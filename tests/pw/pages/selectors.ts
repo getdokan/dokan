@@ -6007,16 +6007,25 @@ export const selector = {
                 openTickets: '//ul[contains(@class,"dokan-support-topic-counts")]//a[contains(text(), "Open Tickets")]',
                 closedTickets: '//ul[contains(@class,"dokan-support-topic-counts")]//a[contains(text(), "Closed Tickets")]',
             },
-
+            newMenus: {
+                allTickets: 'role=button[name^="All"]',
+                openTickets: 'role=button[name^="Open"]',
+                closedTickets: 'role=button[name^="Closed"]',
+            },
             // Filter
             filters: {
                 filterByCustomer: '//select[@id="dokan-search-support-customers"]/..//span[@class="select2-selection__arrow"]',
+                filterByCustomerNew: '//div[normalize-space(text())="Search customer"]',
                 filterByCustomerInput: '.select2-search__field',
+                filterByCustomerInputNew: 'input#dokan-filter-by-customer',
 
                 filterByDate: {
                     dateRangeInput: 'input#support_ticket_date_filter',
+                    dateRangeInputNew: 'role=button[name="Select date range"]',
                     startDateInput: 'input#support_ticket_start_date_filter_alt',
+                    startDateInputNew: 'input#dokan-daterange-start',
                     endDateInput: 'input#support_ticket_end_date_filter_alt',
+                    endDateInputNew: 'input#dokan-daterange-end',
                 },
 
                 tickedIdOrKeyword: '#dokan-support-ticket-search-input',

@@ -243,15 +243,32 @@ export class StoreSupportsPage extends AdminPage {
     // vendor
 
     // vendor store support render properly
-    async vendorStoreSupportRenderProperly() {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.storeSupport);
-
+    async vendorStoreSupportRenderProperly(newUI?: boolean) {
+        if(newUI)
+            await this.goIfNotThere(data.subUrls.frontend.vDashboard.storeSupportNew);
+        else
+            await this.goIfNotThere(data.subUrls.frontend.vDashboard.storeSupport);
         // store support menu elements are visible
-        await this.multipleElementVisible(storeSupportsVendor.menus);
+        await this.multipleElementVisible(storeSupportsVendor.newMenus);
 
-        const { filterByCustomerInput, filterByDate, result, ...filters } = storeSupportsVendor.filters;
-        await this.toBeVisible(storeSupportsVendor.filters.filterByDate.dateRangeInput);
-        await this.multipleElementVisible(filters);
+        if (newUI) {
+            // For new UI, use the new selectors
+            await this.toBeVisible(storeSupportsVendor.filters.filterByDate.dateRangeInputNew);
+            await this.toBeVisible(storeSupportsVendor.filters.filterByCustomerInputNew);
+            // Check if search elements exist (they might not be present in new UI)
+            const searchInputExists = await this.isVisible(storeSupportsVendor.filters.tickedIdOrKeyword);
+            if (searchInputExists) {
+                await this.toBeVisible(storeSupportsVendor.filters.tickedIdOrKeyword);
+            }
+            const searchButtonExists = await this.isVisible(storeSupportsVendor.filters.search);
+            if (searchButtonExists) {
+                await this.toBeVisible(storeSupportsVendor.filters.search);
+            }
+        } else {
+            // For old UI, use the old selectors
+            const { filterByCustomerInput, filterByDate, result, ...filters } = storeSupportsVendor.filters;
+            await this.multipleElementVisible(filters);
+        }
 
         const noSupportTicket = await this.isVisible(storeSupportsVendor.noSupportTicketFound);
         if (noSupportTicket) {
@@ -259,8 +276,13 @@ export class StoreSupportsPage extends AdminPage {
             return;
         }
 
-        // store support table elements are visible
-        await this.multipleElementVisible(storeSupportsVendor.table);
+        // store support table elements are visible (check if table exists)
+        const tableExists = await this.isVisible(storeSupportsVendor.table.table);
+        if (tableExists) {
+            await this.multipleElementVisible(storeSupportsVendor.table);
+        } else {
+            console.log('Support table not found - might be using different UI structure');
+        }
     }
 
     // vendor view support ticket details

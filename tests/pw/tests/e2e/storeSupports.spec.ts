@@ -348,3 +348,117 @@ test.describe('Store Support test (vendor)', () => {
         });
     });
 });
+
+
+
+
+// Tests case for new UI that are developed in React..
+test.describe('Store Support test React UI', () => {
+    let admin: StoreSupportsPage;
+    let vendor: StoreSupportsPage;
+    let aPage: Page, vPage: Page;
+    let apiUtils: ApiUtils;
+    let supportTicketId: string;
+    let newUI = true;
+
+    test.beforeAll(async ({ browser }) => {
+        const adminContext = await browser.newContext(data.auth.adminAuth);
+        aPage = await adminContext.newPage();
+        admin = new StoreSupportsPage(aPage);
+
+        const vendorContext = await browser.newContext(data.auth.vendorAuth);
+        vPage = await vendorContext.newPage();
+        vendor = new StoreSupportsPage(vPage);
+
+        apiUtils = new ApiUtils(await request.newContext());
+
+        await test.step('Create support tickets for vendor testing', async () => {
+            [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
+            await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, status: 'closed', author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
+        });
+    });
+
+    test.afterAll(async () => {
+        await test.step('Deactivate store support module and cleanup', async () => {
+            await apiUtils.activateModules(payloads.moduleIds.storeSupport, payloads.adminAuth);
+            await vPage.close();
+            await apiUtils.dispose();
+        });
+    });
+
+    test('vendor can view store support menu page react', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+        await test.step('Render vendor store support menu properly', async () => {
+            await vendor.vendorStoreSupportRenderProperly(newUI);
+        });
+    });
+
+    test('vendor can view support ticket details', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+        await test.step('View vendor support ticket details', async () => {
+            await vendor.vendorViewSupportTicketDetails(supportTicketId);
+        });
+    });
+
+    test('vendor can filter support tickets by customer', { tag: ['@pro', '@vendor'] }, async () => {
+        await test.step('Filter support tickets by customer', async () => {
+            await vendor.vendorFilterSupportTickets('by-customer', data.storeSupport.filter.byCustomer);
+        });
+    });
+
+    test('vendor can filter support tickets by date range', { tag: ['@pro', '@vendor'] }, async () => {
+        await test.step('Filter support tickets by date range', async () => {
+            await vendor.vendorFilterSupportTickets('by-date', data.date.dateRange);
+        });
+    });
+
+    test('vendor can search support ticket by ticket id', { tag: ['@pro', '@vendor'] }, async () => {
+        await test.step('Search support ticket using ticket id', async () => {
+            await vendor.vendorSearchSupportTicket(supportTicketId);
+        });
+    });
+
+    test('vendor can search support ticket by ticket title', { tag: ['@pro', '@vendor'] }, async () => {
+        await test.step('Search support ticket using ticket title', async () => {
+            await vendor.vendorSearchSupportTicket(data.storeSupport.title);
+        });
+    });
+
+    test('vendor can reply to support ticket', { tag: ['@pro', '@vendor'] }, async () => {
+        await test.step('Reply to support ticket', async () => {
+            await vendor.vendorReplySupportTicket(supportTicketId, data.storeSupport.chatReply.reply);
+        });
+    });
+
+    test('vendor can close support ticket', { tag: ['@pro', '@vendor'] }, async () => {
+        await test.step('Close support ticket', async () => {
+            await vendor.vendorCloseSupportTicket(supportTicketId);
+        });
+    });
+
+    test('vendor can reopen closed support ticket', { tag: ['@pro', '@vendor'] }, async () => {
+        await test.step('Reopen closed support ticket', async () => {
+            const [, closedSupportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, status: 'closed', author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
+            await vendor.vendorReopenSupportTicket(closedSupportTicketId);
+        });
+    });
+
+    test('vendor can close support ticket with a chat reply', { tag: ['@pro', '@vendor'] }, async () => {
+        await test.step('Close support ticket with reply', async () => {
+            const [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
+            await vendor.vendorCloseSupportTicketWithReply(supportTicketId, 'closing this ticket');
+        });
+    });
+
+    test('vendor can reopen closed support ticket with a chat reply', { tag: ['@pro', '@vendor'] }, async () => {
+        await test.step('Reopen closed support ticket with reply', async () => {
+            const [, closedSupportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, status: 'closed', author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
+            await vendor.vendorReopenSupportTicketWithReply(closedSupportTicketId, 'reopening this ticket');
+        });
+    });
+
+    test('admin can disable store support module', { tag: ['@pro', '@admin'] }, async () => {
+        await test.step('Deactivate store support module for vendor', async () => {
+            await apiUtils.deactivateModules(payloads.moduleIds.storeSupport, payloads.adminAuth);
+            await admin.disableStoreSupportModule(data.predefined.vendorStores.vendor1);
+        });
+    });
+});

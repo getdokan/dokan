@@ -1212,6 +1212,7 @@ export const data = {
                 inbox: 'dashboard/inbox',
                 auctionProductEdit: (productId: string) => `dashboard/auction/?product_id=${productId}&action=edit`,
                 storeSupport: 'dashboard/support',
+                storeSupportNew: 'dashboard/new/#/support',
 
                 // sub menus
                 settingsStore: 'dashboard/settings/store',
