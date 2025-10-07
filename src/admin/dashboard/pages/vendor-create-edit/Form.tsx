@@ -54,7 +54,7 @@ export default function Form( {
     const errors: String[] = useSelect( ( select ) => {
         return select( store ).getCreateOrEditVendorErrors();
     }, [] );
-    const [ categories, setCategories ] = useState( [] );
+    const [ categories, setCategories ] = useState( {} );
     const [ commissionSubCategoryConfirm, setCommissionSubCategoryConfirm ] =
         useState( false );
 
@@ -1616,7 +1616,7 @@ export default function Form( {
         apiFetch( { path: 'dokan/v2/products/multistep-categories' } ).then(
             ( response: Record< string, unknown > ) => {
                 if ( response && typeof response === 'object' ) {
-                    setCategories( Object.values( response ) );
+                    setCategories( response );
                 }
             }
         );
