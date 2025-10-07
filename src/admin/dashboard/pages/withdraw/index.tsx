@@ -1,5 +1,5 @@
 import { addQueryArgs } from '@wordpress/url';
-import { __, sprintf } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 import { RawHTML, useEffect, useState, useCallback } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { formatPrice, truncate } from '@dokan/utilities';
@@ -1187,7 +1187,18 @@ const WithdrawPage = () => {
                         namespace={ `view-withdrawal-${ modalState.items[ 0 ]?.id }` }
                         onClose={ closeModal }
                         onConfirm={ closeModal }
-                        dialogTitle={ <></> }
+                        dialogTitle={
+                            <>
+                                <div className="text-2xl font-bold text-gray-900 mb-1">
+                                    { price( modalState.items[ 0 ]?.amount ) }
+                                </div>
+                                <div className="text-sm text-gray-500 mb-3">
+                                    From:{ ' ' }
+                                    { modalState.items[ 0 ]?.user?.store_name ||
+                                        __( 'N/A', 'dokan-lite' ) }
+                                </div>
+                            </>
+                        }
                         confirmButtonText={ __( 'Update', 'dokan-lite' ) }
                         hideCancelButton={ false }
                         cancelButtonText={ __( 'Cancel', 'dokan-lite' ) }
@@ -1204,23 +1215,8 @@ const WithdrawPage = () => {
 
                                     return (
                                         <div>
-                                            { /* Header with amount and store name */ }
-                                            <div className="mb-4">
-                                                <div className="text-2xl font-bold text-gray-900 mb-1">
-                                                    { price( item.amount ) }
-                                                </div>
-                                                <div className="text-sm text-gray-500 mb-3">
-                                                    From:{ ' ' }
-                                                    { item.user?.store_name ||
-                                                        __(
-                                                            'N/A',
-                                                            'dokan-lite'
-                                                        ) }
-                                                </div>
-                                            </div>
-
                                             { /* Withdraw details section */ }
-                                            <div className="mb-6">
+                                            <div className="mb-6 pb-4 border-b border-gray-200">
                                                 <h3 className="text-sm font-medium text-gray-900 mb-3">
                                                     { __(
                                                         'Withdraw details:',
@@ -1299,7 +1295,7 @@ const WithdrawPage = () => {
                                             </div>
 
                                             { /* Payment method and Note section */ }
-                                            <div className="mb-6">
+                                            <div className="mb-6 pb-4 border-b border-gray-200">
                                                 <h3 className="text-sm font-medium text-gray-900 mb-3">
                                                     { __(
                                                         'Payment method and Note:',
@@ -1382,8 +1378,10 @@ const WithdrawPage = () => {
                                                 return (
                                                     <div className="mb-4">
                                                         <h3 className="text-sm font-medium text-gray-900 mb-3">
-                                                            { __(
+                                                            { _n(
+                                                                'Action:',
                                                                 'Actions:',
+                                                                options.length,
                                                                 'dokan-lite'
                                                             ) }
                                                         </h3>
