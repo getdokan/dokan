@@ -32,7 +32,7 @@ import { twMerge } from 'tailwind-merge';
 import DebouncedInput from '@src/components/DebouncedInput';
 import { addQueryArgs } from '@wordpress/url';
 import wpMedia from './WpMedia';
-import { Slot, TabPanel } from '@wordpress/components';
+import { Slot } from '@wordpress/components';
 import { PluginArea } from '@wordpress/plugins';
 import { useEffect, useState } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
@@ -1572,6 +1572,7 @@ export default function Form( {
             className:
                 'border-0 border-b border-solid mr-5 -mb-px space-x-8 whitespace-nowrap border-b-2 px-1 py-4 text-sm font-medium cursor-pointer hover:bg-transparent focus:outline-none text-gray-500 border-gray-200 hover:text-gray-600 hover:border-gray-300',
             component: General,
+            renderAsFunction: true,
         },
         {
             name: 'commission',
@@ -1579,6 +1580,7 @@ export default function Form( {
             className:
                 'border-0 border-b border-solid mr-5 -mb-px space-x-8 whitespace-nowrap border-b-2 px-1 py-4 text-sm font-medium cursor-pointer hover:bg-transparent focus:outline-none text-gray-500 border-gray-200 hover:text-gray-600 hover:border-gray-300',
             component: Commission,
+            renderAsFunction: true,
         },
         {
             name: 'social-options',
@@ -1586,12 +1588,28 @@ export default function Form( {
             className:
                 'border-0 border-b border-solid mr-5 -mb-px space-x-8 whitespace-nowrap border-b-2 px-1 py-4 text-sm font-medium cursor-pointer hover:bg-transparent focus:outline-none text-gray-500 border-gray-200 hover:text-gray-600 hover:border-gray-300',
             component: SocialOptions,
+            renderAsFunction: true,
         },
     ] );
     const [ tabQueryParam, setTabQueryParam ] = useState( 'general' );
 
-    const onTabChange = ( tabName ) => {
+    const handleTabChange = ( tabName: string ) => {
         setTabQueryParam( tabName );
+    };
+
+    const getCurrentTabComponent = () => {
+        const currentTab = tabsData.find(
+            ( tab ) => tab.name === tabQueryParam
+        );
+
+        const TabComponent = currentTab.component;
+
+        if ( currentTab?.renderAsFunction ) {
+            return currentTab.component();
+        }
+
+        // @ts-ignore
+        return <TabComponent />;
     };
 
     useEffect( () => {
@@ -1611,15 +1629,25 @@ export default function Form( {
     return (
         <>
             <div className="flex flex-col">
-                <TabPanel
-                    className="dokan-tab-panel text-gray-500 hover:text-gray-700 *:first:border-gray-200 *:first:*:border-transparent *:[&:not(:last-child)]:*:border-b-2 focus:*:[&:not(:last-child)]:*:outline-transparent"
-                    activeClass="!text-dokan-primary !border-dokan-btn !border-b-2 dokan-active-tab"
-                    tabs={ tabsData }
-                    initialTabName={ tabQueryParam }
-                    onSelect={ onTabChange }
-                >
-                    { ( tab ) => <div className="mt-5">{ typeof tab.component === 'function' ? tab.component() : null }</div> }
-                </TabPanel>
+                { /* @ts-ignore - Tab Navigation - Matching the exact style from your design */ }
+                <div className="flex border-gray-200 overflow-x-auto @md:space-x-8 space-x-4">
+                    { tabsData.map( ( tab ) => (
+                        <button
+                            key={ tab.name }
+                            className={
+                                'px-4 py-4 text-sm border-b !border-b-[2px] border-transparent font-semibold whitespace-nowrap transition-colors ' +
+                                ( tabQueryParam === tab.name
+                                    ? '!border-[#7047EB] text-[#7047EB]'
+                                    : 'border-transparent text-gray-500 hover:text-[#7047EB] hover:!border-[#7047EB]' )
+                            }
+                            onClick={ () => handleTabChange( tab.name ) }
+                        >
+                            { tab.title }
+                        </button>
+                    ) ) }
+                </div>
+
+                { getCurrentTabComponent() }
 
                 { createForm && (
                     <>
