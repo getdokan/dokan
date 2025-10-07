@@ -195,24 +195,7 @@ function Edit( props ) {
 
                 { /*Add new vendor header*/ }
                 <div className="gap-4 flex flex-col md:!flex-row md:!justify-between">
-                    <div className="">
-                        <h1>{ __( 'Update Vendor', 'dokan-lite' ) }</h1>
-                    </div>
-                    <div className="flex flex-col md:!flex-row gap-3">
-                        <DokanButton
-                            variant="secondary"
-                            onClick={ onDiscard }
-                            disabled={ ! isDirty || saving }
-                        >
-                            { __( 'Discard', 'dokan-lite' ) }
-                        </DokanButton>
-                        <DokanButton
-                            onClick={ updateVendor }
-                            loading={ saving }
-                            disabled={ saving }
-                            label={ __( 'Save Changes', 'dokan-lite' ) }
-                        />
-                    </div>
+                    <h1>{ __( 'Update Vendor', 'dokan-lite' ) }</h1>
                 </div>
             </div>
 
@@ -222,6 +205,25 @@ function Edit( props ) {
                 formKey="dokan-edit-vendor"
                 createForm={ false }
             />
+
+            { /*Add new vendor header*/ }
+            <div className="gap-4 flex flex-col md:!flex-row md:!justify-end mt-6">
+                <div className="flex flex-col md:!flex-row gap-3">
+                    <DokanButton
+                        variant="secondary"
+                        onClick={ onDiscard }
+                        disabled={ ! isDirty || saving }
+                    >
+                        { __( 'Discard', 'dokan-lite' ) }
+                    </DokanButton>
+                    <DokanButton
+                        onClick={ updateVendor }
+                        loading={ saving }
+                        disabled={ saving }
+                        label={ __( 'Save Changes', 'dokan-lite' ) }
+                    />
+                </div>
+            </div>
 
             <DokanModal
                 isOpen={ isLeaveModalOpen }

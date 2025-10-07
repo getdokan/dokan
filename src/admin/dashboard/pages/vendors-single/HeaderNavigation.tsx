@@ -48,7 +48,7 @@ const HeaderNavigation = ( { vendor }: HeaderNavigationProps ) => {
                 </svg>
                 { __( 'Vendors List', 'dokan-lite' ) }
             </Button>
-            <div className="flex justify-between w-full">
+            <div className="flex flex-col md:!flex-row gap-4 md:!gap-0 justify-between w-full">
                 <h2 className="text-2xl font-semibold text-[#25252D]">
                     { __( 'Vendor Details', 'dokan-lite' ) }
                 </h2>

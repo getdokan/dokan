@@ -7,7 +7,7 @@ export interface InfoSectionProps {
 }
 const InfoSection = ( { vendor }: InfoSectionProps ) => {
     return (
-        <div className="flex gap-6">
+        <div className="flex flex-col md:!flex-row gap-6">
             <InfoCard vendor={ vendor } />
             <TabSections vendor={ vendor } />
         </div>

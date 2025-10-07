@@ -128,26 +128,29 @@ function Create( props: any ) {
                     <div className="sm:w-full md:w-1/2">
                         <h1>{ __( 'Add New Vendor', 'dokan-lite' ) }</h1>
                     </div>
-                    <div className="sm:w-full md:w-1/2 flex flex-row justify-end gap-3">
-                        <DokanButton
-                            variant="secondary"
-                            onClick={ () =>
-                                ( window.location.href = config.dokanVendorsListUrl )
-                            }
-                        >
-                            { __( 'Cancel', 'dokan-lite' ) }
-                        </DokanButton>
-                        <DokanButton
-                            onClick={ addVendor }
-                            loading={ saving }
-                            disabled={ saving }
-                            label={ __( 'Add Vendor', 'dokan-lite' ) }
-                        />
-                    </div>
                 </div>
             </div>
 
             <Form vendor={ vendor } requiredFields={ requiredFields } />
+
+            <div className="flex flex-row justify-end mt-6">
+                <div className="sm:w-full md:w-1/2 flex flex-row justify-end gap-3">
+                    <DokanButton
+                        variant="secondary"
+                        onClick={ () =>
+                            ( window.location.href = config.dokanVendorsListUrl )
+                        }
+                    >
+                        { __( 'Cancel', 'dokan-lite' ) }
+                    </DokanButton>
+                    <DokanButton
+                        onClick={ addVendor }
+                        loading={ saving }
+                        disabled={ saving }
+                        label={ __( 'Add Vendor', 'dokan-lite' ) }
+                    />
+                </div>
+            </div>
         </Card>
     );
 }

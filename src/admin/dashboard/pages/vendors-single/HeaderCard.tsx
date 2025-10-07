@@ -7,6 +7,7 @@ import { DokanBadge } from '@dokan/components';
 import Banner from './Banner';
 import StoreAvatar from './StoreAvatar';
 import { applyFilters } from "@wordpress/hooks";
+import { Star } from "lucide-react";
 
 export interface HeaderCardProps {
     vendor: Vendor;
@@ -35,7 +36,7 @@ const HeaderCard = ( { vendor }: HeaderCardProps ) => {
             { /* Banner */ }
             <Banner banner={ vendor?.banner } />
             { /* Store Info */ }
-            <div className="flex items-center px-6 py-4 bg-white rounded-b-md">
+            <div className="flex flex-col md:!flex-row items-center px-6 py-4 bg-white rounded-b-md">
                 { /* Store Icon on the left */ }
                 <StoreAvatar gravatar={ vendor?.gravatar } />
                 { /* Store Details */ }
@@ -61,10 +62,15 @@ const HeaderCard = ( { vendor }: HeaderCardProps ) => {
                 </div>
                 { /* Disabled badge */ }
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center mt-2 md:!mt-0 gap-2">
                     { vendor?.featured && (
                         <DokanBadge
-                            label={ __( 'Featured', 'dokan-lite' ) }
+                            label={
+                                <span className="flex justify-center items-center gap-1">
+                                    { __( 'Featured', 'dokan-lite' ) }
+                                    <Star size="12" />
+                                </span>
+                            }
                             variant={ 'warning' }
                         />
                     ) }
