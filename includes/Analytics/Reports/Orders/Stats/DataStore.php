@@ -123,8 +123,6 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 				break;
 		}
 
-        error_log( 'order_commission: ' . print_r( $order_commission, true ) );
-
 		/**
 		 * Filters order stats data.
 		 *

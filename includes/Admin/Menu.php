@@ -112,7 +112,7 @@ class Menu {
         wp_enqueue_script( 'dokan-flot' );
         wp_enqueue_script( 'dokan-chart' );
 
-        // Enqueue header scripts for admin panel
+        // Enqueue header scripts for admin panel.
         wp_enqueue_style( 'dokan-admin-panel-header' );
         wp_enqueue_script( 'dokan-admin-panel-header' );
 

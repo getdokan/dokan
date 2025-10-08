@@ -28,6 +28,10 @@ class Dashboard implements Hookable {
     protected string $setup_guide_key = 'dokan-setup-guide-banner';
 
     /**
+     * Admin panel header script key.
+     *
+     * @since DOKAN_SINCE
+     *
      * @var string
      */
     protected string $header_script_key = 'dokan-admin-panel-header';
@@ -477,18 +481,6 @@ class Dashboard implements Hookable {
                 $this->settings()
             ), 'before'
         );
-    }
-
-    /**
-     * Enqueue header scripts for admin panel pages.
-     *
-     * @since 4.0.0
-     *
-     * @return void
-     */
-    public function enqueue_header_scripts() {
-        wp_enqueue_style( $this->header_script_key );
-        wp_enqueue_script( $this->header_script_key );
     }
 
     /**
