@@ -1,5 +1,5 @@
 import { createRoot } from '@wordpress/element';
-import Header from './Header';
+import AdminBar from './AdminBar';
 import domReady from '@wordpress/dom-ready';
 import './tailwind.scss';
 
@@ -9,6 +9,6 @@ domReady( function () {
 
     if ( headerRoot ) {
         const root = createRoot( headerRoot );
-        root.render( <Header /> );
+        root.render( <AdminBar /> );
     }
 } );

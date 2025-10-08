@@ -1,11 +1,11 @@
 import { __, sprintf } from '@wordpress/i18n';
-import { useState } from '@wordpress/element';
+import { RawHTML, useState } from '@wordpress/element';
 import HelpIcon from '../dashboard/icons/HelpIcon';
 import CrownIcon from '../dashboard/icons/CrownIcon';
 import IconMapping from '../dashboard/components/IconMapping';
 import { twMerge } from 'tailwind-merge';
 
-const Header = () => {
+const AdminBar = () => {
     const [ showDropdown, setShowDropdown ] = useState( false );
     const { is_pro_exists, lite_version, help_menu_items, has_new_version } =
         dokanAdminPanelHeaderSettings?.header_info;
@@ -20,7 +20,7 @@ const Header = () => {
                 <div className="flex flex-wrap items-center gap-3">
                     <img
                         className={ `h-8 mr-auto` }
-                        src={ dokanAdminPanelHeaderSettings?.logo_url }
+                        src={ dokanAdminPanelHeaderSettings?.logo_url || '' }
                         alt={ __( 'Dokan Logo', 'dokan-lite' ) }
                     />
 
@@ -42,10 +42,8 @@ const Header = () => {
                                     { sprintf(
                                         /* translators: %1$s: license plan %2$s: pro version info */
                                         __( '%1$s: %2$s', 'dokan-lite' ),
-                                        dokanAdminPanelHeaderSettings.header_info
-                                            .license_plan,
-                                        dokanAdminPanelHeaderSettings.header_info
-                                            .pro_version
+                                        dokanAdminPanelHeaderSettings?.header_info?.license_plan || '',
+                                        dokanAdminPanelHeaderSettings?.header_info?.pro_version || ''
                                     ) }
                                 </span>
                             </div>
@@ -113,7 +111,7 @@ const Header = () => {
                                     }
                                     className={ twMerge(
                                         'flex items-center !text-black text-[15px] font-semibold no-underline transition-all duration-200 ease-in-out mb-3 last:mb-0 group hover:!text-[#7047EB]',
-                                        item.active && 'text-[#7047EB]'
+                                        item.active && '!text-[#7047EB]'
                                     ) }
                                 >
                                     <div className="w-[38px] h-[38px] flex items-center justify-center rounded-full mr-2.5 transition-all duration-200 ease-in-out bg-[#E4E6EB] group-hover:bg-[#EFEAFF]">
@@ -125,11 +123,9 @@ const Header = () => {
                                             ) }
                                         />
                                     </div>
-                                    <span
-                                        dangerouslySetInnerHTML={ {
-                                            __html: item?.title,
-                                        } }
-                                    ></span>
+                                    <span>
+                                        <RawHTML>{ item?.title }</RawHTML>
+                                    </span>
                                     { item?.active && (
                                         <span className="w-1.5 h-1.5 bg-[#7047EB] rounded-full ml-2.5"></span>
                                     ) }
@@ -143,4 +139,4 @@ const Header = () => {
     );
 };
 
-export default Header;
+export default AdminBar;

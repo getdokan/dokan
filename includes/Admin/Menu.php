@@ -2,7 +2,6 @@
 
 namespace WeDevs\Dokan\Admin;
 
-use WeDevs\Dokan\Admin\Dashboard\Dashboard;
 use WeDevs\Dokan\Admin\Notices\Helper;
 
 class Menu {
@@ -106,14 +105,12 @@ class Menu {
     public function dashboard_script() {
         wp_enqueue_style( 'dokan-admin-css' );
         wp_enqueue_style( 'jquery-ui' );
+        wp_enqueue_style( 'dokan-admin-panel-header' );
 
         wp_enqueue_script( 'jquery-ui-datepicker' );
         wp_enqueue_script( 'wp-color-picker' );
         wp_enqueue_script( 'dokan-flot' );
         wp_enqueue_script( 'dokan-chart' );
-
-        // Enqueue header scripts for admin panel.
-        wp_enqueue_style( 'dokan-admin-panel-header' );
         wp_enqueue_script( 'dokan-admin-panel-header' );
 
         do_action( 'dokan_enqueue_admin_dashboard_script' );
