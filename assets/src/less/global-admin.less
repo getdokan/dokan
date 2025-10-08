@@ -358,13 +358,15 @@
     }
 }
 
-.toplevel_page_dokan #wpcontent {
+.toplevel_page_dokan #wpcontent,
+.dokan_page_dokan-dashboard #wpcontent {
     padding: 0;
     overflow-x: hidden !important;
     min-height: calc(100vh - 32px);
 }
 
-.toplevel_page_dokan #wpcontent .dokan-admin-page-body {
+.toplevel_page_dokan #wpcontent .dokan-admin-page-body,
+.dokan_page_dokan-dashboard #wpcontent .dokan-admin-page-body {
     padding-left: 20px;
 }
 
@@ -372,17 +374,20 @@
     .toplevel_page_dokan #wpbody-content {
         padding-left: 0
     }
-    .toplevel_page_dokan #wpcontent .dokan-admin-page-body {
+    .toplevel_page_dokan #wpcontent .dokan-admin-page-body,
+    .dokan_page_dokan-dashboard #wpcontent .dokan-admin-page-body {
         padding-left: 10px;
     }
 }
 
 @media(max-width:782px) {
     .toplevel_page_dokan #wpbody-content,
-    .toplevel_page_dokan #wpcontent {
+    .toplevel_page_dokan #wpcontent,
+    .dokan_page_dokan-dashboard #wpcontent {
         min-height: calc(100vh - 46px)
     }
-    .toplevel_page_dokan #wpcontent .dokan-admin-page-body {
+    .toplevel_page_dokan #wpcontent .dokan-admin-page-body,
+    .dokan_page_dokan-dashboard #wpcontent .dokan-admin-page-body {
         padding-left: 10px;
     }
 }

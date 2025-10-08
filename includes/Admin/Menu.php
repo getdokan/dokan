@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Admin;
 
+use WeDevs\Dokan\Admin\Dashboard\Dashboard;
 use WeDevs\Dokan\Admin\Notices\Helper;
 
 class Menu {
@@ -111,6 +112,16 @@ class Menu {
         wp_enqueue_script( 'dokan-flot' );
         wp_enqueue_script( 'dokan-chart' );
 
+        // Enqueue header scripts for admin panel
+//        $dashboard = dokan_get_container()->get( 'dashboard' );
+//        if ( $dashboard ) {
+//            $dashboard->enqueue_header_scripts();
+//        }
+
+        $dashboard = new Dashboard();
+
+        $dashboard->enqueue_header_scripts();
+
         do_action( 'dokan_enqueue_admin_dashboard_script' );
     }
 
@@ -124,6 +135,9 @@ class Menu {
      */
     public function dashboard() {
         $has_new_version = Helper::dokan_has_new_version();
+
+        // Render the admin dashboard template.
+        echo '<div id="dokan-admin-panel-header"></div>';
         include DOKAN_DIR . '/templates/admin-header.php';
         echo '<div class="wrap"><div id="dokan-vue-admin"></div></div>';
     }
