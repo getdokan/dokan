@@ -61,9 +61,10 @@ class Menu {
                 $submenu[ $slug ][] = [ __( 'Vendors', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/vendors' ];
             }
 
-            if ( ! dokan()->is_pro_exists() ) {
-                $submenu[ $slug ][] = [ __( 'PRO Features', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/premium' ];
-            }
+            // TODO: We need to remove this vue pro features page. we have a react page to replace.
+            // if ( ! dokan()->is_pro_exists() ) {
+            //     $submenu[ $slug ][] = [ __( 'PRO Features', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/premium' ];
+            // }
         }
 
         do_action( 'dokan_admin_menu', $capability, $menu_position );

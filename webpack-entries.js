@@ -58,6 +58,7 @@ const entryPoints = {
         },
     },
     'dokan-status': '/src/Status/index.tsx',
+    'dokan-pro-features': '/src/ProFeatures/index.tsx',
     'vendor-dashboard/reports/index': './src/vendor-dashboard/reports/index.js',
     // intelligence
     'dokan-intelligence': './src/intelligence/index.tsx',

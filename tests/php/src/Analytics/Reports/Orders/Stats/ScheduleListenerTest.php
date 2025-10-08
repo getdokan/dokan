@@ -13,6 +13,8 @@ use WeDevs\Dokan\Test\DokanTestCase;
 class ScheduleListenerTest extends DokanTestCase {
     public function test_woocommerce_analytics_update_order_stats_hook_is_registered() {
         $order_stats_table_listener = dokan_get_container()->get( ScheduleListener::class );
+        $order_stats_table_listener->register_hooks();
+
         self::assertNotFalse( has_action( 'woocommerce_analytics_update_order_stats', [ $order_stats_table_listener, 'sync_dokan_order' ] ) );
     }
 
@@ -30,6 +32,7 @@ class ScheduleListenerTest extends DokanTestCase {
 		$order_id = $this->create_multi_vendor_order();
 		$service = Mockery::mock( ScheduleListener::class . '[sync_dokan_order]' );
 		dokan_get_container()->extend( ScheduleListener::class )->setConcrete( $service );
+        dokan_get_container()->get( ScheduleListener::class )->register_hooks();
 
         $service->shouldReceive( 'sync_dokan_order' )
             ->atLeast()
