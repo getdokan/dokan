@@ -401,7 +401,7 @@ class Dashboard implements Hookable {
                 'dokanAdminPanelHeaderSettings',
                 [
                     'logo_url'    => DOKAN_PLUGIN_ASSEST . '/images/dokan-logo.png',
-                    'header_info' => apply_filters( 'dokan_admin_setup_guides_header_info', $header_info ),
+                    'header_info' => $header_info,
                 ]
             );
         }
