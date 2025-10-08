@@ -113,14 +113,8 @@ class Menu {
         wp_enqueue_script( 'dokan-chart' );
 
         // Enqueue header scripts for admin panel
-//        $dashboard = dokan_get_container()->get( 'dashboard' );
-//        if ( $dashboard ) {
-//            $dashboard->enqueue_header_scripts();
-//        }
-
-        $dashboard = new Dashboard();
-
-        $dashboard->enqueue_header_scripts();
+        wp_enqueue_style( 'dokan-admin-panel-header' );
+        wp_enqueue_script( 'dokan-admin-panel-header' );
 
         do_action( 'dokan_enqueue_admin_dashboard_script' );
     }
@@ -138,7 +132,6 @@ class Menu {
 
         // Render the admin dashboard template.
         echo '<div id="dokan-admin-panel-header"></div>';
-        include DOKAN_DIR . '/templates/admin-header.php';
         echo '<div class="wrap"><div id="dokan-vue-admin"></div></div>';
     }
 }

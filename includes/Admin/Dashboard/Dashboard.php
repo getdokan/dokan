@@ -487,8 +487,8 @@ class Dashboard implements Hookable {
      * @return void
      */
     public function enqueue_header_scripts() {
-        wp_enqueue_script( $this->header_script_key );
         wp_enqueue_style( $this->header_script_key );
+        wp_enqueue_script( $this->header_script_key );
     }
 
     /**

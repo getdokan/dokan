@@ -12,8 +12,8 @@ const Header = () => {
 
     return (
         <div
-            data-test-id="dokan-dahboard-header"
-            className="w-full bg-white shadow-sm border-b border-gray-200 sm:px-6 sm:py-4 py-2.5 px-3 flex justify-between items-center gap-6 box-border"
+            data-test-id="dokan-dashboard-header"
+            className="w-full bg-white shadow-sm border-b border-gray-200 py-4 px-3 sm:px-6 flex justify-between items-center gap-6 box-border"
         >
             { /* Logo and version tags */ }
             <div className="w-full flex flex-wrap items-center justify-between">
@@ -58,7 +58,7 @@ const Header = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         href="https://dokan.co/wordpress/upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite"
-                        className="bg-[#7047EB] text-white py-2.5 px-5 rounded-md flex items-center gap-2 hover:bg-[#A244FF] hover:text-white focus:text-white transition-colors duration-200 font-medium no-underline text-[13px]"
+                        className="bg-[#7047EB] !text-white py-2.5 px-5 rounded-md flex items-center gap-2 hover:bg-[#A244FF] hover:!text-white focus:!text-white transition-colors duration-200 font-medium no-underline text-[13px]"
                     >
                         { __( 'Upgrade', 'dokan-lite' ) }
                         <CrownIcon className={ 'w-5 h-5' } />
@@ -85,7 +85,7 @@ const Header = () => {
 
                     { /* Dropdown */ }
                     <div
-                        className={ `min-w-64 absolute top-full -right-2.5 mt-5 z-50 bg-white rounded border border-gray-200 shadow-lg w-64 py-4 px-5 transition-opacity transition-transform duration-300 before:bottom-full before:left-0 before:content-[''] before:absolute before:w-full before:h-12 ${
+                        className={ `min-w-64 absolute top-full -right-2.5 mt-5 z-50 bg-white rounded border border-solid border-gray-200 shadow-lg w-64 py-4 px-5 transition-opacity transition-transform duration-300 before:bottom-full before:left-0 before:content-[''] before:absolute before:w-full before:h-12 ${
                             showDropdown
                                 ? 'opacity-100 visible'
                                 : 'opacity-0 invisible'
@@ -112,7 +112,7 @@ const Header = () => {
                                             : ''
                                     }
                                     className={ twMerge(
-                                        'flex items-center text-black text-[15px] font-semibold no-underline transition-all duration-200 ease-in-out mb-3 last:mb-0 group hover:!text-[#7047EB]',
+                                        'flex items-center !text-black text-[15px] font-semibold no-underline transition-all duration-200 ease-in-out mb-3 last:mb-0 group hover:!text-[#7047EB]',
                                         item.active && 'text-[#7047EB]'
                                     ) }
                                 >
