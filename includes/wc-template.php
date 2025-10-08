@@ -227,7 +227,8 @@ function dokan_vendor_quick_edit_data( $column, $post_id ) {
 
         case 'admin_commission':
             $commission = dokan()->commission->get_earning_by_product( $post_id, 'admin' );
-            echo is_numeric( $commission ) ? wc_price( $commission ) : '';
+            $price = is_numeric( $commission ) ? wc_price( $commission ) : '';
+            echo apply_filters( 'dokan_admin_products_list_line_item_commission_view', $price, $commission, $post_id );
 
             break;
 
