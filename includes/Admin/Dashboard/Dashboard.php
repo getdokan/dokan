@@ -34,10 +34,11 @@ class Dashboard implements Hookable {
         add_action( 'dokan_admin_menu', [ $this, 'register_menu' ], 99, 2 );
         add_action( 'dokan_register_scripts', [ $this, 'register_scripts' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-        add_action( 'admin_menu', [ $this, 'clear_dokan_submenu_title' ], 20 );
         add_action( 'admin_notices', [ $this, 'inject_before_notices' ], -9999 );
         add_action( 'admin_notices', [ $this, 'inject_after_notices' ], PHP_INT_MAX );
-        add_action( 'admin_init', [ $this, 'handle_dashboard_redirect' ] );
+
+//        add_action( 'admin_menu', [ $this, 'clear_dokan_submenu_title' ], 20 );
+//        add_action( 'admin_init', [ $this, 'handle_dashboard_redirect' ] );
     }
 
     /**
@@ -212,8 +213,9 @@ class Dashboard implements Hookable {
             'header_info'   => apply_filters( 'dokan_admin_setup_guides_header_info', $header_info ),
             'dashboard_url' => add_query_arg(
                 [
-                    'dokan_admin_dashboard_switching_nonce' => wp_create_nonce( 'dokan_switch_admin_dashboard' ),
-                    'dokan_action'                          => 'switch_dashboard',
+                    'dokan_admin_switching_nonce' => wp_create_nonce( 'dokan_switch_admin_panel' ),
+                    'dokan_action'                => 'switch_admin_panel',
+                    'legacy_key'                  => 'dashboard',
                 ],
                 admin_url()
             ),
