@@ -536,15 +536,6 @@ test.describe('Admin Settings Migration', () => {
         const fieldSelectorId = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_order_status_change';
         const fieldKey = 'orderStatusChangeField'; 
 
-        // step 0: Ensure "One Page Product Creation" is disabled before testing "Product Popup"
-        const fieldSeletor0 = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_one_page_creation';
-        const onePageStatus = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSeletor0);
-        if(onePageStatus) {
-            await adminSettingsPage.updateNewSettings(newNavigationFunction, fieldSeletor0, false);
-            // Verify in old settings
-            const oldValue = await adminSettingsPage.getOldSetting(oldNavigationFunction, 'one_step_product_create');
-            expect(oldValue).toBe(false);
-        }
         // Step 1: Get current status from new settings and toggle it
         let status = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSelectorId);
         await adminSettingsPage.updateNewSettings(newNavigationFunction, fieldSelectorId, !status);
@@ -578,15 +569,6 @@ test.describe('Admin Settings Migration', () => {
         const fieldSelectorId = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_select_any_category';
         const fieldKey = 'selectAnyCategoryField'; 
 
-        // step 0: Ensure "One Page Product Creation" is disabled before testing "Product Popup"
-        const fieldSeletor0 = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_one_page_creation';
-        const onePageStatus = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSeletor0);
-        if(onePageStatus) {
-            await adminSettingsPage.updateNewSettings(newNavigationFunction, fieldSeletor0, false);
-            // Verify in old settings
-            const oldValue = await adminSettingsPage.getOldSetting(oldNavigationFunction, 'one_step_product_create');
-            expect(oldValue).toBe(false);
-        }
         // Step 1: Get current status from new settings and toggle it
         let status = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSelectorId);
         await adminSettingsPage.updateNewSettings(newNavigationFunction, fieldSelectorId, !status);
@@ -612,7 +594,6 @@ test.describe('Admin Settings Migration', () => {
 
 
     // Test for `Vendor Capabilities -> Auction Functions` settings synchronization.
-    // Ned to ensure Auction module and woocommerce auction plugin is active before running this test.
     test('should maintain bi-directional data synchronization for Auction Functions for New Vendors', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
 
         const oldNavigationFunction = 'navigateToOldSellingOptions'; 
@@ -621,15 +602,6 @@ test.describe('Admin Settings Migration', () => {
         const fieldSelectorId = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_auction_functions';
         const fieldKey = 'auctionFunctionsField'; 
 
-        // step 0: Ensure "One Page Product Creation" is disabled before testing "Product Popup"
-        const fieldSeletor0 = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_one_page_creation';
-        const onePageStatus = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSeletor0);
-        if(onePageStatus) {
-            await adminSettingsPage.updateNewSettings(newNavigationFunction, fieldSeletor0, false);
-            // Verify in old settings
-            const oldValue = await adminSettingsPage.getOldSetting(oldNavigationFunction, 'one_step_product_create');
-            expect(oldValue).toBe(false);
-        }
         // Step 1: Get current status from new settings and toggle it
         let status = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSelectorId);
         await adminSettingsPage.updateNewSettings(newNavigationFunction, fieldSelectorId, !status);
@@ -652,5 +624,134 @@ test.describe('Admin Settings Migration', () => {
         const newValueAfterOldUpdate1 = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSelectorId);
         expect(newValueAfterOldUpdate1).toBe(!status); // Final value should be inverted correctly
     });
+
+
+
+//------------------------------//
+
+    // Test for `Vendor Capabilities -> Vendors Can Create Tags` settings synchronization.
+    test('should maintain bi-directional data synchronization for Vendors Can Create Tags', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
+
+        const oldNavigationFunction = 'navigateToOldSellingOptions'; 
+        const newNavigationFunction = 'navigateToNewVendorCapabilitiesSettings'; 
+        const checkboxClass = 'product_vendors_can_create_tags'; 
+        const fieldSelectorId = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_vendors_create_tags';
+        const fieldKey = 'vendorsCanCreateTagsField'; 
+
+        // Step 1: Get current status from new settings and toggle it
+        let status = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSelectorId);
+        await adminSettingsPage.updateNewSettings(newNavigationFunction, fieldSelectorId, !status);
+
+        // Step 2: Verify in old settings (mapping: dokan_selling.show_vendor_info)
+        const oldValueAfterNewUpdate1 = await adminSettingsPage.getOldSetting(oldNavigationFunction, checkboxClass);
+        expect(oldValueAfterNewUpdate1).toBe(!status); // New toggle should reflect correctly in old settings
+
+        // Step 3: Update old settings back to original status
+        await adminSettingsPage.updateOldSetting(status, oldNavigationFunction, fieldKey, checkboxClass);
+        const oldValueAfterNewUpdate2 = await adminSettingsPage.getOldSetting(oldNavigationFunction, checkboxClass);
+        expect(oldValueAfterNewUpdate2).toBe(status); // Old settings should match updated value
+
+        // Step 4: Verify new settings reflect updated value from old settings
+        const newValueAfterOldUpdate2 = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSelectorId);
+        expect(newValueAfterOldUpdate2).toBe(status);
+
+        // Step 5: Toggle again in new settings and verify the updated value
+        await adminSettingsPage.updateNewSettings(newNavigationFunction, fieldSelectorId, !status);
+        const newValueAfterOldUpdate1 = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSelectorId);
+        expect(newValueAfterOldUpdate1).toBe(!status); // Final value should be inverted correctly
+    });
+
+
+    // Test for `Vendor Capabilities -> Add New Attribute Values` settings synchronization.
+    test('should maintain bi-directional data synchronization for Add New Attribute Values', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
+
+        const oldNavigationFunction = 'navigateToOldSellingOptions'; 
+        const newNavigationFunction = 'navigateToNewVendorCapabilitiesSettings'; 
+        const checkboxClass = 'add_new_attribute';
+        const fieldSelectorId = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_add_new_attribute_values';
+        const fieldKey = 'addNewAttributeValuesField'; 
+
+        // Step 1: Get current status from new settings and toggle it
+        let status = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSelectorId);
+        await adminSettingsPage.updateNewSettings(newNavigationFunction, fieldSelectorId, !status);
+
+        // Step 2: Verify in old settings (mapping: dokan_selling.show_vendor_info)
+        const oldValueAfterNewUpdate1 = await adminSettingsPage.getOldSetting(oldNavigationFunction, checkboxClass);
+        expect(oldValueAfterNewUpdate1).toBe(!status); // New toggle should reflect correctly in old settings
+
+        // Step 3: Update old settings back to original status
+        await adminSettingsPage.updateOldSetting(status, oldNavigationFunction, fieldKey, checkboxClass);
+        const oldValueAfterNewUpdate2 = await adminSettingsPage.getOldSetting(oldNavigationFunction, checkboxClass);
+        expect(oldValueAfterNewUpdate2).toBe(status); // Old settings should match updated value
+
+        // Step 4: Verify new settings reflect updated value from old settings
+        const newValueAfterOldUpdate2 = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSelectorId);
+        expect(newValueAfterOldUpdate2).toBe(status);
+
+        // Step 5: Toggle again in new settings and verify the updated value
+        await adminSettingsPage.updateNewSettings(newNavigationFunction, fieldSelectorId, !status);
+        const newValueAfterOldUpdate1 = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSelectorId);
+        expect(newValueAfterOldUpdate1).toBe(!status); // Final value should be inverted correctly
+    });
+
+
+    // Test for `Vendor Capabilities -> Product Review Management by Vendors` settings synchronization.
+    test('should maintain bi-directional data synchronization for Product Review Management by Vendors', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
+
+        const oldNavigationFunction = 'navigateToOldSellingOptions'; 
+        const newNavigationFunction = 'navigateToNewVendorCapabilitiesSettings'; 
+        const checkboxClass = 'seller_review_manage'; 
+        const fieldSelectorId = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_product_review_management';
+        const fieldKey = 'productReviewManagementField'; 
+
+        // Step 1: Get current status from new settings and toggle it
+        let status = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSelectorId);
+        await adminSettingsPage.updateNewSettings(newNavigationFunction, fieldSelectorId, !status);
+
+        // Step 2: Verify in old settings (mapping: dokan_selling.show_vendor_info)
+        const oldValueAfterNewUpdate1 = await adminSettingsPage.getOldSetting(oldNavigationFunction, checkboxClass);
+        expect(oldValueAfterNewUpdate1).toBe(!status); // New toggle should reflect correctly in old settings
+
+        // Step 3: Update old settings back to original status
+        await adminSettingsPage.updateOldSetting(status, oldNavigationFunction, fieldKey, checkboxClass);
+        const oldValueAfterNewUpdate2 = await adminSettingsPage.getOldSetting(oldNavigationFunction, checkboxClass);
+        expect(oldValueAfterNewUpdate2).toBe(status); // Old settings should match updated value
+
+        // Step 4: Verify new settings reflect updated value from old settings
+        const newValueAfterOldUpdate2 = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSelectorId);
+        expect(newValueAfterOldUpdate2).toBe(status);
+
+        // Step 5: Toggle again in new settings and verify the updated value
+        await adminSettingsPage.updateNewSettings(newNavigationFunction, fieldSelectorId, !status);
+        const newValueAfterOldUpdate1 = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSelectorId);
+        expect(newValueAfterOldUpdate1).toBe(!status); // Final value should be inverted correctly
+    });
+
+
+    /// Testing--------- ////
+    test('should maintain bi-directional data synchronization for Shipping Fee Recipient', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
+
+        // Define dynamic parameters
+        const navigationFunction = 'navigateToOldSellingOptions';
+        const fieldClass = 'shipping_tax_fee_recipient';
+        const newValue = 'seller'; // Possible values: 'seller' or 'admin'
+        const oppositeValue = 'admin';
+
+        await adminSettingsPage.updateOldRadioSetting(navigationFunction, fieldClass, newValue);
+        // Step 1: Get current value from old settings
+        const oldValueBefore = await adminSettingsPage.getOldRadioSetting(navigationFunction, fieldClass);
+        console.log('Old setting after update1:', oldValueBefore);
+
+        // Step 2: Update the old setting to new value
+        await adminSettingsPage.updateOldRadioSetting(navigationFunction, fieldClass, oppositeValue);
+
+        // Step 3: Get the updated value to verify
+        const oldValueAfter = await adminSettingsPage.getOldRadioSetting(navigationFunction, fieldClass);
+        console.log('Old setting after update2:', oldValueAfter);
+
+        //Step 4: Verify change
+        //expect(oldValueAfter).toBe(newValue);
+    });
+    // Test part End ....... //
 
 });

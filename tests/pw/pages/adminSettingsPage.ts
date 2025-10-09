@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 import { BasePage } from '@pages/basePage';
 import { data } from '@utils/testData';
 
@@ -1043,7 +1043,7 @@ export class AdminSettingsPage extends BasePage {
     // ******** //
     //----------///
 
-    
+
     // Generic methods to update and get old settings based on parameters
     async updateOldSetting(enabled: boolean, navigationFunction: string, fieldKey: string, checkboxClass: string) {
         await (this as any)[navigationFunction]();
@@ -1102,6 +1102,50 @@ export class AdminSettingsPage extends BasePage {
         const switchElement = this.page.locator(`#${fieldSelectorId}`).getByRole('switch');
         await switchElement.waitFor({ state: 'visible', timeout: 10000 });
         return await switchElement.getAttribute('aria-checked') === 'true';
+    }
+
+    async updateOldRadioSetting( navigationFunction: string, fieldClass: string, optionValue: string ) {
+        // Step 1: Navigate to the correct old settings page
+        await (this as any)[navigationFunction]();
+
+        // Step 2: Wait for the radio group to be in the DOM
+        const radioGroup = this.page.locator(`.${fieldClass} .dokan-radio-fields`);
+        await radioGroup.waitFor({ state: 'attached', timeout: 5000 });
+
+        // Step 3: Locate the label that wraps the desired radio input
+        const targetLabel = this.page.locator(`.${fieldClass} label:has(input[type="radio"][value="${optionValue}"])`);
+        await expect(targetLabel).toHaveCount(1, { timeout: 5000 });
+
+        // Step 4: Check if it's already selected via "checked" class
+        const isAlreadySelected = await targetLabel.getAttribute('class');
+        if (!isAlreadySelected?.includes('checked')) {
+            await targetLabel.click();
+        }
+
+        // Step 5: Save changes
+        const saveButton = this.page.locator(data.adminSettingsMigration.selectors.oldUI.saveChanges);
+        await saveButton.waitFor({ state: 'visible', timeout: 5000 });
+        await saveButton.click();
+
+        await this.page.waitForTimeout(2000);
+        await this.waitForLoadState();
+    }
+
+
+    async getOldRadioSetting( navigationFunction: string, fieldClass: string ): Promise<string> {
+        await (this as any)[navigationFunction]();
+
+        const radioGroup = this.page.locator(`.${fieldClass} .dokan-radio-fields`);
+        await radioGroup.waitFor({ state: 'attached', timeout: 5000 });
+
+        // Find the selected label by class="checked"
+        const activeRadio = this.page.locator(`.${fieldClass} label.checked input[type="radio"]`);
+
+        // Ensure one exists (wait until Vue updates it)
+        await expect(activeRadio).toHaveCount(1, { timeout: 5000 });
+
+        const value = await activeRadio.getAttribute('value');
+        return value ?? '';
     }
     
 }
