@@ -1,3 +1,7 @@
+### v4.1.1 ( Oct 09, 2025 ) ###
+- **update:** Added method to retrieve vendor earnings excluding admin subsidy.
+- **update:** Admin gateway fee calculation now checks an order-level meta value before using the previous fallback logic.
+
 ### v4.1.0 ( Sep 30, 2025 ) ###
 - **feat:** New React-based Admin Dashboard with enhanced metrics and rank boards.
 - **update:** Migrated Pro Features page from Vue to React with enhanced UI.
