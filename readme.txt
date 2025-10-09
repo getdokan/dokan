@@ -3,11 +3,11 @@ Contributors: tareq1988, dokaninc, wedevs, nizamuddinbabu
 Donate Link: https://dokan.co/wordpress/pricing/
 Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivendor, multivendor marketplace
 Requires at least: 6.6
-Tested up to: 6.8.2
+Tested up to: 6.8.3
 WC requires at least: 8.5.0
-WC tested up to: 10.2.1
+WC tested up to: 10.2.2
 Requires PHP: 7.4
-Stable tag: 4.1.0
+Stable tag: 4.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -349,6 +349,10 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v4.1.1 ( Oct 09, 2025 ) =
+- **update:** Added method to retrieve vendor earnings excluding admin subsidy.
+- **update:** Admin gateway fee calculation now checks an order-level meta value before using the previous fallback logic.
+
 = v4.1.0 ( Sep 30, 2025 ) =
 - **feat:** New React-based Admin Dashboard with enhanced metrics and rank boards.
 - **update:** Migrated Pro Features page from Vue to React with enhanced UI.
@@ -366,9 +370,3 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 = v4.0.7 ( Sep 01, 2025 ) =
 - **fix:** Enhanced security controls for vendor account credentials management.
-
-= v4.0.6 ( Aug 29, 2025 ) =
-- **update:** Added translation support for dashboard analytics report scripts to improve internationalization (i18n).
-- **fix:** Resolved an issue in the AdminNotice Vue component by applying the Mixin utility for improved functionality.
-- **fix:** Added async search in store category in vendor edit.
-- **fix:** Admin not receiving withdrawal request email notifications.
