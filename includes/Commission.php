@@ -245,6 +245,46 @@ class Commission {
         return apply_filters( 'dokan_get_earning_by_order', $earning_or_commission, $order, $context );
     }
 
+    /*
+     * Get vendor earning sub-total
+     *
+     * @param int|WC_Order $order Order.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return float|int
+     */
+    public function get_vendor_earning_subtotal_by_order( $order ) {
+        if ( is_numeric( $order ) ) {
+            $order = wc_get_order( $order );
+        }
+
+        if ( ! $order ) {
+            return new WP_Error( 'invalid_order', __( 'Order not found', 'dokan-lite' ), [ 'status' => 404 ] );
+        }
+
+        if ( $order->get_meta( 'has_sub_order' ) ) {
+            return null;
+        }
+
+        try {
+            $order_commission = dokan_get_container()->get( OrderCommission::class );
+            $order_commission->set_order( $order );
+            $order_commission->calculate();
+        } catch ( \Exception $exception ) {
+            return new WP_Error( 'commission_calculation_failed', __( 'Commission calculation failed', 'dokan-lite' ), [ 'status' => 500 ] );
+        }
+        $earning = $order_commission->get_vendor_earning_subtotal();
+
+        /**
+         * Vendor earning without subsidy for a given order.
+         *
+         * @param float    $earning Calculated earning (without subsidy).
+         * @param WC_Order $order   Order object.
+         */
+        return apply_filters( 'dokan_get_vendor_earning_subtotal_by_order', $earning, $order );
+    }
+
     /**
      * Validate commission rate
      *
