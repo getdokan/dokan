@@ -126,5 +126,6 @@ class Menu {
         $has_new_version = Helper::dokan_has_new_version();
         include DOKAN_DIR . '/templates/admin-header.php';
         echo '<div class="wrap"><div id="dokan-vue-admin"></div></div>';
+        echo '<div id="dokan-admin-switching" class="dokan-layout dokan-admin-page-body"></div>';
     }
 }

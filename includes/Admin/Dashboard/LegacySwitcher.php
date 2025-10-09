@@ -108,7 +108,7 @@ class LegacySwitcher implements Hookable {
         // Check if the legacy option exists and remove it.
         $legacy_dashboard_page = get_option( 'dokan_legacy_dashboard_page', false );
         if ( $legacy_dashboard_page ) {
-            // This removes the old option from the database as we've migrated to transients
+            // This removes the old option from the database as we've migrated to transients.
             delete_option( 'dokan_legacy_dashboard_page' );
         }
 

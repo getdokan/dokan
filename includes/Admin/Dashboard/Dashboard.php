@@ -28,6 +28,15 @@ class Dashboard implements Hookable {
     protected string $setup_guide_key = 'dokan-setup-guide-banner';
 
     /**
+     * Admin switching script key.
+     *
+     * @SINCE DOKAN_SINCE
+     *
+     * @var string
+     */
+    protected string $switching_script_key = 'dokan-admin-switching';
+
+    /**
      * Register hooks.
      */
     public function register_hooks(): void {
@@ -120,6 +129,7 @@ class Dashboard implements Hookable {
     public function render_dashboard_page(): void {
         ob_start();
         echo '<div class="wrap"><div id="dokan-admin-dashboard" class="dokan-layout">' . esc_html__( 'Loading...', 'dokan-lite' ) . '</div></div>';
+        echo '<div id="dokan-admin-switching" class="dokan-layout"></div>';
         echo ob_get_clean();
     }
 
@@ -254,6 +264,7 @@ class Dashboard implements Hookable {
             $this->get_pages(), fn( $carry, $page ) => array_merge( $carry, $page->scripts() ), [
                 $this->script_key,
                 $this->setup_guide_key,
+                $this->switching_script_key,
             ]
         );
     }
@@ -270,6 +281,7 @@ class Dashboard implements Hookable {
             $this->get_pages(), fn( $carry, $page ) => array_merge( $carry, $page->styles() ), [
                 $this->script_key,
                 $this->setup_guide_key,
+                $this->switching_script_key,
             ]
         );
     }
@@ -287,6 +299,9 @@ class Dashboard implements Hookable {
 
         // Register the setup guide scripts.
         $this->register_setup_guide_scripts();
+
+        // Register the admin switching scripts.
+        $this->register_admin_switching_scripts();
 
         // Register all other scripts.
         foreach ( $this->get_pages() as $page ) {
@@ -382,6 +397,54 @@ class Dashboard implements Hookable {
                     'asset_url'                      => DOKAN_PLUGIN_ASSEST,
                     'setup_guide_url'                => admin_url( 'admin.php?page=dokan-dashboard#/setup' ),
                     'is_setup_guide_steps_completed' => get_option( 'dokan_admin_setup_guide_steps_completed', false ),
+                ]
+            );
+        }
+    }
+
+    /**
+     * Register the admin switching scripts.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    protected function register_admin_switching_scripts() {
+        $admin_switching_file = DOKAN_DIR . '/assets/js/dokan-admin-switching.asset.php';
+        if ( file_exists( $admin_switching_file ) ) {
+            $switching_script = require $admin_switching_file;
+            $dependencies     = $switching_script['dependencies'] ?? [];
+
+            $dependencies[]   = 'dokan-react-components';
+            $dependencies[]   = 'dokan-react-frontend';
+            $version          = $switching_script['version'] ?? '';
+
+            wp_register_script(
+                $this->switching_script_key,
+                DOKAN_PLUGIN_ASSEST . '/js/dokan-admin-switching.js',
+                $dependencies,
+                $version,
+                true
+            );
+
+            wp_register_style(
+                $this->switching_script_key,
+                DOKAN_PLUGIN_ASSEST . '/js/dokan-admin-switching.css',
+                [],
+                $version
+            );
+
+            wp_set_script_translations(
+                $this->switching_script_key,
+                'dokan-lite'
+            );
+
+            wp_localize_script(
+                $this->switching_script_key,
+                'dokanAdminSwitching',
+                [
+                    'nonce'     => wp_create_nonce( 'dokan_switch_admin_panel' ),
+                    'admin_url' => admin_url(),
                 ]
             );
         }
