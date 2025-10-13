@@ -30,8 +30,37 @@ class LegacySwitcher implements Hookable {
      * @return void
      */
     public function register_hooks(): void {
-        add_action( 'admin_menu', [ $this, 'clear_admin_submenu_title' ], 20 );
+        add_action( 'admin_menu', [ $this, 'clear_admin_submenu_title' ], 30 );
+        add_action( 'admin_menu', [ $this, 'handle_dokan_admin_submenu' ], 20 );
         add_action( 'admin_init', [ $this, 'handle_dashboard_redirect' ] );
+    }
+
+    /**
+     * Clear the Dokan submenu title.
+     *
+     * This method clears the title of the Dokan submenu to prevent it from displaying
+     * in the admin menu. It is useful for cases where you want to hide the submenu title
+     * but still keep the submenu item accessible.
+     *
+     * @since 4.1.0
+     *
+     * @return void
+     */
+    public function clear_admin_submenu_title(): void {
+        global $submenu;
+
+        $legacy   = get_transient( 'dokan_legacy_dashboard_page' );
+        $position = (int) $legacy;
+
+        // @codingStandardsIgnoreStart
+        if ( isset( $submenu['dokan'][ $position ][0] ) ) {
+            $submenu['dokan'][ $position ][0] = '';
+        }
+
+        if ( ! $legacy ) {
+            $submenu['dokan'][0][2] = 'admin.php?page=dokan-dashboard';
+        }
+        // @codingStandardsIgnoreEnd
     }
 
     /**
@@ -41,7 +70,7 @@ class LegacySwitcher implements Hookable {
      *
      * @return void
      */
-    public function clear_admin_submenu_title(): void {
+    public function handle_dokan_admin_submenu(): void {
         global $submenu;
 
         // Check if the submenu exists.
@@ -52,8 +81,14 @@ class LegacySwitcher implements Hookable {
         // Filter the submenu items based on legacy dashboard preference.
         $filtered = array_reduce(
             $submenu['dokan'], function ( $filtered, $menu_item ) {
-				$title = $menu_item[0];
-				$is_legacy = get_transient( 'dokan_legacy_' . sanitize_title_with_dashes( $title ) . '_page' );
+				$title = sanitize_title_with_dashes( $menu_item[0] );
+				$is_legacy = get_transient( 'dokan_legacy_' . $title . '_page' );
+
+                // Keep the dashboard menu item.
+                if ( 'dashboard' === $title ) {
+                    $filtered[] = $menu_item;
+                    return $filtered;
+                }
 
                 // Check if the menu item for handle the admin legacy page switching.
 				if ( isset( $menu_item[2] ) && strpos( $menu_item[2], 'dokan-dashboard' ) !== false ) {
@@ -67,6 +102,8 @@ class LegacySwitcher implements Hookable {
 				return $filtered;
 			}, []
         );
+
+        error_log( 'Keeping dashboard menu item: ' . print_r( $filtered, true ) );
 
         $submenu['dokan'] = array_values( $filtered ); // phpcs:ignore
     }
@@ -100,7 +137,10 @@ class LegacySwitcher implements Hookable {
             set_transient( $legacy_transient_key, $new_legacy_state, $this->transient_expiration );
         }
 
-        $page_slug    = $new_legacy_state ? 'dokan' : 'dokan-dashboard';
+        // Redirect to the new admin page, if needed.
+        $page_slug = $new_legacy_state ? 'dokan' : 'dokan-dashboard';
+        $page_slug = 'vendors' !== $legacy_key ? $page_slug : 'dokan';
+
         $endpoint     = str_replace( 'dashboard', '', $legacy_key ); // Remove 'dashboard' from the endpoint as the default endpoint.
         $redirect_url = add_query_arg( [ 'page' => $page_slug ], admin_url( 'admin.php' ) ) . '#/' . $endpoint;
 

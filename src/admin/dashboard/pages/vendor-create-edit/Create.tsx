@@ -107,7 +107,7 @@ function Create( props: any ) {
     }, [] );
 
     return (
-        <Card className="p-6 border-none">
+        <Card className="py-6 border-none">
             <div>
                 { /*Back to vendors list*/ }
                 <div>

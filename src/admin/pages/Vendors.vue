@@ -263,8 +263,11 @@ export default {
 
     methods: {
         addNew() {
-            // this.loadAddVendor = true;
-            window.open( `${dokan.urls.adminRoot}admin.php?page=dokan-dashboard#/vendors/create`, '_self' );
+            if ( dokan.is_vendor_legacy_page ) {
+                this.loadAddVendor = true;
+            } else {
+                window.open( `${dokan.urls.adminRoot}admin.php?page=dokan-dashboard#/vendors/create`, '_self' );
+            }
         },
         updateVendorComponent (rerender=false) {
             if (rerender) {
@@ -395,11 +398,16 @@ export default {
         },
 
         vendorViewUrl(id) {
-            return `${dokan.urls.adminRoot}admin.php?page=dokan-dashboard#/vendors/${id}`;
+            const pageSlug = dokan.is_vendor_legacy_page ? 'dokan' : 'dokan-dashboard';
+            return `${dokan.urls.adminRoot}admin.php?page=${pageSlug}#/vendors/${id}`;
         },
 
         vendorEditUrl(id) {
-            return `${dokan.urls.adminRoot}admin.php?page=dokan-dashboard#/vendors/edit/${id}`;
+            const isLegacyPage = dokan.is_vendor_legacy_page;
+            const pageSlug = isLegacyPage ? 'dokan' : 'dokan-dashboard';
+            const endUrl = isLegacyPage ? `${id}?edit=true` : `edit/${id}`;
+
+            return `${dokan.urls.adminRoot}admin.php?page=${pageSlug}#/vendors/${endUrl}`;
         },
 
         productUrl(id) {
