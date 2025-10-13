@@ -216,16 +216,8 @@ class Dashboard implements Hookable {
         }
 
         $settings = [
-            'nonce'         => wp_create_nonce( 'dokan_admin_dashboard' ),
-            'header_info'   => apply_filters( 'dokan_admin_setup_guides_header_info', $header_info ),
-            'dashboard_url' => add_query_arg(
-                [
-                    'dokan_admin_switching_nonce' => wp_create_nonce( 'dokan_switch_admin_panel' ),
-                    'dokan_action'                => 'switch_admin_panel',
-                    'legacy_key'                  => 'dashboard',
-                ],
-                admin_url()
-            ),
+            'nonce'       => wp_create_nonce( 'dokan_admin_dashboard' ),
+            'header_info' => apply_filters( 'dokan_admin_setup_guides_header_info', $header_info ),
         ];
 
         foreach ( $this->get_pages() as $page ) {

@@ -1,4 +1,4 @@
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { addQueryArgs } from '@wordpress/url';
 import { useEffect, useState } from '@wordpress/element';
 
@@ -14,7 +14,7 @@ const PanelSwitch = () => {
     const supportedKeys = wp.hooks.applyFilters(
         // Define an array with a filter hook for supported URL keys.
         'dokan_admin_panel_switch_supported_keys',
-        [ 'dashboard', 'withdraw', 'vendors' ]
+        [ 'dashboard', 'vendors' ]
     );
 
     // Get the current URL hash path segments.
@@ -26,130 +26,58 @@ const PanelSwitch = () => {
         return pathWithoutQuery.split( '/' ).filter( Boolean );
     };
 
-    // Get localized data.
-    const { nonce, admin_url } = dokanAdminSwitching || {};
-
-    // window.addEventListener( 'hashchange', () => {
-    //     const urlSegments = getHashPathSegments();
-    //     console.log( urlSegments, '::::::::::::::::urlSegments' );
-    //
-    //     if ( 'vendors' === urlSegments[ 0 ] && urlSegments.length < 2 ) {
-    //         setShouldRender( false );
-    //     } else {
-    //         setShouldRender( true );
-    //     }
-    // } );
-
     useEffect( () => {
-        const checkShouldRender = () => {
+        // Check if the current URL is supported and has the correct hash path.
+        const checkAndUpdate = () => {
             const urlSegments = getHashPathSegments();
-
-            if ( 'vendors' === urlSegments[ 0 ] && urlSegments.length < 2 ) {
-                setShouldRender( false );
-            } else {
-                setShouldRender( true );
-            }
+            setShouldRender(
+                ! ( 'vendors' === urlSegments[ 0 ] && urlSegments.length < 2 )
+            );
         };
 
-        // Initial check
-        checkShouldRender();
+        // Initial check.
+        checkAndUpdate();
 
-        // Listen to multiple events for comprehensive URL change detection
-        window.addEventListener( 'hashchange', checkShouldRender );
-        window.addEventListener( 'popstate', checkShouldRender );
-
-        // Polling mechanism to detect Vue.js programmatic navigation
-        let currentHash = window.location.hash;
-        const pollInterval = setInterval( () => {
-            if ( currentHash !== window.location.hash ) {
-                currentHash = window.location.hash;
-                checkShouldRender();
-            }
-        }, 100 ); // Check every 100ms
-
-        // MutationObserver to detect DOM changes that might indicate route changes
-        const observer = new MutationObserver( ( mutations ) => {
-            mutations.forEach( ( mutation ) => {
-                if (
-                    mutation.type === 'childList' ||
-                    mutation.type === 'attributes'
-                ) {
-                    const newHash = window.location.hash;
-                    if ( currentHash !== newHash ) {
-                        currentHash = newHash;
-                        checkShouldRender();
-                    }
-                }
-            } );
-        } );
-
-        // Observe changes in the main Vue app container
-        const vueContainer = document.getElementById( 'dokan-vue-admin' );
-        if ( vueContainer ) {
-            observer.observe( vueContainer, {
-                childList: true,
-                subtree: true,
-                attributes: true,
-                attributeFilter: [ 'class', 'id' ]
-            } );
-        }
-
-        return () => {
-            window.removeEventListener( 'hashchange', checkShouldRender );
-            window.removeEventListener( 'popstate', checkShouldRender );
-            clearInterval( pollInterval );
-            observer.disconnect();
-        };
+        // Listen events for comprehensive URL change detection.
+        window.addEventListener( 'hashchange', checkAndUpdate );
+        return () => window.removeEventListener( 'hashchange', checkAndUpdate );
     }, [] );
 
-    // // Extract the base key from hash
-    // // Example: #/vendors/28?edit=true -> vendors
-    // const hashPath = window.location.hash.replace( '#/', '' );
-    // const baseKey = hashPath.split( /[/?]/ )[ 0 ];
-    //
-    // // Check if the current page is supported
-    // const isSupported = supportedKeys.includes( baseKey );
-    //
-    // if ( ! isSupported || ! nonce || ! admin_url ) {
-    //     return null;
-    // }
-
+    // Get the admin switching data from the global variable.
+    const { nonce, admin_url } = dokanAdminSwitching || {};
     const baseUrl = getHashPathSegments()[ 0 ] ?? 'dashboard';
-    if ( ! supportedKeys.includes( baseUrl ) ) {
+    const isSupported = supportedKeys.includes( baseUrl );
+    if ( ! isSupported || ! nonce || ! admin_url ) {
         return null;
     }
 
-    // Get the full hash path (everything after #/)
-    const getFullHashPath = () => {
-        return window.location.hash.replace( '#/', '' );
-    };
-
-    const fullHashPath = getFullHashPath();
-
     // Build the switching URL using addQueryArgs.
     // eslint-disable-next-line @wordpress/no-unused-vars-before-return
-    const switchingUrl =
-        addQueryArgs( admin_url, {
-            dokan_admin_switching_nonce: nonce,
-            dokan_action: 'switch_admin_panel',
-            legacy_key: baseUrl,
-            // page: pageValue,
-        } ) + ( fullHashPath ? `#/${ fullHashPath }` : '' );
+    const switchingUrl = addQueryArgs( admin_url, {
+        dokan_admin_switching_nonce: nonce,
+        dokan_action: 'switch_admin_panel',
+        legacy_key: baseUrl,
+    } );
 
     if ( ! shouldRender ) {
         return null;
     }
 
-    // Determine the page parameter value.
-    // If URL already has 'page=dokan', use 'dokan-dashboard', otherwise use 'dokan'
-    // const urlParams = new URLSearchParams( window.location.search );
-    // const currentPage = urlParams.get( 'page' );
-    // const pageValue = currentPage === 'dokan' ? 'dokan-dashboard' : 'dokan';
-
+    const page = new URLSearchParams( window.location.search ).get( 'page' );
 
     return (
-        <div className="new-dashboard-url pt-4 text-sm font-medium">
-            { __( 'To try Dokan new dashboard, ', 'dokan-lite' ) }
+        <div className="new-dashboard-url pt-8 text-sm font-medium">
+            { page !== 'dokan-dashboard'
+                ? sprintf(
+                      /* translators: %s: The base URL of the current page. For example, "dashboard" for the dashboard page. */
+                      __( 'To try Dokan new %s,', 'dokan-lite' ),
+                      baseUrl
+                  )
+                : sprintf(
+                      /* translators: %s: The base URL of the current page. For example, "dashboard" for the dashboard page. */
+                      __( 'If you want to go back to old %s,', 'dokan-lite' ),
+                      baseUrl
+                  ) }{ ' ' }
             { /* eslint-disable-next-line jsx-a11y/anchor-is-valid */ }
             <a
                 href={ switchingUrl || '#' }
