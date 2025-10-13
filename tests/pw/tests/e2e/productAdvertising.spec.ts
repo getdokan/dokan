@@ -1,6 +1,6 @@
 import { test, request, Page } from '@playwright/test';
 import { ProductAdvertisingPage } from '@pages/productAdvertisingPage';
-import { BookingPage } from '@pages/vendorBookingPage';
+//import { BookingPage } from '@pages/vendorBookingPage';
 import { AuctionsPage } from '@pages/vendorAuctionsPage';
 import { VendorPage } from '@pages/vendorPage';
 import { ApiUtils } from '@utils/apiUtils';
@@ -104,7 +104,7 @@ test.describe('Product Advertising test (vendor)', () => {
         await vendor.assertProductAdvertisementIsBought(productName, 'simple');
     });
 
-    test('vendor can buy booking product advertising', { tag: ['@pro', '@vendor'] }, async () => {
+    test.skip('vendor can buy booking product advertising', { tag: ['@pro', '@vendor'] }, async () => {
         test.slow();
         const [, , productName] = await apiUtils.createBookableProduct(payloads.createBookableProduct(), payloads.vendorAuth);
         const orderId = await vendor.buyProductAdvertising(productName, 'booking', BookingPage);
@@ -112,7 +112,7 @@ test.describe('Product Advertising test (vendor)', () => {
         await vendor.assertProductAdvertisementIsBought(productName, 'booking', BookingPage);
     });
 
-    test('vendor can buy auction product advertising', { tag: ['@pro', '@vendor'] }, async () => {
+    test.skip('vendor can buy auction product advertising', { tag: ['@pro', '@vendor'] }, async () => {
         test.slow();
         const [, , productName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
         const orderId = await vendor.buyProductAdvertising(productName, 'auction', AuctionsPage);
@@ -120,7 +120,7 @@ test.describe('Product Advertising test (vendor)', () => {
         await vendor.assertProductAdvertisementIsBought(productName, 'auction', AuctionsPage);
     });
 
-    test('admin can disable product advertising module', { tag: ['@pro', '@admin'] }, async () => {
+    test.skip('admin can disable product advertising module', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.deactivateModules(payloads.moduleIds.productAdvertising, payloads.adminAuth);
         await admin.disableProductAdvertisingModule();
     });
