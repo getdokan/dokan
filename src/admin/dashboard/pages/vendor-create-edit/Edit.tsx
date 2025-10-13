@@ -177,7 +177,7 @@ function Edit( props ) {
     }, [ isDirty, saving ] );
 
     return (
-        <Card className="p-6 border-none">
+        <Card className="py-6 border-none">
             <div>
                 { /*Back to vendors list*/ }
                 <div className="flex flex-row justify-start">
