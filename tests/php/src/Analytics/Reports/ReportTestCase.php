@@ -2,7 +2,9 @@
 
 namespace WeDevs\Dokan\Test\Analytics\Reports;
 
+use Mockery;
 use WeDevs\Dokan\Commission;
+use WeDevs\Dokan\Commission\OrderCommission;
 use WeDevs\Dokan\Test\DokanTestCase;
 
 /**
@@ -97,13 +99,16 @@ abstract class ReportTestCase extends DokanTestCase {
     }
 
     public static function get_dokan_stats_data() {
+        $vendor_earning = random_int( 5, 10 );
+        $admin_earning = random_int( 5, 10 );
+
         return [
             [
 				[
-					'vendor_earning' => random_int( 5, 10 ),
+					'vendor_earning' => $vendor_earning,
 					// 'vendor_gateway_fee' => random_int( 5, 10 ),
 					// 'vendor_discount' => random_int( 5, 10 ),
-					'admin_commission' => random_int( 5, 10 ),
+					'admin_commission' => $admin_earning,
 					// 'admin_gateway_fee' => random_int( 5, 10 ),
 					// 'admin_discount' => random_int( 5, 10 ),
 					// 'admin_subsidy' => random_int( 5, 10 ),
@@ -115,5 +120,12 @@ abstract class ReportTestCase extends DokanTestCase {
     public function tear_down() {
         dokan()->get_container()->extend( 'commission' )->setConcrete( new Commission() );
         parent::tear_down();
+    }
+
+    protected function set_mock_commission( $vendor_earning, $admin_earning ) {
+        $mock_commission = Mockery::mock( OrderCommission::class . '[get_vendor_earning, get_admin_commission]' );
+        $mock_commission->shouldReceive( 'get_vendor_earning' )->andReturn( $vendor_earning );
+        $mock_commission->shouldReceive( 'get_admin_commission' )->andReturn( $admin_earning );
+        dokan_get_container()->extend( OrderCommission::class )->setConcrete( $mock_commission );
     }
 }

@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\DependencyManagement\Providers;
 
 use WeDevs\Dokan\Admin\Dashboard\Dashboard;
+use WeDevs\Dokan\Admin\Dashboard\LegacySwitcher;
 use WeDevs\Dokan\Admin\Dashboard\Pages\Modules;
 use WeDevs\Dokan\Admin\Dashboard\Pages\ProFeatures;
 use WeDevs\Dokan\Admin\Dashboard\Pages\SetupGuide;
@@ -30,6 +31,7 @@ class AdminDashboardServiceProvider extends BaseServiceProvider {
      */
     protected $services = [
         Dashboard::class,
+        LegacySwitcher::class,
         Modules::class,
         Status::class,
         ProFeatures::class,

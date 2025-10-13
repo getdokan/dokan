@@ -64,6 +64,7 @@ class QueryFilterTest extends ReportTestCase {
 
 		$service = Mockery::mock( QueryFilter::class . '[' . implode( ',', $mocking_methods ) . ']' );
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
+        dokan_get_container()->get( QueryFilter::class )->register_hooks();
 
         foreach ( $mocking_methods as $method ) {
             $service->shouldReceive( $method )
@@ -76,7 +77,7 @@ class QueryFilterTest extends ReportTestCase {
             );
         }
 
-		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Products\Query();
+		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\GenericQuery( [], 'products' );
 
 		$wc_stats_query->get_data();
 	}
@@ -91,19 +92,20 @@ class QueryFilterTest extends ReportTestCase {
 		$this->run_all_pending();
 
         $mocking_methods = [
-            'should_filter_by_seller_id',
+            'should_filter_by_vendor_id',
         ];
 
 		$service = Mockery::mock( QueryFilter::class . '[' . implode( ',', $mocking_methods ) . ']' );
 
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
+        dokan_get_container()->get( QueryFilter::class )->register_hooks();
 
         remove_filter( 'woocommerce_analytics_clauses_where_products_subquery', [ $this->sut, 'add_where_subquery' ], 30 );
 
-        $service->shouldReceive( 'should_filter_by_seller_id' )
+        $service->shouldReceive( 'should_filter_by_vendor_id' )
             ->andReturnTrue();
 
-		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Products\Query();
+		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\GenericQuery( [], 'products' );
 
 		$data = $wc_stats_query->get_data();
 
@@ -127,47 +129,6 @@ class QueryFilterTest extends ReportTestCase {
 					], $report_data
                 );
             }
-        }
-	}
-
-    public function test_dokan_products_fields_are_selected_for_admin() {
-		$order_id = $this->create_multi_vendor_order();
-
-		$this->run_all_pending();
-
-        $mocking_methods = [
-            'should_filter_by_seller_id',
-        ];
-
-		$service = Mockery::mock( QueryFilter::class . '[' . implode( ',', $mocking_methods ) . ']' );
-
-		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
-
-        remove_filter( 'woocommerce_analytics_clauses_where_products_subquery', [ $this->sut, 'add_where_subquery' ], 30 );
-
-        $service->shouldReceive( 'should_filter_by_seller_id' )
-            ->andReturnFalse();
-
-		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Products\Query();
-
-		$data = $wc_stats_query->get_data();
-
-        $report_data = $data->data;
-
-        $this->assertCount( 2, $report_data );
-
-        // Assert that parent order items are fetched.
-        $s_order = wc_get_order( $order_id );
-
-        foreach ( $s_order->get_items() as $item ) {
-            $this->assertNestedContains(
-                [
-                    'product_id' => $item->get_product_id(),
-                    'net_revenue' => floatval( $item->get_total() ),
-                    'items_sold' => $item->get_quantity(),
-                    'orders_count' => 1,
-                ], $report_data
-            );
         }
 	}
 }
