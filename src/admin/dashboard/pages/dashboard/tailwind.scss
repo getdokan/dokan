@@ -1,0 +1,106 @@
+@use '../../../../base-tailwind';
+@config './tailwind.config.js';
+
+// Hide the notice list.
+#dokan__notice-list {
+  display: none;
+}
+
+// DataViews styling for dashboard tables
+#dokan-top-performing-vendors,
+#dokan-most-reported-vendors,
+#dokan-most-reviewed-products {
+  &.dokan-dashboard-datatable {
+    .dataviews-wrapper {
+      .dataviews__view-actions {
+        display: none;
+      }
+    }
+
+    .dataviews-view-table-header-button {
+      pointer-events: none;
+      cursor: text;
+
+      &:hover,
+      &:focus,
+      &:active {
+        background: transparent;
+        box-shadow: none;
+        outline: none;
+      }
+    }
+
+    // Hide the dropdown arrow if present
+    .dataviews-view-table-header-button::after {
+      display: none;
+    }
+  }
+
+  .dataviews-view-table__actions-column {
+    .components-button {
+      &:hover {
+        background: transparent;
+      }
+
+      &:focus {
+        box-shadow: none;
+      }
+    }
+  }
+
+  .dataviews-view-table__row {
+    td {
+      vertical-align: middle;
+    }
+
+    &.is-hovered {
+      background-color: transparent;
+    }
+  }
+
+  table.dataviews-view-table {
+    z-index: 0;
+
+    th {
+      background-color: #f9fafb;
+    }
+
+    td,
+    th {
+      &:first-child {
+        padding-left: 32px;
+      }
+
+      &:last-child {
+        padding-right: 32px;
+      }
+    }
+  }
+}
+
+#dokan-top-performing-vendors {
+  table.dataviews-view-table {
+    th:nth-last-child(-n+3) {
+      text-align: right;
+    }
+  }
+}
+
+#dokan-most-reported-vendors,
+#dokan-most-reviewed-products {
+  table.dataviews-view-table {
+    th:last-child {
+      text-align: right;
+    }
+  }
+}
+
+.dokan-layout {
+  .components-popover__content {
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 0 0 1px #ccc, 0 2px 3px #0000000d, 0 4px 5px #0000000a, 0 12px 12px #00000008, 0 16px 16px #00000005;
+    box-sizing: border-box;
+    width: min-content;
+  }
+}
