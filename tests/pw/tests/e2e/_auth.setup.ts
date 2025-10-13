@@ -78,6 +78,7 @@ setup.describe('add & authenticate users', () => {
         const loginPage = new LoginPage(page);
         await loginPage.login(data.vendor, data.auth.vendorAuthFile);
         const productsPage = new ProductsPage(page);
+        
         const nonce = await productsPage.getProductEditNonce();
         helpers.createEnvVar('PRODUCT_EDIT_NONCE', nonce);
     });

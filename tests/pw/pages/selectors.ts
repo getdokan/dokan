@@ -3891,7 +3891,7 @@ export const selector = {
             // products
             products: {
                 productsDiv: '.dashboard-widget.products',
-                addNewProduct: '//a[contains(normalize-space(.), "Add new product")]',
+                addNewProduct: "//span[@class='dokan-add-product-link']//a[1]",
                 widgetTitle: '.products .widget-title',
                 totalTitle: '//div[@class="dashboard-widget products"]//span[normalize-space()="Total"]',
                 liveTitle: '//div[@class="dashboard-widget products"]//span[normalize-space()="Live"]',

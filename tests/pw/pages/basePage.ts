@@ -589,6 +589,7 @@ export class BasePage {
 
     // get attribute value
     async getAttributeValue(selector: string, attribute: string): Promise<string | null> {
+        await this.waitForSelector(selector);
         return await this.page.getAttribute(selector, attribute);
     }
 
