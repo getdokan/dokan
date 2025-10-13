@@ -1,79 +1,85 @@
-import { test } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { CouponsPage } from '@pages/couponsPage';
+import { ApiUtils } from '@utils/apiUtils';
+import { data } from '@utils/testData';
+import { payloads } from '@utils/payloads';
 
-// Clean up test coupons after ALL tests are completed
-test.afterAll(async ({ browser }) => {
-    const adminContext = await browser.newContext({ 
-        storageState: 'playwright/.auth/adminStorageState.json' 
-    });
-    const page = await adminContext.newPage();
-    const couponsPage = new CouponsPage(page);
+const { PRODUCT_ID } = process.env;
 
-    try {
-        await couponsPage.cleanupTestCoupons();
-    } catch (error) {
-        console.log('Cleanup error (non-critical):', error instanceof Error ? error.message : String(error));
-    } finally {
-        await page.close();
-        await adminContext.close();
-    }
-});
+test.describe('Coupons test', () => {
+    let admin: CouponsPage;
+    let vendor: CouponsPage;
+    let customer: CouponsPage;
+    let aPage: Page, vPage: Page, cPage: Page;
+    let apiUtils: ApiUtils;
+    let marketplaceCouponCode: string;
+    let couponCode: string;
 
-test.describe('Coupons Tests', () => {
+    test.beforeAll(async ({ browser }) => {
+        const adminContext = await browser.newContext(data.auth.adminAuth);
+        aPage = await adminContext.newPage();
+        admin = new CouponsPage(aPage);
 
-    test.describe('Admin Coupon Management', () => {
-        test.use({
-            storageState: 'playwright/.auth/adminStorageState.json'
-        });
+        const vendorContext = await browser.newContext(data.auth.vendorAuth);
+        vPage = await vendorContext.newPage();
+        vendor = new CouponsPage(vPage);
 
-        test('Admin Can Add Marketplace Coupon @lite', async ({ page }) => {
-            const couponsPage = new CouponsPage(page);
-            
-            await couponsPage.createMarketplaceCoupon();
-            await couponsPage.verifyMarketplaceCouponFormValues();
-            await couponsPage.verifyMarketplaceCouponCreated();
-        });
+        const customerContext = await browser.newContext(data.auth.customerAuth);
+        cPage = await customerContext.newPage();
+        customer = new CouponsPage(cPage);
 
-        test('Admin Can View Created Coupon @lite', async ({ page }) => {
-            const couponsPage = new CouponsPage(page);
-            
-            await couponsPage.searchAndViewCoupon('test_pw_marketplace_coupon_1');
-        });
+        apiUtils = new ApiUtils(await request.newContext());
+        [, , marketplaceCouponCode] = await apiUtils.createMarketPlaceCoupon(payloads.createMarketPlaceCoupon(), payloads.adminAuth);
+        [, , couponCode] = await apiUtils.createCoupon([PRODUCT_ID], payloads.createCoupon(), payloads.vendorAuth);
     });
 
-    test.describe('Vendor Coupon Management', () => {
-        test.use({
-            storageState: 'playwright/.auth/vendorStorageState.json'
-        });
-
-        test('Vendor Can View Marketplace Coupons @lite', async ({ page }) => {
-            const couponsPage = new CouponsPage(page);
-            
-            await couponsPage.viewMarketplaceCoupons();
-        });
-
-        test('Vendor Can Add Coupon @lite', async ({ page }) => {
-            const couponsPage = new CouponsPage(page);
-            
-            await couponsPage.createVendorCoupon();
-        });
+    test.afterAll(async () => {
+        await aPage.close();
+        await vPage.close();
+        await cPage.close();
+        await apiUtils.dispose();
     });
 
-    test.describe('Customer Coupon Usage', () => {
-        test.use({
-            storageState: 'playwright/.auth/customerStorageState.json'
-        });
+    test('admin can add marketplace coupon old spec', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.addMarketplaceCoupon({ ...data.coupon, title: data.coupon.couponTitle() });
+    });
 
-        test('Customer Can Buy Product with Marketplace Coupon @lite', async ({ page }) => {
-            const couponsPage = new CouponsPage(page);
-            
-            await couponsPage.buyProductWithCoupon(couponsPage.testData.product.name, 'test_pw_marketplace_coupon_1');
-        });
+    //vendor
 
-        test('Customer Can Buy Product with Vendor Coupon @lite', async ({ page }) => {
-            const couponsPage = new CouponsPage(page);
-            
-            await couponsPage.buyProductWithCoupon(couponsPage.testData.product.name, 'test_pw_vendor_coupon_2');
-        });
+    test('vendor can view coupons menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+        await vendor.vendorCouponsRenderProperly();
+    });
+
+    test('vendor can view marketPlace coupons', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+        await vendor.viewMarketPlaceCoupons(marketplaceCouponCode);
+    });
+
+    test('vendor can add coupon', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addCoupon({ ...data.coupon, title: data.coupon.couponTitle() });
+    });
+
+    test('vendor can edit coupon', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.editCoupon({ ...data.coupon, title: couponCode });
+    });
+
+    test('vendor can delete coupon', { tag: ['@pro', '@vendor'] }, async () => {
+        const [, , couponCode] = await apiUtils.createCoupon([PRODUCT_ID], payloads.createCoupon(), payloads.vendorAuth);
+        await vendor.deleteCoupon(couponCode);
+    });
+
+    //customer
+
+    test('customer can view coupon on single store', { tag: ['@pro', '@customer'] }, async () => {
+        await customer.viewStoreCoupon(data.predefined.vendorStores.vendor1, couponCode);
+    });
+
+    test('customer can apply coupon', { tag: ['@pro', '@customer'] }, async ({ page }) => {
+        const customer = new CouponsPage(page); // Used guest customer to avoid conflict with other tests
+        await customer.applyCoupon(data.predefined.simpleProduct.product1.name, data.predefined.coupon.couponCode);
+    });
+
+    test('customer can buy product with coupon', { tag: ['@pro', '@customer'] }, async () => {
+        test.slow();
+        await customer.buyProductWithCoupon(data.predefined.simpleProduct.product1.name, data.predefined.coupon.couponCode);
     });
 });

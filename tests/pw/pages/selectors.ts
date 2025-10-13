@@ -3434,7 +3434,7 @@ export const selector = {
                 usageLimitPerCoupon: '//input[@id="usage_limit"]',
                 usageLimitPerUser: '#usage_limit_per_user',
 
-                publish: '#publish',
+                publish: "//input[@id='publish']",
                 publishSuccessMessage: '#message.notice-success p',
                 publishSuccess: '//p[normalize-space()="Coupon updated."]',
             },
