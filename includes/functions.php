@@ -4018,6 +4018,8 @@ function dokan_get_vendor_store_banner_height() {
  *
  * @since 3.3.3
  *
+ * @deprecated DOKAN_SINCE
+ *
  * @param bool $boolean
  *
  * @return array|bool
@@ -4045,6 +4047,7 @@ function dokan_get_recaptcha_site_and_secret_keys( $boolean = false ) {
  * Handle google reCaptcha validation request.
  *
  * @since 3.3.6
+ * @deprecated DOKAN_SINCE
  *
  * @param string $action
  * @param string $token

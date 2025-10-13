@@ -445,12 +445,6 @@ class Assets {
                 'src'  => $asset_url . '/vendors/date-range-picker/daterangepicker.min.js',
                 'deps' => [ 'jquery', 'moment', 'dokan-util-helper' ],
             ],
-            'dokan-google-recaptcha'    => [
-                'src'       => 'https://www.google.com/recaptcha/api.js?render=' . dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' ),
-                'deps'      => [ 'dokan-util-helper' ],
-                'in_footer' => false,
-            ],
-
             // customize scripts
             'customize-base'            => [
                 'src'  => site_url( 'wp-includes/js/customize-base.js' ),
@@ -848,17 +842,9 @@ class Assets {
             wp_enqueue_script( 'dokan-vendor-address' );
         }
 
-        // Scripts for contact form widget google recaptcha
+        // Scripts for contact form captcha (provider managed)
         if ( dokan_is_store_page() || is_product() ) {
-            // Checks if recaptcha site key and secret key exist
-            if ( dokan_get_recaptcha_site_and_secret_keys( true ) ) {
-                $recaptcha_keys = dokan_get_recaptcha_site_and_secret_keys();
-
-                wp_enqueue_script( 'dokan-google-recaptcha' );
-
-                // Localized script for recaptcha
-                wp_localize_script( 'dokan-google-recaptcha', 'dokan_google_recaptcha', [ 'recaptcha_sitekey' => $recaptcha_keys['site_key'] ] );
-            }
+            dokan_get_container()->get( \WeDevs\Dokan\Captcha\Manager::class )->register_assets();
         }
 
         // localized form validate script
