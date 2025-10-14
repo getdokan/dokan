@@ -1,12 +1,20 @@
 import { Button } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import { Vendor } from '@dokan/definitions/dokan-vendors';
+import { useNavigate } from "react-router-dom";
 
 export interface HeaderNavigationProps {
     vendor: Vendor;
 }
 const HeaderNavigation = ( { vendor }: HeaderNavigationProps ) => {
-    const handleBackToList = () => {};
+    let navigate = useNavigate();
+    const handleBackToList = () => {
+        window.open(
+            // @ts-ignore
+            `${ window.dokanAdminDashboard.urls.adminRoot }admin.php?page=dokan#/vendors`,
+            '_self'
+        );
+    };
 
     const visitStore = () => {
         if ( vendor ) {
@@ -40,7 +48,7 @@ const HeaderNavigation = ( { vendor }: HeaderNavigationProps ) => {
                 </svg>
                 { __( 'Vendors List', 'dokan-lite' ) }
             </Button>
-            <div className="flex justify-between w-full">
+            <div className="flex flex-col md:!flex-row gap-4 md:!gap-0 justify-between w-full">
                 <h2 className="text-2xl font-semibold text-[#25252D]">
                     { __( 'Vendor Details', 'dokan-lite' ) }
                 </h2>
@@ -82,7 +90,9 @@ const HeaderNavigation = ( { vendor }: HeaderNavigationProps ) => {
                     <Button
                         className="dokan-btn-secondary"
                         color="primary"
-                        onClick={ () => window.history.back() }
+                        onClick={ () =>
+                            navigate( `/vendors/edit/${ vendor.id }` )
+                        }
                     >
                         <svg
                             width="17"

@@ -51,6 +51,7 @@ class UserSwitch {
      */
     public function add_localize_data( $localize_data ) {
         $localize_data['is_vendor_switching_enabled'] = $this->is_feature_active();
+        $localize_data['is_vendor_legacy_page']       = get_transient( 'dokan_legacy_vendors_page' );
 
         return $localize_data;
     }

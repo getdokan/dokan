@@ -8,7 +8,7 @@ interface SectionHeadingProps {
 const SectionHeading = ( { title, className = '' }: SectionHeadingProps ) => (
     <h2
         className={ twMerge(
-            'text-lg font-medium text-gray-900 mb-4',
+            'text-lg font-medium text-zinc-500 mb-4',
             className
         ) }
     >
