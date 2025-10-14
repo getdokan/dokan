@@ -143,6 +143,8 @@ class Dashboard implements Hookable {
      * @return array<string, mixed>
      */
     public function settings(): array {
+        // TODO: We are using dokan legacy dashboard URL here for legacy `Import Dummy Data` & `Basic & Fundamental` page.
+        // We will remove this code after getting the new `Import Dummy Data` & `Basic & Fundamental` page.
         $dashboard_url = admin_url( 'admin.php?page=dokan' );
         $header_info   = [
             'lite_version'    => DOKAN_PLUGIN_VERSION,
