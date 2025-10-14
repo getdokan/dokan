@@ -124,7 +124,7 @@ class LegacySwitcher implements Hookable {
             return;
         }
 
-        $legacy_key        = sanitize_key( wp_unslash( $_GET['legacy_key'] ?? '' ) );
+        $legacy_key        = sanitize_key( wp_unslash( $_GET['legacy_key'] ?? 'dashboard' ) );
         $current_is_legacy = get_transient( 'dokan_legacy_' . $legacy_key . '_page' );
         $new_legacy_state  = ! $current_is_legacy;
 
