@@ -98,6 +98,12 @@ class LegacyTransformer implements TransformerInterface {
             // Get value from pages using new key path.
             $value = SettingsMapper::get_value_by_path( $pages_values, $new_key, null );
 
+            // Allow 3rd-parties to transform the value before mapping (e.g., invert booleans).
+            if ( function_exists( 'apply_filters' ) ) {
+                $value = apply_filters( 'dokan_settings_mapper_transform_value', $value, 'new_to_old', $old_key, $new_key, $pages_values, $result );
+                $value = apply_filters( 'dokan_settings_mapper_transform_value_new_to_old', $value, $old_key, $new_key, $pages_values, $result );
+            }
+
             // Only map if value exists (null treated as not set).
             if ( null !== $value ) {
                 if ( ! isset( $result[ $legacy_section ] ) || ! is_array( $result[ $legacy_section ] ) ) {
@@ -105,6 +111,12 @@ class LegacyTransformer implements TransformerInterface {
                 }
                 $result[ $legacy_section ][ $legacy_field ] = $value;
             }
+        }
+
+        // Post-process the whole result to allow adding extra mappings or conditional writes.
+        if ( function_exists( 'apply_filters' ) ) {
+            $result = apply_filters( 'dokan_settings_mapper_after_transform', $result, 'new_to_old', $pages_values );
+            $result = apply_filters( 'dokan_settings_mapper_after_transform_new_to_old', $result, $pages_values );
         }
 
         return $result;
@@ -128,8 +140,20 @@ class LegacyTransformer implements TransformerInterface {
                     continue;
                 }
 
+                // Allow 3rd-parties to transform the value before mapping.
+                if ( function_exists( 'apply_filters' ) ) {
+                    $value = apply_filters( 'dokan_settings_mapper_transform_value', $value, 'old_to_new', $old_key, $new_key, $legacy_values, $result );
+                    $value = apply_filters( 'dokan_settings_mapper_transform_value_old_to_new', $value, $old_key, $new_key, $legacy_values, $result );
+                }
+
                 SettingsMapper::set_value_by_path( $result, $new_key, $value );
             }
+        }
+
+        // Post-process the whole result to allow adding extra mappings or conditional writes.
+        if ( function_exists( 'apply_filters' ) ) {
+            $result = apply_filters( 'dokan_settings_mapper_after_transform', $result, 'old_to_new', $legacy_values );
+            $result = apply_filters( 'dokan_settings_mapper_after_transform_old_to_new', $result, $legacy_values );
         }
 
         return $result;
