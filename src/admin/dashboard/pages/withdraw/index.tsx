@@ -399,7 +399,9 @@ const WithdrawPage = () => {
             callback: async ( items: any[] ) => {
                 await handleBulkAction(
                     'paypal',
-                    items.map( ( item ) => item.id )
+                    items
+                        .filter( ( item ) => 'paypal' === item.method )
+                        .map( ( item ) => item.id )
                 );
             },
         },
