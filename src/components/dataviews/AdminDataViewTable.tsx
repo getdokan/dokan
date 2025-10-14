@@ -208,6 +208,11 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
                                 { ...( tabsWithFilterButton ||
                                     filteredProps.tabs ) }
                                 namespace={ tableNameSpace }
+                                onSelect={ ( tabName ) => {
+                                    filteredProps.tabs?.onSelect?.( tabName );
+                                    filteredProps.selection = [];
+                                    filteredProps.onChangeSelection?.( [] );
+                                } }
                             />
                         ) }
                     { filteredProps.filter &&

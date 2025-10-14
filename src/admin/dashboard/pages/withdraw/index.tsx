@@ -645,7 +645,7 @@ const WithdrawPage = () => {
         const maxAttempts = 60; // Maximum 5 minutes (60 * 5 seconds)
         let attempts = 0;
 
-        const checkStatus = async () => {
+        const checkStatus = async ( resolve ) => {
             try {
                 const statusResponse = await apiFetch( {
                     path: `/dokan/v1/reports/withdraws/export/${ exportId }/status`,
@@ -673,7 +673,13 @@ const WithdrawPage = () => {
                     // Still processing, check again
                     attempts++;
                     if ( attempts < maxAttempts ) {
-                        setTimeout( checkStatus, 5000 ); // Check again in 5 seconds
+                        await new Promise(
+                            ( res ) =>
+                                setTimeout(
+                                    async () => await checkStatus( res ),
+                                    5000
+                                ) // Check again in 5 seconds
+                        );
                     } else {
                         throw new Error( 'Export timeout - please try again' );
                     }
@@ -682,10 +688,14 @@ const WithdrawPage = () => {
                 console.error( 'Error checking export status:', error );
                 alert( __( 'Export failed. Please try again.', 'dokan-lite' ) );
             }
+
+            if ( resolve ) {
+                resolve();
+            }
         };
 
         // Start status checking
-        checkStatus();
+        await checkStatus();
     };
 
     // Handle bulk actions
@@ -961,7 +971,7 @@ const WithdrawPage = () => {
             { /* Data Table */ }
             <DataViews
                 data={ data }
-                namespace="withdraw-data-view"
+                namespace="withdraw-admin-data-view"
                 defaultLayouts={ defaultLayouts }
                 fields={ fields }
                 getItemId={ ( item ) => item.id }
