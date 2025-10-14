@@ -3,8 +3,13 @@ import { useEffect, useState } from '@wordpress/element';
 import getSettings from '../dashboard/settings/getSettings';
 import { Step } from '../dashboard/pages/setup-guide';
 import { __ } from '@wordpress/i18n';
+import { twMerge } from "tailwind-merge";
 
-const AdminSetupBanner = () => {
+interface Props {
+    className?: string;
+}
+
+const AdminSetupBanner = ( props: Props ) => {
     const [ steps, setSteps ] = useState< Step[] >( [] );
 
     if ( dokanSetupGuideBanner?.is_setup_guide_steps_completed ) {
@@ -26,7 +31,10 @@ const AdminSetupBanner = () => {
     return (
         <div
             data-test-id="admin-setup-guide-button"
-            className="bg-white rounded-lg p-5 my-4 mr-[20px]"
+            className={ twMerge(
+                'bg-white rounded-lg p-5 my-4 mr-[10px] md:mr-[20px]',
+                props?.className ?? ''
+            ) }
         >
             <div className="flex items-center flex-wrap gap-y-4 justify-between">
                 <div className="flex items-center flex-wrap gap-6">

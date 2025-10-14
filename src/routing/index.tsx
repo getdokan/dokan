@@ -45,6 +45,7 @@ export function withRouter( Component, capabilities = [] ) {
             replace,
             matches,
             navigation,
+            useParams,
             createSearchParams,
             useSearchParams,
         };

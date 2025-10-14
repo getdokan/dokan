@@ -3,11 +3,11 @@ Contributors: tareq1988, dokaninc, wedevs, nizamuddinbabu
 Donate Link: https://dokan.co/wordpress/pricing/
 Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivendor, multivendor marketplace
 Requires at least: 6.6
-Tested up to: 6.8.2
+Tested up to: 6.8.3
 WC requires at least: 8.5.0
-WC tested up to: 10.1.2
+WC tested up to: 10.2.2
 Requires PHP: 7.4
-Stable tag: 4.0.7
+Stable tag: 4.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -348,45 +348,25 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Product Delivery Schedules
 
 == Changelog ==
+
+= v4.1.1 ( Oct 09, 2025 ) =
+- **update:** Added method to retrieve vendor earnings excluding admin subsidy.
+- **update:** Admin gateway fee calculation now checks an order-level meta value before using the previous fallback logic.
+
+= v4.1.0 ( Sep 30, 2025 ) =
+- **feat:** New React-based Admin Dashboard with enhanced metrics and rank boards.
+- **update:** Migrated Pro Features page from Vue to React with enhanced UI.
+
+= v4.0.9 ( Sep 25, 2025 ) =
+- **update**: Dokan Plugin Top Bar & Notice Left Bar UI.
+- **update**: Order fee now distribute based on order creation if the order is manual order then the added fee of that order will go to seller otherwise it will go to admin. The fee tax will be distributed based on product tax receipt.
+- **fix:** Fix Dashboard and Report page header title and apply filters.
+- **fix:** Conflict with ACF plugin: prevented empty admin notices when Dokan is active.
+
+= v4.0.8 ( Sep 12, 2025 ) =
+- **new:** Added "Chat with us" admin submenu for providing direct access to support chat functionality.
+- **enhance:** Modernize vendor selection with searchable dropdown for better performance.
+- **fix:** Prevent potential errors on additional product sections.
+
 = v4.0.7 ( Sep 01, 2025 ) =
 - **fix:** Enhanced security controls for vendor account credentials management.
-
-= v4.0.6 ( Aug 29, 2025 ) =
-- **update:** Added translation support for dashboard analytics report scripts to improve internationalization (i18n).
-- **fix:** Resolved an issue in the AdminNotice Vue component by applying the Mixin utility for improved functionality.
-- **fix:** Added async search in store category in vendor edit.
-- **fix:** Admin not receiving withdrawal request email notifications.
-
-= v4.0.5 ( Jul 24, 2025 ) =
-
-- **fix:** Improved script loading to ensure compatibility with WooCommerce versions above 10.0.2, preventing potential issues with script dependencies.
-
-= v4.0.4 ( Jul 17, 2025 ) =
-
-- **update:** Admin Notice UI with Modern Design and Improved User Experience.
-- **update:** Enhanced Product Brand Integration with Dedicated Template and Manager Methods.
-- **update:** Enhanced product featured image selection with cropping functionality in the product editor.
-- **fix:** Vendor/store names with special characters (e.g., apostrophes) now display correctly in the vendor dropdown on the admin product edit screen.
-- **fix:** Display correct earning in vendor dashboard product add/edit page for different category.
-- **fix:** Update table header style for mobile display in order details page item list and withdraw approve, pending and cancel list.
-- **fix:** Improved how product inventory information is retrieved, ensuring more accurate and consistent display of stock values.
-- **fix:** Update table header style for mobile display in order details page item list and withdraw approve, pending and cancel list.
-- **fix:** Resolve an issue for "sold individually" option does not save on create or update a product.
-
-= v4.0.3 ( Jul 02, 2025 ) =
-
-- **fix:** Add gradient background style for fa-threads social icon.
-- **fix** Resolved an issue where array access warnings in vendor balance calculation were being triggered.
-- **fix** Resolved an issue where incorrect timestamp on sale price schedule hampering product sales schedule added from vendor dashboard.
-- **fix** Resolved an issue where stock quantity always shows 0 in vendor dashboard product edit screen.
-- **fix** Improved the format of payment methods in the withdrawal settings to ensure they are consistently returned as a zero-based indexed list in the REST API response.
-
-[CHECK THE FULL CHANGELOG](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
-
-== Upgrade Notice ==
-
-= 3.0.0 =
-**Important Update** This update changes code structures for improving performance. Make sure to take backup and read the changlogs first before upgrade process.
-
-= 4.0.0 =
-**Important Update** This update includes major changes that may impact your existing commission settings, email templates, or vendor panel UI updates. Please review the changelog and back up your site before updating to ensure smooth transition.
