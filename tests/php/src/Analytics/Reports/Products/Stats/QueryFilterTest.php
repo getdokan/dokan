@@ -8,6 +8,7 @@ use WeDevs\Dokan\Test\Analytics\Reports\ReportTestCase;
 /**
  * Class OrderStatsTest
  * @group analytics
+ * @group analytics-product-query-filter
  * Unit tests for Order statistics in the Dokan plugin.
  */
 class QueryFilterTest extends ReportTestCase {
@@ -64,6 +65,7 @@ class QueryFilterTest extends ReportTestCase {
 
 		$service = Mockery::mock( QueryFilter::class . '[' . implode( ',', $mocking_methods ) . ']' );
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
+		dokan_get_container()->get( QueryFilter::class )->register_hooks();
 
         foreach ( $mocking_methods as $method ) {
             $service->shouldReceive( $method )
@@ -76,7 +78,7 @@ class QueryFilterTest extends ReportTestCase {
             );
         }
 
-		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Products\Stats\Query();
+		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\GenericQuery( [], 'products-stats' );
 
 		$wc_stats_query->get_data();
 	}
@@ -90,16 +92,17 @@ class QueryFilterTest extends ReportTestCase {
 
 		$this->run_all_pending();
 
-        $filter = Mockery::mock( QueryFilter::class . '[should_filter_by_seller_id]' );
+        $filter = Mockery::mock( QueryFilter::class . '[should_filter_by_vendor_id]' );
 
         dokan_get_container()->extend( QueryFilter::class )->setConcrete( $filter );
+        dokan_get_container()->get( QueryFilter::class )->register_hooks();
 
-        $filter->shouldReceive( 'should_filter_by_seller_id' )
+        $filter->shouldReceive( 'should_filter_by_vendor_id' )
             ->atLeast()
             ->once()
             ->andReturnTrue();
 
-        $orders_query = new \Automattic\WooCommerce\Admin\API\Reports\Products\Stats\Query( [] );
+        $orders_query = new \Automattic\WooCommerce\Admin\API\Reports\GenericQuery( [], 'products-stats' );
 
 		$report_data = $orders_query->get_data();
 
@@ -132,19 +135,20 @@ class QueryFilterTest extends ReportTestCase {
 
 		$this->run_all_pending();
 
-        $filter = Mockery::mock( QueryFilter::class . '[should_filter_by_seller_id]' );
-
-        remove_filter( 'woocommerce_analytics_clauses_where_products_stats_total', [ $this->sut, 'add_where_subquery' ], 30 );
-        remove_filter( 'woocommerce_analytics_clauses_where_products_stats_total', [ $this->sut, 'add_where_subquery' ], 30 );
+        $filter = Mockery::mock( QueryFilter::class . '[should_filter_by_vendor_id]' );
 
         dokan_get_container()->extend( QueryFilter::class )->setConcrete( $filter );
+        dokan_get_container()->get( QueryFilter::class )->register_hooks();
 
-        $filter->shouldReceive( 'should_filter_by_seller_id' )
+        $filter->shouldReceive( 'should_filter_by_vendor_id' )
             ->atLeast()
             ->once()
             ->andReturnFalse();
 
-        $orders_query = new \Automattic\WooCommerce\Admin\API\Reports\Products\Stats\Query( [] );
+        remove_filter( 'woocommerce_analytics_clauses_where_products_stats_interval', [ $this->sut, 'add_where_subquery' ], 30 );
+        remove_filter( 'woocommerce_analytics_clauses_where_products_stats_total', [ $this->sut, 'add_where_subquery' ], 30 );
+
+        $orders_query = new \Automattic\WooCommerce\Admin\API\Reports\GenericQuery( [], 'products-stats' );
 
 		$report_data = $orders_query->get_data();
 
