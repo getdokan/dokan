@@ -13,7 +13,7 @@ const AdminBar = () => {
     return (
         <div
             data-test-id="dokan-dashboard-header"
-            className="w-full bg-white shadow-sm border-b border-gray-200 py-4 px-3 sm:px-6 flex justify-between items-center gap-6 box-border"
+            className="w-full bg-white shadow-sm border-b border-gray-200 py-4 px-3 lg:px-6 flex justify-between items-center gap-6 box-border"
         >
             { /* Logo and version tags */ }
             <div className="w-full flex flex-wrap items-center justify-between">
@@ -56,7 +56,7 @@ const AdminBar = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         href="https://dokan.co/wordpress/upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite"
-                        className="bg-[#7047EB] !text-white py-2.5 px-5 rounded-md flex items-center gap-2 hover:bg-[#A244FF] hover:!text-white focus:!text-white transition-colors duration-200 font-medium no-underline text-[13px]"
+                        className="bg-[#7047EB] !text-white py-2.5 px-5 rounded-md flex items-center gap-2 hover:bg-primary-700 hover:!text-white focus:!text-white transition-colors duration-200 font-medium no-underline text-[13px]"
                     >
                         { __( 'Upgrade', 'dokan-lite' ) }
                         <CrownIcon className={ 'w-5 h-5' } />
