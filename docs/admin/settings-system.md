@@ -230,6 +230,8 @@ If you have your own legacy options that you want bridged to a new page you prov
 - `dokan_settings_mapper_map`: Extend/override the legacy↔new key mapping array.
 - `dokan_settings_element_type_map`: Override the type mapping used by ElementTransformer when creating fields. Signature: ($map, $type, $field_config) and should return an associative array like ['switcher' => 'switch'].
 - `dokan_settings_mapper_report_duplicate_new_keys`: Enable duplicate new-key detection logs during reverse map build. Return true to log `_doing_it_wrong`. Signature: ($report, $new_key, $old_key, $existing_old_key).
+- `dokan_settings_mapper_transform_value`: Filter a single mapped value during conversion. Signature: ($value, $direction, $old_key, $new_key, $source_values, $result_so_far). Direction is one of `new_to_old` or `old_to_new`. Return the transformed value. For convenience, direction-specific variants are also available: `dokan_settings_mapper_transform_value_new_to_old` and `dokan_settings_mapper_transform_value_old_to_new`.
+- `dokan_settings_mapper_after_transform`: Filter the entire converted result after mapping completes. Signature: ($result, $direction, $source_values). For convenience, direction-specific variants are also available: `dokan_settings_mapper_after_transform_new_to_old` and `dokan_settings_mapper_after_transform_old_to_new`.
 - `{hook_key}_populate`: Generic populate filter for a SettingsElement. For pages, `hook_key` usually equals its storage key (for example, `dokan_settings_general_populate`). Use with care to avoid breaking shape.
 
 ### Actions
@@ -241,3 +243,115 @@ If you have your own legacy options that you want bridged to a new page you prov
 - When bridging your own legacy options to a new page, always add mapper entries so both reads and writes flow through the new storage.
 - Take advantage of partial updates: your save payload can include only the fields you need to change.
 - Use the provided PHPUnit tests in `tests/php/src/Admin/Settings` as living examples of mapping and bridging behavior.
+
+
+## Guidelines: Conditional value mapping and callbacks
+The legacy ↔ new conversion layer supports altering values and writing additional target settings during mapping via WordPress filters. This allows you to:
+- Invert or normalize values while mapping between old and new keys.
+- Write multiple target settings when one source setting changes.
+- Implement conditional logic (e.g., multi-select contains a certain option → set or unset another setting).
+
+Two kinds of filters are available:
+- Per-value (simple):
+  - dokan_settings_mapper_transform_value($value, $direction, $old_key, $new_key, $source_values, $result_so_far)
+  - dokan_settings_mapper_transform_value_new_to_old($value, $old_key, $new_key, $source_values, $result_so_far)
+  - dokan_settings_mapper_transform_value_old_to_new($value, $old_key, $new_key, $source_values, $result_so_far)
+- Post-transform (batch adjustments):
+  - dokan_settings_mapper_after_transform($result, $direction, $source_values)
+  - dokan_settings_mapper_after_transform_new_to_old($result, $source_values)
+  - dokan_settings_mapper_after_transform_old_to_new($result, $source_values)
+
+Notes
+- $direction is 'new_to_old' when converting new settings storage to legacy arrays, and 'old_to_new' for the reverse direction.
+- $source_values is the full source data array in the given direction (all pages' values for new_to_old; all legacy sections for old_to_new).
+- $result_so_far is the partially built target result so you can compute diffs.
+- Return the modified $value in per-value filters and the modified $result in post-transform filters.
+
+Examples
+
+1) Invert meaning when mapping between legacy and new
+Example: Old setting 'hide_customer_info' (legacy) vs new 'show_customer_details_to_vendors' (new). If you have a legacy→new or new→legacy mismatch (hide vs show), invert in the per‑value filter.
+
+```php
+add_filter('dokan_settings_mapper_transform_value_new_to_old', function($value, $old_key, $new_key) {
+    // New → Old: If new key is "show_*", legacy may be "hide_*"
+    if ($old_key === 'dokan_selling.hide_customer_info' && $new_key === 'general.marketplace.marketplace_settings.show_customer_details_to_vendors') {
+        // Switchers use 'on'/'off'
+        return $value === 'on' ? 'off' : 'on';
+    }
+    return $value;
+}, 10, 3);
+
+add_filter('dokan_settings_mapper_transform_value_old_to_new', function($value, $old_key, $new_key) {
+    if ($old_key === 'dokan_selling.hide_customer_info' && $new_key === 'general.marketplace.marketplace_settings.show_customer_details_to_vendors') {
+        return $value === 'on' ? 'off' : 'on';
+    }
+    return $value;
+}, 10, 3);
+```
+
+2) Multi‑select contains option "a" → set the opposite setting "z" in legacy
+Suppose there is a new multi-select field at new path general.marketplace.marketplace_settings.multi_select with options a, b, c. If 'a' is selected, set (or clear) a legacy setting z under section my_legacy.
+
+```php
+use WeDevs\Dokan\Admin\Settings\SettingsMapper;
+
+add_filter('dokan_settings_mapper_after_transform_new_to_old', function(array $result, array $pages_values) {
+    $selected = (array) SettingsMapper::get_value_by_path(
+        $pages_values,
+        'general.marketplace.marketplace_settings.multi_select',
+        []
+    );
+
+    if (in_array('a', $selected, true)) {
+        // Example: turn off legacy z when 'a' is chosen
+        $result['my_legacy']['z'] = 'off';
+    }
+
+    return $result;
+}, 10, 2);
+```
+
+3) If legacy setting "m" is enabled → enable two new settings "p" and "q"
+When saving legacy options to new storage (old_to_new), set multiple new keys based on a single legacy flag.
+
+```php
+use WeDevs\Dokan\Admin\Settings\SettingsMapper;
+
+add_filter('dokan_settings_mapper_after_transform_old_to_new', function(array $result, array $legacy_values) {
+    $m = $legacy_values['my_legacy']['m'] ?? 'off';
+    if ($m === 'on') {
+        SettingsMapper::set_value_by_path($result, 'general.marketplace.marketplace_settings.p', 'on');
+        SettingsMapper::set_value_by_path($result, 'general.marketplace.marketplace_settings.q', 'on');
+    }
+    return $result;
+}, 10, 2);
+```
+
+4) If a new setting "g" is enabled → disable opposite settings
+When reading new settings into legacy (new_to_old), you may want to reset a group of legacy values if a single new switch is turned on.
+
+```php
+add_filter('dokan_settings_mapper_after_transform_new_to_old', function(array $result, array $pages_values) {
+    $g = \WeDevs\Dokan\Admin\Settings\SettingsMapper::get_value_by_path(
+        $pages_values,
+        'general.marketplace.marketplace_settings.g',
+        'off'
+    );
+
+    if ($g === 'on') {
+        // Disable/clear a set of legacy fields that are considered opposite to `g`
+        $result['my_legacy']['opposite_1'] = 'off';
+        $result['my_legacy']['opposite_2'] = 'off';
+        $result['my_legacy']['opposite_3'] = 'off';
+    }
+
+    return $result;
+}, 10, 2);
+```
+
+Tips for robust callbacks
+- Always check array shapes and provide defaults to avoid PHP notices.
+- Switchers in Dokan generally use 'on'/'off' strings. Normalize truthy values accordingly.
+- Prefer using SettingsMapper::set_value_by_path() to write new storage values and plain array writes for legacy arrays.
+- Keep your filters idempotent: running them multiple times should produce the same result for the same inputs.
