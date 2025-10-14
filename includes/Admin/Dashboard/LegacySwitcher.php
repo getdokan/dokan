@@ -135,6 +135,8 @@ class LegacySwitcher implements Hookable {
             set_transient( $legacy_transient_key, $new_legacy_state, $this->transient_expiration );
         }
 
+        // TODO: As the admin vendors list reactive page not available at this moment we will redirect to base vendors url.
+        // We will remove this redirect after the vendors list reactive page is available.
         // Redirect to the new admin page, if needed.
         $page_slug = $new_legacy_state ? 'dokan' : 'dokan-dashboard';
         $page_slug = ( 'vendors' !== $legacy_key ) ? $page_slug : 'dokan';
