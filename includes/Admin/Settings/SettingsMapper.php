@@ -305,7 +305,7 @@ class SettingsMapper {
                         $this->reverse_map[ $new ],
                         $old
                     );
-                    _doing_it_wrong( __METHOD__, $message, '3.13.0' );
+                    _doing_it_wrong( __METHOD__, $message, 'DOKAN_SINCE' );
                 }
             }
             $this->reverse_map[ $new ] = $old;
