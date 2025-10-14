@@ -49,6 +49,12 @@ class LegacySwitcher implements Hookable {
     public function clear_admin_submenu_title(): void {
         global $submenu;
 
+        // Check if the user has the required capability.
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            return;
+        }
+
+        // Check if the Dokan Dashboard submenu exists.
         $legacy   = get_transient( 'dokan_legacy_dashboard_page' );
         $position = (int) $legacy;
 
@@ -120,7 +126,7 @@ class LegacySwitcher implements Hookable {
         }
 
         // Early return if nonce verification fails.
-        if ( ! isset( $_GET['dokan_admin_switching_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['dokan_admin_switching_nonce'] ) ), 'dokan_switch_admin_panel' ) ) {
+        if ( ! isset( $_GET['dokan_admin_switching_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['dokan_admin_switching_nonce'] ) ), 'dokan_switch_admin_panel' ) ) {
             return;
         }
 
@@ -135,8 +141,8 @@ class LegacySwitcher implements Hookable {
             set_transient( $legacy_transient_key, $new_legacy_state, $this->transient_expiration );
         }
 
-        // TODO: As the admin vendors list reactive page not available at this moment we will redirect to base vendors url.
-        // We will remove this redirect after the vendors list reactive page is available.
+        // TODO: Redirect to base vendors URL until the React vendors list page is available.
+        // Remove this workaround once the React vendors page is implemented.
         // Redirect to the new admin page, if needed.
         $page_slug = $new_legacy_state ? 'dokan' : 'dokan-dashboard';
         $page_slug = ( 'vendors' !== $legacy_key ) ? $page_slug : 'dokan';
