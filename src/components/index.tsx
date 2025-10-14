@@ -9,6 +9,7 @@ export {
     // @ts-ignore
 } from '@wordpress/dataviews/wp';
 
+export * from './fields';
 export { default as PriceHtml } from './PriceHtml';
 export { default as DateTimeHtml } from './DateTimeHtml';
 export { default as Filter } from './Filter';
@@ -26,6 +27,7 @@ export { default as DokanPriceInput } from './PriceInput';
 export { default as WpDatePicker } from './WpDatePicker';
 export { default as DateTimePicker } from './DateTimePicker';
 export { default as DokanTab } from './Tab';
+export { default as PageHeading } from '../admin/dashboard/pages/settings/Elements/PageHeading';
 export { default as Popover } from './Popover';
 export { default as RichText } from './richtext/RichText';
 export { default as AsyncSelect } from './AsyncSelect';
@@ -38,6 +40,10 @@ export { default as Select } from './Select';
 export { default as DateRangePicker } from './DateRangePicker';
 export { default as TimePicker } from './TimePicker';
 export { default as DokanTooltip } from './DokanTooltip';
+
+// Commission Components
+export * from './commission';
+export { default as LucideIcon } from './Icons/LucideIcon';
 
 // Commission Components
 export * from './commission';

@@ -34,9 +34,11 @@ class Dashboard implements Hookable {
         add_action( 'dokan_admin_menu', [ $this, 'register_menu' ], 99, 2 );
         add_action( 'dokan_register_scripts', [ $this, 'register_scripts' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-        add_action( 'admin_menu', [ $this, 'clear_dokan_submenu_title' ], 20 );
         add_action( 'admin_notices', [ $this, 'inject_before_notices' ], -9999 );
         add_action( 'admin_notices', [ $this, 'inject_after_notices' ], PHP_INT_MAX );
+
+        // Add dashboard switching functionality
+        add_action( 'admin_menu', [ $this, 'clear_dokan_submenu_title' ], 20 );
         add_action( 'admin_init', [ $this, 'handle_dashboard_redirect' ] );
     }
 
@@ -133,7 +135,7 @@ class Dashboard implements Hookable {
      * @return array<string, mixed>
      */
     public function settings(): array {
-        $dashboard_url = admin_url( 'admin.php?page=dokan-dashboard' );
+        $dashboard_url = admin_url( 'admin.php?page=dokan' );
         $header_info   = [
             'lite_version'    => DOKAN_PLUGIN_VERSION,
             'is_pro_exists'   => dokan()->is_pro_exists(),
@@ -216,6 +218,14 @@ class Dashboard implements Hookable {
                     'dokan_action'                          => 'switch_dashboard',
                 ],
                 admin_url()
+            ),
+            'legacy_settings_url' => add_query_arg(
+                [
+                    'dokan_action'          => 'switch_dashboard_settings',
+                    'settings_legacy_nonce' => wp_create_nonce( 'settings_legacy_dashboard' ),
+                    'page'                  => 'dokan#/settings',
+                ],
+                admin_url( 'admin.php' )
             ),
         ];
 
@@ -401,7 +411,7 @@ class Dashboard implements Hookable {
         if ( $screen->id !== 'toplevel_page_dokan' && $screen->id !== 'dokan_page_dokan-dashboard' ) {
             return;
         }
-
+        wp_enqueue_media();
         foreach ( $this->scripts() as $handle ) {
             wp_enqueue_script( $handle );
         }
