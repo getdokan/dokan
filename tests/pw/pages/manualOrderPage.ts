@@ -7,6 +7,23 @@ export class ManualOrderPage {
         this.page = page;
     }
 
+    // Test Data
+    readonly testData = {
+        vendor: {
+            name: 'vendor1store'
+        },
+        product: {
+            name: 'p1_v1'
+        },
+        customer: {
+            name: 'customer1'
+        },
+        fee: {
+            name: 'Test Fee 1',
+            amount: 10
+        }
+    };
+
     // Admin Locators
     readonly adminLocators = {
         dokanSettings: '/wp-admin/admin.php?page=dokan#/settings',
@@ -16,7 +33,9 @@ export class ManualOrderPage {
         
         // Vendor Profile Settings
         vendorsPage: '/wp-admin/admin.php?page=dokan#/vendors',
+        searchVendorsInput: 'searchbox[name="Search Vendors"]',
         vendorLink: (vendorName: string) => `a:has-text("${vendorName}")`,
+        settingsLink: 'a[name=""]',
         vendorOrderToggle: 'div:nth-child(5) > .checkbox-left > .switch > .slider',
         vendorSaveButton: 'button:has-text("Save Changes")',
         okButton: 'button:has-text("OK")'
@@ -52,7 +71,7 @@ export class ManualOrderPage {
         applyButton: 'button:has-text("Apply")'
     };
 
-    // Admin Methods
+    // Admin Methods - Global Settings
     async enableVendorOrderCreation() {
         await this.page.goto(this.adminLocators.dokanSettings);
         await this.page.locator(this.adminLocators.sellingOptionsTab).click();
@@ -87,24 +106,6 @@ export class ManualOrderPage {
         await this.page.locator(this.adminLocators.saveChangesButton).click();
     }
 
-    // async enableVendorOrderCreationForVendor(vendorName: string) {
-    //     await this.page.goto(this.adminLocators.vendorsPage);
-    //     await this.page.locator(this.adminLocators.vendorLink(vendorName)).click();
-        
-    //     const vendorToggle = this.page.locator(this.adminLocators.vendorOrderToggle);
-    //     const isVendorEnabled = await vendorToggle.isChecked();
-        
-    //     if (!isVendorEnabled) {
-    //         await vendorToggle.click();
-    //         console.log(`Vendor ${vendorName} order creation was disabled, now enabled`);
-    //     } else {
-    //         console.log(`Vendor ${vendorName} order creation Already enabled`);
-    //     }
-        
-    //     await this.page.locator(this.adminLocators.vendorSaveButton).first().click();
-    //     await this.page.locator(this.adminLocators.okButton).click();
-    // }
-
     async verifyVendorOrderSettingEnabled() {
         await this.page.goto(this.adminLocators.dokanSettings);
         await this.page.locator(this.adminLocators.sellingOptionsTab).click();
@@ -117,15 +118,92 @@ export class ManualOrderPage {
         await expect(this.page.locator(this.adminLocators.allowVendorOrdersToggle)).not.toBeChecked();
     }
 
+    // Admin Methods - Vendor Specific Settings
+    async goToVendorsPage() {
+        const baseUrl = process.env.BASE_URL || 'https://dokanautomation.test';
+        await this.page.goto(`${baseUrl}/wp-admin/admin.php?page=dokan#/vendors`);
+        await this.page.waitForLoadState('networkidle');
+    }
+
+    async searchVendor(vendorName: string) {
+        await this.page.getByRole('searchbox', { name: 'Search Vendors' }).click();
+        await this.page.getByRole('searchbox', { name: 'Search Vendors' }).fill(vendorName);
+        await this.page.getByRole('searchbox', { name: 'Search Vendors' }).press('Enter');
+        await this.page.waitForLoadState('networkidle');
+    }
+
+    async openVendorSettings(vendorName: string) {
+        await this.page.getByRole('link', { name: vendorName }).click();
+        await this.page.locator("//span[@class='dashicons dashicons-edit']").click();
+        await this.page.waitForLoadState('networkidle');
+    }
+
+    async enableOrderCreation() {
+        // Check if order creation is already enabled
+        const parentSwitch = this.page.locator('div:nth-child(5) > .checkbox-left > .switch');
+        const inputCheckbox = parentSwitch.locator('input[type="checkbox"]');
+        
+        // Check if the checkbox is already checked
+        const isEnabled = await inputCheckbox.isChecked();
+        
+        // Only click if not already enabled
+        if (!isEnabled) {
+            await this.page.locator(this.adminLocators.vendorOrderToggle).click();
+            console.log(`Order creation was disabled, now enabled`);
+        } else {
+            console.log(`Order creation already enabled`);
+        }
+    }
+
+    async disableOrderCreation() {
+        // Check if order creation is currently enabled
+        const parentSwitch = this.page.locator('div:nth-child(5) > .checkbox-left > .switch');
+        const inputCheckbox = parentSwitch.locator('input[type="checkbox"]');
+        
+        // Check if the checkbox is checked
+        const isEnabled = await inputCheckbox.isChecked();
+        
+        // Only click if currently enabled (to disable it)
+        if (isEnabled) {
+            await this.page.locator(this.adminLocators.vendorOrderToggle).click();
+            console.log(`Order creation was enabled, now disabled`);
+        } else {
+            console.log(`Order creation already disabled`);
+        }
+    }
+
+    async saveVendorSettings() {
+        await this.page.getByRole('button', { name: 'Save Changes' }).nth(1).click();
+        await this.page.getByRole('button', { name: 'OK' }).click();
+        await this.page.waitForLoadState('networkidle');
+    }
+
+    // Combined Setup Method - Enable Order Creation for Specific Vendor
+    async enableOrderCreationForVendor(vendorName: string) {
+        await this.goToVendorsPage();
+        await this.searchVendor(vendorName);
+        await this.openVendorSettings(vendorName);
+        await this.enableOrderCreation();
+        await this.saveVendorSettings();
+    }
+
+    // Combined Cleanup Method - Disable Order Creation for Specific Vendor
+    async disableOrderCreationForVendor(vendorName: string) {
+        await this.goToVendorsPage();
+        await this.searchVendor(vendorName);
+        await this.openVendorSettings(vendorName);
+        await this.disableOrderCreation();
+        await this.saveVendorSettings();
+    }
+
     // Vendor Methods
     async navigateToOrders() {
-        // Navigate directly to vendor orders page
-        await this.page.goto(`${process.env.BASE_URL}/dashboard/orders/`);
+        const baseUrl = process.env.BASE_URL || 'https://dokanautomation.test';
+        await this.page.goto(`${baseUrl}/dashboard/orders/`);
         await this.page.waitForLoadState('networkidle');
     }
 
     async clickAddNewOrder() {
-        // Wait for the page to load after navigation
         await this.page.waitForLoadState('networkidle');
         await this.page.locator(this.vendorLocators.addNewOrderButton).click();
     }
@@ -134,42 +212,26 @@ export class ManualOrderPage {
         await this.page.locator(this.vendorLocators.addItemsButton).click();
         await this.page.locator(this.vendorLocators.addProductsButton).click();
         
-        // Wait for the modal to appear and stabilize
         await this.page.waitForLoadState('networkidle');
-        await this.page.waitForTimeout(1000); // Wait for modal animation
         
-        // Wait for the modal overlay to be visible
         await this.page.locator('div[data-open][aria-hidden="true"]').waitFor({ state: 'visible', timeout: 10000 });
         
-        // Try to find and fill the search input within the modal
-        // Wait for the modal to be fully open
-        await this.page.waitForTimeout(1000);
-        
-        // Look for search input specifically within the open modal
         const searchInput = this.page.locator('div[data-open] input, div[data-open] [role="combobox"]').first();
         await searchInput.waitFor({ state: 'visible', timeout: 10000 });
         
-        // Use type instead of fill to avoid click issues
         await searchInput.type(productName);
         
-        // Wait a bit for search results
-        await this.page.waitForTimeout(1000);
+        await this.page.waitForTimeout(2000);
         
-        // Wait for product options to appear and select the first one
-        await this.page.waitForTimeout(2000); // Wait for search results
-        
-        // Debug: Check what options are available
         const options = this.page.locator('[role="option"]');
         const optionCount = await options.count();
         console.log(`Found ${optionCount} product options`);
         
         if (optionCount > 0) {
-            // Try to find the specific product first
             const specificOption = this.page.locator(this.vendorLocators.productOption(productName));
             if (await specificOption.count() > 0) {
                 await specificOption.first().click();
             } else {
-                // If specific product not found, click the first available option
                 console.log(`Product "${productName}" not found, selecting first available option`);
                 await options.first().click();
             }
@@ -181,30 +243,22 @@ export class ManualOrderPage {
     }
 
     async selectCustomer(customerName: string) {
-        // Wait for the modal to be fully open
-        await this.page.waitForTimeout(1000);
-        
-        // Click the customer dropdown (using the exact selector from codegen)
+        await this.page.waitForLoadState('networkidle');
+        await this.page.locator('.css-ytf5rn').first().waitFor({ state: 'visible' });
         await this.page.locator('.css-ytf5rn').first().click();
         
-        // Fill the customer combobox with the customer name
         await this.page.getByRole('combobox', { name: 'Customer' }).fill(customerName);
         
-        // Press Enter to search
         await this.page.getByRole('combobox', { name: 'Customer' }).press('Enter');
         
-        // Wait for options to appear and click the customer option
         await this.page.waitForTimeout(1000);
         
-        // Look for customer option that contains the customer name
         try {
-            // Try to find the exact customer option
             const customerOption = this.page.getByRole('option', { name: `${customerName} (#6)` });
             if (await customerOption.count() > 0) {
                 await customerOption.click();
                 console.log(`Selected customer: ${customerName}`);
             } else {
-                // Fallback: try to find any option containing the customer name
                 const fallbackOption = this.page.getByRole('option').filter({ hasText: customerName });
                 if (await fallbackOption.count() > 0) {
                     await fallbackOption.first().click();
@@ -219,14 +273,12 @@ export class ManualOrderPage {
     }
 
     async setOrderStatus(status: string) {
-        // Use the exact selector from codegen
         await this.page.getByLabel('Order Status').selectOption(status);
     }
 
     async addFeeToOrder(feeName: string, feeAmount: number) {
         console.log('Starting fee addition process...');
         
-        // Use the exact codegen sequence - simple and clean
         console.log('Clicking Add fee button...');
         await this.page.getByRole('button', { name: 'Add fee' }).click();
         
@@ -236,7 +288,6 @@ export class ManualOrderPage {
         
         console.log('Filling fee amount...');
         
-        // Try multiple selectors for the fee amount field
         const feeAmountSelectors = [
             'input[placeholder*="Fee Amount"]',
             'input[placeholder*="amount"]',
@@ -249,7 +300,6 @@ export class ManualOrderPage {
         
         let feeAmountInput = null;
         
-        // Try each selector until we find one that works
         for (const selector of feeAmountSelectors) {
             const element = this.page.locator(selector);
             if (await element.count() > 0 && await element.isVisible()) {
@@ -260,16 +310,14 @@ export class ManualOrderPage {
         }
         
         if (!feeAmountInput) {
-            // Fallback to the original selector
             feeAmountInput = this.page.getByRole('textbox', { name: 'Fee Amount' });
             console.log('Using fallback selector: getByRole textbox Fee Amount');
         }
         
         await feeAmountInput.click();
-        await feeAmountInput.clear(); // Clear any existing value first
+        await feeAmountInput.clear();
         await feeAmountInput.fill(feeAmount.toString());
         
-        // Verify the value was actually entered
         const enteredValue = await feeAmountInput.inputValue();
         console.log(`Fee amount entered: "${enteredValue}" (expected: "${feeAmount}")`);
         
@@ -280,35 +328,27 @@ export class ManualOrderPage {
         console.log('Clicking Add Fee submit button...');
         await this.page.getByRole('button', { name: 'Add Fee', exact: true }).click();
         
-        // Wait a moment for the fee to be processed
         await this.page.waitForTimeout(2000);
         
         console.log('Fee addition process completed');
     }
 
     async saveOrder() {
-        // Wait for the modal to be stable
-        await this.page.waitForTimeout(1000);
-        
-        // Try to find and click the Save button within the modal
         const saveButton = this.page.locator('button:has-text("Save")').first();
         await saveButton.waitFor({ state: 'visible', timeout: 10000 });
         
-        // Try to click the save button
         try {
             await saveButton.click();
             console.log('Order saved successfully');
         } catch (error) {
             console.log('Error clicking save button:', error);
             
-            // Alternative 1: Try to press Enter on the form
             try {
                 await this.page.keyboard.press('Enter');
                 console.log('Used keyboard Enter to save');
             } catch (keyError) {
                 console.log('Keyboard save also failed:', keyError);
                 
-                // Alternative 2: Use JavaScript to force click
                 try {
                     await this.page.evaluate(() => {
                         const saveButton = document.querySelector('button:has-text("Save")') || 
