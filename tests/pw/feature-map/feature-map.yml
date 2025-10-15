@@ -25,6 +25,8 @@
           admin can add flat rate shipping method [lite]: true
           admin can add free shipping method [lite]: true
           admin can add vendor shipping method: true
+          admin can add shipping zone: true
+          admin can edit shipping method: true
           admin can delete shipping method [lite]: true
           admin can delete shipping zone [lite]: true
       vendor:
@@ -239,11 +241,28 @@
           vendor can add downloadable product permission to order [lite]: false
           vendor can perform bulk action on orders [lite]: true
 
+- page: 'Manual Orders'
+  features:
+      admin:
+          admin can enable vendor order creation: true
+          admin can enable vendor order creation in global settings: true
+          admin can disable vendor order creation: true
+          admin can disable vendor order creation in global settings: true
+      vendor:
+          vendor can view add new order button: true
+          vendor can create manual order: true
+          vendor can add product to manual order: true
+          vendor can select customer for manual order: true
+          vendor can set manual order status: true
+          vendor can add fee to manual order: true
+
 - page: 'Payments'
   features:
       admin:
           admin can change currency [lite]: true
           admin can add basic payment methods [lite]: true
+          admin can add stripe payment method: true
+          admin can add Strip Express payment method: true
       vendor:
           vendor can view payment settings menu page [lite]: true
           vendor can add paypal payment method [lite]: true
@@ -315,6 +334,7 @@
           admin can disable vendor info on single store page [lite]: true
           admin can enable Dokan FontAwesome library [lite]: true
           admin can disable Dokan FontAwesome library [lite]: true
+          admin can set store banner size: true
 
 - page: 'Store List'
   features:
@@ -340,7 +360,9 @@
           admin can search vendors [lite]: true
           admin can view vendor details: true
           admin can disable vendor's selling capability [lite]: true
+          admin can disable vendor: true
           admin can enable vendor's selling capability [lite]: true
+          admin can enable vendor: true
           admin can email vendor: true
           admin can add vendor [lite]: true
           admin can edit vendor info [lite]: true
@@ -352,6 +374,7 @@
   features:
       admin:
           admin can set commission on Dokan setup wizard (fixed) [lite]: true
+          admin can set commission on Dokan setup wizard fixed: true
           admin can set commission on Dokan setup wizard (category based) [lite]: true
           admin can set commission on Dokan setup wizard (specific category based) [lite]: true
           admin can set commission on Dokan selling settings (fixed) [lite]: true
@@ -416,6 +439,9 @@
           vendor can view reverse withdrawal announcement: true
           vendor can filter reverse withdrawals by date [lite]: true
           vendor can pay reverse withdrawal balance [lite]: true
+          vendor status is inactive when reverse withdrawal rule applied: true
+          vendor withdraw menu is hidden when reverse withdrawal rule applied: true
+          vendor products in catalog mode when reverse withdrawal rule applied: true
 
 - page: 'Catalog Mode'
   features:
@@ -452,6 +478,8 @@
           admin can view Dokan notice [lite]: true
           admin can view Dokan promotion [lite]: true
           admin can view Dokan premium features promotions [lite]: true
+          multiple promo notices are available and count matches: true
+          a promo notice is visible and has a title: true
 
 - page: 'Help'
   features:
@@ -502,6 +530,10 @@
           vendor can set rma settings (warranty included lifetime): true
           vendor can set rma settings (warranty as addon): true
           vendor can set store seo settings: true
+          vendor can set euCompliance info settings: true
+          vendor can set catalog settings: true
+          vendor can set store banner settings: true
+          vendor can set store profile picture settings: true
 
 - page: 'Setting'
   features:
@@ -551,6 +583,7 @@
           admin can set Dokan SPMV settings: true
           admin can set Dokan printful settings: true
           admin can set Dokan vendor subscription settings: true
+          admin can set Dokan menu manager settings: true
 
 - page: 'Tools'
   features:
@@ -569,6 +602,7 @@
   features:
       admin:
           admin can add marketplace coupon: true
+          admin can view created coupon: true
       vendor:
           vendor can view coupons menu page: true
           vendor can view marketPlace coupons: true
@@ -579,6 +613,8 @@
           customer can view coupon on single store: true
           customer can apply coupon: true
           customer can buy product with coupon: true
+          customer can buy product with marketplace coupon: true
+          customer can buy product with vendor coupon: true
 
 - page: 'Refunds'
   features:
@@ -642,6 +678,8 @@
       customer:
           user can see registration notice (2-step auth) while registering as customer: true
           user can see registration notice (2-step auth) while loggingIn: true
+          user registration process with field validation: true
+          user login process with field validation: true
 
 - page: 'Product Reviews'
   features:
@@ -748,6 +786,8 @@
           vendor can add product virtual option: true
           vendor can remove product virtual option: true
           vendor can update product general options: true
+          vendor can enable product relist options: true
+          vendor can update product relist options: true
           vendor can add auction product inventory options (SKU): true
           vendor can update auction product inventory options (SKU): true
           vendor can remove auction product inventory options (SKU): true
@@ -762,6 +802,7 @@
           vendor can't add already added auction product attribute: true
           vendor can create auction product attribute term: true
           vendor can remove auction product attribute term: true
+          vendor can remove auction product attribute: true
           vendor can add auction product geolocation (individual): true
           vendor can update auction product geolocation (individual): true
           vendor can remove auction product geolocation (individual): true
@@ -772,10 +813,12 @@
           vendor can remove auction product addon: true
           vendor can view auction activity page: true
           vendor can filter auctions activity by date: false
+          vendor can filter auction activity: true
           vendor can reset auctions activity filter: false
           vendor can search auctions activity (auction): false
           vendor can search auctions activity (name): false
           vendor can search auctions activity (email): false
+          vendor can search auction activity: true
       customer:
           customer can bid auction product: true
           customer can buy auction product after win: false
@@ -881,6 +924,7 @@
           vendor can view followers: true
       customer:
           customer can view followed vendors menu page: true
+          customer can view followed vendors via menu page: true
           customer can view followed vendors: true
           customer can follow store on store list page: true
           customer can follow store on single store: true
@@ -1016,6 +1060,19 @@
           customer can purchase printful product with printful shipping: false
           customer can purchase printful product with marketplace shipping: false
 
+- page: 'Product Form Manager'
+  features:
+      admin:
+          admin can enable product form manager module: true
+          admin can disable product form manager module: true
+          admin can add custom block: true
+          admin can edit custom block: true
+          admin can delete custom block: true
+          admin can add custom field to custom block: true
+          admin can edit custom field of custom block: true
+          admin can delete custom field from custom block: true
+          admin can reset product form manager settings: false
+
 - page: 'Product Addon'
   features:
       admin:
@@ -1028,6 +1085,7 @@
           vendor can import global product addon field: true
           vendor can export global product addon field: true
           vendor can remove product addon field: true
+          vendor can remove global product addon: true
           vendor can add product addon: true
           vendor can update product addon: false
           vendor can import product addon: true
@@ -1242,9 +1300,11 @@
   features:
       admin:
           admin can enable RMA module: true
+          admin can RMA module: true
           admin can disable RMA module: true
       vendor:
           vendor can view return request menu page: true
+          vendor can view return request settings menu page: true
           vendor can view return request details: true
           vendor can send rma message: true
           vendor can update rma status: true
@@ -1345,6 +1405,7 @@
   features:
       admin:
           admin can enable store support module: true
+          admin can store support module: true
           admin can disable store support module: true
           admin can view store support menu page: true
           unread count decrease after admin viewing a support ticket: true
@@ -1440,6 +1501,47 @@
           admin can disable vendor analytics module: true
       vendor:
           vendor can view analytics menu page: true
+          vendor can view reports dashboard page: true
+          vendor can navigate to analytics products page: true
+          vendor can navigate to analytics revenue page: true
+          vendor can navigate to analytics orders page: true
+          vendor can navigate to analytics variations page: true
+          vendor can navigate to analytics categories page: true
+          vendor can navigate to analytics coupons page: true
+          vendor can navigate to analytics taxes page: true
+          vendor can navigate to analytics stock page: true
+          vendor can navigate to analytics customers page: true
+          vendor can navigate to analytics downloads page: true
+          vendor can use date range picker on products analytics: true
+          vendor can use date range picker on revenue analytics: true
+          vendor can use date range picker on orders analytics: true
+          vendor can view overview report: true
+          vendor can view sales by day report: true
+          vendor can view top selling report: true
+          vendor can view top earning report: true
+          vendor can view statement report: true
+          vendor can view charts on revenue analytics: true
+          vendor can view charts on products analytics: true
+          vendor can view charts on orders analytics: true
+          vendor can view top selling products table: true
+          vendor can view top earning products table: true
+          vendor can view statement table: true
+          vendor can export products report: true
+          vendor can export revenue report: true
+          vendor can export orders report: true
+          vendor can verify analytics data accuracy for products: true
+          vendor can verify analytics data accuracy for revenue: true
+          vendor can verify analytics data accuracy for orders: true
+          vendor can filter products analytics by product name: true
+          vendor can filter revenue analytics by product category: true
+          vendor can filter orders analytics by order status: true
+          vendor reports pages load within acceptable time: true
+          vendor reports are responsive on mobile devices: true
+          vendor reports are responsive on tablet devices: true
+          vendor sees appropriate message when no data available: true
+          vendor handles analytics page errors gracefully: true
+          vendor reports data matches API responses: true
+          vendor reports pages are accessible: true
 
 - page: 'Vendor Product Importer and Exporter'
   features:
@@ -1520,6 +1622,7 @@
           vendor can view verification request documents: true
           vendor can view verification request notes: true
           vendor can view only required verification method on setup wizard: true
+          vendor can view verification methods on setup wizard: true
           vendor can submit verification request on setup wizard: true
           vendor can re-submit verification request on setup wizard: true
           vendor can cancel verification request on setup wizard: true
@@ -1538,7 +1641,9 @@
           admin can view wholesale customers menu page: true
           admin can search wholesale customer: true
           admin can disable customer's wholesale capability: true
+          admin can disable customer: true
           admin can enable customer's wholesale capability: true
+          admin can enable customer: true
           admin can edit wholesale customer: true
           admin can view wholesale customer orders: true
           admin can delete wholesale customer: true
@@ -1558,6 +1663,7 @@
   features:
       admin:
           admin can enable woocommerce booking integration module: true
+          admin can enable booking module: true
           admin can disable woocommerce booking integration module: true
           admin can add booking product: true
       vendor:
@@ -1578,8 +1684,18 @@
           vendor can add booking resource: true
           vendor can edit booking resource: true
           vendor can delete booking resource: true
+          vendor can manage booking resources: true
           vendor can add booking for guest customer: true
           vendor can add booking for existing customer: true
+          vendor can add guest booking: true
+          vendor can add existing customer booking: true
+          vendor can create and view product: true
+          vendor can create and search product: true
+          vendor can create and duplicate product: true
+          vendor can create and delete product: true
+          vendor can filter by date: true
+          vendor can filter by category: true
+          vendor can filter by other: true
           vendor can add booking with new order id: false
           vendor can add booking with existing order id: false
           vendor can add booking without order id: false
@@ -1607,7 +1723,9 @@
           vendor can remove booking product short description: true
           vendor can update booking product description: true
           vendor can add booking product virtual option: true
+          vendor can add a virtual booking product: true
           vendor can remove booking product virtual option: true
+          vendor can delete booking virtual product: true
           vendor can add booking product inventory options (SKU): true
           vendor can update booking product inventory options (SKU): true
           vendor can remove booking product inventory options (SKU): true
