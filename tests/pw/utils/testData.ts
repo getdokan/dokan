@@ -1323,6 +1323,10 @@ export const data = {
                 singleSellerModeField: '.enable_single_seller_mode .switch',
                 saveChanges: '//input[@id="submit" and @value="Save Changes"]',
                 successMessage: 'Setting has been saved successfully.',
+                dashboardPageDropdown:'[id="dokan_pages\\[dashboard\\]"]',
+                myOrdersPageDropdown: '[id="dokan_pages\\[my_orders\\]"]',
+                storeListingPageDropdown: '[id="dokan_pages\\[store_listing\\]"]',
+                termsAndConditionsPageDropdown: '[id="dokan_pages\\[reg_tc_page\\]"]'
             },
 
             newUI: {
@@ -1333,6 +1337,11 @@ export const data = {
                 saveButton: '#dokan-admin-settings-save-btn button',
                 successMessage: '.notice-success, .updated',
                 clickHereLink: 'a[contains(text(),"Click Here")]',
+                pageSetupLink: '#dokan_settings_general_dokan_pages',
+                locationSetupLink: '#dokan_settings_general_location',
+                dashboardPageDropdown: '#dokan_settings_general_dokan_pages_dashboard_section_dashboard',
+                myOrdersPageDropdown: '#dokan_settings_general_dokan_pages_my_orders_section_my_orders',
+                mapApiSourceDropdown: '#dokan_settings_general_location_map_api_configuration_map_api_source',
             },
         },
 
@@ -1341,6 +1350,37 @@ export const data = {
             updatedStoreUrlFromNew: 'new-store-updated',
             updatedStoreUrlFromOld: 'old-store-updated',
             finalStoreUrl: 'store-final',
+            dashboardPageId: 'Dashboard',
+            alternativeDashboardPageId: 'Cart',
+            myOrdersPageId: 'My Orders',
+            alternativeMyOrdersPageId: 'Cart',
+            storeListingPageId: 'Store List',
+            alternativeStoreListingPageId: 'Cart',
+            termsAndConditionsPageId: 'Terms And Conditions',
+            alternativeTermsAndConditionsPageId: 'Privacy Policy',
+            mapApiSource: 'Mapbox' as 'Google Maps' | 'Mapbox',
+            googleMaps: 'Google Maps' as 'Google Maps' | 'Mapbox',
+            googleMapsApiKey: 'Shamim12345',
+            mapboxApiKey: 'dokan12345',
+            mapPosition: 'Top',
+            alternativeMapPosition: 'Left',
+            // Show filters switch
+            showFiltersBeforeMap: 'off' as 'on' | 'off',
+            alternativeShowFiltersBeforeMap: 'off' as 'on' | 'off',
+
+            // Radius Search
+            radiusUnit: 'Kilometers' as 'Kilometers' | 'Miles',
+            alternativeRadiusUnit: 'Miles' as 'Kilometers' | 'Miles',
+
+            minDistance: '5',
+            alternativeMinDistance: '6',
+
+            maxDistance: '10',
+            alternativeMaxDistance: '15',
+
+            // Map Zoom Level
+            mapZoomLevel: '3',
+            alternativeZoomLevel: '4',
         },
     },
 
