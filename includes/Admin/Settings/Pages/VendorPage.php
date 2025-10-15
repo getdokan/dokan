@@ -126,6 +126,8 @@ class VendorPage extends AbstractPage {
                     ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'on' )
                     ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), 'off' )
                     ->set_default( 'on' )
+                    ->add_dependency( 'vendor_capabilities.vendor_capabilities.one_page_creation', 'on', true, 'display', 'show', '===' )
+                    ->add_dependency( 'vendor_capabilities.vendor_capabilities.one_page_creation', 'off', true, 'display', 'hide', '!==' )
             )
             ->add(
                 ElementFactory::field( 'order_status_change', 'switch' )
