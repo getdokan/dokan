@@ -199,7 +199,7 @@ class Privacy extends WC_Abstract_Privacy {
                 $social_data  = [];
                 $social_field = [
                     'fb'        => __( 'Facebook', 'dokan-lite' ),
-                    'twitter'   => __( 'Twitter', 'dokan-lite' ),
+                    'twitter'   => __( 'X', 'dokan-lite' ),
                     'pinterest' => __( 'Pinterest', 'dokan-lite' ),
                     'linkedin'  => __( 'Linkedin', 'dokan-lite' ),
                     'youtube'   => __( 'Youtube', 'dokan-lite' ),
