@@ -7,7 +7,7 @@ Tested up to: 6.8.3
 WC requires at least: 8.5.0
 WC tested up to: 10.2.2
 Requires PHP: 7.4
-Stable tag: 4.1.1
+Stable tag: 4.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -349,6 +349,10 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v4.1.2 ( Oct 16, 2025 ) =
+- **enhance:** Updated the Admin Dashboard header UI for seamless visual representation with the new React-based frontend architecture.
+- **update:** Added support for retrieving all product types via the Products REST API, enabling more flexible product filtering.
+
 = v4.1.1 ( Oct 09, 2025 ) =
 - **update:** Added method to retrieve vendor earnings excluding admin subsidy.
 - **update:** Admin gateway fee calculation now checks an order-level meta value before using the previous fallback logic.
@@ -363,10 +367,4 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **fix:** Fix Dashboard and Report page header title and apply filters.
 - **fix:** Conflict with ACF plugin: prevented empty admin notices when Dokan is active.
 
-= v4.0.8 ( Sep 12, 2025 ) =
-- **new:** Added "Chat with us" admin submenu for providing direct access to support chat functionality.
-- **enhance:** Modernize vendor selection with searchable dropdown for better performance.
-- **fix:** Prevent potential errors on additional product sections.
-
-= v4.0.7 ( Sep 01, 2025 ) =
-- **fix:** Enhanced security controls for vendor account credentials management.
+[See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
