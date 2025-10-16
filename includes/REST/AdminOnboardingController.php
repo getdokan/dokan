@@ -168,10 +168,24 @@ class AdminOnboardingController extends DokanBaseAdminController {
         update_option( 'dokan_onboarding', $onboarding );
 
         if ( isset( $data['custom_store_url'] ) ) {
-            $general_options['custom_store_url'] = ! empty( $data['custom_store_url'] )
+            $custom_store_url = ! empty( $data['custom_store_url'] )
                 ? sanitize_text_field( wp_unslash( $data['custom_store_url'] ) )
                 : '';
 
+            $reserved_slugs = dokan_get_reserved_url_slugs();
+            if ( in_array( $custom_store_url, $reserved_slugs, true ) ) {
+                return new WP_Error(
+                    'dokan_reserved_slug_error',
+                    sprintf(
+                        /* translators: %s: the reserved slug */
+                        esc_html__( 'The store URL "%s" is reserved by WordPress and cannot be used. Please choose a different value like "store".', 'dokan-lite' ),
+                        $custom_store_url
+                    ),
+                    [ 'status' => 400 ]
+                );
+            }
+
+            $general_options['custom_store_url'] = $custom_store_url;
             update_option( 'dokan_general', $general_options );
         }
 

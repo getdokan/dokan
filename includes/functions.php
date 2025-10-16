@@ -94,6 +94,47 @@ function dokan_is_user_customer( $user_id ) {
 }
 
 /**
+ * Get reserved URL slugs that cannot be used for custom slugs like store base
+ *
+ * @since DOKAN_SINCE
+ *
+ * @return array List of reserved slugs
+ */
+function dokan_get_reserved_url_slugs() {
+    $reserved_slugs = [
+        's',
+        'p',
+        'page',
+        'paged',
+        'author',
+        'feed',
+        'search',
+        'post',
+        'tag',
+        'category',
+        'attachment',
+        'name',
+        'order',
+        'orderby',
+        'rest',
+        'rest_route',
+        'wp-json',
+        'shop',
+        'cart',
+        'checkout',
+    ];
+
+    /**
+     * Filter the list of reserved URL slugs that cannot be used for custom slugs like store base.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $reserved_slugs List of reserved slugs.
+     */
+    return apply_filters( 'dokan_reserved_url_slugs', $reserved_slugs );
+}
+
+/**
  * Check if current user is the product author
  *
  * @param int      $product_id

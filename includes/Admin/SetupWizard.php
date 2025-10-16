@@ -214,6 +214,7 @@ class SetupWizard {
                 'onboardingData',
                 [
                     'site_url'                  => esc_url( get_site_url() ),
+                    'reserved_slugs'            => dokan_get_reserved_url_slugs(),
                     'dokan_admin_dashboard_url' => esc_url( admin_url( 'admin.php?page=' . $page_slug ) ),
                 ]
             );
