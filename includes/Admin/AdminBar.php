@@ -67,16 +67,6 @@ class AdminBar {
             ]
         );
 
-		//        TODO: We need to remove this vue pro features page. we have a react page to replace.
-		//        $wp_admin_bar->add_menu(
-		//            [
-		//                'id'     => 'dokan-pro-features',
-		//                'parent' => 'dokan',
-		//                'title'  => __( 'PRO Features', 'dokan-lite' ),
-		//                'href'   => admin_url( 'admin.php?page=dokan#/premium' ),
-		//            ]
-		//        );
-
         $wp_admin_bar->add_menu(
             [
                 'id'     => 'dokan-settings',
