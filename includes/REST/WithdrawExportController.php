@@ -39,6 +39,7 @@ class WithdrawExportController extends GenericController implements ExportableIn
             'user_id'        => __( 'Vendor ID', 'dokan-lite' ),
             'vendor_name'    => __( 'Vendor Name', 'dokan-lite' ),
             'amount'         => __( 'Amount', 'dokan-lite' ),
+            'payable'        => __( 'Payable', 'dokan-lite' ),
             'date'           => __( 'Date', 'dokan-lite' ),
             'status'         => __( 'Status', 'dokan-lite' ),
             'payment_method' => __( 'Payment Method', 'dokan-lite' ),
@@ -61,6 +62,7 @@ class WithdrawExportController extends GenericController implements ExportableIn
             'user_id'        => $item['user_id'],
             'vendor_name'    => $vendor->get_name(),
             'amount'         => $item['amount'],
+            'payable'        => $item['payable'],
             'date'           => $item['date'],
             'status'         => $item['status'],
             'payment_method' => $item['method'],
@@ -103,7 +105,11 @@ class WithdrawExportController extends GenericController implements ExportableIn
 
         // Set pagination
         $args['limit'] = $request['per_page'] ?? 20;
-        $args['offset'] = ( ( $request['page'] ?? 1 ) - 1 ) * $args['limit'];
+        $args['page'] = $request['page'] ?? 1;
+
+        if ( ! empty( $request['ids'] ) ) {
+            $args['ids'] = $request['ids'];
+        }
 
         // Get withdraws
         $withdraws_obj = dokan()->withdraw->all( $args );
@@ -119,6 +125,7 @@ class WithdrawExportController extends GenericController implements ExportableIn
                 'id'      => $withdraw->get_id(),
                 'user_id' => $withdraw->get_user_id(),
                 'amount'  => $withdraw->get_amount(),
+                'payable' => $withdraw->get_receivable_amount(),
                 'date'    => $withdraw->get_date(),
                 'status'  => $withdraw->get_status(),
                 'method'  => $withdraw->get_method(),
