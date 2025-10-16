@@ -4,6 +4,11 @@ namespace WeDevs\Dokan\Test\Withdrawal;
 
 use WeDevs\Dokan\Test\DokanTestCase;
 
+
+/**
+ * @group withdrawal
+ * @group withdraw-charge-api
+ */
 class WithdrawChargeApiTest extends DokanTestCase {
     /**
      * The namespace of the REST route.
@@ -155,7 +160,7 @@ class WithdrawChargeApiTest extends DokanTestCase {
                     'receivable'  => 190,
                     'charge_data' => [
 						'fixed' => 10,
-						'percentage' => 0,
+						'percentage' => '',
 					],
                 ],
             ],
@@ -188,7 +193,6 @@ class WithdrawChargeApiTest extends DokanTestCase {
         );
 
         $data = $response->get_data();
-
         $this->assertArrayNotHasKey( 'code', $data );
 
         $this->assertArrayHasKey( 'charge', $data );

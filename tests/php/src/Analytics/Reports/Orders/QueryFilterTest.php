@@ -57,7 +57,7 @@ class QueryFilterTest extends ReportTestCase {
 	public function test_filter_hooks_are_applied_for_orders_query() {
 		$order_id = $this->create_multi_vendor_order();
 
-		$this->run_all_pending();
+		$this->run_all_pending_queue();
 
         $mocking_methods = [
             'add_join_subquery',
@@ -97,7 +97,7 @@ class QueryFilterTest extends ReportTestCase {
 
         $this->set_order_meta_for_dokan( $order_id, $expected_data );
 
-		$this->run_all_pending();
+		$this->run_all_pending_queue();
 
         $mocking_methods = [
             'should_filter_by_vendor_id',
@@ -149,7 +149,7 @@ class QueryFilterTest extends ReportTestCase {
 
         $this->set_order_meta_for_dokan( $order_id, $expected_data );
 
-		$this->run_all_pending();
+		$this->run_all_pending_queue();
 
         remove_filter( 'woocommerce_analytics_clauses_where_orders_subquery', [ $this->sut, 'add_where_subquery' ], 30 );
 
@@ -187,7 +187,7 @@ class QueryFilterTest extends ReportTestCase {
 
         $refund = $this->create_refund( $sub_ids[0] );
 
-		$this->run_all_pending();
+		$this->run_all_pending_queue();
 
         remove_filter( 'woocommerce_analytics_clauses_where_orders_subquery', [ $this->sut, 'add_where_subquery' ], 30 );
 
@@ -218,7 +218,7 @@ class QueryFilterTest extends ReportTestCase {
 
         $parent_refund = $this->create_refund( $sub_ids[0], true, true );
 
-		$this->run_all_pending();
+		$this->run_all_pending_queue();
 
         remove_filter( 'woocommerce_analytics_clauses_where_orders_subquery', [ $this->sut, 'add_where_subquery' ], 30 );
 
@@ -250,7 +250,7 @@ class QueryFilterTest extends ReportTestCase {
 
         $refund = $this->create_refund( $order_id );
 
-		$this->run_all_pending();
+		$this->run_all_pending_queue();
 
         remove_filter( 'woocommerce_analytics_clauses_where_orders_subquery', [ $this->sut, 'add_where_subquery' ], 30 );
 
@@ -278,7 +278,7 @@ class QueryFilterTest extends ReportTestCase {
         $order_id = $this->create_single_vendor_order( $this->seller_id1 );
         $order_id2 = $this->create_single_vendor_order( $this->seller_id2 );
 
-		$this->run_all_pending();
+		$this->run_all_pending_queue();
 
         $_GET['sellers'] = $this->seller_id1;
 
@@ -300,7 +300,7 @@ class QueryFilterTest extends ReportTestCase {
         $order_id = $this->create_single_vendor_order( $this->seller_id1 );
         $order_id2 = $this->create_single_vendor_order( $this->seller_id2 );
 
-		$this->run_all_pending();
+		$this->run_all_pending_queue();
 
         // Ignore seller filter if a seller pass another seller ID as filter .
         $_GET['seller'] = $this->seller_id1;

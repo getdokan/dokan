@@ -11,6 +11,8 @@ use WP_REST_Response;
 
 /**
  * @group dokan-customers
+ * @group rest-api
+ * @group rest-api-customers
  */
 class CustomersControllerTest extends DokanTestCase {
 
@@ -28,6 +30,8 @@ class CustomersControllerTest extends DokanTestCase {
      * @var array
      */
     protected $customers = [];
+
+    protected $customer_data = [];
 
     /**
      * Setup test environment

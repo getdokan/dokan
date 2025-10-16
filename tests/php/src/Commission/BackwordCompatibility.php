@@ -9,6 +9,11 @@ use WeDevs\Dokan\Commission\Strategies\OrderItem;
 use WeDevs\Dokan\Test\DokanTestCase;
 use WeDevs\Dokan\Vendor\Coupon;
 
+
+/**
+ * @group commission
+ * @group commission-compatibility
+ */
 class BackwordCompatibility extends DokanTestCase {
 
     private array $category_ids;

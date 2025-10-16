@@ -6,6 +6,10 @@ use WeDevs\Dokan\Commission\Formula\Fixed;
 use WeDevs\Dokan\Commission\Strategies\GlobalStrategy;
 use WeDevs\Dokan\Test\DokanTestCase;
 
+/**
+ * @group commission
+ * @group commission-order
+ */
 class OrderCommission extends DokanTestCase {
 
     private array $category_ids;

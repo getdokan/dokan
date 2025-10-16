@@ -3,7 +3,9 @@
 namespace WeDevs\Dokan\Test;
 
 use WeDevs\Dokan\VendorNavMenuChecker;
-
+/**
+ * @group core-feature
+ */
 class VendorNavMenuCheckerTest extends DokanTestCase {
     /**
      * Test that service is registered to container.

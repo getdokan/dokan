@@ -5,6 +5,10 @@ use WeDevs\Dokan\Test\DokanTestCase;
 use WeDevs\Dokan\Withdraw\Withdraw;
 use WP_UnitTestCase;
 
+/**
+ * @group withdrawal
+ * @group withdraw-charge
+ */
 class WithdrawChargeTest extends DokanTestCase {
 
     /**

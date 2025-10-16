@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\Test\Orders;
 use WeDevs\Dokan\Test\DokanTestCase;
 
 /**
+ * @group orders
  * @group order-status
  */
 class OrderStatusChangeTest extends DokanTestCase {
@@ -166,7 +167,7 @@ class OrderStatusChangeTest extends DokanTestCase {
             [ 'pending', 'on-hold' ],
             [ 'on-hold', 'processing' ],
             [ 'processing', 'completed' ],
-            [ 'processing', 'cancelled' ],
+            [ 'pending', 'cancelled' ],
             [ 'completed', 'refunded' ],
         ];
     }
@@ -179,6 +180,7 @@ class OrderStatusChangeTest extends DokanTestCase {
             [ 'completed', 'processing' ],
             [ 'refunded', 'completed' ],
             [ 'cancelled', 'processing' ],
+            [ 'processing', 'cancelled' ],
         ];
     }
 
