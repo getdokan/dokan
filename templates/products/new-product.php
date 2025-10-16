@@ -266,6 +266,8 @@ do_action( 'dokan_new_product_wrap_before' );
                                     dokan_get_template_part( 'products/dokan-category-header-ui', '', $saved_product_cat_data );
                                     ?>
 
+                                    <?php do_action( 'dokan_new_product_after_product_category' ); ?>
+
                                     <div class="dokan-form-group">
                                         <label for="product_tag" class="form-label"><?php esc_html_e( 'Tags', 'dokan-lite' ); ?></label>
                                         <select multiple="multiple" name="product_tag[]" id="product_tag_search" class="product_tag_search product_tags dokan-form-control dokan-select2" data-placeholder="<?php echo $can_create_tags ? esc_attr__( 'Select tags/Add tags', 'dokan-lite' ) : esc_attr__( 'Select product tags', 'dokan-lite' ); ?>">
