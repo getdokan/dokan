@@ -24,9 +24,12 @@ if ( ! defined( 'ABSPATH' ) ) {
         <meta name="robots" content="noindex, nofollow">
         <?php
         /**
-         * wp_head() hook - REQUIRED
+         * Output all the wp_head() hooks.
+         *
          * This ensures all enqueued scripts and styles are loaded
-         * Do not remove or modify this
+         * Do not remove or modify this.
+         *
+         * wp_head() hook - REQUIRED.
          */
         wp_head();
         ?>
@@ -34,8 +37,12 @@ if ( ! defined( 'ABSPATH' ) ) {
     <body <?php body_class( 'dokan-dashboard-fullwidth-template' ); ?>>
     <?php
     /**
-     * wp_body_open() hook
-     * Introduced in WordPress 5.2
+     * Output the wp_body_open() hook.
+     *
+     * This ensures all scripts are loaded before the closing body tag
+     * Do not remove or modify this.
+     *
+     * wp_body_open() hook.
      */
     if ( function_exists( 'wp_body_open' ) ) {
         wp_body_open();
@@ -52,9 +59,12 @@ if ( ! defined( 'ABSPATH' ) ) {
         </div>
     <?php
     /**
-     * wp_footer() hook - REQUIRED
+     * Output all the wp_footer() hooks.
+     *
      * This ensures all footer scripts are loaded
-     * Do not remove or modify this
+     * Do not remove or modify this.
+     *
+     * wp_footer() hook - REQUIRED.
      */
     wp_footer();
     ?>

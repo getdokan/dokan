@@ -14,7 +14,9 @@ class Dashboard extends DokanShortcode {
     public function __construct() {
         parent::__construct();
 
-        add_filter( 'template_include', [ $this, 'load_fullwidth_template' ], 99 );
+        if ( apply_filters( 'dokan_enable_fullwidth_dashboard', true ) ) {
+            add_filter( 'template_include', [ $this, 'load_fullwidth_template' ], 99 );
+        }
     }
 
     /**
