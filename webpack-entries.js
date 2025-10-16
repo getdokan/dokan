@@ -58,6 +58,13 @@ const entryPoints = {
             type: 'window',
         },
     },
+    'vendors-store': {
+        import: '/src/stores/vendors/store.ts',
+        library: {
+            name: [ 'dokan', 'vendorsStore' ],
+            type: 'window',
+        },
+    },
     'dokan-status': '/src/Status/index.tsx',
     'dokan-pro-features': '/src/ProFeatures/index.tsx',
     'vendor-dashboard/reports/index': './src/vendor-dashboard/reports/index.js',

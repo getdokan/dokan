@@ -6,7 +6,7 @@ This directory contains pure, reusable components for commission management func
 
 ### Pure Components
 
-#### CategoryBasedCommissionPure
+#### CategoryBasedCommission
 A pure, reusable component for managing category-based commission settings.
 
 **Features:**
@@ -18,9 +18,9 @@ A pure, reusable component for managing category-based commission settings.
 
 **Usage:**
 ```typescript
-import { CategoryBasedCommissionPure } from '@dokan/components/commission';
+import { CategoryBasedCommission } from '@dokan/components/commission';
 
-<CategoryBasedCommissionPure
+<CategoryBasedCommission
     categories={categories}
     commissionValues={commissionValues}
     currency={currency}
@@ -105,13 +105,13 @@ src/components/commission/
 
 **Before:**
 ```typescript
-import CategoryBasedCommissionPure from './CategoryBasedCommissionPure';
+import CategoryBasedCommission from './CategoryBasedCommission';
 import FixedCommissionInput from './FixedCommissionInput';
 ```
 
 **After:**
 ```typescript
-import { CategoryBasedCommissionPure, FixedCommissionInput } from '@dokan/components/commission';
+import { CategoryBasedCommission, FixedCommissionInput } from '@dokan/components/commission';
 ```
 
 ## Benefits
@@ -126,7 +126,7 @@ import { CategoryBasedCommissionPure, FixedCommissionInput } from '@dokan/compon
 
 ```
 src/components/commission/
-├── CategoryBasedCommissionPure.tsx
+├── CategoryBasedCommission.tsx
 ├── FixedCommissionInput.tsx
 ├── CommissionHeader.tsx
 ├── CategoryRow.tsx

@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\Admin\Dashboard;
 
 use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\Contracts\Hookable;
+use WeDevs\Dokan\Utilities\OrderUtil;
 
 /**
  * Admin dashboard class.
@@ -324,13 +325,41 @@ class Dashboard implements Hookable {
         $admin_dashboard_file = DOKAN_DIR . '/assets/js/dokan-admin-dashboard.asset.php';
         if ( file_exists( $admin_dashboard_file ) ) {
             $dashboard_script = require $admin_dashboard_file;
-            $dependencies     = $dashboard_script['dependencies'] ?? [];
-
-            $dependencies[]   = 'dokan-react-components';
-            $dependencies[]   = 'dokan-react-frontend';
-
+            $dependencies     = array_merge( $dashboard_script['dependencies'] ?? [], [ 'dokan-react-components', 'dokan-react-frontend', 'jquery', 'media-upload', 'media-views' ] );
             $version          = $dashboard_script['version'] ?? '';
-            $data             = [ 'currency' => dokan_get_container()->get( 'scripts' )->get_localized_price() ];
+
+            $banner_width    = dokan_get_vendor_store_banner_width();
+            $banner_height   = dokan_get_vendor_store_banner_height();
+
+            $has_flex_width  = dokan_get_option( 'store_banner_flex_width', 'dokan_general', true );
+            $has_flex_height = dokan_get_option( 'store_banner_flex_height', 'dokan_general', true );
+
+            $data = apply_filters(
+                'dokan_admin_dashboard_localize_scripts',
+                [
+                    'currency'  => dokan_get_container()->get( 'scripts' )->get_localized_price(),
+                    'states'    => WC()->countries->get_allowed_country_states(),
+                    'countries' => WC()->countries->get_allowed_countries(),
+                    'nonce'     => wp_create_nonce( 'dokan_admin' ),
+                    'store_banner_dimension'                   => [
+                        'width'       => $banner_width,
+                        'height'      => $banner_height,
+                        'flex-width'  => $has_flex_width,
+                        'flex-height' => $has_flex_height,
+                    ],
+                    'urls'                              => [
+                        'adminRoot'         => admin_url(),
+                        'siteUrl'           => home_url( '/' ),
+                        'storePrefix'       => dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ),
+                        'assetsUrl'         => DOKAN_PLUGIN_ASSEST,
+                        'buynowpro'         => dokan_pro_buynow_url(),
+                        'upgradeToPro'      => 'https://dokan.co/wordpress/upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
+                        'dummy_data'        => DOKAN_PLUGIN_ASSEST . '/dummy-data/dokan_dummy_data.csv',
+                        'adminOrderListUrl' => OrderUtil::get_admin_order_list_url(),
+                        'adminOrderEditUrl' => OrderUtil::get_admin_order_edit_url(),
+                    ],
+                ]
+            );
 
             wp_register_script(
                 $this->script_key,
@@ -468,6 +497,9 @@ class Dashboard implements Hookable {
         if ( $screen->id !== 'toplevel_page_dokan' && $screen->id !== 'dokan_page_dokan-dashboard' ) {
             return;
         }
+
+        // Enqueue media scripts
+        wp_enqueue_media();
 
         foreach ( $this->scripts() as $handle ) {
             wp_enqueue_script( $handle );
