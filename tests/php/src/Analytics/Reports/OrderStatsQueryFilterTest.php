@@ -5,6 +5,7 @@ use Exception;
 use Mockery;
 use WeDevs\Dokan\Analytics\Reports\Orders\Stats\QueryFilter;
 use WeDevs\Dokan\Commission;
+use WeDevs\Dokan\Commission\OrderCommission;
 use WeDevs\Dokan\Test\Analytics\Reports\ReportTestCase;
 
 /**
@@ -97,28 +98,10 @@ class OrderStatsQueryFilterTest extends ReportTestCase {
      * @return void
      */
     public function test_dokan_order_stats_added_to_wc_select_query_for_total( array $data ) {
+        $this->set_mock_commission( $data['vendor_earning'], $data['admin_commission'] );
         $parent_id = $this->create_multi_vendor_order();
-        $this->set_order_meta_for_dokan( $parent_id, $data );
-        $mock_commission = Mockery::mock( Commission::class );
-
-        dokan()->get_container()->extend( 'commission' )->setConcrete( $mock_commission );
-
-        $mock_commission->shouldReceive( 'get_earning_by_order' )->andReturnUsing(
-            function ( $order, $context = 'seller' ) use ( $data ) {
-                if ( $order->get_meta( 'has_sub_order' ) ) {
-                    return 0;
-                }
-                if ( $context === 'admin' ) {
-                    return $data['admin_commission'];
-                }
-                return $data['vendor_earning'];
-			}
-        );
 
 		$this->run_all_pending();
-
-        remove_filter( 'woocommerce_analytics_clauses_where_orders_stats_total', [ $this->sut, 'add_where_subquery' ], 30 );
-        remove_filter( 'woocommerce_analytics_clauses_where_orders_stats_total', [ $this->sut, 'add_where_subquery' ], 30 );
 
         $orders_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\Query( [], 'orders-stats' );
 

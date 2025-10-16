@@ -90,25 +90,10 @@ class OrderQueryFilterTest extends ReportTestCase {
      *
      * @return void
      */
-    public function test_dokan_order_stats_fields_are_selected_for_seller( $expected_data ) {
-		$order_id = $this->create_multi_vendor_order();
+    public function test_dokan_order_stats_fields_are_selected_for_seller1( $expected_data ) {
+		$this->set_mock_commission( $expected_data['vendor_earning'], $expected_data['admin_commission'] );
 
-        $this->set_order_meta_for_dokan( $order_id, $expected_data );
-        $mock_commission = Mockery::mock( Commission::class );
-
-        dokan()->get_container()->extend( 'commission' )->setConcrete( $mock_commission );
-
-        $mock_commission->shouldReceive( 'get_earning_by_order' )->andReturnUsing(
-            function ( $order, $context = 'seller' ) use ( $expected_data ) {
-                if ( $order->get_meta( 'has_sub_order' ) ) {
-                    return 0;
-                }
-                if ( $context === 'admin' ) {
-                    return $expected_data['admin_commission'];
-                }
-                return $expected_data['vendor_earning'];
-			}
-        );
+        $order_id = $this->create_multi_vendor_order();
 
 		$this->run_all_pending();
 
@@ -120,6 +105,7 @@ class OrderQueryFilterTest extends ReportTestCase {
 
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
         dokan_get_container()->get( QueryFilter::class )->register_hooks();
+
         remove_filter( 'woocommerce_analytics_clauses_where_orders_subquery', [ $this->sut, 'add_where_subquery' ], 30 );
 
         $service->shouldReceive( 'should_filter_by_vendor_id' )
@@ -162,9 +148,9 @@ class OrderQueryFilterTest extends ReportTestCase {
      * @return void
      */
     public function test_dokan_order_stats_fields_are_selected_for_admin( $expected_data ) {
-		$order_id = $this->create_multi_vendor_order();
+        $this->set_mock_commission( $expected_data['vendor_earning'], $expected_data['admin_commission'] );
 
-        $this->set_order_meta_for_dokan( $order_id, $expected_data );
+        $order_id = $this->create_multi_vendor_order();
 
 		$this->run_all_pending();
 
@@ -172,7 +158,7 @@ class OrderQueryFilterTest extends ReportTestCase {
 
 		$service = Mockery::mock( QueryFilter::class . '[should_filter_by_vendor_id]' );
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
-		dokan_get_container()->get( QueryFilter::class )->register_hooks( );
+		dokan_get_container()->get( QueryFilter::class )->register_hooks();
 
         $service->shouldReceive( 'should_filter_by_vendor_id' )
             ->andReturnUsing(

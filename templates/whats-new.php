@@ -4,6 +4,40 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.1.1',
+        'released' => '2025-10-09',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Added method to retrieve vendor earnings excluding admin subsidy.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Admin gateway fee calculation now checks an order-level meta value before using the previous fallback logic.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.1.0',
+        'released' => '2025-09-30',
+        'changes'  => [
+            'New Feature'  => [
+                [
+                    'title'       => 'New React-based Admin Dashboard with enhanced metrics and rank boards.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement'  => [
+                [
+                    'title'       => 'Migrated Pro Features page from Vue to React with enhanced UI.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.0.9',
         'released' => '2025-09-25',
         'changes'  => [
