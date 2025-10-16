@@ -9,6 +9,44 @@ class Dashboard extends DokanShortcode {
     protected $shortcode = 'dokan-dashboard';
 
     /**
+     * Constructor
+     */
+    public function __construct() {
+        parent::__construct();
+
+        add_filter( 'template_include', [ $this, 'load_fullwidth_template' ], 99 );
+    }
+
+    /**
+     * Load custom fullwidth template
+     *
+     * This method intercepts the template_include filter and returns
+     * a custom blank template when fullwidth mode is activated.
+     * The custom template preserves wp_head() and wp_footer() hooks
+     * to ensure all enqueued scripts and styles are loaded properly.
+     *
+     * @param string $template Path to the template
+     *
+     * @return string Modified template path
+     */
+    public function load_fullwidth_template( $template ) {
+        // Check if we should load the fullwidth template
+        if ( ! dokan_is_seller_dashboard() ) {
+            return $template;
+        }
+
+        // Path to custom template
+        $custom_template = DOKAN_DIR . '/templates/dashboard/full-dashboard.php';
+
+        // Check if custom template exists
+        if ( file_exists( $custom_template ) ) {
+            return $custom_template;
+        }
+
+        return $template;
+    }
+
+    /**
      * Load template files
      *
      * Based on the query vars, load the appropriate template files
