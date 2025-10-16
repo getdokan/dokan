@@ -1,5 +1,6 @@
 import { SearchableSelect, ReactSelect } from '@getdokan/dokan-ui';
 import { twMerge } from 'tailwind-merge';
+import { ChevronDown } from 'lucide-react';
 
 // Local utility to extract props type of a component without relying on React/WordPress types
 type PropsOf< T > = T extends ( props: infer P ) => any ? P : never;
@@ -39,6 +40,18 @@ function Select< Option = DefaultOption >( props: SelectProps< Option > ) {
                     { children }
                 </div>
             </components.Control>
+        );
+    };
+
+    const DropdownIndicator = ( props: any ) => {
+        const { components } = ReactSelect;
+
+        return (
+            <components.DropdownIndicator { ...props }>
+                <div className="text-gray-400">
+                    <ChevronDown size={ 16 } />
+                </div>
+            </components.DropdownIndicator>
         );
     };
 
@@ -95,6 +108,7 @@ function Select< Option = DefaultOption >( props: SelectProps< Option > ) {
             // @ts-ignore
             components={ {
                 Control,
+                DropdownIndicator,
                 ...( props?.components ? props.components : {} ),
             } }
             styles={ styles }
