@@ -4,8 +4,6 @@ import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import {
     AdminDataViews as DataViews,
-    DokanTab,
-    Filter,
     DokanLink,
     DateTimeHtml,
     DokanButton,
@@ -26,7 +24,6 @@ const defaultLayouts = {
 const VendorsPage = ( props ) => {
     const { navigate, params, location, useSearchParams } = props;
     const [ searchParams, setSearchParams ] = useSearchParams();
-    const [ showFilters, setShowFilters ] = useState( false );
     const [ view, setView ] = useState< any >( {
         perPage: 10,
         page: 1,
@@ -53,16 +50,18 @@ const VendorsPage = ( props ) => {
                     const FieldComponent = fieldData.field;
                     return {
                         ...fieldData,
-                        field: <FieldComponent
-                            key={ index }
-                            params={ params }
-                            navigate={ navigate }
-                            location={ location }
-                            searchParams={ searchParams }
-                            setSearchParams={ setSearchParams }
-                        />,
+                        field: (
+                            <FieldComponent
+                                key={ index }
+                                params={ params }
+                                navigate={ navigate }
+                                location={ location }
+                                searchParams={ searchParams }
+                                setSearchParams={ setSearchParams }
+                            />
+                        ),
                     };
-                });
+                } );
             }
         } catch ( _e ) {
             // fail silently
@@ -71,11 +70,11 @@ const VendorsPage = ( props ) => {
     };
 
     const clearFilter = () => {
-        setSearchParams({});
+        setSearchParams( {} );
     };
 
     const clearSingleFilter = ( filterId: string ) => {
-        setSearchParams( ( prevParams ) => {
+        setSearchParams( ( prevParams: any ) => {
             prevParams.delete( filterId );
             return prevParams;
         } );
@@ -208,16 +207,6 @@ const VendorsPage = ( props ) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ status, view.page, view.perPage, search, searchParams ] );
 
-    useEffect( () => {
-        // @ts-ignore
-        const shouldOpenFilter = wp.hooks.applyFilters(
-            'dokan_vendors_show_filters',
-            false,
-            searchParams
-        );
-        setShowFilters( shouldOpenFilter );
-    }, [] );
-
     const handleChangeView = ( newView: any ) => {
         setView( ( prev: any ) => ( { ...prev, ...newView } ) );
     };
@@ -230,8 +219,8 @@ const VendorsPage = ( props ) => {
                     <div className="flex items-center gap-1.5 px-2">
                         { __( 'All', 'dokan-lite' ) }
                         <span className="text-xs font-light text-[#A5A5AA]">
-                    ({ counts.all || 0 })
-                </span>
+                            ({ counts.all || 0 })
+                        </span>
                     </div>
                 ),
                 title: __( 'All', 'dokan-lite' ),
@@ -242,8 +231,8 @@ const VendorsPage = ( props ) => {
                     <div className="flex items-center gap-1.5 px-2">
                         { __( 'Approved', 'dokan-lite' ) }
                         <span className="text-xs font-light text-[#A5A5AA]">
-                    ({ counts.approved || 0 })
-                </span>
+                            ({ counts.approved || 0 })
+                        </span>
                     </div>
                 ),
                 title: __( 'Approved', 'dokan-lite' ),
@@ -254,8 +243,8 @@ const VendorsPage = ( props ) => {
                     <div className="flex items-center gap-1.5 px-2">
                         { __( 'Pending', 'dokan-lite' ) }
                         <span className="text-xs font-light text-[#A5A5AA]">
-                    ({ counts.pending || 0 })
-                </span>
+                            ({ counts.pending || 0 })
+                        </span>
                     </div>
                 ),
                 title: __( 'Pending', 'dokan-lite' ),
@@ -783,8 +772,11 @@ const VendorsPage = ( props ) => {
                         tabs,
                         onSelect: handleTabSelect,
                         initialTabName: status,
-                        additionalComponents:[
-                            <SearchInput value={ search } onChange={ setSearch } />
+                        additionalComponents: [
+                            <SearchInput
+                                value={ search }
+                                onChange={ setSearch }
+                            />,
                         ],
                     } }
                     filter={ {
