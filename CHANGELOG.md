@@ -1,3 +1,7 @@
+### v4.1.2 ( Oct 16, 2025 ) ###
+- **enhance:** Updated the Admin Dashboard header UI for seamless visual representation with the new React-based frontend architecture.
+- **update:** Added support for retrieving all product types via the Products REST API, enabling more flexible product filtering.
+
 ### v4.1.1 ( Oct 09, 2025 ) ###
 - **update:** Added method to retrieve vendor earnings excluding admin subsidy.
 - **update:** Admin gateway fee calculation now checks an order-level meta value before using the previous fallback logic.
