@@ -9,43 +9,41 @@ class Dashboard extends DokanShortcode {
     protected $shortcode = 'dokan-dashboard';
 
     /**
-     * Constructor
+     * Dashboard constructor.
+     *
+     * @return void
      */
     public function __construct() {
         parent::__construct();
 
-        if ( apply_filters( 'dokan_enable_fullwidth_dashboard', true ) ) {
-            add_filter( 'template_include', [ $this, 'load_fullwidth_template' ], 99 );
+        if ( apply_filters( 'dokan_vendor_dashboard_enable_full_width_page', true ) ) {
+            add_action( 'template_redirect', [ $this, 'rewrite_vendor_dashboard_template' ], 1 );
         }
     }
 
     /**
-     * Load custom fullwidth template
+     * Rewrite vendor dashboard template
      *
-     * This method intercepts the template_include filter and returns
-     * a custom blank template when fullwidth mode is activated.
-     * The custom template preserves wp_head() and wp_footer() hooks
-     * to ensure all enqueued scripts and styles are loaded properly.
+     * This method intercepts the template_redirect action and loads
+     * a custom full-width template for the vendor dashboard.
      *
-     * @param string $template Path to the template
+     * @since DOKAN_SINCE
      *
-     * @return string Modified template path
+     * @return void
      */
-    public function load_fullwidth_template( $template ) {
-        // Check if we should load the fullwidth template
-        if ( ! dokan_is_seller_dashboard() ) {
-            return $template;
+    public function rewrite_vendor_dashboard_template() {
+        // Check if the user is logged in and is on the vendor dashboard.
+        if ( is_user_logged_in() && dokan_is_seller_dashboard() ) {
+            $dashboard_template = DOKAN_DIR . '/templates/dashboard/block-dashboard.php';
+
+            // Check if the custom template exists.
+            if ( file_exists( $dashboard_template ) ) {
+                // Load dokan full width vendor dashboard template.
+                include_once $dashboard_template;
+                wp_print_media_templates();
+                exit;
+            }
         }
-
-        // Path to custom template
-        $custom_template = DOKAN_DIR . '/templates/dashboard/full-dashboard.php';
-
-        // Check if custom template exists
-        if ( file_exists( $custom_template ) ) {
-            return $custom_template;
-        }
-
-        return $template;
     }
 
     /**
