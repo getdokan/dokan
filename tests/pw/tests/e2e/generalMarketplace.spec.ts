@@ -4,21 +4,19 @@ import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
 import { data } from '@utils/testData';
 
-const newDatasetBackup = {
-    title: 'Admin Setting: General -> marketplace',
-    old_url: 'admin.php?page=dokan#/settings',
-    new_url:'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_general >> #dokan_settings_general_marketplace',
-    old_selector: '#dokan_general[custom_store_url]',
+const oldDataset = {
+    title: 'Admin Old Setting: General -> marketplace',
+    url: 'wp-admin/admin.php?page=dokan#/settings',
+    selector: '//div[@class="nav-title" and contains(text(),"General")]',
     fields: [
         {
-            selector: '#dokan_settings_general_marketplace_marketplace_settings_vendor_store_url input',
-            old_selector: '#dokan_general[custom_store_url]',
+            selector: '//input[@id="dokan_general[custom_store_url]"]',
             type: 'text',
             value: 'store-url',
-        },
+        }
     ],
 };
+
 const newDataset = {
     title: 'Admin Setting: General -> marketplace',
     url:'wp-admin/admin.php?page=dokan-dashboard#/settings',
@@ -29,6 +27,16 @@ const newDataset = {
             type: 'text',
             value: 'store-url',
         },
+        // {
+        //     selector: '#dokan_settings_general_marketplace_marketplace_settings_enable_single_seller_mode button',
+        //     type: 'switch',
+        //     value: false,
+        // },
+        // {
+        //     selector: '#dokan_settings_general_marketplace_marketplace_settings_store_category_mode button[name="none"]',
+        //     type: 'radio',
+        //     value: 'none',
+        // },
     ],
 };
 
@@ -46,6 +54,20 @@ test.describe('Admin Setting: General -> marketplace', () => {
 
     // Test for `General -> Marketplace -> Vendor Store URL` settings synchronization.
     test('General Settings', { tag: ['@lite', '@admin', '@migration'] }, async () => {
-        await adminSettingsPage.testData(newDataset);
+        await test.step('Update new settings', async () => {
+            await adminSettingsPage.updateSettings(newDataset);
+        });
+        await test.step('Check new settings', async () => {
+            await adminSettingsPage.checkSettings(newDataset);
+        });
+        await test.step('check old settings', async () => {
+            await adminSettingsPage.updateSettings(oldDataset);
+        });
+        // test.step('update old settings', async () => {
+        //     await adminSettingsPage.checkSettings(newDataset);
+        // });
+        // test.step('check new settings', async () => {
+        //     await adminSettingsPage.checkSettings(newDataset);
+        // });
     });
 });

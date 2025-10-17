@@ -3,45 +3,46 @@ import { data } from '@utils/testData';
 import { AdminSettingsPage } from './adminSettingsPage';
 
 export class AdminSettingsPageNew extends AdminSettingsPage {
-    saveButton: string = '#dokan-admin-settings-save-btn button'
+    saveButtonSelector: string = '#dokan-admin-settings-save-btn button'
 
+    setSaveButtonSelector(selector: string) {
+        this.saveButtonSelector = selector;
+    }
     async ensureVisibilityFor(selector: string) {
         const locator = this.page.locator(selector);
         await locator.scrollIntoViewIfNeeded();
         await locator.waitFor({ state: 'visible', timeout: 10000 });
     }
 
-    async testData( dataSet: any ) {
-        console.log( 'DataSet: ', dataSet );
-        await test.step( 'Go to New Settings to update settings', async () => {
-            await this.goIfNotThere(dataSet.url)
-            await this.waitForLoadState();
-            await this.page.waitForTimeout( 2000 ); // Allow page to stabilize
-            const selectors = this.splitSelectors( dataSet.selector || '' );
+    async updateSettings( dataSet: any ) {
+        await this.goIfNotThere(dataSet.url)
+        await this.waitForLoadState();
+        await this.page.waitForTimeout( 2000 ); // Allow page to stabilize
+        const selectors = this.splitSelectors( dataSet.selector || '' );
 
-            for ( const selector of selectors ) {
-                await this.ensureVisibilityFor( selector );
-                await this.page.click( selector );
-            }
-            this.setFieldValues( dataSet.fields );
-            this.saveSettings();
-        });
+        for ( const selector of selectors ) {
+            await this.ensureVisibilityFor( selector );
+            await this.page.click( selector );
+        }
 
-        // await test.step( 'Go to New Settings to check the settings', async () => {
-        //     await this.goIfNotThere(dataSet.url)
-        //     await this.waitForLoadState();
-        //     await this.page.waitForTimeout( 2000 ); // Allow page to stabilize
-        //     const selectors = this.splitSelectors( dataSet.selector || '' );
+        this.setFieldValues( dataSet.fields );
+        this.saveSettings();
+    }
 
-        //     for ( const selector of selectors ) {
-        //         await this.ensureVisibilityFor( selector );
-        //         await this.assertFieldValues( dataSet.fields );
-        //     }
-        // });
+    async checkSettings( dataSet: any ) {
+        await this.goIfNotThere(dataSet.url)
+        await this.waitForLoadState();
+        await this.page.waitForTimeout( 2000 ); // Allow page to stabilize
+        const selectors = this.splitSelectors( dataSet.selector || '' );
+
+        for ( const selector of selectors ) {
+            await this.ensureVisibilityFor( selector );
+            await this.assertFieldValues( dataSet.fields );
+        }
     }
 
     async saveSettings() {
-        const saveBtn = this.page.locator(this.saveButton);
+        const saveBtn = this.page.locator(this.saveButtonSelector);
         if (await saveBtn.isVisible()) {
             await saveBtn.click();
             await this.waitForLoadState();
