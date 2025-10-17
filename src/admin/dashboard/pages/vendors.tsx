@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import {
-    DataViews,
+    AdminDataViews as DataViews,
     DokanTab,
     Filter,
     DokanLink,
@@ -38,24 +38,47 @@ const VendorsPage = ( props ) => {
     const [ search, setSearch ] = useState( '' );
     const [ status, setStatus ] = useState< string >( 'all' );
 
-    // Allow PRO to inject filter fields via wp.hooks.applyFilters
-    const getFilterFields = () => {
+    const getListFilterFields = () => {
         // returns array of React nodes
         const fields: any[] = [];
         try {
             // Use a stable filter id to let pro register fields
             // @ts-ignore
             const injected = wp.hooks.applyFilters(
-                'dokan_admin_vendors_filters',
+                'dokan_admin_vendors_list_filters',
                 fields
             );
             if ( Array.isArray( injected ) ) {
-                return injected;
+                return injected.map( ( fieldData, index ) => {
+                    const FieldComponent = fieldData.field;
+                    return {
+                        ...fieldData,
+                        field: <FieldComponent
+                            key={ index }
+                            params={ params }
+                            navigate={ navigate }
+                            location={ location }
+                            searchParams={ searchParams }
+                            setSearchParams={ setSearchParams }
+                        />,
+                    };
+                });
             }
         } catch ( _e ) {
             // fail silently
         }
         return fields; // lite default: empty
+    };
+
+    const clearFilter = () => {
+        setSearchParams({});
+    };
+
+    const clearSingleFilter = ( filterId: string ) => {
+        setSearchParams( ( prevParams ) => {
+            prevParams.delete( filterId );
+            return prevParams;
+        } );
     };
 
     // Build query just before request; allow PRO to mutate too
@@ -183,7 +206,7 @@ const VendorsPage = ( props ) => {
     useEffect( () => {
         fetchVendors();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ status, view.page, view.perPage, search ] );
+    }, [ status, view.page, view.perPage, search, searchParams ] );
 
     useEffect( () => {
         // @ts-ignore
@@ -203,19 +226,39 @@ const VendorsPage = ( props ) => {
         () => [
             {
                 name: 'all',
-                title: `${ __( 'All', 'dokan-lite' ) } (${ counts.all || 0 })`,
+                icon: (
+                    <div className="flex items-center gap-1.5 px-2">
+                        { __( 'All', 'dokan-lite' ) }
+                        <span className="text-xs font-light text-[#A5A5AA]">
+                    ({ counts.all || 0 })
+                </span>
+                    </div>
+                ),
+                title: __( 'All', 'dokan-lite' ),
             },
             {
                 name: 'approved',
-                title: `${ __( 'Approved', 'dokan-lite' ) } (${
-                    counts.approved || 0
-                })`,
+                icon: (
+                    <div className="flex items-center gap-1.5 px-2">
+                        { __( 'Approved', 'dokan-lite' ) }
+                        <span className="text-xs font-light text-[#A5A5AA]">
+                    ({ counts.approved || 0 })
+                </span>
+                    </div>
+                ),
+                title: __( 'Approved', 'dokan-lite' ),
             },
             {
                 name: 'pending',
-                title: `${ __( 'Pending', 'dokan-lite' ) } (${
-                    counts.pending || 0
-                })`,
+                icon: (
+                    <div className="flex items-center gap-1.5 px-2">
+                        { __( 'Pending', 'dokan-lite' ) }
+                        <span className="text-xs font-light text-[#A5A5AA]">
+                    ({ counts.pending || 0 })
+                </span>
+                    </div>
+                ),
+                title: __( 'Pending', 'dokan-lite' ),
             },
         ],
         [ counts ]
@@ -267,7 +310,7 @@ const VendorsPage = ( props ) => {
                             >
                                 <span
                                     className={ twMerge(
-                                        'text-sm font-medium text-gray-900',
+                                        'text-sm font-medium text-[#7047EB]',
                                         isLoading ? loadingClass : ''
                                     ) }
                                 >
@@ -367,10 +410,10 @@ const VendorsPage = ( props ) => {
                 return (
                     <span
                         className={ twMerge(
-                            'inline-flex items-center px-3.5 py-1.5 rounded-md text-xs font-medium',
+                            'inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-medium',
                             item?.enabled
-                                ? 'bg-green-100 text-green-800'
-                                : 'bg-neutral-100 text-neutral-800',
+                                ? 'bg-[#D4FBEF] text-[#00563F]'
+                                : 'bg-[#F1F1F4] text-[#393939]',
                             isLoading ? loadingClass : ''
                         ) }
                     >
@@ -382,30 +425,6 @@ const VendorsPage = ( props ) => {
             },
         },
     ];
-
-    const onFilter = () => {
-        const next = { ...view };
-
-        // Reset to first page and refresh list
-        next.page = 1;
-        setView( next );
-        fetchVendors( {
-            page: 1,
-            perPage: next.perPage,
-            status,
-        } );
-    };
-
-    const onReset = () => {
-        setView( ( prev: any ) => ( { ...prev, page: 1 } ) );
-        //@ts-ignore
-        wp.hooks.doAction( 'dokan_vendors_reset_filters_before_fetch' );
-        fetchVendors( {
-            page: 1,
-            perPage: view.perPage,
-            noBuildQuery: true,
-        } );
-    };
 
     // Helpers for confirmation
     const extractIdsFromArgs = ( args: any ): number[] => {
@@ -491,6 +510,14 @@ const VendorsPage = ( props ) => {
         );
     };
 
+    // Handle tab selection for status filtering
+    const handleTabSelect = ( tabName ) => {
+        setStatus( tabName );
+        // also refresh current page with new status
+        fetchVendors( { status: tabName, page: 1 } );
+        setView( ( prev: any ) => ( { ...prev, page: 1 } ) );
+    };
+
     return (
         <div className="dokan-layout dokan-admin-vendors">
             <div className="mb-3 flex items-center justify-between">
@@ -507,58 +534,6 @@ const VendorsPage = ( props ) => {
                         { __( 'Add New Vendor', 'dokan-lite' ) }
                     </DokanButton>
                 </div>
-            </div>
-            <div className="mb-3 flex items-center justify-between gap-3">
-                { /* Status Tabs (filter only) */ }
-                <DokanTab
-                    namespace="dokan-admin-vendors-status"
-                    tabs={ tabs }
-                    variant="primary"
-                    onSelect={ ( tabName: string ) => {
-                        setStatus( tabName );
-                        // also refresh current page with new status
-                        fetchVendors( { status: tabName, page: 1 } );
-                        setView( ( prev: any ) => ( { ...prev, page: 1 } ) );
-                    } }
-                />
-                <div className="flex items-center gap-3">
-                    <SearchInput value={ search } onChange={ setSearch } />
-                    { getFilterFields().length > 0 && (
-                        <DokanButton
-                            type="button"
-                            variant="secondary"
-                            onClick={ () => setShowFilters( ( v ) => ! v ) }
-                        >
-                            <LucideIcons.Funnel size={ 16 } />
-                            { __( 'Filter', 'dokan-lite' ) }
-                        </DokanButton>
-                    ) }
-                </div>
-            </div>
-
-            { /* Filters */ }
-            <div
-                className={ `dokan-dashboard-filters ${
-                    showFilters ? '' : 'hidden'
-                }` }
-            >
-                <Filter
-                    fields={ getFilterFields().map( ( Component, index ) => (
-                        <Component
-                            key={ index }
-                            onFilter={ onFilter }
-                            onReset={ onReset }
-                            params={ params }
-                            navigate={ navigate }
-                            location={ location }
-                            searchParams={ searchParams }
-                            setSearchParams={ setSearchParams }
-                        />
-                    ) ) }
-                    showFilter={ false }
-                    showReset={ false }
-                    namespace="dokan-admin-vendors-filter"
-                />
             </div>
 
             { /* Table */ }
@@ -636,7 +611,7 @@ const VendorsPage = ( props ) => {
                     fields={ fields as any }
                     getItemId={ ( item: Vendor ) => item.id }
                     onChangeView={ handleChangeView }
-                    search={ false }
+                    search={ true }
                     selection={ selection }
                     onChangeSelection={ ( ids: string[] ) =>
                         setSelection( ids )
@@ -804,6 +779,19 @@ const VendorsPage = ( props ) => {
                     } }
                     view={ view }
                     isLoading={ isLoading }
+                    tabs={ {
+                        tabs,
+                        onSelect: handleTabSelect,
+                        initialTabName: status,
+                        additionalComponents:[
+                            <SearchInput value={ search } onChange={ setSearch } />
+                        ],
+                    } }
+                    filter={ {
+                        fields: getListFilterFields(),
+                        onFilterRemove: clearSingleFilter,
+                        onReset: () => clearFilter(),
+                    } }
                 />
             </div>
         </div>
