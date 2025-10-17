@@ -19,5 +19,8 @@
         &:focus-visible {
             outline-color: var(--dokan-button-border-color, #7047EB) !important;
         }
+        &.ql-blank::before {
+            font-style: normal;
+        }
     }
 }
