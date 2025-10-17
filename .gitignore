@@ -4,6 +4,7 @@ npm-debug.log
 .DS_Store
 includes/.DS_Store
 .idea
+.vscode
 /includes/.DS_Store
 plugin-deploy.sh
 secret.json
@@ -25,3 +26,4 @@ phpcs-report.txt
 !/assets/css/vue-vendor.css
 !/assets/css/vue-frontend.css
 !/assets/css/wp-version-before-5-3.css
+/types
