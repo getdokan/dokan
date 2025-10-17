@@ -93,14 +93,12 @@ class Coupon {
 
     /**
      * Intercepts coupon application to handle line-item coupon discounts.
-     *
      * WooCommerce removes the coupon from the order and recalculates totals. For reference, see:
+     *
      * @see https://github.com/woocommerce/woocommerce/blob/8abd6e97ca598381cb07287a2e7b735799cb55d5/plugins/woocommerce/includes/abstracts/abstract-wc-order.php#L1339
-     *
-     * WooCommerce does not provide a direct hook to retrieve coupon amounts per line item. However,
-     * the `get_discounts` method of the `WC_Discounts` class allows access to this information.
+     * WooCommerce does not provide a direct hook to retrieve coupon amounts per line items from the WC_Discounts object.
+     * However, the `get_discounts` method of the `WC_Discounts` class allows access to this information.
      * This implementation utilizes the following steps to calculate line-item discounts:
-     *
      * 1. Remove the interfering WC hook used by Dokan hook.
      * 2. Reapply the coupon to the order or cart.
      * 3. Trigger the Dokan action to apply the coupon to the order or cart.
@@ -116,8 +114,12 @@ class Coupon {
     public function intercept_wc_coupon( int $apply_quantity, $item, WC_Coupon $coupon, WC_Discounts $discounts ): int {
         remove_filter( 'woocommerce_coupon_get_apply_quantity', [ $this, 'intercept_wc_coupon' ], 15 );
 
-        $discounts_clone = clone $discounts;
-        $discounts_clone->apply_coupon( $coupon );
+        // Clone the discount object to avoid side effects.
+        $discounts_clone        = clone $discounts;
+        $should_validate_coupon = apply_filters( 'dokan_coupon_should_validate', true, $coupon, $item, $discounts_clone );
+
+        // Reapply the coupon to the order or cart.
+        $discounts_clone->apply_coupon( $coupon, $should_validate_coupon );
 
         do_action( 'dokan_wc_coupon_applied', $coupon, $discounts_clone, $item, $apply_quantity, $this );
 

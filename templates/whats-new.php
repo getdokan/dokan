@@ -4,6 +4,38 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.1.2',
+        'released' => '2025-10-16',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Updated the Admin Dashboard header UI for seamless visual representation with the new React-based frontend architecture.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added support for retrieving all product types via the Products REST API, enabling more flexible product filtering.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.1.1',
+        'released' => '2025-10-09',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Added method to retrieve vendor earnings excluding admin subsidy.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Admin gateway fee calculation now checks an order-level meta value before using the previous fallback logic.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.1.0',
         'released' => '2025-09-30',
         'changes'  => [
