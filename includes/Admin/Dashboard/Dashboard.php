@@ -28,6 +28,15 @@ class Dashboard implements Hookable {
     protected string $setup_guide_key = 'dokan-setup-guide-banner';
 
     /**
+     * Admin panel header script key.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var string
+     */
+    protected string $header_script_key = 'dokan-admin-panel-header';
+
+    /**
      * Register hooks.
      */
     public function register_hooks(): void {
@@ -121,7 +130,8 @@ class Dashboard implements Hookable {
      */
     public function render_dashboard_page(): void {
         ob_start();
-        echo '<div class="wrap"><div id="dokan-admin-dashboard" class="dokan-layout">' . esc_html__( 'Loading...', 'dokan-lite' ) . '</div></div>';
+        echo '<div id="dokan-admin-panel-header" class="dokan-layout"></div>';
+        echo '<div class="wrap"><div id="dokan-admin-dashboard" class="dokan-layout dokan-admin-page-body">' . esc_html__( 'Loading...', 'dokan-lite' ) . '</div></div>';
         echo ob_get_clean();
     }
 
@@ -133,11 +143,14 @@ class Dashboard implements Hookable {
      * @return array<string, mixed>
      */
     public function settings(): array {
-        $dashboard_url = admin_url( 'admin.php?page=dokan-dashboard' );
+        // TODO: We are using dokan legacy dashboard URL here for legacy `Import Dummy Data` & `Basic & Fundamental` page.
+        // We will remove this code after getting the new `Import Dummy Data` & `Basic & Fundamental` page.
+        $dashboard_url = admin_url( 'admin.php?page=dokan' );
         $header_info   = [
             'lite_version'    => DOKAN_PLUGIN_VERSION,
             'is_pro_exists'   => dokan()->is_pro_exists(),
             'dashboard_url'   => $dashboard_url,
+            'has_new_version' => Helper::dokan_has_new_version(),
             'help_menu_items' => apply_filters(
                 'dokan_admin_setup_guides_help_menu_items',
                 [
@@ -254,6 +267,7 @@ class Dashboard implements Hookable {
         return array_reduce(
             $this->get_pages(), fn( $carry, $page ) => array_merge( $carry, $page->scripts() ), [
                 $this->script_key,
+                $this->header_script_key,
                 $this->setup_guide_key,
             ]
         );
@@ -270,6 +284,7 @@ class Dashboard implements Hookable {
         return array_reduce(
             $this->get_pages(), fn( $carry, $page ) => array_merge( $carry, $page->styles() ), [
                 $this->script_key,
+                $this->header_script_key,
                 $this->setup_guide_key,
             ]
         );
@@ -285,6 +300,9 @@ class Dashboard implements Hookable {
     public function register_scripts() {
         // Register the admin dashboard scripts.
         $this->register_admin_dashboard_scripts();
+
+        // Register the admin panel header scripts.
+        $this->register_admin_panel_header_scripts();
 
         // Register the setup guide scripts.
         $this->register_setup_guide_scripts();
@@ -338,6 +356,55 @@ class Dashboard implements Hookable {
                 $this->script_key,
                 'dokanAdminDashboard',
                 $data,
+            );
+        }
+    }
+
+    /**
+     * Register the admin panel header scripts.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    protected function register_admin_panel_header_scripts() {
+        $header_script_file = DOKAN_DIR . '/assets/js/dokan-admin-panel-header.asset.php';
+        if ( file_exists( $header_script_file ) ) {
+            $header_script = require $header_script_file;
+            $dependencies  = $header_script['dependencies'] ?? [];
+            $version       = $header_script['version'] ?? '';
+
+            wp_register_script(
+                $this->header_script_key,
+                DOKAN_PLUGIN_ASSEST . '/js/dokan-admin-panel-header.js',
+                $dependencies,
+                $version,
+                true
+            );
+
+            wp_register_style(
+                $this->header_script_key,
+                DOKAN_PLUGIN_ASSEST . '/js/dokan-admin-panel-header.css',
+                [],
+                $version
+            );
+
+            wp_set_script_translations(
+                $this->header_script_key,
+                'dokan-lite'
+            );
+
+            // Localize the settings.
+            $settings    = $this->settings();
+            $header_info = $settings['header_info'] ?? [];
+
+            wp_localize_script(
+                $this->header_script_key,
+                'dokanAdminPanelHeaderSettings',
+                [
+                    'logo_url'    => DOKAN_PLUGIN_ASSEST . '/images/dokan-logo.png',
+                    'header_info' => $header_info,
+                ]
             );
         }
     }

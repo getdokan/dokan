@@ -32,7 +32,7 @@ const AdminSetupBanner = ( props: Props ) => {
         <div
             data-test-id="admin-setup-guide-button"
             className={ twMerge(
-                'bg-white rounded-lg p-5 my-4 mr-[10px] md:mr-[20px]',
+                'bg-white rounded-lg p-5 my-4',
                 props?.className ?? ''
             ) }
         >

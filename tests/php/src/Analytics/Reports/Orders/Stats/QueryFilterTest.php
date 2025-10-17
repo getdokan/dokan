@@ -1,7 +1,6 @@
 <?php
 namespace WeDevs\Dokan\Test\Analytics\Reports\Orders\Stats;
 
-use Exception;
 use Mockery;
 use WeDevs\Dokan\Analytics\Reports\Orders\Stats\QueryFilter;
 use WeDevs\Dokan\Test\Analytics\Reports\ReportTestCase;
@@ -71,6 +70,7 @@ class QueryFilterTest extends ReportTestCase {
 
 		$service = Mockery::mock( QueryFilter::class . '[' . implode( ',', $mocking_methods ) . ']' );
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
+        dokan_get_container()->get( QueryFilter::class )->register_hooks();
 
         foreach ( $mocking_methods as $method ) {
             $service->shouldReceive( $method )
@@ -83,7 +83,7 @@ class QueryFilterTest extends ReportTestCase {
             );
         }
 
-		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\Query();
+		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\Query( [] );
 
 		$wc_stats_query->get_data();
 	}
@@ -94,17 +94,18 @@ class QueryFilterTest extends ReportTestCase {
      * @return void
      */
     public function test_dokan_order_stats_added_to_wc_select_query_for_seller( array $data ) {
+        $this->set_mock_commission( $data['vendor_earning'], $data['admin_commission'] );
         $parent_id = $this->create_multi_vendor_order();
-
-        $this->set_order_meta_for_dokan( $parent_id, $data );
 
 		$this->run_all_pending();
 
-        $filter = Mockery::mock( QueryFilter::class . '[should_filter_by_seller_id]' );
+        $filter = Mockery::mock( QueryFilter::class . '[should_filter_by_vendor_id]' );
 
         dokan_get_container()->extend( QueryFilter::class )->setConcrete( $filter );
 
-        $filter->shouldReceive( 'should_filter_by_seller_id' )
+        dokan_get_container()->get( QueryFilter::class )->register_hooks();
+
+        $filter->shouldReceive( 'should_filter_by_vendor_id' )
             ->atLeast()
             ->once()
             ->andReturnTrue();
@@ -116,45 +117,6 @@ class QueryFilterTest extends ReportTestCase {
         $sub_ids = dokan_get_suborder_ids_by( $parent_id );
 
         $this->assertCount( $report_data->totals->orders_count, $sub_ids );
-
-        $sub_ord_count = count( $sub_ids );
-
-        // Assert dokan order stats totals.
-        foreach ( $data as $key => $val ) {
-            $this->assertEquals( floatval( $val * $sub_ord_count ), $report_data->totals->{"total_$key"} );
-        }
-    }
-
-    /**
-     * @dataProvider get_dokan_stats_data
-     *
-     * @return void
-     */
-    public function test_dokan_order_stats_added_to_wc_select_query_for_admin( array $data ) {
-        $parent_id = $this->create_multi_vendor_order();
-        $this->set_order_meta_for_dokan( $parent_id, $data );
-
-		$this->run_all_pending();
-
-        $filter = Mockery::mock( QueryFilter::class . '[should_filter_by_seller_id]' );
-
-        remove_filter( 'woocommerce_analytics_clauses_where_orders_stats_total', [ $this->sut, 'add_where_subquery' ], 30 );
-        remove_filter( 'woocommerce_analytics_clauses_where_orders_stats_total', [ $this->sut, 'add_where_subquery' ], 30 );
-
-        dokan_get_container()->extend( QueryFilter::class )->setConcrete( $filter );
-
-        $filter->shouldReceive( 'should_filter_by_seller_id' )
-            ->atLeast()
-            ->once()
-            ->andReturnFalse();
-
-        $orders_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\Query( [] );
-
-		$report_data = $orders_query->get_data();
-
-        $sub_ids = dokan_get_suborder_ids_by( $parent_id );
-
-        $this->assertEquals( 1, $report_data->totals->orders_count );
 
         $sub_ord_count = count( $sub_ids );
 

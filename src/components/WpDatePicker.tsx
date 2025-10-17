@@ -36,41 +36,47 @@ const WpDatePicker = ( props: Props ) => {
     };
 
     return (
-        <div className={ props?.wrapperClassName ?? '' }>
-            { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */ }
+        <>
             <div
-                className={ props?.pickerToggleClassName ?? '' }
-                onClick={ () => {
-                    setIsVisible( ! isVisible );
-                } }
+                className={ props?.wrapperClassName ?? '' }
                 // @ts-ignore
                 ref={ setPopoverAnchor }
             >
-                { props.children ?? (
-                    <SimpleInput
-                        onChange={ () => {} }
-                        value={
-                            props?.currentDate
-                                ? dateI18n(
-                                    getSettings().formats.date,
-                                      props?.currentDate as string,
-                                      getSettings().timezone.string
-                                  )
-                                : ''
-                        }
-                        input={ {
-                            id: props?.inputId ?? instanceId,
-                            name: props?.inputName ?? 'dokan_date_picker_input',
-                            type: 'text',
-                            readOnly: true,
-                            autoComplete: 'off',
-                            placeholder: __( 'Select date', 'dokan-lite' ),
-                            'aria-label':
-                                props?.ariaLabel ??
-                                __( 'Select date', 'dokan-lite' ),
-                        } }
-                    />
-                ) }
+                { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */ }
+                <div
+                    className={ props?.pickerToggleClassName ?? '' }
+                    onClick={ () => {
+                        setIsVisible( ! isVisible );
+                    } }
+                >
+                    { props.children ?? (
+                        <SimpleInput
+                            onChange={ () => {} }
+                            value={
+                                props?.currentDate
+                                    ? dateI18n(
+                                          getSettings().formats.date,
+                                          props?.currentDate as string,
+                                          getSettings().timezone.string
+                                      )
+                                    : ''
+                            }
+                            input={ {
+                                id: props?.inputId ?? instanceId,
+                                name:
+                                    props?.inputName ??
+                                    'dokan_date_picker_input',
+                                type: 'text',
+                                readOnly: true,
+                                autoComplete: 'off',
+                                placeholder: __( 'Select date', 'dokan-lite' ),
+                                'aria-label':
+                                    props?.ariaLabel ??
+                                    __( 'Select date', 'dokan-lite' ),
+                            } }
+                        />
+                    ) }
+                </div>
             </div>
 
             { isVisible && (
@@ -105,7 +111,7 @@ const WpDatePicker = ( props: Props ) => {
                     </div>
                 </Popover>
             ) }
-        </div>
+        </>
     );
 };
 

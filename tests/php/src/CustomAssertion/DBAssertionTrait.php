@@ -71,8 +71,9 @@ trait DBAssertionTrait {
      */
     public function assertDatabaseCount( string $table, int $count, array $data = [] ): void {
         $rows_count = $this->getDatabaseCount( $table, $data );
+        $error_message = sprintf( _n( '%d row', '%d rows', $rows_count, 'dokan-lite' ), $rows_count ) . " found in `$table` for given data " . json_encode( $data );
 
-        $this->assertEquals( $count, $rows_count, "No rows found in `$table` for given data " . json_encode( $data ) );
+        $this->assertEquals( $count, $rows_count, $error_message );
     }
 
     /**
