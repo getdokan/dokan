@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\Admin\Dashboard;
 
 use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\Contracts\Hookable;
+use WeDevs\Dokan\Utilities\OrderUtil;
 
 /**
  * Admin dashboard class.
@@ -330,7 +331,20 @@ class Dashboard implements Hookable {
             $dependencies[]   = 'dokan-react-frontend';
 
             $version          = $dashboard_script['version'] ?? '';
-            $data             = [ 'currency' => dokan_get_container()->get( 'scripts' )->get_localized_price() ];
+            $data = [
+                'currency' => dokan_get_container()->get( 'scripts' )->get_localized_price(),
+                'urls'     => [
+                    'adminRoot'         => admin_url(),
+                    'siteUrl'           => home_url( '/' ),
+                    'storePrefix'       => dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ),
+                    'assetsUrl'         => DOKAN_PLUGIN_ASSEST,
+                    'buynowpro'         => dokan_pro_buynow_url(),
+                    'upgradeToPro'      => 'https://dokan.co/wordpress/upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
+                    'dummy_data'        => DOKAN_PLUGIN_ASSEST . '/dummy-data/dokan_dummy_data.csv',
+                    'adminOrderListUrl' => OrderUtil::get_admin_order_list_url(),
+                    'adminOrderEditUrl' => OrderUtil::get_admin_order_edit_url(),
+                ],
+            ];
 
             wp_register_script(
                 $this->script_key,
@@ -343,7 +357,7 @@ class Dashboard implements Hookable {
             wp_register_style(
                 $this->script_key,
                 DOKAN_PLUGIN_ASSEST . '/css/dokan-admin-dashboard.css',
-                [ 'wc-components' ],
+                [ 'dokan-react-components', 'wc-components' ],
                 $version
             );
 

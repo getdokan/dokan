@@ -13,29 +13,42 @@ export const formatPrice = (
         return price;
     }
 
-    if ( ! window?.dokanFrontend?.currency ) {
+    if (
+        ! window?.dokanFrontend?.currency &&
+        ! window?.dokanAdminDashboard?.currency
+    ) {
         console.warn( 'Dokan Currency Data Not Found' );
         return price;
     }
 
     if ( ! currencySymbol ) {
-        currencySymbol = window?.dokanFrontend?.currency.symbol;
+        currencySymbol =
+            window?.dokanFrontend?.currency.symbol ||
+            window?.dokanAdminDashboard?.currency.symbol;
     }
 
     if ( ! precision ) {
-        precision = window?.dokanFrontend?.currency.precision;
+        precision =
+            window?.dokanFrontend?.currency.precision ||
+            window?.dokanAdminDashboard?.currency.precision;
     }
 
     if ( ! thousand ) {
-        thousand = window?.dokanFrontend?.currency.thousand;
+        thousand =
+            window?.dokanFrontend?.currency.thousand ||
+            window?.dokanAdminDashboard?.currency.thousand;
     }
 
     if ( ! decimal ) {
-        decimal = window?.dokanFrontend?.currency.decimal;
+        decimal =
+            window?.dokanFrontend?.currency.decimal ||
+            window?.dokanAdminDashboard?.currency.decimal;
     }
 
     if ( ! format ) {
-        format = window?.dokanFrontend?.currency.format;
+        format =
+            window?.dokanFrontend?.currency.format ||
+            window?.dokanAdminDashboard?.currency.format;
     }
 
     return window.accounting.formatMoney(
@@ -58,7 +71,10 @@ export const formatNumber = ( value ) => {
         return value;
     }
 
-    if ( ! window?.dokanFrontend?.currency ) {
+    if (
+        ! window?.dokanFrontend?.currency &&
+        ! window?.dokanAdminDashboard?.currency
+    ) {
         console.warn( 'Dokan Currency Data Not Found' );
         return value;
     }
@@ -66,9 +82,12 @@ export const formatNumber = ( value ) => {
     return window.accounting.formatNumber(
         value,
         // @ts-ignore
-        window?.dokanFrontend?.currency.precision,
-        window?.dokanFrontend?.currency.thousand,
-        window?.dokanFrontend?.currency.decimal
+        window?.dokanFrontend?.currency.precision ||
+            window?.dokanAdminDashboard?.currency.precision,
+        window?.dokanFrontend?.currency.thousand ||
+            window?.dokanAdminDashboard?.currency.thousand,
+        window?.dokanFrontend?.currency.decimal ||
+            window?.dokanAdminDashboard?.currency.decimal
     );
 };
 
@@ -78,6 +97,7 @@ export const unformatNumber = ( value ) => {
     }
     return window.accounting.unformat(
         value,
-        window?.dokanFrontend?.currency.decimal
+        window?.dokanFrontend?.currency.decimal ||
+            window?.dokanAdminDashboard?.currency.decimal
     );
 };
