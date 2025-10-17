@@ -68,19 +68,6 @@ function Dashboard() {
                     <MostReportedVendorsSection />
                 ) }
             </div>
-
-            <div className={ `legacy-dashboard-url text-sm font-medium pt-8` }>
-                { __(
-                    'If you want to go back to old dashboard,',
-                    'dokan-lite'
-                ) }{ ' ' }
-                <a
-                    className={ `skip-color-module underline font-bold text-sm text-[#7047EB] hover:text-[#502BBF]` }
-                    href={ dokanAdminDashboardSettings?.dashboard_url || '#' }
-                >
-                    { __( 'Click Here', 'dokan-lite' ) }
-                </a>
-            </div>
         </div>
     );
 }
