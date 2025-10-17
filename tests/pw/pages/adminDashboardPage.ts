@@ -24,102 +24,123 @@ export class AdminDashboardPage extends AdminPage {
         // Wait for page to be fully loaded
         await this.page.waitForLoadState('networkidle');
         
-        // Check if dashboard title is visible
-        await this.toBeVisible("//h1[normalize-space()='Dashboard']");
+        // Main dashboard elements
+        await this.checkMainDashboardElements();
         
-        await this.toBeVisible("//h3[normalize-space()='To-Do']");
+        // To-Do section elements
+        await this.checkToDoSection();
+        
+        // Analytics section elements
+        await this.checkAnalyticsSection();
+        
+        // Vendor metrics section
+        await this.checkVendorMetricsSection();
+        
+        // All-time marketplace stats
+        await this.checkMarketplaceStatsSection();
+    
+        
+        // Additional sections
+        await this.checkAdditionalSections();
+    }
 
-        await this.toBeVisible("//div[contains(text(),'Vendor Approvals')]");
+    // Main dashboard elements
+    private async checkMainDashboardElements() {
+        const mainElements = [
+            "//h1[normalize-space()='Dashboard']",
+            "//h3[normalize-space()='To-Do']",
+            "//h3[normalize-space()='Analytics']",
+            "//h3[normalize-space(text())='Daily Sales Chart']",
+            "//h3[normalize-space()='Monthly Overview']",
+            "//h3[normalize-space(text())='Vendor Metrics']",
+            "//h3[normalize-space(text())='All-Time Marketplace Stats']",
+            "//h3[normalize-space()='Top Performing Vendors']",
+            "//h3[normalize-space()='Most Reviewed Products']",
+            "//h3[normalize-space()='Most Reported Vendors']"
+        ];
+        
+        await this.multipleElementVisible(mainElements);
+    }
 
-        await this.toBeVisible("//div[contains(text(),'Product Approvals')]");
+    // To-Do section elements
+    private async checkToDoSection() {
+        const toDoElements = [
+            "//div[contains(text(),'Vendor Approvals')]",
+            "//div[contains(text(),'Product Approvals')]",
+            "//div[contains(text(),'Pending Withdrawals')]",
+            "//div[contains(text(),'Pending Verifications')]",
+            "//div[contains(text(),'Open Support Tickets')]",
+            "//div[contains(text(),'Return Requests')]",
+            "//div[contains(text(),'Product Q&A Inquiries')]",
+            "//div[contains(text(),'Pending Quotes')]"
+        ];
+        
+        await this.multipleElementVisible(toDoElements);
+    }
 
-        await this.toBeVisible("//div[contains(text(),'Pending Withdrawals')]");
-
-        await this.toBeVisible("//div[contains(text(),'Pending Verifications')]");
-
-        await this.toBeVisible("//div[contains(text(),'Open Support Tickets')]");
-
-        await this.toBeVisible("//div[contains(text(),'Return Requests')]");
-
-        await this.toBeVisible("//div[contains(text(),'Product Q&A Inquiries')]");
-
-        await this.toBeVisible("//div[contains(text(),'Pending Quotes')]");
-
-        await this.toBeVisible("//h3[normalize-space()='Analytics']");
-
-        await this.toBeVisible("//div[contains(text(),'Sales Overview')]");
-
+    // Analytics section elements
+    private async checkAnalyticsSection() {
+        const analyticsElements = [
+            "//div[contains(text(),'Sales Overview')]",
+            "//div[contains(text(),'Revenue Insight')]",
+            "//span[normalize-space(text())='New Products']",
+            "//span[normalize-space(text())='Active Vendors']",
+            "//span[normalize-space(text())='New Vendor Registration']",
+            "//span[normalize-space(text())='New Customers']",
+            "//span[normalize-space(text())='Recurring Customers']",
+            "//span[normalize-space(text())='Refunds']",
+            "//span[normalize-space(text())='Reviews']",
+            "//span[normalize-space(text())='Order Cancellation Rate']",
+            "//span[normalize-space(text())='Support Tickets']",
+            "//span[normalize-space(text())='Abuse Reports']"
+        ];
+        
+        await this.multipleElementVisible(analyticsElements);
+        
+        // Check buttons
         await this.toBeVisible("(//button[contains(@class,'inline-flex items-center')])[1]");
-
-        await this.toBeVisible("//div[contains(text(),'Revenue Insight')]");
-
         await this.toBeVisible("(//button[contains(@class,'inline-flex items-center')])[2]");
-
-        await this.toBeVisible("(//h3[contains(@class,'font-semibold text-base')])[3]");    
-
-        await this.toBeVisible("//span[normalize-space(text())='New Products']");
-
-        await this.toBeVisible("//span[normalize-space(text())='Active Vendors']");
-
-        await this.toBeVisible("//span[normalize-space(text())='New Vendor Registration']");
-
-        await this.toBeVisible("//span[normalize-space(text())='New Customers']");
-
-        await this.toBeVisible("//span[normalize-space(text())='Recurring Customers']");
-
-        await this.toBeVisible("//span[normalize-space(text())='Refunds']");
-
-        await this.toBeVisible("//span[normalize-space(text())='Reviews']");
-
-        await this.toBeVisible("//span[normalize-space(text())='Order Cancellation Rate']");
-
-        await this.toBeVisible("//span[normalize-space(text())='Support Tickets']");
-
-        await this.toBeVisible("//span[normalize-space(text())='Abuse Reports']");
-
-        await this.toBeVisible("//h3[normalize-space(text())='Daily Sales Chart']");
-
-        await this.toBeVisible("//h3[normalize-space()='Monthly Overview']");
-
-        await this.toBeVisible("(//span[@class='text-sm font-medium'])[1]");
-
-        await this.toBeVisible("(//span[@class='text-sm font-medium'])[2]");
-
-        await this.toBeVisible("(//span[@class='text-sm font-medium'])[3]");
-
-        await this.toBeVisible("//h3[normalize-space(text())='Vendor Metrics']");   
-
-        await this.toBeVisible("//span[normalize-space(text())='Verified Vendors']");
-
-        await this.toBeVisible("//span[normalize-space(text())='Subscribed Vendors']");
-
-        await this.toBeVisible("//span[normalize-space(text())='Vendor on Vacation']");
-
-        await this.toBeVisible("//h3[normalize-space(text())='All-Time Marketplace Stats']");
-
-        await this.toBeVisible("//span[normalize-space(text())='Total Products']");
-
-        await this.toBeVisible("//span[normalize-space(text())='Total Vendors']");
-
-        await this.toBeVisible("//span[normalize-space(text())='Total Customers']"); 
-
-        await this.toBeVisible("//span[normalize-space(text())='Total Orders']");
-
-        await this.toBeVisible("//span[@class='text-black font-semibold text-sm'][normalize-space()='Total Sales']");
-
-        await this.toBeVisible("//span[normalize-space()='Total Commissions']");
+        await this.toBeVisible("(//h3[contains(@class,'font-semibold text-base')])[3]");
         
-        await this.toBeVisible("//h3[normalize-space()='Top Performing Vendors']");
+        // Check monthly overview spans
+        await this.toBeVisible("(//span[@class='text-sm font-medium'])[1]");
+        await this.toBeVisible("(//span[@class='text-sm font-medium'])[2]");
+        await this.toBeVisible("(//span[@class='text-sm font-medium'])[3]");
+    }
 
-        // Replace this line:
-        await this.toBeVisible("//div[@class='top-vendors-table relative overflow-x-auto shadow-md sm:rounded-lg bg-white']//th[1]");
+    // Vendor metrics section
+    private async checkVendorMetricsSection() {
+        const vendorMetricsElements = [
+            "//span[normalize-space(text())='Verified Vendors']",
+            "//span[normalize-space(text())='Subscribed Vendors']",
+            "//span[normalize-space(text())='Vendor on Vacation']"
+        ];
+        
+        await this.multipleElementVisible(vendorMetricsElements);
+    }
 
-        await this.toBeVisible("//h3[normalize-space()='Most Reviewed Products']");
+    // Marketplace stats section
+    private async checkMarketplaceStatsSection() {
+        const marketplaceStatsElements = [
+            "//span[normalize-space(text())='Total Products']",
+            "//span[normalize-space(text())='Total Vendors']",
+            "//span[normalize-space(text())='Total Customers']",
+            "//span[normalize-space(text())='Total Orders']",
+            "//span[@class='text-black font-semibold text-sm'][normalize-space()='Total Sales']",
+            "//span[normalize-space()='Total Commissions']"
+        ];
+        
+        await this.multipleElementVisible(marketplaceStatsElements);
+    }
 
-        await this.toBeVisible("//h3[normalize-space()='Most Reported Vendors']");
+    // Top performing vendors table
+    
+        
+     
 
+    // Additional sections
+    private async checkAdditionalSections() {
         await this.toBeVisible("//a[normalize-space()='Click Here']");
-
     }
 
     // Check "At a Glance" values accuracy
