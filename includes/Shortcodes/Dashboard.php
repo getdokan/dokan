@@ -9,6 +9,44 @@ class Dashboard extends DokanShortcode {
     protected $shortcode = 'dokan-dashboard';
 
     /**
+     * Dashboard constructor.
+     *
+     * @return void
+     */
+    public function __construct() {
+        parent::__construct();
+
+        if ( apply_filters( 'dokan_vendor_dashboard_enable_full_width_page', true ) ) {
+            add_action( 'template_redirect', [ $this, 'rewrite_vendor_dashboard_template' ], 1 );
+        }
+    }
+
+    /**
+     * Rewrite vendor dashboard template
+     *
+     * This method intercepts the template_redirect action and loads
+     * a custom full-width template for the vendor dashboard.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function rewrite_vendor_dashboard_template() {
+        // Check if the user is logged in and is on the vendor dashboard.
+        if ( is_user_logged_in() && dokan_is_seller_dashboard() ) {
+            $dashboard_template = DOKAN_DIR . '/templates/dashboard/block-dashboard.php';
+
+            // Check if the custom template exists.
+            if ( file_exists( $dashboard_template ) ) {
+                // Load dokan full width vendor dashboard template.
+                include_once $dashboard_template;
+                wp_print_media_templates();
+                exit;
+            }
+        }
+    }
+
+    /**
      * Load template files
      *
      * Based on the query vars, load the appropriate template files
