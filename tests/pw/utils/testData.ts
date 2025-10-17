@@ -1090,6 +1090,7 @@ export const data = {
                 setupWizardSelling: 'wp-admin/admin.php?page=dokan-setup&step=selling',
                 setupWizardCommission: 'wp-admin/admin.php?page=dokan-setup&step=commission',
                 setupWizardWithdraw: 'wp-admin/admin.php?page=dokan-setup&step=withdraw',
+                dokanNew: 'wp-admin/admin.php?page=dokan-dashboard',
                 dokan: 'wp-admin/admin.php?page=dokan#',
 
                 // only lite

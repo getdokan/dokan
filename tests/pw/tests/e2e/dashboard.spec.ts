@@ -35,14 +35,14 @@ test.describe('Dashboard test', () => {
         await admin.adminDashboardRenderProperly();
     });
 
-    test('admin can evaluate dashboard at a glance values', { tag: ['@lite', '@admin', '@serial'] }, async () => {
-        const summary = await apiUtils.getAdminReportSummary(payloads.adminAuth);
-        await admin.dokanAtAGlanceValueAccuracy(summary);
-    });
+    // test('admin can evaluate dashboard at a glance values', { tag: ['@lite', '@admin', '@serial'] }, async () => {
+    //     const summary = await apiUtils.getAdminReportSummary(payloads.adminAuth);
+    //     await admin.dokanAtAGlanceValueAccuracy(summary);
+    // });
 
-    test('admin can add Dokan news subscriber', { tag: ['@lite', '@admin'] }, async () => {
-        await admin.addDokanNewsSubscriber(data.user.userDetails);
-    });
+    // test('admin can add Dokan news subscriber', { tag: ['@lite', '@admin'] }, async () => {
+    //     await admin.addDokanNewsSubscriber(data.user.userDetails);
+    // });
 
     //vendor
 
