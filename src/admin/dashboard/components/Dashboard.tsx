@@ -4,6 +4,7 @@ import Layout from './Layout';
 import ModulePage from '../pages/modules';
 import SetupGuide from '../pages/setup-guide';
 import WithdrawPage from '../pages/withdraw';
+import ReverseWithdrawalPage from '../pages/reverse-withdrawal';
 import NotFound from '../../../layout/404';
 import AdminDashboard from '../pages/dashboard';
 
@@ -35,6 +36,11 @@ const getAdminRoutes = () => {
             id: 'withdraw',
             element: <WithdrawPage />,
             path: '/withdraw',
+        },
+        {
+            id: 'reverse-withdrawal',
+            element: <ReverseWithdrawalPage />,
+            path: '/reverse-withdrawal',
         },
     ];
 
