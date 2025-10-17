@@ -139,7 +139,7 @@ class Dashboard implements Hookable {
         ob_start();
         echo '<div id="dokan-admin-panel-header" class="dokan-layout"></div>';
         echo '<div class="wrap"><div id="dokan-admin-dashboard" class="dokan-layout dokan-admin-page-body">' . esc_html__( 'Loading...', 'dokan-lite' ) . '</div></div>';
-        echo '<div id="dokan-admin-switching" class="dokan-layout"></div>';
+        echo '<div id="dokan-admin-switching" class="dokan-layout dokan-admin-page-body"></div>';
         echo ob_get_clean();
     }
 
