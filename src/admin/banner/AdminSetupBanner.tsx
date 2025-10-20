@@ -45,7 +45,7 @@ const AdminSetupBanner = ( props: Props ) => {
                         />
                     </div>
                     <div className="flex-col flex gap-3">
-                        <h2 className="text-lg  font-bold text-gray-900">
+                        <h2 className="text-lg font-bold text-gray-900 m-0">
                             { __(
                                 'Complete your marketplace setup in minutes',
                                 'dokan-lite'

@@ -30,43 +30,8 @@ class LegacySwitcher implements Hookable {
      * @return void
      */
     public function register_hooks(): void {
-        add_action( 'admin_menu', [ $this, 'clear_admin_submenu_title' ], 30 );
         add_action( 'admin_menu', [ $this, 'handle_dokan_admin_submenu' ], 20 );
         add_action( 'admin_init', [ $this, 'handle_dashboard_redirect' ] );
-    }
-
-    /**
-     * Clear the Dokan submenu title.
-     *
-     * This method clears the title of the Dokan submenu to prevent it from displaying
-     * in the admin menu. It is useful for cases where you want to hide the submenu title
-     * but still keep the submenu item accessible.
-     *
-     * @since 4.1.0
-     *
-     * @return void
-     */
-    public function clear_admin_submenu_title(): void {
-        global $submenu;
-
-        // Check if the user has the required capability.
-        if ( ! current_user_can( 'manage_woocommerce' ) ) {
-            return;
-        }
-
-        // Check if the Dokan Dashboard submenu exists.
-        $legacy   = get_transient( 'dokan_legacy_dashboard_page' );
-        $position = (int) $legacy;
-
-        // @codingStandardsIgnoreStart
-        if ( isset( $submenu['dokan'][ $position ][0] ) ) {
-            $submenu['dokan'][ $position ][0] = '';
-        }
-
-        if ( ! $legacy ) {
-            $submenu['dokan'][0][2] = 'admin.php?page=dokan-dashboard';
-        }
-        // @codingStandardsIgnoreEnd
     }
 
     /**
@@ -87,17 +52,32 @@ class LegacySwitcher implements Hookable {
         // Filter the submenu items based on legacy dashboard preference.
         $filtered = array_reduce(
             $submenu['dokan'], function ( $filtered, $menu_item ) {
-				$title = sanitize_title_with_dashes( $menu_item[0] );
-				$is_legacy = get_transient( 'dokan_legacy_' . $title . '_page' );
+				$title            = sanitize_title_with_dashes( $menu_item[0] );
+				$is_legacy        = get_transient( 'dokan_legacy_' . $title . '_page' );
+                $is_new_dashboard = strpos( $menu_item[2], 'dokan-dashboard' ) !== false;
 
-				// Keep the dashboard menu item.
+				// Handle the admin dashboard menu item based on legacy dashboard preference.
+                // Dashboard legacy menu and the new menu should keep for frontend mount that's why we are handling the dashboard menu item separately.
 				if ( 'dashboard' === $title ) {
-					$filtered[] = $menu_item;
+                    // Clear the title if the legacy dashboard is enabled.
+                    if ( $is_new_dashboard && $is_legacy ) {
+                        $menu_item[0] = '';
+                    }
+
+                    // Clear the title and update the url if the legacy dashboard is disabled.
+                    if ( ! $is_new_dashboard && ! $is_legacy ) {
+                        $menu_item[0] = '';
+                        $menu_item[2] = 'admin.php?page=dokan-dashboard';
+                    }
+
+                    // Add dashboard menu item based on legacy dashboard preference.
+                    $filtered[] = $menu_item;
+
 					return $filtered;
 				}
 
 				// Check if the menu item for handle the admin legacy page switching.
-				if ( isset( $menu_item[2] ) && strpos( $menu_item[2], 'dokan-dashboard' ) !== false ) {
+				if ( isset( $menu_item[2] ) && $is_new_dashboard ) {
 					if ( ! $is_legacy ) {
 						$filtered[ $title ] = $menu_item;
 					}

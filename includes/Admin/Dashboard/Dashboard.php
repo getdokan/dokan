@@ -498,13 +498,15 @@ class Dashboard implements Hookable {
                 'dokan-lite'
             );
 
-            wp_localize_script(
+            wp_add_inline_script(
                 $this->switching_script_key,
-                'dokanAdminSwitching',
-                [
-                    'nonce'     => wp_create_nonce( 'dokan_switch_admin_panel' ),
-                    'admin_url' => admin_url(),
-                ]
+                'const dokanAdminSwitching = ' . wp_json_encode(
+                    [
+                        'nonce'     => wp_create_nonce( 'dokan_switch_admin_panel' ),
+                        'admin_url' => admin_url(),
+                    ]
+                ),
+                'before'
             );
         }
     }
