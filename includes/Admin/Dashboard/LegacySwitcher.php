@@ -110,15 +110,15 @@ class LegacySwitcher implements Hookable {
             return;
         }
 
-        $legacy_key        = sanitize_key( wp_unslash( $_GET['legacy_key'] ?? 'dashboard' ) );
-        $current_is_legacy = get_transient( 'dokan_legacy_' . $legacy_key . '_page' );
-        $new_legacy_state  = ! $current_is_legacy;
+        $legacy_key          = sanitize_key( wp_unslash( $_GET['legacy_key'] ?? 'dashboard' ) );
+        $filtered_legacy_key = $this->get_custom_transient_key( $legacy_key );
+        $current_is_legacy   = get_transient( $filtered_legacy_key );
+        $new_legacy_state    = ! $current_is_legacy;
 
-        $legacy_transient_key = 'dokan_legacy_' . $legacy_key . '_page';
         if ( $current_is_legacy ) {
-            delete_transient( $legacy_transient_key );
+            delete_transient( $filtered_legacy_key );
         } else {
-            set_transient( $legacy_transient_key, $new_legacy_state, $this->transient_expiration );
+            set_transient( $filtered_legacy_key, $new_legacy_state, $this->transient_expiration );
         }
 
         // TODO: Redirect to base vendors URL until the React vendors list page is available.
@@ -140,5 +140,28 @@ class LegacySwitcher implements Hookable {
 
         wp_safe_redirect( $redirect_url );
         exit;
+    }
+
+    /**
+     * Get admin menu transient key.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $key
+     *
+     * @return string
+     */
+    public function get_custom_transient_key( $key ) {
+        $admin_url_map = apply_filters(
+            'dokan_admin_legacy_url_map',
+            [
+                'request-for-quote' => 'rfq',
+            ]
+        );
+
+        // Get the legacy key from the map or the original key.
+        $legacy_key = sanitize_key( wp_unslash( $admin_url_map[ $key ] ?? $key ) );
+
+        return 'dokan_legacy_' . $legacy_key . '_page';
     }
 }
