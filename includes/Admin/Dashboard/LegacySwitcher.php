@@ -52,7 +52,8 @@ class LegacySwitcher implements Hookable {
         // Filter the submenu items based on legacy dashboard preference.
         $filtered = array_reduce(
             $submenu['dokan'], function ( $filtered, $menu_item ) {
-				$title            = sanitize_title_with_dashes( $menu_item[0] );
+                $menu_title       = explode( ' <', $menu_item[0] );
+                $title            = sanitize_title_with_dashes( $menu_title[0] );
 				$is_legacy        = get_transient( 'dokan_legacy_' . $title . '_page' );
                 $is_new_dashboard = strpos( $menu_item[2], 'dokan-dashboard' ) !== false;
 
