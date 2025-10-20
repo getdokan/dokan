@@ -57,7 +57,7 @@ class LegacySwitcher implements Hookable {
                 $is_new_dashboard = strpos( $menu_item[2], 'dokan-dashboard' ) !== false;
 
 				// Handle the admin dashboard menu item based on legacy dashboard preference.
-                // Dashboard legacy menu and the new menu should keep for frontend mount that's why we are handling the dashboard menu item separately.
+                // Dashboard legacy and the new menu should keep (both) for the frontend mounting purpose, that's why we are handling the dashboard menu item separately.
 				if ( 'dashboard' === $title ) {
                     // Clear the title if the legacy dashboard is enabled.
                     if ( $is_new_dashboard && $is_legacy ) {
