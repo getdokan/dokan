@@ -666,7 +666,7 @@ class Settings {
 
         update_user_meta( $store_id, 'dokan_profile_settings', $dokan_settings );
 
-        do_action( 'dokan_store_profile_saved', $store_id, $dokan_settings );
+        do_action( 'dokan_store_profile_saved', $store_id, $dokan_settings, $prev_dokan_settings );
 
         if ( ! defined( 'DOING_AJAX' ) ) {
             $_GET['message'] = 'profile_saved';
