@@ -4,6 +4,230 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.1.2',
+        'released' => '2025-10-16',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Updated the Admin Dashboard header UI for seamless visual representation with the new React-based frontend architecture.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added support for retrieving all product types via the Products REST API, enabling more flexible product filtering.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.1.1',
+        'released' => '2025-10-09',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Added method to retrieve vendor earnings excluding admin subsidy.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Admin gateway fee calculation now checks an order-level meta value before using the previous fallback logic.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.1.0',
+        'released' => '2025-09-30',
+        'changes'  => [
+            'New Feature'  => [
+                [
+                    'title'       => 'New React-based Admin Dashboard with enhanced metrics and rank boards.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement'  => [
+                [
+                    'title'       => 'Migrated Pro Features page from Vue to React with enhanced UI.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.0.9',
+        'released' => '2025-09-25',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Dokan Plugin Top Bar & Notice Left Bar UI',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Update order fee now distribute based on order creation',
+                    'description' => 'Order fee now distribute based on order creation if the order is manual order then the added fee of that order will go to seller otherwise it will go to admin. The fee tax will be distributed based on product tax receipt.',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Fix Dashboard and Report page header title and apply filters.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Conflict with ACF plugin: prevented empty admin notices when Dokan is active.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.0.8',
+        'released' => '2025-09-12',
+        'changes'  => [
+            'New Feature'  => [
+                [
+                    'title'       => 'Added "Chat with us" admin submenu for providing direct access to support chat functionality.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement'  => [
+                [
+                    'title'       => 'Modernize vendor selection with searchable dropdown for better performance.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Prevent potential errors on additional product sections.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.0.7',
+        'released' => '2025-09-01',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Enhanced security controls for vendor account credentials management.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.0.6',
+        'released' => '2025-08-29',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Added translation support for dashboard analytics report scripts to improve internationalization (i18n)',
+                    'description' => '',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Resolved an issue in the AdminNotice Vue component by applying the Mixin utility for improved functionality.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added async search in store category in vendor edit.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Admin not receiving withdrawal request email notifications.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.0.5',
+        'released' => '2025-07-25',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Improved script loading to ensure compatibility with WooCommerce versions above 10.0.2, preventing potential issues with script dependencies.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.0.4',
+        'released' => '2025-07-17',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Admin Notice UI with Modern Design and Improved User Experience.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Enhanced Product Brand Integration with Dedicated Template and Manager Methods.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Enhanced product featured image selection with cropping functionality in the product editor.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Vendor/store names with special characters (e.g., apostrophes) now display correctly in the vendor dropdown on the admin product edit screen.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Display correct earning in vendor dashboard product add/edit page for different category.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Update table header style for mobile display in order details page item list and withdraw approve, pending and cancel list.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Improved how product inventory information is retrieved, ensuring more accurate and consistent display of stock values.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Update table header style for mobile display in order details page item list and withdraw approve, pending and cancel list.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Resolve an issue for "sold individually" option does not save on create or update a product.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.0.3',
+        'released' => '2025-07-02',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Add gradient background style for fa-threads social icon.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Resolved an issue where array access warnings in vendor balance calculation were being triggered.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Resolved an issue where incorrect timestamp on sale price schedule hampering product sales schedule added from vendor dashboard.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Resolved an issue where stock quantity always shows 0 in vendor dashboard product edit screen.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Improved the format of payment methods in the withdrawal settings to ensure they are consistently returned as a zero-based indexed list in the REST API response.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.0.2',
         'released' => '2025-06-03',
         'changes'  => [

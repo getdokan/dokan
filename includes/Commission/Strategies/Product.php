@@ -16,6 +16,7 @@ class Product extends AbstractStrategy {
     protected $product_id;
 
     protected $vendor_id;
+    protected ?int $category_id;
 
     /**
      * Product strategy source
@@ -31,9 +32,10 @@ class Product extends AbstractStrategy {
      *
      * @param $product_id
      */
-    public function __construct( $product_id, $vendor_id = 0 ) {
-        $this->product_id = $product_id;
-        $this->vendor_id = $vendor_id;
+    public function __construct( $product_id, $vendor_id = 0, $category_id = null ) {
+        $this->product_id  = $product_id;
+        $this->vendor_id   = $vendor_id;
+        $this->category_id = $category_id;
 
         parent::__construct();
     }
@@ -56,14 +58,17 @@ class Product extends AbstractStrategy {
      * Get category for the given product.
      *
      * @param int $product_id
-     * @return void
+     * @return void|int
      */
     protected function get_category_from_product( $product_id ) {
-        $product_categories = Helper::get_saved_products_category( $product_id );
-        $chosen_categories  = $product_categories['chosen_cat'];
-        $category_id        = reset( $chosen_categories );
+        if ( empty( $this->category_id ) && ! empty( $product_id ) ) {
+            $product_categories = Helper::get_saved_products_category( $product_id );
+            $chosen_categories  = $product_categories['chosen_cat'];
+            $category_id        = reset( $chosen_categories );
+            $this->category_id = $category_id;
+        }
 
-        return $category_id ? $category_id : 0;
+        return $this->category_id ? $this->category_id : 0;
     }
 
     /**

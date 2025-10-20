@@ -1,5 +1,5 @@
 import mysql from 'mysql2/promise';
-import { serialize, unserialize, isSerialized } from 'php-serialize';
+import { isSerialized, serialize, unserialize } from 'php-serialize';
 import { helpers } from '@utils/helpers';
 
 const { DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = process.env;
@@ -58,11 +58,32 @@ export const dbUtils = {
 
     // set user meta
     async setUserMeta(userId: string, metaKey: string, metaValue: object | string, serializeData?: boolean): Promise<any> {
-        metaValue = serializeData && !isSerialized(metaValue as string) ? serialize(metaValue) : metaValue;
-        const metaExists = await dbUtils.dbQuery(`SELECT COUNT(*) AS count FROM ${dbPrefix}_usermeta WHERE user_id = ? AND meta_key = ?;`, [userId, metaKey]);
-        const query = metaExists[0].count > 0 ? `UPDATE ${dbPrefix}_usermeta SET meta_value = ? WHERE user_id = ? AND meta_key = ?;` : `INSERT INTO ${dbPrefix}_usermeta (user_id, meta_key, meta_value) VALUES (?, ?, ?);`;
-        const res = await dbUtils.dbQuery(query, metaExists[0].count > 0 ? [metaValue, userId, metaKey] : [userId, metaKey, metaValue]);
-        return res;
+        try {
+            // Validate required parameters
+            if (userId === undefined || userId === null) {
+                throw new Error('setUserMeta: userId is required and cannot be null or undefined.');
+            }
+            if (metaKey === undefined || metaKey === null) {
+                throw new Error('setUserMeta: metaKey is required and cannot be null or undefined.');
+            }
+            // Sanitize metaValue: replace undefined with null
+            metaValue = metaValue === undefined ? null : metaValue;
+            metaValue = serializeData && !isSerialized(metaValue as string) ? serialize(metaValue) : metaValue;
+            const metaExists = await dbUtils.dbQuery(`SELECT COUNT(*) AS count
+                                                      FROM ${dbPrefix}_usermeta
+                                                      WHERE user_id = ?
+                                                        AND meta_key = ?;`, [userId, metaKey]);
+            const query = metaExists[0].count > 0 ? `UPDATE ${dbPrefix}_usermeta
+                                                     SET meta_value = ?
+                                                     WHERE user_id = ?
+                                                       AND meta_key = ?;` : `INSERT INTO ${dbPrefix}_usermeta (user_id, meta_key, meta_value)
+                                                                             VALUES (?, ?, ?);`;
+            const res = await dbUtils.dbQuery(query, metaExists[0].count > 0 ? [metaValue, userId, metaKey] : [userId, metaKey, metaValue]);
+            return res;
+        } catch (error) {
+            console.error('Error in setUserMeta:', error);
+            throw error;
+        }
     },
 
     // update user meta

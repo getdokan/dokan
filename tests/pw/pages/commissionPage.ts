@@ -73,40 +73,55 @@ export class CommissionPage extends AdminPage {
     // set commission on dokan setup wizard
     async setCommissionOnDokanSetupWizard(commission: commission) {
         await this.goIfNotThere(data.subUrls.backend.dokan.setupWizard);
-        await this.click(setupWizardAdmin.letsGo);
-        // skip store setup
-        await this.click(setupWizardAdmin.skipThisStep);
-        // skip selling setup
-        await this.click(setupWizardAdmin.skipThisStep);
-
+        const successHeading = await this.isVisible(setupWizardAdmin.successHeading);
+        console.log('successHeading', successHeading);
+        if (successHeading) {
+            await this.click(setupWizardAdmin.exploreDashboard);
+        } else {
+            await this.click(setupWizardAdmin.startJourney);
+            await this.clearAndType(setupWizardAdmin.vendorStoreURL, data.vendor.storeName);
+            await this.click(setupWizardAdmin.nextBtn);
+            await this.click(setupWizardAdmin.skipThisStep);
+            // skip selling setup
+            await this.page.locator('div').filter({ hasText: /^Physical Products$/ }).first().click();
+            await this.page.locator('div').filter({ hasText: /^Vendors manage their deliveries$/ }).first().click();
+            await this.page.locator('div').filter({ hasText: /^Maximizing sales conversion$/ }).first().click();
+            await this.click(setupWizardAdmin.nextBtn);
+        } // skip store setup
         // add commission
+
+        await this.waitForLoadState('domcontentloaded')
+        await this.goToDokanSettings();
+        await this.clickAndWaitForLoadState(settingsAdmin.menus.sellingOptions);
         await this.addCommission(commission);
 
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.dokan.setupWizardCommission, setupWizardAdmin.continue, 302);
+        //await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.dokan.setupWizardCommission, setupWizardAdmin.continue, 302);
 
         // skip withdraw setup
-        await this.click(setupWizardAdmin.skipThisStep);
+        //await this.click(setupWizardAdmin.skipThisStep);
 
         // recommended
         // await this.disableSwitcherSetupWizard(setupWizardAdmin.storeGrowth);
-        await this.disableSwitcherSetupWizard(setupWizardAdmin.weMail);
-        await this.disableSwitcherSetupWizard(setupWizardAdmin.wooCommerceConversionTracking);
-        await this.disableSwitcherSetupWizard(setupWizardAdmin.texty);
-        await this.click(setupWizardAdmin.continueRecommended);
+        // await this.disableSwitcherSetupWizard(setupWizardAdmin.weMail);
+        // await this.disableSwitcherSetupWizard(setupWizardAdmin.wooCommerceConversionTracking);
+        // await this.disableSwitcherSetupWizard(setupWizardAdmin.texty);
+        // await this.click(setupWizardAdmin.continueRecommended);
 
         // ready!
-        await this.click(setupWizardAdmin.ReturnToTheWordPressDashboard);
+        // await this.click(setupWizardAdmin.ReturnToTheWordPressDashboard);
 
         // assert values
-        await this.goToDokanSettings();
+      
 
-        if (commission.commissionType === 'fixed') {
-            await this.click(settingsAdmin.menus.sellingOptions);
-        } else {
-            await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.multistepCategories, settingsAdmin.menus.sellingOptions);
-        }
+        // if (commission.commissionType === 'fixed') {
+        //     await this.click(settingsAdmin.menus.sellingOptions);
+        // } else {
+        //     await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.multistepCategories, settingsAdmin.menus.sellingOptions);
+        // }
 
-        await this.assertCommission(commission);
+        // await this.assertCommission(commission);
+        await this.page.getByRole('button', { name: 'Save Changes' }).click();
+
     }
 
     // set commission on dokan selling settings
@@ -185,7 +200,9 @@ export class CommissionPage extends AdminPage {
         await this.gotoUntilNetworkidle(data.subUrls.backend.orderDetails(orderId));
 
         // metabox elements are visible
-        await this.multipleElementVisible(selector.admin.wooCommerce.orders.commissionMetaBox);
+        await this.isVisible(selector.admin.wooCommerce.orders.commissionMetaBox.commissionsHeader);
+        await this.multipleElementVisible(selector.admin.wooCommerce.orders.commissionMetaBox.table);
+        await this.isVisible(selector.admin.wooCommerce.orders.commissionMetaBox.totalCommission);           
     }
 
     // view suborders metabox

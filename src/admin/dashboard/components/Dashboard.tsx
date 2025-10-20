@@ -2,8 +2,9 @@ import { withRouter } from '../../../routing';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 import Layout from './Layout';
 import ModulePage from '../pages/modules';
-import { useMutationObserver } from '../../../hooks';
 import SetupGuide from '../pages/setup-guide';
+import NotFound from '../../../layout/404';
+import AdminDashboard from '../pages/dashboard';
 
 export type DokanAdminRoute = {
     id: string;
@@ -14,6 +15,11 @@ export type DokanAdminRoute = {
 
 const getAdminRoutes = () => {
     let routes: Array< DokanAdminRoute > = [
+        {
+            id: 'dashboard',
+            element: <AdminDashboard />,
+            path: '/',
+        },
         {
             id: 'setup',
             element: <SetupGuide />,
@@ -34,7 +40,9 @@ const getAdminRoutes = () => {
 
     routes.push( {
         id: 'dokan-404',
-        element: <h3>404</h3>,
+        element: (
+            <NotFound className="h-screen" backToDashboardUrl="?page=dokan" />
+        ),
         path: '*',
     } );
 
@@ -58,31 +66,6 @@ const Dashboard = () => {
     } );
 
     const router = createHashRouter( mapedRoutes );
-
-    useMutationObserver(
-        document.body,
-        ( mutations ) => {
-            for ( const mutation of mutations ) {
-                if ( mutation.type !== 'childList' ) {
-                    continue;
-                }
-                // @ts-ignore
-                for ( const node of mutation.addedNodes ) {
-                    if ( node.id === 'headlessui-portal-root' ) {
-                        node.classList.add( 'dokan-layout' );
-                        node.style.display = 'block';
-                    }
-
-                    if (
-                        node.hasAttribute( 'data-radix-popper-content-wrapper' )
-                    ) {
-                        node.classList.add( 'dokan-layout' );
-                    }
-                }
-            }
-        },
-        { childList: true }
-    );
 
     return (
         <>

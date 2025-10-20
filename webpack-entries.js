@@ -3,6 +3,7 @@ const entryPoints = {
 
     frontend: './src/dashboard/index.tsx',
     'dokan-admin-dashboard': './src/admin/dashboard/index.tsx',
+    'dokan-admin-panel-header': './src/admin/header/index.tsx',
     'setup-guide-banner': './src/admin/banner/SetupGuideBanner.tsx',
     'vue-frontend': './src/frontend/main.js',
     'vue-admin': './src/admin/main.js',
@@ -58,6 +59,7 @@ const entryPoints = {
         },
     },
     'dokan-status': '/src/Status/index.tsx',
+    'dokan-pro-features': '/src/ProFeatures/index.tsx',
     'vendor-dashboard/reports/index': './src/vendor-dashboard/reports/index.js',
     // intelligence
     'dokan-intelligence': './src/intelligence/index.tsx',

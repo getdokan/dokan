@@ -3,10 +3,10 @@
 /* eslint-disable playwright/no-page-pause */
 /* eslint-disable playwright/no-force-option */
 
-import { expect, Page, BrowserContext, Cookie, Request, Response, Locator, Frame, FrameLocator, JSHandle, ElementHandle } from '@playwright/test';
-import { data } from '@utils/testData';
 import { selector } from '@pages/selectors';
+import { BrowserContext, Cookie, ElementHandle, expect, Frame, FrameLocator, JSHandle, Locator, Page, Request, Response } from '@playwright/test';
 import { helpers } from '@utils/helpers';
+import { data } from '@utils/testData';
 
 const { BASE_URL } = process.env;
 
@@ -245,7 +245,7 @@ export class BasePage {
 
     // click & wait for response
     async clickAndWaitForResponseAndLoadState(subUrl: string, selector: string, code = 200): Promise<Response> {
-        const [, response] = await Promise.all([this.waitForLoadState(), this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.locator(selector).click()]);
+        const [, response] = await Promise.all([this.waitForLoadState('load'), this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.locator(selector).click()]);
         expect(response.status()).toBe(code);
         return response;
     }

@@ -1,6 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { Button } from '@getdokan/dokan-ui';
-import NextIcon from '@dokan/admin/onboard/icons/NextIcon';
+import NextIcon from '@src/admin/onboard/icons/NextIcon';
 
 const NextButton = ( {
     handleNext,

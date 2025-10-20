@@ -1,7 +1,7 @@
 import DokanLogo from '../DokanLogo';
 import { __ } from '@wordpress/i18n';
 import { Button } from '@getdokan/dokan-ui';
-import OnBoardLayout from '@dokan/admin/onboard/OnBoardLayout';
+import OnBoardLayout from '@src/admin/onboard/OnBoardLayout';
 
 const WelcomeScreen = ( { onNext } ) => {
     return (

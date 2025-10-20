@@ -146,7 +146,16 @@ class SetupWizard {
             wp_enqueue_style( 'dokan-fontawesome' );
         }
 
-        wp_register_script( 'jquery-tiptip', WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip.min.js', [ 'jquery' ], WC_VERSION, true );
+        $require_dompurify = version_compare( WC()->version, '10.0.2', '>' );
+
+        if ( $require_dompurify && ! wp_script_is( 'dompurify', 'registered' ) ) {
+            wp_register_script( 'dompurify', WC()->plugin_url() . '/assets/js/dompurify/purify' . $suffix . '.js', array(), WC()->version, false );
+        }
+
+        if ( ! wp_script_is( 'jquery-tiptip', 'registered' ) ) {
+            wp_register_script( 'jquery-tiptip', WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip.min.js', $require_dompurify ? [ 'jquery', 'dompurify' ] : [ 'jquery' ], WC()->version, true );
+        }
+
         wp_register_script( 'wc-setup', WC()->plugin_url() . '/assets/js/admin/wc-setup.min.js', [ 'jquery', 'wc-enhanced-select', 'jquery-blockui', 'wp-util', 'jquery-tiptip', 'dokan-util-helper' ], WC_VERSION, true );
 
         wp_localize_script(
@@ -196,12 +205,16 @@ class SetupWizard {
                 'dokan-lite'
             );
 
+            // Get the admin dashboard url based on the legacy dashboard page option.
+            $is_legacy = get_option( 'dokan_legacy_dashboard_page', false );
+            $page_slug = $is_legacy ? 'dokan' : 'dokan-dashboard';
+
             wp_localize_script(
                 'dokan-admin-onboard-app',
                 'onboardingData',
                 [
                     'site_url'                  => esc_url( get_site_url() ),
-                    'dokan_admin_dashboard_url' => esc_url( admin_url( 'admin.php?page=dokan' ) ),
+                    'dokan_admin_dashboard_url' => esc_url( admin_url( 'admin.php?page=' . $page_slug ) ),
                 ]
             );
         }
@@ -900,7 +913,7 @@ class SetupWizard {
 
         <div class="dokan-setup-done-content">
             <p class="wc-setup-actions step">
-                <a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan' ) ); ?>"><?php esc_html_e( 'Visit Dokan Dashboard', 'dokan-lite' ); ?></a>
+                <a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan-dashboard' ) ); ?>"><?php esc_html_e( 'Visit Dokan Dashboard', 'dokan-lite' ); ?></a>
                 <a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/settings' ) ); ?>"><?php esc_html_e( 'More Settings', 'dokan-lite' ); ?></a>
             </p>
         </div>

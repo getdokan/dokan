@@ -9,12 +9,12 @@ use WP_REST_Server;
 use WeDevs\Dokan\Abstracts\DokanRESTAdminController;
 
 /**
-* Admin Dashboard
-*
-* @since 2.8.0
-*
-* @package dokan
-*/
+ * Admin Dashboard
+ *
+ * @since 2.8.0
+ *
+ * @package dokan
+ */
 class AdminDashboardController extends DokanRESTAdminController {
 
     /**
@@ -32,37 +32,37 @@ class AdminDashboardController extends DokanRESTAdminController {
     public function register_routes() {
         register_rest_route(
             $this->namespace, '/' . $this->base . '/feed', array(
-				array(
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_feeds' ),
-					'permission_callback' => array( $this, 'check_permission' ),
-					'args'                => array(
-						'items' => array(
-							'type'        => 'integer',
-							'description' => __( 'Number of feed item', 'dokan-lite' ),
-							'required'    => false,
-							'default'     => 5,
-						),
-						'show_summary' => array(
-							'type'        => 'boolean',
-							'description' => __( 'Flag for showing summary', 'dokan-lite' ),
-							'required'    => false,
-							'default'     => false,
-						),
-						'show_author' => array(
-							'type'        => 'boolean',
-							'description' => __( 'Flag for showing author', 'dokan-lite' ),
-							'required'    => false,
-							'default'     => false,
-						),
-						'show_date' => array(
-							'type'        => 'boolean',
-							'description' => __( 'Flag for showing date', 'dokan-lite' ),
-							'required'    => false,
-							'default'     => true,
-						),
-					),
-				),
+                array(
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => array( $this, 'get_feeds' ),
+                    'permission_callback' => array( $this, 'check_permission' ),
+                    'args'                => array(
+                        'items' => array(
+                            'type'        => 'integer',
+                            'description' => __( 'Number of feed item', 'dokan-lite' ),
+                            'required'    => false,
+                            'default'     => 5,
+                        ),
+                        'show_summary' => array(
+                            'type'        => 'boolean',
+                            'description' => __( 'Flag for showing summary', 'dokan-lite' ),
+                            'required'    => false,
+                            'default'     => false,
+                        ),
+                        'show_author' => array(
+                            'type'        => 'boolean',
+                            'description' => __( 'Flag for showing author', 'dokan-lite' ),
+                            'required'    => false,
+                            'default'     => false,
+                        ),
+                        'show_date' => array(
+                            'type'        => 'boolean',
+                            'description' => __( 'Flag for showing date', 'dokan-lite' ),
+                            'required'    => false,
+                            'default'     => true,
+                        ),
+                    ),
+                ),
             )
         );
         register_rest_route(
