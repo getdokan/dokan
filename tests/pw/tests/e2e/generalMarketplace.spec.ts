@@ -12,7 +12,7 @@ const oldDataset = {
         {
             selector: '//input[@id="dokan_general[custom_store_url]"]',
             type: 'text',
-            value: 'store-url',
+            value: 'my-url',
         }
     ],
 };
@@ -25,18 +25,18 @@ const newDataset = {
         {
             selector: '#dokan_settings_general_marketplace_marketplace_settings_vendor_store_url input',
             type: 'text',
-            value: 'store-url',
+            value: 'my-url',
         },
-        // {
-        //     selector: '#dokan_settings_general_marketplace_marketplace_settings_enable_single_seller_mode button',
-        //     type: 'switch',
-        //     value: false,
-        // },
-        // {
-        //     selector: '#dokan_settings_general_marketplace_marketplace_settings_store_category_mode button[name="none"]',
-        //     type: 'radio',
-        //     value: 'none',
-        // },
+        {
+            selector: '#dokan_settings_general_marketplace_marketplace_settings_enable_single_seller_mode button',
+            type: 'switch',
+            value: false,
+        },
+        {
+            selector: '#dokan_settings_general_marketplace_marketplace_settings_store_category_mode button[name="none"]',
+            type: 'radio',
+            value: 'None',
+        },
     ],
 };
 
@@ -61,7 +61,7 @@ test.describe('Admin Setting: General -> marketplace', () => {
             await adminSettingsPage.checkSettings(newDataset);
         });
         await test.step('check old settings', async () => {
-            await adminSettingsPage.updateSettings(oldDataset);
+            await adminSettingsPage.checkSettings(oldDataset);
         });
         // test.step('update old settings', async () => {
         //     await adminSettingsPage.checkSettings(newDataset);

@@ -1,5 +1,4 @@
-import { test, expect } from '@playwright/test';
-import { data } from '@utils/testData';
+import { expect } from '@playwright/test';
 import { AdminSettingsPage } from './adminSettingsPage';
 
 export class AdminSettingsPageNew extends AdminSettingsPage {
@@ -10,8 +9,8 @@ export class AdminSettingsPageNew extends AdminSettingsPage {
     }
     async ensureVisibilityFor(selector: string) {
         const locator = this.page.locator(selector);
-        await locator.scrollIntoViewIfNeeded();
-        await locator.waitFor({ state: 'visible', timeout: 10000 });
+        // await locator.scrollIntoViewIfNeeded();
+        await locator.waitFor({ state: 'visible', timeout: 1000 });
     }
 
     async updateSettings( dataSet: any ) {
@@ -43,10 +42,10 @@ export class AdminSettingsPageNew extends AdminSettingsPage {
 
     async saveSettings() {
         const saveBtn = this.page.locator(this.saveButtonSelector);
-        if (await saveBtn.isVisible()) {
+        // if (await saveBtn.isVisible()) {
             await saveBtn.click();
             await this.waitForLoadState();
-        }
+        // }
     }
 
     async setFieldValues(fields: Array<any>) {
@@ -62,9 +61,14 @@ export class AdminSettingsPageNew extends AdminSettingsPage {
                 case 'email':
                     await this.page.fill( field.selector, field.value );
                     break;
-                case 'switch':
-                    await this.page.click( field.selector );
+                case 'switch': {
+                    // Only toggle if current state doesn't match desired state
+                    const currentState = await this.page.locator( field.selector ).getAttribute('aria-checked') === 'true';
+                    if (currentState !== field.value) {
+                        await this.page.click( field.selector );
+                    }
                     break;
+                }
                 case 'radio':
                     await this.page.click( field.selector );
                     break;
@@ -98,12 +102,13 @@ export class AdminSettingsPageNew extends AdminSettingsPage {
                     break;
                 }
                 case 'switch': {
-                    const isChecked = await this.page.locator( field.selector ).isChecked();
+                    const ariaChecked = await this.page.locator( field.selector ).getAttribute('aria-checked');
+                    const isChecked = ariaChecked === 'true';
                     expect(isChecked).toBe(field.value);
                     break;
                 }
                 case 'radio': {
-                    const isChecked = await this.page.locator( field.selector ).isChecked();
+                    const isChecked = await this.page.locator( field.selector ).textContent();
                     expect(isChecked).toBe(field.value);
                     break;
                 }
