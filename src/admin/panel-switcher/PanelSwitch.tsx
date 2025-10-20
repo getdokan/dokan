@@ -9,6 +9,7 @@ import { useEffect, useState } from '@wordpress/element';
  */
 const PanelSwitch = () => {
     const [ shouldRender, setShouldRender ] = useState( false );
+    const [ currentHash, setCurrentHash ] = useState( window.location.hash );
 
     // eslint-disable-next-line @wordpress/no-unused-vars-before-return
     const supportedKeys = wp.hooks.applyFilters(
@@ -19,7 +20,7 @@ const PanelSwitch = () => {
 
     // Get the current URL hash path segments.
     const getHashPathSegments = () => {
-        const hashPath = window.location.hash.replace( '#/', '' );
+        const hashPath = currentHash.replace( '#/', '' );
         const pathWithoutQuery = hashPath.split( '?' )[ 0 ];
 
         // Remove the query string from the path and return the segments of the current path.
@@ -30,6 +31,7 @@ const PanelSwitch = () => {
         // Check if the current URL is supported and has the correct hash path.
         const checkAndUpdate = () => {
             const urlSegments = getHashPathSegments();
+            setCurrentHash( window.location.hash );
             setShouldRender(
                 ! ( 'vendors' === urlSegments[ 0 ] && urlSegments.length < 2 )
             );
