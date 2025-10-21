@@ -130,5 +130,6 @@ class Menu {
         // Render the admin dashboard template.
         echo '<div id="dokan-admin-panel-header"></div>';
         echo '<div class="wrap"><div id="dokan-vue-admin"></div></div>';
+        echo '<div id="dokan-admin-switching" class="dokan-layout dokan-admin-page-body"></div>';
     }
 }
