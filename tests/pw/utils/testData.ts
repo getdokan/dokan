@@ -2107,16 +2107,16 @@ export const data = {
     modules: {
         noModuleMessage: 'No modules found.',
         moduleStats: {
-            totalModules: 40,
+            totalModules: 42,
             modulesVideoLink: 19,
             productManagement: 15,
             integration: 6,
             uiUx: 2,
             shipping: 3,
-            storeManagement: 10,
-            payment: 6,
+            storeManagement: 11,
+            payment: 7,
             orderManagement: 2,
-            vendorManagement: 1,
+            vendorManagement: 2,
         },
 
         modules: [
