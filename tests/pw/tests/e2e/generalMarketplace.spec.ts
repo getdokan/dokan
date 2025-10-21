@@ -53,7 +53,7 @@ const newDataset = {
             value: true,
         },
         {
-            selector: '#dokan_settings_general_marketplace_live_search_search_box_radio div[role="radio"][aria-label="Enhanced Search"]',
+            selector: '#dokan_settings_general_marketplace_live_search_search_box_radio div[role="radio"][aria-label="Classic Search"]',
             type: 'radio',
             value: 'true', // Options: 'Search with Suggestion Box', 'Autoload Replace Current Content'
         },
@@ -77,16 +77,19 @@ test.describe('Admin Setting: General -> marketplace', () => {
         await test.step('Update new settings', async () => {
             await adminSettingsPage.updateSettings(newDataset);
         });
+       
+        await test.step('Check old settings', async () => {
+            await adminSettingsPage.checkSettings(oldDataset);
+        });
+
         await test.step('Check new settings', async () => {
             await adminSettingsPage.checkSettings(newDataset);
         });
-        await test.step('check old settings', async () => {
-            await adminSettingsPage.checkSettings(oldDataset);
-        });
-        // test.step('update old settings', async () => {
+        // test.step('Update old settings', async () => {
+        //     adminSettingsPage.setSaveButtonSelector('Old Save Button');
         //     await adminSettingsPage.checkSettings(newDataset);
         // });
-        // test.step('check new settings', async () => {
+        // test.step('Check new settings', async () => {
         //     await adminSettingsPage.checkSettings(newDataset);
         // });
     });
