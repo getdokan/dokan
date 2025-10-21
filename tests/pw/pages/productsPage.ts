@@ -614,11 +614,26 @@ export class ProductsPage extends AdminPage {
 
     // get product edit nonce
     async getProductEditNonce(): Promise<string> {
-        await this.gotoUntilNetworkidle(data.subUrls.frontend.vDashboard.products);
-        const url = await this.getAttributeValue(selector.vendor.vDashboard.products.addNewProduct, 'href');
-        const nonce = url?.match(/_dokan_edit_product_nonce=([\w\d]+)/)?.[1];
-        if (!nonce) throw new Error('Nonce not found');
-        return nonce;
+        try {
+            // First try to go to the main dashboard to ensure vendor is properly authenticated
+            await this.gotoUntilNetworkidle(data.subUrls.frontend.vDashboard.newDashboard);
+            // Then navigate to products page
+            await this.gotoUntilNetworkidle(data.subUrls.frontend.vDashboard.products);
+            const url = await this.getAttributeValue(selector.vendor.vDashboard.products.addNewProduct, 'href');
+            const nonce = url?.match(/_dokan_edit_product_nonce=([\w\d]+)/)?.[1];
+            if (!nonce) throw new Error('Nonce not found');
+            return nonce;
+        } catch (error) {
+            // If products page fails, try accessing through my-account first
+            console.log('Direct products access failed, trying through my-account...');
+            await this.gotoUntilNetworkidle(data.subUrls.frontend.myAccount);
+            await this.gotoUntilNetworkidle(data.subUrls.frontend.vDashboard.newDashboard);
+            await this.gotoUntilNetworkidle(data.subUrls.frontend.vDashboard.products);
+            const url = await this.getAttributeValue(selector.vendor.vDashboard.products.addNewProduct, 'href');
+            const nonce = url?.match(/_dokan_edit_product_nonce=([\w\d]+)/)?.[1];
+            if (!nonce) throw new Error('Nonce not found');
+            return nonce;
+        }
     }
 
     // go to product edit by id

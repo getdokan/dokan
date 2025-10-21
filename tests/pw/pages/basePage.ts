@@ -45,7 +45,16 @@ export class BasePage {
 
     // goto subUrl
     async goto(subPath: string, options: { referer?: string; timeout?: number; waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' } | undefined = { waitUntil: 'domcontentloaded' }, force = false): Promise<void> {
-        await this.page.goto(subPath, options);
+        const url = this.createUrl(subPath);
+        await this.page.goto(url, options);
+        if (force) {
+            await this.reload();
+        }
+    }
+
+    // goto full URL (for internal use)
+    async gotoUrl(fullUrl: string, options: { referer?: string; timeout?: number; waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' } | undefined = { waitUntil: 'domcontentloaded' }, force = false): Promise<void> {
+        await this.page.goto(fullUrl, options);
         if (force) {
             await this.reload();
         }
@@ -104,7 +113,7 @@ export class BasePage {
             const url = this.createUrl(subPath);
             // console.log('url: ', url);
             await this.toPass(async () => {
-                await this.goto(url, { waitUntil: waitUntil });
+                await this.gotoUrl(url, { waitUntil: waitUntil });
                 const currentUrl = this.getCurrentUrl();
                 expect(currentUrl).toMatch(subPath);
             });

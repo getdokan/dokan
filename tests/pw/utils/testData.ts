@@ -1215,6 +1215,7 @@ export const data = {
             vDashboard: {
                 setupWizard: '?page=dokan-seller-setup',
                 dashboard: 'dashboard',
+                newDashboard: 'dashboard/?path=%2Fanalytics%2FOverview',
                 products: 'dashboard/products',
                 productEdit: (productId: string, nonce: string) => `dashboard/products/?product_id=${productId}&action=edit&_dokan_edit_product_nonce=${nonce}`,
                 spmv: 'dashboard/products-search',

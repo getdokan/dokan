@@ -20,7 +20,7 @@ export class VendorDashboardPage extends VendorPage {
         if (link) {
             await this.goto(link);
         } else {
-            await this.goIfNotThere(data.subUrls.frontend.vDashboard.dashboard);
+            await this.goIfNotThere(data.subUrls.frontend.vDashboard.newDashboard);
         }
 
         // Check if using new React dashboard or old dashboard
