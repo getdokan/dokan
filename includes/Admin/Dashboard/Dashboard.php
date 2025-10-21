@@ -378,7 +378,7 @@ class Dashboard implements Hookable {
             wp_register_style(
                 $this->script_key,
                 DOKAN_PLUGIN_ASSEST . '/css/dokan-admin-dashboard.css',
-                [ 'wc-components' ],
+                [ 'dokan-react-components', 'wc-components' ],
                 $version
             );
 
@@ -387,10 +387,10 @@ class Dashboard implements Hookable {
                 'dokan-lite'
             );
 
-            wp_localize_script(
+            wp_add_inline_script(
                 $this->script_key,
-                'dokanAdminDashboard',
-                $data,
+                'const dokanAdminDashboard = ' . wp_json_encode( $data ),
+                'before'
             );
         }
     }

@@ -8,20 +8,18 @@ import { useEffect, useState } from '@wordpress/element';
  * Handles switching between legacy and new admin panel interfaces
  */
 const PanelSwitch = () => {
-    const [ shouldRender, setShouldRender ] = useState( false );
     const [ currentHash, setCurrentHash ] = useState( window.location.hash );
 
     // eslint-disable-next-line @wordpress/no-unused-vars-before-return
     const supportedKeys = wp.hooks.applyFilters(
         // Define an array with a filter hook for supported URL keys.
         'dokan_admin_panel_switch_supported_keys',
-        [ 'dashboard', 'vendors' ]
+        [ 'dashboard', 'withdraw', 'vendors' ]
     );
 
     // Get the current URL hash path segments.
     const getHashPathSegments = () => {
         const hashPath = currentHash.replace( '#/', '' );
-        // const hashPath = window.location.hash.replace( '#/', '' );
         const pathWithoutQuery = hashPath.split( '?' )[ 0 ];
 
         // Remove the query string from the path and return the segments of the current path.
@@ -31,11 +29,7 @@ const PanelSwitch = () => {
     useEffect( () => {
         // Check if the current URL is supported and has the correct hash path.
         const checkAndUpdate = () => {
-            const urlSegments = getHashPathSegments();
             setCurrentHash( window.location.hash );
-            setShouldRender(
-                ! ( 'vendors' === urlSegments[ 0 ] && urlSegments.length < 2 )
-            );
         };
 
         // Initial check.
@@ -44,7 +38,7 @@ const PanelSwitch = () => {
         // Listen events for comprehensive URL change detection.
         window.addEventListener( 'hashchange', checkAndUpdate );
         return () => window.removeEventListener( 'hashchange', checkAndUpdate );
-    }, [ window.location.hash ] );
+    }, [] );
 
     // Get the admin switching data from the global variable.
     const { nonce, admin_url } = dokanAdminSwitching || {};
@@ -61,10 +55,6 @@ const PanelSwitch = () => {
         dokan_action: 'switch_admin_panel',
         legacy_key: baseUrl,
     } );
-
-    if ( ! shouldRender ) {
-        return null;
-    }
 
     const page = new URLSearchParams( window.location.search ).get( 'page' );
 

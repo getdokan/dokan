@@ -23,4 +23,52 @@
       }
     }
   }
+    .dokan-admin-dashboard-datatable {
+        .dataviews-wrapper {
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0px 1px 3px 0px #0000001A;
+
+            table.dataviews-view-table {
+                border-left: none;
+                border-right: none;
+
+                thead {
+                    z-index: 0;
+                }
+
+                tr td:first-child, tr th:first-child {
+                    padding-left: 20px;
+                }
+                tr td:last-child, tr th:last-child {
+                    padding-right: 20px;
+                }
+
+            };
+            .components-button.is-compact.has-icon:not(.has-text) {
+                width: auto;
+                padding: 6px;
+
+                &:hover,
+                &:focus {
+                    background-color: transparent;
+                    box-shadow: none;
+                    border: none;
+
+                }
+            }
+            .components-flex.components-h-stack.dataviews-pagination {
+                width: 100%;
+                justify-content: space-between;
+                padding: 15px 20px;
+            }
+        }
+    }
+}
+
+.dokan_page_dokan-dashboard {
+    [id^="portal/:"] {
+        --wp-components-color-accent: #EFEAFF;
+        --wp-components-color-accent-inverted:#7047eb;
+    }
 }
