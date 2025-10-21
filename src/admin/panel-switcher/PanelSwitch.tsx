@@ -21,6 +21,7 @@ const PanelSwitch = () => {
     // Get the current URL hash path segments.
     const getHashPathSegments = () => {
         const hashPath = currentHash.replace( '#/', '' );
+        // const hashPath = window.location.hash.replace( '#/', '' );
         const pathWithoutQuery = hashPath.split( '?' )[ 0 ];
 
         // Remove the query string from the path and return the segments of the current path.
@@ -43,7 +44,7 @@ const PanelSwitch = () => {
         // Listen events for comprehensive URL change detection.
         window.addEventListener( 'hashchange', checkAndUpdate );
         return () => window.removeEventListener( 'hashchange', checkAndUpdate );
-    }, [] );
+    }, [ window.location.hash ] );
 
     // Get the admin switching data from the global variable.
     const { nonce, admin_url } = dokanAdminSwitching || {};
