@@ -8,23 +8,29 @@ import { payloads } from '@utils/payloads';
 
 test.describe('Menu Manager test', () => {
     let admin: MenuManagerPage;
-    let aPage: Page;
+    let vendor: MenuManagerPage;
+    let aPage: Page, vPage: Page;
 
     test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new MenuManagerPage(aPage);
+
+        const vendorContext = await browser.newContext(data.auth.vendorAuth);
+        vPage = await vendorContext.newPage();
+        vendor = new MenuManagerPage(vPage);
     });
 
     test.afterAll(async () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.menuManager, dbData.dokan.menuManagerSettings);
         await aPage.close();
+        await vPage.close();
     });
 
     //admin
 
     test('admin can deactivate menu', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.updateMenuStatus('Analytics', 'deactivate', 'analytics');
+        await admin.updateMenuStatus('Analytics', 'deactivate', 'analytics', vendor);
     });
 
     test('admin can activate menu', { tag: ['@pro', '@admin'] }, async () => {
@@ -38,7 +44,7 @@ test.describe('Menu Manager test', () => {
 
         if (wooSubscriptionsActive) {
             await updateMenuStatusByDB('user-subscription', 'false');
-            await admin.updateMenuStatus('User Subscriptions', 'activate', 'userSubscriptions');
+            await admin.updateMenuStatus('User Subscriptions', 'activate', 'userSubscriptions', vendor);
         } else {
             const skipReason = 'WooCommerce Subscriptions plugin is not active';
             console.log(`Skipping test: ${skipReason}`);
@@ -49,7 +55,7 @@ test.describe('Menu Manager test', () => {
     });
 
     test('admin can rename menu', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.renameMenu('Withdraw', 'Withdraws');
+        await admin.renameMenu('Withdraw', 'Withdraws', vendor);
     });
 
     test("admin can't rename menu with more than 45 characters", { tag: ['@pro', '@admin'] }, async () => {

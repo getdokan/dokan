@@ -20,7 +20,7 @@ export class MenuManagerPage extends BasePage {
     }
 
     // update menu status
-    async updateMenuStatus(menu: string, action: string, menuLink: string) {
+    async updateMenuStatus(menu: string, action: string, menuLink: string, vendorPage?: MenuManagerPage) {
         await this.gotoUntilNetworkidle(data.subUrls.backend.dokan.settings, { waitUntil: 'networkidle' }, true);
         await this.click(settingsAdmin.menus.menuManager);
 
@@ -30,10 +30,12 @@ export class MenuManagerPage extends BasePage {
                 await this.clickAndWaitForResponseAndLoadStateUntilNetworkIdle(data.subUrls.ajax, settingsAdmin.saveChanges);
                 await this.toHaveBackgroundColor(menuManager.menuSwitcher(menu) + '//span', 'rgb(0, 144, 255)');
                 //assertion
-                await this.goto(data.subUrls.frontend.vDashboard.dashboard);
-                await this.toBeVisible((vendorDashboard.menus.primary as any)[menuLink]);
-                await this.goto((data.subUrls.frontend.vDashboard as any)[menuLink]);
-                await this.notToBeVisible(menuManager.noPermissionNotice);
+                if (vendorPage) {
+                    await vendorPage.goto(data.subUrls.frontend.vDashboard.dashboard);
+                    await vendorPage.toBeVisible((vendorDashboard.menus.primary as any)[menuLink]);
+                    await vendorPage.goto((data.subUrls.frontend.vDashboard as any)[menuLink]);
+                    await vendorPage.notToBeVisible(menuManager.noPermissionNotice);
+                }
                 break;
 
             case 'deactivate':
@@ -41,10 +43,12 @@ export class MenuManagerPage extends BasePage {
                 await this.clickAndWaitForResponseAndLoadStateUntilNetworkIdle(data.subUrls.ajax, settingsAdmin.saveChanges);
                 await this.toHaveBackgroundColor(menuManager.menuSwitcher(menu) + '//span', 'rgb(215, 218, 221)');
                 //assertion
-                await this.goto(data.subUrls.frontend.vDashboard.dashboard);
-                await this.notToBeVisible((vendorDashboard.menus.primary as any)[menuLink]);
-                await this.goto((data.subUrls.frontend.vDashboard as any)[menuLink]);
-                await this.toBeVisible(menuManager.noPermissionNotice);
+                if (vendorPage) {
+                    await vendorPage.goto(data.subUrls.frontend.vDashboard.dashboard);
+                    await vendorPage.notToBeVisible((vendorDashboard.menus.primary as any)[menuLink]);
+                    await vendorPage.goto((data.subUrls.frontend.vDashboard as any)[menuLink]);
+                    await vendorPage.toBeVisible(menuManager.noPermissionNotice);
+                }
                 break;
 
             default:
@@ -53,7 +57,7 @@ export class MenuManagerPage extends BasePage {
     }
 
     // rename menu
-    async renameMenu(currentMenu: string, newMenu: string) {
+    async renameMenu(currentMenu: string, newMenu: string, vendorPage?: MenuManagerPage) {
         await this.goToMenuManagerSettings();
 
         //rename
@@ -63,8 +67,11 @@ export class MenuManagerPage extends BasePage {
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.saveChanges);
         await this.toBeVisible(menuManager.menuEdit(newMenu));
 
-        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
-        await this.toBeVisible(vendorDashboard.menus.menuByText(newMenu));
+        // Verify the renamed menu appears in vendor dashboard using vendor context
+        if (vendorPage) {
+            await vendorPage.goto(data.subUrls.frontend.vDashboard.dashboard);
+            await vendorPage.toBeVisible(vendorDashboard.menus.menuByText(newMenu));
+        }
     }
 
     async cantRenameMenuBeyondLimit(currentMenu: string, newMenu: string) {
