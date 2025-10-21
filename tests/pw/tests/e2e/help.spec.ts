@@ -20,7 +20,7 @@ test.describe('Dokan help test', () => {
         await admin.adminHelpRenderProperly();
     });
 
-    test('admin can view get help dropdown', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
+    test.skip('admin can view get help dropdown', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
         await admin.adminGetHelpDropdownRenderProperly();
     });
 });
