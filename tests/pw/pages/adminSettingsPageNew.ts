@@ -1,7 +1,7 @@
 import { expect } from '@playwright/test';
-import { AdminSettingsPage } from './adminSettingsPage';
+import { AdminPage } from './adminPage';
 
-export class AdminSettingsPageNew extends AdminSettingsPage {
+export class AdminSettingsPageNew extends AdminPage {
     saveButtonSelector: string = '#dokan-admin-settings-save-btn button'
 
     setSaveButtonSelector(selector: string) {
