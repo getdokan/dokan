@@ -3,6 +3,7 @@ const entryPoints = {
 
     frontend: './src/dashboard/index.tsx',
     'dokan-admin-dashboard': './src/admin/dashboard/index.tsx',
+    'dokan-admin-switching': './src/admin/panel-switcher/index.tsx',
     'dokan-admin-panel-header': './src/admin/header/index.tsx',
     'setup-guide-banner': './src/admin/banner/SetupGuideBanner.tsx',
     'vue-frontend': './src/frontend/main.js',
