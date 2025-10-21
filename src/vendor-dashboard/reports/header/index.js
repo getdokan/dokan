@@ -20,10 +20,12 @@ import { getScreenFromPath, isWCAdmin } from '@woocommerce/navigation';
  * Internal dependencies
  */
 import './style.scss';
+import { applyFilters } from "@wordpress/hooks";
 // import useIsScrolled from "../hooks/useIsScrolled";
 // import { TasksReminderBar, useActiveSetupTasklist } from "../task-lists";
 
-export const PAGE_TITLE_FILTER = 'woocommerce_admin_header_page_title';
+export const PAGE_TITLE_FILTER =
+    'dokan_vendor_dashboard_report_header_page_title';
 
 export const getPageTitle = ( sections ) => {
     let pageTitle;
@@ -91,17 +93,16 @@ export const Header = ( { sections, isEmbedded = false, query } ) => {
                 .reverse()
                 .join( ' &lsaquo; ' );
 
-            const decodedTitle = decodeEntities(
+            let decodedTitle = decodeEntities(
                 sprintf(
                     /* translators: 1: document title. 2: page title */
-                    __(
-                        '%1$s &lsaquo; %2$s &#8212; WooCommerce',
-                        'dokan-lite'
-                    ),
+                    __( '%1$s &lsaquo; %2$s &#8212; Dokan', 'dokan-lite' ),
                     documentTitle,
                     siteTitle
                 )
             );
+
+            decodedTitle = applyFilters( PAGE_TITLE_FILTER, decodedTitle );
 
             if ( document.title !== decodedTitle ) {
                 document.title = decodedTitle;

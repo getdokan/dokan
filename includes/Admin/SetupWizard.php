@@ -205,12 +205,16 @@ class SetupWizard {
                 'dokan-lite'
             );
 
+            // Get the admin dashboard url based on the legacy dashboard page option.
+            $is_legacy = get_option( 'dokan_legacy_dashboard_page', false );
+            $page_slug = $is_legacy ? 'dokan' : 'dokan-dashboard';
+
             wp_localize_script(
                 'dokan-admin-onboard-app',
                 'onboardingData',
                 [
                     'site_url'                  => esc_url( get_site_url() ),
-                    'dokan_admin_dashboard_url' => esc_url( admin_url( 'admin.php?page=dokan' ) ),
+                    'dokan_admin_dashboard_url' => esc_url( admin_url( 'admin.php?page=' . $page_slug ) ),
                 ]
             );
         }
@@ -909,7 +913,7 @@ class SetupWizard {
 
         <div class="dokan-setup-done-content">
             <p class="wc-setup-actions step">
-                <a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan' ) ); ?>"><?php esc_html_e( 'Visit Dokan Dashboard', 'dokan-lite' ); ?></a>
+                <a class="button button-primary" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan-dashboard' ) ); ?>"><?php esc_html_e( 'Visit Dokan Dashboard', 'dokan-lite' ); ?></a>
                 <a class="button" href="<?php echo esc_url( admin_url( 'admin.php?page=dokan#/settings' ) ); ?>"><?php esc_html_e( 'More Settings', 'dokan-lite' ); ?></a>
             </p>
         </div>

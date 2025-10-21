@@ -51,7 +51,7 @@ class VendorBalanceUpdateHandler implements Hookable {
             $order_commission_calculator->set_should_adjust_refund( false );
             $order_commission_calculator->calculate();
 
-            $vendor_earning = $order_commission_calculator->get_vendor_earning();
+            $vendor_earning = $order_commission_calculator->get_vendor_earning() + $order_commission_calculator->get_vendor_gateway_fee();
         } catch ( Exception $e ) {
             error_log( sprintf( 'Dokan: Order %d commission calculation failed. Error: %s', $order_id, $e->getMessage() ) );
             return;

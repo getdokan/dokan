@@ -1,16 +1,16 @@
 # Copyright (c) 2025 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 4.0.8\n"
+"Project-Id-Version: Dokan 4.1.2\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-09-12T13:15:12+00:00\n"
+"POT-Creation-Date: 2025-10-16T08:34:10+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: dokan-lite\n"
 
 #. Plugin Name of the plugin
@@ -41,6 +41,7 @@ msgstr ""
 
 #. translators: 1: Required PHP Version 2: Running php version
 #: dokan-class.php:164
+#, php-format
 msgid "The Minimum PHP Version Requirement for <b>Dokan</b> is %1$s. You are Running PHP %2$s"
 msgstr ""
 
@@ -49,8 +50,8 @@ msgid "Get Pro"
 msgstr ""
 
 #: dokan-class.php:414
-#: includes/Admin/AdminBar.php:83
-#: includes/Admin/Menu.php:73
+#: includes/Admin/AdminBar.php:84
+#: includes/Admin/Menu.php:74
 #: includes/Dashboard/Templates/Settings.php:61
 #: includes/Dashboard/Templates/Settings.php:68
 #: includes/functions-dashboard-navigation.php:63
@@ -59,14 +60,14 @@ msgid "Settings"
 msgstr ""
 
 #: dokan-class.php:415
-#: includes/Admin/Dashboard/Dashboard.php:164
-#: templates/admin-header.php:119
+#: includes/Admin/Dashboard/Dashboard.php:181
 #: assets/js/vue-admin.js:2
 msgid "Documentation"
 msgstr ""
 
 #. translators: 1) interval period
 #: includes/Abstracts/DokanBackgroundProcesses.php:87
+#, php-format
 msgid "Every %d Minutes"
 msgstr ""
 
@@ -97,6 +98,7 @@ msgstr ""
 #: includes/Abstracts/DokanRESTController.php:30
 #: includes/Abstracts/DokanRESTController.php:210
 #: includes/Abstracts/DokanRESTController.php:285
+#, php-format
 msgid "Method '%s' not implemented. Must be overridden in subclass."
 msgstr ""
 
@@ -114,6 +116,7 @@ msgstr ""
 
 #. translators: 1) post type name
 #: includes/Abstracts/DokanRESTController.php:193
+#, php-format
 msgid "The %s cannot be deleted."
 msgstr ""
 
@@ -128,11 +131,13 @@ msgstr ""
 #. translators: %s is Settings element type.
 #: includes/Abstracts/SettingsElement.php:327
 #: includes/Abstracts/SettingsElement.php:401
+#, php-format
 msgid "Settings %s Does not support adding any children."
 msgstr ""
 
 #. translators: %s is Settings element type.
 #: includes/Abstracts/SettingsElement.php:420
+#, php-format
 msgid "Settings %s Does not support removing any children."
 msgstr ""
 
@@ -143,14 +148,18 @@ msgstr ""
 
 #. translators: %s is Status element type.
 #: includes/Abstracts/StatusElement.php:223
+#, php-format
 msgid "Status %s Does not support adding any children."
 msgstr ""
 
 #: includes/Admin/AdminBar.php:56
+#: includes/Admin/Dashboard/Dashboard.php:98
 #: includes/Admin/Menu.php:55
 #: includes/Admin/Settings.php:777
 #: includes/functions-dashboard-navigation.php:34
 #: includes/Install/Installer.php:233
+#: assets/js/dokan-admin-dashboard.js:179
+#: assets/js/vendor-dashboard/reports/index.js:2
 #: assets/js/vue-admin.js:2
 msgid "Dashboard"
 msgstr ""
@@ -160,74 +169,67 @@ msgstr ""
 #: includes/Admin/Menu.php:56
 #: includes/Admin/OnboardingSetup/Steps/WithdrawStep.php:104
 #: includes/Admin/OnboardingSetup/Steps/WithdrawStep.php:107
-#: includes/Admin/SetupWizard.php:286
+#: includes/Admin/SetupWizard.php:290
 #: includes/functions-dashboard-navigation.php:55
 #: includes/functions.php:2783
 #: templates/withdraw/header.php:11
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/frontend.js:172
 msgid "Withdraw"
 msgstr ""
 
-#: includes/Admin/AdminBar.php:74
-#: includes/Admin/Menu.php:65
-msgid "PRO Features"
-msgstr ""
-
-#: includes/Admin/AdminBar.php:138
+#: includes/Admin/AdminBar.php:139
 msgid "Visit Shop"
 msgstr ""
 
-#: includes/Admin/AdminBar.php:147
+#: includes/Admin/AdminBar.php:148
 msgid "Visit Stores"
 msgstr ""
 
-#: includes/Admin/AdminBar.php:156
+#: includes/Admin/AdminBar.php:157
 msgid "Visit Vendor Dashboard"
 msgstr ""
 
-#: includes/Admin/Dashboard/Dashboard.php:58
+#: includes/Admin/Dashboard/Dashboard.php:71
 msgid "The page must be an instance of Pageable."
 msgstr ""
 
-#: includes/Admin/Dashboard/Dashboard.php:120
+#: includes/Admin/Dashboard/Dashboard.php:97
+msgid "Dokan Admin Dashboard"
+msgstr ""
+
+#: includes/Admin/Dashboard/Dashboard.php:134
 #: assets/js/dokan-admin-notice.js:2
 #: assets/js/dokan-promo-notice.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Loading..."
 msgstr ""
 
-#: includes/Admin/Dashboard/Dashboard.php:142
+#: includes/Admin/Dashboard/Dashboard.php:159
 msgid "What's New"
 msgstr ""
 
-#: includes/Admin/Dashboard/Dashboard.php:150
-#: templates/admin-header.php:103
+#: includes/Admin/Dashboard/Dashboard.php:167
 msgid "Get Support"
 msgstr ""
 
-#: includes/Admin/Dashboard/Dashboard.php:157
-#: templates/admin-header.php:111
+#: includes/Admin/Dashboard/Dashboard.php:174
 msgid "Community"
 msgstr ""
 
-#: includes/Admin/Dashboard/Dashboard.php:171
-#: templates/admin-header.php:128
+#: includes/Admin/Dashboard/Dashboard.php:188
 msgid "FAQ"
 msgstr ""
 
-#: includes/Admin/Dashboard/Dashboard.php:178
-#: templates/admin-header.php:136
+#: includes/Admin/Dashboard/Dashboard.php:195
 msgid "Basic & Fundamental"
 msgstr ""
 
-#: includes/Admin/Dashboard/Dashboard.php:185
-#: templates/admin-header.php:145
+#: includes/Admin/Dashboard/Dashboard.php:202
 msgid "Request a Feature"
 msgstr ""
 
-#: includes/Admin/Dashboard/Dashboard.php:192
-#: templates/admin-header.php:153
+#: includes/Admin/Dashboard/Dashboard.php:209
 #: assets/js/vue-admin.js:2
 msgid "Import dummy data"
 msgstr ""
@@ -238,7 +240,7 @@ msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Modules.php:30
 #: includes/Privacy.php:91
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Modules"
 msgstr ""
 
@@ -291,6 +293,7 @@ msgid "This is simple product import and export plugin for vendor"
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Modules.php:119
+#: assets/js/dokan-pro-features.js:2
 msgid "Follow Store"
 msgstr ""
 
@@ -299,6 +302,7 @@ msgid "Send emails to customers when their favorite store updates."
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Modules.php:132
+#: assets/js/dokan-pro-features.js:2
 msgid "Geolocation"
 msgstr ""
 
@@ -307,6 +311,7 @@ msgid "Search Products and Vendors by geolocation."
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Modules.php:146
+#: assets/js/dokan-pro-features.js:2
 msgid "EU Compliance Fields"
 msgstr ""
 
@@ -315,6 +320,7 @@ msgid "EU Compliance Fields Support for Vendors."
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Modules.php:159
+#: assets/js/dokan-pro-features.js:2
 msgid "Live Chat"
 msgstr ""
 
@@ -391,6 +397,7 @@ msgid "Let customers report fraudulent or fake products."
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Modules.php:280
+#: assets/js/dokan-pro-features.js:2
 msgid "Return and Warranty Request"
 msgstr ""
 
@@ -459,6 +466,7 @@ msgid "Accept credit card payments and allow your sellers to get automatic split
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Modules.php:388
+#: assets/js/dokan-pro-features.js:2
 msgid "Product Advertising"
 msgstr ""
 
@@ -511,6 +519,7 @@ msgid "Dokan add-on to verify sellers."
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Modules.php:464
+#: assets/js/dokan-pro-features.js:2
 msgid "Wholesale"
 msgstr ""
 
@@ -519,6 +528,7 @@ msgid "Offer any customer to buy product as a wholesale price from any vendors."
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Modules.php:477
+#: assets/js/dokan-pro-features.js:2
 msgid "Rank Math SEO"
 msgstr ""
 
@@ -587,8 +597,16 @@ msgstr ""
 msgid "Facilitate wholesale orders between merchants and customers with the option for quoted prices."
 msgstr ""
 
+#: includes/Admin/Dashboard/Pages/ProFeatures.php:26
+msgid "Dokan Pro Features"
+msgstr ""
+
+#: includes/Admin/Dashboard/Pages/ProFeatures.php:27
+msgid "Pro Features"
+msgstr ""
+
 #: includes/Admin/Dashboard/Pages/SetupGuide.php:35
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Setup Guide"
 msgstr ""
 
@@ -622,7 +640,9 @@ msgstr ""
 
 #: includes/Admin/functions.php:208
 #: includes/Admin/functions.php:475
+#: includes/REST/AdminDashboardStatsController.php:561
 #: includes/REST/AdminReportController.php:141
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Total Sales"
 msgstr ""
 
@@ -661,13 +681,13 @@ msgstr ""
 #: includes/Admin/Settings.php:613
 #: includes/Admin/Settings.php:624
 #: includes/Admin/Settings.php:635
-#: includes/Admin/SetupWizard.php:490
+#: includes/Admin/SetupWizard.php:494
 #: includes/Install/Installer.php:170
 #: includes/Order/Admin/Hooks.php:97
 #: includes/Order/Admin/Hooks.php:403
 #: includes/wc-template.php:21
 #: includes/wc-template.php:166
-#: includes/wc-template.php:336
+#: includes/wc-template.php:337
 #: templates/my-orders.php:29
 #: templates/orders/sub-order-related-order-meta-box-html.php:41
 #: assets/js/vue-admin.js:2
@@ -689,6 +709,7 @@ msgstr ""
 
 #. translators: %s: withdraw count
 #: includes/Admin/Menu.php:40
+#, php-format
 msgid "Withdraw %s"
 msgstr ""
 
@@ -696,6 +717,7 @@ msgstr ""
 #: includes/Admin/Settings.php:358
 #: includes/ReverseWithdrawal/Hooks.php:252
 #: templates/reverse-withdrawal/header.php:9
+#: assets/js/dokan-pro-features.js:2
 #: assets/js/vue-admin.js:2
 msgid "Reverse Withdrawal"
 msgstr ""
@@ -705,16 +727,17 @@ msgstr ""
 msgid "Vendors"
 msgstr ""
 
-#: includes/Admin/Menu.php:72
+#: includes/Admin/Menu.php:73
 msgid "<span style=\"color:#f18500\">Help</span>"
 msgstr ""
 
-#: includes/Admin/Menu.php:85
+#: includes/Admin/Menu.php:86
 msgid "Chat with us"
 msgstr ""
 
 #. translators: %s permalink settings url
 #: includes/Admin/Notices/Manager.php:116
+#, php-format
 msgid "The <strong>Plain</strong> permalink structure is not working for the Dokan plugin. Please change your permalink structure from <a href=\"%s\">Settings > Permalinks</a>"
 msgstr ""
 
@@ -781,6 +804,7 @@ msgstr ""
 
 #. translators: %s: plugin version
 #: includes/Admin/Notices/WhatsNew.php:45
+#, php-format
 msgid "Check What's new in Dokan Version %s"
 msgstr ""
 
@@ -882,7 +906,7 @@ msgstr ""
 #: includes/Admin/Settings.php:614
 #: includes/Admin/Settings.php:625
 #: includes/Admin/Settings.php:636
-#: includes/Admin/SetupWizard.php:491
+#: includes/Admin/SetupWizard.php:495
 msgid "Admin"
 msgstr ""
 
@@ -943,7 +967,7 @@ msgstr ""
 #: includes/Admin/OnboardingSetup/Steps/CommissionStep.php:105
 #: includes/Admin/OnboardingSetup/Steps/CommissionStep.php:108
 #: includes/Admin/Settings.php:518
-#: includes/Admin/SetupWizard.php:281
+#: includes/Admin/SetupWizard.php:285
 #: includes/functions.php:997
 #: includes/Order/Admin/Hooks.php:96
 #: includes/ReverseWithdrawal/Helper.php:65
@@ -1040,7 +1064,7 @@ msgstr ""
 
 #: includes/Admin/OnboardingSetup/Steps/WithdrawStep.php:145
 #: includes/Admin/Settings.php:757
-#: includes/Admin/SetupWizard.php:735
+#: includes/Admin/SetupWizard.php:739
 msgid "Order Status for Withdraw"
 msgstr ""
 
@@ -1050,7 +1074,7 @@ msgstr ""
 
 #: includes/Admin/OnboardingSetup/Steps/WithdrawStep.php:147
 #: includes/Admin/Settings.php:410
-#: includes/Admin/SetupWizard.php:742
+#: includes/Admin/SetupWizard.php:746
 #: includes/Dashboard/Templates/Dashboard.php:109
 #: includes/Order/functions.php:415
 #: templates/dashboard/orders-widget.php:33
@@ -1059,7 +1083,7 @@ msgstr ""
 
 #: includes/Admin/OnboardingSetup/Steps/WithdrawStep.php:148
 #: includes/Admin/Settings.php:411
-#: includes/Admin/SetupWizard.php:749
+#: includes/Admin/SetupWizard.php:753
 #: includes/Dashboard/Templates/Dashboard.php:119
 #: includes/Order/functions.php:430
 #: templates/dashboard/orders-widget.php:43
@@ -1085,7 +1109,7 @@ msgstr ""
 #: includes/Admin/Pointers.php:181
 #: includes/Admin/Pointers.php:198
 #: includes/Admin/Pointers.php:215
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/dokan-admin-onboard.js:172
 #: assets/js/vue-admin.js:2
 msgid "Next"
@@ -1374,6 +1398,7 @@ msgstr ""
 
 #. translators: %s: store url
 #: includes/Admin/Settings.php:435
+#, php-format
 msgid "Define the vendor store URL (%s<strong>[this-text]</strong>/[vendor-name])"
 msgstr ""
 
@@ -1593,7 +1618,7 @@ msgid "Allow vendors to select any category while creating/editing products."
 msgstr ""
 
 #: includes/Admin/Settings.php:719
-#: includes/Admin/SetupWizard.php:685
+#: includes/Admin/SetupWizard.php:689
 msgid "Withdraw Methods"
 msgstr ""
 
@@ -1614,7 +1639,7 @@ msgid "Select suitable withdraw charges for vendors"
 msgstr ""
 
 #: includes/Admin/Settings.php:747
-#: includes/Admin/SetupWizard.php:728
+#: includes/Admin/SetupWizard.php:732
 msgid "Minimum Withdraw Limit"
 msgstr ""
 
@@ -1623,7 +1648,7 @@ msgid "Minimum balance required to make a withdraw request. Leave blank to set n
 msgstr ""
 
 #: includes/Admin/Settings.php:758
-#: includes/Admin/SetupWizard.php:754
+#: includes/Admin/SetupWizard.php:758
 msgid "Order status for which vendor can make a withdraw request."
 msgstr ""
 
@@ -1707,13 +1732,12 @@ msgid "Which map API source you want to use in your site?"
 msgstr ""
 
 #: includes/Admin/Settings.php:831
-#: includes/Admin/SetupWizard.php:505
-#: assets/js/vue-admin.js:2
+#: includes/Admin/SetupWizard.php:509
 msgid "Google Maps"
 msgstr ""
 
 #: includes/Admin/Settings.php:832
-#: includes/Admin/SetupWizard.php:506
+#: includes/Admin/SetupWizard.php:510
 msgid "Mapbox"
 msgstr ""
 
@@ -1745,6 +1769,7 @@ msgstr ""
 
 #. translators: 1) Opening anchor tag, 2) Closing anchor tag, 3) Opening anchor tag, 4) Closing anchor tag
 #: includes/Admin/Settings.php:866
+#, php-format
 msgid "%1$sreCAPTCHA_v3%2$s credentials required to enable invisible captcha for contact forms. %3$sGet Help%4$s"
 msgstr ""
 
@@ -1932,80 +1957,81 @@ msgctxt "enhanced select"
 msgid "Searching&hellip;"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:267
+#: includes/Admin/SetupWizard.php:271
 #: includes/Vendor/SetupWizard.php:700
 msgid "Introduction"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:271
+#: includes/Admin/SetupWizard.php:275
 #: includes/functions-dashboard-navigation.php:72
 #: includes/Vendor/SetupWizard.php:705
 #: assets/js/vue-admin.js:2
 msgid "Store"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:276
+#: includes/Admin/SetupWizard.php:280
 #: includes/Admin/UserProfile.php:308
 msgid "Selling"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:291
+#: includes/Admin/SetupWizard.php:295
 msgid "Recommended"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:296
+#: includes/Admin/SetupWizard.php:300
 #: includes/Vendor/SetupWizard.php:722
 msgid "Ready!"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:395
+#: includes/Admin/SetupWizard.php:399
 msgid "Dokan &rsaquo; Setup Wizard"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:415
+#: includes/Admin/SetupWizard.php:419
 #: includes/Admin/SetupWizardNoWC.php:95
 msgid "Return to the WordPress Dashboard"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:464
+#: includes/Admin/SetupWizard.php:468
 #: templates/admin-setup-wizard/step-no-wc-introduction.php:2
 msgid "Welcome to the world of Dokan!"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:465
+#: includes/Admin/SetupWizard.php:469
 msgid "Thank you for choosing Dokan to power your online marketplace! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than three minutes.</strong>"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:466
+#: includes/Admin/SetupWizard.php:470
 msgid "No time right now? If you don’t want to go through the wizard, you can skip and return to the WordPress dashboard. Come back anytime if you change your mind!"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:468
+#: includes/Admin/SetupWizard.php:472
 #: includes/Vendor/SetupWizard.php:171
 #: templates/admin-setup-wizard/step-no-wc-introduction.php:74
 msgid "Let's Go!"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:469
+#: includes/Admin/SetupWizard.php:473
 #: includes/Vendor/SetupWizard.php:172
 msgid "Not right now"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:681
+#: includes/Admin/SetupWizard.php:685
 msgid "Withdraw Setup"
 msgstr ""
 
 #. translators: %s: withdraw method name
-#: includes/Admin/SetupWizard.php:703
+#: includes/Admin/SetupWizard.php:707
+#, php-format
 msgid "Enable %s for your vendor as a withdraw method"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:731
+#: includes/Admin/SetupWizard.php:735
 msgid "Minimum balance required to make a withdraw request ( Leave it blank to set no limits )"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:759
-#: includes/Admin/SetupWizard.php:792
+#: includes/Admin/SetupWizard.php:763
+#: includes/Admin/SetupWizard.php:796
 #: includes/Admin/SetupWizardWCAdmin.php:232
 #: includes/Vendor/SetupWizard.php:351
 #: includes/Vendor/SetupWizard.php:560
@@ -2015,7 +2041,7 @@ msgstr ""
 msgid "Continue"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:760
+#: includes/Admin/SetupWizard.php:764
 #: includes/Vendor/SetupWizard.php:353
 #: includes/Vendor/SetupWizard.php:562
 #: templates/admin-setup-wizard/step-commission.php:13
@@ -2025,28 +2051,28 @@ msgstr ""
 msgid "Skip this step"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:776
+#: includes/Admin/SetupWizard.php:780
 msgid "Recommended for All Dokan Marketplaces"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:778
+#: includes/Admin/SetupWizard.php:782
 msgid "Enhance your store with these recommended features."
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:907
+#: includes/Admin/SetupWizard.php:911
 msgid "Your Marketplace is Ready!"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:912
-#: assets/js/dokan-admin-dashboard.js:172
+#: includes/Admin/SetupWizard.php:916
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Visit Dokan Dashboard"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:913
+#: includes/Admin/SetupWizard.php:917
 msgid "More Settings"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:998
+#: includes/Admin/SetupWizard.php:1002
 msgid "The following plugins will be installed and activated for you:"
 msgstr ""
 
@@ -2075,6 +2101,7 @@ msgstr ""
 
 #. translators: %s: country name including the 'the' prefix if needed
 #: includes/Admin/SetupWizardWCAdmin.php:75
+#, php-format
 msgid "We've created two Shipping Zones - for %s and for the rest of the world. Below you can set Flat Rate shipping costs for these Zones or offer Free Shipping."
 msgstr ""
 
@@ -2117,6 +2144,7 @@ msgstr ""
 
 #. translators: %1$s: live rates tooltip text, %2$s: shipping extensions URL
 #: includes/Admin/SetupWizardWCAdmin.php:180
+#, php-format
 msgid "If you'd like to offer <span class=\"help_tip\" data-tip=\"%1$s\">live rates</span> from a specific carrier (e.g. UPS) you can find a variety of extensions available for WooCommerce <a href=\"%2$s\" target=\"_blank\">here</a>."
 msgstr ""
 
@@ -2126,6 +2154,7 @@ msgstr ""
 
 #. translators: %1$s: weight unit dropdown, %2$s: dimension unit dropdown
 #: includes/Admin/SetupWizardWCAdmin.php:207
+#, php-format
 msgid "We'll use %1$s for product weight and %2$s for product dimensions."
 msgstr ""
 
@@ -2184,6 +2213,7 @@ msgstr ""
 #. translators: 1) store banner width 2) store banner height
 #: includes/Admin/UserProfile.php:127
 #: templates/settings/store-form.php:85
+#, php-format
 msgid "Upload a banner for your store. Banner size is (%1$sx%2$s) pixels."
 msgstr ""
 
@@ -2544,6 +2574,7 @@ msgid "Seller Totals."
 msgstr ""
 
 #: includes/Analytics/VendorDashboardManager.php:96
+#: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/vue-admin.js:2
 msgid "Total Earning"
 msgstr ""
@@ -2569,6 +2600,7 @@ msgid "Marketplace Commission"
 msgstr ""
 
 #: includes/Analytics/VendorDashboardManager.php:128
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Total Commission"
 msgstr ""
 
@@ -2591,6 +2623,7 @@ msgstr ""
 #: includes/Assets.php:741
 #: includes/Product/functions.php:504
 #: templates/products/products-listing.php:109
+#: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/dokan-admin-notice.js:2
 #: assets/js/dokan-promo-notice.js:2
 #: assets/js/vue-admin.js:2
@@ -2677,7 +2710,7 @@ msgid "Apply"
 msgstr ""
 
 #: includes/Assets.php:904
-#: assets/js/components.js:179
+#: assets/js/components.js:172
 #: assets/js/vue-admin.js:2
 msgid "Clear"
 msgstr ""
@@ -2778,8 +2811,9 @@ msgstr ""
 #: templates/withdraw/pending-request-listing.php:19
 #: templates/withdraw/pending-request-listing.php:39
 #: templates/withdraw/pending-request-listing.php:63
-#: assets/js/components.js:179
+#: assets/js/components.js:172
 #: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/dokan-admin-notice.js:2
 #: assets/js/dokan-intelligence.js:172
 #: assets/js/dokan-promo-notice.js:2
@@ -2924,6 +2958,7 @@ msgstr ""
 
 #. translators: %d: max linked variation.
 #: includes/Assets.php:1156
+#, php-format
 msgid "Are you sure you want to link all variations? This will create a new variation for each and every possible combination of variation attributes (max %d per run)."
 msgstr ""
 
@@ -3001,33 +3036,35 @@ msgstr ""
 
 #. translators: %s: decimal
 #: includes/Assets.php:1176
-#: includes/Assets.php:1357
+#: includes/Assets.php:1364
+#, php-format
 msgid "Please enter with one decimal point (%s) without thousand separators."
 msgstr ""
 
 #. translators: %s: price decimal separator
 #: includes/Assets.php:1178
-#: includes/Assets.php:1359
+#: includes/Assets.php:1366
+#, php-format
 msgid "Please enter with one monetary decimal point (%s) without thousand separators and currency symbols."
 msgstr ""
 
 #: includes/Assets.php:1179
-#: includes/Assets.php:1360
+#: includes/Assets.php:1367
 msgid "Please enter in country code with two capital letters."
 msgstr ""
 
 #: includes/Assets.php:1180
-#: includes/Assets.php:1361
+#: includes/Assets.php:1368
 msgid "Please enter in a value less than the regular price."
 msgstr ""
 
 #: includes/Assets.php:1181
-#: includes/Assets.php:1362
+#: includes/Assets.php:1369
 msgid "This product has produced sales and may be linked to existing orders. Are you sure you want to delete it?"
 msgstr ""
 
 #: includes/Assets.php:1182
-#: includes/Assets.php:1363
+#: includes/Assets.php:1370
 msgid "This action cannot be reversed. Are you sure you wish to erase personal data from the selected orders?"
 msgstr ""
 
@@ -3204,6 +3241,7 @@ msgstr ""
 
 #. translators: %d is product count.
 #: includes/CatalogMode/Dashboard/ProductBulkEdit.php:133
+#, php-format
 msgid "%s product has been successfully updated."
 msgid_plural "%s products have been successfully updated."
 msgstr[0] ""
@@ -3229,29 +3267,31 @@ msgid "Product not found"
 msgstr ""
 
 #: includes/Commission.php:210
+#: includes/Commission.php:263
 msgid "Order not found"
 msgstr ""
 
 #: includes/Commission.php:238
+#: includes/Commission.php:275
 msgid "Commission calculation failed"
 msgstr ""
 
-#: includes/Commission.php:537
+#: includes/Commission.php:577
 msgid "Combine"
 msgstr ""
 
-#: includes/Commission.php:538
-#: assets/js/components.js:179
-#: assets/js/dokan-admin-dashboard.js:172
+#: includes/Commission.php:578
+#: assets/js/components.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/dokan-setup-wizard-commission.js:1
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Percentage"
 msgstr ""
 
-#: includes/Commission.php:539
-#: assets/js/components.js:179
-#: assets/js/dokan-admin-dashboard.js:172
+#: includes/Commission.php:579
+#: assets/js/components.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/dokan-setup-wizard-commission.js:1
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
@@ -3263,7 +3303,8 @@ msgid "Order is required for order commission calculation."
 msgstr ""
 
 #. translators: 1: Refund item ID, 2: Error message
-#: includes/Commission/OrderCommission.php:150
+#: includes/Commission/OrderCommission.php:153
+#, php-format
 msgid "Refund item ID %1$s error: %2$s"
 msgstr ""
 
@@ -3302,11 +3343,13 @@ msgstr ""
 
 #. translators: %s coupon code.
 #: includes/Commission/RecalculateCommissions.php:198
+#, php-format
 msgid "Coupon removed: \"%s\"."
 msgstr ""
 
 #. translators: 1) page number
 #: includes/Core.php:149
+#, php-format
 msgid "Page %1$s"
 msgstr ""
 
@@ -3434,7 +3477,8 @@ msgstr ""
 #: includes/Dashboard/Templates/Main.php:72
 #: includes/template-tags.php:277
 #: templates/admin-setup-wizard/step-store-wc-fields.php:92
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
+#, php-format,js-format
 msgid "%1$s (%2$s)"
 msgstr ""
 
@@ -3514,16 +3558,19 @@ msgstr ""
 #. translators: %s: maximum tag length
 #: includes/Dashboard/Templates/Products.php:518
 #: includes/Product/functions.php:121
+#, php-format
 msgid "You can only select %s tags"
 msgstr ""
 
 #. translators: 1) reverse withdrawal balance, 2) navigation url, 3) due status, 4) will be taken actions
 #: includes/Dashboard/Templates/ReverseWithdrawal.php:127
+#, php-format
 msgid "You have a reverse withdrawal balance of %1$s to be paid. Please <a href=\"%2$s\">pay</a> it before %3$s. Below actions will be taken after the billing period is over. %4$s"
 msgstr ""
 
 #. translators: 1) reverse withdrawal failed actions, 2) reverse withdrawal navigation url
 #: includes/Dashboard/Templates/ReverseWithdrawal.php:157
+#, php-format
 msgid "Below actions have been taken due to unpaid reverse withdrawal balance: %1$s Kindly <a href=\"%2$s\">pay</a> your due to start selling again."
 msgstr ""
 
@@ -3649,11 +3696,13 @@ msgstr ""
 
 #. translators: 1: Last formatted withdraw amount 2: Last formatted withdraw date 3: Last formatted withdraw method used.
 #: includes/Dashboard/Templates/Withdraw.php:450
+#, php-format
 msgid "%1$s on %2$s to %3$s"
 msgstr ""
 
 #. translators: 1) Negative withdrawal balance amount
 #: includes/Dashboard/Templates/Withdraw.php:489
+#, php-format
 msgid "You have already withdrawn %s. This amount will be deducted from your balance."
 msgstr ""
 
@@ -3712,6 +3761,7 @@ msgstr ""
 #: includes/Emails/VendorWithdrawRequest.php:154
 #: includes/Emails/WithdrawApproved.php:146
 #: includes/Emails/WithdrawCancelled.php:150
+#, php-format
 msgid "Available placeholders: %s"
 msgstr ""
 
@@ -3854,46 +3904,55 @@ msgstr ""
 
 #. translators: %1: from name, %2: from name
 #: includes/Emails/Manager.php:207
+#, php-format
 msgid "\"%1$s\" sent you a message from your \"%2$s\" store"
 msgstr ""
 
 #. translators: %1: from name, %2: status
 #: includes/Emails/Manager.php:259
+#, php-format
 msgid "[%1$s] Refund Request %2$s"
 msgstr ""
 
 #. translators: %s: from name
 #: includes/Emails/Manager.php:293
+#, php-format
 msgid "[%s] New Refund Request"
 msgstr ""
 
 #. translators: %s: from name
 #: includes/Emails/Manager.php:350
+#, php-format
 msgid "[%s] New Withdraw Request"
 msgstr ""
 
 #. translators: %s: from name
 #: includes/Emails/Manager.php:373
+#, php-format
 msgid "[%s] Your Withdraw Request has been approved"
 msgstr ""
 
 #. translators: %s: from name
 #: includes/Emails/Manager.php:397
+#, php-format
 msgid "[%s] Your Withdraw Request has been cancelled"
 msgstr ""
 
 #. translators: %s: from name
 #: includes/Emails/Manager.php:436
+#, php-format
 msgid "[%s] New Vendor Registered"
 msgstr ""
 
 #. translators: %s: from name
 #: includes/Emails/Manager.php:490
+#, php-format
 msgid "[%s] New Product Added"
 msgstr ""
 
 #. translators: %s: from name
 #: includes/Emails/Manager.php:531
+#, php-format
 msgid "[%s] Your product has been approved!"
 msgstr ""
 
@@ -3924,6 +3983,7 @@ msgstr ""
 #: includes/Emails/NewProduct.php:187
 #: includes/Emails/NewSeller.php:150
 #: includes/Emails/VendorWithdrawRequest.php:166
+#, php-format
 msgid "Enter recipients (comma separated) for this email. Defaults to %s."
 msgstr ""
 
@@ -3945,6 +4005,7 @@ msgstr ""
 
 #. translators: 1) admin email address
 #: includes/Emails/NewProductPending.php:185
+#, php-format
 msgid "Enter recipients (comma separated) for this email. Defaults to %1$s."
 msgstr ""
 
@@ -4110,6 +4171,7 @@ msgstr ""
 
 #. translators: %s: Geteway fee
 #: includes/Fees.php:105
+#, php-format
 msgid "Payment gateway processing fee %s"
 msgstr ""
 
@@ -4167,7 +4229,7 @@ msgstr ""
 #: includes/functions-dashboard-navigation.php:302
 #: templates/settings/header.php:14
 #: templates/store-lists-loop.php:104
-#: assets/js/components.js:179
+#: assets/js/components.js:172
 #: assets/js/vue-admin.js:2
 msgid "Visit Store"
 msgstr ""
@@ -4184,12 +4246,14 @@ msgstr ""
 #. translators: 1) argument name, 2) argument value
 #: includes/functions-rest-api.php:22
 #: includes/functions-rest-api.php:61
+#, php-format
 msgid "%1$s is not of type %2$s"
 msgstr ""
 
 #. translators: 1) argument name
 #: includes/functions-rest-api.php:28
 #: includes/functions-rest-api.php:67
+#, php-format
 msgid "%s was not registered as a request argument."
 msgstr ""
 
@@ -4251,40 +4315,47 @@ msgstr ""
 #. translators: 1) bank account name
 #: includes/functions.php:1258
 #: assets/js/vue-admin.js:2
+#, php-format,js-format
 msgid "Account Name: %s"
 msgstr ""
 
 #. translators: 1) bank account number
 #: includes/functions.php:1263
 #: assets/js/vue-admin.js:2
+#, php-format,js-format
 msgid "Account Number: %s"
 msgstr ""
 
 #. translators: 1) bank name
 #: includes/functions.php:1268
 #: assets/js/vue-admin.js:2
+#, php-format,js-format
 msgid "Bank Name: %s"
 msgstr ""
 
 #. translators: 1)  bank address
 #: includes/functions.php:1273
+#, php-format
 msgid "Address: %s"
 msgstr ""
 
 #. translators: 1) bank routing number
 #: includes/functions.php:1278
 #: assets/js/vue-admin.js:2
+#, php-format,js-format
 msgid "Routing Number: %s"
 msgstr ""
 
 #. translators: 1) bank iban
 #: includes/functions.php:1283
 #: assets/js/vue-admin.js:2
+#, php-format,js-format
 msgid "IBAN: %s"
 msgstr ""
 
 #. translators: 1) bank swift
 #: includes/functions.php:1288
+#, php-format
 msgid "SWIFT: %s"
 msgstr ""
 
@@ -4351,12 +4422,13 @@ msgstr ""
 
 #. translators: 1: month name, 2: 4-digit year
 #: includes/functions.php:2183
-#: includes/REST/ProductControllerV2.php:218
+#: includes/REST/ProductControllerV2.php:231
+#, php-format
 msgid "%1$s %2$d"
 msgstr ""
 
 #: includes/functions.php:2198
-#: includes/REST/ProductControllerV2.php:256
+#: includes/REST/ProductControllerV2.php:269
 #: templates/products/edit-product-single.php:271
 #: templates/products/products-listing-row.php:247
 #: templates/products/products-listing.php:139
@@ -4492,7 +4564,6 @@ msgid "View reviews"
 msgstr ""
 
 #: includes/functions.php:2732
-#: assets/js/vue-admin.js:2
 msgid "Manage reviews"
 msgstr ""
 
@@ -4687,134 +4758,180 @@ msgstr ""
 
 #. translators: 1) plugin slug
 #: includes/functions.php:3449
+#, php-format
 msgid "Unable to fetch plugin information from wordpress.org for %s."
 msgstr ""
 
 #. translators: 1) plugin slug
 #: includes/functions.php:3462
+#, php-format
 msgid "Unable to install %s from wordpress.org"
 msgstr ""
 
-#: includes/Intelligence/Admin/Settings.php:26
+#: includes/Intelligence/Admin/Settings.php:27
 msgid "AI Assist"
 msgstr ""
 
-#: includes/Intelligence/Admin/Settings.php:28
+#: includes/Intelligence/Admin/Settings.php:29
 msgid "Dokan AI Assist"
 msgstr ""
 
-#: includes/Intelligence/Admin/Settings.php:30
+#: includes/Intelligence/Admin/Settings.php:31
 msgid "AI Assist Settings"
 msgstr ""
 
-#: includes/Intelligence/Admin/Settings.php:31
+#: includes/Intelligence/Admin/Settings.php:32
 msgid "Set up AI to elevate your platform with enhanced capabilities."
 msgstr ""
 
-#: includes/Intelligence/Admin/Settings.php:47
+#: includes/Intelligence/Admin/Settings.php:51
+msgid "AI Product Info Generator"
+msgstr ""
+
+#: includes/Intelligence/Admin/Settings.php:52
+msgid "Let vendors generate product info by AI"
+msgstr ""
+
+#: includes/Intelligence/Admin/Settings.php:57
 msgid "Engine"
 msgstr ""
 
-#: includes/Intelligence/Admin/Settings.php:50
+#: includes/Intelligence/Admin/Settings.php:63
 msgid "Select which AI provider to use for generating content."
 msgstr ""
 
-#: includes/Intelligence/Admin/Settings.php:56
-msgid "Gemini API Key"
+#. translators: %s is the provider name, e.g., OpenAI
+#: includes/Intelligence/Admin/Settings.php:73
+#, php-format
+msgid "%s API Key"
 msgstr ""
 
 #. translators: 1: OpenAi Link
-#: includes/Intelligence/Admin/Settings.php:59
-msgid "You can get your API Keys in your <a href=\"%s\" target=\"_blank\"> AI Studio Account.</a>"
+#: includes/Intelligence/Admin/Settings.php:76
+#, php-format
+msgid "You can get your API Keys in your <a href=\"%1$s\" target=\"_blank\">%2$s Account.</a>"
 msgstr ""
 
-#: includes/Intelligence/Admin/Settings.php:68
 #: includes/Intelligence/Admin/Settings.php:84
 msgid "Your API key provides secure access to the AI service. Usage costs will be charged to the connected account."
 msgstr ""
 
-#: includes/Intelligence/Admin/Settings.php:72
-msgid "OpenAI API Key"
-msgstr ""
-
-#. translators: 1: OpenAi Link
-#: includes/Intelligence/Admin/Settings.php:75
-msgid "You can get your API Keys in your <a href=\"%s\" target=\"_blank\">OpenAI Account.</a>"
-msgstr ""
-
-#: includes/Intelligence/Admin/Settings.php:88
-#: includes/Intelligence/Admin/Settings.php:102
+#: includes/Intelligence/Admin/Settings.php:89
 msgid "Model"
 msgstr ""
 
-#: includes/Intelligence/Admin/Settings.php:91
-#: includes/Intelligence/Admin/Settings.php:105
+#: includes/Intelligence/Admin/Settings.php:92
 msgid "More advanced models provide higher quality output but may cost more per generation."
 msgstr ""
 
-#: includes/Intelligence/Manager.php:22
-msgid "OpenAI"
-msgstr ""
-
-#: includes/Intelligence/Manager.php:23
-msgid "Gemini"
-msgstr ""
-
-#: includes/Intelligence/REST/AIRequestController.php:57
+#: includes/Intelligence/REST/AIRequestController.php:58
 msgid "Prompt to process"
 msgstr ""
 
-#: includes/Intelligence/REST/AIRequestController.php:62
+#: includes/Intelligence/REST/AIRequestController.php:63
 msgid "Optional data payload"
 msgstr ""
 
 #: includes/Intelligence/REST/AIRequestController.php:87
+msgid "AI provider or model is not configured properly."
+msgstr ""
+
+#. translators: %s: type of generation.
+#: includes/Intelligence/REST/AIRequestController.php:100
+#, php-format
+msgid "Model does not support %s generation."
+msgstr ""
+
+#: includes/Intelligence/REST/AIRequestController.php:112
 msgid "Something went wrong in the configuration. Kindly reach out to Marketplace Owner"
 msgstr ""
 
-#: includes/Intelligence/REST/AIRequestController.php:93
+#: includes/Intelligence/REST/AIRequestController.php:118
 msgid "Service is not available due to some reason. Kindly reach out to Marketplace Owner"
 msgstr ""
 
-#: includes/Intelligence/Services/BaseAIService.php:74
+#: includes/Intelligence/Services/Model.php:178
 msgid "API key is not configured"
 msgstr ""
 
-#: includes/Intelligence/Services/ChatgptResponseService.php:96
-msgid "GPT-3.5 Turbo"
+#: includes/Intelligence/Services/Models/GeminiTwoDotFiveFlash.php:21
+msgid "Gemini 2.5 Flash"
 msgstr ""
 
-#: includes/Intelligence/Services/ChatgptResponseService.php:97
-msgid "GPT-4o Mini"
+#: includes/Intelligence/Services/Models/GeminiTwoDotFiveFlash.php:28
+msgid "Gemini 2.5 Flash is a powerful AI model by Google DeepMind, designed to deliver high-speed and efficient text generation with advanced capabilities."
 msgstr ""
 
-#: includes/Intelligence/Services/ChatgptResponseService.php:98
-msgid "GPT-4o"
+#: includes/Intelligence/Services/Models/GeminiTwoDotFiveFlashLite.php:23
+msgid "Gemini 2.5 Flash Lite"
 msgstr ""
 
-#: includes/Intelligence/Services/ChatgptResponseService.php:99
-msgid "GPT-4 Turbo"
+#: includes/Intelligence/Services/Models/GeminiTwoDotFiveFlashLite.php:30
+msgid "Gemini 2.5 Flash Lite is a lightweight version of the Gemini 2.5 Flash model, designed for efficient text generation with reduced resource requirements."
 msgstr ""
 
-#: includes/Intelligence/Services/ChatgptResponseService.php:100
-msgid "ChatGPT 4o Latest"
+#: includes/Intelligence/Services/Models/GeminiTwoDotFivePro.php:21
+msgid "Gemini 2.5 Pro"
 msgstr ""
 
-#. translators: %1$s: class name, %2$s: interface name
-#: includes/Intelligence/Services/EngineFactory.php:34
-msgid "Unsupported service type provided: %1$s must be an instance of %2$s"
+#: includes/Intelligence/Services/Models/GeminiTwoDotFivePro.php:28
+msgid "Gemini 2.5 Pro is an advanced AI model by Google DeepMind, designed for professional-grade text generation with enhanced capabilities."
 msgstr ""
 
-#: includes/Intelligence/Services/GeminiResponseService.php:115
-msgid "Gemini 1.5 Flash"
+#: includes/Intelligence/Services/Models/OpenAIChatGPTFourO.php:18
+msgid "OpenAI ChatGPT-4o"
 msgstr ""
 
-#: includes/Intelligence/Services/GeminiResponseService.php:116
-msgid "Gemini 2.0 Flash"
+#: includes/Intelligence/Services/Models/OpenAIChatGPTFourO.php:25
+msgid "ChatGPT-4o is an advanced conversational AI model by OpenAI, designed for engaging and context-aware dialogues."
 msgstr ""
 
-#: includes/Intelligence/Services/GeminiResponseService.php:117
-msgid "Gemini 2.0 Flash-Lite"
+#: includes/Intelligence/Services/Models/OpenAIGPTFourO.php:18
+msgid "OpenAI GPT-4o"
+msgstr ""
+
+#: includes/Intelligence/Services/Models/OpenAIGPTFourO.php:25
+msgid "GPT-4o is a powerful language model by OpenAI, designed for advanced text generation and understanding."
+msgstr ""
+
+#: includes/Intelligence/Services/Models/OpenAIGPTFourOMini.php:18
+msgid "OpenAI GPT-4o Mini"
+msgstr ""
+
+#: includes/Intelligence/Services/Models/OpenAIGPTFourOMini.php:25
+msgid "GPT-4o Mini is a smaller, optimized version of the GPT-4 model by OpenAI, designed for efficiency and performance."
+msgstr ""
+
+#: includes/Intelligence/Services/Models/OpenAIGPTFourTurbo.php:18
+msgid "OpenAI GPT-4 Turbo"
+msgstr ""
+
+#: includes/Intelligence/Services/Models/OpenAIGPTFourTurbo.php:25
+msgid "GPT-4 Turbo is an advanced version of the GPT-4 model by OpenAI, optimized for speed and cost-effectiveness."
+msgstr ""
+
+#: includes/Intelligence/Services/Models/OpenAIGPTThreeDotFiveTurbo.php:23
+msgid "OpenAI GPT-3.5 Turbo"
+msgstr ""
+
+#: includes/Intelligence/Services/Models/OpenAIGPTThreeDotFiveTurbo.php:30
+msgid "GPT-3.5 Turbo is a powerful language model by OpenAI, optimized for speed and cost-effectiveness."
+msgstr ""
+
+#: includes/Intelligence/Services/Providers/Gemini.php:20
+msgid "Gemini"
+msgstr ""
+
+#: includes/Intelligence/Services/Providers/Gemini.php:27
+msgid "Gemini is a cutting-edge AI model developed by Google DeepMind, designed to understand and generate human-like text with advanced capabilities."
+msgstr ""
+
+#: includes/Intelligence/Services/Providers/OpenAI.php:20
+msgid "OpenAI"
+msgstr ""
+
+#: includes/Intelligence/Services/Providers/OpenAI.php:27
+msgid "OpenAI is a leading AI research and deployment company, known for its advanced language models and AI technologies."
 msgstr ""
 
 #: includes/Intelligence/Utils/AISupportedFields.php:11
@@ -4839,6 +4956,54 @@ msgstr ""
 
 #: includes/Intelligence/Utils/AISupportedFields.php:24
 msgid "Craft Your Description"
+msgstr ""
+
+#: includes/Models/DataStore/AdminDashboardStatsStore.php:161
+msgid "Recurring Customers"
+msgstr ""
+
+#: includes/Models/DataStore/AdminDashboardStatsStore.php:162
+msgid "Customers who returned and purchased again in the time period"
+msgstr ""
+
+#: includes/Models/DataStore/AdminDashboardStatsStore.php:213
+msgid "New Customers"
+msgstr ""
+
+#: includes/Models/DataStore/AdminDashboardStatsStore.php:214
+msgid "Total new customers registered in the time period"
+msgstr ""
+
+#: includes/Models/DataStore/AdminDashboardStatsStore.php:288
+msgid "Order Cancellation Rate"
+msgstr ""
+
+#: includes/Models/DataStore/AdminDashboardStatsStore.php:289
+msgid "Rate of orders which got cancelled in the time period"
+msgstr ""
+
+#: includes/Models/DataStore/AdminDashboardStatsStore.php:337
+msgid "New Products"
+msgstr ""
+
+#: includes/Models/DataStore/AdminDashboardStatsStore.php:338
+msgid "New products published in the month"
+msgstr ""
+
+#: includes/Models/DataStore/AdminDashboardStatsStore.php:372
+msgid "Active Vendors"
+msgstr ""
+
+#: includes/Models/DataStore/AdminDashboardStatsStore.php:373
+msgid "Vendors sold minimum 1 product"
+msgstr ""
+
+#: includes/Models/DataStore/AdminDashboardStatsStore.php:424
+msgid "New Vendor Registration"
+msgstr ""
+
+#: includes/Models/DataStore/AdminDashboardStatsStore.php:425
+msgid "Total vendors who got registered in the time period"
 msgstr ""
 
 #: includes/Models/DataStore/BaseDataStore.php:65
@@ -4886,14 +5051,15 @@ msgid "Toggle Sub-orders"
 msgstr ""
 
 #: includes/Order/Admin/Hooks.php:576
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Commissions"
 msgstr ""
 
-#: includes/Order/Admin/Hooks.php:586
+#: includes/Order/Admin/Hooks.php:591
 msgid "Sub orders"
 msgstr ""
 
-#: includes/Order/Admin/Hooks.php:586
+#: includes/Order/Admin/Hooks.php:591
 msgid "Related orders"
 msgstr ""
 
@@ -5063,11 +5229,13 @@ msgstr ""
 
 #. translators: %s item name.
 #: includes/Order/Hooks.php:484
+#, php-format
 msgid "Unable to restore stock for item %s."
 msgstr ""
 
 #. translators: 1: Order ID, 2: Refund ID, 3: Refund Amount
 #: includes/Order/RefundHandler.php:192
+#, php-format
 msgid "Dokan refund adjustment error: Seller not found, Order ID: %1$d, Refund ID: %2$d, Refund Amount: %3$f "
 msgstr ""
 
@@ -5324,6 +5492,7 @@ msgstr ""
 
 #. translators: vendor name.
 #: includes/Privacy.php:369
+#, php-format
 msgid "Vendor %s data is removed."
 msgstr ""
 
@@ -5452,6 +5621,7 @@ msgstr ""
 
 #. translators: number of items
 #: includes/Product/functions.php:316
+#, php-format
 msgid "%s item"
 msgid_plural "%s items"
 msgstr[0] ""
@@ -5501,7 +5671,7 @@ msgstr ""
 #: includes/Product/functions.php:363
 #: includes/Product/Hooks.php:201
 #: templates/products/listing-filter.php:110
-#: assets/js/components.js:179
+#: assets/js/components.js:172
 #: assets/js/dashboard-charts.js:1
 msgid "Search"
 msgstr ""
@@ -5624,11 +5794,13 @@ msgstr ""
 
 #. translators: %s: product section name.
 #: includes/ProductSections/Manager.php:96
+#, php-format
 msgid "Hide %s section"
 msgstr ""
 
 #. translators: %s: product section name.
 #: includes/ProductSections/Manager.php:118
+#, php-format
 msgid "Section title for %s"
 msgstr ""
 
@@ -5706,6 +5878,283 @@ msgstr ""
 
 #: includes/REST/AdminDashboardController.php:125
 msgid "Untitled"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:69
+#: includes/REST/AdminDashboardStatsController.php:92
+#: includes/REST/AdminDashboardStatsController.php:128
+#: includes/REST/AdminDashboardStatsController.php:164
+msgid "Date in Y-m format (e.g., 2024-01)"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:192
+msgid "Vendor Approvals"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:199
+msgid "Product Approvals"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:206
+msgid "Pending Withdrawals"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:231
+msgid "Sales Overview"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:236
+msgid "Revenue Insight"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:541
+#: assets/js/vue-admin.js:2
+msgid "Total Products"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:546
+#: assets/js/vue-admin.js:2
+msgid "Total Vendors"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:551
+msgid "Total Customers"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:556
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Total Orders"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:566
+msgid "Total Commissions"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:740
+msgid "Todo Dashboard Data"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:744
+msgid "Vendor approval task information"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:748
+#: includes/REST/AdminDashboardStatsController.php:775
+#: includes/REST/AdminDashboardStatsController.php:802
+msgid "Icon name for the task"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:752
+msgid "Number of pending vendor approvals"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:756
+#: includes/REST/AdminDashboardStatsController.php:783
+#: includes/REST/AdminDashboardStatsController.php:810
+msgid "Task title"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:760
+#: includes/REST/AdminDashboardStatsController.php:787
+#: includes/REST/AdminDashboardStatsController.php:814
+msgid "URL to redirect for this task"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:765
+#: includes/REST/AdminDashboardStatsController.php:792
+#: includes/REST/AdminDashboardStatsController.php:819
+msgid "Display position order"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:771
+msgid "Product approval task information"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:779
+msgid "Number of pending product approvals"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:798
+msgid "Pending withdrawal task information"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:806
+msgid "Number of pending withdrawals"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:838
+msgid "Analytics Dashboard Data"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:842
+msgid "Sales overview analytics link"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:846
+#: includes/REST/AdminDashboardStatsController.php:865
+msgid "Icon name for the analytics item"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:850
+#: includes/REST/AdminDashboardStatsController.php:869
+msgid "URL to the analytics page"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:855
+#: includes/REST/AdminDashboardStatsController.php:874
+msgid "Analytics item title"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:861
+msgid "Revenue insight analytics link"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:893
+msgid "Monthly Overview Dashboard Data"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:897
+msgid "New products statistics"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:909
+msgid "Active vendors statistics"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:921
+msgid "New vendor registration statistics"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:933
+msgid "New customers statistics"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:945
+msgid "Order cancellation rate statistics"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:949
+msgid "Recurring customers statistics"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:966
+msgid "Sales Chart Data"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:970
+msgid "Daily sales intervals data"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:997
+msgid "All Time Stats Data"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1001
+msgid "Total products statistics"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1010
+msgid "Total vendors statistics"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1019
+msgid "Total customers statistics"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1028
+msgid "Total orders statistics"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1037
+msgid "Total sales statistics"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1046
+msgid "Total commissions statistics"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1068
+msgid "Top Performing Vendors Data"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1074
+msgid "Vendor ranking position"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1078
+msgid "Vendor shop name"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1082
+msgid "Total earnings amount"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1086
+msgid "Total number of orders"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1090
+msgid "Total commission amount"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1108
+msgid "Most Reviewed Products Data"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1114
+msgid "Product ranking position"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1118
+msgid "Product ID"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1122
+msgid "Product title"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1126
+msgid "Number of reviews"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1144
+msgid "Vendor Metrics Data"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1148
+msgid "Subscribed vendors metrics"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1152
+#: includes/REST/AdminDashboardStatsController.php:1170
+#: includes/REST/AdminDashboardStatsController.php:1188
+msgid "Icon name for the metric"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1156
+msgid "Number of subscribed vendors"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1160
+#: includes/REST/AdminDashboardStatsController.php:1178
+#: includes/REST/AdminDashboardStatsController.php:1196
+msgid "Metric title"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1166
+msgid "Vendors on vacation metrics"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1174
+msgid "Number of vendors on vacation"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1184
+msgid "Verified vendors metrics"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1192
+msgid "Number of verified vendors"
 msgstr ""
 
 #: includes/REST/AdminMiscController.php:48
@@ -6078,6 +6527,7 @@ msgstr ""
 #. translators: %s: weight unit
 #: includes/REST/DummyDataController.php:477
 #: includes/REST/ProductController.php:2022
+#, php-format
 msgid "Product weight (%s)."
 msgstr ""
 
@@ -6089,18 +6539,21 @@ msgstr ""
 #. translators: %s: dimension unit
 #: includes/REST/DummyDataController.php:489
 #: includes/REST/ProductController.php:2033
+#, php-format
 msgid "Product length (%s)."
 msgstr ""
 
 #. translators: %s: dimension unit
 #: includes/REST/DummyDataController.php:496
 #: includes/REST/ProductController.php:2039
+#, php-format
 msgid "Product width (%s)."
 msgstr ""
 
 #. translators: %s: dimension unit
 #: includes/REST/DummyDataController.php:503
 #: includes/REST/ProductController.php:2045
+#, php-format
 msgid "Product height (%s)."
 msgstr ""
 
@@ -6521,6 +6974,7 @@ msgstr ""
 #. translators: 1) %s: post type name
 #: includes/REST/OrderController.php:639
 #: includes/REST/ProductController.php:354
+#, php-format
 msgid "Cannot create existing %s."
 msgstr ""
 
@@ -6945,6 +7399,7 @@ msgstr ""
 
 #. translators: numeric number of files
 #: includes/REST/OrderControllerV2.php:254
+#, php-format
 msgid "File %d"
 msgstr ""
 
@@ -7053,6 +7508,7 @@ msgstr ""
 
 #. translators: %s: attachment id
 #: includes/REST/ProductController.php:1572
+#, php-format
 msgid "#%s is an invalid image ID."
 msgstr ""
 
@@ -7060,55 +7516,55 @@ msgstr ""
 msgid "Price formatted in HTML."
 msgstr ""
 
-#: includes/REST/ProductControllerV2.php:126
+#: includes/REST/ProductControllerV2.php:139
 msgid "Products author id"
 msgstr ""
 
-#: includes/REST/ProductControllerV2.php:134
+#: includes/REST/ProductControllerV2.php:147
 msgid "Product status publish, pending, draft etc."
 msgstr ""
 
-#: includes/REST/ProductControllerV2.php:142
+#: includes/REST/ProductControllerV2.php:155
 msgid "Products publish month"
 msgstr ""
 
-#: includes/REST/ProductControllerV2.php:150
+#: includes/REST/ProductControllerV2.php:163
 msgid "Products category."
 msgstr ""
 
-#: includes/REST/ProductControllerV2.php:158
-msgid "Products type simple, variable, grouped product etc."
+#: includes/REST/ProductControllerV2.php:171
+msgid "Products type all, simple, variable, grouped product etc."
 msgstr ""
 
-#: includes/REST/ProductControllerV2.php:166
+#: includes/REST/ProductControllerV2.php:179
 msgid "Products stock status in stock or out of stock."
 msgstr ""
 
-#: includes/REST/ProductControllerV2.php:174
+#: includes/REST/ProductControllerV2.php:187
 msgid "Best selling, featured products etc."
 msgstr ""
 
-#: includes/REST/ProductControllerV2.php:181
+#: includes/REST/ProductControllerV2.php:194
 msgid "Limit result set to specific ids."
 msgstr ""
 
-#: includes/REST/ProductControllerV2.php:190
+#: includes/REST/ProductControllerV2.php:203
 msgid "Ensure result set excludes specific IDs."
 msgstr ""
 
-#: includes/REST/ProductControllerV2.php:322
+#: includes/REST/ProductControllerV2.php:335
 msgid "All product created months."
 msgstr ""
 
-#: includes/REST/ProductControllerV2.php:329
+#: includes/REST/ProductControllerV2.php:342
 msgid "Product publish year."
 msgstr ""
 
-#: includes/REST/ProductControllerV2.php:333
+#: includes/REST/ProductControllerV2.php:346
 msgid "Product publish month."
 msgstr ""
 
-#: includes/REST/ProductControllerV2.php:337
+#: includes/REST/ProductControllerV2.php:350
 msgid "Product publish month and year full title."
 msgstr ""
 
@@ -7769,6 +8225,7 @@ msgstr ""
 
 #. translators: 1) Product title
 #: includes/ReverseWithdrawal/Cart.php:92
+#, php-format
 msgid "<strong>Error!</strong> Could not add product <strong>%1$s</strong> to cart. You can not purchase other products along with reverse withdrawal payment."
 msgstr ""
 
@@ -7927,6 +8384,7 @@ msgstr ""
 
 #. translators: 1) wooCommerce installation url
 #: includes/Shortcodes/Dashboard.php:26
+#, php-format
 msgid "Please install <a href=\"%s\"><strong>WooCommerce</strong></a> plugin first"
 msgstr ""
 
@@ -8168,6 +8626,7 @@ msgstr ""
 
 #. translators: 1) store banner width, 2) store banner height.
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:72
+#, php-format
 msgid "Upload your store banner [ jpg or png, %1$d X %2$d pixels (max), 5 mb (max) ]"
 msgstr ""
 
@@ -8207,7 +8666,7 @@ msgstr ""
 
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:152
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:405
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Docs"
 msgstr ""
 
@@ -8446,6 +8905,7 @@ msgstr ""
 
 #. translators: %1$s and %2$s are HTML tags for bold text
 #: includes/Vendor/SetupWizard.php:162
+#, php-format
 msgid "Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. %1$sIt’s completely optional and shouldn’t take longer than two minutes.%2$s"
 msgstr ""
 
@@ -8531,16 +8991,19 @@ msgstr ""
 #. Translators: 1: user display name; 2: username;
 #: includes/Vendor/UserSwitch.php:133
 #: includes/Vendor/UserSwitch.php:183
+#, php-format
 msgid "Switched to %1$s (%2$s)."
 msgstr ""
 
 #. Translators: 1: user display name; 2: username;
 #: includes/Vendor/UserSwitch.php:147
+#, php-format
 msgid "Switch back to %1$s (%2$s)"
 msgstr ""
 
 #. Translators: 1: user display name; 2: username;
 #: includes/Vendor/UserSwitch.php:176
+#, php-format
 msgid "Switched back to %1$s (%2$s)."
 msgstr ""
 
@@ -8549,12 +9012,14 @@ msgid "No ratings found yet!"
 msgstr ""
 
 #: includes/Vendor/Vendor.php:966
+#, php-format
 msgid "%s rating from %d review"
 msgid_plural "%s rating from %d reviews"
 msgstr[0] ""
 msgstr[1] ""
 
 #: includes/Vendor/Vendor.php:967
+#, php-format
 msgid "Rated %s out of %d"
 msgstr ""
 
@@ -8698,7 +9163,7 @@ msgstr ""
 msgid "— No change —"
 msgstr ""
 
-#: includes/wc-template.php:305
+#: includes/wc-template.php:306
 msgid "Go to Vendor Dashboard"
 msgstr ""
 
@@ -8897,11 +9362,13 @@ msgstr ""
 
 #. translators: 1: Email address for withdraw method.
 #: includes/Withdraw/functions.php:421
+#, php-format
 msgid "( %1$s )"
 msgstr ""
 
 #. translators: 1: Bank account holder name. 2: Bank name. 1: Bank account number
 #: includes/Withdraw/functions.php:425
+#, php-format
 msgid "- %1$s - %2$s - ****%3$s"
 msgstr ""
 
@@ -8944,6 +9411,7 @@ msgstr ""
 
 #. translators: %s: withdraw limit amount
 #: includes/Withdraw/Manager.php:50
+#, php-format
 msgid "Withdraw amount must be greater than or equal to %s"
 msgstr ""
 
@@ -9031,6 +9499,7 @@ msgstr ""
 
 #. translators: 1. Terms and conditions of agreement link.
 #: templates/account/update-customer-to-vendor.php:69
+#, php-format
 msgid "I have read and agree to the %1$s."
 msgstr ""
 
@@ -9060,24 +9529,12 @@ msgstr ""
 #. translators: %1$s: opening anchor tag with link, %2$s: an ampersand %3$s: closing anchor tag
 #: templates/account/vendor-registration.php:101
 #: templates/global/seller-registration-form.php:70
+#, php-format
 msgid "I have read and agree to the %1$sTerms %2$s Conditions%3$s."
 msgstr ""
 
 #: templates/account/vendor-registration.php:116
 msgid "Register"
-msgstr ""
-
-#: templates/admin-header.php:47
-msgid "Upgrade"
-msgstr ""
-
-#: templates/admin-header.php:75
-#: assets/js/dokan-admin-dashboard.js:172
-msgid "Get Help"
-msgstr ""
-
-#: templates/admin-header.php:90
-msgid "What’s New"
 msgstr ""
 
 #: templates/admin-notice-dependencies.php:23
@@ -9086,11 +9543,13 @@ msgstr ""
 
 #. translators: 1$-2$: opening and closing <strong> tags, 3$-4$: link tags, takes to woocommerce plugin on wp.org, 5$-6$: opening and closing link tags, leads to plugins.php in admin
 #: templates/admin-notice-dependencies.php:34
+#, php-format
 msgid "%1$sDokan is inactive.%2$s The %3$sWooCommerce plugin%4$s must be active for Dokan to work. Please %5$s install WooCommerce &raquo;%6$s"
 msgstr ""
 
 #. translators: 1$-2$: opening and closing <strong> tags, 3$-4$: link tags, takes to woocommerce plugin on wp.org, 5$-6$: opening and closing link tags, leads to plugins.php in admin
 #: templates/admin-notice-dependencies.php:46
+#, php-format
 msgid "%1$sDokan is inactive.%2$s The %3$sWooCommerce plugin%4$s must be active for Dokan to work. Please %5$s activate WooCommerce &raquo;%6$s"
 msgstr ""
 
@@ -9100,6 +9559,7 @@ msgstr ""
 
 #. translators: %1$s: line break and opening strong tag, %2$s: closing strong tag
 #: templates/admin-setup-wizard/step-no-wc-introduction.php:8
+#, php-format
 msgid "Thanks for choosing Dokan to power your online marketplace! This quick setup wizard will help you configure the basic settings. %1$sThis setup wizard is completely optional and shouldn't take longer than three minutes.%2$s"
 msgstr ""
 
@@ -9109,11 +9569,13 @@ msgstr ""
 
 #. translators: %1$s: opening anchor tag with WooCommerce plugin link, %2$s: closing anchor tag, %3$s: opening anchor tag with php update link
 #: templates/admin-setup-wizard/step-no-wc-introduction.php:37
+#, php-format
 msgid "Please note that %1$sWooCommerce%2$s is necessary for Dokan to work but the current PHP version does not meet minimum requirements for WooCommerce. %3$sPlease learn more about updating PHP%2$s"
 msgstr ""
 
 #. translators: %1$s: opening anchor tag with WooCommerce plugin link, %2$s: closing anchor tag
 #: templates/admin-setup-wizard/step-no-wc-introduction.php:58
+#, php-format
 msgid "Please note that %1$sWooCommerce%2$s is necessary for Dokan to work and it will be automatically installed if you haven't already done so."
 msgstr ""
 
@@ -9160,6 +9622,7 @@ msgstr ""
 
 #. translators: 1: currency name 2: currency symbol, 3: currency code
 #: templates/admin-setup-wizard/step-store-wc-fields.php:95
+#, php-format
 msgid "%1$s (%2$s %3$s)"
 msgstr ""
 
@@ -9206,11 +9669,13 @@ msgstr ""
 
 #. translators: %1$s: opening anchor tag, %2$s: closing anchor tag
 #: templates/admin-setup-wizard/step-store.php:75
+#, php-format
 msgid "%1$sAPI Key%2$s is needed to display map on store page"
 msgstr ""
 
 #. translators: %1$s: opening anchor tag, %2$s: closing anchor tag
 #: templates/admin-setup-wizard/step-store.php:91
+#, php-format
 msgid "%1$sAccess Token%2$s is needed to display map on store page"
 msgstr ""
 
@@ -9220,15 +9685,18 @@ msgstr ""
 
 #. translators: %1$s: opening anchor tag with link, %2$s: closing anchor tag
 #: templates/admin-setup-wizard/step-store.php:113
+#, php-format
 msgid "Want to help make Dokan even more awesome? Allow Dokan Multivendor Marketplace to collect non-sensitive diagnostic data and usage information. %1$sWhat we collect%2$s"
 msgstr ""
 
 #. translators: %1$s: Appsero hypertext with link, %2$s: opening anchor tag with link, %3$s: closing anchor tag
 #: templates/admin-setup-wizard/step-store.php:132
+#, php-format
 msgid "Server environment details (php, mysql, server, WordPress versions), Number of users in your site, Site language, Number of active and inactive plugins, Site name and url, Your name and email address. No sensitive data is tracked. We are using %1$s to collect your data. %2$sLearn more%3$s about how %1$s collects and handles your data."
 msgstr ""
 
 #: templates/dashboard/big-counter-widget.php:17
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Net Sales"
 msgstr ""
 
@@ -9299,6 +9767,7 @@ msgstr ""
 #. translators: 1) customer name 2) customer email
 #: templates/emails/contact-seller.php:21
 #: templates/emails/plain/contact-seller.php:20
+#, php-format
 msgid "From : %1$s (%2$s)"
 msgstr ""
 
@@ -9375,6 +9844,7 @@ msgstr ""
 
 #. translators: 1) seller edit url
 #: templates/emails/new-seller-registered.php:43
+#, php-format
 msgid "To edit vendor access and details <a href=\"%s\">Click Here</a>"
 msgstr ""
 
@@ -9384,24 +9854,28 @@ msgstr ""
 
 #. translators: 1) product title
 #: templates/emails/plain/new-product-pending.php:30
+#, php-format
 msgid "Title: %s"
 msgstr ""
 
 #. translators: 1) product price
 #: templates/emails/plain/new-product-pending.php:34
 #: templates/emails/plain/new-product.php:34
+#, php-format
 msgid "Price: %1$s"
 msgstr ""
 
 #. translators: 1) product seller name
 #: templates/emails/plain/new-product-pending.php:38
 #: templates/emails/plain/new-product.php:38
+#, php-format
 msgid "Vendor: %1$s"
 msgstr ""
 
 #. translators: 1) product category
 #: templates/emails/plain/new-product-pending.php:42
 #: templates/emails/plain/new-product.php:42
+#, php-format
 msgid "Category: %1$s"
 msgstr ""
 
@@ -9419,6 +9893,7 @@ msgstr ""
 
 #. translators: 1) product title
 #: templates/emails/plain/new-product.php:30
+#, php-format
 msgid "Title: %1$s"
 msgstr ""
 
@@ -9436,16 +9911,19 @@ msgstr ""
 
 #. translators: 1) seller name
 #: templates/emails/plain/new-seller-registered.php:31
+#, php-format
 msgid "Vendor: %s"
 msgstr ""
 
 #. translators: 1) store name
 #: templates/emails/plain/new-seller-registered.php:35
+#, php-format
 msgid "Vendor Store: %s"
 msgstr ""
 
 #. translators: 1) seller edit url
 #: templates/emails/plain/new-seller-registered.php:39
+#, php-format
 msgid "To edit vendor access and details visit : %s"
 msgstr ""
 
@@ -9453,11 +9931,13 @@ msgstr ""
 #. translators: 1) seller name
 #: templates/emails/plain/product-published.php:20
 #: templates/emails/product-published.php:19
+#, php-format
 msgid "Hello %s"
 msgstr ""
 
 #. translators: 1) product title
 #: templates/emails/plain/product-published.php:24
+#, php-format
 msgid "Your product %s"
 msgstr ""
 
@@ -9467,36 +9947,43 @@ msgstr ""
 
 #. translators: 1) product url
 #: templates/emails/plain/product-published.php:29
+#, php-format
 msgid "View product : %s"
 msgstr ""
 
 #. translators: 1) product edit url
 #: templates/emails/plain/product-published.php:33
+#, php-format
 msgid "Update : %s"
 msgstr ""
 
 #. translators: 1) store name
 #: templates/emails/plain/reverse-withdrawal-invoice.php:27
+#, php-format
 msgid "Hi %s,\\n\\n"
 msgstr ""
 
 #. translators: 1) invoice month 2) invoice year 3) store name
 #: templates/emails/plain/reverse-withdrawal-invoice.php:30
+#, php-format
 msgid "Your %1$s %2$s invoice is now available for store: %3$s.\\n\\n"
 msgstr ""
 
 #. translators: 1) store name
 #: templates/emails/plain/reverse-withdrawal-invoice.php:33
+#, php-format
 msgid "Summary for %1$s: \\n\\n"
 msgstr ""
 
 #. translators: 1) invoice month 2) invoice year 3) due balance amount
 #: templates/emails/plain/reverse-withdrawal-invoice.php:36
+#, php-format
 msgid "Reverse withdrawal charges for %1$s %2$s: %3$s \\n\\n"
 msgstr ""
 
 #. translators: 1) invoice due date
 #: templates/emails/plain/reverse-withdrawal-invoice.php:39
+#, php-format
 msgid "Due Date %1$s: \\n\\n"
 msgstr ""
 
@@ -9509,6 +9996,7 @@ msgstr ""
 #. translators: 1) order billing full name
 #: templates/emails/plain/vendor-completed-order.php:20
 #: templates/emails/vendor-completed-order.php:37
+#, php-format
 msgid "You have received complete order from %s."
 msgstr ""
 
@@ -9529,11 +10017,13 @@ msgstr ""
 #. translators: 1) order formatted billing full name
 #: templates/emails/plain/vendor-new-order.php:20
 #: templates/emails/vendor-new-order.php:36
+#, php-format
 msgid "You have received an order from %s."
 msgstr ""
 
 #. translators: 1) product name, 2) customer name, 3) rating
 #: templates/emails/plain/vendor-product-review.php:27
+#, php-format
 msgid "We are happy to inform you that your product %1$s has received a new review on our website. The review was written by %2$s and has a rating of %3$s out of 5 stars."
 msgstr ""
 
@@ -9563,6 +10053,7 @@ msgstr ""
 #: templates/emails/plain/withdraw-cancel.php:20
 #: templates/emails/withdraw-approve.php:19
 #: templates/emails/withdraw-cancel.php:19
+#, php-format
 msgid "Hi %s"
 msgstr ""
 
@@ -9582,6 +10073,7 @@ msgstr ""
 #: templates/emails/plain/withdraw-approve.php:30
 #: templates/emails/plain/withdraw-cancel.php:30
 #: templates/emails/withdraw-cancel.php:30
+#, php-format
 msgid "Amount : %s"
 msgstr ""
 
@@ -9591,6 +10083,7 @@ msgstr ""
 #: templates/emails/plain/withdraw-cancel.php:34
 #: templates/emails/withdraw-approve.php:38
 #: templates/emails/withdraw-cancel.php:40
+#, php-format
 msgid "Method : %s"
 msgstr ""
 
@@ -9620,61 +10113,73 @@ msgstr ""
 
 #. translators: 1) user name
 #: templates/emails/plain/withdraw-new.php:23
+#, php-format
 msgid "A new withdraw request has been made by - %s"
 msgstr ""
 
 #. translators: 1) withdraw request amount
 #: templates/emails/plain/withdraw-new.php:27
+#, php-format
 msgid "Request Amount : %s"
 msgstr ""
 
 #. translators: 1) withdraw payment method
 #: templates/emails/plain/withdraw-new.php:31
+#, php-format
 msgid "Payment Method : %s"
 msgstr ""
 
 #. translators: 1) user name
 #: templates/emails/plain/withdraw-new.php:35
+#, php-format
 msgid "Store Name : %s"
 msgstr ""
 
 #. translators: 1) vendor profile url
 #: templates/emails/plain/withdraw-new.php:39
+#, php-format
 msgid "Profile : %s"
 msgstr ""
 
 #. translators: 1) with menu url
 #: templates/emails/plain/withdraw-new.php:43
+#, php-format
 msgid "You can approve or deny it by going here : %s"
 msgstr ""
 
 #. translators: 1) Product url 2) Product title
 #: templates/emails/product-published.php:25
+#, php-format
 msgid "Your product : <a href=\"%1$s\">%2$s</a> is approved by the admin, congrats!"
 msgstr ""
 
 #. translators: 1) product edit link
 #: templates/emails/product-published.php:31
+#, php-format
 msgid "To Edit product click : <a href=\"%s\">here</a>"
 msgstr ""
 
 #. translators: 1) store name
 #: templates/emails/reverse-withdrawal-invoice.php:27
+#, php-format
 msgid "Hi %s,"
 msgstr ""
 
 #. translators: 1) invoice month 2) invoice year 3) store name
 #: templates/emails/reverse-withdrawal-invoice.php:34
+#, php-format
 msgid "Your %1$s %2$s invoice is now available for store: %3$s."
 msgstr ""
 
 #. translators: 1) store name
 #: templates/emails/reverse-withdrawal-invoice.php:45
+#, php-format
 msgid "Summary for %1$s: "
 msgstr ""
 
 #. translators: 1) invoice month 2) invoice year
 #: templates/emails/reverse-withdrawal-invoice.php:54
+#, php-format
 msgid "Reverse withdrawal charges for %1$s %2$s:"
 msgstr ""
 
@@ -9685,6 +10190,7 @@ msgstr ""
 #. translators: %s: Order ID.
 #: templates/emails/vendor-completed-order.php:46
 #: templates/emails/vendor-new-order.php:45
+#, php-format
 msgid "[Order #%s]"
 msgstr ""
 
@@ -9705,6 +10211,7 @@ msgstr ""
 
 #. translators: 1) product name, 2) customer name, 3) rating
 #: templates/emails/vendor-product-review.php:26
+#, php-format
 msgid "We are happy to inform you that your product <strong>%1$s</strong> has received a new review on our website. The review was written by <strong>%2$s</strong> and has a rating of <strong>%3$s</strong> out of 5 stars."
 msgstr ""
 
@@ -9715,6 +10222,7 @@ msgstr ""
 #. translators: 1) withdraw receivable amount
 #: templates/emails/withdraw-approve.php:33
 #: templates/emails/withdraw-cancel.php:35
+#, php-format
 msgid "Receivable amount : %s"
 msgstr ""
 
@@ -9744,11 +10252,13 @@ msgstr ""
 
 #. translators: 1) withdraw page url
 #: templates/emails/withdraw-new.php:56
+#, php-format
 msgid "You can approve or deny it by going <a href=\"%s\"> here </a>"
 msgstr ""
 
 #. translators: 1) cart total amount
 #: templates/global/header-menu.php:16
+#, php-format
 msgid "Cart %s"
 msgstr ""
 
@@ -9855,6 +10365,7 @@ msgstr ""
 #. translators: 1) order total amount 2) order item count
 #: templates/my-orders.php:63
 #: templates/sub-orders.php:88
+#, php-format
 msgid "%1$s for %2$s item"
 msgid_plural "%1$s for %2$s items"
 msgstr[0] ""
@@ -9893,10 +10404,12 @@ msgstr ""
 
 #. translators: %s: variation id
 #: templates/orders/commission-meta-box-html.php:100
+#, php-format
 msgid "%s (No longer exists)"
 msgstr ""
 
 #: templates/orders/commission-meta-box-html.php:116
+#, php-format
 msgid "Source: %s"
 msgstr ""
 
@@ -9957,13 +10470,13 @@ msgstr ""
 #: templates/products/listing-filter.php:101
 #: templates/reverse-withdrawal/filters.php:15
 #: templates/store-lists-filter.php:43
-#: assets/js/components.js:179
+#: assets/js/components.js:172
 msgid "Filter"
 msgstr ""
 
 #: templates/orders/date-export.php:28
 #: templates/products/listing-filter.php:102
-#: assets/js/components.js:179
+#: assets/js/components.js:172
 msgid "Reset"
 msgstr ""
 
@@ -10051,6 +10564,7 @@ msgstr ""
 
 #. translators: 1) human-readable date
 #: templates/orders/details.php:280
+#, php-format
 msgid "added %s ago"
 msgstr ""
 
@@ -10125,6 +10639,7 @@ msgstr ""
 #. translators: 1) order number
 #: templates/orders/listing.php:64
 #: templates/orders/listing.php:70
+#, php-format
 msgid "Order %s"
 msgstr ""
 
@@ -10143,6 +10658,7 @@ msgstr ""
 #. translators: %s: time difference
 #: templates/orders/listing.php:115
 #: templates/products/products-listing-row.php:316
+#, php-format
 msgid "%s ago"
 msgstr ""
 
@@ -10161,6 +10677,7 @@ msgstr ""
 
 #. translators: 1) download count, 2) download file name
 #: templates/orders/order-download-permission-html.php:22
+#, php-format
 msgid "File %1$s: %2$s"
 msgstr ""
 
@@ -10174,6 +10691,7 @@ msgstr ""
 
 #. translators: 1) file download counter
 #: templates/orders/order-download-permission-html.php:52
+#, php-format
 msgid "%s time"
 msgid_plural "%s times"
 msgstr[0] ""
@@ -10236,8 +10754,8 @@ msgid "Enable/Disable Catalog Mode for this product"
 msgstr ""
 
 #: templates/products/dokan-category-header-ui.php:23
-#: assets/js/components.js:179
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/components.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/dokan-setup-wizard-commission.js:1
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
@@ -10524,6 +11042,7 @@ msgstr ""
 
 #. translators: 1) All product count
 #: templates/products/listing-status-filter.php:23
+#, php-format
 msgid "All (%s)"
 msgstr ""
 
@@ -10537,6 +11056,7 @@ msgstr ""
 
 #. translators: %s: product title with edit link
 #: templates/products/new-product.php:131
+#, php-format
 msgid "You have successfully created %s product"
 msgstr ""
 
@@ -10712,6 +11232,7 @@ msgstr ""
 
 #. translators: 1) search query
 #: templates/seller-search-form.php:6
+#, php-format
 msgid "Search Results for: %s"
 msgstr ""
 
@@ -10774,7 +11295,7 @@ msgid "bank check"
 msgstr ""
 
 #: templates/settings/payment-manage.php:16
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/dokan-admin-onboard.js:172
 #: assets/js/frontend.js:172
 msgid "Back"
@@ -10793,6 +11314,7 @@ msgstr ""
 
 #. translators: %s: payment method title
 #: templates/settings/payment.php:33
+#, php-format
 msgid "Direct to %s"
 msgstr ""
 
@@ -10867,6 +11389,7 @@ msgstr ""
 
 #. translators: 1) number of stores
 #: templates/store-lists-filter.php:28
+#, php-format
 msgid "Total store showing: %s"
 msgid_plural "Total stores showing: %s"
 msgstr[0] ""
@@ -10900,11 +11423,13 @@ msgstr ""
 
 #. translators: 1) seller rating
 #: templates/store-lists-loop.php:57
+#, php-format
 msgid "Rated %s out of 5"
 msgstr ""
 
 #. translators: 1) seller rating
 #: templates/store-lists-loop.php:66
+#, php-format
 msgid "%s out of 5"
 msgstr ""
 
@@ -10930,6 +11455,7 @@ msgstr ""
 
 #. translators: %d reviews count
 #: templates/vendor-store-info.php:32
+#, php-format
 msgid "%s Review"
 msgid_plural "%s Reviews"
 msgstr[0] ""
@@ -10960,7 +11486,7 @@ msgstr ""
 #: templates/withdraw/pending-request-listing-dashboard.php:19
 #: templates/withdraw/pending-request-listing.php:16
 #: templates/withdraw/pending-request-listing.php:60
-#: assets/js/components.js:179
+#: assets/js/components.js:172
 #: assets/js/dashboard-charts.js:1
 #: assets/js/frontend.js:172
 #: assets/js/vue-admin.js:2
@@ -11062,6 +11588,7 @@ msgstr ""
 
 #. translators: 1) withdraw threshold days
 #: templates/withdraw/withdraw-dashboard.php:37
+#, php-format
 msgid "%s day"
 msgid_plural "%s days"
 msgstr[0] ""
@@ -11092,124 +11619,129 @@ msgstr ""
 msgid "Make Default"
 msgstr ""
 
-#: assets/js/components.js:179
+#: assets/js/components.js:172
 #: assets/js/dokan-admin-dashboard.js:172
 #: assets/js/dokan-intelligence.js:172
 #: assets/js/frontend.js:172
+#, js-format
 msgid "%1$s at %2$s"
 msgstr ""
 
-#: assets/js/components.js:179
+#: assets/js/components.js:172
 #: assets/js/dokan-admin-dashboard.js:172
 #: assets/js/dokan-intelligence.js:172
 msgid "Confirmation Dialog"
 msgstr ""
 
-#: assets/js/components.js:179
+#: assets/js/components.js:172
 #: assets/js/dokan-admin-dashboard.js:172
 #: assets/js/dokan-intelligence.js:172
 msgid "Delete Confirmation"
 msgstr ""
 
-#: assets/js/components.js:179
+#: assets/js/components.js:172
 #: assets/js/dokan-admin-dashboard.js:172
 #: assets/js/dokan-intelligence.js:172
+#, js-format
 msgid "Are you sure you want to proceed with this %1$sdeletion%2$s?"
 msgstr ""
 
-#: assets/js/components.js:179
+#: assets/js/components.js:172
 #: assets/js/dokan-admin-dashboard.js:172
 #: assets/js/dokan-intelligence.js:172
 msgid "Yes, Delete"
 msgstr ""
 
-#: assets/js/components.js:179
+#: assets/js/components.js:172
 msgid "No options"
 msgstr ""
 
-#: assets/js/components.js:179
+#: assets/js/components.js:172
 #: assets/js/dokan-admin-dashboard.js:172
 #: assets/js/dokan-intelligence.js:172
 #: assets/js/frontend.js:172
 msgid "Select or Upload Media"
 msgstr ""
 
-#: assets/js/components.js:179
+#: assets/js/components.js:172
 #: assets/js/vendor-dashboard/reports/index.js:172
 msgid "Oh no! Something went wrong…"
 msgstr ""
 
-#: assets/js/components.js:179
+#: assets/js/components.js:172
 #: assets/js/vendor-dashboard/reports/index.js:172
 msgid "Kindly refresh the page to load data or try again."
 msgstr ""
 
-#: assets/js/components.js:179
+#: assets/js/components.js:172
 #: assets/js/dokan-admin-onboard.js:172
 #: assets/js/vendor-dashboard/reports/index.js:172
 msgid "Try Again"
 msgstr ""
 
-#: assets/js/components.js:179
+#: assets/js/components.js:172
 #: assets/js/frontend.js:172
 #: assets/js/vue-admin.js:2
 msgid "Enter amount"
 msgstr ""
 
-#: assets/js/components.js:179
+#: assets/js/components.js:172
 msgid "Select date"
 msgstr ""
 
-#: assets/js/components.js:179
+#: assets/js/components.js:172
 msgid "Enter Date"
 msgstr ""
 
-#: assets/js/components.js:179
+#: assets/js/components.js:172
 msgid "Ok"
 msgstr ""
 
-#: assets/js/components.js:179
+#: assets/js/components.js:172
 #: assets/js/dokan-admin-dashboard.js:172
 #: assets/js/dokan-intelligence.js:172
 #: assets/js/frontend.js:172
 msgid "Use this media"
 msgstr ""
 
-#: assets/js/components.js:179
+#: assets/js/components.js:172
+#, js-format
 msgid "Order #%s"
 msgstr ""
 
-#: assets/js/components.js:179
+#: assets/js/components.js:172
+#, js-format
 msgid "Coupon #%s"
 msgstr ""
 
-#: assets/js/components.js:179
+#: assets/js/components.js:172
 msgid "All Category"
 msgstr ""
 
-#: assets/js/components.js:179
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/components.js:172
+#: assets/js/dokan-admin-dashboard.js:179
+#, js-format
 msgid "#%s"
 msgstr ""
 
-#: assets/js/components.js:179
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/components.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/dokan-setup-wizard-commission.js:1
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "All Categories"
 msgstr ""
 
-#: assets/js/components.js:179
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/components.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/dokan-setup-wizard-commission.js:1
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "%"
 msgstr ""
 
-#: assets/js/components.js:179
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/components.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/dokan-setup-wizard-commission.js:1
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
@@ -11217,31 +11749,31 @@ msgid "+"
 msgstr ""
 
 #: assets/js/components.js:179
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/frontend.js:172
 msgid "Sorry, the page can’t be found"
 msgstr ""
 
 #: assets/js/components.js:179
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/frontend.js:172
 msgid "The page you were looking for appears to have been moved, deleted or does not exist"
 msgstr ""
 
 #: assets/js/components.js:179
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/frontend.js:172
 msgid "Back to Dashboard"
 msgstr ""
 
 #: assets/js/components.js:179
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/frontend.js:172
 msgid "Permission Denied"
 msgstr ""
 
 #: assets/js/components.js:179
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/frontend.js:172
 msgid "Sorry, you don’t have permission to access this page"
 msgstr ""
@@ -11296,6 +11828,7 @@ msgid "Dashboard Sections"
 msgstr ""
 
 #: assets/js/customizable-dashboard.js:1
+#, js-format
 msgid "Add %s section"
 msgstr ""
 
@@ -11308,6 +11841,7 @@ msgid "No data for the selected date range"
 msgstr ""
 
 #: assets/js/dashboard-charts.js:1
+#, js-format
 msgid "%s Report"
 msgstr ""
 
@@ -11912,159 +12446,359 @@ msgstr ""
 msgid "Bar chart"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
-msgid "Lite: %s"
+#: assets/js/dokan-admin-dashboard.js:179
+#: assets/js/setup-guide-banner.js:172
+msgid "Setup Step Icon"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
-msgid "Pro"
+#: assets/js/dokan-admin-dashboard.js:179
+#: assets/js/setup-guide-banner.js:172
+msgid "Complete your marketplace setup in minutes"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
-msgid "%1$s: %2$s"
+#: assets/js/dokan-admin-dashboard.js:179
+#: assets/js/setup-guide-banner.js:172
+msgid "Start Setup"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
+#: assets/js/setup-guide-banner.js:172
+msgid "Continue Setup"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Video"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
+#, js-format
 msgid "Requirements: %s"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Upgrade the Plan & Unlock"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Premium modules are limited in Dokan Lite. Upgrade to Dokan Pro to access more features and drive greater growth!"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "40+ Premium Modules"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Advanced Shipping Management"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "100+ Payment Methods"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Subscription & Recurring Payments"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "24/7 Priority Based Support"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Detailed Reporting"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Multilingual Integration"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "And Many More!"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
+#: assets/js/dokan-pro-features.js:2
 #: assets/js/vue-admin.js:2
 msgid "Upgrade to Pro"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Flat 20%"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Bonus: As a Dokan Lite user, use the coupon"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "at checkout for 20% off."
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Already Upgraded?"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Confused? Talk to the Sales Team!"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
+#, js-format
 msgid "Select %1$s Category %2$s"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Search Modules"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
+#, js-format
 msgid "Pro Modules (%s)"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Clear filter"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Currency"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Enter currency amount"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Category ID"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "unknown_error"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Retry Loading"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Skip"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Saving…"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Your Marketplace is  ready to explore"
 msgstr ""
 
-#: assets/js/dokan-admin-dashboard.js:172
+#: assets/js/dokan-admin-dashboard.js:179
+#, js-format
 msgid "%1$s of %1$s tasks completed"
 msgstr ""
 
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "To-Do"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+#, js-format
+msgid "Error fetching to-do data: %s"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Analytics"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+#, js-format
+msgid "Error fetching analytics data: %s"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "View Report"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Month to Date"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "vs Previous Period"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Daily Sales Chart"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Date:"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Total Sales:"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Net Sales:"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Commissions:"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Select Month"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Error loading chart data:"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Monthly Overview"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Monthly overview of key metrics"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Vendor Metrics"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+#, js-format
+msgid "Error fetching vendor metrics: %s"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "All Time Stats"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "All-Time Marketplace Stats"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Overview of your all time result in your marketplace"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Top Performing Vendors"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "--"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Rank"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Vendor Name"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Top performing vendors of the marketplace, updates daily at 00:01"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+#, js-format
+msgid "Error fetching top performing vendors: %s"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Top performing vendors of the marketplace"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Most Reviewed Products"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Product Name"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Review Count"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+#, js-format
+msgid "Error fetching most reviewed products: %s"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Most Reported Vendors"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Abuse Reports"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+#, js-format
+msgid "Error fetching most reported vendors: %s"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/dokan-admin-notice.js:2
 #: assets/js/dokan-promo-notice.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Dismiss"
 msgstr ""
 
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Dismissing…"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/dokan-admin-notice.js:2
 #: assets/js/dokan-promo-notice.js:2
 #: assets/js/vue-bootstrap.js:2
-msgid "Dismissing..."
+msgid "Dismissed"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+#: assets/js/vendor-dashboard/reports/index.js:2
+msgid "Loading…"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Previous notice"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+#, js-format
+msgid "%1$s of %2$s"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Next notice"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Updater Alert!"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Confirm"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "If you want to go back to old dashboard,"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+#: assets/js/vue-admin.js:2
+msgid "Click Here"
 msgstr ""
 
 #: assets/js/dokan-admin-notice.js:2
 #: assets/js/dokan-promo-notice.js:2
 #: assets/js/vue-bootstrap.js:2
-msgid "Dismissed"
+msgid "Dismissing..."
 msgstr ""
 
 #: assets/js/dokan-admin-onboard.js:172
@@ -12088,6 +12822,7 @@ msgid "Choose how vendor store URLs will appear"
 msgstr ""
 
 #: assets/js/dokan-admin-onboard.js:172
+#, js-format
 msgid "%s/"
 msgstr ""
 
@@ -12104,6 +12839,7 @@ msgid "Please enter a valid input"
 msgstr ""
 
 #: assets/js/dokan-admin-onboard.js:172
+#, js-format
 msgid "Vendor Store URL will be (<span class=\"text-indigo-600\">%1$s/%2$s/%3$s</span>)"
 msgstr ""
 
@@ -12136,6 +12872,7 @@ msgid "Services"
 msgstr ""
 
 #: assets/js/dokan-admin-onboard.js:172
+#: assets/js/dokan-pro-features.js:2
 msgid "Subscriptions"
 msgstr ""
 
@@ -12219,6 +12956,33 @@ msgstr ""
 msgid "Failed to submit data. Please try again."
 msgstr ""
 
+#: assets/js/dokan-admin-panel-header.js:1
+msgid "Dokan Logo"
+msgstr ""
+
+#: assets/js/dokan-admin-panel-header.js:1
+#, js-format
+msgid "Lite: %s"
+msgstr ""
+
+#: assets/js/dokan-admin-panel-header.js:1
+#: assets/js/dokan-pro-features.js:2
+msgid "Pro"
+msgstr ""
+
+#: assets/js/dokan-admin-panel-header.js:1
+#, js-format
+msgid "%1$s: %2$s"
+msgstr ""
+
+#: assets/js/dokan-admin-panel-header.js:1
+msgid "Upgrade"
+msgstr ""
+
+#: assets/js/dokan-admin-panel-header.js:1
+msgid "Get Help"
+msgstr ""
+
 #: assets/js/dokan-intelligence.js:172
 msgid "No content generated, please try again."
 msgstr ""
@@ -12296,6 +13060,434 @@ msgstr ""
 msgid "Yes, Insert"
 msgstr ""
 
+#: assets/js/dokan-pro-features.js:2
+#, js-format
+msgid "Unlock the Full Potential of %s Your Marketplace"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Upgrade to Dokan PRO for powerful vendor management, advanced admin controls, and built-in AI assistance. Enjoy exclusive features that simplify operations, boost sales, and scale your business effortlessly."
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "with 20% off"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Effortless Shipping Management"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Let vendors set flexible shipping rates by distance, weight, price, or items."
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Popular Payment Gateways"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Accept payments with popular gateways like PayPal, Stripe, Mangopay, Razorpay, and more."
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Smart Product Management"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Give vendors bulk edit tools, featured ads, and addons for smarter selling."
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Advanced Store Management"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Increase engagement with store follows and builtin ticket based support."
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Customizable Branding"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Customize vendor dashboards with unique colors and seamless theme support."
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "24/7 Super Fast Premium Support"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Enjoy 24/7 premium support from experts to keep your marketplace running smooth."
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Flexible Commission Structure"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Set commissions globally or customize them for vendors, categories, or products."
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Admin & Earning Reports"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Track daily, yearly, and vendor specific earnings from a single dashboard."
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Instant Announcements"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Send important announcements directly to sellers' dashboards for seamless communication."
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Automatic Withdrawal Disbursement"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Automate vendor withdrawals by setting a scheduled disbursement time for seamless transactions."
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Return , Refund & Warranty System"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Allow vendors to set up customized refund and warranty policies for their customers."
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Flexible Coupon Management"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Admins and vendors can create product or vendor-specific coupons with ease."
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "What Makes Pro Exceptional"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Extensive Plugin Support"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Enhance your marketplace with hundreds of WordPress plugins designed for scalability."
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Hundreds of Themes Compatibility"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Dokan supports all WooCommerce-compatible themes."
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "White Label Documentation"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Get marketplace-specific docs crafted by the Dokan team to fit your business needs."
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Why Settle? Get More with Dokan PRO!"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "42+ Modules"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Access an extensive range of modules designed to enhance both admin and vendor experiences."
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Dokan AI"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Generate product titles, descriptions, and images instantly with Dokan AI, powered by OpenAI and Gemini. Save time, look sharp, and sell smarter."
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Frontend Dashboard for Vendors"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Frontend Simple Product"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Individual Vendor Stores"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Frontend Variable Products"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Product Bulk Edit"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Single Product Multivendor"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "WC Booking Integration"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "WC Auction Integration"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Multiple Commission Types"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Dokan Stripe Express"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+#: assets/js/vue-admin.js:2
+msgid "Dokan PayPal Marketplace"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "MANGOPAY Integration"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Razorpay Integration"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+#: assets/js/vue-admin.js:2
+msgid "Dokan Stripe Connect"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Minimum Maximum Order"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Order Email Notifications"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Earning Reports"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Admin Reports"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Vendor Statements"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Shipping Management"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Coupon Creation"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Live Chat Support for Ent Users"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Dummy Data"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Dokan Migrator"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "WPML Integration"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "wp.org Support"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Printful Integration"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Export Import"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Priority Support"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Vendor & Product Management"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Payment & Commission Systems"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Sales, Orders & Customer Support"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Marketing, SEO & Compliance"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Migration, Integration & Support"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Dokan Lite vs Dokan Pro"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Explore All Features"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Features"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+#: assets/js/vue-admin.js:2
+msgid "Lite"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Dokan Powered Marketplace Across the Globe"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Great People, Great Minds Choose Dokan"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Everything in Starter"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "23 Premium Modules"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "3 Sites Licenses"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Ticket Based Support"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Everything in Professional"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "39 Premium Modules"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "5 Sites Licenses"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Everything in Business"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "10 Sites Licenses"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "2 Hours of Theme Compatibility & Installation"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Buy Now"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Popular"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Annually"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Lifetime"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "The Packages We Provide"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Get 20% instant off in all packages with coupon code"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Annual"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Save More 20%"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "What Makes Dokan Stand Out"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "14 Days Money Back Guarantee"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Get a full refund within 14 days if our plugin doesn't meet your needs—no questions asked!"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Help Is Just a Click Away, Day or Night!"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Receive expert support 24/7 to keep your business running smoothly, anytime you need help."
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Regular Releases"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Stay ahead with frequent updates, new features, and enhancements to keep your marketplace running at its best."
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "Ready to Scale Your Marketplace?"
+msgstr ""
+
+#: assets/js/dokan-pro-features.js:2
+msgid "With all the advanced features you get it's hard to resist buying Dokan Pro."
+msgstr ""
+
 #: assets/js/dokan-setup-wizard-commission.js:1
 #: assets/js/vue-admin.js:2
 msgid "Enable Commission Inheritance Setting?"
@@ -12369,6 +13561,7 @@ msgid "No payment methods found to submit a withdrawal request."
 msgstr ""
 
 #: assets/js/frontend.js:172
+#, js-format
 msgid "Please set up your %1$spayment methods%2$s first."
 msgstr ""
 
@@ -12437,22 +13630,6 @@ msgstr ""
 msgid "Rows per table"
 msgstr ""
 
-#: assets/js/setup-guide-banner.js:172
-msgid "Setup Step Icon"
-msgstr ""
-
-#: assets/js/setup-guide-banner.js:172
-msgid "Complete your marketplace setup in minutes"
-msgstr ""
-
-#: assets/js/setup-guide-banner.js:172
-msgid "Start Setup"
-msgstr ""
-
-#: assets/js/setup-guide-banner.js:172
-msgid "Continue Setup"
-msgstr ""
-
 #: assets/js/store-performance.js:1
 msgid "Choose which analytics to display and the section name"
 msgstr ""
@@ -12478,15 +13655,11 @@ msgid "Mutable settings should be accessed via data store."
 msgstr ""
 
 #: assets/js/vendor-dashboard/reports/index.js:2
-msgid "Loading…"
-msgstr ""
-
-#: assets/js/vendor-dashboard/reports/index.js:2
 msgid "Sorry, you are not allowed to access this page."
 msgstr ""
 
 #: assets/js/vendor-dashboard/reports/index.js:2
-msgid "Analytics"
+msgid "Reports"
 msgstr ""
 
 #: assets/js/vendor-dashboard/reports/index.js:2
@@ -12494,7 +13667,8 @@ msgid "Not allowed"
 msgstr ""
 
 #: assets/js/vendor-dashboard/reports/index.js:2
-msgid "%1$s &lsaquo; %2$s &#8212; WooCommerce"
+#, js-format
+msgid "%1$s &lsaquo; %2$s &#8212; Dokan"
 msgstr ""
 
 #: assets/js/vue-admin.js:2
@@ -12550,6 +13724,10 @@ msgid "Subscribe"
 msgstr ""
 
 #: assets/js/vue-admin.js:2
+msgid "To try Dokan new dashboard, "
+msgstr ""
+
+#: assets/js/vue-admin.js:2
 msgid "No requests found."
 msgstr ""
 
@@ -12574,6 +13752,7 @@ msgid "Download PayPal mass payment file"
 msgstr ""
 
 #: assets/js/vue-admin.js:2
+#, js-format
 msgid "Swift Code: %s"
 msgstr ""
 
@@ -12610,179 +13789,11 @@ msgid "Export"
 msgstr ""
 
 #: assets/js/vue-admin.js:2
-msgid "Convinced?"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "With all the advance features you get it’s hard to resist buying Dokan Pro."
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Premium modules to make everything easier & better"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Frontend dashboard for vendors with advanced controls"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Unlimited Product Variations and group product upload"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Zone wise shipping with multiple method for vendors"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Store support based on ticket system for your customers"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Vendors will be able to generate coupon codes"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Earning, Selling and Commission Reports & Statement"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "24/7 super fast premium customer support for you"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Add Social profile to your vendor’s store and support for store SEO"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Frontend order management"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Seller Statement Reports"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Making Announcements"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Customized Product Categories"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Store SEO"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Back Ordering System"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Store Contact Form"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Single Product Multiple Seller"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Seller Verification"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Featured Seller"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Multiple Commission Types"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Frontend Shipping Tracking"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Setup Wizard"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Bookable Product"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Upgrade to Dokan Pro!"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Seems To Be Convinced, You Need More Out Of Your Marketplace"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Dokan PRO offers powerful vendor controls and features, giving sellers full ownership, automation, and freedom to run their stores. Upgrade to PRO to unlock these great features!."
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Check Out All Vendor Functionalities"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Why Upgrade"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "And Many More"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Comparison With Dokan PRO"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "The Packages We Provide"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Buy Now"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "14 Days Money Back Guarantee"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "After successful purchase, you will be eligible for conditional refund"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Terms & Condition Applied"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Payment Options:"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "People We Have Helped"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "We are proud to say the official"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "is built using Dokan"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
 msgid "Help"
 msgstr ""
 
 #: assets/js/vue-admin.js:2
 msgid "Dokan Changelog"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Lite"
 msgstr ""
 
 #: assets/js/vue-admin.js:2
@@ -12888,6 +13899,10 @@ msgid "Unlock these awesome frontend features with Dokan PRO"
 msgstr ""
 
 #: assets/js/vue-admin.js:2
+msgid "Check Out All Vendor Functionalities"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
 msgid "Choose your file"
 msgstr ""
 
@@ -12977,6 +13992,7 @@ msgstr ""
 
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
+#, js-format
 msgid "You can change your profile picture on %s"
 msgstr ""
 
@@ -13209,10 +14225,6 @@ msgid "Change Store Banner"
 msgstr ""
 
 #: assets/js/vue-admin.js:2
-msgid "Total Products"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
 msgid "Items Sold"
 msgstr ""
 
@@ -13246,14 +14258,6 @@ msgstr ""
 
 #: assets/js/vue-admin.js:2
 msgid "Social Profiles"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Dokan PayPal Marketplace"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Dokan Stripe Connect"
 msgstr ""
 
 #: assets/js/vue-admin.js:2
@@ -13318,6 +14322,14 @@ msgstr ""
 
 #: assets/js/vue-admin.js:2
 msgid "Run the importer"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Convinced?"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "With all the advance features you get it’s hard to resist buying Dokan Pro."
 msgstr ""
 
 #: assets/js/vue-admin.js:2
@@ -13534,10 +14546,6 @@ msgstr ""
 
 #: assets/js/vue-admin.js:2
 msgid "Total Transactions"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Total Vendors"
 msgstr ""
 
 #: assets/js/vue-admin.js:2

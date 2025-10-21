@@ -114,7 +114,6 @@
                 </postbox>
             </div>
         </div>
-
     </div>
 </template>
 
@@ -221,7 +220,6 @@ export default {
 
 <style lang="less">
 .dokan-dashboard {
-
     .widgets-wrapper {
         display: block;
         overflow: hidden;
