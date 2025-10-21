@@ -32,6 +32,7 @@ const CardRadioOption = ( {
             onKeyDown={ handleKeyDown }
             role="radio"
             aria-checked={ isSelected }
+            aria-label={ option.title }
             tabIndex={ 0 }
         >
             <div
