@@ -421,6 +421,9 @@ const WithdrawPage = () => {
     const [ noteState, setNoteState ] = useState( '' );
     const [ localNoteState, setLocalNoteState ] = useState( '' );
 
+    // Selected action for the "view" modal
+    const [ selectedAction, setSelectedAction ] = useState< string | number | undefined >( undefined );
+
     // Optimized handlers to prevent re-renders
     const handleNoteChange = useCallback( ( event ) => {
         setLocalNoteState( event.target.value );
@@ -443,6 +446,22 @@ const WithdrawPage = () => {
             const initialNote = items[ 0 ].note || '';
             setNoteState( initialNote );
             setLocalNoteState( initialNote );
+        }
+
+        // Initialize selected action for view modal
+        if ( type === 'view' && items.length > 0 ) {
+            const item = items[ 0 ];
+            const opts: { label: string; value: string }[] = [];
+            if ( item.status === 'pending' ) {
+                opts.push(
+                    { label: __( 'Cancel', 'dokan-lite' ), value: 'cancel' },
+                    { label: __( 'Approve', 'dokan-lite' ), value: 'approve' }
+                );
+            }
+            if ( item.status !== 'approved' ) {
+                opts.push( { label: __( 'Delete', 'dokan-lite' ), value: 'delete' } );
+            }
+            setSelectedAction( opts.length ? opts[ 0 ].value : undefined );
         }
     };
 
@@ -1192,232 +1211,199 @@ const WithdrawPage = () => {
 
             { modalState.isOpen &&
                 modalState.type === 'view' &&
-                modalState.items.length > 0 && (
-                    <DokanModal
-                        className={ `w-[520px] max-w-full` }
-                        isOpen={ modalState.isOpen }
-                        namespace={ `view-withdrawal-${ modalState.items[ 0 ]?.id }` }
-                        onClose={ closeModal }
-                        onConfirm={ closeModal }
-                        dialogTitle={
-                            <>
-                                <div className="text-2xl font-bold text-gray-900 mb-1">
-                                    { price( modalState.items[ 0 ]?.amount ) }
-                                </div>
-                                <div className="text-sm text-gray-500 mb-3">
-                                    From:{ ' ' }
-                                    { modalState.items[ 0 ]?.user?.store_name ||
-                                        __( 'N/A', 'dokan-lite' ) }
-                                </div>
-                            </>
-                        }
-                        confirmButtonText={ __( 'Update', 'dokan-lite' ) }
-                        hideCancelButton={ false }
-                        cancelButtonText={ __( 'Cancel', 'dokan-lite' ) }
-                        dialogContent={
-                            <div className="p-0">
-                                { ( () => {
-                                    const item = modalState.items[ 0 ];
-                                    const statusColors = {
-                                        pending: 'bg-[#FDF2F8] text-[#9D174D]',
-                                        approved: 'bg-[#D4FBEF] text-[#00563F]',
-                                        cancelled:
-                                            'bg-[#F1F1F4] text-[#393939]',
-                                    };
+                modalState.items.length > 0 &&
+                ( () => {
+                    const item = modalState.items[ 0 ];
+                    const statusColors = {
+                        pending: 'bg-[#FDF2F8] text-[#9D174D]',
+                        approved: 'bg-[#D4FBEF] text-[#00563F]',
+                        cancelled: 'bg-[#F1F1F4] text-[#393939]',
+                    } as const;
 
-                                    return (
-                                        <div>
-                                            { /* Withdraw details section */ }
-                                            <div className="mb-6 pb-4 border-b border-gray-200">
-                                                <h3 className="text-sm font-medium text-gray-900 mb-3">
-                                                    { __(
-                                                        'Withdraw details:',
-                                                        'dokan-lite'
-                                                    ) }
-                                                </h3>
+                    const options: { label: string; value: string }[] = [];
+                    if ( item.status === 'pending' ) {
+                        options.push(
+                            { label: __( 'Cancel', 'dokan-lite' ), value: 'cancel' },
+                            { label: __( 'Approve', 'dokan-lite' ), value: 'approve' }
+                        );
+                    }
+                    if ( item.status !== 'approved' ) {
+                        options.push( { label: __( 'Delete', 'dokan-lite' ), value: 'delete' } );
+                    }
 
-                                                <div className="space-y-3 text-sm">
-                                                    <div className="flex justify-between">
-                                                        <span className="text-gray-600">
-                                                            { __(
-                                                                'Status',
-                                                                'dokan-lite'
-                                                            ) }
-                                                        </span>
-                                                        <span
-                                                            className={ `inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                                                statusColors[
-                                                                    item.status
-                                                                ] ||
-                                                                'bg-gray-100 text-gray-800'
-                                                            }` }
-                                                        >
-                                                            { item.status
-                                                                .charAt( 0 )
-                                                                .toUpperCase() +
-                                                                item.status.slice(
-                                                                    1
-                                                                ) }
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex justify-between">
-                                                        <span className="text-gray-600">
-                                                            { __(
-                                                                'Date received',
-                                                                'dokan-lite'
-                                                            ) }
-                                                        </span>
-                                                        <span className="text-gray-900">
-                                                            <DateTimeHtml.Date
-                                                                date={
-                                                                    item.created
-                                                                }
-                                                                format="j F Y, g.i a"
-                                                            />
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex justify-between">
-                                                        <span className="text-gray-600">
-                                                            { __(
-                                                                'Charge',
-                                                                'dokan-lite'
-                                                            ) }
-                                                        </span>
-                                                        <span className="text-gray-900">
-                                                            { price(
-                                                                item.charge || 0
-                                                            ) }
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex justify-between">
-                                                        <span className="text-gray-600">
-                                                            { __(
-                                                                'Payable',
-                                                                'dokan-lite'
-                                                            ) }
-                                                        </span>
-                                                        <span className="text-gray-900 font-medium">
-                                                            { price(
-                                                                item.receivable ||
-                                                                    item.amount
-                                                            ) }
-                                                        </span>
-                                                    </div>
+                    const noActions = options.length === 0;
+
+                    const footer = noActions ? (
+                        <div className="flex items-center justify-end gap-3">
+                            <button
+                                onClick={ closeModal }
+                                className="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm text-[#575757] hover:bg-gray-100"
+                                type="button"
+                            >
+                                { __( 'Close', 'dokan-lite' ) }
+                            </button>
+                        </div>
+                    ) : undefined;
+
+                    return (
+                        <DokanModal
+                            className={ `w-[520px] max-w-full` }
+                            isOpen={ modalState.isOpen }
+                            namespace={ `view-withdrawal-${ modalState.items[ 0 ]?.id }` }
+                            onClose={ closeModal }
+                            onConfirm={ async () => {
+                                if ( noActions ) {
+                                    return;
+                                }
+
+                                let action = ( selectedAction as string | undefined ) || undefined;
+                                if ( ! action && options.length ) {
+                                    action = options[ 0 ].value;
+                                }
+                                if ( ! action ) {
+                                    return;
+                                }
+
+                                const map: Record< string, string > = {
+                                    approve: 'approved',
+                                    cancel: 'cancelled',
+                                    delete: 'delete',
+                                };
+                                const finalAction = map[ action ] || '';
+                                if ( finalAction ) {
+                                    await handleBulkAction( finalAction, [ item.id ] );
+                                }
+                                closeModal();
+                            } }
+                            dialogTitle={
+                                <>
+                                    <div className="text-2xl font-bold text-gray-900 mb-1">
+                                        { price( modalState.items[ 0 ]?.amount ) }
+                                    </div>
+                                    <div className="text-sm text-gray-500 mb-3">
+                                        From:{ ' ' }
+                                        { modalState.items[ 0 ]?.user?.store_name ||
+                                            __( 'N/A', 'dokan-lite' ) }
+                                    </div>
+                                </>
+                            }
+                            confirmButtonText={ __( 'Proceed', 'dokan-lite' ) }
+                            hideCancelButton={ false }
+                            cancelButtonText={ noActions ? __( 'Close', 'dokan-lite' ) : __( 'Cancel', 'dokan-lite' ) }
+                            dialogFooterContent={ footer }
+                            dialogContent={
+                                <div className="p-0">
+                                    <div>
+                                        { /* Withdraw details section */ }
+                                        <div className="mb-6 pb-4 border-b border-gray-200">
+                                            <h3 className="text-sm font-medium text-gray-900 mb-3">
+                                                { __( 'Withdraw details:', 'dokan-lite' ) }
+                                            </h3>
+
+                                            <div className="space-y-3 text-sm">
+                                                <div className="flex justify-between">
+                                                    <span className="text-gray-600">
+                                                        { __( 'Status', 'dokan-lite' ) }
+                                                    </span>
+                                                    <span
+                                                        className={ `inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                                            statusColors[ item.status ] ||
+                                                            'bg-gray-100 text-gray-800'
+                                                        }` }
+                                                    >
+                                                        { item.status
+                                                            .charAt( 0 )
+                                                            .toUpperCase() +
+                                                            item.status.slice( 1 ) }
+                                                    </span>
                                                 </div>
-                                            </div>
-
-                                            { /* Payment method and Note section */ }
-                                            <div className="mb-6 pb-4 border-b border-gray-200">
-                                                <h3 className="text-sm font-medium text-gray-900 mb-3">
-                                                    { __(
-                                                        'Payment method and Note:',
-                                                        'dokan-lite'
-                                                    ) }
-                                                </h3>
-
-                                                <div className="text-sm text-[#828282] mb-2">
-                                                    { item.method_title ||
-                                                        item.method }
-                                                </div>
-
-                                                <RawHTML>
-                                                    { processDetails(
-                                                        item.details,
-                                                        item.method
-                                                    )
-                                                        .split( '\n' )
-                                                        .join( '<br />' ) }
-                                                </RawHTML>
-                                            </div>
-
-                                            { /* Note section */ }
-                                            { item.note && (
-                                                <div className="mb-6">
-                                                    <h3 className="text-sm font-medium text-gray-900 mb-2">
-                                                        { __(
-                                                            'Note',
-                                                            'dokan-lite'
-                                                        ) }
-                                                    </h3>
-                                                    <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded-md">
-                                                        { item.note }
-                                                    </div>
-                                                </div>
-                                            ) }
-
-                                            { /* Actions section */ }
-                                            { ( () => {
-                                                const options: {
-                                                    label: string;
-                                                    value: string;
-                                                }[] = [];
-                                                if (
-                                                    item.status === 'pending'
-                                                ) {
-                                                    options.push(
-                                                        {
-                                                            label: __(
-                                                                'Cancel',
-                                                                'dokan-lite'
-                                                            ),
-                                                            value: 'cancel',
-                                                        },
-                                                        {
-                                                            label: __(
-                                                                'Approve',
-                                                                'dokan-lite'
-                                                            ),
-                                                            value: 'approve',
-                                                        }
-                                                    );
-                                                }
-                                                if (
-                                                    item.status !== 'approved'
-                                                ) {
-                                                    options.push( {
-                                                        label: __(
-                                                            'Delete',
-                                                            'dokan-lite'
-                                                        ),
-                                                        value: 'delete',
-                                                    } );
-                                                }
-
-                                                if ( ! options.length ) {
-                                                    return null;
-                                                }
-
-                                                return (
-                                                    <div className="mb-4">
-                                                        <h3 className="text-sm font-medium text-gray-900 mb-3">
-                                                            { _n(
-                                                                'Action:',
-                                                                'Actions:',
-                                                                options.length,
-                                                                'dokan-lite'
-                                                            ) }
-                                                        </h3>
-                                                        <SimpleRadio
-                                                            name="action"
-                                                            options={ options }
-                                                            class={ 'px-0' }
-                                                            optionClass={
-                                                                'px-0'
-                                                            }
-                                                            selectedOptionClass={
-                                                                'px-0'
-                                                            }
+                                                <div className="flex justify-between">
+                                                    <span className="text-gray-600">
+                                                        { __( 'Date received', 'dokan-lite' ) }
+                                                    </span>
+                                                    <span className="text-gray-900">
+                                                        <DateTimeHtml.Date
+                                                            date={ item.created }
+                                                            format="j F Y, g.i a"
                                                         />
-                                                    </div>
-                                                );
-                                            } )() }
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span className="text-gray-600">
+                                                        { __( 'Charge', 'dokan-lite' ) }
+                                                    </span>
+                                                    <span className="text-gray-900">
+                                                        { price( item.charge || 0 ) }
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span className="text-gray-600">
+                                                        { __( 'Payable', 'dokan-lite' ) }
+                                                    </span>
+                                                    <span className="text-gray-900 font-medium">
+                                                        { price( item.receivable || item.amount ) }
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
-                                    );
-                                } )() }
-                            </div>
-                        }
-                    />
-                ) }
+
+                                        { /* Payment method and Note section */ }
+                                        <div className="mb-6 pb-4 border-b border-gray-200">
+                                            <h3 className="text-sm font-medium text-gray-900 mb-3">
+                                                { __( 'Payment method and Note:', 'dokan-lite' ) }
+                                            </h3>
+
+                                            <div className="text-sm text-[#828282] mb-2">
+                                                { item.method_title || item.method }
+                                            </div>
+
+                                            <RawHTML>
+                                                { processDetails( item.details, item.method )
+                                                    .split( '\n' )
+                                                    .join( '<br />' ) }
+                                            </RawHTML>
+                                        </div>
+
+                                        { /* Note section */ }
+                                        { item.note && (
+                                            <div className="mb-6">
+                                                <h3 className="text-sm font-medium text-gray-900 mb-2">
+                                                    { __( 'Note', 'dokan-lite' ) }
+                                                </h3>
+                                                <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded-md">
+                                                    { item.note }
+                                                </div>
+                                            </div>
+                                        ) }
+
+                                        { /* Actions section */ }
+                                        { ( () => {
+                                            if ( ! options.length ) {
+                                                return null;
+                                            }
+                                            return (
+                                                <div className="mb-4">
+                                                    <h3 className="text-sm font-medium text-gray-900 mb-3">
+                                                        { _n( 'Action:', 'Actions:', options.length, 'dokan-lite' ) }
+                                                    </h3>
+                                                    <SimpleRadio
+                                                        name="action"
+                                                        options={ options }
+                                                        value={ selectedAction }
+                                                        onChange={ ( e ) => setSelectedAction( e.target.value ) }
+                                                        class={ 'px-0' }
+                                                        optionClass={ 'px-0' }
+                                                        selectedOptionClass={ 'px-0' }
+                                                    />
+                                                </div>
+                                            );
+                                        } )() }
+                                    </div>
+                                </div>
+                            }
+                        />
+                    );
+                } )() }
         </div>
     );
 };
