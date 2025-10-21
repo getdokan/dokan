@@ -35,7 +35,27 @@ const newDataset = {
         {
             selector: '#dokan_settings_general_marketplace_marketplace_settings_store_category_mode button[name="none"]',
             type: 'radio',
-            value: 'None',
+            value: 'true',
+        },
+        {
+            selector: '#dokan_settings_general_marketplace_marketplace_settings_show_customer_details_to_vendors button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        {
+            selector: '#dokan_settings_general_marketplace_marketplace_settings_guest_product_enquiry button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        {
+            selector: '#dokan_settings_general_marketplace_marketplace_settings_add_to_cart_button_visibility button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        {
+            selector: '#dokan_settings_general_marketplace_live_search_search_box_radio div[role="radio"][aria-label="Enhanced Search"]',
+            type: 'radio',
+            value: 'true', // Options: 'Search with Suggestion Box', 'Autoload Replace Current Content'
         },
     ],
 };

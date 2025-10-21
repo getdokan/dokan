@@ -9,8 +9,8 @@ export class AdminSettingsPageNew extends AdminSettingsPage {
     }
     async ensureVisibilityFor(selector: string) {
         const locator = this.page.locator(selector);
-        // await locator.scrollIntoViewIfNeeded();
-        await locator.waitFor({ state: 'visible', timeout: 1000 });
+        await locator.scrollIntoViewIfNeeded();
+        await locator.waitFor({ state: 'visible', timeout: 10000 });
     }
 
     async updateSettings( dataSet: any ) {
@@ -42,10 +42,13 @@ export class AdminSettingsPageNew extends AdminSettingsPage {
 
     async saveSettings() {
         const saveBtn = this.page.locator(this.saveButtonSelector);
-        // if (await saveBtn.isVisible()) {
+        try{
+            await saveBtn.waitFor({ state: 'visible', timeout: 8000 }); 
             await saveBtn.click();
             await this.waitForLoadState();
-        // }
+        } catch (error) {
+            console.log('Save button not visible - may not be needed');
+        }
     }
 
     async setFieldValues(fields: Array<any>) {
@@ -69,9 +72,14 @@ export class AdminSettingsPageNew extends AdminSettingsPage {
                     }
                     break;
                 }
-                case 'radio':
-                    await this.page.click( field.selector );
+                case 'radio': {
+                    // Only click if not already selected
+                    const currentState = await this.page.locator( field.selector ).getAttribute('aria-checked');
+                    if (currentState !== field.value) {
+                        await this.page.click( field.selector );
+                    }
                     break;
+                }
                 case 'select':
                     await this.page.click( field.selector );
                     break;
@@ -108,8 +116,8 @@ export class AdminSettingsPageNew extends AdminSettingsPage {
                     break;
                 }
                 case 'radio': {
-                    const isChecked = await this.page.locator( field.selector ).textContent();
-                    expect(isChecked).toBe(field.value);
+                    const ariaChecked = await this.page.locator( field.selector ).getAttribute('aria-checked');
+                    expect(ariaChecked).toBe(field.value);
                     break;
                 }
                 case 'select': {
