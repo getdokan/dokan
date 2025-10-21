@@ -29,16 +29,32 @@ class Dashboard implements Hookable {
     protected string $setup_guide_key = 'dokan-setup-guide-banner';
 
     /**
+     * Admin switching script key.
+     *
+     * @SINCE DOKAN_SINCE
+     *
+     * @var string
+     */
+    protected string $switching_script_key = 'dokan-admin-switching';
+
+    /**
+     * Admin panel header script key.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var string
+     */
+    protected string $header_script_key = 'dokan-admin-panel-header';
+
+    /**
      * Register hooks.
      */
     public function register_hooks(): void {
         add_action( 'dokan_admin_menu', [ $this, 'register_menu' ], 99, 2 );
         add_action( 'dokan_register_scripts', [ $this, 'register_scripts' ] );
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
-        add_action( 'admin_menu', [ $this, 'clear_dokan_submenu_title' ], 20 );
         add_action( 'admin_notices', [ $this, 'inject_before_notices' ], -9999 );
         add_action( 'admin_notices', [ $this, 'inject_after_notices' ], PHP_INT_MAX );
-        add_action( 'admin_init', [ $this, 'handle_dashboard_redirect' ] );
     }
 
     /**
@@ -122,7 +138,9 @@ class Dashboard implements Hookable {
      */
     public function render_dashboard_page(): void {
         ob_start();
-        echo '<div class="wrap"><div id="dokan-admin-dashboard" class="dokan-layout">' . esc_html__( 'Loading...', 'dokan-lite' ) . '</div></div>';
+        echo '<div id="dokan-admin-panel-header" class="dokan-layout"></div>';
+        echo '<div class="wrap"><div id="dokan-admin-dashboard" class="dokan-layout dokan-admin-page-body">' . esc_html__( 'Loading...', 'dokan-lite' ) . '</div></div>';
+        echo '<div id="dokan-admin-switching" class="dokan-layout dokan-admin-page-body"></div>';
         echo ob_get_clean();
     }
 
@@ -134,11 +152,14 @@ class Dashboard implements Hookable {
      * @return array<string, mixed>
      */
     public function settings(): array {
-        $dashboard_url = admin_url( 'admin.php?page=dokan-dashboard' );
+        // TODO: We are using dokan legacy dashboard URL here for legacy `Import Dummy Data` & `Basic & Fundamental` page.
+        // We will remove this code after getting the new `Import Dummy Data` & `Basic & Fundamental` page.
+        $dashboard_url = admin_url( 'admin.php?page=dokan' );
         $header_info   = [
             'lite_version'    => DOKAN_PLUGIN_VERSION,
             'is_pro_exists'   => dokan()->is_pro_exists(),
             'dashboard_url'   => $dashboard_url,
+            'has_new_version' => Helper::dokan_has_new_version(),
             'help_menu_items' => apply_filters(
                 'dokan_admin_setup_guides_help_menu_items',
                 [
@@ -209,15 +230,8 @@ class Dashboard implements Hookable {
         }
 
         $settings = [
-            'nonce'         => wp_create_nonce( 'dokan_admin_dashboard' ),
-            'header_info'   => apply_filters( 'dokan_admin_setup_guides_header_info', $header_info ),
-            'dashboard_url' => add_query_arg(
-                [
-                    'dokan_admin_dashboard_switching_nonce' => wp_create_nonce( 'dokan_switch_admin_dashboard' ),
-                    'dokan_action'                          => 'switch_dashboard',
-                ],
-                admin_url()
-            ),
+            'nonce'       => wp_create_nonce( 'dokan_admin_dashboard' ),
+            'header_info' => apply_filters( 'dokan_admin_setup_guides_header_info', $header_info ),
         ];
 
         foreach ( $this->get_pages() as $page ) {
@@ -255,7 +269,9 @@ class Dashboard implements Hookable {
         return array_reduce(
             $this->get_pages(), fn( $carry, $page ) => array_merge( $carry, $page->scripts() ), [
                 $this->script_key,
+                $this->header_script_key,
                 $this->setup_guide_key,
+                $this->switching_script_key,
             ]
         );
     }
@@ -271,7 +287,9 @@ class Dashboard implements Hookable {
         return array_reduce(
             $this->get_pages(), fn( $carry, $page ) => array_merge( $carry, $page->styles() ), [
                 $this->script_key,
+                $this->header_script_key,
                 $this->setup_guide_key,
+                $this->switching_script_key,
             ]
         );
     }
@@ -287,8 +305,14 @@ class Dashboard implements Hookable {
         // Register the admin dashboard scripts.
         $this->register_admin_dashboard_scripts();
 
+        // Register the admin panel header scripts.
+        $this->register_admin_panel_header_scripts();
+
         // Register the setup guide scripts.
         $this->register_setup_guide_scripts();
+
+        // Register the admin switching scripts.
+        $this->register_admin_switching_scripts();
 
         // Register all other scripts.
         foreach ( $this->get_pages() as $page ) {
@@ -372,6 +396,55 @@ class Dashboard implements Hookable {
     }
 
     /**
+     * Register the admin panel header scripts.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    protected function register_admin_panel_header_scripts() {
+        $header_script_file = DOKAN_DIR . '/assets/js/dokan-admin-panel-header.asset.php';
+        if ( file_exists( $header_script_file ) ) {
+            $header_script = require $header_script_file;
+            $dependencies  = $header_script['dependencies'] ?? [];
+            $version       = $header_script['version'] ?? '';
+
+            wp_register_script(
+                $this->header_script_key,
+                DOKAN_PLUGIN_ASSEST . '/js/dokan-admin-panel-header.js',
+                $dependencies,
+                $version,
+                true
+            );
+
+            wp_register_style(
+                $this->header_script_key,
+                DOKAN_PLUGIN_ASSEST . '/js/dokan-admin-panel-header.css',
+                [],
+                $version
+            );
+
+            wp_set_script_translations(
+                $this->header_script_key,
+                'dokan-lite'
+            );
+
+            // Localize the settings.
+            $settings    = $this->settings();
+            $header_info = $settings['header_info'] ?? [];
+
+            wp_localize_script(
+                $this->header_script_key,
+                'dokanAdminPanelHeaderSettings',
+                [
+                    'logo_url'    => DOKAN_PLUGIN_ASSEST . '/images/dokan-logo.png',
+                    'header_info' => $header_info,
+                ]
+            );
+        }
+    }
+
+    /**
      * Register the setup guide banner scripts.
      *
      * @since 4.0.0
@@ -418,6 +491,56 @@ class Dashboard implements Hookable {
     }
 
     /**
+     * Register the admin switching scripts.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    protected function register_admin_switching_scripts() {
+        $admin_switching_file = DOKAN_DIR . '/assets/js/dokan-admin-switching.asset.php';
+        if ( file_exists( $admin_switching_file ) ) {
+            $switching_script = require $admin_switching_file;
+            $dependencies     = $switching_script['dependencies'] ?? [];
+
+            $dependencies[]   = 'dokan-react-components';
+            $dependencies[]   = 'dokan-react-frontend';
+            $version          = $switching_script['version'] ?? '';
+
+            wp_register_script(
+                $this->switching_script_key,
+                DOKAN_PLUGIN_ASSEST . '/js/dokan-admin-switching.js',
+                $dependencies,
+                $version,
+                true
+            );
+
+            wp_register_style(
+                $this->switching_script_key,
+                DOKAN_PLUGIN_ASSEST . '/js/dokan-admin-switching.css',
+                [],
+                $version
+            );
+
+            wp_set_script_translations(
+                $this->switching_script_key,
+                'dokan-lite'
+            );
+
+            wp_add_inline_script(
+                $this->switching_script_key,
+                'const dokanAdminSwitching = ' . wp_json_encode(
+                    [
+                        'nonce'     => wp_create_nonce( 'dokan_switch_admin_panel' ),
+                        'admin_url' => admin_url(),
+                    ]
+                ),
+                'before'
+            );
+        }
+    }
+
+    /**
      * Enqueue dashboard scripts.
      *
      * @since 4.0.0
@@ -448,32 +571,6 @@ class Dashboard implements Hookable {
                 $this->settings()
             ), 'before'
         );
-    }
-
-    /**
-     * Clear the Dokan submenu title.
-     *
-     * This method clears the title of the Dokan submenu to prevent it from displaying
-     * in the admin menu. It is useful for cases where you want to hide the submenu title
-     * but still keep the submenu item accessible.
-     *
-     * @since 4.1.0
-     *
-     * @return void
-     */
-    public function clear_dokan_submenu_title(): void {
-        global $submenu;
-
-        $legacy   = get_option( 'dokan_legacy_dashboard_page', false );
-        $position = (int) $legacy;
-
-        if ( isset( $submenu['dokan'][ $position ][0] ) ) {
-            $submenu['dokan'][ $position ][0] = '';
-        }
-
-        if ( ! $legacy ) {
-            $submenu['dokan'][0][2] = 'admin.php?page=dokan-dashboard';
-        }
     }
 
     /**
@@ -514,41 +611,5 @@ class Dashboard implements Hookable {
         // Close the hidden div used to prevent notices from flickering before
         // they are inserted elsewhere in the page.
         echo '</div>';
-    }
-
-    /**
-     * Handle dashboard redirect based on legacy dashboard preference.
-     *
-     * This method checks if the user has requested to switch the dashboard and updates
-     * the option accordingly. It then redirects the user to the appropriate dashboard page.
-     *
-     * @since 4.1.0
-     *
-     * @return void
-     */
-    public function handle_dashboard_redirect(): void {
-        // Early return if not a dashboard switch request.
-        if ( ! isset( $_GET['dokan_action'] ) || 'switch_dashboard' !== sanitize_key( wp_unslash( $_GET['dokan_action'] ) ) ) {
-            return;
-        }
-
-        // Early return if nonce verification fails.
-        if ( ! isset( $_GET['dokan_admin_dashboard_switching_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['dokan_admin_dashboard_switching_nonce'] ) ), 'dokan_switch_admin_dashboard' ) ) {
-            return;
-        }
-
-        // Get the current state and toggle it.
-        $current_is_legacy = get_option( 'dokan_legacy_dashboard_page', false );
-        $new_legacy_state  = apply_filters( 'dokan_is_legacy_dashboard_page', ! $current_is_legacy );
-
-        // Update the option
-        update_option( 'dokan_legacy_dashboard_page', $new_legacy_state );
-
-        // Build redirect URL and redirect.
-        $page_slug    = $new_legacy_state ? 'dokan' : 'dokan-dashboard';
-        $redirect_url = add_query_arg( [ 'page' => $page_slug ], admin_url( 'admin.php' ) );
-
-        wp_safe_redirect( $redirect_url );
-        exit;
     }
 }
