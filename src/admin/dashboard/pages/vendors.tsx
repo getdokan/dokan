@@ -13,6 +13,7 @@ import DokanModal from '../../../components/modals/DokanModal';
 import { Vendor } from '../../../definitions/dokan-vendor';
 import * as LucideIcons from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
+import { applyFilters } from "@wordpress/hooks";
 
 const defaultLayouts = {
     table: {},
@@ -41,7 +42,7 @@ const VendorsPage = ( props ) => {
         try {
             // Use a stable filter id to let pro register fields
             // @ts-ignore
-            const injected = wp.hooks.applyFilters(
+            const injected = applyFilters(
                 'dokan_admin_vendors_list_filters',
                 fields
             );
@@ -91,7 +92,7 @@ const VendorsPage = ( props ) => {
         try {
             // Let PRO mutate query via wp.hooks filter
             // @ts-ignore
-            const mutated = wp.hooks.applyFilters(
+            const mutated = applyFilters(
                 'dokan_admin_vendors_before_request',
                 query,
                 searchParams,

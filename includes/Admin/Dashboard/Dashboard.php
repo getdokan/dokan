@@ -372,10 +372,10 @@ class Dashboard implements Hookable {
                 'dokan-lite'
             );
 
-            wp_localize_script(
+            wp_add_inline_script(
                 $this->script_key,
-                'dokanAdminDashboard',
-                $data,
+                'const dokanAdminDashboard = ' . wp_json_encode( $data ),
+                'before'
             );
         }
     }
