@@ -293,7 +293,7 @@ const VendorsPage = ( props ) => {
                             <DokanLink
                                 as="div"
                                 onClick={ () => {
-                                    navigate( `/vendors/edit/${ item.id }` );
+                                    navigate( `/vendors/${ item.id }` );
                                 } }
                                 className="font-bold cursor-pointer"
                             >
