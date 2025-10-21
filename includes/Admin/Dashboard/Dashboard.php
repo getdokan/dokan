@@ -389,7 +389,7 @@ class Dashboard implements Hookable {
 
             wp_add_inline_script(
                 $this->script_key,
-                'const dokanAdminDashboard = ' . wp_json_encode( $data ),
+                'window.dokanAdminDashboard = ' . wp_json_encode( $data ),
                 'before'
             );
         }
