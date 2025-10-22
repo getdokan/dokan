@@ -28,8 +28,8 @@ const Header = () => {
             <div className={ `flex items-center` }>
                 { /* eslint-disable-next-line jsx-a11y/anchor-is-valid */ }
                 <a
+                    href={ window.dokan?.urls?.storeUrl || '' }
                     className="skip-color-module flex items-center text-sm gap-2 font-medium text-[#7047EB] hover:text-indigo-700"
-                    href="#"
                 >
                     <Globe size={ 16 } color="#7047EB" />
                     Visit Store
