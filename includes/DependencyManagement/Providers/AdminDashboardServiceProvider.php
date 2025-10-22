@@ -9,6 +9,7 @@ use WeDevs\Dokan\Admin\Dashboard\Pages\ProFeatures;
 use WeDevs\Dokan\Admin\Dashboard\Pages\SetupGuide;
 use WeDevs\Dokan\Admin\Dashboard\Pages\Status;
 use WeDevs\Dokan\Admin\Dashboard\Pages\Withdraw;
+use WeDevs\Dokan\Admin\Dashboard\Pages\Vendors;
 use WeDevs\Dokan\Admin\OnboardingSetup\AdminSetupGuide;
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
 
@@ -37,6 +38,7 @@ class AdminDashboardServiceProvider extends BaseServiceProvider {
         Status::class,
         ProFeatures::class,
         Withdraw::class,
+        Vendors::class,
 	];
 
     /**

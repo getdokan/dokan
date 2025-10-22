@@ -122,12 +122,8 @@ class LegacySwitcher implements Hookable {
             set_transient( $filtered_legacy_key, $new_legacy_state, $this->transient_expiration );
         }
 
-        // TODO: Redirect to base vendors URL until the React vendors list page is available.
-        // Remove this workaround once the React vendors page is implemented.
         // Redirect to the new admin page, if needed.
-        $page_slug = $new_legacy_state ? 'dokan' : 'dokan-dashboard';
-        $page_slug = ( 'vendors' !== $legacy_key ) ? $page_slug : 'dokan';
-
+        $page_slug    = $new_legacy_state ? 'dokan' : 'dokan-dashboard';
         $endpoint     = str_replace( 'dashboard', '', $legacy_key ); // Remove 'dashboard' from the endpoint as the default endpoint.
         $redirect_url = add_query_arg( [ 'page' => $page_slug ], admin_url( 'admin.php' ) ) . '#/' . $endpoint;
 
