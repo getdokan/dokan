@@ -5,10 +5,10 @@ import apiFetch from '@wordpress/api-fetch';
 import { formatPrice, truncate } from '@dokan/utilities';
 import {
     TextArea,
-    Tooltip,
     SimpleRadio,
     SimpleInput,
 } from '@getdokan/dokan-ui';
+import { DokanTooltip as Tooltip } from '@dokan/components';
 import * as LucideIcons from 'lucide-react';
 import { dateI18n, getSettings } from '@wordpress/date';
 // Import Dokan components

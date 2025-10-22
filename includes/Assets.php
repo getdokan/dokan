@@ -199,11 +199,6 @@ class Assets {
                 'component' => 'ReverseWithdrawalTransactions',
             ],
             [
-                'path'      => '/premium',
-                'name'      => 'Premium',
-                'component' => 'Premium',
-            ],
-            [
                 'path'      => '/help',
                 'name'      => 'Help',
                 'component' => 'Help',
