@@ -195,6 +195,7 @@ export class OrdersPage extends VendorPage {
         await this.goToOrderDetails(orderNumber);
         await this.click(ordersVendor.trackingDetails.addTrackingNumber);
         await this.clearAndType(ordersVendor.trackingDetails.shippingProvider, orderTrackingDetails.shippingProvider);
+        await this.press(data.key.enter);
         await this.clearAndType(ordersVendor.trackingDetails.trackingNumber, orderTrackingDetails.trackingNumber);
         await this.setAttributeValue(ordersVendor.trackingDetails.dateShipped, 'value', helpers.dateFormatFYJ(orderTrackingDetails.dateShipped));
         await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, ordersVendor.trackingDetails.addTrackingDetails);
@@ -204,17 +205,22 @@ export class OrdersPage extends VendorPage {
     async addShipment(orderNumber: string, shipmentDetails: orderShipmentDetails): Promise<void> {
         await this.goToOrderDetails(orderNumber);
         await this.click(ordersVendor.shipment.createNewShipment);
-        await this.click(ordersVendor.shipment.shipmentOrderItem(shipmentDetails.shipmentOrderItem));
-        await this.clearAndType(ordersVendor.shipment.shipmentOrderItemQty(shipmentDetails.shipmentOrderItem), shipmentDetails.shipmentOrderItemQty);
-        await this.selectByValue(ordersVendor.shipment.shippingStatus, shipmentDetails.shippingStatus);
-        await this.selectByValue(ordersVendor.shipment.shippingProvider, shipmentDetails.shippingProvider);
-        await this.setAttributeValue(ordersVendor.shipment.dateShipped, 'value', helpers.dateFormatFYJ(shipmentDetails.dateShipped));
-        await this.clearAndType(ordersVendor.shipment.trackingNumber, shipmentDetails.shippingProvider);
-        await this.clearAndType(ordersVendor.shipment.comments, shipmentDetails.trackingNumber);
-        await this.click(ordersVendor.shipment.notifyCustomer);
-        await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, ordersVendor.shipment.createShipment);
+        await this.page.locator('.shipment_order_item_select').click();
+        await this.page.locator('.shipping_order_item_qty').fill('1');
+        await this.page.locator('#shipment-status').selectOption({ label: 'Delivered' });
+        await this.page.locator('#shipping_status_provider').selectOption({ label: 'DHL' });
+        
+
+        // Fill the date input directly with today's date
+        await this.page.locator(selector.vendor.orders.shipment.dateShipped).fill(helpers.currentDate);
+        await this.page.locator("//input[@id='tracking_status_number']").fill("1234567890");
+        await this.page.locator("//input[@id='tracking_status_number']").press(data.key.enter);
+        await this.page.locator("//textarea[@id='tracking_status_comments']").fill("Test Comment 1");
+        await this.page.locator("//input[@id='add-tracking-status-details']").click();
+        await this.page.waitForLoadState('networkidle');
+        
         // todo: add more assertion, success message, or short shipment description div
-        // todo: also assert on my order details or add new test
+        // todo: also assert on smy order details or add new test
     }
 
     // todo:  update shipment test, shipment updates timeline
