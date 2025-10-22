@@ -31,7 +31,7 @@ class Dashboard implements Hookable {
     /**
      * Admin switching script key.
      *
-     * @SINCE DOKAN_SINCE
+     * @SINCE 4.1.3
      *
      * @var string
      */
@@ -40,7 +40,7 @@ class Dashboard implements Hookable {
     /**
      * Admin panel header script key.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.3
      *
      * @var string
      */
@@ -383,7 +383,7 @@ class Dashboard implements Hookable {
     /**
      * Register the admin panel header scripts.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.3
      *
      * @return void
      */
@@ -478,7 +478,7 @@ class Dashboard implements Hookable {
     /**
      * Register the admin switching scripts.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.3
      *
      * @return void
      */

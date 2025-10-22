@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Extends WooCommerce's Export Controller to provide export functionality
  * for Dokan specific reports like withdraws.
  *
- * @since DOKAN_SINCE
+ * @since 4.1.3
  */
 class ExportController extends Controller {
 	protected $namespace = 'dokan/v1';
@@ -28,7 +28,7 @@ class ExportController extends Controller {
     /**
      * Register routes.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.3
      */
     public function register_routes() {
         register_rest_route(
