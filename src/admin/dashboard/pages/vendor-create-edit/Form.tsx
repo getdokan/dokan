@@ -481,6 +481,7 @@ export default function Form( {
                                     } }
                                     required={ isRequired( 'store_name' ) }
                                     errors={ getError( 'store_name' ) }
+                                    delay={ 500 }
                                 />
                             </div>
 
@@ -777,6 +778,7 @@ export default function Form( {
                                     required={ isRequired( 'email' ) }
                                     errors={ getError( 'email' ) }
                                     icon={ Mail }
+                                    delay={ 500 }
                                 />
                                 <div className="flex justify-between mt-2">
                                     { getStoreSearchText(
