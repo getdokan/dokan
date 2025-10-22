@@ -15,7 +15,6 @@ import {
     LoaderCircle,
 } from 'lucide-react';
 import {
-    AsyncSearchableSelect,
     Card,
     SearchableSelect,
     SimpleCheckbox,
@@ -37,6 +36,7 @@ import { PluginArea } from '@wordpress/plugins';
 import { useEffect, useState } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
 import { kebabCase } from '@dokan/utilities';
+import { Select } from "@src/components";
 
 interface Props {
     vendor: Vendor;
@@ -954,7 +954,7 @@ export default function Form( {
                         </div>
                         <div className="p-6 flex flex-col gap-3">
                             <div>
-                                <AsyncSearchableSelect
+                                <Select
                                     label={ __( 'Country', 'dokan-lite' ) }
                                     placeholder={ __(
                                         'Select country',
@@ -963,7 +963,7 @@ export default function Form( {
                                     isMulti={ false }
                                     required={ isRequired( 'country' ) }
                                     errors={ getError( 'country' ) }
-                                    defaultOptions={ getCountries() }
+                                    options={ getCountries() }
                                     value={ getCountry(
                                         vendor?.address?.country
                                     ) }
@@ -1007,7 +1007,7 @@ export default function Form( {
                                         errors={ getError( 'state' ) }
                                     />
                                 ) : (
-                                    <AsyncSearchableSelect
+                                    <Select
                                         label={ __( 'State', 'dokan-lite' ) }
                                         placeholder={ __(
                                             'Select state',
@@ -1015,7 +1015,7 @@ export default function Form( {
                                         ) }
                                         required={ isRequired( 'state' ) }
                                         errors={ getError( 'state' ) }
-                                        defaultOptions={ getStatesFromCountryCode(
+                                        options={ getStatesFromCountryCode(
                                             vendor?.address?.country
                                         ) }
                                         onChange={ ( value ) => {
