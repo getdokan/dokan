@@ -518,7 +518,7 @@ const VendorsPage = ( props ) => {
                     <DokanButton
                         type="button"
                         variant="primary"
-                        onClick={ () => navigate( '/vendors/add' ) }
+                        onClick={ () => navigate( '/vendors/create' ) }
                     >
                         <LucideIcons.Plus size={ 16 } />
                         { __( 'Add New Vendor', 'dokan-lite' ) }
