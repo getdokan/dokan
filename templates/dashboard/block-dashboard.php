@@ -49,6 +49,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     }
     ?>
         <div id="dokan-dashboard-fullwidth-wrapper" class="dokan-fullwidth-container">
+            <div id='dokan-vendor-dashboard-layout-root' class='dokan-layout'></div>
             <?php
             // Render the page content (which contains the shortcode)
             while ( have_posts() ) :

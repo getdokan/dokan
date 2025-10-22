@@ -9,6 +9,13 @@ class Dashboard extends DokanShortcode {
     protected $shortcode = 'dokan-dashboard';
 
     /**
+     * Script/style handle key for vendor dashboard React app.
+     *
+     * @var string
+     */
+    protected $script_key = 'dokan-vendor-dashboard';
+
+    /**
      * Dashboard constructor.
      *
      * @return void
@@ -19,6 +26,9 @@ class Dashboard extends DokanShortcode {
         if ( apply_filters( 'dokan_vendor_dashboard_enable_full_width_page', true ) ) {
             add_action( 'template_redirect', [ $this, 'rewrite_vendor_dashboard_template' ], 1 );
         }
+
+        // Enqueue React vendor dashboard assets when needed.
+        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_vendor_dashboard_assets' ] );
     }
 
     /**
@@ -43,6 +53,49 @@ class Dashboard extends DokanShortcode {
                 wp_print_media_templates();
                 exit;
             }
+        }
+    }
+
+    /**
+     * Register and enqueue React vendor dashboard assets when viewing the seller dashboard.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function enqueue_vendor_dashboard_assets() {
+        if ( ! is_user_logged_in() || ! dokan_is_seller_dashboard() ) {
+            return;
+        }
+
+        $admin_dashboard_file = DOKAN_DIR . '/assets/js/vendor-dashboard/layout/index.asset.php';
+        if ( file_exists( $admin_dashboard_file ) ) {
+            $dashboard_script = require $admin_dashboard_file;
+            $dependencies     = $dashboard_script['dependencies'] ?? [];
+            $version          = $dashboard_script['version'] ?? '';
+
+            wp_register_script(
+                $this->script_key,
+                DOKAN_PLUGIN_ASSEST . '/js/vendor-dashboard/layout/index.js',
+                $dependencies,
+                $version,
+                true
+            );
+
+            wp_register_style(
+                $this->script_key,
+                DOKAN_PLUGIN_ASSEST . '/js/vendor-dashboard/layout/index.css',
+                [ 'dokan-tailwind' ],
+                $version
+            );
+
+            wp_set_script_translations(
+                $this->script_key,
+                'dokan-lite'
+            );
+
+            wp_enqueue_script( $this->script_key );
+            wp_enqueue_style( $this->script_key );
         }
     }
 
