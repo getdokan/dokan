@@ -53,7 +53,7 @@
                 <template slot="store_name" slot-scope="data">
                     <img :src="data.row.gravatar" :alt="data.row.store_name" width="50">
                     <strong>
-                        <a :href="vendorViewUrl(data.row.id)">{{ data.row.store_name ? data.row.store_name : __( '(no name)', 'dokan-lite' ) }}</a>
+                        <router-link :to="'/vendors/' + data.row.id">{{ data.row.store_name ? data.row.store_name : __( '(no name)', 'dokan-lite' ) }}</router-link>
                     </strong>
                 </template>
 
@@ -75,7 +75,7 @@
 
                 <template slot="row-actions" slot-scope="data">
                 <span v-for="(action, index) in actions" :class="action.key">
-                    <a v-if="action.key == 'edit'" :href="vendorEditUrl(data.row.id)">{{ action.label }}</a>
+                    <router-link v-if="action.key == 'edit'" :to="{ path: 'vendors/' + data.row.id, query:{edit:'true'} }">{{ action.label }}</router-link>
                     <a v-else-if="action.key == 'products'" :href="productUrl(data.row.id)">{{ action.label }}</a>
                     <a v-else-if="action.key == 'orders'" :href="ordersUrl(data.row.id)">{{ action.label }}</a>
                     <a v-else-if="action.key == 'switch_to'" :href="switchToUrl(data.row)">{{ action.label }}</a>
@@ -263,11 +263,7 @@ export default {
 
     methods: {
         addNew() {
-            if ( dokan.is_vendor_legacy_page ) {
-                this.loadAddVendor = true;
-            } else {
-                window.open( `${dokan.urls.adminRoot}admin.php?page=dokan-dashboard#/vendors/create`, '_self' );
-            }
+            this.loadAddVendor = true;
         },
         updateVendorComponent (rerender=false) {
             if (rerender) {
@@ -395,18 +391,6 @@ export default {
                     order: order
                 }
             });
-        },
-
-        vendorViewUrl(id) {
-            const pageSlug = dokan.is_vendor_legacy_page ? 'dokan' : 'dokan-dashboard';
-            return `${dokan.urls.adminRoot}admin.php?page=${pageSlug}#/vendors/${id}`;
-        },
-
-        vendorEditUrl(id) {
-            const isLegacyPage = dokan.is_vendor_legacy_page;
-            const pageSlug = isLegacyPage ? 'dokan' : 'dokan-dashboard';
-            const endUrl = isLegacyPage ? `${id}?edit=true` : `edit/${id}`;
-            return `${dokan.urls.adminRoot}admin.php?page=${pageSlug}#/vendors/${endUrl}`;
         },
 
         productUrl(id) {

@@ -11,7 +11,7 @@ const HeaderNavigation = ( { vendor }: HeaderNavigationProps ) => {
     const handleBackToList = () => {
         window.open(
             // @ts-ignore
-            `${ window.dokanAdminDashboard.urls.adminRoot }admin.php?page=dokan#/vendors`,
+            `${ window.dokanAdminDashboard.urls.adminRoot }admin.php?page=dokan-dashboard#/vendors`,
             '_self'
         );
     };

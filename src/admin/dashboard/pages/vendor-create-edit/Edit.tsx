@@ -184,7 +184,7 @@ function Edit( props ) {
                     <DokanLink
                         href={
                             // @ts-ignore
-                            `${ dokanAdminDashboard.urls.adminRoot }admin.php?page=dokan#/vendors`
+                            `${ dokanAdminDashboard.urls.adminRoot }admin.php?page=dokan-dashboard#/vendors`
                         }
                         className="flex flex-row w-auto items-center gap-1 !text-neutral-500 hover:!underline"
                     >
