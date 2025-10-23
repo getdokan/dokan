@@ -276,7 +276,7 @@ const VendorsPage = ( props ) => {
                         onClick={ () => {
                             navigate( `/vendors/${ item.id }` );
                         } }
-                        email={ item?.email || '' }
+                        subTitle={ item?.email || '' }
                     />
                 );
             },
