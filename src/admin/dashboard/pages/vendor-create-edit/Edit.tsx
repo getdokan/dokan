@@ -194,7 +194,7 @@ function Edit( props ) {
                 </div>
 
                 { /*Add new vendor header*/ }
-                <div className="gap-4 flex flex-col md:!flex-row md:!justify-between">
+                <div className="gap-4 flex flex-col md:!flex-row md:!justify-between mt-[24px]">
                     <h1>{ __( 'Update Vendor', 'dokan-lite' ) }</h1>
                 </div>
             </div>
