@@ -1,7 +1,14 @@
 import { DokanLink } from '@src/components';
 import { twMerge } from 'tailwind-merge';
 
-function VendorCard( { name, avatar, isLoading, loadingClass, onClick, email = '' } ) {
+function UserCard( {
+    name,
+    avatar,
+    isLoading,
+    loadingClass,
+    onClick,
+    subTitle = '',
+} ) {
     return (
         <div className="flex items-center gap-3">
             { avatar ? (
@@ -41,10 +48,12 @@ function VendorCard( { name, avatar, isLoading, loadingClass, onClick, email = '
                         { name }
                     </span>
                 </DokanLink>
-                <span className="text-[14px] font-[400] text-[#A5A5AA]">{ email }</span>
+                <span className="text-[14px] font-[400] text-[#A5A5AA]">
+                    { subTitle }
+                </span>
             </span>
         </div>
     );
 }
 
-export default VendorCard;
+export default UserCard;

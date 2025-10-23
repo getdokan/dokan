@@ -14,7 +14,7 @@ import { Vendor } from '../../../definitions/dokan-vendor';
 import * as LucideIcons from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 import { applyFilters } from "@wordpress/hooks";
-import VendorCard from "admin/dashboard/components/VendorCard";
+import UserCard from "admin/dashboard/components/UserCard";
 
 const defaultLayouts = {
     table: {},
@@ -268,7 +268,7 @@ const VendorsPage = ( props ) => {
                 const name = item?.store_name || '';
                 const avatar = item?.gravatar || '';
                 return (
-                    <VendorCard
+                    <UserCard
                         name={ name }
                         avatar={ avatar }
                         isLoading={ isLoading }
