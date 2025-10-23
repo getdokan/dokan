@@ -1406,7 +1406,7 @@ export default function Form( {
                     </label>
                 </div>
                 <div className={ 'w-full' }>
-                    <SimpleInput
+                    <DebouncedInput
                         value={ value }
                         onChange={ onChange }
                         input={ {
@@ -1436,10 +1436,10 @@ export default function Form( {
                                     'https://facebook.com/username',
                                     'dokan-lite'
                                 ) }
-                                onChange={ ( e ) => {
+                                onChange={ ( value ) => {
                                     setData( 'social', {
                                         ...vendor?.social,
-                                        fb: e.target.value,
+                                        fb: value,
                                     } );
                                 } }
                             />
@@ -1455,10 +1455,10 @@ export default function Form( {
                                     'dokan-lite'
                                 ) }
                                 value={ vendor?.social?.twitter || '' }
-                                onChange={ ( e ) => {
+                                onChange={ ( value ) => {
                                     setData( 'social', {
                                         ...vendor?.social,
-                                        twitter: e.target.value,
+                                        twitter: value,
                                     } );
                                 } }
                             />
@@ -1474,10 +1474,10 @@ export default function Form( {
                                     'dokan-lite'
                                 ) }
                                 value={ vendor?.social?.pinterest || '' }
-                                onChange={ ( e ) => {
+                                onChange={ ( value ) => {
                                     setData( 'social', {
                                         ...vendor?.social,
-                                        pinterest: e.target.value,
+                                        pinterest: value,
                                     } );
                                 } }
                             />
@@ -1493,10 +1493,10 @@ export default function Form( {
                                     'dokan-lite'
                                 ) }
                                 value={ vendor?.social?.linkedin || '' }
-                                onChange={ ( e ) => {
+                                onChange={ ( value ) => {
                                     setData( 'social', {
                                         ...vendor?.social,
-                                        linkedin: e.target.value,
+                                        linkedin: value,
                                     } );
                                 } }
                             />
@@ -1512,10 +1512,10 @@ export default function Form( {
                                     'dokan-lite'
                                 ) }
                                 value={ vendor?.social?.youtube || '' }
-                                onChange={ ( e ) => {
+                                onChange={ ( value ) => {
                                     setData( 'social', {
                                         ...vendor?.social,
-                                        youtube: e.target.value,
+                                        youtube: value,
                                     } );
                                 } }
                             />
@@ -1531,10 +1531,10 @@ export default function Form( {
                                     'dokan-lite'
                                 ) }
                                 value={ vendor?.social?.instagram || '' }
-                                onChange={ ( e ) => {
+                                onChange={ ( value ) => {
                                     setData( 'social', {
                                         ...vendor?.social,
-                                        instagram: e.target.value,
+                                        instagram: value,
                                     } );
                                 } }
                             />
@@ -1549,10 +1549,10 @@ export default function Form( {
                                     'dokan-lite'
                                 ) }
                                 value={ vendor?.social?.flickr || '' }
-                                onChange={ ( e ) => {
+                                onChange={ ( value ) => {
                                     setData( 'social', {
                                         ...vendor?.social,
-                                        flickr: e.target.value,
+                                        flickr: value,
                                     } );
                                 } }
                             />
@@ -1567,10 +1567,10 @@ export default function Form( {
                                     'dokan-lite'
                                 ) }
                                 value={ vendor?.social?.threads || '' }
-                                onChange={ ( e ) => {
+                                onChange={ ( value ) => {
                                     setData( 'social', {
                                         ...vendor?.social,
-                                        threads: e.target.value,
+                                        threads: value,
                                     } );
                                 } }
                             />
@@ -1606,7 +1606,7 @@ export default function Form( {
             className:
                 'border-0 border-b border-solid mr-5 -mb-px space-x-8 whitespace-nowrap border-b-2 px-1 py-4 text-sm font-medium cursor-pointer hover:bg-transparent focus:outline-none text-gray-500 border-gray-200 hover:text-gray-600 hover:border-gray-300',
             component: SocialOptions,
-            renderAsFunction: true,
+            renderAsFunction: false,
         },
     ] );
     const [ tabQueryParam, setTabQueryParam ] = useState( 'general' );
