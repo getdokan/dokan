@@ -14,6 +14,7 @@ import { Vendor } from '../../../definitions/dokan-vendor';
 import * as LucideIcons from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 import { applyFilters } from "@wordpress/hooks";
+import UserCard from "admin/dashboard/components/UserCard";
 
 const defaultLayouts = {
     table: {},
@@ -31,7 +32,7 @@ const VendorsPage = ( props ) => {
         type: 'table',
         titleField: 'vendor',
         layout: { ...defaultLayouts },
-        fields: [ 'email', 'phone', 'registered', 'status' ],
+        fields: [ 'phone', 'registered', 'status' ],
     } );
     const [ search, setSearch ] = useState( '' );
     const [ status, setStatus ] = useState< string >( 'all' );
@@ -261,82 +262,22 @@ const VendorsPage = ( props ) => {
     const fields = [
         {
             id: 'vendor',
-            label: __( 'Store', 'dokan-lite' ),
+            label: __( 'Vendor', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item }: { item: Vendor } ) => {
                 const name = item?.store_name || '';
                 const avatar = item?.gravatar || '';
                 return (
-                    <div className="flex items-center gap-3">
-                        { avatar ? (
-                            <div
-                                className={ twMerge(
-                                    'w-10 h-10 rounded object-cover',
-                                    isLoading ? `${ loadingClass }` : ''
-                                ) }
-                            >
-                                <img
-                                    src={ avatar }
-                                    alt={ name || 'Store avatar' }
-                                    className={ twMerge(
-                                        'w-10 h-10 rounded border object-cover',
-                                        isLoading ? 'opacity-0' : 'opacity-100'
-                                    ) }
-                                />
-                            </div>
-                        ) : (
-                            <div
-                                className="w-8 h-8 rounded bg-gray-100"
-                                aria-hidden="true"
-                            ></div>
-                        ) }
-                        <span className="flex flex-col">
-                            <DokanLink
-                                as="div"
-                                onClick={ () => {
-                                    navigate( `/vendors/${ item.id }` );
-                                } }
-                                className="font-bold cursor-pointer"
-                            >
-                                <span
-                                    className={ twMerge(
-                                        'text-sm font-medium text-[#7047EB]',
-                                        isLoading ? loadingClass : ''
-                                    ) }
-                                >
-                                    { name }
-                                </span>
-                            </DokanLink>
-                        </span>
-                    </div>
-                );
-            },
-        },
-        {
-            id: 'email',
-            label: __( 'Email', 'dokan-lite' ),
-            enableSorting: false,
-            render: ( { item }: { item: Vendor } ) => {
-                const email = item?.email || '';
-                return (
-                    <div className="flex items-center gap-3">
-                        <span className="flex flex-col">
-                            { email ? (
-                                <DokanLink
-                                    href={ `mailto:${ email }` }
-                                    rel="noreferrer"
-                                    target="_blank"
-                                    className={ twMerge(
-                                        isLoading ? `${ loadingClass }` : ''
-                                    ) }
-                                >
-                                    { email }
-                                </DokanLink>
-                            ) : (
-                                <span className="text-gray-400">—</span>
-                            ) }
-                        </span>
-                    </div>
+                    <UserCard
+                        name={ name }
+                        avatar={ avatar }
+                        isLoading={ isLoading }
+                        loadingClass={ loadingClass }
+                        onClick={ () => {
+                            navigate( `/vendors/${ item.id }` );
+                        } }
+                        subTitle={ item?.email || '' }
+                    />
                 );
             },
         },
@@ -352,7 +293,7 @@ const VendorsPage = ( props ) => {
                             { phone ? (
                                 <span
                                     className={ twMerge(
-                                        'text-xs text-gray-500',
+                                        'text-[14px] font-[400] text-[#575757]',
                                         isLoading ? loadingClass : ''
                                     ) }
                                 >
@@ -378,7 +319,7 @@ const VendorsPage = ( props ) => {
                             { registered ? (
                                 <div
                                     className={ twMerge(
-                                        'text-xs text-gray-500',
+                                        'text-[14px] font-[400] text-[#575757]',
                                         isLoading ? loadingClass : ''
                                     ) }
                                 >
@@ -510,10 +451,10 @@ const VendorsPage = ( props ) => {
 
     return (
         <div className="dokan-layout dokan-admin-vendors">
-            <div className="mb-3 flex items-center justify-between">
-                <h1 className="wp-heading-inline">
+            <div className="mb-[24px] flex items-center justify-between">
+                <h2 className="text-2xl leading-3 text-gray-900 font-bold">
                     { __( 'Vendors', 'dokan-lite' ) }
-                </h1>
+                </h2>
                 <div className="flex items-center gap-2">
                     <DokanButton
                         type="button"
@@ -521,7 +462,7 @@ const VendorsPage = ( props ) => {
                         onClick={ () => navigate( '/vendors/create' ) }
                     >
                         <LucideIcons.Plus size={ 16 } />
-                        { __( 'Add New Vendor', 'dokan-lite' ) }
+                        { __( 'Add Vendor', 'dokan-lite' ) }
                     </DokanButton>
                 </div>
             </div>
@@ -699,6 +640,35 @@ const VendorsPage = ( props ) => {
                                         vendor?.id;
                                 },
                             },
+                            // Show Approve Vendor when enabled is false
+                            {
+                                id: 'approve-vendor',
+                                label: () =>
+                                    getActionLabel(
+                                        'Check',
+                                        __( 'Approve Vendors', 'dokan-lite' )
+                                    ),
+                                icon: () => {
+                                    return (
+                                        <span
+                                            className={
+                                                'px-3 py-2 inline-flex items-center rounded-[5px] text-[12px] font-medium border border-[#E9E9E9] h-[28px] text-[#25252D]'
+                                            }
+                                        >
+                                            { __(
+                                                'Approve Vendors',
+                                                'dokan-lite'
+                                            ) }
+                                        </span>
+                                    );
+                                },
+                                supportsBulk: true,
+                                isPrimary: false,
+                                isEligible: ( item: Vendor ) => ! item.enabled,
+                                callback: ( args: any ) => {
+                                    openConfirmFor( 'approve', args );
+                                },
+                            },
                             // Show Disable Selling when enabled is true
                             {
                                 id: 'disable-selling',
@@ -711,7 +681,7 @@ const VendorsPage = ( props ) => {
                                     return (
                                         <span
                                             className={
-                                                'px-3 py-2 inline-flex items-center rounded-md text-sm font-medium border border-[#E9E9E9]'
+                                                'px-3 py-2 inline-flex items-center rounded-[5px] text-[12px] font-medium border border-[#E9E9E9] h-[28px] text-[#25252D]'
                                             }
                                         >
                                             { __(
@@ -727,35 +697,6 @@ const VendorsPage = ( props ) => {
                                 isEligible: ( item: Vendor ) => !! item.enabled,
                                 callback: ( args: any ) => {
                                     openConfirmFor( 'disable', args );
-                                },
-                            },
-                            // Show Approve Vendor when enabled is false
-                            {
-                                id: 'approve-vendor',
-                                label: () =>
-                                    getActionLabel(
-                                        'Check',
-                                        __( 'Approve Vendor', 'dokan-lite' )
-                                    ),
-                                icon: () => {
-                                    return (
-                                        <span
-                                            className={
-                                                'px-3 py-2 inline-flex items-center rounded-md text-sm font-medium border border-[#E9E9E9]'
-                                            }
-                                        >
-                                            { __(
-                                                'Approve Vendor',
-                                                'dokan-lite'
-                                            ) }
-                                        </span>
-                                    );
-                                },
-                                supportsBulk: true,
-                                isPrimary: false,
-                                isEligible: ( item: Vendor ) => ! item.enabled,
-                                callback: ( args: any ) => {
-                                    openConfirmFor( 'approve', args );
                                 },
                             },
                         ] as any
