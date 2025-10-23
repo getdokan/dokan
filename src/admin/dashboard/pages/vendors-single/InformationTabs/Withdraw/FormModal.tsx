@@ -22,6 +22,7 @@ function FormModal( {
             <DokanModal
                 isOpen={ isOpen }
                 namespace="withdraw-form-modal"
+                modalClassName="w-[500px]"
                 onClose={ () => setIsOpen( false ) }
                 dialogTitle={ title ?? '' }
                 dialogContent={
@@ -34,15 +35,13 @@ function FormModal( {
                         <DokanButton
                             variant="secondary"
                             disabled={ isSaving }
-                            className={ `dokan-btn` }
                             label={ __( 'Cancel', 'dokan-lite' ) }
                             onClick={ () => setIsOpen( false ) }
                         />
                         <DokanButton
-                            variant={ 'primary' }
+                            variant="primary"
                             loading={ isSaving }
                             disabled={ isSaving }
-                            className={ `dokan-btn` }
                             label={ __( 'Confirm', 'dokan-lite' ) }
                             onClick={ onConfirm }
                         />

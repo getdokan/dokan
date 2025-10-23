@@ -86,18 +86,23 @@ const SocialLinks = ( { social }: SocialLinksProps ) => {
                     direction="top"
                     contentClass="bg-gray-800 text-white p-2 rounded-md"
                 >
-                    <span
-                        className="w-7 h-7 flex hover:cursor-pointer"
-                        aria-label={ platform.label }
+                    <a
+                        href={ platform.url ?? '#' }
+                        target="_blank"
+                        rel="noreferrer"
                     >
                         { typeof platform.icon === 'string' ? (
-                            <RawHTML key={ platform.key + '_icon' }>
+                            <RawHTML
+                                key={ platform.key + '_icon' }
+                                className="w-7 h-7 flex hover:cursor-pointer"
+                                aria-label={ platform.label }
+                            >
                                 { platform.icon }
                             </RawHTML>
                         ) : (
                             platform.icon
                         ) }
-                    </span>
+                    </a>
                 </Tooltip>
             ) ) }
         </div>
