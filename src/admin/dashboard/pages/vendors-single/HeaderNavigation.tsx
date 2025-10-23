@@ -38,7 +38,7 @@ const HeaderNavigation = ( { vendor }: HeaderNavigationProps ) => {
                 </button>
             </div>
             <div className="flex flex-col md:!flex-row gap-4 md:!gap-0 justify-between w-full">
-                <h2 className="text-2xl leading-3 text-gray-900 font-bold">
+                <h2 className="text-2xl leading-3 text-gray-900 font-bold !p-0 !m-0">
                     { __( 'Vendor Profile', 'dokan-lite' ) }
                 </h2>
                 <div className="flex gap-2">
