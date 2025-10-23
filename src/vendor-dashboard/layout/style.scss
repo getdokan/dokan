@@ -1,2 +1,14 @@
 @use '../../base-tailwind';
 @config './tailwind.config.js';
+
+/* Hide scrollbar in the vendor sidebar but keep it scrollable */
+.dokan-vendor-sidebar-scroll {
+    scrollbar-width: none; /* hides scrollbar while allowing scroll */
+    -ms-overflow-style: none;
+}
+
+/* WebKit-based browsers */
+.dokan-vendor-sidebar-scroll::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}

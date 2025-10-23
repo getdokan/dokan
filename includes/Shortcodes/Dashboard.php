@@ -28,6 +28,7 @@ class Dashboard extends DokanShortcode {
         }
 
         // Enqueue React vendor dashboard assets when needed.
+        add_action( 'init', [ $this, 'register_vendor_dashboard_assets' ] );
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_vendor_dashboard_assets' ] );
     }
 
@@ -63,11 +64,7 @@ class Dashboard extends DokanShortcode {
      *
      * @return void
      */
-    public function enqueue_vendor_dashboard_assets() {
-        if ( ! is_user_logged_in() || ! dokan_is_seller_dashboard() ) {
-            return;
-        }
-
+    public function register_vendor_dashboard_assets() {
         $admin_dashboard_file = DOKAN_DIR . '/assets/js/vendor-dashboard/layout/index.asset.php';
         if ( file_exists( $admin_dashboard_file ) ) {
             $dashboard_script = require $admin_dashboard_file;
@@ -94,9 +91,56 @@ class Dashboard extends DokanShortcode {
                 'dokan-lite'
             );
 
-            wp_enqueue_script( $this->script_key );
-            wp_enqueue_style( $this->script_key );
+            $user_id = get_current_user_id();
+            $vendor  = dokan()->vendor->get( $user_id );
+
+//            // Prepare subscription info via filter to keep Dokan Lite decoupled from Pro.
+//            $subscription = apply_filters(
+//                'dokan_vendor_dashboard_subscription',
+//                [
+//                    'name'   => null,
+//                    'status' => null,
+//                ],
+//                $vendor
+//            );
+
+            wp_add_inline_script(
+                $this->script_key,
+                'var vendorDashboardLayoutConfig = ' . wp_json_encode(
+                    apply_filters(
+                        'dokan_vendor_dashboard_layout_config',
+                        [
+                            'siteInfo' => [
+                                'siteTitle' => get_bloginfo( 'name' ),
+                                'siteIcon'  => get_site_icon_url(),
+                            ],
+                            'vendor'   => [
+                                'name'   => $vendor ? $vendor->get_shop_name() : wp_get_current_user()->display_name,
+                                'avatar' => $vendor ? $vendor->get_avatar() : get_avatar_url( $user_id ),
+                            ],
+//                            'subscription' => $subscription,
+                        ]
+                    )
+                ),
+                'before'
+            );
         }
+    }
+
+    /**
+     * Enqueue React vendor dashboard assets when viewing the seller dashboard.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function enqueue_vendor_dashboard_assets() {
+        if ( ! is_user_logged_in() || ! dokan_is_seller_dashboard() ) {
+            return;
+        }
+
+        wp_enqueue_script( $this->script_key );
+        wp_enqueue_style( $this->script_key );
     }
 
     /**
