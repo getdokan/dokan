@@ -122,10 +122,10 @@ const TabSections = ( { vendor, onDataUpdate }: TabSectionProps ) => {
                     <button
                         key={ tab.name }
                         className={
-                            'px-4 py-4 text-base border-b border-b-2 border-transparent font-semibold whitespace-nowrap transition-colors ' +
+                            'px-4 py-4 text-[14px] border-b font-[600] border-b-[2px] border-transparent font-semibold whitespace-nowrap transition-colors ' +
                             ( activeTab === tab.name
                                 ? '!border-[#7047EB] text-[#7047EB]'
-                                : 'border-transparent text-gray-500 hover:text-[#7047EB] hover:!border-[#7047EB]' )
+                                : 'border-transparent text-[#828282] hover:text-[#7047EB] hover:!border-[#7047EB]' )
                         }
                         onClick={ () => handleTabChange( tab.name ) }
                     >
