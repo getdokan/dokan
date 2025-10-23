@@ -20,6 +20,9 @@ const Header = () => {
         return () => window.removeEventListener( 'resize', compute );
     }, [] );
 
+    const { user, editUrl } = ( window as any )?.vendorDashboardLayoutConfig || {},
+        { name: userName, avatar: userAvatar } = user || {};
+
     return (
         <header
             className={ twMerge(
@@ -31,7 +34,7 @@ const Header = () => {
             <div className={ `flex items-center` }>
                 { /* eslint-disable-next-line jsx-a11y/anchor-is-valid */ }
                 <a
-                    href={ window.dokan?.urls?.storeUrl || '' }
+                    href={ window.dokan?.urls?.storeUrl || '#' }
                     className="skip-color-module flex items-center text-sm gap-2 font-medium text-[#7047EB] hover:text-indigo-700"
                 >
                     <Globe size={ 16 } color="#7047EB" />
@@ -39,10 +42,20 @@ const Header = () => {
                 </a>
                 <div className="border border-[#E9E9E9] border-r-0 h-8 mx-5"></div>
                 <div className="flex items-center gap-2.5">
-                    <div
-                        className="h-7 w-7 rounded-full bg-orange-300"
-                        aria-hidden="true"
-                    />
+                    { userAvatar ? (
+                        <a href={ editUrl || '#' }>
+                            <img
+                                src={ userAvatar }
+                                className="h-7 w-7 rounded-full"
+                                alt={ userName || __( 'User Profile Image', 'dokan-lite' ) }
+                            />
+                        </a>
+                    ) : (
+                        <div
+                            className="h-7 w-7 rounded-full bg-orange-300"
+                            aria-hidden="true"
+                        />
+                    ) }
                     <ChevronDown
                         size={ 16 }
                         strokeWidth={ 3 }
@@ -105,7 +118,7 @@ const Sidebar = () => {
         return () => window.removeEventListener( 'resize', compute );
     }, [] );
 
-    const { siteInfo, vendor, subscription } =
+    const { siteInfo, vendor, subscription, editUrl } =
         ( window as any )?.vendorDashboardLayoutConfig || {};
 
     const { siteTitle, siteIcon } = siteInfo,
@@ -117,7 +130,7 @@ const Sidebar = () => {
     return (
         <aside
             style={ { top: adminBar } }
-            className="bg-indigo-950/100 text-white fixed left-0 bottom-0 z-20 min-w-[250px] flex flex-col"
+            className="bg-indigo-950/100 text-white fixed left-0 bottom-0 z-20 w-[250px] max-w-[250px] flex flex-col"
         >
             { /* Top header inforamtion: full width, attached to top, with a bottom border */ }
             <div className="mb-2 flex items-center gap-3.5 border-solid border-b border-[#DACEFF33] border-t-0 border-x-0 px-8 min-h-20">
@@ -162,12 +175,15 @@ const Sidebar = () => {
 
             { /* Bottom footer: full width, attached to bottom, with a top border */ }
             <div className="border-solid border-t border-[#DACEFF33] border-b-0 border-x-0 px-8 py-4">
-                <div className="flex items-center gap-2.5">
+                <a
+                    href={ editUrl || '#' }
+                    className="flex items-center gap-2.5"
+                >
                     { storeAvatar ? (
                         <img
                             src={ storeAvatar }
                             alt={
-                                storeName || __( 'Your Store', 'dokan-lite' )
+                                storeName || __( 'Store Image', 'dokan-lite' )
                             }
                             className="h-10 w-10 rounded-full"
                         />
@@ -182,18 +198,22 @@ const Sidebar = () => {
                         </div>
                         { subscriptionName && (
                             <div className="text-xs text-indigo-200">
-                                { subscriptionName }
+                                <Tooltip content={ subscriptionName }>
+                                    <span>
+                                        { truncate( subscriptionName, 10 ) }
+                                    </span>
+                                </Tooltip>{ ' ' }
                                 { subscriptionStatus &&
                                     // eslint-disable-next-line @wordpress/valid-sprintf
                                     sprintf(
-                                        /* translators: %s: Subscription status. E.g. "Active" or "Expired" */
-                                        __( '%$s)', 'dokan-lite' ),
+                                        /* translators: 1) Subscription status. E.g. "Active" or "Expired" */
+                                        __( '(%1$s)', 'dokan-lite' ),
                                         subscriptionStatus
                                     ) }
                             </div>
                         ) }
                     </div>
-                </div>
+                </a>
             </div>
         </aside>
     );

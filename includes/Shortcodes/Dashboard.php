@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Shortcodes;
 
 use WeDevs\Dokan\Abstracts\DokanShortcode;
+use WeDevs\Dokan\Utilities\VendorUtil;
 
 class Dashboard extends DokanShortcode {
 
@@ -91,18 +92,9 @@ class Dashboard extends DokanShortcode {
                 'dokan-lite'
             );
 
-            $user_id = get_current_user_id();
-            $vendor  = dokan()->vendor->get( $user_id );
-
-//            // Prepare subscription info via filter to keep Dokan Lite decoupled from Pro.
-//            $subscription = apply_filters(
-//                'dokan_vendor_dashboard_subscription',
-//                [
-//                    'name'   => null,
-//                    'status' => null,
-//                ],
-//                $vendor
-//            );
+            $user_id   = get_current_user_id();
+            $vendor    = dokan()->vendor->get( $user_id );
+            $user_name = wp_get_current_user()->display_name ?? '';
 
             wp_add_inline_script(
                 $this->script_key,
@@ -115,11 +107,16 @@ class Dashboard extends DokanShortcode {
                                 'siteIcon'  => get_site_icon_url(),
                             ],
                             'vendor'   => [
-                                'name'   => $vendor ? $vendor->get_shop_name() : wp_get_current_user()->display_name,
-                                'avatar' => $vendor ? $vendor->get_avatar() : get_avatar_url( $user_id ),
+                                'name'   => $vendor ? $vendor->get_shop_name() : $user_name,
+                                'avatar' => VendorUtil::get_vendor_default_avatar_url(),
                             ],
-//                            'subscription' => $subscription,
-                        ]
+                            'editUrl'  => dokan_get_navigation_url( 'edit-account' ),
+                            'user'     => [
+                                'name'   => $user_name,
+                                'avatar' => get_avatar_url( $user_id ),
+                            ],
+                        ],
+                        $vendor
                     )
                 ),
                 'before'
