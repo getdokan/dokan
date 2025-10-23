@@ -36,7 +36,16 @@ import { PluginArea } from '@wordpress/plugins';
 import { useEffect, useState } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
 import { kebabCase } from '@dokan/utilities';
-import { Select } from "@src/components";
+import { Select } from '@src/components';
+// Social icon components for Social Options UI
+import Facebook from '@src/admin/dashboard/icons/socials/Facebook';
+import YouTube from '@src/admin/dashboard/icons/socials/YouTube';
+import Twitter from '@src/admin/dashboard/icons/socials/Twitter';
+import LinkedIn from '@src/admin/dashboard/icons/socials/LinkedIn';
+import Pinterest from '@src/admin/dashboard/icons/socials/Pinterest';
+import Instagram from '@src/admin/dashboard/icons/socials/Instagram';
+import Threads from '@src/admin/dashboard/icons/socials/Threads';
+import Flickr from 'admin/dashboard/icons/socials/Flickr';
 
 interface Props {
     vendor: Vendor;
@@ -1199,119 +1208,119 @@ export default function Form( {
                             </div>
                             { vendor?.admin_commission_type ===
                                 'category_based' && (
-                                    <>
-                                        <div className="mb-3">
-                                            <ToggleSwitch
-                                                checked={ getResetSubCategory() }
-                                                onChange={ () => {
-                                                    setCommissionSubCategoryConfirm(
-                                                        true
-                                                    );
-                                                } }
-                                                label={ __(
-                                                    'Apply Parent Category Commission to All Subcategories',
-                                                    'dokan-lite'
-                                                ) }
-                                                helpText={ __(
-                                                    "When enabled, changing a parent category's commission rate will automatically update all its subcategories. Disable this option to maintain independent commission rates for subcategories",
-                                                    'dokan-lite'
-                                                ) }
-                                            />
+                                <>
+                                    <div className="mb-3">
+                                        <ToggleSwitch
+                                            checked={ getResetSubCategory() }
+                                            onChange={ () => {
+                                                setCommissionSubCategoryConfirm(
+                                                    true
+                                                );
+                                            } }
+                                            label={ __(
+                                                'Apply Parent Category Commission to All Subcategories',
+                                                'dokan-lite'
+                                            ) }
+                                            helpText={ __(
+                                                "When enabled, changing a parent category's commission rate will automatically update all its subcategories. Disable this option to maintain independent commission rates for subcategories",
+                                                'dokan-lite'
+                                            ) }
+                                        />
 
-                                            <DokanModal
-                                                isOpen={
-                                                    commissionSubCategoryConfirm
-                                                }
-                                                namespace="commission-sub-category-confirm"
-                                                onConfirm={ () => {
-                                                    setData(
-                                                        'reset_sub_category',
-                                                        ! getResetSubCategory()
-                                                    ).then( () => {
-                                                        setCommissionSubCategoryConfirm(
-                                                            false
-                                                        );
-                                                    } );
-                                                } }
-                                                onClose={ () =>
+                                        <DokanModal
+                                            isOpen={
+                                                commissionSubCategoryConfirm
+                                            }
+                                            namespace="commission-sub-category-confirm"
+                                            onConfirm={ () => {
+                                                setData(
+                                                    'reset_sub_category',
+                                                    ! getResetSubCategory()
+                                                ).then( () => {
                                                     setCommissionSubCategoryConfirm(
                                                         false
-                                                    )
-                                                }
-                                                confirmationTitle={
-                                                    getResetSubCategory()
-                                                        ? __(
-                                                            'Disable Commission Inheritance Setting?',
-                                                            'dokan-lite'
-                                                        )
-                                                        : __(
-                                                            'Enable Commission Inheritance Setting?',
-                                                            'dokan-lite'
-                                                        )
-                                                }
-                                                confirmationDescription={
-                                                    getResetSubCategory()
-                                                        ? __(
-                                                            'Subcategories will maintain their independent commission rates when parent category rates are changed.',
-                                                            'dokan-lite'
-                                                        )
-                                                        : __(
-                                                            'Parent category commission changes will automatically update all subcategories. Existing rates will remain unchanged until parent category is modified.',
-                                                            'dokan-lite'
-                                                        )
-                                                }
-                                                confirmButtonText={
-                                                    getResetSubCategory()
-                                                        ? __(
-                                                            'Disable',
-                                                            'dokan-lite'
-                                                        )
-                                                        : __(
-                                                            'Enable',
-                                                            'dokan-lite'
-                                                        )
-                                                }
-                                                cancelButtonText={ __(
-                                                    'Cancel',
-                                                    'dokan-lite'
-                                                ) }
-                                            />
-                                        </div>
-                                        <div>
-                                            { /* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
-                                            <label
-                                                htmlFor=""
-                                                className="mb-2 inline-block cursor-pointer text-sm font-medium leading-[21px] text-gray-900"
-                                            >
-                                                { __(
-                                                    'Admin Commission',
-                                                    'dokan-lite'
-                                                ) }
-                                            </label>
-                                            <CategoryBasedCommission
-                                                // @ts-ignore
-                                                categories={ categories }
-                                                // @ts-ignore
-                                                commissionValues={
-                                                    vendor?.admin_category_commission ||
-                                                    []
-                                                }
-                                                currency={
-                                                    // @ts-ignore
-                                                    window?.dokanAdminDashboard
-                                                        .currency
-                                                }
-                                                onCommissionChange={ ( data ) => {
-                                                    setData(
-                                                        'admin_category_commission',
-                                                        data
                                                     );
-                                                } }
-                                                resetSubCategoryValue={ getResetSubCategory() }
-                                            />
-                                        </div>
-                                    </>
-                                ) }
+                                                } );
+                                            } }
+                                            onClose={ () =>
+                                                setCommissionSubCategoryConfirm(
+                                                    false
+                                                )
+                                            }
+                                            confirmationTitle={
+                                                getResetSubCategory()
+                                                    ? __(
+                                                          'Disable Commission Inheritance Setting?',
+                                                          'dokan-lite'
+                                                      )
+                                                    : __(
+                                                          'Enable Commission Inheritance Setting?',
+                                                          'dokan-lite'
+                                                      )
+                                            }
+                                            confirmationDescription={
+                                                getResetSubCategory()
+                                                    ? __(
+                                                          'Subcategories will maintain their independent commission rates when parent category rates are changed.',
+                                                          'dokan-lite'
+                                                      )
+                                                    : __(
+                                                          'Parent category commission changes will automatically update all subcategories. Existing rates will remain unchanged until parent category is modified.',
+                                                          'dokan-lite'
+                                                      )
+                                            }
+                                            confirmButtonText={
+                                                getResetSubCategory()
+                                                    ? __(
+                                                          'Disable',
+                                                          'dokan-lite'
+                                                      )
+                                                    : __(
+                                                          'Enable',
+                                                          'dokan-lite'
+                                                      )
+                                            }
+                                            cancelButtonText={ __(
+                                                'Cancel',
+                                                'dokan-lite'
+                                            ) }
+                                        />
+                                    </div>
+                                    <div>
+                                        { /* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
+                                        <label
+                                            htmlFor=""
+                                            className="mb-2 inline-block cursor-pointer text-sm font-medium leading-[21px] text-gray-900"
+                                        >
+                                            { __(
+                                                'Admin Commission',
+                                                'dokan-lite'
+                                            ) }
+                                        </label>
+                                        <CategoryBasedCommission
+                                            // @ts-ignore
+                                            categories={ categories }
+                                            // @ts-ignore
+                                            commissionValues={
+                                                vendor?.admin_category_commission ||
+                                                []
+                                            }
+                                            currency={
+                                                // @ts-ignore
+                                                window?.dokanAdminDashboard
+                                                    .currency
+                                            }
+                                            onCommissionChange={ ( data ) => {
+                                                setData(
+                                                    'admin_category_commission',
+                                                    data
+                                                );
+                                            } }
+                                            resetSubCategoryValue={ getResetSubCategory() }
+                                        />
+                                    </div>
+                                </>
+                            ) }
 
                             { vendor?.admin_commission_type === 'fixed' && (
                                 <div>
@@ -1347,10 +1356,10 @@ export default function Form( {
                                                     ...vendor,
                                                     // @ts-ignore
                                                     admin_commission:
-                                                    data?.admin_percentage,
+                                                        data?.admin_percentage,
                                                     // @ts-ignore
                                                     admin_additional_fee:
-                                                    data?.additional_fee,
+                                                        data?.additional_fee,
                                                 } );
                                             } }
                                         />
@@ -1367,197 +1376,204 @@ export default function Form( {
             </>
         );
     };
+    // Reusable social field row with icon + label + input (single line)
+    const SocialField = ( {
+        icon,
+        label,
+        id,
+        value,
+        onChange,
+        placeholder = __( 'https://example.com', 'dokan-lite' ),
+    }: {
+        icon?: JSX.Element;
+        label: string;
+        id: string;
+        value: string;
+        onChange: ( e: any ) => void;
+        placeholder?: string;
+    } ) => {
+        return (
+            <div className="flex items-center">
+                <div className="min-w-[180px] flex items-center gap-3">
+                    <span className="flex items-center justify-center w-10 h-10">
+                        { icon }
+                    </span>
+                    <label
+                        htmlFor={ id }
+                        className="text-[#25252D] font-medium text-[14px]"
+                    >
+                        { label }
+                    </label>
+                </div>
+                <div className={ 'w-full' }>
+                    <SimpleInput
+                        value={ value }
+                        onChange={ onChange }
+                        input={ {
+                            placeholder,
+                            id,
+                            type: 'text',
+                        } }
+                    />
+                </div>
+            </div>
+        );
+    };
+
     const SocialOptions = () => {
         return (
             <>
                 { /*Social information section*/ }
                 <div className="mt-6">
                     <Card className="bg-white">
-                        <div className="border-b p-6">
-                            <h2 className="text-lg font-bold">
-                                { __( 'Social Information', 'dokan-lite' ) }
-                            </h2>
-                        </div>
-                        <div className="p-6 flex flex-col gap-3">
-                            <div>
-                                <SimpleInput
-                                    label={ __( 'Facebook', 'dokan-lite' ) }
-                                    value={ vendor?.social?.fb || '' }
-                                    onChange={ ( e ) => {
-                                        setData( 'social', {
-                                            ...vendor?.social,
-                                            fb: e.target.value,
-                                        } );
-                                    } }
-                                    input={ {
-                                        placeholder: __(
-                                            'https://example.com',
-                                            'dokan-lite'
-                                        ),
-                                        id: 'fb',
-                                        type: 'text',
-                                    } }
-                                />
-                            </div>
+                        <div className="p-8 flex flex-col gap-8">
+                            <SocialField
+                                icon={ <Facebook className="w-10 h-10" /> }
+                                label={ __( 'Facebook', 'dokan-lite' ) }
+                                id="fb"
+                                value={ vendor?.social?.fb || '' }
+                                placeholder={ __(
+                                    'https://facebook.com/username',
+                                    'dokan-lite'
+                                ) }
+                                onChange={ ( e ) => {
+                                    setData( 'social', {
+                                        ...vendor?.social,
+                                        fb: e.target.value,
+                                    } );
+                                } }
+                            />
 
                             <Slot name="dokan-vendor-edit-after-fb-social-information" />
 
-                            <div>
-                                <SimpleInput
-                                    label={ __( 'X', 'dokan-lite' ) }
-                                    value={ vendor?.social?.twitter || '' }
-                                    onChange={ ( e ) => {
-                                        setData( 'social', {
-                                            ...vendor?.social,
-                                            twitter: e.target.value,
-                                        } );
-                                    } }
-                                    input={ {
-                                        placeholder: __(
-                                            'https://example.com',
-                                            'dokan-lite'
-                                        ),
-                                        id: 'twitter',
-                                        type: 'text',
-                                    } }
-                                />
-                            </div>
+                            <SocialField
+                                icon={ <Twitter className="w-10 h-10" /> }
+                                label={ __( 'X', 'dokan-lite' ) }
+                                id="twitter"
+                                placeholder={ __(
+                                    'https://x.com/username',
+                                    'dokan-lite'
+                                ) }
+                                value={ vendor?.social?.twitter || '' }
+                                onChange={ ( e ) => {
+                                    setData( 'social', {
+                                        ...vendor?.social,
+                                        twitter: e.target.value,
+                                    } );
+                                } }
+                            />
 
                             <Slot name="dokan-vendor-edit-after-x-social-information" />
 
-                            <div>
-                                <SimpleInput
-                                    label={ __( 'Pinterest', 'dokan-lite' ) }
-                                    value={ vendor?.social?.pinterest || '' }
-                                    onChange={ ( e ) => {
-                                        setData( 'social', {
-                                            ...vendor?.social,
-                                            pinterest: e.target.value,
-                                        } );
-                                    } }
-                                    input={ {
-                                        placeholder: __(
-                                            'https://example.com',
-                                            'dokan-lite'
-                                        ),
-                                        id: 'pinterest',
-                                        type: 'text',
-                                    } }
-                                />
-                            </div>
+                            <SocialField
+                                icon={ <Pinterest className="w-10 h-10" /> }
+                                label={ __( 'Pinterest', 'dokan-lite' ) }
+                                id="pinterest"
+                                placeholder={ __(
+                                    'https://pinterest.com/username',
+                                    'dokan-lite'
+                                ) }
+                                value={ vendor?.social?.pinterest || '' }
+                                onChange={ ( e ) => {
+                                    setData( 'social', {
+                                        ...vendor?.social,
+                                        pinterest: e.target.value,
+                                    } );
+                                } }
+                            />
 
                             <Slot name="dokan-vendor-edit-after-pinterest-social-information" />
 
-                            <div>
-                                <SimpleInput
-                                    label={ __( 'Linkedin', 'dokan-lite' ) }
-                                    value={ vendor?.social?.linkedin || '' }
-                                    onChange={ ( e ) => {
-                                        setData( 'social', {
-                                            ...vendor?.social,
-                                            linkedin: e.target.value,
-                                        } );
-                                    } }
-                                    input={ {
-                                        placeholder: __(
-                                            'https://example.com',
-                                            'dokan-lite'
-                                        ),
-                                        id: 'linkedin',
-                                        type: 'text',
-                                    } }
-                                />
-                            </div>
+                            <SocialField
+                                icon={ <LinkedIn className="w-10 h-10" /> }
+                                label={ __( 'Linkedin', 'dokan-lite' ) }
+                                id="linkedin"
+                                placeholder={ __(
+                                    'https://linkedin.com/in/username',
+                                    'dokan-lite'
+                                ) }
+                                value={ vendor?.social?.linkedin || '' }
+                                onChange={ ( e ) => {
+                                    setData( 'social', {
+                                        ...vendor?.social,
+                                        linkedin: e.target.value,
+                                    } );
+                                } }
+                            />
 
                             <Slot name="dokan-vendor-edit-after-pinterest-social-information" />
 
-                            <div>
-                                <SimpleInput
-                                    label={ __( 'Youtube', 'dokan-lite' ) }
-                                    value={ vendor?.social?.youtube || '' }
-                                    onChange={ ( e ) => {
-                                        setData( 'social', {
-                                            ...vendor?.social,
-                                            youtube: e.target.value,
-                                        } );
-                                    } }
-                                    input={ {
-                                        placeholder: __(
-                                            'https://example.com',
-                                            'dokan-lite'
-                                        ),
-                                        id: 'youtube',
-                                        type: 'text',
-                                    } }
-                                />
-                            </div>
+                            <SocialField
+                                icon={ <YouTube className="w-10 h-10" /> }
+                                label={ __( 'Youtube', 'dokan-lite' ) }
+                                id="youtube"
+                                placeholder={ __(
+                                    'https://youtube.com/c/username',
+                                    'dokan-lite'
+                                ) }
+                                value={ vendor?.social?.youtube || '' }
+                                onChange={ ( e ) => {
+                                    setData( 'social', {
+                                        ...vendor?.social,
+                                        youtube: e.target.value,
+                                    } );
+                                } }
+                            />
 
                             <Slot name="dokan-vendor-edit-after-youtube-social-information" />
 
-                            <div>
-                                <SimpleInput
-                                    label={ __( 'Instagram', 'dokan-lite' ) }
-                                    value={ vendor?.social?.instagram || '' }
-                                    onChange={ ( e ) => {
-                                        setData( 'social', {
-                                            ...vendor?.social,
-                                            instagram: e.target.value,
-                                        } );
-                                    } }
-                                    input={ {
-                                        placeholder: __(
-                                            'https://example.com',
-                                            'dokan-lite'
-                                        ),
-                                        id: 'instagram',
-                                        type: 'text',
-                                    } }
-                                />
-                            </div>
+                            <SocialField
+                                icon={ <Instagram className="w-10 h-10" /> }
+                                label={ __( 'Instagram', 'dokan-lite' ) }
+                                id="instagram"
+                                placeholder={ __(
+                                    'https://instagram.com/username',
+                                    'dokan-lite'
+                                ) }
+                                value={ vendor?.social?.instagram || '' }
+                                onChange={ ( e ) => {
+                                    setData( 'social', {
+                                        ...vendor?.social,
+                                        instagram: e.target.value,
+                                    } );
+                                } }
+                            />
 
                             <Slot name="dokan-vendor-edit-after-instagram-social-information" />
-                            <div>
-                                <SimpleInput
-                                    label={ __( 'Flickr', 'dokan-lite' ) }
-                                    value={ vendor?.social?.flickr || '' }
-                                    onChange={ ( e ) => {
-                                        setData( 'social', {
-                                            ...vendor?.social,
-                                            flickr: e.target.value,
-                                        } );
-                                    } }
-                                    input={ {
-                                        placeholder: __(
-                                            'https://example.com',
-                                            'dokan-lite'
-                                        ),
-                                        id: 'flickr',
-                                        type: 'text',
-                                    } }
-                                />
-                            </div>
+                            <SocialField
+                                icon={ <Flickr className="w-10 h-10" /> }
+                                label={ __( 'Flickr', 'dokan-lite' ) }
+                                id="flickr"
+                                placeholder={ __(
+                                    'https://flickr.com/photos/username',
+                                    'dokan-lite'
+                                ) }
+                                value={ vendor?.social?.flickr || '' }
+                                onChange={ ( e ) => {
+                                    setData( 'social', {
+                                        ...vendor?.social,
+                                        flickr: e.target.value,
+                                    } );
+                                } }
+                            />
 
                             <Slot name="dokan-vendor-edit-after-flickr-social-information" />
-                            <div>
-                                <SimpleInput
-                                    label={ __( 'Threads', 'dokan-lite' ) }
-                                    value={ vendor?.social?.threads || '' }
-                                    onChange={ ( e ) => {
-                                        setData( 'social', {
-                                            ...vendor?.social,
-                                            threads: e.target.value,
-                                        } );
-                                    } }
-                                    input={ {
-                                        placeholder: __(
-                                            'https://example.com',
-                                            'dokan-lite'
-                                        ),
-                                        id: 'threads',
-                                        type: 'text',
-                                    } }
-                                />
-                            </div>
+                            <SocialField
+                                icon={ <Threads className="w-10 h-10" /> }
+                                label={ __( 'Threads', 'dokan-lite' ) }
+                                id="threads"
+                                placeholder={ __(
+                                    'ttps://threads.net/username',
+                                    'dokan-lite'
+                                ) }
+                                value={ vendor?.social?.threads || '' }
+                                onChange={ ( e ) => {
+                                    setData( 'social', {
+                                        ...vendor?.social,
+                                        threads: e.target.value,
+                                    } );
+                                } }
+                            />
 
                             <Slot name="dokan-vendor-edit-after-threads-social-information" />
                         </div>
