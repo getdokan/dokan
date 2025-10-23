@@ -1,11 +1,28 @@
 import { createRoot, useEffect, useState } from '@wordpress/element';
-import { ChevronDown, ChevronUp, Globe, Menu } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import domReady from '@wordpress/dom-ready';
 import { truncate } from '../../utilities';
 import { twMerge } from 'tailwind-merge';
 import { __, sprintf } from '@wordpress/i18n';
 import './style.scss';
 import { Tooltip } from '@getdokan/dokan-ui';
+
+const getIcon = ( iconName: string ) => {
+    const iconProps = { className: 'w-5 h-5 text-[#828282]' };
+
+    // Get the icon component by name.
+    const IconComponent = ( LucideIcons as any )[ iconName ];
+
+    // If the icon is not found, use a fallback icon.
+    if ( ! IconComponent ) {
+        console.warn(
+            `Icon "${ iconName }" not found in Lucide React. Using fallback.`
+        );
+        return <LucideIcons.Settings { ...iconProps } />;
+    }
+
+    return <IconComponent { ...iconProps } />;
+};
 
 const Header = () => {
     const [ adminBar, setAdminBar ] = useState( 0 );
@@ -31,14 +48,14 @@ const Header = () => {
                 `top-[${ adminBar }px]`
             ) }
         >
-            <Menu />
+            <LucideIcons.Menu />
             <div className={ `flex items-center` }>
                 { /* eslint-disable-next-line jsx-a11y/anchor-is-valid */ }
                 <a
                     href={ window.dokan?.urls?.storeUrl || '#' }
                     className="skip-color-module flex items-center text-sm gap-2 font-medium text-[#7047EB] hover:text-indigo-700 focus:!outline-none"
                 >
-                    <Globe size={ 16 } color="#7047EB" />
+                    <LucideIcons.Globe size={ 16 } color="#7047EB" />
                     { __( 'Visit Store', 'dokan-lite' ) }
                 </a>
                 <div className="border border-[#E9E9E9] border-r-0 h-8 mx-5"></div>
@@ -63,7 +80,7 @@ const Header = () => {
                             aria-hidden="true"
                         />
                     ) }
-                    <ChevronDown
+                    <LucideIcons.ChevronDown
                         size={ 16 }
                         strokeWidth={ 3 }
                         color="#828282"
@@ -204,14 +221,15 @@ const Sidebar = () => {
                                                     : 'text-[#DACEFF] hover:bg-[#7047EB] hover:text-white'
                                             }` }
                                             aria-expanded={
-                                                hasSub ? isExpanded : undefined
+                                                hasSub ? isExpanded : ''
                                             }
                                         >
-                                            <span
-                                                dangerouslySetInnerHTML={ {
-                                                    __html: item.icon,
-                                                } }
-                                            />
+                                            {/*<span*/}
+                                            {/*    dangerouslySetInnerHTML={ {*/}
+                                            {/*        __html: item.icon,*/}
+                                            {/*    } }*/}
+                                            {/*/>*/}
+                                            { getIcon( item.icon_name ) }
                                             <span className="ml-2">
                                                 { item.title }
                                             </span>
@@ -223,9 +241,9 @@ const Sidebar = () => {
                                             ) }
                                             { hasSub &&
                                                 ( isExpanded ? (
-                                                    <ChevronUp className="ml-auto w-4 h-4 text-[#A5A5A5]" />
+                                                    <LucideIcons.ChevronUp className="ml-auto w-4 h-4 text-[#A5A5A5]" />
                                                 ) : (
-                                                    <ChevronDown className="ml-auto w-4 h-4 text-[#A5A5A5]" />
+                                                    <LucideIcons.ChevronDown className="ml-auto w-4 h-4 text-[#A5A5A5]" />
                                                 ) ) }
                                         </a>
 
@@ -265,11 +283,6 @@ const Sidebar = () => {
                                                                             'ml-4'
                                                                         }
                                                                     >
-                                                                        <span
-                                                                            dangerouslySetInnerHTML={ {
-                                                                                __html: subitem.icon,
-                                                                            } }
-                                                                        />
                                                                         <span className="ml-2">
                                                                             {
                                                                                 subitem.title
