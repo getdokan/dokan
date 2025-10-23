@@ -55,6 +55,8 @@ class Dashboard implements Hookable {
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
         add_action( 'admin_notices', [ $this, 'inject_before_notices' ], -9999 );
         add_action( 'admin_notices', [ $this, 'inject_after_notices' ], PHP_INT_MAX );
+        add_filter( 'admin_footer_text', [ $this, 'add_switching_container' ] );
+        add_filter( 'update_footer', [ $this, 'add_update_footer' ], 99 );
     }
 
     /**
@@ -140,7 +142,6 @@ class Dashboard implements Hookable {
         ob_start();
         echo '<div id="dokan-admin-panel-header" class="dokan-layout"></div>';
         echo '<div class="wrap"><div id="dokan-admin-dashboard" class="dokan-layout dokan-admin-page-body">' . esc_html__( 'Loading...', 'dokan-lite' ) . '</div></div>';
-        echo '<div id="dokan-admin-switching" class="dokan-layout dokan-admin-page-body"></div>';
         echo ob_get_clean();
     }
 
@@ -611,5 +612,47 @@ class Dashboard implements Hookable {
         // Close the hidden div used to prevent notices from flickering before
         // they are inserted elsewhere in the page.
         echo '</div>';
+    }
+
+    /**
+     * Add container for admin switching functionality.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $text Footer text
+     *
+     * @return string Modified footer text with admin switching container
+     */
+    public function add_switching_container( $text ) {
+
+        $current_screen = get_current_screen();
+		$is_dokan_screen = ( $current_screen && false !== strpos( $current_screen->id, 'dokan' ) );
+		if ( ! $is_dokan_screen ) {
+            return $text;
+        }
+
+        $dom_element = '<span id="dokan-admin-switching" class="dokan-layout dokan-admin-page-body"></span><br/>';
+
+        return $dom_element;
+    }
+
+    /**
+     * Add empty update footer for Dokan screens.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $content Footer content
+     *
+     * @return string Empty string for Dokan screens, original content otherwise
+     */
+    public function add_update_footer( $content ) {
+        $current_screen = get_current_screen();
+		$is_dokan_screen = ( $current_screen && false !== strpos( $current_screen->id, 'dokan' ) );
+
+		if ( ! $is_dokan_screen ) {
+            return $content;
+        }
+
+        return '';
     }
 }
