@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 
 function Banner({ banner } ) {
     return (
-        <div className="bg-zinc-100 rounded-t-md h-96 relative flex items-center justify-center">
+        <div className="bg-zinc-100 rounded-t-md h-[298px] relative flex items-center justify-center">
             { banner ? (
                 <img
                     src={ banner }
