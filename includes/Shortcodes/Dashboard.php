@@ -102,19 +102,20 @@ class Dashboard extends DokanShortcode {
                     apply_filters(
                         'dokan_vendor_dashboard_layout_config',
                         [
-                            'siteInfo' => [
+                            'siteInfo'   => [
                                 'siteTitle' => get_bloginfo( 'name' ),
                                 'siteIcon'  => get_site_icon_url(),
                             ],
-                            'vendor'   => [
+                            'vendor'     => [
                                 'name'   => $vendor ? $vendor->get_shop_name() : $user_name,
                                 'avatar' => VendorUtil::get_vendor_default_avatar_url(),
                             ],
-                            'editUrl'  => dokan_get_navigation_url( 'edit-account' ),
-                            'user'     => [
+                            'editUrl'    => dokan_get_navigation_url( 'edit-account' ),
+                            'user'       => [
                                 'name'   => $user_name,
                                 'avatar' => get_avatar_url( $user_id ),
                             ],
+                            'sidebarNav' => dokan_get_dashboard_nav(),
                         ],
                         $vendor
                     )

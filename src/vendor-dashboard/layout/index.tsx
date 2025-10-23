@@ -1,5 +1,5 @@
 import { createRoot, useEffect, useState } from '@wordpress/element';
-import { ChevronDown, Globe, Menu } from 'lucide-react';
+import { ChevronDown, ChevronUp, Globe, Menu } from 'lucide-react';
 import domReady from '@wordpress/dom-ready';
 import { truncate } from '../../utilities';
 import { twMerge } from 'tailwind-merge';
@@ -20,7 +20,8 @@ const Header = () => {
         return () => window.removeEventListener( 'resize', compute );
     }, [] );
 
-    const { user, editUrl } = ( window as any )?.vendorDashboardLayoutConfig || {},
+    const { user, editUrl } =
+            ( window as any )?.vendorDashboardLayoutConfig || {},
         { name: userName, avatar: userAvatar } = user || {};
 
     return (
@@ -35,7 +36,7 @@ const Header = () => {
                 { /* eslint-disable-next-line jsx-a11y/anchor-is-valid */ }
                 <a
                     href={ window.dokan?.urls?.storeUrl || '#' }
-                    className="skip-color-module flex items-center text-sm gap-2 font-medium text-[#7047EB] hover:text-indigo-700"
+                    className="skip-color-module flex items-center text-sm gap-2 font-medium text-[#7047EB] hover:text-indigo-700 focus:!outline-none"
                 >
                     <Globe size={ 16 } color="#7047EB" />
                     { __( 'Visit Store', 'dokan-lite' ) }
@@ -43,11 +44,17 @@ const Header = () => {
                 <div className="border border-[#E9E9E9] border-r-0 h-8 mx-5"></div>
                 <div className="flex items-center gap-2.5">
                     { userAvatar ? (
-                        <a href={ editUrl || '#' }>
+                        <a
+                            href={ editUrl || '#' }
+                            className={ 'focus:!outline-none' }
+                        >
                             <img
                                 src={ userAvatar }
                                 className="h-7 w-7 rounded-full"
-                                alt={ userName || __( 'User Profile Image', 'dokan-lite' ) }
+                                alt={
+                                    userName ||
+                                    __( 'User Profile Image', 'dokan-lite' )
+                                }
                             />
                         </a>
                     ) : (
@@ -69,43 +76,6 @@ const Header = () => {
 };
 
 const Sidebar = () => {
-    const items = [
-        'Overview',
-        'Products',
-        'Orders',
-        'Request Quotes',
-        'Withdraw',
-        'Reverse Withdrawal',
-        'Announcement',
-        'Delivery Time',
-        'Coupons',
-        'Reports',
-        'Store Stats',
-        'Reviews',
-        'Staff',
-        'Return Request',
-        'Support',
-        'Tools',
-        'Setting',
-        'Overview',
-        'Products',
-        'Orders',
-        'Request Quotes',
-        'Withdraw',
-        'Reverse Withdrawal',
-        'Announcement',
-        'Delivery Time',
-        'Coupons',
-        'Reports',
-        'Store Stats',
-        'Reviews',
-        'Staff',
-        'Return Request',
-        'Support',
-        'Tools',
-        'Setting',
-    ];
-
     const [ adminBar, setAdminBar ] = useState( 0 );
 
     useEffect( () => {
@@ -118,14 +88,39 @@ const Sidebar = () => {
         return () => window.removeEventListener( 'resize', compute );
     }, [] );
 
-    const { siteInfo, vendor, subscription, editUrl } =
+    const { siteInfo, vendor, subscription, editUrl, sidebarNav } =
         ( window as any )?.vendorDashboardLayoutConfig || {};
+
+    const [ expanded, setExpanded ] = useState< Record< string, boolean > >(
+        {}
+    );
+
+    // Initialize expansion: default collapsed; expand the one that contains the active submenu
+    useEffect( () => {
+        const current = window.location?.href || '';
+        const initial: Record< string, boolean > = {};
+        Object.entries( ( sidebarNav as any ) || {} ).forEach(
+            ( [ key, item ]: any ) => {
+                let hasActiveChild = false;
+                if ( item?.submenu ) {
+                    Object.values( item.submenu ).forEach( ( sub: any ) => {
+                        if ( sub?.url && current.startsWith( sub.url ) ) {
+                            hasActiveChild = true;
+                        }
+                    } );
+                }
+                initial[ key ] = hasActiveChild;
+            }
+        );
+        setExpanded( initial );
+    }, [ sidebarNav ] );
 
     const { siteTitle, siteIcon } = siteInfo,
         sideBarTitle = siteTitle || __( 'Dokan', 'dokan-lite' );
 
     const { name: storeName, avatar: storeAvatar } = vendor || {};
-    const { name: subscriptionName, status: subscriptionStatus } = subscription || {};
+    const { name: subscriptionName, status: subscriptionStatus } =
+        subscription || {};
 
     return (
         <aside
@@ -133,7 +128,7 @@ const Sidebar = () => {
             className="bg-indigo-950/100 text-white fixed left-0 bottom-0 z-20 w-[250px] max-w-[250px] flex flex-col"
         >
             { /* Top header inforamtion: full width, attached to top, with a bottom border */ }
-            <div className="mb-2 flex items-center gap-3.5 border-solid border-b border-[#DACEFF33] border-t-0 border-x-0 px-8 min-h-20">
+            <div className="flex items-center gap-3.5 border-solid border-b border-[#DACEFF33] border-t-0 border-x-0 px-8 min-h-20">
                 { siteIcon ? (
                     <img
                         src={ siteIcon }
@@ -154,22 +149,156 @@ const Sidebar = () => {
             </div>
 
             { /* Scrollable menu body */ }
-            <div className="flex-1 overflow-y-auto px-5 dokan-vendor-sidebar-scroll">
-                <nav className="flex flex-col gap-1">
-                    { items.map( ( label ) => (
-                        // eslint-disable-next-line jsx-a11y/anchor-is-valid
-                        <a
-                            key={ label }
-                            href="#"
-                            className={ `skip-color-module rounded-md px-3 py-2 text-[#DACEFF] hover:text-white hover:bg-indigo-600 ${
-                                label === 'Products'
-                                    ? 'bg-indigo-600 text-white'
-                                    : ''
-                            }` }
-                        >
-                            { label }
-                        </a>
-                    ) ) }
+            <div className="flex-1 overflow-y-auto p-5 dokan-vendor-sidebar-scroll">
+                <nav>
+                    <ul className="flex flex-col gap-1.5">
+                        { Object.entries( sidebarNav || {} ).map(
+                            ( [ key, item ]: any ) => {
+                                const currentUrl = window.location?.href || '';
+                                const hasSub =
+                                    !! item?.submenu &&
+                                    Object.keys( item.submenu ).length > 0;
+                                const isParentActive =
+                                    ! hasSub &&
+                                    item?.url &&
+                                    currentUrl.startsWith( item.url );
+                                const isExpanded = Boolean( expanded?.[ key ] );
+
+                                const onParentClick = ( e: any ) => {
+                                    if ( hasSub ) {
+                                        e.preventDefault();
+                                        setExpanded( ( prev ) => ( {
+                                            ...( prev || {} ),
+                                            [ key ]: ! prev?.[ key ],
+                                        } ) );
+                                    }
+                                };
+
+                                const Bubble = ( {
+                                    count,
+                                    isActive,
+                                }: {
+                                    count: number;
+                                    isActive: boolean;
+                                } ) => (
+                                    <span
+                                        className={ twMerge(
+                                            'ml-auto inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[10px] font-semibold leading-none rounded group-hover:text-[#7C4DFF] group-hover:bg-white',
+                                            isActive
+                                                ? 'text-[#7C4DFF] bg-white'
+                                                : 'text-white bg-[#7C4DFF]'
+                                        ) }
+                                    >
+                                        { count }
+                                    </span>
+                                );
+
+                                return (
+                                    <li key={ key }>
+                                        <a
+                                            href={ item.url }
+                                            onClick={ onParentClick }
+                                            className={ `group skip-color-module flex items-center py-2.5 px-3 rounded-md text-sm focus:!outline-none ${
+                                                isParentActive
+                                                    ? 'text-white bg-[#7047EB]'
+                                                    : 'text-[#DACEFF] hover:bg-[#7047EB] hover:text-white'
+                                            }` }
+                                            aria-expanded={
+                                                hasSub ? isExpanded : undefined
+                                            }
+                                        >
+                                            <span
+                                                dangerouslySetInnerHTML={ {
+                                                    __html: item.icon,
+                                                } }
+                                            />
+                                            <span className="ml-2">
+                                                { item.title }
+                                            </span>
+                                            { item.counts > 0 && (
+                                                <Bubble
+                                                    count={ item.counts }
+                                                    isActive={ isParentActive }
+                                                />
+                                            ) }
+                                            { hasSub &&
+                                                ( isExpanded ? (
+                                                    <ChevronUp className="ml-auto w-4 h-4 text-[#A5A5A5]" />
+                                                ) : (
+                                                    <ChevronDown className="ml-auto w-4 h-4 text-[#A5A5A5]" />
+                                                ) ) }
+                                        </a>
+
+                                        { hasSub && isExpanded && (
+                                            <ul className="mt-2 mx-0 space-y-1.5">
+                                                { Object.entries(
+                                                    item.submenu
+                                                ).map(
+                                                    ( [
+                                                        subkey,
+                                                        subitem,
+                                                    ]: any ) => {
+                                                        const isSubActive =
+                                                            subitem?.url &&
+                                                            currentUrl.startsWith(
+                                                                subitem.url
+                                                            );
+                                                        return (
+                                                            <li key={ subkey }>
+                                                                <a
+                                                                    href={
+                                                                        subitem.url
+                                                                    }
+                                                                    className={ `group skip-color-module flex items-center py-2.5 px-3 pl-8 text-sm rounded-md focus:!outline-none ${
+                                                                        isSubActive
+                                                                            ? 'bg-[#7C4DFF] text-white'
+                                                                            : 'text-[#DACEFF] hover:bg-[#7047EB] hover:text-white'
+                                                                    }` }
+                                                                    aria-current={
+                                                                        isSubActive
+                                                                            ? 'page'
+                                                                            : undefined
+                                                                    }
+                                                                >
+                                                                    <span
+                                                                        className={
+                                                                            'ml-4'
+                                                                        }
+                                                                    >
+                                                                        <span
+                                                                            dangerouslySetInnerHTML={ {
+                                                                                __html: subitem.icon,
+                                                                            } }
+                                                                        />
+                                                                        <span className="ml-2">
+                                                                            {
+                                                                                subitem.title
+                                                                            }
+                                                                        </span>
+                                                                        { subitem.counts >
+                                                                            0 && (
+                                                                            <Bubble
+                                                                                isActive={
+                                                                                    isSubActive
+                                                                                }
+                                                                                count={
+                                                                                    subitem.counts
+                                                                                }
+                                                                            />
+                                                                        ) }
+                                                                    </span>
+                                                                </a>
+                                                            </li>
+                                                        );
+                                                    }
+                                                ) }
+                                            </ul>
+                                        ) }
+                                    </li>
+                                );
+                            }
+                        ) }
+                    </ul>
                 </nav>
             </div>
 
@@ -177,7 +306,7 @@ const Sidebar = () => {
             <div className="border-solid border-t border-[#DACEFF33] border-b-0 border-x-0 px-8 py-4">
                 <a
                     href={ editUrl || '#' }
-                    className="flex items-center gap-2.5"
+                    className="flex items-center gap-2.5 focus:!outline-none"
                 >
                     { storeAvatar ? (
                         <img
