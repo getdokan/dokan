@@ -80,6 +80,7 @@ const OverviewTab = ( { vendor }: OverviewTabProps ) => {
                                 'No Top Selling Products',
                                 'dokan-lite'
                             ) }
+                            className="min-h-[203px]"
                         />
                     ) }
                 </div>

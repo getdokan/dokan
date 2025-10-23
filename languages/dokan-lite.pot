@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-10-23T05:50:32+00:00\n"
+"POT-Creation-Date: 2025-10-23T11:46:51+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -1978,7 +1978,6 @@ msgstr ""
 #: includes/Admin/SetupWizard.php:275
 #: includes/functions-dashboard-navigation.php:72
 #: includes/Vendor/SetupWizard.php:705
-#: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/vue-admin.js:2
 msgid "Store"
 msgstr ""
@@ -12725,7 +12724,7 @@ msgid "Vendors List"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:179
-msgid "Vendor Details"
+msgid "Vendor Profile"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:179
@@ -13408,6 +13407,11 @@ msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:179
 msgid "See Orders"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+#: assets/js/vue-admin.js:2
+msgid "Approve Vendors"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:179
@@ -14620,10 +14624,6 @@ msgstr ""
 
 #: assets/js/vue-admin.js:2
 msgid "Create Vendor"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Approve Vendors"
 msgstr ""
 
 #: assets/js/vue-admin.js:2

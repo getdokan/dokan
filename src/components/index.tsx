@@ -42,6 +42,7 @@ export { default as Select } from './Select';
 export { default as DateRangePicker } from './DateRangePicker';
 export { default as TimePicker } from './TimePicker';
 export { default as DokanTooltip } from './DokanTooltip';
+export { default as UserCard } from './UserCard';
 
 // Commission Components
 export * from './commission';
