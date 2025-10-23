@@ -173,7 +173,8 @@ const AdminFilter = ( {
                     { availableFilters.length > 0 && (
                         <span ref={ setAddButtonAnchor }>
                             <DokanButton
-                                className="flex gap-2 items-center justify-center dokan-btn-tertiary"
+                                className="flex gap-2 items-center justify-center shadow-none"
+                                variant="tertiary"
                                 onClick={ () =>
                                     setIsPopoverOpen(
                                         ( currentState ) => ! currentState
