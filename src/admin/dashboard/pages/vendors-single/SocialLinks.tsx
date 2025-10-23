@@ -122,7 +122,11 @@ const SocialLinks = ( { social }: SocialLinksProps ) => {
                     direction="top"
                     contentClass="bg-gray-800 text-white p-2 rounded-md"
                 >
-                    <span>
+                    <a
+                        href={ platform.url ?? '#' }
+                        target="_blank"
+                        rel="noreferrer"
+                    >
                         <RawHTML
                             key={ platform.key + '_icon' }
                             className="w-7 h-7 flex hover:cursor-pointer"
@@ -130,7 +134,7 @@ const SocialLinks = ( { social }: SocialLinksProps ) => {
                         >
                             { platform.icon }
                         </RawHTML>
-                    </span>
+                    </a>
                 </Tooltip>
             ) ) }
         </div>
