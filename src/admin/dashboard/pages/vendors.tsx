@@ -14,7 +14,7 @@ import { Vendor } from '../../../definitions/dokan-vendor';
 import * as LucideIcons from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 import { applyFilters } from "@wordpress/hooks";
-import UserCard from "admin/dashboard/components/UserCard";
+import UserCard from "@src/components/UserCard";
 
 const defaultLayouts = {
     table: {},

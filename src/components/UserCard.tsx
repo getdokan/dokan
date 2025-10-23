@@ -2,11 +2,11 @@ import { DokanLink } from '@src/components';
 import { twMerge } from 'tailwind-merge';
 
 function UserCard( {
-    name,
-    avatar,
-    isLoading,
-    loadingClass,
-    onClick,
+    name = '',
+    avatar = '',
+    isLoading = false,
+    loadingClass = '',
+    onClick = () => {},
     subTitle = '',
 } ) {
     return (
@@ -48,7 +48,12 @@ function UserCard( {
                         { name }
                     </span>
                 </DokanLink>
-                <span className="text-[14px] font-[400] text-[#A5A5AA]">
+                <span
+                    className={ twMerge(
+                        'text-[14px] font-[400] text-[#A5A5AA]',
+                        isLoading ? loadingClass : ''
+                    ) }
+                >
                     { subTitle }
                 </span>
             </span>
