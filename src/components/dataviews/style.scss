@@ -70,5 +70,14 @@
     [id^="portal/:"] {
         --wp-components-color-accent: #EFEAFF;
         --wp-components-color-accent-inverted:#7047eb;
+
+        div[role="menu"] {
+            padding: 10px 0;
+        }
+        div[role="menuitem"] {
+            padding: 0 16px;
+            box-sizing: content-box;
+            min-height: calc(4px*9);
+        }
     }
 }
