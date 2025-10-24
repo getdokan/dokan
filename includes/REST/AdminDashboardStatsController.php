@@ -198,7 +198,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
                     'icon'         => 'UserCheck',
                     'count'        => $this->get_vendor_approvals_count(),
                     'title'        => esc_html__( 'Vendor Approvals', 'dokan-lite' ),
-                    'redirect_url' => admin_url( 'admin.php?page=' . $legacy_vendors_url  ),
+                    'redirect_url' => admin_url( 'admin.php?page=' . $legacy_vendors_url ),
                     'position'     => 10,
                 ],
                 'product_approvals'   => [
