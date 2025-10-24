@@ -213,9 +213,13 @@ const WithdrawPage = () => {
                 const full =
                     processDetails( item.details, item.method ) ||
                     __( '-', 'dokan-lite' );
-                return (
+                return full?.length <= 22 ? (
+                    <p className="m-0 space-x-2 flex flex-wrap text-wrap leading-6 text-sm text-gray-600">
+                        <RawHTML>{ full }</RawHTML>
+                    </p>
+                ) : (
                     <Tooltip content={ <RawHTML>{ full }</RawHTML> }>
-                        <p className="m-0 space-x-2 flex flex-wrap max-w-40 text-wrap leading-6 text-sm text-gray-600">
+                        <p className="m-0 space-x-2 flex flex-wrap text-wrap leading-6 text-sm text-gray-600">
                             <RawHTML>
                                 { truncate ? truncate( full, 22 ) : full }
                             </RawHTML>
@@ -229,7 +233,11 @@ const WithdrawPage = () => {
             label: __( 'Note', 'dokan-lite' ),
             render: ( { item } ) => {
                 const full = item.note || __( '-', 'dokan-lite' );
-                return (
+                return full?.length <= 22 ? (
+                    <p className="m-0 space-x-2 flex flex-wrap max-w-40 text-wrap leading-6 text-sm text-gray-600">
+                        <RawHTML>{ full }</RawHTML>
+                    </p>
+                ) : (
                     <Tooltip content={ <RawHTML>{ full }</RawHTML> }>
                         <p className="m-0 space-x-2 flex flex-wrap max-w-40 text-wrap leading-6 text-sm text-gray-600">
                             <RawHTML>
