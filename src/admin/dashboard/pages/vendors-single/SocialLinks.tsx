@@ -1,72 +1,31 @@
 import { VendorSocial } from '@dokan/definitions/dokan-vendors';
 import { __ } from '@wordpress/i18n';
-import { RawHTML } from '@wordpress/element';
+import { RawHTML, useMemo } from '@wordpress/element';
 import { DokanTooltip as Tooltip } from '@dokan/components';
-import Facebook from '@src/admin/dashboard/icons/socials/Facebook';
-import YouTube from '@src/admin/dashboard/icons/socials/YouTube';
-import Twitter from '@src/admin/dashboard/icons/socials/Twitter';
-import LinkedIn from '@src/admin/dashboard/icons/socials/LinkedIn';
-import Pinterest from '@src/admin/dashboard/icons/socials/Pinterest';
-import Instagram from '@src/admin/dashboard/icons/socials/Instagram';
-import Threads from '@src/admin/dashboard/icons/socials/Threads';
+import { getSocialPlatformsArray } from '@src/admin/dashboard/config/socialPlatforms';
 
 export interface SocialLinksProps {
     social: VendorSocial;
 }
 
 const SocialLinks = ( { social }: SocialLinksProps ) => {
-    let socialPlatforms = [
-        {
-            key: 'fb',
-            label: __( 'Facebook', 'dokan-lite' ),
-            url: social.fb,
-            icon: <Facebook />,
-        },
-        {
-            key: 'youtube',
-            label: __( 'YouTube', 'dokan-lite' ),
-            url: social.youtube,
-            icon: <YouTube />,
-        },
-        {
-            key: 'twitter',
-            label: __( 'Twitter', 'dokan-lite' ),
-            url: social.twitter,
-            icon: <Twitter />,
-        },
-        {
-            key: 'linkedin',
-            label: __( 'LinkedIn', 'dokan-lite' ),
-            url: social.linkedin,
-            icon: <LinkedIn />,
-        },
-        {
-            key: 'pinterest',
-            label: __( 'Pinterest', 'dokan-lite' ),
-            url: social.pinterest,
-            icon: <Pinterest />,
-        },
-        {
-            key: 'instagram',
-            label: __( 'Instagram', 'dokan-lite' ),
-            url: social.instagram,
-            icon: <Instagram />,
-        },
-        {
-            key: 'threads',
-            label: __( 'Threads', 'dokan-lite' ),
-            url: social.threads,
-            icon: <Threads />,
-        },
-    ];
+    const platformsConfig = useMemo( () => getSocialPlatformsArray(), [] );
 
-    // @ts-ignore
-    socialPlatforms = wp.hooks.applyFilters(
-        'dokan_admin_dashboard_social_platforms_map',
-        socialPlatforms
+    // Map platforms to include URL from vendor social data
+    const socialPlatforms = useMemo(
+        () =>
+            platformsConfig.map( ( platform ) => ( {
+                key: platform.key,
+                label: platform.label,
+                url: social[ platform.key as keyof VendorSocial ],
+                icon: platform.icon,
+            } ) ),
+        [ platformsConfig, social ]
     );
-    const availablePlatforms = socialPlatforms.filter(
-        ( platform ) => platform.url
+
+    const availablePlatforms = useMemo(
+        () => socialPlatforms.filter( ( platform ) => platform.url ),
+        [ socialPlatforms ]
     );
 
     if ( availablePlatforms.length === 0 ) {
