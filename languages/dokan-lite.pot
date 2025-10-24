@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-10-23T11:46:51+00:00\n"
+"POT-Creation-Date: 2025-10-24T05:19:22+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -59,7 +59,7 @@ msgid "Settings"
 msgstr ""
 
 #: dokan-class.php:415
-#: includes/Admin/Dashboard/Dashboard.php:190
+#: includes/Admin/Dashboard/Dashboard.php:191
 #: assets/js/vue-admin.js:2
 msgid "Documentation"
 msgstr ""
@@ -146,7 +146,7 @@ msgid "Status %s Does not support adding any children."
 msgstr ""
 
 #: includes/Admin/AdminBar.php:56
-#: includes/Admin/Dashboard/Dashboard.php:106
+#: includes/Admin/Dashboard/Dashboard.php:108
 #: includes/Admin/Menu.php:55
 #: includes/Admin/Settings.php:777
 #: includes/functions-dashboard-navigation.php:34
@@ -184,46 +184,46 @@ msgstr ""
 msgid "Visit Vendor Dashboard"
 msgstr ""
 
-#: includes/Admin/Dashboard/Dashboard.php:79
+#: includes/Admin/Dashboard/Dashboard.php:81
 msgid "The page must be an instance of Pageable."
 msgstr ""
 
-#: includes/Admin/Dashboard/Dashboard.php:105
+#: includes/Admin/Dashboard/Dashboard.php:107
 msgid "Dokan Admin Dashboard"
 msgstr ""
 
-#: includes/Admin/Dashboard/Dashboard.php:142
+#: includes/Admin/Dashboard/Dashboard.php:144
 #: assets/js/dokan-admin-notice.js:2
 #: assets/js/dokan-promo-notice.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Loading..."
 msgstr ""
 
-#: includes/Admin/Dashboard/Dashboard.php:168
+#: includes/Admin/Dashboard/Dashboard.php:169
 msgid "What's New"
 msgstr ""
 
-#: includes/Admin/Dashboard/Dashboard.php:176
+#: includes/Admin/Dashboard/Dashboard.php:177
 msgid "Get Support"
 msgstr ""
 
-#: includes/Admin/Dashboard/Dashboard.php:183
+#: includes/Admin/Dashboard/Dashboard.php:184
 msgid "Community"
 msgstr ""
 
-#: includes/Admin/Dashboard/Dashboard.php:197
+#: includes/Admin/Dashboard/Dashboard.php:198
 msgid "FAQ"
 msgstr ""
 
-#: includes/Admin/Dashboard/Dashboard.php:204
+#: includes/Admin/Dashboard/Dashboard.php:205
 msgid "Basic & Fundamental"
 msgstr ""
 
-#: includes/Admin/Dashboard/Dashboard.php:211
+#: includes/Admin/Dashboard/Dashboard.php:212
 msgid "Request a Feature"
 msgstr ""
 
-#: includes/Admin/Dashboard/Dashboard.php:218
+#: includes/Admin/Dashboard/Dashboard.php:219
 #: assets/js/vue-admin.js:2
 msgid "Import dummy data"
 msgstr ""
@@ -649,7 +649,7 @@ msgstr ""
 
 #: includes/Admin/functions.php:208
 #: includes/Admin/functions.php:475
-#: includes/REST/AdminDashboardStatsController.php:561
+#: includes/REST/AdminDashboardStatsController.php:569
 #: includes/REST/AdminReportController.php:141
 #: assets/js/dokan-admin-dashboard.js:179
 msgid "Total Sales"
@@ -5890,273 +5890,273 @@ msgstr ""
 msgid "Date in Y-m format (e.g., 2024-01)"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:192
+#: includes/REST/AdminDashboardStatsController.php:200
 msgid "Vendor Approvals"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:199
+#: includes/REST/AdminDashboardStatsController.php:207
 msgid "Product Approvals"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:206
+#: includes/REST/AdminDashboardStatsController.php:214
 msgid "Pending Withdrawals"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:231
+#: includes/REST/AdminDashboardStatsController.php:239
 msgid "Sales Overview"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:236
+#: includes/REST/AdminDashboardStatsController.php:244
 msgid "Revenue Insight"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:541
+#: includes/REST/AdminDashboardStatsController.php:549
 #: assets/js/vue-admin.js:2
 msgid "Total Products"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:546
+#: includes/REST/AdminDashboardStatsController.php:554
 #: assets/js/vue-admin.js:2
 msgid "Total Vendors"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:551
+#: includes/REST/AdminDashboardStatsController.php:559
 msgid "Total Customers"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:556
+#: includes/REST/AdminDashboardStatsController.php:564
 #: assets/js/dokan-admin-dashboard.js:179
 msgid "Total Orders"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:566
+#: includes/REST/AdminDashboardStatsController.php:574
 msgid "Total Commissions"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:740
+#: includes/REST/AdminDashboardStatsController.php:748
 msgid "Todo Dashboard Data"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:744
-msgid "Vendor approval task information"
-msgstr ""
-
-#: includes/REST/AdminDashboardStatsController.php:748
-#: includes/REST/AdminDashboardStatsController.php:775
-#: includes/REST/AdminDashboardStatsController.php:802
-msgid "Icon name for the task"
-msgstr ""
-
 #: includes/REST/AdminDashboardStatsController.php:752
-msgid "Number of pending vendor approvals"
+msgid "Vendor approval task information"
 msgstr ""
 
 #: includes/REST/AdminDashboardStatsController.php:756
 #: includes/REST/AdminDashboardStatsController.php:783
 #: includes/REST/AdminDashboardStatsController.php:810
-msgid "Task title"
+msgid "Icon name for the task"
 msgstr ""
 
 #: includes/REST/AdminDashboardStatsController.php:760
-#: includes/REST/AdminDashboardStatsController.php:787
-#: includes/REST/AdminDashboardStatsController.php:814
+msgid "Number of pending vendor approvals"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:764
+#: includes/REST/AdminDashboardStatsController.php:791
+#: includes/REST/AdminDashboardStatsController.php:818
+msgid "Task title"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:768
+#: includes/REST/AdminDashboardStatsController.php:795
+#: includes/REST/AdminDashboardStatsController.php:822
 msgid "URL to redirect for this task"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:765
-#: includes/REST/AdminDashboardStatsController.php:792
-#: includes/REST/AdminDashboardStatsController.php:819
+#: includes/REST/AdminDashboardStatsController.php:773
+#: includes/REST/AdminDashboardStatsController.php:800
+#: includes/REST/AdminDashboardStatsController.php:827
 msgid "Display position order"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:771
+#: includes/REST/AdminDashboardStatsController.php:779
 msgid "Product approval task information"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:779
+#: includes/REST/AdminDashboardStatsController.php:787
 msgid "Number of pending product approvals"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:798
+#: includes/REST/AdminDashboardStatsController.php:806
 msgid "Pending withdrawal task information"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:806
+#: includes/REST/AdminDashboardStatsController.php:814
 msgid "Number of pending withdrawals"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:838
+#: includes/REST/AdminDashboardStatsController.php:846
 msgid "Analytics Dashboard Data"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:842
+#: includes/REST/AdminDashboardStatsController.php:850
 msgid "Sales overview analytics link"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:846
-#: includes/REST/AdminDashboardStatsController.php:865
+#: includes/REST/AdminDashboardStatsController.php:854
+#: includes/REST/AdminDashboardStatsController.php:873
 msgid "Icon name for the analytics item"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:850
-#: includes/REST/AdminDashboardStatsController.php:869
+#: includes/REST/AdminDashboardStatsController.php:858
+#: includes/REST/AdminDashboardStatsController.php:877
 msgid "URL to the analytics page"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:855
-#: includes/REST/AdminDashboardStatsController.php:874
+#: includes/REST/AdminDashboardStatsController.php:863
+#: includes/REST/AdminDashboardStatsController.php:882
 msgid "Analytics item title"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:861
+#: includes/REST/AdminDashboardStatsController.php:869
 msgid "Revenue insight analytics link"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:893
+#: includes/REST/AdminDashboardStatsController.php:901
 msgid "Monthly Overview Dashboard Data"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:897
+#: includes/REST/AdminDashboardStatsController.php:905
 msgid "New products statistics"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:909
+#: includes/REST/AdminDashboardStatsController.php:917
 msgid "Active vendors statistics"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:921
+#: includes/REST/AdminDashboardStatsController.php:929
 msgid "New vendor registration statistics"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:933
+#: includes/REST/AdminDashboardStatsController.php:941
 msgid "New customers statistics"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:945
+#: includes/REST/AdminDashboardStatsController.php:953
 msgid "Order cancellation rate statistics"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:949
+#: includes/REST/AdminDashboardStatsController.php:957
 msgid "Recurring customers statistics"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:966
+#: includes/REST/AdminDashboardStatsController.php:974
 msgid "Sales Chart Data"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:970
+#: includes/REST/AdminDashboardStatsController.php:978
 msgid "Daily sales intervals data"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:997
+#: includes/REST/AdminDashboardStatsController.php:1005
 msgid "All Time Stats Data"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:1001
+#: includes/REST/AdminDashboardStatsController.php:1009
 msgid "Total products statistics"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:1010
+#: includes/REST/AdminDashboardStatsController.php:1018
 msgid "Total vendors statistics"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:1019
+#: includes/REST/AdminDashboardStatsController.php:1027
 msgid "Total customers statistics"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:1028
+#: includes/REST/AdminDashboardStatsController.php:1036
 msgid "Total orders statistics"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:1037
+#: includes/REST/AdminDashboardStatsController.php:1045
 msgid "Total sales statistics"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:1046
+#: includes/REST/AdminDashboardStatsController.php:1054
 msgid "Total commissions statistics"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:1068
+#: includes/REST/AdminDashboardStatsController.php:1076
 msgid "Top Performing Vendors Data"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:1074
+#: includes/REST/AdminDashboardStatsController.php:1082
 msgid "Vendor ranking position"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:1078
+#: includes/REST/AdminDashboardStatsController.php:1086
 msgid "Vendor shop name"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:1082
+#: includes/REST/AdminDashboardStatsController.php:1090
 msgid "Total earnings amount"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:1086
+#: includes/REST/AdminDashboardStatsController.php:1094
 msgid "Total number of orders"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:1090
+#: includes/REST/AdminDashboardStatsController.php:1098
 msgid "Total commission amount"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:1108
+#: includes/REST/AdminDashboardStatsController.php:1116
 msgid "Most Reviewed Products Data"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:1114
+#: includes/REST/AdminDashboardStatsController.php:1122
 msgid "Product ranking position"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:1118
+#: includes/REST/AdminDashboardStatsController.php:1126
 msgid "Product ID"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:1122
+#: includes/REST/AdminDashboardStatsController.php:1130
 msgid "Product title"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:1126
+#: includes/REST/AdminDashboardStatsController.php:1134
 msgid "Number of reviews"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:1144
+#: includes/REST/AdminDashboardStatsController.php:1152
 msgid "Vendor Metrics Data"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:1148
-msgid "Subscribed vendors metrics"
-msgstr ""
-
-#: includes/REST/AdminDashboardStatsController.php:1152
-#: includes/REST/AdminDashboardStatsController.php:1170
-#: includes/REST/AdminDashboardStatsController.php:1188
-msgid "Icon name for the metric"
-msgstr ""
-
 #: includes/REST/AdminDashboardStatsController.php:1156
-msgid "Number of subscribed vendors"
+msgid "Subscribed vendors metrics"
 msgstr ""
 
 #: includes/REST/AdminDashboardStatsController.php:1160
 #: includes/REST/AdminDashboardStatsController.php:1178
 #: includes/REST/AdminDashboardStatsController.php:1196
+msgid "Icon name for the metric"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1164
+msgid "Number of subscribed vendors"
+msgstr ""
+
+#: includes/REST/AdminDashboardStatsController.php:1168
+#: includes/REST/AdminDashboardStatsController.php:1186
+#: includes/REST/AdminDashboardStatsController.php:1204
 msgid "Metric title"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:1166
+#: includes/REST/AdminDashboardStatsController.php:1174
 msgid "Vendors on vacation metrics"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:1174
+#: includes/REST/AdminDashboardStatsController.php:1182
 msgid "Number of vendors on vacation"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:1184
+#: includes/REST/AdminDashboardStatsController.php:1192
 msgid "Verified vendors metrics"
 msgstr ""
 
-#: includes/REST/AdminDashboardStatsController.php:1192
+#: includes/REST/AdminDashboardStatsController.php:1200
 msgid "Number of verified vendors"
 msgstr ""
 
@@ -12736,6 +12736,10 @@ msgid "YouTube"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:179
+msgid "X"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "No Social Links Added"
 msgstr ""
 
@@ -12894,6 +12898,10 @@ msgid "Not Connected"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:179
+msgid "Searching…"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
 msgid "Store Image"
 msgstr ""
 
@@ -12907,10 +12915,6 @@ msgstr ""
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Select Image"
-msgstr ""
-
-#: assets/js/dokan-admin-dashboard.js:179
-msgid "Searching…"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:179
@@ -13095,20 +13099,16 @@ msgid "Enable"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:179
-#: assets/js/vue-bootstrap.js:2
-msgid "Social Options"
-msgstr ""
-
-#: assets/js/dokan-admin-dashboard.js:179
-msgid "Social Information"
-msgstr ""
-
-#: assets/js/dokan-admin-dashboard.js:179
 msgid "https://example.com"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:179
-msgid "X"
+msgid "Please enter a valid %1$s URL (must contain: %2$s)"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+#: assets/js/vue-bootstrap.js:2
+msgid "Social Options"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:179

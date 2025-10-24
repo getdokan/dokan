@@ -617,7 +617,7 @@ class Dashboard implements Hookable {
     /**
      * Add container for admin switching functionality.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.3
      *
      * @param string $text Footer text
      *
@@ -639,7 +639,7 @@ class Dashboard implements Hookable {
     /**
      * Add empty update footer for Dokan screens.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.3
      *
      * @param string $content Footer content
      *
