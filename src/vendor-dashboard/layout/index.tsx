@@ -7,23 +7,6 @@ import { __, sprintf } from '@wordpress/i18n';
 import './style.scss';
 import { Tooltip } from '@getdokan/dokan-ui';
 
-const getIcon = ( iconName: string ) => {
-    const iconProps = { className: 'w-5 h-5 text-[#828282]' };
-
-    // Get the icon component by name.
-    const IconComponent = ( LucideIcons as any )[ iconName ];
-
-    // If the icon is not found, use a fallback icon.
-    if ( ! IconComponent ) {
-        console.warn(
-            `Icon "${ iconName }" not found in Lucide React. Using fallback.`
-        );
-        return <LucideIcons.Settings { ...iconProps } />;
-    }
-
-    return <IconComponent { ...iconProps } />;
-};
-
 const Header = () => {
     const [ adminBar, setAdminBar ] = useState( 0 );
 
@@ -139,6 +122,29 @@ const Sidebar = () => {
     const { name: subscriptionName, status: subscriptionStatus } =
         subscription || {};
 
+    const getIcon = ( iconName: string, isParentActive: boolean ) => {
+        const iconProps = {
+            className: twMerge(
+                isParentActive ? 'text-[#FFFFFF]' : 'text-[#DACEFF]',
+                'w-5 h-5 group-hover:text-[#FFFFFF]'
+            ),
+            size: 20,
+        };
+
+        // Get the icon component by name.
+        const IconComponent = ( LucideIcons as any )[ iconName ];
+
+        // If the icon is not found, use a fallback icon.
+        if ( ! IconComponent ) {
+            console.warn(
+                `Icon "${ iconName }" not found in Lucide React. Using fallback.`
+            );
+            return <LucideIcons.Settings { ...iconProps } />;
+        }
+
+        return <IconComponent { ...iconProps } />;
+    };
+
     return (
         <aside
             style={ { top: adminBar } }
@@ -224,12 +230,7 @@ const Sidebar = () => {
                                                 hasSub ? isExpanded : ''
                                             }
                                         >
-                                            {/*<span*/}
-                                            {/*    dangerouslySetInnerHTML={ {*/}
-                                            {/*        __html: item.icon,*/}
-                                            {/*    } }*/}
-                                            {/*/>*/}
-                                            { getIcon( item.icon_name ) }
+                                            { getIcon( item.icon_name, isParentActive ) }
                                             <span className="ml-2">
                                                 { item.title }
                                             </span>
