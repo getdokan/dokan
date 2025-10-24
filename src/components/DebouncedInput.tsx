@@ -5,7 +5,7 @@ import { SimpleInput } from "@getdokan/dokan-ui";
 const DebouncedInput = ( {
     value: externalValue = '',
     onChange,
-    delay = 300,
+    delay = 500,
     component = '',
     ...props
 } ) => {

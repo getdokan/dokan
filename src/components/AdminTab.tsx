@@ -120,7 +120,7 @@ const AdminTab = ( {
                     { children || ( () => null ) }
                 </TabPanel>
 
-                <div className="flex items-end gap-2">
+                <div className="flex items-center gap-2">
                     { additionalComponents?.map( ( node, index ) => (
                         <Fragment key={ index }>{ node }</Fragment>
                     ) ) }
