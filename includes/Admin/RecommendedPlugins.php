@@ -26,7 +26,7 @@ class RecommendedPlugins {
             [
                 'type'        => 'store_growth',
                 'title'       => __( 'StoreGrowth', 'dokan-lite' ),
-                'description' => __( 'Increase sales with powerful conversion tools for WooCommerce.', 'dokan-lite' ),
+                'description' => __( 'Increase revenue with powerful sales tools for WooCommerce.', 'dokan-lite' ),
                 'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/store-growth-logo.png',
                 'img_alt'     => __( 'StoreGrowth logo', 'dokan-lite' ),
                 'slug'        => 'storegrowth-sales-booster',
