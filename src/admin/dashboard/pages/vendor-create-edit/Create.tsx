@@ -1,4 +1,4 @@
-import Form from './Form';
+import Form from './form';
 import { useDispatch, useSelect } from '@wordpress/data';
 import store from '../../../../stores/vendors';
 import { useEffect, useState } from '@wordpress/element';
@@ -138,7 +138,8 @@ function Create( props: any ) {
                     <DokanButton
                         variant="secondary"
                         onClick={ () =>
-                            ( window.location.href = config.dokanVendorsListUrl )
+                            ( window.location.href =
+                                config.dokanVendorsListUrl )
                         }
                     >
                         { __( 'Cancel', 'dokan-lite' ) }

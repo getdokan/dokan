@@ -1,4 +1,4 @@
-import Form from './Form';
+import Form from './form';
 import { useDispatch, useSelect } from '@wordpress/data';
 import store from '../../../../stores/vendors';
 import { useEffect, useState, useRef } from '@wordpress/element';
