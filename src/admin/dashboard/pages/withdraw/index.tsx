@@ -212,7 +212,7 @@ const WithdrawPage = () => {
                     <Tooltip content={ <RawHTML>{ full }</RawHTML> }>
                         <p className="m-0 space-x-2 flex flex-wrap max-w-40 text-wrap leading-6 text-sm text-gray-600">
                             <RawHTML>
-                                { truncate ? truncate( full, 120 ) : full }
+                                { truncate ? truncate( full, 40 ) : full }
                             </RawHTML>
                         </p>
                     </Tooltip>
@@ -228,7 +228,7 @@ const WithdrawPage = () => {
                     <Tooltip content={ <RawHTML>{ full }</RawHTML> }>
                         <p className="m-0 space-x-2 flex flex-wrap max-w-40 text-wrap leading-6 text-sm text-gray-600">
                             <RawHTML>
-                                { truncate ? truncate( full, 120 ) : full }
+                                { truncate ? truncate( full, 40 ) : full }
                             </RawHTML>
                         </p>
                     </Tooltip>
