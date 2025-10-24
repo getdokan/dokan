@@ -184,12 +184,12 @@ function Edit( props ) {
                     <DokanLink
                         href={
                             // @ts-ignore
-                            `${ dokanAdminDashboard.urls.adminRoot }admin.php?page=dokan-dashboard#/vendors`
+                            `${ dokanAdminDashboard.urls.adminRoot }admin.php?page=dokan-dashboard#/vendors/${ id ?? '' }`
                         }
                         className="flex flex-row w-auto items-center gap-1 !text-neutral-500 hover:!underline"
                     >
                         <ChevronLeft size="15" />
-                        <span>{ __( 'Vendors', 'dokan-lite' ) }</span>
+                        <span>{ __( 'Vendor', 'dokan-lite' ) }</span>
                     </DokanLink>
                 </div>
 
