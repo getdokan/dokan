@@ -22,7 +22,6 @@ import {
 } from '@dokan/components';
 
 import { Trash, ArrowDown, Home, Calendar, CreditCard } from 'lucide-react';
-import { twMerge } from 'tailwind-merge';
 
 // Define withdraw statuses for tab filtering
 const WITHDRAW_STATUSES = [
