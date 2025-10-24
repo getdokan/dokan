@@ -116,6 +116,28 @@ class Dashboard extends DokanShortcode {
                                 'avatar' => get_avatar_url( $user_id ),
                             ],
                             'sidebarNav' => dokan_get_dashboard_nav(),
+                            'headerNav'  => [
+                                [
+                                    'label' => __( 'My Account', 'dokan-lite' ),
+                                    'icon'  => 'UserRound',
+                                    'url'   => dokan_get_navigation_url( 'edit-account' ),
+                                ],
+                                [
+                                    'label' => __( 'Back to WP Panel', 'dokan-lite' ),
+                                    'icon'  => 'UserRound',
+                                    'url'   => admin_url(),
+                                ],
+                                [
+                                    'label' => __( 'Access Admin Panel', 'dokan-lite' ),
+                                    'icon'  => 'LockOpen',
+                                    'url'   => admin_url(),
+                                ],
+                                [
+                                    'label' => __( 'Log out', 'dokan-lite' ),
+                                    'icon'  => 'LogOut',
+                                    'url'   => wp_logout_url( home_url() ),
+                                ],
+                            ],
                         ],
                         $vendor
                     )

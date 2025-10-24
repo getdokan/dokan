@@ -5,6 +5,7 @@ import { truncate } from '../../utilities';
 import { twMerge } from 'tailwind-merge';
 import { __, sprintf } from '@wordpress/i18n';
 import './style.scss';
+import { Popover } from '@dokan/components';
 import { Tooltip } from '@getdokan/dokan-ui';
 
 const Header = () => {
@@ -36,9 +37,9 @@ const Header = () => {
                 { /* eslint-disable-next-line jsx-a11y/anchor-is-valid */ }
                 <a
                     href={ window.dokan?.urls?.storeUrl || '#' }
-                    className="skip-color-module flex items-center text-sm gap-2 font-medium text-[#7047EB] hover:text-indigo-700 focus:!outline-none"
+                    className="group skip-color-module flex items-center text-sm gap-2 font-medium text-[#393939] hover:text-[#7047EB] focus:!outline-none"
                 >
-                    <LucideIcons.Globe size={ 16 } color="#7047EB" />
+                    <LucideIcons.Globe size={ 16 } className={ 'text-[#828282] group-hover:text-[#7047EB]' } />
                     { __( 'Visit Store', 'dokan-lite' ) }
                 </a>
                 <div className="border border-[#E9E9E9] border-r-0 h-8 mx-5"></div>
@@ -159,8 +160,8 @@ const Sidebar = () => {
                         alt={ __( 'Vendor Dashboard Logo', 'dokan-lite' ) }
                     />
                 ) : (
-                    <span className="grid h-8 w-8 place-items-center rounded-md bg-[#ECE6FF]">
-                        <span className="h-4 w-4 rounded bg-gradient-to-br from-[#79A926] to-[#197B84]" />
+                    <span className="grid h-8 w-8 place-items-center rounded-md bg-[#7047EB]">
+                        <LucideIcons.Globe size={ 20 } color="#FFF" />
                     </span>
                 ) }
 
@@ -242,9 +243,9 @@ const Sidebar = () => {
                                             ) }
                                             { hasSub &&
                                                 ( isExpanded ? (
-                                                    <LucideIcons.ChevronUp className="ml-auto w-4 h-4 text-[#A5A5A5]" />
+                                                    <LucideIcons.ChevronUp className="ml-auto w-4 h-4 text-[#A5A5A5] group-hover:text-white" />
                                                 ) : (
-                                                    <LucideIcons.ChevronDown className="ml-auto w-4 h-4 text-[#A5A5A5]" />
+                                                    <LucideIcons.ChevronDown className="ml-auto w-4 h-4 text-[#A5A5A5] group-hover:text-white" />
                                                 ) ) }
                                         </a>
 
@@ -276,7 +277,7 @@ const Sidebar = () => {
                                                                     aria-current={
                                                                         isSubActive
                                                                             ? 'page'
-                                                                            : undefined
+                                                                            : ''
                                                                     }
                                                                 >
                                                                     <span
@@ -284,7 +285,7 @@ const Sidebar = () => {
                                                                             'ml-4'
                                                                         }
                                                                     >
-                                                                        <span className="ml-2">
+                                                                        <span className="ml-3">
                                                                             {
                                                                                 subitem.title
                                                                             }
