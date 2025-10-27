@@ -379,7 +379,7 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
 
     $product = wc_get_product( $post_id );
     
-    $raw_sku = isset( $data['_sku'] ) ? $data['_sku'] : '';
+    $raw_sku = $data['_sku'] ?? '';
     $sku = trim( wp_unslash( $raw_sku ) ) !== '' ? sanitize_text_field( wp_unslash( $raw_sku ) ) : '';
     try {
         $product->set_sku( $sku );
