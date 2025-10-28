@@ -5,7 +5,7 @@ import { truncate } from '../../utilities';
 import { twMerge } from 'tailwind-merge';
 import { __, sprintf } from '@wordpress/i18n';
 import './style.scss';
-import { Popover } from '@dokan/components';
+import { Popover } from '@src/components';
 import { Tooltip } from '@getdokan/dokan-ui';
 
 const Header = () => {
@@ -21,9 +21,18 @@ const Header = () => {
         return () => window.removeEventListener( 'resize', compute );
     }, [] );
 
-    const { user, editUrl } =
+    const { user, headerNav } =
             ( window as any )?.vendorDashboardLayoutConfig || {},
         { name: userName, avatar: userAvatar } = user || {};
+
+    const [ isMenuOpen, setIsMenuOpen ] = useState( false );
+    const [ popoverAnchor, setPopoverAnchor ] = useState< any >();
+
+    const getMenuIcon = ( iconName?: string ) => {
+        const Icon =
+            ( LucideIcons as any )[ iconName || '' ] || LucideIcons.User;
+        return <Icon size={ 16 } className="text-[#828282]" />;
+    };
 
     return (
         <header
@@ -39,25 +48,42 @@ const Header = () => {
                     href={ window.dokan?.urls?.storeUrl || '#' }
                     className="group skip-color-module flex items-center text-sm gap-2 font-medium text-[#393939] hover:text-[#7047EB] focus:!outline-none"
                 >
-                    <LucideIcons.Globe size={ 16 } className={ 'text-[#828282] group-hover:text-[#7047EB]' } />
+                    <LucideIcons.Globe
+                        size={ 16 }
+                        className={
+                            'text-[#828282] group-hover:text-[#7047EB]'
+                        }
+                    />
                     { __( 'Visit Store', 'dokan-lite' ) }
                 </a>
                 <div className="border border-[#E9E9E9] border-r-0 h-8 mx-5"></div>
-                <div className="flex items-center gap-2.5">
+
+                <div
+                    className="flex items-center gap-2.5 cursor-pointer"
+                    // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
+                    onMouseEnter={ () => setIsMenuOpen( true ) }
+                    onMouseLeave={ () => setIsMenuOpen( false ) }
+                    onKeyDown={ ( e ) => {
+                        if ( e.key === 'Enter' || e.key === ' ' ) {
+                            e.preventDefault();
+                            setIsMenuOpen( ( v ) => ! v );
+                        }
+                    } }
+                    role="button"
+                    tabIndex={ 0 }
+                    ref={ setPopoverAnchor }
+                    aria-haspopup="menu"
+                    aria-expanded={ isMenuOpen }
+                >
                     { userAvatar ? (
-                        <a
-                            href={ editUrl || '#' }
-                            className={ 'focus:!outline-none' }
-                        >
-                            <img
-                                src={ userAvatar }
-                                className="h-7 w-7 rounded-full"
-                                alt={
-                                    userName ||
-                                    __( 'User Profile Image', 'dokan-lite' )
-                                }
-                            />
-                        </a>
+                        <img
+                            src={ userAvatar }
+                            className="h-7 w-7 rounded-full"
+                            alt={
+                                userName ||
+                                __( 'User Profile Image', 'dokan-lite' )
+                            }
+                        />
                     ) : (
                         <div
                             className="h-7 w-7 rounded-full bg-orange-300"
@@ -71,6 +97,37 @@ const Header = () => {
                         className={ 'mt-0.5' }
                     />
                 </div>
+
+                { isMenuOpen && (
+                    <Popover
+                        animate
+                        anchor={ popoverAnchor }
+                        className="dokan-layout"
+                        onClose={ () => setIsMenuOpen( false ) }
+                    >
+                        <div className="bg-white rounded-md shadow-md p-2 min-w-[220px]">
+                            <ul className="flex flex-col">
+                                { headerNav?.map(
+                                    ( item: any, idx: number ) => (
+                                        <li key={ idx }>
+                                            <a
+                                                href={ item?.url || '#' }
+                                                className="flex items-center gap-2 px-3 py-2 rounded text-sm text-[#393939] hover:bg-[#F3F0FF] focus:!outline-none"
+                                                onClick={ () =>
+                                                    setIsMenuOpen( false )
+                                                }
+                                                role="menuitem"
+                                            >
+                                                { getMenuIcon( item?.icon ) }
+                                                <span>{ item?.label }</span>
+                                            </a>
+                                        </li>
+                                    )
+                                ) }
+                            </ul>
+                        </div>
+                    </Popover>
+                ) }
             </div>
         </header>
     );
@@ -137,9 +194,6 @@ const Sidebar = () => {
 
         // If the icon is not found, use a fallback icon.
         if ( ! IconComponent ) {
-            console.warn(
-                `Icon "${ iconName }" not found in Lucide React. Using fallback.`
-            );
             return <LucideIcons.Settings { ...iconProps } />;
         }
 
@@ -231,7 +285,10 @@ const Sidebar = () => {
                                                 hasSub ? isExpanded : ''
                                             }
                                         >
-                                            { getIcon( item.icon_name, isParentActive ) }
+                                            { getIcon(
+                                                item.icon_name,
+                                                isParentActive
+                                            ) }
                                             <span className="ml-2">
                                                 { item.title }
                                             </span>

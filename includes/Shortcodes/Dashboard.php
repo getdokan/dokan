@@ -120,7 +120,7 @@ class Dashboard extends DokanShortcode {
                                 [
                                     'label' => __( 'My Account', 'dokan-lite' ),
                                     'icon'  => 'UserRound',
-                                    'url'   => dokan_get_navigation_url( 'edit-account' ),
+                                    'url'   => dokan_get_page_url( 'myaccount', 'woocommerce' ),
                                 ],
                                 [
                                     'label' => __( 'Back to WP Panel', 'dokan-lite' ),
