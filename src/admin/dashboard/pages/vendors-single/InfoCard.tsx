@@ -146,8 +146,6 @@ const InfoCard = ( { vendor }: InfoCardProps ) => {
                     <Mail size="15" />
                     <Tooltip
                         content={ vendor?.email }
-                        direction="top"
-                        contentClass="bg-gray-800 text-white p-2 rounded-md"
                     >
                         <p>
                             { vendor?.email
