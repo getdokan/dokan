@@ -201,20 +201,39 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
             />
             <DataViews { ...filteredProps }>
                 <div className="dokan-admin-dashboard-datatable-header w-full flex items-center flex-col justify-between rounded-tr-md rounded-tl-md">
-                    { filteredProps.tabs &&
-                        filteredProps.tabs.tabs &&
-                        filteredProps.tabs.tabs.length > 0 && (
-                            <AdminTab
-                                { ...( tabsWithFilterButton ||
-                                    filteredProps.tabs ) }
-                                namespace={ tableNameSpace }
-                                onSelect={ ( tabName ) => {
-                                    filteredProps.tabs?.onSelect?.( tabName );
-                                    filteredProps.selection = [];
-                                    filteredProps.onChangeSelection?.( [] );
-                                } }
-                            />
-                        ) }
+                    {/* Render header controls using dataviews classes to preserve layout */}
+                    <div className="dataviews__view-actions w-full flex items-center justify-between">
+                        <div className="dataviews__left-controls flex items-center gap-4">
+                            { filteredProps.tabs &&
+                                filteredProps.tabs.tabs &&
+                                filteredProps.tabs.tabs.length > 0 && (
+                                    <AdminTab
+                                        { ...( tabsWithFilterButton ||
+                                            filteredProps.tabs ) }
+                                        namespace={ tableNameSpace }
+                                        onSelect={ ( tabName ) => {
+                                            filteredProps.tabs?.onSelect?.( tabName );
+                                            filteredProps.selection = [];
+                                            filteredProps.onChangeSelection?.( [] );
+                                        } }
+                                    />
+                                ) }
+                        </div>
+
+                        <div className="dataviews__right-controls flex items-center">
+                            { /* Render search and filters toggle on the right */ }
+                            { filteredProps.search && (
+                                <div className="dokan-dataviews-search order-1">
+                                    <DataViews.Search label={ filteredProps.searchLabel } />
+                                </div>
+                            ) }
+
+                            <div className="order-2 ml-3">
+                                <DataViews.FiltersToggle />
+                            </div>
+                        </div>
+                    </div>
+
                     { filteredProps.filter &&
                         filteredProps.filter.fields &&
                         filteredProps.filter.fields.length > 0 && (
