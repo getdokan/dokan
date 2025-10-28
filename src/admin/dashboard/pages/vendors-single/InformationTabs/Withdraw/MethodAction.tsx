@@ -11,6 +11,7 @@ import store from '@dokan/stores/vendors';
 import { useDispatch } from '@wordpress/data';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
+import { useToast } from "@getdokan/dokan-ui";
 
 function MethodAction( {
     connected,
@@ -26,6 +27,7 @@ function MethodAction( {
     const [ isOpen, setIsOpen ] = useState( false );
     const { setVendor } = useDispatch( store );
     const [ loading, setLoading ] = useState( false );
+    const toast = useToast();
     if (
         settings?.chargeable_methods &&
         ! Object.prototype.hasOwnProperty.call(
@@ -78,10 +80,21 @@ function MethodAction( {
 
             setLoading( false );
             setIsOpen( false );
-        } catch {
+            toast( {
+                type: 'success',
+                title: __( 'Payment method saved successfully', 'dokan-lite' ),
+            } );
+        } catch ( error ) {
             await setVendor( vendorCopy );
 
             setLoading( false );
+
+            toast( {
+                type: 'error',
+                title:
+                    error?.message ||
+                    __( 'Failed to save payment method', 'dokan-lite' ),
+            } );
         }
     };
 
@@ -165,9 +178,9 @@ function MethodAction( {
                     <DokanButton
                         variant="secondary"
                         label={ __( 'Manage', 'dokan-lite' ) }
-                        icon={ () => <Settings size={ 15 } /> }
+                        icon={ () => <Settings size={ 20 } /> }
                         size="sm"
-                        className="px-2 py-1 w-[80px] h-[26px]"
+                        className="py-1 px-1.5 w-[80px] h-[26px]"
                         onClick={ () => setIsOpen( true ) }
                     />
                 ) : (
