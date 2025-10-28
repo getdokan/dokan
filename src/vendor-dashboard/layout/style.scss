@@ -71,11 +71,11 @@
 .header-popover {
     a {
         &:hover {
-            color: var(--dokan-button-secondary-text-color, #7047EB);
-            background-color: var(--dokan-sidebar-text-color, #DACEFF);
+            color: var(--dokan-sidebar-hover-background-color, #7047EB);
+            background-color: var(--dokan-button-tertiary-hover-background-color, #DACEFF82);
 
             svg {
-                color: var(--dokan-button-secondary-text-color, #7047EB);
+                color: var(--dokan-sidebar-hover-background-color, #7047EB);
             }
         }
     }
