@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Shortcodes;
 
 use WeDevs\Dokan\Abstracts\DokanShortcode;
+use WeDevs\Dokan\Utilities\OrderUtil;
 use WeDevs\Dokan\Utilities\VendorUtil;
 
 class Dashboard extends DokanShortcode {
@@ -92,9 +93,42 @@ class Dashboard extends DokanShortcode {
                 'dokan-lite'
             );
 
-            $user_id   = get_current_user_id();
-            $vendor    = dokan()->vendor->get( $user_id );
-            $user_name = wp_get_current_user()->display_name ?? '';
+            $user_id      = get_current_user_id();
+            $vendor       = dokan()->vendor->get( $user_id );
+            $user_name    = wp_get_current_user()->display_name ?? '';
+            $admin_access = dokan_get_option( 'admin_access', 'dokan_general', 'on' );
+            $no_access    = OrderUtil::is_hpos_enabled() ? 'on' : $admin_access;
+
+            // Frontend header nav items.
+            $header_nav = [
+                [
+                    'label' => __( 'My Account', 'dokan-lite' ),
+                    'icon'  => 'UserRound',
+                    'url'   => dokan_get_page_url( 'myaccount', 'woocommerce' ),
+                ],
+                [
+                    'label' => __( 'Back to WP Panel', 'dokan-lite' ),
+                    'icon'  => 'WPLogo',
+                    'url'   => admin_url(),
+                    'isSvg' => true,
+                ],
+                [
+                    'label' => __( 'Log out', 'dokan-lite' ),
+                    'icon'  => 'LogOut',
+                    'url'   => wp_logout_url( home_url() ),
+                ],
+            ];
+
+            // Add an admin access link to the header nav based on the admin access and HPOS settings.
+            if ( 'on' !== $no_access ) {
+                array_splice( $header_nav, 2, 0, [
+                    [
+                        'label' => __( 'Access Admin Panel', 'dokan-lite' ),
+                        'icon'  => 'LockOpen',
+                        'url'   => admin_url(),
+                    ]
+                ] );
+            }
 
             wp_add_inline_script(
                 $this->script_key,
@@ -116,28 +150,7 @@ class Dashboard extends DokanShortcode {
                                 'avatar' => get_avatar_url( $user_id ),
                             ],
                             'sidebarNav' => dokan_get_dashboard_nav(),
-                            'headerNav'  => [
-                                [
-                                    'label' => __( 'My Account', 'dokan-lite' ),
-                                    'icon'  => 'UserRound',
-                                    'url'   => dokan_get_page_url( 'myaccount', 'woocommerce' ),
-                                ],
-                                [
-                                    'label' => __( 'Back to WP Panel', 'dokan-lite' ),
-                                    'icon'  => 'UserRound',
-                                    'url'   => admin_url(),
-                                ],
-                                [
-                                    'label' => __( 'Access Admin Panel', 'dokan-lite' ),
-                                    'icon'  => 'LockOpen',
-                                    'url'   => admin_url(),
-                                ],
-                                [
-                                    'label' => __( 'Log out', 'dokan-lite' ),
-                                    'icon'  => 'LogOut',
-                                    'url'   => wp_logout_url( home_url() ),
-                                ],
-                            ],
+                            'headerNav'  => $header_nav,
                         ],
                         $vendor
                     )

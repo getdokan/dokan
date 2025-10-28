@@ -12,3 +12,58 @@
     width: 0;
     height: 0;
 }
+
+.dokan-frontend-layout {
+    .dokan-frontend-sidebar {
+        background-color: var(--dokan-sidebar-background-color, #322067);
+
+        li {
+            a {
+                color: var(--dokan-sidebar-text-color, #DACEFF);
+
+                svg {
+                    color: var(--dokan-sidebar-text-color, #DACEFF);
+                }
+
+                .sidebar-menu-bubble {
+                    background-color: var(--dokan-sidebar-hover-background-color, #7047EB);
+                }
+
+                &:hover,
+                &.active {
+                    color: var(--dokan-sidebar-hover-text-color, #ffffff);
+                    background-color: var(--dokan-sidebar-hover-background-color, #7047EB);
+
+                    svg {
+                        color: var(--dokan-sidebar-hover-text-color, #ffffff);
+                    }
+
+                    .sidebar-menu-bubble {
+                        background-color: #fff;
+                        color: var(--dokan-sidebar-hover-background-color, #7047EB);
+                    }
+                }
+            }
+        }
+    }
+
+    .dokan-frontend-layout-header {
+        .visit-store {
+            &:hover {
+                color: var(--dokan-button-secondary-text-color, #7047EB);
+
+                svg {
+                    color: var(--dokan-button-secondary-text-color, #7047EB);
+                }
+            }
+        }
+
+        .header-avatar {
+            &:hover {
+                svg {
+                    color: var(--dokan-button-secondary-text-color, #7047EB);
+                }
+            }
+        }
+    }
+}

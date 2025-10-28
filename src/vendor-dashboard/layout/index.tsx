@@ -4,9 +4,10 @@ import domReady from '@wordpress/dom-ready';
 import { truncate } from '../../utilities';
 import { twMerge } from 'tailwind-merge';
 import { __, sprintf } from '@wordpress/i18n';
-import './style.scss';
 import { Popover } from '@src/components';
 import { Tooltip } from '@getdokan/dokan-ui';
+import WPLogo from '../icons/WPLogo';
+import './style.scss';
 
 const Header = () => {
     const [ adminBar, setAdminBar ] = useState( 0 );
@@ -31,7 +32,12 @@ const Header = () => {
     const getMenuIcon = ( iconName?: string ) => {
         const Icon =
             ( LucideIcons as any )[ iconName || '' ] || LucideIcons.User;
-        return <Icon size={ 16 } className="text-[#828282]" />;
+        return (
+            <Icon
+                size={ 18 }
+                className="text-[#828282] group-hover:text-[#7047EB]"
+            />
+        );
     };
 
     return (
@@ -42,33 +48,23 @@ const Header = () => {
             ) }
         >
             <LucideIcons.Menu />
-            <div className={ `flex items-center` }>
+            <div
+                className={ `dokan-frontend-layout-header flex items-center relative` }
+            >
                 { /* eslint-disable-next-line jsx-a11y/anchor-is-valid */ }
                 <a
                     href={ window.dokan?.urls?.storeUrl || '#' }
-                    className="group skip-color-module flex items-center text-sm gap-2 font-medium text-[#393939] hover:text-[#7047EB] focus:!outline-none"
+                    className="visit-store group skip-color-module flex items-center text-sm gap-2 font-medium text-[#25252D] focus:!outline-none py-4 px-5"
                 >
-                    <LucideIcons.Globe
-                        size={ 16 }
-                        className={
-                            'text-[#828282] group-hover:text-[#7047EB]'
-                        }
-                    />
+                    <LucideIcons.Globe size={ 16 } className="text-[#828282]" />
                     { __( 'Visit Store', 'dokan-lite' ) }
                 </a>
-                <div className="border border-[#E9E9E9] border-r-0 h-8 mx-5"></div>
-
+                <div className="border border-[#E9E9E9] border-r-0 h-8"></div>
                 <div
-                    className="flex items-center gap-2.5 cursor-pointer"
                     // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
                     onMouseEnter={ () => setIsMenuOpen( true ) }
                     onMouseLeave={ () => setIsMenuOpen( false ) }
-                    onKeyDown={ ( e ) => {
-                        if ( e.key === 'Enter' || e.key === ' ' ) {
-                            e.preventDefault();
-                            setIsMenuOpen( ( v ) => ! v );
-                        }
-                    } }
+                    className="header-avatar flex items-center gap-2.5 cursor-pointer py-4 px-5"
                     role="button"
                     tabIndex={ 0 }
                     ref={ setPopoverAnchor }
@@ -93,40 +89,54 @@ const Header = () => {
                     <LucideIcons.ChevronDown
                         size={ 16 }
                         strokeWidth={ 3 }
-                        color="#828282"
-                        className={ 'mt-0.5' }
+                        className={ twMerge(
+                            'mt-0.5 text-[#828282]',
+                            isMenuOpen ? 'rotate-180' : ''
+                        ) }
                     />
                 </div>
 
                 { isMenuOpen && (
-                    <Popover
-                        animate
-                        anchor={ popoverAnchor }
-                        className="dokan-layout"
-                        onClose={ () => setIsMenuOpen( false ) }
+                    <div
+                        onMouseEnter={ () => setIsMenuOpen( true ) }
+                        onMouseLeave={ () => setIsMenuOpen( false ) }
                     >
-                        <div className="bg-white rounded-md shadow-md p-2 min-w-[220px]">
-                            <ul className="flex flex-col">
-                                { headerNav?.map(
-                                    ( item: any, idx: number ) => (
-                                        <li key={ idx }>
-                                            <a
-                                                href={ item?.url || '#' }
-                                                className="flex items-center gap-2 px-3 py-2 rounded text-sm text-[#393939] hover:bg-[#F3F0FF] focus:!outline-none"
-                                                onClick={ () =>
-                                                    setIsMenuOpen( false )
-                                                }
-                                                role="menuitem"
-                                            >
-                                                { getMenuIcon( item?.icon ) }
-                                                <span>{ item?.label }</span>
-                                            </a>
-                                        </li>
-                                    )
-                                ) }
-                            </ul>
-                        </div>
-                    </Popover>
+                        <Popover
+                            animate
+                            anchor={ popoverAnchor }
+                            className="dokan-layout"
+                            onClose={ () => setIsMenuOpen( false ) }
+                        >
+                            <div className="bg-white rounded-md shadow-md min-w-[240px] transition-all duration-200 ease-in-out py-2">
+                                <ul className="flex flex-col">
+                                    { headerNav?.map(
+                                        ( item: any, idx: number ) => (
+                                            <li key={ idx }>
+                                                <a
+                                                    href={ item?.url || '#' }
+                                                    className="skip-color-module group flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#828282] hover:text-[#7047EB] hover:bg-[#EFEAFF] focus:!outline-none transition-colors duration-150"
+                                                    onClick={ () =>
+                                                        setIsMenuOpen( false )
+                                                    }
+                                                    role="menuitem"
+                                                >
+                                                    { item.isSvg &&
+                                                    item?.icon === 'WPLogo' ? (
+                                                        <WPLogo className="w-[18px] h-[18px] fill-[#828282] group-hover:fill-[#7047eb]" />
+                                                    ) : (
+                                                        getMenuIcon(
+                                                            item?.icon
+                                                        )
+                                                    ) }
+                                                    <span>{ item?.label }</span>
+                                                </a>
+                                            </li>
+                                        )
+                                    ) }
+                                </ul>
+                            </div>
+                        </Popover>
+                    </div>
                 ) }
             </div>
         </header>
@@ -182,10 +192,7 @@ const Sidebar = () => {
 
     const getIcon = ( iconName: string, isParentActive: boolean ) => {
         const iconProps = {
-            className: twMerge(
-                isParentActive ? 'text-[#FFFFFF]' : 'text-[#DACEFF]',
-                'w-5 h-5 group-hover:text-[#FFFFFF]'
-            ),
+            className: 'w-5 h-5',
             size: 20,
         };
 
@@ -203,7 +210,7 @@ const Sidebar = () => {
     return (
         <aside
             style={ { top: adminBar } }
-            className="bg-indigo-950/100 text-white fixed left-0 bottom-0 z-20 w-[250px] max-w-[250px] flex flex-col"
+            className="dokan-frontend-sidebar text-white fixed left-0 bottom-0 z-20 w-[250px] max-w-[250px] flex flex-col"
         >
             { /* Top header inforamtion: full width, attached to top, with a bottom border */ }
             <div className="flex items-center gap-3.5 border-solid border-b border-[#DACEFF33] border-t-0 border-x-0 px-8 min-h-20">
@@ -254,18 +261,13 @@ const Sidebar = () => {
 
                                 const Bubble = ( {
                                     count,
-                                    isActive,
                                 }: {
                                     count: number;
-                                    isActive: boolean;
                                 } ) => (
                                     <span
-                                        className={ twMerge(
-                                            'ml-auto inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[10px] font-semibold leading-none rounded group-hover:text-[#7C4DFF] group-hover:bg-white',
-                                            isActive
-                                                ? 'text-[#7C4DFF] bg-white'
-                                                : 'text-white bg-[#7C4DFF]'
-                                        ) }
+                                        className={
+                                            'sidebar-menu-bubble ml-auto inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 py-0.5 text-[10px] font-semibold leading-none rounded-md text-white'
+                                        }
                                     >
                                         { count }
                                     </span>
@@ -276,14 +278,9 @@ const Sidebar = () => {
                                         <a
                                             href={ item.url }
                                             onClick={ onParentClick }
-                                            className={ `group skip-color-module flex items-center py-2.5 px-3 rounded-md text-sm focus:!outline-none ${
-                                                isParentActive
-                                                    ? 'text-white bg-[#7047EB]'
-                                                    : 'text-[#DACEFF] hover:bg-[#7047EB] hover:text-white'
+                                            className={ `group skip-color-module flex items-center py-2.5 px-3 rounded-md font-medium text-sm focus:!outline-none ${
+                                                isParentActive && 'active'
                                             }` }
-                                            aria-expanded={
-                                                hasSub ? isExpanded : ''
-                                            }
                                         >
                                             { getIcon(
                                                 item.icon_name,
@@ -293,10 +290,7 @@ const Sidebar = () => {
                                                 { item.title }
                                             </span>
                                             { item.counts > 0 && (
-                                                <Bubble
-                                                    count={ item.counts }
-                                                    isActive={ isParentActive }
-                                                />
+                                                <Bubble count={ item.counts } />
                                             ) }
                                             { hasSub &&
                                                 ( isExpanded ? (
@@ -326,16 +320,10 @@ const Sidebar = () => {
                                                                     href={
                                                                         subitem.url
                                                                     }
-                                                                    className={ `group skip-color-module flex items-center py-2.5 px-3 pl-8 text-sm rounded-md focus:!outline-none ${
-                                                                        isSubActive
-                                                                            ? 'bg-[#7C4DFF] text-white'
-                                                                            : 'text-[#DACEFF] hover:bg-[#7047EB] hover:text-white'
+                                                                    className={ `group skip-color-module flex items-center py-2.5 px-3 pl-8 text-sm font-medium rounded-md focus:!outline-none ${
+                                                                        isSubActive &&
+                                                                        'active'
                                                                     }` }
-                                                                    aria-current={
-                                                                        isSubActive
-                                                                            ? 'page'
-                                                                            : ''
-                                                                    }
                                                                 >
                                                                     <span
                                                                         className={
@@ -350,9 +338,6 @@ const Sidebar = () => {
                                                                         { subitem.counts >
                                                                             0 && (
                                                                             <Bubble
-                                                                                isActive={
-                                                                                    isSubActive
-                                                                                }
                                                                                 count={
                                                                                     subitem.counts
                                                                                 }
@@ -433,7 +418,7 @@ const Layout = () => {
     }, [] );
 
     return (
-        <div className="w-full">
+        <div className="dokan-frontend-layout w-full">
             <Sidebar />
             <main className="ml-60 flex-1 border-l border-gray-200 bg-white">
                 <Header />
