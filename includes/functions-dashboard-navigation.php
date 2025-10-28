@@ -64,12 +64,11 @@ function dokan_get_dashboard_nav(): array {
             'react_route' => 'withdraw',
         ],
         'settings'  => [
-            'title'            => __( 'Settings', 'dokan-lite' ),
-            'icon'             => '<i class="fas fa-cog"></i>',
-            'icon_name'        => 'Settings',
-            'url'              => dokan_get_navigation_url( 'settings/store' ),
-            'pos'              => 200,
-            'store_operations' => true,
+            'title'     => __( 'Settings', 'dokan-lite' ),
+            'icon'      => '<i class="fas fa-cog"></i>',
+            'icon_name' => 'Settings',
+            'url'       => dokan_get_navigation_url( 'settings/store' ),
+            'pos'       => 200,
         ],
     ];
 

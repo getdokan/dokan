@@ -67,3 +67,16 @@
         }
     }
 }
+
+.header-popover {
+    a {
+        &:hover {
+            color: var(--dokan-button-secondary-text-color, #7047EB);
+            background-color: var(--dokan-sidebar-text-color, #DACEFF);
+
+            svg {
+                color: var(--dokan-button-secondary-text-color, #7047EB);
+            }
+        }
+    }
+}

@@ -95,22 +95,18 @@ class Dashboard extends DokanShortcode {
 
             $user_id      = get_current_user_id();
             $vendor       = dokan()->vendor->get( $user_id );
+            $is_admin     = current_user_can( 'manage_options' );
             $user_name    = wp_get_current_user()->display_name ?? '';
             $admin_access = dokan_get_option( 'admin_access', 'dokan_general', 'on' );
             $no_access    = OrderUtil::is_hpos_enabled() ? 'on' : $admin_access;
 
             // Frontend header nav items.
+            // Build base with My Account and Log out; insert conditional admin links next.
             $header_nav = [
                 [
                     'label' => __( 'My Account', 'dokan-lite' ),
                     'icon'  => 'UserRound',
                     'url'   => dokan_get_page_url( 'myaccount', 'woocommerce' ),
-                ],
-                [
-                    'label' => __( 'Back to WP Panel', 'dokan-lite' ),
-                    'icon'  => 'WPLogo',
-                    'url'   => admin_url(),
-                    'isSvg' => true,
                 ],
                 [
                     'label' => __( 'Log out', 'dokan-lite' ),
@@ -119,14 +115,24 @@ class Dashboard extends DokanShortcode {
                 ],
             ];
 
-            // Add an admin access link to the header nav based on the admin access and HPOS settings.
-            if ( 'on' !== $no_access ) {
-                array_splice( $header_nav, 2, 0, [
+            if ( $is_admin ) {
+                // Only administrators: show Back to WP Panel.
+                array_splice( $header_nav, 1, 0, [
                     [
-                        'label' => __( 'Access Admin Panel', 'dokan-lite' ),
+                        'label' => esc_html__( 'Back to WP Panel', 'dokan-lite' ),
+                        'icon'  => 'WPLogo',
+                        'url'   => admin_url(),
+                        'isSvg' => true,
+                    ],
+                ] );
+            } elseif ( 'on' !== $no_access ) {
+                // Non-admins with admin panel access: show Access Admin Panel.
+                array_splice( $header_nav, 1, 0, [
+                    [
+                        'label' => esc_html__( 'Access Admin Panel', 'dokan-lite' ),
                         'icon'  => 'LockOpen',
                         'url'   => admin_url(),
-                    ]
+                    ],
                 ] );
             }
 

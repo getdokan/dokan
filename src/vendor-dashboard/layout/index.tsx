@@ -1,4 +1,4 @@
-import { createRoot, useEffect, useState } from '@wordpress/element';
+import { createRoot, useEffect, useState, useRef } from '@wordpress/element';
 import * as LucideIcons from 'lucide-react';
 import domReady from '@wordpress/dom-ready';
 import { truncate } from '../../utilities';
@@ -9,7 +9,7 @@ import { Tooltip } from '@getdokan/dokan-ui';
 import WPLogo from '../icons/WPLogo';
 import './style.scss';
 
-const Header = () => {
+const Header = ( { onToggleSidebar }: { onToggleSidebar: () => void } ) => {
     const [ adminBar, setAdminBar ] = useState( 0 );
 
     useEffect( () => {
@@ -35,7 +35,7 @@ const Header = () => {
         return (
             <Icon
                 size={ 18 }
-                className="text-[#828282] group-hover:text-[#7047EB]"
+                className="text-[#828282]"
             />
         );
     };
@@ -47,7 +47,14 @@ const Header = () => {
                 `top-[${ adminBar }px]`
             ) }
         >
-            <LucideIcons.Menu />
+            <button
+                type="button"
+                onClick={ onToggleSidebar }
+                aria-label="Toggle sidebar menu"
+                className="p-2 rounded hover:bg-gray-100 focus:ring-0 focus:!outline-none"
+            >
+                <LucideIcons.Menu />
+            </button>
             <div
                 className={ `dokan-frontend-layout-header flex items-center relative` }
             >
@@ -96,54 +103,52 @@ const Header = () => {
                     />
                 </div>
 
-                { isMenuOpen && (
-                    <div
-                        onMouseEnter={ () => setIsMenuOpen( true ) }
-                        onMouseLeave={ () => setIsMenuOpen( false ) }
+                { /*{ isMenuOpen && (*/ }
+                <div
+                    onMouseEnter={ () => setIsMenuOpen( true ) }
+                    onMouseLeave={ () => setIsMenuOpen( false ) }
+                >
+                    <Popover
+                        animate
+                        anchor={ popoverAnchor }
+                        className="dokan-layout"
+                        onClose={ () => setIsMenuOpen( false ) }
                     >
-                        <Popover
-                            animate
-                            anchor={ popoverAnchor }
-                            className="dokan-layout"
-                            onClose={ () => setIsMenuOpen( false ) }
-                        >
-                            <div className="bg-white rounded-md shadow-md min-w-[240px] transition-all duration-200 ease-in-out py-2">
-                                <ul className="flex flex-col">
-                                    { headerNav?.map(
-                                        ( item: any, idx: number ) => (
-                                            <li key={ idx }>
-                                                <a
-                                                    href={ item?.url || '#' }
-                                                    className="skip-color-module group flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#828282] hover:text-[#7047EB] hover:bg-[#EFEAFF] focus:!outline-none transition-colors duration-150"
-                                                    onClick={ () =>
-                                                        setIsMenuOpen( false )
-                                                    }
-                                                    role="menuitem"
-                                                >
-                                                    { item.isSvg &&
-                                                    item?.icon === 'WPLogo' ? (
-                                                        <WPLogo className="w-[18px] h-[18px] fill-[#828282] group-hover:fill-[#7047eb]" />
-                                                    ) : (
-                                                        getMenuIcon(
-                                                            item?.icon
-                                                        )
-                                                    ) }
-                                                    <span>{ item?.label }</span>
-                                                </a>
-                                            </li>
-                                        )
-                                    ) }
-                                </ul>
-                            </div>
-                        </Popover>
-                    </div>
-                ) }
+                        <div className="header-popover bg-white rounded-md shadow-md min-w-[240px] transition-all duration-200 ease-in-out py-2">
+                            <ul className="flex flex-col">
+                                { headerNav?.map(
+                                    ( item: any, idx: number ) => (
+                                        <li key={ idx }>
+                                            <a
+                                                href={ item?.url || '#' }
+                                                className="skip-color-module group flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#828282] focus:!outline-none transition-colors duration-150"
+                                                onClick={ () =>
+                                                    setIsMenuOpen( false )
+                                                }
+                                                role="menuitem"
+                                            >
+                                                { item.isSvg &&
+                                                item?.icon === 'WPLogo' ? (
+                                                    <WPLogo className="w-[18px] h-[18px] fill-[#828282]" />
+                                                ) : (
+                                                    getMenuIcon( item?.icon )
+                                                ) }
+                                                <span>{ item?.label }</span>
+                                            </a>
+                                        </li>
+                                    )
+                                ) }
+                            </ul>
+                        </div>
+                    </Popover>
+                </div>
+                { /*) }*/ }
             </div>
         </header>
     );
 };
 
-const Sidebar = () => {
+const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
     const [ adminBar, setAdminBar ] = useState( 0 );
 
     useEffect( () => {
@@ -162,6 +167,20 @@ const Sidebar = () => {
     const [ expanded, setExpanded ] = useState< Record< string, boolean > >(
         {}
     );
+
+    // Hover state for collapsed submenu flyouts
+    const [ hoveredKey, setHoveredKey ] = useState< string | null >( null );
+    const [ hoverFromBottom, setHoverFromBottom ] = useState( false );
+    const [ hoverRect, setHoverRect ] = useState< DOMRect | null >( null );
+    const hoverTimeoutRef = useRef< any >( null );
+
+    const computePopoverFromBottom = ( rect: DOMRect, count: number ) => {
+        // Estimate popover height; cap for safety and allow scroll inside
+        const itemHeight = 40; // px per submenu row approx
+        const padding = 16; // vertical padding
+        const estimated = Math.min( count, 8 ) * itemHeight + padding;
+        return rect.bottom + estimated > window.innerHeight;
+    };
 
     // Initialize expansion: default collapsed; expand the one that contains the active submenu
     useEffect( () => {
@@ -210,10 +229,18 @@ const Sidebar = () => {
     return (
         <aside
             style={ { top: adminBar } }
-            className="dokan-frontend-sidebar text-white fixed left-0 bottom-0 z-20 w-[250px] max-w-[250px] flex flex-col"
+            className={ twMerge(
+                'dokan-frontend-sidebar text-white fixed left-0 bottom-0 z-20 flex flex-col transition-all duration-200',
+                collapsed ? 'w-24 max-w-24' : 'w-[250px] max-w-[250px]'
+            ) }
         >
             { /* Top header inforamtion: full width, attached to top, with a bottom border */ }
-            <div className="flex items-center gap-3.5 border-solid border-b border-[#DACEFF33] border-t-0 border-x-0 px-8 min-h-20">
+            <div
+                className={ twMerge(
+                    'flex items-center gap-3.5 border-solid border-b border-[#DACEFF33] border-t-0 border-x-0 min-h-20',
+                    collapsed ? 'px-5 justify-center' : 'px-8'
+                ) }
+            >
                 { siteIcon ? (
                     <img
                         src={ siteIcon }
@@ -226,15 +253,22 @@ const Sidebar = () => {
                     </span>
                 ) }
 
-                <Tooltip content={ sideBarTitle }>
-                    <span className="text-2xl font-bold text-white">
-                        { truncate( sideBarTitle, 9 ) }
-                    </span>
-                </Tooltip>
+                { ! collapsed && (
+                    <Tooltip content={ sideBarTitle }>
+                        <span className="text-2xl font-bold text-white">
+                            { truncate( sideBarTitle, 9 ) }
+                        </span>
+                    </Tooltip>
+                ) }
             </div>
 
             { /* Scrollable menu body */ }
-            <div className="flex-1 overflow-y-auto p-5 dokan-vendor-sidebar-scroll">
+            <div
+                className={ twMerge(
+                    'flex-1 overflow-y-auto dokan-vendor-sidebar-scroll',
+                    collapsed ? 'p-2' : 'p-5'
+                ) }
+            >
                 <nav>
                     <ul className="flex flex-col gap-1.5">
                         { Object.entries( sidebarNav || {} ).map(
@@ -250,7 +284,7 @@ const Sidebar = () => {
                                 const isExpanded = Boolean( expanded?.[ key ] );
 
                                 const onParentClick = ( e: any ) => {
-                                    if ( hasSub ) {
+                                    if ( hasSub && ! collapsed ) {
                                         e.preventDefault();
                                         setExpanded( ( prev ) => ( {
                                             ...( prev || {} ),
@@ -261,38 +295,95 @@ const Sidebar = () => {
 
                                 const Bubble = ( {
                                     count,
+                                    isCollapsed = false,
                                 }: {
                                     count: number;
+                                    isCollapsed?: boolean;
                                 } ) => (
                                     <span
-                                        className={
-                                            'sidebar-menu-bubble ml-auto inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 py-0.5 text-[10px] font-semibold leading-none rounded-md text-white'
-                                        }
+                                        className={ twMerge(
+                                            'sidebar-menu-bubble ml-auto inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 py-0.5 text-[10px] font-semibold leading-none rounded-md text-white',
+                                            isCollapsed &&
+                                                'absolute -top-1 -right-2'
+                                        ) }
                                     >
                                         { count }
                                     </span>
                                 );
 
                                 return (
-                                    <li key={ key }>
+                                    <li
+                                        className={ twMerge(
+                                            'relative',
+                                            collapsed && 'flex justify-center'
+                                        ) }
+                                        key={ key }
+                                        onMouseEnter={ ( e ) => {
+                                            if ( collapsed && hasSub ) {
+                                                const rect = (
+                                                    e.currentTarget as HTMLElement
+                                                 ).getBoundingClientRect();
+                                                const subCount = Object.keys(
+                                                    item.submenu || {}
+                                                ).length;
+                                                setHoverRect( rect );
+                                                setHoverFromBottom(
+                                                    computePopoverFromBottom(
+                                                        rect,
+                                                        subCount
+                                                    )
+                                                );
+                                                setHoveredKey( key );
+                                            }
+                                        } }
+                                        onMouseLeave={ () => {
+                                            if ( collapsed ) {
+                                                // delay slightly to allow moving into the flyout
+                                                if ( hoverTimeoutRef.current ) {
+                                                    clearTimeout(
+                                                        hoverTimeoutRef.current
+                                                    );
+                                                }
+                                                hoverTimeoutRef.current =
+                                                    setTimeout( () => {
+                                                        setHoveredKey( null );
+                                                    }, 150 );
+                                            }
+                                        } }
+                                    >
                                         <a
                                             href={ item.url }
                                             onClick={ onParentClick }
-                                            className={ `group skip-color-module flex items-center py-2.5 px-3 rounded-md font-medium text-sm focus:!outline-none ${
+                                            className={ twMerge(
+                                                'group skip-color-module relative flex items-center rounded-md font-medium focus:!outline-none py-2.5',
+                                                collapsed
+                                                    ? 'w-10 max-w-10 justify-center'
+                                                    : 'text-sm px-3',
                                                 isParentActive && 'active'
-                                            }` }
+                                            ) }
                                         >
                                             { getIcon(
                                                 item.icon_name,
                                                 isParentActive
                                             ) }
-                                            <span className="ml-2">
-                                                { item.title }
-                                            </span>
+                                            { /*{ collapsed && item.counts > 0 && (*/ }
+                                            { /*    <span className="absolute -top-1 -right-1 inline-flex items-center justify-center min-w-[16px] h-4 px-1 text-[10px] font-semibold leading-none rounded-full bg-[#F04438] text-white shadow">*/ }
+                                            { /*        { item.counts }*/ }
+                                            { /*    </span>*/ }
+                                            { /*) }*/ }
+                                            { ! collapsed && (
+                                                <span className="ml-2">
+                                                    { item.title }
+                                                </span>
+                                            ) }
                                             { item.counts > 0 && (
-                                                <Bubble count={ item.counts } />
+                                                <Bubble
+                                                    count={ item.counts }
+                                                    isCollapsed={ collapsed }
+                                                />
                                             ) }
                                             { hasSub &&
+                                                ! collapsed &&
                                                 ( isExpanded ? (
                                                     <LucideIcons.ChevronUp className="ml-auto w-4 h-4 text-[#A5A5A5] group-hover:text-white" />
                                                 ) : (
@@ -300,57 +391,167 @@ const Sidebar = () => {
                                                 ) ) }
                                         </a>
 
-                                        { hasSub && isExpanded && (
-                                            <ul className="mt-2 mx-0 space-y-1.5">
-                                                { Object.entries(
-                                                    item.submenu
-                                                ).map(
-                                                    ( [
-                                                        subkey,
-                                                        subitem,
-                                                    ]: any ) => {
-                                                        const isSubActive =
-                                                            subitem?.url &&
-                                                            currentUrl.startsWith(
-                                                                subitem.url
+                                        { collapsed &&
+                                            hasSub &&
+                                            hoveredKey === key &&
+                                            hoverRect && (
+                                                <div
+                                                    onMouseEnter={ () => {
+                                                        if (
+                                                            hoverTimeoutRef.current
+                                                        ) {
+                                                            clearTimeout(
+                                                                hoverTimeoutRef.current
                                                             );
-                                                        return (
-                                                            <li key={ subkey }>
-                                                                <a
-                                                                    href={
-                                                                        subitem.url
-                                                                    }
-                                                                    className={ `group skip-color-module flex items-center py-2.5 px-3 pl-8 text-sm font-medium rounded-md focus:!outline-none ${
-                                                                        isSubActive &&
-                                                                        'active'
-                                                                    }` }
-                                                                >
-                                                                    <span
-                                                                        className={
-                                                                            'ml-4'
-                                                                        }
-                                                                    >
-                                                                        <span className="ml-3">
-                                                                            {
-                                                                                subitem.title
+                                                        }
+                                                        setHoveredKey( key );
+                                                    } }
+                                                    onMouseLeave={ () => {
+                                                        if (
+                                                            hoverTimeoutRef.current
+                                                        ) {
+                                                            clearTimeout(
+                                                                hoverTimeoutRef.current
+                                                            );
+                                                        }
+                                                        hoverTimeoutRef.current =
+                                                            setTimeout( () => {
+                                                                setHoveredKey(
+                                                                    null
+                                                                );
+                                                            }, 150 );
+                                                    } }
+                                                    className="z-30"
+                                                    style={ {
+                                                        position: 'fixed',
+                                                        left:
+                                                            ( hoverRect?.right ||
+                                                                0 ) + 8,
+                                                        top: hoverFromBottom
+                                                            ? undefined
+                                                            : hoverRect?.top,
+                                                        bottom: hoverFromBottom
+                                                            ? Math.max(
+                                                                  0,
+                                                                  window.innerHeight -
+                                                                      ( hoverRect?.bottom ||
+                                                                          0 )
+                                                              )
+                                                            : undefined,
+                                                    } }
+                                                >
+                                                    <div className="bg-white rounded-md shadow-md min-w-[220px] max-h-96 overflow-y-auto py-2">
+                                                        <ul className="flex flex-col">
+                                                            { Object.entries(
+                                                                item.submenu ||
+                                                                    {}
+                                                            ).map(
+                                                                ( [
+                                                                    subkey,
+                                                                    subitem,
+                                                                ]: any ) => {
+                                                                    const isSubActive =
+                                                                        subitem?.url &&
+                                                                        currentUrl.startsWith(
+                                                                            subitem.url
+                                                                        );
+                                                                    return (
+                                                                        <li
+                                                                            key={
+                                                                                subkey
                                                                             }
-                                                                        </span>
-                                                                        { subitem.counts >
-                                                                            0 && (
-                                                                            <Bubble
-                                                                                count={
-                                                                                    subitem.counts
+                                                                        >
+                                                                            <a
+                                                                                href={
+                                                                                    subitem.url
                                                                                 }
-                                                                            />
-                                                                        ) }
-                                                                    </span>
-                                                                </a>
-                                                            </li>
-                                                        );
-                                                    }
-                                                ) }
-                                            </ul>
-                                        ) }
+                                                                                className={ twMerge(
+                                                                                    'skip-color-module group flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#828282] hover:text-[#7047EB] hover:bg-[#EFEAFF] rounded-md focus:!outline-none',
+                                                                                    isSubActive
+                                                                                        ? 'active'
+                                                                                        : ''
+                                                                                ) }
+                                                                            >
+                                                                                <span className="ml-1">
+                                                                                    {
+                                                                                        subitem.title
+                                                                                    }
+                                                                                </span>
+                                                                                { subitem.counts >
+                                                                                    0 && (
+                                                                                    <span className="ml-auto inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 py-0.5 text-[10px] font-semibold leading-none rounded-md text-white sidebar-menu-bubble">
+                                                                                        {
+                                                                                            subitem.counts
+                                                                                        }
+                                                                                    </span>
+                                                                                ) }
+                                                                            </a>
+                                                                        </li>
+                                                                    );
+                                                                }
+                                                            ) }
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            ) }
+
+                                        { ! collapsed &&
+                                            hasSub &&
+                                            isExpanded && (
+                                                <ul className="mt-2 mx-0 space-y-1.5">
+                                                    { Object.entries(
+                                                        item.submenu
+                                                    ).map(
+                                                        ( [
+                                                            subkey,
+                                                            subitem,
+                                                        ]: any ) => {
+                                                            const isSubActive =
+                                                                subitem?.url &&
+                                                                currentUrl.startsWith(
+                                                                    subitem.url
+                                                                );
+                                                            return (
+                                                                <li
+                                                                    key={
+                                                                        subkey
+                                                                    }
+                                                                >
+                                                                    <a
+                                                                        href={
+                                                                            subitem.url
+                                                                        }
+                                                                        className={ `group skip-color-module flex items-center py-2.5 px-3 pl-8 text-sm font-medium rounded-md focus:!outline-none ${
+                                                                            isSubActive &&
+                                                                            'active'
+                                                                        }` }
+                                                                    >
+                                                                        <span
+                                                                            className={
+                                                                                'ml-4'
+                                                                            }
+                                                                        >
+                                                                            <span className="ml-3">
+                                                                                {
+                                                                                    subitem.title
+                                                                                }
+                                                                            </span>
+                                                                            { subitem.counts >
+                                                                                0 && (
+                                                                                <Bubble
+                                                                                    count={
+                                                                                        subitem.counts
+                                                                                    }
+                                                                                />
+                                                                            ) }
+                                                                        </span>
+                                                                    </a>
+                                                                </li>
+                                                            );
+                                                        }
+                                                    ) }
+                                                </ul>
+                                            ) }
                                     </li>
                                 );
                             }
@@ -360,7 +561,12 @@ const Sidebar = () => {
             </div>
 
             { /* Bottom footer: full width, attached to bottom, with a top border */ }
-            <div className="border-solid border-t border-[#DACEFF33] border-b-0 border-x-0 px-8 py-4">
+            <div
+                className={ twMerge(
+                    'border-solid border-t border-[#DACEFF33] border-b-0 border-x-0 py-4',
+                    ! collapsed ? 'px-8' : 'px-6 flex justify-center'
+                ) }
+            >
                 <a
                     href={ editUrl || '#' }
                     className="flex items-center gap-2.5 focus:!outline-none"
@@ -378,27 +584,31 @@ const Sidebar = () => {
                             <span className="h-2.5 w-2.5 rotate-45 rounded-sm bg-white/90" />
                         </div>
                     ) }
-                    <div className="leading-tight space-y-1">
-                        <div className="text-sm font-semibold text-white">
-                            { storeName || __( 'Your Store', 'dokan-lite' ) }
-                        </div>
-                        { subscriptionName && (
-                            <div className="text-xs text-indigo-200">
-                                <Tooltip content={ subscriptionName }>
-                                    <span>
-                                        { truncate( subscriptionName, 10 ) }
-                                    </span>
-                                </Tooltip>{ ' ' }
-                                { subscriptionStatus &&
-                                    // eslint-disable-next-line @wordpress/valid-sprintf
-                                    sprintf(
-                                        /* translators: 1) Subscription status. E.g. "Active" or "Expired" */
-                                        __( '(%1$s)', 'dokan-lite' ),
-                                        subscriptionStatus
-                                    ) }
+
+                    { ! collapsed && (
+                        <div className="leading-tight space-y-1">
+                            <div className="text-sm font-semibold text-white">
+                                { storeName ||
+                                    __( 'Your Store', 'dokan-lite' ) }
                             </div>
-                        ) }
-                    </div>
+                            { subscriptionName && (
+                                <div className="text-xs text-indigo-200">
+                                    <Tooltip content={ subscriptionName }>
+                                        <span>
+                                            { truncate( subscriptionName, 10 ) }
+                                        </span>
+                                    </Tooltip>{ ' ' }
+                                    { subscriptionStatus &&
+                                        // eslint-disable-next-line @wordpress/valid-sprintf
+                                        sprintf(
+                                            /* translators: 1) Subscription status. E.g. "Active" or "Expired" */
+                                            __( '(%1$s)', 'dokan-lite' ),
+                                            subscriptionStatus
+                                        ) }
+                                </div>
+                            ) }
+                        </div>
+                    ) }
                 </a>
             </div>
         </aside>
@@ -406,6 +616,8 @@ const Sidebar = () => {
 };
 
 const Layout = () => {
+    const [ collapsed, setCollapsed ] = useState( false );
+
     useEffect( () => {
         const dashboardWrapEl = document.querySelector(
             '#dokan-dashboard-fullwidth-wrapper .dokan-dashboard-content'
@@ -419,9 +631,16 @@ const Layout = () => {
 
     return (
         <div className="dokan-frontend-layout w-full">
-            <Sidebar />
-            <main className="ml-60 flex-1 border-l border-gray-200 bg-white">
-                <Header />
+            <Sidebar collapsed={ collapsed } />
+            <main
+                className={ twMerge(
+                    'flex-1 border-l border-gray-200 bg-white transition-all duration-200',
+                    collapsed ? 'ml-16' : 'ml-60'
+                ) }
+            >
+                <Header
+                    onToggleSidebar={ () => setCollapsed( ( v ) => ! v ) }
+                />
             </main>
         </div>
     );

@@ -1,6 +1,7 @@
 .dokan-dashboard {
   .dokan-dash-sidebar {
     width: 17%;
+    max-width: 250px;
     _float: left;
     flex: 1 auto;
     background-color: var(--dokan-sidebar-background-color, #322067);
@@ -346,10 +347,8 @@
   position: relative;
 
   .dokan-dashboard-content {
-    padding: 0;
     position: relative;
-    padding-top: 48px;
-    padding-right: 48px;
+    padding: 48px 48px 0 48px;
   }
 
   > div:not(.dokan-dashboard-content) {
