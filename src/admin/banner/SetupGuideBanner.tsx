@@ -8,7 +8,10 @@ domReady( function () {
     if ( adminHeaderRoot ) {
         const mountDiv = document.createElement( 'div' );
         mountDiv.setAttribute( 'id', 'setup-guide-banner-root' );
-        mountDiv.setAttribute( 'class', 'dokan-layout dokan-admin-page-body' );
+        mountDiv.setAttribute(
+            'class',
+            'dokan-layout dokan-admin-page-body pr-[10px] lg:pr-5'
+        );
 
         adminHeaderRoot.after( mountDiv );
         const rootElement = document.querySelector(

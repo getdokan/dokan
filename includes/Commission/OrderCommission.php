@@ -237,6 +237,12 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
             return floatval( $gateway_fee['fee'] );
         }
 
+        // if order has admin gateway fee, return it
+        $admin_gateway_fee = $this->order->get_meta( 'dokan_admin_gateway_fee', true );
+        if ( ! empty( $admin_gateway_fee ) ) {
+            return floatval( $admin_gateway_fee );
+        }
+
         return 0;
     }
 
@@ -294,6 +300,32 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      */
     public function get_vendor_earning(): float {
         return $this->get_vendor_net_earning() + $this->get_total_vendor_fees();
+    }
+
+    /**
+     * Vendor payout subtotal based on customer's actual payment.
+     *
+     * Returns the vendor’s payable subtotal (excludes admin subsidy) and caps it
+     * to the amount actually paid by the customer (net of refunds) to avoid overpay during payment.
+     *
+     * Formula:
+     * - admin < 0 → vendor_adj = vendor - abs(admin)
+     * - admin ≥ 0 → vendor_adj = vendor
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return float|int
+     */
+    public function get_vendor_earning_subtotal(): float {
+
+        $admin_commission = $this->get_admin_commission();
+
+        // If admin commission is negative, it means admin has subsidized the vendor.
+        if ( $admin_commission < 0 ) {
+            return $this->get_vendor_earning() - abs( $admin_commission );
+        }
+
+        return $this->get_vendor_earning();
     }
 
     /**
