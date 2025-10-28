@@ -349,7 +349,7 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
-= v4.1.3 ( Oct 23, 2025 ) =
+= v4.1.3 ( Oct 28, 2025 ) =
 - **update:** Admin Dashboard withdraw list UI with Modern Design and Improved User Experience.
 - **update:** Admin Dashboard vendor list UI with Modern Design and Improved User Experience.
 

@@ -184,18 +184,18 @@ function Edit( props ) {
                     <DokanLink
                         href={
                             // @ts-ignore
-                            `${ dokanAdminDashboard.urls.adminRoot }admin.php?page=dokan-dashboard#/vendors`
+                            `${ dokanAdminDashboard.urls.adminRoot }admin.php?page=dokan-dashboard#/vendors/${ id ?? '' }`
                         }
                         className="flex flex-row w-auto items-center gap-1 !text-neutral-500 hover:!underline"
                     >
                         <ChevronLeft size="15" />
-                        <span>{ __( 'Vendors', 'dokan-lite' ) }</span>
+                        <span>{ __( 'Vendor', 'dokan-lite' ) }</span>
                     </DokanLink>
                 </div>
 
                 { /*Add new vendor header*/ }
                 <div className="gap-4 flex flex-col md:!flex-row md:!justify-between mt-[24px]">
-                    <h1>{ __( 'Update Vendor', 'dokan-lite' ) }</h1>
+                    <h1 className="text-[24px] text-[#25252D] font-bold">{ __( 'Update Vendor', 'dokan-lite' ) }</h1>
                 </div>
             </div>
 

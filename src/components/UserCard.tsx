@@ -1,5 +1,7 @@
-import { DokanLink } from '@src/components';
+import { DokanLink, DokanTooltip as Tooltip } from '@src/components';
 import { twMerge } from 'tailwind-merge';
+import { RawHTML } from '@wordpress/element';
+import { truncate } from '@src/utilities';
 
 function UserCard( {
     name = '',
@@ -34,28 +36,60 @@ function UserCard( {
                 ></div>
             ) }
             <span className="flex flex-col gap-[6px] h-[44px]">
-                <DokanLink
-                    as="div"
-                    onClick={ onClick }
-                    className="cursor-pointer"
-                >
+                { name.length <= 22 ? (
+                    <DokanLink
+                        as="div"
+                        onClick={ onClick }
+                        className="cursor-pointer"
+                    >
+                        <span
+                            className={ twMerge(
+                                'text-[14px] font-[600] text-[#7047EB]',
+                                isLoading ? loadingClass : ''
+                            ) }
+                        >
+                            { name }
+                        </span>
+                    </DokanLink>
+                ) : (
+                    <DokanLink
+                        as="div"
+                        onClick={ onClick }
+                        className="cursor-pointer"
+                    >
+                        <Tooltip content={ <RawHTML>{ name }</RawHTML> }>
+                            <span
+                                className={ twMerge(
+                                    'text-[14px] font-[600] text-[#7047EB]',
+                                    isLoading ? loadingClass : ''
+                                ) }
+                            >
+                                { truncate( name, 22 ) }
+                            </span>
+                        </Tooltip>
+                    </DokanLink>
+                ) }
+                { subTitle.length <= 22 ? (
                     <span
                         className={ twMerge(
-                            'text-[14px] font-[600] text-[#7047EB]',
+                            'text-[14px] font-[400] text-[#A5A5AA]',
                             isLoading ? loadingClass : ''
                         ) }
                     >
-                        { name }
+                        { subTitle }
                     </span>
-                </DokanLink>
-                <span
-                    className={ twMerge(
-                        'text-[14px] font-[400] text-[#A5A5AA]',
-                        isLoading ? loadingClass : ''
-                    ) }
-                >
-                    { subTitle }
-                </span>
+                ) : (
+                    <Tooltip content={ <RawHTML>{ subTitle }</RawHTML> }>
+                        <span
+                            className={ twMerge(
+                                'text-[14px] font-[400] text-[#A5A5AA]',
+                                isLoading ? loadingClass : ''
+                            ) }
+                        >
+                            { truncate( subTitle, 22 ) }
+                        </span>
+                    </Tooltip>
+                ) }
             </span>
         </div>
     );

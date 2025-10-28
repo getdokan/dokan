@@ -126,7 +126,7 @@ function Create( props: any ) {
                 { /*Add new vendor header*/ }
                 <div className="flex flex-row mt-[24px]">
                     <div className="sm:w-full md:w-1/2">
-                        <h1>{ __( 'Add New Vendor', 'dokan-lite' ) }</h1>
+                        <h1 className="text-[24px] text-[#25252D] font-bold">{ __( 'Add New Vendor', 'dokan-lite' ) }</h1>
                     </div>
                 </div>
             </div>

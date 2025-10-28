@@ -1,12 +1,12 @@
 import { PaymentDetails, Vendor } from '@dokan/definitions/dokan-vendors';
-import { __ } from "@wordpress/i18n";
+import { __ } from '@wordpress/i18n';
 import { DateTimeHtml } from '../../../../components';
 import { humanTimeDiff } from '@wordpress/date';
 import SocialLinks from './SocialLinks';
 import { Slot } from '@wordpress/components';
 import { PluginArea } from '@wordpress/plugins';
-import { CircleCheck, Clock, Mail, Phone } from "lucide-react";
-import { truncate } from "@dokan/utilities";
+import { CircleCheck, Clock, Mail, Phone } from 'lucide-react';
+import { truncate } from '@dokan/utilities';
 import { DokanTooltip as Tooltip } from '@dokan/components';
 
 export interface InfoCardProps {
@@ -151,7 +151,7 @@ const InfoCard = ( { vendor }: InfoCardProps ) => {
                     >
                         <p>
                             { vendor?.email
-                                ? truncate( vendor?.email, 40 )
+                                ? truncate( vendor?.email, 30 )
                                 : __( '-', 'dokan-lite' ) }
                         </p>
                     </Tooltip>
@@ -182,7 +182,7 @@ const InfoCard = ( { vendor }: InfoCardProps ) => {
                         </>
                     ) : (
                         <>
-                            <Clock size={15} />
+                            <Clock size={ 15 } />
                             <span className="">
                                 { __( 'Requires Review', 'dokan-lite' ) }
                             </span>
@@ -195,7 +195,9 @@ const InfoCard = ( { vendor }: InfoCardProps ) => {
                     { __( 'Subscription:', 'dokan-lite' ) }
                 </h4>
                 <p className="text-[#393939] text-sm font-normal">
-                    { __( 'No Subscription Added', 'dokan-lite' ) }
+                    { vendor?.current_subscription?.label
+                        ? truncate( vendor?.current_subscription?.label, 30 )
+                        : __( 'No Subscription Added', 'dokan-lite' ) }
                 </p>
             </div>
             <div className="mb-4">
