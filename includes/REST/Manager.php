@@ -179,7 +179,7 @@ class Manager {
     /**
      * Register export controllers with WooCommerce export system
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.3
      *
      * @param array $controller_map Existing controller map
      *
@@ -199,7 +199,7 @@ class Manager {
     /**
      * Register withdraw data endpoint for export
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.3
      *
      * @param  string  $endpoint The report's data endpoint
      * @param  string  $type The report's type

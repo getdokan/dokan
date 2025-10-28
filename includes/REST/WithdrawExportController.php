@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Handles withdraw report exports by implementing ExportableInterface
  * and extending WooCommerce's GenericController.
  *
- * @since DOKAN_SINCE
+ * @since 4.1.3
  */
 class WithdrawExportController extends GenericController implements ExportableInterface {
 

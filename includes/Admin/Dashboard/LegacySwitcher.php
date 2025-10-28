@@ -9,14 +9,14 @@ use WeDevs\Dokan\Contracts\Hookable;
  *
  * Handles legacy URL switching and menu title clearing for admin dashboard and settings.
  *
- * @since DOKAN_SINCE
+ * @since 4.1.3
  */
 class LegacySwitcher implements Hookable {
 
     /**
      * Default transient expiration time in seconds (15 days)
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.3
      *
      * @var int
      */
@@ -25,7 +25,7 @@ class LegacySwitcher implements Hookable {
     /**
      * Register hooks for the LegacySwitcher
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.3
      *
      * @return void
      */
@@ -37,7 +37,7 @@ class LegacySwitcher implements Hookable {
     /**
      * Clear admin submenu title based on legacy dashboard preference.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.3
      *
      * @return void
      */
@@ -96,7 +96,7 @@ class LegacySwitcher implements Hookable {
     /**
      * Handle dashboard redirect based on legacy dashboard preference.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.3
      *
      * @return void
      */
@@ -142,7 +142,7 @@ class LegacySwitcher implements Hookable {
     /**
      * Get admin menu transient key.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.3
      *
      * @param string $key
      *

@@ -7,7 +7,7 @@ Tested up to: 6.8.3
 WC requires at least: 8.5.0
 WC tested up to: 10.2.2
 Requires PHP: 7.4
-Stable tag: 4.1.2
+Stable tag: 4.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -348,6 +348,10 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Product Delivery Schedules
 
 == Changelog ==
+
+= v4.1.3 ( Oct 28, 2025 ) =
+- **update:** Admin Dashboard withdraw list UI with Modern Design and Improved User Experience.
+- **update:** Admin Dashboard vendor list UI with Modern Design and Improved User Experience.
 
 = v4.1.2 ( Oct 16, 2025 ) =
 - **enhance:** Updated the Admin Dashboard header UI for seamless visual representation with the new React-based frontend architecture.
