@@ -59,10 +59,8 @@
         }
 
         .header-avatar {
-            &:hover {
-                svg {
-                    color: var(--dokan-button-secondary-text-color, #7047EB);
-                }
+            svg.active {
+                color: var(--dokan-button-secondary-text-color, #7047EB);
             }
         }
     }
