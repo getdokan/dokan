@@ -13,7 +13,7 @@ const AdminBar = () => {
     return (
         <div
             data-test-id="dokan-dashboard-header"
-            className="w-full bg-white shadow-sm border-b border-gray-200 py-4 px-3 lg:px-6 flex justify-between items-center gap-6 box-border"
+            className="w-full bg-white shadow-sm border-b border-gray-200 py-4 px-6 flex justify-between items-center gap-6 box-border"
         >
             { /* Logo and version tags */ }
             <div className="w-full flex flex-wrap items-center justify-between">

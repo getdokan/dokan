@@ -4,6 +4,22 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.1.3',
+        'released' => '2025-10-28',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Admin Dashboard withdraw list UI with Modern Design and Improved User Experience.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Admin Dashboard vendor list UI with Modern Design and Improved User Experience.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.1.2',
         'released' => '2025-10-16',
         'changes'  => [
