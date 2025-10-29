@@ -61,6 +61,7 @@ export class ProductAddonsPage extends VendorPage {
         await this.multipleElementVisible(addonsVendor.table);
 
         await this.clickAndWaitForLoadState(addonsVendor.createNewAddon);
+        await this.page.waitForLoadState('networkidle');
         await this.clickAndWaitForResponse(data.subUrls.ajax, addonsVendor.addon.addField);
         await this.check(addonsVendor.addon.addDescription);
 
