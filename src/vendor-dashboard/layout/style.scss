@@ -37,6 +37,16 @@
                 }
             }
         }
+
+        .sidebar-footer {
+            .store-name {
+                color: var(--dokan-sidebar-hover-text-color, #ffffff);
+            }
+
+            .subscription-info {
+                color: var(--dokan-sidebar-text-color, #DACEFF);
+            }
+        }
     }
 
     .dokan-frontend-layout-header {

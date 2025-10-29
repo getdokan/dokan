@@ -417,13 +417,13 @@ const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
                         ) }
 
                         { ! collapsed && (
-                            <div className="leading-tight space-y-1">
-                                <div className="text-sm font-semibold text-white">
+                            <div className="sidebar-footer leading-tight space-y-1">
+                                <div className="store-name text-sm font-semibold">
                                     { storeName ||
                                         __( 'Your Store', 'dokan-lite' ) }
                                 </div>
                                 { subscriptionName && (
-                                    <div className="text-xs text-indigo-200">
+                                    <div className="subscription-info text-xs">
                                         <Tooltip content={ subscriptionName }>
                                             <span>
                                                 { truncate(
