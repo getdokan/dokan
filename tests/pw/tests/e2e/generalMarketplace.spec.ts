@@ -1,4 +1,3 @@
-
 import { test } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
@@ -18,7 +17,12 @@ const oldDataset = {
             selector: '//label[@for="dokan_general[enable_single_seller_mode]"]//label[@class="switch tips"]',
             type: 'checkbox',
             value: true,
-        }
+        },
+        {
+            selector: '//label[@for="0-none-store_category_type"]',
+            type: 'radio-old',
+            value: 'true',
+        },
     ],
 };
 
@@ -39,7 +43,7 @@ const newDataset = {
         },
         {
             selector: '#dokan_settings_general_marketplace_marketplace_settings_store_category_mode button[name="none"]',
-            type: 'radio',
+            type: 'radio-new',
             value: 'true',
         },
         {

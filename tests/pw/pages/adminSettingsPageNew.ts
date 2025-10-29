@@ -25,7 +25,9 @@ export class AdminSettingsPageNew extends AdminPage {
         }
 
         this.setFieldValues( dataSet.fields );
+        await this.page.waitForTimeout( 5000 ); // Allow any dynamic changes to take effect
         this.saveSettings();
+        await this.page.waitForTimeout( 5000 ); // Allow save to complete
     }
 
     async checkSettings( dataSet: any ) {
@@ -89,6 +91,38 @@ export class AdminSettingsPageNew extends AdminPage {
                     }
                     break;
                 }
+                case 'radio-old': {
+                    // Old style: label wrapping an input. Selector should point to the label.
+                    const label = this.page.locator(field.selector);
+                    const desiredSelected = field.value === true || field.value === 'true';
+
+                    // Check if label has 'checked' class
+                    let isSelected = await label.evaluate(el => el.classList.contains('checked')).catch(() => false);
+                    if (!isSelected) {
+                        // fallback: if label has a 'for' attribute, check the associated input
+                        const forAttr = await label.getAttribute('for').catch(() => null);
+                        if (forAttr) {
+                            const inputLocator = this.page.locator(`#${forAttr}`);
+                            isSelected = await inputLocator.isChecked().catch(() => false);
+                        }
+                    }
+
+                    if (isSelected !== desiredSelected) {
+                        await label.click();
+                    }
+                    break;
+                }
+                case 'radio-new': {
+                    // New style: buttons with role="radio" and aria-checked attribute
+                    const locator = this.page.locator(field.selector);
+                    const ariaChecked = await locator.getAttribute('aria-checked').catch(() => null);
+                    const isChecked = ariaChecked === 'true';
+                    const desired = field.value === true || field.value === 'true';
+                    if (isChecked !== desired) {
+                        await locator.click();
+                    }
+                    break;
+                }
                 case 'select':
                     await this.page.click( field.selector );
                     break;
@@ -135,6 +169,30 @@ export class AdminSettingsPageNew extends AdminPage {
                 case 'radio': {
                     const ariaChecked = await this.page.locator( field.selector ).getAttribute('aria-checked');
                     expect(ariaChecked).toBe(field.value);
+                    break;
+                }
+                case 'radio-old': {
+                    // Old style: label wrapping an input. Selector should point to the label.
+                    const label = this.page.locator(field.selector);
+                    const desiredSelected = field.value === true || field.value === 'true';
+                    let isSelected = await label.evaluate(el => el.classList.contains('checked')).catch(() => false);
+                    if (!isSelected) {
+                        const forAttr = await label.getAttribute('for').catch(() => null);
+                        if (forAttr) {
+                            const inputLocator = this.page.locator(`#${forAttr}`);
+                            isSelected = await inputLocator.isChecked().catch(() => false);
+                        }
+                    }
+                    expect(isSelected).toBe(desiredSelected);
+                    break;
+                }
+                case 'radio-new': {
+                    // New style: buttons with role="radio" and aria-checked attribute
+                    const locator = this.page.locator(field.selector);
+                    const ariaChecked = await locator.getAttribute('aria-checked').catch(() => null);
+                    const isChecked = ariaChecked === 'true';
+                    const desired = field.value === true || field.value === 'true';
+                    expect(isChecked).toBe(desired);
                     break;
                 }
                 case 'select': {
