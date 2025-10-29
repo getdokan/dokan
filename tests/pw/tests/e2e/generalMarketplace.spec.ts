@@ -3,28 +3,52 @@ import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
 import { data } from '@utils/testData';
 
-const oldDataset = {
-    title: 'Admin Old Setting: General -> marketplace',
-    url: 'wp-admin/admin.php?page=dokan#/settings',
-    selector: '//div[@class="nav-title" and contains(text(),"General")]',
-    fields: [
-        {
-            selector: '//input[@id="dokan_general[custom_store_url]"]',
-            type: 'text',
-            value: 'my-url',
-        },
-        {
-            selector: '//label[@for="dokan_general[enable_single_seller_mode]"]//label[@class="switch tips"]',
-            type: 'checkbox',
-            value: true,
-        },
-        {
-            selector: '//label[@for="0-none-store_category_type"]',
-            type: 'radioOld',
-            value: 'true',
-        },
-    ],
-};
+const oldDataset = [
+    {
+        title: 'Admin Old Setting: General',
+        url: 'wp-admin/admin.php?page=dokan#/settings',
+        selector: '//div[@class="nav-title" and contains(text(),"General")]',
+        fields: [
+            {
+                selector: '//input[@id="dokan_general[custom_store_url]"]',
+                type: 'text',
+                value: 'my-url',
+            },
+            {
+                selector: '//label[@for="dokan_general[enable_single_seller_mode]"]//label[@class="switch tips"]',
+                type: 'checkbox',
+                value: true,
+            },
+            {
+                selector: '//label[@for="0-none-store_category_type"]',
+                type: 'radioOld',
+                value: 'true',
+            },
+        ],
+    },
+    {
+        title: 'Admin Old Setting: Selling Options',
+        url: 'wp-admin/admin.php?page=dokan#/settings',
+        selector: '//div[@class="nav-title" and contains(text(),"Selling Options")]',
+        fields: [
+            {
+                selector: '//label[@for="dokan_selling[hide_customer_info]"]//label[@class="switch tips"]',
+                type: 'checkbox',
+                value: true,
+            },  
+            // {
+            //     selector: '//input[@id="dokan_selling[enable_guest_user_enquiry]"]',
+            //     type: 'checkbox',
+            //     value: true,
+            // },
+            // {
+            //     selector: '//input[@id="dokan_selling[catalog_mode_hide_add_to_cart_button]"]',
+            //     type: 'checkbox',
+            //     value: true,
+            // },
+        ],
+    }
+];
 
 const newDataset = {
     title: 'Admin Setting: General -> marketplace',
@@ -87,13 +111,18 @@ test.describe('Admin Setting: General -> marketplace', () => {
             await adminSettingsPage.updateSettings(newDataset);
         });
        
-        await test.step('Check old settings', async () => {
-            await adminSettingsPage.checkSettings(oldDataset);
-        });
+        await test.step('Check old settings for General and Selling Options' , async () => {
+            for (const dataset of oldDataset) {
+                await test.step('Check old settings -> ' + dataset.title , async () => {
+                    await adminSettingsPage.checkSettings(dataset);
+                });
+            }
+        }); 
 
         await test.step('Check new settings', async () => {
             await adminSettingsPage.checkSettings(newDataset);
         });
+
         // test.step('Update old settings', async () => {
         //     adminSettingsPage.setSaveButtonSelector('Old Save Button');
         //     await adminSettingsPage.checkSettings(newDataset);

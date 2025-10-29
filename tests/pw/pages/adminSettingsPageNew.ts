@@ -9,20 +9,28 @@ export class AdminSettingsPageNew extends AdminPage {
     }
     async ensureVisibilityFor(selector: string) {
         const locator = this.page.locator(selector);
-        await locator.scrollIntoViewIfNeeded();
-        await locator.waitFor({ state: 'visible', timeout: 10000 });
+        await locator.waitFor({ state: 'attached', timeout: 15000 });
+        await locator.scrollIntoViewIfNeeded({ timeout: 15000 });
+        await locator.waitFor({ state: 'visible', timeout: 15000 });
+    }
+
+    async navigateThroughSelectors(selector: string) {
+        const selectors = this.splitSelectors(selector);
+        for (const sel of selectors) {
+            if (sel) {
+                await this.ensureVisibilityFor(sel);
+                // Click the selector to navigate (e.g., tabs, accordions, sections)
+                await this.page.click(sel);
+                await this.page.waitForTimeout(500); // Allow UI to update after navigation
+            }
+        }
     }
 
     async updateSettings( dataSet: any ) {
         await this.goIfNotThere(dataSet.url)
         await this.waitForLoadState();
         await this.page.waitForTimeout( 2000 ); // Allow page to stabilize
-        const selectors = this.splitSelectors( dataSet.selector || '' );
-
-        for ( const selector of selectors ) {
-            await this.ensureVisibilityFor( selector );
-            await this.page.click( selector );
-        }
+        await this.navigateThroughSelectors(dataSet.selector || '');
 
         this.setFieldValues( dataSet.fields );
         await this.page.waitForTimeout( 5000 ); // Allow any dynamic changes to take effect
@@ -33,13 +41,15 @@ export class AdminSettingsPageNew extends AdminPage {
     async checkSettings( dataSet: any ) {
         await this.goIfNotThere(dataSet.url)
         await this.waitForLoadState();
-        await this.page.waitForTimeout( 2000 ); // Allow page to stabilize
-        const selectors = this.splitSelectors( dataSet.selector || '' );
-
-        for ( const selector of selectors ) {
-            await this.ensureVisibilityFor( selector );
-            await this.assertFieldValues( dataSet.fields );
+        await this.page.waitForTimeout( 3000 ); // Allow page to stabilize (increased for old admin page)
+        
+        // Navigate through selectors if provided
+        if (dataSet.selector) {
+            await this.navigateThroughSelectors(dataSet.selector);
+            await this.page.waitForTimeout( 1000 ); // Wait after navigation
         }
+        
+        await this.assertFieldValues( dataSet.fields );
     }
 
     async saveSettings() {
