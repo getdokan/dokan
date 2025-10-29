@@ -85,8 +85,14 @@ const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
     useEffect( () => {
         if ( ! collapsed ) {
             setActivePopover( null );
+            setActivePopover( null );
             clearHideTimeout();
         }
+
+        document.documentElement.style.setProperty(
+            '--dokan-sidebar-width',
+            `${ collapsed ? 96 : 250 }px`
+        );
     }, [ collapsed ] );
 
     // ==========================================
@@ -219,10 +225,34 @@ const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
                                     const hasSub =
                                         !! item?.submenu &&
                                         Object.keys( item.submenu ).length > 0;
+
+                                    // Parent is active if it has no submenu and its URL matches current
                                     const isParentActive =
                                         ! hasSub &&
                                         item?.url &&
                                         currentUrl.startsWith( item.url );
+
+                                    // Detect if any child submenu item is active
+                                    let hasActiveChild = false;
+                                    if ( hasSub ) {
+                                        Object.values( item.submenu ).forEach(
+                                            ( sub: any ) => {
+                                                if (
+                                                    sub?.url &&
+                                                    currentUrl.startsWith(
+                                                        sub.url
+                                                    )
+                                                ) {
+                                                    hasActiveChild = true;
+                                                }
+                                            }
+                                        );
+                                    }
+
+                                    // In collapsed state, mark parent as active when a child is active
+                                    const isParentActiveCollapsed =
+                                        collapsed && hasSub && hasActiveChild;
+
                                     const isExpanded = Boolean(
                                         expanded[ key ]
                                     );
@@ -264,7 +294,9 @@ const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
                                                     collapsed
                                                         ? 'w-10 max-w-10 justify-center'
                                                         : 'text-sm px-3',
-                                                    isParentActive && 'active'
+                                                    ( isParentActive ||
+                                                        isParentActiveCollapsed ) &&
+                                                        'active'
                                                 ) }
                                             >
                                                 { /* Icon: turn white when its popover is visible */ }

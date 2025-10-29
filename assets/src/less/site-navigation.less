@@ -1,9 +1,10 @@
 .dokan-dashboard {
   .dokan-dash-sidebar {
-    width: 17%;
-    max-width: 250px;
     _float: left;
     flex: 1 auto;
+    transition: width .2s ease;
+    width: var(--dokan-sidebar-width, 250px);
+    max-width: var(--dokan-sidebar-width, 250px);
     background-color: var(--dokan-sidebar-background-color, #322067);
 
     ul.dokan-dashboard-menu {
