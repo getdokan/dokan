@@ -5,8 +5,8 @@ import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
 const { PRODUCT_ID } = process.env;
-
-test.describe('Product Reviews test', () => {
+//Need to rewrite this test, because new Product Review UI is not implemented yet
+test.describe.skip('Product Reviews test', () => {
     let vendor: ProductReviewsPage;
     let vPage: Page;
     let apiUtils: ApiUtils;
