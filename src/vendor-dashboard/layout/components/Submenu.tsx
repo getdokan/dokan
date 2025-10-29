@@ -33,7 +33,7 @@ const Submenu = ( {
             <div
                 onMouseEnter={ onMouseEnter }
                 onMouseLeave={ onMouseLeave }
-                className="bg-white rounded-md shadow-lg min-w-[220px] max-h-96 overflow-y-auto py-2"
+                className="sidebar-popover bg-white rounded shadow-lg min-w-[240px] max-h-96 overflow-y-auto py-2"
             >
                 <ul className="flex flex-col">
                     { Object.entries( submenu || {} ).map(
@@ -47,7 +47,7 @@ const Submenu = ( {
                                     <a
                                         href={ subitem.url }
                                         className={ twMerge(
-                                            'skip-color-module group flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#828282] hover:text-[#7047EB] hover:bg-[#EFEAFF] rounded-md focus:!outline-none transition-colors',
+                                            'skip-color-module group flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#828282] focus:!outline-none transition-colors',
                                             isSubActive && 'active'
                                         ) }
                                     >

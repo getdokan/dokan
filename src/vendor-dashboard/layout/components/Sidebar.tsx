@@ -141,11 +141,12 @@ const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
     const { name: subscriptionName, status: subscriptionStatus } =
         subscription || {};
 
-    const getIcon = ( iconName: string ) => {
+    const getIcon = ( iconName: string, forceWhite = false ) => {
+        const className = twMerge( 'w-5 h-5', forceWhite && '!text-white' );
         const iconProps = {
-            className: 'w-5 h-5',
+            className,
             size: 20,
-        };
+        } as const;
 
         const IconComponent = ( LucideIcons as any )[ iconName ];
         if ( ! IconComponent ) {
@@ -266,7 +267,23 @@ const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
                                                     isParentActive && 'active'
                                                 ) }
                                             >
-                                                { getIcon( item.icon_name ) }
+                                                { /* Icon: turn white when its popover is visible */ }
+                                                <span
+                                                    className={ twMerge(
+                                                        activePopover?.key ===
+                                                            key && collapsed
+                                                            ? 'text-white'
+                                                            : ''
+                                                    ) }
+                                                >
+                                                    { getIcon(
+                                                        item.icon_name,
+                                                        Boolean(
+                                                            activePopover?.key ===
+                                                                key && collapsed
+                                                        )
+                                                    ) }
+                                                </span>
                                                 { ! collapsed && (
                                                     <span className="ml-2">
                                                         { item.title }
