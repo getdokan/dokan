@@ -72,6 +72,15 @@ export class AdminSettingsPageNew extends AdminPage {
                     }
                     break;
                 }
+                case 'checkbox': {
+                    // Handle checkbox with "enabled" class - Check input element state but click on label
+                    const inputElement = this.page.locator( field.selector ).locator('input[type="checkbox"]');
+                    const hasEnabledClass = await inputElement.evaluate(el => el.classList.contains('enabled'));
+                    if (hasEnabledClass !== field.value) {
+                        await this.page.click( field.selector );
+                    }
+                    break;
+                }
                 case 'radio': {
                     // Only click if not already selected
                     const currentState = await this.page.locator( field.selector ).getAttribute('aria-checked');
@@ -113,6 +122,14 @@ export class AdminSettingsPageNew extends AdminPage {
                     const ariaChecked = await this.page.locator( field.selector ).getAttribute('aria-checked');
                     const isChecked = ariaChecked === 'true';
                     expect(isChecked).toBe(field.value);
+                    break;
+                }
+                case 'checkbox': {
+                    const inputElement = this.page.locator( field.selector ).locator('input[type="checkbox"]');
+                    const hasEnabledClass = await inputElement.evaluate(el => el.classList.contains('enabled'));
+                    console.log('hasEnabledClass', hasEnabledClass);
+                    console.log('field.value', field.value);
+                    expect(hasEnabledClass).toBe(field.value);
                     break;
                 }
                 case 'radio': {
