@@ -1198,7 +1198,7 @@ export const data = {
             bookedDayBlocks: '?wc-ajax=wc_bookings_find_booked_day_blocks',
             editAccountCustomer: 'my-account/edit-account',
             becomeVendor: 'my-account/account-migration',
-            productDetails: (productName: string) => `product/${productName}`,
+            productDetails: (productName: string) => `shop/uncategorized/${productName}`,
             orderDetails: (orderId: string) => `my-account/view-order/${orderId}`,
             orderReceivedDetails: (orderId: string, orderKey: string) => `checkout/order-received/${orderId}/?key=${orderKey}`,
             vendorDetails: (storeName: string) => `store/${storeName}`,
