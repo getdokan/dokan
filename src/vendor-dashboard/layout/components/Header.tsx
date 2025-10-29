@@ -4,6 +4,7 @@ import { twMerge } from 'tailwind-merge';
 import { __ } from '@wordpress/i18n';
 import { Popover } from '@src/components';
 import WPLogo from '../../icons/WPLogo';
+import { decodeEntities } from '@wordpress/html-entities';
 
 const Header = ( { onToggleSidebar }: { onToggleSidebar: () => void } ) => {
     const [ adminBar, setAdminBar ] = useState( 0 );
@@ -111,7 +112,9 @@ const Header = ( { onToggleSidebar }: { onToggleSidebar: () => void } ) => {
                                         ( item: any, idx: number ) => (
                                             <li key={ idx }>
                                                 <a
-                                                    href={ item?.url || '#' }
+                                                    href={ decodeEntities(
+                                                        item?.url || '#'
+                                                    ) }
                                                     className="skip-color-module group flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#828282] focus:!outline-none transition-colors duration-150"
                                                     onClick={ () =>
                                                         setIsMenuOpen( false )

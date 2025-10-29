@@ -5,7 +5,7 @@ import * as LucideIcons from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 import { Tooltip } from '@getdokan/dokan-ui';
 import { truncate } from '../../../utilities';
-import Submenu from './Submenu';
+import SubmenuPopover from './SubmenuPopover';
 import CountBubble from './CountBubble';
 
 const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
@@ -148,7 +148,7 @@ const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
         subscription || {};
 
     const getIcon = ( iconName: string, forceWhite = false ) => {
-        const className = twMerge( 'w-5 h-5', forceWhite && '!text-white' );
+        const className = twMerge( 'w-5 h-5', forceWhite && 'hovered-item' );
         const iconProps = {
             className,
             size: 20,
@@ -332,61 +332,45 @@ const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
                                                 { hasSub &&
                                                     ! collapsed &&
                                                     ( isExpanded ? (
-                                                        <LucideIcons.ChevronUp className="ml-auto w-4 h-4 text-[#A5A5A5] group-hover:text-white" />
+                                                        <LucideIcons.ChevronUp className="ml-auto w-4 h-4 text-[#A5A5A5] group-hover:text-white transition-transform duration-200" />
                                                     ) : (
-                                                        <LucideIcons.ChevronDown className="ml-auto w-4 h-4 text-[#A5A5A5] group-hover:text-white" />
+                                                        <LucideIcons.ChevronDown className="ml-auto w-4 h-4 text-[#A5A5A5] group-hover:text-white transition-transform duration-200" />
                                                     ) ) }
                                             </a>
 
-                                            { /* Expanded submenu (inline) */ }
-                                            { ! collapsed &&
-                                                hasSub &&
-                                                isExpanded && (
+                                            { /* Expanded submenu (inline) with smooth animation */ }
+                                            { ! collapsed && hasSub && (
+                                                <div
+                                                    className={ twMerge(
+                                                        'overflow-hidden motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-in-out',
+                                                        isExpanded
+                                                            ? 'max-h-full opacity-100 translate-y-0'
+                                                            : 'max-h-0 opacity-0 -translate-y-1 pointer-events-none'
+                                                    ) }
+                                                >
                                                     <ul className="mt-2 mx-0 space-y-1.5">
-                                                        { Object.entries(
-                                                            item.submenu
-                                                        ).map(
-                                                            ( [
-                                                                subkey,
-                                                                subitem,
-                                                            ]: any ) => {
+                                                        { Object.entries( item.submenu ).map(
+                                                            ( [ subkey, subitem ]: any ) => {
                                                                 const isSubActive =
                                                                     subitem?.url &&
-                                                                    currentUrl.startsWith(
-                                                                        subitem.url
-                                                                    );
+                                                                    currentUrl.startsWith( subitem.url );
 
                                                                 return (
-                                                                    <li
-                                                                        key={
-                                                                            subkey
-                                                                        }
-                                                                    >
+                                                                    <li key={ subkey }>
                                                                         <a
-                                                                            href={
-                                                                                subitem.url
-                                                                            }
-                                                                            className={ `group skip-color-module flex items-center py-2.5 px-3 pl-8 text-sm font-medium rounded-md focus:!outline-none ${
-                                                                                isSubActive &&
-                                                                                'active'
-                                                                            }` }
+                                                                            href={ subitem.url }
+                                                                            className={ twMerge(
+                                                                                'group skip-color-module flex items-center py-2.5 px-3 pl-8 text-sm font-medium rounded-md focus:!outline-none',
+                                                                                isSubActive && 'active'
+                                                                            ) }
                                                                         >
-                                                                            <span
-                                                                                className={
-                                                                                    'ml-4'
-                                                                                }
-                                                                            >
+                                                                            <span className="ml-4">
                                                                                 <span className="ml-3">
-                                                                                    {
-                                                                                        subitem.title
-                                                                                    }
+                                                                                    { subitem.title }
                                                                                 </span>
-                                                                                { subitem.counts >
-                                                                                    0 && (
+                                                                                { subitem.counts > 0 && (
                                                                                     <CountBubble
-                                                                                        count={
-                                                                                            subitem.counts
-                                                                                        }
+                                                                                        count={ subitem.counts }
                                                                                     />
                                                                                 ) }
                                                                             </span>
@@ -396,7 +380,8 @@ const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
                                                             }
                                                         ) }
                                                     </ul>
-                                                ) }
+                                                </div>
+                                            ) }
                                         </li>
                                     );
                                 }
@@ -463,7 +448,7 @@ const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
 
             { /* === POPOVER === */ }
             { collapsed && activePopover && (
-                <Submenu
+                <SubmenuPopover
                     submenu={ activePopover.submenu }
                     anchorRef={ activePopover.anchorRef }
                     onMouseEnter={ keepPopoverVisible }

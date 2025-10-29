@@ -1,9 +1,9 @@
 import { Popover } from '@wordpress/components';
 import { twMerge } from 'tailwind-merge';
 // eslint-disable-next-line import/named
-import { RefObject } from '@wordpress/element';
+import { RefObject, useEffect, useState } from '@wordpress/element';
 
-const Submenu = ( {
+const SubmenuPopover = ( {
     submenu,
     anchorRef,
     onMouseEnter,
@@ -17,6 +17,13 @@ const Submenu = ( {
     onClose: () => void;
 } ) => {
     const currentUrl = window.location?.href || '';
+    const [ entered, setEntered ] = useState( false );
+
+    // Trigger enter animation on mount
+    useEffect( () => {
+        const id = requestAnimationFrame( () => setEntered( true ) );
+        return () => cancelAnimationFrame( id );
+    }, [] );
 
     return (
         <Popover
@@ -33,7 +40,12 @@ const Submenu = ( {
             <div
                 onMouseEnter={ onMouseEnter }
                 onMouseLeave={ onMouseLeave }
-                className="sidebar-popover bg-white rounded shadow-lg min-w-[240px] max-h-96 overflow-y-auto py-2"
+                className={ twMerge(
+                    'sidebar-popover bg-white rounded shadow-lg min-w-[240px] max-h-96 overflow-y-auto py-2 transform-gpu transition-all duration-200 ease-out',
+                    entered
+                        ? 'opacity-100 translate-y-0'
+                        : 'opacity-0 -translate-y-1'
+                ) }
             >
                 <ul className="flex flex-col">
                     { Object.entries( submenu || {} ).map(
@@ -47,7 +59,7 @@ const Submenu = ( {
                                     <a
                                         href={ subitem.url }
                                         className={ twMerge(
-                                            'skip-color-module group flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#828282] focus:!outline-none transition-colors',
+                                            'skip-color-module group flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#828282] focus:!outline-none transition-colors duration-150',
                                             isSubActive && 'active'
                                         ) }
                                     >
@@ -70,4 +82,4 @@ const Submenu = ( {
     );
 };
 
-export default Submenu;
+export default SubmenuPopover;

@@ -1,18 +1,6 @@
 @use '../../base-tailwind';
 @config './tailwind.config.js';
 
-/* Hide scrollbar in the vendor sidebar but keep it scrollable */
-.dokan-vendor-sidebar-scroll {
-    scrollbar-width: none; /* hides scrollbar while allowing scroll */
-    -ms-overflow-style: none;
-}
-
-/* WebKit-based browsers */
-.dokan-vendor-sidebar-scroll::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-}
-
 .dokan-frontend-layout {
     .dokan-frontend-sidebar {
         background-color: var(--dokan-sidebar-background-color, #322067);
@@ -27,6 +15,10 @@
 
                 .sidebar-menu-bubble {
                     background-color: var(--dokan-sidebar-hover-background-color, #7047EB);
+                }
+
+                .hovered-item {
+                    color: var(--dokan-sidebar-hover-text-color, #ffffff);
                 }
 
                 &:hover,
@@ -78,4 +70,27 @@
             }
         }
     }
+}
+
+.dokan-submenu-popover {
+    li {
+        a {
+            &.active {
+                color: var(--dokan-sidebar-hover-text-color, #ffffff);
+                background-color: var(--dokan-sidebar-hover-background-color, #7047EB);
+            }
+        }
+    }
+}
+
+/* Hide scrollbar in the vendor sidebar but keep it scrollable */
+.dokan-vendor-sidebar-scroll {
+    scrollbar-width: none; /* hides scrollbar while allowing scroll */
+    -ms-overflow-style: none;
+}
+
+/* WebKit-based browsers */
+.dokan-vendor-sidebar-scroll::-webkit-scrollbar {
+    width: 0;
+    height: 0;
 }

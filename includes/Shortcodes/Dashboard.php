@@ -104,14 +104,14 @@ class Dashboard extends DokanShortcode {
             // Build base with My Account and Log out; insert conditional admin links next.
             $header_nav = [
                 [
-                    'label' => __( 'My Account', 'dokan-lite' ),
+                    'label' => esc_html__( 'My Account', 'dokan-lite' ),
                     'icon'  => 'UserRound',
                     'url'   => dokan_get_page_url( 'myaccount', 'woocommerce' ),
                 ],
                 [
-                    'label' => __( 'Log out', 'dokan-lite' ),
+                    'label' => esc_html__( 'Log out', 'dokan-lite' ),
                     'icon'  => 'LogOut',
-                    'url'   => wp_logout_url( home_url() ),
+                    'url'   => esc_url_raw( wp_logout_url( home_url() ) ),
                 ],
             ];
 
