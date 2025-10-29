@@ -125,10 +125,10 @@ class SetupWizardWCAdmin extends \WC_Admin_Setup_Wizard {
                 <ul class="wc-wizard-services shipping">
                     <li class="wc-wizard-service-item">
                         <div class="wc-wizard-service-name">
-                            <p><?php echo esc_html_e( 'Shipping Zone', 'dokan-lite' ); ?></p>
+                            <p><?php esc_html_e( 'Shipping Zone', 'dokan-lite' ); ?></p>
                         </div>
                         <div class="wc-wizard-service-description">
-                            <p><?php echo esc_html_e( 'Shipping Method', 'dokan-lite' ); ?></p>
+                            <p><?php esc_html_e( 'Shipping Method', 'dokan-lite' ); ?></p>
                         </div>
                     </li>
                     <li class="wc-wizard-service-item">
@@ -153,7 +153,7 @@ class SetupWizardWCAdmin extends \WC_Admin_Setup_Wizard {
                     </li>
                     <li class="wc-wizard-service-item">
                         <div class="wc-wizard-service-name">
-                            <p><?php echo esc_html_e( 'Locations not covered by your other zones', 'dokan-lite' ); ?></p>
+                            <p><?php esc_html_e( 'Locations not covered by your other zones', 'dokan-lite' ); ?></p>
                         </div>
                         <div class="wc-wizard-service-description">
                             <?php $this->shipping_method_selection_form( $country_code, $currency_code, 'shipping_zones[intl]' ); ?>
