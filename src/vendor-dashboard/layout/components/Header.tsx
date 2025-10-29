@@ -34,10 +34,10 @@ const Header = ( { onToggleSidebar }: { onToggleSidebar: () => void } ) => {
 
     return (
         <header
-            className={ twMerge(
-                `z-10 flex justify-between min-h-20 items-center gap-3 border-solid border-b border-x-0 border-t-0 border-gray-200 bg-white px-12`,
-                `top-[${ adminBar }px]`
-            ) }
+            style={ { top: adminBar } }
+            className={
+                'z-10 flex justify-between min-h-20 items-center gap-3 border-solid border-b border-x-0 border-t-0 border-gray-200 bg-white px-12'
+            }
         >
             <button
                 type="button"
@@ -123,7 +123,7 @@ const Header = ( { onToggleSidebar }: { onToggleSidebar: () => void } ) => {
                                                 >
                                                     { item.isSvg &&
                                                     item?.icon === 'WPLogo' ? (
-                                                        <WPLogo className="w-[18px] h-[18px] fill-[#828282]" />
+                                                        <WPLogo className="w-[18px] h-[18px] text-[#828282]" />
                                                     ) : (
                                                         getMenuIcon(
                                                             item?.icon
