@@ -183,6 +183,14 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
      * @return WP_REST_Response
      */
     public function get_to_do() {
+        // Get the legacy pages.
+        $is_legacy_vendors_page  = get_transient( 'dokan_legacy_vendors_page' );
+        $is_legacy_withdraw_page = get_transient( 'dokan_legacy_withdraw_page' );
+
+        // If the legacy pages are not set, then set them to false.
+        $legacy_vendors_url  = $is_legacy_vendors_page ? 'dokan#/vendors?status=pending' : 'dokan-dashboard#/vendors';
+        $legacy_withdraw_url = $is_legacy_withdraw_page ? 'dokan#/withdraw?status=pending' : 'dokan-dashboard#/withdraw';
+
         $data = apply_filters(
             'dokan_rest_admin_dashboard_todo_data',
             [
@@ -190,7 +198,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
                     'icon'         => 'UserCheck',
                     'count'        => $this->get_vendor_approvals_count(),
                     'title'        => esc_html__( 'Vendor Approvals', 'dokan-lite' ),
-                    'redirect_url' => admin_url( 'admin.php?page=dokan#/vendors?status=pending' ),
+                    'redirect_url' => admin_url( 'admin.php?page=' . $legacy_vendors_url ),
                     'position'     => 10,
                 ],
                 'product_approvals'   => [
@@ -204,7 +212,7 @@ class AdminDashboardStatsController extends DokanBaseAdminController {
                     'icon'         => 'PanelTop',
                     'count'        => $this->get_pending_withdrawals_count(),
                     'title'        => esc_html__( 'Pending Withdrawals', 'dokan-lite' ),
-                    'redirect_url' => admin_url( 'admin.php?page=dokan#/withdraw?status=pending' ),
+                    'redirect_url' => admin_url( 'admin.php?page=' . $legacy_withdraw_url ),
                     'position'     => 30,
                 ],
             ],
