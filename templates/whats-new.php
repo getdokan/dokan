@@ -4,6 +4,38 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.1.3',
+        'released' => '2025-10-28',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Admin Dashboard withdraw list UI with Modern Design and Improved User Experience.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Admin Dashboard vendor list UI with Modern Design and Improved User Experience.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.1.2',
+        'released' => '2025-10-16',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Updated the Admin Dashboard header UI for seamless visual representation with the new React-based frontend architecture.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added support for retrieving all product types via the Products REST API, enabling more flexible product filtering.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.1.1',
         'released' => '2025-10-09',
         'changes'  => [
