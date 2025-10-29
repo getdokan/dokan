@@ -199,11 +199,6 @@ class Assets {
                 'component' => 'ReverseWithdrawalTransactions',
             ],
             [
-                'path'      => '/premium',
-                'name'      => 'Premium',
-                'component' => 'Premium',
-            ],
-            [
                 'path'      => '/help',
                 'name'      => 'Help',
                 'component' => 'Help',
@@ -646,6 +641,19 @@ class Assets {
                 'deps'    => $core_store_asset['dependencies'],
             ];
         }
+
+        $vendors_store_asset_file = DOKAN_DIR . '/assets/js/vendors-store.asset.php';
+        if ( file_exists( $vendors_store_asset_file ) ) {
+            $vendors_store_asset = require $vendors_store_asset_file;
+
+            // Register React components.
+            $scripts['dokan-stores-vendors'] = [
+                'version' => $vendors_store_asset['version'],
+                'src'     => $asset_url . '/js/vendors-store.js',
+                'deps'    => $vendors_store_asset['dependencies'],
+            ];
+        }
+
         $product_store_asset_file = DOKAN_DIR . '/assets/js/products-store.asset.php';
         if ( file_exists( $product_store_asset_file ) ) {
             $stores_asset = require $product_store_asset_file;
@@ -1360,14 +1368,6 @@ class Assets {
                             'dokan_action'                          => 'switch_dashboard',
                         ],
                         admin_url()
-                    ),
-                    'newSettingsUrl'    => add_query_arg(
-                        [
-                            'dokan_action'          => 'switch_dashboard_settings',
-                            'settings_legacy_nonce' => wp_create_nonce( 'settings_legacy_dashboard' ),
-                            'page'                  => 'dokan-dashboard#/settings',
-                        ],
-                        admin_url( 'admin.php' )
                     ),
                 ],
                 'states'                            => WC()->countries->get_allowed_country_states(),

@@ -3,6 +3,8 @@ const entryPoints = {
 
     frontend: './src/dashboard/index.tsx',
     'dokan-admin-dashboard': './src/admin/dashboard/index.tsx',
+    'dokan-admin-switching': './src/admin/panel-switcher/index.tsx',
+    'dokan-admin-panel-header': './src/admin/header/index.tsx',
     'setup-guide-banner': './src/admin/banner/SetupGuideBanner.tsx',
     'vue-frontend': './src/frontend/main.js',
     'vue-admin': './src/admin/main.js',
@@ -54,6 +56,13 @@ const entryPoints = {
         import: '/src/stores/core/store.ts',
         library: {
             name: [ 'dokan', 'coreStore' ],
+            type: 'window',
+        },
+    },
+    'vendors-store': {
+        import: '/src/stores/vendors/store.ts',
+        library: {
+            name: [ 'dokan', 'vendorsStore' ],
             type: 'window',
         },
     },
