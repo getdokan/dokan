@@ -27,7 +27,7 @@ class ProductControllerV2 extends ProductController {
     /**
      * Class Constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.3
      *
      * @return void
      */
@@ -360,7 +360,7 @@ class ProductControllerV2 extends ProductController {
     /**
      * Reset exclude product type.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.3
      *
      * @param array           $exclude_product_type Exclude product type.
      * @param WP_REST_Request $request              Request object.

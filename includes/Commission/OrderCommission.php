@@ -312,7 +312,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      * - admin < 0 → vendor_adj = vendor - abs(admin)
      * - admin ≥ 0 → vendor_adj = vendor
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.3
      *
      * @return float|int
      */
