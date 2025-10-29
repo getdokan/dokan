@@ -303,7 +303,7 @@ export class ProductQAPage extends BasePage {
 
     // delete question
     async vendorDeleteQuestion(questionId: string): Promise<void> {
-        await this.goto(data.subUrls.frontend.vDashboard.questionDetails(questionId));
+        await this.goIfNotThere(data.subUrls.frontend.vDashboard.questionDetails(questionId));
         await this.click(productQAVendor.questionDetails.status.deleteQuestion);
         await this.clickAndWaitForResponse(data.subUrls.ajax, productQAVendor.questionDetails.confirmAction);
         await this.toBeVisible(productQAVendor.questionDetails.questionDeleteSuccessMessage);
