@@ -32,7 +32,7 @@ const AdminSetupBanner = ( props: Props ) => {
         <div
             data-test-id="admin-setup-guide-button"
             className={ twMerge(
-                'bg-white rounded-lg p-5 my-4 mr-[10px] md:mr-[20px]',
+                'bg-white rounded-lg p-5 my-4',
                 props?.className ?? ''
             ) }
         >
@@ -45,7 +45,7 @@ const AdminSetupBanner = ( props: Props ) => {
                         />
                     </div>
                     <div className="flex-col flex gap-3">
-                        <h2 className="text-lg  font-bold text-gray-900">
+                        <h2 className="text-lg font-bold text-gray-900 m-0">
                             { __(
                                 'Complete your marketplace setup in minutes',
                                 'dokan-lite'

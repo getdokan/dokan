@@ -93,7 +93,6 @@ export default {
         },
 
         setStoreCategories( value = '', include = [], initial = false ) {
-            console.log(initial);
             if( dokan.store_category_type !== 'none' ) {
                 this.isLoading = true
 
