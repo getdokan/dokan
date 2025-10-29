@@ -20,7 +20,7 @@ const oldDataset = {
         },
         {
             selector: '//label[@for="0-none-store_category_type"]',
-            type: 'radio-old',
+            type: 'radioOld',
             value: 'true',
         },
     ],
@@ -43,7 +43,7 @@ const newDataset = {
         },
         {
             selector: '#dokan_settings_general_marketplace_marketplace_settings_store_category_mode button[name="none"]',
-            type: 'radio-new',
+            type: 'radio',
             value: 'true',
         },
         {

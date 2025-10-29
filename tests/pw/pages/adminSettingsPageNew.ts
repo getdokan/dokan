@@ -83,15 +83,7 @@ export class AdminSettingsPageNew extends AdminPage {
                     }
                     break;
                 }
-                case 'radio': {
-                    // Only click if not already selected
-                    const currentState = await this.page.locator( field.selector ).getAttribute('aria-checked');
-                    if (currentState !== field.value) {
-                        await this.page.click( field.selector );
-                    }
-                    break;
-                }
-                case 'radio-old': {
+                case 'radioOld': {
                     // Old style: label wrapping an input. Selector should point to the label.
                     const label = this.page.locator(field.selector);
                     const desiredSelected = field.value === true || field.value === 'true';
@@ -112,8 +104,7 @@ export class AdminSettingsPageNew extends AdminPage {
                     }
                     break;
                 }
-                case 'radio-new': {
-                    // New style: buttons with role="radio" and aria-checked attribute
+                case 'radio': {
                     const locator = this.page.locator(field.selector);
                     const ariaChecked = await locator.getAttribute('aria-checked').catch(() => null);
                     const isChecked = ariaChecked === 'true';
@@ -171,7 +162,7 @@ export class AdminSettingsPageNew extends AdminPage {
                     expect(ariaChecked).toBe(field.value);
                     break;
                 }
-                case 'radio-old': {
+                case 'radioOld': {
                     // Old style: label wrapping an input. Selector should point to the label.
                     const label = this.page.locator(field.selector);
                     const desiredSelected = field.value === true || field.value === 'true';
@@ -186,7 +177,7 @@ export class AdminSettingsPageNew extends AdminPage {
                     expect(isSelected).toBe(desiredSelected);
                     break;
                 }
-                case 'radio-new': {
+                case 'radio': {
                     // New style: buttons with role="radio" and aria-checked attribute
                     const locator = this.page.locator(field.selector);
                     const ariaChecked = await locator.getAttribute('aria-checked').catch(() => null);
