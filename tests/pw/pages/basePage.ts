@@ -242,13 +242,29 @@ export class BasePage {
 
     // click & wait for response
     async clickAndWaitForResponse(subUrl: string, selector: string, code = 200): Promise<Response> {
-        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.locator(selector).click()]);
+        const element = this.page.locator(selector);
+        // Ensure element is visible and ready to be clicked
+        await element.scrollIntoViewIfNeeded();
+        await element.waitFor({ state: 'visible' });
+        
+        const [response] = await Promise.all([
+            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), 
+            element.click()
+        ]);
         return response;
     }
 
     // click & wait for response with response type
     async clickAndWaitForResponseWithType(subUrl: string, selector: string, requestType: string, code = 200): Promise<Response> {
-        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.request().method().toLowerCase() == requestType.toLowerCase() && resp.status() === code), this.page.locator(selector).click()]);
+        const element = this.page.locator(selector);
+        // Ensure element is visible and ready to be clicked
+        await element.scrollIntoViewIfNeeded();
+        await element.waitFor({ state: 'visible' });
+        
+        const [response] = await Promise.all([
+            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.request().method().toLowerCase() == requestType.toLowerCase() && resp.status() === code), 
+            element.click()
+        ]);
         return response;
     }
 

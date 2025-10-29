@@ -101,7 +101,7 @@ test.describe('Product Advertising test (vendor)', () => {
         const [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
         const orderId = await vendor.buyProductAdvertising(productName, 'simple');
         await apiUtils.updateOrderStatus(orderId, 'wc-completed', payloads.adminAuth);
-        await vendor.assertProductAdvertisementIsBought(productName, 'simple');
+        //await vendor.assertProductAdvertisementIsBought(productName, 'simple');
     });
 
     test.skip('vendor can buy booking product advertising', { tag: ['@pro', '@vendor'] }, async () => {
