@@ -42,11 +42,11 @@ const oldDataset = [
             //     type: 'checkbox',
             //     value: true,
             // },
-            // {
-            //     selector: '//label[@for="dokan_selling[catalog_mode_hide_add_to_cart_button]"]//label[@class="switch tips"]',
-            //     type: 'checkbox',
-            //     value: false,
-            // },
+            {
+                selector: '//label[@for="dokan_selling[catalog_mode_hide_add_to_cart_button]"]//label[@class="switch tips"]',
+                type: 'checkbox',
+                value: false,
+            },
         ],
     }
 ];
@@ -112,9 +112,9 @@ test.describe('Admin Setting: General -> marketplace', () => {
             await adminSettingsPage.updateSettings(newDataset);
         });
        
-        await test.step('Check old settings for General and Selling Options' , async () => {
+        await test.step('Check old settings' , async () => {
             for (const dataset of oldDataset) {
-                await test.step('Check old settings -> ' + dataset.title , async () => {
+                await test.step( dataset.title , async () => {
                     await adminSettingsPage.checkSettings(dataset);
                 });
             }
@@ -149,4 +149,3 @@ test.describe('Admin Setting: General -> marketplace', () => {
         });
     });
 });
-    
