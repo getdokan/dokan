@@ -85,7 +85,6 @@ const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
     useEffect( () => {
         if ( ! collapsed ) {
             setActivePopover( null );
-            setActivePopover( null );
             clearHideTimeout();
         }
 

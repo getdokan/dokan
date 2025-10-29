@@ -25,13 +25,9 @@ class Dashboard extends DokanShortcode {
     public function __construct() {
         parent::__construct();
 
-        if ( apply_filters( 'dokan_vendor_dashboard_enable_full_width_page', true ) ) {
-            add_action( 'template_redirect', [ $this, 'rewrite_vendor_dashboard_template' ], 1 );
-        }
-
-        // Enqueue React vendor dashboard assets when needed.
         add_action( 'init', [ $this, 'register_vendor_dashboard_assets' ] );
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_vendor_dashboard_assets' ] );
+        add_action( 'template_redirect', [ $this, 'rewrite_vendor_dashboard_template' ], 1 );
     }
 
     /**
@@ -47,7 +43,7 @@ class Dashboard extends DokanShortcode {
     public function rewrite_vendor_dashboard_template() {
         // Check if the user is logged in and is on the vendor dashboard.
         if ( is_user_logged_in() && dokan_is_seller_dashboard() ) {
-            $dashboard_template = DOKAN_DIR . '/templates/dashboard/block-dashboard.php';
+            $dashboard_template = DOKAN_DIR . '/templates/dashboard/fullwidth-dashboard.php';
 
             // Check if the custom template exists.
             if ( file_exists( $dashboard_template ) ) {
@@ -117,23 +113,33 @@ class Dashboard extends DokanShortcode {
 
             if ( $is_admin ) {
                 // Only administrators: show Back to WP Panel.
-                array_splice( $header_nav, 1, 0, [
+                array_splice(
+                    $header_nav,
+                    1,
+                    0,
                     [
-                        'label' => esc_html__( 'Back to WP Panel', 'dokan-lite' ),
-                        'icon'  => 'WPLogo',
-                        'url'   => admin_url(),
-                        'isSvg' => true,
-                    ],
-                ] );
+                        [
+                            'label' => esc_html__( 'Back to WP Panel', 'dokan-lite' ),
+                            'icon'  => 'WPLogo',
+                            'url'   => admin_url(),
+                            'isSvg' => true,
+                        ],
+                    ]
+                );
             } elseif ( 'on' !== $no_access ) {
                 // Non-admins with admin panel access: show Access Admin Panel.
-                array_splice( $header_nav, 1, 0, [
+                array_splice(
+                    $header_nav,
+                    1,
+                    0,
                     [
-                        'label' => esc_html__( 'Access Admin Panel', 'dokan-lite' ),
-                        'icon'  => 'LockOpen',
-                        'url'   => admin_url(),
-                    ],
-                ] );
+                        [
+                            'label' => esc_html__( 'Access Admin Panel', 'dokan-lite' ),
+                            'icon'  => 'LockOpen',
+                            'url'   => admin_url(),
+                        ],
+                    ]
+                );
             }
 
             wp_add_inline_script(
