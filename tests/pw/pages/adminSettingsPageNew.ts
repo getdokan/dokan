@@ -3,9 +3,17 @@ import { AdminPage } from './adminPage';
 
 export class AdminSettingsPageNew extends AdminPage {
     saveButtonSelector: string = '#dokan-admin-settings-save-btn button'
+    oldSaveButtonSelector: string = '#submit'
 
     setSaveButtonSelector(selector: string) {
         this.saveButtonSelector = selector;
+    }
+
+    async reloadUrl(url: string) {
+        await this.goIfNotThere(url);
+        await this.waitForLoadState();
+        await this.reload();
+        await this.waitForLoadState();
     }
     async ensureVisibilityFor(selector: string) {
         const locator = this.page.locator(selector);
@@ -21,7 +29,6 @@ export class AdminSettingsPageNew extends AdminPage {
                 await this.ensureVisibilityFor(sel);
                 // Click the selector to navigate (e.g., tabs, accordions, sections)
                 await this.page.click(sel);
-                await this.page.waitForTimeout(500); // Allow UI to update after navigation
             }
         }
     }
@@ -29,24 +36,19 @@ export class AdminSettingsPageNew extends AdminPage {
     async updateSettings( dataSet: any ) {
         await this.goIfNotThere(dataSet.url)
         await this.waitForLoadState();
-        await this.page.waitForTimeout( 2000 ); // Allow page to stabilize
         await this.navigateThroughSelectors(dataSet.selector || '');
 
-        this.setFieldValues( dataSet.fields );
-        await this.page.waitForTimeout( 5000 ); // Allow any dynamic changes to take effect
-        this.saveSettings();
-        await this.page.waitForTimeout( 5000 ); // Allow save to complete
+        await this.setFieldValues( dataSet.fields );
+        await this.saveSettings();
     }
 
     async checkSettings( dataSet: any ) {
         await this.goIfNotThere(dataSet.url)
         await this.waitForLoadState();
-        await this.page.waitForTimeout( 3000 ); // Allow page to stabilize (increased for old admin page)
         
         // Navigate through selectors if provided
         if (dataSet.selector) {
             await this.navigateThroughSelectors(dataSet.selector);
-            await this.page.waitForTimeout( 1000 ); // Wait after navigation
         }
         
         await this.assertFieldValues( dataSet.fields );

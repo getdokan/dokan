@@ -2,6 +2,7 @@ import { test } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
 import { data } from '@utils/testData';
+import { da } from '@faker-js/faker/.';
 
 const oldDataset = [
     {
@@ -42,9 +43,9 @@ const oldDataset = [
             //     value: true,
             // },
             // {
-            //     selector: '//input[@id="dokan_selling[catalog_mode_hide_add_to_cart_button]"]',
+            //     selector: '//label[@for="dokan_selling[catalog_mode_hide_add_to_cart_button]"]//label[@class="switch tips"]',
             //     type: 'checkbox',
-            //     value: true,
+            //     value: false,
             // },
         ],
     }
@@ -83,7 +84,7 @@ const newDataset = {
         {
             selector: '#dokan_settings_general_marketplace_marketplace_settings_add_to_cart_button_visibility button[role="switch"]',
             type: 'switch',
-            value: true,
+            value: false,
         },
         {
             selector: '#dokan_settings_general_marketplace_live_search_search_box_radio div[role="radio"][aria-label="Search with Suggestion Box"]',
@@ -106,7 +107,7 @@ test.describe('Admin Setting: General -> marketplace', () => {
     });
 
     // Test for `General -> Marketplace -> Vendor Store URL` settings synchronization.
-    test('General Settings', { tag: ['@lite', '@admin', '@migration'] }, async () => {
+    test('New to Old General Settings synchronization', { tag: ['@lite', '@admin', '@migration'] }, async () => {
         await test.step('Update new settings', async () => {
             await adminSettingsPage.updateSettings(newDataset);
         });
@@ -121,14 +122,31 @@ test.describe('Admin Setting: General -> marketplace', () => {
 
         await test.step('Check new settings', async () => {
             await adminSettingsPage.checkSettings(newDataset);
+        }); 
+    });
+
+        // Test for `General -> Marketplace -> Vendor Store URL` settings synchronization.
+    test('Old to new General Settings synchronization', { tag: ['@lite', '@admin', '@migration'] }, async () => {
+        await test.step('Update old settings', async () => {
+            await adminSettingsPage.setSaveButtonSelector(adminSettingsPage.oldSaveButtonSelector);
+            for (const dataset of oldDataset) {
+                await test.step('Update '+ dataset.title , async () => {
+                    await adminSettingsPage.updateSettings(dataset);
+                });
+            }
         });
 
-        // test.step('Update old settings', async () => {
-        //     adminSettingsPage.setSaveButtonSelector('Old Save Button');
-        //     await adminSettingsPage.checkSettings(newDataset);
-        // });
-        // test.step('Check new settings', async () => {
-        //     await adminSettingsPage.checkSettings(newDataset);
-        // });
+        await test.step('Reload old settings urls', async () => {
+            for (const dataset of oldDataset) {
+                await test.step('Reload '+ dataset.title , async () => {
+                    await adminSettingsPage.reloadUrl(dataset.url);
+                });
+            }
+        });
+
+        await test.step('Check new settings again', async () => {
+            await adminSettingsPage.checkSettings(newDataset);
+        });
     });
 });
+    
