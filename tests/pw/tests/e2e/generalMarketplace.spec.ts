@@ -37,17 +37,29 @@ const oldDataset = [
                 type: 'checkbox',
                 value: true,
             },  
-            // {
-            //     selector: '//input[@id="dokan_selling[enable_guest_user_enquiry]"]',
-            //     type: 'checkbox',
-            //     value: true,
-            // },
+            {
+                selector: '//label[@for="dokan_selling[enable_guest_user_enquiry]"]//label[@class="switch tips"]',
+                type: 'checkbox',
+                value: true,
+            },
             {
                 selector: '//label[@for="dokan_selling[catalog_mode_hide_add_to_cart_button]"]//label[@class="switch tips"]',
                 type: 'checkbox',
                 value: false,
             },
         ],
+    },
+    {
+        title: 'Admin Old Setting: Live Search',
+        url: 'wp-admin/admin.php?page=dokan#/settings',
+        selector: '//div[@class="nav-title" and contains(text(),"Live Search")]',
+        fields: [
+            {
+                selector: '//select[@id="dokan_live_search_setting[live_search_option]"]',
+                type: 'select',
+                value: 'suggestion_box', // Options: 'suggestion_box', 'old_live_search'
+            },
+        ]
     }
 ];
 

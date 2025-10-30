@@ -18,7 +18,7 @@ export class AdminSettingsPageNew extends AdminPage {
     async ensureVisibilityFor(selector: string) {
         const locator = this.page.locator(selector);
         await locator.waitFor({ state: 'attached', timeout: 15000 });
-        await locator.scrollIntoViewIfNeeded({ timeout: 15000 });
+        //await locator.scrollIntoViewIfNeeded({ timeout: 15000 });
         await locator.waitFor({ state: 'visible', timeout: 15000 });
     }
 
