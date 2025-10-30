@@ -3,9 +3,14 @@ import { createHashRouter, RouterProvider } from 'react-router-dom';
 import Layout from './Layout';
 import ModulePage from '../pages/modules';
 import SetupGuide from '../pages/setup-guide';
+import WithdrawPage from '../pages/withdraw';
+import VendorsSingle from '../pages/vendors-single';
+import Create from '../pages/vendor-create-edit/Create';
+import Edit from '../pages/vendor-create-edit/Edit';
 import NotFound from '../../../layout/404';
 import SettingsPage from '../pages/settings';
 import AdminDashboard from '../pages/dashboard';
+import VendorsPage from '../pages/vendors';
 
 export type DokanAdminRoute = {
     id: string;
@@ -30,6 +35,31 @@ const getAdminRoutes = () => {
             id: 'pro-modules',
             element: <ModulePage />,
             path: '/pro-modules',
+        },
+        {
+            id: 'withdraw',
+            element: <WithdrawPage />,
+            path: '/withdraw',
+        },
+        {
+            id: 'vendors',
+            element: <VendorsPage />,
+            path: '/vendors',
+        },
+        {
+            id: 'vendor-single',
+            element: <VendorsSingle />,
+            path: '/vendors/:id',
+        },
+        {
+            id: 'vendor-create',
+            element: <Create />,
+            path: '/vendors/create',
+        },
+        {
+            id: 'vendor-edit',
+            element: <Edit />,
+            path: '/vendors/edit/:id',
         },
         {
             id: 'settings',
