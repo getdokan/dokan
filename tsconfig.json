@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         // Project options
-        "lib": [ "ESNext", "DOM" ],
+        "lib": ["ESNext", "DOM"],
         "target": "ESNext",
         "module": "ESNext",
         "allowJs": false,
@@ -13,11 +13,10 @@
         "baseUrl": ".",
         "paths": {
             // Webpack aliases from webpack.config.js
-            "@src/*": [ "./src/*" ],
-            "@dokan/*": [ "./src/*" ],
-            "frontend/*": [ "./src/frontend/*" ],
-            "admin/*": [ "./src/admin/*" ],
-            "reports/*": [ "./src/vendor-dashboard/reports/*" ]
+            "@src/*": ["./src/*"],
+            "frontend/*": ["./src/frontend/*"],
+            "admin/*": ["./src/admin/*"],
+            "reports/*": ["./src/vendor-dashboard/reports/*"]
         },
         "resolveJsonModule": true,
         "esModuleInterop": true,

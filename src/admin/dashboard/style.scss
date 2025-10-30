@@ -14,6 +14,9 @@
 .animate-complete-step {
     animation: completeStep 0.9s ease-in-out;
 }
+ .dokan-lite-module-select-category-popover {
+     @apply top-5 !important;
+ }
 
 #dokan-admin-dashboard {
     .dokan-dashboard-datatable {

@@ -1,0 +1,167 @@
+import apiFetch from '@wordpress/api-fetch';
+import {
+    TodoData,
+    MonthlyOverviewData,
+    VendorMetricsData,
+    AllTimeStatsData,
+    SalesChartData,
+    AnalyticsData,
+    TopPerformingVendorsData,
+    MostReviewedProductsData,
+    MostReportedVendorsData,
+    AdminNoticesData,
+} from '../types';
+
+const API_BASE = 'dokan/v1/admin/dashboard';
+
+// Format date for API (YYYY-MM format)
+export const formatDateForApi = ( month: number, year: number ): string => {
+    return `${ year }-${ month.toString().padStart( 2, '0' ) }`;
+};
+
+// Todo Section API
+export const fetchTodoData = async (): Promise< TodoData > => {
+    return await apiFetch< TodoData >( {
+        path: `${ API_BASE }/todo`,
+        method: 'GET',
+    } );
+};
+
+// Monthly Overview API
+export const fetchMonthlyOverview = async (
+    date?: string
+): Promise< MonthlyOverviewData > => {
+    const params = date ? `?date=${ date }` : '';
+    return await apiFetch< MonthlyOverviewData >( {
+        path: `${ API_BASE }/monthly-overview${ params }`,
+        method: 'GET',
+    } );
+};
+
+// Vendor Metrics API
+export const fetchVendorMetrics = async (
+    date?: string
+): Promise< VendorMetricsData > => {
+    const params = date ? `?date=${ date }` : '';
+    return await apiFetch< VendorMetricsData >( {
+        path: `${ API_BASE }/vendor-metrics${ params }`,
+        method: 'GET',
+    } );
+};
+
+// All Time Stats API
+export const fetchAllTimeStats = async (
+    date?: string
+): Promise< AllTimeStatsData > => {
+    const params = date ? `?date=${ date }` : '';
+    return await apiFetch< AllTimeStatsData >( {
+        path: `${ API_BASE }/all-time-stats${ params }`,
+        method: 'GET',
+    } );
+};
+
+// Sales Chart API
+export const fetchSalesChart = async (
+    date?: string
+): Promise< SalesChartData > => {
+    const params = date ? `?date=${ date }` : '';
+    return await apiFetch< SalesChartData >( {
+        path: `${ API_BASE }/sales-chart${ params }`,
+        method: 'GET',
+    } );
+};
+
+// Analytics API
+export const fetchAnalytics = async (): Promise< AnalyticsData > => {
+    return await apiFetch< AnalyticsData >( {
+        path: `${ API_BASE }/analytics`,
+        method: 'GET',
+    } );
+};
+
+// Top Performing Vendors API
+export const fetchTopPerformingVendors = async (
+    date?: string
+): Promise< TopPerformingVendorsData > => {
+    const params = date ? `?date=${ date }` : '';
+    return await apiFetch< TopPerformingVendorsData >( {
+        path: `${ API_BASE }/top-performing-vendors${ params }`,
+        method: 'GET',
+    } );
+};
+
+// Most Reviewed Products API
+export const fetchMostReviewedProducts =
+    async (): Promise< MostReviewedProductsData > => {
+        return await apiFetch< MostReviewedProductsData >( {
+            path: `${ API_BASE }/most-reviewed-products`,
+            method: 'GET',
+        } );
+    };
+
+// Most Reported Vendors API
+export const fetchMostReportedVendors =
+    async (): Promise< MostReportedVendorsData > => {
+        return await apiFetch< MostReportedVendorsData >( {
+            path: `${ API_BASE }/most-reported-vendors`,
+            method: 'GET',
+        } );
+    };
+
+// Admin Notices API
+export const fetchAdminNotices = async (
+    endpoint: string = 'admin',
+    scope?: string
+): Promise< AdminNoticesData > => {
+    const params = scope ? `?scope=${ scope }` : '';
+    return await apiFetch< AdminNoticesData >( {
+        path: `dokan/v1/admin/notices/${ endpoint }${ params }`,
+        method: 'GET',
+    } );
+};
+
+export const dismissAdminNotice = async ( ajaxData: {
+    action: string;
+    nonce: string;
+    [ key: string ]: any;
+} ): Promise< any > => {
+    const formData = new FormData();
+    Object.entries( ajaxData ).forEach( ( [ key, value ] ) => {
+        formData.append( key, value );
+    } );
+
+    // Use dokan_promo.ajaxurl like the Vue component
+    const ajaxUrl =
+        window.dokan_promo?.ajaxurl ||
+        window.ajaxurl ||
+        '/wp-admin/admin-ajax.php';
+
+    return await apiFetch( {
+        url: ajaxUrl,
+        method: 'POST',
+        body: formData,
+    } );
+};
+
+export const executeNoticeAction = async ( ajaxData: {
+    action: string;
+    nonce: string;
+    [ key: string ]: any;
+} ): Promise< any > => {
+    const formData = new FormData();
+    Object.entries( ajaxData ).forEach( ( [ key, value ] ) => {
+        formData.append( key, value );
+    } );
+
+    // Use dokan_promo.ajaxurl like the Vue component
+    const ajaxUrl =
+        window.dokan_promo?.ajaxurl ||
+        window.ajaxurl ||
+        '/wp-admin/admin-ajax.php';
+
+    return await apiFetch( {
+        url: ajaxUrl,
+        method: 'POST',
+        body: formData,
+    } );
+};

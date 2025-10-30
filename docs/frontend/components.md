@@ -18,6 +18,8 @@
 10. **Forbidden** - Unified 403 component for unauthorized route
 11. **MediaUploader** - File upload component
 12. **DokanPriceInput** - Specialized input component for price entry with formatting
+13. **DokanTooltip** - Unified tooltip component for displaying contextual information
+13. **DateRangePicker** - Unified date range picker component for selecting start and end dates
 
 ## Important Dependencies
 
@@ -115,6 +117,7 @@ export { default as DokanBadge } from './Badge';
 export { default as DokanAlert } from './Alert';
 export { default as DokanPriceInput } from './PriceInput';
 export { default as ComponentName } from './YourComponent';
+export {default as DateRangePicker} from './DateRangePicker';
 ```
 
 ## Button Component
@@ -568,6 +571,184 @@ The MediaUploader component accepts the following props:
 
 The DokanLink component is designed to be simple yet flexible, providing a consistent look and feel across the application while maintaining accessibility and usability standards.
 
+## DateRangePicker Component
+
+`Dokan` provides a unified date range picker component for selecting start and end dates in a user-friendly interface.
+The component wraps the WooCommerce DateRange component in a Headless UI Popover for better positioning and user
+interaction.
+
+### Features
+
+- Date range selection with calendar UI
+- Customizable date format
+- Optional date validation
+- Accessible UI with keyboard navigation
+- Controlled show/hide functionality
+- Fully integrated with WooCommerce date components
+
+### Usage Example
+
+```jsx
+import {useState} from '@wordpress/element';
+import {DateRangePicker} from '@dokan/components';
+import {dateI18n, getSettings} from '@wordpress/date';
+
+const ReportFilter = () => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [after, setAfter] = useState('2023-01-01');
+    const [afterText, setAfterText] = useState('');
+    const [before, setBefore] = useState('2023-01-31');
+    const [beforeText, setBeforeText] = useState('');
+    const [focusedInput, setFocusedInput] = useState('startDate');
+
+    return (
+        <DateRangePicker
+            show={isOpen}
+            after={after}
+            setShow={setIsOpen}
+            afterText={afterText}
+            before={before}
+            beforeText={beforeText}
+            onUpdate={(update) => {
+                if (update.after) {
+                    setAfter(update.after);
+                }
+                if (update.afterText) {
+                    setAfterText(update.afterText);
+                }
+                if (update.before) {
+                    setBefore(update.before);
+                }
+                if (update.beforeText) {
+                    setBeforeText(update.beforeText);
+                }
+                if (update.focusedInput) {
+                    setFocusedInput(update.focusedInput);
+
+                    if (update.focusedInput !== 'endDate') {
+                        setIsOpen(false);
+                    }
+
+                    if (update.focusedInput === 'endDate' && after) {
+                        setBefore('');
+                        setBeforeText('');
+                        setIsOpen(true);
+                    }
+                }
+            }}
+            shortDateFormat="MM/DD/YYYY"
+            focusedInput={focusedInput}
+            isInvalidDate={(date) => new Date(date) > new Date()}
+        >
+            <div className="date-range-button">
+        <span className="components-button">
+          <span className="date-range-label">
+            {dateI18n(getSettings().formats.date, after)} - {dateI18n(getSettings().formats.date, before)}
+          </span>
+        </span>
+            </div>
+        </DateRangePicker>
+    );
+};
+```
+
+### DateRangePicker Component Properties
+
+The DateRangePicker component accepts the following props:
+
+| Prop              | Type                        | Required | Description                                                 |
+|-------------------|-----------------------------|----------|-------------------------------------------------------------|
+| `show`            | `boolean`                   | Yes      | Whether the date picker popover is visible                  |
+| `setShow`         | `(show: boolean) => void`   | Yes      | Function to control the visibility of the popover           |
+| `after`           | `string`                    | Yes      | Start date value (ISO string format)                        |
+| `afterText`       | `string`                    | Yes      | Formatted display text for start date                       |
+| `before`          | `string`                    | Yes      | End date value (ISO string format)                          |
+| `beforeText`      | `string`                    | Yes      | Formatted display text for end date                         |
+| `onUpdate`        | `function`                  | Yes      | Callback when dates are updated with new values             |
+| `children`        | `ReactNode`                 | No       | Content to trigger the date picker popover                  |
+| `focusedInput`    | `string`                    | No       | Which input is currently focused ('startDate' or 'endDate') |
+| `shortDateFormat` | `string`                    | No       | Format for displaying dates (default: WordPress setting)    |
+| `isInvalidDate`   | `(date: string) => boolean` | No       | Function to determine if a date should be disabled          |
+
+### Customization
+
+The DateRangePicker component can be customized using WordPress filters:
+
+```jsx
+// Add a filter to customize DateRangePicker props
+wp.hooks.addFilter(
+    'dokan_date_range_picker_props',
+    'your-plugin/customize-date-range-picker',
+    (props) => {
+        // Customize props as needed
+        return {
+            ...props,
+            shortDateFormat: 'YYYY-MM-DD',
+            // Other custom properties
+        };
+    }
+);
+```
+
+### Working with Date Ranges
+
+When using DateRangePicker for filtering data:
+
+```jsx
+// In a data fetching component
+const [dateRange, setDateRange] = useState({
+    startDate: '2023-01-01',
+    endDate: '2023-01-31'
+});
+
+useEffect(() => {
+    // Fetch data with date range parameters
+    apiFetch({
+        path: addQueryArgs('/dokan/v1/reports/sales', {
+            start_date: dateRange.startDate,
+            end_date: dateRange.endDate
+        }),
+    }).then(response => {
+        // Handle the response
+    });
+}, [dateRange]);
+
+// DateRangePicker updates
+<DateRangePicker
+    // ...other props
+    onUpdate={(update) => {
+        if (update.after && update.before) {
+            setDateRange({
+                startDate: update.after,
+                endDate: update.before
+            });
+        }
+        // Handle other updates
+    }}
+>
+    {/* Trigger element */}
+</DateRangePicker>
+```
+
+### Integration Best Practices
+
+1. **State Management**
+    - Maintain all date-related state in the parent component
+    - Use callback functions to update state when date selection changes
+
+2. **Date Validation**
+    - Use `isInvalidDate` prop to restrict date selection where needed
+    - Consider business rules when implementing validation logic
+
+3. **Accessibility**
+    - Ensure the trigger element has appropriate aria attributes
+    - Provide clear visual cues for the current selection
+
+4. **UI/UX Considerations**
+    - Display selected dates in a user-friendly format
+    - Provide clear indication when the date picker is active
+    - Consider mobile responsiveness for the popover placement
+
 ## CustomerFilter Component
 
 The CustomerFilter component provides a standardized way to filter content by customer across your application. It allows users to search and select customers from a dropdown interface.
@@ -861,3 +1042,27 @@ wp.hooks.addFilter(
     }
 );
 ```
+
+
+## DokanTooltip Component
+
+`Dokan` provides a unified tooltip component for displaying contextual information and help text. The component is built on top of the `Tooltip` component from `@getdokan/dokan-ui` and provides consistent styling across the application.
+
+### Usage Example
+
+```jsx
+import { __ } from '@wordpress/i18n';
+import { DokanTooltip } from '@dokan/components';
+
+const TooltipExample = () => {
+  return (
+    <div className="space-y-4">
+      <DokanTooltip content={ __( "This is a helpful tooltip", 'dokan-lite' ) }>
+        <button>{ __( 'Hover me', 'dokan-lite' ) }</button>
+      </DokanTooltip>
+    </div>
+  );
+};
+```
+
+The DokanTooltip component enhances the user experience by providing contextual information without cluttering the interface, making it ideal for help text, labels for icon buttons, and additional details about UI elements.

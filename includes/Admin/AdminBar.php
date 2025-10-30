@@ -44,7 +44,7 @@ class AdminBar {
         $args = [
             'id'     => 'dokan',
             'title'  => __( 'Dokan', 'dokan-lite' ),
-            'href'   => admin_url( 'admin.php?page=dokan' ),
+            'href'   => admin_url( 'admin.php?page=dokan-dashboard' ),
         ];
 
         $wp_admin_bar->add_menu( $args );
@@ -54,7 +54,7 @@ class AdminBar {
                 'id'     => 'dokan-dashboard',
                 'parent' => 'dokan',
                 'title'  => __( 'Dashboard', 'dokan-lite' ),
-                'href'   => admin_url( 'admin.php?page=dokan' ),
+                'href'   => admin_url( 'admin.php?page=dokan-dashboard' ),
             ]
         );
 
@@ -64,15 +64,6 @@ class AdminBar {
                 'parent' => 'dokan',
                 'title'  => __( 'Withdraw', 'dokan-lite' ),
                 'href'   => admin_url( 'admin.php?page=dokan#/withdraw' ),
-            ]
-        );
-
-        $wp_admin_bar->add_menu(
-            [
-                'id'     => 'dokan-pro-features',
-                'parent' => 'dokan',
-                'title'  => __( 'PRO Features', 'dokan-lite' ),
-                'href'   => admin_url( 'admin.php?page=dokan#/premium' ),
             ]
         );
 

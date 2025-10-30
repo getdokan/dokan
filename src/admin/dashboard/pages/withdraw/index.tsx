@@ -1,41 +1,27 @@
 import { addQueryArgs } from '@wordpress/url';
-import { __, sprintf } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 import { RawHTML, useEffect, useState, useCallback } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import { formatPrice, truncate } from '@dokan/utilities';
 import {
     TextArea,
-    Tooltip,
     SimpleRadio,
     SimpleInput,
 } from '@getdokan/dokan-ui';
+import { DokanTooltip as Tooltip } from '@dokan/components';
 import * as LucideIcons from 'lucide-react';
 import { dateI18n, getSettings } from '@wordpress/date';
 // Import Dokan components
 import {
-    DokanButton,
-    DataViews,
+    AdminDataViews as DataViews,
     DateTimeHtml,
-    DokanModal,
-    DokanTab,
-    Filter,
     VendorAsyncSelect,
     DateRangePicker,
+    AsyncSelect,
+    DokanModal,
 } from '@dokan/components';
 
-import {
-    Trash,
-    MessageSquare,
-    Funnel,
-    ArrowDown,
-    Eye,
-    Check,
-    XCircle,
-    Download,
-    Home,
-    Calendar,
-} from 'lucide-react';
-import { twMerge } from 'tailwind-merge';
+import { Trash, ArrowDown, Home, Calendar, CreditCard } from 'lucide-react';
 
 // Define withdraw statuses for tab filtering
 const WITHDRAW_STATUSES = [
@@ -43,14 +29,6 @@ const WITHDRAW_STATUSES = [
     { value: 'approved', label: __( 'Approved', 'dokan-lite' ) },
     { value: 'cancelled', label: __( 'Cancelled', 'dokan-lite' ) },
     { value: 'all', label: __( 'All', 'dokan-lite' ) },
-];
-
-// Define payment methods for filtering
-const PAYMENT_METHODS = [
-    { value: '', label: __( 'All Methods', 'dokan-lite' ) },
-    { value: 'paypal', label: __( 'PayPal', 'dokan-lite' ) },
-    { value: 'bank', label: __( 'Bank Transfer', 'dokan-lite' ) },
-    { value: 'skrill', label: __( 'Skrill', 'dokan-lite' ) },
 ];
 
 const price = ( amount ) => <RawHTML>{ formatPrice( amount ) }</RawHTML>;
@@ -111,8 +89,7 @@ const WithdrawPage = () => {
         cancelled: 0,
     } );
     const [ filterArgs, setFilterArgs ] = useState( {} );
-    const [ activeStatus, setActiveStatus ] = useState( 'all' );
-    const [ showFilters, setShowFilters ] = useState( false );
+    const [ activeStatus, setActiveStatus ] = useState( 'pending' );
     const [ vendorFilter, setVendorFilter ] = useState< VendorSelect | null >(
         null
     );
@@ -122,6 +99,11 @@ const WithdrawPage = () => {
     const [ beforeText, setBeforeText ] = useState( '' );
     const [ focusInput, setFocusInput ] = useState( 'startDate' );
 
+    const [ paymentMethod, setPaymentMethod ] = useState< {
+        value: string | number;
+        label: string;
+    } | null >( null );
+
     // Define fields for the table columns
     const fields = [
         {
@@ -130,16 +112,20 @@ const WithdrawPage = () => {
             enableGlobalSearch: true,
             enableSorting: true,
             render: ( { item } ) => (
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-3">
                     { item.user?.gravatar && (
-                        <img
-                            src={ item.user.gravatar }
-                            alt={ item.user?.store_name || '' }
-                            className="w-8 h-8 rounded-sm"
-                        />
+                        <div
+                            className={ 'w-[44px] h-[44px] rounded object-cover' }
+                        >
+                            <img
+                                src={ item.user.gravatar }
+                                alt={ item.user?.store_name || '' }
+                                className={ 'w-[44px] h-[44px] rounded-[5px] object-cover border-[1px] border-[#E9E9E9] border-solid' }
+                            />
+                        </div>
                     ) }
                     <div>
-                        <div className="font-medium text-gray-600">
+                        <div className="font-medium text-[#7047EB]">
                             { item.user?.store_name ||
                                 __( 'N/A', 'dokan-lite' ) }
                         </div>
@@ -162,20 +148,16 @@ const WithdrawPage = () => {
             label: __( 'Status', 'dokan-lite' ),
             enableGlobalSearch: true,
             getValue: ( { item } ) => item.status,
-            elements: WITHDRAW_STATUSES.slice( 1 ), // Exclude 'all' option
-            filterBy: {
-                operators: [ 'isAny', 'isNone' ],
-            },
             render: ( { item } ) => {
                 const statusColors = {
-                    pending: 'bg-yellow-100 text-yellow-800',
-                    approved: 'bg-green-100 text-green-800',
+                    pending: 'bg-[#FDF2F8] text-[#9D174D]',
+                    approved: 'bg-[#D4FBEF] text-[#00563F]',
                 };
                 return (
                     <span
-                        className={ `inline-flex items-center px-3.5 py-1.5 rounded-md text-xs font-medium ${
+                        className={ `inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-medium ${
                             statusColors[ item.status ] ||
-                            'bg-gray-100 text-gray-800'
+                            'bg-[#F1F1F4] text-[#393939]'
                         }` }
                     >
                         {
@@ -230,11 +212,15 @@ const WithdrawPage = () => {
                 const full =
                     processDetails( item.details, item.method ) ||
                     __( '-', 'dokan-lite' );
-                return (
+                return full?.length <= 22 ? (
+                    <p className="m-0 space-x-2 flex flex-wrap text-wrap leading-6 text-sm text-gray-600">
+                        <RawHTML>{ full }</RawHTML>
+                    </p>
+                ) : (
                     <Tooltip content={ <RawHTML>{ full }</RawHTML> }>
-                        <p className="m-0 space-x-2 flex flex-wrap max-w-40 text-wrap leading-6 text-sm text-gray-600">
+                        <p className="m-0 space-x-2 flex flex-wrap text-wrap leading-6 text-sm text-gray-600">
                             <RawHTML>
-                                { truncate ? truncate( full, 120 ) : full }
+                                { truncate ? truncate( full, 22 ) : full }
                             </RawHTML>
                         </p>
                     </Tooltip>
@@ -246,11 +232,15 @@ const WithdrawPage = () => {
             label: __( 'Note', 'dokan-lite' ),
             render: ( { item } ) => {
                 const full = item.note || __( '-', 'dokan-lite' );
-                return (
+                return full?.length <= 22 ? (
+                    <p className="m-0 space-x-2 flex flex-wrap max-w-40 text-wrap leading-6 text-sm text-gray-600">
+                        <RawHTML>{ full }</RawHTML>
+                    </p>
+                ) : (
                     <Tooltip content={ <RawHTML>{ full }</RawHTML> }>
                         <p className="m-0 space-x-2 flex flex-wrap max-w-40 text-wrap leading-6 text-sm text-gray-600">
                             <RawHTML>
-                                { truncate ? truncate( full, 120 ) : full }
+                                { truncate ? truncate( full, 22 ) : full }
                             </RawHTML>
                         </p>
                     </Tooltip>
@@ -418,7 +408,14 @@ const WithdrawPage = () => {
             isPrimary: false,
             supportsBulk: true,
             isEligible: ( item ) => 'paypal' === item?.method,
-            callback: async ( items: any[] ) => {},
+            callback: async ( items: any[] ) => {
+                await handleBulkAction(
+                    'paypal',
+                    items
+                        .filter( ( item ) => 'paypal' === item.method )
+                        .map( ( item ) => item.id )
+                );
+            },
         },
     ];
 
@@ -435,6 +432,9 @@ const WithdrawPage = () => {
     // Note state for add-note modal
     const [ noteState, setNoteState ] = useState( '' );
     const [ localNoteState, setLocalNoteState ] = useState( '' );
+
+    // Selected action for the "view" modal
+    const [ selectedAction, setSelectedAction ] = useState< string | number | undefined >( undefined );
 
     // Optimized handlers to prevent re-renders
     const handleNoteChange = useCallback( ( event ) => {
@@ -458,6 +458,22 @@ const WithdrawPage = () => {
             const initialNote = items[ 0 ].note || '';
             setNoteState( initialNote );
             setLocalNoteState( initialNote );
+        }
+
+        // Initialize selected action for view modal
+        if ( type === 'view' && items.length > 0 ) {
+            const item = items[ 0 ];
+            const opts: { label: string; value: string }[] = [];
+            if ( item.status === 'pending' ) {
+                opts.push(
+                    { label: __( 'Cancel', 'dokan-lite' ), value: 'cancel' },
+                    { label: __( 'Approve', 'dokan-lite' ), value: 'approve' }
+                );
+            }
+            if ( item.status !== 'approved' ) {
+                opts.push( { label: __( 'Delete', 'dokan-lite' ), value: 'delete' } );
+            }
+            setSelectedAction( opts.length ? opts[ 0 ].value : undefined );
         }
     };
 
@@ -484,7 +500,7 @@ const WithdrawPage = () => {
         search: '',
         type: 'table',
         titleField: 'vendor',
-        status: 'all',
+        status: 'pending',
         layout: { ...defaultLayouts },
         fields: fields.map( ( field ) =>
             field.id !== 'vendor' ? field.id : ''
@@ -504,19 +520,50 @@ const WithdrawPage = () => {
     // Create tabs with status counts
     const tabs = WITHDRAW_STATUSES.map( ( status ) => ( {
         name: status.value,
-        title: `${ status.label } ${
-            statusCounts[ status.value ]
-                ? `(${ statusCounts[ status.value ] })`
-                : ''
-        }`,
+        icon: (
+            <div className="flex items-center gap-1.5 px-2">
+                { status.label }
+                <span className="text-xs font-light text-[#A5A5AA]">
+                    ({ statusCounts[ status.value ] })
+                </span>
+            </div>
+        ),
+        title: status.label,
     } ) );
+
+    const tabsAdditionalContents = [
+        <button
+            type="button"
+            className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-[#575757] hover:bg-[#7047EB] hover:text-white"
+            onClick={ async () => {
+                try {
+                    // Minimal placeholder; backend export flow may vary.
+                    // Attempt to hit export endpoint via same query params.
+                    const path = addQueryArgs( 'dokan/v2/withdraw', {
+                        ...view,
+                        is_export: true,
+                    } );
+                    const res = await apiFetch( { path } );
+                    if ( res && res.url ) {
+                        window.location.assign( res.url as string );
+                    }
+                } catch ( e ) {
+                    // eslint-disable-next-line no-console
+                    console.error( 'Export failed or not supported yet', e );
+                }
+            } }
+        >
+            <ArrowDown size={ 16 } />
+            { __( 'Export', 'dokan-lite' ) }
+        </button>,
+    ];
 
     // Handle data fetching from the server
     const fetchWithdraws = async () => {
         setIsLoading( true );
         try {
             const queryArgs = {
-                per_page: view?.perPage ?? 10,
+                per_page: view?.perPage ?? 20,
                 page: view?.page ?? 1,
                 search: view?.search ?? '',
                 status: view?.status === 'all' ? '' : view?.status,
@@ -585,6 +632,105 @@ const WithdrawPage = () => {
         }
     };
 
+    // Handle export withdraws
+    const handleExportWithdraws = async ( ids ) => {
+        try {
+            // Show loading state
+            console.log( 'Starting withdraw export for IDs:', ids );
+
+            // Step 1: Initiate the export
+            const exportResponse = await apiFetch( {
+                path: '/dokan/v1/reports/withdraws/export',
+                method: 'POST',
+                data: {
+                    report_args: {
+                        per_page: 50,
+                        ids, // Filter to only export selected withdraws
+                    },
+                    email: false, // Don't send email, just download directly
+                },
+            } );
+
+            if ( exportResponse.export_id ) {
+                console.log(
+                    'Export initiated with ID:',
+                    exportResponse.export_id
+                );
+
+                // Step 2: Poll for export status
+                await pollExportStatus( exportResponse.export_id );
+            } else {
+                throw new Error( 'Failed to initiate export' );
+            }
+        } catch ( error ) {
+            console.error( 'Error exporting withdraws:', error );
+            alert(
+                __(
+                    'Failed to export withdraws. Please try again.',
+                    'dokan-lite'
+                )
+            );
+        }
+    };
+
+    // Poll export status and download when ready
+    const pollExportStatus = async ( exportId ) => {
+        const maxAttempts = 60; // Maximum 5 minutes (60 * 5 seconds)
+        let attempts = 0;
+
+        const checkStatus = async ( resolve ) => {
+            try {
+                const statusResponse = await apiFetch( {
+                    path: `/dokan/v1/reports/withdraws/export/${ exportId }/status`,
+                    method: 'GET',
+                } );
+
+                console.log( 'Export status:', statusResponse );
+
+                if ( statusResponse.percent_complete === 100 ) {
+                    // Export is complete, download the file
+                    if ( statusResponse.download_url ) {
+                        // Create a temporary link to download the file
+                        const link = document.createElement( 'a' );
+                        link.href = statusResponse.download_url;
+                        link.download = ''; // Let the browser determine the filename
+                        document.body.appendChild( link );
+                        link.click();
+                        document.body.removeChild( link );
+
+                        console.log( 'Export completed and downloaded' );
+                    } else {
+                        throw new Error( 'Download URL not available' );
+                    }
+                } else {
+                    // Still processing, check again
+                    attempts++;
+                    if ( attempts < maxAttempts ) {
+                        await new Promise(
+                            ( res ) =>
+                                setTimeout(
+                                    async () => await checkStatus( res ),
+                                    5000
+                                ) // Check again in 5 seconds
+                        );
+                    } else {
+                        throw new Error( 'Export timeout - please try again' );
+                    }
+                }
+            } catch ( error ) {
+                console.error( 'Error checking export status:', error );
+                alert( __( 'Export failed. Please try again.', 'dokan-lite' ) );
+            }
+
+            if ( resolve ) {
+                resolve();
+            }
+        };
+
+        // Start status checking
+        await checkStatus();
+    };
+
     // Handle bulk actions
     const handleBulkAction = async ( action, ids ) => {
         try {
@@ -593,6 +739,11 @@ const WithdrawPage = () => {
                 updateData.status = action;
             } else if ( action === 'cancelled' ) {
                 updateData.status = action;
+            }
+
+            if ( 'paypal' === action ) {
+                await handleExportWithdraws( ids );
+                return;
             }
 
             if ( action === 'delete' ) {
@@ -637,14 +788,12 @@ const WithdrawPage = () => {
     };
 
     // Handle filter
-    const handleFilter = () => {
+    useEffect( () => {
         setView( ( prevView ) => ( {
             ...prevView,
             page: 1, // Reset to first page when applying filters
         } ) );
-
-        // fetchWithdraws();
-    };
+    }, [ filterArgs ] );
 
     // Clear filters
     const clearFilter = () => {
@@ -653,13 +802,53 @@ const WithdrawPage = () => {
         setAfterText( '' );
         setBefore( '' );
         setBeforeText( '' );
+        setPaymentMethod( null );
         setFilterArgs( {} );
 
         setView( ( prevView ) => ( {
             ...prevView,
             page: 1, // Reset to first page when applying filters
         } ) );
-        // fetchWithdraws();
+    };
+
+    const clearSingleFilter = ( filterId: string ) => {
+        const args = { ...filterArgs };
+        switch ( filterId ) {
+            case 'vendor':
+                setVendorFilter( null );
+                delete args.user_id;
+                break;
+            case 'payment_method':
+                setPaymentMethod( null );
+                delete args.payment_method;
+                break;
+            case 'date-range':
+                setAfter( '' );
+                setAfterText( '' );
+                setBefore( '' );
+                setBeforeText( '' );
+                delete args.start_date;
+                delete args.end_date;
+                break;
+            default:
+                break;
+        }
+        setFilterArgs( args );
+        setView( ( prevView ) => ( { ...prevView, page: 1 } ) );
+    };
+
+    const loadPaymentMethods = async ( inputValue ) => {
+        // return array of { value, label }
+        const data = await apiFetch( {
+            path: `/dokan/v2/withdraw/payment_methods`,
+        } );
+
+        return Array.isArray( data )
+            ? data.map( ( method ) => ( {
+                  value: method.id,
+                  label: method.title,
+              } ) )
+            : [];
     };
 
     // Fetch withdraws when view changes
@@ -667,184 +856,155 @@ const WithdrawPage = () => {
         fetchWithdraws();
     }, [ view ] );
 
+    const filterFields = [
+        {
+            id: 'vendor',
+            label: __( 'Vendor', 'dokan-lite' ),
+            field: (
+                <VendorAsyncSelect
+                    icon={ <Home size={ 16 } /> }
+                    key="vendor-select"
+                    value={ vendorFilter }
+                    onChange={ (
+                        selectedVendorObj: null | {
+                            value: string;
+                            label: string;
+                        }
+                    ) => {
+                        const args = { ...filterArgs };
+
+                        delete args.user_id;
+
+                        if ( selectedVendorObj ) {
+                            args.user_id = selectedVendorObj.value;
+                        }
+                        setVendorFilter( selectedVendorObj );
+                        setFilterArgs( args );
+                    } }
+                    placeholder={ __( 'Select Vendor', 'dokan-lite' ) }
+                    isClearable
+                    prefetch
+                    defaultOptions
+                    cacheOptions
+                />
+            ),
+        },
+        {
+            id: 'payment_method',
+            label: __( 'Payment Method', 'dokan-lite' ),
+            field: (
+                <AsyncSelect
+                    key="payment-method-select"
+                    icon={ <CreditCard size={ 16 } /> }
+                    loadOptions={ loadPaymentMethods }
+                    cacheOptions
+                    defaultOptions
+                    isClearable
+                    value={ paymentMethod }
+                    onChange={ ( method ) => {
+                        const args = { ...filterArgs };
+                        delete args.payment_method;
+
+                        if ( method ) {
+                            args.payment_method = method.value;
+                        }
+                        setPaymentMethod( method );
+                        setFilterArgs( args );
+                    } }
+                    placeholder="Payment Method"
+                />
+            ),
+        },
+        {
+            id: 'date-range',
+            label: __( 'Date Range', 'dokan-lite' ),
+            field: (
+                <DateRangePicker
+                    key="date-range-select"
+                    after={ after }
+                    afterText={ afterText }
+                    before={ before }
+                    beforeText={ beforeText }
+                    onUpdate={ ( update ) => {
+                        if ( update.after ) {
+                            setAfter( update.after );
+                        }
+
+                        if ( update.afterText ) {
+                            setAfterText( update.afterText );
+                        }
+
+                        if ( update.before ) {
+                            setBefore( update.before );
+                        }
+
+                        if ( update.beforeText ) {
+                            setBeforeText( update.beforeText );
+                        }
+
+                        if ( update.focusedInput ) {
+                            setFocusInput( update.focusedInput );
+
+                            if ( update.focusedInput === 'endDate' && after ) {
+                                setBefore( '' );
+                                setBeforeText( '' );
+                            }
+                        }
+                    } }
+                    shortDateFormat="MM/DD/YYYY"
+                    focusedInput={ focusInput }
+                    isInvalidDate={ () => false }
+                    wrapperClassName="w-full"
+                    pickerToggleClassName="block"
+                    wpPopoverClassName="dokan-layout"
+                    popoverBodyClassName="p-4 w-auto text-sm/6"
+                    onClear={ () => {
+                        setAfter( '' );
+                        setAfterText( '' );
+                        setBefore( '' );
+                        setBeforeText( '' );
+                        const args = { ...filterArgs };
+                        delete args.start_date;
+                        delete args.end_date;
+                        setFilterArgs( args );
+                    } }
+                    onOk={ () => {
+                        setFilterArgs( {
+                            ...filterArgs,
+                            start_date: after,
+                            end_date: before,
+                        } );
+                    } }
+                >
+                    <SimpleInput
+                        addOnLeft={ <Calendar size="16" /> }
+                        className="border rounded px-3 py-1.5 w-full bg-white"
+                        onChange={ () => {} }
+                        input={ {
+                            type: 'text',
+                            value:
+                                ! after || ! before
+                                    ? ''
+                                    : displayDateRange( after, before ),
+                            placeholder: 'Date',
+                            readOnly: true,
+                        } }
+                    />
+                </DateRangePicker>
+            ),
+        },
+    ];
+
     return (
         <div className="withdraw-admin-page">
             <h2 className="text-2xl leading-3 text-gray-900 font-bold mb-6">
                 { __( 'Withdraw', 'dokan-lite' ) }
             </h2>
-            { /* Status Tabs + Actions Row */ }
-            <div className="mb-6 flex items-center justify-between gap-3">
-                <DokanTab
-                    namespace="withdraw_status_tabs"
-                    tabs={ tabs }
-                    variant="primary"
-                    onSelect={ handleTabSelect }
-                    initialTabName={ activeStatus }
-                />
-                <div className="flex items-center gap-2">
-                    <button
-                        type="button"
-                        className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-[#575757] hover:bg-[#7047EB] hover:text-white"
-                        onClick={ async () => {
-                            try {
-                                // Minimal placeholder; backend export flow may vary.
-                                // Attempt to hit export endpoint via same query params.
-                                const path = addQueryArgs(
-                                    'dokan/v2/withdraw',
-                                    { ...view, is_export: true }
-                                );
-                                const res = await apiFetch( { path } );
-                                if ( res && res.url ) {
-                                    window.location.assign( res.url as string );
-                                }
-                            } catch ( e ) {
-                                // eslint-disable-next-line no-console
-                                console.error(
-                                    'Export failed or not supported yet',
-                                    e
-                                );
-                            }
-                        } }
-                    >
-                        <ArrowDown size={ 16 } />
-                        { __( 'Export', 'dokan-lite' ) }
-                    </button>
-                    <button
-                        type="button"
-                        className={ twMerge(
-                            'inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm hover:bg-[#7047EB] hover:text-white',
-                            showFilters
-                                ? 'bg-[#7047EB] text-white'
-                                : 'text-[#575757] bg-white'
-                        ) }
-                        onClick={ () => setShowFilters( ( v ) => ! v ) }
-                    >
-                        <Funnel size={ 16 } />
-                        { __( 'Filter', 'dokan-lite' ) }
-                    </button>
-                </div>
-            </div>
-
-            { /* Filters */ }
-            <div
-                className={ `mb-6 dokan-dashboard-filters ${
-                    showFilters ? '' : 'hidden'
-                }` }
-            >
-                <Filter
-                    fields={ [
-                        <VendorAsyncSelect
-                            icon={ <Home size={ 16 } /> }
-                            key="vendor-select"
-                            value={ vendorFilter }
-                            onChange={ (
-                                selectedVendorObj: null | {
-                                    value: string;
-                                    label: string;
-                                }
-                            ) => {
-                                const args = { ...filterArgs };
-
-                                delete args.user_id;
-
-                                if ( selectedVendorObj ) {
-                                    args.user_id = selectedVendorObj.value;
-                                }
-                                setFilterArgs( args );
-                                setVendorFilter( selectedVendorObj );
-                            } }
-                            placeholder={ __( 'Select Vendor', 'dokan-lite' ) }
-                            isClearable={ true }
-                        />,
-                        <DateRangePicker
-                            after={ after }
-                            afterText={ afterText }
-                            before={ before }
-                            beforeText={ beforeText }
-                            onUpdate={ ( update ) => {
-                                if ( update.after ) {
-                                    setAfter( update.after );
-                                }
-
-                                if ( update.afterText ) {
-                                    setAfterText( update.afterText );
-                                }
-
-                                if ( update.before ) {
-                                    setBefore( update.before );
-                                }
-
-                                if ( update.beforeText ) {
-                                    setBeforeText( update.beforeText );
-                                }
-
-                                if ( update.focusedInput ) {
-                                    setFocusInput( update.focusedInput );
-
-                                    if (
-                                        update.focusedInput === 'endDate' &&
-                                        after
-                                    ) {
-                                        setBefore( '' );
-                                        setBeforeText( '' );
-                                    }
-                                }
-                            } }
-                            shortDateFormat="MM/DD/YYYY"
-                            focusedInput={ focusInput }
-                            isInvalidDate={ () => false }
-                            wrapperClassName="w-full"
-                            pickerToggleClassName="block"
-                            wpPopoverClassName="dokan-layout"
-                            popoverBodyClassName="p-4 w-auto text-sm/6"
-                            onClear={ () => {
-                                setAfter( '' );
-                                setAfterText( '' );
-                                setBefore( '' );
-                                setBeforeText( '' );
-                                const args = { ...filterArgs };
-                                delete args.start_date;
-                                delete args.end_date;
-                                setFilterArgs( args );
-                            } }
-                            onOk={ () => {
-                                setFilterArgs( {
-                                    ...filterArgs,
-                                    start_date: after,
-                                    end_date: before,
-                                } );
-                            } }
-                        >
-                            <SimpleInput
-                                addOnLeft={ <Calendar size="16" /> }
-                                className="border rounded px-3 py-1.5 w-full bg-white"
-                                onChange={ () => {} }
-                                input={ {
-                                    type: 'text',
-                                    value:
-                                        ! after || ! before
-                                            ? ''
-                                            : displayDateRange( after, before ),
-                                    placeholder: 'Select date range',
-                                    readOnly: true,
-                                } }
-                            />
-                        </DateRangePicker>,
-                    ] }
-                    onFilter={ () => handleFilter() }
-                    onReset={ () => clearFilter() }
-                    showFilter={ true }
-                    showReset={ true }
-                    resetBtnClassName="dokan-btn-tertiary"
-                    filterBtnClassName="dokan-btn-success"
-                    namespace="withdraw_filters"
-                />
-            </div>
 
             { /* Data Table */ }
             <DataViews
                 data={ data }
-                namespace="withdraw-data-view"
+                namespace="withdraw-admin-data-view"
                 defaultLayouts={ defaultLayouts }
                 fields={ fields }
                 getItemId={ ( item ) => item.id }
@@ -858,6 +1018,18 @@ const WithdrawPage = () => {
                 onChangeSelection={ setSelection }
                 actions={ actions }
                 isLoading={ isLoading }
+                tabs={ {
+                    tabs,
+                    onSelect: handleTabSelect,
+                    initialTabName: activeStatus,
+                    additionalComponents: tabsAdditionalContents,
+                } }
+                filter={ {
+                    fields: filterFields,
+                    onFilterRemove: ( filterId ) =>
+                        clearSingleFilter( filterId ),
+                    onReset: () => clearFilter(),
+                } }
             />
 
             { /* DokanModal for approve, cancel, delete actions */ }
@@ -1051,234 +1223,199 @@ const WithdrawPage = () => {
 
             { modalState.isOpen &&
                 modalState.type === 'view' &&
-                modalState.items.length > 0 && (
-                    <DokanModal
-                        className={ `w-[520px] max-w-full` }
-                        isOpen={ modalState.isOpen }
-                        namespace={ `view-withdrawal-${ modalState.items[ 0 ]?.id }` }
-                        onClose={ closeModal }
-                        onConfirm={ closeModal }
-                        dialogTitle={ <></> }
-                        confirmButtonText={ __( 'Update', 'dokan-lite' ) }
-                        hideCancelButton={ false }
-                        cancelButtonText={ __( 'Cancel', 'dokan-lite' ) }
-                        dialogContent={
-                            <div className="p-0">
-                                { ( () => {
-                                    const item = modalState.items[ 0 ];
-                                    const statusColors = {
-                                        pending:
-                                            'bg-yellow-100 text-yellow-800',
-                                        approved: 'bg-green-100 text-green-800',
-                                        cancelled: 'bg-gray-100 text-gray-800',
-                                    };
+                modalState.items.length > 0 &&
+                ( () => {
+                    const item = modalState.items[ 0 ];
+                    const statusColors = {
+                        pending: 'bg-[#FDF2F8] text-[#9D174D]',
+                        approved: 'bg-[#D4FBEF] text-[#00563F]',
+                        cancelled: 'bg-[#F1F1F4] text-[#393939]',
+                    } as const;
 
-                                    return (
-                                        <div>
-                                            { /* Header with amount and store name */ }
-                                            <div className="mb-4">
-                                                <div className="text-2xl font-bold text-gray-900 mb-1">
-                                                    { price( item.amount ) }
+                    const options: { label: string; value: string }[] = [];
+                    if ( item.status === 'pending' ) {
+                        options.push(
+                            { label: __( 'Cancel', 'dokan-lite' ), value: 'cancel' },
+                            { label: __( 'Approve', 'dokan-lite' ), value: 'approve' }
+                        );
+                    }
+                    if ( item.status !== 'approved' ) {
+                        options.push( { label: __( 'Delete', 'dokan-lite' ), value: 'delete' } );
+                    }
+
+                    const noActions = options.length === 0;
+
+                    const footer = noActions ? (
+                        <div className="flex items-center justify-end gap-3">
+                            <button
+                                onClick={ closeModal }
+                                className="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm text-[#575757] hover:bg-gray-100"
+                                type="button"
+                            >
+                                { __( 'Close', 'dokan-lite' ) }
+                            </button>
+                        </div>
+                    ) : undefined;
+
+                    return (
+                        <DokanModal
+                            className={ `w-[520px] max-w-full` }
+                            isOpen={ modalState.isOpen }
+                            namespace={ `view-withdrawal-${ modalState.items[ 0 ]?.id }` }
+                            onClose={ closeModal }
+                            onConfirm={ async () => {
+                                if ( noActions ) {
+                                    return;
+                                }
+
+                                let action = ( selectedAction as string | undefined ) || undefined;
+                                if ( ! action && options.length ) {
+                                    action = options[ 0 ].value;
+                                }
+                                if ( ! action ) {
+                                    return;
+                                }
+
+                                const map: Record< string, string > = {
+                                    approve: 'approved',
+                                    cancel: 'cancelled',
+                                    delete: 'delete',
+                                };
+                                const finalAction = map[ action ] || '';
+                                if ( finalAction ) {
+                                    await handleBulkAction( finalAction, [ item.id ] );
+                                }
+                                closeModal();
+                            } }
+                            dialogTitle={
+                                <>
+                                    <div className="text-2xl font-bold text-gray-900 mb-1">
+                                        { price( modalState.items[ 0 ]?.amount ) }
+                                    </div>
+                                    <div className="text-sm text-gray-500 mb-3">
+                                        From:{ ' ' }
+                                        { modalState.items[ 0 ]?.user?.store_name ||
+                                            __( 'N/A', 'dokan-lite' ) }
+                                    </div>
+                                </>
+                            }
+                            confirmButtonText={ __( 'Proceed', 'dokan-lite' ) }
+                            hideCancelButton={ false }
+                            cancelButtonText={ noActions ? __( 'Close', 'dokan-lite' ) : __( 'Cancel', 'dokan-lite' ) }
+                            dialogFooterContent={ footer }
+                            dialogContent={
+                                <div className="p-0">
+                                    <div>
+                                        { /* Withdraw details section */ }
+                                        <div className="mb-6 pb-4 border-b border-gray-200">
+                                            <h3 className="text-sm font-medium text-gray-900 mb-3">
+                                                { __( 'Withdraw details:', 'dokan-lite' ) }
+                                            </h3>
+
+                                            <div className="space-y-3 text-sm">
+                                                <div className="flex justify-between">
+                                                    <span className="text-gray-600">
+                                                        { __( 'Status', 'dokan-lite' ) }
+                                                    </span>
+                                                    <span
+                                                        className={ `inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                                            statusColors[ item.status ] ||
+                                                            'bg-gray-100 text-gray-800'
+                                                        }` }
+                                                    >
+                                                        { item.status
+                                                            .charAt( 0 )
+                                                            .toUpperCase() +
+                                                            item.status.slice( 1 ) }
+                                                    </span>
                                                 </div>
-                                                <div className="text-sm text-gray-500 mb-3">
-                                                    From:{ ' ' }
-                                                    { item.user?.store_name ||
-                                                        __(
-                                                            'N/A',
-                                                            'dokan-lite'
-                                                        ) }
-                                                </div>
-                                            </div>
-
-                                            { /* Withdraw details section */ }
-                                            <div className="mb-6">
-                                                <h3 className="text-sm font-medium text-gray-900 mb-3">
-                                                    { __(
-                                                        'Withdraw details:',
-                                                        'dokan-lite'
-                                                    ) }
-                                                </h3>
-
-                                                <div className="space-y-3 text-sm">
-                                                    <div className="flex justify-between">
-                                                        <span className="text-gray-600">
-                                                            { __(
-                                                                'Status',
-                                                                'dokan-lite'
-                                                            ) }
-                                                        </span>
-                                                        <span
-                                                            className={ `inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                                                statusColors[
-                                                                    item.status
-                                                                ] ||
-                                                                'bg-gray-100 text-gray-800'
-                                                            }` }
-                                                        >
-                                                            { item.status
-                                                                .charAt( 0 )
-                                                                .toUpperCase() +
-                                                                item.status.slice(
-                                                                    1
-                                                                ) }
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex justify-between">
-                                                        <span className="text-gray-600">
-                                                            { __(
-                                                                'Date received',
-                                                                'dokan-lite'
-                                                            ) }
-                                                        </span>
-                                                        <span className="text-gray-900">
-                                                            <DateTimeHtml.Date
-                                                                date={
-                                                                    item.created
-                                                                }
-                                                                format="j F Y, g.i a"
-                                                            />
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex justify-between">
-                                                        <span className="text-gray-600">
-                                                            { __(
-                                                                'Charge',
-                                                                'dokan-lite'
-                                                            ) }
-                                                        </span>
-                                                        <span className="text-gray-900">
-                                                            { price(
-                                                                item.charge || 0
-                                                            ) }
-                                                        </span>
-                                                    </div>
-                                                    <div className="flex justify-between">
-                                                        <span className="text-gray-600">
-                                                            { __(
-                                                                'Payable',
-                                                                'dokan-lite'
-                                                            ) }
-                                                        </span>
-                                                        <span className="text-gray-900 font-medium">
-                                                            { price(
-                                                                item.receivable ||
-                                                                    item.amount
-                                                            ) }
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            { /* Payment method and Note section */ }
-                                            <div className="mb-6">
-                                                <h3 className="text-sm font-medium text-gray-900 mb-3">
-                                                    { __(
-                                                        'Payment method and Note:',
-                                                        'dokan-lite'
-                                                    ) }
-                                                </h3>
-
-                                                <div className="text-sm text-[#828282] mb-2">
-                                                    { item.method_title ||
-                                                        item.method }
-                                                </div>
-
-                                                <RawHTML>
-                                                    { processDetails(
-                                                        item.details,
-                                                        item.method
-                                                    )
-                                                        .split( '\n' )
-                                                        .join( '<br />' ) }
-                                                </RawHTML>
-                                            </div>
-
-                                            { /* Note section */ }
-                                            { item.note && (
-                                                <div className="mb-6">
-                                                    <h3 className="text-sm font-medium text-gray-900 mb-2">
-                                                        { __(
-                                                            'Note',
-                                                            'dokan-lite'
-                                                        ) }
-                                                    </h3>
-                                                    <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded-md">
-                                                        { item.note }
-                                                    </div>
-                                                </div>
-                                            ) }
-
-                                            { /* Actions section */ }
-                                            { ( () => {
-                                                const options: {
-                                                    label: string;
-                                                    value: string;
-                                                }[] = [];
-                                                if (
-                                                    item.status === 'pending'
-                                                ) {
-                                                    options.push(
-                                                        {
-                                                            label: __(
-                                                                'Cancel',
-                                                                'dokan-lite'
-                                                            ),
-                                                            value: 'cancel',
-                                                        },
-                                                        {
-                                                            label: __(
-                                                                'Approve',
-                                                                'dokan-lite'
-                                                            ),
-                                                            value: 'approve',
-                                                        }
-                                                    );
-                                                }
-                                                if (
-                                                    item.status !== 'approved'
-                                                ) {
-                                                    options.push( {
-                                                        label: __(
-                                                            'Delete',
-                                                            'dokan-lite'
-                                                        ),
-                                                        value: 'delete',
-                                                    } );
-                                                }
-
-                                                if ( ! options.length ) {
-                                                    return null;
-                                                }
-
-                                                return (
-                                                    <div className="mb-4">
-                                                        <h3 className="text-sm font-medium text-gray-900 mb-3">
-                                                            { __(
-                                                                'Actions:',
-                                                                'dokan-lite'
-                                                            ) }
-                                                        </h3>
-                                                        <SimpleRadio
-                                                            name="action"
-                                                            options={ options }
-                                                            class={ 'px-0' }
-                                                            optionClass={
-                                                                'px-0'
-                                                            }
-                                                            selectedOptionClass={
-                                                                'px-0'
-                                                            }
+                                                <div className="flex justify-between">
+                                                    <span className="text-gray-600">
+                                                        { __( 'Date received', 'dokan-lite' ) }
+                                                    </span>
+                                                    <span className="text-gray-900">
+                                                        <DateTimeHtml.Date
+                                                            date={ item.created }
+                                                            format="j F Y, g.i a"
                                                         />
-                                                    </div>
-                                                );
-                                            } )() }
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span className="text-gray-600">
+                                                        { __( 'Charge', 'dokan-lite' ) }
+                                                    </span>
+                                                    <span className="text-gray-900">
+                                                        { price( item.charge || 0 ) }
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between">
+                                                    <span className="text-gray-600">
+                                                        { __( 'Payable', 'dokan-lite' ) }
+                                                    </span>
+                                                    <span className="text-gray-900 font-medium">
+                                                        { price( item.receivable || item.amount ) }
+                                                    </span>
+                                                </div>
+                                            </div>
                                         </div>
-                                    );
-                                } )() }
-                            </div>
-                        }
-                    />
-                ) }
+
+                                        { /* Payment method and Note section */ }
+                                        <div className="mb-6 pb-4 border-b border-gray-200">
+                                            <h3 className="text-sm font-medium text-gray-900 mb-3">
+                                                { __( 'Payment method and Note:', 'dokan-lite' ) }
+                                            </h3>
+
+                                            <div className="text-sm text-[#828282] mb-2">
+                                                { item.method_title || item.method }
+                                            </div>
+
+                                            <RawHTML>
+                                                { processDetails( item.details, item.method )
+                                                    .split( '\n' )
+                                                    .join( '<br />' ) }
+                                            </RawHTML>
+                                        </div>
+
+                                        { /* Note section */ }
+                                        { item.note && (
+                                            <div className="mb-6">
+                                                <h3 className="text-sm font-medium text-gray-900 mb-2">
+                                                    { __( 'Note', 'dokan-lite' ) }
+                                                </h3>
+                                                <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded-md">
+                                                    { item.note }
+                                                </div>
+                                            </div>
+                                        ) }
+
+                                        { /* Actions section */ }
+                                        { ( () => {
+                                            if ( ! options.length ) {
+                                                return null;
+                                            }
+                                            return (
+                                                <div className="mb-4">
+                                                    <h3 className="text-sm font-medium text-gray-900 mb-3">
+                                                        { _n( 'Action:', 'Actions:', options.length, 'dokan-lite' ) }
+                                                    </h3>
+                                                    <SimpleRadio
+                                                        name="action"
+                                                        options={ options }
+                                                        value={ selectedAction }
+                                                        onChange={ ( e ) => setSelectedAction( e.target.value ) }
+                                                        class={ 'px-0' }
+                                                        optionClass={ 'px-0' }
+                                                        selectedOptionClass={ 'px-0' }
+                                                    />
+                                                </div>
+                                            );
+                                        } )() }
+                                    </div>
+                                </div>
+                            }
+                        />
+                    );
+                } )() }
         </div>
     );
 };
