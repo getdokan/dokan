@@ -4,7 +4,7 @@ import { useCallback, useMemo } from '@wordpress/element';
 import { SETTINGS_STORE } from '../../../../../../../stores/adminSettings';
 import {
     CategoryBasedCommissionProps,
-    CategoryBasedCommissionPure,
+    CategoryBasedCommission as CategoryBasedCommissionPure,
 } from '../../../../../../../components';
 import { SettingsProps } from '../../../types';
 
