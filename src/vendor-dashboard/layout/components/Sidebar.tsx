@@ -1,5 +1,11 @@
 // eslint-disable-next-line import/named
-import { RefObject, useEffect, useRef, useState } from '@wordpress/element';
+import {
+    RawHTML,
+    RefObject,
+    useEffect,
+    useRef,
+    useState,
+} from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import * as LucideIcons from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
@@ -110,7 +116,7 @@ const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
     // ==========================================
     // ACTIVE MENU DETECTION & AUTO-EXPAND
     // ==========================================
-    const { siteInfo, vendor, subscription, editUrl, sidebarNav } =
+    const { siteInfo, vendor, subscription, sidebarNav } =
         ( window as any )?.vendorDashboardLayoutConfig || {};
 
     useEffect( () => {
@@ -307,11 +313,24 @@ const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
                                                             : ''
                                                     ) }
                                                 >
-                                                    { getIcon(
-                                                        item.icon_name,
-                                                        Boolean(
-                                                            activePopover?.key ===
-                                                                key && collapsed
+                                                    { /* Render custom images or icons from the sidebar config */ }
+                                                    { item.icon &&
+                                                    item.icon.startsWith(
+                                                        '<img'
+                                                    ) ? (
+                                                        <span
+                                                            dangerouslySetInnerHTML={ {
+                                                                __html: item.icon,
+                                                            } }
+                                                        />
+                                                    ) : (
+                                                        getIcon(
+                                                            item.icon_name,
+                                                            Boolean(
+                                                                activePopover?.key ===
+                                                                    key &&
+                                                                    collapsed
+                                                            )
                                                         )
                                                     ) }
                                                 </span>
@@ -331,9 +350,23 @@ const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
                                                 { hasSub &&
                                                     ! collapsed &&
                                                     ( isExpanded ? (
-                                                        <LucideIcons.ChevronUp className="ml-auto w-4 h-4 text-[#A5A5A5] group-hover:text-white transition-transform duration-200" />
+                                                        <LucideIcons.ChevronUp
+                                                            className={ twMerge(
+                                                                'ml-2 w-4 h-4 text-[#A5A5A5] group-hover:text-white transition-transform duration-200',
+                                                                item.counts > 0
+                                                                    ? 'ml-2'
+                                                                    : 'ml-auto'
+                                                            ) }
+                                                        />
                                                     ) : (
-                                                        <LucideIcons.ChevronDown className="ml-auto w-4 h-4 text-[#A5A5A5] group-hover:text-white transition-transform duration-200" />
+                                                        <LucideIcons.ChevronDown
+                                                            className={ twMerge(
+                                                                'ml-2 w-4 h-4 text-[#A5A5A5] group-hover:text-white transition-transform duration-200',
+                                                                item.counts > 0
+                                                                    ? 'ml-2'
+                                                                    : 'ml-auto'
+                                                            ) }
+                                                        />
                                                     ) ) }
                                             </a>
 
@@ -341,38 +374,56 @@ const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
                                             { ! collapsed && hasSub && (
                                                 <div
                                                     className={ twMerge(
-                                                        'overflow-hidden motion-safe:transition-all motion-safe:duration-300 motion-safe:ease-in-out',
+                                                        'overflow-hidden',
                                                         isExpanded
-                                                            ? 'max-h-full opacity-100 translate-y-0'
-                                                            : 'max-h-0 opacity-0 -translate-y-1 pointer-events-none'
+                                                            ? 'max-h-full opacity-100'
+                                                            : 'max-h-0 opacity-0 pointer-events-none'
                                                     ) }
                                                 >
                                                     <ul className="mt-2 mx-0 space-y-1.5">
-                                                        { Object.entries( item.submenu ).map(
-                                                            ( [ subkey, subitem ]: any ) => {
+                                                        { Object.entries(
+                                                            item.submenu
+                                                        ).map(
+                                                            ( [
+                                                                subkey,
+                                                                subitem,
+                                                            ]: any ) => {
                                                                 const isSubActive =
                                                                     subitem?.url &&
-                                                                    currentUrl.startsWith( subitem.url );
+                                                                    currentUrl.startsWith(
+                                                                        subitem.url
+                                                                    );
 
                                                                 return (
-                                                                    <li key={ subkey }>
+                                                                    <li
+                                                                        key={
+                                                                            subkey
+                                                                        }
+                                                                    >
                                                                         <a
-                                                                            href={ subitem.url }
+                                                                            href={
+                                                                                subitem.url
+                                                                            }
                                                                             className={ twMerge(
-                                                                                'group skip-color-module flex items-center py-2.5 px-3 pl-8 text-sm font-medium rounded-md focus:!outline-none',
-                                                                                isSubActive && 'active'
+                                                                                'group skip-color-module flex items-center py-2.5 px-3 text-sm font-medium rounded-md focus:!outline-none',
+                                                                                isSubActive &&
+                                                                                    'active'
                                                                             ) }
                                                                         >
-                                                                            <span className="ml-4">
-                                                                                <span className="ml-3">
-                                                                                    { subitem.title }
-                                                                                </span>
-                                                                                { subitem.counts > 0 && (
-                                                                                    <CountBubble
-                                                                                        count={ subitem.counts }
-                                                                                    />
-                                                                                ) }
+                                                                            <LucideIcons.Settings className="w-5 h-5 !text-transparent" />
+                                                                            <span className="ml-2">
+                                                                                {
+                                                                                    subitem.title
+                                                                                }
                                                                             </span>
+                                                                            { subitem.counts >
+                                                                                0 && (
+                                                                                <CountBubble
+                                                                                    count={
+                                                                                        subitem.counts
+                                                                                    }
+                                                                                />
+                                                                            ) }
                                                                         </a>
                                                                     </li>
                                                                 );
@@ -396,10 +447,7 @@ const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
                         ! collapsed ? 'px-8' : 'px-6 flex justify-center'
                     ) }
                 >
-                    <a
-                        href={ editUrl || '#' }
-                        className="flex items-center gap-2.5 focus:!outline-none"
-                    >
+                    <div className="flex items-center gap-2.5 focus:!outline-none">
                         { storeAvatar ? (
                             <img
                                 src={ storeAvatar }
@@ -422,15 +470,23 @@ const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
                                         __( 'Your Store', 'dokan-lite' ) }
                                 </div>
                                 { subscriptionName && (
-                                    <div className="subscription-info text-xs">
-                                        <Tooltip content={ subscriptionName }>
+                                    <div className="subscription-info text-xs flex items-center gap-1">
+                                        <Tooltip
+                                            content={
+                                                <RawHTML>
+                                                    { subscriptionName }
+                                                </RawHTML>
+                                            }
+                                        >
                                             <span>
-                                                { truncate(
-                                                    subscriptionName,
-                                                    10
-                                                ) }
+                                                <RawHTML>
+                                                    { truncate(
+                                                        subscriptionName,
+                                                        10
+                                                    ) }
+                                                </RawHTML>
                                             </span>
-                                        </Tooltip>{ ' ' }
+                                        </Tooltip>
                                         { subscriptionStatus &&
                                             sprintf(
                                                 /* translators: %1$s: Subscription status */
@@ -441,7 +497,7 @@ const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
                                 ) }
                             </div>
                         ) }
-                    </a>
+                    </div>
                 </div>
             </aside>
 

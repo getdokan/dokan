@@ -15,9 +15,8 @@ const Layout = () => {
             '#dokan-dashboard-fullwidth-wrapper .dokan-dashboard-content'
         );
 
-        // Apply styles when the component mounts
         if ( dashboardWrapEl ) {
-            dashboardWrapEl.style.visibility = 'visible';
+            dashboardWrapEl.style.display = 'block';
         }
     }, [] );
 

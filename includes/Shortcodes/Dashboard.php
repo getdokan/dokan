@@ -25,9 +25,13 @@ class Dashboard extends DokanShortcode {
     public function __construct() {
         parent::__construct();
 
-        add_action( 'init', [ $this, 'register_vendor_dashboard_assets' ] );
-        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_vendor_dashboard_assets' ] );
-        add_action( 'template_redirect', [ $this, 'rewrite_vendor_dashboard_template' ], 1 );
+        // Register vendor dashboard assets if the vendor layout is not legacy.
+        $vendor_layout = dokan_get_option( 'vendor_layout_style', 'dokan_appearance', 'latest' );
+        if ( 'legacy' !== $vendor_layout ) {
+            add_action( 'init', [ $this, 'register_vendor_dashboard_assets' ] );
+            add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_vendor_dashboard_assets' ] );
+            add_action( 'template_redirect', [ $this, 'rewrite_vendor_dashboard_template' ], 1 );
+        }
     }
 
     /**
@@ -36,7 +40,7 @@ class Dashboard extends DokanShortcode {
      * This method intercepts the template_redirect action and loads
      * a custom full-width template for the vendor dashboard.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.3
      *
      * @return void
      */
@@ -58,7 +62,7 @@ class Dashboard extends DokanShortcode {
     /**
      * Register and enqueue React vendor dashboard assets when viewing the seller dashboard.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.3
      *
      * @return void
      */
@@ -102,7 +106,7 @@ class Dashboard extends DokanShortcode {
                 [
                     'label' => esc_html__( 'My Account', 'dokan-lite' ),
                     'icon'  => 'UserRound',
-                    'url'   => dokan_get_page_url( 'myaccount', 'woocommerce' ),
+                    'url'   => dokan_get_navigation_url( 'edit-account' ),
                 ],
                 [
                     'label' => esc_html__( 'Log out', 'dokan-lite' ),
@@ -154,7 +158,7 @@ class Dashboard extends DokanShortcode {
                             ],
                             'vendor'     => [
                                 'name'   => $vendor ? $vendor->get_shop_name() : $user_name,
-                                'avatar' => VendorUtil::get_vendor_default_avatar_url(),
+                                'avatar' => $vendor->get_avatar() ?? VendorUtil::get_vendor_default_avatar_url(),
                             ],
                             'editUrl'    => dokan_get_navigation_url( 'edit-account' ),
                             'user'       => [
@@ -175,7 +179,7 @@ class Dashboard extends DokanShortcode {
     /**
      * Enqueue React vendor dashboard assets when viewing the seller dashboard.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.3
      *
      * @return void
      */

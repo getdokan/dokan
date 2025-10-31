@@ -67,7 +67,7 @@ const SubmenuPopover = ( {
                                             { subitem.title }
                                         </span>
                                         { subitem.counts > 0 && (
-                                            <span className="ml-auto inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 py-0.5 text-[10px] font-semibold leading-none rounded-md text-white sidebar-menu-bubble">
+                                            <span className="ml-auto inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 py-0.5 text-[10px] font-semibold leading-none rounded-md text-white sidebar-submenu-bubble">
                                                 { subitem.counts }
                                             </span>
                                         ) }

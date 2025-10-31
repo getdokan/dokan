@@ -70,9 +70,10 @@ div.media-sidebar a.edit-attachment{
     }
 
     .dokan-dashboard-content {
-        width: calc(100% - var(--dokan-sidebar-width, 250px));
+        padding: 4px 4px 4px 25px;
         overflow: hidden;
         margin-top: 0px;
+        width: 83%;
         flex: 5 auto;
 
         article.dashboard-content-area {
@@ -531,6 +532,12 @@ div.media-sidebar a.edit-attachment{
         padding-left: 5px;
         padding-right: 5px;
       }
+    }
+
+    #dokan-dashboard-fullwidth-wrapper {
+        .dokan-dashboard-content {
+            width: calc(100% - var(--dokan-sidebar-width, 250px));
+        }
     }
 }
 

@@ -807,11 +807,29 @@ class Settings {
                 ],
             ],
             'dokan_appearance' => [
-                'appearance_options'         => [
-                    'name'        => 'appearance_options',
+                'vendor_layout_options'      => [
+                    'name'        => 'vendor_layout_options',
                     'type'        => 'sub_section',
-                    'label'       => __( 'Store Appearance', 'dokan-lite' ),
-                    'description' => __( 'Configure your site appearances.', 'dokan-lite' ),
+                    'label'       => esc_html__( 'Vendor Dashboard Appearance', 'dokan-lite' ),
+                    'description' => esc_html__( 'Configure the appearance and style of the vendor dashboard.', 'dokan-lite' ),
+                ],
+                'vendor_layout_style'        => [
+                    'name'    => 'vendor_layout_style',
+                    'label'   => esc_html__( 'Vendor Dashboard Style', 'dokan-lite' ),
+                    'desc'    => esc_html__( 'Select the user interface for the vendor dashboard.', 'dokan-lite' ),
+                    'type'    => 'radio',
+                    'default' => 'latest',
+                    'options' => [
+                        'latest' => esc_html__( 'New UI', 'dokan-lite' ),
+                        'legacy' => esc_html__( 'Legacy UI', 'dokan-lite' ),
+                    ],
+                ],
+                'appearance_options'         => [
+                    'name'          => 'appearance_options',
+                    'type'          => 'sub_section',
+                    'label'         => esc_html__( 'Store Appearance', 'dokan-lite' ),
+                    'description'   => esc_html__( 'Configure your site appearances.', 'dokan-lite' ),
+                    'content_class' => 'sub-section-styles',
                 ],
                 'store_map'                  => [
                     'name'    => 'store_map',

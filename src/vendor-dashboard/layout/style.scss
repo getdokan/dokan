@@ -88,6 +88,16 @@
             &.active {
                 color: var(--dokan-sidebar-hover-text-color, #ffffff);
                 background-color: var(--dokan-sidebar-hover-background-color, #7047EB);
+
+                .sidebar-submenu-bubble {
+                    color: var(--dokan-sidebar-hover-background-color, #7047EB);
+                    background-color: var(--dokan-sidebar-hover-text-color, #ffffff);
+                }
+            }
+
+            .sidebar-submenu-bubble {
+                color: var(--dokan-sidebar-hover-text-color, #ffffff);
+                background-color: var(--dokan-sidebar-hover-background-color, #7047EB);
             }
         }
     }
