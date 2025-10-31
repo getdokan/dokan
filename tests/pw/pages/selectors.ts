@@ -4019,7 +4019,7 @@ export const selector = {
             // discount
             discount: {
                 discountedPrice: '#\\_sale_price',
-                schedule: '//label[@for="_sale_price"]//a[normalize-space()="Schedule"]',
+                schedule: "//label[@for='_sale_price']//a[contains(@class,'sale_schedule')][normalize-space()='Schedule']",
                 scheduleCancel: '//label[@for="_sale_price"]//a[normalize-space()="Cancel"]',
                 scheduleFrom: 'input[name="_sale_price_dates_from"]',
                 scheduleTo: 'input[name="_sale_price_dates_to"]',
