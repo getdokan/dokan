@@ -131,7 +131,13 @@ export class AdminSettingsPageNew extends AdminPage {
                     break;
                 case 'textarea':
                     await this.page.fill( field.selector, field.value );
-                    break;  
+                    break;
+                case 'textareaOld': {
+                    const frameHandle = this.page.frameLocator(field.selector);
+                    await frameHandle.locator('body').fill(field.value);
+                    break;
+                }
+                    
             }
         }
     }
@@ -204,9 +210,17 @@ export class AdminSettingsPageNew extends AdminPage {
                     break;
                 }
                 case 'textarea': {
-                    const value = await this.page.inputValue( field.selector );
+                    const editor = this.page.locator(`${field.selector}`).first();
+                    await editor.waitFor({ state: 'visible' });
+                    const value = await editor.innerText(); // use innerText for Quill editor
                     expect(value).toBe(field.value);
                     break;
+                }
+                case 'textareaOld': {
+                    const frameHandle = this.page.frameLocator(field.selector);
+                    const textValue = await frameHandle.locator('body').innerText();
+                    expect(textValue.trim()).toBe(field.value);
+                    return;
                 }
             }
         }
