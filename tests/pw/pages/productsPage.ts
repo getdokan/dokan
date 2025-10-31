@@ -609,7 +609,9 @@ export class ProductsPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
         await this.clearAndType(productsVendor.search.searchInput, productName);
         await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, productsVendor.search.searchBtn);
-        await this.toBeVisible(productsVendor.productLink(productName));
+        
+        // Use .first() to handle cases where multiple products have the same name
+        await expect(this.page.locator(productsVendor.productLink(productName)).first()).toBeVisible();
     }
 
     // get product edit nonce
@@ -619,7 +621,11 @@ export class ProductsPage extends AdminPage {
             await this.gotoUntilNetworkidle(data.subUrls.frontend.vDashboard.newDashboard);
             // Then navigate to products page
             await this.gotoUntilNetworkidle(data.subUrls.frontend.vDashboard.products);
-            const url = await this.getAttributeValue(selector.vendor.vDashboard.products.addNewProduct, 'href');
+            
+            // Wait for element to be attached (not necessarily visible) since button might be hidden
+            await this.page.locator(selector.vendor.vDashboard.products.addNewProduct).waitFor({ state: 'attached', timeout: 15000 });
+            const url = await this.page.getAttribute(selector.vendor.vDashboard.products.addNewProduct, 'href');
+            
             const nonce = url?.match(/_dokan_edit_product_nonce=([\w\d]+)/)?.[1];
             if (!nonce) throw new Error('Nonce not found');
             return nonce;
@@ -629,7 +635,11 @@ export class ProductsPage extends AdminPage {
             await this.gotoUntilNetworkidle(data.subUrls.frontend.myAccount);
             await this.gotoUntilNetworkidle(data.subUrls.frontend.vDashboard.newDashboard);
             await this.gotoUntilNetworkidle(data.subUrls.frontend.vDashboard.products);
-            const url = await this.getAttributeValue(selector.vendor.vDashboard.products.addNewProduct, 'href');
+            
+            // Wait for element to be attached (not necessarily visible) since button might be hidden
+            await this.page.locator(selector.vendor.vDashboard.products.addNewProduct).waitFor({ state: 'attached', timeout: 15000 });
+            const url = await this.page.getAttribute(selector.vendor.vDashboard.products.addNewProduct, 'href');
+            
             const nonce = url?.match(/_dokan_edit_product_nonce=([\w\d]+)/)?.[1];
             if (!nonce) throw new Error('Nonce not found');
             return nonce;
