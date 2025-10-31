@@ -121,7 +121,7 @@ const LoginForm = ( {
                 { error && (
                     <DokanAlert
                         label={ decodeEntities( error ) }
-                        type="danger"
+                        variant="danger"
                     />
                 ) }
                 <div className="flex flex-col">
