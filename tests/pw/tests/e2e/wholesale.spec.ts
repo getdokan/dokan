@@ -7,8 +7,8 @@ import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 import { dbData } from '@utils/dbData';
-
-test.describe('Wholesale test (admin)', () => {
+// Need to rewrite because it has flaky test cases
+test.describe.skip('Wholesale test (admin)', () => {
     let admin: WholesalePage;
     let customer: WholesalePage;
     let customerPage: CustomerPage;

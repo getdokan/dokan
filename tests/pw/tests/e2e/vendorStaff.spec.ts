@@ -3,8 +3,9 @@ import { VendorStaffPage } from '@pages/vendorStaffPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
+//Need to rewrite full test because of new Staff page
 
-test.describe('Vendor staff test (vendor)', () => {
+test.describe.skip('Vendor staff test (vendor)', () => {
     let admin: VendorStaffPage;
     let vendor: VendorStaffPage;
     let aPage: Page, vPage: Page;

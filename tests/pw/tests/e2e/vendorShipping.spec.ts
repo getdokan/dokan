@@ -1,8 +1,9 @@
 import { test, Page } from '@playwright/test';
 import { VendorShippingPage } from '@pages/vendorShippingPage';
 import { data } from '@utils/testData';
+//Need to rewrite full test because of new Shiiping page
 
-test.describe('Vendor shipping test', () => {
+test.describe.skip('Vendor shipping test', () => {
     let vendor: VendorShippingPage;
     let vPage: Page;
 

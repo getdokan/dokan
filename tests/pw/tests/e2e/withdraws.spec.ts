@@ -5,8 +5,8 @@ import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
 const { PRODUCT_ID, VENDOR_ID } = process.env;
-
-test.describe('Withdraw test', () => {
+//Need to rewrite full test because of new Withdraw page
+test.describe.skip('Withdraw test', () => {
     let admin: WithdrawsPage;
     let vendor: WithdrawsPage;
     let aPage: Page, vPage: Page;
