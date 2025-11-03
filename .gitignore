@@ -18,6 +18,7 @@ config.json
 phpcs-report.txt
 /phpcs.xml
 .phpunit.result.cache
+test-results/
 
 #unwanted webpack files
 /assets/js/
