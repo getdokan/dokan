@@ -15,6 +15,7 @@ import {
     useMatches,
     useNavigation,
     createSearchParams,
+    useSearchParams
 } from 'react-router-dom';
 import coreStore from '@dokan/stores/core';
 import { useSelect } from '@wordpress/data';
@@ -44,7 +45,9 @@ export function withRouter( Component, capabilities = [] ) {
             replace,
             matches,
             navigation,
+            useParams,
             createSearchParams,
+            useSearchParams,
         };
 
         if ( ! authorised ) {

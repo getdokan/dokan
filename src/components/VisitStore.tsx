@@ -1,5 +1,5 @@
 import { __ } from '@wordpress/i18n';
-import { Tooltip } from '@getdokan/dokan-ui';
+import Tooltip from './DokanTooltip';
 import { ExternalLink } from 'lucide-react';
 
 type VisitStoreProps = {

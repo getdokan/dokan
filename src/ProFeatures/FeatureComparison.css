@@ -1,0 +1,30 @@
+.category-button {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 130%;
+  letter-spacing: 0;
+}
+
+@media (min-width: 768px) {
+  .category-button {
+    font-size: 18px;
+    font-weight: 700;
+  }
+}
+
+.feature-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0;
+}
+
+@media (min-width: 768px) {
+  .feature-text {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 140%;
+  }
+}
