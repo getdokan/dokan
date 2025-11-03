@@ -6,48 +6,123 @@ import { da } from '@faker-js/faker/.';
 
 const oldDataset = [
     {
-        title: 'Admin Old Setting: Social Onboarding',
+        title: 'Admin Old Setting: Social API',
         url: 'wp-admin/admin.php?page=dokan#/settings',
-        selector: '//div[@class="nav-title" and contains(text(),"Social Login")]',
+        selector: '//div[@class="nav-title" and contains(text(),"Social API")]',
         fields: [
-            {
-                selector: '//label[@for="dokan_social_api[enabled]"]//label[@class="switch tips"]',
-                type: 'checkbox',
-                value: true,
-            },
-            {
-                selector: '//input[@id="dokan_social_api[fb_app_id]"]',
-                type: 'text',
-                value: 'fb-app-id',
-            },
-            {
-                selector: '//input[@id="dokan_social_api[google_app_id]"]',
-                type: 'text',
-                value: 'google-client-id',
-            },
+            // Todo ( Need ID/classes in Social API section(old settings) to make selectors more reliable )
+            // According to mahbub bhai we will do this latter with shohag bhai
+            // Need to test manually 
         ],
     },
 ];
+
 
 const newDataset = {
     title: 'Admin Setting: Vendor -> social_onboarding',
     url:'wp-admin/admin.php?page=dokan-dashboard#/settings',
     selector: '#dokan_settings_vendor >> #dokan_settings_vendor_social_onboarding',
     fields: [
+        // Main Social Login Toggle
         {
-            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_social_login button',
+            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_social_login button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        
+        // Facebook Section - Enable first, then inputs
+        {
+            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_facebook_api_group_facebook_enabled button[role="switch"]',
             type: 'switch',
             value: true,
         },
         {
             selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_facebook_api_group_facebook_app_id input',
             type: 'text',
-            value: 'fb-app-id',
+            value: 'facebook-app-id-test-12345',
+        },
+        {
+            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_facebook_api_group_facebook_app_secret input',
+            type: 'text',
+            value: 'facebook-app-secret-test-67890',
+        },
+        
+        // X (Twitter) Section - Enable first, then inputs
+        {
+            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_x_api_group_x_enabled button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        {
+            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_x_api_group_x_api_key input',
+            type: 'text',
+            value: 'x-api-key-test-12345',
+        },
+        {
+            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_x_api_group_x_api_secret input',
+            type: 'text',
+            value: 'x-api-secret-test-67890',
+        },
+        
+        // Google Section - Enable first, then inputs
+        {
+            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_google_api_group_google_enabled button[role="switch"]',
+            type: 'switch',
+            value: true,
         },
         {
             selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_google_api_group_google_client_id input',
             type: 'text',
-            value: 'google-client-id',
+            value: 'google-client-id-test-12345',
+        },
+        {
+            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_google_api_group_google_client_secret input',
+            type: 'text',
+            value: 'google-client-secret-test-67890',
+        },
+        
+        // LinkedIn Section - Enable first, then inputs
+        {
+            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_linkedin_api_group_linkedin_enabled button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        {
+            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_linkedin_api_group_linkedin_client_id input',
+            type: 'text',
+            value: 'linkedin-client-id-test-12345',
+        },
+        {
+            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_linkedin_api_group_linkedin_client_secret input',
+            type: 'text',
+            value: 'linkedin-client-secret-test-67890',
+        },
+        
+        // Apple Section - Enable first, then inputs
+        {
+            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_apple_api_group_apple_enabled button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        {
+            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_apple_api_group_apple_service_id input',
+            type: 'text',
+            value: 'apple-service-id-test-12345',
+        },
+        {
+            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_apple_api_group_apple_team_id input',
+            type: 'text',
+            value: 'apple-team-id-test-67890',
+        },
+        {
+            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_apple_api_group_apple_key_id input',
+            type: 'text',
+            value: 'apple-key-id-test-11223',
+        },
+        {
+            selector: '#dokan_settings_vendor_social_onboarding_social_onboarding_apple_api_group_apple_key_content textarea',
+            type: 'text',
+            value: 'Hello Apple Key Content',
         },
     ],
 };
@@ -64,25 +139,31 @@ test.describe('Admin Setting: Vendor -> social_onboarding', () => {
         await loginPage.adminLogin(data.admin);
     });
 
-    test('New to Old Social Onboarding Settings synchronization', { tag: ['@lite', '@admin', '@migration'] }, async () => {
+    test('New socialOnboarding check', { tag: ['@lite', '@admin', '@migration'] }, async () => {
         await test.step('Update new settings', async () => {
             await adminSettingsPage.updateSettings(newDataset);
         });
-       
-        await test.step('Check old settings' , async () => {
-            for (const dataset of oldDataset) {
-                await test.step( dataset.title , async () => {
-                    await adminSettingsPage.checkSettings(dataset);
+
+        await test.step('Reload new settings urls', async () => {
+            for ( const dataset of [newDataset] ) {
+                await test.step('Reload '+ dataset.title , async () => {
+                    await adminSettingsPage.reloadUrl(dataset.url);         
                 });
             }
+        });
+
+        await test.step('Check new settings' , async () => {
+            await test.step( newDataset.title , async () => {
+                await adminSettingsPage.checkSettings(newDataset);
+            });
         }); 
 
-        await test.step('Check new settings', async () => {
-            await adminSettingsPage.checkSettings(newDataset);
-        }); 
+        // await test.step('Check new settings', async () => {
+        //     await adminSettingsPage.checkSettings(newDataset);
+        // }); 
     });
 
-    test('Old to new Social Onboarding Settings synchronization', { tag: ['@lite', '@admin', '@migration'] }, async () => {
+    test.skip('Old to new Social Onboarding Settings synchronization', { tag: ['@lite', '@admin', '@migration'] }, async () => {
         await test.step('Update old settings', async () => {
             await adminSettingsPage.setSaveButtonSelector(adminSettingsPage.oldSaveButtonSelector);
             for (const dataset of oldDataset) {

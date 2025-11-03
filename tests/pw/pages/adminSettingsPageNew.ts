@@ -210,7 +210,7 @@ export class AdminSettingsPageNew extends AdminPage {
                     break;
                 }
                 case 'textarea': {
-                    const editor = this.page.locator(`${field.selector}`).first();
+                    const editor = this.page.locator(field.selector).first();
                     await editor.waitFor({ state: 'visible' });
                     const value = await editor.innerText(); // use innerText for Quill editor
                     expect(value).toBe(field.value);
