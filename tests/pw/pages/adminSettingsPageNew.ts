@@ -75,6 +75,19 @@ export class AdminSettingsPageNew extends AdminPage {
                 case 'number':
                     await this.page.fill( field.selector, field.value );
                     break;
+                case 'dropdown': {
+                    const trigger = this.page.locator(field.selector);
+                    await trigger.waitFor({ state: 'visible' });
+                    await trigger.click();
+
+                    const option = this.page.locator(`role=option[name="${field.value}"]`);
+                    await option.waitFor({ state: 'visible' });
+                    await option.click();
+
+                    // Ensure value is updated in trigger
+                    await expect(trigger.locator('span')).toHaveText(field.value);
+                    break;
+                }
                 case 'email':
                     await this.page.fill( field.selector, field.value );
                     break;
