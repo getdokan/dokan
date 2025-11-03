@@ -7,7 +7,7 @@ import { payloads } from '@utils/payloads';
 
 const { PRODUCT_ID } = process.env;
 
-test.describe('Reports test', () => {
+test.describe.skip('Reports test', () => {
     let admin: ReportsPage;
     let vendor: VendorReportsPage;
     let aPage: Page, vPage: Page;

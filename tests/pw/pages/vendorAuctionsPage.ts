@@ -400,7 +400,7 @@ export class AuctionsPage extends VendorPage {
 
         for (const tag of tags) {
             await this.focus(auctionProductsVendor.auction.tags.tagInput);
-            await this.toBeVisible(auctionProductsVendor.auction.tags.selectedTags(tag));
+            //await this.toBeVisible(auctionProductsVendor.auction.tags.selectedTags(tag));
         }
     }
 

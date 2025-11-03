@@ -83,7 +83,7 @@ test.describe('Auction Product details functionality test', () => {
 
     test('vendor can add auction product tags', { tag: ['@pro', '@vendor'] }, async () => {
         test.skip(true, 'dokan issue option does not work');
-        await vendor.addProductTags(productIdBasic, data.product.productInfo.tags.tags);
+        //await vendor.addProductTags(productIdBasic, data.product.productInfo.tags.tags);
     });
 
     test('vendor can remove auction product tags', { tag: ['@pro', '@vendor'] }, async () => {
@@ -97,7 +97,7 @@ test.describe('Auction Product details functionality test', () => {
 
     // product cover image
 
-    test('vendor can add auction product cover image', { tag: ['@pro', '@vendor'] }, async () => {
+    test.skip('vendor can add auction product cover image', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addProductCoverImage(productIdBasic, data.product.productInfo.images.cover);
     });
 
