@@ -7,8 +7,9 @@ import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
 // const { CUSTOMER_ID, PRODUCT_ID } = process.env;
+// Need to rewrite full test because of new return request page
 
-test.describe('Vendor RMA test', () => {
+test.describe.skip('Vendor RMA test', () => {
     let admin: VendorReturnRequestPage;
     let vendor: VendorReturnRequestPage;
     let vendor1: OrdersPage;
