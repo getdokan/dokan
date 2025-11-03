@@ -37,17 +37,21 @@ setup.describe('add & authenticate users', () => {
 
     setup('add vendor1', { tag: ['@lite'] }, async () => {
         const [, sellerId] = await apiUtils.createStore(payloads.createStore1, payloads.adminAuth, true);
-        // add open-close time
-        await apiUtils.updateStore(sellerId, { ...payloads.storeResetFields, ...payloads.storeOpenClose }, payloads.adminAuth);
+        
+        // Only proceed with additional setup if sellerId is valid
+        if (sellerId) {
+            // add open-close time
+            await apiUtils.updateStore(sellerId, { ...payloads.storeResetFields, ...payloads.storeOpenClose }, payloads.adminAuth);
 
-        // add review
-        if (DOKAN_PRO) {
-            await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.adminAuth);
+            // add review
+            if (DOKAN_PRO) {
+                await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.adminAuth);
+            }
+            // add map location
+            await dbUtils.addStoreMapLocation(sellerId);
+
+            helpers.createEnvVar('VENDOR_ID', sellerId);
         }
-        // add map location
-        await dbUtils.addStoreMapLocation(sellerId);
-
-        helpers.createEnvVar('VENDOR_ID', sellerId);
     });
 
     setup('add customer2', { tag: ['@lite'] }, async () => {
@@ -57,16 +61,20 @@ setup.describe('add & authenticate users', () => {
 
     setup('add vendor2', { tag: ['@lite'] }, async () => {
         const [, sellerId] = await apiUtils.createStore(payloads.createStore2, payloads.adminAuth, true);
-        // add open-close time
-        await apiUtils.updateStore(sellerId, { ...payloads.storeResetFields, ...payloads.storeOpenClose }, payloads.adminAuth);
-        // add review
-        if (DOKAN_PRO) {
-            await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.adminAuth);
-        }
-        // add map location
-        await dbUtils.addStoreMapLocation(sellerId);
+        
+        // Only proceed with additional setup if sellerId is valid
+        if (sellerId) {
+            // add open-close time
+            await apiUtils.updateStore(sellerId, { ...payloads.storeResetFields, ...payloads.storeOpenClose }, payloads.adminAuth);
+            // add review
+            if (DOKAN_PRO) {
+                await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.adminAuth);
+            }
+            // add map location
+            await dbUtils.addStoreMapLocation(sellerId);
 
-        helpers.createEnvVar('VENDOR2_ID', sellerId);
+            helpers.createEnvVar('VENDOR2_ID', sellerId);
+        }
     });
 
     setup('authenticate customer', { tag: ['@lite'] }, async ({ page }) => {
