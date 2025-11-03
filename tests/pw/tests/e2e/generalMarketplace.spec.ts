@@ -2,7 +2,6 @@ import { test } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
 import { data } from '@utils/testData';
-import { da } from '@faker-js/faker/.';
 
 const oldDataset = [
     {
@@ -137,7 +136,7 @@ test.describe('Admin Setting: General -> marketplace', () => {
         }); 
     });
 
-        // Test for `General -> Marketplace -> Vendor Store URL` settings synchronization.
+    // Test for `General -> Marketplace -> Vendor Store URL` settings synchronization.
     test('Old to new General Settings synchronization', { tag: ['@lite', '@admin', '@migration'] }, async () => {
         await test.step('Update old settings', async () => {
             await adminSettingsPage.setSaveButtonSelector(adminSettingsPage.oldSaveButtonSelector);
