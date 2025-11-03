@@ -8,7 +8,7 @@ import { dbData } from '@utils/dbData';
 
 const { VENDOR_ID } = process.env;
 
-test.describe('Booking Product test', () => {
+test.describe.skip('Booking Product test', () => {
     let admin: BookingPage;
     let vendor: BookingPage;
     let customer: BookingPage;

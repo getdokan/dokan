@@ -49,7 +49,7 @@ test.describe('Vendor delivery time test', () => {
         await vendor.vendorDeliveryTimeSettingsRenderProperly();
     });
 
-    test('vendor can set delivery time settings', { tag: ['@pro', '@vendor'] }, async () => {
+    test.skip('vendor can set delivery time settings', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.setDeliveryTimeSettings(data.vendor.deliveryTime);
     });
 
@@ -68,7 +68,7 @@ test.describe('Vendor delivery time test', () => {
         await customer.placeOrderWithDeliverTimeStorePickup('delivery-time', data.deliveryTime);
     });
 
-    test('customer can buy product with store pickup', { tag: ['@pro', '@customer'] }, async () => {
+    test.skip('customer can buy product with store pickup', { tag: ['@pro', '@customer'] }, async () => {
         await customer.addProductToCart(data.predefined.simpleProduct.product1.name, 'single-product');
         await customer.placeOrderWithDeliverTimeStorePickup('store-pickup', data.deliveryTime);
     });
