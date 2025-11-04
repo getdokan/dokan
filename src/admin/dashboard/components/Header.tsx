@@ -1,5 +1,5 @@
 import { __, sprintf } from '@wordpress/i18n';
-import { RawHTML, useState } from '@wordpress/element';
+import { useState } from '@wordpress/element';
 import HelpIcon from '../icons/HelpIcon';
 import DokanIcon from '../icons/DokanIcon';
 import CrownIcon from '../icons/CrownIcon';
@@ -108,13 +108,12 @@ const Header = () => {
                                         </div>
                                         <span
                                             className={ `${
-                                                item?.active
-                                                    ? 'text-[#7047EB]'
-                                                    : ''
+                                                item?.active ? 'text-[#7047EB]' : ''
                                             }` }
-                                        >
-                                            <RawHTML>{ item?.title }</RawHTML>
-                                        </span>
+                                            dangerouslySetInnerHTML={ {
+                                                __html: item?.title
+                                            } }
+                                        ></span>
                                         { item?.active && (
                                             <span className="w-1.5 h-1.5 rounded-full bg-[#7047EB]"></span>
                                         ) }
