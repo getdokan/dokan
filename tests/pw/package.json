@@ -18,7 +18,7 @@
         "env:setup": "NO_SETUP=true npx playwright test --project=e2e_setup",
         "auth:setup": "NO_SETUP=true npx playwright test --project=auth_setup",
         "test:api": "npx playwright test --project=api_tests --config=api.config.ts",
-        "test:e2e": "npx playwright test --project=e2e_tests",
+        "test:e2e": "NO_SETUP=true npx playwright test --project=e2e_tests",
         "test:api:pro": "DOKAN_PRO=true npx playwright test --project=api_tests --config=api.config.ts",
         "test:e2e:pro": "DOKAN_PRO=true npx playwright test --project=e2e_tests",
         "test:e2e:coverage": "npx playwright test --project=coverage_report --reporter=null",

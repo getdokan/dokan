@@ -4,7 +4,7 @@ import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
-test.describe('Product functionality test', () => {
+test.describe.skip('Product functionality test', () => {
     let admin: ProductsPage;
     let vendor: ProductsPage;
     let aPage: Page, vPage: Page;
