@@ -111,7 +111,7 @@ const Header = () => {
                                                 item?.active ? 'text-[#7047EB]' : ''
                                             }` }
                                             dangerouslySetInnerHTML={ {
-                                                __html: item?.title
+                                                __html: item?.title,
                                             } }
                                         ></span>
                                         { item?.active && (
