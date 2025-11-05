@@ -363,3 +363,29 @@
     }
   }
 }
+
+@media screen and ( max-width: 768px ) {
+  .dokan-dashboard {
+    #dokan-dashboard-fullwidth-wrapper {
+      position: relative;
+
+      .dokan-dash-sidebar {
+        display: none;
+      }
+
+      .dokan-dashboard-wrap {
+        .dokan-dashboard-content {
+          padding: 24px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and ( max-width: 600px ) {
+  #dokan-dashboard-fullwidth-wrapper {
+    #dokan-vendor-dashboard-layout-root {
+      z-index: 99999;
+    }
+  }
+}

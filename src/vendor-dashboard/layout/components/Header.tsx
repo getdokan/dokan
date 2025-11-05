@@ -7,18 +7,6 @@ import WPLogo from '../../icons/WPLogo';
 import { decodeEntities } from '@wordpress/html-entities';
 
 const Header = ( { onToggleSidebar }: { onToggleSidebar: () => void } ) => {
-    const [ adminBar, setAdminBar ] = useState( 0 );
-
-    useEffect( () => {
-        const compute = () => {
-            const el = document.getElementById( 'wpadminbar' );
-            setAdminBar( el ? el.offsetHeight : 0 );
-        };
-        compute();
-        window.addEventListener( 'resize', compute );
-        return () => window.removeEventListener( 'resize', compute );
-    }, [] );
-
     const { user, headerNav } =
         ( window as any )?.vendorDashboardLayoutConfig || {},
         { name: userName, avatar: userAvatar } = user || {};
@@ -34,7 +22,6 @@ const Header = ( { onToggleSidebar }: { onToggleSidebar: () => void } ) => {
 
     return (
         <header
-            style={ { top: adminBar } }
             className={
                 'z-10 flex justify-between min-h-20 items-center gap-3 border-solid border-b border-x-0 border-t-0 border-gray-200 bg-white px-12'
             }
@@ -70,7 +57,7 @@ const Header = ( { onToggleSidebar }: { onToggleSidebar: () => void } ) => {
                     aria-haspopup="menu"
                     aria-expanded={ isMenuOpen }
                 >
-                    { userAvatar ? (
+                    { userAvatar && (
                         <img
                             src={ userAvatar }
                             className="h-7 w-7 rounded-full"
@@ -78,11 +65,6 @@ const Header = ( { onToggleSidebar }: { onToggleSidebar: () => void } ) => {
                                 userName ||
                                 __( 'User Profile Image', 'dokan-lite' )
                             }
-                        />
-                    ) : (
-                        <div
-                            className="h-7 w-7 rounded-full bg-orange-300"
-                            aria-hidden="true"
                         />
                     ) }
                     <LucideIcons.ChevronDown

@@ -47,6 +47,11 @@
                 color: var(--dokan-sidebar-text-color, #DACEFF);
             }
         }
+
+        hr {
+            background-color: var(--dokan-sidebar-text-color, #DACEFF);
+            opacity: 0.2;
+        }
     }
 
     .dokan-frontend-layout-header {

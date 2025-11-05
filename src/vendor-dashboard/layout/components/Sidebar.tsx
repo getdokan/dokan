@@ -10,11 +10,17 @@ import { __, sprintf } from '@wordpress/i18n';
 import * as LucideIcons from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 import { Tooltip } from '@getdokan/dokan-ui';
-import { truncate } from '../../../utilities';
+import { truncate } from '@src/utilities';
 import SubmenuPopover from './SubmenuPopover';
 import CountBubble from './CountBubble';
 
-const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
+const Sidebar = ( {
+    collapsed,
+    windowWidth,
+}: {
+    collapsed: boolean;
+    windowWidth: number;
+} ) => {
     const [ adminBar, setAdminBar ] = useState( 0 );
     const [ expanded, setExpanded ] = useState< Record< string, boolean > >(
         {}
@@ -182,16 +188,20 @@ const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
     return (
         <>
             <aside
-                style={ { top: adminBar } }
+                style={ { top: windowWidth > 600 ? adminBar : 0 } }
                 className={ twMerge(
                     'dokan-frontend-sidebar text-white fixed left-0 bottom-0 z-20 flex flex-col transition-all duration-200',
-                    collapsed ? 'w-24 max-w-24' : 'w-[250px] max-w-[250px]'
+                    collapsed
+                        ? windowWidth <= 768
+                            ? 'w-0 max-w-0'
+                            : 'w-24 max-w-24'
+                        : 'w-[250px] max-w-[250px]'
                 ) }
             >
                 { /* === HEADER === */ }
                 <div
                     className={ twMerge(
-                        'flex items-center gap-3.5 border-solid border-b border-[#DACEFF33] border-t-0 border-x-0 min-h-20',
+                        'flex items-center gap-3.5 min-h-20',
                         collapsed ? 'px-5 justify-center' : 'px-8'
                     ) }
                 >
@@ -220,7 +230,7 @@ const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
                 <div
                     className={ twMerge(
                         'flex-1 overflow-y-auto dokan-vendor-sidebar-scroll',
-                        collapsed ? 'p-2' : 'p-5'
+                        collapsed && windowWidth <= 768 ? 'p-0' : 'p-5'
                     ) }
                 >
                     <nav>
@@ -297,7 +307,9 @@ const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
                                                 className={ twMerge(
                                                     'group skip-color-module relative flex items-center rounded-md font-medium focus:!outline-none py-2.5',
                                                     collapsed
-                                                        ? 'w-10 max-w-10 justify-center'
+                                                        ? windowWidth <= 768
+                                                            ? 'w-0 max-w-0'
+                                                            : 'w-10 max-w-10 justify-center'
                                                         : 'text-sm px-3',
                                                     ( isParentActive ||
                                                         isParentActiveCollapsed ) &&
@@ -440,10 +452,12 @@ const Sidebar = ( { collapsed }: { collapsed: boolean } ) => {
                     </nav>
                 </div>
 
+                <hr className="m-0 w-full h-[1px]" />
+
                 { /* === FOOTER === */ }
                 <div
                     className={ twMerge(
-                        'border-solid border-t border-[#DACEFF33] border-b-0 border-x-0 py-4',
+                        'py-4',
                         ! collapsed ? 'px-8' : 'px-6 flex justify-center'
                     ) }
                 >
