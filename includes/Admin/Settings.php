@@ -160,9 +160,9 @@ class Settings {
                 throw new DokanException( 'dokan_settings_error_saving', __( '`section` parameter is required.', 'dokan-lite' ), 400 );
             }
 
-            $option_name  = sanitize_text_field( wp_unslash( $_POST['section'] ) );
+            $option_name = sanitize_text_field( wp_unslash( $_POST['section'] ) );
             // validate and sanitize option name to avoid any unwanted option update
-            if( ! in_array( $option_name, wp_list_pluck( $this->get_settings_sections(), 'id' ), true ) ) {
+            if ( ! in_array( $option_name, wp_list_pluck( $this->get_settings_sections(), 'id' ), true ) ) {
                 throw new DokanException( 'dokan_settings_invalid_section', __( 'Invalid section name.', 'dokan-lite' ), 400 );
             }
             $option_value = $this->sanitize_options( wp_unslash( $_POST['settingsData'] ), 'edit' ); // phpcs:ignore
