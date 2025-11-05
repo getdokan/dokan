@@ -135,7 +135,7 @@ test.describe('Admin Setting: Vendor -> vendor_subscription', () => {
         }); 
     });
 
-    test.skip('Old to new Vendor Subscription Settings synchronization', { tag: ['@lite', '@admin', '@migration'] }, async () => {
+    test('Old to new Vendor Subscription Settings synchronization', { tag: ['@lite', '@admin', '@migration'] }, async () => {
         await test.step('Update old settings', async () => {
             await adminSettingsPage.setSaveButtonSelector(adminSettingsPage.oldSaveButtonSelector);
             for (const dataset of oldDataset) {
@@ -153,6 +153,21 @@ test.describe('Admin Setting: Vendor -> vendor_subscription', () => {
             }
         });
 
+        // Ekhane Problem ase. Old e akbar reload korar por o new e jeye changed value pai na tai abar old e jeye reload disi
+        await test.step('Reload new settings urls', async () => {
+            for ( const dataset of [newDataset] ) {
+                await test.step('Reload '+ dataset.title , async () => {
+                    await adminSettingsPage.reloadUrl(dataset.url);         
+                });
+            }
+        });
+        await test.step('Reload old settings urls', async () => {
+            for (const dataset of oldDataset) {
+                await test.step('Reload '+ dataset.title , async () => {
+                    await adminSettingsPage.reloadUrl(dataset.url);
+                });
+            }
+        });
         await test.step('Check new settings again', async () => {
             await adminSettingsPage.checkSettings(newDataset);
         });
