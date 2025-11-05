@@ -32,6 +32,10 @@ export interface BaseSelectProps< Option = DefaultOption >
 function AsyncSelect< Option = DefaultOption >(
     props: BaseSelectProps< Option >
 ) {
+    // Default portal target for the dropdown menu so it isn't clipped by parent containers
+    const defaultMenuPortalTarget =
+        typeof document !== 'undefined' ? document.body : undefined;
+
     const Control = ( controlProps: any ) => {
         const { children, selectProps } = controlProps as {
             children: React.ReactNode;
@@ -69,11 +73,11 @@ function AsyncSelect< Option = DefaultOption >(
             </components.Control>
         );
     };
-    const DropdownIndicator = ( props: any ) => {
+    const DropdownIndicator = ( indicatorProps: any ) => {
         const { components } = ReactSelect;
 
         return (
-            <components.DropdownIndicator { ...props }>
+            <components.DropdownIndicator { ...indicatorProps }>
                 <div className="text-gray-400">
                     <ChevronDown size={ 16 } />
                 </div>
@@ -115,6 +119,17 @@ function AsyncSelect< Option = DefaultOption >(
             ...base,
             cursor: 'pointer',
         } ),
+        menuPortal: ( base: any ) => ( {
+            ...base,
+            zIndex: 9999,
+            wordBreak: 'break-all',
+            minWidth: '18.75rem !important',
+        } ),
+        menu: ( base: any ) => ( {
+            ...base,
+            zIndex: 9999,
+            wordBreak: 'break-all',
+        } ),
         menuList: ( base: any ) => ( {
             ...base,
             cursor: 'default',
@@ -142,6 +157,11 @@ function AsyncSelect< Option = DefaultOption >(
             blurInputOnSelect={ props.blurInputOnSelect ?? true }
             closeMenuOnSelect={ props.closeMenuOnSelect ?? true }
             hideSelectedOptions={ props.hideSelectedOptions ?? false }
+            // Render menu in a portal to avoid clipping and position it correctly
+            menuPortalTarget={
+                props.menuPortalTarget ?? defaultMenuPortalTarget
+            }
+            menuPosition={ props.menuPosition ?? 'fixed' }
             { ...props }
         />
     );
