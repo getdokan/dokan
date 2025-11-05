@@ -882,7 +882,6 @@ const WithdrawPage = () => {
                         setFilterArgs( args );
                     } }
                     placeholder={ __( 'Select Vendor', 'dokan-lite' ) }
-                    isClearable
                     prefetch
                     defaultOptions
                     cacheOptions
@@ -899,7 +898,6 @@ const WithdrawPage = () => {
                     loadOptions={ loadPaymentMethods }
                     cacheOptions
                     defaultOptions
-                    isClearable
                     value={ paymentMethod }
                     onChange={ ( method ) => {
                         const args = { ...filterArgs };
