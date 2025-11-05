@@ -893,6 +893,7 @@ const WithdrawPage = () => {
             label: __( 'Payment Method', 'dokan-lite' ),
             field: (
                 <AsyncSelect
+                    selectedTitle={ __( 'Payment Method', 'dokan-lite' ) }
                     key="payment-method-select"
                     icon={ <CreditCard size={ 16 } /> }
                     loadOptions={ loadPaymentMethods }

@@ -24,6 +24,12 @@ export interface BaseSelectProps< Option = DefaultOption >
      * Position of the icon within the control. Defaults to 'left'.
      */
     iconPosition?: 'left' | 'right';
+    /**
+     * When provided and the select is NOT multi, the selected value will be rendered
+     * with this title as a prefix, e.g. "Vendor: Store 1".
+     * You can also pass a function to compute the title from the selected option.
+     */
+    selectedTitle?: string | ( ( option: Option ) => string );
     components?: PropsOf<
         typeof AsyncSearchableSelect< Option >
     >[ 'components' ];
@@ -85,6 +91,41 @@ function AsyncSelect< Option = DefaultOption >(
         );
     };
 
+    const SingleValue = ( singleValueProps: any ) => {
+        const { components } = ReactSelect;
+        const { selectProps, data } = singleValueProps as {
+            selectProps: {
+                selectedTitle?: string | ( ( option: Option ) => string );
+                isMulti?: boolean;
+            };
+            data: Option & { label?: string };
+        };
+
+        const isMulti = Boolean( selectProps?.isMulti );
+        const selectedTitle = selectProps?.selectedTitle;
+
+        let content = singleValueProps.children as React.ReactNode;
+
+        if ( ! isMulti && selectedTitle && data ) {
+            const prefix =
+                typeof selectedTitle === 'function'
+                    ? selectedTitle( data as Option )
+                    : selectedTitle;
+            const label: any = ( data as any )?.label ?? content;
+            content = (
+                <span title={ `${ prefix }: ${ label }` }>
+                    { prefix }: { label }
+                </span>
+            );
+        }
+
+        return (
+            <components.SingleValue { ...singleValueProps }>
+                { content }
+            </components.SingleValue>
+        );
+    };
+
     const styles = {
         control: ( base: any ) => ( {
             ...base,
@@ -123,7 +164,7 @@ function AsyncSelect< Option = DefaultOption >(
             ...base,
             zIndex: 9999,
             wordBreak: 'break-all',
-            minWidth: '18.75rem !important',
+            width: '18.75rem !important',
         } ),
         menu: ( base: any ) => ( {
             ...base,
@@ -148,6 +189,7 @@ function AsyncSelect< Option = DefaultOption >(
             components={ {
                 Control,
                 DropdownIndicator,
+                SingleValue,
                 // @ts-ignore
                 ...( props?.components ? props.components : {} ),
             } }

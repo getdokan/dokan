@@ -268,6 +268,7 @@ function VendorAsyncSelect( props: VendorAsyncSelectProps ) {
                 return results;
             } }
             instanceId={ `vendor-async-${ depsSignature }` }
+            selectedTitle={ __( 'Vendor', 'dokan' ) }
             { ...rest }
             onMenuOpen={ async () => {
                 try {

@@ -282,6 +282,7 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
             } }
             // pass an instanceId too for good measure
             instanceId={ `product-async-${ depsSignature }` }
+            selectedTitle={ __( 'Product', 'dokan' ) }
             { ...rest }
             onMenuOpen={ async () => {
                 try {

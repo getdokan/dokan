@@ -266,6 +266,7 @@ function OrderAsyncSelect( props: OrderAsyncSelectProps ) {
                 return results;
             } }
             instanceId={ `order-async-${ depsSignature }` }
+            selectedTitle={ __( 'Order', 'dokan' ) }
             { ...rest }
             onMenuOpen={ async () => {
                 try {
