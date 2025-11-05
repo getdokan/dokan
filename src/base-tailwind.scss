@@ -27,9 +27,9 @@
         @apply bg-dokan-btn focus:outline-dokan-btn;
     }
     .dokan-layout {
-        table:not(.dataviews-view-table),
-        table:not(.dataviews-view-table) th,
-        table:not(.dataviews-view-table) td {
+        table:not(.dataviews-view-table, .dokan-status-table),
+        table:not(.dataviews-view-table, .dokan-status-table) th,
+        table:not(.dataviews-view-table, .dokan-status-table) td {
             margin: 0;
             padding: 0;
             border: 0;

@@ -7,7 +7,7 @@ const Table = ( { element }: { element: StatusElement } ) => {
             className="overflow-hidden shadow ring-1 ring-black/5 sm:rounded-lg"
             data-hook={ element.hook_key }
         >
-            <table className="min-w-full divide-y divide-gray-300">
+            <table className="dokan-status-table min-w-full divide-y divide-gray-300">
                 { element.headers.length > 0 && (
                     <thead className="bg-gray-50">
                         <tr>
