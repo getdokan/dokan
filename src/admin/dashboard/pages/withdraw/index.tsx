@@ -956,7 +956,6 @@ const WithdrawPage = () => {
                     wrapperClassName="w-full"
                     pickerToggleClassName="block"
                     wpPopoverClassName="dokan-layout"
-                    popoverBodyClassName="p-4 w-auto text-sm/6"
                     onClear={ () => {
                         setAfter( '' );
                         setAfterText( '' );
