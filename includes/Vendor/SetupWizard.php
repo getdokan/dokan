@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\Vendor;
 
 use WC_Countries;
 use WeDevs\Dokan\Admin\SetupWizard as DokanSetupWizard;
+use WeDevs\Dokan\Assets;
 
 /**
  * Seller setup wizard class
@@ -100,11 +101,13 @@ class SetupWizard extends DokanSetupWizard {
      * @return void
      */
     public function frontend_enqueue_scripts() {
+        $jquery_blockui = Assets::get_wc_handler( 'jquery-blockui' );
+        $jquery_tiptip  = Assets::get_wc_handler( 'jquery-tiptip' );
         wp_enqueue_style( 'jquery-ui' );
         wp_enqueue_emoji_styles();
         wp_enqueue_script( 'jquery' );
-        wp_enqueue_script( 'jquery-tiptip' );
-        wp_enqueue_script( 'jquery-blockui' );
+        wp_enqueue_script( $jquery_tiptip );
+        wp_enqueue_script( $jquery_blockui );
         wp_enqueue_script( 'jquery-ui-autocomplete' );
         wp_enqueue_script( 'wc-enhanced-select' );
 
