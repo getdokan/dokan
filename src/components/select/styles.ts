@@ -52,7 +52,7 @@ const styles = {
             ...base,
             cursor: state.isDisabled ? 'not-allowed' : 'pointer',
             backgroundColor: state.isSelected
-                ? 'var(--colors-primary-100)'
+                ? 'var(--colors-primary-50)'
                 : base.backgroundColor,
             ':active': {
                 ...base[ ':active' ],
@@ -66,9 +66,7 @@ const styles = {
                     ? 'var(--colors-primary-200)'
                     : base[ ':hover' ]?.backgroundColor,
             },
-            color: state.isSelected
-                ? 'var(--dokan-button-tertiary-text-color)'
-                : base.color,
+            color: state.isSelected ? 'var(--colors-primary-800)' : base.color,
         };
     },
 } as const;
