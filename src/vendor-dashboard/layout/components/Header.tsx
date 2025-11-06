@@ -60,7 +60,7 @@ const Header = ( { onToggleSidebar }: { onToggleSidebar: () => void } ) => {
                     { userAvatar && (
                         <img
                             src={ userAvatar }
-                            className="h-7 w-7 rounded-full"
+                            className="h-7 w-7 rounded-full border border-gray-100"
                             alt={
                                 userName ||
                                 __( 'User Profile Image', 'dokan-lite' )

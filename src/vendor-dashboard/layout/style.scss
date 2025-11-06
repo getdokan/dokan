@@ -5,6 +5,10 @@
     .dokan-frontend-sidebar {
         background-color: var(--dokan-sidebar-background-color, #322067);
 
+        .site-icon {
+            background-color: var(--dokan-sidebar-hover-background-color, #7047EB);
+        }
+
         li {
             a {
                 color: var(--dokan-sidebar-text-color, #DACEFF);

@@ -212,7 +212,14 @@ const Sidebar = ( {
                             alt={ __( 'Vendor Dashboard Logo', 'dokan-lite' ) }
                         />
                     ) : (
-                        <span className="grid h-8 w-8 place-items-center rounded-md bg-[#7047EB]">
+                        <span
+                            className={ twMerge(
+                                'grid h-8 w-8 place-items-center rounded-md site-icon',
+                                collapsed && windowWidth <= 768
+                                    ? 'hidden'
+                                    : 'w-8'
+                            ) }
+                        >
                             <LucideIcons.Globe size={ 20 } color="#FFF" />
                         </span>
                     ) }
