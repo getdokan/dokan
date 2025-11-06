@@ -27,10 +27,6 @@ export interface SelectProps< Option = DefaultOption >
      */
     iconPosition?: 'left' | 'right';
     /**
-     * Backward-compat alias. If provided, it will be used as `icon`.
-     */
-    leftIcon?: React.ReactNode;
-    /**
      * When provided and the select is NOT multi, the selected value will be rendered
      * with this title as a prefix, e.g. "Vendor: Store 1".
      * You can also pass a function to compute the title from the selected option.
