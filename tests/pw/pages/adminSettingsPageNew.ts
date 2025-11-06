@@ -150,7 +150,16 @@ export class AdminSettingsPageNew extends AdminPage {
                     await frameHandle.locator('body').fill(field.value);
                     break;
                 }
-                    
+                case 'radioLabel': {
+                    const optionLocator = this.page.locator(
+                        `${field.selector} div[role="radio"]`, 
+                        { hasText: field.value }
+                    );
+                    await optionLocator.waitFor({ state: 'visible', timeout: 15000 });
+                    await optionLocator.click();
+                    break;
+                }
+                   
             }
         }
     }
@@ -235,6 +244,18 @@ export class AdminSettingsPageNew extends AdminPage {
                     expect(textValue.trim()).toBe(field.value);
                     return;
                 }
+                case 'radioLabel': {
+                    // Locate the checked radio button within the container
+                    const selectedLocator = this.page.locator(
+                        `${field.selector} div[role="radio"][aria-checked="true"] h3`
+                    );
+                    await selectedLocator.waitFor({ state: 'visible', timeout: 15000 });
+
+                    const labelText = (await selectedLocator.innerText()).trim();
+                    expect(labelText).toBe(field.value);
+                    break;
+                }
+
             }
         }
     }

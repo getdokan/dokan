@@ -12,21 +12,22 @@ const oldDataset = [
             {
                 selector: '//label[@for="dokan_store_support_setting[enabled_for_customer_order]"]//label[@class="switch tips"]',
                 type: 'checkbox',
-                value: true,
+                value: true
+            },
+            {
+                selector: '//select[@id="dokan_store_support_setting[store_support_product_page]"]',
+                type: 'select',
+                value: 'above_tab' // Options: 'above_tab', 'inside_tab', 'dont_show'
             },
             {
                 selector: '//input[@id="dokan_store_support_setting[support_button_label]"]',
                 type: 'text',
-                value: 'Support',
-            },
-            {
-                selector: '//label[@for="dokan_store_support_setting[store_support_product_page]"]//label[@class="switch tips"]',
-                type: 'checkbox',
-                value: true,
-            },
-        ],
+                value: 'Support'
+            }
+        ]
     },
 ];
+
 
 const newDataset = {
     title: 'Admin Setting: Moderation -> store_support',
@@ -44,10 +45,10 @@ const newDataset = {
             value: 'Support',
         },
         {
-            selector: '#dokan_settings_moderation_store_support_store_support_settings_store_support_product_page button[role="switch"]',
-            type: 'switch',
-            value: true,
-        },
+            selector: '#dokan_settings_moderation_store_support_store_support_settings_store_support_product_page',
+            type: 'radioLabel',
+            value: 'Above Product Tab'
+        }
     ],
 };
 
@@ -73,7 +74,6 @@ test.describe('Admin Setting: Moderation -> store_support', () => {
                 });
             }
         });
-
         await test.step('Check new settings', async () => {
             await adminSettingsPage.checkSettings(newDataset);
         });
@@ -96,7 +96,14 @@ test.describe('Admin Setting: Moderation -> store_support', () => {
                 });
             }
         });
-
+        // Need the following reload again. Todo
+        await test.step('Reload old settings urls', async () => {
+            for (const dataset of oldDataset) {
+                await test.step('Reload ' + dataset.title, async () => {
+                    await adminSettingsPage.reloadUrl(dataset.url);
+                });
+            }
+        });
         await test.step('Check new settings again', async () => {
             await adminSettingsPage.checkSettings(newDataset);
         });
