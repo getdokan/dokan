@@ -135,8 +135,9 @@ function AsyncSelect< Option = DefaultOption >(
         const { components } = ReactSelect;
         const isMulti = Boolean( multiProps?.selectProps?.isMulti );
 
+        // Hide chips entirely for multi-select to avoid duplicate text next to summary
         if ( isMulti ) {
-            return multiProps.children;
+            return null;
         }
         return <components.MultiValue { ...multiProps } />;
     };
@@ -152,7 +153,7 @@ function AsyncSelect< Option = DefaultOption >(
         return (
             <components.Option { ...optionProps }>
                 <div className="dokan-layout">
-                    <div className="flex items-center gap-2 bg-[]">
+                    <div className="flex items-center gap-2">
                         <span
                             className={
                                 'inline-flex h-4 w-4 items-center justify-center rounded border ' +
