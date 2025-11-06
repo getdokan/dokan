@@ -17,3 +17,77 @@
  .dokan-lite-module-select-category-popover {
      @apply top-5 !important;
  }
+
+#dokan-admin-dashboard {
+    .dokan-dashboard-datatable {
+        z-index: 0;
+        position: relative;
+
+        .dataviews-wrapper {
+            .dataviews__view-actions {
+                display: none;
+            }
+        }
+    }
+
+    .dataviews-view-table__actions-column {
+        .components-button {
+            &:hover {
+                background: transparent;
+            }
+
+            &:focus {
+                box-shadow: none;
+            }
+        }
+    }
+
+    .dataviews-view-table__row {
+        td {
+            vertical-align: middle;
+        }
+    }
+
+    table.dataviews-view-table {
+        border: 1px solid #E9E9E9;
+        th {
+            background-color: #f9fafb;
+            border-bottom: 1px solid #E9E9E9;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
+        }
+    }
+
+    .dataviews-wrapper {
+        .dataviews-no-results {
+            color: #6b7280;
+        }
+
+        .dataviews-no-results {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+    }
+}
+
+#dokan-admin-dashboard {
+    .dataviews-view-table {
+        .dataviews-view-table__actions-column {
+            .components-button {
+                &:first-child {
+                    margin-right: 16px;
+                }
+            }
+        }
+    }
+}
+
+#dokan-admin-dashboard {
+    .dataviews-wrapper {
+        background-color: #ffffff;
+        .dataviews-loading {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+    }
+}

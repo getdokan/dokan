@@ -37,13 +37,13 @@
     <?php endforeach ?>
     <?php if ( $instock_counts ) : ?>
         <li<?php echo $status_class === 'instock' ? ' class="active"' : ''; ?>>
-            <a href="<?php echo esc_url( add_query_arg( [ 'post_status' => 'instock', '_product_listing_filter_nonce' => $nonce ], $permalink ) ); ?>"><?php echo esc_html_e( 'In stock', 'dokan-lite' ) . ' (' . esc_html( $instock_counts ) . ')'; ?></a> <?php // phpcs:ignore ?>
+            <a href="<?php echo esc_url( add_query_arg( [ 'post_status' => 'instock', '_product_listing_filter_nonce' => $nonce ], $permalink ) ); ?>"><?php esc_html_e( 'In stock', 'dokan-lite' ) . ' (' . esc_html( $instock_counts ) . ')'; ?></a> <?php // phpcs:ignore ?>
         </li>
     <?php endif; ?>
 
     <?php if ( $outofstock_counts ) : ?>
         <li<?php echo $status_class === 'outofstock' ? ' class="active"' : ''; ?>>
-            <a href="<?php echo esc_url( add_query_arg( [ 'post_status' => 'outofstock', '_product_listing_filter_nonce' => $nonce ], $permalink ) ); ?>"><?php echo esc_html_e( 'Out of stock', 'dokan-lite' ) . ' (' . esc_html( $outofstock_counts ) . ')'; ?></a> <?php // phpcs:ignore ?>
+            <a href="<?php echo esc_url( add_query_arg( [ 'post_status' => 'outofstock', '_product_listing_filter_nonce' => $nonce ], $permalink ) ); ?>"><?php esc_html_e( 'Out of stock', 'dokan-lite' ) . ' (' . esc_html( $outofstock_counts ) . ')'; ?></a> <?php // phpcs:ignore ?>
         </li>
     <?php endif; ?>
 </ul> <!-- .post-statuses-filter -->
