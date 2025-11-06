@@ -7,7 +7,7 @@ Tested up to: 6.8.3
 WC requires at least: 8.5.0
 WC tested up to: 10.2.2
 Requires PHP: 7.4
-Stable tag: 4.1.3
+Stable tag: 4.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -349,6 +349,10 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v4.1.4 ( Nov 06, 2025 ) =
+- **update:** Added validation for the `section` parameter in `Admin Settings` to prevent unauthorized or unintended option updates.
+- **update:** Strengthened nonce handling for limited-time promotional notices by changing the action from `dokan_admin` to `dokan_promotional_notice` for improved consistency and isolation.
+
 = v4.1.3 ( Oct 28, 2025 ) =
 - **update:** Admin Dashboard withdraw list UI with Modern Design and Improved User Experience.
 - **update:** Admin Dashboard vendor list UI with Modern Design and Improved User Experience.
@@ -364,11 +368,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 = v4.1.0 ( Sep 30, 2025 ) =
 - **feat:** New React-based Admin Dashboard with enhanced metrics and rank boards.
 - **update:** Migrated Pro Features page from Vue to React with enhanced UI.
-
-= v4.0.9 ( Sep 25, 2025 ) =
-- **update**: Dokan Plugin Top Bar & Notice Left Bar UI.
-- **update**: Order fee now distribute based on order creation if the order is manual order then the added fee of that order will go to seller otherwise it will go to admin. The fee tax will be distributed based on product tax receipt.
-- **fix:** Fix Dashboard and Report page header title and apply filters.
-- **fix:** Conflict with ACF plugin: prevented empty admin notices when Dokan is active.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
