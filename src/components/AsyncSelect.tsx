@@ -111,14 +111,14 @@ function AsyncSelect< Option = DefaultOption >(
         return (
             <components.ValueContainer { ...valueProps }>
                 { hasValue ? (
-                    <div className="truncate text-[14px] leading-[22px] text-gray-700">
+                    <div className="break-all text-[14px] leading-[22px] text-gray-700">
                         { prefix ? (
                             <span className="font-normal">
                                 { `${String( prefix )}: ` }
                             </span>
                         ) : null }
                         <span
-                            className="truncate align-middle"
+                            className="align-middle"
                             title={ summary }
                         >
                             { summary }
@@ -260,6 +260,24 @@ function AsyncSelect< Option = DefaultOption >(
             return {
                 ...base,
                 cursor: state.isDisabled ? 'not-allowed' : 'pointer',
+                backgroundColor: state.isSelected
+                    ? 'var(--colors-primary-100)'
+                    : base.backgroundColor,
+                ':active': {
+                    ...base[ ':active' ],
+                    backgroundColor: state.isSelected
+                        ? 'var(--colors-primary-100)'
+                        : base[ ':active' ]?.backgroundColor,
+                },
+                ':hover': {
+                    ...base[ ':hover' ],
+                    backgroundColor: state.isSelected
+                        ? 'var(--colors-primary-200)'
+                        : base[ ':hover' ]?.backgroundColor,
+                },
+                color: state.isSelected
+                    ? 'var(--dokan-button-tertiary-text-color)'
+                    : base.color,
             };
         },
     } as const;

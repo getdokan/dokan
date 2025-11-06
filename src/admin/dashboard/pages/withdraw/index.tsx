@@ -885,7 +885,6 @@ const WithdrawPage = () => {
                     prefetch
                     defaultOptions
                     cacheOptions
-                    isMulti={true}
                 />
             ),
         },
