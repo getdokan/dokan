@@ -62,7 +62,7 @@ class CloudflareTurnstileProvider extends AbstractProvider {
         wp_enqueue_script( $handle );
 
         // Add a tiny inline helper to set token into the hidden input when solved (for contact form)
-        $inline = "window.dokanTurnstileSetToken = function(token){ try{ var el = document.querySelector('form#dokan-form-contact-seller .dokan_recaptcha_token'); if(el){ el.value = token; } }catch(e){} }";
+        $inline = "window.dokanTurnstileSetToken = function(token){ try{ var el = document.querySelector('form .dokan_recaptcha_token'); if(el){ el.value = token; } }catch(e){} }";
         wp_add_inline_script( $handle, $inline, 'after' );
     }
 
@@ -81,6 +81,7 @@ class CloudflareTurnstileProvider extends AbstractProvider {
         $site = esc_attr( (string) $this->get_option( 'turnstile_site_key', '' ) );
         // Visible widget keeps things simple and avoids extra JS. Token will be set via callback above when solved
         $html = '<div class="cf-turnstile" data-sitekey="' . $site . '" data-callback="dokanTurnstileSetToken"></div>';
+        $html .= '<input type="hidden" name="dokan_recaptcha_token" class="dokan_recaptcha_token">';
         return $html;
     }
 
