@@ -21,10 +21,12 @@ const SingleValue = ( singleValueProps: any ) => {
                 ? selectedTitle( data as any )
                 : selectedTitle;
         const label: any = ( data as any )?.label ?? content;
-        content = (
+        content = prefix ? (
             <span title={ `${ prefix }: ${ label }` }>
                 { prefix }: { label }
             </span>
+        ) : (
+            <span title={ `${ label }` }>{ label }</span>
         );
     }
 
