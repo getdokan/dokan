@@ -65,6 +65,88 @@ function Select< Option = DefaultOption >( props: SelectProps< Option > ) {
         );
     };
 
+    // Render a single-line summary for multi-select instead of chips
+    const ValueContainer = ( valueProps: any ) => {
+        const { components } = ReactSelect;
+        const { selectProps, hasValue } = valueProps as any;
+        const isMulti = Boolean( selectProps?.isMulti );
+        if ( ! isMulti ) {
+            return <components.ValueContainer { ...valueProps } />;
+        }
+        const values: any[] = ( selectProps?.getValue?.() as any[] ) || [];
+        const labels = values.map( ( v ) => v?.label ?? v ).filter( Boolean );
+        const titlePrefix = selectProps?.selectedTitle;
+        const prefix =
+            typeof titlePrefix === 'function' && labels.length
+                ? titlePrefix( values[ 0 ] )
+                : titlePrefix;
+        const summary = labels.join( ', ' );
+        return (
+            <components.ValueContainer { ...valueProps }>
+                { hasValue ? (
+                    <div className="truncate text-[14px] leading-[22px] text-gray-700">
+                        { prefix ? (
+                            <span className="font-normal">
+                                { String( prefix ) }:
+                            </span>
+                        ) : null }
+                        <span
+                            className="truncate align-middle"
+                            title={ summary }
+                        >
+                            { summary }
+                        </span>
+                    </div>
+                ) : null }
+                { valueProps.children }
+            </components.ValueContainer>
+        );
+    };
+
+    // Hide chips when isMulti to match summary UI
+    const MultiValue = ( multiProps: any ) => {
+        const { components } = ReactSelect;
+        const isMulti = Boolean( multiProps?.selectProps?.isMulti );
+        if ( isMulti ) {
+            return null;
+        }
+        return <components.MultiValue { ...multiProps } />;
+    };
+
+    // Checkbox-style options
+    const Option = ( optionProps: any ) => {
+        const { components } = ReactSelect;
+        const { isSelected, isDisabled } = optionProps;
+        return (
+            <components.Option { ...optionProps }>
+                <div className="flex items-center gap-2">
+                    <span
+                        className={
+                            'inline-flex h-4 w-4 items-center justify-center rounded border ' +
+                            ( isSelected
+                                ? 'bg-purple-600 border-purple-600'
+                                : 'bg-white border-gray-300' ) +
+                            ( isDisabled ? ' opacity-50' : '' )
+                        }
+                    >
+                        { isSelected ? (
+                            <svg
+                                viewBox="0 0 20 20"
+                                className="h-3 w-3 text-white"
+                            >
+                                <path
+                                    d="M7.629 13.233L4.4 10.004l1.2-1.2 2.029 2.03 6.17-6.17 1.2 1.2-7.37 7.37z"
+                                    fill="currentColor"
+                                />
+                            </svg>
+                        ) : null }
+                    </span>
+                    <span>{ optionProps.label }</span>
+                </div>
+            </components.Option>
+        );
+    };
+
     const SingleValue = ( singleValueProps: any ) => {
         const { components } = ReactSelect;
         const { selectProps, data } = singleValueProps as {
@@ -164,6 +246,9 @@ function Select< Option = DefaultOption >( props: SelectProps< Option > ) {
                 Control,
                 DropdownIndicator,
                 SingleValue,
+                ValueContainer,
+                MultiValue,
+                Option,
                 ...( props?.components ? props.components : {} ),
             } }
             styles={ styles }

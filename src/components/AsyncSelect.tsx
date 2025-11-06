@@ -1,6 +1,6 @@
 import { AsyncSearchableSelect, ReactSelect } from '@getdokan/dokan-ui';
 import { twMerge } from 'tailwind-merge';
-import { ChevronDown } from 'lucide-react';
+import { Check, ChevronDown } from 'lucide-react';
 
 // Local utility to extract props type of a component without relying on React/WordPress types
 type PropsOf< T > = T extends ( props: infer P ) => any ? P : never;
@@ -88,6 +88,86 @@ function AsyncSelect< Option = DefaultOption >(
                     <ChevronDown size={ 16 } />
                 </div>
             </components.DropdownIndicator>
+        );
+    };
+
+    // Render a single-line summary for multi-select instead of chips
+    const ValueContainer = ( valueProps: any ) => {
+        const { components } = ReactSelect;
+        const { selectProps, hasValue } = valueProps as any;
+        const isMulti = Boolean( selectProps?.isMulti );
+        if ( ! isMulti ) {
+            return <components.ValueContainer { ...valueProps } />;
+        }
+        const values: any[] = ( selectProps?.value as any[] ) || [];
+        const labels = values.map( ( v ) => v?.label ?? v ).filter( Boolean );
+        const titlePrefix = selectProps?.selectedTitle;
+        const prefix =
+            typeof titlePrefix === 'function' && labels.length
+                ? titlePrefix( values[ 0 ] )
+                : titlePrefix;
+        const summary = labels.join( ', ' );
+        // Keep the input so user can type; hide chips via MultiValue override
+        return (
+            <components.ValueContainer { ...valueProps }>
+                { hasValue ? (
+                    <div className="truncate text-[14px] leading-[22px] text-gray-700">
+                        { prefix ? (
+                            <span className="font-normal">
+                                { `${String( prefix )}: ` }
+                            </span>
+                        ) : null }
+                        <span
+                            className="truncate align-middle"
+                            title={ summary }
+                        >
+                            { summary }
+                        </span>
+                    </div>
+                ) : null }
+                { valueProps.children }
+            </components.ValueContainer>
+        );
+    };
+
+    // Hide multi-value chips entirely
+    const MultiValue = ( multiProps: any ) => {
+        const { components } = ReactSelect;
+        const isMulti = Boolean( multiProps?.selectProps?.isMulti );
+
+        if ( isMulti ) {
+            return multiProps.children;
+        }
+        return <components.MultiValue { ...multiProps } />;
+    };
+
+    // Add a checkbox in options list
+    const Option = ( optionProps: any ) => {
+        const { components } = ReactSelect;
+        const { isSelected, isDisabled } = optionProps;
+
+        if ( ! optionProps.isMulti ) {
+            return <components.Option { ...optionProps } />;
+        }
+        return (
+            <components.Option { ...optionProps }>
+                <div className="dokan-layout">
+                    <div className="flex items-center gap-2 bg-[]">
+                        <span
+                            className={
+                                'inline-flex h-4 w-4 items-center justify-center rounded border ' +
+                                ( isSelected
+                                    ? '!bg-dokan-btn !border-dokan-btn'
+                                    : '!bg-white !border-gray-300' ) +
+                                ( isDisabled ? ' opacity-50' : '' )
+                            }
+                        >
+                            <Check size={ 16 } color="white" />
+                        </span>
+                        <span>{ optionProps.label }</span>
+                    </div>
+                </div>
+            </components.Option>
         );
     };
 
@@ -190,6 +270,9 @@ function AsyncSelect< Option = DefaultOption >(
                 Control,
                 DropdownIndicator,
                 SingleValue,
+                ValueContainer,
+                MultiValue,
+                Option,
                 // @ts-ignore
                 ...( props?.components ? props.components : {} ),
             } }
