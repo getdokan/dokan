@@ -4,6 +4,22 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.1.4',
+        'released' => '2025-11-06',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Added validation for the `section` parameter in `Admin Settings` to prevent unauthorized or unintended option updates.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Strengthened nonce handling for limited-time promotional notices by changing the action from `dokan_admin` to `dokan_promotional_notice` for improved consistency and isolation.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.1.3',
         'released' => '2025-10-28',
         'changes'  => [
