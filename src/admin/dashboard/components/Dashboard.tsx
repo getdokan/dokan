@@ -10,6 +10,7 @@ import Edit from '../pages/vendor-create-edit/Edit';
 import NotFound from '../../../layout/404';
 import AdminDashboard from '../pages/dashboard';
 import VendorsPage from '../pages/vendors';
+import ReverseWithdrawalPage from '../pages/reverse-withdrawal';
 
 export type DokanAdminRoute = {
     id: string;
@@ -59,6 +60,11 @@ const getAdminRoutes = () => {
             id: 'vendor-edit',
             element: <Edit />,
             path: '/vendors/edit/:id',
+        },
+        {
+            id: 'reverse-withdrawal',
+            element: <ReverseWithdrawalPage />,
+            path: '/reverse-withdrawal',
         },
     ];
 
