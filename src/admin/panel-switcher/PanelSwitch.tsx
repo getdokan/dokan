@@ -14,7 +14,13 @@ const PanelSwitch = () => {
     const supportedKeys = wp.hooks.applyFilters(
         // Define an array with a filter hook for supported URL keys.
         'dokan_admin_panel_switch_supported_keys',
-        [ 'dashboard', 'withdraw', 'vendors', 'store-reviews' ]
+        [
+            'dashboard',
+            'withdraw',
+            'vendors',
+            'store-reviews',
+            'request-for-quote',
+        ]
     );
 
     // Get the current URL hash path segments.
