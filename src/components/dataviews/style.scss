@@ -9,17 +9,30 @@
         display: none;
       }
 
-      .components-button.is-compact.has-icon:not(.has-text) {
+      .components-button.is-compact {
+        opacity: 1;
+        padding-right: 0;
+        margin: 0 !important;
+
+        &.has-icon:not(.has-text) {
           width: auto;
           padding: 6px;
 
           &:hover,
           &:focus {
-              background-color: transparent;
-              box-shadow: none;
-              border: none;
-
+            background-color: transparent;
+            box-shadow: none;
+            border: none;
           }
+        }
+
+        &:focus {
+          outline: none;
+        }
+
+        &:hover {
+          background-color: transparent;
+        }
       }
     }
   }
