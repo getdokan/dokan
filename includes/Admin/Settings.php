@@ -35,6 +35,7 @@ class Settings {
         add_filter( 'dokan_get_settings_values', [ $this, 'set_withdraw_limit_gateways' ], 20, 2 );
         add_filter( 'dokan_get_settings_values', [ $this, 'set_commission_type_if_not_set' ], 20, 2 );
         add_filter( 'dokan_settings_general_site_options', [ $this, 'add_dokan_data_clear_setting' ], 310 );
+        add_filter( 'dokan_get_settings_values', [ $this, 'set_vendor_latest_layout' ], 20, 2 );
     }
 
     /**
@@ -1162,5 +1163,23 @@ class Settings {
         ];
 
         return $settings_fields;
+    }
+
+    /**
+     * Set the default settings for vendor layout.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param mixed $option_name
+     * @param mixed $option_value
+     *
+     * @return void|mixed $option_value
+     */
+    public function set_vendor_latest_layout( $option_value, $option_name ) {
+        if ( 'dokan_appearance' === $option_name && empty( $option_value['vendor_layout_style'] ) ) {
+            $option_value['vendor_layout_style'] = 'latest';
+        }
+
+        return $option_value;
     }
 }
