@@ -62,7 +62,7 @@ const getAdminRoutes = () => {
             path: '/vendors/edit/:id',
         },
         {
-            id: 'reverse-withdrawal',
+            id: 'reverse-withdrawal', // Added Reverse Withdrawal route
             element: <ReverseWithdrawalPage />,
             path: '/reverse-withdrawal',
         },

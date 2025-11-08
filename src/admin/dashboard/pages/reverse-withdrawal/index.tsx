@@ -282,7 +282,7 @@ const ReverseWithdrawalPage = () => {
                 </DokanButton>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div className="grid grid-rows-1 md:grid-cols-4 gap-5 mb-7">
                 <div className="bg-white p-4 rounded-md shadow border border-gray-200">
                     <p className="text-sm text-purple-600 font-medium mb-1">{__('Total Collected', 'dokan-lite')}</p>
                     <p className="text-2xl font-bold text-gray-900">{price(stats.credit)}</p>

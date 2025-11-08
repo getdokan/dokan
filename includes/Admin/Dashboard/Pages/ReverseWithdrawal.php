@@ -61,6 +61,6 @@ class ReverseWithdrawal extends AbstractPage {
      * @return void
      */
     public function register(): void {
-        // No need to register assets here as the component is directly included in Dashboard route
+        // No need to register assets here as the component is directly included in Dashboard route.
     }
 }

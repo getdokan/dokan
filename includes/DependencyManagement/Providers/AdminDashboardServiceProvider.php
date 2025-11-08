@@ -40,7 +40,7 @@ class AdminDashboardServiceProvider extends BaseServiceProvider {
         ProFeatures::class,
         Withdraw::class,
         Vendors::class,
-        ReverseWithdrawal::class,
+        ReverseWithdrawal::class, // Added ReverseWithdrawal page service
 	];
 
     /**
