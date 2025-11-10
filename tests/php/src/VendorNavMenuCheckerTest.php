@@ -38,17 +38,17 @@ class VendorNavMenuCheckerTest extends DokanTestCase {
         $checker = new VendorNavMenuChecker();
         $menu_items = [
             'dashboard' => [
-                'route' => 'dashboard',
+                'react_route' => 'dashboard',
                 'url'   => 'http://example.com/dashboard',
                 'name'  => 'Dashboard',
             ],
             'products' => [
-                'route' => 'products',
+                'react_route' => 'products',
                 'url'   => 'http://example.com/products',
                 'name'  => 'Products',
             ],
             'orders' => [
-                'route' => 'orders',
+                'react_route' => 'orders',
                 'url'   => 'http://example.com/orders',
                 'name'  => 'Orders',
             ],
@@ -105,17 +105,17 @@ class VendorNavMenuCheckerTest extends DokanTestCase {
         $checker    = new VendorNavMenuChecker();
         $menu_items = [
             'dashboard' => [
-                'route' => 'dashboard',
+                'react_route' => 'dashboard',
                 'url'   => dokan_get_navigation_url(),
                 'name'  => 'Dashboard',
             ],
             'products'  => [
-                'route' => 'products',
+                'react_route' => 'products',
                 'url'   => dokan_get_navigation_url( 'products' ),
                 'name'  => 'Products',
             ],
             'orders'    => [
-                'route' => 'orders',
+                'react_route' => 'orders',
                 'url'   => dokan_get_navigation_url( 'orders' ),
                 'name'  => 'Orders',
             ],
@@ -181,17 +181,17 @@ class VendorNavMenuCheckerTest extends DokanTestCase {
         $checker    = new VendorNavMenuChecker();
         $menu_items = [
             'dashboard' => [
-                'route' => 'dashboard',
+                'react_route' => 'dashboard',
                 'url'   => dokan_get_navigation_url(),
                 'name'  => 'Dashboard',
             ],
             'products'  => [
-                'route' => 'products',
+                'react_route' => 'products',
                 'url'   => dokan_get_navigation_url( 'products' ),
                 'name'  => 'Products',
             ],
             'orders'    => [
-                'route' => 'orders',
+                'react_route' => 'orders',
                 'url'   => dokan_get_navigation_url( 'orders' ),
                 'name'  => 'Orders',
             ],
@@ -265,17 +265,17 @@ class VendorNavMenuCheckerTest extends DokanTestCase {
         $checker    = new VendorNavMenuChecker();
         $menu_items = [
             'dashboard' => [
-                'route' => 'dashboard',
+                'react_route' => 'dashboard',
                 'url'   => dokan_get_navigation_url(),
                 'name'  => 'Dashboard',
             ],
             'products'  => [
-                'route' => 'products',
+                'react_route' => 'products',
                 'url'   => dokan_get_navigation_url( 'products' ),
                 'name'  => 'Products',
             ],
             'orders'    => [
-                'route' => 'orders',
+                'react_route' => 'orders',
                 'url'   => dokan_get_navigation_url( 'orders' ),
                 'name'  => 'Orders',
             ],
