@@ -31,14 +31,16 @@ class Assets {
 
     public static function get_wc_handler( $handler ): string {
         // map legacy handlers to new ones
-        $handlers = [
-            'jquery-blockui' => 'jquery-blockui',
-            'jquery-tiptip' => 'jquery-tiptip',
-        ];
-        if ( version_compare( WC()->version, '10.3.0', '>=' ) ) {
-            return 'wc-' . $handlers[ $handler ];
+        $supported_handlers = [ 'jquery-blockui', 'jquery-tiptip' ];
+        // Return original handler if not in our supported list
+        if ( ! in_array( $handler, $supported_handlers, true ) ) {
+            return $handler;
         }
-        return $handlers[ $handler ] ?? $handler;
+        // For WC 10.3.0+, use 'wc-' prefix
+        if ( version_compare( WC()->version, '10.3.0', '>=' ) ) {
+            return 'wc-' . $handler;
+        }
+        return $handler;
     }
 
     /**
