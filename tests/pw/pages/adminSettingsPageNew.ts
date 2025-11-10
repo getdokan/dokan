@@ -132,6 +132,16 @@ export class AdminSettingsPageNew extends AdminPage {
                 case 'textarea':
                     await this.page.fill( field.selector, field.value );
                     break;  
+                case 'color-picker': {
+                    const picker = this.page.locator(field.selector);
+                    await picker.click();
+                    const input = picker.locator('input[type="text"]');
+                    if (await input.count() > 0) {
+                        await input.fill(field.value);
+                        await input.press('Enter'); 
+                    }
+                    break;
+                }
             }
         }
     }
@@ -206,6 +216,13 @@ export class AdminSettingsPageNew extends AdminPage {
                 case 'textarea': {
                     const value = await this.page.inputValue( field.selector );
                     expect(value).toBe(field.value);
+                    break;
+                }
+                case 'color-picker': {
+                    const color = await this.page.locator(field.selector).evaluate(el => {
+                        return getComputedStyle(el).backgroundColor;
+                    });
+                    expect(color).toBe(field.value);
                     break;
                 }
             }
