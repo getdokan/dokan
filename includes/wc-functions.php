@@ -388,8 +388,8 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
     }
 
     // Set Sales and prices
-    $product->set_regular_price($regular_price ?? '');
-    $product->set_sale_price($sale_price ?? '');
+    $product->set_regular_price( $regular_price ?? '' );
+    $product->set_sale_price( $sale_price ?? '' );
 
     // Site timezone
     $tz_string = wc_timezone_string();
