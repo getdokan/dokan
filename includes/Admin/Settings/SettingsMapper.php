@@ -124,6 +124,32 @@ class SettingsMapper {
         'dokan_report_abuse.abuse_reasons'                    => 'moderation.report_abuse.reasons_for_abuse_reports.report_abuse_reasons',
 
         // =========================
+        // Delivery Time Settings
+        // =========================
+
+        // Main settings
+        'dokan_delivery_time.allow_vendor_override_settings' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.allow_vendor_override_settings',
+        'dokan_delivery_time.selection_required' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.selection_required',
+        'dokan_delivery_time.delivery_date_label' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_date_label',
+        'dokan_delivery_time.preorder_date' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.preorder_date',
+        'dokan_delivery_time.time_slot_minutes' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.time_slot_minutes',
+        'dokan_delivery_time.order_per_slot' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.order_per_slot',
+        'dokan_delivery_time.delivery_box_info' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_box_info',
+
+        // Delivery support (multicheck - needs special handling like shipping providers)
+        // 'dokan_delivery_time.delivery_support.delivery' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_support',
+        // 'dokan_delivery_time.delivery_support.store-pickup' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_support',
+
+        // Delivery days
+        'dokan_delivery_time.delivery_day_monday'    => 'shipment.dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule.monday',
+        'dokan_delivery_time.delivery_day_tuesday'   => 'shipment.dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule.tuesday',
+        'dokan_delivery_time.delivery_day_wednesday' => 'shipment.dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule.wednesday',
+        'dokan_delivery_time.delivery_day_thursday'  => 'shipment.dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule.thursday',
+        'dokan_delivery_time.delivery_day_friday'    => 'shipment.dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule.friday',
+        'dokan_delivery_time.delivery_day_saturday'  => 'shipment.dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule.saturday',
+        'dokan_delivery_time.delivery_day_sunday'    => 'shipment.dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule.sunday',
+
+        // =========================
         // Transaction > Commissions
         // =========================
         'dokan_selling.commission_type'                        => 'transaction.commission.commission.commission_type',
