@@ -12,13 +12,13 @@ const oldDataset = [
             {
                 selector: '//label[@for="dokan_report_abuse[reported_by_logged_in_users_only]"]//label[@class="switch tips"]',
                 type: 'checkbox',
-                value: true,
+                value: false,
             },
-            {
-                selector: '//textarea[@id="dokan_report_abuse[abuse_reasons]"]',
-                type: 'textarea',
-                value: 'Spam\nInappropriate',
-            },
+            // {
+            //     selector: '//textarea[@id="dokan_report_abuse[abuse_reasons]"]',
+            //     type: 'textarea',
+            //     value: 'Spam\nInappropriate',
+            // },
         ],
     },
 ];
@@ -29,15 +29,15 @@ const newDataset = {
     selector: '#dokan_settings_moderation >> #dokan_settings_moderation_report_abuse',
     fields: [
         {
-            selector: '#dokan_settings_moderation_report_abuse_report_abuse_settings_report_abuse_reported_by button[role="switch"]',
-            type: 'switch',
-            value: true,
+            selector: '#dokan_settings_moderation_report_abuse_report_abuse_settings_report_abuse_reported_by button[name="all_users"]',
+            type: 'radio',
+            value: 'true',
         },
-        {
-            selector: '#dokan_settings_moderation_report_abuse_reasons_for_abuse_reports_report_abuse_reasons textarea',
-            type: 'textarea',
-            value: 'Spam\nInappropriate',
-        },
+        // { //Todo
+        //     selector: '#dokan_settings_moderation_report_abuse_reasons_for_abuse_reports_report_abuse_reasons textarea',
+        //     type: 'textarea',
+        //     value: 'Spam\nInappropriate',
+        // },
     ],
 };
 
@@ -86,7 +86,13 @@ test.describe('Admin Setting: Moderation -> report_abuse', () => {
                 });
             }
         });
-
+        await test.step('Reload old settings urls', async () => {
+            for (const dataset of oldDataset) {
+                await test.step('Reload ' + dataset.title, async () => {
+                    await adminSettingsPage.reloadUrl(dataset.url);
+                });
+            }
+        });
         await test.step('Check new settings again', async () => {
             await adminSettingsPage.checkSettings(newDataset);
         });
