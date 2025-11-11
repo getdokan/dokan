@@ -49,6 +49,7 @@ class LegacySwitcher implements Hookable {
             return;
         }
 
+
         // Filter the submenu items based on legacy dashboard preference.
         $filtered = array_reduce(
             $submenu['dokan'], function ( $filtered, $menu_item ) {
@@ -89,6 +90,10 @@ class LegacySwitcher implements Hookable {
 				return $filtered;
 			}, []
         );
+
+        error_log( print_r( get_transient( 'dokan_legacy_' . sanitize_title_with_dashes( 'Seller Badge' ) . '_page' ), 1 ) );
+        error_log( print_r( $submenu['dokan'], 1 ) );
+
 
         $submenu['dokan'] = array_values( $filtered ); // phpcs:ignore
     }
@@ -152,7 +157,8 @@ class LegacySwitcher implements Hookable {
         $admin_url_map = apply_filters(
             'dokan_admin_legacy_url_map',
             [
-                'request-for-quote' => 'rfq',
+                'request-for-quote'  => 'rfq',
+                'dokan-seller-badge' => 'seller-badge',
             ]
         );
 
