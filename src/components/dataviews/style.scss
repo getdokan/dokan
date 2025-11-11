@@ -11,12 +11,11 @@
 
       .components-button.is-compact {
         opacity: 1;
-        padding-right: 0;
         margin: 0 !important;
 
         &.has-icon:not(.has-text) {
           width: auto;
-          padding: 6px;
+          padding: 6px 3px;
 
           &:hover,
           &:focus {
