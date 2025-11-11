@@ -350,9 +350,9 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 == Changelog ==
 
 = v4.1.5 ( Nov 11, 2025 ) =
-- **update:** Add vendor verification legacy ui support for admin panel to ensure backward compatibility with older interface versions.
+- **update:** Added vendor verification legacy UI support for admin panel to ensure backward compatibility with older interface versions.
 - **update:** Updated all Twitter labels to X to reflect the latest brand changes.
-- **update:** Add custom store URL validation in admin settings to prevent conflicts with WordPress search functionality.
+- **update:** Added custom store URL validation in admin settings to prevent conflicts with WordPress search functionality.
 - **update:** Fixed PHP warnings triggered when saving variable products by improving validation and data handling during product save operations.
 
 = v4.1.4 ( Nov 06, 2025 ) =
