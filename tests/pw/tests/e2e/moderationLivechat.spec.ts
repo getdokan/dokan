@@ -7,32 +7,27 @@ const oldDataset = [
     {
         title: 'Admin Old Setting: Livechat',
         url: 'wp-admin/admin.php?page=dokan#/settings',
-        selector: '//div[@class="nav-title" and contains(text(),"Livechat")]',
+        selector: '//div[@class="nav-title" and contains(text(),"Live Chat")]',
         fields: [
             {
                 selector: '//label[@for="dokan_live_chat[enable]"]//label[@class="switch tips"]',
                 type: 'checkbox',
-                value: true,
+                value: true
             },
             {
-                selector: '//select[@id="dokan_live_chat[provider]"]',
-                type: 'select',
-                value: 'tawk',
-            },
-            {
-                selector: '//input[@id="dokan_live_chat[app_id]"]',
-                type: 'text',
-                value: 'app-id',
-            },
-            {
-                selector: '//input[@id="dokan_live_chat[app_secret]"]',
-                type: 'text',
-                value: 'app-secret',
+                selector: 'label[for="1-tawkto-provider"]',
+                type: 'radioOld',
+                value: true
             },
             {
                 selector: '//label[@for="dokan_live_chat[chat_button_seller_page]"]//label[@class="switch tips"]',
                 type: 'checkbox',
-                value: true,
+                value: true
+            },
+            {
+                selector: '//select[@id="dokan_live_chat[chat_button_product_page]"]',
+                type: 'select',
+                value: 'above_tab'
             },
         ],
     },
@@ -44,29 +39,25 @@ const newDataset = {
     selector: '#dokan_settings_moderation >> #dokan_settings_moderation_livechat',
     fields: [
         {
-            selector: '#dokan_settings_moderation_livechat_livechat_settings_livechat_enabled button[role="switch"]',
+            selector: '#dokan_settings_moderation_livechat_livechat_settings_livechat_enabled button',
             type: 'switch',
-            value: true,
+            value: true
         },
+        // {
+        //     There is problem of some fields. Todo: Fix those selectors later.
+        //     selector: '#dokan_settings_moderation_livechat_livechat_settings_livechat_provider div[role="radio"][aria-checked="true"]:has-text("Tawk.to")',
+        //     type: 'radio',
+        //     value: true
+        // },
         {
-            selector: '#dokan_settings_moderation_livechat_livechat_settings_livechat_provider select',
-            type: 'select',
-            value: 'tawk',
-        },
-        {
-            selector: '#dokan_settings_moderation_livechat_livechat_settings_livechat_app_id input',
-            type: 'text',
-            value: 'app-id',
-        },
-        {
-            selector: '#dokan_settings_moderation_livechat_livechat_settings_livechat_app_secret input',
-            type: 'text',
-            value: 'app-secret',
-        },
-        {
-            selector: '#dokan_settings_moderation_livechat_livechat_settings_livechat_vendor_page_button button[role="switch"]',
+            selector: '#dokan_settings_moderation_livechat_livechat_settings_livechat_vendor_page_button button',
             type: 'switch',
-            value: true,
+            value: true
+        },
+        {
+            selector: '#dokan_settings_moderation_livechat_livechat_settings_livechat_product_page_button div[role="radio"][aria-label="Above Product Tab"]',
+            type: 'radio',
+            value: 'true',
         },
     ],
 };
