@@ -38,6 +38,7 @@ export { default as VendorAsyncSelect } from './VendorAsyncSelect';
 export { default as ProductAsyncSelect } from './ProductAsyncSelect';
 export { default as OrderAsyncSelect } from './OrderAsyncSelect';
 export { default as CouponAsyncSelect } from './CouponAsyncSelect';
+export { default as CustomerAsyncSelect } from './CustomerAsyncSelect';
 export { default as SearchInput } from './SearchInput';
 export { default as Select } from './Select';
 export { default as DateRangePicker } from './DateRangePicker';
