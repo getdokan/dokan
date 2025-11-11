@@ -82,7 +82,7 @@ function AsyncSelect< Option = DefaultOption >(
     };
 
     const styles = {
-        control: ( base: any ) => ( {
+        control: ( base: any, state: any ) => ( {
             ...base,
             borderRadius: '0.40rem',
             minHeight: '2.5rem',
@@ -92,6 +92,8 @@ function AsyncSelect< Option = DefaultOption >(
             ':focus': { outline: 'none' },
             ':focus-within': { outline: 'none' },
             borderColor: base.borderColor,
+            paddingLeft: ! state.selectProps.icon ? 12 : base.paddingLeft,
+            paddingRight: ! state.selectProps.icon ? 12 : base.paddingRight,
         } ),
         placeholder: ( base: any ) => ( {
             ...base,

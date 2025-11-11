@@ -3,6 +3,7 @@ import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import AsyncSelect, { type BaseSelectProps } from './AsyncSelect';
 import { __, sprintf } from '@wordpress/i18n';
+import { ReactSelect } from '@getdokan/dokan-ui';
 
 export interface CustomerOption {
     value: number;
@@ -45,6 +46,38 @@ const defaultMap = ( customer: any ): CustomerOption => {
         label,
         raw: customer,
     };
+};
+
+const CustomerOptionRow = ( props: any ) => {
+    const { data, innerRef, innerProps } = props;
+    return (
+        <div
+            ref={ innerRef }
+            { ...innerProps }
+            className="group px-4 py-2 cursor-pointer hover:bg-[#F4F1FE]"
+            style={ {
+                backgroundColor: props.isFocused ? '#F4F1FE' : 'transparent',
+            } }
+        >
+            <div className="font-semibold text-sm text-[#25252D] group-hover:text-[#7047EB]">
+                { data.label }
+            </div>
+            { data.raw?.email && (
+                <div className="text-xs text-[#A5A5AA] mt-1">
+                    { data.raw?.email }
+                </div>
+            ) }
+        </div>
+    );
+};
+
+const CustomerSingleValue = ( props: any ) => {
+    const { components } = ReactSelect;
+    return (
+        <components.SingleValue { ...props }>
+            <div className="text-sm leading-5">{ props.children }</div>
+        </components.SingleValue>
+    );
 };
 
 function CustomerAsyncSelect( props: CustomerAsyncSelectProps ) {
@@ -262,6 +295,14 @@ function CustomerAsyncSelect( props: CustomerAsyncSelectProps ) {
     // Track if we've already attempted a load on first menu open to avoid duplicate calls
     const hasLoadedOnOpenRef = useRef< boolean >( false );
 
+    // Merge default customer components with user overrides
+    const userComponents = ( rest as any )?.components;
+    const customerComponents = {
+        Option: CustomerOptionRow,
+        SingleValue: CustomerSingleValue,
+        ...( userComponents || {} ), // allow user to override
+    };
+
     return (
         <AsyncSelect
             key={ depsSignature }
@@ -285,6 +326,7 @@ function CustomerAsyncSelect( props: CustomerAsyncSelectProps ) {
                 return results;
             } }
             instanceId={ `customer-async-${ depsSignature }` }
+            components={ customerComponents }
             { ...rest }
             onMenuOpen={ async () => {
                 try {
