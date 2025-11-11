@@ -98,6 +98,21 @@ class SettingsMapper {
         'dokan_germanized.override_invoice_number' => 'compliance.eu_compliance.eu_compliance_settings.vendor_invoice_number_override',
 
         // =========================
+        // Shipment Settings
+        // =========================
+        //Main shipment tracking toggle
+        'dokan_shipping_status_setting.enabled' => 'shipment.shipment-setting-page.shipment-settings.allows_shipment_tracking',
+        // Allow marking shipments as received. This field will visible only if shipment tracking is enabled.
+        'dokan_shipping_status_setting.allow_mark_received' => 'shipment.shipment-setting-page.shipment-settings.allow_mark_received',
+        // ShipStation logging
+        'dokan_general.enable_shipstation_logging' => 'shipment.shipment-setting-page.shipment-settings.enable_shipstation_logging',
+
+        // Shipping Provider
+        'dokan_shipping_status_setting.shipping_status_provider' => 'shipment.shipment-setting-page.shipment-provider',
+        // Shipping Status (repeatable field in old UI maps to repeatable section in new UI)
+        'dokan_shipping_status_setting.shipping_status_list' => 'shipment.shipment-setting-page.shipment-status.shipping_status_list',
+
+        // =========================
         // Moderation > RMA
         // =========================
         'dokan_rma.rma_order_status'            => 'moderation.rma.rma_settings.rma_order_status',
