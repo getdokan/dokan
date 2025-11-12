@@ -47,3 +47,4 @@ export { default as UserCard } from './UserCard';
 
 // Commission Components
 export * from './commission';
+export { default as DokanLoginForm } from './LoginForm';

@@ -380,4 +380,10 @@
     span:has(+ .dokan-react-search-input) {
         background: white !important;
     }
+
+    .dokan-alert {
+        p {
+            margin: 0;
+        }
+    }
 }

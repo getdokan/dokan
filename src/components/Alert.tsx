@@ -49,7 +49,7 @@ const DokanAlert = ( {
             label={ label }
             color={ config.color }
             type={ config.type }
-            className={ `ring-1 ring-inset ${ config.className } ${ className }` }
+            className={ `ring-1 ring-inset dokan-alert ${ config.className } ${ className }` }
             { ...props }
         >
             { children }

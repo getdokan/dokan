@@ -20,6 +20,7 @@
 12. **DokanPriceInput** - Specialized input component for price entry with formatting
 13. **DokanTooltip** - Unified tooltip component for displaying contextual information
 13. **DateRangePicker** - Unified date range picker component for selecting start and end dates
+13. **LoginForm** - Login form component
 
 ## Important Dependencies
 
@@ -64,7 +65,7 @@ if (file_exists($script_assets)) {
 For `dokan free & premium version`, we can import the components via `@dokan/components`:
 
 ```js
-import { DataViews, DokanBadge, DokanButton, DokanAlert, DokanLink, DokanMaskInput } from '@dokan/components';
+import { DataViews, DokanBadge, DokanButton, DokanAlert, DokanLink, DokanMaskInput, DokanLoginForm } from '@dokan/components';
 ```
 
 For external `plugins`, we must include the `dokan-react-components` as scripts dependency and the `@dokan/components` should be introduced as an external resource configuration to resolve the path via `webpack`:
@@ -93,6 +94,7 @@ externals: {
 |        |      |___ Badge.tsx         # Badge component
 |        |      |___ Alert.tsx         # Alert component
 |        |      |___ PriceInput.tsx    # Price input component
+|        |      |___ LoginForm.tsx     # Login form component
 |        |      |___ your-component/   # Your new component directory
 |        |      |     |___ index.tsx
 |        |      |     |___ style.scss
@@ -116,6 +118,7 @@ export { default as DokanLink } from './Link';
 export { default as DokanBadge } from './Badge';
 export { default as DokanAlert } from './Alert';
 export { default as DokanPriceInput } from './PriceInput';
+export { default as DokanLoginForm } from './LoginForm';
 export { default as ComponentName } from './YourComponent';
 export {default as DateRangePicker} from './DateRangePicker';
 ```
@@ -1041,6 +1044,97 @@ wp.hooks.addFilter(
         };
     }
 );
+```
+
+## LoginForm Component
+
+`Dokan` provides a reusable login form component that can be used across various parts of your application to handle
+user authentication. The component includes username/password fields, validation, error handling, and options for
+account creation.
+
+### Features
+
+- Clean, responsive design with Tailwind styling
+- Form validation for required fields
+- Error display for failed login attempts
+- "Create an account" option that can be customized
+- Seamless integration with WordPress authentication
+
+### Usage Example
+
+```jsx
+import { LoginForm } from '@dokan/components';
+
+const MyLoginPage = () => {
+    const handleLoginSuccess = () => {
+        // Handle successful login, e.g. redirect
+        window.location.reload();
+    };
+
+    const handleCreateAccount = () => {
+        // Handle create account click, e.g. navigate to registration page
+        window.location.href = '/register';
+    };
+
+    return (
+        <div className="my-login-container">
+            <LoginForm
+                onLoginSuccess={ handleLoginSuccess }
+                onCreateAccount={ handleCreateAccount }
+            />
+        </div>
+    );
+};
+```
+
+### LoginForm Component Properties
+
+The LoginForm component accepts the following props:
+
+| Prop              | Type       | Required | Description                                                                                      |
+|-------------------|------------|----------|--------------------------------------------------------------------------------------------------|
+| `onLoginSuccess`  | `Function` | No       | Callback function triggered after successful login (default: empty function)                     |
+| `onCreateAccount` | `Function` | No       | Callback function triggered when "Create an account" button is clicked (default: empty function) |
+
+### Integration with Existing Authentication Systems
+
+The LoginForm component uses jQuery AJAX under the hood to maintain compatibility with WordPress's authentication
+system. It handles all the complexity of form submission, authentication token management, and error handling
+internally.
+
+When a user submits their credentials, the component:
+
+1. Creates properly formatted form data with the appropriate field names
+2. Submits the data to WordPress via AJAX
+3. Handles success and error states appropriately
+4. Triggers the provided callback functions
+
+This provides a seamless integration with WordPress's authentication system without requiring you to write any
+authentication code yourself.
+
+### Advanced Usage with Custom Styling
+
+```jsx
+import { LoginForm } from '@dokan/components';
+
+const CustomStyledLogin = () => {
+    return (
+        <div className="my-custom-login bg-gradient-to-r from-blue-100 to-purple-100 p-8 rounded-lg shadow-xl">
+            <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
+                {__('Member Access', 'dokan-lite')}
+            </h2>
+
+            <LoginForm
+                onLoginSuccess={ () => window.location.reload() }
+                onCreateAccount={ () => window.location.href = '/become-a-vendor' }
+            />
+
+            <div className="mt-4 text-center text-sm text-gray-600">
+                { __( 'Protected by Dokan security', 'dokan-lite' ) }
+            </div>
+        </div>
+    );
+};
 ```
 
 
