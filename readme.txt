@@ -94,7 +94,8 @@ Dokan is also compatible with the [Otel theme](https://dokan.co/wordpress/otel-t
 With Dokan, experience a smooth, fast setup process in under an hour and have your WooCommerce multivendor marketplace running within a day. It perfectly matches your expectations and is designed with intuitive practices from eCommerce leaders like WooCommerce and others.
 
 = AI Assistant =
-Generate product titles, short & long descriptions using generative AI directly from the vendor dashboard.
+* Generative AI: Generate product titles, short & long descriptions using generative AI directly from the vendor dashboard.
+* AI Image Enhancer: Instantly make product photos clearer, brighter, and more appealing
 
 = A RELIABLE GROWING PLATFORM & COMMUNITY =
 
@@ -232,7 +233,9 @@ Never get bored with the old-fashioned appearance of your store. Have full contr
 
 Dokan comes with a number of advanced features & modules that boost your WooCommerce marketplace position, always keeping you one step ahead of the competition. Continuous innovations and features are brought with regular and timely releases. Check out the changelog [here](https://dokan.co/wordpress/changelog/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
 
-* [Stripe Express](https://dokan.co/wordpress/modules/stripe-express/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module)(Pro)
+* [Stripe Express](https://dokan.co/wordpress/modules/stripe-express/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module)(Pro) 
+* [Paystack](https://dokan.co/docs/wordpress/modules/paystack/)(Pro) 
+* [Vendor Support](https://dokan.co/docs/wordpress/modules/vendor-support/)(Pro) 
 * [Print on Demand Marketplace](https://dokan.co/wordpress/modules/printful-integration/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module)(Pro)
 * [Minimum Maximum Order](https://dokan.co/wordpress/modules/minimum-maximum-order/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro)
 * [Product Advertising](https://dokan.co/wordpress/modules/product-advertising/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro)
