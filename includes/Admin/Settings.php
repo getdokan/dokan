@@ -1154,7 +1154,7 @@ class Settings {
     /**
      * Sanitize custom store URL to prevent reserved WordPress keywords
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.5
      *
      * @param string $value The custom store URL value
      *
