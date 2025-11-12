@@ -72,12 +72,22 @@ const DataViewTable = ( props: DataViewsProps< Item > ) => {
         data,
     } = props;
 
-    const defaultLayouts =
-        props?.defaultLayouts ||
-        ( {
-            table: { density: 'comfortable' },
-            list: {},
-        } as SupportedLayouts );
+    // TODO: We should use the `props?.defaultLayouts` as default value for customize `defaultLayouts` prop from the component.
+    // Currently, we are using hardcoded format for backward version compatibility. After the next major release, we can remove this line.
+    const defaultLayouts = {
+        table: { density: 'comfortable' },
+        list: {},
+        grid: {},
+    } as SupportedLayouts;
+
+    // TODO: We should use the `props?.actions?.label` as actionable button, from dokan pro version 4.1.5 it will be working accordingly.
+    // Currently, we are using this hardcoded logic for backward version compatibility. After the next major release, we can remove this line.
+    // eslint-disable-next-line array-callback-return
+    actions?.map( ( action ) => {
+        if ( ! action?.label ) {
+            action.label = action?.icon;
+        }
+    } );
 
     const filteredProps = {
         ...props,
