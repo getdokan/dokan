@@ -13,8 +13,10 @@ import DokanModal from '../../../components/modals/DokanModal';
 import { Vendor } from '../../../definitions/dokan-vendor';
 import * as LucideIcons from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
-import { applyFilters } from "@wordpress/hooks";
-import UserCard from "@src/components/UserCard";
+import { applyFilters } from '@wordpress/hooks';
+import UserCard from '@src/components/UserCard';
+import { Slot } from '@wordpress/components';
+import { PluginArea } from '@wordpress/plugins';
 
 const defaultLayouts = {
     table: { density: 'comfortable' },
@@ -455,6 +457,11 @@ const VendorsPage = ( props ) => {
                     { __( 'Vendors', 'dokan-lite' ) }
                 </h2>
                 <div className="flex items-center gap-2">
+                    <Slot
+                        name="dokan-admin-vendors-list-before-add-vendor-btn"
+                        fillProps={ { props } }
+                    />
+
                     <DokanButton
                         type="button"
                         variant="primary"
@@ -463,6 +470,11 @@ const VendorsPage = ( props ) => {
                         <LucideIcons.Plus size={ 16 } />
                         { __( 'Add Vendor', 'dokan-lite' ) }
                     </DokanButton>
+
+                    <Slot
+                        name="dokan-admin-vendors-list-after-add-vendor-btn"
+                        fillProps={ { props } }
+                    />
                 </div>
             </div>
 
@@ -727,6 +739,9 @@ const VendorsPage = ( props ) => {
                     } }
                 />
             </div>
+
+            { /* Plugin Area for Extensions */ }
+            <PluginArea scope="dokan-admin-vendors-list-page" />
         </div>
     );
 };
