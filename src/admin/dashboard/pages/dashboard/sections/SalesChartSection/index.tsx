@@ -328,8 +328,6 @@ const SalesChartSection = () => {
     // Only use current month data
     const currentMonthData = salesData?.intervals || [];
 
-    console.log( salesData, ':::::::::::::::::::::::::salesData' );
-
     return (
         <Section>
             <div className="woocommerce-dashboard__dashboard-charts">

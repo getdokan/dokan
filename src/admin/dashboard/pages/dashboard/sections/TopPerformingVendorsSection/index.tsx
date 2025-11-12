@@ -227,7 +227,10 @@ const TopPerformingVendorsSection = () => {
                 <DataViews
                     data={ padDefaultData( data || [] ) }
                     namespace="dokan-top-performing-vendors"
-                    defaultLayouts={ { table: {}, density: 'comfortable' } }
+                    defaultLayouts={ {
+                        table: { density: 'comfortable' },
+                        list: {},
+                    } }
                     fields={ fields }
                     getItemId={ ( item ) => item.rank }
                     onChangeView={ setView }
