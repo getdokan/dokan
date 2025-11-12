@@ -4,6 +4,7 @@ import { addQueryArgs } from '@wordpress/url';
 import AsyncSelect, { type BaseSelectProps } from './AsyncSelect';
 import { __, sprintf } from '@wordpress/i18n';
 import { ReactSelect } from '@getdokan/dokan-ui';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 export interface CustomerOption {
     value: number;
@@ -80,6 +81,23 @@ const CustomerSingleValue = ( props: any ) => {
     );
 };
 
+const DropdownIndicator = ( indicatorProps: any ) => {
+    const { components } = ReactSelect;
+    const isOpen = indicatorProps.selectProps.menuIsOpen;
+
+    return (
+        <components.DropdownIndicator { ...indicatorProps }>
+            <div className="text-gray-400">
+                { isOpen ? (
+                    <ChevronUp size={ 16 } />
+                ) : (
+                    <ChevronDown size={ 16 } />
+                ) }
+            </div>
+        </components.DropdownIndicator>
+    );
+};
+
 function CustomerAsyncSelect( props: CustomerAsyncSelectProps ) {
     const {
         endpoint = '/dokan/v1/customers',
@@ -90,6 +108,7 @@ function CustomerAsyncSelect( props: CustomerAsyncSelectProps ) {
         loadOptions: userLoadOptions,
         prefetch = false,
         shouldNullOnPrefetch = false,
+        components: userComponents,
         ...rest
     } = props;
 
@@ -296,11 +315,12 @@ function CustomerAsyncSelect( props: CustomerAsyncSelectProps ) {
     const hasLoadedOnOpenRef = useRef< boolean >( false );
 
     // Merge default customer components with user overrides
-    const userComponents = ( rest as any )?.components;
+    // Don't spread all userComponents to preserve AsyncSelect's
     const customerComponents = {
-        Option: CustomerOptionRow,
-        SingleValue: CustomerSingleValue,
-        ...( userComponents || {} ), // allow user to override
+        Option: userComponents?.Option || CustomerOptionRow,
+        SingleValue: userComponents?.SingleValue || CustomerSingleValue,
+        DropdownIndicator,
+        ...userComponents,
     };
 
     return (
@@ -326,7 +346,7 @@ function CustomerAsyncSelect( props: CustomerAsyncSelectProps ) {
                 return results;
             } }
             instanceId={ `customer-async-${ depsSignature }` }
-            components={ customerComponents }
+            components={ { ...customerComponents } }
             { ...rest }
             onMenuOpen={ async () => {
                 try {
