@@ -39,7 +39,7 @@ Hear what reputed WordPress influencer and online business strategist, Darrel Wi
 
 Here is how you can build your multivendor marketplace with Dokan.
 
-[youtube https://www.youtube.com/watch?v=_Vv5T7qqhoE]
+[https://www.youtube.com/watch?v=rF3zooidxjs]
 
 = PLACES WHERE DOKAN HAS BEEN FEATURED =
 
