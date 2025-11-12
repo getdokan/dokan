@@ -95,7 +95,7 @@ With Dokan, experience a smooth, fast setup process in under an hour and have yo
 
 = AI Assistant =
 * Generative AI: Generate product titles, short & long descriptions using generative AI directly from the vendor dashboard.
-* AI Image Enhancer: Instantly make product photos clearer, brighter, and more appealing
+* AI Image Enhancer: Instantly make product photos clearer, brighter, and more appealing.
 
 = A RELIABLE GROWING PLATFORM & COMMUNITY =
 
