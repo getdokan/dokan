@@ -82,11 +82,11 @@ const DataViewTable = ( props: DataViewsProps< Item > ) => {
 
     // TODO: We should use the `props?.actions?.label` as actionable button, from dokan pro version 4.1.5 it will be working accordingly.
     // Currently, we are using this hardcoded logic for backward version compatibility. After the next major release, we can remove this line.
-    // eslint-disable-next-line array-callback-return
-    actions?.map( ( action ) => {
+    const normalizedActions = actions?.map( ( action ) => {
         if ( ! action?.label ) {
-            action.label = action?.icon || '';
+            return { ...action, label: action?.icon || '' };
         }
+        return action;
     } );
 
     const filteredProps = {
@@ -102,7 +102,7 @@ const DataViewTable = ( props: DataViewsProps< Item > ) => {
         actions: applyFiltersToTableElements(
             namespace,
             'actions',
-            actions,
+            normalizedActions,
             props
         ),
         defaultLayouts: applyFiltersToTableElements(
