@@ -85,7 +85,7 @@ const DataViewTable = ( props: DataViewsProps< Item > ) => {
     // eslint-disable-next-line array-callback-return
     actions?.map( ( action ) => {
         if ( ! action?.label ) {
-            action.label = action?.icon;
+            action.label = action?.icon || '';
         }
     } );
 
