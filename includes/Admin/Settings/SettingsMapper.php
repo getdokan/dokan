@@ -273,6 +273,33 @@ class SettingsMapper {
         'dokan_spmv.available_vendor_list_position' => 'vendor.single_product_multi_vendor.single_product_multi_vendor.available_vendor_section_display_position',
         'dokan_spmv.show_order'              => 'vendor.single_product_multi_vendor.single_product_multi_vendor.spmv_products_display',
 
+        //Verification > Email Verification
+        'dokan_email_verification.enabled'            => 'verification.email-verification-page.email-verification.enabled',
+        'dokan_email_verification.registration_notice' => 'verification.email-verification-page.registration-notice.registration_notice',
+        'dokan_email_verification.login_notice'      => 'verification.email-verification-page.login-notice.login_notice',
+
+        // Verification > SMS Gateways
+        // SMS Provider Section - Active Gateway
+        'dokan_verification_sms_gateways.active_gateway' => 'verification.sms-gateways-page.sms-provider.sms_provider',
+
+        // Twilio Settings
+        'dokan_verification_sms_gateways.twilio_enable_status' => 'verification.sms-gateways-page.sms-provider.connect_to_twilio',
+        'dokan_verification_sms_gateways.twilio_number'        => 'verification.sms-gateways-page.sms-provider.from_number',
+        'dokan_verification_sms_gateways.twilio_username'      => 'verification.sms-gateways-page.sms-provider.account_sid',
+        'dokan_verification_sms_gateways.twilio_pass'          => 'verification.sms-gateways-page.sms-provider.auth_token',
+        'dokan_verification_sms_gateways.twilio_code_type'     => 'verification.sms-gateways-page.sms-provider.sms_code_type',
+
+        // Nexmo/Vonage Settings (using the flattened structure)
+        'dokan_verification_sms_gateways.nexmo_enable_status'  => 'verification.sms-gateways-page.sms-provider.connect_to_vonage',
+        'dokan_verification_sms_gateways.nexmo_username'       => 'verification.sms-gateways-page.sms-provider.vonage_api_key',
+        'dokan_verification_sms_gateways.nexmo_pass'           => 'verification.sms-gateways-page.sms-provider.vonage_api_secret',
+
+        // Sender Section
+        'dokan_verification_sms_gateways.sender_name'     => 'verification.sms-gateways-page.sender.sender_name',
+        'dokan_verification_sms_gateways.sms_text'        => 'verification.sms-gateways-page.sender.sms_text',
+        'dokan_verification_sms_gateways.sms_sent_msg'    => 'verification.sms-gateways-page.sender.sms_sent_success',
+        'dokan_verification_sms_gateways.sms_sent_error'  => 'verification.sms-gateways-page.sender.sms_sent_error',
+
         // =========================
         // Product > Product Advertisement
         // =========================
