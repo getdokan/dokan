@@ -72,13 +72,23 @@ const DataViewTable = ( props: DataViewsProps< Item > ) => {
         data,
     } = props;
 
-    // TODO: We should use the `props?.defaultLayouts` as default value for customize `defaultLayouts` prop from the component.
-    // Currently, we are using hardcoded format for backward version compatibility. After the next major release, we can remove this line.
-    const defaultLayouts = {
-        table: { density: 'comfortable' },
-        list: {},
-        grid: {},
-    } as SupportedLayouts;
+    const getDefaultLayouts = ( customLayout: SupportedLayouts ) => {
+        const keys = Object?.keys( customLayout );
+        const defaultLayout = {
+            table: { density: 'comfortable' },
+            list: {},
+            grid: {},
+        } as SupportedLayouts;
+
+        // TODO: After the next major release, we need to remove this `density` property check. We'll use custom layout otherwise default directly.
+        // Currently, we are checking this `density` props for backward version compatibility.
+        return ! keys.includes( 'density' ) ? customLayout : defaultLayout;
+    };
+
+    // Apply default layouts if not provided.
+    const defaultLayouts = getDefaultLayouts(
+        props?.defaultLayouts as SupportedLayouts
+    );
 
     // TODO: We should use the `props?.actions?.label` as actionable button, from dokan pro version 4.1.5 it will be working accordingly.
     // Currently, we are using this hardcoded logic for backward version compatibility. After the next major release, we can remove this line.
