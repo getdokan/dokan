@@ -32,9 +32,8 @@ export interface BaseSelectProps< Option = DefaultOption >
     /**
      * When provided and the select is NOT multi, the selected value will be rendered
      * with this title as a prefix, e.g. "Vendor: Store 1".
-     * You can also pass a function to compute the title from the selected option.
      */
-    selectedTitle?: string | ( ( option: Option ) => string );
+    selectedTitle?: string;
     components?: PropsOf<
         typeof AsyncSearchableSelect< Option >
     >[ 'components' ];

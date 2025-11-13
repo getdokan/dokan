@@ -272,7 +272,7 @@ function CouponAsyncSelect( props: CouponAsyncSelectProps ) {
                 return results;
             } }
             instanceId={ `coupon-async-${ depsSignature }` }
-            selectedTitle={ __( 'Coupon', 'dokan' ) }
+            selectedTitle={ __( 'Coupon', 'dokan-lite' ) }
             { ...rest }
             onMenuOpen={ async () => {
                 try {

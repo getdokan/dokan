@@ -36,7 +36,7 @@ const styles = {
         ...base,
         zIndex: 9999,
         wordBreak: 'break-all',
-        width: '18.75rem !important',
+        minWidth: '18.75rem',
     } ),
     menu: ( base: any ) => ( {
         ...base,
