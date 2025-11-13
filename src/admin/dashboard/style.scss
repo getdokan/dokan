@@ -68,6 +68,16 @@
             padding-bottom: 1rem;
         }
     }
+
+    #reverse-withdrawal-data-view {
+        .dataviews-view-table__row {
+            th {
+                &:first-child {
+                    width: 75%;
+                }
+            }
+        }
+    }
 }
 
 #dokan-admin-dashboard {
