@@ -21,6 +21,7 @@ const PanelSwitch = () => {
             'store-reviews',
             'subscriptions',
             'abuse-reports',
+            'verifications',
         ]
     );
 

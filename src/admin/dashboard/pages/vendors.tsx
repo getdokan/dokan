@@ -17,10 +17,9 @@ import { applyFilters } from "@wordpress/hooks";
 import UserCard from "@src/components/UserCard";
 
 const defaultLayouts = {
-    table: {},
+    table: { density: 'comfortable' },
     grid: {},
     list: {},
-    density: 'comfortable' as const,
 };
 
 const VendorsPage = ( props ) => {
