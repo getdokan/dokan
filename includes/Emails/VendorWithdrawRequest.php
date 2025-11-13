@@ -94,9 +94,9 @@ class VendorWithdrawRequest extends WC_Email {
         $this->setup_locale();
         $this->object                          = $seller;
         $this->placeholders['{store_name}']    = $seller->get_shop_name();
-        // Format amounts using wc_price() so WooCommerce "Number of decimals" setting is respected
-        $this->placeholders['{amount}']        = dokan()->email->currency_symbol( wc_format_decimal( $amount, $decimals ,true ) );
-        $this->placeholders['{charge}']        = dokan()->email->currency_symbol( wc_format_decimal( $withdraw_charger, $decimals ,true ) );
+        // Format amounts using wc_format_decimal() to respect WooCommerce "Number of decimals" setting
+        $this->placeholders['{amount}']        = dokan()->email->currency_symbol( wc_format_decimal( $amount, $decimals, true ) );
+        $this->placeholders['{charge}']        = dokan()->email->currency_symbol( wc_format_decimal( $withdraw_charge, $decimals, true ) );
         $this->placeholders['{method}']        = dokan_withdraw_get_method_title( $method );
         $this->placeholders['{profile_url}']   = $seller->get_profile_url();
         $this->placeholders['{withdraw_page}'] = admin_url( 'admin.php?page=dokan#/withdraw?status=pending' );
