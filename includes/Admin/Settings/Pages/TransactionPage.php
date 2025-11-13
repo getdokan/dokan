@@ -192,25 +192,25 @@ class TransactionPage extends AbstractPage {
                 ElementFactory::field( 'shipping_fee', 'radio_capsule' )
                     ->set_title( esc_html__( 'Shipping Fee', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Who will be receiving the shipping fees? Note that, tax fees for corresponding shipping method will not be included with shipping fees.', 'dokan-lite' ) )
-                    ->add_option( esc_html__( 'Vendor', 'dokan-lite' ), 'vendor', 'Users' )
+                    ->add_option( esc_html__( 'Vendor', 'dokan-lite' ), 'seller', 'Users' )
                     ->add_option( esc_html__( 'Admin', 'dokan-lite' ), 'admin', 'User' )
-                    ->set_default( 'vendor' )
+                    ->set_default( 'seller' )
             )
             ->add(
                 ElementFactory::field( 'product_tax_fee', 'radio_capsule' )
                     ->set_title( esc_html__( 'Product Tax Fee', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Who will be receiving the tax fees for products? Note that, shipping tax fees will not be included with product tax.', 'dokan-lite' ) )
-                    ->add_option( esc_html__( 'Vendor', 'dokan-lite' ), 'vendor', 'Users' )
+                    ->add_option( esc_html__( 'Vendor', 'dokan-lite' ), 'seller', 'Users' )
                     ->add_option( esc_html__( 'Admin', 'dokan-lite' ), 'admin', 'User' )
-                    ->set_default( 'vendor' )
+                    ->set_default( 'seller' )
             )
             ->add(
                 ElementFactory::field( 'shipping_tax_fee', 'radio_capsule' )
                     ->set_title( esc_html__( 'Shipping Tax Fee', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Who will be receiving the tax fees for shipping?', 'dokan-lite' ) )
-                    ->add_option( esc_html__( 'Vendor', 'dokan-lite' ), 'vendor', 'Users' )
+                    ->add_option( esc_html__( 'Vendor', 'dokan-lite' ), 'seller', 'Users' )
                     ->add_option( esc_html__( 'Admin', 'dokan-lite' ), 'admin', 'User' )
-                    ->set_default( 'vendor' )
+                    ->set_default( 'seller' )
             );
 
         // Add the fees section to fees page
