@@ -158,7 +158,7 @@ const AddReverseWithdrawModal = ( { open, onClose } ) => {
                 <label className="text-[#25252D] font-medium text-sm">
                     { __( 'Transaction Type', 'dokan-lite' ) }
                 </label>
-                <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-2">
+                <div className="flex rounded-md overflow-hidden border border-[#7047EB]">
                     { [
                         {
                             label: __( 'Product', 'dokan-lite' ),
@@ -191,7 +191,7 @@ const AddReverseWithdrawModal = ( { open, onClose } ) => {
                                     ? 'primary'
                                     : 'secondary'
                             }
-                            className="w-full px-4 py-2.5 flex items-center justify-center"
+                            className="w-full px-4 py-2.5 flex items-center justify-center !rounded-none focus:!outline-none"
                         >
                             { item.icon && (
                                 <item.icon className="w-4 h-4 mr-2" />
