@@ -241,10 +241,9 @@ const WPostsDataView = ({ navigate }) => {
 
     // Set data view default layout. We can hide priew by not passing the layout prop.
     const defaultLayouts = {
-        table: {},
+        table: { density: 'comfortable' },
         grid: {},
         list: {},
-        density: 'comfortable', // Use density pre-defined values: comfortable, compact, cozy
     };
 
     // Set view state for handle the table view, we can take decision based on the view state.
