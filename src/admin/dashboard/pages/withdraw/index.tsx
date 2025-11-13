@@ -487,10 +487,9 @@ const WithdrawPage = () => {
 
     // Set data view default layout
     const defaultLayouts = {
-        table: {},
+        table: { density: 'comfortable' },
         grid: {},
         list: {},
-        density: 'comfortable',
     };
 
     // Set view state for handling the table view
