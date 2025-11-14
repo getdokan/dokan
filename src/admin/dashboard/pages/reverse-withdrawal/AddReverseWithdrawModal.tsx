@@ -90,7 +90,6 @@ const AddReverseWithdrawModal = ( { open, onClose } ) => {
 
             resetForm();
             onClose();
-            console.log( 'Reverse withdrawal created successfully:', response );
         } catch ( error ) {
             console.error( 'Error saving reverse withdrawal:', error );
             throw error;

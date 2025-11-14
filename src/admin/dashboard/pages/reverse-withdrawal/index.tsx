@@ -111,14 +111,10 @@ const ReverseWithdrawalPage = () => {
                 return (
                     <div className="flex items-center gap-1.5 px-2 text-black text-sm font-semibold">
                         { __( 'List of Data', 'dokan-lite' ) }
-                        { /*{ __( 'All', 'dokan-lite' ) }*/ }
-                        { /*<span className="text-xs font-light text-[#A5A5AA]">*/ }
-                        { /*    ({ totalItems })*/ }
-                        { /*</span>*/ }
                     </div>
                 );
             },
-            title: __( 'All', 'dokan-lite' ),
+            title: __( 'List of Data', 'dokan-lite' ),
         },
     ];
 
@@ -432,7 +428,6 @@ const ReverseWithdrawalPage = () => {
                 isLoading={ isLoading }
                 emptyIcon={ <ArrowRightLeft size={ 52 } /> }
                 emptyTitle={ __( 'No transaction found', 'dokan-lite' ) }
-                // header={ __( 'List of Data', 'dokan-lite' ) }
                 tabs={ {
                     tabs,
                     onSelect: () => {},
