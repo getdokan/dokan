@@ -77,6 +77,14 @@
                 }
             }
         }
+
+        #dokan-admin-tab-reverse_withdrawal_data_view {
+            .components-tab-panel__tabs {
+                button:first-child {
+                    border: 0;
+                }
+            }
+        }
     }
 }
 

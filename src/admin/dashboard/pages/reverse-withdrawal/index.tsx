@@ -109,8 +109,8 @@ const ReverseWithdrawalPage = () => {
             name: 'list',
             icon: () => {
                 return (
-                    <div className="flex items-center gap-1.5 px-2">
-                        { __( 'Reverse Withdrawals', 'dokan-lite' ) }
+                    <div className="flex items-center gap-1.5 px-2 text-black text-sm font-semibold">
+                        { __( 'List of Data', 'dokan-lite' ) }
                         { /*{ __( 'All', 'dokan-lite' ) }*/ }
                         { /*<span className="text-xs font-light text-[#A5A5AA]">*/ }
                         { /*    ({ totalItems })*/ }

@@ -10,6 +10,7 @@ import {
 } from '@src/components';
 import { Box, ShoppingBag, CreditCard, Info } from 'lucide-react';
 import { useState } from '@wordpress/element';
+import { twMerge } from 'tailwind-merge';
 
 const AddReverseWithdrawModal = ( { open, onClose } ) => {
     const [ transectionType, setTransectionType ] = useState<
@@ -158,7 +159,7 @@ const AddReverseWithdrawModal = ( { open, onClose } ) => {
                 <label className="text-[#25252D] font-medium text-sm">
                     { __( 'Transaction Type', 'dokan-lite' ) }
                 </label>
-                <div className="flex rounded-md overflow-hidden border border-[#7047EB]">
+                <div className="flex flex-col sm:!flex-row rounded-md overflow-hidden border border-[#7047EB] w-fit">
                     { [
                         {
                             label: __( 'Product', 'dokan-lite' ),
@@ -191,12 +192,27 @@ const AddReverseWithdrawModal = ( { open, onClose } ) => {
                                     ? 'primary'
                                     : 'secondary'
                             }
-                            className="w-full px-4 py-2.5 flex items-center justify-center !rounded-none focus:!outline-none"
+                            className="w-fit min-w-32 px-5 py-2.5 flex items-center justify-center !rounded-none focus:!outline-none gap-2.5"
                         >
                             { item.icon && (
-                                <item.icon className="w-4 h-4 mr-2" />
+                                <item.icon
+                                    strokeWidth={ 3 }
+                                    className={ twMerge(
+                                        'w-4 h-4 text-[#828282]',
+                                        transectionType === item.value &&
+                                            'text-white'
+                                    ) }
+                                />
                             ) }
-                            { item.label }
+                            <span
+                                className={ twMerge(
+                                    'text-sm font-semibold text-black',
+                                    transectionType === item.value &&
+                                        'text-white'
+                                ) }
+                            >
+                                { item.label }
+                            </span>
                         </DokanButton>
                     ) ) }
                 </div>
@@ -297,7 +313,7 @@ const AddReverseWithdrawModal = ( { open, onClose } ) => {
                         </div>
                     </div>
                 </label>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="flex flex-col sm:!flex-row rounded-md overflow-hidden border border-[#7047EB] w-fit">
                     { [
                         { label: __( 'Debit', 'dokan-lite' ), value: 'debit' },
                         {
@@ -317,9 +333,17 @@ const AddReverseWithdrawModal = ( { open, onClose } ) => {
                                     ? 'primary'
                                     : 'secondary'
                             }
-                            className="w-full px-4 py-2.5"
+                            className="w-fit min-w-32 px-5 py-2.5 flex items-center justify-center !rounded-none focus:!outline-none gap-2.5"
                         >
-                            { item.label }
+                            <span
+                                className={ twMerge(
+                                    'text-sm font-semibold text-black',
+                                    withdrawalType === item.value &&
+                                        'text-white'
+                                ) }
+                            >
+                                { item.label }
+                            </span>
                         </DokanButton>
                     ) ) }
                 </div>
@@ -403,7 +427,7 @@ const AddReverseWithdrawModal = ( { open, onClose } ) => {
             onClose={ handleClose }
             onConfirm={ handleConfirm }
             namespace="add-reverse-withdrawal"
-            className={ `!w-[620px] flex flex-col` }
+            className={ `!w-[350px] sm:!w-[620px] flex flex-col` }
             dialogTitle={ __( 'Add New Reverse Withdrawal', 'dokan-lite' ) }
             dialogContent={ modalContent }
             confirmButtonText={ __( 'Add New', 'dokan-lite' ) }
