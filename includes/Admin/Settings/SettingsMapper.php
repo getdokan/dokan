@@ -92,8 +92,8 @@ class SettingsMapper {
         // Compliance > EU Compliance (Germanized)
         // =========================
         'dokan_germanized.vendor_registration'   => 'compliance.eu_compliance.eu_compliance_settings.eu_vendor_registration_display',
-        'dokan_germanized.vendor_fields'         => 'compliance.eu_compliance.vendor_extra_fields.vendor_extra_fields',
-        'dokan_germanized.customer_fields'       => 'compliance.eu_compliance.customer_extra_fields.customer_extra_fields',
+        //'dokan_germanized.vendor_fields.dokan_company_name'         => 'compliance.eu_compliance.vendor_extra_fields.vendor_extra_fields.company_name',
+        //'dokan_germanized.customer_fields'       => 'compliance.eu_compliance.customer_extra_fields.customer_extra_fields',
         'dokan_germanized.enabled_germanized'    => 'compliance.eu_compliance.eu_compliance_settings.germanized_support_vendors',
         'dokan_germanized.override_invoice_number' => 'compliance.eu_compliance.eu_compliance_settings.vendor_invoice_number_override',
 
@@ -169,7 +169,8 @@ class SettingsMapper {
         // Transaction > Commissions
         // =========================
         'dokan_selling.commission_type'                        => 'transaction.commission.commission.commission_type',
-        'dokan_selling.commission_fixed_values'                => 'transaction.commission.commission.admin_commission',
+        'dokan_selling.admin_percentage'                => 'transaction.commission.commission.admin_commission.admin_percentage',
+        'dokan_selling.additional_fee'                => 'transaction.commission.commission.admin_commission.additional_fee',
         'dokan_selling.reset_sub_category_when_edit_all_category' => 'transaction.commission.commission.reset_sub_category_when_edit_all_category',
         'dokan_selling.commission_category_based_values'       => 'transaction.commission.commission.commission_category_based_values',
 
