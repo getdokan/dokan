@@ -92,7 +92,7 @@ const ReverseWithdrawalPage = () => {
     ];
 
     const [ view, setView ] = useState( {
-        perPage: 10,
+        perPage: 20,
         page: 1,
         search: '',
         type: 'table',
@@ -126,6 +126,8 @@ const ReverseWithdrawalPage = () => {
             const queryArgs = {
                 per_page: view.perPage,
                 page: view.page,
+                orderby: ( view as any )?.sort?.field || 'added',
+                order: ( view as any )?.sort?.direction || 'desc',
                 ...filterArgs,
             };
 
