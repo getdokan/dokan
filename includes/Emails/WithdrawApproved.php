@@ -85,8 +85,8 @@ class WithdrawApproved extends WC_Email {
         $amount = wc_format_decimal( $withdraw->get_amount(), false, true );
 
         $this->placeholders['{store_name}']        = $seller->get_shop_name();
-        $this->placeholders['{amount}']            = dokan()->email->currency_symbol( $amount );
-        $this->placeholders['{receivable_amount}'] = dokan()->email->currency_symbol( $withdraw->get_receivable_amount() );
+        $this->placeholders['{amount}']            = dokan()->email->currency_symbol( wc_format_decimal( $amount, '' ) );
+        $this->placeholders['{receivable_amount}'] = dokan()->email->currency_symbol( wc_format_decimal( $withdraw->get_receivable_amount(), '' ) );
         $this->placeholders['{method}']            = dokan_withdraw_get_method_title( $withdraw->get_method() );
         $this->placeholders['{profile_url}']       = esc_url( dokan_get_navigation_url( 'edit-account' ) );
         $this->placeholders['{withdraw_page}']     = esc_url( dokan_get_navigation_url( 'withdraw-requests' ) );
