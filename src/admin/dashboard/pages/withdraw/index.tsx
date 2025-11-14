@@ -125,10 +125,17 @@ const WithdrawPage = () => {
                         </div>
                     ) }
                     <div>
-                        <div className="font-medium text-[#7047EB]">
-                            { item.user?.store_name ||
-                                __( 'N/A', 'dokan-lite' ) }
-                        </div>
+                        <Tooltip content={<RawHTML>{item.user?.store_name ?? __( 'N/A', 'dokan-lite' )}</RawHTML>}>
+                            <div className="font-medium text-[#7047EB] max-w-[150px]">
+                                <RawHTML>
+                                    {item.user?.store_name
+                                        ? truncate
+                                            ? truncate(item.user.store_name, 22)
+                                            : item.user.store_name
+                                        : __( 'N/A', 'dokan-lite' )}
+                                </RawHTML>
+                            </div>
+                        </Tooltip>
                     </div>
                 </div>
             ),
