@@ -380,7 +380,7 @@ const AddReverseWithdrawModal = ( { open, onClose } ) => {
                         input={ {
                             id: 'withdraw-amount',
                             name: 'withdraw-amount',
-                            placeholder: __( 'Enter amount', 'dokan' ),
+                            placeholder: __( 'Enter amount', 'dokan-lite' ),
                         } }
                     />
                 </div>
