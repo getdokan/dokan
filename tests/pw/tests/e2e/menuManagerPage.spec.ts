@@ -11,7 +11,7 @@ const oldDataset = [
     {
         title: 'Admin Old Setting: Menu Manager',
         url: 'wp-admin/admin.php?page=dokan#/settings', 
-        selector: '//div[@class="nav-title" and contains(text(),"General")] >> //div[@class="nav-title" and contains(text(),"Email Verification")]', 
+        selector: '//div[@class="nav-title" and contains(text(),"General")] >> //div[@class="nav-title" and contains(text(),"Menu Manager")]', 
         fields: [
             {
                 selector: '//div[@id="dokan_email_verification"]//label[contains(@class,"switch")]//span[contains(@class,"slider")]',
@@ -35,30 +35,76 @@ const oldDataset = [
 ];
 
 // New UI Email Verification Settings
-const newDataset = {
+const newDataset = [
+    {
     title: 'Admin Setting: Email Verification',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_verification >> #dokan_verification_email-verification-page',
-    fields: [
-        {
-            selector: '#dokan_verification_email-verification-page_email-verification_enabled button',
-            type: 'switch',
-            value: true,
-        },
-        {
-            // Textarea for 'Registration Notice'
-            selector: '#dokan_verification_email-verification-page_registration-notice_registration_notice textarea',
-            type: 'text',
-            value: 'Please verify your email to complete registration.',
-        },
-        {
-            // Textarea for 'Login Notice'
-            selector: '#dokan_verification_email-verification-page_login-notice_login_notice textarea',
-            type: 'text',
-            value: 'Your email is unverified. Please check your inbox.',
-        },
-    ],
-};
+    selector: '#dokan_settings_appearance >> #dokan_settings_appearance_dashboard-menu-manager-page',
+    fields: 
+        [
+            {
+                // Dashboard is the 1st menu item. It appears disabled (cursor-not-allowed opacity-50).
+                selector: '.menu-manager-menu-manager-left_menus > div > div > div:nth-child(1) button[role="switch"]',
+                type: 'switch',
+                value: true,
+            },
+            {
+                // Products is the 2nd menu item.
+                selector: '.menu-manager-menu-manager-left_menus > div > div > div:nth-child(2) button[role="switch"]',
+                type: 'switch',
+                value: true,
+            },
+            {
+                // Delivery Time is the 3rd menu item.
+                selector: '.menu-manager-menu-manager-left_menus > div > div > div:nth-child(3) button[role="switch"]',
+                type: 'switch',
+                value: true,
+            },
+            {
+                // Announcements is the 4th menu item.
+                selector: '.menu-manager-menu-manager-left_menus > div > div > div:nth-child(4) button[role="switch"]',
+                type: 'switch',
+                value: true,
+            },
+            {
+                // Staff is the 5th menu item.
+                selector: '.menu-manager-menu-manager-left_menus > div > div > div:nth-child(5) button[role="switch"]',
+                type: 'switch',
+                value: true,
+            },
+            {
+                // Store Stats is the 6th menu item.
+                selector: '.menu-manager-menu-manager-left_menus > div > div > div:nth-child(6) button[role="switch"]',
+                type: 'switch',
+                value: true,
+            },
+            {
+                // Tools is the 7th menu item.
+                selector: '.menu-manager-menu-manager-left_menus > div > div > div:nth-child(7) button[role="switch"]',
+                type: 'switch',
+                value: true,
+            },
+            {
+                // Reports is the 8th menu item.
+                selector: '.menu-manager-menu-manager-left_menus > div > div > div:nth-child(8) button[role="switch"]',
+                type: 'switch',
+                value: true,
+            },
+            {
+                // Reviews is the 9th menu item.
+                selector: '.menu-manager-menu-manager-left_menus > div > div > div:nth-child(9) button[role="switch"]',
+                type: 'switch',
+                value: true,
+            },
+            {
+                // Coupons is the 10th menu item.
+                selector: '.menu-manager-menu-manager-left_menus > div > div > div:nth-child(10) button[role="switch"]',
+                type: 'switch',
+                value: true,
+            },
+    ]
+},
+];
 
 // --- Test Suite ---
 
@@ -74,7 +120,7 @@ test.describe('Admin Setting: Email Verification Settings Synchronization', () =
         await loginPage.adminLogin(data.admin);
     });
 
-    test('New to Old Email Verification Settings synchronization', { tag: ['@lite', '@admin', '@migration', '@email-verification'] }, async () => {
+    test('New to Old Menu manager Settings synchronization', { tag: ['@lite', '@admin', '@migration', '@email-verification'] }, async () => {
         await test.step('Update new settings', async () => {
             await adminSettingsPage.updateSettings(newDataset);
         });
