@@ -7,7 +7,7 @@ class ReverseWithdrawal extends AbstractPage {
     /**
      * Get the ID of the page.
      *
-     * @since 4.0.0
+     * @since DOKAN_SINCE
      *
      * @return string
      */
@@ -20,8 +20,8 @@ class ReverseWithdrawal extends AbstractPage {
      */
     public function menu( string $capability, string $position ): array {
         return [
-            'page_title' => __( 'Reverse Withdrawal Management', 'dokan-lite' ),
-            'menu_title' => __( 'Reverse Withdrawal', 'dokan-lite' ),
+            'page_title' => esc_html__( 'Reverse Withdrawal Management', 'dokan-lite' ),
+            'menu_title' => esc_html__( 'Reverse Withdrawal', 'dokan-lite' ),
             'route'      => 'reverse-withdrawal',
             'capability' => $capability,
             'position'   => 11,
@@ -45,7 +45,7 @@ class ReverseWithdrawal extends AbstractPage {
     /**
      * Get the styles.
      *
-     * @since 4.0.0
+     * @since DOKAN_SINCE
      *
      * @return array<string> An array of style handles.
      */
@@ -56,7 +56,7 @@ class ReverseWithdrawal extends AbstractPage {
     /**
      * Register the page scripts and styles.
      *
-     * @since 4.0.0
+     * @since DOKAN_SINCE
      *
      * @return void
      */
