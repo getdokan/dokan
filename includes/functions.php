@@ -2298,6 +2298,10 @@ function dokan_get_social_profile_fields() {
             'icon'  => 'youtube-square',
             'title' => __( 'Youtube', 'dokan-lite' ),
         ],
+        'tiktok'    => [
+            'icon'  => 'tiktok',
+            'title' => __( 'TikTok', 'dokan-lite' ),
+        ],
         'instagram' => [
             'icon'  => 'instagram',
             'title' => __( 'Instagram', 'dokan-lite' ),
