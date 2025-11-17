@@ -168,11 +168,11 @@ class SettingsMapper {
         // =========================
         // Transaction > Commissions
         // =========================
-        'dokan_selling.commission_type'                        => 'transaction.commission.commission.commission_type',
-        'dokan_selling.admin_percentage'                => 'transaction.commission.commission.admin_commission.admin_percentage',
-        'dokan_selling.additional_fee'                => 'transaction.commission.commission.admin_commission.additional_fee',
+        'dokan_selling.commission_type'                           => 'transaction.commission.commission.commission_type',
+        'dokan_selling.admin_percentage'                          => 'transaction.commission.commission.admin_commission.admin_percentage',
+        'dokan_selling.additional_fee'                            => 'transaction.commission.commission.admin_commission.additional_fee',
         'dokan_selling.reset_sub_category_when_edit_all_category' => 'transaction.commission.commission.reset_sub_category_when_edit_all_category',
-        'dokan_selling.commission_category_based_values'       => 'transaction.commission.commission.commission_category_based_values',
+        'dokan_selling.commission_category_based_values'          => 'transaction.commission.commission.commission_category_based_values',
 
         // Transaction > Fees
         'dokan_selling.shipping_fee_recipient'  => 'transaction.fees.fees.shipping_fee',
@@ -180,11 +180,16 @@ class SettingsMapper {
         'dokan_selling.shipping_tax_fee_recipient' => 'transaction.fees.fees.shipping_tax_fee',
 
         // Transaction > Withdraw
-        'dokan_withdraw.withdraw_limit'         => 'transaction.withdraw_charge.section_withdraw_charge.minimum_withdraw_limit',
-        'dokan_withdraw.withdraw_order_status'  => 'transaction.withdraw_charge.section_withdraw_charge.manual_withdraw',
-        'dokan_withdraw.exclude_cod_payment'    => 'transaction.withdraw_charge.section_withdraw_charge.cod_payments',
-        'dokan_withdraw.withdraw_date_limit'    => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_threshold',
-        'dokan_withdraw.hide_withdraw_option'   => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_option_visibility',
+        'dokan_withdraw.withdraw_limit'         => 'transaction.withdraw_charge.minimum_withdraw_limit_section.minimum_withdraw_limit',
+        'dokan_withdraw.withdraw_date_limit'    => 'transaction.withdraw_charge.withdraw_threshold_section.withdraw_threshold',
+        // transaction->withdraw->COD Payments ei field ta notun e include/exclude ase but puraton e true/false value ase. Eita callback diye korte hbe
+        //'dokan_withdraw.exclude_cod_payment'    => 'transaction.withdraw_charge.cod_payments_section.cod_payments',
+        
+        //'dokan_withdraw.withdraw_limit'         => 'transaction.withdraw_charge.section_withdraw_charge.minimum_withdraw_limit_section.minimum_withdraw_limit',
+        // 'dokan_withdraw.withdraw_order_status'  => 'transaction.withdraw_charge.section_withdraw_charge.manual_withdraw',
+        // 'dokan_withdraw.exclude_cod_payment'    => 'transaction.withdraw_charge.section_withdraw_charge.cod_payments',
+        // 'dokan_withdraw.withdraw_date_limit'    => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_threshold',
+        // 'dokan_withdraw.hide_withdraw_option'   => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_option_visibility',
 
         // Transaction > Reverse Withdrawal
         'dokan_reverse_withdrawal.enabled'                   => 'transaction.reverse_withdrawal.reverse_withdrawal_section.enabled',
