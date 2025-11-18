@@ -881,7 +881,6 @@ const WithdrawPage = () => {
                         setFilterArgs( args );
                     } }
                     placeholder={ __( 'Select Vendor', 'dokan-lite' ) }
-                    isClearable
                     prefetch
                     defaultOptions
                     cacheOptions
@@ -893,12 +892,12 @@ const WithdrawPage = () => {
             label: __( 'Payment Method', 'dokan-lite' ),
             field: (
                 <AsyncSelect
+                    selectedTitle={ __( 'Payment Method', 'dokan-lite' ) }
                     key="payment-method-select"
                     icon={ <CreditCard size={ 16 } /> }
                     loadOptions={ loadPaymentMethods }
                     cacheOptions
                     defaultOptions
-                    isClearable
                     value={ paymentMethod }
                     onChange={ ( method ) => {
                         const args = { ...filterArgs };
@@ -956,7 +955,6 @@ const WithdrawPage = () => {
                     wrapperClassName="w-full"
                     pickerToggleClassName="block"
                     wpPopoverClassName="dokan-layout"
-                    popoverBodyClassName="p-4 w-auto text-sm/6"
                     onClear={ () => {
                         setAfter( '' );
                         setAfterText( '' );
