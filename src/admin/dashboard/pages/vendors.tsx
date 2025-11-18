@@ -13,8 +13,10 @@ import DokanModal from '../../../components/modals/DokanModal';
 import { Vendor } from '../../../definitions/dokan-vendor';
 import * as LucideIcons from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
-import { applyFilters } from "@wordpress/hooks";
-import UserCard from "@src/components/UserCard";
+import { applyFilters } from '@wordpress/hooks';
+import UserCard from '@src/components/UserCard';
+import { Slot } from '@wordpress/components';
+import { PluginArea } from '@wordpress/plugins';
 
 const defaultLayouts = {
     table: { density: 'comfortable' },
@@ -258,103 +260,110 @@ const VendorsPage = ( props ) => {
     const loadingClass = twMerge(
         '!bg-neutral-200 !rounded !animate-pulse !text-transparent'
     );
-    const fields = [
-        {
-            id: 'vendor',
-            label: __( 'Vendor', 'dokan-lite' ),
-            enableSorting: false,
-            render: ( { item }: { item: Vendor } ) => {
-                const name = item?.store_name || '';
-                const avatar = item?.gravatar || '';
-                return (
-                    <UserCard
-                        name={ name }
-                        avatar={ avatar }
-                        isLoading={ isLoading }
-                        loadingClass={ loadingClass }
-                        onClick={ () => {
-                            navigate( `/vendors/${ item.id }` );
-                        } }
-                        subTitle={ item?.email || '' }
-                    />
-                );
+    const fields = applyFilters(
+        'dokan-admin-vendors-list-column-fields',
+        [
+            {
+                id: 'vendor',
+                label: __( 'Vendor', 'dokan-lite' ),
+                enableSorting: false,
+                render: ( { item }: { item: Vendor } ) => {
+                    const name = item?.store_name || '';
+                    const avatar = item?.gravatar || '';
+                    return (
+                        <UserCard
+                            name={ name }
+                            avatar={ avatar }
+                            isLoading={ isLoading }
+                            loadingClass={ loadingClass }
+                            onClick={ () => {
+                                navigate( `/vendors/${ item.id }` );
+                            } }
+                            subTitle={ item?.email || '' }
+                        />
+                    );
+                },
             },
-        },
-        {
-            id: 'phone',
-            label: __( 'Phone', 'dokan-lite' ),
-            enableSorting: false,
-            render: ( { item }: { item: Vendor } ) => {
-                const phone = item?.phone || '';
-                return (
-                    <div className="flex items-center gap-3">
-                        <span className="flex flex-col">
-                            { phone ? (
-                                <span
-                                    className={ twMerge(
-                                        'text-[14px] font-[400] text-[#575757]',
-                                        isLoading ? loadingClass : ''
-                                    ) }
-                                >
-                                    { phone }
-                                </span>
-                            ) : (
-                                <span className="text-gray-400">—</span>
-                            ) }
-                        </span>
-                    </div>
-                );
-            },
-        },
-        {
-            id: 'registered',
-            label: __( 'Registered', 'dokan-lite' ),
-            enableSorting: false,
-            render: ( { item }: { item: Vendor } ) => {
-                const registered = item?.registered || '';
-                return (
-                    <div className="flex items-center gap-3">
-                        <div className="flex flex-col">
-                            { registered ? (
-                                <div
-                                    className={ twMerge(
-                                        'text-[14px] font-[400] text-[#575757]',
-                                        isLoading ? loadingClass : ''
-                                    ) }
-                                >
-                                    <DateTimeHtml.Date date={ registered } />
-                                </div>
-                            ) : (
-                                <span className="text-gray-400">—</span>
-                            ) }
+            {
+                id: 'phone',
+                label: __( 'Phone', 'dokan-lite' ),
+                enableSorting: false,
+                render: ( { item }: { item: Vendor } ) => {
+                    const phone = item?.phone || '';
+                    return (
+                        <div className="flex items-center gap-3">
+                            <span className="flex flex-col">
+                                { phone ? (
+                                    <span
+                                        className={ twMerge(
+                                            'text-[14px] font-[400] text-[#575757]',
+                                            isLoading ? loadingClass : ''
+                                        ) }
+                                    >
+                                        { phone }
+                                    </span>
+                                ) : (
+                                    <span className="text-gray-400">—</span>
+                                ) }
+                            </span>
                         </div>
-                    </div>
-                );
+                    );
+                },
             },
-        },
-        {
-            id: 'status',
-            label: __( 'Status', 'dokan-lite' ),
-            enableSorting: false,
-            render: ( { item }: { item: Vendor } ) => {
-                return (
-                    <span
-                        className={ twMerge(
-                            'inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-medium',
-                            item?.enabled
-                                ? 'bg-[#D4FBEF] text-[#00563F]'
-                                : 'bg-[#F1F1F4] text-[#393939]',
-                            isLoading ? loadingClass : ''
-                        ) }
-                    >
-                        { item?.enabled
-                            ? __( 'Enabled', 'dokan-lite' )
-                            : __( 'Disabled', 'dokan-lite' ) }
-                    </span>
-                );
+            {
+                id: 'registered',
+                label: __( 'Registered', 'dokan-lite' ),
+                enableSorting: false,
+                render: ( { item }: { item: Vendor } ) => {
+                    const registered = item?.registered || '';
+                    return (
+                        <div className="flex items-center gap-3">
+                            <div className="flex flex-col">
+                                { registered ? (
+                                    <div
+                                        className={ twMerge(
+                                            'text-[14px] font-[400] text-[#575757]',
+                                            isLoading ? loadingClass : ''
+                                        ) }
+                                    >
+                                        <DateTimeHtml.Date
+                                            date={ registered }
+                                        />
+                                    </div>
+                                ) : (
+                                    <span className="text-gray-400">—</span>
+                                ) }
+                            </div>
+                        </div>
+                    );
+                },
             },
-        },
-    ];
+            {
+                id: 'status',
+                label: __( 'Status', 'dokan-lite' ),
+                enableSorting: false,
+                render: ( { item }: { item: Vendor } ) => {
+                    return (
+                        <span
+                            className={ twMerge(
+                                'inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-medium',
+                                item?.enabled
+                                    ? 'bg-[#D4FBEF] text-[#00563F]'
+                                    : 'bg-[#F1F1F4] text-[#393939]',
+                                isLoading ? loadingClass : ''
+                            ) }
+                        >
+                            { item?.enabled
+                                ? __( 'Enabled', 'dokan-lite' )
+                                : __( 'Disabled', 'dokan-lite' ) }
+                        </span>
+                    );
+                },
+            },
+        ],
+        loadingClass,
+        isLoading
+    );
 
     // Helpers for confirmation
     const extractIdsFromArgs = ( args: any ): number[] => {
@@ -455,6 +464,11 @@ const VendorsPage = ( props ) => {
                     { __( 'Vendors', 'dokan-lite' ) }
                 </h2>
                 <div className="flex items-center gap-2">
+                    <Slot
+                        name="dokan-admin-vendors-list-before-add-vendor-btn"
+                        fillProps={ { props } }
+                    />
+
                     <DokanButton
                         type="button"
                         variant="primary"
@@ -463,6 +477,11 @@ const VendorsPage = ( props ) => {
                         <LucideIcons.Plus size={ 16 } />
                         { __( 'Add Vendor', 'dokan-lite' ) }
                     </DokanButton>
+
+                    <Slot
+                        name="dokan-admin-vendors-list-after-add-vendor-btn"
+                        fillProps={ { props } }
+                    />
                 </div>
             </div>
 
@@ -707,7 +726,10 @@ const VendorsPage = ( props ) => {
                             Math.ceil( totalItems / ( view.perPage || 10 ) )
                         ),
                     } }
-                    view={ view }
+                    view={ applyFilters(
+                        'dokan-admin-vendors-list-view',
+                        view
+                    ) }
                     isLoading={ isLoading }
                     tabs={ {
                         tabs,
@@ -727,6 +749,9 @@ const VendorsPage = ( props ) => {
                     } }
                 />
             </div>
+
+            { /* Plugin Area for Extensions */ }
+            <PluginArea scope="dokan-admin-vendors-list-page" />
         </div>
     );
 };

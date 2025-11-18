@@ -33,7 +33,6 @@ const Example = () => {
       value={ coupon }
       onChange={ setCoupon }
       placeholder="Search coupons"
-      isClearable
       defaultOptions
     />
   );
