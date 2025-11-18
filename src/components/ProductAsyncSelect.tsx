@@ -27,7 +27,7 @@ const defaultMap = ( product: any ): ProductOption => ( {
     label:
         product.name ||
         // eslint-disable-next-line @wordpress/i18n-translator-comments
-        sprintf( __( 'Product #%s', 'dokan' ), String( product?.id ?? '' ) ),
+        sprintf( __( 'Product #%s', 'dokan-lite' ), String( product?.id ?? '' ) ),
     raw: product,
 } );
 
@@ -282,6 +282,7 @@ function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
             } }
             // pass an instanceId too for good measure
             instanceId={ `product-async-${ depsSignature }` }
+            selectedTitle={ __( 'Product', 'dokan-lite' ) }
             { ...rest }
             onMenuOpen={ async () => {
                 try {
