@@ -4,6 +4,30 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.1.5',
+        'released' => '2025-11-11',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Added vendor verification legacy UI support for admin panel to ensure backward compatibility with older interface versions.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated all Twitter labels to X to reflect the latest brand changes.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added custom store URL validation in admin settings to prevent conflicts with WordPress search functionality.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed PHP warnings triggered when saving variable products by improving validation and data handling during product save operations.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.1.4',
         'released' => '2025-11-06',
         'changes'  => [

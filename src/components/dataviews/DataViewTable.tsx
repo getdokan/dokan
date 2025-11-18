@@ -72,12 +72,32 @@ const DataViewTable = ( props: DataViewsProps< Item > ) => {
         data,
     } = props;
 
-    const defaultLayouts =
-        props?.defaultLayouts ||
-        ( {
+    const getDefaultLayouts = ( customLayout: SupportedLayouts ) => {
+        const keys = Object?.keys( customLayout );
+        const defaultLayout = {
             table: { density: 'comfortable' },
             list: {},
-        } as SupportedLayouts );
+            grid: {},
+        } as SupportedLayouts;
+
+        // TODO: After the next major release, we need to remove this `density` property check. We'll use custom layout otherwise default directly.
+        // Currently, we are checking this `density` props for backward version compatibility.
+        return ! keys.includes( 'density' ) ? customLayout : defaultLayout;
+    };
+
+    // Apply default layouts if not provided.
+    const defaultLayouts = getDefaultLayouts(
+        props?.defaultLayouts as SupportedLayouts
+    );
+
+    // TODO: We should use the `props?.actions?.label` as actionable button, from dokan pro version 4.1.5 it will be working accordingly.
+    // Currently, we are using this hardcoded logic for backward version compatibility. After the next major release, we can remove this line.
+    const normalizedActions = actions?.map( ( action ) => {
+        if ( ! action?.label ) {
+            return { ...action, label: action?.icon || '' };
+        }
+        return action;
+    } );
 
     const filteredProps = {
         ...props,
@@ -92,7 +112,7 @@ const DataViewTable = ( props: DataViewsProps< Item > ) => {
         actions: applyFiltersToTableElements(
             namespace,
             'actions',
-            actions,
+            normalizedActions,
             props
         ),
         defaultLayouts: applyFiltersToTableElements(
