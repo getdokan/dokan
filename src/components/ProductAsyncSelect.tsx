@@ -33,7 +33,7 @@ const defaultMap = ( product: any ): ProductOption => ( {
 
 function ProductAsyncSelect( props: ProductAsyncSelectProps ) {
     const {
-        endpoint = '/dokan/v1/products',
+        endpoint = '/dokan/v2/products',
         perPage = 20,
         mapOption = defaultMap,
         extraQuery = {},
