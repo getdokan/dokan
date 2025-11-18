@@ -26,11 +26,10 @@ const ShortContent = ( {
     content,
     maxLength = 22,
     className = 'm-0 space-x-2 flex flex-wrap text-wrap leading-6 text-sm text-gray-600',
-    fallback = '-',
+    fallback = __( '-', 'dokan-lite' ),
     useRawHTML = true,
 }: ShortContentProps ) => {
-    // eslint-disable-next-line @wordpress/i18n-no-variables
-    const displayContent = content || __( fallback, 'dokan-lite' );
+    const displayContent = content || fallback;
     const ContentWrapper = useRawHTML ? RawHTML : 'span';
 
     // Short content - display directly.
