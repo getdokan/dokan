@@ -11,12 +11,11 @@
 
       .components-button.is-compact {
         opacity: 1;
-        padding-right: 0;
         margin: 0 !important;
 
         &.has-icon:not(.has-text) {
           width: auto;
-          padding: 6px;
+          padding: 6px 3px;
 
           &:hover,
           &:focus {
@@ -74,6 +73,18 @@
                 width: 100%;
                 justify-content: space-between;
                 padding: 15px 20px;
+            }
+
+            .dokan-admin-dashboard-datatable-bulkaction {
+                .dataviews-bulk-actions-footer__action-buttons {
+                    gap: 10px;
+
+                    .components-button.is-compact:not(:last-child) {
+                        border: 1px solid #E9E9E9;
+                        border-radius: 6px;
+                        line-height: 1;
+                    }
+                }
             }
         }
     }

@@ -380,4 +380,14 @@
     span:has(+ .dokan-react-search-input) {
         background: white !important;
     }
+
+    .dokan-date-range-picker {
+        .woocommerce-calendar {
+            @apply bg-white border-none #{!important};
+
+            .DayPicker_transitionContainer, .CalendarMonth, .CalendarMonthGrid, .DayPicker__horizontal {
+                @apply bg-white #{!important};
+            }
+        }
+    }
 }

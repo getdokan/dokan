@@ -1387,6 +1387,7 @@ class Assets {
         return apply_filters(
             'dokan_vue_admin_localize_script', [
                 'commission_types' => dokan_commission_types(),
+                'reserved_slugs'   => dokan_get_reserved_url_slugs(),
             ]
         );
     }
