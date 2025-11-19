@@ -11,8 +11,18 @@ import {
 import { Box, ShoppingBag, CreditCard, Info } from 'lucide-react';
 import { useState } from '@wordpress/element';
 import { twMerge } from 'tailwind-merge';
+// import { formatNumber, formatPrice } from '@dokan/utilities';
+import { useDebounceCallback } from 'usehooks-ts';
 
-const AddReverseWithdrawModal = ( { open, onClose } ) => {
+const AddReverseWithdrawModal = ( {
+    open,
+    onClose,
+    onCreated,
+}: {
+    open: boolean;
+    onClose: () => void;
+    onCreated?: ( args?: any ) => void;
+} ) => {
     const [ transectionType, setTransectionType ] = useState<
         'manual_product' | 'manual_order' | 'other'
     >( 'manual_product' );
@@ -22,6 +32,7 @@ const AddReverseWithdrawModal = ( { open, onClose } ) => {
         'debit' | 'credit'
     >( 'debit' );
     const [ withdrawalAmount, setWithdrawalAmount ] = useState( '' );
+    const [ withdrawalAmountRaw, setWithdrawalAmountRaw ] = useState( '' );
     const [ withdrawalNote, setWithdrawalNote ] = useState( '' );
     const [ vendorsData, setVendorsData ] = useState( null );
     const [ loading, setLoading ] = useState( false );
@@ -44,7 +55,7 @@ const AddReverseWithdrawModal = ( { open, onClose } ) => {
             newErrors.trId = true;
         }
 
-        if ( ! withdrawalAmount ) {
+        if ( ! withdrawalAmountRaw ) {
             newErrors.withdrawalAmount = true;
         }
 
@@ -59,20 +70,22 @@ const AddReverseWithdrawModal = ( { open, onClose } ) => {
 
         setErrors( {} );
 
-        let trn_id = 0;
+        // Determine related transaction id (product/order) in camelCase for lint compliance
+        let trnId = 0;
         if ( transectionType === 'manual_product' ) {
-            trn_id = selectedProduct.value;
+            trnId = selectedProduct.value;
         } else if ( transectionType === 'manual_order' ) {
-            trn_id = selectedOrder.value;
+            trnId = selectedOrder.value;
         }
 
         const debit =
-            withdrawalType === 'debit' ? String( withdrawalAmount ) : '0';
+            withdrawalType === 'debit' ? String( withdrawalAmountRaw ) : '0';
         const credit =
-            withdrawalType === 'credit' ? String( withdrawalAmount ) : '0';
+            withdrawalType === 'credit' ? String( withdrawalAmountRaw ) : '0';
 
         const payload = {
-            trn_id,
+            // use snake_case keys to match API contract
+            trn_id: trnId,
             trn_type: transectionType,
             vendor_id: vendorsData.value,
             note: withdrawalNote,
@@ -82,16 +95,20 @@ const AddReverseWithdrawModal = ( { open, onClose } ) => {
 
         setLoading( true );
         try {
-            const response = await apiFetch( {
+            await apiFetch( {
                 path: 'dokan/v1/reverse-withdrawal/transactions',
                 method: 'POST',
                 data: payload,
             } );
 
+            onCreated( { payload } );
             resetForm();
             onClose();
         } catch ( error ) {
-            console.error( 'Error saving reverse withdrawal:', error );
+            // Show console error for debugging purposes.
+            console.log(
+                'Something went wrong while creating reverse withdrawal.'
+            );
             throw error;
         } finally {
             setLoading( false );
@@ -104,6 +121,7 @@ const AddReverseWithdrawModal = ( { open, onClose } ) => {
         setSelectedOrder( null );
         setWithdrawalType( 'debit' );
         setWithdrawalAmount( '' );
+        setWithdrawalAmountRaw( '' );
         setWithdrawalNote( '' );
         setVendorsData( null );
         setErrors( {} );
@@ -131,6 +149,16 @@ const AddReverseWithdrawModal = ( { open, onClose } ) => {
     const handleWithdrawalTypeChange = ( type: 'debit' | 'credit' ) => {
         setWithdrawalType( type );
     };
+
+    const handleWithdrawAmount = ( value, unformattedValue ) => {
+        setWithdrawalAmount( value );
+        setWithdrawalAmountRaw( unformattedValue );
+    };
+
+    const debouncedWithdrawAmount = useDebounceCallback(
+        handleWithdrawAmount,
+        500
+    );
 
     const modalContent = (
         <div className="space-y-7 px-4 py-2 sm:p-6 md:p-8 overflow-y-auto max-h-[calc(100vh-220px)] sm:max-h-[calc(90vh-200px)]">
@@ -230,11 +258,13 @@ const AddReverseWithdrawModal = ( { open, onClose } ) => {
                         isClearable
                         prefetch
                         extraQuery={ {
-                            ...( vendorsData?.value
-                                ? { id: vendorsData.value }
-                                : {} ),
+                            ...( vendorsData?.value && {
+                                author: vendorsData.value,
+                            } ),
                             post_status: 'publish',
                         } }
+                        disabled={ ! vendorsData }
+                        className={ '!rounded-lg' }
                         noOptionsMessage={ () =>
                             ! vendorsData
                                 ? __(
@@ -265,7 +295,8 @@ const AddReverseWithdrawModal = ( { open, onClose } ) => {
                         isClearable
                         prefetch
                         endpoint="dokan/v1/orders"
-                        isDisabled={ ! vendorsData }
+                        disabled={ ! vendorsData }
+                        className={ '!rounded-lg' }
                         extraQuery={ {
                             ...( vendorsData?.value && {
                                 seller_id: vendorsData.value,
@@ -373,8 +404,8 @@ const AddReverseWithdrawModal = ( { open, onClose } ) => {
                         label={ '' }
                         namespace="reverse-withdrawal-amount"
                         value={ withdrawalAmount }
-                        onChange={ ( e ) =>
-                            setWithdrawalAmount( e.target.value )
+                        onChange={ ( value, unformattedValue ) =>
+                            debouncedWithdrawAmount( value, unformattedValue )
                         }
                         className="w-full border border-gray-300 rounded-md px-3 py-2.5 text-sm focus:!outline-none"
                         input={ {

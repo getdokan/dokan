@@ -19,7 +19,7 @@ import DateRangePicker from '@src/components/DateRangePicker';
 
 const price = ( amount ) => <RawHTML>{ formatPrice( amount ) }</RawHTML>;
 
-const ReverseWithdrawalPage = () => {
+const ReverseWithdrawalPage = ( props ) => {
     const [ stats, setStats ] = useState( {
         credit: 0,
         balance: 0,
@@ -47,11 +47,18 @@ const ReverseWithdrawalPage = () => {
             label: __( 'Store', 'dokan-lite' ),
             enableGlobalSearch: true,
             render: ( { item } ) => (
-                <div className="flex items-center space-x-2">
+                <div
+                    className="flex items-center space-x-2 hover:underline text-dokan-link cursor-pointer"
+                    onClick={ () =>
+                        props?.navigate(
+                            `/reverse-withdrawal/store/${ item.vendor_id }`
+                        )
+                    }
+                >
                     <div className="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center font-semibold">
                         { item.store_name?.charAt( 0 ).toUpperCase() }
                     </div>
-                    <span className="font-medium text-gray-900">
+                    <span className="font-medium">
                         { item.store_name || __( '(no name)', 'dokan-lite' ) }
                     </span>
                 </div>
@@ -72,19 +79,9 @@ const ReverseWithdrawalPage = () => {
             label: __( 'Date', 'dokan-lite' ),
             enableSorting: true,
             render: ( { item } ) => {
-                if (
-                    ! item.last_payment_date ||
-                    isNaN( new Date( item.last_payment_date ).getTime() )
-                ) {
-                    return '--';
-                }
-                const formattedDate = dateI18n(
-                    getSettings().formats.date,
-                    item.last_payment_date
-                );
                 return (
                     <span className="text-[#575757] text-xs">
-                        { formattedDate.replace( /\//g, '.' ) }
+                        { item.last_payment_date }
                     </span>
                 );
             },
@@ -170,20 +167,7 @@ const ReverseWithdrawalPage = () => {
         fetchData();
     }, [ fetchData ] );
 
-    const handleModalSave = useCallback(
-        async ( formData ) => {
-            try {
-                await apiFetch( {
-                    path: 'dokan/v1/reverse-withdrawal',
-                    method: 'POST',
-                    data: formData,
-                } );
-                setShowAddModal( false );
-                fetchData();
-            } catch {}
-        },
-        [ fetchData ]
-    );
+    // Note: creation handled within AddReverseWithdrawModal via onCreated callback
 
     const clearSingleFilter = ( filterId ) => {
         const args = { ...filterArgs };
@@ -447,7 +431,10 @@ const ReverseWithdrawalPage = () => {
                 <AddReverseWithdrawModal
                     open={ showAddModal }
                     onClose={ () => setShowAddModal( false ) }
-                    onSave={ handleModalSave }
+                    onCreated={ () => {
+                        setShowAddModal( false );
+                        fetchData();
+                    } }
                 />
             ) }
         </div>

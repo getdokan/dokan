@@ -86,6 +86,16 @@
             }
         }
     }
+
+    #reverse-withdrawal-transactions {
+        #dokan-admin-tab-reverse_withdrawal_transactions {
+            .components-tab-panel__tabs {
+                button:first-child {
+                    border: 0;
+                }
+            }
+        }
+    }
 }
 
 #dokan-admin-dashboard {
