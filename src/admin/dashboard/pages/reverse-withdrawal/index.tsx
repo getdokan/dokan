@@ -167,20 +167,7 @@ const ReverseWithdrawalPage = ( props ) => {
         fetchData();
     }, [ fetchData ] );
 
-    const handleModalSave = useCallback(
-        async ( formData ) => {
-            try {
-                await apiFetch( {
-                    path: 'dokan/v1/reverse-withdrawal',
-                    method: 'POST',
-                    data: formData,
-                } );
-                setShowAddModal( false );
-                fetchData();
-            } catch {}
-        },
-        [ fetchData ]
-    );
+    // Note: creation handled within AddReverseWithdrawModal via onCreated callback
 
     const clearSingleFilter = ( filterId ) => {
         const args = { ...filterArgs };
@@ -444,7 +431,10 @@ const ReverseWithdrawalPage = ( props ) => {
                 <AddReverseWithdrawModal
                     open={ showAddModal }
                     onClose={ () => setShowAddModal( false ) }
-                    onSave={ handleModalSave }
+                    onCreated={ () => {
+                        setShowAddModal( false );
+                        fetchData();
+                    } }
                 />
             ) }
         </div>
