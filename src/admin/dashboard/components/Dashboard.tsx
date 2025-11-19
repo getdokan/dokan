@@ -11,6 +11,7 @@ import NotFound from '../../../layout/404';
 import AdminDashboard from '../pages/dashboard';
 import VendorsPage from '../pages/vendors';
 import ReverseWithdrawalPage from '../pages/reverse-withdrawal';
+import ReverseWithdrawalTransactionPage from 'admin/dashboard/pages/reverse-withdrawal/ReverseWithdrawalTransaction';
 
 export type DokanAdminRoute = {
     id: string;
@@ -65,6 +66,11 @@ const getAdminRoutes = () => {
             id: 'reverse-withdrawal', // Added Reverse Withdrawal route
             element: <ReverseWithdrawalPage />,
             path: '/reverse-withdrawal',
+        },
+        {
+            id: 'reverse-withdrawal-store',
+            element: <ReverseWithdrawalTransactionPage />,
+            path: '/reverse-withdrawal/store/:id',
         },
     ];
 
