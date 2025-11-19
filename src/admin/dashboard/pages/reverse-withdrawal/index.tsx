@@ -40,7 +40,6 @@ const ReverseWithdrawalPage = ( props ) => {
     const [ dateBeforeText, setDateBeforeText ] = useState( '' );
     const [ focusedInput, setFocusedInput ] = useState( 'startDate' );
 
-    // Memoize fields to prevent unnecessary re-renders
     const fields = [
         {
             id: 'store_name',

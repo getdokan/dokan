@@ -1,6 +1,11 @@
 import { addQueryArgs } from '@wordpress/url';
 import { __ } from '@wordpress/i18n';
-import { RawHTML, useCallback, useEffect, useState, useMemo } from '@wordpress/element';
+import {
+    RawHTML,
+    useCallback,
+    useEffect,
+    useState,
+} from '@wordpress/element';
 import { dateI18n, getSettings } from '@wordpress/date';
 import apiFetch from '@wordpress/api-fetch';
 import { formatPrice } from '@dokan/utilities';
@@ -15,12 +20,8 @@ import {
     WalletMinimal,
 } from 'lucide-react';
 
-const price = ( amount ) => <RawHTML>{ formatPrice( amount ) }</RawHTML>;
-
 const ReverseWithdrawalTransactionPage = ( { params, navigate } ) => {
-    // params.id is injected by withRouter HOC from Dashboard.tsx
     const vendorId = params?.id;
-
     const [ stats, setStats ] = useState( {
         credit: 0,
         balance: 0,
@@ -39,7 +40,8 @@ const ReverseWithdrawalTransactionPage = ( { params, navigate } ) => {
     const [ dateBefore, setDateBefore ] = useState( '' );
     const [ dateBeforeText, setDateBeforeText ] = useState( '' );
     const [ focusedInput, setFocusedInput ] = useState( 'startDate' );
-    const [ isInitialized, setIsInitialized ] = useState( false );
+
+    const price = ( amount ) => <RawHTML>{ formatPrice( amount ) }</RawHTML>;
 
     const fields = [
         {
@@ -144,6 +146,23 @@ const ReverseWithdrawalTransactionPage = ( { params, navigate } ) => {
         fields: fields.map( ( f ) => f.id ),
     } );
 
+    const tabs = [
+        {
+            name: 'list',
+            icon: () => {
+                return (
+                    <div className="flex items-center gap-1.5 px-2 text-black text-sm font-semibold">
+                        { __(
+                            'List of Transactions',
+                            'dokan-lite'
+                        ) }
+                    </div>
+                );
+            },
+            title: __( 'List of Transactions', 'dokan-lite' ),
+        },
+    ];
+
     const fetchStore = useCallback( async () => {
         if ( ! vendorId ) {
             return;
@@ -160,11 +179,6 @@ const ReverseWithdrawalTransactionPage = ( { params, navigate } ) => {
 
     const fetchTransactions = useCallback( async () => {
         if ( ! vendorId ) {
-            return;
-        }
-
-        // Don't fetch until initialization is complete
-        if ( ! isInitialized ) {
             return;
         }
 
@@ -208,33 +222,11 @@ const ReverseWithdrawalTransactionPage = ( { params, navigate } ) => {
         } finally {
             setIsLoading( false );
         }
-    }, [ vendorId, view.page, view.perPage, filterArgs, isInitialized ] );
+    }, [ vendorId, view.page, view.perPage, filterArgs ] );
 
     useEffect( () => {
         fetchStore();
     }, [ fetchStore ] );
-
-    // Initialize default date filter to match Vue page (last 30 days)
-    useEffect( () => {
-        // Only run once on mount
-        const end = new Date();
-        end.setHours( 23, 59, 59, 0 );
-        const start = new Date();
-        start.setDate( start.getDate() - 29 ); // Last 30 days
-        start.setHours( 0, 0, 0, 0 );
-
-        // Format dates as 'YYYY-MM-DD HH:mm:ss' to match Vue implementation
-        const from = dateI18n( 'Y-m-d H:i:s', start );
-        const to = dateI18n( 'Y-m-d H:i:s', end );
-
-        setDateAfter( start );
-        setDateAfterText( from );
-        setDateBefore( end );
-        setDateBeforeText( to );
-        setFilterArgs( { trn_date: { from, to } } );
-        setIsInitialized( true );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [] );
 
     useEffect( () => {
         fetchTransactions();
@@ -243,22 +235,12 @@ const ReverseWithdrawalTransactionPage = ( { params, navigate } ) => {
     const clearSingleFilter = ( filterId ) => {
         const args = { ...filterArgs };
         switch ( filterId ) {
-            case 'date-range':
-                // Reset to default 30 days window like Vue
-                const end = new Date();
-                end.setHours( 23, 59, 59, 0 );
-                const start = new Date();
-                start.setDate( start.getDate() - 29 );
-                start.setHours( 0, 0, 0, 0 );
-
-                const from = dateI18n( 'Y-m-d H:i:s', start );
-                const to = dateI18n( 'Y-m-d H:i:s', end );
-
-                setDateAfter( start );
-                setDateAfterText( from );
-                setDateBefore( end );
-                setDateBeforeText( to );
-                args.trn_date = { from, to };
+            case 'dokan-date-range':
+                setDateAfter( '' );
+                setDateAfterText( '' );
+                setDateBefore( '' );
+                setDateBeforeText( '' );
+                delete args.trn_date;
                 break;
             default:
                 break;
@@ -267,21 +249,11 @@ const ReverseWithdrawalTransactionPage = ( { params, navigate } ) => {
     };
 
     const clearFilter = () => {
-        // Reset to default 30 days window like Vue
-        const end = new Date();
-        end.setHours( 23, 59, 59, 0 );
-        const start = new Date();
-        start.setDate( start.getDate() - 29 );
-        start.setHours( 0, 0, 0, 0 );
-
-        const from = dateI18n( 'Y-m-d H:i:s', start );
-        const to = dateI18n( 'Y-m-d H:i:s', end );
-
-        setDateAfter( start );
-        setDateAfterText( from );
-        setDateBefore( end );
-        setDateBeforeText( to );
-        setFilterArgs( { trn_date: { from, to } } );
+        setDateAfter( '' );
+        setDateAfterText( '' );
+        setDateBefore( '' );
+        setDateBeforeText( '' );
+        setFilterArgs( {} );
     };
 
     const header = (
@@ -326,124 +298,112 @@ const ReverseWithdrawalTransactionPage = ( { params, navigate } ) => {
         },
     ];
 
-    // Memoize filter fields to prevent recreation - matching listing page pattern
-    const filterFields = useMemo(
-        () => [
-            {
-                id: 'date-range',
-                label: __( 'Date Range', 'dokan-lite' ),
-                field: (
-                    <DateRangePicker
-                        key="date-range-select"
-                        after={ dateAfter }
-                        afterText={ dateAfterText }
-                        before={ dateBefore }
-                        beforeText={ dateBeforeText }
-                        onUpdate={ ( update ) => {
-                            if ( update.after ) {
-                                setDateAfter( update.after );
+    const filterFields = [
+        {
+            id: 'dokan-date-range',
+            label: __( 'Date Range', 'dokan-lite' ),
+            field: (
+                <DateRangePicker
+                    key="transactions-date-range"
+                    after={ dateAfter }
+                    afterText={ dateAfterText }
+                    before={ dateBefore }
+                    beforeText={ dateBeforeText }
+                    onUpdate={ ( update ) => {
+                        if ( update.after ) {
+                            setDateAfter( update.after );
+                        }
+                        if ( update.afterText ) {
+                            setDateAfterText( update.afterText );
+                        }
+                        if ( update.before ) {
+                            setDateBefore( update.before );
+                        }
+                        if ( update.beforeText ) {
+                            setDateBeforeText( update.beforeText );
+                        }
+                        if ( update.focusedInput ) {
+                            setFocusedInput( update.focusedInput );
+                            if (
+                                update.focusedInput === 'endDate' &&
+                                dateAfter
+                            ) {
+                                setDateBefore( '' );
+                                setDateBeforeText( '' );
                             }
-                            if ( update.afterText ) {
-                                setDateAfterText( update.afterText );
-                            }
-                            if ( update.before ) {
-                                setDateBefore( update.before );
-                            }
-                            if ( update.beforeText ) {
-                                setDateBeforeText( update.beforeText );
-                            }
-                            if ( update.focusedInput ) {
-                                setFocusedInput( update.focusedInput );
-                                if (
-                                    update.focusedInput === 'endDate' &&
+                        }
+                    } }
+                    shortDateFormat="MM/DD/YYYY"
+                    focusedInput={ focusedInput }
+                    isInvalidDate={ () => false }
+                    wrapperClassName="w-full"
+                    pickerToggleClassName="block"
+                    wpPopoverClassName="dokan-layout"
+                    popoverBodyClassName="p-4 w-auto text-sm/6"
+                    onClear={ () => {
+                        setDateAfter( '' );
+                        setDateAfterText( '' );
+                        setDateBefore( '' );
+                        setDateBeforeText( '' );
+                        const args = { ...filterArgs };
+                        delete args.trn_date;
+                        setFilterArgs( args );
+                    } }
+                    onOk={ () => {
+                        // Apply the selected date range
+                        const args = { ...filterArgs };
+                        if ( dateAfter || dateBefore ) {
+                            args.trn_date = {};
+                            if ( dateAfter ) {
+                                args.trn_date.from = dateI18n(
+                                    'Y-m-d 00:00:00',
                                     dateAfter
-                                ) {
-                                    setDateBefore( '' );
-                                    setDateBeforeText( '' );
-                                }
+                                );
                             }
-                        } }
-                        shortDateFormat="MM/DD/YYYY"
-                        focusedInput={ focusedInput }
-                        isInvalidDate={ () => false }
-                        wrapperClassName="w-full"
-                        pickerToggleClassName="block"
-                        wpPopoverClassName="dokan-layout"
-                        popoverBodyClassName="p-4 w-auto text-sm/6"
-                        onClear={ () => {
-                            // Clear removes date filter completely
-                            setDateAfter( '' );
-                            setDateAfterText( '' );
-                            setDateBefore( '' );
-                            setDateBeforeText( '' );
-                            const args = { ...filterArgs };
-                            delete args.trn_date;
-                            setFilterArgs( args );
-                        } }
-                        onOk={ () => {
-                            // Apply the selected date range
-                            const args = { ...filterArgs };
-                            if ( dateAfter || dateBefore ) {
-                                args.trn_date = {};
-                                if ( dateAfter ) {
-                                    args.trn_date.from = dateI18n(
-                                        'Y-m-d 00:00:00',
-                                        dateAfter
+                            if ( dateBefore ) {
+                                args.trn_date.to = dateI18n(
+                                    'Y-m-d 23:59:59',
+                                    dateBefore
+                                );
+                            }
+                        }
+                        setFilterArgs( args );
+                    } }
+                >
+                    <div className="relative">
+                        <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none z-10" />
+                        <input
+                            type="text"
+                            value={ ( () => {
+                                const parts = [];
+                                if ( dateAfterText || dateAfter ) {
+                                    parts.push(
+                                        dateI18n(
+                                            getSettings().formats.date,
+                                            dateAfterText || dateAfter
+                                        )
                                     );
                                 }
-                                if ( dateBefore ) {
-                                    args.trn_date.to = dateI18n(
-                                        'Y-m-d 23:59:59',
-                                        dateBefore
+                                if ( dateBeforeText || dateBefore ) {
+                                    parts.push(
+                                        dateI18n(
+                                            getSettings().formats.date,
+                                            dateBeforeText || dateBefore
+                                        )
                                     );
                                 }
-                            }
-                            setFilterArgs( args );
-                        } }
-                    >
-                        <div className="relative">
-                            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none z-10" />
-                            <input
-                                type="text"
-                                value={ ( () => {
-                                    const parts = [];
-                                    if ( dateAfterText || dateAfter ) {
-                                        parts.push(
-                                            dateI18n(
-                                                getSettings().formats.date,
-                                                dateAfterText || dateAfter
-                                            )
-                                        );
-                                    }
-                                    if ( dateBeforeText || dateBefore ) {
-                                        parts.push(
-                                            dateI18n(
-                                                getSettings().formats.date,
-                                                dateBeforeText || dateBefore
-                                            )
-                                        );
-                                    }
 
-                                    return parts.join( ' - ' );
-                                } )() }
-                                className="border border-gray-300 rounded-md pl-8 text-gray-900 cursor-pointer w-full bg-[#fdfdfd] h-11"
-                                placeholder={ __( 'Date', 'dokan-lite' ) }
-                                readOnly
-                            />
-                        </div>
-                    </DateRangePicker>
-                ),
-            },
-        ],
-        [
-            dateAfter,
-            dateAfterText,
-            dateBefore,
-            dateBeforeText,
-            focusedInput,
-            filterArgs,
-        ]
-    );
+                                return parts.join( ' - ' );
+                            } )() }
+                            className="border border-gray-300 rounded-md pl-8 text-gray-900 cursor-pointer w-full bg-[#fdfdfd] h-11"
+                            placeholder={ __( 'Date', 'dokan-lite' ) }
+                            readOnly
+                        />
+                    </div>
+                </DateRangePicker>
+            ),
+        },
+    ];
 
     return (
         <div
@@ -479,32 +439,27 @@ const ReverseWithdrawalTransactionPage = ( { params, navigate } ) => {
             </div>
 
             <DataViews
-                namespace="reverse_withdrawal_transactions"
-                view={ view as any }
-                onChangeView={ ( v ) => setView( v as any ) }
-                fields={ fields as any }
                 data={ data }
+                fields={ fields }
+                namespace="reverse-withdrawal-transactions"
+                defaultLayouts={ {
+                    table: { density: 'comfortable' },
+                    list: {},
+                } }
+                getItemId={ ( item ) => item.id }
+                view={ view }
+                onChangeView={ setView }
                 isLoading={ isLoading }
-                paginationInfo={ { totalItems, totalPages: 1 } }
+                emptyIcon={ <ArrowRightLeft size={ 52 } /> }
+                emptyTitle={ __( 'No transaction found', 'dokan-lite' ) }
+                paginationInfo={ {
+                    totalItems,
+                    totalPages: Math.ceil( totalItems / view.perPage ),
+                } }
                 tabs={ {
-                    tabs: [
-                        {
-                            name: 'transactions',
-                            icon: () => {
-                                return (
-                                    <div className="flex items-center gap-1.5 px-2 text-black text-sm font-semibold">
-                                        { __(
-                                            'List of Transactions',
-                                            'dokan-lite'
-                                        ) }
-                                    </div>
-                                );
-                            },
-                            title: __( 'List of Transactions', 'dokan-lite' ),
-                        },
-                    ],
+                    tabs,
                     onSelect: () => {},
-                    initialTabName: 'transactions',
+                    initialTabName: 'list',
                 } }
                 filter={ {
                     fields: filterFields,
