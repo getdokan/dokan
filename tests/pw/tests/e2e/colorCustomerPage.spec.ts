@@ -11,13 +11,18 @@ const oldColorDataset = {
     url: 'wp-admin/admin.php?page=dokan#/settings',
     selector: '//div[@class="nav-title" and contains(text(),"General")] >> //div[@class="nav-title" and contains(text(),"Colors")]',
     fields: [
-        // Palette type → Pre-defined or Custom
-        {
-            selector: '//h3[contains(text(),"Pre-defined Color Palette")]/ancestor::div[contains(@class,"color_option")]',
-            type: 'click',    // change from 'select' or 'radio' to 'click'
+       {
+            // Targets the <div> with class 'color_option' and ensures it contains the required title text.
+            selector: '.color_option:has-text("Pre-defined Color Palette")',
+            type: 'radio',
+            value: 'true',
         },
-        
-        // You may add additional fields here if needed…
+         {
+            selector: '.color-pallete-contents.active-pallete',
+            type: 'radio',
+            value: 'true',
+        },
+
     ],
 };
 
@@ -29,17 +34,15 @@ const newColorDataset = {
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
     selector: '#dokan_settings_appearance >> #dokan_settings_appearance_dashboard-color-customizer-page',
     fields: [
-        // Pre-defined palette type
         {
-            selector: 'input[name="pallete-type"][value="template"]',
+            selector: 'div[role="radio"]:has-text("Pre-defined Color Palette")',
             type: 'radio',
-            value: 'template', // template = pre-defined
+            value: 'true',
         },
-        // Palette option radio (e.g. purple pulse, ocean, majestic orange)
         {
-            selector: 'input[name="color-palette"][value="purple pulse"]',
+            selector: 'div[role="radio"][aria-label="Purple Pulse"]',
             type: 'radio',
-            value: 'purple pulse',
+            value: 'true',
         },
     ],
 };
@@ -73,10 +76,6 @@ test.describe('Admin Setting: Store Colors Migration', () => {
 
         await test.step('Check old color settings', async () => {
             await adminSettingsPage.checkSettings(oldColorDataset);
-        });
-
-        await test.step('Check new color settings again', async () => {
-            await adminSettingsPage.checkSettings(newColorDataset);
         });
     });
 

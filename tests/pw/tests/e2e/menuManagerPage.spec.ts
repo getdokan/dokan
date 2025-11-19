@@ -14,97 +14,228 @@ const oldDataset = [
         selector: '//div[@class="nav-title" and contains(text(),"General")] >> //div[@class="nav-title" and contains(text(),"Menu Manager")]', 
         fields: [
             {
-                selector: '//div[@id="dokan_email_verification"]//label[contains(@class,"switch")]//span[contains(@class,"slider")]',
-                type: 'checkbox-switch',
+                selector: '#switch-wrapper-products label.switch',
+                type: 'checkbox',
+                value: true,
+            },
+           {
+                // Orders toggle
+                selector: '#switch-wrapper-orders label.switch',
+                type: 'checkbox',
                 value: true,
             },
             {
-                // Textarea for 'Registration Notice'
-                selector: '#dokan_email_verification\\[registration_notice\\]',
-                type: 'text',
-                value: 'Please verify your email to complete registration.',
+                // Request Quotes toggle
+                selector: '#switch-wrapper-requested-quotes label.switch',
+                type: 'checkbox',
+                value: true,
             },
             {
-                // Textarea for 'Login Notice'
-                selector: '#dokan_email_verification\\[login_notice\\]',
-                type: 'text',
-                value: 'Your email is unverified. Please check your inbox.',
+                // Coupons toggle
+                selector: '#switch-wrapper-coupons label.switch',
+                type: 'checkbox',
+                value: true,
             },
-        ],
+            {
+                // Reports toggle
+                selector: '#switch-wrapper-reports label.switch',
+                type: 'checkbox',
+                value: true,
+            },
+            {
+                // Delivery Time toggle
+                selector: '#switch-wrapper-delivery-time-dashboard label.switch',
+                type: 'checkbox',
+                value: true,
+            },
+            {
+                // Reviews toggle
+                selector: '#switch-wrapper-reviews label.switch',
+                type: 'checkbox',
+                value: true,
+            },
+            {
+                // Withdraw toggle
+                selector: '#switch-wrapper-withdraw label.switch',
+                type: 'checkbox',
+                value: true,
+            },
+            {
+                // Badge toggle
+                selector: '#switch-wrapper-seller-badge label.switch',
+                type: 'checkbox',
+                value: true,
+            },
+            {
+                // Product Q&A toggle
+                selector: '#switch-wrapper-product-questions-answers label.switch',
+                type: 'checkbox',
+                value: true,
+            },
+            {
+                // Return Requests toggle
+                selector: '#switch-wrapper-return-request label.switch',
+                type: 'checkbox',
+                value: true,
+            },
+            {
+                // Staff toggle
+                selector: '#switch-wrapper-staffs label.switch',
+                type: 'checkbox',
+                value: true,
+            },
+            {
+                // Followers toggle
+                selector: '#switch-wrapper-followers label.switch',
+                type: 'checkbox',
+                value: true,
+            },
+            {
+                // Subscription toggle
+                selector: '#switch-wrapper-subscription label.switch',
+                type: 'checkbox',
+                value: true,
+            },
+            {
+                // Announcements toggle
+                selector: '#switch-wrapper-announcement label.switch',
+                type: 'checkbox',
+                value: true,
+            },
+            {
+                // Admin Support toggle
+                selector: '#switch-wrapper-vendor-support label.switch',
+                type: 'checkbox',
+                value: true,
+            },
+            {
+                // Tools toggle
+                selector: '#switch-wrapper-tools label.switch',
+                type: 'checkbox',
+                value: true,
+            },
+            {
+                // Support toggle
+                selector: '#switch-wrapper-support label.switch',
+                type: 'checkbox',
+                value: true,
+            },
+        ]
     },
 ];
 
 // New UI Email Verification Settings
-const newDataset = [
-    {
-    title: 'Admin Setting: Email Verification',
+const newDataset = { 
+    title: 'Admin Setting: Email Verification', 
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
     selector: '#dokan_settings_appearance >> #dokan_settings_appearance_dashboard-menu-manager-page',
-    fields: 
-        [
-            {
-                // Dashboard is the 1st menu item. It appears disabled (cursor-not-allowed opacity-50).
-                selector: '.menu-manager-menu-manager-left_menus > div > div > div:nth-child(1) button[role="switch"]',
-                type: 'switch',
-                value: true,
-            },
-            {
-                // Products is the 2nd menu item.
-                selector: '.menu-manager-menu-manager-left_menus > div > div > div:nth-child(2) button[role="switch"]',
-                type: 'switch',
-                value: true,
-            },
-            {
-                // Delivery Time is the 3rd menu item.
-                selector: '.menu-manager-menu-manager-left_menus > div > div > div:nth-child(3) button[role="switch"]',
-                type: 'switch',
-                value: true,
-            },
-            {
-                // Announcements is the 4th menu item.
-                selector: '.menu-manager-menu-manager-left_menus > div > div > div:nth-child(4) button[role="switch"]',
-                type: 'switch',
-                value: true,
-            },
-            {
-                // Staff is the 5th menu item.
-                selector: '.menu-manager-menu-manager-left_menus > div > div > div:nth-child(5) button[role="switch"]',
-                type: 'switch',
-                value: true,
-            },
-            {
-                // Store Stats is the 6th menu item.
-                selector: '.menu-manager-menu-manager-left_menus > div > div > div:nth-child(6) button[role="switch"]',
-                type: 'switch',
-                value: true,
-            },
-            {
-                // Tools is the 7th menu item.
-                selector: '.menu-manager-menu-manager-left_menus > div > div > div:nth-child(7) button[role="switch"]',
-                type: 'switch',
-                value: true,
-            },
-            {
-                // Reports is the 8th menu item.
-                selector: '.menu-manager-menu-manager-left_menus > div > div > div:nth-child(8) button[role="switch"]',
-                type: 'switch',
-                value: true,
-            },
-            {
-                // Reviews is the 9th menu item.
-                selector: '.menu-manager-menu-manager-left_menus > div > div > div:nth-child(9) button[role="switch"]',
-                type: 'switch',
-                value: true,
-            },
-            {
-                // Coupons is the 10th menu item.
-                selector: '.menu-manager-menu-manager-left_menus > div > div > div:nth-child(10) button[role="switch"]',
-                type: 'switch',
-                value: true,
-            },
+    fields: [
+        {
+            selector: '#switch-wrapper-dashboard button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        {
+            selector: '#switch-wrapper-products button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        {
+            selector: '#switch-wrapper-orders button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+         {
+            selector: '#switch-wrapper-requested-quotes button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        {
+            selector: '#switch-wrapper-coupons button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        {
+            selector: '#switch-wrapper-reports button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        {
+            selector: '#switch-wrapper-delivery-time-dashboard button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        {
+            selector: '#switch-wrapper-announcement button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        {
+            selector: '#switch-wrapper-reviews button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        {
+            selector: '#switch-wrapper-withdraw button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        {
+            selector: '#switch-wrapper-seller-badge button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        {
+            selector: '#switch-wrapper-product-questions-answers button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        {
+            selector: '#switch-wrapper-return-request button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        {
+            selector: '#switch-wrapper-staffs button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        {
+            selector: '#switch-wrapper-followers button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        {
+            selector: '#switch-wrapper-subscription button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        {
+            // Announcements toggle
+            selector: '#switch-wrapper-announcement button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        {
+            // Admin Support toggle
+            selector: '#switch-wrapper-vendor-support button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        {
+            // Tools toggle
+            selector: '#switch-wrapper-tools button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
+        {
+            // Support toggle
+            selector: '#switch-wrapper-support button[role="switch"]',
+            type: 'switch',
+            value: true,
+        },
     ]
-},
-];
+};
 
 // --- Test Suite ---
 

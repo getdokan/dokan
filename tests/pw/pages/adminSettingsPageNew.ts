@@ -159,7 +159,14 @@ export class AdminSettingsPageNew extends AdminPage {
                     await optionLocator.click();
                     break;
                 }
-                   
+               case 'checkbox-switch': {
+                    const locator = this.page.locator(field.selector);
+                    const isChecked = await locator.isChecked(); // get current state
+                    if (isChecked !== field.value) {            // only toggle if different
+                        await locator.click();
+                    }
+                    break;
+                }    
             }
         }
     }
