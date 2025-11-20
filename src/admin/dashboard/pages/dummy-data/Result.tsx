@@ -37,8 +37,7 @@ function Result( { onClear, loading, navigate }: ResultProps ) {
             { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */ }
             <div
                 className="mb-[14px] border border-[#E9E9E9] rounded-[6px] flex items-center gap-[12px] p-[12px] hover:bg-[#F8F9F8]"
-                role="button"
-                tabIndex={ 0 }
+                itemType="button"
                 onClick={ () => navigate( '/vendors' ) }
             >
                 <div className="h-[44px] w-[44px] border border-[#E9E9E9] bg-[#F8F9F8] flex justify-center items-center rounded-[5px]">
@@ -52,8 +51,7 @@ function Result( { onClear, loading, navigate }: ResultProps ) {
             { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */ }
             <div
                 className="mb-[14px] border border-[#E9E9E9] rounded-[6px] flex items-center gap-[12px] p-[12px] hover:bg-[#F8F9F8]"
-                role="button"
-                tabIndex={ 0 }
+                itemType="button"
                 onClick={ () =>
                     window.open(
                         `${ dokanAdminDashboard.urls.adminRoot }edit.php?post_type=product`,
