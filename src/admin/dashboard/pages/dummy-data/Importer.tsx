@@ -1,7 +1,7 @@
 // @ts-ignore
 // eslint-disable-next-line import/no-unresolved
 import { DokanButton } from '@dokan/components';
-import { __ } from "@wordpress/i18n";
+import { __ } from '@wordpress/i18n';
 
 type ImporterProps = {
     progress: number;
@@ -9,7 +9,7 @@ type ImporterProps = {
     onRun: () => void;
 };
 
-function Importer({ progress, loading, onRun }: ImporterProps) {
+function Importer( { progress, loading, onRun }: ImporterProps ) {
     return (
         <div className="p-[24px]">
             <div className="flex flex-col gap-[24px]">
@@ -30,14 +30,14 @@ function Importer({ progress, loading, onRun }: ImporterProps) {
                         className="w-full h-[8px] [&::-webkit-progress-bar]:rounded-lg [&::-webkit-progress-value]:rounded-lg [&::-webkit-progress-bar]:bg-[#EFEAFF] [&::-webkit-progress-value]:bg-[#7047EB] [&::-webkit-progress-value]:transition-[width_0.5s] [&::-moz-progress-bar]:bg-[#7047EB]"
                         value={ Math.round( progress ) }
                         max={ 100 }
-                    ></progress>
+                    />
                     <span>{ Math.round( progress ) }%</span>
                 </div>
 
                 <div>
                     <DokanButton
-                        disabled={ !! loading }
-                        loading={ !! loading }
+                        disabled={ loading }
+                        loading={ loading }
                         onClick={ onRun }
                         label={ __( 'Run the Importer', 'dokan-lite' ) }
                         className="!h-[28px] !font-[500] !text-[12px] !leading-[16px]"

@@ -23,7 +23,7 @@ function Result( { onClear, loading, navigate } ) {
                         />
                     </svg>
                 </div>
-                <h2 className="ont-bold font-[700] text-[18px] text-[#25252D]">
+                <h2 className="font-bold font-[700] text-[18px] text-[#25252D]">
                     { __( 'Dummy Data Import complete!', 'dokan-lite' ) }
                 </h2>
             </div>
