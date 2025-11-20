@@ -19,7 +19,7 @@ function Importer( { progress, loading, onRun }: ImporterProps ) {
                     </h2>
                     <p className="font-[400] text-[14px] text-[#828282]">
                         { __(
-                            'Normally it takes less than 1 minutes.',
+                            'Normally it takes less than 1 minute.',
                             'dokan-lite'
                         ) }
                     </p>
