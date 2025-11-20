@@ -27,8 +27,11 @@ const defaultMap = ( store: any ): VendorOption => ( {
     label:
         store.store_name ||
         store.name ||
-        // eslint-disable-next-line @wordpress/i18n-translator-comments
-        sprintf( __( '(no name) #%s', 'dokan-lite' ), String( store?.id ) ),
+        sprintf(
+            // eslint-disable-next-line @wordpress/i18n-translator-comments
+            __( '(no name) #%s', 'dokan-lite' ),
+            String( store?.id ?? '' )
+        ),
     raw: store,
 } );
 
