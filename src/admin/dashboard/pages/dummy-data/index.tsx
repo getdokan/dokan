@@ -9,11 +9,11 @@ import Result from 'admin/dashboard/pages/dummy-data/Result';
 import StatusSkeleton from 'admin/dashboard/pages/dummy-data/StatusSkeleton';
 import { DokanLink } from '@dokan/components';
 import { ChevronLeft } from 'lucide-react';
+import { RouterProps } from "@src/definitions/RouterProps";
 
-function Index( props ) {
+function Index( props: RouterProps ) {
     const toast = useToast();
     const [ progress, setProgress ] = useState( 0 );
-    const [ dummyData, setDummyData ] = useState< any[] >( [] );
     const [ loading, setLoading ] = useState< boolean >( true );
     const [ allVendors, setAllVendors ] = useState< any[] >( [] );
     const [ allProducts, setAllProducts ] = useState< any[] >( [] );
@@ -139,7 +139,6 @@ function Index( props ) {
     }
 
     function resetDataState() {
-        setDummyData( [] );
         setAllVendors( [] );
         setAllProducts( [] );
     }
@@ -161,7 +160,6 @@ function Index( props ) {
             .then( ( data: string ) => {
                 const results = parse( data, { header: true } );
                 const rows: any[] = ( results as any )?.data || [];
-                setDummyData( rows );
                 loadCsvData( rows );
             } )
             .catch( ( err: any ) => {
@@ -287,7 +285,7 @@ function Index( props ) {
 
     function getVendorProducts( vendorId: any ) {
         return allProducts.filter(
-            ( item ) => String( item.vendor ) == String( vendorId )
+            ( item ) => String( item.vendor ) === String( vendorId )
         );
     }
 
