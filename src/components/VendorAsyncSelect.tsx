@@ -28,7 +28,7 @@ const defaultMap = ( store: any ): VendorOption => ( {
         store.store_name ||
         store.name ||
         // eslint-disable-next-line @wordpress/i18n-translator-comments
-        sprintf( __( 'Order #%s', 'dokan-lite' ), String( store?.id ) ),
+        sprintf( __( '(no name) #%s', 'dokan-lite' ), String( store?.id ) ),
     raw: store,
 } );
 
@@ -265,6 +265,7 @@ function VendorAsyncSelect( props: VendorAsyncSelectProps ) {
                 if ( inputValue && inputValue.trim() !== '' ) {
                     skipMergeDueToDepsRef.current = false;
                 }
+
                 return results;
             } }
             instanceId={ `vendor-async-${ depsSignature }` }
