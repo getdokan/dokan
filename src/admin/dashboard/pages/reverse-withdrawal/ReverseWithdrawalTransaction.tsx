@@ -112,9 +112,9 @@ const ReverseWithdrawalTransactionPage = ( { params, navigate } ) => {
                     return <span>--</span>;
                 }
                 return amt < 0 ? (
-                    <span>( { price( Math.abs( amt ) ) } )</span>
+                    <div className="flex">( { price( Math.abs( amt ) ) } )</div>
                 ) : (
-                    <span>{ price( amt ) }</span>
+                    <div className="flex">{ price( amt ) }</div>
                 );
             },
         },
