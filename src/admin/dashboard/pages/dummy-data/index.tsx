@@ -242,6 +242,29 @@ function Index( props: RouterProps ) {
             } );
     }
 
+    const loadImporterBody = () => {
+        if ( statusLoader ) {
+            return <StatusSkeleton />;
+        } else if ( ! statusLoader && ! done ) {
+            return (
+                <Importer
+                    progress={ progress }
+                    loading={ loading }
+                    onRun={ importBtnHandler }
+                    { ...props }
+                />
+            );
+        }
+
+        return (
+            <Result
+                onClear={ clearAllDummyData }
+                loading={ loading }
+                { ...props }
+            />
+        );
+    };
+
     return (
         <div className="w-full md:w-[658px] m-auto">
             <DokanLink
@@ -278,27 +301,7 @@ function Index( props: RouterProps ) {
                     </div>
                 </div>
 
-                { statusLoader && <StatusSkeleton /> }
-
-                { ! statusLoader && ! done && (
-                    <div className="border-b border-[#E9E9E9]">
-                        <Importer
-                            progress={ progress }
-                            loading={ loading }
-                            onRun={ importBtnHandler }
-                            { ...props }
-                        />
-                    </div>
-                ) }
-                { ! statusLoader && done && (
-                    <Result
-                        onClear={ clearAllDummyData }
-                        loading={ loading }
-                        { ...props }
-                    />
-                ) }
-
-                { /* Distance Matrix API Test UI can be implemented later; omitted for minimal viable migration */ }
+                { loadImporterBody() }
             </Card>
 
             <DokanToaster />
