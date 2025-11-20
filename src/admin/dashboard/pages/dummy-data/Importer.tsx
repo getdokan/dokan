@@ -27,7 +27,7 @@ function Importer({ progress, loading, onRun }: ImporterProps) {
 
                 <div className="flex flex-row gap-[16px] items-center my-[4px]">
                     <progress
-                        className="w-full h-[8px] [&::-webkit-progress-bar]:rounded-lg [&::-webkit-progress-value]:rounded-lg [&::-webkit-progress-bar]:bg-[#EFEAFF] [&::-webkit-progress-value]:bg-[#7047EB] [&::-moz-progress-bar]:bg-[#7047EB]"
+                        className="w-full h-[8px] [&::-webkit-progress-bar]:rounded-lg [&::-webkit-progress-value]:rounded-lg [&::-webkit-progress-bar]:bg-[#EFEAFF] [&::-webkit-progress-value]:bg-[#7047EB] [&::-webkit-progress-value]:transition-[width_0.5s] [&::-moz-progress-bar]:bg-[#7047EB]"
                         value={ Math.round( progress ) }
                         max={ 100 }
                     ></progress>

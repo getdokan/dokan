@@ -1,4 +1,4 @@
-import { Card, DokanToaster } from '@getdokan/dokan-ui';
+import { Card, DokanToaster, useToast } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { parse } from 'papaparse';
@@ -6,9 +6,11 @@ import { useEffect, useMemo, useState } from 'react';
 import HeaderImage from 'admin/dashboard/pages/dummy-data/HeaderImage';
 import Importer from 'admin/dashboard/pages/dummy-data/Importer';
 import Result from 'admin/dashboard/pages/dummy-data/Result';
+import { DokanLink } from "@dokan/components";
+import { ChevronLeft } from "lucide-react";
 
 function Index( props ) {
-    const [ errorMsg, setErrorMsg ] = useState( '' );
+    const toast = useToast();
     const [ progress, setProgress ] = useState( 0 );
     const [ dummyData, setDummyData ] = useState< any[] >( [] );
     const [ loading, setLoading ] = useState< boolean >( true );
@@ -125,9 +127,12 @@ function Index( props ) {
             } )
             .catch( ( err: any ) => {
                 // Try to surface error minimally
-                setErrorMsg(
-                    err?.message || __( 'Something went wrong', 'dokan-lite' )
-                );
+                toast( {
+                    type: 'error',
+                    title:
+                        err?.message ||
+                        __( 'Something went wrong', 'dokan-lite' ),
+                } );
             } )
             .finally( () => setStatusLoader( false ) );
     }
@@ -144,7 +149,10 @@ function Index( props ) {
         const url = csvFileUrl;
         if ( ! url ) {
             setLoading( false );
-            setErrorMsg( __( 'CSV URL missing', 'dokan-lite' ) );
+            toast( {
+                type: 'error',
+                title: __( 'CSV URL missing', 'dokan-lite' ),
+            } );
             return;
         }
         apiFetch( { url, parse: false } )
@@ -156,9 +164,12 @@ function Index( props ) {
                 loadCsvData( rows );
             } )
             .catch( ( err: any ) => {
-                setErrorMsg(
-                    err?.message || __( 'Failed to load CSV', 'dokan-lite' )
-                );
+                toast( {
+                    type: 'error',
+                    title:
+                        err?.message ||
+                        __( 'Failed to load CSV', 'dokan-lite' ),
+                } );
             } )
             .finally( () => setLoading( false ) );
     }
@@ -222,9 +233,12 @@ function Index( props ) {
                 handleImport( nextIndex );
             } )
             .catch( ( err: any ) => {
-                setErrorMsg(
-                    err?.message || __( 'Something went wrong', 'dokan-lite' )
-                );
+                toast( {
+                    type: 'error',
+                    title:
+                        err?.message ||
+                        __( 'Something went wrong', 'dokan-lite' ),
+                } );
                 setLoading( false );
             } );
     }
@@ -267,13 +281,12 @@ function Index( props ) {
     }
 
     function resetToImport() {
-        setErrorMsg( '' );
         setProgress( 0 );
         setLoading( false );
         setDone( false );
     }
 
-    function clearAllDummyData() {
+    function clearAllDummyData( setIsConfirmOpen: ( value: boolean ) => void ) {
         setLoading( true );
         apiFetch( {
             path: 'dokan/v1/dummy-data/clear',
@@ -287,27 +300,43 @@ function Index( props ) {
                 loadCsvFile();
             } )
             .catch( ( err: any ) => {
-                setErrorMsg(
-                    err?.message || __( 'Something went wrong', 'dokan-lite' )
-                );
+                toast( {
+                    type: 'error',
+                    title:
+                        err?.message ||
+                        __( 'Something went wrong', 'dokan-lite' ),
+                } );
             } )
-            .finally( () => setLoading( false ) );
+            .finally( () => {
+                setLoading( false );
+                setIsConfirmOpen( false );
+            } );
     }
 
     return (
         <div className="w-full md:w-[658px] m-auto">
-            <h2 className="ont-bold font-[700] text-[24px] text-[#25252D] mb-[24px]">
+            <DokanLink
+                href={
+                    // @ts-ignore
+                    `${ dokanAdminDashboard.urls.adminRoot }admin.php?page=dokan-dashboard#/tools`
+                }
+                className="flex flex-row w-auto items-center gap-1 !text-[#828282] font-[400] text-[14px] hover:!underline mb-[20px]"
+            >
+                <ChevronLeft size="15" />
+                <span>{ __( 'Back to Tools', 'dokan-lite' ) }</span>
+            </DokanLink>
+            <h2 className="font-bold font-[700] text-[24px] text-[#25252D] mb-[24px]">
                 { __( 'Dummy data', 'dokan-lite' ) }
             </h2>
             <Card className="bg-white rounded-[6px] border border-[#E9E9E9]">
                 <div className="p-[24px] flex items-start justify-between border-b border-[#E9E9E9]">
-                    <div className="w-1/2">
-                        <h2 className="font-[700] text-[18px] text-[#25252D] mb-[10px]">
+                    <div className="w-2/3">
+                        <h3 className="font-[700] text-[18px] text-[#25252D] mb-[10px]">
                             { __(
                                 'Import dummy vendors and products',
                                 'dokan-lite'
                             ) }
-                        </h2>
+                        </h3>
                         <p className="font-[400] text-[14px] text-[#828282]">
                             { __(
                                 'This tool allows you to import vendor and some products for vendors to your marketplace.',
@@ -326,22 +355,22 @@ function Index( props ) {
                             progress={ progress }
                             loading={ loading }
                             onRun={ importBtnHandler }
+                            { ...props }
                         />
                     </div>
                 ) }
                 { ! statusLoader && done && (
-                    <Result onClear={ clearAllDummyData } loading={ loading } />
+                    <Result
+                        onClear={ clearAllDummyData }
+                        loading={ loading }
+                        { ...props }
+                    />
                 ) }
 
                 { /* Distance Matrix API Test UI can be implemented later; omitted for minimal viable migration */ }
             </Card>
 
             <DokanToaster />
-            { !! errorMsg && (
-                <div className="mt-3 text-red-600 text-sm" role="alert">
-                    { errorMsg }
-                </div>
-            ) }
         </div>
     );
 }

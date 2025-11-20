@@ -1,13 +1,11 @@
-import { Check, Users, Box, Trash } from 'lucide-react';
+import { Users, Box, Trash } from 'lucide-react';
 import { __ } from '@wordpress/i18n';
-import { DokanButton } from '@dokan/components';
+import { DokanButton, DokanModal } from '@dokan/components';
+import { useState } from '@wordpress/element';
 
-type ResultProps = {
-    onClear: () => void;
-    loading: boolean;
-};
+function Result( { onClear, loading, navigate } ) {
+    const [ isConfirmOpen, setIsConfirmOpen ] = useState( false );
 
-function Result( { onClear, loading }: ResultProps ) {
     return (
         <div className="p-[24px]">
             <div className="flex flex-row items-center mb-[20px]">
@@ -30,28 +28,45 @@ function Result( { onClear, loading }: ResultProps ) {
                 </h2>
             </div>
 
-            <div className="mb-[14px] border border-[#E9E9E9] rounded-[6px] flex items-center gap-[12px] p-[12px]">
+            { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */ }
+            <div
+                className="mb-[14px] border border-[#E9E9E9] rounded-[6px] flex items-center gap-[12px] p-[12px] hover:bg-[#F8F9F8]"
+                role="button"
+                tabIndex={ 0 }
+                onClick={ () => navigate( '/vendors' ) }
+            >
                 <div className="h-[44px] w-[44px] border border-[#E9E9E9] bg-[#F8F9F8] flex justify-center items-center rounded-[5px]">
                     <Users size="24" color="#828282" />
                 </div>
                 <p className="text-[14px] font-[600] text-[#25252D]">
-                    { __( 'View Dummy 6 Vendors', 'dokan-lite' ) }
+                    { __( 'View Dummy Vendors', 'dokan-lite' ) }
                 </p>
             </div>
 
-            <div className="mb-[20px] border border-[#E9E9E9] rounded-[6px] flex items-center gap-[12px] p-[12px]">
+            { /* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */ }
+            <div
+                className="mb-[14px] border border-[#E9E9E9] rounded-[6px] flex items-center gap-[12px] p-[12px] hover:bg-[#F8F9F8]"
+                role="button"
+                tabIndex={ 0 }
+                onClick={ () =>
+                    window.open(
+                        `${ dokanAdminDashboard.urls.adminRoot }edit.php?post_type=product`,
+                        '_self'
+                    )
+                }
+            >
                 <div className="h-[44px] w-[44px] border border-[#E9E9E9] bg-[#F8F9F8] flex justify-center items-center rounded-[5px]">
                     <Box size="24" color="#828282" />
                 </div>
                 <p className="text-[14px] font-[600] text-[#25252D]">
-                    { __( 'View Dummy 5 Products', 'dokan-lite' ) }
+                    { __( 'View Dummy Products', 'dokan-lite' ) }
                 </p>
             </div>
 
             <DokanButton
-                disabled={ !! loading }
-                loading={ !! loading }
-                onClick={ onClear }
+                disabled={ loading }
+                loading={ loading }
+                onClick={ () => setIsConfirmOpen( true ) }
                 variant="danger"
                 label={
                     <div className="flex items-center gap-[6px]">
@@ -60,6 +75,20 @@ function Result( { onClear, loading }: ResultProps ) {
                     </div>
                 }
                 className="!h-[28px] !font-[500] !text-[12px] !leading-[16px] !bg-white !text-[#E64B5F]"
+            />
+
+            <DokanModal
+                isOpen={ isConfirmOpen }
+                namespace="dummy-data-clear"
+                onConfirm={ () => onClear( setIsConfirmOpen ) }
+                onClose={ () => setIsConfirmOpen( false ) }
+                confirmButtonVariant="danger"
+                confirmationTitle={ __( 'Confirmation', 'dokan-lite' ) }
+                confirmationDescription={ __(
+                    'Are you sure to remove all dummy data!',
+                    'dokan-lite'
+                ) }
+                loading={ loading }
             />
         </div>
     );
