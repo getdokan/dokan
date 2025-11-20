@@ -3,7 +3,13 @@ import { __ } from '@wordpress/i18n';
 import { DokanButton, DokanModal } from '@dokan/components';
 import { useState } from '@wordpress/element';
 
-function Result( { onClear, loading, navigate } ) {
+type ResultProps = {
+    onClear: ( setIsConfirmOpen: ( value: boolean ) => void ) => void;
+    loading: boolean;
+    navigate: ( path: string ) => void;
+};
+
+function Result( { onClear, loading, navigate }: ResultProps ) {
     const [ isConfirmOpen, setIsConfirmOpen ] = useState( false );
 
     return (
