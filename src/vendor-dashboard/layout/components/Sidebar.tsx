@@ -21,6 +21,7 @@ const Sidebar = ( {
     collapsed: boolean;
     windowWidth: number;
 } ) => {
+    const [ currentUrl, setCurrentUrl ] = useState( window.location?.href );
     const [ adminBar, setAdminBar ] = useState( 0 );
     const [ expanded, setExpanded ] = useState< Record< string, boolean > >(
         {}
@@ -180,10 +181,19 @@ const Sidebar = ( {
         } ) );
     };
 
-    // ==========================================
-    // MAIN RENDER
-    // ==========================================
-    const currentUrl = window.location?.href || '';
+    useEffect( () => {
+        // Check if the current URL is supported and has the correct hash path.
+        const checkAndUpdate = () => {
+            setCurrentUrl( window.location.href );
+        };
+
+        // Initial check.
+        checkAndUpdate();
+
+        // Listen events for comprehensive URL change detection.
+        window.addEventListener( 'hashchange', checkAndUpdate );
+        return () => window.removeEventListener( 'hashchange', checkAndUpdate );
+    }, [] );
 
     return (
         <>
@@ -487,8 +497,24 @@ const Sidebar = ( {
                         { ! collapsed && (
                             <div className="sidebar-footer leading-tight space-y-1">
                                 <div className="store-name text-sm font-semibold">
-                                    { storeName ||
-                                        __( 'Your Store', 'dokan-lite' ) }
+                                    { storeName ? (
+                                        <Tooltip
+                                            content={
+                                                <RawHTML>{ storeName }</RawHTML>
+                                            }
+                                        >
+                                            <span>
+                                                <RawHTML>
+                                                    { truncate(
+                                                        storeName,
+                                                        16
+                                                    ) }
+                                                </RawHTML>
+                                            </span>
+                                        </Tooltip>
+                                    ) : (
+                                        __( 'Your Store', 'dokan-lite' )
+                                    ) }
                                 </div>
                                 { subscriptionName && (
                                     <div className="subscription-info text-xs flex items-center gap-1">
