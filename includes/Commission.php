@@ -250,7 +250,7 @@ class Commission {
      *
      * @param int|WC_Order $order Order.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.3
      *
      * @return float|int
      */

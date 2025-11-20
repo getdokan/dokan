@@ -160,7 +160,11 @@ class Settings {
                 throw new DokanException( 'dokan_settings_error_saving', __( '`section` parameter is required.', 'dokan-lite' ), 400 );
             }
 
-            $option_name  = sanitize_text_field( wp_unslash( $_POST['section'] ) );
+            $option_name = sanitize_text_field( wp_unslash( $_POST['section'] ) );
+            // validate and sanitize option name to avoid any unwanted option update
+            if ( ! in_array( $option_name, wp_list_pluck( $this->get_settings_sections(), 'id' ), true ) ) {
+                throw new DokanException( 'dokan_settings_invalid_section', __( 'Invalid section name.', 'dokan-lite' ), 400 );
+            }
             $option_value = $this->sanitize_options( wp_unslash( $_POST['settingsData'] ), 'edit' ); // phpcs:ignore
             $option_value = apply_filters( 'dokan_save_settings_value', $option_value, $option_name );
             $old_options  = get_option( $option_name, [] );
@@ -429,12 +433,13 @@ class Settings {
                     'default' => 'on',
                 ],
                 'custom_store_url'       => [
-                    'name'    => 'custom_store_url',
-                    'label'   => __( 'Vendor Store URL', 'dokan-lite' ),
+                    'name'              => 'custom_store_url',
+                    'label'             => __( 'Vendor Store URL', 'dokan-lite' ),
                     /* translators: %s: store url */
-                    'desc'    => sprintf( __( 'Define the vendor store URL (%s<strong>[this-text]</strong>/[vendor-name])', 'dokan-lite' ), site_url( '/' ) ),
-                    'default' => 'store',
-                    'type'    => 'text',
+                    'desc'              => sprintf( __( 'Define the vendor store URL (%s<strong>[this-text]</strong>/[vendor-name])', 'dokan-lite' ), site_url( '/' ) ),
+                    'default'           => 'store',
+                    'type'              => 'text',
+                    'sanitize_callback' => [ $this, 'sanitize_custom_store_url' ],
                 ],
                 'setup_wizard_logo_url'  => [
                     'name'  => 'setup_wizard_logo_url',
@@ -1144,5 +1149,40 @@ class Settings {
         ];
 
         return $settings_fields;
+    }
+
+    /**
+     * Sanitize custom store URL to prevent reserved WordPress keywords
+     *
+     * @since 4.1.5
+     *
+     * @param string $value The custom store URL value
+     *
+     * @return string
+     * @throws DokanException
+     */
+    public function sanitize_custom_store_url( $value ) {
+        $value = sanitize_text_field( $value );
+
+        if ( empty( $value ) ) {
+            return $value;
+        }
+
+        $reserved_slugs = dokan_get_reserved_url_slugs();
+
+        // Check if the value is in the reserved slugs list.
+        if ( in_array( $value, $reserved_slugs, true ) ) {
+            throw new DokanException(
+                'dokan_reserved_slug_error',
+                sprintf(
+                    /* translators: %s: the reserved slug */
+                    esc_html__( 'The store URL "%s" is reserved by WordPress and cannot be used. Please choose a different value like "store".', 'dokan-lite' ),
+                    esc_html( $value )
+                ),
+                400
+            );
+        }
+
+        return $value;
     }
 }

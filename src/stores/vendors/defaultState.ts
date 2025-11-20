@@ -1,0 +1,21 @@
+const defaultState = {
+    vendors: [],
+    loading: true,
+    error: undefined,
+    queryParams: {
+        page: 1,
+        per_page: 10,
+        status: undefined,
+        search: '',
+        orderby: 'registered',
+        order: 'desc',
+    },
+    vendorStats: {},
+    topProducts: {},
+    loadingTopProducts: {},
+    createOrEditVendorLoading: false,
+    createOrEditVendor: {},
+    createOrEditVendorErrors: [],
+};
+
+export default defaultState;

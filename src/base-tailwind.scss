@@ -96,6 +96,11 @@
                 color: #fff
             }
         }
+
+        h1, h2, h3, h4, h5, h6 {
+            padding: 0;
+            margin: 0;
+        }
     }
 
     button[data-headlessui-state="checked"] {
@@ -374,5 +379,15 @@
     .dokan-react-search-input ~ span,
     span:has(+ .dokan-react-search-input) {
         background: white !important;
+    }
+
+    .dokan-date-range-picker {
+        .woocommerce-calendar {
+            @apply bg-white border-none #{!important};
+
+            .DayPicker_transitionContainer, .CalendarMonth, .CalendarMonthGrid, .DayPicker__horizontal {
+                @apply bg-white #{!important};
+            }
+        }
     }
 }

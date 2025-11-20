@@ -207,7 +207,7 @@ function dokan_process_product_file_download_paths_permission( $product_id, $var
         foreach ( $existing_permissions as $existing_permission ) {
             $order = wc_get_order( $existing_permission->order_id );
 
-            if ( ! empty( $order->get_id() ) ) {
+            if ( $order && $order->get_id() ) {
                 // Remove permissions
                 if ( ! empty( $removed_download_ids ) ) {
                     foreach ( $removed_download_ids as $download_id ) {

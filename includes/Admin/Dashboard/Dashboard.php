@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\Admin\Dashboard;
 
 use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\Contracts\Hookable;
+use WeDevs\Dokan\Utilities\OrderUtil;
 
 /**
  * Admin dashboard class.
@@ -30,7 +31,7 @@ class Dashboard implements Hookable {
     /**
      * Admin switching script key.
      *
-     * @SINCE DOKAN_SINCE
+     * @SINCE 4.1.3
      *
      * @var string
      */
@@ -39,7 +40,7 @@ class Dashboard implements Hookable {
     /**
      * Admin panel header script key.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.3
      *
      * @var string
      */
@@ -54,6 +55,8 @@ class Dashboard implements Hookable {
         add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
         add_action( 'admin_notices', [ $this, 'inject_before_notices' ], -9999 );
         add_action( 'admin_notices', [ $this, 'inject_after_notices' ], PHP_INT_MAX );
+        add_filter( 'admin_footer_text', [ $this, 'add_switching_container' ] );
+        add_filter( 'update_footer', [ $this, 'add_update_footer' ], 99 );
     }
 
     /**
@@ -139,7 +142,6 @@ class Dashboard implements Hookable {
         ob_start();
         echo '<div id="dokan-admin-panel-header" class="dokan-layout"></div>';
         echo '<div class="wrap"><div id="dokan-admin-dashboard" class="dokan-layout dokan-admin-page-body">' . esc_html__( 'Loading...', 'dokan-lite' ) . '</div></div>';
-        echo '<div id="dokan-admin-switching" class="dokan-layout dokan-admin-page-body"></div>';
         echo ob_get_clean();
     }
 
@@ -330,13 +332,41 @@ class Dashboard implements Hookable {
         $admin_dashboard_file = DOKAN_DIR . '/assets/js/dokan-admin-dashboard.asset.php';
         if ( file_exists( $admin_dashboard_file ) ) {
             $dashboard_script = require $admin_dashboard_file;
-            $dependencies     = $dashboard_script['dependencies'] ?? [];
-
-            $dependencies[]   = 'dokan-react-components';
-            $dependencies[]   = 'dokan-react-frontend';
-
+            $dependencies     = array_merge( $dashboard_script['dependencies'] ?? [], [ 'dokan-react-components', 'dokan-react-frontend', 'jquery', 'media-upload', 'media-views' ] );
             $version          = $dashboard_script['version'] ?? '';
-            $data             = [ 'currency' => dokan_get_container()->get( 'scripts' )->get_localized_price() ];
+
+            $banner_width    = dokan_get_vendor_store_banner_width();
+            $banner_height   = dokan_get_vendor_store_banner_height();
+
+            $has_flex_width  = dokan_get_option( 'store_banner_flex_width', 'dokan_general', true );
+            $has_flex_height = dokan_get_option( 'store_banner_flex_height', 'dokan_general', true );
+
+            $data = apply_filters(
+                'dokan_admin_dashboard_localize_scripts',
+                [
+                    'currency'  => dokan_get_container()->get( 'scripts' )->get_localized_price(),
+                    'states'    => WC()->countries->get_allowed_country_states(),
+                    'countries' => WC()->countries->get_allowed_countries(),
+                    'nonce'     => wp_create_nonce( 'dokan_admin' ),
+                    'store_banner_dimension'                   => [
+                        'width'       => $banner_width,
+                        'height'      => $banner_height,
+                        'flex-width'  => $has_flex_width,
+                        'flex-height' => $has_flex_height,
+                    ],
+                    'urls'                              => [
+                        'adminRoot'         => admin_url(),
+                        'siteUrl'           => home_url( '/' ),
+                        'storePrefix'       => dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ),
+                        'assetsUrl'         => DOKAN_PLUGIN_ASSEST,
+                        'buynowpro'         => dokan_pro_buynow_url(),
+                        'upgradeToPro'      => 'https://dokan.co/wordpress/upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
+                        'dummy_data'        => DOKAN_PLUGIN_ASSEST . '/dummy-data/dokan_dummy_data.csv',
+                        'adminOrderListUrl' => OrderUtil::get_admin_order_list_url(),
+                        'adminOrderEditUrl' => OrderUtil::get_admin_order_edit_url(),
+                    ],
+                ]
+            );
 
             wp_register_script(
                 $this->script_key,
@@ -349,7 +379,7 @@ class Dashboard implements Hookable {
             wp_register_style(
                 $this->script_key,
                 DOKAN_PLUGIN_ASSEST . '/css/dokan-admin-dashboard.css',
-                [ 'wc-components' ],
+                [ 'dokan-react-components', 'wc-components' ],
                 $version
             );
 
@@ -358,10 +388,10 @@ class Dashboard implements Hookable {
                 'dokan-lite'
             );
 
-            wp_localize_script(
+            wp_add_inline_script(
                 $this->script_key,
-                'dokanAdminDashboard',
-                $data,
+                'window.dokanAdminDashboard = ' . wp_json_encode( $data ),
+                'before'
             );
         }
     }
@@ -369,7 +399,7 @@ class Dashboard implements Hookable {
     /**
      * Register the admin panel header scripts.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.3
      *
      * @return void
      */
@@ -464,7 +494,7 @@ class Dashboard implements Hookable {
     /**
      * Register the admin switching scripts.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.3
      *
      * @return void
      */
@@ -525,6 +555,9 @@ class Dashboard implements Hookable {
             return;
         }
 
+        // Enqueue media scripts
+        wp_enqueue_media();
+
         foreach ( $this->scripts() as $handle ) {
             wp_enqueue_script( $handle );
         }
@@ -579,5 +612,47 @@ class Dashboard implements Hookable {
         // Close the hidden div used to prevent notices from flickering before
         // they are inserted elsewhere in the page.
         echo '</div>';
+    }
+
+    /**
+     * Add container for admin switching functionality.
+     *
+     * @since 4.1.3
+     *
+     * @param string $text Footer text
+     *
+     * @return string Modified footer text with admin switching container
+     */
+    public function add_switching_container( $text ) {
+
+        $current_screen = get_current_screen();
+		$is_dokan_screen = ( $current_screen && false !== strpos( $current_screen->id, 'dokan' ) );
+		if ( ! $is_dokan_screen ) {
+            return $text;
+        }
+
+        $dom_element = '<span id="dokan-admin-switching" class="dokan-layout dokan-admin-page-body"></span><br/>';
+
+        return $dom_element;
+    }
+
+    /**
+     * Add empty update footer for Dokan screens.
+     *
+     * @since 4.1.3
+     *
+     * @param string $content Footer content
+     *
+     * @return string Empty string for Dokan screens, original content otherwise
+     */
+    public function add_update_footer( $content ) {
+        $current_screen = get_current_screen();
+		$is_dokan_screen = ( $current_screen && false !== strpos( $current_screen->id, 'dokan' ) );
+
+		if ( ! $is_dokan_screen ) {
+            return $content;
+        }
+
+        return '';
     }
 }

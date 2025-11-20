@@ -199,11 +199,6 @@ class Assets {
                 'component' => 'ReverseWithdrawalTransactions',
             ],
             [
-                'path'      => '/premium',
-                'name'      => 'Premium',
-                'component' => 'Premium',
-            ],
-            [
                 'path'      => '/help',
                 'name'      => 'Help',
                 'component' => 'Help',
@@ -646,6 +641,19 @@ class Assets {
                 'deps'    => $core_store_asset['dependencies'],
             ];
         }
+
+        $vendors_store_asset_file = DOKAN_DIR . '/assets/js/vendors-store.asset.php';
+        if ( file_exists( $vendors_store_asset_file ) ) {
+            $vendors_store_asset = require $vendors_store_asset_file;
+
+            // Register React components.
+            $scripts['dokan-stores-vendors'] = [
+                'version' => $vendors_store_asset['version'],
+                'src'     => $asset_url . '/js/vendors-store.js',
+                'deps'    => $vendors_store_asset['dependencies'],
+            ];
+        }
+
         $product_store_asset_file = DOKAN_DIR . '/assets/js/products-store.asset.php';
         if ( file_exists( $product_store_asset_file ) ) {
             $stores_asset = require $product_store_asset_file;
@@ -1379,6 +1387,7 @@ class Assets {
         return apply_filters(
             'dokan_vue_admin_localize_script', [
                 'commission_types' => dokan_commission_types(),
+                'reserved_slugs'   => dokan_get_reserved_url_slugs(),
             ]
         );
     }

@@ -27,8 +27,11 @@ const defaultMap = ( store: any ): VendorOption => ( {
     label:
         store.store_name ||
         store.name ||
-        // eslint-disable-next-line @wordpress/i18n-translator-comments
-        sprintf( __( 'Order #%s', 'dokan-lite' ), String( store?.id ) ),
+        sprintf(
+            // eslint-disable-next-line @wordpress/i18n-translator-comments
+            __( '(no name) #%s', 'dokan-lite' ),
+            String( store?.id ?? '' )
+        ),
     raw: store,
 } );
 
@@ -268,6 +271,7 @@ function VendorAsyncSelect( props: VendorAsyncSelectProps ) {
                 return results;
             } }
             instanceId={ `vendor-async-${ depsSignature }` }
+            selectedTitle={ __( 'Vendor', 'dokan-lite' ) }
             { ...rest }
             onMenuOpen={ async () => {
                 try {
