@@ -265,7 +265,6 @@ function VendorAsyncSelect( props: VendorAsyncSelectProps ) {
                 if ( inputValue && inputValue.trim() !== '' ) {
                     skipMergeDueToDepsRef.current = false;
                 }
-
                 return results;
             } }
             instanceId={ `vendor-async-${ depsSignature }` }
