@@ -82,6 +82,11 @@ class SettingsMapper {
         'dokan_appearance.recaptcha_secret_key'    => 'appearance.store.google_recaptcha.google_recaptcha_settings.recaptcha_secret_key',
 
         // =========================
+        // Appearance > Dashboard Color Customizer
+        // =========================
+        'dokan_colors.store_color_pallete'                  => 'appearance.dashboard-color-customizer-page.dokan-store-colors.dashboard_color_customizer',
+
+        // =========================
         // Compliance > Privacy
         // =========================
         'dokan_privacy.enable_privacy' => 'compliance.privacy.privacy_settings.privacy_policy_display',
