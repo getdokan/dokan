@@ -38,6 +38,14 @@ const AddReverseWithdrawModal = ( {
     const [ loading, setLoading ] = useState( false );
     const [ errors, setErrors ] = useState( {} );
 
+    // Compute if there are any validation errors
+    const hasValidationErrors =
+        ! vendorsData?.value ||
+        ( transectionType === 'manual_product' && ! selectedProduct?.value ) ||
+        ( transectionType === 'manual_order' && ! selectedOrder?.value ) ||
+        ! withdrawalAmountRaw ||
+        ! withdrawalNote;
+
     const handleConfirm = async () => {
         const newErrors = {};
         if ( ! vendorsData?.value ) {
@@ -169,9 +177,9 @@ const AddReverseWithdrawModal = ( {
                 </label>
                 <VendorAsyncSelect
                     prefetch
+                    isClearable
                     value={ vendorsData }
                     onChange={ handleVendorChange }
-                    isClearable
                     placeholder={ __( 'Search', 'dokan-lite' ) }
                 />
                 { errors.vendorId && (
@@ -464,6 +472,7 @@ const AddReverseWithdrawModal = ( {
             cancelButtonText={ __( 'Cancel', 'dokan-lite' ) }
             confirmButtonVariant="primary"
             loading={ loading }
+            confirmButtonDisabled={ hasValidationErrors }
         />
     );
 };

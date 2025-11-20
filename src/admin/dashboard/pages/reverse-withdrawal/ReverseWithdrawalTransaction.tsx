@@ -1,5 +1,5 @@
 import { addQueryArgs } from '@wordpress/url';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import {
     RawHTML,
     useCallback,
@@ -19,6 +19,7 @@ import {
     DollarSign,
     WalletMinimal,
 } from 'lucide-react';
+import { SimpleInput } from '@getdokan/dokan-ui';
 
 const ReverseWithdrawalTransactionPage = ( { params, navigate } ) => {
     const vendorId = params?.id;
@@ -298,6 +299,15 @@ const ReverseWithdrawalTransactionPage = ( { params, navigate } ) => {
         },
     ];
 
+    const displayDateRange = ( startDate, endDate ) => {
+        return sprintf(
+            // translators: %s: start date, %s: end date.
+            __( '%s - %s', 'dokan-lite' ),
+            dateI18n( getSettings().formats.date, startDate ),
+            dateI18n( getSettings().formats.date, endDate )
+        );
+    };
+
     const filterFields = [
         {
             id: 'dokan-date-range',
@@ -370,36 +380,20 @@ const ReverseWithdrawalTransactionPage = ( { params, navigate } ) => {
                         setFilterArgs( args );
                     } }
                 >
-                    <div className="relative">
-                        <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none z-10" />
-                        <input
-                            type="text"
-                            value={ ( () => {
-                                const parts = [];
-                                if ( dateAfterText || dateAfter ) {
-                                    parts.push(
-                                        dateI18n(
-                                            getSettings().formats.date,
-                                            dateAfterText || dateAfter
-                                        )
-                                    );
-                                }
-                                if ( dateBeforeText || dateBefore ) {
-                                    parts.push(
-                                        dateI18n(
-                                            getSettings().formats.date,
-                                            dateBeforeText || dateBefore
-                                        )
-                                    );
-                                }
-
-                                return parts.join( ' - ' );
-                            } )() }
-                            className="border border-gray-300 rounded-md pl-8 text-gray-900 cursor-pointer w-full bg-[#fdfdfd] h-11"
-                            placeholder={ __( 'Date', 'dokan-lite' ) }
-                            readOnly
-                        />
-                    </div>
+                    <SimpleInput
+                        addOnLeft={ <Calendar size="16" /> }
+                        className="border rounded px-3 py-1.5 w-full bg-white"
+                        onChange={ () => {} }
+                        input={ {
+                            type: 'text',
+                            value:
+                                ! dateAfter || ! dateBefore
+                                    ? ''
+                                    : displayDateRange( dateAfter, dateBefore ),
+                            placeholder: 'Date',
+                            readOnly: true,
+                        } }
+                    />
                 </DateRangePicker>
             ),
         },

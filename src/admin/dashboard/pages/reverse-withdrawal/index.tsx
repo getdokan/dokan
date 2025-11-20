@@ -1,5 +1,5 @@
 import { addQueryArgs } from '@wordpress/url';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { RawHTML, useEffect, useState, useCallback } from '@wordpress/element';
 import { dateI18n, getSettings } from '@wordpress/date';
 import apiFetch from '@wordpress/api-fetch';
@@ -16,6 +16,7 @@ import {
 import AddReverseWithdrawModal from './AddReverseWithdrawModal';
 import { VendorAsyncSelect } from '@src/components';
 import DateRangePicker from '@src/components/DateRangePicker';
+import { SimpleInput } from '@getdokan/dokan-ui';
 
 const price = ( amount ) => <RawHTML>{ formatPrice( amount ) }</RawHTML>;
 
@@ -197,6 +198,15 @@ const ReverseWithdrawalPage = ( props ) => {
         setFilterArgs( {} );
     };
 
+    const displayDateRange = ( startDate, endDate ) => {
+        return sprintf(
+            // translators: %s: start date, %s: end date.
+            __( '%s - %s', 'dokan-lite' ),
+            dateI18n( getSettings().formats.date, startDate ),
+            dateI18n( getSettings().formats.date, endDate )
+        );
+    };
+
     // Memoize filter fields to prevent recreation
     const filterFields = [
         {
@@ -293,38 +303,20 @@ const ReverseWithdrawalPage = ( props ) => {
                         setFilterArgs( args );
                     } }
                 >
-                    <div className="relative">
-                        <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none z-10" />
-                        <input
-                            type="text"
-                            value={ ( () => {
-                                const parts = [];
-                                if ( dateAfterText || dateAfter ) {
-                                    parts.push(
-                                        // dateAfterText || dateAfter
-                                        dateI18n(
-                                            getSettings().formats.date,
-                                            dateAfterText || dateAfter
-                                        )
-                                    );
-                                }
-                                if ( dateBeforeText || dateBefore ) {
-                                    parts.push(
-                                        // dateBeforeText || dateBefore
-                                        dateI18n(
-                                            getSettings().formats.date,
-                                            dateBeforeText || dateBefore
-                                        )
-                                    );
-                                }
-
-                                return parts.join( ' - ' );
-                            } )() }
-                            className="border border-gray-300 rounded-md pl-8 text-gray-900 cursor-pointer w-full bg-[#fdfdfd] h-11"
-                            placeholder={ __( 'Date', 'dokan-lite' ) }
-                            readOnly
-                        />
-                    </div>
+                    <SimpleInput
+                        addOnLeft={ <Calendar size="16" /> }
+                        className="border rounded px-3 py-1.5 w-full bg-white"
+                        onChange={ () => {} }
+                        input={ {
+                            type: 'text',
+                            value:
+                                ! dateAfter || ! dateBefore
+                                    ? ''
+                                    : displayDateRange( dateAfter, dateBefore ),
+                            placeholder: 'Date',
+                            readOnly: true,
+                        } }
+                    />
                 </DateRangePicker>
             ),
         },
