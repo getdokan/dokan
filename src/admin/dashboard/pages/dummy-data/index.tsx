@@ -2,12 +2,13 @@ import { Card, DokanToaster, useToast } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { parse } from 'papaparse';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from '@wordpress/element';
 import HeaderImage from 'admin/dashboard/pages/dummy-data/HeaderImage';
 import Importer from 'admin/dashboard/pages/dummy-data/Importer';
 import Result from 'admin/dashboard/pages/dummy-data/Result';
-import { DokanLink } from "@dokan/components";
-import { ChevronLeft } from "lucide-react";
+import StatusSkeleton from 'admin/dashboard/pages/dummy-data/StatusSkeleton';
+import { DokanLink } from '@dokan/components';
+import { ChevronLeft } from 'lucide-react';
 
 function Index( props ) {
     const toast = useToast();
@@ -213,6 +214,16 @@ function Index( props ) {
         if ( ! vendorData ) {
             setLoading( false );
             setDone( true );
+
+            if ( vendorIndex > 0 ) {
+                toast( {
+                    type: 'success',
+                    title: __(
+                        'Dummy data imported successfully',
+                        'dokan-lite'
+                    ),
+                } );
+            }
             return;
         }
 
@@ -310,6 +321,14 @@ function Index( props ) {
             .finally( () => {
                 setLoading( false );
                 setIsConfirmOpen( false );
+
+                toast( {
+                    type: 'success',
+                    title: __(
+                        'All dummy data remove successfully',
+                        'dokan-lite'
+                    ),
+                } );
             } );
     }
 
@@ -348,6 +367,8 @@ function Index( props ) {
                         <HeaderImage />
                     </div>
                 </div>
+
+                { statusLoader && <StatusSkeleton /> }
 
                 { ! statusLoader && ! done && (
                     <div className="border-b border-[#E9E9E9]">
