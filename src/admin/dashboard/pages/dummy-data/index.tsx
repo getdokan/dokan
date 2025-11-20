@@ -2,14 +2,15 @@ import { Card, DokanToaster, useToast } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { parse } from 'papaparse';
-import { useEffect, useMemo, useState } from '@wordpress/element';
-import HeaderImage from 'admin/dashboard/pages/dummy-data/HeaderImage';
-import Importer from 'admin/dashboard/pages/dummy-data/Importer';
-import Result from 'admin/dashboard/pages/dummy-data/Result';
-import StatusSkeleton from 'admin/dashboard/pages/dummy-data/StatusSkeleton';
+import { useEffect, useState } from '@wordpress/element';
+import HeaderImage from './HeaderImage';
+import Importer from './Importer';
+import Result from './Result';
+import StatusSkeleton from './StatusSkeleton';
 import { DokanLink } from '@dokan/components';
 import { ChevronLeft } from 'lucide-react';
-import { RouterProps } from "@src/definitions/RouterProps";
+import { RouterProps } from '@src/definitions/RouterProps';
+import { productsDataToRemove, vendorsDataToRemove } from './RemovableDatasObj';
 
 function Index( props: RouterProps ) {
     const toast = useToast();
@@ -21,95 +22,6 @@ function Index( props: RouterProps ) {
     const [ statusLoader, setStatusLoader ] = useState< boolean >( true );
 
     const csvFileUrl = ( window as any )?.dokanAdminDashboard?.urls?.dummy_data;
-
-    const vendorsDataToRemove = useMemo(
-        () => [
-            'sku',
-            'status',
-            'catalog_visibility',
-            'short_description',
-            'date_on_sale_from',
-            'date_on_sale_to',
-            'tax_status',
-            'tax_class',
-            'stock_status',
-            'manage_stock',
-            'stock_quantity',
-            'children',
-            'backorders',
-            'sold_individually',
-            'reviews_allowed',
-            'purchase_note',
-            'sale_price',
-            'regular_price',
-            'category_ids',
-            'tag_ids',
-            'shipping_class_id',
-            'raw_image_id',
-            'raw_gallery_image_ids',
-            'download_limit',
-            'download_expiry',
-            'parent_id',
-            'grouped_products',
-            'upsell_ids',
-            'cross_sell_ids',
-            'product_url',
-            'button_text',
-            'menu_order',
-            'virtual',
-            'downloadable',
-            'status',
-            'attribute_1_name',
-            'attribute_1_value',
-            'attribute_1_visible',
-            'attribute_1_global',
-            'attribute_2_name',
-            'attribute_2_value',
-            'attribute_2_visible',
-            'attribute_2_global',
-            '_wpcom_is_markdown',
-            'download1_name',
-            'download_1_url',
-            'download_2_name',
-            'download_2_url',
-            'vendor',
-        ],
-        []
-    );
-    const productsDataToRemove = useMemo(
-        () => [
-            'email',
-            'password',
-            'store_name',
-            'social',
-            'payment',
-            'phone',
-            'show_email',
-            'address',
-            'location',
-            'banner',
-            'icon',
-            'gravatar',
-            'show_more_tpab',
-            'show_ppp',
-            'enable_tnc',
-            'store_tnc',
-            'show_min_order_discount',
-            'store_seo',
-            'dokan_store_time',
-            'enabled',
-            'trusted',
-            'attribute_1_name',
-            'attribute_1_value',
-            'attribute_1_visible',
-            'attribute_1_global',
-            'attribute_2_name',
-            'attribute_2_value',
-            'attribute_2_visible',
-            'attribute_2_global',
-        ],
-        []
-    );
 
     // initial load
     useEffect( () => {
