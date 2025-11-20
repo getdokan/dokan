@@ -3,7 +3,13 @@
 import { DokanButton } from '@dokan/components';
 import { __ } from "@wordpress/i18n";
 
-function Importer() {
+type ImporterProps = {
+    progress: number;
+    loading: boolean;
+    onRun: () => void;
+};
+
+function Importer({ progress, loading, onRun }: ImporterProps) {
     return (
         <div className="p-[24px]">
             <div className="flex flex-col gap-[24px]">
@@ -22,17 +28,17 @@ function Importer() {
                 <div className="flex flex-row gap-[16px] items-center my-[4px]">
                     <progress
                         className="w-full h-[8px] [&::-webkit-progress-bar]:rounded-lg [&::-webkit-progress-value]:rounded-lg [&::-webkit-progress-bar]:bg-[#EFEAFF] [&::-webkit-progress-value]:bg-[#7047EB] [&::-moz-progress-bar]:bg-[#7047EB]"
-                        value={ 10 }
+                        value={ Math.round( progress ) }
                         max={ 100 }
                     ></progress>
-                    <span>{ 10 }%</span>
+                    <span>{ Math.round( progress ) }%</span>
                 </div>
 
                 <div>
                     <DokanButton
-                        // disabled={ disabled || !! loading }
-                        // loading={ loading }
-                        // onClick={ () => onClick( type ) }
+                        disabled={ !! loading }
+                        loading={ !! loading }
+                        onClick={ onRun }
                         label={ __( 'Run the Importer', 'dokan-lite' ) }
                         className="!h-[28px] !font-[500] !text-[12px] !leading-[16px]"
                     />

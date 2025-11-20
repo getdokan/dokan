@@ -2,7 +2,12 @@ import { Check, Users, Box, Trash } from 'lucide-react';
 import { __ } from '@wordpress/i18n';
 import { DokanButton } from '@dokan/components';
 
-function Result( props ) {
+type ResultProps = {
+    onClear: () => void;
+    loading: boolean;
+};
+
+function Result( { onClear, loading }: ResultProps ) {
     return (
         <div className="p-[24px]">
             <div className="flex flex-row items-center mb-[20px]">
@@ -44,9 +49,9 @@ function Result( props ) {
             </div>
 
             <DokanButton
-                // disabled={ disabled || !! loading }
-                // loading={ loading }
-                // onClick={ () => onClick( type ) }
+                disabled={ !! loading }
+                loading={ !! loading }
+                onClick={ onClear }
                 variant="danger"
                 label={
                     <div className="flex items-center gap-[6px]">
