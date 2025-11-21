@@ -251,7 +251,7 @@ const Sidebar = ( {
                     ) }
                 >
                     <nav>
-                        <ul className="flex flex-col gap-1.5">
+                        <ul className="flex flex-col gap-1.5 list-none p-0">
                             { Object.entries( sidebarNav || {} ).map(
                                 ( [ key, item ]: any ) => {
                                     const hasSub =
@@ -409,7 +409,7 @@ const Sidebar = ( {
                                                             : 'max-h-0 opacity-0 pointer-events-none'
                                                     ) }
                                                 >
-                                                    <ul className="mt-2 mx-0 space-y-1.5">
+                                                    <ul className="mt-2 mx-0 space-y-1.5 list-none p-0">
                                                         { Object.entries(
                                                             item.submenu
                                                         ).map(

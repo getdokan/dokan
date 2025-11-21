@@ -91,7 +91,7 @@ const Header = ( { onToggleSidebar }: { onToggleSidebar: () => void } ) => {
                             onClose={ () => setIsMenuOpen( false ) }
                         >
                             <div className="header-popover bg-white rounded-md shadow-md min-w-[240px] transition-all duration-200 ease-in-out py-2">
-                                <ul className="flex flex-col">
+                                <ul className="flex flex-col p-0 list-none">
                                     { headerNav?.map(
                                         ( item: any, idx: number ) => (
                                             <li key={ idx }>
