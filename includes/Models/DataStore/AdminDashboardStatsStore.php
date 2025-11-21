@@ -282,13 +282,15 @@ class AdminDashboardStatsStore extends BaseDataStore {
 
         return apply_filters(
             'dokan_admin_dashboard_order_cancellation_rate_data',
-            [
-                ...$order_stats,
-                'icon'     => 'BanknoteX',
-                'title'    => esc_html__( 'Order Cancellation Rate', 'dokan-lite' ),
-                'tooltip'  => esc_html__( 'Rate of orders which got cancelled in the time period', 'dokan-lite' ),
-                'position' => 80,
-            ],
+            array_merge(
+                $order_stats,
+                [
+                    'icon'     => 'BanknoteX',
+                    'title'    => esc_html__( 'Order Cancellation Rate', 'dokan-lite' ),
+                    'tooltip'  => esc_html__( 'Rate of orders which got cancelled in the time period', 'dokan-lite' ),
+                    'position' => 80,
+                ]
+            ),
             $date_range
         );
     }
