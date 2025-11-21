@@ -39,6 +39,7 @@ const Header = ( { onToggleSidebar }: { onToggleSidebar: () => void } ) => {
             >
                 { /* eslint-disable-next-line jsx-a11y/anchor-is-valid */ }
                 <a
+                    target="_blank"
                     href={ window.dokan?.urls?.storeUrl || '#' }
                     className="visit-store group skip-color-module flex items-center text-sm gap-2 font-medium text-[#25252D] focus:!outline-none py-4 px-5"
                 >
@@ -50,6 +51,7 @@ const Header = ( { onToggleSidebar }: { onToggleSidebar: () => void } ) => {
                     // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
                     onMouseEnter={ () => setIsMenuOpen( true ) }
                     onMouseLeave={ () => setIsMenuOpen( false ) }
+                    onClick={ () => setIsMenuOpen( ! isMenuOpen ) }
                     className="header-avatar flex items-center gap-2.5 cursor-pointer py-4 px-5"
                     role="button"
                     tabIndex={ 0 }
