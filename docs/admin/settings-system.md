@@ -24,6 +24,7 @@ This document explains how the new Admin Settings system works, how to create pa
   - [Filters](#filters)
   - [Actions](#actions)
 - [Tips](#tips)
+- [Guidelines: Conditional value mapping and callbacks](#guidelines-conditional-value-mapping-and-callbacks)
 
 ## Overview
 The Admin Settings system is a structured, extensible configuration framework for Dokan. It models settings as a hierarchy:
