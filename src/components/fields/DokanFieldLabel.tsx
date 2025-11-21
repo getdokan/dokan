@@ -29,7 +29,7 @@ const DokanBaseFieldLabel = ( {
     return (
         <div
             className={ twMerge(
-                `flex items-start gap-4 max-w-xl`,
+                `flex items-start gap-4 max-w-xl mb-4`,
                 wrapperClassNames
             ) }
         >
