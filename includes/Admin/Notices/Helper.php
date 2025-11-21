@@ -80,7 +80,7 @@ class Helper {
                     'show_close_button' => true,
                     'ajax_data'         => [
                         'action' => 'dokan_dismiss_limited_time_promotional_notice',
-                        'nonce'  => wp_create_nonce( 'dokan_admin' ),
+                        'nonce'  => wp_create_nonce( 'dokan_promotional_notice' ),
                         'key'    => $promo['key'],
                     ],
                     'actions'           => [
