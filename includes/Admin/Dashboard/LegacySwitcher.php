@@ -152,6 +152,7 @@ class LegacySwitcher implements Hookable {
         $admin_url_map = apply_filters(
             'dokan_admin_legacy_url_map',
             [
+                'refund'              => 'refunds',
                 'request-for-quote'   => 'rfq',
                 'announcement'        => 'announcements',
                 'product-advertising' => 'advertising',

@@ -15,6 +15,7 @@ const PanelSwitch = () => {
         // Define an array with a filter hook for supported URL keys.
         'dokan_admin_panel_switch_supported_keys',
         [
+            'refund',
             'dashboard',
             'withdraw',
             'vendors',
