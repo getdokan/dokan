@@ -123,3 +123,17 @@
     width: 0;
     height: 0;
 }
+
+/* Apply styles for xstore theme specific conflicts. */
+.wp-theme-xstore {
+    .dokan-frontend-layout {
+        .dokan-frontend-sidebar {
+            div {
+                &:last-child,
+                &:first-child {
+                    flex: 0;
+                }
+            }
+        }
+    }
+}
