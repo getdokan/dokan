@@ -500,7 +500,7 @@ const WithdrawPage = () => {
         type: 'table',
         titleField: 'vendor',
         status: 'pending',
-        layout: { ...defaultLayouts },
+        layout: { density: 'comfortable' },
         fields: fields.map( ( field ) =>
             field.id !== 'vendor' ? field.id : ''
         ),

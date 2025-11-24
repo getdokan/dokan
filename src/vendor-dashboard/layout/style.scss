@@ -128,7 +128,7 @@
 .wp-theme-xstore {
     .dokan-frontend-layout {
         .dokan-frontend-sidebar {
-            div {
+            > div {
                 &:last-child,
                 &:first-child {
                     flex: 0;
