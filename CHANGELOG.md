@@ -1,5 +1,4 @@
 ### v4.2.0 ( Nov 24, 2025 ) ###
-- **new:** Vendors can now add their TikTok profile in their social settings to connect with more customers.
 - **update:** Ensured full compatibility for the legacy admin panel across Subscriptions, Announcements, Wholesale, Product Ads, Abuse Reports, Seller Badge, and Refund pages.
 - **update:** The vendor dashboard now supports modern, full-width theme layouts, providing a more spacious user experience.
 - **update:** Redesigned the Admin's Reverse Withdrawal page with a modern, easier-to-use interface for faster payment management.

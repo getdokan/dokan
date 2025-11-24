@@ -7,12 +7,6 @@ $changelog = [
         'version'  => 'Version 4.2.0',
         'released' => '2025-11-24',
         'changes'  => [
-            'New' => [
-                [
-                    'title'       => 'Vendors can now add their TikTok profile in their social settings to connect with more customers.',
-                    'description' => '',
-                ],
-            ],
             'Improvement' => [
                 [
                     'title'       => 'Ensured full compatibility for the legacy admin panel across Subscriptions, Announcements, Wholesale, Product Ads, Abuse Reports, Seller Badge, and Refund pages.',
