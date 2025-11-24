@@ -94,6 +94,8 @@ class Manager {
             'shop_name' => $store->get_shop_name(),
             'url'       => $store->get_shop_url(),
             'address'   => $store->get_address(),
+            'avatar'    => $store->get_avatar(),
+            'banner'    => $store->get_banner(),
         );
 
         $response->set_data( $data );

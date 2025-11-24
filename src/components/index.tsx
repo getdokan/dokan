@@ -5,8 +5,9 @@ export { default as SortableList } from './sortable-list';
 export {
     DataForm,
     VIEW_LAYOUTS,
+    DataViewsPicker,
     filterSortAndPaginate,
-    isItemValid,
+    useFormValidity,
     // @ts-ignore
 } from '@wordpress/dataviews/wp';
 

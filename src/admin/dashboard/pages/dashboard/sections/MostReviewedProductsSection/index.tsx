@@ -116,7 +116,10 @@ const MostReviewedProductsSection = () => {
                 <DataViews
                     data={ padDefaultData( data || [] ) }
                     namespace="dokan-most-reviewed-products"
-                    defaultLayouts={ { table: {}, density: 'comfortable' } }
+                    defaultLayouts={ {
+                        table: { density: 'comfortable' },
+                        list: {},
+                    } }
                     fields={ fields }
                     getItemId={ ( item ) => item.product_id }
                     onChangeView={ setView }
