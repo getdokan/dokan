@@ -19,9 +19,10 @@ const PanelSwitch = () => {
             'withdraw',
             'vendors',
             'store-reviews',
+            'verifications',
+            'announcement',
             'subscriptions',
             'abuse-reports',
-            'verifications',
         ]
     );
 
