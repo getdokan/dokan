@@ -24,6 +24,7 @@ const PanelSwitch = () => {
             'announcement',
             'subscriptions',
             'abuse-reports',
+            'wholesale-customer'
         ]
     );
 
