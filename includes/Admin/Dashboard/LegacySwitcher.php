@@ -155,6 +155,7 @@ class LegacySwitcher implements Hookable {
                 'refund'              => 'refunds',
                 'request-for-quote'   => 'rfq',
                 'announcement'        => 'announcements',
+                'dokan-seller-badge'  => 'seller-badge',
                 'product-advertising' => 'advertising',
             ]
         );

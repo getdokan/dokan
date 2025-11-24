@@ -26,6 +26,7 @@ const PanelSwitch = () => {
             'announcement',
             'subscriptions',
             'abuse-reports',
+            'dokan-seller-badge',
             'wholesale-customer',
         ]
     );
