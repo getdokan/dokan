@@ -7,7 +7,7 @@ Tested up to: 6.8.3
 WC requires at least: 8.5.0
 WC tested up to: 10.2.2
 Requires PHP: 7.4
-Stable tag: 4.1.5
+Stable tag: 4.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -352,6 +352,14 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v4.2.0 ( Nov 24, 2025 ) =
+- **new:** Vendors can now add their TikTok profile in their social settings to connect with more customers.
+- **update:** Ensured full compatibility for the legacy admin panel across Subscriptions, Announcements, Wholesale, Product Ads, Abuse Reports, Seller Badge, and Refund pages.
+- **update:** The vendor dashboard now supports modern, full-width theme layouts, providing a more spacious user experience.
+- **update:** Redesigned the Admin's Reverse Withdrawal page with a modern, easier-to-use interface for faster payment management.
+- **fix:** Corrected a price formatting issue in both HTML and plain text email templates.
+- **fix:** Fixed a redirection issue on the legacy vendor shipping policy page to ensure it works correctly.
+
 = v4.1.5 ( Nov 11, 2025 ) =
 - **update:** Added vendor verification legacy UI support for admin panel to ensure backward compatibility with older interface versions.
 - **update:** Updated all Twitter labels to X to reflect the latest brand changes.
@@ -369,13 +377,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 = v4.1.2 ( Oct 16, 2025 ) =
 - **enhance:** Updated the Admin Dashboard header UI for seamless visual representation with the new React-based frontend architecture.
 - **update:** Added support for retrieving all product types via the Products REST API, enabling more flexible product filtering.
-
-= v4.1.1 ( Oct 09, 2025 ) =
-- **update:** Added method to retrieve vendor earnings excluding admin subsidy.
-- **update:** Admin gateway fee calculation now checks an order-level meta value before using the previous fallback logic.
-
-= v4.1.0 ( Sep 30, 2025 ) =
-- **feat:** New React-based Admin Dashboard with enhanced metrics and rank boards.
-- **update:** Migrated Pro Features page from Vue to React with enhanced UI.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

@@ -5,7 +5,7 @@
  * This template renders only the shortcode content in full-width mode
  * while preserving all wp_head() and wp_footer() hooks for scripts/styles
  *
- * @since DOKAN_SINCE
+ * @since 4.2.0
  *
  * @package Dokan
  */

@@ -1208,7 +1208,7 @@ class Settings {
     /**
      * Set the default settings for vendor layout.
      *
-     * @since DOKAN_SINCE
+     * @since 4.2.0
      *
      * @param mixed $option_name
      * @param mixed $option_value
