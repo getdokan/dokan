@@ -20,11 +20,12 @@ const PanelSwitch = () => {
             'vendors',
             'store-reviews',
             'verifications',
+            'product-advertising',
             'reverse-withdrawal',
             'announcement',
             'subscriptions',
             'abuse-reports',
-            'wholesale-customer'
+            'wholesale-customer',
         ]
     );
 
