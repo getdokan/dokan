@@ -144,6 +144,7 @@ class LegacyTransformer implements TransformerInterface {
                 if ( function_exists( 'apply_filters' ) ) {
                     $value = apply_filters( 'dokan_settings_mapper_transform_value', $value, 'old_to_new', $old_key, $new_key, $legacy_values, $result );
                     $value = apply_filters( 'dokan_settings_mapper_transform_value_old_to_new', $value, $old_key, $new_key, $legacy_values, $result );
+                    error_log('Value after change: ' . $value  );
                 }
 
                 SettingsMapper::set_value_by_path( $result, $new_key, $value );
