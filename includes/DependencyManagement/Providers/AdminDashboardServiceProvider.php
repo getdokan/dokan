@@ -12,6 +12,7 @@ use WeDevs\Dokan\Admin\Dashboard\Pages\Withdraw;
 use WeDevs\Dokan\Admin\Dashboard\Pages\Vendors;
 use WeDevs\Dokan\Admin\OnboardingSetup\AdminSetupGuide;
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
+use WeDevs\Dokan\Admin\Dashboard\Pages\ReverseWithdrawal;
 
 /**
  * Admin Dashboard API Service Provider
@@ -39,6 +40,7 @@ class AdminDashboardServiceProvider extends BaseServiceProvider {
         ProFeatures::class,
         Withdraw::class,
         Vendors::class,
+        ReverseWithdrawal::class, // Added ReverseWithdrawal page service
 	];
 
     /**
