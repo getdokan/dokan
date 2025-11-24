@@ -153,6 +153,7 @@ class LegacySwitcher implements Hookable {
             'dokan_admin_legacy_url_map',
             [
                 'request-for-quote' => 'rfq',
+                'announcement'      => 'announcements',
             ]
         );
 

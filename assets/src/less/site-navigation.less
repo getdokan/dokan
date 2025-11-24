@@ -303,6 +303,31 @@
       }
     }
   }
+
+  #dokan-dashboard-fullwidth-wrapper {
+    .dokan-dash-sidebar {
+      transition: width .2s ease;
+      width: var(--dokan-sidebar-width, 250px);
+      max-width: var(--dokan-sidebar-width, 250px);
+    }
+
+    .dokan-dashboard-wrap {
+      z-index: 1;
+      position: relative;
+
+      .dokan-dashboard-content {
+        position: relative;
+        padding: 48px;
+      }
+
+      > div:not(.dokan-dashboard-content) {
+        visibility: hidden;
+      }
+      > .dokan-dashboard-content {
+        display: none;
+      }
+    }
+  }
 }
 
 @keyframes showNav {
@@ -335,6 +360,32 @@
           padding-top: 48px !important;
         }
       }
+    }
+  }
+}
+
+@media screen and ( max-width: 768px ) {
+  .dokan-dashboard {
+    #dokan-dashboard-fullwidth-wrapper {
+      position: relative;
+
+      .dokan-dash-sidebar {
+        display: none;
+      }
+
+      .dokan-dashboard-wrap {
+        .dokan-dashboard-content {
+          padding: 24px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and ( max-width: 600px ) {
+  #dokan-dashboard-fullwidth-wrapper {
+    #dokan-vendor-dashboard-layout-root {
+      z-index: 99999;
     }
   }
 }
