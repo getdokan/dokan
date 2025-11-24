@@ -98,7 +98,10 @@ const MostReportedVendorsSection = () => {
                     <DataViews
                         namespace="dokan-most-reported-vendors"
                         data={ padDefaultData( data || [] ) }
-                        defaultLayouts={ { table: {}, density: 'comfortable' } }
+                        defaultLayouts={ {
+                            table: { density: 'comfortable' },
+                            list: {},
+                        } }
                         fields={ fields }
                         getItemId={ ( item ) => item.vendor_id }
                         onChangeView={ setView }

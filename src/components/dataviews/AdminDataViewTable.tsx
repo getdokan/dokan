@@ -37,7 +37,7 @@ type DataViewsProps< Item > = {
         totalPages: number;
     };
     ViewportDimensions?: typeof ViewportDimensions;
-    defaultLayouts: SupportedLayouts;
+    defaultLayouts?: SupportedLayouts;
     selection?: string[];
     onChangeSelection?: ( items: string[] ) => void;
     onClickItem?: ( item: Item ) => void;
@@ -93,6 +93,13 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
         emptyDescription,
     } = props;
 
+    const defaultLayouts =
+        props.defaultLayouts ||
+        ( {
+            table: { density: 'comfortable' },
+            list: {},
+        } as SupportedLayouts );
+
     const filteredProps = {
         ...props,
         data: applyFiltersToTableElements( namespace, 'data', data, props ),
@@ -109,7 +116,12 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
             actions,
             props
         ),
-
+        defaultLayouts: applyFiltersToTableElements(
+            namespace,
+            'layouts',
+            defaultLayouts,
+            props
+        ),
         empty: empty || (
             <ListEmpty
                 icon={ emptyIcon }
