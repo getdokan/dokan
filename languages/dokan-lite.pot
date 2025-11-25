@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-11-24T12:31:14+00:00\n"
+"POT-Creation-Date: 2025-11-25T09:06:56+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -3595,7 +3595,7 @@ msgstr ""
 
 #: includes/Dashboard/Templates/Products.php:223
 #: includes/Dashboard/Templates/Settings.php:139
-#: includes/Shortcodes/Dashboard.php:214
+#: includes/Shortcodes/Dashboard.php:32
 #: templates/global/no-permission.php:54
 msgid "You have no permission to view this page"
 msgstr ""
@@ -4308,7 +4308,7 @@ msgid "Edit Account"
 msgstr ""
 
 #: includes/functions-dashboard-navigation.php:309
-#: includes/Shortcodes/Dashboard.php:112
+#: includes/Shortcodes/FullWidthVendorLayout.php:119
 msgid "Log out"
 msgstr ""
 
@@ -8520,22 +8520,22 @@ msgstr ""
 msgid "Shipping: "
 msgstr ""
 
-#: includes/Shortcodes/Dashboard.php:107
+#. translators: 1) wooCommerce installation url
+#: includes/Shortcodes/Dashboard.php:28
+msgid "Please install <a href=\"%s\"><strong>WooCommerce</strong></a> plugin first"
+msgstr ""
+
+#: includes/Shortcodes/FullWidthVendorLayout.php:114
 #: templates/global/header-menu.php:53
 msgid "My Account"
 msgstr ""
 
-#: includes/Shortcodes/Dashboard.php:126
+#: includes/Shortcodes/FullWidthVendorLayout.php:133
 msgid "Back to WP Panel"
 msgstr ""
 
-#: includes/Shortcodes/Dashboard.php:141
+#: includes/Shortcodes/FullWidthVendorLayout.php:148
 msgid "Access Admin Panel"
-msgstr ""
-
-#. translators: 1) wooCommerce installation url
-#: includes/Shortcodes/Dashboard.php:210
-msgid "Please install <a href=\"%s\"><strong>WooCommerce</strong></a> plugin first"
 msgstr ""
 
 #: includes/Shortcodes/VendorRegistration.php:18

@@ -251,7 +251,7 @@ const Sidebar = ( {
                     ) }
                 >
                     <nav>
-                        <ul className="flex flex-col gap-1.5 list-none p-0">
+                        <ul className="flex flex-col gap-1.5 list-none p-0 m-0">
                             { Object.entries( sidebarNav || {} ).map(
                                 ( [ key, item ]: any ) => {
                                     const hasSub =

@@ -1229,12 +1229,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCompatibility/PHPCompatibilityWP.git",
-                "reference": "a7dc8d391e0641dd817c750cc624fb54a0c4db89"
+                "reference": "abd5c78508e1ef4ee82ddbeb714e5642bbd6b131"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/a7dc8d391e0641dd817c750cc624fb54a0c4db89",
-                "reference": "a7dc8d391e0641dd817c750cc624fb54a0c4db89",
+                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/abd5c78508e1ef4ee82ddbeb714e5642bbd6b131",
+                "reference": "abd5c78508e1ef4ee82ddbeb714e5642bbd6b131",
                 "shasum": ""
             },
             "require": {
@@ -1289,7 +1289,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-11-18T18:49:46+00:00"
+            "time": "2025-11-25T00:08:16+00:00"
         },
         {
             "name": "phpcsstandards/phpcsextra",
@@ -4008,12 +4008,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress-Coding-Standards.git",
-                "reference": "d0d8da583e8f2021c506e816edf8be0b22e26ef4"
+                "reference": "5025d83282f1c1dd351daaf837376658c155f02e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/d0d8da583e8f2021c506e816edf8be0b22e26ef4",
-                "reference": "d0d8da583e8f2021c506e816edf8be0b22e26ef4",
+                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/5025d83282f1c1dd351daaf837376658c155f02e",
+                "reference": "5025d83282f1c1dd351daaf837376658c155f02e",
                 "shasum": ""
             },
             "require": {
@@ -4029,7 +4029,7 @@
             "require-dev": {
                 "php-parallel-lint/php-console-highlighter": "^1.0.0",
                 "php-parallel-lint/php-parallel-lint": "^1.4.0",
-                "phpcompatibility/php-compatibility": "^9.0",
+                "phpcompatibility/php-compatibility": "^10.0.0@dev",
                 "phpcsstandards/phpcsdevtools": "^1.2.0",
                 "phpunit/phpunit": "^8.0 || ^9.0"
             },
@@ -4067,7 +4067,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2025-11-24T09:24:56+00:00"
+            "time": "2025-11-25T06:51:36+00:00"
         },
         {
             "name": "wp-phpunit/wp-phpunit",
