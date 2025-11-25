@@ -13,6 +13,7 @@ import {
     validateForm,
 } from '@src/admin/dashboard/pages/vendor-create-edit/Utils';
 import { config } from './vendor-config';
+import { Settings } from './form/types';
 
 function Create( props: any ) {
     const [ saving, setSaving ] = useState( false );
@@ -102,8 +103,21 @@ function Create( props: any ) {
     };
 
     useEffect( () => {
+        const settings: Settings =
+            // @ts-ignore
+            dokanAdminDashboardSettings?.vendors ?? ( {} as Settings );
+
+        initialData.enabled =
+            settings?.new_seller_enable_selling === 'automatically';
         // @ts-ignore
-        setCreateOrEditVendor( initialData );
+        setCreateOrEditVendor(
+            // @ts-ignore
+            applyFilters(
+                'dokan-create-vendor-initial-data',
+                initialData,
+                settings
+            )
+        );
     }, [] );
 
     return (
