@@ -183,8 +183,7 @@ class SettingsMapper {
         // Transaction > Withdraw
         'dokan_withdraw.withdraw_limit'         => 'transaction.withdraw_charge.minimum_withdraw_limit_section.minimum_withdraw_limit',
         'dokan_withdraw.withdraw_date_limit'    => 'transaction.withdraw_charge.withdraw_threshold_section.withdraw_threshold',
-        // transaction->withdraw->COD Payments ei field ta notun e include/exclude ase but puraton e true/false value ase. Eita callback diye korte hbe
-        //'dokan_withdraw.exclude_cod_payment'    => 'transaction.withdraw_charge.cod_payments_section.cod_payments',
+        'dokan_withdraw.exclude_cod_payment'    => 'transaction.withdraw_charge.cod_payments_section.cod_payments',
         
         //'dokan_withdraw.withdraw_limit'         => 'transaction.withdraw_charge.section_withdraw_charge.minimum_withdraw_limit_section.minimum_withdraw_limit',
         // 'dokan_withdraw.withdraw_order_status'  => 'transaction.withdraw_charge.section_withdraw_charge.manual_withdraw',
