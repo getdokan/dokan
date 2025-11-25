@@ -20,6 +20,11 @@ class FullWidthVendorLayout implements Hookable {
      */
     protected $script_key = 'dokan-vendor-dashboard';
 
+    /**
+     * Register hooks.
+     *
+     * @return void
+     */
     public function register_hooks(): void {
         // Register vendor dashboard assets if the vendor layout is not legacy.
         $vendor_layout = dokan_get_option( 'vendor_layout_style', 'dokan_appearance', 'latest' );
@@ -64,7 +69,7 @@ class FullWidthVendorLayout implements Hookable {
     /**
      * Register and enqueue React vendor dashboard assets when viewing the seller dashboard.
      *
-     * @since 4.1.3
+     * @since DOKAN_SINCE
      *
      * @return void
      */
@@ -181,7 +186,7 @@ class FullWidthVendorLayout implements Hookable {
     /**
      * Enqueue React vendor dashboard assets when viewing the seller dashboard.
      *
-     * @since 4.1.3
+     * @since DOKAN_SINCE
      *
      * @return void
      */
