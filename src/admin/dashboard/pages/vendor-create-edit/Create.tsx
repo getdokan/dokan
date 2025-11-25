@@ -103,18 +103,20 @@ function Create( props: any ) {
     };
 
     useEffect( () => {
-        const settings: Settings =
-            // @ts-ignore
-            dokanAdminDashboardSettings?.vendors ?? ( {} as Settings );
+        // @ts-ignore
+        const settings: Settings = dokanAdminDashboardSettings?.vendors || {};
 
-        initialData.enabled =
-            settings?.new_seller_enable_selling === 'automatically';
+        const vendorInitialData = {
+            ...initialData,
+            enabled: settings?.new_seller_enable_selling === 'automatically',
+        };
+
         // @ts-ignore
         setCreateOrEditVendor(
             // @ts-ignore
             applyFilters(
                 'dokan-create-vendor-initial-data',
-                initialData,
+                vendorInitialData,
                 settings
             )
         );
@@ -140,7 +142,9 @@ function Create( props: any ) {
                 { /*Add new vendor header*/ }
                 <div className="flex flex-row mt-[24px]">
                     <div className="sm:w-full md:w-1/2">
-                        <h1 className="text-[24px] text-[#25252D] font-bold">{ __( 'Add New Vendor', 'dokan-lite' ) }</h1>
+                        <h1 className="text-[24px] text-[#25252D] font-bold">
+                            { __( 'Add New Vendor', 'dokan-lite' ) }
+                        </h1>
                     </div>
                 </div>
             </div>
