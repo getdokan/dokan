@@ -3,7 +3,6 @@
 namespace WeDevs\Dokan\DependencyManagement\Providers;
 
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
-use WeDevs\Dokan\Shortcodes\FullWidthVendorLayout;
 
 class CommonServiceProvider extends BaseServiceProvider {
     /**
@@ -25,7 +24,7 @@ class CommonServiceProvider extends BaseServiceProvider {
         \WeDevs\Dokan\Commission\RecalculateCommissions::class,
         \WeDevs\Dokan\Order\RefundHandler::class,
         \WeDevs\Dokan\Exceptions\Handler::class,
-        FullWidthVendorLayout::class
+        \WeDevs\Dokan\Shortcodes\FullWidthVendorLayout::class
 	];
 
 	/**
