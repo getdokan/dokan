@@ -658,6 +658,36 @@ const VendorsPage = ( props ) => {
                                         vendor?.id;
                                 },
                             },
+                            {
+                                id: 'switch-to',
+                                label: () =>
+                                    getActionLabel(
+                                        'ArrowLeftRight',
+                                        __( 'Switch to', 'dokan-lite' )
+                                    ),
+                                icon: () => {
+                                    return (
+                                        <span
+                                            className={
+                                                'px-3 py-2 inline-flex items-center rounded-md text-sm font-medium border border-[#E9E9E9]'
+                                            }
+                                        >
+                                            { __( 'Switch to', 'dokan-lite' ) }
+                                        </span>
+                                    );
+                                },
+                                isPrimary: false,
+                                supportsBulk: false,
+                                isEligible: ( item: Vendor ) =>
+                                    item?.switch_url &&
+                                    item?.switch_url.length &&
+                                    dokanAdminDashboardSettings?.vendors
+                                        ?.is_vendor_switching_enabled,
+                                callback: ( item ) => {
+                                    const vendor: Vendor = item[ 0 ] as Vendor;
+                                    window.location.href = vendor?.switch_url;
+                                },
+                            },
                             // Show Approve Vendor when enabled is false
                             {
                                 id: 'approve-vendor',
