@@ -173,8 +173,6 @@ class FullWidthVendorLayout implements Hookable {
                 );
             }
 
-            error_log( print_r( dokan_get_dashboard_nav(), 1 ) );
-
             wp_add_inline_script(
                 $this->script_key,
                 'var vendorDashboardLayoutConfig = ' . wp_json_encode(
