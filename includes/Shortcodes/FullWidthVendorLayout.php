@@ -9,7 +9,7 @@ use WeDevs\Dokan\Utilities\VendorUtil;
 /**
  * Fullwidth vendor layout
  *
- * @since DOKAN_SINCE
+ * @since 4.2.0
  */
 class FullWidthVendorLayout implements Hookable {
 
@@ -39,7 +39,7 @@ class FullWidthVendorLayout implements Hookable {
     /**
      * Update vendor layout style option.
      *
-     * @since DOKAN_SINCE
+     * @since 4.2.0
      *
      * @return void
      */
@@ -62,7 +62,7 @@ class FullWidthVendorLayout implements Hookable {
      * The custom template preserves wp_head() and wp_footer() hooks
      * to ensure all enqueued scripts and styles are loaded properly.
      *
-     * @since DOKAN_SINCE
+     * @since 4.2.0
      *
      * @param string $template Path to the template
      *
@@ -88,7 +88,7 @@ class FullWidthVendorLayout implements Hookable {
     /**
      * Register and enqueue React vendor dashboard assets when viewing the seller dashboard.
      *
-     * @since DOKAN_SINCE
+     * @since 4.2.0
      *
      * @return void
      */
@@ -206,7 +206,7 @@ class FullWidthVendorLayout implements Hookable {
     /**
      * Enqueue React vendor dashboard assets when viewing the seller dashboard.
      *
-     * @since DOKAN_SINCE
+     * @since 4.2.0
      *
      * @return void
      */

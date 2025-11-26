@@ -4,6 +4,36 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.2.0',
+        'released' => '2025-11-24',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Ensured full compatibility for the legacy admin panel across Subscriptions, Announcements, Wholesale, Product Ads, Abuse Reports, Seller Badge, and Refund pages.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The vendor dashboard now supports modern, full-width theme layouts, providing a more spacious user experience.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => "Redesigned the Admin's Reverse Withdrawal page with a modern, easier-to-use interface for faster payment management.",
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Corrected a price formatting issue in both HTML and plain text email templates.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed a redirection issue on the legacy vendor shipping policy page to ensure it works correctly.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.1.5',
         'released' => '2025-11-11',
         'changes'  => [
