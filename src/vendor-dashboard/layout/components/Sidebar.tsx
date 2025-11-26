@@ -365,7 +365,8 @@ const Sidebar = ( {
                                                 </span>
                                                 { ! collapsed && (
                                                     <span className="ml-2">
-                                                        { item.title }
+                                                        { item?.menu_manager_title ||
+                                                            item?.title }
                                                     </span>
                                                 ) }
                                                 { item.counts > 0 && (
@@ -441,9 +442,8 @@ const Sidebar = ( {
                                                                         >
                                                                             <LucideIcons.Settings className="w-5 h-5 !text-transparent" />
                                                                             <span className="ml-2">
-                                                                                {
-                                                                                    subitem.title
-                                                                                }
+                                                                                { subitem?.menu_manager_title ||
+                                                                                    subitem?.title }
                                                                             </span>
                                                                             { subitem.counts >
                                                                                 0 && (
