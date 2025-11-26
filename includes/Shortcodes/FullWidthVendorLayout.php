@@ -26,13 +26,32 @@ class FullWidthVendorLayout implements Hookable {
      * @return void
      */
     public function register_hooks(): void {
+        add_action( 'dokan_setup_wizard_styles', [ $this, 'update_layout_style' ] );
         // Register vendor dashboard assets if the vendor layout is not legacy.
-        $vendor_layout = dokan_get_option( 'vendor_layout_style', 'dokan_appearance', 'latest' );
-        if ( 'legacy' !== $vendor_layout ) {
-            add_action( 'init', [ $this, 'register_vendor_dashboard_assets' ] );
+        $vendor_layout = dokan_get_option( 'vendor_layout_style', 'dokan_appearance', 'legacy' );
+        if ( 'latest' === $vendor_layout ) {
+            add_action( 'init', [ $this, 'register_vendor_dashboard_assets' ], 99 );
             add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_vendor_dashboard_assets' ] );
             add_filter( 'template_include', [ $this, 'rewrite_vendor_dashboard_template' ] );
         }
+    }
+
+    /**
+     * Update vendor layout style option.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function update_layout_style(): void {
+        if ( ! is_admin() ) {
+            return;
+        }
+
+        $appearance                        = get_option( 'dokan_appearance', [] );
+        $appearance['vendor_layout_style'] = 'latest';
+
+        update_option( 'dokan_appearance', $appearance );
     }
 
     /**
@@ -101,7 +120,8 @@ class FullWidthVendorLayout implements Hookable {
             );
 
             $user_id      = get_current_user_id();
-            $vendor       = dokan()->vendor->get( $user_id );
+            $seller_id    = dokan_get_current_user_id();
+            $vendor       = dokan()->vendor->get( $seller_id );
             $is_admin     = current_user_can( 'manage_options' );
             $user_name    = wp_get_current_user()->display_name ?? '';
             $admin_access = dokan_get_option( 'admin_access', 'dokan_general', 'on' );

@@ -824,7 +824,7 @@ class Settings {
                     'label'   => esc_html__( 'Vendor Dashboard Style', 'dokan-lite' ),
                     'desc'    => esc_html__( 'Select the user interface for the vendor dashboard.', 'dokan-lite' ),
                     'type'    => 'radio',
-                    'default' => 'latest',
+                    'default' => 'legacy',
                     'options' => [
                         'latest' => esc_html__( 'New UI', 'dokan-lite' ),
                         'legacy' => esc_html__( 'Legacy UI', 'dokan-lite' ),
@@ -1217,7 +1217,7 @@ class Settings {
      */
     public function set_vendor_latest_layout( $option_value, $option_name ) {
         if ( 'dokan_appearance' === $option_name && empty( $option_value['vendor_layout_style'] ) ) {
-            $option_value['vendor_layout_style'] = 'latest';
+            $option_value['vendor_layout_style'] = 'legacy';
         }
 
         return $option_value;
