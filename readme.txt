@@ -7,7 +7,7 @@ Tested up to: 6.8.3
 WC requires at least: 8.5.0
 WC tested up to: 10.2.2
 Requires PHP: 7.4
-Stable tag: 4.1.5
+Stable tag: 4.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,7 +39,7 @@ Hear what reputed WordPress influencer and online business strategist, Darrel Wi
 
 Here is how you can build your multivendor marketplace with Dokan.
 
-[youtube https://www.youtube.com/watch?v=_Vv5T7qqhoE]
+[https://www.youtube.com/watch?v=rF3zooidxjs]
 
 = PLACES WHERE DOKAN HAS BEEN FEATURED =
 
@@ -94,7 +94,8 @@ Dokan is also compatible with the [Otel theme](https://dokan.co/wordpress/otel-t
 With Dokan, experience a smooth, fast setup process in under an hour and have your WooCommerce multivendor marketplace running within a day. It perfectly matches your expectations and is designed with intuitive practices from eCommerce leaders like WooCommerce and others.
 
 = AI Assistant =
-Generate product titles, short & long descriptions using generative AI directly from the vendor dashboard.
+* Generative AI: Generate product titles, short & long descriptions using generative AI directly from the vendor dashboard.
+* AI Image Enhancer: Instantly make product photos clearer, brighter, and more appealing.
 
 = A RELIABLE GROWING PLATFORM & COMMUNITY =
 
@@ -232,7 +233,9 @@ Never get bored with the old-fashioned appearance of your store. Have full contr
 
 Dokan comes with a number of advanced features & modules that boost your WooCommerce marketplace position, always keeping you one step ahead of the competition. Continuous innovations and features are brought with regular and timely releases. Check out the changelog [here](https://dokan.co/wordpress/changelog/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
 
-* [Stripe Express](https://dokan.co/wordpress/modules/stripe-express/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module)(Pro)
+* [Stripe Express](https://dokan.co/wordpress/modules/stripe-express/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module)(Pro) 
+* [Paystack](https://dokan.co/docs/wordpress/modules/paystack/)(Pro) 
+* [Vendor Support](https://dokan.co/docs/wordpress/modules/vendor-support/)(Pro) 
 * [Print on Demand Marketplace](https://dokan.co/wordpress/modules/printful-integration/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module)(Pro)
 * [Minimum Maximum Order](https://dokan.co/wordpress/modules/minimum-maximum-order/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro)
 * [Product Advertising](https://dokan.co/wordpress/modules/product-advertising/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro)
@@ -349,6 +352,13 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v4.2.0 ( Nov 24, 2025 ) =
+- **update:** Ensured full compatibility for the legacy admin panel across Subscriptions, Announcements, Wholesale, Product Ads, Abuse Reports, Seller Badge, and Refund pages.
+- **update:** The vendor dashboard now supports modern, full-width theme layouts, providing a more spacious user experience.
+- **update:** Redesigned the Admin's Reverse Withdrawal page with a modern, easier-to-use interface for faster payment management.
+- **fix:** Corrected a price formatting issue in both HTML and plain text email templates.
+- **fix:** Fixed a redirection issue on the legacy vendor shipping policy page to ensure it works correctly.
+
 = v4.1.5 ( Nov 11, 2025 ) =
 - **update:** Added vendor verification legacy UI support for admin panel to ensure backward compatibility with older interface versions.
 - **update:** Updated all Twitter labels to X to reflect the latest brand changes.
@@ -366,13 +376,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 = v4.1.2 ( Oct 16, 2025 ) =
 - **enhance:** Updated the Admin Dashboard header UI for seamless visual representation with the new React-based frontend architecture.
 - **update:** Added support for retrieving all product types via the Products REST API, enabling more flexible product filtering.
-
-= v4.1.1 ( Oct 09, 2025 ) =
-- **update:** Added method to retrieve vendor earnings excluding admin subsidy.
-- **update:** Admin gateway fee calculation now checks an order-level meta value before using the previous fallback logic.
-
-= v4.1.0 ( Sep 30, 2025 ) =
-- **feat:** New React-based Admin Dashboard with enhanced metrics and rank boards.
-- **update:** Migrated Pro Features page from Vue to React with enhanced UI.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

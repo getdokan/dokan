@@ -71,6 +71,7 @@ const entryPoints = {
     'vendor-dashboard/reports/index': './src/vendor-dashboard/reports/index.js',
     // intelligence
     'dokan-intelligence': './src/intelligence/index.tsx',
+    'vendor-dashboard/layout/index': './src/vendor-dashboard/layout/index.tsx',
     'products-store': {
         import: '/src/stores/products/store.ts',
         library: {
