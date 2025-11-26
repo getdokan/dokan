@@ -28,7 +28,7 @@ class FullWidthVendorLayout implements Hookable {
     public function register_hooks(): void {
         add_action( 'dokan_setup_wizard_styles', [ $this, 'update_layout_style' ] );
         // Register vendor dashboard assets if the vendor layout is not legacy.
-        $vendor_layout = dokan_get_option( 'vendor_layout_style', 'dokan_appearance', 'latest' );
+        $vendor_layout = dokan_get_option( 'vendor_layout_style', 'dokan_appearance', 'legacy' );
         if ( 'latest' === $vendor_layout ) {
             add_action( 'init', [ $this, 'register_vendor_dashboard_assets' ], 99 );
             add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_vendor_dashboard_assets' ] );
