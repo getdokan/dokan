@@ -13,6 +13,7 @@ import { Tooltip } from '@getdokan/dokan-ui';
 import { truncate } from '@src/utilities';
 import SubmenuPopover from './SubmenuPopover';
 import CountBubble from './CountBubble';
+import { applyFilters } from '@wordpress/hooks';
 
 const Sidebar = ( {
     collapsed,
@@ -290,6 +291,11 @@ const Sidebar = ( {
                                     );
 
                                     const menuItemRef = getMenuItemRef( key );
+                                    const menuTitle = applyFilters(
+                                        'dokan_sidebar_menu_title',
+                                        item?.menu_manager_title || item?.title,
+                                        item
+                                    ) as string;
 
                                     return (
                                         <li
@@ -365,8 +371,7 @@ const Sidebar = ( {
                                                 </span>
                                                 { ! collapsed && (
                                                     <span className="ml-2">
-                                                        { item?.menu_manager_title ||
-                                                            item?.title }
+                                                        { menuTitle }
                                                     </span>
                                                 ) }
                                                 { item.counts > 0 && (
@@ -424,6 +429,14 @@ const Sidebar = ( {
                                                                         subitem.url
                                                                     );
 
+                                                                const subMenuTitle =
+                                                                    applyFilters(
+                                                                        'dokan_sidebar_submenu_title',
+                                                                        subitem?.menu_manager_title ||
+                                                                            subitem?.title,
+                                                                        subitem
+                                                                    ) as string;
+
                                                                 return (
                                                                     <li
                                                                         key={
@@ -442,8 +455,9 @@ const Sidebar = ( {
                                                                         >
                                                                             <LucideIcons.Settings className="w-5 h-5 !text-transparent" />
                                                                             <span className="ml-2">
-                                                                                { subitem?.menu_manager_title ||
-                                                                                    subitem?.title }
+                                                                                {
+                                                                                    subMenuTitle
+                                                                                }
                                                                             </span>
                                                                             { subitem.counts >
                                                                                 0 && (
