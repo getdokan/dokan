@@ -199,6 +199,15 @@ class ProductControllerV2 extends ProductController {
             'default'           => array(),
             'sanitize_callback' => 'wp_parse_id_list',
         );
+        $params['exclude'] = array(
+            'description'       => __( 'Ensure result set excludes specific IDs.', 'dokan-lite' ),
+            'type'              => 'array',
+            'items'             => array(
+                'type' => 'integer',
+            ),
+            'default'           => array(),
+            'sanitize_callback' => 'wp_parse_id_list',
+        );
         $params['include_variations'] = array(
             'description' => __( 'If true matched product variations will be added to the collection', 'dokan-lite' ),
             'type'        => 'boolean',
