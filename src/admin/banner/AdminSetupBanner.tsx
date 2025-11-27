@@ -12,10 +12,6 @@ interface Props {
 const AdminSetupBanner = ( props: Props ) => {
     const [ steps, setSteps ] = useState< Step[] >( [] );
 
-    if ( dokanSetupGuideBanner?.is_setup_guide_steps_completed ) {
-        return;
-    }
-
     useEffect( () => {
         const allSteps: Step[] = getSettings( 'setup' ).steps;
         setSteps( allSteps );
@@ -27,6 +23,13 @@ const AdminSetupBanner = ( props: Props ) => {
     const isNoStepsCompleted = completedSteps === 0;
     const setupGuideUrl = dokanSetupGuideBanner?.setup_guide_url;
     const dokanAssetUrl = dokanSetupGuideBanner?.asset_url;
+
+    if (
+        dokanSetupGuideBanner?.is_setup_guide_steps_completed ||
+        completedSteps === totalSteps
+    ) {
+        return;
+    }
 
     return (
         <div
