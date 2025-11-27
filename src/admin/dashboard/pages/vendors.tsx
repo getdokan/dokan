@@ -324,7 +324,7 @@ const VendorsPage = ( props ) => {
                 id: 'registered',
                 label: __( 'Registered', 'dokan-lite' ),
                 enableSorting: true,
-                enableHiding: false,
+                enableHiding: true,
                 render: ( { item }: { item: Vendor } ) => {
                     const registered = item?.registered || '';
                     return (
