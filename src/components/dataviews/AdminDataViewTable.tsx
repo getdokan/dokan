@@ -37,7 +37,7 @@ type DataViewsProps< Item > = {
         totalPages: number;
     };
     ViewportDimensions?: typeof ViewportDimensions;
-    defaultLayouts: SupportedLayouts;
+    defaultLayouts?: SupportedLayouts;
     selection?: string[];
     onChangeSelection?: ( items: string[] ) => void;
     onClickItem?: ( item: Item ) => void;
@@ -93,6 +93,13 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
         emptyDescription,
     } = props;
 
+    const defaultLayouts =
+        props.defaultLayouts ||
+        ( {
+            table: { density: 'comfortable' },
+            list: {},
+        } as SupportedLayouts );
+
     const filteredProps = {
         ...props,
         data: applyFiltersToTableElements( namespace, 'data', data, props ),
@@ -109,7 +116,12 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
             actions,
             props
         ),
-
+        defaultLayouts: applyFiltersToTableElements(
+            namespace,
+            'layouts',
+            defaultLayouts,
+            props
+        ),
         empty: empty || (
             <ListEmpty
                 icon={ emptyIcon }
@@ -201,6 +213,11 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
             />
             <DataViews { ...filteredProps }>
                 <div className="dokan-admin-dashboard-datatable-header w-full flex items-center flex-col justify-between rounded-tr-md rounded-tl-md">
+                    { filteredProps.header && (
+                        <div className="font-semibold text-sm text-[#25252D]">
+                            { filteredProps.header }
+                        </div>
+                    ) }
                     { filteredProps.tabs &&
                         filteredProps.tabs.tabs &&
                         filteredProps.tabs.tabs.length > 0 && (

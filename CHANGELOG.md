@@ -1,3 +1,16 @@
+### v4.2.0 ( Nov 24, 2025 ) ###
+- **update:** Ensured full compatibility for the legacy admin panel across Subscriptions, Announcements, Wholesale, Product Ads, Abuse Reports, Seller Badge, and Refund pages.
+- **update:** The vendor dashboard now supports modern, full-width theme layouts, providing a more spacious user experience.
+- **update:** Redesigned the Admin's Reverse Withdrawal page with a modern, easier-to-use interface for faster payment management.
+- **fix:** Corrected a price formatting issue in both HTML and plain text email templates.
+- **fix:** Fixed a redirection issue on the legacy vendor shipping policy page to ensure it works correctly.
+
+### v4.1.5 ( Nov 11, 2025 ) ###
+- **update:** Added vendor verification legacy UI support for admin panel to ensure backward compatibility with older interface versions.
+- **update:** Updated all Twitter labels to X to reflect the latest brand changes.
+- **update:** Added custom store URL validation in admin settings to prevent conflicts with WordPress search functionality.
+- **update:** Fixed PHP warnings triggered when saving variable products by improving validation and data handling during product save operations.
+
 ### v4.1.3 ( Oct 28, 2025 ) ###
 - **update:** Admin Dashboard withdraw list UI with Modern Design and Improved User Experience.
 - **update:** Admin Dashboard vendor list UI with Modern Design and Improved User Experience.

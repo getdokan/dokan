@@ -91,6 +91,22 @@ import { Home } from 'lucide-react';
 />
 ```
 
+#### Dark background for the left icon
+
+If you want the icon inside the Select control to appear with a darker background [as shown in the figma design](https://www.figma.com/design/7wqWdKZrqfquGOgY1WXJwJ/Plugin-Product-Design_P2?node-id=6276-51219&t=KnJV5czVclZR4s2k-1), add the `dokan-select-addon` class to the Select component. This class is provided by the base styles and targets the react-select control to render a subtle gray background behind the icon.
+
+Minimal example using `leftIcon`:
+
+```jsx
+<Select
+  options={ options }
+  value={ value }
+  onChange={ setValue }
+  leftIcon={ <Home size={16} className="inline-block align-middle dokan-select-box-icon-bg" /> }
+  className="dokan-select-addon"
+/>
+```
+
 ### 3. Multi Select
 
 ```jsx

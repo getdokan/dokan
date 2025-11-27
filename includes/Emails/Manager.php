@@ -66,7 +66,7 @@ class Manager {
      * @return string
      */
     public function currency_symbol( $amount ) {
-        $price = sprintf( get_woocommerce_price_format(), get_woocommerce_currency_symbol(), $amount );
+        $price = wc_price( $amount, [ 'in_span' => false ] );
 
         return html_entity_decode( $price );
     }
