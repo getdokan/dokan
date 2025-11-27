@@ -199,14 +199,10 @@ class ProductControllerV2 extends ProductController {
             'default'           => array(),
             'sanitize_callback' => 'wp_parse_id_list',
         );
-        $params['exclude'] = array(
-            'description'       => __( 'Ensure result set excludes specific IDs.', 'dokan-lite' ),
-            'type'              => 'array',
-            'items'             => array(
-                'type' => 'integer',
-            ),
-            'default'           => array(),
-            'sanitize_callback' => 'wp_parse_id_list',
+        $params['include_variations'] = array(
+            'description' => __( 'If true matched product variations will be added to the collection', 'dokan-lite' ),
+            'type'        => 'boolean',
+            'default'     => false,
         );
 
         return $params;
@@ -315,6 +311,11 @@ class ProductControllerV2 extends ProductController {
                 'value'   => sanitize_text_field( wp_unslash( $request['stock_status'] ) ),
                 'compare' => ' = ',
             );
+        }
+
+        // Product stock status.
+        if ( isset( $request['include_variations'] ) && true === wc_string_to_bool( $request['include_variations'] ) ) {
+            $args['post_type'] = [ $this->post_type, 'product_variation' ];
         }
 
         return apply_filters( 'dokan_rest_pre_product_listing_args', $args, $request );
