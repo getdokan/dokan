@@ -156,8 +156,6 @@ const VendorsPage = ( props ) => {
                 ...( search && { search } ),
             };
 
-            // Apply sorting if present in view
-            // DataViews provides view.sort = { field: string, direction: 'asc' | 'desc' }
             if ( view?.sort?.field ) {
                 // Only map known/supported sortable fields
                 if ( view.sort.field === 'registered' ) {
