@@ -333,9 +333,12 @@ function RequestWithdrawBtn( {
 
     const RequestWithdraw = () => {
         return (
-            <DokanButton onClick={ () => setIsOpen( true ) }>
-                { __( 'Request Withdraw', 'dokan-lite' ) }
-            </DokanButton>
+            // @ts-ignore
+            window?.dokanFrontend?.withdraw?.isManualWithdrawEnable && (
+                <DokanButton onClick={ () => setIsOpen( true ) }>
+                    { __( 'Request Withdraw', 'dokan-lite' ) }
+                </DokanButton>
+            )
         );
     };
 
