@@ -14,6 +14,11 @@ class SettingsMapperCallbacks implements Hookable {
      */
     public function register_hooks(): void {
         add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_customer_details_visibility' ], 10, 4 );
+        add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_vendor_info_visibility' ], 10, 4 );
+        add_filter( 'dokan_settings_mapper_after_transform_old_to_new', [ $this, 'map_location_placement_old_to_new' ], 10, 2 );
+        add_filter( 'dokan_settings_mapper_after_transform_new_to_old', [ $this, 'map_location_placement_new_to_old' ], 10, 2 );
+        add_filter( 'dokan_settings_mapper_after_transform_old_to_new', [ $this, 'map_single_product_preview_old_to_new' ], 10, 2 );
+        add_filter( 'dokan_settings_mapper_after_transform_new_to_old', [ $this, 'map_single_product_preview_new_to_old' ], 10, 2 );
     }
 
     /**
@@ -31,4 +36,390 @@ class SettingsMapperCallbacks implements Hookable {
         }
         return $value === 'on' ? 'off' : 'on';
     }
+
+    /**
+     * Map location placement from old (two settings) to new (one multi-select)
+     * Old → New direction
+     * 
+     * @since DOKAN_SINCE
+     * @param array $result The converted new settings array
+     * @param array $legacy_values The source legacy settings array
+     * @return array Modified result
+     */
+    public function map_location_placement_old_to_new( $result, $legacy_values ) {
+        $map_pages = '';
+        if ( isset( $legacy_values['dokan_geolocation']['show_location_map_pages'] ) ) {
+            $map_pages = $legacy_values['dokan_geolocation']['show_location_map_pages'];
+        }
+
+        $product_tab = 'off';
+        if ( isset( $legacy_values['dokan_geolocation']['show_product_location_in_wc_tab'] ) ) {
+            $product_tab = $legacy_values['dokan_geolocation']['show_product_location_in_wc_tab'];
+        }
+
+        $locations = [];
+
+        // Handle radio field mapping
+        if ( ! empty( $map_pages ) ) {
+            if ( $map_pages === 'all' ) {
+                $locations[] = 'store_listing';
+                $locations[] = 'shop_page';
+            } elseif ( $map_pages === 'store_listing' ) {
+                $locations[] = 'store_listing';
+            } elseif ( $map_pages === 'shop' ) {
+                $locations[] = 'shop_page';
+            }
+        }
+
+        // Handle switch field mapping
+        if ( $product_tab === 'on' ) {
+            $locations[] = 'single_product_location_tab';
+        } elseif ( $product_tab === true ) {
+            $locations[] = 'single_product_location_tab';
+        } elseif ( $product_tab === '1' ) {
+            $locations[] = 'single_product_location_tab';
+        }
+
+        // Remove duplicates and set the value
+        $locations = array_unique( $locations );
+
+        // Set the combined value in the new structure
+        SettingsMapper::set_value_by_path(
+            $result,
+            'general.location.map_placement.map_placement_locations',
+            $locations
+        );
+
+        return $result;
+    }
+
+    /**
+     * Map location placement from new (one multi-select) to old (two settings)
+     * New → Old direction
+     * 
+     * @since DOKAN_SINCE
+     * @param array $result The converted legacy settings array
+     * @param array $pages_values The source new settings array
+     * @return array Modified result
+     */
+    public function map_location_placement_new_to_old( $result, $pages_values ) {
+        $locations = (array) SettingsMapper::get_value_by_path(
+            $pages_values,
+            'general.location.map_placement.map_placement_locations',
+            []
+        );
+
+        // Determine the radio value based on checkboxes
+        $has_store_listing = in_array( 'store_listing', $locations, true );
+        $has_shop_page = in_array( 'shop_page', $locations, true );
+        $has_product_tab = in_array( 'single_product_location_tab', $locations, true );
+
+        // Map to radio field value
+        if ( $has_store_listing && $has_shop_page ) {
+            $result['dokan_geolocation']['show_location_map_pages'] = 'all';
+        } elseif ( $has_store_listing ) {
+            $result['dokan_geolocation']['show_location_map_pages'] = 'store_listing';
+        } elseif ( $has_shop_page ) {
+            $result['dokan_geolocation']['show_location_map_pages'] = 'shop';
+        } else {
+            $result['dokan_geolocation']['show_location_map_pages'] = '';
+        }
+
+        // Map to switch field value
+        if ( $has_product_tab ) {
+            $result['dokan_geolocation']['show_product_location_in_wc_tab'] = 'on';
+        } else {
+            $result['dokan_geolocation']['show_product_location_in_wc_tab'] = 'off';
+        }
+
+        return $result;
+    }
+
+    /**
+     * Map vendor info visibility with inverted logic and renamed values
+     * OLD: hide_vendor_info ['email', 'phone', 'address'] - items to HIDE
+     * NEW: vendor_info_visibility ['store_email', 'store_phone', 'store_address'] - items to SHOW
+     * 
+     * @since DOKAN_SINCE
+     * @param mixed $value
+     * @param string $to_indicator Direction: 'new_to_old' or 'old_to_new'
+     * @param string $old_key
+     * @param string $new_key
+     * @return mixed
+     */
+    public function map_vendor_info_visibility( $value, $to_indicator, $old_key, $new_key, $source_values = [], $result = [] ) {
+        // Only process our specific mapping
+        if ( 'dokan_appearance.hide_vendor_info' !== $old_key || 'appearance.store.vendor_info_visibility_section.vendor_info_visibility' !== $new_key ) {
+            return $value;
+        }
+        if ( is_null( $value ) ) {
+            return $value;
+        }
+        
+        // Mapping between old and new field names
+        $field_map = [
+            'email'   => 'store_email',
+            'phone'   => 'store_phone',
+            'address' => 'store_address',
+        ];
+
+        // All possible values
+        $all_values_old = [ 'email', 'phone', 'address' ];
+        $all_values_new = [ 'store_email', 'store_phone', 'store_address' ];
+
+        if ( 'old_to_new' === $to_indicator ) {
+            // OLD → NEW: ['email'=>'email', 'phone'=>''] (associative) → ['store_email'=>'', 'store_phone'=>1] (associative)
+            
+            if ( ! is_array( $value ) ) {
+                $value = [];
+            }
+            
+            // Extract hidden items from old format (non-empty values = hidden)
+            $hidden_items_old = [];
+            foreach ( $all_values_old as $old_key_check ) {
+                if ( isset( $value[ $old_key_check ] ) ) {
+                    $val = $value[ $old_key_check ];
+                    // Non-empty value means HIDDEN in old format
+                    if ( ! empty( $val ) && $val !== '' && $val !== '0' && $val !== 0 && $val !== false ) {
+                        $hidden_items_old[] = $old_key_check;
+                    }
+                }
+            }
+            // Map old hidden items to new field names
+            $hidden_items_new = [];
+            foreach ( $hidden_items_old as $old_item ) {
+                if ( isset( $field_map[ $old_item ] ) ) {
+                    $hidden_items_new[] = $field_map[ $old_item ];
+                }
+            }
+            
+            // Build result: all items as keys, value=1 if NOT hidden (shown), value='' if hidden
+            $result_array = [];
+            foreach ( $all_values_new as $new_key ) {
+                if ( in_array( $new_key, $hidden_items_new, true ) ) {
+                    $result_array[ $new_key ] = '';  // Hidden = empty string
+                } else {
+                    $result_array[ $new_key ] = 1;   // Shown = 1
+                }
+            }
+            
+            return $result_array;
+        }
+
+        if ( 'new_to_old' === $to_indicator ) {
+            // NEW → OLD: ['store_email'=>1, 'store_phone'=>''] (associative) → ['email'=>'', 'phone'=>'phone'] (associative)
+            
+            if ( ! is_array( $value ) ) {
+                $value = [];
+            }
+            
+            // Extract shown items (value = 1 or truthy = SHOWN)
+            $shown_items_new = [];
+            foreach ( $value as $key => $val ) {
+                // Truthy and not empty string means it's SHOWN
+                if ( ! empty( $val ) && $val !== '' && $val !== '0' && $val !== 0 && $val !== false ) {
+                    $shown_items_new[] = $key;
+                }
+            } 
+            // Map shown new items back to old field names
+            $reverse_map = array_flip( $field_map );
+            $shown_items_old = [];
+            foreach ( $shown_items_new as $new_item ) {
+                if ( isset( $reverse_map[ $new_item ] ) ) {
+                    $shown_items_old[] = $reverse_map[ $new_item ];
+                }
+            }
+            // Build result in old format: key with value=itself means HIDDEN, key with value='' means SHOWN
+            $result_array = [];
+            foreach ( $all_values_old as $old_key_check ) {
+                if ( in_array( $old_key_check, $shown_items_old, true ) ) {
+                    $result_array[ $old_key_check ] = '';  // Shown = empty string
+                } else {
+                    $result_array[ $old_key_check ] = $old_key_check;  // Hidden = key itself
+                }
+            }
+            
+            return $result_array;
+        }
+
+        return $value;
+    }
+
+    /**
+     * Map single product preview from old (three separate settings) to new (one multi-checkbox)
+     * Old → New direction
+     * 
+     * OLD settings:
+     * - dokan_general.show_vendor_info: 'on' = SHOW, 'off' = HIDE
+     * - dokan_general.enabled_more_products_tab: 'on' = SHOW, 'off' = HIDE
+     * - dokan_selling.disable_shipping_tab: 'on' = HIDE, 'off' = SHOW (inverted!)
+     * 
+     * NEW setting:
+     * - appearance.store.single_product_preview_section.single_product_preview
+     *   {vendor_info: true, more_products_tab: true, shipping_tab: true}
+     *   true = SHOW, false = HIDE
+     * 
+     * @since DOKAN_SINCE
+     * @param array $result The converted new settings array
+     * @param array $legacy_values The source legacy settings array
+     * @return array Modified result
+     */
+    public function map_single_product_preview_old_to_new( $result, $legacy_values ) {
+        // Define the keys we're mapping for clarity
+        $old_keys = [
+            'vendor_info'       => 'dokan_general.show_vendor_info',
+            'more_products_tab' => 'dokan_general.enabled_more_products_tab',
+            'shipping_tab'      => 'dokan_selling.disable_shipping_tab',
+        ];
+        $new_key = 'appearance.store.single_product_preview_section.single_product_preview';
+
+        // Only run this mapping if at least one of the source fields is present
+        $has_vendor_info = isset( $legacy_values['dokan_general']['show_vendor_info'] );
+        $has_more_products = isset( $legacy_values['dokan_general']['enabled_more_products_tab'] );
+        $has_shipping = isset( $legacy_values['dokan_selling']['disable_shipping_tab'] );
+
+        if ( ! $has_vendor_info && ! $has_more_products && ! $has_shipping ) {
+            // None of the source fields are present, skip mapping
+            return $result;
+        }
+
+        $show_vendor_info = 'off';
+        if ( $has_vendor_info ) {
+            $show_vendor_info = $legacy_values['dokan_general']['show_vendor_info'];
+        }
+
+        $enabled_more_products = 'off';
+        if ( $has_more_products ) {
+            $enabled_more_products = $legacy_values['dokan_general']['enabled_more_products_tab'];
+        }
+
+        $disable_shipping = 'off';
+        if ( $has_shipping ) {
+            $disable_shipping = $legacy_values['dokan_selling']['disable_shipping_tab'];
+        }
+
+        // Build the new structure
+        $vendor_info_value = false;
+        if ( $show_vendor_info === 'on' ) {
+            $vendor_info_value = true;
+        }
+
+        $more_products_value = false;
+        if ( $enabled_more_products === 'on' ) {
+            $more_products_value = true;
+        }
+
+        $shipping_tab_value = true; // Default to true (shown)
+        if ( $disable_shipping === 'on' ) {
+            $shipping_tab_value = false; // Inverted: 'on' means disabled in old
+        }
+
+        $preview_settings = [
+            'vendor_info'       => $vendor_info_value,
+            'more_products_tab' => $more_products_value,
+            'shipping_tab'      => $shipping_tab_value,
+        ];
+
+        // Set the combined value in the new structure
+        SettingsMapper::set_value_by_path(
+            $result,
+            $new_key,
+            $preview_settings
+        );
+
+        return $result;
+    }
+
+    /**
+     * Map single product preview from new (one multi-checkbox) to old (three separate settings)
+     * New → Old direction
+     * 
+     * @since DOKAN_SINCE
+     * @param array $result The converted legacy settings array
+     * @param array $pages_values The source new settings array
+     * @return array Modified result
+     */
+    public function map_single_product_preview_new_to_old( $result, $pages_values ) {
+        // Define the keys we're mapping for clarity
+        $new_key = 'appearance.store.single_product_preview_section.single_product_preview';
+        $old_keys = [
+            'vendor_info'       => 'dokan_general.show_vendor_info',
+            'more_products_tab' => 'dokan_general.enabled_more_products_tab',
+            'shipping_tab'      => 'dokan_selling.disable_shipping_tab',
+        ];
+
+        // Check if the new field exists in the source data
+        if ( ! SettingsMapper::has_path( $pages_values, $new_key ) ) {
+            // Source field not present, skip mapping
+            return $result;
+        }
+
+        $preview = SettingsMapper::get_value_by_path(
+            $pages_values,
+            $new_key,
+            []
+        );
+
+        // Ensure we have an array
+        if ( ! is_array( $preview ) ) {
+            $preview = [];
+        }
+
+        // Extract boolean values (handle boolean, truthy values, and empty strings)
+        // Empty string means unchecked, 1 or true means checked
+        $vendor_info_enabled = false;
+        if ( isset( $preview['vendor_info'] ) ) {
+            $value = $preview['vendor_info'];
+            if ( $value !== '' && $value !== '0' && $value !== 0 && $value !== false ) {
+                $vendor_info_enabled = true;
+            }
+        }
+
+        $more_products_enabled = false;
+        if ( isset( $preview['more_products_tab'] ) ) {
+            $value = $preview['more_products_tab'];
+            if ( $value !== '' && $value !== '0' && $value !== 0 && $value !== false ) {
+                $more_products_enabled = true;
+            }
+        }
+
+        $shipping_enabled = false;
+        if ( isset( $preview['shipping_tab'] ) ) {
+            $value = $preview['shipping_tab'];
+            if ( $value !== '' && $value !== '0' && $value !== 0 && $value !== false ) {
+                $shipping_enabled = true;
+            }
+        }
+
+        // Initialize sections if they don't exist
+        if ( ! isset( $result['dokan_general'] ) ) {
+            $result['dokan_general'] = [];
+        }
+        if ( ! isset( $result['dokan_selling'] ) ) {
+            $result['dokan_selling'] = [];
+        }
+
+        // Map to legacy format
+        if ( $vendor_info_enabled ) {
+            $result['dokan_general']['show_vendor_info'] = 'on';
+        } else {
+            $result['dokan_general']['show_vendor_info'] = 'off';
+        }
+
+        if ( $more_products_enabled ) {
+            $result['dokan_general']['enabled_more_products_tab'] = 'on';
+        } else {
+            $result['dokan_general']['enabled_more_products_tab'] = 'off';
+        }
+
+        // Inverted: if shipping is enabled (true) in new, disable_shipping should be 'off' in old
+        if ( $shipping_enabled ) {
+            $result['dokan_selling']['disable_shipping_tab'] = 'off';
+        } else {
+            $result['dokan_selling']['disable_shipping_tab'] = 'on';
+        }
+
+        return $result;
+    }
+
 }

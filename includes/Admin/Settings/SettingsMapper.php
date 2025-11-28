@@ -60,9 +60,6 @@ class SettingsMapper {
         'dokan_geolocation.distance_min'                      => 'general.location.map_display_settings.radius_search_min_distance',
         'dokan_geolocation.distance_max'                      => 'general.location.map_display_settings.radius_search_max_distance',
         'dokan_geolocation.map_zoom'                          => 'general.location.map_display_settings.map_zoom_level',
-        // Note: Old had two separate controls for placement; new consolidates to a single multi-select
-        'dokan_geolocation.show_location_map_pages'           => 'general.location.map_placement.map_placement_locations',
-        'dokan_geolocation.show_product_location_in_wc_tab'   => 'general.location.map_placement.map_placement_locations',
 
         // =========================
         // Appearance > Store Page
@@ -72,7 +69,7 @@ class SettingsMapper {
         // Banner size combined into a double input in new UI
         'dokan_appearance.store_banner_width'  => 'appearance.store.store_banner_dimension_section.store_banner_dimension',
         'dokan_appearance.store_banner_height' => 'appearance.store.store_banner_dimension_section.store_banner_dimension',
-        'dokan_appearance.store_open_close'    => 'appearance.store.store_clossing_time_widget_section.store_clossing_time_widget',
+        'dokan_appearance.store_open_close'    => 'appearance.store.store_time_widget_section.store_time_widget',
         'dokan_appearance.enable_theme_store_sidebar' => 'appearance.store.store_sidebar_section.store_opening_time',
         'dokan_appearance.hide_vendor_info'    => 'appearance.store.vendor_info_visibility_section.vendor_info_visibility',
         'dokan_appearance.disable_dokan_fontawesome' => 'appearance.store.dokan_font_section.dokan_font',
