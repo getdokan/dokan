@@ -86,6 +86,7 @@ class VendorPage extends AbstractPage {
             ->add(
                 ElementFactory::field( 'enable_selling', 'radio_capsule' )
                     ->set_title( esc_html__( 'Enable Selling', 'dokan-lite' ) )
+                    ->set_tooltip( esc_html__( 'If checked, vendors will have permission to sell immediately after registration. If unchecked, newly registered vendors cannot add products until selling capability is activated manually from admin dashboard.', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Immediately enable selling for newly registered vendors.', 'dokan-lite' ) )
                     ->add_option( esc_html__( 'Automatically', 'dokan-lite' ), 'automatically' )
                     ->add_option( esc_html__( 'Manually', 'dokan-lite' ), 'manually' )
