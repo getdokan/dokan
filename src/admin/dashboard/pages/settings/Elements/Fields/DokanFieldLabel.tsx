@@ -18,7 +18,7 @@ const DokanFieldLabel = ( {
                 imageUrl={ element.image_url }
                 title={ element.title }
                 helperText={ element.description }
-                tooltip={ element.helper_text }
+                tooltip={ element.tooltip }
             />
             { element?.doc_link && (
                 <a
