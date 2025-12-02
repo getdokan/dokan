@@ -152,7 +152,7 @@ const Sidebar = ( {
     // ==========================================
     // RENDER HELPERS
     // ==========================================
-    const { siteTitle, siteIcon } = siteInfo || {};
+    const { siteTitle, siteIcon, siteUrl } = siteInfo || {};
     const sideBarTitle = siteTitle || __( 'Dokan', 'dokan-lite' );
 
     const { name: storeName, avatar: storeAvatar } = vendor || {};
@@ -209,9 +209,10 @@ const Sidebar = ( {
                 ) }
             >
                 { /* === HEADER === */ }
-                <div
+                <a
+                    href={ siteUrl || '/' }
                     className={ twMerge(
-                        'flex items-center gap-3.5 min-h-20',
+                        'flex items-center gap-3.5 min-h-20 no-underline',
                         collapsed ? 'px-5 justify-center' : 'px-8'
                     ) }
                 >
@@ -241,7 +242,7 @@ const Sidebar = ( {
                             </span>
                         </Tooltip>
                     ) }
-                </div>
+                </a>
 
                 { /* === MENU === */ }
                 <div

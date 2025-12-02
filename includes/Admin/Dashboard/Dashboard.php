@@ -155,7 +155,13 @@ class Dashboard implements Hookable {
     public function settings(): array {
         // TODO: We are using dokan legacy dashboard URL here for legacy `Import Dummy Data` & `Basic & Fundamental` page.
         // We will remove this code after getting the new `Import Dummy Data` & `Basic & Fundamental` page.
-        $dashboard_url = admin_url( 'admin.php?page=dokan' );
+        $legacy_dashboard_url = admin_url( 'admin.php?page=dokan' );
+
+        // Get the dashboard page slug based on the legacy dashboard page settings.
+        $is_legacy_dashboard_page = get_transient( 'dokan_legacy_dashboard_page' );
+        $dashboard_page_slug      = $is_legacy_dashboard_page ? 'dokan' : 'dokan-dashboard';
+        $dashboard_url            = admin_url( 'admin.php?page=' . esc_attr( $dashboard_page_slug ) );
+
         $header_info   = [
             'lite_version'    => DOKAN_PLUGIN_VERSION,
             'is_pro_exists'   => dokan()->is_pro_exists(),
@@ -167,7 +173,7 @@ class Dashboard implements Hookable {
                     [
                         'id'       => 'whats-new',
                         'title'    => esc_html__( "What's New", 'dokan-lite' ),
-                        'url'      => $dashboard_url . '#/changelog',
+                        'url'      => $legacy_dashboard_url . '#/changelog',
                         'icon'     => 'whats-new',
                         'active'   => Helper::dokan_has_new_version(),
                         'external' => false,
@@ -203,7 +209,7 @@ class Dashboard implements Hookable {
                     [
                         'id'       => 'basic-fundamental',
                         'title'    => esc_html__( 'Basic & Fundamental', 'dokan-lite' ),
-                        'url'      => $dashboard_url . '#/help',
+                        'url'      => $legacy_dashboard_url . '#/help',
                         'icon'     => 'settings',
                         'external' => false,
                     ],
@@ -217,7 +223,7 @@ class Dashboard implements Hookable {
                     [
                         'id'       => 'import-dummy-data',
                         'title'    => __( 'Import dummy data', 'dokan-lite' ),
-                        'url'      => $dashboard_url . '#/dummy-data',
+                        'url'      => $legacy_dashboard_url . '#/dummy-data',
                         'icon'     => 'import-data',
                         'external' => false,
                     ],

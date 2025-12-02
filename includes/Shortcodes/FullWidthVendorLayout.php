@@ -182,6 +182,7 @@ class FullWidthVendorLayout implements Hookable {
                             'siteInfo'   => [
                                 'siteTitle' => get_bloginfo( 'name' ),
                                 'siteIcon'  => get_site_icon_url(),
+                                'siteUrl'   => home_url(),
                             ],
                             'vendor'     => [
                                 'name'   => $vendor ? $vendor->get_shop_name() : $user_name,
