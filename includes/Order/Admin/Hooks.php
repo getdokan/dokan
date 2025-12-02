@@ -6,7 +6,6 @@ use Exception;
 use WC_Data_Store;
 use WC_Order;
 use WeDevs\Dokan\Commission\OrderCommission;
-use WeDevs\Dokan\ReverseWithdrawal\Order;
 use WeDevs\Dokan\Utilities\OrderUtil;
 use WP_Post;
 
