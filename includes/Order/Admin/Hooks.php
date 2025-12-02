@@ -306,6 +306,12 @@ class Hooks {
                     }
 
                     const urlParams = new URLSearchParams(window.location.search);
+                    // Hide the toggle button if the only suborders are visible.
+                    if ( 'sub_order' === urlParams.get('dokan_order_filter') ) {
+                        $('button.toggle-sub-orders').hide();
+                        return;
+                    }
+
                     if ( urlParams.get('s') || urlParams.get('vendor_id') ) {
                         return;
                     }
@@ -332,7 +338,13 @@ class Hooks {
                     });
                 }
                 <?php else : ?>
-                $('tr.sub-order').hide();
+                const urlParams = new URLSearchParams(window.location.search);
+                // Hide the toggle button if the only suborders are visible.
+                if ( 'sub_order' !== urlParams.get('dokan_order_filter') ) {
+                    $('tr.sub-order').hide();
+                } else {
+                    $('button.toggle-sub-orders').hide();
+                }
 
                 $('button.show-sub-orders').on('click', function (e) {
                     e.preventDefault();
@@ -358,13 +370,6 @@ class Hooks {
                     $('tr.sub-order').toggle();
                 });
                 <?php endif; ?>
-
-                // Check if filtering by suborders
-                const urlParams = new URLSearchParams(window.location.search);
-                if ( 'sub_order' === urlParams.get('dokan_order_filter') ) {
-                    $('tr.sub-order').show();
-                    $('button.toggle-sub-orders').hide();
-                }
             });
         </script>
 
@@ -616,10 +621,11 @@ class Hooks {
      * @return array
      */
     public function filter_orders_by_order_type_query( $query_args ) {
-        global $typenow;
+        $screen    = get_current_screen();
+        $post_type = $screen->post_type ?? '';
 
-        // For legacy orders, check if HPOS is enabled.
-        if ( 'shop_order' !== $typenow ) {
+        // Return early if the current screen is not order screen.
+        if ( 'shop_order' !== $post_type ) {
             return $query_args;
         }
 
