@@ -283,16 +283,16 @@ class SettingsMapper {
         'dokan_verification_sms_gateways.active_gateway' => 'verification.sms-gateways-page.sms-provider.sms_provider',
 
         // Twilio Settings
-        'dokan_verification_sms_gateways.twilio_enable_status' => 'verification.sms-gateways-page.sms-provider.connect_to_twilio',
-        'dokan_verification_sms_gateways.twilio_number'        => 'verification.sms-gateways-page.sms-provider.from_number',
-        'dokan_verification_sms_gateways.twilio_username'      => 'verification.sms-gateways-page.sms-provider.account_sid',
-        'dokan_verification_sms_gateways.twilio_pass'          => 'verification.sms-gateways-page.sms-provider.auth_token',
-        'dokan_verification_sms_gateways.twilio_code_type'     => 'verification.sms-gateways-page.sms-provider.sms_code_type',
+        'dokan_verification_sms_gateways.twilio_enable_status' => 'verification.sms-gateways-page.sms-provider.twilio_api_group.connect_to_twilio',
+        'dokan_verification_sms_gateways.twilio_number'        => 'verification.sms-gateways-page.sms-provider.twilio_api_group.from_number',
+        'dokan_verification_sms_gateways.twilio_username'      => 'verification.sms-gateways-page.sms-provider.twilio_api_group.account_sid',
+        'dokan_verification_sms_gateways.twilio_pass'          => 'verification.sms-gateways-page.sms-provider.twilio_api_group.auth_token',
+        'dokan_verification_sms_gateways.twilio_code_type'     => 'verification.sms-gateways-page.sms-provider.twilio_api_group.sms_code_type',
 
         // Nexmo/Vonage Settings (using the flattened structure)
-        'dokan_verification_sms_gateways.nexmo_enable_status'  => 'verification.sms-gateways-page.sms-provider.connect_to_vonage',
-        'dokan_verification_sms_gateways.nexmo_username'       => 'verification.sms-gateways-page.sms-provider.vonage_api_key',
-        'dokan_verification_sms_gateways.nexmo_pass'           => 'verification.sms-gateways-page.sms-provider.vonage_api_secret',
+        'dokan_verification_sms_gateways.nexmo_enable_status'  => 'verification.sms-gateways-page.sms-provider.vonage_api_group.connect_to_vonage',
+        'dokan_verification_sms_gateways.nexmo_username'       => 'verification.sms-gateways-page.sms-provider.vonage_api_group.nexmo_username',
+        'dokan_verification_sms_gateways.nexmo_pass'           => 'verification.sms-gateways-page.sms-provider.vonage_api_group.nexmo_pass',
 
         // Sender Section
         'dokan_verification_sms_gateways.sender_name'     => 'verification.sms-gateways-page.sender.sender_name',
