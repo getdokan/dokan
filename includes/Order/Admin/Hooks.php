@@ -624,18 +624,13 @@ class Hooks {
         $post_type = $screen->post_type ?? '';
 
         // Return early if the current screen is not order screen.
-        if ( 'shop_order' !== $post_type ) {
+        $filter_type = sanitize_text_field( wp_unslash( $_GET['dokan_order_filter'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if ( 'shop_order' !== $post_type || empty( $filter_type ) ) {
             return $query_args;
         }
-
-        if ( empty( $_GET['dokan_order_filter'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-            return $query_args;
-        }
-
-        $is_hpos_enabled = OrderUtil::is_hpos_enabled();
-        $filter_type     = sanitize_text_field( wp_unslash( $_GET['dokan_order_filter'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
         // Render only suborder products if filter types are set to 'sub_order'.
+        $is_hpos_enabled = OrderUtil::is_hpos_enabled();
         if ( 'sub_order' === $filter_type ) {
             $query_type = $is_hpos_enabled ? 'parent_exclude' : 'post_parent__not_in';
 
