@@ -124,6 +124,10 @@ class Hooks {
     }
 
     /**
+     * Add shipping tax rate.
+     *
+     * @since DOKAN_SINCE
+     *
      * @param $rate WC_Shipping_Rate
      * @param $args array
      * @param $wc_shipping_method  WC_Shipping_Method
@@ -139,7 +143,6 @@ class Hooks {
 
             if ( is_array( $rates ) && ! empty( $rates ) ) {
                 $taxes = Tax::calc_shipping_tax( $total_cost, $rates );
-
                 $rate->set_taxes( $taxes );
             }
         }
