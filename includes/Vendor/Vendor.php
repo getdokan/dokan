@@ -1220,6 +1220,15 @@ class Vendor {
     }
 
     /**
+     * Set TikTok
+     *
+     * @param string
+     */
+    public function set_tiktok( $value ) {
+        $this->set_social_prop( 'tiktok', 'social', esc_url_raw( $value ) );
+    }
+
+    /**
      * Set show email
      *
      * @param string

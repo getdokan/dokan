@@ -35,6 +35,7 @@ function dokan_get_dashboard_nav(): array {
             'icon'       => '<i class="fas fa-tachometer-alt"></i>',
             'url'        => dokan_get_navigation_url() . ( ReportUtil::is_analytics_enabled() ? '?path=%2Fanalytics%2FOverview' : '' ),
             'pos'        => 10,
+            'icon_name'  => 'House',
             'permission' => 'dokan_view_overview_menu',
         ],
         'products'  => [
@@ -42,6 +43,7 @@ function dokan_get_dashboard_nav(): array {
             'icon'       => '<i class="fas fa-briefcase"></i>',
             'url'        => dokan_get_navigation_url( 'products' ),
             'pos'        => 30,
+            'icon_name'  => 'Box',
             'permission' => 'dokan_view_product_menu',
         ],
         'orders'    => [
@@ -49,6 +51,7 @@ function dokan_get_dashboard_nav(): array {
             'icon'       => '<i class="fas fa-shopping-cart"></i>',
             'url'        => dokan_get_navigation_url( 'orders' ),
             'pos'        => 50,
+            'icon_name'  => 'ShoppingCart',
             'permission' => 'dokan_view_order_menu',
         ],
         'withdraw'  => [
@@ -56,14 +59,16 @@ function dokan_get_dashboard_nav(): array {
             'icon'        => '<i class="fas fa-upload"></i>',
             'url'         => dokan_get_navigation_url( 'withdraw' ),
             'pos'         => 70,
+            'icon_name'   => 'DollarSign',
             'permission'  => 'dokan_view_withdraw_menu',
             'react_route' => 'withdraw',
         ],
         'settings'  => [
-            'title' => __( 'Settings', 'dokan-lite' ),
-            'icon'  => '<i class="fas fa-cog"></i>',
-            'url'   => dokan_get_navigation_url( 'settings/store' ),
-            'pos'   => 200,
+            'title'     => __( 'Settings', 'dokan-lite' ),
+            'icon'      => '<i class="fas fa-cog"></i>',
+            'icon_name' => 'Settings',
+            'url'       => dokan_get_navigation_url( 'settings/store' ),
+            'pos'       => 200,
         ],
     ];
 

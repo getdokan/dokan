@@ -35,6 +35,7 @@ class Settings {
         add_filter( 'dokan_get_settings_values', [ $this, 'set_withdraw_limit_gateways' ], 20, 2 );
         add_filter( 'dokan_get_settings_values', [ $this, 'set_commission_type_if_not_set' ], 20, 2 );
         add_filter( 'dokan_settings_general_site_options', [ $this, 'add_dokan_data_clear_setting' ], 310 );
+        add_filter( 'dokan_get_settings_values', [ $this, 'set_vendor_latest_layout' ], 20, 2 );
     }
 
     /**
@@ -812,11 +813,29 @@ class Settings {
                 ],
             ],
             'dokan_appearance' => [
-                'appearance_options'         => [
-                    'name'        => 'appearance_options',
+                'vendor_layout_options'      => [
+                    'name'        => 'vendor_layout_options',
                     'type'        => 'sub_section',
-                    'label'       => __( 'Store Appearance', 'dokan-lite' ),
-                    'description' => __( 'Configure your site appearances.', 'dokan-lite' ),
+                    'label'       => esc_html__( 'Vendor Dashboard Appearance', 'dokan-lite' ),
+                    'description' => esc_html__( 'Configure the appearance and style of the vendor dashboard.', 'dokan-lite' ),
+                ],
+                'vendor_layout_style'        => [
+                    'name'    => 'vendor_layout_style',
+                    'label'   => esc_html__( 'Vendor Dashboard Style', 'dokan-lite' ),
+                    'desc'    => esc_html__( 'Select the user interface for the vendor dashboard.', 'dokan-lite' ),
+                    'type'    => 'radio',
+                    'default' => 'legacy',
+                    'options' => [
+                        'latest' => esc_html__( 'New UI', 'dokan-lite' ),
+                        'legacy' => esc_html__( 'Legacy UI', 'dokan-lite' ),
+                    ],
+                ],
+                'appearance_options'         => [
+                    'name'          => 'appearance_options',
+                    'type'          => 'sub_section',
+                    'label'         => esc_html__( 'Store Appearance', 'dokan-lite' ),
+                    'description'   => esc_html__( 'Configure your site appearances.', 'dokan-lite' ),
+                    'content_class' => 'sub-section-styles',
                 ],
                 'store_map'                  => [
                     'name'    => 'store_map',
@@ -1184,5 +1203,23 @@ class Settings {
         }
 
         return $value;
+    }
+
+    /**
+     * Set the default settings for vendor layout.
+     *
+     * @since 4.2.0
+     *
+     * @param mixed $option_name
+     * @param mixed $option_value
+     *
+     * @return void|mixed $option_value
+     */
+    public function set_vendor_latest_layout( $option_value, $option_name ) {
+        if ( 'dokan_appearance' === $option_name && empty( $option_value['vendor_layout_style'] ) ) {
+            $option_value['vendor_layout_style'] = 'legacy';
+        }
+
+        return $option_value;
     }
 }

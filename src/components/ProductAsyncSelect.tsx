@@ -26,8 +26,11 @@ const defaultMap = ( product: any ): ProductOption => ( {
     value: product.id,
     label:
         product.name ||
-        // eslint-disable-next-line @wordpress/i18n-translator-comments
-        sprintf( __( 'Product #%s', 'dokan-lite' ), String( product?.id ?? '' ) ),
+        sprintf(
+            // eslint-disable-next-line @wordpress/i18n-translator-comments
+            __( '(no title) #%s', 'dokan-lite' ),
+            String( product?.id ?? '' )
+        ),
     raw: product,
 } );
 
