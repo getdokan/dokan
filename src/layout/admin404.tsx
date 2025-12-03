@@ -23,8 +23,7 @@ const AdminNotFound = ( {
     backToDashboardUrl?: string;
 } ) => {
     // @ts-ignore
-    const dashBoardUrl = window.dokan?.urls?.dashboardUrl ?? '#';
-
+    const adminDashboardUrl =  backToDashboardUrl ?? window.dokanAdminDashboard?.urls?.adminDashboardUrl ?? '#/';
     return (
         <>
             { children ? (
@@ -37,18 +36,17 @@ const AdminNotFound = ( {
                         className
                     ) }
                 >
-                    <Slot name="before-dokan-not-found" />
+                    <Slot name="before-dokan-admin-not-found" />
 
                     <div className="flex flex-col items-center justify-center text-center gap-[22px] ">
                         { /* Icon */ }
                         <div className="flex items-center justify-center rounded-full bg-[#EFEAFF] w-[127px] h-[127px]  flex-shrink-0">
                             <FileQuestion className="text-[#7047EB] w-[52px] h-[52px]" />
                         </div>
-
                         { /* 404 + text */ }
                         <div className="max-w-[270px] ">
                             <div className="text-[64px] font-bold text-[#25252D] leading-[130%]">
-                                404
+                               { __( '404', 'dokan-lite' ) }
                             </div>
                             <div className="flex flex-col gap-2 justify-center text ">
                                 <h3 className="text-lg  font-bold text-[#25252D] leading-[130%]">
@@ -60,10 +58,10 @@ const AdminNotFound = ( {
                             </div>
                         </div>
                         { /* Button */ }
-                        { navigateButton ?? (
+                        { navigateButton && (
                             <DokanButton
                                 link={ true }
-                                href={ backToDashboardUrl ?? dashBoardUrl }
+                                href={ adminDashboardUrl }
                                 variant={ 'primary' }
                                 className="inline-flex justify-end items-center gap-[10px] py-[10px] px-[24px] sm:py-[8px] sm:px-[16px] rounded-[5px] bg-[#7047EB] text-white"
                             >
@@ -72,7 +70,7 @@ const AdminNotFound = ( {
                         ) }
                     </div>
 
-                    <Slot name="after-dokan-not-found" />
+                    <Slot name="after-dokan-admin-not-found" />
                 </div>
             ) }
         </>
