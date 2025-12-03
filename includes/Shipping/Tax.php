@@ -7,32 +7,22 @@ use WC_Tax;
 class Tax extends WC_Tax {
 
     /**
-     * @param $rate \WC_Shipping_Rate
-     * @param $args array
+     * Get tax rates for shipping
      *
-     * @return array Array of tax rate arrays, each containing 'rate', 'label', 'shipping', and 'compound' keys. Empty array if no shipping rates found for the tax class.
+     * @since DOKAN_SINCE
+     *
+     * @param $args
+     *
+     * @return array
      */
-    public static function get_tax_rates( $rate, $args ) {
-        $tax_class = null;
-        $customer = null;
-        // See if we have an explicitly set shipping tax class.
-        $shipping_tax_class = get_option( 'woocommerce_shipping_tax_class' );
+    public static function get_tax_rates( $args ) {
+        $tax_class = self::get_shipping_tax_class_from_vendor_cart_items( $args );
 
-        if ( 'inherit' !== $shipping_tax_class ) {
-            $tax_class = $shipping_tax_class;
-        }
-
-        // If we don't have a shipping tax class yet, work out which one to use.
-        if ( is_null( $tax_class ) ) {
-            $tax_class = self::get_shipping_tax_class_from_vendor_cart_items( $rate, $args );
-        }
-
-        // If we still don't have a tax class, there must be no taxable items.
         if ( is_null( $tax_class ) ) {
             return array();
         }
 
-        $location = self::get_tax_location( $tax_class, $customer );
+        $location = self::get_tax_location( $tax_class );
 
         // Check for a valid location.
         if ( 4 !== count( $location ) ) {
@@ -52,25 +42,22 @@ class Tax extends WC_Tax {
         );
     }
 
-
     /**
-     * Get the shipping tax class from the cart items.
+     * Get shipping tax class from vendor cart items.
      *
-     * Determines the appropriate tax class for shipping based on cart contents.
-     * Standard tax class takes priority, followed by the first non-standard class
-     * found in the configured tax class hierarchy.
-     * @param $rate \WC_Shipping_Rate
-     * @param $args array
+     * @since DOKAN_SINCE
      *
-     * @return string|null The shipping tax class slug, or null if no taxable items are found.
+     * @param $args
+     *
+     * @return false|mixed|string|null
      */
-    private static function get_shipping_tax_class_from_vendor_cart_items( $rate, $args ) {
+    private static function get_shipping_tax_class_from_vendor_cart_items( $args ) {
         $standard_tax_class = '';
-        $vendor_cart = $args['package']['contents'];
+        $vendor_cart = ! empty( $args['package']['contents'] ) ? $args['package']['contents'] : [];
 
         // Check if cart has items before proceeding.
         if ( ! $vendor_cart ) {
-            return $standard_tax_class;
+            return null;
         }
 
         $cart_tax_classes = self::get_vendor_cart_item_tax_classes_for_shipping( $vendor_cart );
@@ -107,9 +94,13 @@ class Tax extends WC_Tax {
     }
 
     /**
-     * Get all tax classes for shipping based on the items in the cart.
+     * Retrieves a list of unique tax classes for shipping from the provided vendor cart items.
      *
-     * @return array
+     * @static DOKAN_SINCE
+     *
+     * @param array $cart_items An array of cart items.
+     *
+     * @return array An array of unique tax classes applicable to shipping for the provided cart items.
      */
     public static function get_vendor_cart_item_tax_classes_for_shipping( $cart_items ) {
         $found_tax_classes = array();

@@ -126,26 +126,22 @@ class Hooks {
     /**
      * @param $rate WC_Shipping_Rate
      * @param $args array
-     * @param $obj  WC_Shipping_Method
+     * @param $wc_shipping_method  WC_Shipping_Method
      *
      * @return \WC_Shipping_Rate
      */
-    public function add_shipping_method_rate( $rate, $args, $obj ) {
-        $taxes = $rate->get_taxes();
+    public function add_shipping_method_rate( $rate, $args, $wc_shipping_method ) {
+        $taxes      = $rate->get_taxes();
         $total_cost = $rate->get_cost();
-        if ( is_array( $taxes ) && $total_cost > 0 && $obj->is_taxable() ) {
-            $reflectionObj = new ReflectionClass( get_class( $obj ) );
-            $method = $reflectionObj->getMethod( 'get_taxes_per_item' );
-            $method->setAccessible( true );
 
-            if ( 'per_item' === $args['calc_tax'] ) {
-                $taxes = $method->invoke( $obj, $args['cost'] );
-            } else {
-                $rates = Tax::get_tax_rates( $rate, $args );
+        if ( 'per_order' === $args['calc_tax'] && is_array( $taxes ) && $total_cost > 0 && $wc_shipping_method->is_taxable() ) {
+            $rates = Tax::get_tax_rates( $args );
+
+            if ( is_array( $rates ) && ! empty( $rates ) ) {
                 $taxes = Tax::calc_shipping_tax( $total_cost, $rates );
-            }
 
-            $rate->set_taxes( $taxes );
+                $rate->set_taxes( $taxes );
+            }
         }
 
         return $rate;
