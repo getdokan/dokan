@@ -2,11 +2,8 @@
 
 namespace WeDevs\Dokan\Shipping;
 
-use ReflectionClass;
 use WC_Order;
 use WC_Order_Item_Shipping;
-use WC_Shipping_Method;
-use WC_Shipping_Rate;
 
 /**
  * Shipping hooks class
@@ -124,13 +121,13 @@ class Hooks {
     }
 
     /**
-     * Add shipping tax rate.
+     * Add shipping tax rate based on vendor product items.
      *
      * @since DOKAN_SINCE
      *
-     * @param $rate WC_Shipping_Rate
+     * @param $rate \WC_Shipping_Rate
      * @param $args array
-     * @param $wc_shipping_method  WC_Shipping_Method
+     * @param $wc_shipping_method \WC_Shipping_Method
      *
      * @return \WC_Shipping_Rate
      */
