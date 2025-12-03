@@ -212,7 +212,7 @@ const Sidebar = ( {
                 <a
                     href={ siteUrl || '/' }
                     className={ twMerge(
-                        'flex items-center gap-3.5 min-h-20 no-underline',
+                        'flex items-center gap-3.5 min-h-20 no-underline focus:!outline-none',
                         collapsed ? 'px-5 justify-center' : 'px-8'
                     ) }
                 >
