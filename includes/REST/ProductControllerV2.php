@@ -322,9 +322,18 @@ class ProductControllerV2 extends ProductController {
             );
         }
 
-        // Product stock status.
+        // Include variations but exclude parent variable products when requested.
         if ( isset( $request['include_variations'] ) && true === wc_string_to_bool( $request['include_variations'] ) ) {
             $args['post_type'] = [ $this->post_type, 'product_variation' ];
+
+            // Exclude parent variable products so only variations (and other non-variable products) are included.
+            // Variations are a different post type and won't be affected by this taxonomy filter.
+            $args['tax_query'][] = array(
+                'taxonomy' => 'product_type',
+                'field'    => 'slug',
+                'terms'    => array( 'variable' ),
+                'operator' => 'NOT IN',
+            );
         }
 
         return apply_filters( 'dokan_rest_pre_product_listing_args', $args, $request );
