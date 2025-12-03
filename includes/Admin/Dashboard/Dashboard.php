@@ -160,7 +160,7 @@ class Dashboard implements Hookable {
         // Get the dashboard page slug based on the legacy dashboard page settings.
         $is_legacy_dashboard_page = get_transient( 'dokan_legacy_dashboard_page' );
         $dashboard_page_slug      = $is_legacy_dashboard_page ? 'dokan' : 'dokan-dashboard';
-        $dashboard_url            = admin_url( 'admin.php?page=' . esc_attr( $dashboard_page_slug ) );
+        $dashboard_url            = admin_url( 'admin.php?page=' . $dashboard_page_slug );
 
         $header_info   = [
             'lite_version'    => DOKAN_PLUGIN_VERSION,
