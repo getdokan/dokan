@@ -6,7 +6,7 @@ import { FileQuestion } from 'lucide-react';
 
 const AdminNotFound = ( {
     children,
-    navigateButton,
+    navigateButton = true,
     title = __( "Sorry, the page can't be found", 'dokan-lite' ),
     message = __(
         'The page you were looking for appears to have been moved, deleted or does not exist.',
@@ -16,7 +16,7 @@ const AdminNotFound = ( {
     backToDashboardUrl = null,
 }: {
     children?: JSX.Element;
-    navigateButton?: JSX.Element;
+    navigateButton?: JSX.Element | boolean;
     title?: string;
     message?: string;
     className?: string;
