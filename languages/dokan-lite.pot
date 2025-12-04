@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-12-04T07:28:05+00:00\n"
+"POT-Creation-Date: 2025-12-04T08:09:56+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -12576,26 +12576,6 @@ msgid "Bar chart"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:179
-#: assets/js/setup-guide-banner.js:172
-msgid "Setup Step Icon"
-msgstr ""
-
-#: assets/js/dokan-admin-dashboard.js:179
-#: assets/js/setup-guide-banner.js:172
-msgid "Complete your marketplace setup in minutes"
-msgstr ""
-
-#: assets/js/dokan-admin-dashboard.js:179
-#: assets/js/setup-guide-banner.js:172
-msgid "Start Setup"
-msgstr ""
-
-#: assets/js/dokan-admin-dashboard.js:179
-#: assets/js/setup-guide-banner.js:172
-msgid "Continue Setup"
-msgstr ""
-
-#: assets/js/dokan-admin-dashboard.js:179
 msgid "Video"
 msgstr ""
 
@@ -14467,6 +14447,22 @@ msgstr ""
 
 #: assets/js/leaderboards.js:1
 msgid "Rows per table"
+msgstr ""
+
+#: assets/js/setup-guide-banner.js:172
+msgid "Setup Step Icon"
+msgstr ""
+
+#: assets/js/setup-guide-banner.js:172
+msgid "Complete your marketplace setup in minutes"
+msgstr ""
+
+#: assets/js/setup-guide-banner.js:172
+msgid "Start Setup"
+msgstr ""
+
+#: assets/js/setup-guide-banner.js:172
+msgid "Continue Setup"
 msgstr ""
 
 #: assets/js/store-performance.js:1

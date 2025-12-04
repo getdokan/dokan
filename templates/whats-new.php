@@ -84,6 +84,14 @@ $changelog = [
                     'title'       => 'Restored the side-by-side layout for the main Admin Dashboard panel.',
                     'description' => '',
                 ],
+                [
+                    'title'       => 'Prevent console warning from admin panel setup guide banner elements.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Remove setup guide banner for admin setup guide pages.',
+                    'description' => '',
+                ],
             ],
         ],
     ],

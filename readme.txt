@@ -371,6 +371,8 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **fix:** Added support for including product variations in products rest api requests.
 - **fix:** Stopped unnecessary warnings and notices from appearing during the initial store setup process.
 - **fix:** Restored the side-by-side layout for the main Admin Dashboard panel.
+- **fix:** Prevent console warning from admin panel setup guide banner elements.
+- **fix:** Remove setup guide banner for admin setup guide pages.
 
 = v4.2.0 ( Nov 24, 2025 ) =
 - **update:** Ensured full compatibility for the legacy admin panel across Subscriptions, Announcements, Wholesale, Product Ads, Abuse Reports, Seller Badge, and Refund pages.
