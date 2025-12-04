@@ -255,6 +255,14 @@ const Sidebar = ( {
                         <ul className="flex flex-col gap-1.5 list-none p-0 m-0">
                             { Object.entries( sidebarNav || {} ).map(
                                 ( [ key, item ]: any ) => {
+                                    // If switched off from the menu manager.
+                                    if (
+                                        'is_switched_on' in item &&
+                                        ! item.is_switched_on
+                                    ) {
+                                        return null;
+                                    }
+
                                     const hasSub =
                                         !! item?.submenu &&
                                         Object.keys( item.submenu ).length > 0;
@@ -423,6 +431,15 @@ const Sidebar = ( {
                                                                 subkey,
                                                                 subitem,
                                                             ]: any ) => {
+                                                                // If switched off from the menu manager.
+                                                                if (
+                                                                    'is_switched_on' in
+                                                                        subitem &&
+                                                                    ! subitem.is_switched_on
+                                                                ) {
+                                                                    return null;
+                                                                }
+
                                                                 const isSubActive =
                                                                     subitem?.url &&
                                                                     currentUrl.startsWith(
