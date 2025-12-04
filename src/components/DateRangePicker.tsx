@@ -100,12 +100,14 @@ const DateRangePicker = ( props: Props ) => {
                 >
                     <div
                         className={ twMerge(
-                            'p-4 w-auto text-sm/6',
+                            'w-auto text-sm/6',
                             props?.popoverBodyClassName ?? ''
                         ) }
                     >
-                        <DateRange { ...props } />
-                        <div className="mt-2 flex flex-row gap-2">
+                        <div className="dokan-date-range-picker">
+                            <DateRange { ...props } />
+                        </div>
+                        <div className="m-4 mt-0 flex flex-row justify-end gap-2">
                             <DokanButton
                                 size="sm"
                                 onClick={ () => {
@@ -122,9 +124,10 @@ const DateRangePicker = ( props: Props ) => {
                                         } );
                                     }
                                 } }
-                            >
-                                { __( 'Clear', 'dokan-lite' ) }
-                            </DokanButton>
+                                variant="tertiary"
+                                label={ __( 'Clear', 'dokan-lite' )}
+                                className="dokan-link"
+                            />
 
                             <DokanButton
                                 size="sm"
@@ -134,9 +137,9 @@ const DateRangePicker = ( props: Props ) => {
                                         props.onOk();
                                     }
                                 } }
-                            >
-                                { __( 'Ok', 'dokan-lite' ) }
-                            </DokanButton>
+                                variant="primary"
+                                label={ __( 'Ok', 'dokan-lite' )}
+                            />
                         </div>
                     </div>
                 </Popover>

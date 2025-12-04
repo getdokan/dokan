@@ -1,3 +1,38 @@
+### v4.2.0 ( Nov 24, 2025 ) ###
+- **update:** Ensured full compatibility for the legacy admin panel across Subscriptions, Announcements, Wholesale, Product Ads, Abuse Reports, Seller Badge, and Refund pages.
+- **update:** The vendor dashboard now supports modern, full-width theme layouts, providing a more spacious user experience.
+- **update:** Redesigned the Admin's Reverse Withdrawal page with a modern, easier-to-use interface for faster payment management.
+- **fix:** Corrected a price formatting issue in both HTML and plain text email templates.
+- **fix:** Fixed a redirection issue on the legacy vendor shipping policy page to ensure it works correctly.
+
+### v4.1.5 ( Nov 11, 2025 ) ###
+- **update:** Added vendor verification legacy UI support for admin panel to ensure backward compatibility with older interface versions.
+- **update:** Updated all Twitter labels to X to reflect the latest brand changes.
+- **update:** Added custom store URL validation in admin settings to prevent conflicts with WordPress search functionality.
+- **update:** Fixed PHP warnings triggered when saving variable products by improving validation and data handling during product save operations.
+
+### v4.1.3 ( Oct 28, 2025 ) ###
+- **update:** Admin Dashboard withdraw list UI with Modern Design and Improved User Experience.
+- **update:** Admin Dashboard vendor list UI with Modern Design and Improved User Experience.
+
+### v4.1.2 ( Oct 16, 2025 ) ###
+- **enhance:** Updated the Admin Dashboard header UI for seamless visual representation with the new React-based frontend architecture.
+- **update:** Added support for retrieving all product types via the Products REST API, enabling more flexible product filtering.
+
+### v4.1.1 ( Oct 09, 2025 ) ###
+- **update:** Added method to retrieve vendor earnings excluding admin subsidy.
+- **update:** Admin gateway fee calculation now checks an order-level meta value before using the previous fallback logic.
+
+### v4.1.0 ( Sep 30, 2025 ) ###
+- **feat:** New React-based Admin Dashboard with enhanced metrics and rank boards.
+- **update:** Migrated Pro Features page from Vue to React with enhanced UI.
+
+### v4.0.9 ( Sep 25, 2025 ) ###
+- **update**: Dokan Plugin Top Bar & Notice Left Bar UI.
+- **update**: Order fee now distribute based on order creation if the order is manual order then the added fee of that order will go to seller otherwise it will go to admin. The fee tax will be distributed based on product tax receipt.
+- **fix:** Fix Dashboard and Report page header title and apply filters.
+- **fix:** Conflict with ACF plugin: prevented empty admin notices when Dokan is active.
+
 ### v4.0.8 ( Sep 12, 2025 ) ###
 - **new:** Added "Chat with us" admin submenu for providing direct access to support chat functionality.
 - **enhance:** Modernize vendor selection with searchable dropdown for better performance.

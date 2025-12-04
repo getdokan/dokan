@@ -94,6 +94,47 @@ function dokan_is_user_customer( $user_id ) {
 }
 
 /**
+ * Get reserved URL slugs that cannot be used for custom slugs like store base
+ *
+ * @since 4.1.5
+ *
+ * @return array List of reserved slugs
+ */
+function dokan_get_reserved_url_slugs() {
+    $reserved_slugs = [
+        's',
+        'p',
+        'page',
+        'paged',
+        'author',
+        'feed',
+        'search',
+        'post',
+        'tag',
+        'category',
+        'attachment',
+        'name',
+        'order',
+        'orderby',
+        'rest',
+        'rest_route',
+        'wp-json',
+        'shop',
+        'cart',
+        'checkout',
+    ];
+
+    /**
+     * Filter the list of reserved URL slugs that cannot be used for custom slugs like store base.
+     *
+     * @since 4.1.5
+     *
+     * @param array $reserved_slugs List of reserved slugs.
+     */
+    return apply_filters( 'dokan_reserved_url_slugs', $reserved_slugs );
+}
+
+/**
  * Check if current user is the product author
  *
  * @param int      $product_id
@@ -2284,7 +2325,7 @@ function dokan_get_social_profile_fields() {
         ],
         'twitter'   => [
             'icon'  => 'fa-brands fa-square-x-twitter',
-            'title' => __( 'Twitter', 'dokan-lite' ),
+            'title' => __( 'X', 'dokan-lite' ),
         ],
         'pinterest' => [
             'icon'  => 'pinterest-square',
@@ -2297,6 +2338,10 @@ function dokan_get_social_profile_fields() {
         'youtube'   => [
             'icon'  => 'youtube-square',
             'title' => __( 'Youtube', 'dokan-lite' ),
+        ],
+        'tiktok'    => [
+            'icon'  => 'tiktok',
+            'title' => __( 'TikTok', 'dokan-lite' ),
         ],
         'instagram' => [
             'icon'  => 'instagram',

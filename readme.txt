@@ -3,11 +3,11 @@ Contributors: tareq1988, dokaninc, wedevs, nizamuddinbabu
 Donate Link: https://dokan.co/wordpress/pricing/
 Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivendor, multivendor marketplace
 Requires at least: 6.6
-Tested up to: 6.8.2
+Tested up to: 6.8.3
 WC requires at least: 8.5.0
-WC tested up to: 10.1.2
+WC tested up to: 10.2.2
 Requires PHP: 7.4
-Stable tag: 4.0.8
+Stable tag: 4.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,7 +39,7 @@ Hear what reputed WordPress influencer and online business strategist, Darrel Wi
 
 Here is how you can build your multivendor marketplace with Dokan.
 
-[youtube https://www.youtube.com/watch?v=_Vv5T7qqhoE]
+[https://www.youtube.com/watch?v=rF3zooidxjs]
 
 = PLACES WHERE DOKAN HAS BEEN FEATURED =
 
@@ -94,7 +94,8 @@ Dokan is also compatible with the [Otel theme](https://dokan.co/wordpress/otel-t
 With Dokan, experience a smooth, fast setup process in under an hour and have your WooCommerce multivendor marketplace running within a day. It perfectly matches your expectations and is designed with intuitive practices from eCommerce leaders like WooCommerce and others.
 
 = AI Assistant =
-Generate product titles, short & long descriptions using generative AI directly from the vendor dashboard.
+* Generative AI: Generate product titles, short & long descriptions using generative AI directly from the vendor dashboard.
+* AI Image Enhancer: Instantly make product photos clearer, brighter, and more appealing.
 
 = A RELIABLE GROWING PLATFORM & COMMUNITY =
 
@@ -232,7 +233,9 @@ Never get bored with the old-fashioned appearance of your store. Have full contr
 
 Dokan comes with a number of advanced features & modules that boost your WooCommerce marketplace position, always keeping you one step ahead of the competition. Continuous innovations and features are brought with regular and timely releases. Check out the changelog [here](https://dokan.co/wordpress/changelog/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
 
-* [Stripe Express](https://dokan.co/wordpress/modules/stripe-express/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module)(Pro)
+* [Stripe Express](https://dokan.co/wordpress/modules/stripe-express/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module)(Pro) 
+* [Paystack](https://dokan.co/docs/wordpress/modules/paystack/)(Pro) 
+* [Vendor Support](https://dokan.co/docs/wordpress/modules/vendor-support/)(Pro) 
 * [Print on Demand Marketplace](https://dokan.co/wordpress/modules/printful-integration/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module)(Pro)
 * [Minimum Maximum Order](https://dokan.co/wordpress/modules/minimum-maximum-order/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro)
 * [Product Advertising](https://dokan.co/wordpress/modules/product-advertising/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro)
@@ -348,42 +351,30 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Product Delivery Schedules
 
 == Changelog ==
-= v4.0.8 ( Sep 12, 2025 ) =
-- **new:** Added "Chat with us" admin submenu for providing direct access to support chat functionality.
-- **enhance:** Modernize vendor selection with searchable dropdown for better performance.
-- **fix:** Prevent potential errors on additional product sections.
 
-= v4.0.7 ( Sep 01, 2025 ) =
-- **fix:** Enhanced security controls for vendor account credentials management.
+= v4.2.0 ( Nov 24, 2025 ) =
+- **update:** Ensured full compatibility for the legacy admin panel across Subscriptions, Announcements, Wholesale, Product Ads, Abuse Reports, Seller Badge, and Refund pages.
+- **update:** The vendor dashboard now supports modern, full-width theme layouts, providing a more spacious user experience.
+- **update:** Redesigned the Admin's Reverse Withdrawal page with a modern, easier-to-use interface for faster payment management.
+- **fix:** Corrected a price formatting issue in both HTML and plain text email templates.
+- **fix:** Fixed a redirection issue on the legacy vendor shipping policy page to ensure it works correctly.
 
-= v4.0.6 ( Aug 29, 2025 ) =
-- **update:** Added translation support for dashboard analytics report scripts to improve internationalization (i18n).
-- **fix:** Resolved an issue in the AdminNotice Vue component by applying the Mixin utility for improved functionality.
-- **fix:** Added async search in store category in vendor edit.
-- **fix:** Admin not receiving withdrawal request email notifications.
+= v4.1.5 ( Nov 11, 2025 ) =
+- **update:** Added vendor verification legacy UI support for admin panel to ensure backward compatibility with older interface versions.
+- **update:** Updated all Twitter labels to X to reflect the latest brand changes.
+- **update:** Added custom store URL validation in admin settings to prevent conflicts with WordPress search functionality.
+- **update:** Fixed PHP warnings triggered when saving variable products by improving validation and data handling during product save operations.
 
-= v4.0.5 ( Jul 24, 2025 ) =
+= v4.1.4 ( Nov 06, 2025 ) =
+- **update:** Added validation for the `section` parameter in `Admin Settings` to prevent unauthorized or unintended option updates.
+- **update:** Strengthened nonce handling for limited-time promotional notices by changing the action from `dokan_admin` to `dokan_promotional_notice` for improved consistency and isolation.
 
-- **fix:** Improved script loading to ensure compatibility with WooCommerce versions above 10.0.2, preventing potential issues with script dependencies.
+= v4.1.3 ( Oct 28, 2025 ) =
+- **update:** Admin Dashboard withdraw list UI with Modern Design and Improved User Experience.
+- **update:** Admin Dashboard vendor list UI with Modern Design and Improved User Experience.
 
-= v4.0.4 ( Jul 17, 2025 ) =
+= v4.1.2 ( Oct 16, 2025 ) =
+- **enhance:** Updated the Admin Dashboard header UI for seamless visual representation with the new React-based frontend architecture.
+- **update:** Added support for retrieving all product types via the Products REST API, enabling more flexible product filtering.
 
-- **update:** Admin Notice UI with Modern Design and Improved User Experience.
-- **update:** Enhanced Product Brand Integration with Dedicated Template and Manager Methods.
-- **update:** Enhanced product featured image selection with cropping functionality in the product editor.
-- **fix:** Vendor/store names with special characters (e.g., apostrophes) now display correctly in the vendor dropdown on the admin product edit screen.
-- **fix:** Display correct earning in vendor dashboard product add/edit page for different category.
-- **fix:** Update table header style for mobile display in order details page item list and withdraw approve, pending and cancel list.
-- **fix:** Improved how product inventory information is retrieved, ensuring more accurate and consistent display of stock values.
-- **fix:** Update table header style for mobile display in order details page item list and withdraw approve, pending and cancel list.
-- **fix:** Resolve an issue for "sold individually" option does not save on create or update a product.
-
-[CHECK THE FULL CHANGELOG](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
-
-== Upgrade Notice ==
-
-= 3.0.0 =
-**Important Update** This update changes code structures for improving performance. Make sure to take backup and read the changlogs first before upgrade process.
-
-= 4.0.0 =
-**Important Update** This update includes major changes that may impact your existing commission settings, email templates, or vendor panel UI updates. Please review the changelog and back up your site before updating to ensure smooth transition.
+[See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

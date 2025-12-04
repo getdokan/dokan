@@ -152,7 +152,7 @@ const RichText = forwardRef< Quill, RichTextProps >( ( props, ref ) => {
                     [ { list: 'ordered' }, { list: 'bullet' } ],
                     [ { indent: '-1' }, { indent: '+1' } ],
                     [ { color: [] }, { background: [] } ],
-                    [ 'link', 'image', 'video' ],
+                    [ 'link', 'image' ],
                     [ 'clean' ],
                 ],
                 handlers: {

@@ -4,6 +4,168 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.2.0',
+        'released' => '2025-11-24',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Ensured full compatibility for the legacy admin panel across Subscriptions, Announcements, Wholesale, Product Ads, Abuse Reports, Seller Badge, and Refund pages.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The vendor dashboard now supports modern, full-width theme layouts, providing a more spacious user experience.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => "Redesigned the Admin's Reverse Withdrawal page with a modern, easier-to-use interface for faster payment management.",
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Corrected a price formatting issue in both HTML and plain text email templates.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed a redirection issue on the legacy vendor shipping policy page to ensure it works correctly.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.1.5',
+        'released' => '2025-11-11',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Added vendor verification legacy UI support for admin panel to ensure backward compatibility with older interface versions.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated all Twitter labels to X to reflect the latest brand changes.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added custom store URL validation in admin settings to prevent conflicts with WordPress search functionality.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed PHP warnings triggered when saving variable products by improving validation and data handling during product save operations.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.1.4',
+        'released' => '2025-11-06',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Added validation for the `section` parameter in `Admin Settings` to prevent unauthorized or unintended option updates.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Strengthened nonce handling for limited-time promotional notices by changing the action from `dokan_admin` to `dokan_promotional_notice` for improved consistency and isolation.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.1.3',
+        'released' => '2025-10-28',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Admin Dashboard withdraw list UI with Modern Design and Improved User Experience.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Admin Dashboard vendor list UI with Modern Design and Improved User Experience.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.1.2',
+        'released' => '2025-10-16',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Updated the Admin Dashboard header UI for seamless visual representation with the new React-based frontend architecture.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added support for retrieving all product types via the Products REST API, enabling more flexible product filtering.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.1.1',
+        'released' => '2025-10-09',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Added method to retrieve vendor earnings excluding admin subsidy.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Admin gateway fee calculation now checks an order-level meta value before using the previous fallback logic.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.1.0',
+        'released' => '2025-09-30',
+        'changes'  => [
+            'New Feature'  => [
+                [
+                    'title'       => 'New React-based Admin Dashboard with enhanced metrics and rank boards.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement'  => [
+                [
+                    'title'       => 'Migrated Pro Features page from Vue to React with enhanced UI.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.0.9',
+        'released' => '2025-09-25',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Dokan Plugin Top Bar & Notice Left Bar UI',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Update order fee now distribute based on order creation',
+                    'description' => 'Order fee now distribute based on order creation if the order is manual order then the added fee of that order will go to seller otherwise it will go to admin. The fee tax will be distributed based on product tax receipt.',
+                ],
+            ],
+            'Fix'  => [
+                [
+                    'title'       => 'Fix Dashboard and Report page header title and apply filters.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Conflict with ACF plugin: prevented empty admin notices when Dokan is active.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.0.8',
         'released' => '2025-09-12',
         'changes'  => [

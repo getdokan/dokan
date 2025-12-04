@@ -581,8 +581,13 @@ class Hooks {
             );
         }
 
+        $show_related_order_meta_box = apply_filters(
+            'dokan_show_related_order_meta_box',
+            $has_sub_order || ! empty( $order->get_parent_id() ),
+            $order
+        );
         // If the order has is a parent order or a child order, avoid those order that has no parent order or child order.
-        if ( $has_sub_order || ! empty( $order->get_parent_id() ) ) {
+        if ( $show_related_order_meta_box ) {
             $title = $has_sub_order ? __( 'Sub orders', 'dokan-lite' ) : __( 'Related orders', 'dokan-lite' );
 
             add_meta_box(

@@ -60,10 +60,6 @@ class Menu {
             if ( ! dokan()->is_pro_exists() || version_compare( DOKAN_PRO_PLUGIN_VERSION, '2.9.14', '>' ) ) {
                 $submenu[ $slug ][] = [ __( 'Vendors', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/vendors' ];
             }
-
-            if ( ! dokan()->is_pro_exists() ) {
-                $submenu[ $slug ][] = [ __( 'PRO Features', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/premium' ];
-            }
         }
 
         do_action( 'dokan_admin_menu', $capability, $menu_position );
@@ -104,11 +100,13 @@ class Menu {
     public function dashboard_script() {
         wp_enqueue_style( 'dokan-admin-css' );
         wp_enqueue_style( 'jquery-ui' );
+        wp_enqueue_style( 'dokan-admin-panel-header' );
 
         wp_enqueue_script( 'jquery-ui-datepicker' );
         wp_enqueue_script( 'wp-color-picker' );
         wp_enqueue_script( 'dokan-flot' );
         wp_enqueue_script( 'dokan-chart' );
+        wp_enqueue_script( 'dokan-admin-panel-header' );
 
         do_action( 'dokan_enqueue_admin_dashboard_script' );
     }
@@ -123,7 +121,9 @@ class Menu {
      */
     public function dashboard() {
         $has_new_version = Helper::dokan_has_new_version();
-        include DOKAN_DIR . '/templates/admin-header.php';
+
+        // Render the admin dashboard template.
+        echo '<div id="dokan-admin-panel-header"></div>';
         echo '<div class="wrap"><div id="dokan-vue-admin"></div></div>';
     }
 }

@@ -1,5 +1,11 @@
-import { SearchableSelect, ReactSelect } from '@getdokan/dokan-ui';
-import { twMerge } from 'tailwind-merge';
+import { SearchableSelect } from '@getdokan/dokan-ui';
+import ValueContainer from "@src/components/select/ValueContainer";
+import Option from "@src/components/select/Option";
+import MultiValue from "@src/components/select/MultiValue";
+import SingleValue from "@src/components/select/SingleValue";
+import Control from "@src/components/select/Control";
+import DropdownIndicator from "@src/components/select/DropdownIndicator";
+import styles from "@src/components/select/styles";
 
 // Local utility to extract props type of a component without relying on React/WordPress types
 type PropsOf< T > = T extends ( props: infer P ) => any ? P : never;
@@ -12,89 +18,38 @@ export type DefaultOption = {
 
 export interface SelectProps< Option = DefaultOption >
     extends Omit< PropsOf< typeof SearchableSelect< Option > >, 'components' > {
-    leftIcon?: React.ReactNode;
+    /**
+     * Icon element to render inside the control.
+     */
+    icon?: React.ReactNode;
+    /**
+     * Position of the icon within the control. Defaults to 'left'.
+     */
+    iconPosition?: 'left' | 'right';
+    /**
+     * When provided and the select is NOT multi, the selected value will be rendered
+     * with this title as a prefix, e.g. "Vendor: Store 1".
+     * You can also pass a function to compute the title from the selected option.
+     */
+    selectedTitle?: string | ( ( option: Option ) => string );
     components?: PropsOf< typeof SearchableSelect< Option > >[ 'components' ];
 }
 
 function Select< Option = DefaultOption >( props: SelectProps< Option > ) {
-    const Control = ( controlProps: any ) => {
-        const { children, selectProps } = controlProps as {
-            children: React.ReactNode;
-            selectProps: { leftIcon?: React.ReactNode };
-        };
-        const { components } = ReactSelect;
-        return (
-            <components.Control { ...controlProps }>
-                { selectProps.leftIcon ? (
-                    <span className="!flex !items-center !ml-[15px]">
-                        { selectProps.leftIcon }
-                    </span>
-                ) : null }
-                <div
-                    className={ twMerge(
-                        'flex flex-1',
-                        selectProps.leftIcon ? 'ml-1.5' : 'ml-0'
-                    ) }
-                >
-                    { children }
-                </div>
-            </components.Control>
-        );
-    };
-
-    const styles = {
-        control: ( base: any ) => ( {
-            ...base,
-            borderRadius: '0.40rem',
-            minHeight: '2.5rem',
-            boxShadow: 'none',
-            marginTop: -1,
-            outline: 'none',
-            ':focus': { outline: 'none' },
-            ':focus-within': { outline: 'none' },
-            borderColor: base.borderColor,
-        } ),
-        placeholder: ( base: any ) => ( {
-            ...base,
-            fontSize: 14,
-            lineHeight: '22px',
-        } ),
-        singleValue: ( base: any ) => ( {
-            ...base,
-            fontSize: 14,
-            lineHeight: '22px',
-        } ),
-        input: ( base: any ) => ( {
-            ...base,
-            fontSize: 14,
-            lineHeight: '22px',
-            marginTop: 1,
-            marginBottom: 1,
-        } ),
-        valueContainer: ( base: any ) => ( { ...base, paddingLeft: 4 } ),
-        indicatorsContainer: ( base: any ) => ( {
-            ...base,
-            cursor: 'pointer',
-        } ),
-        container: ( base: any ) => ( { ...base, outline: 'none' } ),
-        menu: ( base: any ) => ( { ...base, zIndex: 50 } ),
-        menuList: ( base: any ) => ( {
-            ...base,
-            cursor: 'default',
-        } ),
-        option: ( base: any, state: any ) => {
-            return {
-                ...base,
-                cursor: state.isDisabled ? 'not-allowed' : 'pointer',
-            };
-        },
-    } as const;
+    // Default portal target for the dropdown menu so it isn't clipped by parent containers
+    const defaultMenuPortalTarget =
+        typeof document !== 'undefined' ? document.body : undefined;
 
     return (
         <SearchableSelect
             // @ts-ignore
             components={ {
                 Control,
+                DropdownIndicator,
+                SingleValue,
+                ValueContainer,
+                MultiValue,
+                Option,
                 ...( props?.components ? props.components : {} ),
             } }
             styles={ styles }
@@ -103,6 +58,11 @@ function Select< Option = DefaultOption >( props: SelectProps< Option > ) {
             blurInputOnSelect={ props.blurInputOnSelect ?? true }
             closeMenuOnSelect={ props.closeMenuOnSelect ?? true }
             hideSelectedOptions={ props.hideSelectedOptions ?? false }
+            // Render menu in a portal to avoid clipping and position it correctly
+            menuPortalTarget={
+                props.menuPortalTarget ?? defaultMenuPortalTarget
+            }
+            menuPosition={ props.menuPosition ?? 'fixed' }
             { ...props }
         />
     );
