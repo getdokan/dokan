@@ -569,7 +569,7 @@ class Hooks {
     /**
      * Render the order type filter dropdown.
      *
-     * @since DOKAN_SINCE
+     * @since 4.2.1
      *
      * @param string $typenow
      *
@@ -593,7 +593,7 @@ class Hooks {
          * Filter to add additional order type filter options.
          * Pro modules or others can use this hook to add their own options.
          *
-         * @since DOKAN_SINCE
+         * @since 4.2.1
          *
          * @param array $filter_options Array of filter options
          */
@@ -613,7 +613,7 @@ class Hooks {
     /**
      * Filter orders by order type for both HPOS and legacy.
      *
-     * @since DOKAN_SINCE
+     * @since 4.2.1
      *
      * @param array $query_args Query arguments (HPOS) or query vars (legacy)
      *
@@ -641,7 +641,7 @@ class Hooks {
         /**
          * Allow Pro modules to handle their custom filter types.
          *
-         * @since DOKAN_SINCE
+         * @since 4.2.1
          *
          * @param array|null $query_args      Modified or original query arguments.
          * @param string     $filter_type     The selected filter type
