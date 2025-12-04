@@ -137,7 +137,7 @@ class SettingsMapper {
 
         // Moderation > Report Abuse
         'dokan_report_abuse.reported_by_logged_in_users_only' => 'moderation.report_abuse.report_abuse_settings.report_abuse_reported_by',
-        'dokan_report_abuse.abuse_reasons'                    => 'moderation.report_abuse.reasons_for_abuse_reports.report_abuse_reasons',
+        'dokan_report_abuse.abuse_reasons'                    => 'moderation.report_abuse.report_abuse_settings.report_abuse_reasons',
         //'dokan_rma.rma_reasons'                    => 'moderation.report_abuse.reasons_for_abuse_reports.report_abuse_reasons',
 
         // =========================

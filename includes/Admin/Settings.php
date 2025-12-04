@@ -206,19 +206,22 @@ class Settings {
                 /** @var NewAdminSettingsManager $settings_manager */
                 $settings_manager = dokan_get_container()->get( NewAdminSettingsManager::class );
 
-                array_walk($new_data, function (&$fields, $page_id) {
-                    if (!is_array($fields)) {
-                        return;
+                array_walk(
+                    $new_data,
+                    function( &$fields, $page_id ) {
+                        if ( ! is_array( $fields ) ) {
+                            return;
+                        }
+
+                        $existing = get_option( 'dokan_settings_' . $page_id, [] );
+
+                        if ( ! is_array( $existing ) ) {
+                            $existing = [];
+                        }
+
+                        $fields = array_replace_recursive( $existing, $fields );
                     }
-
-                    $existing = get_option('dokan_settings_' . $page_id, []);
-
-                    if (!is_array($existing)) {
-                        $existing = [];
-                    }
-
-                    $fields = array_replace_recursive($existing, $fields);
-                });
+                );
 
                 $settings_manager->save( $new_data, false );
 

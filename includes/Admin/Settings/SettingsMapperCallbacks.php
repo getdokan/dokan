@@ -15,6 +15,10 @@ class SettingsMapperCallbacks implements Hookable {
     public function register_hooks(): void {
         add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_customer_details_visibility' ], 10, 4 );
         add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_cod_payments' ], 10, 4 );
+        add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_report_abuse_reasons_old_to_new' ], 10, 3 );
+        add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_report_abuse_reasons_new_to_old' ], 10, 3 );
+        add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_report_rma_reasons_old_to_new' ], 10, 3 );
+        add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_report_rma_reasons_new_to_old' ], 10, 3 );
     }
 
     /**
@@ -71,5 +75,101 @@ class SettingsMapperCallbacks implements Hookable {
         }
 
         return $value;
+    }
+
+    /**
+     * Function to map report abuse reasons from new format to old format
+     *
+     * @param array $value
+     * @param string $old_key
+     * @param string $new_key
+     *
+     * @return array
+     */
+    public function map_report_abuse_reasons_new_to_old( $value, $old_key, $new_key ) {
+        if ( is_null( $value ) || 'dokan_report_abuse.abuse_reasons' !== $old_key || 'moderation.report_abuse.report_abuse_settings.report_abuse_reasons' !== $new_key ) {
+            return $value;
+        }
+        $old_value = [];
+        foreach ( (array) $value as $item ) {
+            $old_value[] = [
+                'id'    => $item['id'] ?? '',
+                'value' => $item['title'] ?? '',
+            ];
+        }
+        error_log( 'New Value Of Reasons Abuse new to Old : ' . print_r( $old_value, true ) );
+        return $old_value;
+    }
+
+    /**
+     * Function to map report abuse reasons from old format to new format
+     *
+     * @param array $value
+     * @param string $old_key
+     * @param string $new_key
+     *
+     * @return array
+     */
+    public function map_report_abuse_reasons_old_to_new( $value, $old_key, $new_key ) {
+        if ( is_null( $value ) || 'dokan_report_abuse.abuse_reasons' !== $old_key || 'moderation.report_abuse.report_abuse_settings.report_abuse_reasons' !== $new_key ) {
+            return $value;
+        }
+        $new_value = [];
+        foreach ( (array) $value as $index => $item ) {
+            $new_value[] = [
+                'id'    => $item['id'] ?? 'abuse_reason_' . ( $index + 1 ),
+                'title' => $item['value'] ?? '',
+                'order' => $index + 1,
+            ];
+        }
+        return $new_value;
+    }
+
+    /**
+     * Function to map report rma reasons from new format to old format
+     *
+     * @param array $value
+     * @param string $old_key
+     * @param string $new_key
+     *
+     * @return array
+     */
+    public function map_report_rma_reasons_new_to_old( $value, $old_key, $new_key ) {
+        if ( is_null( $value ) || 'dokan_rma.rma_reasons' !== $old_key || 'moderation.rma.reasons_of_rma_settings.rma_reasons' !== $new_key ) {
+            return $value;
+        }
+        $old_value = [];
+        foreach ( (array) $value as $item ) {
+            $old_value[] = [
+                'id'    => $item['id'] ?? '',
+                'value' => $item['title'] ?? '',
+            ];
+        }
+        return $old_value;
+    }
+
+    /**
+     * Function to map report rma reasons from old format to new format
+     *
+     * @param array $value
+     * @param string $old_key
+     * @param string $new_key
+     *
+     * @return array
+     */
+    public function map_report_rma_reasons_old_to_new( $value, $old_key, $new_key ) {
+        if ( is_null( $value ) || 'dokan_rma.rma_reasons' !== $old_key || 'moderation.rma.reasons_of_rma_settings.rma_reasons' !== $new_key ) {
+            return $value;
+        }
+        $new_value = [];
+        foreach ( (array) $value as $index => $item ) {
+            // Old format has 'id' and 'value'; new format expects 'id', 'title', 'order'
+            $new_value[] = [
+                'id'    => $item['id'] ?? 'abuse_reason_' . ( $index + 1 ),
+                'title' => $item['value'] ?? '',
+                'order' => $index + 1,
+            ];
+        }
+        return $new_value;
     }
 }
