@@ -13,38 +13,38 @@ namespace WeDevs\Dokan\Admin;
 class UserList {
 
     /**
-     * Constructor
+     * Class Constructor.
      */
     public function __construct() {
         // Add Pending Vendor tab.
-        add_filter( 'views_users', array( $this, 'add_pending_vendor_view' ) );
-        add_filter( 'pre_get_users', array( $this, 'filter_pending_vendors' ) );
-        add_filter( 'bulk_actions-users', array( $this, 'add_bulk_actions' ) );
-        add_filter( 'handle_bulk_actions-users', array( $this, 'handle_bulk_actions' ), 10, 3 );
+        add_filter( 'views_users', [ $this, 'add_pending_vendor_view' ] );
+        add_filter( 'pre_get_users', [ $this, 'filter_pending_vendors' ] );
+        add_filter( 'bulk_actions-users', [ $this, 'add_bulk_actions' ] );
+        add_filter( 'handle_bulk_actions-users', [ $this, 'handle_bulk_actions' ], 10, 3 );
 
         // Bulk action notices.
-        add_action( 'admin_notices', array( $this, 'show_bulk_action_notices' ) );
+        add_action( 'admin_notices', [ $this, 'show_bulk_action_notices' ] );
     }
 
     /**
-     * Add Pending Vendor view to users list
+     * Add Pending Vendor view to user's list.
+     *
+     * @since DOKAN_SINCE
      *
      * @param array $views Existing views
      *
      * @return array Modified views
      */
     public function add_pending_vendor_view( $views ) {
-        $pending_count = $this->get_pending_vendor_count();
-
-        $class = '';
-        if ( isset( $_GET['pending_vendors'] ) && $_GET['pending_vendors'] === '1' ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-            $class = 'current';
-        }
+        $status_count   = dokan_get_seller_status_count();
+        $pending_count  = $status_count['inactive'] ?? 0;
+        $pending_filter = sanitize_text_field( wp_unslash( $_GET['pending_vendors'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
         $views['pending_vendors'] = sprintf(
-            '<a href="%s" class="%s">%s <span class="count">(%s)</span></a>',
+            /* translators: %1$s: Pending Vendors link, %2$s: Current class, %3$s: Pending Vendors label, %4$s: Pending Vendors count */
+            '<a href="%1$s" class="%2$s">%3$s <span class="count">(%4$s)</span></a>',
             esc_url( add_query_arg( 'pending_vendors', '1', admin_url( 'users.php' ) ) ),
-            esc_attr( $class ),
+            esc_attr( '1' === $pending_filter ? 'current' : '' ),
             esc_html__( 'Pending Vendors', 'dokan-lite' ),
             esc_html( $pending_count )
         );
@@ -53,36 +53,7 @@ class UserList {
     }
 
     /**
-     * Get pending vendor count
-     *
-     * @return int
-     */
-    private function get_pending_vendor_count() {
-        $args = array(
-            'role'        => 'seller',
-            'meta_query'  => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-                'relation' => 'OR',
-                array(
-                    'key'     => 'dokan_enable_selling',
-                    'value'   => 'no',
-                    'compare' => '=',
-                ),
-                array(
-                    'key'     => 'dokan_enable_selling',
-                    'compare' => 'NOT EXISTS',
-                ),
-            ),
-            'count_total' => true,
-            'fields'      => 'ID',
-        );
-
-        $user_query = new \WP_User_Query( $args );
-
-        return $user_query->get_total();
-    }
-
-    /**
-     * Filter users to show only pending vendors
+     * Filter users to show only pending vendors.
      *
      * @param \WP_User_Query $query User query object
      *
@@ -95,7 +66,8 @@ class UserList {
             return $query;
         }
 
-        if ( ! isset( $_GET['pending_vendors'] ) || $_GET['pending_vendors'] !== '1' ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $pending_filter = sanitize_text_field( wp_unslash( $_GET['pending_vendors'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if ( '1' !== $pending_filter ) {
             return $query;
         }
 
@@ -103,22 +75,22 @@ class UserList {
 
         $meta_query = $query->get( 'meta_query' );
         if ( ! is_array( $meta_query ) ) {
-            $meta_query = array();
+            $meta_query = [];
         }
 
         // Include vendors with dokan_enable_selling = 'no' OR vendors without the meta key at all
-        $meta_query[] = array(
+        $meta_query[] = [
             'relation' => 'OR',
-            array(
+            [
                 'key'     => 'dokan_enable_selling',
                 'value'   => 'no',
                 'compare' => '=',
-            ),
-            array(
+            ],
+            [
                 'key'     => 'dokan_enable_selling',
                 'compare' => 'NOT EXISTS',
-            ),
-        );
+            ],
+        ];
 
         $query->set( 'meta_query', $meta_query );
 
@@ -126,22 +98,27 @@ class UserList {
     }
 
     /**
-     * Add bulk actions to users list
+     * Add bulk actions to the user's list.
+     *
+     * @since DOKAN_SINCE
      *
      * @param array $actions Existing bulk actions
      *
      * @return array Modified bulk actions
      */
     public function add_bulk_actions( $actions ) {
-        if ( isset( $_GET['pending_vendors'] ) && $_GET['pending_vendors'] === '1' ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-            $actions['approve_vendors'] = __( 'Approve Vendors', 'dokan-lite' );
+        $pending_filter = sanitize_text_field( wp_unslash( $_GET['pending_vendors'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if ( '1' === $pending_filter ) {
+            $actions['approve_vendors'] = esc_html__( 'Approve Vendors', 'dokan-lite' );
         }
 
         return $actions;
     }
 
     /**
-     * Handle bulk actions
+     * Handle bulk actions.
+     *
+     * @since DOKAN_SINCE
      *
      * @param string $sendback Redirect URL
      * @param string $doaction Action being performed
