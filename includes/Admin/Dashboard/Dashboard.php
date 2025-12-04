@@ -335,6 +335,9 @@ class Dashboard implements Hookable {
             $dependencies     = array_merge( $dashboard_script['dependencies'] ?? [], [ 'dokan-react-components', 'dokan-react-frontend', 'jquery', 'media-upload', 'media-views' ] );
             $version          = $dashboard_script['version'] ?? '';
 
+            $is_legacy_dashboard_page = get_transient( 'dokan_legacy_dashboard_page' );
+            $legacy_dashboard_url     = $is_legacy_dashboard_page ? 'dokan' : 'dokan-dashboard';
+
             $banner_width    = dokan_get_vendor_store_banner_width();
             $banner_height   = dokan_get_vendor_store_banner_height();
 
@@ -364,6 +367,7 @@ class Dashboard implements Hookable {
                         'dummy_data'        => DOKAN_PLUGIN_ASSEST . '/dummy-data/dokan_dummy_data.csv',
                         'adminOrderListUrl' => OrderUtil::get_admin_order_list_url(),
                         'adminOrderEditUrl' => OrderUtil::get_admin_order_edit_url(),
+                        'adminDashboardUrl' => admin_url( 'admin.php?page=' . $legacy_dashboard_url ),
                     ],
                 ]
             );

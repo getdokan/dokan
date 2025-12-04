@@ -3,6 +3,7 @@ import { createHashRouter, RouterProvider } from 'react-router-dom';
 import Layout from './Layout';
 import ModulePage from '../pages/modules';
 import SetupGuide from '../pages/setup-guide';
+import AdminNotFound from '../../../layout/admin404';
 import WithdrawPage from '../pages/withdraw';
 import VendorsSingle from '../pages/vendors-single';
 import Create from '../pages/vendor-create-edit/Create';
@@ -83,7 +84,7 @@ const getAdminRoutes = () => {
     routes.push( {
         id: 'dokan-404',
         element: (
-            <NotFound className="h-screen" backToDashboardUrl="?page=dokan" />
+            <AdminNotFound className="h-screen" backToDashboardUrl={window.dokanAdminDashboard?.urls?.adminDashboardUrl || '/'} />
         ),
         path: '*',
     } );
