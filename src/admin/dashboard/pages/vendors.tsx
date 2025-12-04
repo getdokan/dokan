@@ -32,6 +32,7 @@ const VendorsPage = ( props ) => {
         page: 1,
         type: 'table',
         titleField: 'vendor',
+        sort: { field: 'registered', direction: 'desc' },
         layout: { ...defaultLayouts },
         fields: [ 'phone', 'registered', 'status' ],
     } );
@@ -155,6 +156,15 @@ const VendorsPage = ( props ) => {
                 ...( search && { search } ),
             };
 
+            if ( view?.sort?.field ) {
+                // Only map known/supported sortable fields
+                if ( view.sort.field === 'registered' ) {
+                    query.orderby = 'registered';
+                    query.order =
+                        view.sort.direction === 'asc' ? 'asc' : 'desc';
+                }
+            }
+
             const currentStatus = args?.status ?? status;
             if ( currentStatus && currentStatus !== 'all' ) {
                 query.status = currentStatus;
@@ -208,7 +218,7 @@ const VendorsPage = ( props ) => {
     useEffect( () => {
         fetchVendors();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ status, view.page, view.perPage, search, searchParams ] );
+    }, [ status, view.page, view.perPage, view.sort, search, searchParams ] );
 
     const handleChangeView = ( newView: any ) => {
         setView( ( prev: any ) => ( { ...prev, ...newView } ) );
@@ -313,7 +323,7 @@ const VendorsPage = ( props ) => {
             {
                 id: 'registered',
                 label: __( 'Registered', 'dokan-lite' ),
-                enableSorting: false,
+                enableSorting: true,
                 render: ( { item }: { item: Vendor } ) => {
                     const registered = item?.registered || '';
                     return (
@@ -767,6 +777,7 @@ const VendorsPage = ( props ) => {
                         initialTabName: status,
                         additionalComponents: [
                             <SearchInput
+                                key="vendors-search"
                                 value={ search }
                                 onChange={ setSearch }
                             />,
