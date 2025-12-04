@@ -13,6 +13,7 @@ import { Tooltip } from '@getdokan/dokan-ui';
 import { truncate } from '@src/utilities';
 import SubmenuPopover from './SubmenuPopover';
 import CountBubble from './CountBubble';
+import { applyFilters } from '@wordpress/hooks';
 
 const Sidebar = ( {
     collapsed,
@@ -254,6 +255,14 @@ const Sidebar = ( {
                         <ul className="flex flex-col gap-1.5 list-none p-0 m-0">
                             { Object.entries( sidebarNav || {} ).map(
                                 ( [ key, item ]: any ) => {
+                                    // If switched off from the menu manager.
+                                    if (
+                                        'is_switched_on' in item &&
+                                        ! item.is_switched_on
+                                    ) {
+                                        return null;
+                                    }
+
                                     const hasSub =
                                         !! item?.submenu &&
                                         Object.keys( item.submenu ).length > 0;
@@ -290,6 +299,11 @@ const Sidebar = ( {
                                     );
 
                                     const menuItemRef = getMenuItemRef( key );
+                                    const menuTitle = applyFilters(
+                                        'dokan_sidebar_menu_title',
+                                        item?.menu_manager_title || item?.title,
+                                        item
+                                    ) as string;
 
                                     return (
                                         <li
@@ -365,7 +379,7 @@ const Sidebar = ( {
                                                 </span>
                                                 { ! collapsed && (
                                                     <span className="ml-2">
-                                                        { item.title }
+                                                        { menuTitle }
                                                     </span>
                                                 ) }
                                                 { item.counts > 0 && (
@@ -417,11 +431,28 @@ const Sidebar = ( {
                                                                 subkey,
                                                                 subitem,
                                                             ]: any ) => {
+                                                                // If switched off from the menu manager.
+                                                                if (
+                                                                    'is_switched_on' in
+                                                                        subitem &&
+                                                                    ! subitem.is_switched_on
+                                                                ) {
+                                                                    return null;
+                                                                }
+
                                                                 const isSubActive =
                                                                     subitem?.url &&
                                                                     currentUrl.startsWith(
                                                                         subitem.url
                                                                     );
+
+                                                                const subMenuTitle =
+                                                                    applyFilters(
+                                                                        'dokan_sidebar_submenu_title',
+                                                                        subitem?.menu_manager_title ||
+                                                                            subitem?.title,
+                                                                        subitem
+                                                                    ) as string;
 
                                                                 return (
                                                                     <li
@@ -442,7 +473,7 @@ const Sidebar = ( {
                                                                             <LucideIcons.Settings className="w-5 h-5 !text-transparent" />
                                                                             <span className="ml-2">
                                                                                 {
-                                                                                    subitem.title
+                                                                                    subMenuTitle
                                                                                 }
                                                                             </span>
                                                                             { subitem.counts >
