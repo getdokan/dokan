@@ -30,6 +30,7 @@ const PanelSwitch = () => {
             'dokan-seller-badge',
             'wholesale-customer',
             'admin-store-support',
+            'product-qa',
         ]
     ) as string[];
 
