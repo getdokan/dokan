@@ -4,7 +4,7 @@
  *
  * This template renders the order type filter dropdown in the WP Admin → WooCommerce → Orders page.
  *
- * @since DOKAN_SINCE
+ * @since 4.2.1
  *
  * @package Dokan
  *
