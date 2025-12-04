@@ -40,6 +40,10 @@ class Hooks {
             add_action( 'woocommerce_trash_order', [ $this, 'admin_on_trash_order' ] );
             add_action( 'woocommerce_untrash_order', [ $this, 'admin_on_untrash_order' ] );
             add_action( 'woocommerce_delete_order', [ $this, 'admin_on_delete_order' ] );
+
+            // HPOS equivalent hooks for filtering orders.
+            add_filter( 'woocommerce_order_list_table_prepare_items_query_args', [ $this, 'filter_orders_by_order_type_query' ] );
+            add_action( 'woocommerce_order_list_table_restrict_manage_orders', [ $this, 'render_order_type_filter_dropdown' ] );
         } else {
             add_action( 'manage_shop_order_posts_custom_column', [ $this, 'shop_order_custom_columns' ], 11, 2 );
             add_action( 'admin_footer-edit.php', [ $this, 'admin_shop_order_scripts' ] );
@@ -49,6 +53,10 @@ class Hooks {
             add_action( 'wp_trash_post', [ $this, 'admin_on_trash_order' ] );
             add_action( 'untrash_post', [ $this, 'admin_on_untrash_order' ] );
             add_action( 'delete_post', [ $this, 'admin_on_delete_order_post' ] );
+
+            // Legacy equivalent hooks for filtering orders.
+            add_filter( 'request', [ $this, 'filter_orders_by_order_type_query' ] );
+            add_action( 'restrict_manage_posts', [ $this, 'render_order_type_filter_dropdown' ] );
         }
 
         // Change order meta key and value.
@@ -297,6 +305,12 @@ class Hooks {
                     }
 
                     const urlParams = new URLSearchParams(window.location.search);
+                    // Hide the toggle button if the only suborders are visible.
+                    if ( 'sub_order' === urlParams.get('dokan_order_filter') ) {
+                        $('button.toggle-sub-orders').hide();
+                        return;
+                    }
+
                     if ( urlParams.get('s') || urlParams.get('vendor_id') ) {
                         return;
                     }
@@ -323,7 +337,13 @@ class Hooks {
                     });
                 }
                 <?php else : ?>
-                $('tr.sub-order').hide();
+                const urlParams = new URLSearchParams(window.location.search);
+                // Hide the toggle button if the only suborders are visible.
+                if ( 'sub_order' !== urlParams.get('dokan_order_filter') ) {
+                    $('tr.sub-order').hide();
+                } else {
+                    $('button.toggle-sub-orders').hide();
+                }
 
                 $('button.show-sub-orders').on('click', function (e) {
                     e.preventDefault();
@@ -544,6 +564,90 @@ class Hooks {
         if ( $typenow === 'shop_order' ) {
             echo '<button class="toggle-sub-orders button show">' . esc_html__( 'Toggle Sub-orders', 'dokan-lite' ) . '</button>';
         }
+    }
+
+    /**
+     * Render the order type filter dropdown.
+     *
+     * @since 4.2.1
+     *
+     * @param string $typenow
+     *
+     * @return void
+     */
+    public function render_order_type_filter_dropdown( $typenow ) {
+        if ( $typenow !== 'shop_order' ) {
+            return;
+        }
+
+        // Get the current filter value
+        $current_filter = isset( $_GET['dokan_order_filter'] ) ? sanitize_text_field( wp_unslash( $_GET['dokan_order_filter'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+        // Product type filter options.
+        $filter_options = [
+            ''          => esc_html__( 'All Order Types', 'dokan-lite' ),
+            'sub_order' => esc_html__( 'Vendor Sub-orders', 'dokan-lite' ),
+        ];
+
+        /**
+         * Filter to add additional order type filter options.
+         * Pro modules or others can use this hook to add their own options.
+         *
+         * @since 4.2.1
+         *
+         * @param array $filter_options Array of filter options
+         */
+        $filter_options = apply_filters( 'dokan_order_type_filter_options', $filter_options );
+
+        // Render the order filter template.
+        dokan_get_template_part(
+            'orders/order-type-filter',
+            '',
+            [
+                'filter_options' => $filter_options,
+                'current_filter' => $current_filter,
+            ]
+        );
+    }
+
+    /**
+     * Filter orders by order type for both HPOS and legacy.
+     *
+     * @since 4.2.1
+     *
+     * @param array $query_args Query arguments (HPOS) or query vars (legacy)
+     *
+     * @return array
+     */
+    public function filter_orders_by_order_type_query( $query_args ) {
+        $screen    = get_current_screen();
+        $post_type = $screen->post_type ?? '';
+
+        // Return early if the current screen is not order screen.
+        $filter_type = sanitize_text_field( wp_unslash( $_GET['dokan_order_filter'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if ( 'shop_order' !== $post_type || empty( $filter_type ) ) {
+            return $query_args;
+        }
+
+        // Render only suborder products if filter types are set to 'sub_order'.
+        $is_hpos_enabled = OrderUtil::is_hpos_enabled();
+        if ( 'sub_order' === $filter_type ) {
+            $query_type = $is_hpos_enabled ? 'parent_exclude' : 'post_parent__not_in';
+
+            // Vendor Suborders (Child orders only - orders with parent_id > 0).
+            $query_args[ $query_type ] = [ 0 ];
+        }
+
+        /**
+         * Allow Pro modules to handle their custom filter types.
+         *
+         * @since 4.2.1
+         *
+         * @param array|null $query_args      Modified or original query arguments.
+         * @param string     $filter_type     The selected filter type
+         * @param array      $is_hpos_enabled HPOS status.
+         */
+        return apply_filters( 'dokan_order_type_filter_query_args', $query_args, $filter_type, $is_hpos_enabled );
     }
 
     /**

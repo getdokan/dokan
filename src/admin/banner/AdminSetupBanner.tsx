@@ -3,7 +3,7 @@ import { useEffect, useState } from '@wordpress/element';
 import getSettings from '../dashboard/settings/getSettings';
 import { Step } from '../dashboard/pages/setup-guide';
 import { __ } from '@wordpress/i18n';
-import { twMerge } from "tailwind-merge";
+import { twMerge } from 'tailwind-merge';
 
 interface Props {
     className?: string;
@@ -11,22 +11,58 @@ interface Props {
 
 const AdminSetupBanner = ( props: Props ) => {
     const [ steps, setSteps ] = useState< Step[] >( [] );
+    const [ currentHash, setCurrentHash ] = useState( window.location.hash );
 
-    if ( dokanSetupGuideBanner?.is_setup_guide_steps_completed ) {
-        return;
-    }
+    // Get setup guide banner settings.
+    const isSetupCompleted = dokanSetupGuideBanner?.is_setup_guide_steps_completed;
+    const setupGuideUrl = dokanSetupGuideBanner?.setup_guide_url;
+    const dokanAssetUrl = dokanSetupGuideBanner?.asset_url;
 
+    // Initialize steps.
     useEffect( () => {
         const allSteps: Step[] = getSettings( 'setup' ).steps;
         setSteps( allSteps );
+    }, [] );
+
+    // Track hash changes.
+    useEffect( () => {
+        // Check if the current URL is supported and has the correct hash path.
+        const checkAndUpdate = () => {
+            setCurrentHash( window.location.hash );
+        };
+
+        // Initial check.
+        checkAndUpdate();
+
+        // Listen events for comprehensive URL change detection.
+        window.addEventListener( 'hashchange', checkAndUpdate );
+        return () => window.removeEventListener( 'hashchange', checkAndUpdate );
     }, [] );
 
     const totalSteps = steps.length;
     const completedSteps = steps.filter( ( step ) => step.is_completed ).length;
     const stepProgress = ( completedSteps / totalSteps ) * 100;
     const isNoStepsCompleted = completedSteps === 0;
-    const setupGuideUrl = dokanSetupGuideBanner?.setup_guide_url;
-    const dokanAssetUrl = dokanSetupGuideBanner?.asset_url;
+
+    // Check if we should hide the banner.
+    const baseHashUrl = currentHash.replace( '#/', '' );
+    const basePageQuery = new URLSearchParams( window.location.search ).get(
+        'page'
+    );
+    const isOnSetupPage =
+        baseHashUrl === 'setup' && basePageQuery === 'dokan-dashboard';
+
+    // If we're on the setup page or a setup guide is completed, don't show the banner.
+    if ( isOnSetupPage || isSetupCompleted ) {
+        return;
+    }
+
+    if (
+        dokanSetupGuideBanner?.is_setup_guide_steps_completed ||
+        completedSteps === totalSteps
+    ) {
+        return;
+    }
 
     return (
         <div

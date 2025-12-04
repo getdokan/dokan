@@ -1,3 +1,25 @@
+### v4.2.1 ( Dec 04, 2025 ) ###
+- **new:** Added a "Filter by Vendor Sub-orders" option to the WooCommerce Orders page to easily filter specific marketplace orders.
+- **update:** Redesigned the Admin Panel "Not Found" page template for a better look and user experience.
+- **update:** Ensured full compatibility for the legacy admin panel store support page.
+- **update:** Improved how tooltips appear and remain visible in both the Dokan vendor and admin panels.
+- **update:** Clicking the site title in the new vendor dashboard now redirects to the marketplace main site URL.
+- **update:** Added support for legacy URL settings to the "Visit Dashboard" button within the Admin Setup Wizard.
+- **fix:** Applied menu manager support to correctly control the vendor sidebar menus in the new dashboard layout.
+- **fix:** Added the ability to sort the vendor management table by registration date.
+- **fix:** Corrected the default toggle switch states when creating a new vendor to ensure they start in the intended position.
+- **fix:** Added checks to ensure users without a vendor account are redirected to a proper "404 Not Found" page instead of an error.
+- **fix:** Allowed vendors to correctly enter decimal amounts in the withdrawal request popup.
+- **fix:** Ensured that admin-configured banner dimensions are correctly displayed in the admin vendor settings.
+- **fix:** Fixed an issue where manual withdrawal requests now correctly reflect the settings configured by the admin.
+- **fix:** Updated the correct method for translating text (text domain handling) for recommended plugins.
+- **fix:** Prevented the "Complete Your Marketplace Setup" widget from showing up after the vendor has finished all the onboarding steps.
+- **fix:** Added support for including product variations in products rest api requests.
+- **fix:** Stopped unnecessary warnings and notices from appearing during the initial store setup process.
+- **fix:** Restored the side-by-side layout for the main Admin Dashboard panel.
+- **fix:** Prevent console warning from admin panel setup guide banner elements.
+- **fix:** Remove setup guide banner for admin setup guide pages.
+
 ### v4.2.0 ( Nov 24, 2025 ) ###
 - **update:** Ensured full compatibility for the legacy admin panel across Subscriptions, Announcements, Wholesale, Product Ads, Abuse Reports, Seller Badge, and Refund pages.
 - **update:** The vendor dashboard now supports modern, full-width theme layouts, providing a more spacious user experience.

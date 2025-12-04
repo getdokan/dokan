@@ -1061,16 +1061,16 @@
         },
         {
             "name": "phpcompatibility/php-compatibility",
-            "version": "10.0.0-alpha1",
+            "version": "10.0.0-alpha2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCompatibility/PHPCompatibility.git",
-                "reference": "de29923c98ce1d7d35df862c51d5dc0062c95401"
+                "reference": "e0f0e5a3dc819a4a0f8d679a0f2453d941976e18"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibility/zipball/de29923c98ce1d7d35df862c51d5dc0062c95401",
-                "reference": "de29923c98ce1d7d35df862c51d5dc0062c95401",
+                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibility/zipball/e0f0e5a3dc819a4a0f8d679a0f2453d941976e18",
+                "reference": "e0f0e5a3dc819a4a0f8d679a0f2453d941976e18",
                 "shasum": ""
             },
             "require": {
@@ -1084,13 +1084,10 @@
             "require-dev": {
                 "php-parallel-lint/php-console-highlighter": "^1.0.0",
                 "php-parallel-lint/php-parallel-lint": "^1.4.0",
-                "phpcsstandards/phpcsdevcs": "^1.1.6",
+                "phpcsstandards/phpcsdevcs": "^1.2.0",
                 "phpcsstandards/phpcsdevtools": "^1.2.3",
                 "phpunit/phpunit": "^4.8.36 || ^5.7.21 || ^6.0 || ^7.0 || ^8.0 || ^9.3.4 || ^10.5.32 || ^11.3.3",
                 "yoast/phpunit-polyfills": "^1.1.5 || ^2.0.5 || ^3.1.0"
-            },
-            "suggest": {
-                "roave/security-advisories": "dev-master || Helps prevent installing dependencies with known security issues."
             },
             "type": "phpcodesniffer-standard",
             "extra": {
@@ -1150,20 +1147,20 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-10-20T21:11:54+00:00"
+            "time": "2025-11-28T11:36:33+00:00"
         },
         {
             "name": "phpcompatibility/phpcompatibility-paragonie",
-            "version": "2.0.0-alpha1",
+            "version": "2.0.0-alpha2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCompatibility/PHPCompatibilityParagonie.git",
-                "reference": "e9b1de33aca14704843b86705d0c00f9b30e9401"
+                "reference": "7a979711c87d8202b52f56c56bd719d09d8ed7f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityParagonie/zipball/e9b1de33aca14704843b86705d0c00f9b30e9401",
-                "reference": "e9b1de33aca14704843b86705d0c00f9b30e9401",
+                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityParagonie/zipball/7a979711c87d8202b52f56c56bd719d09d8ed7f5",
+                "reference": "7a979711c87d8202b52f56c56bd719d09d8ed7f5",
                 "shasum": ""
             },
             "require": {
@@ -1221,7 +1218,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-10-21T05:42:02+00:00"
+            "time": "2025-11-29T13:09:49+00:00"
         },
         {
             "name": "phpcompatibility/phpcompatibility-wp",
@@ -1229,12 +1226,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCompatibility/PHPCompatibilityWP.git",
-                "reference": "abd5c78508e1ef4ee82ddbeb714e5642bbd6b131"
+                "reference": "6e8eb78e0a7b0c22bc2aee91dc3c6694f963167c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/abd5c78508e1ef4ee82ddbeb714e5642bbd6b131",
-                "reference": "abd5c78508e1ef4ee82ddbeb714e5642bbd6b131",
+                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/6e8eb78e0a7b0c22bc2aee91dc3c6694f963167c",
+                "reference": "6e8eb78e0a7b0c22bc2aee91dc3c6694f963167c",
                 "shasum": ""
             },
             "require": {
@@ -1289,7 +1286,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-11-25T00:08:16+00:00"
+            "time": "2025-12-02T09:05:52+00:00"
         },
         {
             "name": "phpcsstandards/phpcsextra",
@@ -1787,16 +1784,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.6.29",
+            "version": "9.6.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "9ecfec57835a5581bc888ea7e13b51eb55ab9dd3"
+                "reference": "b69489b312503bf8fa6d75a76916919d7d2fa6d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/9ecfec57835a5581bc888ea7e13b51eb55ab9dd3",
-                "reference": "9ecfec57835a5581bc888ea7e13b51eb55ab9dd3",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/b69489b312503bf8fa6d75a76916919d7d2fa6d4",
+                "reference": "b69489b312503bf8fa6d75a76916919d7d2fa6d4",
                 "shasum": ""
             },
             "require": {
@@ -1870,7 +1867,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.29"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.30"
             },
             "funding": [
                 {
@@ -1894,7 +1891,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-09-24T06:29:11+00:00"
+            "time": "2025-12-01T07:35:08+00:00"
         },
         {
             "name": "psr/container",
@@ -4008,12 +4005,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress-Coding-Standards.git",
-                "reference": "2cff710a8077fd933e0fe66e981325483d0dd455"
+                "reference": "013dc8104e543d39af5d693cc9c1be39d8ea6307"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/2cff710a8077fd933e0fe66e981325483d0dd455",
-                "reference": "2cff710a8077fd933e0fe66e981325483d0dd455",
+                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/013dc8104e543d39af5d693cc9c1be39d8ea6307",
+                "reference": "013dc8104e543d39af5d693cc9c1be39d8ea6307",
                 "shasum": ""
             },
             "require": {
@@ -4067,7 +4064,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2025-11-25T17:04:50+00:00"
+            "time": "2025-12-01T11:44:28+00:00"
         },
         {
             "name": "wp-phpunit/wp-phpunit",
@@ -4075,12 +4072,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wp-phpunit/wp-phpunit.git",
-                "reference": "5ecb4ce1dc6aba9240b702c168dc608f1188fce1"
+                "reference": "95bf7b390a1ce6c1b54f3a07197a3f3b07021e4f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wp-phpunit/wp-phpunit/zipball/5ecb4ce1dc6aba9240b702c168dc608f1188fce1",
-                "reference": "5ecb4ce1dc6aba9240b702c168dc608f1188fce1",
+                "url": "https://api.github.com/repos/wp-phpunit/wp-phpunit/zipball/95bf7b390a1ce6c1b54f3a07197a3f3b07021e4f",
+                "reference": "95bf7b390a1ce6c1b54f3a07197a3f3b07021e4f",
                 "shasum": ""
             },
             "default-branch": true,
@@ -4116,7 +4113,7 @@
                 "issues": "https://github.com/wp-phpunit/issues",
                 "source": "https://github.com/wp-phpunit/wp-phpunit"
             },
-            "time": "2025-04-16T01:40:54+00:00"
+            "time": "2025-12-03T01:19:46+00:00"
         },
         {
             "name": "yoast/phpunit-polyfills",

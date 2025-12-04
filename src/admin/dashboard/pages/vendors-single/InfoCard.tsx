@@ -86,7 +86,7 @@ const InfoCard = ( { vendor }: InfoCardProps ) => {
         <div className="w-full h-fit md:!w-[300px] flex flex-col gap-2 p-6 bg-white rounded shadow-md">
             <PluginArea scope="dokan-admin-dashboard-vendors-single" />
             <Slot
-                name={ `dokan-admin-vendor-before-info-contents` }
+                name="dokan-admin-vendor-before-info-contents"
                 fillProps={ { vendor } }
             />
 
@@ -134,6 +134,11 @@ const InfoCard = ( { vendor }: InfoCardProps ) => {
                     </Tooltip>
                 </div>
             </div>
+            <Slot
+                name="dokan-admin-vendor-after-info-registered-since"
+                fillProps={ { vendor } }
+            />
+
             <div className="mb-4">
                 <h4 className="text-[#828282] text-xs font-normal mb-2">
                     { __( 'Contact:', 'dokan-lite' ) }
@@ -155,6 +160,11 @@ const InfoCard = ( { vendor }: InfoCardProps ) => {
                     </Tooltip>
                 </p>
             </div>
+            <Slot
+                name="dokan-admin-vendor-after-info-contact"
+                fillProps={ { vendor } }
+            />
+
             <div className="mb-4">
                 <h4 className="text-[#828282] text-xs font-normal mb-2">
                     { __( 'Commission Type:', 'dokan-lite' ) }
@@ -165,6 +175,11 @@ const InfoCard = ( { vendor }: InfoCardProps ) => {
                         : __( 'Category Based', 'dokan-lite' ) }
                 </p>
             </div>
+            <Slot
+                name="dokan-admin-vendor-after-info-commission-type"
+                fillProps={ { vendor } }
+            />
+
             <div className="mb-4">
                 <h4 className="text-[#828282] text-xs font-normal mb-2">
                     { __( 'Product Publishing:', 'dokan-lite' ) }
@@ -188,16 +203,11 @@ const InfoCard = ( { vendor }: InfoCardProps ) => {
                     ) }
                 </p>
             </div>
-            <div className="mb-4">
-                <h4 className="text-[#828282] text-xs font-normal mb-2">
-                    { __( 'Subscription:', 'dokan-lite' ) }
-                </h4>
-                <p className="text-[#393939] text-sm font-normal">
-                    { vendor?.current_subscription?.label
-                        ? truncate( vendor?.current_subscription?.label, 30 )
-                        : __( 'No Subscription Added', 'dokan-lite' ) }
-                </p>
-            </div>
+            <Slot
+                name="dokan-admin-vendor-after-info-product-publishing"
+                fillProps={ { vendor } }
+            />
+
             <div className="mb-4">
                 <h4 className="text-[#828282] text-xs font-normal mb-2">
                     { __( 'Payment Method:', 'dokan-lite' ) }
@@ -216,6 +226,11 @@ const InfoCard = ( { vendor }: InfoCardProps ) => {
                     </p>
                 ) }
             </div>
+            <Slot
+                name="dokan-admin-vendor-after-info-payment-method"
+                fillProps={ { vendor } }
+            />
+
             <div className="mb-4">
                 <h4 className="text-[#828282] text-xs font-normal mb-2">
                     { __( 'Social Links:', 'dokan-lite' ) }
@@ -228,9 +243,13 @@ const InfoCard = ( { vendor }: InfoCardProps ) => {
                     </p>
                 ) }
             </div>
+            <Slot
+                name="dokan-admin-vendor-after-info-social-links"
+                fillProps={ { vendor } }
+            />
 
             <Slot
-                name={ `dokan-admin-vendor-after-info-contents` }
+                name="dokan-admin-vendor-after-info-contents"
                 fillProps={ { vendor } }
             />
         </div>
