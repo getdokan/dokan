@@ -127,7 +127,7 @@ class Settings {
         $settings = [];
 
         // Ensure new settings are populated from legacy if currently blank
-		//        $this->ensure_new_settings_populated_from_legacy();
+        $this->ensure_new_settings_populated_from_legacy();
 
         // Build legacy-style values from the new settings storage.
         $legacy_from_new = $this->get_legacy_values_from_new();
@@ -138,7 +138,7 @@ class Settings {
             $new_mapped       = isset( $legacy_from_new[ $legacy_option_id ] ) && is_array( $legacy_from_new[ $legacy_option_id ] ) ? $legacy_from_new[ $legacy_option_id ] : [];
 
             // Prefer new mapped values and fall back to existing legacy options for unmapped fields.
-            $merged = array_merge( $old_stored, $new_mapped );
+            $merged = array_replace_recursive( $old_stored, $new_mapped );
 
             $settings[ $legacy_option_id ] = apply_filters( 'dokan_get_settings_values', $merged, $legacy_option_id );
         }
@@ -205,6 +205,21 @@ class Settings {
             if ( ! empty( $new_data ) ) {
                 /** @var NewAdminSettingsManager $settings_manager */
                 $settings_manager = dokan_get_container()->get( NewAdminSettingsManager::class );
+
+                array_walk($new_data, function (&$fields, $page_id) {
+                    if (!is_array($fields)) {
+                        return;
+                    }
+
+                    $existing = get_option('dokan_settings_' . $page_id, []);
+
+                    if (!is_array($existing)) {
+                        $existing = [];
+                    }
+
+                    $fields = array_replace_recursive($existing, $fields);
+                });
+
                 $settings_manager->save( $new_data, false );
 
                 // Fallback: if pages are not registered/available, write directly to new storage options
