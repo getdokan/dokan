@@ -57,6 +57,13 @@ const AdminSetupBanner = ( props: Props ) => {
         return;
     }
 
+    if (
+        dokanSetupGuideBanner?.is_setup_guide_steps_completed ||
+        completedSteps === totalSteps
+    ) {
+        return;
+    }
+
     return (
         <div
             data-test-id="admin-setup-guide-button"

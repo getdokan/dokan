@@ -9,7 +9,7 @@ import { TopPerformingVendorsData, MonthPickerValue } from '../../types';
 import TopPerformingVendorsSkeleton from './Skeleton';
 import { applyFilters } from '@wordpress/hooks';
 import { formatPrice, truncate } from '../../../../../../utilities';
-import { DokanTooltip as Tooltip } from '@dokan/components';
+import { DokanTooltip as Tooltip, ShortContent } from '@dokan/components';
 
 const TopPerformingVendorsSection = () => {
     const [ monthData, setMonthData ] = useState< MonthPickerValue >( {
@@ -99,7 +99,7 @@ const TopPerformingVendorsSection = () => {
             label: __( 'Rank', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item } ) => (
-                <div className="font-medium text-gray-900 text-center">
+                <div className="font-medium text-center text-gray-900 px-2">
                     { item.rank }
                 </div>
             ),
@@ -109,9 +109,10 @@ const TopPerformingVendorsSection = () => {
             label: __( 'Vendor Name', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item } ) => (
-                <div className="font-medium text-gray-900">
-                    { item.vendor_name }
-                </div>
+                <ShortContent
+                    content={ item.vendor_name }
+                    className="font-medium text-gray-900"
+                />
             ),
         },
         {
@@ -227,7 +228,10 @@ const TopPerformingVendorsSection = () => {
                 <DataViews
                     data={ padDefaultData( data || [] ) }
                     namespace="dokan-top-performing-vendors"
-                    defaultLayouts={ { table: {}, density: 'comfortable' } }
+                    defaultLayouts={ {
+                        table: { density: 'comfortable' },
+                        list: {},
+                    } }
                     fields={ fields }
                     getItemId={ ( item ) => item.rank }
                     onChangeView={ setView }
