@@ -3,12 +3,12 @@
 namespace WeDevs\Dokan\Admin;
 
 /**
- * User List related tasks for wp-admin
+ * User List related tasks for wp-admin.
+ * Adds Pending Vendor tab and Approve Vendors bulk action.
  *
- * Adds Pending Vendor tab and Approve Vendors bulk action
+ * @since DOKAN_SINCE
  *
  * @package Dokan
- * @since DOKAN_SINCE
  */
 class UserList {
 
@@ -36,15 +36,15 @@ class UserList {
      * @return array Modified views
      */
     public function add_pending_vendor_view( $views ) {
-        $status_count   = dokan_get_seller_status_count();
-        $pending_count  = $status_count['inactive'] ?? 0;
-        $pending_filter = sanitize_text_field( wp_unslash( $_GET['pending_vendors'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $status_count  = dokan_get_seller_status_count();
+        $pending_count = $status_count['inactive'] ?? 0;
+        $role_data     = sanitize_text_field( wp_unslash( $_GET['role'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
         $views['pending_vendors'] = sprintf(
             /* translators: %1$s: Pending Vendors link, %2$s: Current class, %3$s: Pending Vendors label, %4$s: Pending Vendors count */
             '<a href="%1$s" class="%2$s">%3$s <span class="count">(%4$s)</span></a>',
-            esc_url( add_query_arg( 'pending_vendors', '1', admin_url( 'users.php' ) ) ),
-            esc_attr( '1' === $pending_filter ? 'current' : '' ),
+            esc_url( add_query_arg( 'role', 'pending_vendors', admin_url( 'users.php' ) ) ),
+            esc_attr( 'pending_vendors' === $role_data ? 'current' : '' ),
             esc_html__( 'Pending Vendors', 'dokan-lite' ),
             esc_html( $pending_count )
         );
@@ -66,19 +66,20 @@ class UserList {
             return $query;
         }
 
-        $pending_filter = sanitize_text_field( wp_unslash( $_GET['pending_vendors'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        if ( '1' !== $pending_filter ) {
+        $role_data = sanitize_text_field( wp_unslash( $_GET['role'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if ( 'pending_vendors' !== $role_data ) {
             return $query;
         }
 
-        $query->set( 'role', 'seller' );
+        // Unset the role parameter for fetch all users and set our custom role query.
+        $query->set( 'role', '' );
+        $query->set( 'role__in', [ 'seller', 'administrator' ] );
 
         $meta_query = $query->get( 'meta_query' );
         if ( ! is_array( $meta_query ) ) {
             $meta_query = [];
         }
 
-        // Include vendors with dokan_enable_selling = 'no' OR vendors without the meta key at all
         $meta_query[] = [
             'relation' => 'OR',
             [
@@ -107,8 +108,8 @@ class UserList {
      * @return array Modified bulk actions
      */
     public function add_bulk_actions( $actions ) {
-        $pending_filter = sanitize_text_field( wp_unslash( $_GET['pending_vendors'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        if ( '1' === $pending_filter ) {
+        $role_data = sanitize_text_field( wp_unslash( $_GET['role'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if ( 'pending_vendors' === $role_data ) {
             $actions['approve_vendors'] = esc_html__( 'Approve Vendors', 'dokan-lite' );
         }
 
@@ -144,14 +145,14 @@ class UserList {
                 continue;
             }
 
-            // Check if user is a vendor and is currently disabled
+            // Check if the user is a vendor and is currently disabled.
             if ( ! user_can( $user_id, 'dokandar' ) ) {
                 continue;
             }
 
             $selling = get_user_meta( $user_id, 'dokan_enable_selling', true );
 
-            // Approve if selling is 'no' or meta key doesn't exist (empty string)
+            // Approve if selling is 'no' or a meta-key doesn't exist (empty string).
             if ( $selling === 'no' || $selling === '' ) {
                 $vendor->make_active();
                 ++$approved_count;
@@ -164,26 +165,30 @@ class UserList {
     }
 
     /**
-     * Show admin notices for bulk actions
+     * Show admin notices for bulk actions.
+     *
+     * @since DOKAN_SINCE
      *
      * @return void
      */
     public function show_bulk_action_notices() {
-        if ( ! isset( $_GET['vendors_approved'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $count = absint( wp_unslash( $_GET['vendors_approved'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if ( empty( $count ) ) {
             return;
         }
 
-        $count = absint( $_GET['vendors_approved'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $message = sprintf(
+            /* translators: %d: number of vendors approved */
+            _n( '%d vendor approved successfully.', '%d vendors approved successfully.', $count, 'dokan-lite' ),
+            $count
+        );
 
-        if ( $count > 0 ) {
-            printf(
-                '<div class="notice notice-success is-dismissible"><p>%s</p></div>',
-                sprintf(
-                    /* translators: %d: number of vendors approved */
-                    esc_html( _n( '%d vendor approved successfully.', '%d vendors approved successfully.', $count, 'dokan-lite' ) ),
-                    esc_html( $count )
-                )
-            );
-        }
+        dokan_get_template(
+            'admin/bulk-vendor-approve-notice.php',
+            [
+                'count'   => $count,
+                'message' => $message,
+            ]
+        );
     }
 }
