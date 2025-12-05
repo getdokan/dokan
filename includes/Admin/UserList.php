@@ -36,16 +36,17 @@ class UserList {
      * @return array Modified views
      */
     public function add_pending_vendor_view( $views ) {
+        error_log( print_r( $views, true ) );
         $status_count  = dokan_get_seller_status_count();
         $pending_count = $status_count['inactive'] ?? 0;
         $role_data     = sanitize_text_field( wp_unslash( $_GET['role'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
-        $views['pending_vendors'] = sprintf(
+        $views['pending_vendor'] = sprintf(
             /* translators: %1$s: Pending Vendors link, %2$s: Current class, %3$s: Pending Vendors label, %4$s: Pending Vendors count */
             '<a href="%1$s" class="%2$s">%3$s <span class="count">(%4$s)</span></a>',
-            esc_url( add_query_arg( 'role', 'pending_vendors', admin_url( 'users.php' ) ) ),
-            esc_attr( 'pending_vendors' === $role_data ? 'current' : '' ),
-            esc_html__( 'Pending Vendors', 'dokan-lite' ),
+            esc_url( add_query_arg( 'role', 'pending_vendor', admin_url( 'users.php' ) ) ),
+            esc_attr( 'pending_vendor' === $role_data ? 'current' : '' ),
+            esc_html__( 'Pending Vendor', 'dokan-lite' ),
             esc_html( $pending_count )
         );
 
@@ -67,7 +68,7 @@ class UserList {
         }
 
         $role_data = sanitize_text_field( wp_unslash( $_GET['role'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        if ( 'pending_vendors' !== $role_data ) {
+        if ( 'pending_vendor' !== $role_data ) {
             return $query;
         }
 
@@ -109,7 +110,7 @@ class UserList {
      */
     public function add_bulk_actions( $actions ) {
         $role_data = sanitize_text_field( wp_unslash( $_GET['role'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        if ( 'pending_vendors' === $role_data ) {
+        if ( 'pending_vendor' === $role_data ) {
             $actions['approve_vendors'] = esc_html__( 'Approve Vendors', 'dokan-lite' );
         }
 
@@ -153,7 +154,7 @@ class UserList {
             $selling = get_user_meta( $user_id, 'dokan_enable_selling', true );
 
             // Approve if selling is 'no' or a meta-key doesn't exist (empty string).
-            if ( $selling === 'no' || $selling === '' ) {
+            if ( $selling !== 'yes' ) {
                 $vendor->make_active();
                 ++$approved_count;
             }
