@@ -4,16 +4,25 @@ import domReady from '@wordpress/dom-ready';
 import AdminSetupBanner from './AdminSetupBanner';
 
 domReady( function () {
-    const adminHeaderRoot = document.querySelector( '.dokan-admin-header' );
+    const adminHeaderRoot = document.querySelector(
+        '#dokan-admin-panel-header'
+    );
     if ( adminHeaderRoot ) {
-        const mountDiv = document.createElement( 'div' );
-        mountDiv.setAttribute( 'id', 'setup-guide-banner-root' );
-        mountDiv.setAttribute(
+        const wrapperDiv = document.createElement( 'div' );
+        wrapperDiv.setAttribute(
             'class',
-            'dokan-layout dokan-admin-page-body pr-[10px] lg:pr-5'
+            'dokan-layout dokan-admin-page-body'
         );
 
-        adminHeaderRoot.after( mountDiv );
+        const mountDiv = document.createElement( 'div' );
+        mountDiv.setAttribute( 'id', 'setup-guide-banner-root' );
+        mountDiv.setAttribute( 'class', 'pr-[10px] lg:pr-5' );
+
+        // Append the root inside the wrapper.
+        wrapperDiv.appendChild( mountDiv );
+
+        // Insert the wrapper after the admin header root.
+        adminHeaderRoot.after( wrapperDiv );
         const rootElement = document.querySelector(
             '#setup-guide-banner-root'
         );

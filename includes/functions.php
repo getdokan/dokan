@@ -96,7 +96,7 @@ function dokan_is_user_customer( $user_id ) {
 /**
  * Get reserved URL slugs that cannot be used for custom slugs like store base
  *
- * @since DOKAN_SINCE
+ * @since 4.1.5
  *
  * @return array List of reserved slugs
  */
@@ -127,7 +127,7 @@ function dokan_get_reserved_url_slugs() {
     /**
      * Filter the list of reserved URL slugs that cannot be used for custom slugs like store base.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.5
      *
      * @param array $reserved_slugs List of reserved slugs.
      */
@@ -2338,6 +2338,10 @@ function dokan_get_social_profile_fields() {
         'youtube'   => [
             'icon'  => 'youtube-square',
             'title' => __( 'Youtube', 'dokan-lite' ),
+        ],
+        'tiktok'    => [
+            'icon'  => 'tiktok',
+            'title' => __( 'TikTok', 'dokan-lite' ),
         ],
         'instagram' => [
             'icon'  => 'instagram',

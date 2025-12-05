@@ -33,7 +33,6 @@ const Example = () => {
       value={ product }
       onChange={ setProduct }
       placeholder="Search products"
-      isClearable
       defaultOptions
     />
   );

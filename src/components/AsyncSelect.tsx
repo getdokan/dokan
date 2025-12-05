@@ -1,5 +1,12 @@
-import { AsyncSearchableSelect, ReactSelect } from '@getdokan/dokan-ui';
-import { twMerge } from 'tailwind-merge';
+import { AsyncSearchableSelect } from '@getdokan/dokan-ui';
+import ValueContainer from "@src/components/select/ValueContainer";
+import Option from "@src/components/select/Option";
+import MultiValue from "@src/components/select/MultiValue";
+import SingleValue from "@src/components/select/SingleValue";
+import Control from "@src/components/select/Control";
+import DropdownIndicator from "@src/components/select/DropdownIndicator";
+import styles from "@src/components/select/styles";
+import { twMerge } from "tailwind-merge";
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
 // Local utility to extract props type of a component without relying on React/WordPress types
@@ -24,14 +31,24 @@ export interface BaseSelectProps< Option = DefaultOption >
      * Position of the icon within the control. Defaults to 'left'.
      */
     iconPosition?: 'left' | 'right';
+    /**
+     * When provided and the select is NOT multi, the selected value will be rendered
+     * with this title as a prefix, e.g. "Vendor: Store 1".
+     */
+    selectedTitle?: string;
     components?: PropsOf<
         typeof AsyncSearchableSelect< Option >
     >[ 'components' ];
+    className?: string;
 }
 
 function AsyncSelect< Option = DefaultOption >(
     props: BaseSelectProps< Option >
 ) {
+    // Default portal target for the dropdown menu so it isn't clipped by parent containers
+    const defaultMenuPortalTarget =
+        typeof document !== 'undefined' ? document.body : undefined;
+
     const Control = ( controlProps: any ) => {
         const { children, selectProps } = controlProps as {
             children: React.ReactNode;
@@ -140,15 +157,24 @@ function AsyncSelect< Option = DefaultOption >(
             components={ {
                 Control,
                 DropdownIndicator,
+                SingleValue,
+                ValueContainer,
+                MultiValue,
+                Option,
                 // @ts-ignore
                 ...( props?.components ? props.components : {} ),
             } }
             styles={ styles }
-            className="shadow-none"
+            className={ twMerge( 'shadow-none', props?.className ) }
             classNamePrefix={ props.classNamePrefix ?? 'react-select' }
             blurInputOnSelect={ props.blurInputOnSelect ?? true }
             closeMenuOnSelect={ props.closeMenuOnSelect ?? true }
             hideSelectedOptions={ props.hideSelectedOptions ?? false }
+            // Render menu in a portal to avoid clipping and position it correctly
+            menuPortalTarget={
+                props.menuPortalTarget ?? defaultMenuPortalTarget
+            }
+            menuPosition={ props.menuPosition ?? 'fixed' }
             { ...props }
         />
     );

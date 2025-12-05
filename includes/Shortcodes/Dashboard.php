@@ -3,6 +3,8 @@
 namespace WeDevs\Dokan\Shortcodes;
 
 use WeDevs\Dokan\Abstracts\DokanShortcode;
+use WeDevs\Dokan\Utilities\OrderUtil;
+use WeDevs\Dokan\Utilities\VendorUtil;
 
 class Dashboard extends DokanShortcode {
 
