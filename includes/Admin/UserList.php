@@ -36,7 +36,6 @@ class UserList {
      * @return array Modified views
      */
     public function add_pending_vendor_view( $views ) {
-        error_log( print_r( $views, true ) );
         $status_count  = dokan_get_seller_status_count();
         $pending_count = $status_count['inactive'] ?? 0;
         $role_data     = sanitize_text_field( wp_unslash( $_GET['role'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
