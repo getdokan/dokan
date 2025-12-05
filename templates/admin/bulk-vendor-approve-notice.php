@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin View: Bulk Action Notice
+ * Admin View: Bulk Action Notice for Approve Vendors.
  *
  * @since DOKAN_SINCE
  *
