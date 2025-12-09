@@ -3,7 +3,11 @@ import SettingsParser from '../SettingsParser';
 
 const TableRow = ( { element }: { element: StatusElement } ) => {
     return (
-        <tr data-hook={ element.hook_key }>
+        <tr 
+            // CHANGED: Lighter border. REMOVED px/py padding here (it belongs on the td)
+            className="border-b border-[#E9E9E9] last:border-0 transition-colors"
+            data-hook={ element.hook_key }
+        >
             { ( element?.children || [] ).map( ( child ) => {
                 return (
                     <SettingsParser
