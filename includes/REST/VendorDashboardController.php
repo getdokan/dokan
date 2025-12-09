@@ -119,7 +119,6 @@ class VendorDashboardController extends \WP_REST_Controller {
                     'callback'            => [ $this, 'get_preferences' ],
                     'args'                => [],
                     'schema'              => [ $this, 'get_preferences_schema' ],
-                    'permission_callback' => 'is_user_logged_in',
                 ],
             ]
         );
@@ -351,7 +350,7 @@ class VendorDashboardController extends \WP_REST_Controller {
             [
                 'currency'              => get_woocommerce_currency(),
                 'currency_position'     => get_option( 'woocommerce_currency_pos' ),
-                'currency_symbol'       => get_woocommerce_currency_symbol(),
+                'currency_symbol'       => html_entity_decode( get_woocommerce_currency_symbol(), ENT_COMPAT ),
                 'decimal_separator'     => wc_get_price_decimal_separator(),
                 'thousand_separator'    => wc_get_price_thousand_separator(),
                 'decimal_point'         => wc_get_price_decimals(),
@@ -369,6 +368,8 @@ class VendorDashboardController extends \WP_REST_Controller {
                 'date_format'           => get_option( 'date_format' ),
                 'time_format'           => get_option( 'time_format' ),
                 'language'              => get_locale(),
+                'week_start_on'         => get_option( 'start_of_week' ),
+                'store_color' => dokan_get_option( 'store_color_pallete', 'dokan_colors', [] ),
             ]
         );
     }
@@ -501,6 +502,12 @@ class VendorDashboardController extends \WP_REST_Controller {
                 'language'              => [
                     'description' => esc_html__( 'Store language.', 'dokan-lite' ),
                     'type'        => 'string',
+                    'context'     => [ 'view' ],
+                    'readonly'    => true,
+                ],
+                'start_of_week' => [
+                    'description' => esc_html__( 'Store start of week.', 'dokan-lite' ),
+                    'type'        => 'object',
                     'context'     => [ 'view' ],
                     'readonly'    => true,
                 ],
