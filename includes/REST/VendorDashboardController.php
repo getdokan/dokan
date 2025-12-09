@@ -511,6 +511,12 @@ class VendorDashboardController extends \WP_REST_Controller {
                     'context'     => [ 'view' ],
                     'readonly'    => true,
                 ],
+                'store_color' => [
+                    'description' => esc_html__( 'Store color.', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'context'     => [ 'view' ],
+                    'readonly'    => true,
+                ],
             ],
         ];
     }
