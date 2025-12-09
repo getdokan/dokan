@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\REST;
 
 use DateInterval;
 use DatePeriod;
+use WeDevs\Dokan\Utilities\VendorUtil;
 use WP_Error;
 use WP_HTTP_Response;
 use WP_REST_Request;
@@ -154,9 +155,17 @@ class VendorDashboardController extends \WP_REST_Controller {
      * @return WP_Error|WP_HTTP_Response|WP_REST_Response
      */
     public function get_profile_information() {
-        return rest_ensure_response(
-            dokan_get_store_info( dokan_get_current_user_id() )
-        );
+        $store_settings = dokan_get_store_info( dokan_get_current_user_id() );
+        $banner         = ! empty( $store_settings['banner'] ) ? absint( $store_settings['banner'] ) : 0;
+        $banner_url     = $banner ? wp_get_attachment_url( $banner ) : VendorUtil::get_vendor_default_banner_url();
+        $store_settings['banner_url'] = $banner_url;
+
+        $gravatar_id  = ! empty( $profile_info['gravatar'] ) ? $profile_info['gravatar'] : 0;
+        $gravatar_url = $gravatar_id ? wp_get_attachment_url( $gravatar_id ) : VendorUtil::get_vendor_default_avatar_url();
+        $store_settings['gravatar_url'] = $gravatar_url;
+
+        $store_settings = apply_filters( 'dokan_vendor_profile_response', $store_settings );
+        return rest_ensure_response( $store_settings );
     }
 
     /**
@@ -346,11 +355,15 @@ class VendorDashboardController extends \WP_REST_Controller {
      * @return WP_Error|WP_HTTP_Response|WP_REST_Response
      */
     public function get_preferences() {
+        $currency_options = [];
+        foreach ( get_woocommerce_currencies() as $key => $currency ) {
+            $currency_options[ $key ] = get_woocommerce_currency_symbol( $key );
+        }
         return rest_ensure_response(
             [
                 'currency'              => get_woocommerce_currency(),
                 'currency_position'     => get_option( 'woocommerce_currency_pos' ),
-                'currency_symbol'       => html_entity_decode( get_woocommerce_currency_symbol(), ENT_COMPAT ),
+                'currency_symbol'       => get_woocommerce_currency_symbol(),
                 'decimal_separator'     => wc_get_price_decimal_separator(),
                 'thousand_separator'    => wc_get_price_thousand_separator(),
                 'decimal_point'         => wc_get_price_decimals(),
@@ -369,7 +382,8 @@ class VendorDashboardController extends \WP_REST_Controller {
                 'time_format'           => get_option( 'time_format' ),
                 'language'              => get_locale(),
                 'week_start_on'         => get_option( 'start_of_week' ),
-                'store_color' => dokan_get_option( 'store_color_pallete', 'dokan_colors', [] ),
+                'store_color'           => dokan_get_option( 'store_color_pallete', 'dokan_colors', [] ),
+                'currency_options'      => $currency_options,
             ]
         );
     }
