@@ -20,6 +20,8 @@ class SettingsMapperCallbacks implements Hookable {
         add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_report_abuse_reasons_new_to_old' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_report_rma_reasons_old_to_new' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_report_rma_reasons_new_to_old' ], 10, 3 );
+        add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_vendor_extra_fields_old_to_new' ], 10, 3 );
+        add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_vendor_extra_fields_new_to_old' ], 10, 3 );
     }
 
     /**
@@ -98,7 +100,6 @@ class SettingsMapperCallbacks implements Hookable {
                 'value' => $item['title'] ?? '',
             ];
         }
-        error_log( 'New Value Of Reasons Abuse new to Old : ' . print_r( $old_value, true ) );
         return $old_value;
     }
 
@@ -191,5 +192,85 @@ class SettingsMapperCallbacks implements Hookable {
             return $value;
         }
         return $value === 'on' ? 'off' : 'on';
+    }
+
+    /**
+     * Function to map vendor extra fields from old format to new format
+     * @param array $value
+     * @param string $old_key
+     * @param string $new_key
+     *
+     * @return array
+     */
+    public function map_vendor_extra_fields_old_to_new( $value, $old_key, $new_key ) {
+        if ( 'dokan_germanized.vendor_fields' !== $old_key || 'compliance.eu_compliance.vendor_extra_fields.vendor_extra_fields' !== $new_key || is_null( $value ) ) {
+            return $value;
+        }
+
+        $mapped = [];
+        if ( ! empty( $value['dokan_company_name'] ) ) {
+            $mapped[] = 'company_name';
+        }
+        if ( ! empty( $value['dokan_company_id_number'] ) ) {
+            $mapped[] = 'company_id_number';
+        }
+        if ( ! empty( $value['dokan_vat_number'] ) ) {
+            $mapped[] = 'vat_number';
+        }
+        if ( ! empty( $value['dokan_bank_name'] ) ) {
+            $mapped[] = 'bank_name';
+        }
+        if ( ! empty( $value['dokan_bank_iban'] ) ) {
+            $mapped[] = 'bank_iban';
+        }
+        return $mapped;
+    }
+
+    /**
+     * Function to map vendor extra fields from new format to old format
+     * @param array $value
+     * @param string $old_key
+     * @param string $new_key
+     *
+     * @return array
+     */
+    public function map_vendor_extra_fields_new_to_old( $value, $old_key, $new_key ) {
+
+        if ( 'dokan_germanized.vendor_fields' !== $old_key || 'compliance.eu_compliance.vendor_extra_fields.vendor_extra_fields' !== $new_key || is_null( $value ) ) {
+            return $value;
+        }
+        $old_value = [
+            'dokan_company_name'      => '',
+            'dokan_company_id_number' => '',
+            'dokan_vat_number'        => '',
+            'dokan_bank_name'         => '',
+            'dokan_bank_iban'         => '',
+        ];
+
+        foreach ( (array) $value as $field ) {
+            switch ( $field ) {
+
+                case 'company_name':
+                    $old_value['dokan_company_name'] = 'dokan_company_name';
+                    break;
+
+                case 'company_id_number':
+                    $old_value['dokan_company_id_number'] = 'dokan_company_id_number';
+                    break;
+
+                case 'vat_number':
+                    $old_value['dokan_vat_number'] = 'dokan_vat_number';
+                    break;
+
+                case 'bank_name':
+                    $old_value['dokan_bank_name'] = 'dokan_bank_name';
+                    break;
+
+                case 'bank_iban':
+                    $old_value['dokan_bank_iban'] = 'dokan_bank_iban';
+                    break;
+            }
+        }
+        return $old_value;
     }
 }
