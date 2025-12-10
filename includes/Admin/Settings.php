@@ -812,12 +812,12 @@ class Settings {
                     'placeholder' => __( 'Select page', 'dokan-lite' ),
                 ],
                 'vendor_onboarding' => [
-                'name' => 'vendor_onboarding',
-                'label' => __( 'Vendor Onboarding', 'dokan-lite' ),  
-                'desc' => __( 'Select a page for vendor onboarding and login', 'dokan-lite' ),  
-                'type' => 'select',
-                'placeholder' => __( 'Select page', 'dokan-lite' ),
-                'options' => $pages_array,
+                    'name' => 'vendor_onboarding',
+                    'label' => __( 'Vendor Onboarding', 'dokan-lite' ),
+                    'desc' => __( 'Select a page for vendor onboarding and login', 'dokan-lite' ),
+                    'type' => 'select',
+                    'placeholder' => __( 'Select page', 'dokan-lite' ),
+                    'options' => $pages_array,
                 ],
             ],
             'dokan_appearance' => [
