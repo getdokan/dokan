@@ -154,7 +154,7 @@ class SettingsMapper {
         'dokan_delivery_time.delivery_box_info' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_box_info',
 
         // Delivery support (multicheck - needs special handling like shipping providers)
-        // 'dokan_delivery_time.delivery_support.delivery' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_support',
+        'dokan_delivery_time.delivery_support' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_support',
         // 'dokan_delivery_time.delivery_support.store-pickup' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_support',
 
         // Delivery days

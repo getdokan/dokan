@@ -16,6 +16,7 @@ class SettingsMapperCallbacks implements Hookable {
         add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_customer_details_visibility' ], 10, 4 );
         add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_cod_payments' ], 10, 4 );
         add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_welcome_wizard' ], 10, 4 );
+        add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_delivery_support' ], 10, 4 );
         add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_report_abuse_reasons_old_to_new' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_report_abuse_reasons_new_to_old' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_report_rma_reasons_old_to_new' ], 10, 3 );
@@ -354,4 +355,70 @@ class SettingsMapperCallbacks implements Hookable {
         }
         return $old_value;
     }
+
+    /**
+     * Function for mapping delivery support between old and new settings
+     *
+     * Maps legacy associative array to new numeric array and vice versa.
+     * Returns immediately if the value is null.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array|null $value The current value to map
+     * @param string      $to_indicator Direction of mapping: 'old_to_new' or 'new_to_old'
+     * @param string      $old_key The legacy setting key
+     * @param string      $new_key The new settings dot-path key
+     *
+     * @return array|null The mapped value or null if input is null
+     */
+    public function map_delivery_support( $value, $to_indicator, $old_key, $new_key ) {
+
+        $old = 'dokan_delivery_time.delivery_support';
+        $new = 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_support';
+
+        if ( is_null( $value ) || $old !== $old_key || $new !== $new_key ) {
+            return $value;
+        }
+
+        /**
+         * OLD → NEW
+         * old format: [ 'delivery' => 'delivery', 'store-pickup' => 'store-pickup' ]
+         * new format: [ 'delivery', 'store-pickup' ]
+         */
+        if ( $to_indicator === 'old_to_new' ) {
+            return array_values( (array) $value );
+        }
+
+        /**
+         * NEW → OLD
+         * new format: [ 'delivery', 'store-pickup' ]
+         * old format must include both keys:
+         *
+         * [
+         *   'delivery'     => 'delivery',
+         *   'store-pickup' => '' or 'store-pickup'
+         * ]
+         */
+        if ( $to_indicator === 'new_to_old' ) {
+
+            // Default required keys with empty values
+            $old_value = [
+                'delivery'     => '',
+                'store-pickup' => '',
+            ];
+
+            foreach ( (array) $value as $item ) {
+                if ( $item === 'delivery' ) {
+                    $old_value['delivery'] = 'delivery';
+                }
+
+                if ( $item === 'store-pickup' ) {
+                    $old_value['store-pickup'] = 'store-pickup';
+                }
+            }
+            return $old_value;
+        }
+        return $value;
+    }
+
 }
