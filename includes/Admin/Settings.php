@@ -811,13 +811,13 @@ class Settings {
                     'tooltip'     => __( 'Select a page to display the Terms and Conditions of your store for Vendors.', 'dokan-lite' ),
                     'placeholder' => __( 'Select page', 'dokan-lite' ),
                 ],
-                'vendor_onboarding' => [ 
-                'name' => 'vendor_onboarding',  
+                'vendor_onboarding' => [
+                'name' => 'vendor_onboarding',
                 'label' => __( 'Vendor Onboarding', 'dokan-lite' ),  
                 'desc' => __( 'Select a page for vendor onboarding and login', 'dokan-lite' ),  
-                'type' => 'select',  
-                'placeholder' => __( 'Select page', 'dokan-lite' ),  
-                'options' => $pages_array,  
+                'type' => 'select',
+                'placeholder' => __( 'Select page', 'dokan-lite' ),
+                'options' => $pages_array,
                 ],
             ],
             'dokan_appearance' => [

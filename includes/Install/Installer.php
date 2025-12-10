@@ -247,11 +247,11 @@ class Installer {
                 'page_id'    => 'my_orders',
                 'content'    => '[dokan-my-orders]',
             ],
-            [  
-            'post_title' => __( 'Vendor Onboarding', 'dokan-lite' ),  
-            'slug' => 'vendor-onboarding',  
-            'page_id' => 'vendor_onboarding',  
-            'content' => '[dokan-vendor-registration]',  
+            [ 
+            'post_title' => __( 'Vendor Onboarding', 'dokan-lite' ),
+            'slug' => 'vendor-onboarding',
+            'page_id' => 'vendor_onboarding',
+            'content' => '[dokan-vendor-registration]',
             ],
         ];
 
