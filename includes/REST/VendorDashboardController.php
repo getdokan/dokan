@@ -120,6 +120,7 @@ class VendorDashboardController extends \WP_REST_Controller {
                     'callback'            => [ $this, 'get_preferences' ],
                     'args'                => [],
                     'schema'              => [ $this, 'get_preferences_schema' ],
+                    'permission_callback' => '__return_true',
                 ],
             ]
         );
