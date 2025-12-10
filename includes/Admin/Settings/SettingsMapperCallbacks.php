@@ -15,6 +15,7 @@ class SettingsMapperCallbacks implements Hookable {
     public function register_hooks(): void {
         add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_customer_details_visibility' ], 10, 4 );
         add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_cod_payments' ], 10, 4 );
+        add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_welcome_wizard' ], 10, 4 );
         add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_report_abuse_reasons_old_to_new' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_report_abuse_reasons_new_to_old' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_report_rma_reasons_old_to_new' ], 10, 3 );
@@ -171,5 +172,24 @@ class SettingsMapperCallbacks implements Hookable {
             ];
         }
         return $new_value;
+    }
+
+    /**
+     * Function for mapping welcome wizard setting
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $value
+     * @param string $to_indicator
+     * @param string $old_key
+     * @param string $new_key
+     *
+     * @return string|null
+     */
+    public function map_welcome_wizard( $value, $to_indicator, $old_key, $new_key ) {
+        if ( 'dokan_general.disable_welcome_wizard' !== $old_key || 'vendor.vendor_onboarding.welcome_wizard' !== $new_key || is_null( $value ) ) {
+            return $value;
+        }
+        return $value === 'on' ? 'off' : 'on';
     }
 }

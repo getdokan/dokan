@@ -127,7 +127,7 @@ class Settings {
         $settings = [];
 
         // Ensure new settings are populated from legacy if currently blank
-        $this->ensure_new_settings_populated_from_legacy();
+        //$this->ensure_new_settings_populated_from_legacy();
 
         // Build legacy-style values from the new settings storage.
         $legacy_from_new = $this->get_legacy_values_from_new();
