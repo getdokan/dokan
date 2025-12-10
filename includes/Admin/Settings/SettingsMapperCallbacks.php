@@ -22,6 +22,8 @@ class SettingsMapperCallbacks implements Hookable {
         add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_report_rma_reasons_new_to_old' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_vendor_extra_fields_old_to_new' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_vendor_extra_fields_new_to_old' ], 10, 3 );
+        add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_customer_extra_fields_old_to_new' ], 10, 3 );
+        add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_customer_extra_fields_new_to_old' ], 10, 3 );
     }
 
     /**
@@ -249,7 +251,6 @@ class SettingsMapperCallbacks implements Hookable {
 
         foreach ( (array) $value as $field ) {
             switch ( $field ) {
-
                 case 'company_name':
                     $old_value['dokan_company_name'] = 'dokan_company_name';
                     break;
@@ -268,6 +269,86 @@ class SettingsMapperCallbacks implements Hookable {
 
                 case 'bank_iban':
                     $old_value['dokan_bank_iban'] = 'dokan_bank_iban';
+                    break;
+            }
+        }
+        return $old_value;
+    }
+
+    /**
+     * Function to map customer extra fields from old format to new format
+     *
+     * @param array $value
+     * @param string $old_key
+     * @param string $new_key
+     *
+     * @return array
+     */
+    public function map_customer_extra_fields_old_to_new( $value, $old_key, $new_key ) {
+
+        if ( 'dokan_germanized.customer_fields' !== $old_key || 'compliance.eu_compliance.customer_extra_fields.customer_extra_fields' !== $new_key || is_null( $value ) ) {
+            return $value;
+        }
+
+        $mapped = [];
+
+        if ( ! empty( $value['billing_dokan_company_id_number'] ) ) {
+            $mapped[] = 'billing_dokan_company_id_number';
+        }
+
+        if ( ! empty( $value['billing_dokan_vat_number'] ) ) {
+            $mapped[] = 'billing_dokan_vat_number';
+        }
+
+        if ( ! empty( $value['billing_dokan_bank_name'] ) ) {
+            $mapped[] = 'billing_dokan_bank_name';
+        }
+
+        if ( ! empty( $value['billing_dokan_bank_iban'] ) ) {
+            $mapped[] = 'billing_dokan_bank_iban';
+        }
+
+        return $mapped;
+    }
+
+    /**
+     * Function to map customer extra fields from new format to old format
+     *
+     * @param array $value
+     * @param string $old_key
+     * @param string $new_key
+     *
+     * @return array
+     */
+    public function map_customer_extra_fields_new_to_old( $value, $old_key, $new_key ) {
+
+        if ( 'dokan_germanized.customer_fields' !== $old_key || 'compliance.eu_compliance.customer_extra_fields.customer_extra_fields' !== $new_key || is_null( $value ) ) {
+            return $value;
+        }
+
+        $old_value = [
+            'billing_dokan_company_id_number' => '',
+            'billing_dokan_vat_number'        => '',
+            'billing_dokan_bank_name'         => '',
+            'billing_dokan_bank_iban'         => '',
+        ];
+
+        foreach ( (array) $value as $field ) {
+            switch ( $field ) {
+                case 'billing_dokan_company_id_number':
+                    $old_value['billing_dokan_company_id_number'] = 'billing_dokan_company_id_number';
+                    break;
+
+                case 'billing_dokan_vat_number':
+                    $old_value['billing_dokan_vat_number'] = 'billing_dokan_vat_number';
+                    break;
+
+                case 'billing_dokan_bank_name':
+                    $old_value['billing_dokan_bank_name'] = 'billing_dokan_bank_name';
+                    break;
+
+                case 'billing_dokan_bank_iban':
+                    $old_value['billing_dokan_bank_iban'] = 'billing_dokan_bank_iban';
                     break;
             }
         }

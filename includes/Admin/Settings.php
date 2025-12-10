@@ -208,7 +208,7 @@ class Settings {
 
                 array_walk(
                     $new_data,
-                    function( &$fields, $page_id ) {
+                    function ( &$fields, $page_id ) {
                         if ( ! is_array( $fields ) ) {
                             return;
                         }
