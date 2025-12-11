@@ -18,7 +18,7 @@ export class AdminSettingsPageNew extends AdminPage {
     async ensureVisibilityFor(selector: string) {
         const locator = this.page.locator(selector);
         await locator.waitFor({ state: 'attached', timeout: 15000 });
-        await locator.scrollIntoViewIfNeeded({ timeout: 15000 });
+        //await locator.scrollIntoViewIfNeeded({ timeout: 15000 });
         await locator.waitFor({ state: 'visible', timeout: 15000 });
     }
 
@@ -45,19 +45,19 @@ export class AdminSettingsPageNew extends AdminPage {
     async checkSettings( dataSet: any ) {
         await this.goIfNotThere(dataSet.url)
         await this.waitForLoadState();
-        
+
         // Navigate through selectors if provided
         if (dataSet.selector) {
             await this.navigateThroughSelectors(dataSet.selector);
         }
-        
+
         await this.assertFieldValues( dataSet.fields );
     }
 
     async saveSettings() {
         const saveBtn = this.page.locator(this.saveButtonSelector);
         try{
-            await saveBtn.waitFor({ state: 'visible', timeout: 8000 }); 
+            await saveBtn.waitFor({ state: 'visible', timeout: 8000 });
             await saveBtn.click();
             await this.waitForLoadState();
         } catch (error) {
@@ -75,6 +75,19 @@ export class AdminSettingsPageNew extends AdminPage {
                 case 'number':
                     await this.page.fill( field.selector, field.value );
                     break;
+                case 'dropdown': {
+                    const trigger = this.page.locator(field.selector);
+                    await trigger.waitFor({ state: 'visible' });
+                    await trigger.click();
+
+                    const option = this.page.locator(`role=option[name="${field.value}"]`);
+                    await option.waitFor({ state: 'visible' });
+                    await option.click();
+
+                    // Ensure value is updated in trigger
+                    await expect(trigger.locator('span')).toHaveText(field.value);
+                    break;
+                }
                 case 'email':
                     await this.page.fill( field.selector, field.value );
                     break;
@@ -131,14 +144,30 @@ export class AdminSettingsPageNew extends AdminPage {
                     break;
                 case 'textarea':
                     await this.page.fill( field.selector, field.value );
-                    break;  
+                    break;
+                case 'textareaOld': {
+                    const frameHandle = this.page.frameLocator(field.selector);
+                    await frameHandle.locator('body').fill(field.value);
+                    break;
+                }
+                case 'radioLabel': {
+                    const optionLocator = this.page.locator(
+                        `${field.selector} div[role="radio"]`,
+                        { hasText: field.value }
+                    );
+                    await optionLocator.waitFor({ state: 'visible', timeout: 15000 });
+                    await optionLocator.click();
+                    break;
+                }
+
+                    break;
                 case 'color-picker': {
                     const picker = this.page.locator(field.selector);
                     await picker.click();
                     const input = picker.locator('input[type="text"]');
                     if (await input.count() > 0) {
                         await input.fill(field.value);
-                        await input.press('Enter'); 
+                        await input.press('Enter');
                     }
                     break;
                 }
@@ -214,7 +243,9 @@ export class AdminSettingsPageNew extends AdminPage {
                     break;
                 }
                 case 'textarea': {
-                    const value = await this.page.inputValue( field.selector );
+                    const editor = this.page.locator(field.selector).first();
+                    await editor.waitFor({ state: 'visible' });
+                    const value = await editor.innerText(); // use innerText for Quill editor
                     expect(value).toBe(field.value);
                     break;
                 }
@@ -225,6 +256,24 @@ export class AdminSettingsPageNew extends AdminPage {
                     expect(color).toBe(field.value);
                     break;
                 }
+                case 'textareaOld': {
+                    const frameHandle = this.page.frameLocator(field.selector);
+                    const textValue = await frameHandle.locator('body').innerText();
+                    expect(textValue.trim()).toBe(field.value);
+                    return;
+                }
+                case 'radioLabel': {
+                    // Locate the checked radio button within the container
+                    const selectedLocator = this.page.locator(
+                        `${field.selector} div[role="radio"][aria-checked="true"] h3`
+                    );
+                    await selectedLocator.waitFor({ state: 'visible', timeout: 15000 });
+
+                    const labelText = (await selectedLocator.innerText()).trim();
+                    expect(labelText).toBe(field.value);
+                    break;
+                }
+
             }
         }
     }

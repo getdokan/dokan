@@ -2,7 +2,6 @@ import { test } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
 import { data } from '@utils/testData';
-import { da } from '@faker-js/faker/.';
 
 const oldDataset = [
     {
@@ -37,17 +36,29 @@ const oldDataset = [
                 type: 'checkbox',
                 value: true,
             },  
-            // {
-            //     selector: '//input[@id="dokan_selling[enable_guest_user_enquiry]"]',
-            //     type: 'checkbox',
-            //     value: true,
-            // },
+            {
+                selector: '//label[@for="dokan_selling[enable_guest_user_enquiry]"]//label[@class="switch tips"]',
+                type: 'checkbox',
+                value: true,
+            },
             {
                 selector: '//label[@for="dokan_selling[catalog_mode_hide_add_to_cart_button]"]//label[@class="switch tips"]',
                 type: 'checkbox',
                 value: false,
             },
         ],
+    },
+    {
+        title: 'Admin Old Setting: Live Search',
+        url: 'wp-admin/admin.php?page=dokan#/settings',
+        selector: '//div[@class="nav-title" and contains(text(),"Live Search")]',
+        fields: [
+            {
+                selector: '//select[@id="dokan_live_search_setting[live_search_option]"]',
+                type: 'select',
+                value: 'suggestion_box', // Options: 'suggestion_box', 'old_live_search'
+            },
+        ]
     }
 ];
 
@@ -125,7 +136,7 @@ test.describe('Admin Setting: General -> marketplace', () => {
         }); 
     });
 
-        // Test for `General -> Marketplace -> Vendor Store URL` settings synchronization.
+    // Test for `General -> Marketplace -> Vendor Store URL` settings synchronization.
     test('Old to new General Settings synchronization', { tag: ['@lite', '@admin', '@migration'] }, async () => {
         await test.step('Update old settings', async () => {
             await adminSettingsPage.setSaveButtonSelector(adminSettingsPage.oldSaveButtonSelector);
