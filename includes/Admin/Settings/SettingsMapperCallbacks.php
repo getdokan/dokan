@@ -32,6 +32,8 @@ class SettingsMapperCallbacks implements Hookable {
         add_filter( 'dokan_settings_mapper_after_transform_new_to_old', [ $this, 'map_location_placement_new_to_old' ], 10, 2 );
         add_filter( 'dokan_settings_mapper_after_transform_old_to_new', [ $this, 'map_single_product_preview_old_to_new' ], 10, 2 );
         add_filter( 'dokan_settings_mapper_after_transform_new_to_old', [ $this, 'map_single_product_preview_new_to_old' ], 10, 2 );
+        add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_discount_edit_old_to_new' ], 10, 3 );
+        add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_discount_edit_new_to_old' ], 10, 3 );
     }
 
     /**
@@ -853,5 +855,64 @@ class SettingsMapperCallbacks implements Hookable {
         }
 
         return $result;
+
+    /**
+     * Function to map discount edit settings from old format to new format
+     *
+     * @param array $value
+     * @param string $old_key
+     * @param string $new_key
+     *
+     * @return array
+     */
+    public function map_discount_edit_old_to_new( $value, $old_key, $new_key ) {
+
+        if ( 'dokan_selling.discount_edit' !== $old_key || 'vendor.vendor_capabilities.vendor_capabilities.discount_settings' !== $new_key || is_null( $value ) ) {
+            return $value;
+        }
+
+        $mapped = [];
+
+        if ( is_array( $value ) ) {
+            foreach ( $value as $option_key => $option_value ) {
+                if ( ! empty( $option_value ) ) {
+                    // selected in old format
+                    $mapped[] = $option_key;
+                }
+            }
+        }
+
+        return $mapped; // may be empty
+    }
+
+    /**
+     * Function to map discount edit settings from new format to old format
+     *
+     * @param array $value
+     * @param string $old_key
+     * @param string $new_key
+     *
+     * @return array
+     */
+    public function map_discount_edit_new_to_old( $value, $old_key, $new_key ) {
+
+        if ( 'dokan_selling.discount_edit' !== $old_key || 'vendor.vendor_capabilities.vendor_capabilities.discount_settings' !== $new_key || is_null( $value ) ) {
+            return $value;
+        }
+
+        // Old keys must always exist
+        $old_value = [
+            'order-discount'   => '',
+            'product-discount' => '',
+        ];
+
+        if ( is_array( $value ) ) {
+            foreach ( $value as $option_key ) {
+                if ( isset( $old_value[ $option_key ] ) ) {
+                    $old_value[ $option_key ] = $option_key;
+                }
+            }
+        }
+        return $old_value;
     }
 }
