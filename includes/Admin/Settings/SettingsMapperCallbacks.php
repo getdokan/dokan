@@ -29,6 +29,8 @@ class SettingsMapperCallbacks implements Hookable {
         add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_after_grace_period_new_to_old' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_discount_edit_old_to_new' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_discount_edit_new_to_old' ], 10, 3 );
+        add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_shipping_status_list_old_to_new' ], 10, 3 );
+        add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_shipping_status_list_new_to_old' ], 10, 3 );
     }
 
     /**
@@ -544,4 +546,72 @@ class SettingsMapperCallbacks implements Hookable {
         }
         return $old_value;
     }
+
+    /**
+     * Function to map shipping status list from old format to new format
+     *
+     * @param array $value
+     * @param string $old_key
+     * @param string $new_key
+     *
+     * @return array
+     */
+    public function map_shipping_status_list_old_to_new( $value, $old_key, $new_key ) {
+        if ( 'dokan_shipping_status_setting.shipping_status_list' !== $old_key || 'shipment.shipment-setting-page.shipment-status.shipping_status_list' !== $new_key || is_null( $value ) ) {
+            return $value;
+        }
+
+        $new_value = [];
+
+        foreach ( (array) $value as $index => $item ) {
+            $new_item = [
+                'id'    => $item['id'] ?? '',
+                'order' => $index,
+                'title' => $item['value'] ?? '',
+            ];
+
+            // Map must_use → required
+            if ( isset( $item['must_use'] ) && $item['must_use'] ) {
+                $new_item['required'] = 1;
+            }
+
+            $new_value[] = $new_item;
+        }
+
+        return $new_value;
+    }
+
+    /**
+     * Function to map shipping status list from new format to old format
+     *
+     * @param array $value
+     * @param string $old_key
+     * @param string $new_key
+     *
+     * @return array
+     */
+    public function map_shipping_status_list_new_to_old( $value, $old_key, $new_key ) {
+        if ( 'shipment.shipment-setting-page.shipment-status.shipping_status_list' !== $new_key || 'dokan_shipping_status_setting.shipping_status_list' !== $old_key || is_null( $value ) ) {
+            return $value;
+        }
+
+        $old_value = [];
+        foreach ( (array) $value as $item ) {
+            $old_item = [
+                'id'    => $item['id'] ?? '',
+                'value' => $item['title'] ?? '',
+            ];
+
+            // required → must_use
+            if ( isset( $item['required'] ) && $item['required'] ) {
+                $old_item['must_use'] = true;
+                $old_item['desc']     = '(This is must use item)';
+            }
+
+            $old_value[] = $old_item;
+        }
+
+        return $old_value;
+    }
+
 }

@@ -111,7 +111,7 @@ class SettingsMapper {
         'dokan_shipping_status_setting.shipping_status_provider' => 'shipment.shipment-setting-page.shipment-provider',
         // Shipping Status (repeatable field in old UI maps to repeatable section in new UI)
         //'dokan_shipping_status_setting.shipment_status.shipping_status_list' => 'shipment.shipment-setting-page.shipment-settings.shipment-status.shipping_status_list',
-        //'dokan_shipping_status_setting.shipping_status_list' => 'shipment.shipment-setting-page.shipment-status.shipping_status_list',
+        'dokan_shipping_status_setting.shipping_status_list' => 'shipment.shipment-setting-page.shipment-status.shipping_status_list',
 
         // =========================
         // Moderation > RMA
