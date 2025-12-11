@@ -25,6 +25,8 @@ class SettingsMapperCallbacks implements Hookable {
         add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_vendor_extra_fields_new_to_old' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_customer_extra_fields_old_to_new' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_customer_extra_fields_new_to_old' ], 10, 3 );
+        add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_after_grace_period_old_to_new' ], 10, 3 );
+        add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_after_grace_period_new_to_old' ], 10, 3 );
     }
 
     /**
@@ -421,4 +423,64 @@ class SettingsMapperCallbacks implements Hookable {
         return $value;
     }
 
+    /**
+     * Function to map after grace period failed actions from old format to new format
+     *
+     * @param array $value
+     * @param string $old_key
+     * @param string $new_key
+     *
+     * @return array
+     */
+    public function map_after_grace_period_old_to_new( $value, $old_key, $new_key ) {
+
+        if ( 'dokan_reverse_withdrawal.failed_actions' !== $old_key || 'transaction.reverse_withdrawal.reverse_withdrawal_section.failed_actions' !== $new_key || is_null( $value ) ) {
+            return $value;
+        }
+
+        $mapped = [];
+
+        // old array always has keys, but values may be empty (unchecked)
+        foreach ( $value as $key => $val ) {
+            if ( ! empty( $val ) ) {     // selected only
+                $mapped[] = $key;
+            }
+        }
+
+        return $mapped;  // can be empty array
+    }
+
+    /**
+     * Function to map after grace period failed actions from new format to old format
+     *
+     * @param array $value
+     * @param string $old_key
+     * @param string $new_key
+     *
+     * @return array
+     */
+    public function map_after_grace_period_new_to_old( $value, $old_key, $new_key ) {
+
+        if ( 'dokan_reverse_withdrawal.failed_actions' !== $old_key || 'transaction.reverse_withdrawal.reverse_withdrawal_section.failed_actions' !== $new_key || is_null( $value ) ) {
+            return $value;
+        }
+
+        // old keys always exist
+        $old_value = [
+            'enable_catalog_mode' => '',
+            'hide_withdraw_menu'  => '',
+            'status_inactive'     => '',
+        ];
+
+        if ( is_array( $value ) ) {
+            foreach ( $value as $action ) {
+                // Only the selected items get filled on both sides
+                if ( isset( $old_value[ $action ] ) ) {
+                    $old_value[ $action ] = $action;
+                }
+            }
+        }
+        return $old_value;
+    }
 }
+
