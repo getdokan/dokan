@@ -9,7 +9,7 @@ const Table = ( { element }: { element: StatusElement } ) => {
         >
             <table className="dokan-status-table min-w-full">
                 { element.headers.length > 0 && (
-                    <thead className="bg-[#FDFDFD] border border-[#E9E9E9] rounded-t-[6px]"> 
+                    <thead className="bg-[#FDFDFD] border-b border-[#E9E9E9]"> 
                         <tr>
                             { element.headers.map( ( header: string ) => {
                                 return (
@@ -29,7 +29,7 @@ const Table = ( { element }: { element: StatusElement } ) => {
                         </tr>
                     </thead>
                 ) }
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white">
                     { ( element?.children || [] ).map( ( child ) => {
                         return (
                             <SettingsParser

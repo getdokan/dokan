@@ -9,7 +9,7 @@ const SubSection = ( { element }: { element: StatusElement } ) => {
                     { element.title }
                 </h4>
                 { element.description && (
-                    <p className="mt-4 max-w-[465px] text-xs text-[#828282] leading-[140%] ">
+                    <p className="mt-4 max-w-[465px] text-[12px] text-[#828282] leading-[140%] ">
                         { element.description }
                     </p>
                 ) }

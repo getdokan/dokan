@@ -5,7 +5,7 @@ import { RawHTML } from '@wordpress/element';
 const Heading = ( { element }: { element: StatusElement } ) => {
     return (
         <div
-            className="mb-8 ml-6" // Added bottom margin for spacing
+            className="mb-8 ml-5" // Added bottom margin for spacing
             data-hook={ element.hook_key }
         >
             <div className="md:flex md:items-start md:justify-between">

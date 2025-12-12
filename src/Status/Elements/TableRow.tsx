@@ -4,8 +4,7 @@ import SettingsParser from '../SettingsParser';
 const TableRow = ( { element }: { element: StatusElement } ) => {
     return (
         <tr 
-            // CHANGED: Lighter border. REMOVED px/py padding here (it belongs on the td)
-            className="border-b border-[#E9E9E9] last:border-0 transition-colors"
+            className="border-t border-[#E9E9E9] first:border-t-0 transition-colors bg-white"
             data-hook={ element.hook_key }
         >
             { ( element?.children || [] ).map( ( child ) => {
