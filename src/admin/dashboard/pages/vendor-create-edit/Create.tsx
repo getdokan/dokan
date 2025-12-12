@@ -88,7 +88,7 @@ function Create( props: any ) {
                     title: __( 'Vendor Added Successfully.', 'dokan-lite' ),
                 } );
 
-                navigate( `/vendors/edit/${ response?.id }` );
+                navigate( `/vendors` );
             } )
             .catch( async ( err ) => {
                 if ( err.message ) {
