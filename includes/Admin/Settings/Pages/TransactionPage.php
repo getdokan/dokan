@@ -123,6 +123,7 @@ class TransactionPage extends AbstractPage {
         // Create commission subpage
         $commission_page = ElementFactory::sub_page( 'commission' )
             ->set_title( esc_html__( 'Commissions', 'dokan-lite' ) )
+            ->set_description( esc_html__( 'Set up marketplace commission structure and earnings from vendor sales.', 'dokan-lite' ) )
             ->set_priority( 200 );
 
         // Create commission section
@@ -132,6 +133,7 @@ class TransactionPage extends AbstractPage {
             ->add(
                 ElementFactory::field( 'commission_type', 'radio_capsule' )
                     ->set_title( esc_html__( 'Commission Type', 'dokan-lite' ) )
+                    ->set_tooltip( esc_html__( 'Select a commission type', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Select a commission type for your marketplace', 'dokan-lite' ) )
                     ->add_option( esc_html__( 'Fixed', 'dokan-lite' ), 'fixed', 'Percent' )
                     ->add_option( esc_html__( 'Category Based', 'dokan-lite' ), 'category_based', 'Box' )
@@ -156,6 +158,7 @@ class TransactionPage extends AbstractPage {
             ->add(
                 ElementFactory::field( 'reset_sub_category_when_edit_all_category', 'switch' )
                     ->set_title( esc_html__( 'Apply Parent Category Commission to All Subcategories', 'dokan-lite' ) )
+                    ->set_tooltip( esc_html__( "When enabled, changing a parent category's commission rate will automatically update all its subcategories. Disable this option to maintain independent commission rates for subcategories", 'dokan-lite' ) )
                     ->set_description( esc_html__( "Important: 'All Categories' commission serves as your marketplace's default rate and cannot be empty. If 0 is given in value, then the marketplace will deduct no commission from vendors", 'dokan-lite' ) )
                     ->add_dependency( 'commission.commission.commission_type', 'category_based', true, 'display', 'hide', '!==' )
                     ->add_dependency( 'commission.commission.commission_type', 'category_based', true, 'display', 'show', '===' )
@@ -349,8 +352,8 @@ class TransactionPage extends AbstractPage {
                 ElementFactory::field( 'billing_type', 'radio_capsule' )
                     ->set_title( esc_html__( 'Billing Type', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Select how vendors will be billed for their reverse balance amounts.', 'dokan-lite' ) )
-                    ->add_option( esc_html__( 'By Amount Limit', 'dokan-lite' ), 'by_amount' )
-                    ->add_option( esc_html__( 'Monthly', 'dokan-lite' ), 'by_month' )
+                    ->add_option( esc_html__( 'By Amount Limit', 'dokan-lite' ), 'by_amount', 'DollarSign' )
+                    ->add_option( esc_html__( 'Monthly', 'dokan-lite' ), 'by_month', 'Calendar' )
                     ->set_default( 'by_amount' )
             )
             ->add(
