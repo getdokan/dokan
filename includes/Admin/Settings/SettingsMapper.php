@@ -111,7 +111,7 @@ class SettingsMapper {
         'dokan_shipping_status_setting.shipping_status_provider' => 'shipment.shipment-setting-page.shipment-provider',
         // Shipping Status (repeatable field in old UI maps to repeatable section in new UI)
         //'dokan_shipping_status_setting.shipment_status.shipping_status_list' => 'shipment.shipment-setting-page.shipment-settings.shipment-status.shipping_status_list',
-        //'dokan_shipping_status_setting.shipping_status_list' => 'shipment.shipment-setting-page.shipment-status.shipping_status_list',
+        'dokan_shipping_status_setting.shipping_status_list' => 'shipment.shipment-setting-page.shipment-status.shipping_status_list',
 
         // =========================
         // Moderation > RMA
@@ -137,7 +137,34 @@ class SettingsMapper {
 
         // Moderation > Report Abuse
         'dokan_report_abuse.reported_by_logged_in_users_only' => 'moderation.report_abuse.report_abuse_settings.report_abuse_reported_by',
-        'dokan_report_abuse.abuse_reasons'                    => 'moderation.report_abuse.reasons_for_abuse_reports.report_abuse_reasons',
+        'dokan_report_abuse.abuse_reasons'                    => 'moderation.report_abuse.report_abuse_settings.report_abuse_reasons',
+        //'dokan_rma.rma_reasons'                    => 'moderation.report_abuse.reasons_for_abuse_reports.report_abuse_reasons',
+
+        // =========================
+        // Delivery Time Settings
+        // =========================
+
+        // Main settings
+        'dokan_delivery_time.allow_vendor_override_settings' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.allow_vendor_override_settings',
+        'dokan_delivery_time.selection_required' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.selection_required',
+        'dokan_delivery_time.delivery_date_label' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_date_label',
+        'dokan_delivery_time.preorder_date' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.preorder_date',
+        'dokan_delivery_time.time_slot_minutes' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.time_slot_minutes',
+        'dokan_delivery_time.order_per_slot' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.order_per_slot',
+        'dokan_delivery_time.delivery_box_info' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_box_info',
+
+        // Delivery support (multicheck - needs special handling like shipping providers)
+        'dokan_delivery_time.delivery_support' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_support',
+        // 'dokan_delivery_time.delivery_support.store-pickup' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_support',
+
+        // Delivery days
+        'dokan_delivery_time.delivery_day_monday'    => 'shipment.dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule.monday',
+        'dokan_delivery_time.delivery_day_tuesday'   => 'shipment.dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule.tuesday',
+        'dokan_delivery_time.delivery_day_wednesday' => 'shipment.dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule.wednesday',
+        'dokan_delivery_time.delivery_day_thursday'  => 'shipment.dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule.thursday',
+        'dokan_delivery_time.delivery_day_friday'    => 'shipment.dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule.friday',
+        'dokan_delivery_time.delivery_day_saturday'  => 'shipment.dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule.saturday',
+        'dokan_delivery_time.delivery_day_sunday'    => 'shipment.dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule.sunday',
 
         // =========================
         // Delivery Time Settings
@@ -168,10 +195,11 @@ class SettingsMapper {
         // =========================
         // Transaction > Commissions
         // =========================
-        'dokan_selling.commission_type'                        => 'transaction.commission.commission.commission_type',
-        'dokan_selling.commission_fixed_values'                => 'transaction.commission.commission.admin_commission',
+        'dokan_selling.commission_type'                           => 'transaction.commission.commission.commission_type',
+        'dokan_selling.admin_percentage'                          => 'transaction.commission.commission.admin_commission.admin_percentage',
+        'dokan_selling.additional_fee'                            => 'transaction.commission.commission.admin_commission.additional_fee',
         'dokan_selling.reset_sub_category_when_edit_all_category' => 'transaction.commission.commission.reset_sub_category_when_edit_all_category',
-        'dokan_selling.commission_category_based_values'       => 'transaction.commission.commission.commission_category_based_values',
+        'dokan_selling.commission_category_based_values'          => 'transaction.commission.commission.commission_category_based_values',
 
         // Transaction > Fees
         'dokan_selling.shipping_fee_recipient'  => 'transaction.fees.fees.shipping_fee',
@@ -179,11 +207,15 @@ class SettingsMapper {
         'dokan_selling.shipping_tax_fee_recipient' => 'transaction.fees.fees.shipping_tax_fee',
 
         // Transaction > Withdraw
-        'dokan_withdraw.withdraw_limit'         => 'transaction.withdraw_charge.section_withdraw_charge.minimum_withdraw_limit',
-        'dokan_withdraw.withdraw_order_status'  => 'transaction.withdraw_charge.section_withdraw_charge.manual_withdraw',
-        'dokan_withdraw.exclude_cod_payment'    => 'transaction.withdraw_charge.section_withdraw_charge.cod_payments',
-        'dokan_withdraw.withdraw_date_limit'    => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_threshold',
-        'dokan_withdraw.hide_withdraw_option'   => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_option_visibility',
+        'dokan_withdraw.withdraw_limit'         => 'transaction.withdraw_charge.minimum_withdraw_limit_section.minimum_withdraw_limit',
+        'dokan_withdraw.withdraw_date_limit'    => 'transaction.withdraw_charge.withdraw_threshold_section.withdraw_threshold',
+        'dokan_withdraw.exclude_cod_payment'    => 'transaction.withdraw_charge.cod_payments_section.cod_payments',
+        
+        //'dokan_withdraw.withdraw_limit'         => 'transaction.withdraw_charge.section_withdraw_charge.minimum_withdraw_limit_section.minimum_withdraw_limit',
+        // 'dokan_withdraw.withdraw_order_status'  => 'transaction.withdraw_charge.section_withdraw_charge.manual_withdraw',
+        // 'dokan_withdraw.exclude_cod_payment'    => 'transaction.withdraw_charge.section_withdraw_charge.cod_payments',
+        // 'dokan_withdraw.withdraw_date_limit'    => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_threshold',
+        // 'dokan_withdraw.hide_withdraw_option'   => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_option_visibility',
 
         // Transaction > Reverse Withdrawal
         'dokan_reverse_withdrawal.enabled'                   => 'transaction.reverse_withdrawal.reverse_withdrawal_section.enabled',

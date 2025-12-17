@@ -27,7 +27,7 @@ export default function DokanTextField( { element } ) {
                         title={ element.title }
                         titleFontWeight="bold"
                         helperText={ element.description }
-                        tooltip={ element.helper_text }
+                        tooltip={ element.tooltip }
                         imageUrl={ element?.image_url }
                         wrapperClassNames={ 'w-full' }
                     />

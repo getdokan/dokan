@@ -105,7 +105,7 @@ class Settings {
      *
      * @throws \Exception
      */
-    public function save( array $data ): void {
+    public function save( array $data, bool $save_old = true ): void {
         // Mirror new settings saves back to legacy options as well.
         $transformer = new LegacyTransformer();
 
@@ -115,6 +115,10 @@ class Settings {
             if ( isset( $data[ $page_id ] ) ) {
                 // Save into the new storage for this page
                 $page->save( $data[ $page_id ] );
+
+                if ( ! $save_old ) {
+                    continue;
+                }
 
                 // Also update corresponding legacy options using the mapper/transformer
                 $legacy = $transformer->transform(

@@ -18,10 +18,9 @@ function RequestList( {
     loading: boolean;
 } ) {
     const defaultLayouts = {
-        table: {},
+        table: { density: 'comfortable' },
         grid: {},
         list: {},
-        density: 'comfortable', // Use density pre-defined values: comfortable, compact, cozy
     };
 
     const allStatus = {
@@ -154,10 +153,9 @@ function RequestList( {
             ? [
                   {
                       id: 'withdraw-cancel',
-                      label: '',
                       isPrimary: true,
                       isEligible: () => status === 'pending',
-                      icon: () => {
+                      label: () => {
                           return (
                               <div>
                                   { loading ? (
