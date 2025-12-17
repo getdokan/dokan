@@ -857,6 +857,7 @@ class SettingsMapperCallbacks implements Hookable {
         }
 
         return $result;
+    }
 
     /**
      * Function to map discount edit settings from old format to new format
