@@ -89,6 +89,18 @@ const oldDataset = [
             { selector: shippingProviderLocatorsOld.other,              type: 'checkbox', value: true },
         ],
     },
+    {
+        title: 'Admin Old Settings: General',
+        url: 'wp-admin/admin.php?page=dokan#/settings',
+        selector: '//div[@class="nav-title" and contains(text(),"General")]',
+        fields: [
+            {
+                selector: '//label[@for="dokan_general[enable_shipstation_logging]"]//label[@class="switch tips"]',
+                type: 'checkbox',
+                value: true,
+            },
+        ],
+    }
 ];
 
 const newDataset = {
@@ -120,6 +132,7 @@ const newDataset = {
         { selector: shippingProviderLocators.usps,               type: 'switch', value: true },
         { selector: shippingProviderLocators.dhlUs,              type: 'switch', value: true },
         { selector: shippingProviderLocators.other,              type: 'switch', value: true },
+        // Shipment status field will be checked manually.
     ],
 };
 

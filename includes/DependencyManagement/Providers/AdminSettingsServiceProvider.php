@@ -11,6 +11,7 @@ use WeDevs\Dokan\Admin\Settings\Pages\AIAssistPage;
 use WeDevs\Dokan\Admin\Settings\Pages\ModerationPage;
 use WeDevs\Dokan\Admin\Settings\Pages\CompliancePage;
 use WeDevs\Dokan\Admin\Settings\Settings;
+use WeDevs\Dokan\Admin\Settings\SettingsMapperCallbacks;
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
 
 class AdminSettingsServiceProvider extends BaseServiceProvider {
@@ -24,6 +25,7 @@ class AdminSettingsServiceProvider extends BaseServiceProvider {
      */
     protected $services = [
         Settings::class,
+        SettingsMapperCallbacks::class,
         GeneralPage::class,
         ProductPage::class,
         AppearancePage::class,
