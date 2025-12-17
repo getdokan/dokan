@@ -86,6 +86,7 @@ class VendorPage extends AbstractPage {
             ->add(
                 ElementFactory::field( 'enable_selling', 'radio_capsule' )
                     ->set_title( esc_html__( 'Enable Selling', 'dokan-lite' ) )
+                    ->set_tooltip( esc_html__( 'If checked, vendors will have permission to sell immediately after registration. If unchecked, newly registered vendors cannot add products until selling capability is activated manually from admin dashboard.', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Immediately enable selling for newly registered vendors.', 'dokan-lite' ) )
                     ->add_option( esc_html__( 'Automatically', 'dokan-lite' ), 'automatically' )
                     ->add_option( esc_html__( 'Manually', 'dokan-lite' ), 'manually' )
@@ -104,7 +105,7 @@ class VendorPage extends AbstractPage {
         $vendor_capabilities_page = ElementFactory::sub_page( 'vendor_capabilities' )
             ->set_title( esc_html__( 'Vendor Capabilities', 'dokan-lite' ) )
             ->set_priority( 300 )
-            ->set_description( esc_html__( 'Configure what vendors can do in your marketplace.', 'dokan-lite' ) );
+            ->set_description( esc_html__( 'Configure what vendors can do and control within your marketplace.', 'dokan-lite' ) );
 
         // Create a single section for all vendor capabilities
         $vendor_capabilities_section = ElementFactory::section( 'vendor_capabilities' );
@@ -114,6 +115,7 @@ class VendorPage extends AbstractPage {
             ->add(
                 ElementFactory::field( 'one_page_creation', 'switch' )
                     ->set_title( esc_html__( 'One Page Product Creation', 'dokan-lite' ) )
+                    ->set_tooltip( esc_html__( 'If disabled, instead of a single add product page it will open a pop up window or vendor will redirect to product page when adding new product.', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Add new product in single page view.', 'dokan-lite' ) )
                     ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'on' )
                     ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), 'off' )
@@ -122,6 +124,7 @@ class VendorPage extends AbstractPage {
             ->add(
                 ElementFactory::field( 'product_popup', 'switch' )
                     ->set_title( esc_html__( 'Product Popup', 'dokan-lite' ) )
+                    ->set_tooltip( esc_html__( 'If disabled, instead of a pop up window vendor will redirect to product page when adding new product.', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Add new product in popup view.', 'dokan-lite' ) )
                     ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'on' )
                     ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), 'off' )
@@ -132,6 +135,7 @@ class VendorPage extends AbstractPage {
             ->add(
                 ElementFactory::field( 'order_status_change', 'switch' )
                     ->set_title( esc_html__( 'Order Status Change', 'dokan-lite' ) )
+                    ->set_tooltip( esc_html__( 'Checking this will enable sellers to change the order status. If unchecked, only admin can change the order status.', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Allow vendor to update order status.', 'dokan-lite' ) )
                     ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'on' )
                     ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), 'off' )

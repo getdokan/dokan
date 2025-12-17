@@ -9,7 +9,7 @@ import { da } from '@faker-js/faker/.';
 // Old UI Email Verification Settings
 const oldDataset = [
     {
-        title: 'Admin Old Setting: Menu Manager',
+        title: 'Admin Old Setting: Email Verification',
         url: 'wp-admin/admin.php?page=dokan#/settings', 
         selector: '//div[@class="nav-title" and contains(text(),"General")] >> //div[@class="nav-title" and contains(text(),"Email Verification")]', 
         fields: [

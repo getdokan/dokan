@@ -45,19 +45,19 @@ export class AdminSettingsPageNew extends AdminPage {
     async checkSettings( dataSet: any ) {
         await this.goIfNotThere(dataSet.url)
         await this.waitForLoadState();
-        
+
         // Navigate through selectors if provided
         if (dataSet.selector) {
             await this.navigateThroughSelectors(dataSet.selector);
         }
-        
+
         await this.assertFieldValues( dataSet.fields );
     }
 
     async saveSettings() {
         const saveBtn = this.page.locator(this.saveButtonSelector);
         try{
-            await saveBtn.waitFor({ state: 'visible', timeout: 8000 }); 
+            await saveBtn.waitFor({ state: 'visible', timeout: 8000 });
             await saveBtn.click();
             await this.waitForLoadState();
         } catch (error) {
@@ -152,14 +152,14 @@ export class AdminSettingsPageNew extends AdminPage {
                 }
                 case 'radioLabel': {
                     const optionLocator = this.page.locator(
-                        `${field.selector} div[role="radio"]`, 
+                        `${field.selector} div[role="radio"]`,
                         { hasText: field.value }
                     );
                     await optionLocator.waitFor({ state: 'visible', timeout: 15000 });
                     await optionLocator.click();
                     break;
                 }
-               case 'checkbox-switch': {
+                case 'checkbox-switch': {
                     const locator = this.page.locator(field.selector);
                     const isChecked = await locator.isChecked(); // get current state
                     if (isChecked !== field.value) {            // only toggle if different
@@ -167,6 +167,16 @@ export class AdminSettingsPageNew extends AdminPage {
                     }
                     break;
                 }    
+                case 'color-picker': {
+                    const picker = this.page.locator(field.selector);
+                    await picker.click();
+                    const input = picker.locator('input[type="text"]');
+                    if (await input.count() > 0) {
+                        await input.fill(field.value);
+                        await input.press('Enter');
+                    }
+                    break;
+                }
             }
         }
     }
@@ -243,6 +253,13 @@ export class AdminSettingsPageNew extends AdminPage {
                     await editor.waitFor({ state: 'visible' });
                     const value = await editor.innerText(); // use innerText for Quill editor
                     expect(value).toBe(field.value);
+                    break;
+                }
+                case 'color-picker': {
+                    const color = await this.page.locator(field.selector).evaluate(el => {
+                        return getComputedStyle(el).backgroundColor;
+                    });
+                    expect(color).toBe(field.value);
                     break;
                 }
                 case 'textareaOld': {

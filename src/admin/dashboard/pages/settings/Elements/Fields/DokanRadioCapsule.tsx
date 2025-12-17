@@ -20,7 +20,7 @@ export default function DokanRadioCapsule( { element } ) {
                 title={ element.title }
                 titleFontWeight="bold"
                 helperText={ element.description }
-                tooltip={ element.helper_text }
+                tooltip={ element?.tooltip ?? ''}
                 imageUrl={ element?.image_url }
             />
             <BaseRadioCapsule

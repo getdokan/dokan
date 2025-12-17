@@ -19,7 +19,7 @@ export default function DokanShowHideField( { element } ) {
                     <DokanFieldLabel
                         title={ element.title }
                         helperText={ element.description }
-                        tooltip={ element.helper_text }
+                        tooltip={ element.tooltip }
                         titleFontWeight="bold"
                         imageUrl={ element?.image_url }
                     />

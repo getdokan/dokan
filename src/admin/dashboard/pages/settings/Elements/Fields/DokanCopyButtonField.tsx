@@ -11,7 +11,7 @@ export default function DokanCopyButtonField( { element } ) {
                 <DokanFieldLabel
                     title={ element.title }
                     helperText={ element.description }
-                    tooltip={ element.help_text }
+                    tooltip={ element.tooltip }
                     titleFontWeight="bold"
                     imageUrl={ element?.image_url }
                 />

@@ -24,11 +24,11 @@ const oldDataset = [
                 type: 'text',
                 value: 'Other Available Vendor---'
             },
-            // { //Mapping issue found. Neeed to fix then verify
-            //     selector: '//select[@id="dokan_spmv[available_vendor_list_position]"]',
-            //     type: 'select',
-            //     value: 'below_tabs'
-            // },
+            {
+                selector: '//select[@id="dokan_spmv[available_vendor_list_position]"]',
+                type: 'select',
+                value: 'below_tabs'
+            },
             {
                 selector: '//select[@id="dokan_spmv[show_order]"]',
                 type: 'select',

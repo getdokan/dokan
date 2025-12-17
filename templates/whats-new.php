@@ -4,6 +4,46 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.1.5',
+        'released' => '2025-11-11',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Added vendor verification legacy UI support for admin panel to ensure backward compatibility with older interface versions.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated all Twitter labels to X to reflect the latest brand changes.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added custom store URL validation in admin settings to prevent conflicts with WordPress search functionality.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed PHP warnings triggered when saving variable products by improving validation and data handling during product save operations.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.1.4',
+        'released' => '2025-11-06',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Added validation for the `section` parameter in `Admin Settings` to prevent unauthorized or unintended option updates.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Strengthened nonce handling for limited-time promotional notices by changing the action from `dokan_admin` to `dokan_promotional_notice` for improved consistency and isolation.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.1.3',
         'released' => '2025-10-28',
         'changes'  => [

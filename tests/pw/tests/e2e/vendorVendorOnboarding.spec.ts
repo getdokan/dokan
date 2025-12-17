@@ -72,7 +72,7 @@ const newDataset = {
             type: 'switch',
             value: true,
         },
-        // {
+        // { // This field should be test manually
         //     selector: '#dokan_settings_vendor_vendor_onboarding_vendor_setup_wizard_logo input[name="dokan-file-upload-url"]',
         //     type: 'text',
         //     value: '',

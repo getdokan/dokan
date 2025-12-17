@@ -127,7 +127,7 @@ class Settings {
         $settings = [];
 
         // Ensure new settings are populated from legacy if currently blank
-        $this->ensure_new_settings_populated_from_legacy();
+        //$this->ensure_new_settings_populated_from_legacy();
 
         // Build legacy-style values from the new settings storage.
         $legacy_from_new = $this->get_legacy_values_from_new();
@@ -138,7 +138,7 @@ class Settings {
             $new_mapped       = isset( $legacy_from_new[ $legacy_option_id ] ) && is_array( $legacy_from_new[ $legacy_option_id ] ) ? $legacy_from_new[ $legacy_option_id ] : [];
 
             // Prefer new mapped values and fall back to existing legacy options for unmapped fields.
-            $merged = array_merge( $old_stored, $new_mapped );
+            $merged = array_replace_recursive( $old_stored, $new_mapped );
 
             $settings[ $legacy_option_id ] = apply_filters( 'dokan_get_settings_values', $merged, $legacy_option_id );
         }
@@ -176,7 +176,11 @@ class Settings {
                 throw new DokanException( 'dokan_settings_error_saving', __( '`section` parameter is required.', 'dokan-lite' ), 400 );
             }
 
-            $option_name  = sanitize_text_field( wp_unslash( $_POST['section'] ) );
+            $option_name = sanitize_text_field( wp_unslash( $_POST['section'] ) );
+            // validate and sanitize option name to avoid any unwanted option update
+            if ( ! in_array( $option_name, wp_list_pluck( $this->get_settings_sections(), 'id' ), true ) ) {
+                throw new DokanException( 'dokan_settings_invalid_section', __( 'Invalid section name.', 'dokan-lite' ), 400 );
+            }
             $option_value = $this->sanitize_options( wp_unslash( $_POST['settingsData'] ), 'edit' ); // phpcs:ignore
             $option_value = apply_filters( 'dokan_save_settings_value', $option_value, $option_name );
 
@@ -191,12 +195,35 @@ class Settings {
 
             // Transform legacy section values to new settings storage and save
             $transformer = new LegacyTransformer();
-            $new_data    = $transformer->transform( [ 'from' => 'old', 'data' => [ $option_name => $option_value ] ] );
+            $new_data    = $transformer->transform(
+                [
+					'from' => 'old',
+					'data' => [ $option_name => $option_value ],
+				]
+            );
 
             if ( ! empty( $new_data ) ) {
                 /** @var NewAdminSettingsManager $settings_manager */
                 $settings_manager = dokan_get_container()->get( NewAdminSettingsManager::class );
-                $settings_manager->save( $new_data );
+
+                array_walk(
+                    $new_data,
+                    function ( &$fields, $page_id ) {
+                        if ( ! is_array( $fields ) ) {
+                            return;
+                        }
+
+                        $existing = get_option( 'dokan_settings_' . $page_id, [] );
+
+                        if ( ! is_array( $existing ) ) {
+                            $existing = [];
+                        }
+
+                        $fields = array_replace_recursive( $existing, $fields );
+                    }
+                );
+
+                $settings_manager->save( $new_data, false );
 
                 // Fallback: if pages are not registered/available, write directly to new storage options
                 $available_ids = [];
@@ -469,12 +496,13 @@ class Settings {
                     'default' => 'on',
                 ],
                 'custom_store_url'       => [
-                    'name'    => 'custom_store_url',
-                    'label'   => __( 'Vendor Store URL', 'dokan-lite' ),
+                    'name'              => 'custom_store_url',
+                    'label'             => __( 'Vendor Store URL', 'dokan-lite' ),
                     /* translators: %s: store url */
-                    'desc'    => sprintf( __( 'Define the vendor store URL (%s<strong>[this-text]</strong>/[vendor-name])', 'dokan-lite' ), site_url( '/' ) ),
-                    'default' => 'store',
-                    'type'    => 'text',
+                    'desc'              => sprintf( __( 'Define the vendor store URL (%s<strong>[this-text]</strong>/[vendor-name])', 'dokan-lite' ), site_url( '/' ) ),
+                    'default'           => 'store',
+                    'type'              => 'text',
+                    'sanitize_callback' => [ $this, 'sanitize_custom_store_url' ],
                 ],
                 'setup_wizard_logo_url'  => [
                     'name'  => 'setup_wizard_logo_url',
@@ -1187,6 +1215,41 @@ class Settings {
     }
 
     /**
+     * Sanitize custom store URL to prevent reserved WordPress keywords
+     *
+     * @since 4.1.5
+     *
+     * @param string $value The custom store URL value
+     *
+     * @return string
+     * @throws DokanException
+     */
+    public function sanitize_custom_store_url( $value ) {
+        $value = sanitize_text_field( $value );
+
+        if ( empty( $value ) ) {
+            return $value;
+        }
+
+        $reserved_slugs = dokan_get_reserved_url_slugs();
+
+        // Check if the value is in the reserved slugs list.
+        if ( in_array( $value, $reserved_slugs, true ) ) {
+            throw new DokanException(
+                'dokan_reserved_slug_error',
+                sprintf(
+                    /* translators: %s: the reserved slug */
+                    esc_html__( 'The store URL "%s" is reserved by WordPress and cannot be used. Please choose a different value like "store".', 'dokan-lite' ),
+                    esc_html( $value )
+                ),
+                400
+            );
+        }
+
+        return $value;
+    }
+
+    /**
      * Get values from the new settings storage across all pages.
      *
      * @since 4.0.0
@@ -1285,9 +1348,9 @@ class Settings {
                 if ( ! is_array( $existing ) ) {
                     $existing = [];
                 }
-                $wrapped    = [ $page_id => $page_values ];
+                $wrapped = [ $page_id => $page_values ];
                 // Merge so we don't drop any pre-existing values.
-                $merged     = array_replace_recursive( $existing, $wrapped );
+                $merged = array_replace_recursive( $existing, $wrapped );
                 update_option( $storage_key, $merged );
             }
         }
