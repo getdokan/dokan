@@ -273,6 +273,12 @@ export class AdminSettingsPageNew extends AdminPage {
                     expect(labelText).toBe(field.value);
                     break;
                 }
+                case 'checkbox-switch': {
+                    const locator = this.page.locator(field.selector);
+                    const isChecked = await locator.isChecked();
+                    expect(isChecked).toBe(field.value);
+                    break;
+                }
 
             }
         }
