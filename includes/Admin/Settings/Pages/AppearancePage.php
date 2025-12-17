@@ -91,7 +91,7 @@ class AppearancePage extends AbstractPage {
                         ElementFactory::section( 'products_page' )
                             ->add(
                                 ElementFactory::field( 'store_product_per_page', 'number' )
-                                    ->set_title( esc_html__( 'Products Per Page', 'dokan-lite' ) )
+                                    ->set_title( esc_html__( 'Store Products Per Page', 'dokan-lite' ) )
                                     ->set_description(
                                         esc_html__(
                                             'Set how many products to display per page on the
@@ -102,7 +102,7 @@ vendor store page.', 'dokan-lite'
                                     ->set_placeholder( esc_html__( 'Products Per Page', 'dokan-lite' ) )
                                     ->set_minimum( 1 )
                                     ->set_step( 1 )
-                                    ->set_helper_text( esc_html__( 'Set the number of products to display per page on the vendor store page.', 'dokan-lite' ) )
+                                    ->set_tooltip( esc_html__( 'Set the number of products to display per page on the vendor store page.', 'dokan-lite' ) )
                             )
                     )
                     ->add(
@@ -115,7 +115,7 @@ vendor store page.', 'dokan-lite'
                                             ->set_description(
                                                 sprintf(
                                                     /* translators: 1. Link to Google reCaptcha */
-                                                    esc_html__( 'Connect to enable spam protection that works automatically in the background. %1$sGet Help%2$s', 'dokan-lite' ),
+                                                    esc_html__( 'Connect to enable spam protection that works automatically in the background %1$sGet Help%2$s', 'dokan-lite' ),
                                                     '<a href="https://www.google.com/recaptcha/about/" target="_blank" rel="noopener noreferrer">',
                                                     '</a>'
                                                 )
@@ -123,6 +123,7 @@ vendor store page.', 'dokan-lite'
                                             ->set_default( 'off' )
                                             ->set_enable_state( esc_html__( 'Enable', 'dokan-lite' ), 'on' )
                                             ->set_disable_state( esc_html__( 'Disable', 'dokan-lite' ), 'off' )
+                                            ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/social-onboarding/google.svg' )
                                     )
                                     ->add(
                                         ElementFactory::field( 'recaptcha_info', 'info' )

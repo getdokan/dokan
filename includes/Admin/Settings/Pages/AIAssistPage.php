@@ -129,7 +129,7 @@ class AIAssistPage extends AbstractPage {
                             ->add(
                                 ElementFactory::field( 'openai_api_key', 'show_hide' )
                                     ->set_title( esc_html__( 'API Key', 'dokan-lite' ) )
-                                    ->set_description( esc_html__( 'Enter your OpenAI API key for content generation.', 'dokan-lite' ) )
+                                    ->set_tooltip( __( 'Enter your OpenAI API key for content generation.', 'dokan-lite' ) )
                                     ->set_placeholder( esc_html__( 'Enter your OpenAI API key', 'dokan-lite' ) )
                                     ->add_dependency( 'product_info_engine', 'chatgpt', true, 'display', 'show', '===' )
                             )
@@ -176,16 +176,10 @@ class AIAssistPage extends AbstractPage {
                                 ElementFactory::field( 'leonardo_api_info', 'base_field_label' )
                                     ->set_title( esc_html__( 'Leonardo AI API', 'dokan-lite' ) )
                                     ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/ai-assist/leonardo-ai-thumbnail.svg' )
-                                    ->set_description( esc_html__( 'Connect to your Leonardo AI account with your website.', 'dokan-lite' ) )
-                                    ->add_dependency( 'product_image_engine', 'leonardo', true, 'display', 'show', '===' )
-                            )
-                            ->add(
-                                ElementFactory::field( 'leonardo_api_notice', 'info' )
-                                    ->set_title( esc_html__( 'You can get your API Keys in your Leonardo AI account', 'dokan-lite' ) )
                                     ->set_description(
                                         sprintf(
                                             /* translators: 1. Link start tag, 2. Link end tag */
-                                            esc_html__( 'Access your Leonardo AI dashboard to generate API keys for integration. %1$sGet Help%2$s', 'dokan-lite' ),
+                                            esc_html__( 'Connect to your Leonardo AI account with your website. %1$sGet Help%2$s', 'dokan-lite' ),
                                             '<a href="https://wedevs.com/docs/dokan-lite/leonardo-integration/" target="_blank" rel="noopener noreferrer">',
                                             '</a>'
                                         )
@@ -193,9 +187,16 @@ class AIAssistPage extends AbstractPage {
                                     ->add_dependency( 'product_image_engine', 'leonardo', true, 'display', 'show', '===' )
                             )
                             ->add(
+                                ElementFactory::field( 'leonardo_api_notice', 'info' )
+                                    ->set_title( esc_html__( 'You can get your API Keys in your', 'dokan-lite' ) )
+                                    ->set_link_text( esc_html__( 'Leonardo AI Account', 'dokan-lite' ) )
+                                    ->set_link_url( 'https://leonardo.ai' )
+                                    ->add_dependency( 'product_image_engine', 'leonardo', true, 'display', 'show', '===' )
+                            )
+                            ->add(
                                 ElementFactory::field( 'leonardo_api_key', 'show_hide' )
                                     ->set_title( esc_html__( 'API Key', 'dokan-lite' ) )
-                                    ->set_description( esc_html__( 'Enter your Leonardo AI API key for image generation.', 'dokan-lite' ) )
+                                    ->set_tooltip( __( 'Enter your Leonardo AI API key for image generation.', 'dokan-lite' ) )
                                     ->set_placeholder( esc_html__( 'Enter your Leonardo AI API key', 'dokan-lite' ) )
                                     ->add_dependency( 'product_image_engine', 'leonardo', true, 'display', 'show', '===' )
                             )

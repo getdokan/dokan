@@ -218,7 +218,13 @@ class GeneralPage extends AbstractPage {
                                     ->add(
                                         ElementFactory::field( 'google_map_base', 'base_field_label' )
                                             ->set_title( esc_html__( 'Google Map API Key', 'dokan-lite' ) )
-                                            ->set_description( esc_html__( 'Enter your Google Maps API key to enable map functionality.', 'dokan-lite' ) )
+                                            ->set_description(
+                                                sprintf(
+                                                    __( '<a href="%s" target="_blank" rel="noopener noreferrer">API Key</a> is needed to display map on store page.', 'dokan-lite' ),
+                                                    'https://developers.google.com/maps/documentation/javascript/'
+                                                )
+                                            )
+                                            ->set_tooltip( __( 'Insert Google API Key (with hyperlink) to display store map.', 'dokan-lite' ) )
                                     )
                                     ->add(
                                         ElementFactory::field( 'google_map_api_key', 'show_hide' )
