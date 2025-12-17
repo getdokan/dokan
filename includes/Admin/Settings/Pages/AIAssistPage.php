@@ -79,7 +79,7 @@ class AIAssistPage extends AbstractPage {
             ->set_title( esc_html__( 'Content Generation', 'dokan-lite' ) )
             ->set_priority( 100 )
             ->set_description( esc_html__( 'Set up AI to elevate your platform with enhanced capabilities.', 'dokan-lite' ) )
-            ->set_doc_link( 'https://wedevs.com/docs/dokan-lite/ai-assist/' )
+            ->set_doc_link( 'https://dokan.co/docs/wordpress/settings/dokan-ai-assistant/' )
             ->add(
                 ElementFactory::section( 'product_image_section' )
                     ->add(
