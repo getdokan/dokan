@@ -392,10 +392,11 @@ const DokanRepeater = ( { element }: SettingsProps ) => {
         <>
             <div className="dokan-repeater-field w-full">
                 <DokanFieldLabel
-                    titleFontWeight="light"
-                    wrapperClassNames={ element.title ? 'p-4' : '' }
+                    titleFontWeight="bold"
+                    wrapperClassNames={ element.title ? 'w-full max-w-full p-4 border-b border-gray-200' : '' }
                     title={ element.title || '' }
                     helperText={ element.description }
+                    tooltip={ element?.tooltip ?? '' }
                     imageUrl={ element?.image_url }
                 />
 

@@ -109,6 +109,7 @@ const DokanBaseRadioCapsule = ( {
             { options?.map( ( option, index ) => (
                 <button
                     key={ option?.value }
+                    name={ option?.value }
                     ref={ ( el ) => ( buttonRefs.current[ index ] = el ) }
                     type="button"
                     role="radio"

@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Admin\Settings\Pages;
 
 use WeDevs\Dokan\Admin\Settings\Elements\ElementFactory;
+use WeDevs\Dokan\Admin\Settings;
 
 class CompliancePage extends AbstractPage {
 
@@ -78,6 +79,15 @@ class CompliancePage extends AbstractPage {
      * @return void
      */
     public function describe_settings(): void {
+        $legacy_settings = dokan_get_container()->get( Settings::class );
+        $pages_array = $legacy_settings->get_post_type( 'page' );
+        $options = [];
+        foreach ( $pages_array as $key => $label ) {
+            $options[] = [
+                'title' => $label,
+                'value' => $key,
+            ];
+        }
         // Create Privacy subpage
         $privacy_page = ElementFactory::sub_page( 'privacy' )
             ->set_priority( 100 )
@@ -106,10 +116,7 @@ class CompliancePage extends AbstractPage {
                 ->set_title( esc_html__( 'Privacy Policy Page', 'dokan-lite' ) )
                 ->set_description( esc_html__( 'Choose which page displays your privacy policy', 'dokan-lite' ) )
                 ->set_placeholder( esc_html__( 'Select a page', 'dokan-lite' ) )
-                ->add_option( esc_html__( 'Privacy Policy', 'dokan-lite' ), 'privacy-policy' )
-                ->add_option( esc_html__( 'Terms of Service', 'dokan-lite' ), 'terms-of-service' )
-                ->add_option( esc_html__( 'Legal Information', 'dokan-lite' ), 'legal-information' )
-                ->set_default( 'privacy-policy' )
+                ->set_options( $options )
         );
 
         // Create Privacy Policy Content section
