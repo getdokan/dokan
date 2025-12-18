@@ -70,7 +70,7 @@ const newDataset = {
         {
             selector: '#dokan_settings_vendor_vendor_onboarding_welcome_wizard button[role="switch"]',
             type: 'switch',
-            value: true,
+            value: false, // Note: Inverted value compared to old setting
         },
         // { // This field should be test manually
         //     selector: '#dokan_settings_vendor_vendor_onboarding_vendor_setup_wizard_logo input[name="dokan-file-upload-url"]',
