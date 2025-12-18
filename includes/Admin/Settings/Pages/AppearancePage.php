@@ -197,29 +197,33 @@ vendor store page.', 'dokan-lite'
                                 ElementFactory::field( 'store_template', 'customize_radio' )
                                     ->set_title( esc_html__( 'Store Header Template', 'dokan-lite' ) )
                                     ->set_description( esc_html__( 'Select a store header for your store.', 'dokan-lite' ) )
-                                    ->set_default( 'template-1' )
+                                    ->set_default( 'default' )
                                     ->add_enhanced_option(
                                         [
                                             'title'       => esc_html__( 'Template 1', 'dokan-lite' ),
-                                            'value'       => 'template-1',
-                                            'description' => esc_html__( 'A clean and modern template with a focus on product display.', 'dokan-lite' ),
+                                            'value'       => 'default',
                                             'image'       => DOKAN_PLUGIN_ASSEST . '/src/images/store/store-page-template-one.svg',
                                         ]
                                     )
                                     ->add_enhanced_option(
                                         [
                                             'title'       => esc_html__( 'Template 2', 'dokan-lite' ),
-                                            'value'       => 'template-2',
-                                            'description' => esc_html__( 'A stylish template with emphasis on vendor branding.', 'dokan-lite' ),
-                                            'image'       => DOKAN_PLUGIN_ASSEST . '/src/images/store/store-page-template-one.svg',
+                                            'value'       => 'layout1',
+                                            'image'       => DOKAN_PLUGIN_ASSEST . '/src/images/store/store-page-template-two.svg',
                                         ]
                                     )
                                     ->add_enhanced_option(
                                         [
                                             'title'       => esc_html__( 'Template 3', 'dokan-lite' ),
-                                            'value'       => 'template-3',
-                                            'description' => esc_html__( 'A minimalistic template for a sleek shopping experience.', 'dokan-lite' ),
-                                            'image'       => DOKAN_PLUGIN_ASSEST . '/src/images/store/store-page-template-one.svg',
+                                            'value'       => 'layout2',
+                                            'image'       => DOKAN_PLUGIN_ASSEST . '/src/images/store/store-page-template-three.svg',
+                                        ]
+                                    )
+                                    ->add_enhanced_option(
+                                        [
+                                            'title'       => esc_html__( 'Template 4', 'dokan-lite' ),
+                                            'value'       => 'layout3',
+                                            'image'       => DOKAN_PLUGIN_ASSEST . '/src/images/store/store-page-template-four.svg',
                                         ]
                                     )
                                     ->set_variant( 'template' )
