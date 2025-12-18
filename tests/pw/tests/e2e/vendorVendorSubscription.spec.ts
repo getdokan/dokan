@@ -75,26 +75,6 @@ const newDataset = {
             type: 'radio',
             value: 'true',
         },
-        {
-            selector: '#dokan_settings_vendor_vendor_subscription_vendor_subscription_cancelling_email_subject textarea',
-            type: 'text',
-            value: 'Subscription Package Cancel notification.',
-        },
-        {
-            selector: '#dokan_settings_vendor_vendor_subscription_vendor_subscription_cancelling_email_body textarea',
-            type: 'text',
-            value: 'Dear subscriber, Your subscription has expired. Please renew your package to continue using it.',
-        },
-        {
-            selector: '#dokan_settings_vendor_vendor_subscription_vendor_subscription_alert_email_subject textarea',
-            type: 'text',
-            value: 'Subscription Ending Soon',
-        },
-        {
-            selector: '#dokan_settings_vendor_vendor_subscription_vendor_subscription_alert_email_body textarea',
-            type: 'text',
-            value: 'Dear subscriber, Your subscription will be ending soon. Please renew your package in a timely manner for continued usage.ss',
-        },
     ]
 };
 
