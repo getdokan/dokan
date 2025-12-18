@@ -85,7 +85,7 @@ const newDataset = {
         {
             selector: '#dokan_settings_general_marketplace_marketplace_settings_show_customer_details_to_vendors button[role="switch"]',
             type: 'switch',
-            value: true,
+            value: false, // Note: Inverted value compared to old setting
         },
         {
             selector: '#dokan_settings_general_marketplace_marketplace_settings_guest_product_enquiry button[role="switch"]',
