@@ -13,12 +13,12 @@ const DokanFieldLabel = ( {
     }
 
     return (
-        <div className="p-5 flex justify-between gap-4 items-center">
+        <div className="p-5 flex justify-between gap-4 items-center" id={ element.hook_key }>
             <DokanBaseFieldLabel
                 imageUrl={ element.image_url }
                 title={ element.title }
                 helperText={ element.description }
-                tooltip={ element.helper_text }
+                tooltip={ element.tooltip }
             />
             { element?.doc_link && (
                 <a

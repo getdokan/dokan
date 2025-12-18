@@ -123,6 +123,7 @@ class TransactionPage extends AbstractPage {
         // Create commission subpage
         $commission_page = ElementFactory::sub_page( 'commission' )
             ->set_title( esc_html__( 'Commissions', 'dokan-lite' ) )
+            ->set_description( esc_html__( 'Set up marketplace commission structure and earnings from vendor sales.', 'dokan-lite' ) )
             ->set_priority( 200 );
 
         // Create commission section
@@ -132,6 +133,7 @@ class TransactionPage extends AbstractPage {
             ->add(
                 ElementFactory::field( 'commission_type', 'radio_capsule' )
                     ->set_title( esc_html__( 'Commission Type', 'dokan-lite' ) )
+                    ->set_tooltip( esc_html__( 'Select a commission type', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Select a commission type for your marketplace', 'dokan-lite' ) )
                     ->add_option( esc_html__( 'Fixed', 'dokan-lite' ), 'fixed', 'Percent' )
                     ->add_option( esc_html__( 'Category Based', 'dokan-lite' ), 'category_based', 'Box' )
@@ -156,6 +158,7 @@ class TransactionPage extends AbstractPage {
             ->add(
                 ElementFactory::field( 'reset_sub_category_when_edit_all_category', 'switch' )
                     ->set_title( esc_html__( 'Apply Parent Category Commission to All Subcategories', 'dokan-lite' ) )
+                    ->set_tooltip( esc_html__( "When enabled, changing a parent category's commission rate will automatically update all its subcategories. Disable this option to maintain independent commission rates for subcategories", 'dokan-lite' ) )
                     ->set_description( esc_html__( "Important: 'All Categories' commission serves as your marketplace's default rate and cannot be empty. If 0 is given in value, then the marketplace will deduct no commission from vendors", 'dokan-lite' ) )
                     ->add_dependency( 'commission.commission.commission_type', 'category_based', true, 'display', 'hide', '!==' )
                     ->add_dependency( 'commission.commission.commission_type', 'category_based', true, 'display', 'show', '===' )
@@ -192,25 +195,25 @@ class TransactionPage extends AbstractPage {
                 ElementFactory::field( 'shipping_fee', 'radio_capsule' )
                     ->set_title( esc_html__( 'Shipping Fee', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Who will be receiving the shipping fees? Note that, tax fees for corresponding shipping method will not be included with shipping fees.', 'dokan-lite' ) )
-                    ->add_option( esc_html__( 'Vendor', 'dokan-lite' ), 'vendor', 'Users' )
+                    ->add_option( esc_html__( 'Vendor', 'dokan-lite' ), 'seller', 'Users' )
                     ->add_option( esc_html__( 'Admin', 'dokan-lite' ), 'admin', 'User' )
-                    ->set_default( 'vendor' )
+                    ->set_default( 'seller' )
             )
             ->add(
                 ElementFactory::field( 'product_tax_fee', 'radio_capsule' )
                     ->set_title( esc_html__( 'Product Tax Fee', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Who will be receiving the tax fees for products? Note that, shipping tax fees will not be included with product tax.', 'dokan-lite' ) )
-                    ->add_option( esc_html__( 'Vendor', 'dokan-lite' ), 'vendor', 'Users' )
+                    ->add_option( esc_html__( 'Vendor', 'dokan-lite' ), 'seller', 'Users' )
                     ->add_option( esc_html__( 'Admin', 'dokan-lite' ), 'admin', 'User' )
-                    ->set_default( 'vendor' )
+                    ->set_default( 'seller' )
             )
             ->add(
                 ElementFactory::field( 'shipping_tax_fee', 'radio_capsule' )
                     ->set_title( esc_html__( 'Shipping Tax Fee', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Who will be receiving the tax fees for shipping?', 'dokan-lite' ) )
-                    ->add_option( esc_html__( 'Vendor', 'dokan-lite' ), 'vendor', 'Users' )
+                    ->add_option( esc_html__( 'Vendor', 'dokan-lite' ), 'seller', 'Users' )
                     ->add_option( esc_html__( 'Admin', 'dokan-lite' ), 'admin', 'User' )
-                    ->set_default( 'vendor' )
+                    ->set_default( 'seller' )
             );
 
         // Add the fees section to fees page
@@ -349,8 +352,8 @@ class TransactionPage extends AbstractPage {
                 ElementFactory::field( 'billing_type', 'radio_capsule' )
                     ->set_title( esc_html__( 'Billing Type', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Select how vendors will be billed for their reverse balance amounts.', 'dokan-lite' ) )
-                    ->add_option( esc_html__( 'By Amount Limit', 'dokan-lite' ), 'by_amount' )
-                    ->add_option( esc_html__( 'Monthly', 'dokan-lite' ), 'by_month' )
+                    ->add_option( esc_html__( 'By Amount Limit', 'dokan-lite' ), 'by_amount', 'DollarSign' )
+                    ->add_option( esc_html__( 'Monthly', 'dokan-lite' ), 'by_month', 'Calendar' )
                     ->set_default( 'by_amount' )
             )
             ->add(
@@ -391,8 +394,8 @@ class TransactionPage extends AbstractPage {
                 ElementFactory::field( 'failed_actions', 'multicheck' )
                     ->set_title( esc_html__( 'Penalty Actions After Grace Period', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Choose actions to take when the grace period expires and payment remains outstanding.', 'dokan-lite' ) )
-                    ->add_option( esc_html__( 'Add to Cart Button Visibility', 'dokan-lite' ), 'enable_catalog_mode' )
-                    ->add_option( esc_html__( 'Withdraw Menu', 'dokan-lite' ), 'hide_withdraw_menu' )
+                    ->add_option( esc_html__( 'Disable Add to Cart Button', 'dokan-lite' ), 'enable_catalog_mode' )
+                    ->add_option( esc_html__( 'Hide Withdraw Menu', 'dokan-lite' ), 'hide_withdraw_menu' )
                     ->add_option( esc_html__( 'Make Vendor Status Inactive', 'dokan-lite' ), 'status_inactive' )
                     ->set_default( [ 'enable_catalog_mode' ] )
             )
