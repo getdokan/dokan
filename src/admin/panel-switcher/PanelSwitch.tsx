@@ -1,6 +1,7 @@
 import { __, sprintf } from '@wordpress/i18n';
 import { addQueryArgs } from '@wordpress/url';
 import { useEffect, useState } from '@wordpress/element';
+import { applyFilters } from '@wordpress/hooks';
 
 /**
  * AdminSwitching Component
@@ -11,18 +12,27 @@ const PanelSwitch = () => {
     const [ currentHash, setCurrentHash ] = useState( window.location.hash );
 
     // eslint-disable-next-line @wordpress/no-unused-vars-before-return
-    const supportedKeys = wp.hooks.applyFilters(
+    const supportedKeys = applyFilters(
         // Define an array with a filter hook for supported URL keys.
         'dokan_admin_panel_switch_supported_keys',
         [
+            'refund',
             'dashboard',
             'withdraw',
             'vendors',
+            'settings',
             'store-reviews',
             'verifications',
-            'settings',
+            'product-advertising',
+            'reverse-withdrawal',
+            'announcement',
+            'subscriptions',
+            'abuse-reports',
+            'dokan-seller-badge',
+            'wholesale-customer',
+            'admin-store-support',
         ]
-    );
+    ) as string[];
 
     // Get the current URL hash path segments.
     const getHashPathSegments = () => {
