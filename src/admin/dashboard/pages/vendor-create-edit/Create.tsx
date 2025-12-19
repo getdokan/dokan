@@ -13,6 +13,7 @@ import {
     validateForm,
 } from '@src/admin/dashboard/pages/vendor-create-edit/Utils';
 import { config } from './vendor-config';
+import { Settings } from './form/types';
 
 function Create( props: any ) {
     const [ saving, setSaving ] = useState( false );
@@ -103,7 +104,22 @@ function Create( props: any ) {
 
     useEffect( () => {
         // @ts-ignore
-        setCreateOrEditVendor( initialData );
+        const settings: Settings = dokanAdminDashboardSettings?.vendors || {};
+
+        const vendorInitialData = {
+            ...initialData,
+            enabled: settings?.new_seller_enable_selling === 'automatically',
+        };
+
+        // @ts-ignore
+        setCreateOrEditVendor(
+            // @ts-ignore
+            applyFilters(
+                'dokan-create-vendor-initial-data',
+                vendorInitialData,
+                settings
+            )
+        );
     }, [] );
 
     return (
@@ -126,7 +142,9 @@ function Create( props: any ) {
                 { /*Add new vendor header*/ }
                 <div className="flex flex-row mt-[24px]">
                     <div className="sm:w-full md:w-1/2">
-                        <h1 className="text-[24px] text-[#25252D] font-bold">{ __( 'Add New Vendor', 'dokan-lite' ) }</h1>
+                        <h1 className="text-[24px] text-[#25252D] font-bold">
+                            { __( 'Add New Vendor', 'dokan-lite' ) }
+                        </h1>
                     </div>
                 </div>
             </div>

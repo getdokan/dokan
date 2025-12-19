@@ -8,6 +8,7 @@ import LinkedIn from '@src/admin/dashboard/icons/socials/LinkedIn';
 import Pinterest from '@src/admin/dashboard/icons/socials/Pinterest';
 import Instagram from '@src/admin/dashboard/icons/socials/Instagram';
 import Threads from '@src/admin/dashboard/icons/socials/Threads';
+import TikTok from '@src/admin/dashboard/icons/socials/TikTok';
 import Flickr from 'admin/dashboard/icons/socials/Flickr';
 
 export interface SocialPlatformConfig {
@@ -92,6 +93,16 @@ export const getSocialPlatformsConfig = (
             placeholder: 'https://youtube.com/c/username',
             icon: getIconComponent( YouTube, iconSize ),
             getIcon: ( size ) => getIconComponent( YouTube, size ),
+        },
+        tiktok: {
+            id: 'tiktok',
+            key: 'tiktok',
+            name: 'TikTok',
+            label: __( 'TikTok', 'dokan-lite' ),
+            domains: [ 'tiktok.com', 'vm.tiktok.com', 'www.tiktok.com' ],
+            placeholder: 'https://tiktok.com/@username',
+            icon: getIconComponent( TikTok, iconSize ),
+            getIcon: ( size ) => getIconComponent( TikTok, size ),
         },
         instagram: {
             id: 'instagram',
