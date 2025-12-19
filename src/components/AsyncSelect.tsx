@@ -6,6 +6,7 @@ import SingleValue from "@src/components/select/SingleValue";
 import Control from "@src/components/select/Control";
 import DropdownIndicator from "@src/components/select/DropdownIndicator";
 import styles from "@src/components/select/styles";
+import { twMerge } from "tailwind-merge";
 
 // Local utility to extract props type of a component without relying on React/WordPress types
 type PropsOf< T > = T extends ( props: infer P ) => any ? P : never;
@@ -37,6 +38,7 @@ export interface BaseSelectProps< Option = DefaultOption >
     components?: PropsOf<
         typeof AsyncSearchableSelect< Option >
     >[ 'components' ];
+    className?: string;
 }
 
 function AsyncSelect< Option = DefaultOption >(
@@ -60,7 +62,7 @@ function AsyncSelect< Option = DefaultOption >(
                 ...( props?.components ? props.components : {} ),
             } }
             styles={ styles }
-            className="shadow-none"
+            className={ twMerge( 'shadow-none', props?.className ) }
             classNamePrefix={ props.classNamePrefix ?? 'react-select' }
             blurInputOnSelect={ props.blurInputOnSelect ?? true }
             closeMenuOnSelect={ props.closeMenuOnSelect ?? true }

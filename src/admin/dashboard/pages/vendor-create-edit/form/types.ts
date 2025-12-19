@@ -42,3 +42,8 @@ export interface CommissionType {
     label: string;
     value: string;
 }
+
+export interface Settings {
+    new_seller_enable_selling: 'automatically' | 'manually' | 'verified_only';
+    allow_vendor_create_manual_order: boolean;
+}
