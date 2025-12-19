@@ -47,7 +47,7 @@ export default function DokanNumber( { element } ) {
 
     return (
         <div
-            className="grid-cols-12 grid gap-2 justify-between w-full p-4"
+            className="grid-cols-12 grid gap-2 justify-between items-center w-full p-4"
             id={ element.hook_key }
         >
             { hasTitle && (
