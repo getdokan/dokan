@@ -101,6 +101,17 @@
             padding: 0;
             margin: 0;
         }
+
+        .dokan-select-addon {
+            .react-select__control {
+                span {
+                    margin: 0 !important;
+                    background-color: #EAEAEA;
+                    padding: 12px;
+                    border-radius: 5px 0 0 5px;
+                }
+            }
+        }
     }
 
     button[data-headlessui-state="checked"] {

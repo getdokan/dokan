@@ -125,10 +125,21 @@ const WithdrawPage = () => {
                         </div>
                     ) }
                     <div>
-                        <div className="font-medium text-[#7047EB]">
-                            { item.user?.store_name ||
-                                __( 'N/A', 'dokan-lite' ) }
-                        </div>
+                        {item.user?.store_name && item.user.store_name.length > 22 ? (
+                            <Tooltip content={<RawHTML>{item.user.store_name}</RawHTML>}>
+                                <div className="font-medium text-[#7047EB]">
+                                    <RawHTML>
+                                    {truncate ? truncate(item.user.store_name, 22) : item.user.store_name}
+                                    </RawHTML>
+                                </div>
+                            </Tooltip>
+                            ) : (
+                            <div className="font-medium text-[#7047EB]">
+                                <RawHTML>
+                                    {item.user?.store_name || __('N/A', 'dokan-lite')}
+                                </RawHTML>
+                            </div>
+                        )}
                     </div>
                 </div>
             ),
@@ -500,7 +511,7 @@ const WithdrawPage = () => {
         type: 'table',
         titleField: 'vendor',
         status: 'pending',
-        layout: { ...defaultLayouts },
+        layout: { density: 'comfortable' },
         fields: fields.map( ( field ) =>
             field.id !== 'vendor' ? field.id : ''
         ),

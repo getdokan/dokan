@@ -58,7 +58,9 @@ function Balance( {
                     <div className="flex flex-col md:!flex-row sm:!items-center justify-between">
                         <div className="flex flex-col">
                             <div className="text-gray-700 md:mb-4 sm:mb-0 flex">
-                                <span>{ __( 'Your Balance:', 'dokan-lite' ) }</span>
+                                <span>
+                                    { __( 'Your Balance:', 'dokan-lite' ) }
+                                </span>
                                 &nbsp;
                                 <span className="font-semibold">
                                     <PriceHtml
@@ -86,11 +88,17 @@ function Balance( {
                                 </span>
                             </div>
                         </div>
-                        <RequestWithdrawBtn
-                            settings={ settings }
-                            withdrawRequests={ withdrawRequests }
-                            balanceData={ bodyData }
-                        />
+
+                        {
+                            // @ts-ignore
+                            window?.dokanFrontend?.withdraw?.isManualWithdrawEnable && (
+                                <RequestWithdrawBtn
+                                    settings={ settings }
+                                    withdrawRequests={ withdrawRequests }
+                                    balanceData={ bodyData }
+                                />
+                            )
+                        }
                     </div>
                 </Card.Body>
             </Card>

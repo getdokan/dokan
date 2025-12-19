@@ -14,11 +14,16 @@
 ## Introduction
 This document will help you to define a menu is available in `React` and its `PHP` override information.
 
+> **Related Documentation**: For third-party plugin developers looking to register custom menus in the Dokan dashboard, see [Registering Menu in Dokan Dashboard from Third-Party Plugins](../integration/dashboard-menu-registration.md).
+
+> **Related Documentation**: For a comprehensive guide on registering dashboard menus from third-party plugins, including complete examples and best practices, see [Registering Menu in Dokan Dashboard from Third-Party Plugins](../integration/dashboard-menu-registration.md).
+
 
 ## 1. Declare a menu is available in `React`.
 To declare a menu is available in `React`, you need to define `route` property during the menu registration.
 
 ### Declare `React` menu in **Dokan Lite**.
+
 ```php
 // includes/functions-dashboard-navigation.php#L27-L66
 $menus = [
@@ -87,10 +92,18 @@ add_filter( 'dokan_get_dashboard_nav', function ( $menus ) {
 } );
 ```
 
+> **See Also**: For comprehensive examples and best practices on registering dashboard menus from third-party plugins, including React route registration, see [Registering Menu in Dokan Dashboard from Third-Party Plugins](../integration/dashboard-menu-registration.md).
+
+> **See Also**: For detailed examples and best practices on registering dashboard menus from third-party plugins, including React route registration, see [PHP Menu Registration](../integration/dashboard-menu-registration.md#php-menu-registration) and [React Route Registration](../integration/dashboard-menu-registration.md#react-route-registration).
+
 
 ## 2. Declare the Override templates for a React route.
 If you are writing a new feature or modifying an existing feature in the `React` application, you do not need to define the override templates for the `React` route.
 But if you are modifying or migrating an existing feature written in PHP to the `React` application and you want that if some of the PHP template is overridden by the existing PHP template then the legacy PHP page will be displayed, then you need to define the override templates for the `React` route.
+
+> **Note**: When registering new menus from third-party plugins, you typically don't need to define override templates unless you're migrating existing PHP features. For new menu registrations, see [Registering Menu in Dokan Dashboard from Third-Party Plugins](../integration/dashboard-menu-registration.md).
+
+> **Note**: When registering new menus from third-party plugins, you typically don't need to define override templates unless you're migrating existing PHP features. For new menu registrations, see [Registering Menu in Dokan Dashboard from Third-Party Plugins](../integration/dashboard-menu-registration.md).
 ### Define the override templates for a React route in Dokan Lite.
 ```php
 // VendorNavMenuChecker.php#L13-L26
@@ -163,3 +176,7 @@ add_filter( 'dokan_is_dashboard_nav_dependency_resolved', function ( $is_cleared
 }, 10, 2 );
 
 ```
+
+## Related Documentation
+
+- [Registering Menu in Dokan Dashboard from Third-Party Plugins](../integration/dashboard-menu-registration.md) - Comprehensive guide for third-party plugin developers on registering custom dashboard menus and React routes

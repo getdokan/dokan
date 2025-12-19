@@ -274,12 +274,12 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
 
 <style>
     .dokan-settings-content .dokan-settings-area .dokan-banner {
-        max-width: <?php echo esc_attr( $banner_width ) . 'px'; ?>;
-        max-height: <?php echo esc_attr( $banner_height ) . 'px'; ?>;
+        max-width: <?php echo esc_attr( max( $banner_width, 625 ) ) . 'px'; ?>;
+        max-height: <?php echo esc_attr( max( $banner_height, 300 ) ) . 'px'; ?>;
     }
 
     .dokan-settings-content .dokan-settings-area .dokan-banner .dokan-remove-banner-image {
-        height: <?php echo esc_attr( $banner_height ) . 'px'; ?>;
+        height: <?php echo esc_attr( max( $banner_height, 300 ) ) . 'px'; ?>;
     }
 
 </style>

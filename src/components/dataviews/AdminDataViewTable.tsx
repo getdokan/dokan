@@ -213,6 +213,11 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
             />
             <DataViews { ...filteredProps }>
                 <div className="dokan-admin-dashboard-datatable-header w-full flex items-center flex-col justify-between rounded-tr-md rounded-tl-md">
+                    { filteredProps.header && (
+                        <div className="font-semibold text-sm text-[#25252D]">
+                            { filteredProps.header }
+                        </div>
+                    ) }
                     { filteredProps.tabs &&
                         filteredProps.tabs.tabs &&
                         filteredProps.tabs.tabs.length > 0 && (

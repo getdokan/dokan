@@ -511,3 +511,24 @@
         background: var(--wp-admin-theme-color) !important;
     }
 }
+
+@media (max-width: 768px) {
+    .dokan-dashboard-content {
+        .woocommerce-section-header {
+            padding-left: 18px !important;
+            padding-right: 8px !important;
+        }
+    }
+
+    .dokan-dashboard-content {
+        .woocommerce-section-header {
+            &.has-interval-select {
+                padding: 0 20px 24px 20px;
+
+                .components-select-control__input {
+                    padding-left: 14px;
+                }
+            }
+        }
+    }
+}
