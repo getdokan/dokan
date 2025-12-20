@@ -1,7 +1,8 @@
 import { __, sprintf } from '@wordpress/i18n';
 import { useState, useEffect, useCallback, useRef } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
-import { Search, X, Crown } from 'lucide-react';
+import { Search, X, Crown,Hammer,TrendingUp, Rocket,CircleCheck} from 'lucide-react';
+import { twMerge } from 'tailwind-merge';
 
 // Types
 interface ChangeItem {
@@ -37,11 +38,25 @@ const ChangeBadge = ( { type }: { type: string } ) => {
                 return 'bg-blue-500 text-white';
         }
     };
-
+const renderIcon = () => {
+        // New Features / Modules
+        if ( [ 'New', 'New Module', 'New Feature' ].includes( type ) ) {
+            return <Rocket size={ 12 } />;
+        }
+        // Bug Fixes
+        if ( type === 'Fix' ) {
+            return <Hammer size={ 12 } />;
+        }
+        if ( [ 'Improvement', 'Improvements', 'Update' ].includes( type ) ) {
+            return <TrendingUp size={ 12 } />;
+        }
+        return null;
+    };
     return (
         <span
-            className={ `inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${ getBadgeStyles() }` }
+            className={ `inline-flex items-center px-2 py-1 gap-[6px] rounded-[20px] text-xs font-semibold ${ getBadgeStyles() }` }
         >
+            { renderIcon() }
             { type }
         </span>
     );
@@ -94,7 +109,7 @@ const SearchBar = ( {
             { /* Jump to version trigger button */ }
             <button
                 onClick={ () => setIsOpen( ! isOpen ) }
-                className="flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900"
+                className="flex items-center gap-1 text-sm text-[#575757] hover:text-gray-900"
             >
                 { __( 'Jump to version', 'dokan-lite' ) }
                 <svg
@@ -118,7 +133,7 @@ const SearchBar = ( {
             { isOpen && (
                 <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
                     { /* Search Input */ }
-                    <div className="p-2 border-b border-gray-200">
+                    <div className="px-4 py-2 border-b border-gray-200">
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                             <input
@@ -131,8 +146,7 @@ const SearchBar = ( {
                                     'Search version…',
                                     'dokan-lite'
                                 ) }
-                                className="w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                autoFocus
+                                className="w-full pl-10 pr-10 py-2 rounded-[3px] border border-[#7047EB] bg-white text-sm focus:outline-none focus:border-[#7047EB]"
                             />
                             { searchQuery && (
                                 <button
@@ -165,10 +179,10 @@ const SearchBar = ( {
                                             setIsOpen( false );
                                             setSearchQuery( '' );
                                         } }
-                                        className={ `w-full text-left px-4 py-2 text-sm hover:bg-gray-100 focus:outline-none ${
+                                        className={ `w-full text-left px-4 py-2 text-sm hover:bg-[#EFEAFF] focus:outline-none ${
                                             isMatch
-                                                ? 'text-purple-600'
-                                                : 'text-gray-700'
+                                                ? 'text-[#828282] hover:text-[#7047EB]'
+                                                : 'text-[#828282] hover:text-[#7047EB]'
                                         }` }
                                     >
                                         { version.version }
@@ -209,27 +223,29 @@ const PackageToggle = ( {
     }
 
     return (
-        <div className="inline-flex rounded-full bg-white p-1">
+        <div className="inline-flex">
             <button
                 onClick={ () => onToggle( 'lite' ) }
-                className={ `px-4 py-1.5 text-sm font-medium rounded-full transition-colors ${
+                className={ `flex flex-col justify-center items-end px-[22px] py-2 text-sm font-semibold transition-colors rounded-l-[5px] border ${
                     activePackage === 'lite'
-                        ? 'bg-[#7047EB] text-white'
-                        : 'text-gray-600 hover:text-gray-900'
+                        ? 'bg-[#7047EB] border-[#7047EB] text-white'
+                        : 'bg-white border-[#E9E9E9] text-black'
                 }` }
             >
                 { __( 'Lite', 'dokan-lite' ) }
             </button>
             <button
                 onClick={ () => onToggle( 'pro' ) }
-                className={ `px-4 py-1.5 text-sm font-medium rounded-full transition-colors flex items-center gap-1 ${
+                className={ `flex flex-col justify-center items-end px-[22px] py-2 text-sm font-medium transition-colors rounded-r-[5px] border ${
                     activePackage === 'pro'
-                        ? 'bg-[#7047EB] text-white'
-                        : 'text-gray-600 hover:text-gray-900'
+                        ? 'bg-[#7047EB] border-[#7047EB] text-white'
+                        : 'bg-white border-[#E9E9E9] text-black'
                 }` }
             >
-                { __( 'Pro', 'dokan-lite' ) }
-                <Crown className="w-3 h-3" />
+                <span className="flex items-center font-semibold gap-2">
+                    {__('Pro', 'dokan-lite')}
+                    <Crown size={ 16 } />
+                </span>
             </button>
         </div>
     );
@@ -309,18 +325,21 @@ const VersionRow = ( {
     const visibleChangeEntries = Object.entries( visibleChanges );
 
     return (
-        <div className="flex gap-8 mb-8">
+        <div className="flex gap-20 mb-10">
             { /* Left Column - Version Info (Sticky) */ }
             <div className="w-48 flex-shrink-0">
                 <div className="sticky top-4">
-                    <div className="flex items-center gap-2 mb-1">
+                    <div className="flex items-center gap-1.5 mb-1">
                         <h3 className="text-lg font-semibold text-gray-900">
                             { version.version }
                         </h3>
                         { isLatest && (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                                { __( 'Latest', 'dokan-lite' ) }
-                                <Crown className="w-3 h-3 ml-1" />
+                            <span className="inline-flex items-center">
+                                <span className='block border-l border-[#A5A5AA] h-4'></span>
+                                <span className='flex items-center px-2 py-1 rounded-full text-sm font-normal text-[#008864] gap-1.5'>
+                                    { __( 'Latest', 'dokan-lite' ) }
+                                    <CircleCheck size={12} />
+                                </span>
                             </span>
                         ) }
                     </div>
@@ -333,7 +352,7 @@ const VersionRow = ( {
             { /* Right Column - Changes Card */ }
             <div className="flex-1">
                 <div
-                    className={ `bg-gray-50 rounded-lg p-6 transition-all duration-300 ${
+                    className={ `bg-white rounded-lg transition-all duration-300 shadow-[0_1px_2px_-1px_rgba(0,0,0,0.10),0_1px_3px_0_rgba(0,0,0,0.10)] ${
                         isHighlighted
                             ? 'ring-2 ring-blue-500 ring-offset-2'
                             : 'border border-gray-200'
@@ -344,22 +363,24 @@ const VersionRow = ( {
                             <div key={ type }>
                                 { /* Add border/divider before each section except the first */ }
                                 { typeIndex > 0 && (
-                                    <hr className="my-6 border-t border-gray-200" />
+                                    <hr className="my-6 w-full h-px bg-[#E9E9E9] border-0 m-0" />
                                 ) }
-                                <ChangeBadge type={ type } />
-                                <ul className="mt-3 space-y-2">
-                                    { items.map( ( item, itemIndex ) => (
-                                        <li
-                                            key={ itemIndex }
-                                            className="flex items-start text-sm text-gray-700"
-                                        >
-                                            <span className="mr-2 text-gray-400">
-                                                •
-                                            </span>
-                                            <span>{ item.title }</span>
-                                        </li>
-                                    ) ) }
-                                </ul>
+                                <div className='p-6'>
+                                    <ChangeBadge type={ type } />
+                                    <ul className="mt-3 space-y-3">
+                                        { items.map( ( item, itemIndex ) => (
+                                            <li
+                                                key={ itemIndex }
+                                                className="flex items-start text-sm text-[#575757] mb-0"
+                                            >
+                                                <span className="mr-2 text-sm text-[#575757]">
+                                                    •
+                                                </span>
+                                                <span>{ item.title }</span>
+                                            </li>
+                                        ) ) }
+                                    </ul>
+                                </div>
                             </div>
                         )
                     ) }
@@ -368,7 +389,7 @@ const VersionRow = ( {
                     { shouldShowToggle && (
                         <button
                             onClick={ onToggle }
-                            className="mt-4 text-sm text-blue-600 hover:text-blue-800 font-medium focus:outline-none underline"
+                            className="mt-4 text-sm text-[#7047EB] hover:text-[#5a38bc] font-medium !outline-none !focus:outline-none focus:ring-0 focus:border-0 underline"
                         >
                             { isExpanded
                                 ? __( 'See Less', 'dokan-lite' )
@@ -540,9 +561,9 @@ const ChangelogPage = () => {
     };
 
     return (
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto mt-10">
             { /* Header */ }
-            <div className="flex items-start justify-between mb-8">
+            <div className="flex items-start justify-between mb-14">
                 { /* Left Side - Title and Jump to Version */ }
                 <div>
                     <h1 className="text-2xl font-bold text-gray-900 mb-4">

@@ -172,8 +172,8 @@ class Dashboard implements Hookable {
                 [
                     [
                         'id'       => 'whats-new',
-                        'title'    => esc_html__( "What's New", 'dokan-lite' ),
-                        'url'      => $legacy_dashboard_url . '#/changelog',
+                        'title'    => esc_html__( "Changelog", 'dokan-lite' ),
+                        'url'      => $dashboard_url . '#/changelog',
                         'icon'     => 'whats-new',
                         'active'   => Helper::dokan_has_new_version(),
                         'external' => false,
