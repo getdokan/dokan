@@ -1,14 +1,14 @@
 # Copyright (c) 2025 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 4.2.1\n"
+"Project-Id-Version: Dokan 4.2.2\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-12-04T11:55:15+00:00\n"
+"POT-Creation-Date: 2025-12-22T10:51:25+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -13097,6 +13097,10 @@ msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:179
 msgid "Upload"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Size - 600 X 325 px"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:179
