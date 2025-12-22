@@ -547,10 +547,13 @@ const WithdrawPage = () => {
             className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-[#575757] hover:bg-[#7047EB] hover:text-white"
             onClick={ async () => {
                 try {
-                    // Minimal placeholder; backend export flow may vary.
-                    // Attempt to hit export endpoint via same query params.
+                    // We use `totalItems` as `per_page` to fetch all matching records in a single request, bypassing pagination.
                     const path = addQueryArgs( 'dokan/v2/withdraw', {
-                        ...view,
+                        per_page: totalItems || 1,
+                        page: 1,
+                        search: view?.search ?? '',
+                        status: view?.status === 'all' ? '' : view?.status,
+                        ...filterArgs,
                         is_export: true,
                     } );
                     const res = await apiFetch( { path } );

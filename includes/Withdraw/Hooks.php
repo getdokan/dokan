@@ -47,6 +47,12 @@ class Hooks {
 
         // Export withdraw logs.
         $exporter = new \WeDevs\Dokan\Admin\WithdrawLogExporter();
+
+        // Set filename from URL parameter (generated during file creation).
+        if ( isset( $_GET['filename'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+            $exporter->set_filename( sanitize_file_name( wp_unslash( $_GET['filename'] ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        }
+
         $exporter->export();
     }
 

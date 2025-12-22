@@ -98,6 +98,56 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
     }
 
     /**
+     * Generate and set filename based on applied filters.
+     *
+     * Format: dokan-withdraw-log-export{_vendor-name}{_status}{_method}{_date-range}.csv
+     * Only includes filter parts that are actually applied.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $filters Array of filter parameters (user_id, status, payment_method, start_date, end_date).
+     *
+     * @return void
+     */
+    public function set_filename_from_filters( $filters = [] ) {
+        $parts = [ 'dokan-withdraw-log-export' ];
+
+        // Add vendor name if filtered by user_id.
+        if ( ! empty( $filters['user_id'] ) ) {
+            $store_info = dokan_get_store_info( absint( $filters['user_id'] ) );
+            $store_name = ! empty( $store_info['store_name'] )
+                ? sanitize_title( $store_info['store_name'] )
+                : 'vendor-' . absint( $filters['user_id'] );
+            $parts[]    = $store_name;
+        }
+
+        // Add status if filtered.
+        if ( ! empty( $filters['status'] ) ) {
+            $parts[] = sanitize_title( $filters['status'] );
+        }
+
+        // Add payment method if filtered.
+        if ( ! empty( $filters['payment_method'] ) ) {
+            $parts[] = sanitize_title( $filters['payment_method'] );
+        }
+
+        // Add date range if both start and end dates are provided (mon-DD format).
+        if ( ! empty( $filters['start_date'] ) && ! empty( $filters['end_date'] ) ) {
+            $start_timestamp = strtotime( $filters['start_date'] );
+            $end_timestamp   = strtotime( $filters['end_date'] );
+
+            // Only add if both dates are valid timestamps.
+            if ( $start_timestamp && $end_timestamp ) {
+                $start   = strtolower( wp_date( 'M-d', $start_timestamp ) );
+                $end     = strtolower( wp_date( 'M-d', $end_timestamp ) );
+                $parts[] = $start . '_to_' . $end;
+            }
+        }
+
+        $this->set_filename( implode( '_', $parts ) );
+    }
+
+    /**
      * Return an array of columns to export.
      *
      * @since 3.8.3
