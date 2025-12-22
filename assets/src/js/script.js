@@ -167,16 +167,25 @@ jQuery(function($) {
           dokan.store_banner_dimension['flex-height'],
           10
         ),
-        realHeight,
-        realWidth,
-        imgSelectOptions;
-
+          realHeight,
+          realWidth,
+          imgSelectOptions;
+    
       realWidth = attachment.get('width');
       realHeight = attachment.get('height');
 
-      var control = controller.get('control');
-      controller.set('canSkipCrop', !control.mustBeCropped(flexWidth, flexHeight, xInit, yInit, realWidth, realHeight));
-
+      var shouldBeCropped = true;
+      
+      if (flexWidth && flexHeight) {
+        shouldBeCropped = false;
+      }
+      
+      if (!shouldBeCropped || (realWidth === xInit && realHeight === yInit)) {
+        shouldBeCropped = false;
+      }
+      
+      controller.set('canSkipCrop', !shouldBeCropped);
+    
       imgSelectOptions = {
         handles: true,
         keys: true,
@@ -192,7 +201,7 @@ jQuery(function($) {
         maxHeight: yInit,
         maxWidth: xInit,
       };
-
+    
       return imgSelectOptions;
     },
 
@@ -334,9 +343,9 @@ jQuery(function($) {
             suggestedWidth: dokan.store_banner_dimension.width,
             suggestedHeight: dokan.store_banner_dimension.height
           }),
-          new wp.media.controller.CustomizeImageCropper({
+          new wp.media.controller.Cropper({
             imgSelectOptions: settings.calculateImageSelectOptions,
-            control: cropControl
+            suggestedWidth: dokan?.store_banner_dimension?.width || 5000
           })
         ]
       });
