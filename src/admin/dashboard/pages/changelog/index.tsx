@@ -114,11 +114,6 @@ const ChangelogPage = () => {
         if ( element ) {
             element.scrollIntoView( { behavior: 'smooth', block: 'start' } );
         }
-
-        // Remove highlight after 2 seconds
-        setTimeout( () => {
-            setHighlightedVersion( null );
-        }, 2000 );
     };
 
     // Get current versions based on active package
@@ -191,6 +186,13 @@ const ChangelogPage = () => {
                     activePackage={ activePackage }
                     onToggle={ handlePackageToggle }
                 />
+
+                { highlightedVersion && (
+                    <div
+                        className="fixed inset-0 z-10"
+                        onClick={ () => setHighlightedVersion( null ) }
+                    />
+                ) }
             </div>
 
             { /* Content */ }

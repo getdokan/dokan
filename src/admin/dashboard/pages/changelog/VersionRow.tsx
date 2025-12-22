@@ -112,7 +112,7 @@ const VersionRow = ( {
                 <div
                     className={ `bg-white rounded-lg transition-all duration-300 shadow-[0_1px_2px_-1px_rgba(0,0,0,0.10),0_1px_3px_0_rgba(0,0,0,0.10)] ${
                         isHighlighted
-                            ? 'ring-2 ring-blue-500 ring-offset-2'
+                            ? 'ring-2 ring-[#7047EB]'
                             : 'border border-gray-200'
                     }` }
                 >
