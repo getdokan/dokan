@@ -6,13 +6,13 @@ const ChangeBadge = ( { type }: { type: string } ) => {
             case 'New':
             case 'New Module':
             case 'New Feature':
-                return 'bg-teal-500 text-white';
+                return 'bg-[#00BC8B] text-white';
             case 'Fix':
-                return 'bg-red-500 text-white';
+                return 'bg-[#E64B5F] text-white';
             case 'Improvement':
             case 'Improvements':
             case 'Update':
-                return 'bg-purple-500 text-white';
+                return 'bg-[#3B82F6] text-white';
             default:
                 return 'bg-blue-500 text-white';
         }

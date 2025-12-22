@@ -88,7 +88,7 @@ const SearchBar = ({
             { isOpen && (
                 <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
                     { /* Search Input */ }
-                    <div className="px-4 py-2 border-b border-gray-200">
+                    <div className="p-3 border-b border-gray-200">
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                             <input
