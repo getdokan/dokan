@@ -312,14 +312,23 @@ class StoreController extends WP_REST_Controller {
      */
     public function get_store( $request ) {
         $store_id = (int) $request['id'];
+        $current_user = get_current_user_id();
 
-        $store = dokan()->vendor->get( $store_id );
+        $staff_vendor_id = get_user_meta( $current_user, '_vendor_id', true );
+
+        if ( $staff_vendor_id ) {
+            $vendor_id = (int) $staff_vendor_id;
+            $store = dokan()->vendor->get( $vendor_id );
+        }
+        else {
+            $store = dokan()->vendor->get( $store_id );
+        }
 
         $stores_data = $this->prepare_item_for_response( $store, $request );
-        $response    = rest_ensure_response( $stores_data );
-
+        $response = rest_ensure_response( $stores_data );
         return $response;
     }
+
 
     /**
      * Delete store
@@ -361,10 +370,21 @@ class StoreController extends WP_REST_Controller {
             return true;
         }
 
-        if ( current_user_can( 'dokandar' ) ) {
-            return dokan_get_current_user_id() === absint( $request->get_param( 'id' ) );
+        $current_user = get_current_user_id();
+        $requested_id = absint( $request->get_param( 'id' ) );
+
+        if ( current_user_can( 'dokandar' ) && $current_user === $requested_id ) {
+            return true;
         }
+
+        $staff_vendor_id = get_user_meta( $current_user, '_vendor_id', true );
+        if ( $staff_vendor_id && (int) $staff_vendor_id === $requested_id ) {
+            return true;
+        }
+
+        return false;
     }
+
 
     /**
      * Update Store
