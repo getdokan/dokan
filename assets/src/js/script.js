@@ -167,6 +167,9 @@ jQuery(function($) {
           dokan.store_banner_dimension['flex-height'],
           10
         ),
+        ratio,
+        xImg,
+        yImg,
         realHeight,
         realWidth,
         imgSelectOptions;
@@ -174,8 +177,29 @@ jQuery(function($) {
       realWidth = attachment.get('width');
       realHeight = attachment.get('height');
 
-      var control = controller.get('control');
-      controller.set('canSkipCrop', !control.mustBeCropped(flexWidth, flexHeight, xInit, yInit, realWidth, realHeight));
+      this.headerImage = new api.HeaderTool.ImageModel();
+      this.headerImage.set({
+        themeWidth: xInit,
+        themeHeight: yInit,
+        themeFlexWidth: flexWidth,
+        themeFlexHeight: flexHeight,
+        imageWidth: realWidth,
+        imageHeight: realHeight
+      });
+
+      controller.set('canSkipCrop', !this.headerImage.shouldBeCropped());
+
+      ratio = xInit / yInit;
+      xImg = realWidth;
+      yImg = realHeight;
+
+      if (xImg / yImg > ratio) {
+        yInit = yImg;
+        xInit = yInit * ratio;
+      } else {
+        xInit = xImg;
+        yInit = xInit / ratio;
+      }
 
       imgSelectOptions = {
         handles: true,
@@ -187,11 +211,18 @@ jQuery(function($) {
         x1: 0,
         y1: 0,
         x2: xInit,
-        y2: yInit,
-        aspectRatio: xInit + ':' + yInit,
-        maxHeight: yInit,
-        maxWidth: xInit,
+        y2: yInit
       };
+
+      if (flexHeight === false && flexWidth === false) {
+        imgSelectOptions.aspectRatio = xInit + ':' + yInit;
+      }
+      if (flexHeight === false) {
+        imgSelectOptions.maxHeight = yInit;
+      }
+      if (flexWidth === false) {
+        imgSelectOptions.maxWidth = xInit;
+      }
 
       return imgSelectOptions;
     },
@@ -279,45 +310,6 @@ jQuery(function($) {
 
       settings.uploadBtn = this;
 
-      var cropControl = {
-        id: "control-id",
-        params: {
-          width: parseInt(dokan.store_banner_dimension.width, 10),
-          height: parseInt(dokan.store_banner_dimension.height, 10),
-          flex_width: !!parseInt(dokan.store_banner_dimension['flex-width'], 10),
-          flex_height: !!parseInt(dokan.store_banner_dimension['flex-height'], 10),
-        }
-      };
-
-      cropControl.mustBeCropped = function(flexW, flexH, dstW, dstH, imgW, imgH) {
-        // If the width and height are both flexible then the user does not need to crop the image
-        if (true === flexW && true === flexH) {
-          return false;
-        }
-
-        // If the width is flexible and the cropped image height matches the current image height, then the user does not need to crop the image.
-        if (true === flexW && dstH === imgH) {
-          return false;
-        }
-
-        // If the height is flexible and the cropped image width matches the current image width, then the user does not need to crop the image.
-        if (true === flexH && dstW === imgW) {
-          return false;
-        }
-
-        // If the cropped image width matches the current image width, and the cropped image height matches the current image height, then the user does not need to crop the image.
-        if (dstW === imgW && dstH === imgH) {
-          return false;
-        }
-
-        // If the destination width is equal to or greater than the cropped image width then the user does not need to crop the image
-        if (imgW <= dstW) {
-          return false;
-        }
-
-        return true;
-      };
-
       settings.frame = wp.media({
         multiple: false,
         button: {
@@ -334,9 +326,9 @@ jQuery(function($) {
             suggestedWidth: dokan.store_banner_dimension.width,
             suggestedHeight: dokan.store_banner_dimension.height
           }),
-          new wp.media.controller.CustomizeImageCropper({
-            imgSelectOptions: settings.calculateImageSelectOptions,
-            control: cropControl
+          new wp.media.controller.Cropper({
+            suggestedWidth: 5000,
+            imgSelectOptions: settings.calculateImageSelectOptions
           })
         ]
       });
