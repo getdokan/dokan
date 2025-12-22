@@ -7,7 +7,7 @@ Tested up to: 6.8.3
 WC requires at least: 8.5.0
 WC tested up to: 10.2.2
 Requires PHP: 7.4
-Stable tag: 4.2.2
+Stable tag: 4.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -352,6 +352,9 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v4.2.3 ( Dec 22, 2025 ) =
+- **fix:** Compatible vendor store banner image cropper with the latest version.
+
 = v4.2.2 ( Dec 22, 2025 ) =
 - **fix:** Banner image cropper reflects an error on the vendor store settings.
 
@@ -389,13 +392,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **update:** Updated all Twitter labels to X to reflect the latest brand changes.
 - **update:** Added custom store URL validation in admin settings to prevent conflicts with WordPress search functionality.
 - **update:** Fixed PHP warnings triggered when saving variable products by improving validation and data handling during product save operations.
-
-= v4.1.4 ( Nov 06, 2025 ) =
-- **update:** Added validation for the `section` parameter in `Admin Settings` to prevent unauthorized or unintended option updates.
-- **update:** Strengthened nonce handling for limited-time promotional notices by changing the action from `dokan_admin` to `dokan_promotional_notice` for improved consistency and isolation.
-
-= v4.1.3 ( Oct 28, 2025 ) =
-- **update:** Admin Dashboard withdraw list UI with Modern Design and Improved User Experience.
-- **update:** Admin Dashboard vendor list UI with Modern Design and Improved User Experience.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

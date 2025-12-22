@@ -1,3 +1,6 @@
+### v4.2.3 ( Dec 22, 2025 ) ###
+- **fix:** Compatible vendor store banner image cropper with the latest version.
+
 ### v4.2.2 ( Dec 22, 2025 ) ###
 - **fix:** Banner image cropping reflects an error on the vendor store settings.
 
