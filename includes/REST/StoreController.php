@@ -318,9 +318,8 @@ class StoreController extends WP_REST_Controller {
 
         if ( $staff_vendor_id ) {
             $vendor_id = (int) $staff_vendor_id;
-            $store = dokan()->vendor->get( $vendor_id );
-        }
-        else {
+            $store     = dokan()->vendor->get( $vendor_id );
+        } else {
             $store = dokan()->vendor->get( $store_id );
         }
 
