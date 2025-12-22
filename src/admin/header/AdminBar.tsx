@@ -5,31 +5,31 @@ import CrownIcon from '../dashboard/icons/CrownIcon';
 import { twMerge } from 'tailwind-merge';
 
 // Import Lucide Icons
-import { 
-    RefreshCw, 
-    Headphones, 
-    Facebook, 
-    FileText, 
-    HelpCircle, 
-    Settings, 
-    Lightbulb, 
-    Wand2, 
-    Box, 
-    Circle 
+import {
+    RefreshCw,
+    Headphones,
+    Facebook,
+    FileText,
+    HelpCircle,
+    Settings,
+    Lightbulb,
+    Wand2,
+    Box,
+    Circle,
 } from 'lucide-react';
 
 // Define the mapping internally
 const lucideIconMapping = {
-    'whats-new'       : RefreshCw,
-    'support'         : Headphones,
-    'facebook'        : Facebook,
-    'documentation'   : FileText,
-    'faq'             : HelpCircle,
-    'settings'        : Settings,
-    'feature-request' : Lightbulb,
-    'setup-wizard'    : Wand2,
-    'import-data'     : Box,
-    'custom-icon'     : Circle,
+    'whats-new': RefreshCw,
+    support: Headphones,
+    facebook: Facebook,
+    documentation: FileText,
+    faq: HelpCircle,
+    settings: Settings,
+    'feature-request': Lightbulb,
+    'setup-wizard': Wand2,
+    'import-data': Box,
+    'custom-icon': Circle,
 };
 
 const AdminBar = () => {
@@ -69,8 +69,10 @@ const AdminBar = () => {
                                     { sprintf(
                                         /* translators: %1$s: license plan %2$s: pro version info */
                                         __( '%1$s: %2$s', 'dokan-lite' ),
-                                        dokanAdminPanelHeaderSettings?.header_info?.license_plan || '',
-                                        dokanAdminPanelHeaderSettings?.header_info?.pro_version || ''
+                                        dokanAdminPanelHeaderSettings
+                                            ?.header_info?.license_plan || '',
+                                        dokanAdminPanelHeaderSettings
+                                            ?.header_info?.pro_version || ''
                                     ) }
                                 </span>
                             </div>
@@ -94,61 +96,73 @@ const AdminBar = () => {
             { /* Help button */ }
             <div
                 data-test-id="dokan-dashboard-header-help-menu-container"
-                className="relative mr-12"
+                className="relative"
             >
                 <div
                     onMouseEnter={ () => setShowDropdown( true ) }
                     onMouseLeave={ () => setShowDropdown( false ) }
                     className={ twMerge(
-                        "relative flex items-center justify-center w-8 h-8 rounded-full border border-solid border-[#E9E9E9] transition-all duration-200 ease-in-out cursor-pointer",
-                        showDropdown ? "bg-[#7047EB] border-[#7047EB]" : "bg-white"
+                        'relative flex items-center justify-center w-8 h-8 rounded-full border border-solid border-[#E9E9E9] transition-all duration-200 ease-in-out cursor-pointer',
+                        showDropdown
+                            ? 'bg-[#7047EB] border-[#7047EB]'
+                            : 'bg-white'
                     ) }
                 >
                     { has_new_version && (
                         <span className="whats-new-pointer absolute w-1.5 h-1.5 top-0 right-0 rounded-full border-2 border-[#fff] border-solid box-content bg-[#7047EB]"></span>
                     ) }
-                    
+
                     <HelpIcon
-                        className={ twMerge( 'w-2.5 h-3.5 transition-colors', showDropdown ? 'fill-white' : 'fill-[#828282]' ) }
+                        className={ twMerge(
+                            'w-2.5 h-3.5 transition-colors',
+                            showDropdown ? 'fill-white' : 'fill-[#828282]'
+                        ) }
                     />
 
                     { /* Dropdown */ }
                     <div
                         className={ twMerge(
-                            "absolute top-full right-0 mt-2 z-50 bg-white rounded border border-solid border-gray-200 shadow-xl w-[240px] py-3 transition-all duration-200",
-                            showDropdown ? 'opacity-100 visible transition-opacity duration-200' : 'opacity-0 invisible'
+                            "absolute top-full right-0 mt-2 z-50 bg-white rounded border border-solid border-gray-200 shadow-xl w-[240px] py-3 transition-opacity transition-transform duration-300 before:bottom-full before:left-0 before:content-[''] before:absolute before:w-full before:h-6",
+                            showDropdown
+                                ? 'opacity-100 visible transition-opacity duration-200'
+                                : 'opacity-0 invisible'
                         ) }
                     >
                         <div className="flex flex-col">
                             { help_menu_items?.map( ( item ) => {
                                 // Get the Lucide Component based on the key
-                                const IconComponent = lucideIconMapping[item?.icon] || Circle;
+                                const IconComponent =
+                                    lucideIconMapping[ item?.icon ] || Circle;
 
                                 return (
                                     <a
                                         key={ item?.id }
                                         href={ item?.url }
-                                        target={ item?.external ? '_blank' : '_self' }
-                                        rel={ item?.external ? 'noopener noreferrer' : '' }
-                                        className={ twMerge(
-                                            'flex items-center text-[15px] font-normal no-underline transition-all duration-150 py-2.5 px-4 group',
-                                            item.active 
-                                                ? 'bg-[#F4EFFF] !text-[#7047EB]' 
-                                                : '!text-[#828282] hover:bg-[#EFEAFF] hover:!text-[#7047EB]'
-                                        ) }
+                                        target={
+                                            item?.external ? '_blank' : '_self'
+                                        }
+                                        rel={
+                                            item?.external
+                                                ? 'noopener noreferrer'
+                                                : ''
+                                        }
+                                        className={
+                                            'skip-color-module flex items-center text-[15px] text-[#828282] font-normal no-underline transition-all duration-150 py-2.5 px-4 group hover:bg-[#EFEAFF] hover:!text-[#7047EB]'
+                                        }
                                     >
                                         <div className="w-6 h-6 flex items-center justify-center mr-2.5 transition-all">
-                                            <IconComponent 
-                                                size={18} 
-                                                strokeWidth={1.8}
-                                                className={ twMerge(
-                                                    'transition-colors',
-                                                    item.active ? 'text-[#7047EB]' : 'text-[#828282] group-hover:text-[#7047EB]'
-                                                ) }
+                                            <IconComponent
+                                                size={ 18 }
+                                                className={
+                                                    'transition-colors text-[#828282] group-hover:text-[#7047EB]'
+                                                }
                                             />
                                         </div>
-                                        <span className="flex-1">
+                                        <span className="flex-1 flex items-center gap-2.5">
                                             <RawHTML>{ item?.title }</RawHTML>
+                                            { item.active && (
+                                                <span className="whats-new-pointer w-1.5 h-1.5 top-0 right-0 rounded-full bg-[#7047EB]"></span>
+                                            ) }
                                         </span>
                                     </a>
                                 );
