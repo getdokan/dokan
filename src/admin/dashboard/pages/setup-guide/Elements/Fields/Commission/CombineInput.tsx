@@ -98,14 +98,20 @@ const CombineInput = ( { element, onValueChange }: SettingsProps ) => {
             id={ element.hook_key }
             className=" @container/combine grid grid-cols-12 p-4 gap-2"
         >
-            <div className="flex flex-col @xl/combine:col-span-7 col-span-12 gap-1">
-                <h2 className="text-sm @md/combine:text-base leading-6 font-semibold text-gray-900">
-                    <RawHTML>{ element?.title }</RawHTML>
-                </h2>
-                <p className="text-xs @md/combine:text-sm font-normal text-[#828282] mt-1">
-                    <RawHTML>{ element?.description }</RawHTML>
-                </p>
-            </div>
+            { ( element?.title || element?.description ) && (
+                <div className="flex flex-col @xl/combine:col-span-7 col-span-12 gap-1">
+                    { element?.title && (
+                        <h2 className="text-sm @md/combine:text-base leading-6 font-semibold text-gray-900">
+                            <RawHTML>{ element?.title }</RawHTML>
+                        </h2>
+                    ) }
+                    { element?.description && (
+                        <p className="text-xs @md/combine:text-sm font-normal text-[#828282] mt-1">
+                            <RawHTML>{ element?.description }</RawHTML>
+                        </p>
+                    ) }
+                </div>
+            ) }
             <div className="@xl/combine:col-span-5 col-span-12 flex items-center justify-end space-x-2">
                 <MaskedInput
                     value={ formatValue( values.admin_percentage ) }
