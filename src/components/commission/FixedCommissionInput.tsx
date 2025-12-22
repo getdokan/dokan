@@ -128,7 +128,7 @@ const FixedCommissionInput = ( {
             className="@container/combine grid grid-cols-12 p-4 gap-2"
         >
             { hasContent && (
-                <div className="flex flex-col @xl/combine:col-span-7 col-span-12 gap-1">
+                <div className="flex flex-col justify-center @xl/combine:col-span-7 col-span-12 gap-1">
                     { title && (
                         <h2 className="text-sm @md/combine:text-base leading-6 font-semibold text-gray-900">
                             <RawHTML>{ title }</RawHTML>
