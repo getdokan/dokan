@@ -1,3 +1,6 @@
+### v4.2.2 ( Dec 22, 2025 ) ###
+- **fix:** Banner image cropping reflects an error on the vendor store settings.
+
 ### v4.2.1 ( Dec 04, 2025 ) ###
 - **new:** Added a "Filter by Vendor Sub-orders" option to the WooCommerce Orders page to easily filter specific marketplace orders.
 - **update:** Redesigned the Admin Panel "Not Found" page template for a better look and user experience.

@@ -4,6 +4,18 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.2.2',
+        'released' => '2025-12-22',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Banner image cropper reflects an error on the vendor store settings.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.2.1',
         'released' => '2025-12-04',
         'changes'  => [
