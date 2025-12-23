@@ -312,17 +312,12 @@ class StoreController extends WP_REST_Controller {
      */
     public function get_store( $request ) {
         $store_id = (int) $request['id'];
-        $current_user = get_current_user_id();
-
-        $staff_vendor_id = get_user_meta( $current_user, '_vendor_id', true );
-
-        if ( $staff_vendor_id ) {
-            $vendor_id = (int) $staff_vendor_id;
-            $store     = dokan()->vendor->get( $vendor_id );
-        } else {
-            $store = dokan()->vendor->get( $store_id );
+        
+        if ( ! dokan_is_user_seller( $store_id, true ) ) {
+           $store_id = dokan_get_current_user_id();
         }
 
+        $store = dokan()->vendor->get( $store_id );
         $stores_data = $this->prepare_item_for_response( $store, $request );
         $response = rest_ensure_response( $stores_data );
         return $response;
@@ -372,19 +367,20 @@ class StoreController extends WP_REST_Controller {
         $current_user = get_current_user_id();
         $requested_id = absint( $request->get_param( 'id' ) );
 
-        if ( current_user_can( 'dokandar' ) && $current_user === $requested_id ) {
+        if ( dokan_is_user_seller( $current_user ) && $current_user === $requested_id ) {
             return true;
         }
 
-        $staff_vendor_id = get_user_meta( $current_user, '_vendor_id', true );
-        if ( $staff_vendor_id && (int) $staff_vendor_id === $requested_id ) {
+        $staff_vendor_id = (int) get_user_meta( $current_user, '_vendor_id', true );
+
+        if ( $staff_vendor_id && $staff_vendor_id === $requested_id ) {
             return true;
         }
 
         return false;
     }
 
-
+    
     /**
      * Update Store
      *
@@ -395,8 +391,18 @@ class StoreController extends WP_REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function update_store( $request ) {
-        $store = dokan()->vendor->get( (int) $request->get_param( 'id' ) );
+        $requested_id = absint( $request->get_param( 'id' ) );
+        $current_user = get_current_user_id();
 
+        if ( user_can( $current_user, 'vendor_staff' ) ) {
+            $staff_vendor_id = (int) get_user_meta( $current_user, '_vendor_id', true );
+
+            if ( $staff_vendor_id ) {
+                $requested_id = $staff_vendor_id;
+            }
+        }
+
+        $store  = dokan()->vendor->get( $requested_id );
         $params   = $request->get_params();
         $store_id = dokan()->vendor->update( $store->get_id(), $params );
 
