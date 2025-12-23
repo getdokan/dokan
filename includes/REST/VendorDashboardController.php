@@ -386,6 +386,7 @@ class VendorDashboardController extends \WP_REST_Controller {
                 'tagline'               => get_bloginfo( 'description' ),
                 'site_icon'             => $favicon,
                 'currency'              => get_woocommerce_currency(),
+                'currency_options'      => $currency_options,
                 'currency_position'     => get_option( 'woocommerce_currency_pos' ),
                 'currency_symbol'       => get_woocommerce_currency_symbol(),
                 'decimal_separator'     => wc_get_price_decimal_separator(),
@@ -407,7 +408,6 @@ class VendorDashboardController extends \WP_REST_Controller {
                 'language'              => get_locale(),
                 'week_start_on'         => get_option( 'start_of_week' ),
                 'store_color'           => dokan_get_option( 'store_color_pallete', 'dokan_colors', [] ),
-                'currency_options'      => $currency_options,
                 'timezone_utc'          => $timezone_utc,
             ]
         );
@@ -424,9 +424,33 @@ class VendorDashboardController extends \WP_REST_Controller {
             'type'       => 'object',
             // In JSON Schema you can specify object properties in the properties attribute.
             'properties' => [
+                'site_title'            => [
+                    'description' => esc_html__( 'Site title.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view' ],
+                    'readonly'    => true,
+                ],
+                'tagline'               => [
+                    'description' => esc_html__( 'Tagline.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view' ],
+                    'readonly'    => true,
+                ],
+                'site_icon'             => [
+                    'description' => esc_html__( 'Favicon.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view' ],
+                    'readonly'    => true,
+                ],
                 'currency'              => [
                     'description' => esc_html__( 'Payment currency.', 'dokan-lite' ),
                     'type'        => 'string',
+                    'context'     => [ 'view' ],
+                    'readonly'    => true,
+                ],
+                'currency_options'      => [
+                    'description' => esc_html__( 'Currency Options.', 'dokan-lite' ),
+                    'type'        => 'object',
                     'context'     => [ 'view' ],
                     'readonly'    => true,
                 ],
@@ -538,13 +562,19 @@ class VendorDashboardController extends \WP_REST_Controller {
                     'context'     => [ 'view' ],
                     'readonly'    => true,
                 ],
+                'timezone_utc'           => [
+                    'description' => esc_html__( 'Store UTC time.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view' ],
+                    'readonly'    => true,
+                ],
                 'language'              => [
                     'description' => esc_html__( 'Store language.', 'dokan-lite' ),
                     'type'        => 'string',
                     'context'     => [ 'view' ],
                     'readonly'    => true,
                 ],
-                'start_of_week' => [
+                'week_start_on' => [
                     'description' => esc_html__( 'Store start of week.', 'dokan-lite' ),
                     'type'        => 'object',
                     'context'     => [ 'view' ],
