@@ -260,7 +260,6 @@ class Manager {
         if ( ! $data ) {
             return $vendor;
         }
-       error_log( 'Current User ID: ' . get_current_user_id() );
         //Allow if current user is the vendor OR is an administrator/shop manager.
         $is_owner = dokan_get_current_user_id() === (int) $vendor->get_id();
         $is_admin = current_user_can( 'manage_woocommerce' ) || current_user_can( 'manage_options' );
