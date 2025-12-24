@@ -1,4 +1,5 @@
 import { dispatch } from '@wordpress/data';
+import { decodeEntities } from '@wordpress/html-entities';
 import {
     DokanBaseTextField as BaseDokanNumber,
     DokanFieldLabel,
@@ -78,8 +79,8 @@ export default function DokanNumber( { element } ) {
                     min={ element.min }
                     max={ element.max }
                     step={ element.step }
-                    prefix={ prefix }
-                    postfix={ postfix }
+                    prefix={ decodeEntities( prefix ) }
+                    postfix={ decodeEntities( postfix ) }
                 />
             </div>
         </div>
