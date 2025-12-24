@@ -42,7 +42,7 @@ const CardRadioOption = ( {
                     ! divider && 'flex-row-reverse justify-end'
                 ) }
             >
-                <div className="flex flex-col">
+                <div className="flex flex-col flex-1">
                     <span className="font-semibold text-[14px] text-[#25252D]">
                         { typeof option.title === 'string' &&
                             parse( option.title ) }

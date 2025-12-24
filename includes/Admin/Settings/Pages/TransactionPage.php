@@ -373,7 +373,7 @@ class TransactionPage extends AbstractPage {
             )
             ->add(
                 ElementFactory::field( 'monthly_billing_day', 'number' )
-                    ->set_title( esc_html__( 'Monthly Billing Day', 'dokan-lite' ) )
+                    ->set_title( esc_html__( 'Monthly Billing Date', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Enter the day of month when you want to send reverse withdrawal balance invoices to vendors.', 'dokan-lite' ) )
                     ->set_addon_icon( true )
                     ->set_prefix( 'Calendar' )
