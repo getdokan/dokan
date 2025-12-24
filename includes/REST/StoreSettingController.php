@@ -14,7 +14,7 @@ use WP_Error;
  *
  * @author weDevs <info@wedevs.com>
  */
-class StoreSettingController extends WP_REST_Controller {
+class StoreSettingController extends DokanBaseVendorController {
     /**
      * Endpoint namespace
      *
@@ -42,7 +42,7 @@ class StoreSettingController extends WP_REST_Controller {
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_settings' ],
-                    'permission_callback' => [ $this, 'get_settings_permission_callback' ],
+                    'permission_callback' => [ $this, 'check_permission' ],
                     'args'                => [
                         'vendor_id' => [
                             'required'          => false,
@@ -57,7 +57,7 @@ class StoreSettingController extends WP_REST_Controller {
                 [
                     'methods'             => WP_REST_Server::EDITABLE,
                     'callback'            => [ $this, 'update_settings' ],
-                    'permission_callback' => [ $this, 'get_settings_permission_callback' ],
+                    'permission_callback' => [ $this, 'check_permission' ],
                     'args'                => [
                         'vendor_id' => [
                             'required'          => false,
@@ -121,25 +121,6 @@ class StoreSettingController extends WP_REST_Controller {
         $response['chargeable_methods']           = dokan_withdraw_get_chargeable_methods();
 
         return rest_ensure_response( $response );
-    }
-
-    /**
-     * Permission callback for vendor settings
-     *
-     * @return bool|WP_Error
-     */
-    public function get_settings_permission_callback() {
-        $vendor = $this->get_vendor();
-
-        if ( is_wp_error( $vendor ) ) {
-            return $vendor;
-        }
-
-        if ( empty( $vendor->get_id() ) ) {
-            return new WP_Error( 'no_store_found', __( 'No vendor found', 'dokan-lite' ), [ 'status' => 404 ] );
-        }
-
-        return true;
     }
 
     /**
