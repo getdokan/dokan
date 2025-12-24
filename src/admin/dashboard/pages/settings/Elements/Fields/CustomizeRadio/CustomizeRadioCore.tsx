@@ -29,7 +29,7 @@ const CustomizeRadioCore: React.FC< CustomizeRadioProps > = ( {
         baseClassName = 'flex flex-wrap gap-4';
     }
     return (
-        <div className={ `${ baseClassName } ${ className }` }>
+        <div className={ `${ baseClassName } mt-5 ${ className }` }>
             { options.map( ( option ) => {
                 const isSelected = option.value === selectedValue;
 

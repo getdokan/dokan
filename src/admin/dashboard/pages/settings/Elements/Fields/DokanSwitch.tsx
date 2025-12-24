@@ -29,7 +29,7 @@ export default function DokanSwitch( { element } ) {
                         helperText={ element.description }
                         tooltip={ element.tooltip }
                         imageUrl={ element?.image_url }
-                        wrapperClassNames={ 'w-full' }
+                        wrapperClassNames={ 'w-full items-center' }
                     />
                 </div>
             ) }

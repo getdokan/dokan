@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\Admin\Settings\Pages;
 use WeDevs\Dokan\Admin\Settings\Elements\ElementFactory;
 use WeDevs\Dokan\Admin\Settings\ElementTransformer;
 use WeDevs\Dokan\Admin\Settings;
+use WeDevs\Dokan\Utilities\AdminSettings;
 
 class VendorPage extends AbstractPage {
 
@@ -95,6 +96,7 @@ class VendorPage extends AbstractPage {
             ->add(
                 ElementFactory::field( 'address_fields', 'switch' )
                     ->set_title( esc_html__( 'Address Fields', 'dokan-lite' ) )
+                    ->set_tooltip( esc_html__( 'Add Address Fields on the Vendor Registration form.', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Add Address Fields on the Vendor Registration form.', 'dokan-lite' ) )
                     ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'on' )
                     ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), 'off' )
@@ -154,7 +156,7 @@ class VendorPage extends AbstractPage {
         $vendor_capabilities_page->add( $vendor_capabilities_section );
 
         $this
-            ->set_title( esc_html__( 'Vendor', 'dokan-lite' ) )
+            ->set_title( esc_html__( 'Vendors', 'dokan-lite' ) )
             ->set_description( esc_html__( 'Configure vendor-related settings and capabilities.', 'dokan-lite' ) )
             ->set_icon( 'Users' )
             ->add( $vendor_onboarding )

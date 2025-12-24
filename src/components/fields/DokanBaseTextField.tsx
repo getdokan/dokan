@@ -113,10 +113,8 @@ const DokanBaseTextField = ( {
                         placeholder,
                         ...inputProps,
                     } }
-                    addOnLeft={ prefix ? <RawHTML>{ prefix }</RawHTML> : null }
-                    addOnRight={
-                        postfix ? <RawHTML>{ postfix }</RawHTML> : null
-                    }
+                    addOnLeft={ prefix }
+                    addOnRight={ postfix }
                     { ...otherProps }
                 />
             </div>
