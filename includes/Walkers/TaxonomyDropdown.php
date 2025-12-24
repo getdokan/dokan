@@ -40,6 +40,32 @@ class TaxonomyDropdown extends Walker {
     }
 
     /**
+     * Override display_element method to add additional validation
+     *
+     * @param object $element           Data object.
+     * @param array  $children_elements List of elements to continue traversing.
+     * @param int    $max_depth         Max depth to traverse.
+     * @param int    $depth             Depth of current element.
+     * @param array  $args              An array of arguments.
+     * @param string $output            Used to append additional content.
+     */
+    public function display_element( $element, &$children_elements, $max_depth, $depth, $args, &$output ) {
+        // Validate element is an object before accessing properties
+        if ( ! $element ) {
+            return;
+        }
+
+        // Check if the required ID field exists
+        $id_field = $this->db_fields['id'] ?? 0;
+        if ( ! isset( $element->$id_field ) ) {
+            return;
+        }
+
+        // Now call the parent method which will properly handle valid elements
+        parent::display_element( $element, $children_elements, $max_depth, $depth, $args, $output );
+    }
+
+    /**
      * Start element
      *
      * @param string $output
@@ -51,26 +77,22 @@ class TaxonomyDropdown extends Walker {
      * @return void
      */
     public function start_el( &$output, $category, $depth = 0, $args = [], $id = 0 ) {
-        $commission_data = dokan()->commission->get_commission(
-            [
-                'product_id'  => $this->post_id,
-                'category_id' => $category->term_id,
-                'vendor_id'   => dokan_get_current_user_id(),
-            ]
-        );
 
-        $commission_val = $commission_data->get_vendor_earning();
-        $commission_type = $commission_data->get_type();
+
+        $taxonomy = isset( $category->taxonomy ) ? $category->taxonomy : '';
+
+        if ( ! taxonomy_exists( $taxonomy ) ) {
+            dokan_log( 'Taxonomy does not exist: ' . $taxonomy );
+            return;
+        }
+        // Check if term_id exists
+        if ( ! isset( $category->term_id ) ) {
+            return;
+        }
 
         $pad      = str_repeat( '&nbsp;&#8212;', $depth * 1 );
         $cat_name = apply_filters( 'list_cats', $category->name, $category );
-        $output .= "<option class=\"level-$depth\" value=\"" . $category->term_id . '"';
-
-        if ( defined( 'DOKAN_PRO_PLUGIN_VERSION' ) && version_compare( DOKAN_PRO_PLUGIN_VERSION, '2.9.14', '<' ) ) {
-            $output .= ' data-commission="' . $commission_val . '" data-commission_type="' . $commission_type . '"';
-        } else {
-            $output .= ' data-commission="' . $commission_val . '" data-product-id="' . $this->post_id . '"';
-        }
+        $output   .= "<option class=\"level-$depth\" value=\"" . $category->term_id . '"';
 
         $selected = is_array( $args['selected'] ) ? $args['selected'] : (array) $args['selected'];
         $selected = array_map( 'intval', $selected );
@@ -89,3 +111,5 @@ class TaxonomyDropdown extends Walker {
         $output .= "</option>\n";
     }
 }
+
+

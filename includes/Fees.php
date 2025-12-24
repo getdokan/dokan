@@ -3,13 +3,6 @@
 namespace WeDevs\Dokan;
 
 use WC_Order;
-use WC_Product;
-use WeDevs\Dokan\Commission\Calculator;
-use WeDevs\Dokan\Commission\Strategies\GlobalStrategy;
-use WeDevs\Dokan\Commission\Strategies\OrderItem;
-use WeDevs\Dokan\Commission\Strategies\Product;
-use WeDevs\Dokan\Commission\Strategies\Vendor;
-use WeDevs\Dokan\ProductCategory\Helper;
 use WP_Error;
 use WooCommerce\PayPalCommerce\WcGateway\Gateway\PayPalGateway;
 
@@ -124,7 +117,7 @@ class Fees {
     /**
      * Get processing fee
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.4
      *
      * @param WC_Order $order
      *

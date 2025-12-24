@@ -37,13 +37,6 @@ const mergeCoverageReports = (reportPaths: string[]): CoverageReport => {
     reportPaths.forEach(reportPath => {
         const report: CoverageReport = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
 
-        // Add total features and covered features
-        // mergedReport.total_features += report.total_features;
-        // mergedReport.total_covered_features += report.total_covered_features;
-
-        // Add coverage percentages (convert string to number, remove "%")
-        // mergedReport.coverage = (parseFloat(mergedReport.coverage.replace('%', '')) + parseFloat(report.coverage.replace('%', ''))).toFixed(2) + '%';
-
         // Merge page coverage
         mergedReport.page_coverage = mergePageCoverage(mergedReport.page_coverage, report.page_coverage);
 

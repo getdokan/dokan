@@ -10,17 +10,18 @@ use user_switching;
 /**
 * User Switching functionality
 *
-* @since  DOKAN_LITE_SINCE
+* @since  3.0.6
 */
 class UserSwitch {
 
     /**
      * Load automatically when class initiate
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.6
      */
     public function __construct() {
         add_filter( 'dokan_admin_localize_script', [ $this, 'add_localize_data' ], 15 );
+        add_filter( 'dokan_admin_dashboard_vendors_settings', [ $this, 'add_localize_data' ] );
         add_filter( 'dokan_rest_store_additional_fields', [ $this, 'populate_switch_url' ], 2, 3 );
         add_action( 'dokan_dashboard_content_inside_before', [ $this, 'show_user_switching_message' ], 9 );
     }
@@ -28,7 +29,7 @@ class UserSwitch {
     /**
      * Is feature active or not
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.6
      *
      * @return boolean
      */
@@ -45,12 +46,13 @@ class UserSwitch {
     /**
      * Add localize scription for loading if feature available or not
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.6
      *
      * @return array
      */
     public function add_localize_data( $localize_data ) {
         $localize_data['is_vendor_switching_enabled'] = $this->is_feature_active();
+        $localize_data['is_vendor_legacy_page']       = get_transient( 'dokan_legacy_vendors_page' );
 
         return $localize_data;
     }
@@ -58,7 +60,7 @@ class UserSwitch {
     /**
      * Populate switch url for user
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.6
      *
      * @return array
      */
@@ -85,7 +87,7 @@ class UserSwitch {
     /**
      * Switch to or Switch Back to user message in vendor dashboard
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.6
      *
      * @return void
      */
@@ -123,7 +125,7 @@ class UserSwitch {
                             echo '<span>';
                         }
                     ?>
-                    <span class="fa fa-user" style="color:#f05025" aria-hidden="true"></span>
+                    <span class="fa fa-user" style="color: var(--dokan-button-background-color, #7047EB)" aria-hidden="true"></span>
                     <?php
                         $message       = '';
                         $just_switched = isset( $_GET['user_switched'] );

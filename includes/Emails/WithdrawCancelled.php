@@ -28,15 +28,16 @@ class WithdrawCancelled extends WC_Email {
         $this->template_plain   = 'emails/plain/withdraw-cancel.php';
         $this->template_base    = DOKAN_DIR . '/templates/';
         $this->placeholders = [
-            '{store_name}'    => '',
-            '{amount}'        => '',
-            '{method}'        => '',
-            '{profile_url}'   => '',
-            '{withdraw_page}' => dokan_get_navigation_url( 'withdraw' ),
-            '{note}'          => '',
+            '{store_name}'        => '',
+            '{amount}'            => '',
+            '{receivable_amount}' => '',
+            '{method}'            => '',
+            '{profile_url}'       => '',
+            '{withdraw_page}'     => dokan_get_navigation_url( 'withdraw' ),
+            '{note}'              => '',
             // Only for backward compatibility.
-            '{user_name}'     => '',
-            '{site_name}'     => $this->get_from_name(),
+            '{user_name}'         => '',
+            '{site_name}'         => $this->get_from_name(),
         ];
 
         // Triggers for this email
@@ -83,12 +84,13 @@ class WithdrawCancelled extends WC_Email {
         $seller                      = new Vendor( $withdraw->get_user_id() );
         $this->object                = $seller;
 
-        $this->placeholders['{store_name}']    = $seller->get_shop_name();
-        $this->placeholders['{amount}']        = dokan()->email->currency_symbol( $withdraw->get_amount() );
-        $this->placeholders['{method}']        = dokan_withdraw_get_method_title( $withdraw->get_method() );
-        $this->placeholders['{profile_url}']   = dokan_get_navigation_url( 'edit-account' );
-        $this->placeholders['{note}']          = $withdraw->get_note();
-        $this->placeholders['{user_name}']     = $seller->get_shop_name(); // Only for  backward compatibility.
+        $this->placeholders['{store_name}']        = $seller->get_shop_name();
+        $this->placeholders['{amount}']            = dokan()->email->currency_symbol( $withdraw->get_amount() );
+        $this->placeholders['{receivable_amount}'] = dokan()->email->currency_symbol( $withdraw->get_receivable_amount() );
+        $this->placeholders['{method}']            = dokan_withdraw_get_method_title( $withdraw->get_method() );
+        $this->placeholders['{profile_url}']       = dokan_get_navigation_url( 'edit-account' );
+        $this->placeholders['{note}']              = $withdraw->get_note();
+        $this->placeholders['{user_name}']         = $seller->get_shop_name(); // Only for  backward compatibility.
 
         $this->send( $seller->get_email(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         $this->restore_locale();

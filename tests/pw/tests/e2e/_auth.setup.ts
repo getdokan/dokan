@@ -45,7 +45,7 @@ setup.describe('add & authenticate users', () => {
             await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.adminAuth);
         }
         // add map location
-        await dbUtils.addStoreBiographyAndMapLocation(sellerId);
+        await dbUtils.addStoreMapLocation(sellerId);
 
         helpers.createEnvVar('VENDOR_ID', sellerId);
     });
@@ -64,7 +64,7 @@ setup.describe('add & authenticate users', () => {
             await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.adminAuth);
         }
         // add map location
-        await dbUtils.addStoreBiographyAndMapLocation(sellerId);
+        await dbUtils.addStoreMapLocation(sellerId);
 
         helpers.createEnvVar('VENDOR2_ID', sellerId);
     });

@@ -105,6 +105,7 @@
                     <category-based-commission
                         :value="watchCategoryCommission"
                         @change="onCategoryUpdate"
+                        :resetSubCategory="fieldValue?.reset_sub_category_when_edit_all_category && fieldValue?.reset_sub_category_when_edit_all_category === 'on'"
                     />
                 </div>
 
@@ -261,6 +262,27 @@
                               :value="fieldValue[fieldData.name]"
                               @input="event => inputValueHandler( fieldData.name, event.target.value, fieldValue[fieldData.name] )"
                             >
+                        </label>
+                    </div>
+                </fieldset>
+                <p v-if="hasError( fieldData.name )" class="dokan-error">
+                    {{ getError( fieldData.label ) }}
+                </p>
+            </div>
+        </template>
+
+        <template v-if="'croppable_image' === fieldData.type">
+            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+                <fieldset>
+                    <FieldHeading :fieldData="fieldData"></FieldHeading>
+                    <div class="field add_files">
+                        <label :style="{ maxWidth: fieldData.render_width + 'px' }" :for="sectionId + '[' + fieldData.name + ']'">
+                            <UploadImage
+                                :croppingWidth="parseInt( croppingWidth )"
+                                :croppingHeight="parseInt( croppingHeight )"
+                                :src="fieldValue[fieldData.name]"
+                                @uploadedImage="uploadedImage"
+                                :showButton="false" />
                         </label>
                     </div>
                 </fieldset>
@@ -514,6 +536,8 @@
     import CombineInput from "admin/components/CombineInput.vue";
     import CategoryBasedCommission from "admin/components/Commission/CategoryBasedCommission.vue";
     import DokanRadioGroup from "admin/components/DokanRadioGroup.vue";
+    import UploadImage from "admin/components/UploadImage.vue";
+
     let Mapbox                = dokan_get_lib('Mapbox');
     let TextEditor            = dokan_get_lib('TextEditor');
     let GoogleMaps            = dokan_get_lib('GoogleMaps');
@@ -523,6 +547,7 @@
         name: 'Fields',
 
         components: {
+            UploadImage,
             CategoryBasedCommission,
             CombineInput,
             DokanRadioGroup,
@@ -546,6 +571,8 @@
                 checked               : this.isChecked(),
                 socialChecked         : this.isSocialChecked(),
                 expandSocials         : false,
+                croppingWidth         : this.fieldData.cropping_width,
+                croppingHeight        : this.fieldData.cropping_height,
                 repeatableItem        : {},
                 repeatableTime        : [],
                 singleColorPicker     : { default: this.fieldData.default, label: '', show_pallete: false },
@@ -553,6 +580,7 @@
                 customFieldComponents : dokan.hooks.applyFilters( 'getDokanCustomFieldComponents', [] ),
                 commissionFieldComponents : dokan.hooks.applyFilters( 'getDokanCommissionFieldComponents', [] ),
                 multiCheckValues      : {},
+                dokanProExists        : dokan.hasPro,
             }
         },
 
@@ -570,6 +598,24 @@
                     this.checked = value;
                 }
             });
+
+            this.$root.$on( 'dokanRestoreDefault', ( fieldData ) => {
+                if ( this.fieldValue[ fieldData.name ] !== fieldData.default ) {
+                    this.fieldValue[ fieldData.name ] = fieldData.default
+                }
+            });
+        },
+        
+        watch: {
+            fieldValue: {
+                handler( newValue ) {
+                    if ( this.id === 'default_store_banner' ) {
+                        this.croppingWidth = newValue.store_banner_width;
+                        this.croppingHeight = newValue.store_banner_height;
+                    }
+                },
+                deep: true,
+            }
         },
 
         computed: {
@@ -734,9 +780,42 @@
                   fieldData.is_lite ?? false
                 );
             },
+            
+            uploadedImage( image ) {
+                this.fieldValue[ this.id ] = this.validateInputData( this.id, image.src, this.fieldValue[ this.id ], this.fieldData );
+            },
+
+            validateCustomStoreUrl( value ) {
+                // Emit event to remove any existing validation error for this field first
+                this.$emit('removeValidationError', 'custom_store_url');
+
+                if ( ! value ) {
+                    return;
+                }
+
+                // List of reserved WordPress keywords from backend
+                const reservedSlugs = dokan.hooks.applyFilters(
+                    'dokan_reserved_url_slugs',
+                    dokanAdmin.reserved_slugs || []
+                );
+
+                // Check if the value is in the reserved slugs list (case-sensitive)
+                if ( reservedSlugs.includes( value ) ) {
+                    // Emit event to add validation error
+                    this.$emit( 'addValidationError', {
+                        name: 'custom_store_url',
+                        error: this.__( 'The store URL "%s" is reserved by WordPress and cannot be used. Please choose a different value like "store".', 'dokan-lite' ).replace( '%s', value )
+                    } );
+                }
+            },
 
             inputValueHandler( name, newValue, oldValue ) {
-              this.fieldValue[ name ] = this.validateInputData( name, newValue, oldValue, this.fieldData );
+                // Add validation for the custom_store_url field
+                if ( name === 'custom_store_url' ) {
+                    this.validateCustomStoreUrl( newValue );
+                }
+
+                this.fieldValue[ name ] = this.validateInputData( name, newValue, oldValue, this.fieldData );
             },
 
             containCommonFields( type ) {
@@ -1132,6 +1211,10 @@
                             box-shadow: 0 0 0 1px transparent;
                         }
                     }
+                }
+
+                .field_default {
+                    margin: 0;
                 }
             }
 

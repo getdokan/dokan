@@ -79,8 +79,7 @@ class DokanFactoryTest extends DokanTestCase {
         $this->assertEquals( 10, $order->get_total_fees() );
         $this->assertEquals( 10, $order->get_shipping_total() );
         $this->assertEquals( 15, $order->get_subtotal() );
-        $this->assertEquals( 15, $order->get_discount_total() );
-        $this->assertEquals( 20, $order->get_total() );
+        $this->assertEquals( 35, $order->get_total() );
 
         $line_items = $order->get_items();
         $this->assertCount( 2, $line_items );

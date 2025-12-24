@@ -86,5 +86,6 @@
     $(function(){
         // DOM Ready - Let's invoke the init method
         DokanAdminProduct.init();
+        window.DokanAdminProduct = DokanAdminProduct;
     });
 })(jQuery);

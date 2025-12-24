@@ -37,6 +37,8 @@ class ProductStatsQueryFilterTest extends ReportTestCase {
      */
     public function test_products_stats_hook_registered() {
         $order_stats_query_filter = dokan_get_container()->get( QueryFilter::class );
+        $order_stats_query_filter->register_hooks();
+        
         // Assert the Join Clause filters are registered
         self::assertNotFalse( has_filter( 'woocommerce_analytics_clauses_join_products_stats_total', [ $order_stats_query_filter, 'add_join_subquery' ] ) );
         self::assertNotFalse( has_filter( 'woocommerce_analytics_clauses_join_products_stats_interval', [ $order_stats_query_filter, 'add_join_subquery' ] ) );
@@ -64,6 +66,7 @@ class ProductStatsQueryFilterTest extends ReportTestCase {
 
 		$service = Mockery::mock( QueryFilter::class . '[' . implode( ',', $mocking_methods ) . ']' );
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
+		dokan_get_container()->get( QueryFilter::class )->register_hooks();
 
         foreach ( $mocking_methods as $method ) {
             $service->shouldReceive( $method )
@@ -93,6 +96,7 @@ class ProductStatsQueryFilterTest extends ReportTestCase {
         $filter = Mockery::mock( QueryFilter::class . '[should_filter_by_vendor_id]' );
 
         dokan_get_container()->extend( QueryFilter::class )->setConcrete( $filter );
+        dokan_get_container()->get( QueryFilter::class )->register_hooks();
 
         $filter->shouldReceive( 'should_filter_by_vendor_id' )
             ->atLeast()
@@ -138,6 +142,7 @@ class ProductStatsQueryFilterTest extends ReportTestCase {
         remove_filter( 'woocommerce_analytics_clauses_where_products_stats_total', [ $this->sut, 'add_where_subquery' ], 30 );
 
         dokan_get_container()->extend( QueryFilter::class )->setConcrete( $filter );
+        dokan_get_container()->get( QueryFilter::class )->register_hooks();
 
         $filter->shouldReceive( 'should_filter_by_vendor_id' )
             ->atLeast()

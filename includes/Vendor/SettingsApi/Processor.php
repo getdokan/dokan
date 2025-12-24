@@ -33,7 +33,7 @@ class Processor {
      */
     public function __construct( $vendor = 0 ) {
         if ( empty( $vendor ) ) {
-            $vendor = dokan()->vendor->get( get_current_user_id() );
+            $vendor = dokan()->vendor->get( dokan_get_current_user_id() );
         } else {
             $vendor = dokan()->vendor->get( $vendor );
         }

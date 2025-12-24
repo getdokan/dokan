@@ -36,7 +36,6 @@ div.media-sidebar a.edit-attachment{
         flex-wrap: wrap;
         -webkit-flex-wrap: wrap;
         -ms-flex-wrap: wrap;
-        overflow: hidden;
         width: 100%;
 
         * {
@@ -44,7 +43,13 @@ div.media-sidebar a.edit-attachment{
         }
 
         a:focus {
-            outline-color: #ff5a40;
+            outline-color: var(--dokan-button-background-color, #7047EB);
+        }
+
+        input[type=checkbox]:not(.dokan-layout input[type=checkbox]){
+            -webkit-appearance: revert;
+            -moz-appearance: revert;
+            appearance: revert;
         }
     }
 
@@ -65,7 +70,7 @@ div.media-sidebar a.edit-attachment{
     }
 
     .dokan-dashboard-content {
-        padding: 0 0 0 25px;
+        padding: 4px 4px 4px 25px;
         overflow: hidden;
         margin-top: 0px;
         width: 83%;
@@ -536,6 +541,16 @@ div.media-sidebar a.edit-attachment{
         padding-right: 5px;
       }
     }
+
+    #dokan-dashboard-fullwidth-wrapper {
+        .dokan-dashboard-content {
+            width: calc(100% - var(--dokan-sidebar-width, 250px));
+        }
+    }
+
+    .select2-search__field {
+        min-width: 220px !important;
+    }
 }
 
 .dokan-column-name-with-avatar {
@@ -549,5 +564,43 @@ div.media-sidebar a.edit-attachment{
         border-radius: 50%;
         border: 1px solid #fff;
         box-shadow: 0 1px 0 0 #e0e0e0;
+    }
+}
+
+@media screen and ( max-width: 768px ) {
+    #dokan-dashboard-fullwidth-wrapper {
+        .dokan-dashboard-content {
+            width: 100%;
+        }
+
+        .dokan-frontend-layout {
+            header {
+                padding: 0 22px;
+                min-height: 60px;
+                height: 60px;
+            }
+
+            .visit-store,
+            .header-avatar {
+                padding: 0;
+            }
+
+            .header-avatar {
+                padding-left: 20px;
+            }
+
+            .visit-store {
+                font-size: 12px;
+                padding-right: 20px;
+            }
+        }
+    }
+}
+
+@media screen and ( max-width: 600px ) {
+    #dokan-dashboard-fullwidth-wrapper {
+        #dokan-vendor-dashboard-layout-root {
+            top: 0;
+        }
     }
 }

@@ -5,6 +5,9 @@
  * @since   2.4
  *
  * @package dokan
+ *
+ * @var WP_User $author     Vendor user object
+ * @var array   $store_info Vendor store data
  */
 ?>
 

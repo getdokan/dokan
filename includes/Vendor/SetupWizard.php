@@ -487,9 +487,9 @@ class SetupWizard extends DokanSetupWizard {
         $dokan_settings['show_email']   = isset( $_POST['show_email'] ) ? 'yes' : 'no';
         $country = $dokan_settings['address']['country'] ?? '';
         $state = $dokan_settings['address']['state'] ?? '';
-        $country_has_states = isset( $states[ $country ] ) && count( $states[ $country ] ) > 0;
-        $state_is_empty = empty( $state );        // Validating fileds.
-        // Validating fileds.
+        $country_has_states = isset( $states[ $country ] );
+        $state_is_empty = empty( $state );        // Validating filed.
+        // Validating filed.
         $is_valid_form = true;
         if ( empty( $dokan_settings['address']['street_1'] ) ) {
             $is_valid_form = false;
@@ -506,11 +506,13 @@ class SetupWizard extends DokanSetupWizard {
         if ( empty( $dokan_settings['address']['country'] ) ) {
             $is_valid_form = false;
             $_POST['error_address[country]'] = 'error';
-        } elseif ( ( $country_has_states && $state_is_empty ) || ( ! $country_has_states && $state_is_empty ) ) {
+        } elseif ( ( $country_has_states && count( $states[ $country ] ) > 0 && $state_is_empty ) ) {
+            $is_valid_form = false;
+            $_POST['error_address[state]'] = 'error';
+        } elseif ( ! $country_has_states && $state_is_empty ) {
             $is_valid_form = false;
             $_POST['error_address[state]'] = 'error';
         }
-
         if ( ! $is_valid_form ) {
             return;
         }
@@ -519,7 +521,7 @@ class SetupWizard extends DokanSetupWizard {
         $dokan_settings = dokan()->registration->check_and_set_address_profile_completion( $this->store_id, $dokan_settings, $profile_settings );
 
         update_user_meta( $this->store_id, 'dokan_profile_settings', $dokan_settings );
-        do_action( 'dokan_store_profile_saved', $this->store_id, $dokan_settings );
+        do_action( 'dokan_store_profile_saved', $this->store_id, $dokan_settings, $profile_settings );
         do_action( 'dokan_seller_wizard_store_field_save', $this );
 
         wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );

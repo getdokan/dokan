@@ -4,7 +4,7 @@
             <div class="dokan-notice">
                 <h2></h2>
                 <AdminNotice></AdminNotice>
-                <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
+<!--                <UpgradeBanner v-if="! hasPro"></UpgradeBanner>-->
             </div>
             <div class="change-log" :class="hasPro ? 'pro-change-log' : 'lite-change-log'" id="change-log">
                 <h3>{{ __( 'Dokan Changelog', 'dokan-lite' ) }}</h3>
@@ -98,14 +98,14 @@ let Loading     = dokan_get_lib('Loading');
 let AdminNotice = dokan_get_lib('AdminNotice');
 
 import $ from 'jquery';
-import UpgradeBanner from "admin/components/UpgradeBanner.vue";
+// import UpgradeBanner from "admin/components/UpgradeBanner.vue";
 
 export default {
     name: 'ChangeLog',
 
     components: {
         Loading,
-        UpgradeBanner,
+        // UpgradeBanner,
         AdminNotice,
     },
 

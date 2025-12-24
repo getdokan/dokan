@@ -55,6 +55,58 @@ class ProductController extends DokanRESTController {
     protected $post_status = [ 'publish', 'pending', 'draft' ];
 
     /**
+     * Class constructor.
+     *
+     * @since 4.0.0
+     */
+    public function __construct() {
+        add_filter( "dokan_rest_{$this->post_type}_object_query", [ $this, 'add_only_downloadable_query' ], 10, 2 );
+    }
+
+    /**
+     * Add only downloadable meta query.
+     *
+     * @since 4.0.0
+     *
+     * @param array $args
+     *
+     * @param \WP_REST_Request $request
+     */
+    public function add_only_downloadable_query( $args, $request ) {
+        if ( true === dokan_string_to_bool( $request->get_param( 'only_downloadable' ) ) ) {
+            $args['meta_query'][] = [
+                'key'     => '_downloadable',
+                'value'   => 'yes',
+                'compare' => '=',
+            ];
+        }
+
+        return $args;
+    }
+
+    /**
+     * Product API query parameters collections.
+     *
+     * @since 4.0.0
+     *
+     * @return array Query parameters.
+     */
+    public function get_product_collection_params() {
+        $schema = parent::get_product_collection_params();
+
+        $schema['only_downloadable'] = [
+            'description' => __( 'If truthy value then only downloadable products will be returned', 'dokan-lite' ),
+            'type' => [ 'boolean', 'string' ],
+            'enum' => [ true, false, 0, 1 ],
+            'sanitize_callback' => 'dokan_string_to_bool',
+            'validate_callback' => 'dokan_string_to_bool',
+            'default' => false,
+        ];
+
+        return $schema;
+    }
+
+    /**
      * Register all routes related with stores
      *
      * @return void

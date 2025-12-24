@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Admin;
 
+use WeDevs\Dokan\Dashboard\Templates\Dashboard;
+use WeDevs\Dokan\Utilities\ReportUtil;
 use WP_Admin_Bar;
 
 /**
@@ -42,7 +44,7 @@ class AdminBar {
         $args = [
             'id'     => 'dokan',
             'title'  => __( 'Dokan', 'dokan-lite' ),
-            'href'   => admin_url( 'admin.php?page=dokan' ),
+            'href'   => admin_url( 'admin.php?page=dokan-dashboard' ),
         ];
 
         $wp_admin_bar->add_menu( $args );
@@ -52,7 +54,7 @@ class AdminBar {
                 'id'     => 'dokan-dashboard',
                 'parent' => 'dokan',
                 'title'  => __( 'Dashboard', 'dokan-lite' ),
-                'href'   => admin_url( 'admin.php?page=dokan' ),
+                'href'   => admin_url( 'admin.php?page=dokan-dashboard' ),
             ]
         );
 
@@ -62,15 +64,6 @@ class AdminBar {
                 'parent' => 'dokan',
                 'title'  => __( 'Withdraw', 'dokan-lite' ),
                 'href'   => admin_url( 'admin.php?page=dokan#/withdraw' ),
-            ]
-        );
-
-        $wp_admin_bar->add_menu(
-            [
-                'id'     => 'dokan-pro-features',
-                'parent' => 'dokan',
-                'title'  => __( 'PRO Features', 'dokan-lite' ),
-                'href'   => admin_url( 'admin.php?page=dokan#/premium' ),
             ]
         );
 
@@ -152,7 +145,7 @@ class AdminBar {
                 'parent' => 'site-name',
                 'id'     => 'view-dashboard',
                 'title'  => __( 'Visit Vendor Dashboard', 'dokan-lite' ),
-                'href'   => get_permalink( $vendor_dashboard ),
+                'href'   => get_permalink( $vendor_dashboard ) . ( ReportUtil::is_analytics_enabled() ? '?path=%2Fanalytics%2FOverview' : '' ),
             ];
         }
 

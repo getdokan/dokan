@@ -3,7 +3,7 @@
         <div class="dokan-settings">
             <h1 style="margin-bottom: 15px;">{{ __( 'Settings', 'dokan-lite' ) }}</h1>
             <AdminNotice></AdminNotice>
-            <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
+<!--            <UpgradeBanner v-if="! hasPro"></UpgradeBanner>-->
 
             <div id="setting-message_updated" class="settings-error notice is-dismissible" :class="{ 'updated' : isUpdated, 'error' : !isUpdated }" v-if="isSaved">
                 <p><strong v-html="message"></strong></p>
@@ -14,7 +14,7 @@
 
             <div class="dokan-settings-wrap " ref='settingsWrapper'>
                 <div class='flex d-xs:flex-col lg:flex-row w-full'>
-                    <div class="nav-tab-wrapper d-xs:!pb-5 d-xs:!pt-5 px-4 py-2 lg:overflow-hidden d-xs:w-full z-[500] w-[250px] flex-1 lg:w-[340px]">
+                    <div class="nav-tab-wrapper d-xs:!pb-5 d-xs:!pt-5 px-4 py-2 z-[1] lg:overflow-hidden d-xs:w-full  w-[250px] flex-1 lg:w-[340px]">
                         <div class="nab-section block">
                             <div class="flex gap-4 items-center">
                                 <!-- Mobile menu toggle button -->
@@ -167,6 +167,8 @@
                                             :all-settings-values="settingValues"
                                             :setting-fields='settingFields'
                                             @openMedia="showMedia"
+                                            @addValidationError="addValidationError"
+                                            @removeValidationError="removeValidationError"
                                             :key="fieldId"
                                             :errors="errors"
                                             :validationErrors="validationErrors"
@@ -213,7 +215,7 @@
 
     import Fields from "admin/components/Fields.vue"
     import SettingsBanner from "admin/components/SettingsBanner.vue";
-    import UpgradeBanner from "admin/components/UpgradeBanner.vue";
+    // import UpgradeBanner from "admin/components/UpgradeBanner.vue";
     import MobileSettingsDrawer from "admin/components/Settings/MobileSettingsList.vue";
 
     export default {
@@ -226,7 +228,7 @@
             Fields,
             Loading,
             SettingsBanner,
-            UpgradeBanner,
+            // UpgradeBanner,
             AdminNotice,
         },
 
@@ -500,6 +502,11 @@
                     return false;
                 }
 
+                // Check for custom validation errors first
+                if ( this.validationErrors && this.validationErrors.length > 0 ) {
+                    return false;
+                }
+
                 allFields.forEach( ( fields, index ) => {
                     if ( section === fields ) {
                         let sectionFields = this.settingFields[fields];
@@ -569,7 +576,8 @@
                     } );
                 } );
 
-                if ( this.errors.length < 1 ) {
+                // Check both required field errors and validation errors
+                if ( this.errors.length < 1 && this.validationErrors.length < 1 ) {
                     return true;
                 }
 
@@ -580,6 +588,18 @@
                return array.filter( ( element ) => {
                    return element !== value;
                });
+            },
+
+            addValidationError( error ) {
+                // Remove any existing error for the same field first
+                this.validationErrors = this.validationErrors.filter( e => e.name !== error.name );
+                // Add the new validation error
+                this.validationErrors.push( error );
+            },
+
+            removeValidationError( fieldName ) {
+                // Remove validation error for the specified field
+                this.validationErrors = this.validationErrors.filter( e => e.name !== fieldName );
             },
 
             toggleLoadingState() {
@@ -767,6 +787,27 @@
                         if ( response.dismiss ) {
                             this.settingValues.dokan_general.data_clear_on_uninstall = 'off';
                             this.$emit( 'switcHandler', 'data_clear_on_uninstall', this.settingValues.dokan_general.data_clear_on_uninstall );
+                        }
+                    });
+                }
+
+                if ( ( 'dokan_selling' in this.settingValues ) && 'reset_sub_category_when_edit_all_category' === fieldName ) {
+                    const confirmTitle = 'on' === value ? this.__( 'Enable Commission Inheritance Setting?', 'dokan-lite' ) : this.__( 'Disable Commission Inheritance Setting?', 'dokan-lite' );
+                    const htmlText = 'on' === value ? this.__( 'Parent category commission changes will automatically update all subcategories. Existing rates will remain unchanged until parent category is modified.', 'dokan-lite' ) : this.__( 'Subcategories will maintain their independent commission rates when parent category rates are changed.', 'dokan-lite' );
+                    const confirmBtnText = 'on' === value ? this.__( 'Enable', 'dokan-lite' ) : this.__( 'Disable', 'dokan-lite' );
+                    const updatableValue = 'on' === value ? 'off' : 'on';
+
+                    Swal.fire({
+                        icon              : 'warning',
+                        html              : htmlText,
+                        title             : confirmTitle,
+                        showCancelButton  : true,
+                        cancelButtonText  : this.__( 'Cancel', 'dokan-lite' ),
+                        confirmButtonText : confirmBtnText,
+                    }).then( ( response ) => {
+                        if ( response.dismiss ) {
+                            this.settingValues.dokan_selling.reset_sub_category_when_edit_all_category = updatableValue;
+                            this.$emit( 'switcHandler', 'reset_sub_category_when_edit_all_category', this.settingValues.dokan_selling.reset_sub_category_when_edit_all_category );
                         }
                     });
                 }

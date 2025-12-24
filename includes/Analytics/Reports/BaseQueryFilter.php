@@ -18,14 +18,6 @@ abstract class BaseQueryFilter implements Hookable {
     protected $context = '';
 
     /**
-     * QueryFilter constructor.
-     * Registers the hooks on instantiation.
-     */
-	public function __construct() {
-		$this->register_hooks();
-	}
-
-    /**
      * Add join clause for Dokan order state table in WooCommerce analytics queries.
      *
      * @param array $clauses The existing join clauses.
@@ -69,7 +61,7 @@ abstract class BaseQueryFilter implements Hookable {
      * @return array The modified where clauses.
      */
 	protected function add_where_subquery_for_refund( array $clauses ): array {
-		if ( ! isset( $_GET['refunds'] ) ) {
+		if ( ! isset( $_GET['refunds'] ) ) { //phpcs:ignore
 			return $clauses;
 		}
 
@@ -172,10 +164,10 @@ abstract class BaseQueryFilter implements Hookable {
 			return 0;
 		}
 
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( 'view_woocommerce_reports' ) ) {
 			return dokan_get_current_user_id();
 		}
 
-		return (int) ( wp_unslash( $_GET['sellers']  ?? 0 ) ); // phpcs:ignore
+		return (int) ( wp_unslash( $_GET['sellers'] ?? 0 ) ); // phpcs:ignore
 	}
 }

@@ -84,6 +84,10 @@ abstract class DokanTestCase extends WP_UnitTestCase {
         parent::set_up();
         Monkey\setUp();
 
+        $this->setup_permalink_structure();
+
+        $this->set_dokan_pages();
+
         // There is no need of REST and DB for Unit test.
         if ( $this->is_unit_test ) {
             return;
@@ -96,6 +100,32 @@ abstract class DokanTestCase extends WP_UnitTestCase {
         $this->server   = $wp_rest_server;
         do_action( 'rest_api_init' );
         $this->setup_users();
+    }
+
+    /**
+     * Setup permalink structure to postname for the test.
+     *
+     * @return void
+     */
+    protected function setup_permalink_structure(): void {
+		update_option( 'permalink_structure', '/%postname%/' );
+
+		global $wp_rewrite;
+		$wp_rewrite->set_permalink_structure( '/%postname%/' );
+		$wp_rewrite->flush_rules();
+	}
+
+    /**
+     * Setup Dokan pages
+     *
+     * @return void
+     */
+    protected function set_dokan_pages(): void {
+		delete_option( 'dokan_pages_created' );
+		delete_option( 'dokan_pages' );
+
+		$installer = new \WeDevs\Dokan\Install\Installer();
+		$installer->setup_pages();
     }
 
     /**

@@ -244,6 +244,7 @@ export const endPoints = {
     getAdminPromoNotices: `${SERVER_URL}/dokan/v1/admin/notices/promo`,
     getAdminLogs: `${SERVER_URL}/dokan/v1/admin/logs`,
     getAdminExportLogs: `${SERVER_URL}/dokan/v1/admin/logs/export`,
+    getAdminSettings: `${SERVER_URL}/dokan/v1/admin/option`,
 
     // seller badge
     getVerifiedSellerVerificationTypes: `${SERVER_URL}/dokan/v1/seller-badge/verification-types`,

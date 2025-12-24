@@ -37,6 +37,12 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
     </li>
     <li>
         <strong>
+            <?php esc_html_e( 'Charge:', 'dokan-lite' ); ?>
+        </strong>
+        <?php echo wp_kses_post( $data['{charge}'] ); ?>
+    </li>
+    <li>
+        <strong>
             <?php esc_html_e( 'Payment Method: ', 'dokan-lite' ); ?>
         </strong>
         <?php echo esc_html( $data['{method}'] ); ?>

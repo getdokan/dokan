@@ -6,6 +6,7 @@ use WeDevs\Dokan\Commission\Model\Setting;
 
 class Vendor implements InterfaceSetting {
 
+    protected int $category_id;
     /**
      * Product id to get a commission.
      *
@@ -15,7 +16,8 @@ class Vendor implements InterfaceSetting {
      */
     protected $vendor;
 
-    public function __construct( $vendor_id ) {
+    public function __construct( $vendor_id, int $category_id = 0 ) {
+        $this->category_id = $category_id;
         $this->vendor = dokan()->vendor->get( $vendor_id );
     }
 
@@ -42,7 +44,22 @@ class Vendor implements InterfaceSetting {
             $category_commissions = ! is_array( $category_commissions ) ? [] : $category_commissions;
         }
 
+        // @todo Need to check if the commission rate
+        if ( $type === 'category_based' ) {
+            $all_category_commissions = $category_commissions['all'] ?? [];
+            $category_commissions_items = $category_commissions['items'][ $this->category_id ] ?? [];
+
+            if ( ! empty( $category_commissions_items ) ) {
+                $percentage = $category_commissions_items['percentage'] ?? '';
+                $flat       = $category_commissions_items['flat'] ?? '';
+            } else {
+                $percentage = $all_category_commissions['percentage'] ?? '';
+                $flat       = $all_category_commissions['flat'] ?? '';
+            }
+        }
+
         $settings = new Setting();
+
         $settings->set_type( $type )
                 ->set_flat( $flat )
                 ->set_percentage( $percentage )
@@ -64,22 +81,21 @@ class Vendor implements InterfaceSetting {
      *     @type array  $category_commissions
      * }
      *
-     * @return \WeDevs\Dokan\Commission\Model\Setting
+     * @return Setting
      */
     public function save( array $setting ): Setting {
         if ( ! $this->vendor->get_id() ) {
             return $this->get();
         }
 
-        $percentage           = isset( $setting['percentage'] ) ? $setting['percentage'] : '';
-        $type                 = isset( $setting['type'] ) ? $setting['type'] : '';
-        $flat                 = isset( $setting['flat'] ) ? $setting['flat'] : '';
-        $category_commissions = isset( $setting['category_commissions'] ) ? $setting['category_commissions'] : [];
+        $setting = apply_filters( 'dokan_vendor_commission_settings_before_save', $setting, $this->vendor );
 
-        $this->vendor->update_meta( 'dokan_admin_percentage', $percentage );
-        $this->vendor->update_meta( 'dokan_admin_percentage_type', $type );
-        $this->vendor->update_meta( 'dokan_admin_additional_fee', $flat );
-        $this->vendor->update_meta( 'admin_category_commission', $category_commissions );
+        $this->vendor->update_meta( 'dokan_admin_percentage', $setting['percentage'] ?? '' );
+        $this->vendor->update_meta( 'dokan_admin_percentage_type', $setting['type'] ?? '' );
+        $this->vendor->update_meta( 'dokan_admin_additional_fee', $setting['flat'] ?? '' );
+        $this->vendor->update_meta( 'admin_category_commission', $setting['category_commissions'] ?? [] );
+
+        do_action( 'dokan_vendor_commission_settings_after_save', $setting, $this->vendor );
 
         return $this->get();
     }

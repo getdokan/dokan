@@ -18,7 +18,7 @@
             <input type="email" name="email" value="<?php echo esc_attr( $email ); ?>" placeholder="<?php esc_attr_e( 'you@example.com', 'dokan-lite' ); ?>" class="dokan-form-control" required="required">
         </li>
         <li class="dokan-form-group">
-            <textarea name="message" maxlength="1000" cols="25" rows="6" value="" placeholder="<?php esc_attr_e( 'Type your messsage...', 'dokan-lite' ); ?>" class="dokan-form-control" required="required"></textarea>
+            <textarea name="message" maxlength="1000" cols="25" rows="6" value="" placeholder="<?php esc_attr_e( 'Type your message...', 'dokan-lite' ); ?>" class="dokan-form-control" required="required"></textarea>
         </li>
     </ul>
 

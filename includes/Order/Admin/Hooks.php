@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\Order\Admin;
 use Exception;
 use WC_Data_Store;
 use WC_Order;
+use WeDevs\Dokan\Commission\OrderCommission;
 use WeDevs\Dokan\Utilities\OrderUtil;
 use WP_Post;
 
@@ -39,6 +40,10 @@ class Hooks {
             add_action( 'woocommerce_trash_order', [ $this, 'admin_on_trash_order' ] );
             add_action( 'woocommerce_untrash_order', [ $this, 'admin_on_untrash_order' ] );
             add_action( 'woocommerce_delete_order', [ $this, 'admin_on_delete_order' ] );
+
+            // HPOS equivalent hooks for filtering orders.
+            add_filter( 'woocommerce_order_list_table_prepare_items_query_args', [ $this, 'filter_orders_by_order_type_query' ] );
+            add_action( 'woocommerce_order_list_table_restrict_manage_orders', [ $this, 'render_order_type_filter_dropdown' ] );
         } else {
             add_action( 'manage_shop_order_posts_custom_column', [ $this, 'shop_order_custom_columns' ], 11, 2 );
             add_action( 'admin_footer-edit.php', [ $this, 'admin_shop_order_scripts' ] );
@@ -48,6 +53,10 @@ class Hooks {
             add_action( 'wp_trash_post', [ $this, 'admin_on_trash_order' ] );
             add_action( 'untrash_post', [ $this, 'admin_on_untrash_order' ] );
             add_action( 'delete_post', [ $this, 'admin_on_delete_order_post' ] );
+
+            // Legacy equivalent hooks for filtering orders.
+            add_filter( 'request', [ $this, 'filter_orders_by_order_type_query' ] );
+            add_action( 'restrict_manage_posts', [ $this, 'render_order_type_filter_dropdown' ] );
         }
 
         // Change order meta key and value.
@@ -164,7 +173,15 @@ class Hooks {
                 if ( '1' === $order->get_meta( 'has_sub_order', true ) ) {
                     $output = '--';
                 } else {
-                    $commission = dokan()->commission->get_earning_by_order( $order->get_id(), 'admin' );
+                    try {
+                        $order_commission = dokan_get_container()->get( OrderCommission::class );
+                        $order_commission->set_order( $order );
+                        $order_commission->get();
+
+                        $commission = $order_commission->get_admin_commission();
+                    } catch ( Exception $e ) {
+                        $commission = 0;
+                    }
                     /**
                      * In case of refund, we are not excluding gateway fee; in case of stripe full/partial refund net amount can be negative
                      */
@@ -288,6 +305,12 @@ class Hooks {
                     }
 
                     const urlParams = new URLSearchParams(window.location.search);
+                    // Hide the toggle button if the only suborders are visible.
+                    if ( 'sub_order' === urlParams.get('dokan_order_filter') ) {
+                        $('button.toggle-sub-orders').hide();
+                        return;
+                    }
+
                     if ( urlParams.get('s') || urlParams.get('vendor_id') ) {
                         return;
                     }
@@ -314,7 +337,13 @@ class Hooks {
                     });
                 }
                 <?php else : ?>
-                $('tr.sub-order').hide();
+                const urlParams = new URLSearchParams(window.location.search);
+                // Hide the toggle button if the only suborders are visible.
+                if ( 'sub_order' !== urlParams.get('dokan_order_filter') ) {
+                    $('tr.sub-order').hide();
+                } else {
+                    $('button.toggle-sub-orders').hide();
+                }
 
                 $('button.show-sub-orders').on('click', function (e) {
                     e.preventDefault();
@@ -382,7 +411,7 @@ class Hooks {
     /**
      * Change order item display meta key.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.8.0
      * @since 3.8.0 Moved this method from Order/Hooks.php file
      *
      * @param string $display_key
@@ -400,7 +429,7 @@ class Hooks {
     /**
      * Change order item display meta value.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.8.0
      * @since 3.8.0 Moved this method from Order/Hooks.php file
      *
      * @param string $display_value
@@ -466,7 +495,11 @@ class Hooks {
             return;
         }
 
-        $child_orders = dokan()->order->get_child_orders( $order->get_id() );
+        $child_orders = dokan()->order->get_child_orders(
+            $order->get_id(), [
+				'status' => [ 'trash' ],
+			]
+        );
         if ( ! $child_orders ) {
             return;
         }
@@ -534,6 +567,90 @@ class Hooks {
     }
 
     /**
+     * Render the order type filter dropdown.
+     *
+     * @since 4.2.1
+     *
+     * @param string $typenow
+     *
+     * @return void
+     */
+    public function render_order_type_filter_dropdown( $typenow ) {
+        if ( $typenow !== 'shop_order' ) {
+            return;
+        }
+
+        // Get the current filter value
+        $current_filter = isset( $_GET['dokan_order_filter'] ) ? sanitize_text_field( wp_unslash( $_GET['dokan_order_filter'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
+        // Product type filter options.
+        $filter_options = [
+            ''          => esc_html__( 'All Order Types', 'dokan-lite' ),
+            'sub_order' => esc_html__( 'Vendor Sub-orders', 'dokan-lite' ),
+        ];
+
+        /**
+         * Filter to add additional order type filter options.
+         * Pro modules or others can use this hook to add their own options.
+         *
+         * @since 4.2.1
+         *
+         * @param array $filter_options Array of filter options
+         */
+        $filter_options = apply_filters( 'dokan_order_type_filter_options', $filter_options );
+
+        // Render the order filter template.
+        dokan_get_template_part(
+            'orders/order-type-filter',
+            '',
+            [
+                'filter_options' => $filter_options,
+                'current_filter' => $current_filter,
+            ]
+        );
+    }
+
+    /**
+     * Filter orders by order type for both HPOS and legacy.
+     *
+     * @since 4.2.1
+     *
+     * @param array $query_args Query arguments (HPOS) or query vars (legacy)
+     *
+     * @return array
+     */
+    public function filter_orders_by_order_type_query( $query_args ) {
+        $screen    = get_current_screen();
+        $post_type = $screen->post_type ?? '';
+
+        // Return early if the current screen is not order screen.
+        $filter_type = sanitize_text_field( wp_unslash( $_GET['dokan_order_filter'] ?? '' ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if ( 'shop_order' !== $post_type || empty( $filter_type ) ) {
+            return $query_args;
+        }
+
+        // Render only suborder products if filter types are set to 'sub_order'.
+        $is_hpos_enabled = OrderUtil::is_hpos_enabled();
+        if ( 'sub_order' === $filter_type ) {
+            $query_type = $is_hpos_enabled ? 'parent_exclude' : 'post_parent__not_in';
+
+            // Vendor Suborders (Child orders only - orders with parent_id > 0).
+            $query_args[ $query_type ] = [ 0 ];
+        }
+
+        /**
+         * Allow Pro modules to handle their custom filter types.
+         *
+         * @since 4.2.1
+         *
+         * @param array|null $query_args      Modified or original query arguments.
+         * @param string     $filter_type     The selected filter type
+         * @param array      $is_hpos_enabled HPOS status.
+         */
+        return apply_filters( 'dokan_order_type_filter_query_args', $query_args, $filter_type, $is_hpos_enabled );
+    }
+
+    /**
      * Add dokan commission meta-box in woocommerce order details page
      * and add suborders or related sibling orders in meta-box.
      *
@@ -550,9 +667,14 @@ class Hooks {
 
         $order         = dokan()->order->get( OrderUtil::get_post_or_order_id( $post ) );
         $has_sub_order = '1' === $order->get_meta( 'has_sub_order', true );
+        $show_commission_meta_box = apply_filters(
+            'dokan_show_commission_meta_box',
+            ! $has_sub_order,
+            $order
+        );
 
         // Check if the screen is order details page and if it is a child order.
-        if ( ! $has_sub_order ) {
+        if ( $show_commission_meta_box ) {
             add_meta_box(
                 'dokan_commission_box',
                 __( 'Commissions', 'dokan-lite' ),
@@ -563,8 +685,13 @@ class Hooks {
             );
         }
 
+        $show_related_order_meta_box = apply_filters(
+            'dokan_show_related_order_meta_box',
+            $has_sub_order || ! empty( $order->get_parent_id() ),
+            $order
+        );
         // If the order has is a parent order or a child order, avoid those order that has no parent order or child order.
-        if ( $has_sub_order || ! empty( $order->get_parent_id() ) ) {
+        if ( $show_related_order_meta_box ) {
             $title = $has_sub_order ? __( 'Sub orders', 'dokan-lite' ) : __( 'Related orders', 'dokan-lite' );
 
             add_meta_box(
@@ -588,26 +715,31 @@ class Hooks {
      * @return void
      */
     public function commission_meta_box( $post_or_order ) {
-        global $wpdb;
         $order = dokan()->order->get( OrderUtil::get_post_or_order_id( $post_or_order ) );
-
-        $data = $wpdb->get_row(
-            $wpdb->prepare( "SELECT order_total,net_amount FROM {$wpdb->prefix}dokan_orders WHERE order_id = %d LIMIT 1", $order->get_id() )
-        );
-
-        $order_total = $data && property_exists( $data, 'order_total' ) ? $data->order_total : 0;
-        $net_amount = $data && property_exists( $data, 'net_amount' ) ? $data->net_amount : 0;
-
-        $total_commission     = (float) $order_total - (float) $net_amount;
         $all_commission_types = array_merge( dokan_commission_types(), dokan()->commission->get_legacy_commission_types() );
+
+        try {
+            $order_commission = dokan_get_container()->get( OrderCommission::class );
+            $order_commission->set_order( $order );
+            $order_commission->get();
+        } catch ( \Exception $exception ) {
+            dokan_log( 'Dokan can not calculate commission on commission meta box : ' . $exception->getMessage() );
+            return;
+        }
 
         dokan_get_template_part(
             'orders/commission-meta-box-html', '', [
                 'order'                => $order,
-                'data'                 => $data,
-                'total_commission'     => $total_commission,
                 'all_commission_types' => $all_commission_types,
+                'order_commission'     => $order_commission,
             ]
+        );
+
+        wp_enqueue_style(
+            'dokan-commission-meta-box',
+            DOKAN_PLUGIN_ASSEST . '/css/dokan-admin-commission-suborder-metabox.css',
+            [],
+            DOKAN_PLUGIN_VERSION
         );
     }
 

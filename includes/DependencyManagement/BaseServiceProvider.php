@@ -20,6 +20,7 @@ use WeDevs\Dokan\ThirdParty\Packages\League\Container\ServiceProvider\AbstractSe
  */
 abstract class BaseServiceProvider extends AbstractServiceProvider {
 	protected $services = [];
+	protected $tags = [];
 
 	/**
      * {@inheritDoc}
@@ -33,6 +34,10 @@ abstract class BaseServiceProvider extends AbstractServiceProvider {
 		static $implements = array();
 
 		foreach ( $this->services as $class ) {
+			if ( ! class_exists( $class ) ) {
+				continue;
+			}
+
 			$implements_more = class_implements( $class );
 			if ( $implements_more ) {
 				$implements = array_merge( $implements, $implements_more );
@@ -41,7 +46,7 @@ abstract class BaseServiceProvider extends AbstractServiceProvider {
 
 		$implements = array_unique( $implements );
 
-		return array_key_exists( $alias, $implements );
+		return array_key_exists( $alias, $implements ) || in_array( $alias, $this->services, true ) || in_array( $alias, $this->tags, true );
 	}
 
 	/**
@@ -52,16 +57,19 @@ abstract class BaseServiceProvider extends AbstractServiceProvider {
 	 *
 	 * @param string     $id       Entry ID (typically a class or interface name).
 	 * @param mixed|null $concrete Concrete entity to register under that ID, null for automatic creation.
-	 * @param bool|null  $shared   Whether to register the class as shared (`get` always returns the same instance)
+	 * @param bool       $shared   Whether to register the class as shared (`get` always returns the same instance)
 	 *                             or not.
 	 *
 	 * @return DefinitionInterface
 	 */
-	protected function add_with_implements_tags( string $id, $concrete = null, bool $shared = null ): DefinitionInterface {
-		$definition = $this->getContainer()->add( $id, $concrete, $shared );
+	protected function add_with_implements_tags( string $id, $concrete = null, bool $shared = false ): DefinitionInterface {
+		$definition = $this->getContainer()->add( $id, $concrete )->setShared( $shared );
 
 		foreach ( class_implements( $id ) as $interface ) {
 			$definition->addTag( $interface );
+			if ( ! in_array( $interface, $this->services, true ) ) {
+				$this->services[] = $interface;
+			}
 		}
 
 		return $definition;
@@ -78,4 +86,18 @@ abstract class BaseServiceProvider extends AbstractServiceProvider {
 	protected function share_with_implements_tags( string $id, $concrete = null ): DefinitionInterface {
 		return $this->add_with_implements_tags( $id, $concrete, true );
 	}
+
+	/**
+	 * Adds tags to the given definition.
+	 *
+	 * @param DefinitionInterface $definition The definition to which tags will be added.
+	 * @param array $tags An array of tags to add to the definition.
+	 *
+	 * @return void
+	 */
+    protected function add_tags( DefinitionInterface $definition, $tags ) {
+        foreach ( $tags as $tag ) {
+			$definition = $definition->addTag( $tag );
+        }
+    }
 }

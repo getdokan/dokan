@@ -91,7 +91,7 @@ $user = get_user_by( 'id', get_current_user_id() );
 
                 <p>
                     <?php wp_nonce_field( 'dokan_save_account_details' ); ?>
-                    <input type="submit" class="dokan-btn dokan-btn-danger dokan-btn-theme" name="dokan_save_account_details" value="<?php esc_attr_e( 'Save changes', 'dokan-lite' ); ?>"/>
+                    <input type="submit" class="dokan-btn dokan-btn-theme" name="dokan_save_account_details" value="<?php esc_attr_e( 'Save changes', 'dokan-lite' ); ?>"/>
                     <input type="hidden" name="action" value="dokan_save_account_details"/>
                 </p>
 

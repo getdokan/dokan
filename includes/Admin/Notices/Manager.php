@@ -31,9 +31,9 @@ class Manager {
      */
     private function init_classes() {
         $this->container['whats_new']              = new WhatsNew();
-        $this->container['setup_wizard']           = new SetupWizard();
         $this->container['plugin_review']          = new PluginReview();
         $this->container['limited_time_promotion'] = new LimitedTimePromotion();
+        $this->container['upgrade_v4']             = new UpgradeToV4();
     }
 
     /**

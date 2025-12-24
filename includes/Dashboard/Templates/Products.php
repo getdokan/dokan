@@ -8,6 +8,8 @@ use WC_Product_Simple;
 use WeDevs\Dokan\ProductForm\Elements as ProductFormElements;
 use WeDevs\Dokan\ProductForm\Factory as ProductFormFactory;
 use WP_Post;
+use WeDevs\Dokan\ProductCategory\Helper;
+use WeDevs\Dokan\Utilities\ReportUtil;
 
 /**
  *  Product Functionality for Product Handler
@@ -344,6 +346,11 @@ class Products {
      * @return void
      */
     public function render_product_listing_template() {
+        if ( ReportUtil::is_report_products_url() ) {
+            dokan_get_template_part( 'dashboard/dashboard' );
+            return;
+        }
+
         $bulk_statuses = apply_filters(
             'dokan_bulk_product_statuses', [
                 '-1'     => __( 'Bulk Actions', 'dokan-lite' ),
@@ -351,7 +358,13 @@ class Products {
             ]
         );
 
-        dokan_get_template_part( 'products/products-listing', '', [ 'bulk_statuses' => $bulk_statuses ] );
+        dokan_get_template_part(
+            'products/products-listing',
+            '',
+            [
+                'bulk_statuses' => $bulk_statuses,
+            ]
+        );
     }
 
     /**

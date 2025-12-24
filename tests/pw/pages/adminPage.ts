@@ -1,9 +1,9 @@
-import { Page } from '@playwright/test';
-import { BasePage } from '@pages/basePage';
-import { selector } from '@pages/selectors';
-import { data } from '@utils/testData';
-import { helpers } from '@utils/helpers';
-import { payment, dokanSetupWizard, woocommerce } from '@utils/interfaces';
+import {Page} from '@playwright/test';
+import {BasePage} from '@pages/basePage';
+import {selector} from '@pages/selectors';
+import {data} from '@utils/testData';
+import {helpers} from '@utils/helpers';
+import {dokanSetupWizard, payment, woocommerce} from '@utils/interfaces';
 
 const { DOKAN_PRO } = process.env;
 
@@ -147,8 +147,9 @@ export class AdminPage extends BasePage {
         await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.backend.dokan.setupWizardWithdraw, setupWizardAdmin.continue, 302);
 
         // Recommended
-        await this.disableSwitcherSetupWizard(setupWizardAdmin.wooCommerceConversionTracking);
+        // await this.disableSwitcherSetupWizard(setupWizardAdmin.storeGrowth);
         await this.disableSwitcherSetupWizard(setupWizardAdmin.weMail);
+        await this.disableSwitcherSetupWizard(setupWizardAdmin.wooCommerceConversionTracking);
         await this.disableSwitcherSetupWizard(setupWizardAdmin.texty);
         await this.click(setupWizardAdmin.continueRecommended);
 

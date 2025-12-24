@@ -12,5 +12,5 @@ $localized_date = dokan_format_date( $trn_date['from'] ) . ' - ' . dokan_format_
     <input type="hidden" name="trn_date[to]" class="dokan-daterangepicker-end-date" id="trn_date_to_filter_alt" value="<?php echo esc_attr( $trn_date['to'] ); ?>"/>
 
     <?php wp_nonce_field( 'dokan_reverse_withdrawal_filter', '_nonce' ); ?>
-    <input type="submit" class="dokan-btn dokan-btn-info dokan-btn-lg dokan-theme" value="<?php esc_html_e( 'Filter', 'dokan-lite' ); ?>">
+    <input type="submit" class="dokan-btn dokan-btn-lg dokan-btn-theme" value="<?php esc_html_e( 'Filter', 'dokan-lite' ); ?>">
 </form>

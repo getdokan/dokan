@@ -94,4 +94,11 @@ test.describe('admin api test', () => {
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.admin.adminExportLogsSchema);
     });
+
+    test('get admin settings', { tag: ['@pro'] }, async () => {
+        const [response, responseBody] = await apiUtils.get(endPoints.getAdminSettings, { params: { section: 'dokan_selling', option: 'commission_type' } });
+        expect(response.ok()).toBeTruthy();
+        expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.admin.adminSettingsSchema);
+    });
 });

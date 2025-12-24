@@ -28,6 +28,8 @@ class Rewrites {
         add_filter( 'query_vars', [ $this, 'register_query_var' ] );
         add_filter( 'woocommerce_get_breadcrumb', [ $this, 'store_page_breadcrumb' ] );
         add_filter( 'tiny_mce_before_init', [ $this, 'remove_h1_from_heading_in_edit_product_page' ] );
+
+        add_action( 'wp', [ $this, 'maybe_flash_rewrite_rules' ], 99 );
     }
 
     /**
@@ -53,12 +55,13 @@ class Rewrites {
         $author      = get_query_var( $this->custom_store_url );
         $seller_info = get_user_by( 'slug', $author );
 
+        $crumbs[1] = [ ucwords( $this->custom_store_url ), get_permalink( dokan_get_option( 'store_listing', 'dokan_pages' ) ) ];
         if ( ! $seller_info ) {
-            return;
+            $crumbs[2] = [ __( 'Error 404', 'dokan-lite' ), '' ];
+            return $crumbs;
         }
 
-        $crumbs[1]   = [ ucwords( $this->custom_store_url ), get_permalink( dokan_get_option( 'store_listing', 'dokan_pages' ) ) ];
-        $crumbs[2]   = [ $author, dokan_get_store_url( $seller_info->data->ID ) ];
+        $crumbs[2] = [ $author, dokan_get_store_url( $seller_info->data->ID ) ];
 
         return $crumbs;
     }
@@ -190,22 +193,18 @@ class Rewrites {
         if ( ! empty( $store_name ) ) {
             $store_user = get_user_by( 'slug', $store_name );
 
-            if ( ! $store_user ) {
-                return get_404_template();
-            }
+            // 1. User must exist
+            // 2. Must not be a vendor staff (unless super admin)
+            // 3. Must be a valid Dokan seller
+            if (
+                ! $store_user
+                || ( ! is_super_admin( $store_user->ID ) && user_can( $store_user->ID, 'vendor_staff' ) )
+                || ! dokan_is_user_seller( $store_user->ID )
+            ) {
+                global $wp_query;
+                $wp_query->set_404();
+                status_header( 404 );
 
-            // Bell out for Vendor Stuff extensions
-            if ( ! is_super_admin( $store_user->ID ) && user_can( $store_user->ID, 'vendor_staff' ) ) {
-                return get_404_template();
-            }
-
-            // no user found
-            if ( ! $store_user ) {
-                return get_404_template();
-            }
-
-            // check if the user is seller
-            if ( ! dokan_is_user_seller( $store_user->ID ) ) {
                 return get_404_template();
             }
 
@@ -382,7 +381,7 @@ class Rewrites {
     /**
      * Returns an array of arguments for ordering products based on the selected values.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.7
      *
      * @param string $orderby Order by param
      * @param string $order Order param
@@ -458,7 +457,7 @@ class Rewrites {
     /**
      * Handle numeric price sorting
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.7
      *
      * @param array $args Query args
      *
@@ -473,7 +472,7 @@ class Rewrites {
     /**
      * Handle numeric price sorting
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.7
      *
      * @param array $args Query args
      *
@@ -490,7 +489,7 @@ class Rewrites {
      *
      * This lets us sort by meta value desc, and have a second orderby param
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.7
      *
      * @param array $args Query args
      *
@@ -505,7 +504,7 @@ class Rewrites {
     /**
      * Order by rating post clauses
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.7
      *
      * @param array $args Query args
      *
@@ -520,7 +519,7 @@ class Rewrites {
     /**
      * Join wc_product_meta_lookup to posts if not already joined.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.2.7
      *
      * @param string $sql SQL join
      *
@@ -533,5 +532,24 @@ class Rewrites {
             $sql .= " LEFT JOIN {$wpdb->wc_product_meta_lookup} wc_product_meta_lookup ON $wpdb->posts.ID = wc_product_meta_lookup.product_id ";
         }
         return $sql;
+    }
+
+    /**
+     * Flush rewrite rules if the version is 4.0 or above.
+     *
+     * @since 4.0.0
+     *
+     * @return void
+     */
+    public function maybe_flash_rewrite_rules() {
+        $flash = get_option( 'dokan_rewrite_rules_needs_flashing', 'yes' );
+
+        if ( 'yes' !== $flash ) {
+            return;
+        }
+
+        dokan()->flush_rewrite_rules();
+
+        update_option( 'dokan_rewrite_rules_needs_flashing', 'no', true );
     }
 }

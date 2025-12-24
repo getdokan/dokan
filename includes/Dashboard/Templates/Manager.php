@@ -37,5 +37,6 @@ class Manager {
         $this->container['withdraw']           = new Withdraw();
         $this->container['product_category']   = new MultiStepCategories();
         $this->container['reverse_withdrawal'] = new ReverseWithdrawal();
+        $this->container['new_dashboard']      = new NewDashboard();
     }
 }

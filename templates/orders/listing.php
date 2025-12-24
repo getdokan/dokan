@@ -84,7 +84,7 @@ if ( $user_orders ) {
                                     dokan()->commission->get_earning_by_order( $order ),
                                     [
                                         'currency' => $order->get_currency(),
-                                        'decimals' => wc_get_price_decimals() + 2,
+                                        'decimals' => wc_get_price_decimals(),
                                     ]
                                 )
                             );

@@ -17,10 +17,10 @@ class Product implements InterfaceSetting {
     protected $product;
 
     public function __construct( $product_id ) {
-        $this->product = dokan()->product->get( $product_id );
+        $this->product = wc_get_product( $product_id );
 
         if ( $this->product && $this->product->is_type( 'variation' ) ) {
-            $this->product = dokan()->product->get( $this->product->get_parent_id() );
+            $this->product = wc_get_product( $this->product->get_parent_id() );
         }
     }
 
@@ -66,17 +66,20 @@ class Product implements InterfaceSetting {
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
     public function save( array $setting ): Setting {
-        $commission_percentage = isset( $setting['percentage'] ) ? $setting['percentage'] : '';
-        $commission_type       = isset( $setting['type'] ) ? $setting['type'] : '';
-        $additional_flat       = isset( $setting['flat'] ) ? $setting['flat'] : '';
+        $settings = apply_filters( 'dokan_product_commission_settings_before_save', $setting, $this->product );
+
+        $commission_percentage = $setting['percentage'] ?? '';
+        $commission_type       = $setting['type'] ?? '';
+        $additional_flat       = $setting['flat'] ?? '';
 
         if ( is_a( $this->product, WC_Product::class ) && $this->product->get_id() ) {
             $this->product->update_meta_data( '_per_product_admin_commission', $commission_percentage );
             $this->product->update_meta_data( '_per_product_admin_commission_type', $commission_type );
             $this->product->update_meta_data( '_per_product_admin_additional_fee', $additional_flat );
-
             $this->product->save_meta_data();
             $this->product->save();
+
+			do_action( 'dokan_product_commission_settings_after_save', $settings, $this->product );
         }
 
         $commission = new Setting();

@@ -21,6 +21,10 @@ setup.describe('setup woocommerce settings', () => {
         await apiUtils.dispose();
     });
 
+    setup('set woocommerce site visibility settings', { tag: ['@lite'] }, async () => {
+        await dbUtils.setOptionValue('woocommerce_coming_soon', 'no', false);
+    });
+
     setup('set woocommerce settings', { tag: ['@lite'] }, async () => {
         await apiUtils.updateBatchWcSettingsOptions('general', payloads.general);
         await apiUtils.updateBatchWcSettingsOptions('account', payloads.account);

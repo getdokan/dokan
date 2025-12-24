@@ -1646,6 +1646,9 @@ export const schemas = {
                 })
                 .optional(),
         }),
+
+        // admin settings schema
+        adminSettingsSchema: z.any(),
     },
 
     // customers schema

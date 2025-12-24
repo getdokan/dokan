@@ -8,6 +8,7 @@ use WC_Order_Item_Coupon;
 use WC_Order_Refund;
 use WeDevs\Dokan\Cache;
 use WeDevs\Dokan\Utilities\OrderUtil;
+use WeDevs\Dokan\Vendor\Coupon;
 use WP_Error;
 
 /**
@@ -448,20 +449,28 @@ class Manager {
     }
 
     /**
+     * Get all child orders of a parent order
+     *
      * @param int|WC_Order $parent_order
+     * @param array $args
      *
      * @return WC_Order[]
      */
-    public function get_child_orders( $parent_order ) {
+    public function get_child_orders( $parent_order, array $args = [] ) {
         $parent_order_id = is_numeric( $parent_order ) ? $parent_order : $parent_order->get_id();
+        $default_args = [
+			'type'   => 'shop_order',
+			'parent' => $parent_order_id,
+			'limit'  => -1,
+		];
 
-        return wc_get_orders(
-            [
-                'type'   => 'shop_order',
-                'parent' => $parent_order_id,
-                'limit'  => -1,
-            ]
+        $args = apply_filters(
+            'dokan_get_child_orders_args',
+            wp_parse_args( $args, $default_args ),
+            $parent_order_id
         );
+
+        return wc_get_orders( $args );
     }
 
     /**
@@ -628,7 +637,7 @@ class Manager {
             $this->create_taxes( $order, $parent_order, $seller_products );
 
             // add coupons if any
-            $this->create_coupons( $order, $parent_order, $seller_products );
+            $this->create_coupons( $order, $parent_order );
 
             $order->save(); // need to save order data before passing it to a hook
 
@@ -683,6 +692,8 @@ class Manager {
                     $product_item->add_meta_data( $meta->key, $meta->value );
                 }
             }
+
+            $product_item->add_meta_data( '_dokan_parent_order_item_id', $item->get_id() );
 
             $order->add_item( $product_item );
         }
@@ -786,23 +797,9 @@ class Manager {
             }
             dokan_log( sprintf( '#%d - Adding shipping item.', $order->get_id() ) );
 
-            $item = new \WC_Order_Item_Shipping();
-            $item->set_props(
-                [
-                    'method_title' => $shipping_method->get_name(),
-                    'method_id'    => $shipping_method->get_method_id(),
-                    'total'        => $shipping_method->get_total(),
-                    'taxes'        => $shipping_method->get_taxes(),
-                ]
-            );
+            $item = clone $shipping_method;
+            $item->set_id( 0 );
             $shipping_totals += $shipping_method->get_total();
-            $metadata        = $shipping_method->get_meta_data();
-
-            if ( $metadata ) {
-                foreach ( $metadata as $meta ) {
-                    $item->add_meta_data( $meta->key, $meta->value );
-                }
-            }
             $order->add_item( $item );
         }
         $order->set_shipping_total( $shipping_totals );
@@ -814,24 +811,18 @@ class Manager {
      *
      * @param WC_Order $order
      * @param WC_Order $parent_order
-     * @param array    $products
      *
      * @return void
      */
-    private function create_coupons( $order, $parent_order, $products ) {
+    private function create_coupons( $order, $parent_order ) {
         if ( dokan()->is_pro_exists() && property_exists( dokan_pro(), 'vendor_discount' ) ) {
             // remove vendor discount coupon code changes
             remove_filter( 'woocommerce_order_get_items', [ dokan_pro()->vendor_discount->woocommerce_hooks, 'replace_coupon_name' ], 10 );
         }
 
-        $used_coupons = $parent_order->get_items( 'coupon' );
-        $product_ids  = array_map(
-            function ( $item ) {
-                return $item->get_product_id();
-            }, $products
-        );
+        $parent_coupons = $parent_order->get_items( 'coupon' );
 
-        if ( ! $used_coupons ) {
+        if ( ! $parent_coupons ) {
             return;
         }
 
@@ -841,32 +832,45 @@ class Manager {
             return;
         }
 
-        foreach ( $used_coupons as $item ) {
-            /**
-             * @var WC_Order_Item_Coupon $item
-             */
-            $coupon = new \WC_Coupon( $item->get_code() );
+        $parent_coupons = array_map(
+            function ( $coupon ) {
+                /** @var WC_Order_Item_Coupon $coupon */
+                return $coupon->get_code();
+            },
+            $parent_coupons
+        );
 
-            if (
-                apply_filters( 'dokan_should_copy_coupon_to_sub_order', true, $coupon, $item, $order ) &&
-                (
-                    array_intersect( $product_ids, $coupon->get_product_ids() ) ||
-                    apply_filters( 'dokan_is_order_have_admin_coupon', false, $coupon, [ $seller_id ], $product_ids )
-                )
-            ) {
-                $new_item = new WC_Order_Item_Coupon();
-                $new_item->set_props(
-                    [
-                        'code'         => $item->get_code(),
-                        'discount'     => $item->get_discount(),
-                        'discount_tax' => $item->get_discount_tax(),
-                    ]
-                );
-
-                $new_item->add_meta_data( 'coupon_data', $coupon->get_data() );
-
-                $order->add_item( $new_item );
+        $order_items = $order->get_items();
+        $used_coupons_data = [];
+        foreach ( $order_items as $order_item ) {
+            $item_coupons = $order_item->get_meta( Coupon::DOKAN_COUPON_META_KEY, true );
+            if ( ! is_array( $item_coupons ) ) {
+                continue;
             }
+            foreach ( $item_coupons as $code => $item ) {
+                if ( ! isset( $used_coupons_data[ $code ] ) ) {
+                    $used_coupons_data[ $code ] = 0;
+                }
+                if ( in_array( $code, $parent_coupons, true ) ) {
+                    $used_coupons_data[ $code ] += $item['discount'];
+                }
+            }
+        }
+
+        foreach ( $used_coupons_data as $code => $total_discount ) {
+            $coupon = new \WC_Coupon( $code );
+            $coupon_item = new WC_Order_Item_Coupon();
+            $coupon_item->set_props(
+                [
+                    'code'         => $code,
+                    'discount'     => $total_discount,
+                    'discount_tax' => 0,
+                ]
+            );
+            $coupon_info = $coupon->get_short_info();
+            $coupon_item->add_meta_data( 'coupon_info', $coupon_info );
+            $coupon_item->add_meta_data( 'coupon_data', $coupon->get_data() );
+            $order->add_item( $coupon_item );
         }
     }
 

@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Admin;
 
 use Exception;
+use WeDevs\Dokan\Utilities\AdminSettings;
 use WP_Error;
 use WeDevs\Dokan\Exceptions\DokanException;
 use WeDevs\Dokan\Traits\AjaxResponseError;
@@ -34,6 +35,7 @@ class Settings {
         add_filter( 'dokan_get_settings_values', [ $this, 'set_withdraw_limit_gateways' ], 20, 2 );
         add_filter( 'dokan_get_settings_values', [ $this, 'set_commission_type_if_not_set' ], 20, 2 );
         add_filter( 'dokan_settings_general_site_options', [ $this, 'add_dokan_data_clear_setting' ], 310 );
+        add_filter( 'dokan_get_settings_values', [ $this, 'set_vendor_latest_layout' ], 20, 2 );
     }
 
     /**
@@ -93,8 +95,8 @@ class Settings {
         $clickable_types = [ 'flat', 'fixed' ];
 
         if ( 'dokan_selling' === $option_name && isset( $option_values['commission_type'] ) && in_array( $option_values['commission_type'], $clickable_types, true ) ) {
-            $admin_percentage       = (float) $option_values['admin_percentage'];
-            $saved_admin_percentage = dokan_get_option( 'admin_percentage', 'dokan_selling', '' );
+            $admin_percentage       = (float) ( $option_values['admin_percentage'] ?? 0 );
+            $saved_admin_percentage = dokan_get_option( 'admin_percentage', 'dokan_selling', '0' );
 
             if ( $admin_percentage < 0 || $admin_percentage > 100 ) {
                 $option_values['admin_percentage'] = $saved_admin_percentage;
@@ -126,6 +128,15 @@ class Settings {
             $settings[ $section['id'] ] = apply_filters( 'dokan_get_settings_values', $this->sanitize_options( get_option( $section['id'], [] ), 'read' ), $section['id'] );
         }
 
+        $new_seller_enable_selling_statuses = isset( $settings['dokan_selling']['new_seller_enable_selling'] ) ? $settings['dokan_selling']['new_seller_enable_selling'] : 'automatically';
+
+        /**
+         * This is the mapper of enabled selling admin setting option for before and after of 4.0.2
+         */
+        if ( ! empty( $settings['dokan_selling'] ) && ! in_array( $new_seller_enable_selling_statuses, $settings, true ) ) {
+            $settings['dokan_selling']['new_seller_enable_selling'] = dokan_get_container()->get( AdminSettings::class )->get_new_seller_enable_selling_status( $settings['dokan_selling']['new_seller_enable_selling'] ?? null );
+        }
+
         wp_send_json_success( $settings );
     }
 
@@ -150,7 +161,11 @@ class Settings {
                 throw new DokanException( 'dokan_settings_error_saving', __( '`section` parameter is required.', 'dokan-lite' ), 400 );
             }
 
-            $option_name  = sanitize_text_field( wp_unslash( $_POST['section'] ) );
+            $option_name = sanitize_text_field( wp_unslash( $_POST['section'] ) );
+            // validate and sanitize option name to avoid any unwanted option update
+            if ( ! in_array( $option_name, wp_list_pluck( $this->get_settings_sections(), 'id' ), true ) ) {
+                throw new DokanException( 'dokan_settings_invalid_section', __( 'Invalid section name.', 'dokan-lite' ), 400 );
+            }
             $option_value = $this->sanitize_options( wp_unslash( $_POST['settingsData'] ), 'edit' ); // phpcs:ignore
             $option_value = apply_filters( 'dokan_save_settings_value', $option_value, $option_name );
             $old_options  = get_option( $option_name, [] );
@@ -419,12 +434,13 @@ class Settings {
                     'default' => 'on',
                 ],
                 'custom_store_url'       => [
-                    'name'    => 'custom_store_url',
-                    'label'   => __( 'Vendor Store URL', 'dokan-lite' ),
+                    'name'              => 'custom_store_url',
+                    'label'             => __( 'Vendor Store URL', 'dokan-lite' ),
                     /* translators: %s: store url */
-                    'desc'    => sprintf( __( 'Define the vendor store URL (%s<strong>[this-text]</strong>/[vendor-name])', 'dokan-lite' ), site_url( '/' ) ),
-                    'default' => 'store',
-                    'type'    => 'text',
+                    'desc'              => sprintf( __( 'Define the vendor store URL (%s<strong>[this-text]</strong>/[vendor-name])', 'dokan-lite' ), site_url( '/' ) ),
+                    'default'           => 'store',
+                    'type'              => 'text',
+                    'sanitize_callback' => [ $this, 'sanitize_custom_store_url' ],
                 ],
                 'setup_wizard_logo_url'  => [
                     'name'  => 'setup_wizard_logo_url',
@@ -556,6 +572,19 @@ class Settings {
                         ],
                     ],
                 ],
+                'reset_sub_category_when_edit_all_category' => [
+                    'name'    => 'reset_sub_category_when_edit_all_category',
+                    'label'   => __( 'Apply Parent Category Commission to All Subcategories', 'dokan-lite' ),
+                    'desc'    => __( 'Important: \'All Categories\' commission serves as your marketplace\'s default rate and cannot be empty. If 0 is given in value, then the marketplace will deduct no commission from vendors', 'dokan-lite' ),
+                    'type'    => 'switcher',
+                    'default' => 'on',
+                    'tooltip' => __( 'When enabled, changing a parent category\'s commission rate will automatically update all its subcategories. Disable this option to maintain independent commission rates for subcategories', 'dokan-lite' ),
+                    'show_if' => [
+                        'commission_type' => [
+                            'equal' => 'category_based',
+                        ],
+                    ],
+                ],
                 'commission_category_based_values' => [
                     'name'                 => 'commission_category_based_values',
                     'type'                 => 'category_based_commission',
@@ -630,8 +659,9 @@ class Settings {
                     'name'    => 'new_seller_enable_selling',
                     'label'   => __( 'Enable Selling', 'dokan-lite' ),
                     'desc'    => __( 'Immediately enable selling for newly registered vendors', 'dokan-lite' ),
-                    'type'    => 'switcher',
-                    'default' => 'on',
+                    'type'    => 'select',
+                    'options' => dokan_get_container()->get( AdminSettings::class )->new_seller_enable_selling_statuses(),
+                    'default' => 'automatically',
                     'tooltip' => __( 'If checked, vendors will have permission to sell immediately after registration. If unchecked, newly registered vendors cannot add products until selling capability is activated manually from admin dashboard.', 'dokan-lite' ),
                 ],
                 'order_status_change'       => [
@@ -651,6 +681,10 @@ class Settings {
                 ],
             ]
         );
+
+        // Collect store banner dimensions for croppable fields.
+        $store_banner_width  = dokan()->is_pro_exists() ? dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 ) : 625;
+        $store_banner_height = dokan()->is_pro_exists() ? dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 ) : 300;
 
         $settings_fields = [
             'dokan_general'    => array_merge(
@@ -760,11 +794,29 @@ class Settings {
                 ],
             ],
             'dokan_appearance' => [
-                'appearance_options'         => [
-                    'name'        => 'appearance_options',
+                'vendor_layout_options'      => [
+                    'name'        => 'vendor_layout_options',
                     'type'        => 'sub_section',
-                    'label'       => __( 'Store Appearance', 'dokan-lite' ),
-                    'description' => __( 'Configure your site appearances.', 'dokan-lite' ),
+                    'label'       => esc_html__( 'Vendor Dashboard Appearance', 'dokan-lite' ),
+                    'description' => esc_html__( 'Configure the appearance and style of the vendor dashboard.', 'dokan-lite' ),
+                ],
+                'vendor_layout_style'        => [
+                    'name'    => 'vendor_layout_style',
+                    'label'   => esc_html__( 'Vendor Dashboard Style', 'dokan-lite' ),
+                    'desc'    => esc_html__( 'Select the user interface for the vendor dashboard.', 'dokan-lite' ),
+                    'type'    => 'radio',
+                    'default' => 'legacy',
+                    'options' => [
+                        'latest' => esc_html__( 'New UI', 'dokan-lite' ),
+                        'legacy' => esc_html__( 'Legacy UI', 'dokan-lite' ),
+                    ],
+                ],
+                'appearance_options'         => [
+                    'name'          => 'appearance_options',
+                    'type'          => 'sub_section',
+                    'label'         => esc_html__( 'Store Appearance', 'dokan-lite' ),
+                    'description'   => esc_html__( 'Configure your site appearances.', 'dokan-lite' ),
+                    'content_class' => 'sub-section-styles',
                 ],
                 'store_map'                  => [
                     'name'    => 'store_map',
@@ -867,6 +919,26 @@ class Settings {
                     ],
                     'default' => 'default',
                 ],
+                'default_store_banner'       => [
+                    'name'            => 'default_store_banner',
+                    'label'           => esc_html__( 'Default Store Banner', 'dokan-lite' ),
+                    'type'            => 'croppable_image',
+                    'default'         => DOKAN_PLUGIN_ASSEST . '/images/default-store-banner.png',
+                    'restore'         => true,
+                    'render_width'    => 625,
+                    'cropping_width'  => $store_banner_width,
+                    'cropping_height' => $store_banner_height,
+                ],
+                'default_store_profile'      => [
+                    'name'            => 'default_store_profile',
+                    'label'           => esc_html__( 'Default Store Profile Picture', 'dokan-lite' ),
+                    'type'            => 'croppable_image',
+                    'default'         => DOKAN_PLUGIN_ASSEST . '/images/mystery-person.jpg',
+                    'restore'         => true,
+                    'render_width'    => 120,
+                    'cropping_width'  => 384,
+                    'cropping_height' => 384,
+                ],
                 'store_open_close'           => [
                     'name'    => 'store_open_close',
                     'label'   => __( 'Store Opening Closing Time Widget', 'dokan-lite' ),
@@ -963,7 +1035,7 @@ class Settings {
     /**
      * Add settings nonce to localized vars
      *
-     * @since DOKNA_LITE_SINCE
+     * @since 3.0.6
      *
      * @param array $vars
      *
@@ -978,7 +1050,7 @@ class Settings {
     /**
      * Get refreshed options for a admin setting
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.0.6
      *
      * @return void
      */
@@ -1077,5 +1149,58 @@ class Settings {
         ];
 
         return $settings_fields;
+    }
+
+    /**
+     * Sanitize custom store URL to prevent reserved WordPress keywords
+     *
+     * @since 4.1.5
+     *
+     * @param string $value The custom store URL value
+     *
+     * @return string
+     * @throws DokanException
+     */
+    public function sanitize_custom_store_url( $value ) {
+        $value = sanitize_text_field( $value );
+
+        if ( empty( $value ) ) {
+            return $value;
+        }
+
+        $reserved_slugs = dokan_get_reserved_url_slugs();
+
+        // Check if the value is in the reserved slugs list.
+        if ( in_array( $value, $reserved_slugs, true ) ) {
+            throw new DokanException(
+                'dokan_reserved_slug_error',
+                sprintf(
+                    /* translators: %s: the reserved slug */
+                    esc_html__( 'The store URL "%s" is reserved by WordPress and cannot be used. Please choose a different value like "store".', 'dokan-lite' ),
+                    esc_html( $value )
+                ),
+                400
+            );
+        }
+
+        return $value;
+    }
+
+    /**
+     * Set the default settings for vendor layout.
+     *
+     * @since 4.2.0
+     *
+     * @param mixed $option_name
+     * @param mixed $option_value
+     *
+     * @return void|mixed $option_value
+     */
+    public function set_vendor_latest_layout( $option_value, $option_name ) {
+        if ( 'dokan_appearance' === $option_name && empty( $option_value['vendor_layout_style'] ) ) {
+            $option_value['vendor_layout_style'] = 'legacy';
+        }
+
+        return $option_value;
     }
 }

@@ -1,3 +1,197 @@
+### v4.2.3 ( Dec 22, 2025 ) ###
+- **fix:** Compatible vendor store banner image cropper with the latest version.
+
+### v4.2.2 ( Dec 22, 2025 ) ###
+- **fix:** Banner image cropping reflects an error on the vendor store settings.
+
+### v4.2.1 ( Dec 04, 2025 ) ###
+- **new:** Added a "Filter by Vendor Sub-orders" option to the WooCommerce Orders page to easily filter specific marketplace orders.
+- **update:** Redesigned the Admin Panel "Not Found" page template for a better look and user experience.
+- **update:** Ensured full compatibility for the legacy admin panel store support page.
+- **update:** Improved how tooltips appear and remain visible in both the Dokan vendor and admin panels.
+- **update:** Clicking the site title in the new vendor dashboard now redirects to the marketplace main site URL.
+- **update:** Added support for legacy URL settings to the "Visit Dashboard" button within the Admin Setup Wizard.
+- **fix:** Applied menu manager support to correctly control the vendor sidebar menus in the new dashboard layout.
+- **fix:** Added the ability to sort the vendor management table by registration date.
+- **fix:** Corrected the default toggle switch states when creating a new vendor to ensure they start in the intended position.
+- **fix:** Added checks to ensure users without a vendor account are redirected to a proper "404 Not Found" page instead of an error.
+- **fix:** Allowed vendors to correctly enter decimal amounts in the withdrawal request popup.
+- **fix:** Ensured that admin-configured banner dimensions are correctly displayed in the admin vendor settings.
+- **fix:** Fixed an issue where manual withdrawal requests now correctly reflect the settings configured by the admin.
+- **fix:** Updated the correct method for translating text (text domain handling) for recommended plugins.
+- **fix:** Prevented the "Complete Your Marketplace Setup" widget from showing up after the vendor has finished all the onboarding steps.
+- **fix:** Added support for including product variations in products rest api requests.
+- **fix:** Stopped unnecessary warnings and notices from appearing during the initial store setup process.
+- **fix:** Restored the side-by-side layout for the main Admin Dashboard panel.
+- **fix:** Prevent console warning from admin panel setup guide banner elements.
+- **fix:** Remove setup guide banner for admin setup guide pages.
+
+### v4.2.0 ( Nov 24, 2025 ) ###
+- **update:** Ensured full compatibility for the legacy admin panel across Subscriptions, Announcements, Wholesale, Product Ads, Abuse Reports, Seller Badge, and Refund pages.
+- **update:** The vendor dashboard now supports modern, full-width theme layouts, providing a more spacious user experience.
+- **update:** Redesigned the Admin's Reverse Withdrawal page with a modern, easier-to-use interface for faster payment management.
+- **fix:** Corrected a price formatting issue in both HTML and plain text email templates.
+- **fix:** Fixed a redirection issue on the legacy vendor shipping policy page to ensure it works correctly.
+
+### v4.1.5 ( Nov 11, 2025 ) ###
+- **update:** Added vendor verification legacy UI support for admin panel to ensure backward compatibility with older interface versions.
+- **update:** Updated all Twitter labels to X to reflect the latest brand changes.
+- **update:** Added custom store URL validation in admin settings to prevent conflicts with WordPress search functionality.
+- **update:** Fixed PHP warnings triggered when saving variable products by improving validation and data handling during product save operations.
+
+### v4.1.3 ( Oct 28, 2025 ) ###
+- **update:** Admin Dashboard withdraw list UI with Modern Design and Improved User Experience.
+- **update:** Admin Dashboard vendor list UI with Modern Design and Improved User Experience.
+
+### v4.1.2 ( Oct 16, 2025 ) ###
+- **enhance:** Updated the Admin Dashboard header UI for seamless visual representation with the new React-based frontend architecture.
+- **update:** Added support for retrieving all product types via the Products REST API, enabling more flexible product filtering.
+
+### v4.1.1 ( Oct 09, 2025 ) ###
+- **update:** Added method to retrieve vendor earnings excluding admin subsidy.
+- **update:** Admin gateway fee calculation now checks an order-level meta value before using the previous fallback logic.
+
+### v4.1.0 ( Sep 30, 2025 ) ###
+- **feat:** New React-based Admin Dashboard with enhanced metrics and rank boards.
+- **update:** Migrated Pro Features page from Vue to React with enhanced UI.
+
+### v4.0.9 ( Sep 25, 2025 ) ###
+- **update**: Dokan Plugin Top Bar & Notice Left Bar UI.
+- **update**: Order fee now distribute based on order creation if the order is manual order then the added fee of that order will go to seller otherwise it will go to admin. The fee tax will be distributed based on product tax receipt.
+- **fix:** Fix Dashboard and Report page header title and apply filters.
+- **fix:** Conflict with ACF plugin: prevented empty admin notices when Dokan is active.
+
+### v4.0.8 ( Sep 12, 2025 ) ###
+- **new:** Added "Chat with us" admin submenu for providing direct access to support chat functionality.
+- **enhance:** Modernize vendor selection with searchable dropdown for better performance.
+- **fix:** Prevent potential errors on additional product sections.
+
+### v4.0.7 ( Sep 01, 2025 ) ###
+- **fix:** Enhanced security controls for vendor account credentials management.
+
+### v4.0.6 ( Aug 29, 2025 ) ###
+- **update:** Added translation support for dashboard analytics report scripts to improve internationalization (i18n).
+- **fix:** Resolved an issue in the AdminNotice Vue component by applying the Mixin utility for improved functionality.
+- **fix:** Added async search in store category in vendor edit.
+- **fix:** Admin not receiving withdrawal request email notifications.
+
+### v4.0.5 ( Jul 24, 2025 ) ###
+- **fix:** Improved script loading to ensure compatibility with WooCommerce versions above 10.0.2, preventing potential issues with script dependencies.
+
+### v4.0.4 ( Jul 17, 2025 ) ###
+
+- **update:** Admin Notice UI with Modern Design and Improved User Experience.
+- **update:** Enhanced Product Brand Integration with Dedicated Template and Manager Methods.
+- **update:** Enhanced product featured image selection with cropping functionality in the product editor.
+- **fix:** Vendor/store names with special characters (e.g., apostrophes) now display correctly in the vendor dropdown on the admin product edit screen.
+- **fix:** Display correct earning in vendor dashboard product add/edit page for different category.
+- **fix:** Update table header style for mobile display in order details page item list and withdraw approve, pending and cancel list.
+- **fix:** Improved how product inventory information is retrieved, ensuring more accurate and consistent display of stock values.
+- **fix:** Update table header style for mobile display in order details page item list and withdraw approve, pending and cancel list.
+- **fix:** Resolve an issue for "sold individually" option does not save on create or update a product.
+
+### v4.0.3 ( Jul 02, 2025 ) ###
+
+- **fix:** Add gradient background style for fa-threads social icon.
+- **fix** Resolved an issue where array access warnings in vendor balance calculation were being triggered.
+- **fix** Resolved an issue where incorrect timestamp on sale price schedule hampering product sales schedule added from vendor dashboard.
+- **fix** Resolved an issue where stock quantity always shows 0 in vendor dashboard product edit screen.
+- **fix** Improved the format of payment methods in the withdrawal settings to ensure they are consistently returned as a zero-based indexed list in the REST API response.
+
+
+### v4.0.2 ( Jun 03, 2025 ) ###
+
+- **fix:** Resolved an issue where the single store page header style was broken on multiple themes.
+- **fix:** Added proper type checking for product and author objects in the product tab template to prevent potential errors when invalid data is passed.
+- **fix:** Skip cart validation for reverse withdrawal in Stripe Express.
+- **fix:** Fix admin dashboard order details page items meta-box content and commission meta-box content  not showing properly.
+- **fix:** Fixed analytics view permissions to access analytics data for users. Thanks to @oliviertassinari for the contribution.
+- **fix:** Adjust the admin commission and order total to exclude partial refund for display where needed.
+- **fix:** Clarify output language in AI response based on the input language.
+
+### v4.0.1 ( May 08, 2025 ) ###
+
+- **update**: Replaced the WordPress.org banner image with a new version for improved branding.
+- **fix:** Added number value data type casting in order commission.
+
+### v4.0.0 ( May 06, 2025 ) ###
+
+- **new:** AI-powered auto-completion for product content (titles, short and long descriptions). Integrated with OpenAI and Gemini GPT models, improves content creation speed and consistency, allows selection of preferred AI provider
+- **new:** WooCommerce Brand management support in Vendor Panel, Vendors can assign brands during product creation, editing
+- **new:** Introduced Dokan link components with success, warning, info, and danger variants using Tailwind utility classes
+- **new:** Introduced Dokan button components with success, warning, info, and danger variants using Tailwind utility classes
+- **new:** Introduced Dokan badge components with primary, secondary, success, warning, info, and danger variants using Tailwind utility classes
+- **new:** Introduced Dokan alert components with success, warning, info, and danger variants using Tailwind utility classes
+- **new:** Created Dokan price input component formatted according to WooCommerce settings
+- **new:** Implemented internal error React component for error boundary and integrated with Analytics feature
+- **new:** Introduce product & product categories data store
+- **new:** Introduced comprehensive setup guide panel with multiple steps for admin
+- **new:** Introduce vendor analytics feature integrating with WooCommerce analytics system.
+- **update:** Migrated color scheme from 'default' to 'Majestic Orange' for improved visual consistency
+- **update:** Enhanced withdrawal display with proper currency symbols and formatting according to WooCommerce settings
+- **update:** Refined Dokan primary and secondary button colors including text, background, border and shadow for tertiary button
+- **update:** Updated color scheme in the dummy data importer to align with Dokan's brand color
+- **update:** Redesign the upgrade modal using ReactJS framework for improved performance and user experience
+- **update:** Enhanced withdraw with modern UI for better user experience
+- **update:** Optimized withdraw request process with reduced loading times
+- **update:** Reimagined withdraw management interface with cleaner layouts
+- **update:** Skeleton loaders for withdraw screens to improve perceived performance during data fetching
+- **update:** UI inconsistencies in withdraw request and history views
+- **update:** Better error handling for withdraw actions
+- **update:** Improved onboarding experience with modern UI and intuitive setup flow.
+- **fix:** Resolved an issue where the vendor dashboard menus  UI with submenus and notification counters were breaking
+- **fix:** Product reviews not working from admin
+- 
+### v3.14.11 ( Mar 14, 2025 ) ###
+
+- **update:** Dokan now displays prices based on the decimal points setup in WooCommerce.
+- **update:** Added charge and receivable amount in withdraw email templates.
+- **fix:** Resolve an issue when displaying admin earning in admin order list.
+- **fix:** Dokan registration form asset loading issue on Elementor My Account widget.
+- **fix:** Resolved an issue where revoking access to digital product content from order details page reverts on page reload.
+- **fix:** Vendor setup wizard form validation added to properly handle countries without states.
+
+### v3.14.10 ( Feb 28, 2025 ) ###
+
+- **fix:** Prevented wrong store URL generation for staff managers on admin dashboard.
+- **fix:** Restoring parent order with restore related child orders.
+- **fix:** Store settings API data storing inconsistencies.
+
+### v3.14.9 ( Feb 12, 2025 ) ###
+
+- **fix:** Fix earning suggestion in vendor dashboard when product edit page loads initially.
+- **fix:** Fix vendor earning suggestion currency, currency position, decimal separator in vendor dashboard product edit page.
+- **fix:** Fix vendor earning suggestion for invalid product price.
+- **fix:** Tax calculation for shipping based on tax status
+- **feat:** Rollback support for product statues on dokan pro deactivation.
+- **refactor:** Improved dokan_is_user_seller function by adding strict comparison to differentiate between vendor and staff.
+
+### v3.14.8 ( Jan 29, 2025 ) ###
+
+- **update:** Missing parameters support added for the reverse-withdrawal API endpoints.
+- **update:** Missing parameters support added for the Settings API endpoints.
+- **fix:** Fixed an error when navigating to the product edit page with an invalid (non-numeric) product ID.
+- **fix:** Fixed a misspelling typo vendor contact form input field.
+- **fix:** Fixed and updated analytics cache modifier for seller analytics filter.
+
+### v3.14.6 ( Jan 09, 2025 ) ###
+
+- **fix:** Translations on Admin Commission Setup Wizard, Withdraw, Withdraw Log, Add Reverse Withdraw, Dummy Data, and Vendor Single pages were not working due to wrong text-domains.
+
+### v3.14.5 ( Jan 06, 2025 ) ###
+
+- **update:** Improvement vendor setup wizard ui.
+- **update:** Improvement withdraw approved email template.
+- **update:** Dokan admin settings page responsive & update ui design.
+
+### v3.14.4 ( Dec 27, 2024 ) ###
+
+- **fix:** Added tweaks to improve system stability and smoothness.
+
+### v3.14.3 ( Dec 11, 2024 ) ###
+
+- **update:** Updated Dokan admin header to display current pro plan and version with upgrading option.
+
 ### v3.14.2 ( Dec 06, 2024 ) ###
 
 - **update:** Added commission setting option in product bulk edit for Admin.

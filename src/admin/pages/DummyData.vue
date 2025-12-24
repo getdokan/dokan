@@ -24,7 +24,7 @@
             <div v-else class="dokan-importer">
                 <section class="import-done">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100" height="100">
-                        <path d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z" fill="#1BAC9E"/>
+                        <path d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z" fill="#7047EB"/>
                     </svg>
                     <p>
                         {{__( 'Import complete!', 'dokan-lite' )}}
@@ -454,11 +454,11 @@ export default {
             }
 
             & li.active {
-                border-color: #1BAC9E;
-                color: #1BAC9E;
+                border-color: #7047EB;
+                color: #7047EB;
 
                 &::before{
-                    border-color: #1BAC9E;
+                    border-color: #7047EB;
                 }
             }
         }
@@ -508,7 +508,7 @@ export default {
                             border-radius: 5px;
                         }
                         &[value]::-webkit-progress-value {
-                            background-color: #1BAC9E;
+                            background-color: #7047EB;
                             border-radius: 5px;
                             transition: width 0.5s;
                         }
@@ -528,7 +528,7 @@ export default {
 
                 p {
                     font-size: 1.2rem;
-                    color: #1BAC9E;
+                    color: #7047EB;
                 }
 
                 .links {
@@ -554,8 +554,8 @@ export default {
                     line-height: 1.5em;
                     height: auto;
                     border-radius: 4px;
-                    background-color: #1BAC9E;
-                    border-color: #1BAC9E;
+                    background-color: #7047EB;
+                    border-color: #7047EB;
                     border: none;
                     margin: 0;
                     opacity: 1;
@@ -563,8 +563,8 @@ export default {
                     cursor: pointer;
 
                     &.is-loading {
-                        background-color: rgba(27, 172, 158, .5);
-                        border-color: rgba(27, 172, 158, .5);
+                        background-color: rgba(112, 71, 235, .5);
+                        border-color: rgba(112, 71, 235, .5);
                     }
 
                     &.is-busy {

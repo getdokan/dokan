@@ -71,7 +71,21 @@ trait DBAssertionTrait {
      */
     public function assertDatabaseCount( string $table, int $count, array $data = [] ): void {
         $rows_count = $this->getDatabaseCount( $table, $data );
+        $error_message = sprintf( _n( '%d row', '%d rows', $rows_count, 'dokan-lite' ), $rows_count ) . " found in `$table` for given data " . json_encode( $data );
 
-        $this->assertEquals( $count, $rows_count, "No rows found in `$table` for given data " . json_encode( $data ) );
+        $this->assertEquals( $count, $rows_count, $error_message );
+    }
+
+    /**
+     * Assert that a table does not contain any rows matching the specified criteria.
+     *
+     * @param string $table The name of the table (without the prefix).
+     * @param array  $data  An associative array of field-value pairs to match.
+     * @return void
+     */
+    public function assertDatabaseMissing( string $table, array $data = [] ): void {
+        $rows_count = $this->getDatabaseCount( $table, $data );
+
+        $this->assertEquals( 0, $rows_count, "Expected `$table` to not have any matching rows, but found {$rows_count} for data " . wp_json_encode( $data ) );
     }
 }

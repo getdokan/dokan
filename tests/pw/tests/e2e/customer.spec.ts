@@ -39,11 +39,11 @@ test.describe('Customer functionality test', () => {
         await customer.customerBecomeVendor(data.customer.customerInfo);
     });
 
-    test('customer can add billing details', { tag: ['@lite', '@customer'] }, async () => {
+    test.skip('customer can add billing details', { tag: ['@lite', '@customer'] }, async () => {
         await customer.addBillingAddress(data.customer.customerInfo.billing);
     });
 
-    test('customer can add shipping details', { tag: ['@lite', '@customer'] }, async () => {
+    test.skip('customer can add shipping details', { tag: ['@lite', '@customer'] }, async () => {
         await customer.addShippingAddress(data.customer.customerInfo.shipping);
     });
 

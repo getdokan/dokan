@@ -2,11 +2,6 @@
 
 namespace WeDevs\Dokan\Commission\Strategies;
 
-use WeDevs\Dokan\Commission\Formula\CategoryBased;
-use WeDevs\Dokan\Commission\Formula\Fixed;
-use WeDevs\Dokan\Commission\Formula\Percentage;
-use WeDevs\Dokan\Commission\Model\Setting;
-use WeDevs\Dokan\Commission\Settings\Builder;
 use WeDevs\Dokan\Commission\Settings\DefaultSetting;
 
 class DefaultStrategy extends AbstractStrategy {
@@ -30,21 +25,29 @@ class DefaultStrategy extends AbstractStrategy {
     }
 
     /**
+     * @inheritDoc
+     */
+    public function set_next(): AbstractStrategy {
+        $this->next = null;
+
+        return $this;
+    }
+
+    /**
      * Returns global commission settings.
      *
      * @since 3.14.0
      *
-     * @return \WeDevs\Dokan\Commission\Model\Setting
+     * @return void
      */
-    public function get_settings(): Setting {
-        $builder = Builder::build( '', '' );
-        $setting = $builder->get();
+    public function set_settings() {
+        $default_setting = new DefaultSetting();
+        $setting = $default_setting->get();
 
         $setting->set_type( DefaultSetting::TYPE )
             ->set_flat( 0 )
-            ->set_percentage( 0 )
-            ->set_category_commissions( [] );
+            ->set_percentage( 0 );
 
-        return $setting;
+        $this->settings = $setting;
     }
 }

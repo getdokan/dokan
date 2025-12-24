@@ -4,13 +4,15 @@
         <tr>
             <th scope="row"><label for="new_seller_enable_selling"><?php esc_html_e( 'New Vendor Enable Selling', 'dokan-lite' ); ?></label></th>
             <td>
-                <input type="checkbox" name="new_seller_enable_selling" id="new_seller_enable_selling" class="switch-input" <?php checked( $new_seller_enable_selling, 'on', true ); ?>>
-                <label for="new_seller_enable_selling" class="switch-label">
-                    <span class="toggle--on"><?php esc_html_e( 'On', 'dokan-lite' ); ?></span>
-                    <span class="toggle--off"><?php esc_html_e( 'Off', 'dokan-lite' ); ?></span>
-                </label>
+                <select class="wc-enhanced-select" id="new_seller_enable_selling" name="new_seller_enable_selling">
+                <?php foreach ( $new_seller_enable_selling_statuses as $key => $value ) : ?>
+                    <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, $new_seller_enable_selling ); ?>>
+                        <?php echo esc_html( $value ); ?>
+                    </option>
+                <?php endforeach; ?>
+                </select>
                 <span class="description">
-                    <?php esc_html_e( 'Make selling status enable for new registred vendor', 'dokan-lite' ); ?>
+                    <?php esc_html_e( 'Set selling status for newly registered vendor', 'dokan-lite' ); ?>
                 </span>
             </td>
         </tr>
