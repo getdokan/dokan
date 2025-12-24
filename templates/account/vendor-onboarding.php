@@ -7,17 +7,15 @@ if ( function_exists( 'wc_print_notices' ) ) {
 ?>
 
 <div class="dokan-vendor-onboarding">
-    <h1 class="onboarding-title"><?php esc_html_e( 'Vendor Onboarding', 'dokan-lite' ); ?></h1>
-
-    <div class="onboarding-container">
+    <div class="dokan-onboarding-container">
         <!-- Login Section -->
-        <div class="login-section">
+        <div class="dokan-login-section">
             <h2><?php esc_html_e( 'Login', 'dokan-lite' ); ?></h2>
             <?php wc_get_template( 'global/form-login.php' ); ?>
         </div>
 
         <!-- Registration Section -->
-        <div class="registration-section">
+        <div class="dokan-registration-section">
             <h2><?php esc_html_e( 'Registration', 'dokan-lite' ); ?></h2>
             <?php dokan_get_template_part( 'account/vendor-registration', false, [ 'data' => $data ] ); ?>
         </div>
@@ -25,29 +23,29 @@ if ( function_exists( 'wc_print_notices' ) ) {
 </div>
 
 <style>
-    .dokan-vendor-onboarding {
+    .dokan-vendor-onboarding,.entry-title {
         max-width: 1400px;
         margin: 0 auto;
         padding: 60px 40px;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
-    .onboarding-title {
+    .entry-title {
         font-size: 2.5rem;
-        margin-bottom: 60px;
+        margin-bottom: 0px;
         font-weight: 600;
         color: #000;
     }
 
-    .onboarding-container {
+    .dokan-onboarding-container {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 80px;
         align-items: start;
     }
 
-    .login-section h2,
-    .registration-section h2 {
+    .dokan-login-section h2,
+    .dokan-registration-section h2 {
         font-size: 2rem;
         margin-bottom: 30px;
         font-weight: 600;
@@ -55,24 +53,24 @@ if ( function_exists( 'wc_print_notices' ) ) {
     }
 
     /* Login Form Styling */
-    .login-section .woocommerce-form-login {
+    .dokan-login-section .woocommerce-form-login {
         max-width: 600px;
     }
 
-    .login-section .woocommerce-form-login .form-row {
+    .dokan-login-section .woocommerce-form-login .form-row {
         display: block !important;
         width: 100% !important;
         margin-bottom: 20px;
         float: none !important;
     }
 
-    .login-section .woocommerce-form-login .form-row.form-row-first,
-    .login-section .woocommerce-form-login .form-row.form-row-last {
+    .dokan-login-section .woocommerce-form-login .form-row.form-row-first,
+    .dokan-login-section .woocommerce-form-login .form-row.form-row-last {
         width: 100% !important;
         float: none !important;
     }
 
-    .login-section label {
+    .dokan-login-section label {
         display: block;
         margin-bottom: 8px;
         font-weight: 400;
@@ -80,9 +78,9 @@ if ( function_exists( 'wc_print_notices' ) ) {
         font-size: 0.95rem;
     }
 
-    .login-section input[type="text"],
-    .login-section input[type="password"],
-    .login-section input[type="email"] {
+    .dokan-login-section input[type="text"],
+    .dokan-login-section input[type="password"],
+    .dokan-login-section input[type="email"] {
         width: 100%;
         padding: 12px 15px;
         border: 1px solid #ddd;
@@ -92,27 +90,27 @@ if ( function_exists( 'wc_print_notices' ) ) {
         transition: border-color 0.3s ease;
     }
 
-    .login-section input[type="text"]:focus,
-    .login-section input[type="password"]:focus,
-    .login-section input[type="email"]:focus {
+    .dokan-login-section input[type="text"]:focus,
+    .dokan-login-section input[type="password"]:focus,
+    .dokan-login-section input[type="email"]:focus {
         outline: none;
         border-color: #999;
     }
 
-    .login-section .woocommerce-form-login__rememberme {
+    .dokan-login-section .woocommerce-form-login__rememberme {
         display: flex;
         align-items: center;
         margin-bottom: 20px;
     }
 
-    .login-section input[type="checkbox"] {
+    .dokan-login-section input[type="checkbox"] {
         margin-right: 8px;
         width: 16px;
         height: 16px;
     }
 
-    .login-section button[type="submit"],
-    .login-section .button {
+    .dokan-login-section button[type="submit"],
+    .dokan-login-section .button {
         background-color: #000;
         color: #fff;
         padding: 12px 30px;
@@ -126,35 +124,35 @@ if ( function_exists( 'wc_print_notices' ) ) {
         letter-spacing: 0.5px;
     }
 
-    .login-section button[type="submit"]:hover,
-    .login-section .button:hover {
+    .dokan-login-section button[type="submit"]:hover,
+    .dokan-login-section .button:hover {
         background-color: #333;
     }
 
-    .login-section .lost_password {
+    .dokan-login-section .lost_password {
         margin-top: 20px;
     }
 
-    .login-section .lost_password a {
+    .dokan-login-section .lost_password a {
         color: #e74c3c;
         text-decoration: none;
         font-size: 0.95rem;
     }
 
-    .login-section .lost_password a:hover {
+    .dokan-login-section .lost_password a:hover {
         text-decoration: underline;
     }
 
     /* Registration Section Styling */
-    .registration-section form {
+    .dokan-registration-section form {
         max-width: 600px;
     }
 
-    .registration-section .form-row {
+    .dokan-registration-section .form-row {
         margin-bottom: 20px;
     }
 
-    .registration-section label {
+    .dokan-registration-section label {
         display: block;
         margin-bottom: 8px;
         font-weight: 400;
@@ -162,13 +160,13 @@ if ( function_exists( 'wc_print_notices' ) ) {
         font-size: 0.95rem;
     }
 
-    .registration-section input[type="text"],
-    .registration-section input[type="password"],
-    .registration-section input[type="email"],
-    .registration-section input[type="tel"],
-    .registration-section input[type="url"],
-    .registration-section select,
-    .registration-section textarea {
+    .dokan-registration-section input[type="text"],
+    .dokan-registration-section input[type="password"],
+    .dokan-registration-section input[type="email"],
+    .dokan-registration-section input[type="tel"],
+    .dokan-registration-section input[type="url"],
+    .dokan-registration-section select,
+    .dokan-registration-section textarea {
         width: 100%;
         padding: 12px 15px;
         border: 1px solid #ddd;
@@ -178,21 +176,21 @@ if ( function_exists( 'wc_print_notices' ) ) {
         transition: border-color 0.3s ease;
     }
 
-    .registration-section select,
-    .registration-section select.dokan-form-control {
+    .dokan-registration-section select,
+    .dokan-registration-section select.dokan-form-control {
         height: auto;
     }
 
-    .registration-section input:focus,
-    .registration-section select:focus,
-    .registration-section textarea:focus {
+    .dokan-registration-section input:focus,
+    .dokan-registration-section select:focus,
+    .dokan-registration-section textarea:focus {
         outline: none;
         border-color: #999;
     }
 
-    .registration-section button[type="submit"],
-    .registration-section .dokan-btn {
-        background-color: #000;
+    .dokan-registration-section button[type="submit"],
+    .dokan-registration-section .dokan-btn {
+        background-color: rgba(0, 0, 0, 1);
         color: #fff;
         padding: 12px 30px;
         border: none;
@@ -205,32 +203,96 @@ if ( function_exists( 'wc_print_notices' ) ) {
         letter-spacing: 0.5px;
     }
 
-    .registration-section button[type="submit"]:hover,
-    .registration-section .dokan-btn:hover {
-        background-color: #333;
+   /* .dokan-vendor-onboarding .button,
+    .dokan-vendor-onboarding button[type="submit"],
+    .dokan-vendor-onboarding .dokan-btn-theme {
+        background: #000 !important;
+        color: #fff !important;
+        border: none !important;
+        padding: 14px 28px !important;
+        font-weight: 600 !important;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border-radius: 4px !important;
+        cursor: pointer;
+        width: auto;
+        transition: opacity 0.3s;
     }
 
-    .registration-section .help-block,
-    .registration-section .description {
+    .dokan-vendor-onboarding button:hover {
+        opacity: 0.8;
+    } */
+
+    .dokan-registration-section .help-block,
+    .dokan-registration-section .description {
         font-size: 0.85rem;
         color: #666;
         margin-top: 5px;
     }
 
-    .registration-section input[type="checkbox"] {
+    .dokan-registration-section input[type="checkbox"] {
         width: 16px;
         height: 16px;
         margin-right: 8px;
     }
 
+    /* Subscription Pack Styles */
+    .dokan-registration-section .dps-pack-wrappper {
+        border: 1px solid #D3CED2 !important;
+        padding: 20px;
+        border-radius: 4px;
+    }
+
+    .dokan-registration-section .dps-pack {
+        display: none;
+        margin-top: 20px;
+        padding: 15px;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+    }
+
+    .dokan-registration-section .dps-pack:first-of-type {
+        display: block;
+    }
+
+    .dokan-registration-section .dps-pack-price {
+        margin-bottom: 12px;
+        font-weight: 600;
+        font-size: 1.2rem;
+        color: #333;
+    }
+
+    .dokan-registration-section .dps-amount {
+        margin-right: 10px;
+    }
+
+    .dokan-registration-section .dps-rec-period {
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .dokan-registration-section .pack_content {
+        font-size: 0.95rem;
+        color: #555;
+        line-height: 1.6;
+    }
+
+    .dokan-registration-section .pack_content b {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+        color: #000;
+    }
+
     @media (max-width: 1024px) {
-        .onboarding-container {
+        .dokan-onboarding-container {
             grid-template-columns: 1fr;
             gap: 60px;
         }
         
-        .login-section .woocommerce-form-login,
-        .registration-section form {
+        .dokan-login-section .woocommerce-form-login,
+        .dokan-registration-section form {
             max-width: 100%;
         }
     }
@@ -240,18 +302,41 @@ if ( function_exists( 'wc_print_notices' ) ) {
             padding: 40px 20px;
         }
 
-        .onboarding-title {
+        .dokan-onboarding-title {
             font-size: 2rem;
             margin-bottom: 40px;
         }
 
-        .login-section h2,
-        .registration-section h2 {
+        .dokan-login-section h2,
+        .dokan-registration-section h2 {
             font-size: 1.5rem;
         }
 
-        .onboarding-container {
+        .dokan-onboarding-container {
             gap: 40px;
         }
     }
 </style>
+
+<script>
+(function($) {
+    var wrapper = $( '.dps-pack-wrappper' );
+    var Dokan_Subscription_details = {
+        init : function() {
+            wrapper.on( 'change', 'select#dokan-subscription-pack', this.show_details );
+            this.show_details();
+        },
+        show_details : function(){
+            let id = $( 'select#dokan-subscription-pack' ).val();
+            $('.dps-pack').hide();
+            $('.dps-pack-'+id).show();
+        }
+    };
+
+    $(document).ready(function() {
+        if ( wrapper.length ) {
+            Dokan_Subscription_details.init();
+        }
+    });
+})(jQuery);
+</script>

@@ -251,7 +251,7 @@ class Installer {
                 'post_title' => __( 'Vendor Onboarding', 'dokan-lite' ),
                 'slug' => 'vendor-onboarding',
                 'page_id' => 'vendor_onboarding',
-                'content' => '[dokan-vendor-registration]',
+                'content' => '[dokan-vendor-onboarding-registration]',
             ],
         ];
 

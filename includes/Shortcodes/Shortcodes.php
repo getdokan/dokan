@@ -32,7 +32,7 @@ class Shortcodes {
 				'dokan-stores'               => new Stores(),
 				'dokan-vendor-registration'  => new VendorRegistration(),
 				'dokan-customer-migration'   => new CustomerMigration(),
-                'dokan-test-registration'    => new VendorOnboardingRegistration(),
+                'dokan-vendor-onboarding-registration'    => new VendorOnboardingRegistration(),
 			]
         );
     }

@@ -6,7 +6,7 @@ use WeDevs\Dokan\Abstracts\DokanShortcode;
 
 class VendorOnboardingRegistration extends DokanShortcode {
 
-    protected $shortcode = 'dokan-test-registration';
+    protected $shortcode = 'dokan-vendor-onboarding-registration';
 
     /**
      * Vendor onboarding form shortcode callback
