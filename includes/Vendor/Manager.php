@@ -261,6 +261,14 @@ class Manager {
             return $vendor;
         }
 
+        // Allow if current user is the vendor OR is an administrator/shop manager.
+        $is_owner = get_current_user_id() === (int) $vendor->get_id();
+        $is_admin = current_user_can( 'manage_woocommerce' ) || current_user_can( 'manage_options' );
+
+        if ( ! $is_owner && ! $is_admin ) {
+            return new \WP_Error( 'dokan_permission_denied', __( 'You do not have permission to update this vendor.', 'dokan-lite' ) );
+        }
+
         // default wp based user data
         if ( ! empty( $data['user_pass'] ) && get_current_user_id() === $vendor->get_id() ) {
             wp_update_user(
