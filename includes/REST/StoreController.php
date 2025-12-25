@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\REST;
 
+use WeDevs\Dokan\Traits\VendorAuthorizable;
 use WeDevs\Dokan\Vendor\Vendor;
 use WP_Error;
 use WP_Query;
@@ -18,6 +19,7 @@ use WP_REST_Server;
  * @author weDevs <info@wedevs.com>
  */
 class StoreController extends WP_REST_Controller {
+    use VendorAuthorizable;
 
     /**
      * Endpoint namespace
@@ -311,18 +313,18 @@ class StoreController extends WP_REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_store( $request ) {
-        $store_id = (int) $request['id'];
+        $store_id = dokan_get_current_user_id();
         
-        if ( ! dokan_is_user_seller( $store_id, true ) ) {
-           $store_id = dokan_get_current_user_id();
+        if( ! ($this->check_vendor_authorizable_permission( $store_id )) ){
+            return new WP_Error( 'rest_forbidden', __( 'You do not have permissions to access this store.', 'dokan' ), [ 'status' => 403 ] );
         }
 
+        $request['id'] = $store_id;
         $store = dokan()->vendor->get( $store_id );
         $stores_data = $this->prepare_item_for_response( $store, $request );
         $response = rest_ensure_response( $stores_data );
         return $response;
     }
-
 
     /**
      * Delete store
@@ -360,6 +362,7 @@ class StoreController extends WP_REST_Controller {
      * @return bool
      */
     public function update_store_permissions_check( $request ) {
+        // Admin can update any store
         if ( current_user_can( 'manage_woocommerce' ) ) {
             return true;
         }
@@ -367,18 +370,21 @@ class StoreController extends WP_REST_Controller {
         $current_user = get_current_user_id();
         $requested_id = absint( $request->get_param( 'id' ) );
 
-        if ( dokan_is_user_seller( $current_user ) && $current_user === $requested_id ) {
-            return true;
+        // Vendor staff: force parent vendor ID
+        if ( user_can( $current_user, 'vendor_staff' ) ) {
+            $staff_vendor_id = (int) get_user_meta( $current_user, '_vendor_id', true );
+
+            if ( ! $staff_vendor_id ) {
+                return false;
+            }
+
+            $requested_id = $staff_vendor_id;
         }
 
-        $staff_vendor_id = (int) get_user_meta( $current_user, '_vendor_id', true );
-
-        if ( $staff_vendor_id && $staff_vendor_id === $requested_id ) {
-            return true;
-        }
-
-        return false;
+        // Delegate final decision
+        return $this->check_vendor_authorizable_permission( $requested_id );
     }
+
 
     
     /**
@@ -403,6 +409,15 @@ class StoreController extends WP_REST_Controller {
         }
 
         $store  = dokan()->vendor->get( $requested_id );
+
+        if ( ! $store || ! $store->get_id() ) {
+            return new WP_Error(
+                'dokan_rest_store_not_found',
+                __( 'Store not found.', 'dokan' ),
+                [ 'status' => 404 ]
+            );
+        }
+        
         $params   = $request->get_params();
         $store_id = dokan()->vendor->update( $store->get_id(), $params );
 
