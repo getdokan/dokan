@@ -113,7 +113,7 @@ $custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'stor
     <p class="form-row">
         <?php wp_nonce_field( 'woocommerce-register', 'woocommerce-register-nonce' ); ?>
 
-        <input type="submit" class="dokan-btn dokan-btn-theme" name="register" value="<?php esc_attr_e( 'Register', 'dokan-lite' ); ?>" />
+        <input type="submit" class="woocommerce-Button woocommerce-button button" name="register" value="<?php esc_attr_e( 'Register', 'dokan-lite' ); ?>" />
     </p>
 
     <?php do_action( 'dokan_vendor_reg_form_end' ); ?>
