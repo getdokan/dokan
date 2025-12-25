@@ -85,6 +85,6 @@ $custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'stor
 
 <p class="form-row form-group user-role vendor-customer-registration">
 
-   <input type="hidden" name="role" value="customer">
+    <input type="hidden" name="role" value="customer">
     <?php do_action( 'dokan_registration_form_role', $role ); ?>
 </p>

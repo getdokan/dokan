@@ -243,22 +243,60 @@ class Manager {
         }
 
         $settings_url = add_query_arg(
-            [ 'page' => 'dokan#/settings' ],
+            [ 'page' => 'dokan#/tools' ],
             admin_url( 'admin.php' )
         );
 
-        $notices[] = [
-            'type'        => 'warning',
-            'title'       => esc_html__( 'Vendor Onboarding Page Not Configured', 'dokan-lite' ),
-            'description' => sprintf(
+        $dokan_pages = get_option( 'dokan_pages', [] );
+        $page_id = isset( $dokan_pages['vendor_onboarding'] ) ? $dokan_pages['vendor_onboarding'] : 0;
+
+        // Check if page was configured but is now deleted or unpublished
+        if ( $page_id && (int) $page_id > 0 ) {
+            $page = get_post( $page_id );
+            
+            if ( ! $page ) {
+                // Page doesn't exist
+                $notice_title = esc_html__( 'Vendor Onboarding page not found!', 'dokan-lite' );
+                $notice_description = sprintf(
+                    /* translators: %s: Settings link */
+                    esc_html__( 'The configured Vendor Onboarding page has been deleted. Please set a new page in %s', 'dokan-lite' ),
+                    sprintf(
+                        '<a href="%s">%s</a>',
+                        esc_url( $settings_url ),
+                        esc_html__( 'Dokan → Tools → Page Installation', 'dokan-lite' )
+                    )
+                );
+            } else {
+                // Page exists but is not published
+                $notice_title = esc_html__( 'Vendor Onboarding page is not published!', 'dokan-lite' );
+                $notice_description = sprintf(
+                    /* translators: %s: Settings link */
+                    esc_html__( 'The configured Vendor Onboarding page is not published. Please publish it or configure a new page in %s', 'dokan-lite' ),
+                    sprintf(
+                        '<a href="%s">%s</a>',
+                        esc_url( $settings_url ),
+                        esc_html__( 'Dokan → Tools → Page Installation', 'dokan-lite' )
+                    )
+                );
+            }
+        } else {
+            // Page not configured at all
+            $notice_title = esc_html__( 'Vendor Onboarding feature is almost ready!', 'dokan-lite' );
+            $notice_description = sprintf(
                 /* translators: %s: Settings link */
-                esc_html__( 'Vendor onboarding page is not configured. Please set it in %s', 'dokan-lite' ),
+                esc_html__( 'Dokan Vendor Onboarding requires a dedicated page to be configured. Please set it in %s', 'dokan-lite' ),
                 sprintf(
                     '<a href="%s">%s</a>',
                     esc_url( $settings_url ),
-                    esc_html__( 'Dokan → Settings → Page Settings', 'dokan-lite' )
+                    esc_html__( 'Dokan → Tools → Page Installation', 'dokan-lite' )
                 )
-            ),
+            );
+        }
+
+        $notices[] = [
+            'type'        => 'warning',
+            'title'       => $notice_title,
+            'description' => $notice_description,
             'priority'    => 5,
             'scope'       => 'global',
         ];
