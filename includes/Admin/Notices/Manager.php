@@ -253,7 +253,7 @@ class Manager {
         // Check if page was configured but is now deleted or unpublished
         if ( $page_id && (int) $page_id > 0 ) {
             $page = get_post( $page_id );
-            
+
             if ( ! $page ) {
                 // Page doesn't exist
                 $notice_title = esc_html__( 'Vendor Onboarding page not found!', 'dokan-lite' );

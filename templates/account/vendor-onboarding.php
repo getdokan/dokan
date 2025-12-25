@@ -203,26 +203,6 @@ if ( function_exists( 'wc_print_notices' ) ) {
         letter-spacing: 0.5px;
     }
 
-   /* .dokan-vendor-onboarding .button,
-    .dokan-vendor-onboarding button[type="submit"],
-    .dokan-vendor-onboarding .dokan-btn-theme {
-        background: #000 !important;
-        color: #fff !important;
-        border: none !important;
-        padding: 14px 28px !important;
-        font-weight: 600 !important;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        border-radius: 4px !important;
-        cursor: pointer;
-        width: auto;
-        transition: opacity 0.3s;
-    }
-
-    .dokan-vendor-onboarding button:hover {
-        opacity: 0.8;
-    } */
-
     .dokan-registration-section .help-block,
     .dokan-registration-section .description {
         font-size: 0.85rem;
