@@ -14,7 +14,7 @@ use WP_Error;
  *
  * @author weDevs <info@wedevs.com>
  */
-class StoreSettingController extends DokanBaseVendorController {
+class StoreSettingController extends WP_REST_Controller {
     /**
      * Endpoint namespace
      *
@@ -42,7 +42,7 @@ class StoreSettingController extends DokanBaseVendorController {
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_settings' ],
-                    'permission_callback' => [ $this, 'check_permission' ],
+                    'permission_callback' => [ $this, 'get_settings_permission_callback' ],
                     'args'                => [
                         'vendor_id' => [
                             'required'          => false,
@@ -57,7 +57,7 @@ class StoreSettingController extends DokanBaseVendorController {
                 [
                     'methods'             => WP_REST_Server::EDITABLE,
                     'callback'            => [ $this, 'update_settings' ],
-                    'permission_callback' => [ $this, 'check_permission' ],
+                    'permission_callback' => [ $this, 'get_settings_permission_callback' ],
                     'args'                => [
                         'vendor_id' => [
                             'required'          => false,
@@ -121,6 +121,38 @@ class StoreSettingController extends DokanBaseVendorController {
         $response['chargeable_methods']           = dokan_withdraw_get_chargeable_methods();
 
         return rest_ensure_response( $response );
+    }
+
+    /**
+     * Permission callback for vendor settings
+     *
+     * @return bool|WP_Error
+     */
+    public function get_settings_permission_callback() {
+// 2. Get the vendor object based on the REQUEST (this captures the target vendor_id)
+        $vendor = $this->get_vendor( $request );
+
+        if ( is_wp_error( $vendor ) ) {
+            return $vendor;
+        }
+
+        $target_vendor_id = (int) $vendor->get_id();
+        $current_user_id = dokan_get_current_user_id();
+
+        // 3. Expert Authorization Logic
+        $is_admin = current_user_can( 'manage_woocommerce' ) || current_user_can( 'manage_options' );
+        $is_owner = ( $current_user_id === $target_vendor_id );
+
+        // If you are not the owner AND not an admin, block the request immediately
+        if ( ! $is_owner && ! $is_admin ) {
+            return new WP_Error( 
+                'dokan_permission_denied', 
+                __( 'You do not have permission to access these settings.', 'dokan-lite' ), 
+                [ 'status' => 403 ] 
+            );
+        }
+
+        return true;
     }
 
     /**
