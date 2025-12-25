@@ -57,7 +57,7 @@ class StoreSettingController extends WP_REST_Controller {
                 [
                     'methods'             => WP_REST_Server::EDITABLE,
                     'callback'            => [ $this, 'update_settings' ],
-                    'permission_callback' => [ $this, 'get_settings_permission_callback' ],
+                    'permission_callback' => [ $this, 'update_settings_permission_callback' ],
                     'args'                => [
                         'vendor_id' => [
                             'required'          => false,
@@ -129,32 +129,53 @@ class StoreSettingController extends WP_REST_Controller {
      * @return bool|WP_Error
      */
     public function get_settings_permission_callback() {
-// 2. Get the vendor object based on the REQUEST (this captures the target vendor_id)
-        $vendor = $this->get_vendor( $request );
+        $vendor = $this->get_vendor();
 
         if ( is_wp_error( $vendor ) ) {
             return $vendor;
         }
 
-        $target_vendor_id = (int) $vendor->get_id();
-        $current_user_id = dokan_get_current_user_id();
-
-        // 3. Expert Authorization Logic
-        $is_admin = current_user_can( 'manage_woocommerce' ) || current_user_can( 'manage_options' );
-        $is_owner = ( $current_user_id === $target_vendor_id );
-
-        // If you are not the owner AND not an admin, block the request immediately
-        if ( ! $is_owner && ! $is_admin ) {
-            return new WP_Error( 
-                'dokan_permission_denied', 
-                __( 'You do not have permission to access these settings.', 'dokan-lite' ), 
-                [ 'status' => 403 ] 
-            );
+        if ( empty( $vendor->get_id() ) ) {
+            return new WP_Error( 'no_store_found', __( 'No vendor found', 'dokan-lite' ), [ 'status' => 404 ] );
         }
 
         return true;
     }
 
+    /**
+     * Permission callback for updating vendor settings.
+     *
+     * @param \WP_REST_Request $request REST Request.
+     *
+     * @return bool|WP_Error
+     */
+	public function update_settings_permission_callback( $request ) {
+		$vendor = $this->get_vendor( $request );
+
+		if ( is_wp_error( $vendor ) ) {
+			return $vendor;
+		}
+
+		if ( empty( $vendor->get_id() ) ) {
+			return new WP_Error( 'no_store_found', __( 'No vendor found', 'dokan-lite' ), array( 'status' => 404 ) );
+		}
+
+		$target_vendor_id = (int) $vendor->get_id();
+		$current_user_id  = dokan_get_current_user_id();
+
+		$is_admin = current_user_can( 'manage_woocommerce' );
+		$is_owner = $current_user_id === $target_vendor_id;
+
+		if ( ! $is_admin && ! $is_owner ) {
+			return new WP_Error(
+				'dokan_permission_denied',
+				__( 'You do not have permission to access these settings.', 'dokan-lite' ),
+				array( 'status' => 403 )
+			);
+		}
+
+		return true;
+	}
     /**
      * Get vendor
      *
