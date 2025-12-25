@@ -260,6 +260,7 @@ class Manager {
         if ( ! $data ) {
             return $vendor;
         }
+
         // default wp based user data
         if ( ! empty( $data['user_pass'] ) && get_current_user_id() === $vendor->get_id() ) {
             wp_update_user(
