@@ -316,7 +316,7 @@ class StoreController extends WP_REST_Controller {
         $store_id = dokan_get_current_user_id();
 
         if ( ! ( $this->check_vendor_authorizable_permission( $store_id ) ) ) {
-            return new WP_Error( 'rest_forbidden', __( 'You do not have permissions to access this store.', 'dokan' ), [ 'status' => 403 ] );
+            return new WP_Error( 'rest_forbidden', __( 'You do not have permissions to access this store.', 'dokan-lite' ), [ 'status' => 403 ] );
         }
 
         $request['id'] = $store_id;
@@ -413,7 +413,7 @@ class StoreController extends WP_REST_Controller {
         if ( ! $store || ! $store->get_id() ) {
             return new WP_Error(
                 'dokan_rest_store_not_found',
-                __( 'Store not found.', 'dokan' ),
+                __( 'Store not found.', 'dokan-lite' ),
                 [ 'status' => 404 ]
             );
         }
