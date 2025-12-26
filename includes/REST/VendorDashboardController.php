@@ -4,6 +4,10 @@ namespace WeDevs\Dokan\REST;
 
 use DateInterval;
 use DatePeriod;
+use DateTime;
+use DateTimeZone;
+use Exception;
+use WeDevs\Dokan\Utilities\VendorUtil;
 use WP_Error;
 use WP_HTTP_Response;
 use WP_REST_Request;
@@ -119,7 +123,7 @@ class VendorDashboardController extends \WP_REST_Controller {
                     'callback'            => [ $this, 'get_preferences' ],
                     'args'                => [],
                     'schema'              => [ $this, 'get_preferences_schema' ],
-                    'permission_callback' => 'is_user_logged_in',
+                    'permission_callback' => '__return_true',
                 ],
             ]
         );
@@ -155,9 +159,17 @@ class VendorDashboardController extends \WP_REST_Controller {
      * @return WP_Error|WP_HTTP_Response|WP_REST_Response
      */
     public function get_profile_information() {
-        return rest_ensure_response(
-            dokan_get_store_info( dokan_get_current_user_id() )
-        );
+        $profile_info   = dokan_get_store_info( dokan_get_current_user_id() );
+        $banner         = ! empty( $profile_info['banner'] ) ? absint( $profile_info['banner'] ) : 0;
+        $banner_url     = $banner ? wp_get_attachment_url( $banner ) : VendorUtil::get_vendor_default_banner_url();
+        $profile_info['banner_url'] = $banner_url;
+
+        $gravatar_id  = ! empty( $profile_info['gravatar'] ) ? $profile_info['gravatar'] : 0;
+        $gravatar_url = $gravatar_id ? wp_get_attachment_url( $gravatar_id ) : VendorUtil::get_vendor_default_avatar_url();
+        $profile_info['gravatar_url'] = $gravatar_url;
+
+        $profile_info = apply_filters( 'dokan_vendor_profile_response', $profile_info );
+        return rest_ensure_response( $profile_info );
     }
 
     /**
@@ -345,11 +357,36 @@ class VendorDashboardController extends \WP_REST_Controller {
      * @since 3.3.3
      *
      * @return WP_Error|WP_HTTP_Response|WP_REST_Response
+     * @throws Exception
      */
     public function get_preferences() {
+        $currency_options = [];
+        foreach ( get_woocommerce_currencies() as $key => $currency ) {
+            $currency_options[ $key ] = get_woocommerce_currency_symbol( $key );
+        }
+        $tz_string = get_option( 'timezone_string' );
+        $offset    = get_option( 'gmt_offset' );
+
+        if ( $tz_string ) {
+            // Timezone like "Asia/Dhaka"
+            $dt = new DateTime( 'now', new DateTimeZone( $tz_string ) );
+            $timezone_utc = $dt->format( 'P' ); // e.g. +06:00
+        } else {
+            // Fallback offset
+            $hours   = (int) $offset;
+            $minutes = abs( $offset - $hours ) * 60;
+            $timezone_utc = sprintf( '%+03d:%02d', $hours, $minutes );
+        }
+        $icon_id  = get_option( 'site_icon' );
+        $favicon  = $icon_id ? wp_get_attachment_image_url( $icon_id, 'full' ) : '';
+
         return rest_ensure_response(
             [
+                'site_title'            => get_bloginfo( 'name' ),
+                'tagline'               => get_bloginfo( 'description' ),
+                'site_icon'             => $favicon,
                 'currency'              => get_woocommerce_currency(),
+                'currency_options'      => $currency_options,
                 'currency_position'     => get_option( 'woocommerce_currency_pos' ),
                 'currency_symbol'       => get_woocommerce_currency_symbol(),
                 'decimal_separator'     => wc_get_price_decimal_separator(),
@@ -369,6 +406,9 @@ class VendorDashboardController extends \WP_REST_Controller {
                 'date_format'           => get_option( 'date_format' ),
                 'time_format'           => get_option( 'time_format' ),
                 'language'              => get_locale(),
+                'week_start_on'         => get_option( 'start_of_week' ),
+                'store_color'           => dokan_get_option( 'store_color_pallete', 'dokan_colors', [] ),
+                'timezone_utc'          => $timezone_utc,
             ]
         );
     }
@@ -384,9 +424,33 @@ class VendorDashboardController extends \WP_REST_Controller {
             'type'       => 'object',
             // In JSON Schema you can specify object properties in the properties attribute.
             'properties' => [
+                'site_title'            => [
+                    'description' => esc_html__( 'Site title.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view' ],
+                    'readonly'    => true,
+                ],
+                'tagline'               => [
+                    'description' => esc_html__( 'Tagline.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view' ],
+                    'readonly'    => true,
+                ],
+                'site_icon'             => [
+                    'description' => esc_html__( 'Favicon.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view' ],
+                    'readonly'    => true,
+                ],
                 'currency'              => [
                     'description' => esc_html__( 'Payment currency.', 'dokan-lite' ),
                     'type'        => 'string',
+                    'context'     => [ 'view' ],
+                    'readonly'    => true,
+                ],
+                'currency_options'      => [
+                    'description' => esc_html__( 'Currency Options.', 'dokan-lite' ),
+                    'type'        => 'object',
                     'context'     => [ 'view' ],
                     'readonly'    => true,
                 ],
@@ -498,9 +562,27 @@ class VendorDashboardController extends \WP_REST_Controller {
                     'context'     => [ 'view' ],
                     'readonly'    => true,
                 ],
+                'timezone_utc'           => [
+                    'description' => esc_html__( 'Store UTC time.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view' ],
+                    'readonly'    => true,
+                ],
                 'language'              => [
                     'description' => esc_html__( 'Store language.', 'dokan-lite' ),
                     'type'        => 'string',
+                    'context'     => [ 'view' ],
+                    'readonly'    => true,
+                ],
+                'week_start_on' => [
+                    'description' => esc_html__( 'Store start of week.', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'context'     => [ 'view' ],
+                    'readonly'    => true,
+                ],
+                'store_color' => [
+                    'description' => esc_html__( 'Store color.', 'dokan-lite' ),
+                    'type'        => 'object',
                     'context'     => [ 'view' ],
                     'readonly'    => true,
                 ],
