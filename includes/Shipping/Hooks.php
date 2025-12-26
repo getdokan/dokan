@@ -123,7 +123,7 @@ class Hooks {
     /**
      * Add shipping tax rate based on vendor product items.
      *
-     * @since DOKAN_SINCE
+     * @since 4.2.4
      *
      * @param $rate \WC_Shipping_Rate
      * @param $args array

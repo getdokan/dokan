@@ -6,7 +6,7 @@ namespace WeDevs\Dokan\Admin;
  * User List related tasks for wp-admin.
  * Adds Pending Vendor tab and Approve Vendors bulk action.
  *
- * @since DOKAN_SINCE
+ * @since 4.2.4
  *
  * @package Dokan
  */
@@ -29,7 +29,7 @@ class UserList {
     /**
      * Add Pending Vendor view to user's list.
      *
-     * @since DOKAN_SINCE
+     * @since 4.2.4
      *
      * @param array $views Existing views
      *
@@ -101,7 +101,7 @@ class UserList {
     /**
      * Add bulk actions to the user's list.
      *
-     * @since DOKAN_SINCE
+     * @since 4.2.4
      *
      * @param array $actions Existing bulk actions
      *
@@ -119,7 +119,7 @@ class UserList {
     /**
      * Handle bulk actions.
      *
-     * @since DOKAN_SINCE
+     * @since 4.2.4
      *
      * @param string $sendback Redirect URL
      * @param string $doaction Action being performed
@@ -167,7 +167,7 @@ class UserList {
     /**
      * Show admin notices for bulk actions.
      *
-     * @since DOKAN_SINCE
+     * @since 4.2.4
      *
      * @return void
      */

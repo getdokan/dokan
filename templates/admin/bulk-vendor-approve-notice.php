@@ -2,7 +2,7 @@
 /**
  * Admin View: Bulk Action Notice for Approve Vendors.
  *
- * @since DOKAN_SINCE
+ * @since 4.2.4
  *
  * @var int    $count   Number of vendors processed
  * @var string $message Success message to display
