@@ -220,10 +220,10 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
         update_post_meta( $post_id, '_sale_price_dates_to', '' );
     } else {
         // Sales and prices
-        $date_from     = (string) isset( $data['_sale_price_dates_from'] ) ? wc_clean( $data['_sale_price_dates_from'] ) : '';
-        $date_to       = (string) isset( $data['_sale_price_dates_to'] ) ? wc_clean( $data['_sale_price_dates_to'] ) : '';
-        $regular_price = (string) isset( $data['_regular_price'] ) ? wc_clean( $data['_regular_price'] ) : '';
-        $sale_price    = (string) isset( $data['_sale_price'] ) ? wc_clean( $data['_sale_price'] ) : '';
+        $date_from     = isset( $data['_sale_price_dates_from'] ) ? (string) wc_clean( $data['_sale_price_dates_from'] ) : '';
+        $date_to       = isset( $data['_sale_price_dates_to'] ) ? (string) wc_clean( $data['_sale_price_dates_to'] ) : '';
+        $regular_price = isset( $data['_regular_price'] ) ? (string) wc_clean( $data['_regular_price'] ) : '';
+        $sale_price    = isset( $data['_sale_price'] ) ? (string) wc_clean( $data['_sale_price'] ) : '';
         $now           = dokan_current_datetime();
 
         // Update price if on sale
@@ -379,7 +379,7 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
 
     $product = wc_get_product( $post_id );
 
-    $sku = trim( wp_unslash( $data['_sku'] ) ) !== '' ? sanitize_text_field( wp_unslash( $data['_sku'] ) ) : '';
+    $sku = sanitize_text_field( wp_unslash( $data['_sku'] ?? '' ) );
     try {
         $product->set_sku( $sku );
     } catch ( WC_Data_Exception $e ) {
@@ -388,8 +388,8 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
     }
 
     // Set Sales and prices
-    $product->set_regular_price( $regular_price );
-    $product->set_sale_price( $sale_price );
+    $product->set_regular_price( $regular_price ?? '' );
+    $product->set_sale_price( $sale_price ?? '' );
 
     // Site timezone
     $tz_string = wc_timezone_string();

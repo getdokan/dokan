@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Admin;
 
 use stdClass;
+use WeDevs\Dokan\Assets;
 use WeDevs\Dokan\Utilities\AdminSettings;
 
 /**
@@ -151,12 +152,14 @@ class SetupWizard {
         if ( $require_dompurify && ! wp_script_is( 'dompurify', 'registered' ) ) {
             wp_register_script( 'dompurify', WC()->plugin_url() . '/assets/js/dompurify/purify' . $suffix . '.js', array(), WC()->version, false );
         }
+        $jquery_blockui = Assets::get_wc_handler( 'jquery-blockui' );
+        $jquery_tiptip  = Assets::get_wc_handler( 'jquery-tiptip' );
 
-        if ( ! wp_script_is( 'jquery-tiptip', 'registered' ) ) {
-            wp_register_script( 'jquery-tiptip', WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip.min.js', $require_dompurify ? [ 'jquery', 'dompurify' ] : [ 'jquery' ], WC()->version, true );
+        if ( ! wp_script_is( $jquery_tiptip, 'registered' ) ) {
+            wp_register_script( $jquery_tiptip, WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip.min.js', $require_dompurify ? [ 'jquery', 'dompurify' ] : [ 'jquery' ], WC()->version, true );
         }
 
-        wp_register_script( 'wc-setup', WC()->plugin_url() . '/assets/js/admin/wc-setup.min.js', [ 'jquery', 'wc-enhanced-select', 'jquery-blockui', 'wp-util', 'jquery-tiptip', 'dokan-util-helper' ], WC_VERSION, true );
+        wp_register_script( 'wc-setup', WC()->plugin_url() . '/assets/js/admin/wc-setup.min.js', [ 'jquery', 'wc-enhanced-select', $jquery_blockui, 'wp-util', $jquery_tiptip, 'dokan-util-helper' ], WC_VERSION, true );
 
         wp_localize_script(
             'wc-setup',
@@ -214,6 +217,7 @@ class SetupWizard {
                 'onboardingData',
                 [
                     'site_url'                  => esc_url( get_site_url() ),
+                    'reserved_slugs'            => dokan_get_reserved_url_slugs(),
                     'dokan_admin_dashboard_url' => esc_url( admin_url( 'admin.php?page=' . $page_slug ) ),
                 ]
             );

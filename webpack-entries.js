@@ -3,6 +3,7 @@ const entryPoints = {
 
     frontend: './src/dashboard/index.tsx',
     'dokan-admin-dashboard': './src/admin/dashboard/index.tsx',
+    'dokan-admin-switching': './src/admin/panel-switcher/index.tsx',
     'dokan-admin-panel-header': './src/admin/header/index.tsx',
     'setup-guide-banner': './src/admin/banner/SetupGuideBanner.tsx',
     'vue-frontend': './src/frontend/main.js',
@@ -58,11 +59,19 @@ const entryPoints = {
             type: 'window',
         },
     },
+    'vendors-store': {
+        import: '/src/stores/vendors/store.ts',
+        library: {
+            name: [ 'dokan', 'vendorsStore' ],
+            type: 'window',
+        },
+    },
     'dokan-status': '/src/Status/index.tsx',
     'dokan-pro-features': '/src/ProFeatures/index.tsx',
     'vendor-dashboard/reports/index': './src/vendor-dashboard/reports/index.js',
     // intelligence
     'dokan-intelligence': './src/intelligence/index.tsx',
+    'vendor-dashboard/layout/index': './src/vendor-dashboard/layout/index.tsx',
     'products-store': {
         import: '/src/stores/products/store.ts',
         library: {

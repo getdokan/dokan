@@ -3,12 +3,16 @@
 namespace WeDevs\Dokan\DependencyManagement\Providers;
 
 use WeDevs\Dokan\Admin\Dashboard\Dashboard;
+use WeDevs\Dokan\Admin\Dashboard\LegacySwitcher;
 use WeDevs\Dokan\Admin\Dashboard\Pages\Modules;
 use WeDevs\Dokan\Admin\Dashboard\Pages\ProFeatures;
 use WeDevs\Dokan\Admin\Dashboard\Pages\SetupGuide;
 use WeDevs\Dokan\Admin\Dashboard\Pages\Status;
+use WeDevs\Dokan\Admin\Dashboard\Pages\Withdraw;
+use WeDevs\Dokan\Admin\Dashboard\Pages\Vendors;
 use WeDevs\Dokan\Admin\OnboardingSetup\AdminSetupGuide;
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
+use WeDevs\Dokan\Admin\Dashboard\Pages\ReverseWithdrawal;
 
 /**
  * Admin Dashboard API Service Provider
@@ -30,9 +34,13 @@ class AdminDashboardServiceProvider extends BaseServiceProvider {
      */
     protected $services = [
         Dashboard::class,
+        LegacySwitcher::class,
         Modules::class,
         Status::class,
         ProFeatures::class,
+        Withdraw::class,
+        Vendors::class,
+        ReverseWithdrawal::class, // Added ReverseWithdrawal page service
 	];
 
     /**

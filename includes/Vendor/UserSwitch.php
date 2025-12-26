@@ -21,6 +21,7 @@ class UserSwitch {
      */
     public function __construct() {
         add_filter( 'dokan_admin_localize_script', [ $this, 'add_localize_data' ], 15 );
+        add_filter( 'dokan_admin_dashboard_vendors_settings', [ $this, 'add_localize_data' ] );
         add_filter( 'dokan_rest_store_additional_fields', [ $this, 'populate_switch_url' ], 2, 3 );
         add_action( 'dokan_dashboard_content_inside_before', [ $this, 'show_user_switching_message' ], 9 );
     }
@@ -51,6 +52,7 @@ class UserSwitch {
      */
     public function add_localize_data( $localize_data ) {
         $localize_data['is_vendor_switching_enabled'] = $this->is_feature_active();
+        $localize_data['is_vendor_legacy_page']       = get_transient( 'dokan_legacy_vendors_page' );
 
         return $localize_data;
     }

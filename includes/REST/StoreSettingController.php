@@ -36,18 +36,40 @@ class StoreSettingController extends WP_REST_Controller {
      */
     public function register_routes() {
         register_rest_route(
-            $this->namespace, '/' . $this->rest_base, [
-				[
-					'methods'             => WP_REST_Server::READABLE,
-					'callback'            => [ $this, 'get_settings' ],
-					'permission_callback' => [ $this, 'get_settings_permission_callback' ],
-				],
+            $this->namespace,
+            '/' . $this->rest_base,
+            [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_settings' ],
+                    'permission_callback' => [ $this, 'get_settings_permission_callback' ],
+                    'args'                => [
+                        'vendor_id' => [
+                            'required'          => false,
+                            'type'              => 'integer',
+                            'validate_callback' => function ( $param ) {
+                                return is_numeric( $param ) && (int) $param > 0;
+                            },
+                            'description'       => __( 'Optional vendor ID', 'dokan-lite' ),
+                        ],
+                    ],
+                ],
                 [
                     'methods'             => WP_REST_Server::EDITABLE,
                     'callback'            => [ $this, 'update_settings' ],
                     'permission_callback' => [ $this, 'get_settings_permission_callback' ],
+                    'args'                => [
+                        'vendor_id' => [
+                            'required'          => false,
+                            'type'              => 'integer',
+                            'validate_callback' => function ( $param ) {
+                                return is_numeric( $param ) && (int) $param > 0;
+                            },
+                            'description'       => __( 'Optional vendor ID', 'dokan-lite' ),
+                        ],
+                    ],
                 ],
-			]
+            ]
         );
     }
 
@@ -61,7 +83,7 @@ class StoreSettingController extends WP_REST_Controller {
      * @return WP_Error|\WP_REST_Response
      */
     public function update_settings( $request ) {
-        $vendor   = $this->get_vendor();
+        $vendor   = $this->get_vendor( $request );
         $params   = $request->get_params();
         $store_id = dokan()->vendor->update( $vendor->get_id(), $params );
 
@@ -85,11 +107,18 @@ class StoreSettingController extends WP_REST_Controller {
      * @return mixed|WP_Error|\WP_HTTP_Response|\WP_REST_Response
      */
     public function get_settings( $request ) {
-        $vendor   = $this->get_vendor();
+        $vendor   = $this->get_vendor( $request );
         $response = dokan_get_store_info( $vendor->id );
 
+        $methods_data = dokan_get_container()->get( 'dashboard' )->templates->settings->get_seller_payment_methods( $vendor->get_id() );
+
         $response['bank_payment_required_fields'] = dokan_bank_payment_required_fields();
-        $response['active_payment_methods'] = dokan_withdraw_get_active_methods();
+        $response['active_payment_methods']       = $methods_data['active_methods'] ?? [];
+        $response['connected_methods']            = $methods_data['connected_methods'] ?? [];
+        $response['disconnected_methods']         = $methods_data['disconnected_methods'] ?? [];
+        $response['withdraw_options']             = dokan_withdraw_get_methods();
+        $response['fields_placeholders']          = dokan_bank_payment_fields_placeholders();
+        $response['chargeable_methods']           = dokan_withdraw_get_chargeable_methods();
 
         return rest_ensure_response( $response );
     }
@@ -116,16 +145,24 @@ class StoreSettingController extends WP_REST_Controller {
     /**
      * Get vendor
      *
+     * @param \WP_REST_Request|null
+     *
      * @return WP_Error|Vendor
      */
-    protected function get_vendor() {
-        $current_user = dokan_get_current_user_id();
-        if ( $current_user ) {
-            $vendor = dokan()->vendor->get( $current_user );
-        }
+    protected function get_vendor( $request = null ) {
+        $vendor_id = is_a( $request, \WP_REST_Request::class ) && $request->get_param( 'vendor_id' ) ? $request->get_param( 'vendor_id' ) : '';
+        if ( $vendor_id ) {
+            $vendor = dokan()->vendor->get( (int) $vendor_id );
+        } else {
+            $current_user = dokan_get_current_user_id();
 
-        if ( ! $current_user ) {
-            return new WP_Error( 'Unauthorized', __( 'You are not logged in', 'dokan-lite' ), [ 'code' => 401 ] );
+            if ( ! $current_user ) {
+                return new WP_Error( 'Unauthorized', __( 'You are not logged in', 'dokan-lite' ), [ 'code' => 401 ] );
+            }
+
+            if ( $current_user ) {
+                $vendor = dokan()->vendor->get( $current_user );
+            }
         }
 
         return $vendor;

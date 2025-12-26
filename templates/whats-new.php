@@ -4,6 +4,244 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.2.4',
+        'released' => '2025-12-26',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Added a Pending Vendors tab on the WordPress admin Users screen to view vendors awaiting approval.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added a bulk action on the WordPress admin Users screen to approve multiple pending vendors at once, including per-user validation and permission checks.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added an admin notice view on the WordPress admin Users screen that summarizes how many vendors were approved after performing bulk actions.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Improved compatibility with recent WooCommerce changes to script handling, making setup wizard and frontend script loading more reliable.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Redesigned the Admin Panel "Changelog" page template for a better look and user experience.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Improved shipping tax calculations so shipping taxes are computed more accurately per-order, taking vendor cart item tax classes into account for multi-vendor orders.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.2.3',
+        'released' => '2025-12-22',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Compatible vendor store banner image cropper with the latest version.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.2.2',
+        'released' => '2025-12-22',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Banner image cropper reflects an error on the vendor store settings.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.2.1',
+        'released' => '2025-12-04',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Added a "Filter by Vendor Sub-orders" option to the WooCommerce Orders page to easily filter specific marketplace orders.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Redesigned the Admin Panel "Not Found" page template for a better look and user experience.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Ensured full compatibility for the legacy admin panel store support page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Improved how tooltips appear and remain visible in both the Dokan vendor and admin panels.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Clicking the site title in the new vendor dashboard now redirects to the marketplace main site URL.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added support for legacy URL settings to the "Visit Dashboard" button within the Admin Setup Wizard.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Applied menu manager support to correctly control the vendor sidebar menus in the new dashboard layout.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added the ability to sort the vendor management table by registration date.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Corrected the default toggle switch states when creating a new vendor to ensure they start in the intended position.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added checks to ensure users without a vendor account are redirected to a proper "404 Not Found" page instead of an error.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Allowed vendors to correctly enter decimal amounts in the withdrawal request popup.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Ensured that admin-configured banner dimensions are correctly displayed in the admin vendor settings.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed an issue where manual withdrawal requests now correctly reflect the settings configured by the admin.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated the correct method for translating text (text domain handling) for recommended plugins.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Prevented the "Complete Your Marketplace Setup" widget from showing up after the vendor has finished all the onboarding steps.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added support for including product variations in products rest api requests.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Stopped unnecessary warnings and notices from appearing during the initial store setup process.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Restored the side-by-side layout for the main Admin Dashboard panel.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Prevent console warning from admin panel setup guide banner elements.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Remove setup guide banner for admin setup guide pages.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.2.0',
+        'released' => '2025-11-24',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Ensured full compatibility for the legacy admin panel across Subscriptions, Announcements, Wholesale, Product Ads, Abuse Reports, Seller Badge, and Refund pages.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'The vendor dashboard now supports modern, full-width theme layouts, providing a more spacious user experience.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => "Redesigned the Admin's Reverse Withdrawal page with a modern, easier-to-use interface for faster payment management.",
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Corrected a price formatting issue in both HTML and plain text email templates.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed a redirection issue on the legacy vendor shipping policy page to ensure it works correctly.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.1.5',
+        'released' => '2025-11-11',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Added vendor verification legacy UI support for admin panel to ensure backward compatibility with older interface versions.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated all Twitter labels to X to reflect the latest brand changes.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added custom store URL validation in admin settings to prevent conflicts with WordPress search functionality.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed PHP warnings triggered when saving variable products by improving validation and data handling during product save operations.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.1.4',
+        'released' => '2025-11-06',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Added validation for the `section` parameter in `Admin Settings` to prevent unauthorized or unintended option updates.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Strengthened nonce handling for limited-time promotional notices by changing the action from `dokan_admin` to `dokan_promotional_notice` for improved consistency and isolation.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.1.3',
+        'released' => '2025-10-28',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Admin Dashboard withdraw list UI with Modern Design and Improved User Experience.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Admin Dashboard vendor list UI with Modern Design and Improved User Experience.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.1.2',
         'released' => '2025-10-16',
         'changes'  => [

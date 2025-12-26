@@ -1,6 +1,7 @@
 import { MaskedInput } from '@getdokan/dokan-ui';
 import { CommissionInputsProps } from './types';
 import { Plus } from 'lucide-react';
+import DebouncedInput from '@src/components/DebouncedInput';
 
 const CommissionInputs: React.FC< CommissionInputsProps > = ( {
     categoryId,
@@ -33,7 +34,8 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
     return (
         <div className="flex items-center">
             <div className="w-[142px]">
-                <MaskedInput
+                <DebouncedInput
+                    component={ MaskedInput }
                     input={ {
                         type: 'number',
                     } }
@@ -54,7 +56,7 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
                             isAllCategory
                         )
                     }
-                    className={ `w-full h-10 pl-6  text-sm  rounded-r-[3px] bg-white focus:border-[#7047EB] focus:ring-1 focus:ring-[#7047EB] focus:ring-opacity-20 transition-colors placeholder-[#828282] text-[#575757]` }
+                    className={ `w-full h-10 pl-6  text-sm bg-white focus:border-[#7047EB] focus:ring-1 focus:ring-[#7047EB] focus:ring-opacity-20 transition-colors placeholder-[#828282] text-[#575757] !border-r-0 !rounded-r-none` }
                     maskRule={ {
                         numeral: true,
                         delimiter: currency.thousand,
@@ -67,7 +69,8 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
                 <Plus />
             </div>
             <div className="w-[120px]">
-                <MaskedInput
+                <DebouncedInput
+                    component={ MaskedInput }
                     addOnLeft={
                         <span className="text-[#575757] text-sm">
                             { currency.symbol }
@@ -91,7 +94,7 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
                         numeralDecimalMark: currency.decimal,
                         numeralDecimalScale: currency.precision,
                     } }
-                    className={ `w-full h-10 pl-6 pr-3 text-sm  rounded-r-[3px] bg-white focus:border-[#7047EB] focus:ring-1 focus:ring-[#7047EB] focus:ring-opacity-20 transition-colors placeholder-[#828282] text-[#575757]` }
+                    className={ `w-full h-10 pl-6 pr-3 text-sm  rounded-r-[3px] bg-white focus:border-[#7047EB] focus:ring-1 focus:ring-[#7047EB] focus:ring-opacity-20 transition-colors placeholder-[#828282] text-[#575757] !border-l-0 !rounded-l-none` }
                 />
             </div>
         </div>

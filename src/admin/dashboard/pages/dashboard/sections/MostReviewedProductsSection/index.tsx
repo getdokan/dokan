@@ -9,6 +9,7 @@ import MostReviewedProductsSkeleton from './Skeleton';
 import { applyFilters } from '@wordpress/hooks';
 import { truncate } from '../../../../../../utilities';
 import { DokanTooltip as Tooltip } from '@dokan/components';
+import { ShortContent } from '@src/components';
 
 const MostReviewedProductsSection = () => {
     const { data, loading, error } =
@@ -54,7 +55,7 @@ const MostReviewedProductsSection = () => {
             label: __( 'Rank', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item } ) => (
-                <div className="font-medium text-center text-gray-900">
+                <div className="font-medium text-center text-gray-900 px-2">
                     { item.rank }
                 </div>
             ),
@@ -64,17 +65,10 @@ const MostReviewedProductsSection = () => {
             label: __( 'Product Name', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item } ) => (
-                <div className="font-medium text-gray-900">
-                    <Tooltip
-                        content={ <RawHTML>{ item.product_title }</RawHTML> }
-                    >
-                        <div className="w-fit">
-                            <RawHTML>
-                                { truncate( item.product_title, 50 ) }
-                            </RawHTML>
-                        </div>
-                    </Tooltip>
-                </div>
+                <ShortContent
+                    className="font-medium text-gray-900"
+                    content={ item.product_title }
+                />
             ),
         },
         {
@@ -116,7 +110,10 @@ const MostReviewedProductsSection = () => {
                 <DataViews
                     data={ padDefaultData( data || [] ) }
                     namespace="dokan-most-reviewed-products"
-                    defaultLayouts={ { table: {}, density: 'comfortable' } }
+                    defaultLayouts={ {
+                        table: { density: 'comfortable' },
+                        list: {},
+                    } }
                     fields={ fields }
                     getItemId={ ( item ) => item.product_id }
                     onChangeView={ setView }

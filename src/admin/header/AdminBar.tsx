@@ -2,8 +2,35 @@ import { __, sprintf } from '@wordpress/i18n';
 import { RawHTML, useState } from '@wordpress/element';
 import HelpIcon from '../dashboard/icons/HelpIcon';
 import CrownIcon from '../dashboard/icons/CrownIcon';
-import IconMapping from '../dashboard/components/IconMapping';
 import { twMerge } from 'tailwind-merge';
+
+// Import Lucide Icons
+import {
+    RefreshCw,
+    Headphones,
+    Facebook,
+    FileText,
+    HelpCircle,
+    Settings,
+    Lightbulb,
+    Wand2,
+    Box,
+    Circle,
+} from 'lucide-react';
+
+// Define the mapping internally
+const lucideIconMapping = {
+    'whats-new': RefreshCw,
+    support: Headphones,
+    facebook: Facebook,
+    documentation: FileText,
+    faq: HelpCircle,
+    settings: Settings,
+    'feature-request': Lightbulb,
+    'setup-wizard': Wand2,
+    'import-data': Box,
+    'custom-icon': Circle,
+};
 
 const AdminBar = () => {
     const [ showDropdown, setShowDropdown ] = useState( false );
@@ -13,7 +40,7 @@ const AdminBar = () => {
     return (
         <div
             data-test-id="dokan-dashboard-header"
-            className="w-full bg-white shadow-sm border-b border-gray-200 py-4 px-3 lg:px-6 flex justify-between items-center gap-6 box-border"
+            className="w-full bg-white shadow-sm border-b border-gray-200 py-4 px-6 flex justify-between items-center gap-6 box-border"
         >
             { /* Logo and version tags */ }
             <div className="w-full flex flex-wrap items-center justify-between">
@@ -42,8 +69,10 @@ const AdminBar = () => {
                                     { sprintf(
                                         /* translators: %1$s: license plan %2$s: pro version info */
                                         __( '%1$s: %2$s', 'dokan-lite' ),
-                                        dokanAdminPanelHeaderSettings?.header_info?.license_plan || '',
-                                        dokanAdminPanelHeaderSettings?.header_info?.pro_version || ''
+                                        dokanAdminPanelHeaderSettings
+                                            ?.header_info?.license_plan || '',
+                                        dokanAdminPanelHeaderSettings
+                                            ?.header_info?.pro_version || ''
                                     ) }
                                 </span>
                             </div>
@@ -72,65 +101,72 @@ const AdminBar = () => {
                 <div
                     onMouseEnter={ () => setShowDropdown( true ) }
                     onMouseLeave={ () => setShowDropdown( false ) }
-                    className="relative flex items-center justify-center w-[30px] h-[30px] bg-[#e4e6eb] hover:bg-[#0C5F9A] rounded-full cursor-pointer transition-all duration-200 ease-in-out"
+                    className={ twMerge(
+                        'relative flex items-center justify-center w-8 h-8 rounded-full border border-solid border-[#E9E9E9] transition-all duration-200 ease-in-out cursor-pointer',
+                        showDropdown
+                            ? 'bg-[#7047EB] border-[#7047EB]'
+                            : 'bg-white'
+                    ) }
                 >
                     { has_new_version && (
                         <span className="whats-new-pointer absolute w-1.5 h-1.5 top-0 right-0 rounded-full border-2 border-[#fff] border-solid box-content bg-[#7047EB]"></span>
                     ) }
+
                     <HelpIcon
-                        className={ twMerge( showDropdown && 'fill-white' ) }
+                        className={ twMerge(
+                            'w-2.5 h-3.5 transition-colors',
+                            showDropdown ? 'fill-white' : 'fill-[#828282]'
+                        ) }
                     />
 
                     { /* Dropdown */ }
                     <div
-                        className={ `min-w-64 absolute top-full -right-2.5 mt-5 z-50 bg-white rounded border border-solid border-gray-200 shadow-lg w-64 py-4 px-5 transition-opacity transition-transform duration-300 before:bottom-full before:left-0 before:content-[''] before:absolute before:w-full before:h-12 ${
+                        className={ twMerge(
+                            "absolute top-full right-0 mt-2 z-50 bg-white rounded border border-solid border-gray-200 shadow-xl w-[240px] py-3 transition-opacity transition-transform duration-300 before:bottom-full before:left-0 before:content-[''] before:absolute before:w-full before:h-6",
                             showDropdown
-                                ? 'opacity-100 visible'
+                                ? 'opacity-100 visible transition-opacity duration-200'
                                 : 'opacity-0 invisible'
-                        }` }
+                        ) }
                     >
-                        { /* Arrow indicator */ }
-                        <div className="absolute -top-2 right-4 w-4 h-4 bg-white transform rotate-45 border-t border-l border-solid border-b-0 border-r-0 border-gray-200"></div>
+                        <div className="flex flex-col">
+                            { help_menu_items?.map( ( item ) => {
+                                // Get the Lucide Component based on the key
+                                const IconComponent =
+                                    lucideIconMapping[ item?.icon ] || Circle;
 
-                        <h3 className="text-lg font-bold m-0">
-                            { __( 'Get Help', 'dokan-lite' ) }
-                        </h3>
-
-                        <div className="mt-[13px]">
-                            { help_menu_items?.map( ( item ) => (
-                                <a
-                                    key={ item?.id }
-                                    href={ item?.url }
-                                    target={
-                                        item?.external ? '_blank' : '_self'
-                                    }
-                                    rel={
-                                        item?.external
-                                            ? 'noopener noreferrer'
-                                            : ''
-                                    }
-                                    className={ twMerge(
-                                        'flex items-center !text-black text-[15px] font-semibold no-underline transition-all duration-200 ease-in-out mb-3 last:mb-0 group hover:!text-[#7047EB]',
-                                        item.active && '!text-[#7047EB]'
-                                    ) }
-                                >
-                                    <div className="w-[38px] h-[38px] flex items-center justify-center rounded-full mr-2.5 transition-all duration-200 ease-in-out bg-[#E4E6EB] group-hover:bg-[#EFEAFF]">
-                                        <IconMapping
-                                            iconKey={ item?.icon }
-                                            className={ twMerge(
-                                                'w-5 h-5 transition-all duration-200 ease-in-out group-hover:fill-[#7047EB]',
-                                                item.active && '!fill-[#7047EB]'
+                                return (
+                                    <a
+                                        key={ item?.id }
+                                        href={ item?.url }
+                                        target={
+                                            item?.external ? '_blank' : '_self'
+                                        }
+                                        rel={
+                                            item?.external
+                                                ? 'noopener noreferrer'
+                                                : ''
+                                        }
+                                        className={
+                                            'skip-color-module flex items-center text-[15px] text-[#828282] font-normal no-underline transition-all duration-150 py-2.5 px-4 group hover:bg-[#EFEAFF] hover:!text-[#7047EB]'
+                                        }
+                                    >
+                                        <div className="w-6 h-6 flex items-center justify-center mr-2.5 transition-all">
+                                            <IconComponent
+                                                size={ 18 }
+                                                className={
+                                                    'transition-colors text-[#828282] group-hover:text-[#7047EB]'
+                                                }
+                                            />
+                                        </div>
+                                        <span className="flex-1 flex items-center gap-2.5">
+                                            <RawHTML>{ item?.title }</RawHTML>
+                                            { item.active && (
+                                                <span className="whats-new-pointer w-1.5 h-1.5 top-0 right-0 rounded-full bg-[#7047EB]"></span>
                                             ) }
-                                        />
-                                    </div>
-                                    <span>
-                                        <RawHTML>{ item?.title }</RawHTML>
-                                    </span>
-                                    { item?.active && (
-                                        <span className="w-1.5 h-1.5 bg-[#7047EB] rounded-full ml-2.5"></span>
-                                    ) }
-                                </a>
-                            ) ) }
+                                        </span>
+                                    </a>
+                                );
+                            } ) }
                         </div>
                     </div>
                 </div>

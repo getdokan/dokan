@@ -29,6 +29,20 @@ class Assets {
         }
     }
 
+    public static function get_wc_handler( $handler ): string {
+        // map legacy handlers to new ones
+        $supported_handlers = [ 'jquery-blockui', 'jquery-tiptip' ];
+        // Return original handler if not in our supported list
+        if ( ! in_array( $handler, $supported_handlers, true ) ) {
+            return $handler;
+        }
+        // For WC 10.3.0+, use 'wc-' prefix
+        if ( version_compare( WC()->version, '10.3.0', '>=' ) ) {
+            return 'wc-' . $handler;
+        }
+        return $handler;
+    }
+
     /**
      * Load global admin and promo notices scripts
      *
@@ -197,11 +211,6 @@ class Assets {
                 'path'      => '/reverse-withdrawal/store/:store_id',
                 'name'      => 'ReverseWithdrawalTransactions',
                 'component' => 'ReverseWithdrawalTransactions',
-            ],
-            [
-                'path'      => '/premium',
-                'name'      => 'Premium',
-                'component' => 'Premium',
             ],
             [
                 'path'      => '/help',
@@ -381,6 +390,7 @@ class Assets {
      */
     public function get_scripts() {
         global $wp_version;
+        $jquery_tiptip = self::get_wc_handler( 'jquery-tiptip' );
 
         $frontend_shipping_asset = require DOKAN_DIR . '/assets/js/frontend.asset.php';
 
@@ -498,7 +508,7 @@ class Assets {
             ],
             'dokan-script'              => [
                 'src'     => $asset_url . '/js/dokan.js',
-                'deps'    => [ 'imgareaselect', 'customize-base', 'customize-model', 'wp-i18n', 'jquery-tiptip', 'moment', 'dokan-date-range-picker', 'dokan-accounting' ],
+                'deps'    => [ 'imgareaselect', 'customize-base', 'customize-model', 'wp-i18n', $jquery_tiptip, 'moment', 'dokan-date-range-picker', 'dokan-accounting' ],
                 'version' => filemtime( $asset_path . 'js/dokan.js' ),
             ],
             'dokan-vue-vendor'          => [
@@ -589,8 +599,8 @@ class Assets {
             ];
         }
 
-        if ( ! wp_script_is( 'jquery-tiptip', 'registered' ) ) {
-            $scripts['jquery-tiptip'] = [
+        if ( ! wp_script_is( $jquery_tiptip, 'registered' ) ) {
+            $scripts[ $jquery_tiptip ] = [
                 'src'  => WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js',
                 'deps' => $require_dompurify ? [ 'jquery', 'dompurify' ] : [ 'jquery' ],
             ];
@@ -646,6 +656,19 @@ class Assets {
                 'deps'    => $core_store_asset['dependencies'],
             ];
         }
+
+        $vendors_store_asset_file = DOKAN_DIR . '/assets/js/vendors-store.asset.php';
+        if ( file_exists( $vendors_store_asset_file ) ) {
+            $vendors_store_asset = require $vendors_store_asset_file;
+
+            // Register React components.
+            $scripts['dokan-stores-vendors'] = [
+                'version' => $vendors_store_asset['version'],
+                'src'     => $asset_url . '/js/vendors-store.js',
+                'deps'    => $vendors_store_asset['dependencies'],
+            ];
+        }
+
         $product_store_asset_file = DOKAN_DIR . '/assets/js/products-store.asset.php';
         if ( file_exists( $product_store_asset_file ) ) {
             $stores_asset = require $product_store_asset_file;
@@ -1342,13 +1365,6 @@ class Assets {
                     'dummy_data'        => DOKAN_PLUGIN_ASSEST . '/dummy-data/dokan_dummy_data.csv',
                     'adminOrderListUrl' => OrderUtil::get_admin_order_list_url(),
                     'adminOrderEditUrl' => OrderUtil::get_admin_order_edit_url(),
-                    'dashboard_url'     => add_query_arg(
-                        [
-                            'dokan_admin_dashboard_switching_nonce' => wp_create_nonce( 'dokan_switch_admin_dashboard' ),
-                            'dokan_action'                          => 'switch_dashboard',
-                        ],
-                        admin_url()
-                    ),
                 ],
                 'states'                            => WC()->countries->get_allowed_country_states(),
                 'countries'                         => WC()->countries->get_allowed_countries(),
@@ -1386,6 +1402,7 @@ class Assets {
         return apply_filters(
             'dokan_vue_admin_localize_script', [
                 'commission_types' => dokan_commission_types(),
+                'reserved_slugs'   => dokan_get_reserved_url_slugs(),
             ]
         );
     }

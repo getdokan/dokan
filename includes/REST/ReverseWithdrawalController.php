@@ -228,13 +228,20 @@ class ReverseWithdrawalController extends WP_REST_Controller {
      * @return WP_REST_Response
      */
     public function get_store_transactions( $request ) {
-        $request_params = $request->get_params();
-        $manager        = new Manager();
-        $items          = [];
+        $default_transaction_date = Helper::get_default_transaction_date();
+        $request_params           = $request->get_params();
+        $manager                  = new Manager();
+        $items                    = [];
 
         if ( ! current_user_can( dokana_admin_menu_capability() ) || ! isset( $request_params['vendor_id'] ) ) {
             $request_params['vendor_id'] = dokan_get_current_user_id();
         }
+
+        // Set default trn_date if not set.
+        $request_params['trn_date'] = [
+            'from' => $request_params['trn_date']['from'] ?? $default_transaction_date['from'],
+            'to'   => $request_params['trn_date']['to'] ?? $default_transaction_date['to'],
+        ];
 
         $data = $manager->get_store_transactions( $request_params );
 
@@ -646,7 +653,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
             ],
             'trn_date'  => [
                 'description' => __( 'Get transactions via date range', 'dokan-lite' ),
-                'required'    => true,
+                'required'    => false,
                 'type'        => 'object',
                 'properties'  => [
                     'from' => [
