@@ -313,7 +313,9 @@ class StoreController extends WP_REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_store( $request ) {
-        if ( ! $this->check_vendor_authorizable_permission( $request['id'] ) ) {
+        $store_id = $this->get_store_id_for_user( (int) $request->get_param( 'id' ) );
+
+        if ( ! $this->check_vendor_authorizable_permission( $store_id ) ) {
             return new WP_Error(
                 'rest_forbidden',
                 __( 'You do not have permissions to access this store.', 'dokan-lite' ),
@@ -321,8 +323,8 @@ class StoreController extends WP_REST_Controller {
             );
         }
 
-        $store = dokan()->vendor->get( $request['id'] );
-        $stores_data = $this->prepare_item_for_response( $store, $request );
+        $store = dokan()->vendor->get( $store_id );
+        $stores_data  = $this->prepare_item_for_response( $store, $request );
         $response = rest_ensure_response( $stores_data );
         return $response;
     }
@@ -368,7 +370,7 @@ class StoreController extends WP_REST_Controller {
             return true;
         }
 
-        return $this->check_vendor_authorizable_permission( $this->get_user_vendor_id() );
+        return $this->check_vendor_authorizable_permission( $this->get_store_id_for_user() );
     }
 
     /**
