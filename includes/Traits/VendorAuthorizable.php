@@ -59,11 +59,11 @@ trait VendorAuthorizable {
      *
      * Returns the vendor ID for a vendor or the parent vendor ID for vendor staff.
      *
-     * @param int|null $user_id Optional. User ID to check. Defaults to current user.
+     * @param int $user_id Optional. User ID. Defaults to current user.
      *
-     * @return int|false|null Vendor ID on success, false if staff has no vendor, null if not vendor or staff.
+     * @return int|false Vendor ID on success, false otherwise.
      */
-    public function get_user_vendor_id( $user_id = null ) {
+    public function get_user_vendor_id( $user_id = 0 ) {
         if ( empty( $user_id ) ) {
             $user_id = get_current_user_id();
         }
@@ -82,6 +82,6 @@ trait VendorAuthorizable {
             return $vendor_id;
         }
 
-        return null;
+        return false;
     }
 }
