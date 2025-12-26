@@ -20,6 +20,7 @@ const PanelSwitch = () => {
             'dashboard',
             'withdraw',
             'vendors',
+            'changelog',
             'store-reviews',
             'verifications',
             'product-advertising',
