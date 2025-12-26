@@ -1,3 +1,11 @@
+### v4.2.4 ( Dec 26, 2025 ) ###
+- **new:** Added a Pending Vendors tab on the WordPress admin Users screen to view vendors awaiting approval.
+- **new:** Added a bulk action on the WordPress admin Users screen to approve multiple pending vendors at once, including per-user validation and permission checks.
+- **new:** Added an admin notice view on the WordPress admin Users screen that summarizes how many vendors were approved after performing bulk actions.
+- **update:** Improved compatibility with recent WooCommerce changes to script handling, making setup wizard and frontend script loading more reliable.
+- **update:** Redesigned the Admin Panel "Changelog" page template for a better look and user experience.
+- **fix:** Improved shipping tax calculations so shipping taxes are computed more accurately per-order, taking vendor cart item tax classes into account for multi-vendor orders.
+
 ### v4.2.3 ( Dec 22, 2025 ) ###
 - **fix:** Compatible vendor store banner image cropper with the latest version.
 

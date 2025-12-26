@@ -9,7 +9,7 @@ class Tax extends WC_Tax {
     /**
      * Get tax rates for shipping
      *
-     * @since DOKAN_SINCE
+     * @since 4.2.4
      *
      * @param $args
      *
@@ -45,7 +45,7 @@ class Tax extends WC_Tax {
     /**
      * Get shipping tax class from vendor cart items.
      *
-     * @since DOKAN_SINCE
+     * @since 4.2.4
      *
      * @param $args
      *
@@ -96,7 +96,7 @@ class Tax extends WC_Tax {
     /**
      * Retrieves a list of unique tax classes for shipping from the provided vendor cart items.
      *
-     * @static DOKAN_SINCE
+     * @static 4.2.4
      *
      * @param array $cart_items An array of cart items.
      *
