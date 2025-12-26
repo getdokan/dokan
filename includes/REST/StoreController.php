@@ -367,25 +367,8 @@ class StoreController extends WP_REST_Controller {
             return true;
         }
 
-        $current_user = get_current_user_id();
-        $requested_id = absint( $request->get_param( 'id' ) );
-
-        // Vendor staff: force parent vendor ID
-        if ( user_can( $current_user, 'vendor_staff' ) ) {
-            $staff_vendor_id = (int) get_user_meta( $current_user, '_vendor_id', true );
-
-            if ( ! $staff_vendor_id ) {
-                return false;
-            }
-
-            $requested_id = $staff_vendor_id;
-        }
-
-        // Delegate final decision
-        return $this->check_vendor_authorizable_permission( $requested_id );
+        return $this->check_vendor_authorizable_permission( $this->get_user_vendor_id() );
     }
-
-
 
     /**
      * Update Store
