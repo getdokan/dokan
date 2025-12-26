@@ -313,10 +313,14 @@ class StoreController extends WP_REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_store( $request ) {
-        if ( ! ( $this->check_vendor_authorizable_permission( $request['id'] ) ) ) {
-            return new WP_Error( 'rest_forbidden', __( 'You do not have permissions to access this store.', 'dokan-lite' ), [ 'status' => 403 ] );
+        if ( ! $this->check_vendor_authorizable_permission( $request['id'] ) ) {
+            return new WP_Error(
+                'rest_forbidden',
+                __( 'You do not have permissions to access this store.', 'dokan-lite' ),
+                [ 'status' => 403 ]
+            );
         }
-        
+
         $store = dokan()->vendor->get( $request['id'] );
         $stores_data = $this->prepare_item_for_response( $store, $request );
         $response = rest_ensure_response( $stores_data );
