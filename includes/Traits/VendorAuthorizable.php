@@ -26,7 +26,7 @@ trait VendorAuthorizable {
      * @return bool True if authorized, false otherwise.
      */
     public function check_vendor_authorizable_permission( $vendor_id ) {
-        if( ! $vendor_id ) {
+        if ( ! $vendor_id ) {
             return false;
         }
 
