@@ -47,5 +47,4 @@ trait VendorAuthorizable {
 
         return false;
     }
-
 }
