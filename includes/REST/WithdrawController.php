@@ -374,8 +374,7 @@ class WithdrawController extends WP_REST_Controller {
 
         // Export items.
         $exporter = new WithdrawLogExporter();
-        $step     = isset( $params['page'] ) ? absint( $params['page'] ) : 1;
-        $statuses = [ 'pending', 'completed', 'cancelled' ];
+        $step     = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
 
         // Set dynamic filename based on filters BEFORE generating file.
         $exporter->set_filename_from_filters(
@@ -391,7 +390,7 @@ class WithdrawController extends WP_REST_Controller {
         $exporter->set_items( $data );
         $exporter->set_page( $step );
         $exporter->set_limit( $args['limit'] );
-        $exporter->set_total_rows( $statuses[ $args['status'] ] );
+        $exporter->set_total_rows( $withdraws->total );
         $exporter->generate_file();
 
         $percent     = $exporter->get_percent_complete();

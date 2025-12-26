@@ -669,8 +669,8 @@ export default {
 
             const args = {
                 is_export: true,
-                per_page: self.perPage,
-                page: self.currentPage,
+                per_page: 100,
+                page: page,
                 status: self.currentStatus,
                 user_id: user_id,
                 payment_method: self.paymentMethods.id,

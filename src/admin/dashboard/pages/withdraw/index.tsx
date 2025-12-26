@@ -21,7 +21,7 @@ import {
     DokanModal,
 } from '@dokan/components';
 
-import { Trash, ArrowDown, Home, Calendar, CreditCard } from 'lucide-react';
+import { Trash, ArrowDown, Home, Calendar, CreditCard, Loader2 } from 'lucide-react';
 
 // Define withdraw statuses for tab filtering
 const WITHDRAW_STATUSES = [
@@ -88,6 +88,8 @@ const WithdrawPage = () => {
         approved: 0,
         cancelled: 0,
     } );
+    const [ isExporting, setIsExporting ] = useState( false );
+    const [ exportProgress, setExportProgress ] = useState( 0 );
     const [ filterArgs, setFilterArgs ] = useState( {} );
     const [ activeStatus, setActiveStatus ] = useState( 'pending' );
     const [ vendorFilter, setVendorFilter ] = useState< VendorSelect | null >(
@@ -544,30 +546,72 @@ const WithdrawPage = () => {
     const tabsAdditionalContents = [
         <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-[#575757] hover:bg-[#7047EB] hover:text-white"
+            className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-[#575757] hover:bg-[#7047EB] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={ isExporting }
             onClick={ async () => {
+                setIsExporting( true );
+                setExportProgress( 0 );
                 try {
-                    // We use `totalItems` as `per_page` to fetch all matching records in a single request, bypassing pagination.
-                    const path = addQueryArgs( 'dokan/v2/withdraw', {
-                        per_page: totalItems || 1,
-                        page: 1,
-                        search: view?.search ?? '',
-                        status: view?.status === 'all' ? '' : view?.status,
-                        ...filterArgs,
-                        is_export: true,
-                    } );
-                    const res = await apiFetch( { path } );
-                    if ( res && res.url ) {
-                        window.location.assign( res.url as string );
+                    let page = 1;
+                    let isComplete = false;
+                    let downloadUrl = null;
+
+                    // Poll until export is complete
+                    while ( ! isComplete ) {
+                        const path = addQueryArgs( 'dokan/v2/withdraw', {
+                            per_page: 100,
+                            page: page,
+                            search: view?.search ?? '',
+                            status: view?.status === 'all' ? '' : view?.status,
+                            ...filterArgs,
+                            is_export: true,
+                        } );
+
+                        const res = await apiFetch( { path } );
+
+                        // Update progress if available
+                        if ( res?.percentage !== undefined ) {
+                            setExportProgress( res.percentage );
+                        }
+
+                        if ( res?.step === 'done' ) {
+                            isComplete = true;
+                            downloadUrl = res.url;
+                        } else if ( res?.step ) {
+                            // Continue to next page
+                            page = res.step;
+                        } else {
+                            throw new Error( 'Invalid response from export' );
+                        }
+                    }
+
+                    if ( downloadUrl ) {
+                        window.location.assign( downloadUrl as string );
                     }
                 } catch ( e ) {
                     // eslint-disable-next-line no-console
                     console.error( 'Export failed or not supported yet', e );
+                    alert( __( 'Export failed. Please try again.', 'dokan-lite' ) );
+                } finally {
+                    setIsExporting( false );
+                    setExportProgress( 0 );
                 }
             } }
         >
-            <ArrowDown size={ 16 } />
-            { __( 'Export', 'dokan-lite' ) }
+            { isExporting ? (
+                <>
+                    <Loader2 className="animate-spin" size={ 16 } />
+                    { exportProgress > 0
+                        ? __( `Exporting (${ exportProgress }%)`, 'dokan-lite' )
+                        : __( 'Exporting...', 'dokan-lite' )
+                    }
+                </>
+            ) : (
+                <>
+                    <ArrowDown size={ 16 } />
+                    { __( 'Export', 'dokan-lite' ) }
+                </>
+            ) }
         </button>,
     ];
 
