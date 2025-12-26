@@ -26,6 +26,10 @@ trait VendorAuthorizable {
      * @return bool True if authorized, false otherwise.
      */
     public function check_vendor_authorizable_permission( $vendor_id ) {
+        if( ! $vendor_id ) {
+            return false;
+        }
+
         $vendor = dokan()->vendor->get( $vendor_id );
 
         if ( ! $vendor || ! $vendor->get_id() ) {
@@ -60,7 +64,9 @@ trait VendorAuthorizable {
      * @return int|false|null Vendor ID on success, false if staff has no vendor, null if not vendor or staff.
      */
     public function get_user_vendor_id( $user_id = null ) {
-        $user_id = $user_id ?: get_current_user_id();
+        if ( empty( $user_id ) ) {
+            $user_id = get_current_user_id();
+        }
 
         if ( dokan_is_user_seller( $user_id, true ) ) {
             return (int) $user_id;
@@ -68,7 +74,12 @@ trait VendorAuthorizable {
 
         if ( user_can( $user_id, 'vendor_staff' ) ) {
             $vendor_id = (int) get_user_meta( $user_id, '_vendor_id', true );
-            return $vendor_id ?: false;
+
+            if ( empty( $vendor_id ) ) {
+                return false;
+            }
+
+            return $vendor_id;
         }
 
         return null;
