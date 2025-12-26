@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Traits;
 
 trait VendorAuthorizable {
+
     /**
      * Check if user has vendor permission.
      *
@@ -48,6 +49,7 @@ trait VendorAuthorizable {
 
         if ( user_can( $current_user_id, 'vendor_staff' ) ) {
             $staff_vendor_id = (int) get_user_meta( $current_user_id, '_vendor_id', true );
+
             return $staff_vendor_id === (int) $vendor_id;
         }
 
