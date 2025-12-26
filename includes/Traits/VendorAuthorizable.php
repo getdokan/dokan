@@ -14,7 +14,7 @@ trait VendorAuthorizable {
         return current_user_can( 'dokandar' );
     }
     /**
-     * Check if user has vendor permission.
+     * Check if passing id has vendor authorizable permission.
      *
      * @since 3.14.11
      *
