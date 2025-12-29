@@ -56,6 +56,10 @@ class AdminServiceProvider extends BaseServiceProvider {
             ->addShared( \WeDevs\Dokan\Admin\UserProfile::class, \WeDevs\Dokan\Admin\UserProfile::class )
             ->addTag( self::TAG );
 
+        $this->getContainer()
+            ->addShared( \WeDevs\Dokan\Admin\UserList::class, \WeDevs\Dokan\Admin\UserList::class )
+            ->addTag( self::TAG );
+
 		$this->getContainer()
             ->addShared( \WeDevs\Dokan\Admin\SetupWizard::class, \WeDevs\Dokan\Admin\SetupWizard::class )
             ->addTag( self::TAG );
