@@ -313,9 +313,9 @@ class StoreController extends WP_REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_store( $request ) {
-        $store_id = $this->get_store_id_for_user( (int) $request->get_param( 'id' ) );
+        $store_id = $this->get_vendor_id_for_user( (int) $request->get_param( 'id' ) );
 
-        if ( ! $this->check_vendor_authorizable_permission( $store_id ) ) {
+        if ( ! $this->can_access_vendor_store( $store_id ) ) {
             return new WP_Error(
                 'rest_forbidden',
                 __( 'You do not have permissions to access this store.', 'dokan-lite' ),
@@ -365,12 +365,18 @@ class StoreController extends WP_REST_Controller {
      * @return bool
      */
     public function update_store_permissions_check( $request ) {
-        // Admin can update any store
         if ( current_user_can( 'manage_woocommerce' ) ) {
             return true;
         }
 
-        return $this->check_vendor_authorizable_permission( $this->get_store_id_for_user() );
+        $requested_id = absint( $request->get_param( 'id' ) );
+        $user_store_id = $this->get_vendor_id_for_user();
+
+        if ( user_can( get_current_user_id(), 'vendor_staff' ) && $requested_id === get_current_user_id() ) {
+            $requested_id = $user_store_id;
+        }
+
+        return $this->can_access_vendor_store( $requested_id );
     }
 
     /**
@@ -386,12 +392,8 @@ class StoreController extends WP_REST_Controller {
         $requested_id = absint( $request->get_param( 'id' ) );
         $current_user = get_current_user_id();
 
-        if ( user_can( $current_user, 'vendor_staff' ) ) {
-            $staff_vendor_id = (int) get_user_meta( $current_user, '_vendor_id', true );
-
-            if ( $staff_vendor_id ) {
-                $requested_id = $staff_vendor_id;
-            }
+        if ( user_can( $current_user, 'vendor_staff' ) && $requested_id === $current_user ) {
+            $requested_id = $this->get_vendor_id_for_user( $current_user );
         }
 
         $store = dokan()->vendor->get( $requested_id );

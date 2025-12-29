@@ -26,7 +26,7 @@ trait VendorAuthorizable {
      *
      * @return bool True if authorized, false otherwise.
      */
-    public function check_vendor_authorizable_permission( int $vendor_id ): bool {
+    public function can_access_vendor_store( int $vendor_id ): bool {
         if ( ! $vendor_id ) {
             return false;
         }
@@ -61,7 +61,7 @@ trait VendorAuthorizable {
      *
      * @return int Vendor/store ID or 0 if unavailable.
      */
-    public function get_store_id_for_user( int $user_id = 0 ): int {
+    public function get_vendor_id_for_user( int $user_id = 0 ): int {
         if ( empty( $user_id ) ) {
             $user_id = dokan_get_current_user_id();
         }
