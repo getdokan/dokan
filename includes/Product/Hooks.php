@@ -53,6 +53,11 @@ class Hooks {
         add_action( 'woocommerce_product_options_advanced', array( $this, 'add_per_product_commission_options' ), 15 );
         add_action( 'woocommerce_process_product_meta_simple', array( $this, 'save_per_product_commission_options' ), 15 );
         add_action( 'woocommerce_process_product_meta_variable', array( $this, 'save_per_product_commission_options' ), 15 );
+        add_action( 'dokan_product_content_inside_area_before', [ $this, 'load_react_template' ] );
+    }
+
+    public function load_react_template() {
+        echo '<div id="product-form-manager-template"></div>';
     }
 
     /**

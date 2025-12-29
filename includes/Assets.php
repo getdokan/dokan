@@ -5,6 +5,8 @@ namespace WeDevs\Dokan;
 use Automattic\WooCommerce\Internal\Admin\WCAdminAssets;
 use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
+use WeDevs\Dokan\ProductForm\Field;
+use WeDevs\Dokan\ProductForm\Section;
 use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\Utilities\OrderUtil;
 use WeDevs\Dokan\ProductForm\Factory as ProductFormFactory;
@@ -379,6 +381,11 @@ class Assets {
                 'deps'    => [ 'wp-components' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/components.css' ),
             ],
+            'dokan-product-form-manager' => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/js/form-manager.css',
+                'deps'    => [ 'wp-components' ],
+                'version' => filemtime( DOKAN_DIR . '/assets/js/form-manager.css' ),
+            ],
         ];
 
         return $styles;
@@ -693,8 +700,82 @@ class Assets {
             ];
         }
 
+        $product_form_manager = DOKAN_DIR . '/assets/js/form-manager.asset.php';
+        if ( file_exists( $product_form_manager ) ) {
+            $form_asset = require $product_form_manager;
+            $scripts['dokan-product-form-manager'] = [
+                'version' => $form_asset['version'],
+                'src'     => $asset_url . '/js/form-manager.js',
+                'deps'    => array_merge( $form_asset['dependencies'], [ 'dokan-react-components' ] ),
+            ];
+        }
+
         return $scripts;
     }
+
+    public function get_form_fields() {
+		$product_id = isset( $_GET['product_id'] ) ? intval( $_GET['product_id'] ) : 0; // phpcs:ignore
+		$product    = wc_get_product( $product_id );
+
+		$sections_data = [];
+
+		if ( class_exists( ProductFormFactory::class ) ) {
+			$sections = ProductFormFactory::get_sections();
+
+			foreach ( $sections as $key => $section ) {
+				/** @var Section $section */
+				if ( is_wp_error( $section ) ) {
+					continue;
+				}
+
+				$fields = [];
+
+				foreach ( $section->get_fields() as $field ) {
+					/** @var Field $field */
+					if ( is_wp_error( $field ) || ! $field->is_visible() ) {
+						continue;
+					}
+
+					$value = '';
+					if ( $product ) {
+						try {
+							$value = $field->get_value( $product );
+						} catch ( \Throwable $e ) {
+							$value = '';
+						}
+					}
+
+					$field_data = [
+						'id'          => $field->get_id(),
+						'name'        => $field->get_name(),
+						'title'       => $field->get_title(),
+						'help'        => $field->get_help_content(),
+						'placeholder' => $field->get_placeholder(),
+						'help_content' => $field->get_help_content(),
+						'description' => $field->get_description(),
+						'required'    => $field->is_required(),
+						'value'       => $value,
+						'field_type'  => $field->get_field_type(),
+						'options'     => method_exists( $field, 'get_options' ) ? $field->get_options( $product ) : [],
+						'errors'      => $field->get_error_message(),
+						'visibility' => $field->is_visible(),
+						'dependency_condition' => $field->get_dependency_condition(),
+					];
+
+					$fields[] = $field_data;
+				}
+
+				$sections_data[] = [
+					'id'     => $section->get_id(),
+					'title'  => $section->get_title(),
+					'order'  => $section->get_order(),
+					'fields' => $fields,
+					'description' => $section->get_description(),
+				];
+			}
+		}
+		return $sections_data;
+	}
 
     public function get_product_fields() {
         $temp_fields = [];
@@ -702,7 +783,7 @@ class Assets {
             $temp_fields[ $field_id ] = $field->toArray();
         }
 
-        return json_encode( $temp_fields );
+        return wp_json_encode( $temp_fields );
     }
 
     /**
@@ -897,6 +978,17 @@ class Assets {
 
         // localized form validate script
         self::load_form_validate_script();
+
+        // load the form manager
+        wp_enqueue_script( 'dokan-product-form-manager' );
+        wp_enqueue_style( 'dokan-product-form-manager' );
+        wp_localize_script(
+            'dokan-product-form-manager',
+            'dokanFormManager',
+            [
+                'sections' => $this->get_form_fields(),
+            ]
+        );
 
         do_action( 'dokan_enqueue_scripts' );
     }

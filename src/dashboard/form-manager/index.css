@@ -1,0 +1,15 @@
+.components-card {
+    padding: 20px;
+}
+.flex {
+    display: flex;
+}
+.flex-col {
+    flex-direction: column;
+}
+.gap-1 {
+    gap: 0.25rem;
+}
+.uppercase {
+    text-transform: uppercase;
+}
