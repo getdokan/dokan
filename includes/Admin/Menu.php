@@ -34,6 +34,10 @@ class Menu {
         $withdraw_text = __( 'Withdraw', 'dokan-lite' );
         $slug          = 'dokan';
 
+        if ( ! current_user_can( $capability ) ) {
+            return;
+        }
+
         // phpcs:disable
         if ( $withdraw['pending'] ) {
             // translators: %s: withdraw count
