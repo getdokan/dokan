@@ -719,61 +719,60 @@ class Assets {
 
 		$sections_data = [];
 
-		if ( class_exists( ProductFormFactory::class ) ) {
-			$sections = ProductFormFactory::get_sections();
 
-			foreach ( $sections as $key => $section ) {
-				/** @var Section $section */
-				if ( is_wp_error( $section ) ) {
-					continue;
-				}
+        $sections = ProductFormFactory::get_sections();
 
-				$fields = [];
+        foreach ( $sections as $key => $section ) {
+            /** @var Section $section */
+            if ( is_wp_error( $section ) ) {
+                continue;
+            }
 
-				foreach ( $section->get_fields() as $field ) {
-					/** @var Field $field */
-					if ( is_wp_error( $field ) || ! $field->is_visible() ) {
-						continue;
-					}
+            $fields = [];
 
-					$value = '';
-					if ( $product ) {
-						try {
-							$value = $field->get_value( $product );
-						} catch ( \Throwable $e ) {
-							$value = '';
-						}
-					}
+            foreach ( $section->get_fields() as $field ) {
+                /** @var Field $field */
+                if ( is_wp_error( $field ) || ! $field->is_visible() ) {
+                    continue;
+                }
 
-					$field_data = [
-						'id'          => $field->get_id(),
-						'name'        => $field->get_name(),
-						'title'       => $field->get_title(),
-						'help'        => $field->get_help_content(),
-						'placeholder' => $field->get_placeholder(),
-						'help_content' => $field->get_help_content(),
-						'description' => $field->get_description(),
-						'required'    => $field->is_required(),
-						'value'       => $value,
-						'field_type'  => $field->get_field_type(),
-						'options'     => method_exists( $field, 'get_options' ) ? $field->get_options( $product ) : [],
-						'errors'      => $field->get_error_message(),
-						'visibility' => $field->is_visible(),
-						'dependency_condition' => $field->get_dependency_condition(),
-					];
+                $value = '';
+                if ( $product ) {
+                    try {
+                        $value = $field->get_value( $product );
+                    } catch ( \Throwable $e ) {
+                        $value = '';
+                    }
+                }
 
-					$fields[] = $field_data;
-				}
+                $field_data = [
+                    'id'          => $field->get_id(),
+                    'name'        => $field->get_name(),
+                    'title'       => $field->get_title(),
+                    'help'        => $field->get_help_content(),
+                    'placeholder' => $field->get_placeholder(),
+                    'help_content' => $field->get_help_content(),
+                    'description' => $field->get_description(),
+                    'required'    => $field->is_required(),
+                    'value'       => $value,
+                    'field_type'  => $field->get_field_type(),
+                    'options'     => method_exists( $field, 'get_options' ) ? $field->get_options( $product ) : [],
+                    'errors'      => $field->get_error_message(),
+                    'visibility' => $field->is_visible(),
+                    'dependency_condition' => $field->get_dependency_condition(),
+                ];
 
-				$sections_data[] = [
-					'id'     => $section->get_id(),
-					'title'  => $section->get_title(),
-					'order'  => $section->get_order(),
-					'fields' => $fields,
-					'description' => $section->get_description(),
-				];
-			}
-		}
+                $fields[] = $field_data;
+            }
+
+            $sections_data[] = [
+                'id'     => $section->get_id(),
+                'title'  => $section->get_title(),
+                'order'  => $section->get_order(),
+                'fields' => $fields,
+                'description' => $section->get_description(),
+            ];
+        }
 		return $sections_data;
 	}
 
