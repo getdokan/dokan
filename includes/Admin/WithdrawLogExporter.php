@@ -35,7 +35,7 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
      *
      * @var string
      */
-    protected $filename = 'dokan-withdraw-log-export.csv';
+    protected $filename = 'dokan-withdraw-log.csv';
 
     /**
      * Items to export.
@@ -100,7 +100,7 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
     /**
      * Generate and set filename based on applied filters.
      *
-     * Format: dokan-withdraw-log-export{_vendor-name}{_status}{_method}{_date-range}.csv
+     * Format: dokan-withdraw-log{_vendor-name}{_status}{_method}{_date-range}.csv
      * Only includes filter parts that are actually applied.
      *
      * @since DOKAN_SINCE
@@ -110,7 +110,7 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
      * @return void
      */
     public function set_filename_from_filters( $filters = [] ) {
-        $parts = [ 'dokan-withdraw-log-export' ];
+        $parts = [ 'dokan-withdraw-log' ];
 
         // Add vendor name if filtered by user_id.
         if ( ! empty( $filters['user_id'] ) ) {
@@ -118,7 +118,13 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
             $store_name = ! empty( $store_info['store_name'] )
                 ? sanitize_title( $store_info['store_name'] )
                 : 'vendor-' . absint( $filters['user_id'] );
-            $parts[]    = $store_name;
+            
+            // Truncate if too long (max 50 chars for store name part).
+            if ( strlen( $store_name ) > 50 ) {
+                $store_name = substr( $store_name, 0, 44 ) . '-trunc';
+            }
+            
+            $parts[] = $store_name;
         }
 
         // Add status if filtered.
@@ -131,15 +137,15 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
             $parts[] = sanitize_title( $filters['payment_method'] );
         }
 
-        // Add date range if both start and end dates are provided (mon-DD format).
+        // Add date range if both start and end dates are provided (Y-M-d format).
         if ( ! empty( $filters['start_date'] ) && ! empty( $filters['end_date'] ) ) {
             $start_timestamp = strtotime( $filters['start_date'] );
             $end_timestamp   = strtotime( $filters['end_date'] );
 
             // Only add if both dates are valid timestamps.
             if ( $start_timestamp && $end_timestamp ) {
-                $start   = strtolower( wp_date( 'M-d', $start_timestamp ) );
-                $end     = strtolower( wp_date( 'M-d', $end_timestamp ) );
+                $start   = strtolower( wp_date( 'Y-M-d', $start_timestamp ) );
+                $end     = strtolower( wp_date( 'Y-M-d', $end_timestamp ) );
                 $parts[] = $start . '_to_' . $end;
             }
         }
