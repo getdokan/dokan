@@ -345,7 +345,7 @@ jQuery(function($) {
           }),
           new wp.media.controller.Cropper({
             imgSelectOptions: settings.calculateImageSelectOptions,
-            suggestedWidth: dokan?.store_banner_dimension?.width || 5000
+            suggestedWidth: dokan?.store_banner_dimension?.width || 500
           })
         ]
       });
