@@ -59,7 +59,7 @@ class Init {
         $section->add_field(
             Elements::NAME,
             [
-                'title'          => __( 'Title', 'dokan-lite' ),
+                'title'          => __( 'Product Title', 'dokan-lite' ),
                 'field_type'     => 'text',
                 'name'           => 'post_title',
                 'placeholder'    => __( 'Enter product title...', 'dokan-lite' ),
@@ -312,7 +312,7 @@ class Init {
         $section->add_field(
             Elements::SHORT_DESCRIPTION, [
                 'title'          => __( 'Short Description', 'dokan-lite' ),
-                'field_type'     => 'textarea',
+                'field_type'     => 'rich_text',
                 'name'           => 'post_excerpt',
                 'placeholder'    => __( 'Enter product short description', 'dokan-lite' ),
                 'value_callback' => function ( $product, $value = '' ) {
@@ -332,7 +332,7 @@ class Init {
         $section->add_field(
             Elements::DESCRIPTION, [
                 'title'          => __( 'Description', 'dokan-lite' ),
-                'field_type'     => 'textarea',
+                'field_type'     => 'rich_text',
                 'name'           => 'post_content',
                 'placeholder'    => __( 'Enter product description', 'dokan-lite' ),
                 'required'       => true,

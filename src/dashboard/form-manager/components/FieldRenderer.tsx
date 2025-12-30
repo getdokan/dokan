@@ -1,5 +1,6 @@
+import { DokanButton, MediaUploader, RichText } from '@src/components';
+import { sanitizeHTML } from '@src/utilities';
 import { FormField, Section } from '../types';
-import { DokanButton, MediaUploader, RichText } from './../../../components';
 
 export const CustomField = ( {
     label,
@@ -59,25 +60,51 @@ const ImageEdit = ( { data, field, onChange }: any ) => {
     );
 };
 
+const getElementsFromOptions = ( options: any ) => {
+    if ( Array.isArray( options ) ) {
+        return options.map( ( opt: any ) => ( {
+            label: opt.label,
+            value: opt.value,
+        } ) );
+    }
+
+    return Object.entries( options ).map( ( [ value, label ] ) => ( {
+        label,
+        value,
+    } ) );
+};
+
 export const getFieldConfig = ( field: FormField, section: Section ) => {
     const mappedField = {
         ...field,
-        label: <span dangerouslySetInnerHTML={ { __html: field.title } } />,
+        label: (
+            <span
+                dangerouslySetInnerHTML={ {
+                    __html: sanitizeHTML( field.title ),
+                } }
+            />
+        ),
         description: (
             <span
                 dangerouslySetInnerHTML={ {
-                    __html: field.help_content || field.description,
+                    __html: sanitizeHTML(
+                        field.help_content || field.description
+                    ),
                 } }
             />
         ),
         placeholder: field.placeholder,
         required: field.required,
-        type: field.field_type, // default type, will be updated below
+        type: field.field_type,
     };
 
     // Map Input Types
     switch ( field.field_type ) {
         case 'textarea':
+            mappedField.type = 'text';
+            mappedField.Edit = 'textarea';
+            break;
+        case 'rich_text':
             mappedField.type = 'text';
             mappedField.Edit = TextareaEdit;
             break;
@@ -85,8 +112,8 @@ export const getFieldConfig = ( field: FormField, section: Section ) => {
             mappedField.type = 'boolean';
             mappedField.Edit = 'checkbox';
             break;
-        case 'integer':
         case 'number':
+        case 'integer':
             mappedField.type = 'integer';
             break;
         case 'date':
@@ -95,19 +122,9 @@ export const getFieldConfig = ( field: FormField, section: Section ) => {
             break;
         case 'select':
             mappedField.type = field.id.endsWith( '_ids' ) ? 'array' : 'text';
-            const elements = Array.isArray( field.options )
-                ? field.options.map( ( opt: any ) => ( {
-                      label: opt.label,
-                      value: opt.value,
-                  } ) )
-                : Object.entries( field.options ).map(
-                      ( [ value, label ] ) => ( {
-                          label,
-                          value,
-                      } )
-                  );
-            mappedField.elements = elements;
-            mappedField.Edit = elements.length > 0 ? 'select' : 'text';
+            mappedField.elements = getElementsFromOptions( field.options );
+            mappedField.Edit =
+                mappedField.elements.length > 0 ? 'select' : 'text';
             break;
         case 'image':
         case 'gallery':

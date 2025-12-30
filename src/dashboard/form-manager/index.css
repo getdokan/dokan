@@ -1,5 +1,9 @@
-.components-card {
-    padding: 20px;
+.components-card-header,
+.components-card-body {
+    padding: 20px !important;
+}
+.dataforms-layouts-card__field-header {
+    border-bottom: 1px solid #ddd !important;
 }
 .flex {
     display: flex;
@@ -12,4 +16,7 @@
 }
 .uppercase {
     text-transform: uppercase;
+}
+.dokan-dashboard-content:has(.dokan-product-form.dokan-layout) {
+    background-color: #f0f0f1;
 }

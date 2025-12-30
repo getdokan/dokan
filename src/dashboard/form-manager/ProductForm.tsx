@@ -1,6 +1,7 @@
 import { DataForm } from '@wordpress/dataviews';
 import { useCallback, useMemo, useState } from '@wordpress/element';
 import { getFieldConfig } from './components/FieldRenderer';
+import layout from './layout';
 import { Section } from './types';
 
 const sections = ( window as any ).dokanFormManager.sections as Section[];
@@ -30,31 +31,14 @@ const ProductForm = () => {
             section.fields.map( ( field ) => getFieldConfig( field, section ) )
         );
 
-        const layouts = sections
-            .filter( ( section ) => section.fields.length > 0 )
-            .map( ( section ) => {
-                return {
-                    id: section.id,
-                    label: section.title,
-                    description: section.description,
-                    children: section.fields.map( ( field ) => field.id ),
-                    layout: {
-                        type: 'card' as const, // 'card' causes context memoization error in current WP version
-                        withHeader: true,
-                    },
-                };
-            } );
-
         return {
             fields: allFields,
-            formLayout: {
-                fields: layouts,
-            } as any,
+            formLayout: layout as any,
         };
     }, [] );
 
     // eslint-disable-next-line no-console
-    console.log( { 'Form Layout:': formLayout, fields: fields } );
+    console.log( { 'Form Layout:': formLayout, fields } );
 
     return (
         <div className="dokan-product-form dokan-layout">
