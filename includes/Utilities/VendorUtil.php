@@ -52,4 +52,34 @@ class VendorUtil {
          */
         return apply_filters( 'dokan_get_vendor_default_avatar_url', $avatar_url );
     }
+
+
+    /**
+     * Get vendor/store ID for a user.
+     *
+     * Vendors return their own ID.
+     * Vendor staff return their parent vendor ID.
+     * Others return 0.
+     *
+     * @param int $user_id Optional. User ID. Defaults to current user.
+     *
+     * @return int Vendor/store ID or 0 if unavailable.
+     */
+    public static function get_vendor_id_for_user( int $user_id = 0 ): int {
+        if ( empty( $user_id ) ) {
+            $user_id = dokan_get_current_user_id();
+        }
+
+        if ( dokan_is_user_seller( $user_id, true ) ) {
+            return (int) $user_id;
+        }
+
+        if ( user_can( $user_id, 'vendor_staff' ) ) {
+            $vendor_id = (int) get_user_meta( $user_id, '_vendor_id', true );
+
+            return $vendor_id;
+        }
+
+        return 0;
+    }
 }

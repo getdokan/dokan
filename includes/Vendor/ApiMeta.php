@@ -1,0 +1,81 @@
+<?php
+
+namespace WeDevs\Dokan\Vendor;
+
+use WeDevs\Dokan\Utilities\VendorUtil;
+
+/**
+ * WCAdminUser Class.
+ */
+class ApiMeta {
+	/**
+	 * Constructor.
+	 */
+	public function __construct() {
+		add_action( 'rest_api_init', array( $this, 'register_user_data' ) );
+	}
+
+	/**
+	 * Registers WooCommerce specific user data to the WordPress user API.
+	 */
+	public function register_user_data() {
+		register_rest_field(
+			'user',
+			'dokan_meta',
+			array(
+				'get_callback'    => array( $this, 'get_user_data_values' ),
+				'schema'          => null,
+			)
+		);
+	}
+
+	/**
+	 * For all the registered user data fields (  Loader::get_user_data_fields ), fetch the data
+	 * for returning via the REST API.
+	 *
+	 * @param WP_User $user Current user.
+	 */
+	public function get_user_data_values( $user ) {
+		$values = [
+            'vendor_id' => VendorUtil::get_vendor_id_for_user( (int) $user['id'] ),
+        ];
+
+		foreach ( $this->get_user_data_fields() as $field ) {
+			$values[ $field ] = self::get_user_data_field( $user['id'], $field );
+		}
+
+		return apply_filters( 'dokan_vendor_api_meta_get_user_data_values', $values, $user );
+	}
+
+	/**
+	 * We store some WooCommerce specific user meta attached to users endpoint,
+	 * so that we can track certain preferences or values such as the inbox activity panel last open time.
+	 * Additional fields can be added in the function below, and then used via wc-admin's currentUser data.
+	 *
+	 * @return array Fields to expose over the WP user endpoint.
+	 */
+	public function get_user_data_fields() {
+		/**
+		 * Filter user data fields exposed over the WordPress user endpoint.
+		 *
+		 * @since 4.0.0
+		 * @param array $fields Array of fields to expose over the WP user endpoint.
+		 */
+		return apply_filters( 'dokan_vendor_get_user_data_fields', [] );
+	}
+
+	/**
+	 * Helper to retrieve user data fields.
+	 *
+	 * Migrates old key prefixes as well.
+	 *
+	 * @param int    $user_id  User ID.
+	 * @param string $field Field name.
+	 * @return mixed The user field value.
+	 */
+	public static function get_user_data_field( $user_id, $field ) {
+		$meta_value = get_user_meta( $user_id, $field, true );
+
+		return $meta_value;
+	}
+}
