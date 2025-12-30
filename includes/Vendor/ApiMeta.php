@@ -32,10 +32,10 @@ class ApiMeta {
 	}
 
 	/**
-	 * For all the registered user data fields (  Loader::get_user_data_fields ), fetch the data
-	 * for returning via the REST API.
+	 * Fetches the vendor-specific user data values for returning via the REST API.
 	 *
-	 * @param WP_User $user Current user.
+	 * @param array $user Current user data from REST API.
+	 * @return array Vendor-specific user data including vendor_id.
 	 */
 	public function get_user_data_values( $user ) {
 		$values = [
@@ -68,8 +68,6 @@ class ApiMeta {
 
 	/**
 	 * Helper to retrieve user data fields.
-	 *
-	 * Migrates old key prefixes as well.
 	 *
 	 * @param int    $user_id  User ID.
 	 * @param string $field Field name.

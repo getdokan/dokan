@@ -80,6 +80,7 @@ const selectors = {
     },
 
     /**
+     * Get the global settings.
      *
      * @param state
      */
