@@ -416,8 +416,10 @@ class VendorDashboardController extends \WP_REST_Controller {
                 'week_start_on'         => get_option( 'start_of_week' ),
                 'store_color'           => dokan_get_option( 'store_color_pallete', 'dokan_colors', [] ),
                 'timezone_utc'          => $timezone_utc,
-                'ai_text_enable'        => $is_text_configured,
-                'ai_image_enable'       => $is_image_configured,
+                'ai_settings'           => [
+                    'ai_text_enable'    => $is_text_configured,
+                    'ai_image_enable'   => $is_image_configured,
+                ],
             ]
         );
     }
@@ -595,15 +597,9 @@ class VendorDashboardController extends \WP_REST_Controller {
                     'context'     => [ 'view' ],
                     'readonly'    => true,
                 ],
-                'ai_text_enable'    => [
-                    'description' => esc_html__( 'Enable product ai text enhancer.', 'dokan-lite' ),
-                    'type'        => 'boolean',
-                    'context'     => [ 'view' ],
-                    'readonly'    => true,
-                ],
-                'ai_image_enable'    => [
-                    'description' => esc_html__( 'Enable product ai image enhancer.', 'dokan-lite' ),
-                    'type'        => 'boolean',
+                'ai_settings'    => [
+                    'description' => esc_html__( 'Store AI Settings.', 'dokan-lite' ),
+                    'type'        => 'object',
                     'context'     => [ 'view' ],
                     'readonly'    => true,
                 ],
