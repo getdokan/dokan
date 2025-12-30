@@ -713,12 +713,11 @@ class Assets {
         return $scripts;
     }
 
-    public function get_form_fields() {
+    public function get_form_fields(): array {
 		$product_id = isset( $_GET['product_id'] ) ? intval( $_GET['product_id'] ) : 0; // phpcs:ignore
 		$product    = wc_get_product( $product_id );
 
 		$sections_data = [];
-
 
         $sections = ProductFormFactory::get_sections();
 
@@ -741,7 +740,7 @@ class Assets {
                     try {
                         $value = $field->get_value( $product );
                     } catch ( \Throwable $e ) {
-                        $value = '';
+                        dokan_log( 'Error getting value for product ' . $product->get_id() . ': ' . $e->getMessage() );
                     }
                 }
 
@@ -752,13 +751,14 @@ class Assets {
                     'help'        => $field->get_help_content(),
                     'placeholder' => $field->get_placeholder(),
                     'help_content' => $field->get_help_content(),
+                    'tooltip'     => $field->get_tooltip(),
                     'description' => $field->get_description(),
                     'required'    => $field->is_required(),
                     'value'       => $value,
                     'field_type'  => $field->get_field_type(),
-                    'options'     => method_exists( $field, 'get_options' ) ? $field->get_options( $product ) : [],
+                    'options'     => $field->get_options( $product ),
                     'errors'      => $field->get_error_message(),
-                    'visibility' => $field->is_visible(),
+                    'visibility'  => $field->is_visible(),
                     'dependency_condition' => $field->get_dependency_condition(),
                 ];
 
@@ -769,21 +769,12 @@ class Assets {
                 'id'     => $section->get_id(),
                 'title'  => $section->get_title(),
                 'order'  => $section->get_order(),
-                'fields' => $fields,
                 'description' => $section->get_description(),
+                'fields' => $fields,
             ];
         }
 		return $sections_data;
 	}
-
-    public function get_product_fields() {
-        $temp_fields = [];
-        foreach ( ProductFormFactory::get_fields() as $field_id => $field ) {
-            $temp_fields[ $field_id ] = $field->toArray();
-        }
-
-        return wp_json_encode( $temp_fields );
-    }
 
     /**
      * Registers WooCommerce Admin scripts for the React-based Dokan Vendor dashboard.
@@ -864,7 +855,6 @@ class Assets {
             'currency_format'              => esc_attr( str_replace( [ '%1$s', '%2$s' ], [ '%s', '%v' ], get_woocommerce_price_format() ) ), // For accounting JS
             'round_at_subtotal'            => get_option( 'woocommerce_tax_round_at_subtotal', 'no' ),
             'product_types'                => apply_filters( 'dokan_product_types', [ 'simple' ] ),
-            'product_form_fields'          => $this->get_product_fields(),
             'loading_img'                  => DOKAN_PLUGIN_ASSEST . '/images/loading.gif',
             'store_product_search_nonce'   => wp_create_nonce( 'dokan_store_product_search_nonce' ),
             'i18n_download_permission'     => __( 'Are you sure you want to revoke access to this download?', 'dokan-lite' ),

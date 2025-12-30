@@ -39,6 +39,7 @@ abstract class Component {
         'title'                  => '', // label for the field
         'description'            => '', // description of the field
         'help_content'           => '', // help content for the field
+        'tooltip'                => '', // tooltip content for the field
         'visibility'             => true, // field visibility, if the field is visible under frontend
         'required'               => false, // by default, all fields are not required
         'dependency_condition'   => [], // dependency condition for the field
@@ -174,6 +175,34 @@ abstract class Component {
      */
     public function set_help_content( string $help_content ): self {
         $this->data['help_content'] = wp_kses_post( $help_content );
+
+        return $this;
+    }
+
+    /**
+     * Get field tooltip content
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    public function get_tooltip(): string {
+        return $this->data['tooltip'];
+    }
+
+    /**
+     * Set field tooltip content, validated with
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $tooltip
+     *
+     * @see   wp_kses_post()
+     *
+     * @return $this
+     */
+    public function set_tooltip( string $tooltip ): self {
+        $this->data['tooltip'] = wp_kses_post( $tooltip );
 
         return $this;
     }

@@ -82,7 +82,7 @@ class Init {
         $section->add_field(
             Elements::SLUG,
             [
-                'title'             => __( 'Slug', 'dokan-lite' ),
+                'title'             => __( 'Permalink', 'dokan-lite' ),
                 'field_type'        => 'text',
                 'type'              => 'other',
                 'name'              => 'slug',
@@ -110,7 +110,6 @@ class Init {
             Elements::TYPE, [
                 'title'          => __( 'Product Type', 'dokan-lite' ),
                 'field_type'     => 'select',
-                'type'           => 'other',
                 'id'             => 'product_type',
                 'name'           => 'product_type',
                 'options'        => apply_filters(
@@ -120,6 +119,7 @@ class Init {
                     ]
                 ),
                 'help_content'   => __( 'Choose Variable if your product has multiple attributes - like sizes, colors, quality etc', 'dokan-lite' ),
+                'tooltip'       => __( 'Choose product type.', 'dokan-lite' ),
                 'value_callback' => function ( $product, $value = '' ) {
                     if ( '' !== $value ) {
                         return $value;
@@ -144,7 +144,7 @@ class Init {
 
         $section->add_field(
             Elements::SALE_PRICE, [
-                'title'       => __( 'Discounted Price', 'dokan-lite' ),
+                'title'       => __( 'Sale Price', 'dokan-lite' ),
                 'field_type'  => 'text',
                 'name'        => '_sale_price',
                 'placeholder' => '0.00',
@@ -302,7 +302,7 @@ class Init {
 
         $section->add_field(
             Elements::GALLERY_IMAGE_IDS, [
-                'title'       => __( 'Product Gallery', 'dokan-lite' ),
+                'title'       => __( 'Product Gallery Image', 'dokan-lite' ),
                 'field_type'  => 'gallery',
                 'name'        => 'gallery_image_ids',
                 'placeholder' => __( 'Select product gallery images', 'dokan-lite' ),

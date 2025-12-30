@@ -15,6 +15,7 @@ export type FormField = {
     help: string;
     placeholder: string;
     help_content: string;
+    tooltip: string;
     description: string;
     required: boolean;
     value: string | number | boolean | null;

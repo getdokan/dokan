@@ -1,5 +1,11 @@
-import { DokanButton, MediaUploader, RichText } from '@src/components';
+import {
+    DokanButton,
+    DokanTooltip,
+    MediaUploader,
+    RichText,
+} from '@src/components';
 import { sanitizeHTML } from '@src/utilities';
+import { Info } from 'lucide-react';
 import { FormField, Section } from '../types';
 
 export const CustomField = ( {
@@ -78,11 +84,18 @@ export const getFieldConfig = ( field: FormField, section: Section ) => {
     const mappedField = {
         ...field,
         label: (
-            <span
-                dangerouslySetInnerHTML={ {
-                    __html: sanitizeHTML( field.title ),
-                } }
-            />
+            <div className="flex gap-1">
+                <span
+                    dangerouslySetInnerHTML={ {
+                        __html: sanitizeHTML( field.title ),
+                    } }
+                />
+                { field.tooltip && (
+                    <DokanTooltip content={ field.tooltip || '' }>
+                        <Info size={ 16 } />
+                    </DokanTooltip>
+                ) }
+            </div>
         ),
         description: (
             <span
