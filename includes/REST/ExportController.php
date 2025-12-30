@@ -86,49 +86,23 @@ class ExportController extends Controller {
      * @return \WP_Error|\WP_REST_Response
      */
     public function export_items( $request ) {
-        $report_type = $request['type'];
-        $report_args = empty( $request['report_args'] ) ? array() : $request['report_args'];
-        $send_email  = isset( $request['email'] ) ? $request['email'] : false;
+        // 1. Let WooCommerce handle the heavy lifting
+        $response = parent::export_items( $request );
 
-        $default_export_id = str_replace( '.', '', microtime( true ) );
-        $export_id         = apply_filters( 'woocommerce_admin_export_id', $default_export_id );
-        $export_id         = (string) sanitize_file_name( $export_id );
-
-        // Generate and store custom filename
-        $custom_filename = $this->generate_filename( $report_args );
-        set_transient( 'dokan_export_filename_' . $export_id, $custom_filename, 24 * HOUR_IN_SECONDS );
-
-        $total_rows = ReportExporter::queue_report_export( $export_id, $report_type, $report_args, $send_email );
-
-        if ( 0 === $total_rows ) {
-            return rest_ensure_response(
-                array(
-                    'message' => __( 'There is no data to export for the given request.', 'woocommerce' ),
-                )
-            );
+        // 2. If successful, grab the ID and save our custom filename
+        if ( ! is_wp_error( $response ) ) {
+            $data = $response->get_data();
+            
+            if ( ! empty( $data['export_id'] ) ) {
+                $report_args     = empty( $request['report_args'] ) ? array() : $request['report_args'];
+                $custom_filename = $this->generate_filename( $report_args );
+                
+                // Save for retrieval in export_status
+                set_transient( 'dokan_export_filename_' . $data['export_id'], $custom_filename, 24 * HOUR_IN_SECONDS );
+            }
         }
 
-        ReportExporter::update_export_percentage_complete( $report_type, $export_id, 0 );
-
-        $response = rest_ensure_response(
-            array(
-                'message'   => __( 'Your report file is being generated.', 'woocommerce' ),
-                'export_id' => $export_id,
-            )
-        );
-
-        // Include a link to the export status endpoint.
-        $response->add_links(
-            array(
-                'status' => array(
-                    'href' => rest_url( sprintf( '%s/reports/%s/export/%s/status', $this->namespace, $report_type, $export_id ) ),
-                ),
-            )
-        );
-
-        $data = $this->prepare_response_for_collection( $response );
-
-        return rest_ensure_response( $data );
+        return $response;
     }
 
     /**
@@ -213,6 +187,9 @@ class ExportController extends Controller {
             $reports_dir  = \Automattic\WooCommerce\Admin\ReportCSVExporter::get_reports_directory();
             $default_path = $reports_dir . $default_filename . '.csv';
             $new_path     = $reports_dir . $new_filename . '.csv';
+            
+            $default_headers_path = $reports_dir . $default_filename . '.csv.headers';
+            $new_headers_path     = $reports_dir . $new_filename . '.csv.headers';
 
             // Check if already renamed
             if ( file_exists( $new_path ) ) {
@@ -224,6 +201,11 @@ class ExportController extends Controller {
             } elseif ( file_exists( $default_path ) ) {
                 // Rename file
                 rename( $default_path, $new_path );
+                
+                // Rename headers file if it exists
+                if ( file_exists( $default_headers_path ) ) {
+                    rename( $default_headers_path, $new_headers_path );
+                }
 
                 // Update download URL
                 if ( ! empty( $data['download_url'] ) ) {
