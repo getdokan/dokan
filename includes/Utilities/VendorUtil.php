@@ -8,7 +8,7 @@ class VendorUtil {
      *
      * @since 4.0.6
      *
-     * @return void
+     * @return string The default store banner URL.
      */
     public static function get_vendor_default_banner_url(): string {
         // Define the default store banner URL from plugin assets
@@ -55,15 +55,19 @@ class VendorUtil {
 
 
     /**
-     * Get vendor/store ID for a user.
+     * Get the vendor/store ID associated with a user.
      *
-     * Vendors return their own ID.
-     * Vendor staff return their parent vendor ID.
-     * Others return 0.
+     * This method determines the vendor ID based on the user's role:
+     * - Vendors: Returns their own user ID as the vendor ID
+     * - Vendor staff: Returns their parent vendor's ID (stored in user meta)
+     * - Other users: Returns 0 if not associated with any vendor
      *
-     * @param int $user_id Optional. User ID. Defaults to current user.
+     * @since DOKAN_SINCE
      *
-     * @return int Vendor/store ID or 0 if unavailable.
+     * @param int $user_id Optional. The user ID to get the vendor ID for. Defaults to 0 (current user).
+     *
+     * @return int The vendor/store ID. Returns 0 if the user is not a vendor or vendor staff,
+     *             or if vendor ID cannot be determined.
      */
     public static function get_vendor_id_for_user( int $user_id = 0 ): int {
         if ( empty( $user_id ) ) {
