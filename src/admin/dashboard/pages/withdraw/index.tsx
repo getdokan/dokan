@@ -551,35 +551,14 @@ const WithdrawPage = () => {
                 setIsExporting(true);
                 setExportProgress(0);
 
-                const formatDateForExport = (dateStr) => {
-                    if (!dateStr) {
-                        return undefined;
-                    }
-
-                    // Handle Date objects
-                    if (dateStr instanceof Date) {
-                        return dateStr.toISOString().split('T')[0];
-                    }
-
-                    // Handle strings
-                    if (typeof dateStr === 'string') {
-                        const parts = dateStr.split('/');
-                        if (parts.length === 3) {
-                            return `${parts[2]}-${parts[0]}-${parts[1]}`;
-                        }
-                    }
-
-                    return dateStr;
-                };
-
                 try {
                     const reportArgs = {
                         status:
                             activeStatus === 'all' ? undefined : activeStatus,
                         user_id: filterArgs.user_id,
                         payment_method: filterArgs.payment_method,
-                        after: formatDateForExport(filterArgs.start_date),
-                        before: formatDateForExport(filterArgs.end_date),
+                        start_date: filterArgs.start_date,
+                        end_date: filterArgs.end_date,
                     };
 
                     const exportResponse = await apiFetch({

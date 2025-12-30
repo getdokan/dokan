@@ -95,11 +95,20 @@ class WithdrawExportController extends GenericController implements ExportableIn
             $args['method'] = $request['payment_method'];
         }
 
-        if ( ! empty( $request['after'] ) ) {
+        if ( ! empty( $request['start_date'] ) ) {
+            $args['start_date'] = $request['start_date'];
+        }
+
+        if ( ! empty( $request['end_date'] ) ) {
+            $args['end_date'] = $request['end_date'];
+        }
+
+        // Support Legacy 'after' and 'before' for backward compatibility
+        if ( ! empty( $request['after'] ) && empty( $args['start_date'] ) ) {
             $args['start_date'] = $request['after'];
         }
 
-        if ( ! empty( $request['before'] ) ) {
+        if ( ! empty( $request['before'] ) && empty( $args['end_date'] ) ) {
             $args['end_date'] = $request['before'];
         }
 
@@ -173,15 +182,29 @@ class WithdrawExportController extends GenericController implements ExportableIn
             'validate_callback' => 'rest_validate_request_arg',
         );
 
-        $params['after'] = array(
-            'description'       => __( 'Date after which to filter withdraws (ISO 8601 format).', 'dokan-lite' ),
+        $params['start_date'] = array(
+            'description'       => __( 'Date after which to filter withdraws (YYYY-MM-DD).', 'dokan-lite' ),
             'type'              => 'string',
             'validate_callback' => 'rest_validate_request_arg',
         );
 
-        $params['before'] = array(
-            'description'       => __( 'Date before which to filter withdraws (ISO 8601 format).', 'dokan-lite' ),
+        $params['end_date'] = array(
+            'description'       => __( 'Date before which to filter withdraws (YYYY-MM-DD).', 'dokan-lite' ),
             'type'              => 'string',
+            'validate_callback' => 'rest_validate_request_arg',
+        );
+
+        $params['after'] = array(
+            'description'       => __( 'Legacy: Date after which to filter withdraws.', 'dokan-lite' ),
+            'type'              => 'string',
+            'format'            => 'date-time',
+            'validate_callback' => 'rest_validate_request_arg',
+        );
+
+        $params['before'] = array(
+            'description'       => __( 'Legacy: Date before which to filter withdraws.', 'dokan-lite' ),
+            'type'              => 'string',
+            'format'            => 'date-time',
             'validate_callback' => 'rest_validate_request_arg',
         );
 

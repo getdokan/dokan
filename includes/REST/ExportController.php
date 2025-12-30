@@ -60,9 +60,9 @@ class ExportController extends Controller {
             $parts[] = sanitize_title( $filters['payment_method'] );
         }
 
-        // Add date range if both start and end dates are provided (Y-M-d format).
-        $start_date = isset( $filters['start_date'] ) ? $filters['start_date'] : ( isset( $filters['after'] ) ? $filters['after'] : '' );
-        $end_date   = isset( $filters['end_date'] ) ? $filters['end_date'] : ( isset( $filters['before'] ) ? $filters['before'] : '' );
+        // Add date range if both start and end dates are provided.
+        $start_date = $filters['start_date'] ?? $filters['after'] ?? '';
+        $end_date   = $filters['end_date'] ?? $filters['before'] ?? '';
 
         if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
             $start_timestamp = strtotime( $start_date );
@@ -86,18 +86,18 @@ class ExportController extends Controller {
      * @return \WP_Error|\WP_REST_Response
      */
     public function export_items( $request ) {
-        // 1. Let WooCommerce handle the heavy lifting
+        // Call parent to handle export queueing.
         $response = parent::export_items( $request );
 
-        // 2. If successful, grab the ID and save our custom filename
+        // Grab the ID and save our custom filename
         if ( ! is_wp_error( $response ) ) {
             $data = $response->get_data();
-            
+
             if ( ! empty( $data['export_id'] ) ) {
                 $report_args     = empty( $request['report_args'] ) ? array() : $request['report_args'];
                 $custom_filename = $this->generate_filename( $report_args );
-                
-                // Save for retrieval in export_status
+
+                // Store custom filename for retrieval during status check.
                 set_transient( 'dokan_export_filename_' . $data['export_id'], $custom_filename, 24 * HOUR_IN_SECONDS );
             }
         }
@@ -171,7 +171,7 @@ class ExportController extends Controller {
             $report_type = $request['type'];
             $export_id   = $request['export_id'];
 
-            // Define filenames (base name without extension for URL)
+            // Define filenames without extension for URL replacement.
             $default_filename = "wc-{$report_type}-report-export-{$export_id}";
             
             // Retrieve custom filename from transient or fall back to previous default
@@ -193,21 +193,17 @@ class ExportController extends Controller {
 
             // Check if already renamed
             if ( file_exists( $new_path ) ) {
-                // Update download URL
                  if ( ! empty( $data['download_url'] ) ) {
                     $data['download_url'] = str_replace( $default_filename, $new_filename, $data['download_url'] );
                     $response->set_data( $data );
                 }
             } elseif ( file_exists( $default_path ) ) {
-                // Rename file
                 rename( $default_path, $new_path );
                 
-                // Rename headers file if it exists
                 if ( file_exists( $default_headers_path ) ) {
                     rename( $default_headers_path, $new_headers_path );
                 }
 
-                // Update download URL
                 if ( ! empty( $data['download_url'] ) ) {
                     $data['download_url'] = str_replace( $default_filename, $new_filename, $data['download_url'] );
                     $response->set_data( $data );
