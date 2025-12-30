@@ -5,7 +5,9 @@ namespace WeDevs\Dokan\Vendor;
 use WeDevs\Dokan\Utilities\VendorUtil;
 
 /**
- * WCAdminUser Class.
+ * ApiMeta Class.
+ *
+ * Handles Dokan vendor user meta registration for the REST API.
  */
 class ApiMeta {
 	/**
@@ -16,7 +18,7 @@ class ApiMeta {
 	}
 
 	/**
-	 * Registers WooCommerce specific user data to the WordPress user API.
+	 * Registers Dokan specific user data to the WordPress user API.
 	 */
 	public function register_user_data() {
 		register_rest_field(
@@ -48,9 +50,9 @@ class ApiMeta {
 	}
 
 	/**
-	 * We store some WooCommerce specific user meta attached to users endpoint,
-	 * so that we can track certain preferences or values such as the inbox activity panel last open time.
-	 * Additional fields can be added in the function below, and then used via wc-admin's currentUser data.
+	 * We store some Dokan specific user meta attached to users endpoint,
+	 * so that we can track certain preferences or values for vendors.
+	 * Additional fields can be added in the function below, and then used via Dokan's currentUser data.
 	 *
 	 * @return array Fields to expose over the WP user endpoint.
 	 */

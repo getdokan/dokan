@@ -80,7 +80,7 @@ const resolvers = {
         },
 
     /**
-     * Check if the current user is a vendor staff.
+     * Get the vendor ID for the current user.
      */
     getVendorId:
         () =>
