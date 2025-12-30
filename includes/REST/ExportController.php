@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\REST;
 
 use Automattic\WooCommerce\Admin\API\Reports\Export\Controller;
+use Automattic\WooCommerce\Admin\ReportExporter;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -24,6 +25,111 @@ class ExportController extends Controller {
      * @var string
      */
     protected $rest_base = '/reports/(?P<type>[a-z]+)/export';
+
+    /**
+     * Generate filename based on filters.
+     *
+     * @param array $filters
+     * @return string
+     */
+    protected function generate_filename( $filters = [] ) {
+        $parts = [ 'dokan-withdraw-log' ];
+
+        // Add vendor name if filtered by user_id.
+        if ( ! empty( $filters['user_id'] ) ) {
+            $store_info = dokan_get_store_info( absint( $filters['user_id'] ) );
+            $store_name = ! empty( $store_info['store_name'] )
+                ? sanitize_title( $store_info['store_name'] )
+                : 'vendor-' . absint( $filters['user_id'] );
+
+            // Truncate if too long (max 50 chars for store name part).
+            if ( strlen( $store_name ) > 50 ) {
+                $store_name = substr( $store_name, 0, 44 ) . '-trunc';
+            }
+
+            $parts[] = $store_name;
+        }
+
+        // Add status if filtered.
+        if ( ! empty( $filters['status'] ) ) {
+            $parts[] = sanitize_title( $filters['status'] );
+        }
+
+        // Add payment method if filtered.
+        if ( ! empty( $filters['payment_method'] ) ) {
+            $parts[] = sanitize_title( $filters['payment_method'] );
+        }
+
+        // Add date range if both start and end dates are provided (Y-M-d format).
+        $start_date = isset( $filters['start_date'] ) ? $filters['start_date'] : ( isset( $filters['after'] ) ? $filters['after'] : '' );
+        $end_date   = isset( $filters['end_date'] ) ? $filters['end_date'] : ( isset( $filters['before'] ) ? $filters['before'] : '' );
+
+        if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+            $start_timestamp = strtotime( $start_date );
+            $end_timestamp   = strtotime( $end_date );
+
+            // Only add if both dates are valid timestamps.
+            if ( $start_timestamp && $end_timestamp ) {
+                $start   = strtolower( wp_date( 'Y-M-d', $start_timestamp ) );
+                $end     = strtolower( wp_date( 'Y-M-d', $end_timestamp ) );
+                $parts[] = $start . '_to_' . $end;
+            }
+        }
+
+        return implode( '_', $parts );
+    }
+
+    /**
+     * Export data based on user request params.
+     *
+     * @param  \WP_REST_Request $request Request data.
+     * @return \WP_Error|\WP_REST_Response
+     */
+    public function export_items( $request ) {
+        $report_type = $request['type'];
+        $report_args = empty( $request['report_args'] ) ? array() : $request['report_args'];
+        $send_email  = isset( $request['email'] ) ? $request['email'] : false;
+
+        $default_export_id = str_replace( '.', '', microtime( true ) );
+        $export_id         = apply_filters( 'woocommerce_admin_export_id', $default_export_id );
+        $export_id         = (string) sanitize_file_name( $export_id );
+
+        // Generate and store custom filename
+        $custom_filename = $this->generate_filename( $report_args );
+        set_transient( 'dokan_export_filename_' . $export_id, $custom_filename, 24 * HOUR_IN_SECONDS );
+
+        $total_rows = ReportExporter::queue_report_export( $export_id, $report_type, $report_args, $send_email );
+
+        if ( 0 === $total_rows ) {
+            return rest_ensure_response(
+                array(
+                    'message' => __( 'There is no data to export for the given request.', 'woocommerce' ),
+                )
+            );
+        }
+
+        ReportExporter::update_export_percentage_complete( $report_type, $export_id, 0 );
+
+        $response = rest_ensure_response(
+            array(
+                'message'   => __( 'Your report file is being generated.', 'woocommerce' ),
+                'export_id' => $export_id,
+            )
+        );
+
+        // Include a link to the export status endpoint.
+        $response->add_links(
+            array(
+                'status' => array(
+                    'href' => rest_url( sprintf( '%s/reports/%s/export/%s/status', $this->namespace, $report_type, $export_id ) ),
+                ),
+            )
+        );
+
+        $data = $this->prepare_response_for_collection( $response );
+
+        return rest_ensure_response( $data );
+    }
 
     /**
      * Register routes.
@@ -71,5 +177,62 @@ class ExportController extends Controller {
         }
 
         return true;
+    }
+    /**
+     * Export status based on user request params.
+     *
+     * @param  \WP_REST_Request $request Request data.
+     * @return \WP_Error|\WP_REST_Response
+     */
+    public function export_status( $request ) {
+        $response = parent::export_status( $request );
+
+        if ( is_wp_error( $response ) ) {
+            return $response;
+        }
+
+        $data = $response->get_data();
+
+        if ( isset( $data['percent_complete'] ) && 100 === $data['percent_complete'] ) {
+            $report_type = $request['type'];
+            $export_id   = $request['export_id'];
+
+            // Define filenames (base name without extension for URL)
+            $default_filename = "wc-{$report_type}-report-export-{$export_id}";
+            
+            // Retrieve custom filename from transient or fall back to previous default
+            $custom_base_name = get_transient( 'dokan_export_filename_' . $export_id );
+            if ( ! $custom_base_name ) {
+                $custom_base_name = "dokan-{$report_type}-report-export-{$export_id}";
+            }
+            
+            $new_filename = $custom_base_name;
+
+
+            // Get reports directory
+            $reports_dir  = \Automattic\WooCommerce\Admin\ReportCSVExporter::get_reports_directory();
+            $default_path = $reports_dir . $default_filename . '.csv';
+            $new_path     = $reports_dir . $new_filename . '.csv';
+
+            // Check if already renamed
+            if ( file_exists( $new_path ) ) {
+                // Update download URL
+                 if ( ! empty( $data['download_url'] ) ) {
+                    $data['download_url'] = str_replace( $default_filename, $new_filename, $data['download_url'] );
+                    $response->set_data( $data );
+                }
+            } elseif ( file_exists( $default_path ) ) {
+                // Rename file
+                rename( $default_path, $new_path );
+
+                // Update download URL
+                if ( ! empty( $data['download_url'] ) ) {
+                    $data['download_url'] = str_replace( $default_filename, $new_filename, $data['download_url'] );
+                    $response->set_data( $data );
+                }
+            }
+        }
+
+        return $response;
     }
 }
