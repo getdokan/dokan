@@ -23,19 +23,19 @@ export const CustomField = ( {
     );
 };
 
-const TextareaEdit = ( { data, field, onChange }: any ) => (
+const RichTextEdit = ( { data, field, onChange }: any ) => (
     <CustomField label={ field.label }>
         <RichText
             placeholder={ field.placeholder }
             value={ data[ field.id ] }
-            onChange={ ( value: string ) =>
-                onChange( { [ field.id ]: value } )
-            }
+            onChange={ ( value: string ) => {
+                onChange( { [ field.id ]: value } );
+            } }
         />
     </CustomField>
 );
 
-const ImageEdit = ( { data, field, onChange }: any ) => {
+const FeatureImage = ( { data, field, onChange }: any ) => {
     return (
         <CustomField label={ field.label }>
             <MediaUploader
@@ -68,10 +68,7 @@ const ImageEdit = ( { data, field, onChange }: any ) => {
 
 const getElementsFromOptions = ( options: any ) => {
     if ( Array.isArray( options ) ) {
-        return options.map( ( opt: any ) => ( {
-            label: opt.label,
-            value: opt.value,
-        } ) );
+        return options;
     }
 
     return Object.entries( options ).map( ( [ value, label ] ) => ( {
@@ -119,7 +116,7 @@ export const getFieldConfig = ( field: FormField, section: Section ) => {
             break;
         case 'rich_text':
             mappedField.type = 'text';
-            mappedField.Edit = TextareaEdit;
+            mappedField.Edit = RichTextEdit;
             break;
         case 'checkbox':
             mappedField.type = 'boolean';
@@ -142,7 +139,7 @@ export const getFieldConfig = ( field: FormField, section: Section ) => {
         case 'image':
         case 'gallery':
             mappedField.type = 'integer';
-            mappedField.Edit = ImageEdit;
+            mappedField.Edit = FeatureImage;
             break;
         default:
             mappedField.type = 'text';

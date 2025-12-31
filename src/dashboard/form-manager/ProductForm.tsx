@@ -41,7 +41,7 @@ const ProductForm = () => {
     console.log( { 'Form Layout:': formLayout, fields } );
 
     return (
-        <div className="dokan-product-form dokan-layout">
+        <div className="dokan-product-form-manager dokan-layout">
             <DataForm
                 data={ product }
                 fields={ fields }
