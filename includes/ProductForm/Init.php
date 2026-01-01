@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\ProductForm;
 
 use WC_Product;
 use WeDevs\Dokan\ProductCategory\Helper as ProductCategoryHelper;
+use WeDevs\Dokan\ProductForm\Factory as ProductFormFactory;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -23,6 +24,84 @@ class Init {
      */
     public function __construct() {
         add_action( 'init', [ $this, 'init_form_fields' ], 10 );
+        add_action( 'dokan_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+    }
+
+	public function get_form_fields(): array {
+		$product_id = isset( $_GET['product_id'] ) ? intval( $_GET['product_id'] ) : 0; // phpcs:ignore
+		$product    = wc_get_product( $product_id );
+
+		$sections_data = [];
+
+        $sections = ProductFormFactory::get_sections();
+
+        foreach ( $sections as $section ) {
+            /** @var Section $section */
+            if ( is_wp_error( $section ) ) {
+                continue;
+            }
+
+            $fields = [];
+
+            foreach ( $section->get_fields() as $field ) {
+                /** @var Field $field */
+                if ( is_wp_error( $field ) || ! $field->is_visible() ) {
+                    continue;
+                }
+
+                $value = '';
+                if ( $product ) {
+                    try {
+                        $value = $field->get_value( $product );
+                    } catch ( \Throwable $e ) {
+                        dokan_log( 'Error getting value for product ' . $product->get_id() . ': ' . $e->getMessage() );
+                    }
+                }
+
+                $field_data = [
+                    'id'          => $field->get_id(),
+                    'name'        => $field->get_name(),
+                    'title'       => $field->get_title(),
+                    'help'        => $field->get_help_content(),
+                    'placeholder' => $field->get_placeholder(),
+                    'help_content' => $field->get_help_content(),
+                    'tooltip'     => $field->get_tooltip(),
+                    'description' => $field->get_description(),
+                    'required'    => $field->is_required(),
+                    'value'       => $value,
+                    'field_type'  => $field->get_field_type(),
+                    'options'     => $field->get_options( $product ),
+                    'errors'      => $field->get_error_message(),
+                    'visibility'  => $field->is_visible(),
+                    'dependency_condition' => $field->get_dependency_condition(),
+                    'left_icon'     => $field->get_left_icon(),
+                ];
+
+                $fields[] = $field_data;
+            }
+
+            $sections_data[] = [
+                'id'     => $section->get_id(),
+                'title'  => $section->get_title(),
+                'order'  => $section->get_order(),
+                'description' => $section->get_description(),
+                'fields' => $fields,
+            ];
+        }
+		return $sections_data;
+	}
+
+    public function enqueue_scripts() {
+        // load the form manager
+        wp_enqueue_script( 'dokan-product-form-manager' );
+        wp_enqueue_style( 'dokan-product-form-manager' );
+        wp_localize_script(
+            'dokan-product-form-manager',
+            'dokanFormManager',
+            [
+                'sections' => $this->get_form_fields(),
+            ]
+        );
     }
 
     /**
@@ -47,6 +126,7 @@ class Init {
      * @return void
      */
     public function init_general_fields() {
+        $currency = get_woocommerce_currency_symbol();
         $section = Factory::add_section(
             'general',
             [
@@ -139,6 +219,7 @@ class Init {
                 'field_type'  => 'text',
                 'name'        => '_regular_price',
                 'placeholder' => '0.00',
+                'left_icon'   => $currency,
             ]
         );
 
@@ -148,13 +229,14 @@ class Init {
                 'field_type'  => 'text',
                 'name'        => '_sale_price',
                 'placeholder' => '0.00',
+                'left_icon'   => $currency,
             ]
         );
 
         $section->add_field(
             Elements::DATE_ON_SALE_FROM, [
                 'title'                => __( 'From', 'dokan-lite' ),
-                'field_type'           => 'text',
+                'field_type'           => 'date',
                 'name'                 => '_sale_price_dates_from',
                 'placeholder'          => 'YYYY-MM-DD',
                 'value_callback'       => function ( $product, $value = '' ) {
@@ -182,7 +264,7 @@ class Init {
         $section->add_field(
             Elements::DATE_ON_SALE_TO, [
                 'title'                => __( 'To', 'dokan-lite' ),
-                'field_type'           => 'text',
+                'field_type'           => 'date',
                 'name'                 => '_sale_price_dates_to',
                 'placeholder'          => 'YYYY-MM-DD',
                 'value_callback'       => function ( $product, $value = '' ) {

@@ -35,7 +35,7 @@ const ProductForm = () => {
     }, [] );
 
     // eslint-disable-next-line no-console
-    console.log( { 'Form Layout:': formLayout, fields } );
+    console.log( { 'Form Layout:': formLayout, fields, data: product } );
 
     return (
         <div className="dokan-product-form-manager dokan-layout">

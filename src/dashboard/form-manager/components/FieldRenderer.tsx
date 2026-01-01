@@ -4,6 +4,7 @@ import { Info } from 'lucide-react';
 import { FormField, Section } from '../types';
 import FeatureImage from './FeatureImage';
 import RichTextEdit from './RichTextEdit';
+import TextWithAddon from './TextWithAddon';
 
 const getElementsFromOptions = ( options: any ) => {
     if ( Array.isArray( options ) ) {
@@ -84,6 +85,9 @@ export const getFieldConfig = ( field: FormField, section: Section ) => {
             break;
         default:
             mappedField.type = 'text';
+            if ( field.left_icon || field.right_icon ) {
+                mappedField.Edit = TextWithAddon;
+            }
     }
 
     // Handle Visibility/Dependency

@@ -22,4 +22,15 @@
     .uppercase {
         text-transform: uppercase;
     }
+    .form-manager-price-input {
+        background: white;
+        border: 1px solid rgb(209 213 219 / var(--tw-border-opacity, 1));
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+        border-left: none;
+        &:focus {
+            border-color: var(--dokan-button-border-color) !important;
+            outline: none;
+        }
+    }
 }

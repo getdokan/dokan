@@ -24,4 +24,6 @@ export type FormField = {
     errors: string;
     dependency_condition: { [ key: string ]: any };
     visibility: boolean;
+    left_icon?: string;
+    right_icon?: string;
 } & Field< any >;

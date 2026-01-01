@@ -5,11 +5,8 @@ namespace WeDevs\Dokan;
 use Automattic\WooCommerce\Internal\Admin\WCAdminAssets;
 use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
-use WeDevs\Dokan\ProductForm\Field;
-use WeDevs\Dokan\ProductForm\Section;
 use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\Utilities\OrderUtil;
-use WeDevs\Dokan\ProductForm\Factory as ProductFormFactory;
 use WeDevs\Dokan\Utilities\ReportUtil;
 
 class Assets {
@@ -712,70 +709,6 @@ class Assets {
 
         return $scripts;
     }
-
-    public function get_form_fields(): array {
-		$product_id = isset( $_GET['product_id'] ) ? intval( $_GET['product_id'] ) : 0; // phpcs:ignore
-		$product    = wc_get_product( $product_id );
-
-		$sections_data = [];
-
-        $sections = ProductFormFactory::get_sections();
-
-        foreach ( $sections as $key => $section ) {
-            /** @var Section $section */
-            if ( is_wp_error( $section ) ) {
-                continue;
-            }
-
-            $fields = [];
-
-            foreach ( $section->get_fields() as $field ) {
-                /** @var Field $field */
-                if ( is_wp_error( $field ) || ! $field->is_visible() ) {
-                    continue;
-                }
-
-                $value = '';
-                if ( $product ) {
-                    try {
-                        $value = $field->get_value( $product );
-                    } catch ( \Throwable $e ) {
-                        dokan_log( 'Error getting value for product ' . $product->get_id() . ': ' . $e->getMessage() );
-                    }
-                }
-
-                $field_data = [
-                    'id'          => $field->get_id(),
-                    'name'        => $field->get_name(),
-                    'title'       => $field->get_title(),
-                    'help'        => $field->get_help_content(),
-                    'placeholder' => $field->get_placeholder(),
-                    'help_content' => $field->get_help_content(),
-                    'tooltip'     => $field->get_tooltip(),
-                    'description' => $field->get_description(),
-                    'required'    => $field->is_required(),
-                    'value'       => $value,
-                    'field_type'  => $field->get_field_type(),
-                    'options'     => $field->get_options( $product ),
-                    'errors'      => $field->get_error_message(),
-                    'visibility'  => $field->is_visible(),
-                    'dependency_condition' => $field->get_dependency_condition(),
-                ];
-
-                $fields[] = $field_data;
-            }
-
-            $sections_data[] = [
-                'id'     => $section->get_id(),
-                'title'  => $section->get_title(),
-                'order'  => $section->get_order(),
-                'description' => $section->get_description(),
-                'fields' => $fields,
-            ];
-        }
-		return $sections_data;
-	}
-
     /**
      * Registers WooCommerce Admin scripts for the React-based Dokan Vendor dashboard.
      *
@@ -967,17 +900,6 @@ class Assets {
 
         // localized form validate script
         self::load_form_validate_script();
-
-        // load the form manager
-        wp_enqueue_script( 'dokan-product-form-manager' );
-        wp_enqueue_style( 'dokan-product-form-manager' );
-        wp_localize_script(
-            'dokan-product-form-manager',
-            'dokanFormManager',
-            [
-                'sections' => $this->get_form_fields(),
-            ]
-        );
 
         do_action( 'dokan_enqueue_scripts' );
     }
