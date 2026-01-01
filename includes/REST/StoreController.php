@@ -64,7 +64,7 @@ class StoreController extends WP_REST_Controller {
                         'description'       => __( 'Unique identifier for the object.', 'dokan-lite' ),
                         'type'              => 'integer',
                         'sanitize_callback' => 'absint',
-                        'validate_callback' => 'dokan_rest_validate_store_id',
+                        'validate_callback' => [ $this, 'validate_store_id' ],
                     ],
                 ],
                 [
