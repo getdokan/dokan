@@ -1,72 +1,9 @@
-import {
-    DokanButton,
-    DokanTooltip,
-    MediaUploader,
-    RichText,
-} from '@src/components';
+import { DokanTooltip } from '@src/components';
 import { sanitizeHTML } from '@src/utilities';
 import { Info } from 'lucide-react';
 import { FormField, Section } from '../types';
-
-export const CustomField = ( {
-    label,
-    children,
-    className = '',
-}: {
-    label: string | React.ReactNode;
-    children: React.ReactNode;
-    className?: string;
-} ) => {
-    return (
-        <div className={ `flex flex-col gap-1 ${ className }` }>
-            <div className="uppercase">{ label }</div>
-            { children }
-        </div>
-    );
-};
-
-const RichTextEdit = ( { data, field, onChange }: any ) => (
-    <CustomField label={ field.label }>
-        <RichText
-            placeholder={ field.placeholder }
-            value={ data[ field.id ] }
-            onChange={ ( value: string ) => {
-                onChange( { [ field.id ]: value } );
-            } }
-        />
-    </CustomField>
-);
-
-const FeatureImage = ( { data, field, onChange }: any ) => {
-    return (
-        <CustomField label={ field.label }>
-            <MediaUploader
-                multiple={ field.field_type === 'gallery' }
-                onSelect={ ( value: any ) => {
-                    onChange( {
-                        [ field.id ]: value.id,
-                        [ `$${ field.id }_url` ]: value.url,
-                    } );
-                } }
-            >
-                <DokanButton variant="secondary" className="uppercase">
-                    Upload { field.field_type }
-                </DokanButton>
-                { data[ `$${ field.id }_url` ] && (
-                    <img
-                        src={ data[ `$${ field.id }_url` ] }
-                        alt="Product"
-                        style={ {
-                            marginTop: '10px',
-                            maxWidth: '100%',
-                            width: '150px',
-                        } }
-                    />
-                ) }
-            </MediaUploader>
-        </CustomField>
-    );
-};
+import FeatureImage from './FeatureImage';
+import RichTextEdit from './RichTextEdit';
 
 const getElementsFromOptions = ( options: any ) => {
     if ( Array.isArray( options ) ) {
