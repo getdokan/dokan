@@ -21,7 +21,7 @@ import {
     DokanModal,
 } from '@dokan/components';
 
-import { Trash, ArrowDown, Home, Calendar, CreditCard } from 'lucide-react';
+import { Trash, ArrowDown, Home, Calendar, CreditCard, Loader2 } from 'lucide-react';
 
 // Define withdraw statuses for tab filtering
 const WITHDRAW_STATUSES = [
@@ -88,6 +88,7 @@ const WithdrawPage = () => {
         approved: 0,
         cancelled: 0,
     } );
+    const [ isExporting, setIsExporting ] = useState( false );
     const [ filterArgs, setFilterArgs ] = useState( {} );
     const [ activeStatus, setActiveStatus ] = useState( 'pending' );
     const [ vendorFilter, setVendorFilter ] = useState< VendorSelect | null >(
@@ -544,27 +545,54 @@ const WithdrawPage = () => {
     const tabsAdditionalContents = [
         <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-[#575757] hover:bg-[#7047EB] hover:text-white"
+            disabled={ isExporting }
+            className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-[#575757] hover:bg-[#7047EB] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={ async () => {
+                setIsExporting(true);
+
                 try {
-                    // Minimal placeholder; backend export flow may vary.
-                    // Attempt to hit export endpoint via same query params.
-                    const path = addQueryArgs( 'dokan/v2/withdraw', {
-                        ...view,
-                        is_export: true,
-                    } );
-                    const res = await apiFetch( { path } );
-                    if ( res && res.url ) {
-                        window.location.assign( res.url as string );
+                    const reportArgs = {
+                        status:
+                            activeStatus === 'all' ? undefined : activeStatus,
+                        user_id: filterArgs.user_id,
+                        payment_method: filterArgs.payment_method,
+                        after: filterArgs.start_date,
+                        before: filterArgs.end_date,
+                    };
+
+                    const exportResponse = await apiFetch({
+                        path: '/dokan/v1/reports/withdraws/export',
+                        method: 'POST',
+                        data: {
+                            report_args: reportArgs,
+                            per_page: 100,
+                            email: false,
+                        },
+                    });
+
+                    if (exportResponse.export_id) {
+                        await pollExportStatus(exportResponse.export_id);
+                    } else {
+                        throw new Error('Failed to initiate export');
                     }
-                } catch ( e ) {
-                    // eslint-disable-next-line no-console
-                    console.error( 'Export failed or not supported yet', e );
+                } catch (e) {
+                    alert(__('Export failed. Please try again.', 'dokan-lite'));
+                } finally {
+                    setIsExporting(false);
                 }
-            } }
+            }}
         >
-            <ArrowDown size={ 16 } />
-            { __( 'Export', 'dokan-lite' ) }
+            { isExporting ? (
+                <>
+                    <Loader2 className="animate-spin" size={16} />
+                    { __( 'Exporting...', 'dokan-lite' ) }
+                </>
+            ) : (
+                <>
+                    <ArrowDown size={16} />
+                    { __( 'Export', 'dokan-lite' ) }
+                </>
+            ) }
         </button>,
     ];
 
