@@ -4324,3 +4324,20 @@ function dokan_get_new_product_url() {
         dokan_get_navigation_url( 'new-product' )
     );
 }
+
+/**
+ * Include Email Interceptor for Report Export.
+ */
+require_once DOKAN_INC_DIR . '/email-interceptor.php';
+
+/**
+ * Register Withdraw Export Controller for WooCommerce Reports.
+ *
+ * @param array  List of report controllers.
+ * @return array
+ */
+function dokan_register_withdraw_export_controller( $controllers ) {
+    $controllers['withdraws'] = 'WeDevs\Dokan\REST\WithdrawExportController';
+    return $controllers;
+}
+add_filter( 'woocommerce_export_report_controller_map', 'dokan_register_withdraw_export_controller' );

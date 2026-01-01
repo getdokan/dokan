@@ -566,7 +566,7 @@ const WithdrawPage = () => {
                         method: 'POST',
                         data: {
                             report_args: reportArgs,
-                            email: false,
+                            email: true,
                         },
                     });
 

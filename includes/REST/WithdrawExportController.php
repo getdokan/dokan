@@ -55,20 +55,7 @@ class WithdrawExportController extends GenericController implements ExportableIn
      * @return array Key value pair of Column ID => Value.
      */
     public function prepare_item_for_export( $item ) {
-        $vendor = dokan()->vendor->get( $item['user_id'] );
-
-        return array(
-            'id'             => $item['id'],
-            'user_id'        => $item['user_id'],
-            'vendor_name'    => $vendor->get_name(),
-            'amount'         => $item['amount'],
-            'payable'        => $item['payable'],
-            'date'           => $item['date'],
-            'status'         => $item['status'],
-            'payment_method' => $item['method'],
-            'details'        => $item['details'],
-            'note'           => $item['note'],
-        );
+        return $item;
     }
 
     /**
@@ -130,21 +117,25 @@ class WithdrawExportController extends GenericController implements ExportableIn
 
         $data = array();
         foreach ( $withdraws as $withdraw ) {
+            $vendor = dokan()->vendor->get( $withdraw->get_user_id() );
+            $vendor_name = $vendor ? $vendor->get_name() : __( 'N/A', 'dokan-lite' );
+
             $data[] = array(
-                'id'      => $withdraw->get_id(),
-                'user_id' => $withdraw->get_user_id(),
-                'amount'  => $withdraw->get_amount(),
-                'payable' => $withdraw->get_receivable_amount(),
-                'date'    => $withdraw->get_date(),
-                'status'  => $withdraw->get_status(),
-                'method'  => $withdraw->get_method(),
-                'details' => $withdraw->get_details(),
-                'note'    => $withdraw->get_note(),
+                'id'             => $withdraw->get_id(),
+                'user_id'        => $withdraw->get_user_id(),
+                'vendor_name'    => $vendor_name,
+                'amount'         => $withdraw->get_amount(),
+                'payable'        => $withdraw->get_receivable_amount(),
+                'date'           => $withdraw->get_date(),
+                'status'         => $withdraw->get_status(),
+                'payment_method' => $withdraw->get_method(),
+                'details'        => $withdraw->get_details(),
+                'note'           => $withdraw->get_note(),
             );
         }
 
         $response = rest_ensure_response( $data );
-
+        
         // Add pagination headers
         $response->header( 'X-WP-Total', absint( $total_withdraws ) );
         $response->header( 'X-WP-TotalPages', absint( $withdraws_obj->max_num_pages ) );
