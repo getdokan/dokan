@@ -3,13 +3,13 @@ const CustomField = ( {
     children,
     className = '',
 }: {
-    label: string | React.ReactNode;
+    label?: string | React.ReactNode;
     children: React.ReactNode;
     className?: string;
 } ) => {
     return (
         <div className={ `flex flex-col gap-1 ${ className }` }>
-            <div className="uppercase">{ label }</div>
+            { label && <div className="uppercase">{ label }</div> }
             { children }
         </div>
     );

@@ -29,6 +29,7 @@ const fields = [
                         },
                         children: [
                             'name',
+                            'slug',
                             'product_type',
                             {
                                 id: 'digital-options',
@@ -39,12 +40,27 @@ const fields = [
                             'category_ids',
                             'regular_price',
                             'sale_price',
-                            'date_on_sale_from',
-                            'date_on_sale_to',
+                            '_create_schedule_for_discount',
+                            {
+                                id: 'product-discount-schedule',
+                                layout: {
+                                    type: 'row',
+                                },
+                                children: [
+                                    'date_on_sale_from',
+                                    'date_on_sale_to',
+                                ],
+                            },
                             {
                                 id: 'product-image',
                                 layout: {
                                     type: 'row',
+                                    styles: {
+                                        image_id: {
+                                            flex: 2,
+                                        },
+                                        gallery_image_ids: { flex: 2 },
+                                    },
                                 },
                                 children: [ 'image_id', 'gallery_image_ids' ],
                             },
@@ -61,6 +77,7 @@ const fields = [
                         id: 'inventory',
                         layout: {
                             type: 'card',
+                            withHeader: true,
                         },
                         label: 'Inventory',
                         description: getDescription( 'inventory' ),
@@ -77,6 +94,7 @@ const fields = [
                         id: 'shipping',
                         layout: {
                             type: 'card',
+                            withHeader: true,
                         },
                         label: 'Shipping',
                         description: getDescription( 'shipping' ),
@@ -99,6 +117,7 @@ const fields = [
                         id: 'linked',
                         layout: {
                             type: 'card',
+                            withHeader: true,
                         },
                         label: 'Linked Products',
                         description: getDescription( 'linked' ),
@@ -112,6 +131,7 @@ const fields = [
                         id: 'downloadable-options',
                         layout: {
                             type: 'card',
+                            withHeader: true,
                         },
                         label: 'Downloadable Options',
                         description: getDescription( 'downloadable-options' ),
@@ -153,6 +173,7 @@ const fields = [
                         layout: {
                             type: 'card',
                             isCollapsible: false,
+                            withHeader: true,
                         },
                         label: 'Purchase Note',
                         description: getDescription( 'purchase-note' ),

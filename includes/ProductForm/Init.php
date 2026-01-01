@@ -234,6 +234,28 @@ class Init {
         );
 
         $section->add_field(
+            Elements::CREATE_SCHEDULE_FOR_DISCOUNT, [
+                'title'                => __( 'Create Schedule for Discount', 'dokan-lite' ),
+                'field_type'           => 'checkbox',
+                'type'                 => 'other',
+                'name'                 => '_create_schedule_for_discount',
+                'value_callback'       => function ( $product, $value = '' ) {
+                    if ( '' !== $value ) {
+                        $time = dokan_current_datetime()->modify( $value );
+
+                        return $time ? $time->getTimestamp() : false;
+                    }
+
+                    if ( ! $product instanceof WC_Product ) {
+                        return false;
+                    }
+
+                    return $product->get_date_on_sale_to( 'edit' ) ? $product->get_date_on_sale_to( 'edit' )->getTimestamp() : false;
+                },
+            ]
+        );
+
+        $section->add_field(
             Elements::DATE_ON_SALE_FROM, [
                 'title'                => __( 'From', 'dokan-lite' ),
                 'field_type'           => 'date',
@@ -254,7 +276,7 @@ class Init {
                 },
                 'dependency_condition' => [
                     'section'  => 'general',
-                    'field'    => Elements::SALE_PRICE,
+                    'field'    => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
                     'operator' => 'equal',
                     'value'    => 'on',
                 ],
@@ -282,7 +304,7 @@ class Init {
                 },
                 'dependency_condition' => [
                     'section'  => 'general',
-                    'field'    => Elements::SALE_PRICE,
+                    'field'    => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
                     'operator' => 'equal',
                     'value'    => 'on',
                 ],
@@ -299,7 +321,7 @@ class Init {
                 'field_type'        => 'select',
                 'name'              => 'chosen_product_cat[]',
                 'placeholder'       => __( 'Select product categories', 'dokan-lite' ),
-                'options'           => [],
+                'options'           => \WeDevs\Dokan\ProductCategory\Helper::get_product_categories_tree(),
                 'required'          => true,
                 'error_msg'         => $category_error_message,
                 'sanitize_callback' => function ( array $categories, WC_Product $product ) {

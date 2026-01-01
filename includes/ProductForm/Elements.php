@@ -75,4 +75,5 @@ class Elements {
     const ADDITIONAL_SHIPPING_COST_META = '_additional_price';
     const ADDITIONAL_SHIPPING_QUANTITY_META = '_additional_qty';
     const ADDITIONAL_SHIPPING_PROCESSING_TIME_META = '_dps_processing_time';
+    const CREATE_SCHEDULE_FOR_DISCOUNT = '_create_schedule_for_discount';
 }

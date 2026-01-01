@@ -2,9 +2,11 @@ import { DokanTooltip } from '@src/components';
 import { sanitizeHTML } from '@src/utilities';
 import { Info } from 'lucide-react';
 import { FormField, Section } from '../types';
+import DateTimePickerEdit from './DateTimePickerEdit';
 import FeatureImage from './FeatureImage';
 import RichTextEdit from './RichTextEdit';
 import TextWithAddon from './TextWithAddon';
+import CategoriesEdit from './CategoriesEdit';
 
 const getElementsFromOptions = ( options: any ) => {
     if ( Array.isArray( options ) ) {
@@ -51,9 +53,6 @@ export const getFieldConfig = ( field: FormField, section: Section ) => {
     // Map Input Types
     switch ( field.field_type ) {
         case 'textarea':
-            mappedField.type = 'text';
-            mappedField.Edit = 'textarea';
-            break;
         case 'rich_text':
             mappedField.type = 'text';
             mappedField.Edit = RichTextEdit;
@@ -68,12 +67,16 @@ export const getFieldConfig = ( field: FormField, section: Section ) => {
         case 'date':
         case 'datetime':
             mappedField.type = 'datetime';
+            mappedField.Edit = DateTimePickerEdit;
             break;
         case 'select':
             mappedField.type = field.id.endsWith( '_ids' ) ? 'array' : 'text';
             mappedField.elements = getElementsFromOptions( field.options );
-            mappedField.Edit =
-                mappedField.elements.length > 0 ? 'select' : 'text';
+            if ( field.name == 'chosen_product_cat[]' ) {
+                mappedField.Edit = CategoriesEdit;
+            } else {
+                mappedField.Edit = 'select';
+            }
             break;
         case 'image':
             mappedField.type = 'integer';
