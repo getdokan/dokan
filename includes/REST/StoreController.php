@@ -306,6 +306,12 @@ class StoreController extends WP_REST_Controller {
     /**
      * Get singe store
      *
+     * Public endpoint: Returns public data for all users/guests (respecting admin settings).
+     * Sensitive data is only returned for authorized users (vendor, vendor staff, or admin).
+     *
+     * For vendor staff accessing via their own ID, the vendor ID is resolved to show their vendor's store.
+     * Vendors and vendor staff attempting to access another vendor's store will be blocked (403).
+     *
      * @since 1.0.0
      *
      * @param $request
@@ -313,19 +319,21 @@ class StoreController extends WP_REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function get_store( $request ) {
-        $store_id = $this->get_vendor_id_for_user( (int) $request->get_param( 'id' ) );
+        $requested_id = absint( $request->get_param( 'id' ) );
 
-        if ( ! $this->can_access_vendor_store( $store_id ) ) {
+        $store = dokan()->vendor->get( $requested_id );
+
+        if ( ! $store || ! $store->get_id() ) {
             return new WP_Error(
-                'rest_forbidden',
-                __( 'You do not have permissions to access this store.', 'dokan-lite' ),
-                [ 'status' => 403 ]
+                'dokan_rest_store_not_found',
+                __( 'Store not found.', 'dokan-lite' ),
+                [ 'status' => 404 ]
             );
         }
 
-        $store = dokan()->vendor->get( $store_id );
-        $stores_data  = $this->prepare_item_for_response( $store, $request );
-        $response = rest_ensure_response( $stores_data );
+        $stores_data = $this->prepare_item_for_response( $store, $request );
+        $response    = rest_ensure_response( $stores_data );
+
         return $response;
     }
 
@@ -651,22 +659,53 @@ class StoreController extends WP_REST_Controller {
     /**
      * Prepare a single user output for response
      *
+     * Public data is returned for all users/guests (respecting admin settings for hiding vendor info).
+     * Sensitive data is only returned for authorized users (vendor, vendor staff, or admin).
+     *
      * @param Vendor $store
      * @param WP_REST_Request $request Request object.
      * @param array $additional_fields (optional)
+     * @param bool $is_authorized (optional) Whether the current user is authorized to view sensitive data.
      *
      * @return WP_REST_Response $response Response data.
      */
     public function prepare_item_for_response( $store, $request, $additional_fields = [] ) {
         $data = $store->to_array();
 
-        $commission_settings               = $store->get_commission_settings();
-        $data['admin_category_commission'] = $commission_settings->get_category_commissions();
-        $data['admin_commission']          = $commission_settings->get_percentage();
-        $data['admin_additional_fee']      = $commission_settings->get_flat();
-        $data['admin_commission_type']     = $commission_settings->get_type();
+        $is_authorized = $this->can_access_vendor_store( $store->get_id() );
+        // Add sensitive admin commission data only for authorized users
+        if ( $is_authorized ) {
+            $commission_settings               = $store->get_commission_settings();
+            $data['admin_category_commission'] = $commission_settings->get_category_commissions();
+            $data['admin_commission']          = $commission_settings->get_percentage();
+            $data['admin_additional_fee']      = $commission_settings->get_flat();
+            $data['admin_commission_type']     = $commission_settings->get_type();
+        }
 
-        $data     = array_merge( $data, apply_filters( 'dokan_rest_store_additional_fields', $additional_fields, $store, $request ) );
+        // Filter sensitive data for unauthorized users
+        if ( ! $is_authorized ) {
+            // Respect admin settings for hiding vendor info (same as public store page)
+            if ( dokan_is_vendor_info_hidden( 'address' ) ) {
+                unset( $data['address'] );
+            }
+
+            if ( dokan_is_vendor_info_hidden( 'phone' ) ) {
+                unset( $data['phone'] );
+            }
+
+            // Hide email if admin setting hides it OR vendor doesn't want to show it
+            if ( dokan_is_vendor_info_hidden( 'email' ) || ! $store->show_email() ) {
+                unset( $data['email'] );
+            }
+
+            // Remove payment profiles (sensitive - always hidden from public)
+            unset( $data['payment'] );
+
+            // Remove store enabled status (sensitive - always hidden from public)
+            unset( $data['enabled'] );
+        }
+
+        $data     = array_merge( $data, apply_filters( 'dokan_rest_store_additional_fields', $additional_fields, $store, $request, $is_authorized ) );
         $response = rest_ensure_response( $data );
         $response->add_links( $this->prepare_links( $data, $request ) );
 

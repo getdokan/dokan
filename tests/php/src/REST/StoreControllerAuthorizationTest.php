@@ -164,20 +164,25 @@ class StoreControllerAuthorizationTest extends DokanTestCase {
     }
 
     /**
-     * Test that vendor cannot access another vendor's store.
+     * Test that vendor can access another vendor's store (public endpoint with filtered data).
      *
      * @return void
      */
     public function test_vendor_cannot_access_another_vendor_store(): void {
         wp_set_current_user( $this->seller_id1 );
 
-        // Try to access seller_id2's store
+        // Try to access seller_id2's store (public endpoint, so access is allowed)
         $response = $this->get_request( "stores/{$this->seller_id2}" );
-        $this->assertEquals( 403, $response->get_status(), 'Vendor should not be able to access another vendor store' );
+        $this->assertEquals( 200, $response->get_status(), 'Vendor can access another vendor store (public endpoint)' );
 
         $data = $response->get_data();
-        $this->assertEquals( 'rest_forbidden', $data['code'], 'Error code should be rest_forbidden' );
-        $this->assertStringContainsString( 'permissions', $data['message'], 'Error message should mention permissions' );
+        // Verify sensitive data is filtered (unauthorized access gets public data only)
+        $this->assertArrayNotHasKey( 'payment', $data, 'Payment data should be hidden from unauthorized users' );
+        $this->assertArrayNotHasKey( 'enabled', $data, 'Enabled status should be hidden from unauthorized users' );
+        $this->assertArrayNotHasKey( 'admin_commission', $data, 'Admin commission should be hidden from unauthorized users' );
+        // Verify public data is available
+        $this->assertArrayHasKey( 'store_name', $data, 'Store name should be available (public data)' );
+        $this->assertArrayHasKey( 'id', $data, 'Store ID should be available (public data)' );
     }
 
     /**
@@ -214,13 +219,10 @@ class StoreControllerAuthorizationTest extends DokanTestCase {
         $data = $response->get_data();
         $this->assertEquals( $this->seller_id1, $data['id'], 'Store ID should match associated vendor ID' );
 
-        // Staff should also be able to access their vendor's store using their own ID
-        // (the system should resolve staff ID to vendor ID)
-        $response = $this->get_request( "stores/{$this->vendor_staff_id1}" );
-        $this->assertEquals( 200, $response->get_status(), 'Vendor staff should be able to access store using their own ID' );
-
-        $data = $response->get_data();
-        $this->assertEquals( $this->seller_id1, $data['id'], 'Store ID should resolve to associated vendor ID' );
+        // Verify sensitive data is available for authorized staff
+        $this->assertArrayHasKey( 'admin_commission', $data, 'Admin commission should be available for authorized staff' );
+        $this->assertArrayHasKey( 'payment', $data, 'Payment data should be available for authorized staff' );
+        $this->assertArrayHasKey( 'enabled', $data, 'Enabled status should be available for authorized staff' );
     }
 
     /**
@@ -258,19 +260,24 @@ class StoreControllerAuthorizationTest extends DokanTestCase {
     }
 
     /**
-     * Test that vendor staff cannot access another vendor's store.
+     * Test that vendor staff can access another vendor's store (public endpoint with filtered data).
      *
      * @return void
      */
     public function test_vendor_staff_cannot_access_another_vendor_store(): void {
         wp_set_current_user( $this->vendor_staff_id1 );
 
-        // Try to access seller_id2's store (different vendor)
+        // Try to access seller_id2's store (different vendor) - public endpoint allows access
         $response = $this->get_request( "stores/{$this->seller_id2}" );
-        $this->assertEquals( 403, $response->get_status(), 'Vendor staff should not be able to access another vendor store' );
+        $this->assertEquals( 200, $response->get_status(), 'Vendor staff can access another vendor store (public endpoint)' );
 
         $data = $response->get_data();
-        $this->assertEquals( 'rest_forbidden', $data['code'], 'Error code should be rest_forbidden' );
+        // Verify sensitive data is filtered (unauthorized access gets public data only)
+        $this->assertArrayNotHasKey( 'payment', $data, 'Payment data should be hidden from unauthorized users' );
+        $this->assertArrayNotHasKey( 'enabled', $data, 'Enabled status should be hidden from unauthorized users' );
+        $this->assertArrayNotHasKey( 'admin_commission', $data, 'Admin commission should be hidden from unauthorized users' );
+        // Verify public data is available
+        $this->assertArrayHasKey( 'store_name', $data, 'Store name should be available (public data)' );
     }
 
     /**
@@ -293,19 +300,25 @@ class StoreControllerAuthorizationTest extends DokanTestCase {
     }
 
     /**
-     * Test that customer cannot access any vendor store.
+     * Test that customer can access vendor store (public endpoint with filtered data).
      *
      * @return void
      */
     public function test_customer_cannot_access_vendor_store(): void {
         wp_set_current_user( $this->customer_id );
 
-        // Try to access seller_id1's store
+        // Try to access seller_id1's store (public endpoint, so access is allowed)
         $response = $this->get_request( "stores/{$this->seller_id1}" );
-        $this->assertEquals( 403, $response->get_status(), 'Customer should not be able to access vendor store' );
+        $this->assertEquals( 200, $response->get_status(), 'Customer can access vendor store (public endpoint)' );
 
         $data = $response->get_data();
-        $this->assertEquals( 'rest_forbidden', $data['code'], 'Error code should be rest_forbidden' );
+        // Verify sensitive data is filtered (unauthorized access gets public data only)
+        $this->assertArrayNotHasKey( 'payment', $data, 'Payment data should be hidden from unauthorized users' );
+        $this->assertArrayNotHasKey( 'enabled', $data, 'Enabled status should be hidden from unauthorized users' );
+        $this->assertArrayNotHasKey( 'admin_commission', $data, 'Admin commission should be hidden from unauthorized users' );
+        // Verify public data is available
+        $this->assertArrayHasKey( 'store_name', $data, 'Store name should be available (public data)' );
+        $this->assertArrayHasKey( 'id', $data, 'Store ID should be available (public data)' );
     }
 
     /**
@@ -367,40 +380,51 @@ class StoreControllerAuthorizationTest extends DokanTestCase {
     }
 
     /**
-     * Test that vendor staff from different vendors cannot access each other's stores.
+     * Test that vendor staff from different vendors can access each other's stores (public endpoint with filtered data).
      *
      * @return void
      */
     public function test_different_vendor_staff_cannot_access_each_others_stores(): void {
-        // Staff from vendor 1 trying to access vendor 2's store
+        // Staff from vendor 1 trying to access vendor 2's store (public endpoint allows access)
         wp_set_current_user( $this->vendor_staff_id1 );
         $response = $this->get_request( "stores/{$this->seller_id2}" );
-        $this->assertEquals( 403, $response->get_status(), 'Vendor staff 1 should not access vendor 2 store' );
+        $this->assertEquals( 200, $response->get_status(), 'Vendor staff can access other vendor stores (public endpoint)' );
 
-        // Staff from vendor 2 trying to access vendor 1's store
+        $data = $response->get_data();
+        // Verify sensitive data is filtered (unauthorized access gets public data only)
+        $this->assertArrayNotHasKey( 'payment', $data, 'Payment data should be hidden from unauthorized users' );
+        $this->assertArrayNotHasKey( 'enabled', $data, 'Enabled status should be hidden from unauthorized users' );
+        $this->assertArrayNotHasKey( 'admin_commission', $data, 'Admin commission should be hidden from unauthorized users' );
+
+        // Staff from vendor 2 trying to access vendor 1's store (public endpoint allows access)
         wp_set_current_user( $this->vendor_staff_id2 );
         $response = $this->get_request( "stores/{$this->seller_id1}" );
-        $this->assertEquals( 403, $response->get_status(), 'Vendor staff 2 should not access vendor 1 store' );
+        $this->assertEquals( 200, $response->get_status(), 'Vendor staff can access other vendor stores (public endpoint)' );
+
+        $data = $response->get_data();
+        // Verify sensitive data is filtered
+        $this->assertArrayNotHasKey( 'payment', $data, 'Payment data should be hidden from unauthorized users' );
+        $this->assertArrayNotHasKey( 'admin_commission', $data, 'Admin commission should be hidden from unauthorized users' );
     }
 
     /**
-     * Test vendor ID resolution for vendor staff when accessing store by staff ID.
+     * Test that vendor staff accessing store by staff ID returns store data (public endpoint uses ID directly).
      *
      * @return void
      */
     public function test_vendor_id_resolution_for_staff_accessing_by_staff_id(): void {
         wp_set_current_user( $this->vendor_staff_id1 );
 
-        // When staff accesses store using their own ID, it should resolve to their vendor's ID
+        // When staff accesses store using their own ID, it returns data for that user ID
+        // (public endpoint uses requested ID directly, no vendor ID resolution)
         $response = $this->get_request( "stores/{$this->vendor_staff_id1}" );
-        $this->assertEquals( 200, $response->get_status(), 'Staff should access store using their own ID' );
+        $this->assertEquals( 200, $response->get_status(), 'Staff accessing by their own ID returns data (public endpoint)' );
 
         $data = $response->get_data();
-        $this->assertEquals(
-            $this->seller_id1,
-            $data['id'],
-            'Store ID should resolve to the staff member\'s associated vendor ID, not the staff ID'
-        );
+        $this->assertEquals( $this->vendor_staff_id1, $data['id'], 'Store ID should match the requested staff ID' );
+        // Verify sensitive data is filtered (staff accessing via their own ID is not authorized for that store)
+        $this->assertArrayNotHasKey( 'payment', $data, 'Payment data should be hidden from unauthorized users' );
+        $this->assertArrayNotHasKey( 'admin_commission', $data, 'Admin commission should be hidden from unauthorized users' );
     }
 
     /**
@@ -472,7 +496,7 @@ class StoreControllerAuthorizationTest extends DokanTestCase {
     }
 
     /**
-     * Test that vendor staff cannot access store if vendor_id meta is missing.
+     * Test that vendor staff without vendor_id meta can access store (public endpoint with filtered data).
      *
      * @return void
      */
@@ -487,9 +511,17 @@ class StoreControllerAuthorizationTest extends DokanTestCase {
 
         wp_set_current_user( $orphan_staff_id );
 
-        // Try to access any store
+        // Try to access any store (public endpoint, so access is allowed)
         $response = $this->get_request( "stores/{$this->seller_id1}" );
-        $this->assertEquals( 403, $response->get_status(), 'Staff without vendor_id meta should not access store' );
+        $this->assertEquals( 200, $response->get_status(), 'Staff without vendor_id meta can access store (public endpoint)' );
+
+        $data = $response->get_data();
+        // Verify sensitive data is filtered (unauthorized access gets public data only)
+        $this->assertArrayNotHasKey( 'payment', $data, 'Payment data should be hidden from unauthorized users' );
+        $this->assertArrayNotHasKey( 'enabled', $data, 'Enabled status should be hidden from unauthorized users' );
+        $this->assertArrayNotHasKey( 'admin_commission', $data, 'Admin commission should be hidden from unauthorized users' );
+        // Verify public data is available
+        $this->assertArrayHasKey( 'store_name', $data, 'Store name should be available (public data)' );
 
         // Clean up
         wp_delete_user( $orphan_staff_id );
