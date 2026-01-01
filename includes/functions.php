@@ -730,7 +730,7 @@ function dokan_post_input_box( $post_id, $meta_key, $attr = [], $type = 'text' )
 function dokan_get_post_status( $status = '' ) {
     $statuses = apply_filters(
         'dokan_get_post_status', [
-            'publish' => __( 'Online', 'dokan-lite' ),
+            'publish' => __( 'Published', 'dokan-lite' ),
             'draft'   => __( 'Draft', 'dokan-lite' ),
             'pending' => __( 'Pending Review', 'dokan-lite' ),
             'future'  => __( 'Scheduled', 'dokan-lite' ),

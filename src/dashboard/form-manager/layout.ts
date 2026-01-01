@@ -1,3 +1,12 @@
+import { Section } from './types';
+
+const sections = ( window as any ).dokanFormManager.sections as Section[];
+
+const getDescription = ( sectionId: string ) => {
+    const section = sections.find( ( sec ) => sec.id === sectionId );
+    return section ? section.description : undefined;
+};
+
 const fields = [
     {
         id: 'main-layout',
@@ -5,8 +14,8 @@ const fields = [
             type: 'row',
             alignment: 'start',
             styles: {
-                'left-column': { flex: 2, marginRight: '10px' },
-                'right-column': { flex: 1 },
+                'left-column': { flex: 5, marginRight: '10px' },
+                'right-column': { flex: 2 },
             },
         },
         children: [
@@ -32,13 +41,21 @@ const fields = [
                             'sale_price',
                             'date_on_sale_from',
                             'date_on_sale_to',
-                            'image_id',
-                            'gallery_image_ids',
-                            'short_description',
-                            'description',
-                            'product_url',
-                            'button_text',
+                            {
+                                id: 'product-image',
+                                layout: {
+                                    type: 'row',
+                                },
+                                children: [ 'image_id', 'gallery_image_ids' ],
+                            },
                         ],
+                    },
+                    {
+                        id: 'description',
+                        layout: {
+                            type: 'card',
+                        },
+                        children: [ 'short_description', 'description' ],
                     },
                     {
                         id: 'inventory',
@@ -46,6 +63,7 @@ const fields = [
                             type: 'card',
                         },
                         label: 'Inventory',
+                        description: getDescription( 'inventory' ),
                         children: [
                             'sku',
                             'stock_status',
@@ -61,6 +79,7 @@ const fields = [
                             type: 'card',
                         },
                         label: 'Shipping',
+                        description: getDescription( 'shipping' ),
                         children: [
                             '_disable_shipping',
                             'weight',
@@ -82,6 +101,7 @@ const fields = [
                             type: 'card',
                         },
                         label: 'Linked Products',
+                        description: getDescription( 'linked' ),
                         children: [
                             'upsell_ids',
                             'cross_sell_ids',
@@ -94,11 +114,20 @@ const fields = [
                             type: 'card',
                         },
                         label: 'Downloadable Options',
+                        description: getDescription( 'downloadable-options' ),
                         children: [
                             'downloads',
                             'download_limit',
                             'download_expiry',
                         ],
+                    },
+                    {
+                        id: 'others',
+                        layout: {
+                            type: 'card',
+                        },
+                        label: 'Others',
+                        children: [ 'product_url', 'button_text' ],
                     },
                 ],
             },
@@ -126,7 +155,7 @@ const fields = [
                             isCollapsible: false,
                         },
                         label: 'Purchase Note',
-                        description: 'Customer will get this in order email.',
+                        description: getDescription( 'purchase-note' ),
                         children: [ 'purchase_note' ],
                     },
                 ],
@@ -134,6 +163,8 @@ const fields = [
         ],
     },
 ];
+
+export { sections };
 
 export default {
     fields,

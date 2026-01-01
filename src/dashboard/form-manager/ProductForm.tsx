@@ -1,10 +1,7 @@
 import { DataForm } from '@wordpress/dataviews';
 import { useCallback, useMemo, useState } from '@wordpress/element';
 import { getFieldConfig } from './components/FieldRenderer';
-import layout from './layout';
-import { Section } from './types';
-
-const sections = ( window as any ).dokanFormManager.sections as Section[];
+import layout, { sections } from './layout';
 
 const ProductForm = () => {
     // 1. Calculate initialData first

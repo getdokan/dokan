@@ -11,12 +11,14 @@ import { FormField, Section } from '../types';
 export const CustomField = ( {
     label,
     children,
+    className = '',
 }: {
     label: string | React.ReactNode;
     children: React.ReactNode;
+    className?: string;
 } ) => {
     return (
-        <div className="flex flex-col gap-1">
+        <div className={ `flex flex-col gap-1 ${ className }` }>
             <div className="uppercase">{ label }</div>
             { children }
         </div>
@@ -88,7 +90,7 @@ export const getFieldConfig = ( field: FormField, section: Section ) => {
                     } }
                 />
                 { field.tooltip && (
-                    <DokanTooltip content={ field.tooltip || '' }>
+                    <DokanTooltip content={ field.tooltip }>
                         <Info size={ 16 } />
                     </DokanTooltip>
                 ) }
@@ -123,7 +125,6 @@ export const getFieldConfig = ( field: FormField, section: Section ) => {
             mappedField.Edit = 'checkbox';
             break;
         case 'number':
-        case 'integer':
             mappedField.type = 'integer';
             break;
         case 'date':
@@ -137,8 +138,11 @@ export const getFieldConfig = ( field: FormField, section: Section ) => {
                 mappedField.elements.length > 0 ? 'select' : 'text';
             break;
         case 'image':
-        case 'gallery':
             mappedField.type = 'integer';
+            mappedField.Edit = FeatureImage;
+            break;
+        case 'gallery':
+            mappedField.type = 'array';
             mappedField.Edit = FeatureImage;
             break;
         default:
@@ -146,28 +150,33 @@ export const getFieldConfig = ( field: FormField, section: Section ) => {
     }
 
     // Handle Visibility/Dependency
-    mappedField.isVisible = () => {
+    mappedField.isVisible = ( data: Record< string, any > ) => {
         if ( ! field.visibility ) {
             return false;
         }
-        if ( field.dependency_condition ) {
+        const item = field.dependency_condition;
+        if ( typeof item === 'object' && ! Array.isArray( item ) ) {
             const {
                 field: depField,
                 operator,
                 value,
             } = field.dependency_condition;
-            const depsField = section.fields.find( ( f ) => f.id === depField );
-            if ( depsField ) {
-                if ( operator === 'equal' ) {
-                    return depsField.visibility === value;
-                }
-                if ( operator === 'not_equal' ) {
-                    return depsField.visibility !== value;
-                }
+            const depValue = data[ depField ];
+
+            let targetValue: any = value;
+            if ( value === 'on' ) targetValue = true;
+            if ( value === 'off' ) targetValue = false;
+
+            if ( operator === 'equal' ) {
+                return depValue === targetValue;
             }
         }
         return true;
     };
+
+    if ( ! field.help_content && ! field.description ) {
+        mappedField.description = undefined as any;
+    }
 
     return mappedField;
 };
