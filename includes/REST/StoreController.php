@@ -365,18 +365,12 @@ class StoreController extends WP_REST_Controller {
      * @return bool
      */
     public function update_store_permissions_check( $request ) {
-        if ( current_user_can( 'manage_woocommerce' ) ) {
-            return true;
-        }
-
         $requested_id = absint( $request->get_param( 'id' ) );
-        $user_store_id = $this->get_vendor_id_for_user();
 
-        if ( user_can( get_current_user_id(), 'vendor_staff' ) && $requested_id === get_current_user_id() ) {
-            $requested_id = $user_store_id;
-        }
+        // Resolve vendor ID: handles both vendor IDs and vendor staff IDs
+        $store_id = $this->get_vendor_id_for_user( $requested_id );
 
-        return $this->can_access_vendor_store( $requested_id );
+        return $this->can_access_vendor_store( $store_id );
     }
 
     /**
@@ -390,13 +384,19 @@ class StoreController extends WP_REST_Controller {
      */
     public function update_store( $request ) {
         $requested_id = absint( $request->get_param( 'id' ) );
-        $current_user = get_current_user_id();
 
-        if ( user_can( $current_user, 'vendor_staff' ) && $requested_id === $current_user ) {
-            $requested_id = $this->get_vendor_id_for_user( $current_user );
+        // Resolve vendor ID: handles both vendor IDs and vendor staff IDs
+        $store_id = $this->get_vendor_id_for_user( $requested_id );
+
+        if ( ! $store_id ) {
+            return new WP_Error(
+                'dokan_rest_store_not_found',
+                __( 'Store not found.', 'dokan-lite' ),
+                [ 'status' => 404 ]
+            );
         }
 
-        $store = dokan()->vendor->get( $requested_id );
+        $store = dokan()->vendor->get( $store_id );
 
         if ( ! $store || ! $store->get_id() ) {
             return new WP_Error(
@@ -407,13 +407,13 @@ class StoreController extends WP_REST_Controller {
         }
 
         $params   = $request->get_params();
-        $store_id = dokan()->vendor->update( $store->get_id(), $params );
+        $updated_store_id = dokan()->vendor->update( $store->get_id(), $params );
 
-        if ( is_wp_error( $store_id ) ) {
-            return new WP_Error( $store_id->get_error_code(), $store_id->get_error_message() );
+        if ( is_wp_error( $updated_store_id ) ) {
+            return new WP_Error( $updated_store_id->get_error_code(), $updated_store_id->get_error_message() );
         }
 
-        $store = dokan()->vendor->get( $store_id );
+        $store = dokan()->vendor->get( $updated_store_id );
 
         do_action( 'dokan_rest_stores_update_store', $store, $request );
 
