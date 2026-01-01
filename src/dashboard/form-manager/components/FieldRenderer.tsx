@@ -61,6 +61,10 @@ export const getFieldConfig = ( field: FormField, section: Section ) => {
             mappedField.type = 'boolean';
             mappedField.Edit = 'checkbox';
             break;
+        case 'radio':
+            mappedField.type = 'text';
+            mappedField.Edit = 'radio';
+            break;
         case 'number':
             mappedField.type = 'integer';
             break;
@@ -70,12 +74,12 @@ export const getFieldConfig = ( field: FormField, section: Section ) => {
             mappedField.Edit = DateTimePickerEdit;
             break;
         case 'select':
-            mappedField.type = field.id.endsWith( '_ids' ) ? 'array' : 'text';
+            mappedField.type = 'number';
             mappedField.elements = getElementsFromOptions( field.options );
+            mappedField.Edit = 'select';
             if ( field.name == 'chosen_product_cat[]' ) {
                 mappedField.Edit = CategoriesEdit;
-            } else {
-                mappedField.Edit = 'select';
+                mappedField.type = 'array';
             }
             break;
         case 'image':
@@ -107,7 +111,7 @@ export const getFieldConfig = ( field: FormField, section: Section ) => {
             } = field.dependency_condition;
             const depValue = data[ depField ];
 
-            let targetValue: any = value;
+            let targetValue = value;
             if ( value === 'on' ) targetValue = true;
             if ( value === 'off' ) targetValue = false;
 
@@ -119,10 +123,44 @@ export const getFieldConfig = ( field: FormField, section: Section ) => {
     };
 
     if ( ! field.help_content && ! field.description ) {
-        mappedField.description = undefined as any;
+        // @ts-ignore
+        delete mappedField.description;
     }
 
     return mappedField;
+};
+
+export const processLayout = ( layoutFields: any[] ) => {
+    return layoutFields.map( ( field ) => {
+        if ( typeof field === 'string' ) {
+            return field;
+        }
+
+        const newField = { ...field };
+
+        if ( newField.layout?.type === 'card' && newField.description ) {
+            newField.label = (
+                <div className="dokan-form-card-header-content">
+                    <div className="dokan-form-card-title">
+                        { newField.label }
+                    </div>
+                    <div
+                        className="dokan-form-card-description"
+                        dangerouslySetInnerHTML={ {
+                            __html: sanitizeHTML( newField.description ),
+                        } }
+                    />
+                </div>
+            );
+            delete newField.description;
+        }
+
+        if ( newField.children ) {
+            newField.children = processLayout( newField.children );
+        }
+
+        return newField;
+    } );
 };
 
 const FieldRenderer = () => {

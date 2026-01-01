@@ -2,9 +2,25 @@ import { Section } from './types';
 
 const sections = ( window as any ).dokanFormManager.sections as Section[];
 
-const getDescription = ( sectionId: string ) => {
+const getLabelAndDescription = ( sectionId: string ) => {
     const section = sections.find( ( sec ) => sec.id === sectionId );
-    return section ? section.description : undefined;
+    if ( ! section ) {
+        // search each subsection
+        for ( const sec of sections ) {
+            if ( sec.fields.length ) {
+                for ( const field of sec.fields ) {
+                    if ( field.id === sectionId ) {
+                        return {
+                            label: field.title,
+                            description: field.description,
+                        };
+                    }
+                }
+            }
+        }
+        return {};
+    }
+    return { label: section.title, description: section.description };
 };
 
 const fields = [
@@ -79,8 +95,6 @@ const fields = [
                             type: 'card',
                             withHeader: true,
                         },
-                        label: 'Inventory',
-                        description: getDescription( 'inventory' ),
                         children: [
                             'sku',
                             'stock_status',
@@ -89,6 +103,7 @@ const fields = [
                             'backorders',
                             'sold_individually',
                         ],
+                        ...getLabelAndDescription( 'inventory' ),
                     },
                     {
                         id: 'shipping',
@@ -96,8 +111,6 @@ const fields = [
                             type: 'card',
                             withHeader: true,
                         },
-                        label: 'Shipping',
-                        description: getDescription( 'shipping' ),
                         children: [
                             '_disable_shipping',
                             'weight',
@@ -112,6 +125,7 @@ const fields = [
                             'tax_status',
                             'tax_class',
                         ],
+                        ...getLabelAndDescription( 'shipping' ),
                     },
                     {
                         id: 'linked',
@@ -119,13 +133,12 @@ const fields = [
                             type: 'card',
                             withHeader: true,
                         },
-                        label: 'Linked Products',
-                        description: getDescription( 'linked' ),
                         children: [
                             'upsell_ids',
                             'cross_sell_ids',
                             'children',
                         ],
+                        ...getLabelAndDescription( 'linked' ),
                     },
                     {
                         id: 'downloadable-options',
@@ -133,21 +146,21 @@ const fields = [
                             type: 'card',
                             withHeader: true,
                         },
-                        label: 'Downloadable Options',
-                        description: getDescription( 'downloadable-options' ),
                         children: [
                             'downloads',
                             'download_limit',
                             'download_expiry',
                         ],
+                        ...getLabelAndDescription( 'downloadable' ),
                     },
                     {
                         id: 'others',
                         layout: {
                             type: 'card',
+                            withHeader: true,
                         },
-                        label: 'Others',
                         children: [ 'product_url', 'button_text' ],
+                        ...getLabelAndDescription( 'others' ),
                     },
                 ],
             },
@@ -165,19 +178,18 @@ const fields = [
                             'status',
                             'catalog_visibility',
                             'tag_ids',
+                            'brand_ids',
                             'reviews_allowed',
                         ],
                     },
                     {
-                        id: 'purchase-note',
+                        id: 'purchase_note',
                         layout: {
                             type: 'card',
-                            isCollapsible: false,
                             withHeader: true,
                         },
-                        label: 'Purchase Note',
-                        description: getDescription( 'purchase-note' ),
                         children: [ 'purchase_note' ],
+                        ...getLabelAndDescription( 'purchase_note' ),
                     },
                 ],
             },

@@ -321,7 +321,7 @@ class Init {
                 'field_type'        => 'select',
                 'name'              => 'chosen_product_cat[]',
                 'placeholder'       => __( 'Select product categories', 'dokan-lite' ),
-                'options'           => \WeDevs\Dokan\ProductCategory\Helper::get_product_categories_tree(),
+                'options'           => ProductCategoryHelper::get_product_categories_tree(),
                 'required'          => true,
                 'error_msg'         => $category_error_message,
                 'sanitize_callback' => function ( array $categories, WC_Product $product ) {
@@ -391,6 +391,37 @@ class Init {
                     }
 
                     return $product->get_tag_ids();
+                },
+            ]
+        );
+
+        $section->add_field(
+            Elements::BRANDS, [
+                'title'             => __( 'Brands', 'dokan-lite' ),
+                'field_type'        => 'select',
+                'name'              => 'product_brand[]',
+                'placeholder'       => __( 'Select product brands', 'dokan-lite' ),
+                'sanitize_callback' => function ( $brands ) {
+                    return array_map(
+                        function ( $brand ) {
+                            if ( is_numeric( $brand ) ) {
+                                return absint( $brand );
+                            } else {
+                                return sanitize_text_field( $brand );
+                            }
+                        }, (array) $brands
+                    );
+                },
+                'value_callback'    => function ( $product, $value = '' ) {
+                    if ( '' !== $value ) {
+                        return $value;
+                    }
+
+                    if ( ! $product instanceof WC_Product ) {
+                        return [];
+                    }
+
+                    return $product->get_brand_ids();
                 },
             ]
         );
@@ -811,7 +842,8 @@ class Init {
                 'title'             => __( 'Purchase Note', 'dokan-lite' ),
                 'field_type'        => 'textarea',
                 'name'              => '_purchase_note',
-                'placeholder'       => __( 'Customer will get this info in their order email', 'dokan-lite' ),
+                'description'       => __( 'Customer will get this in order email.', 'dokan-lite' ),
+                'placeholder'       => __( 'Purchase Note', 'dokan-lite' ),
                 'sanitize_callback' => 'wp_kses_post',
             ]
         );

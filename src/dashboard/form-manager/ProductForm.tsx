@@ -1,6 +1,6 @@
 import { DataForm } from '@wordpress/dataviews';
 import { useCallback, useMemo, useState } from '@wordpress/element';
-import { getFieldConfig } from './components/FieldRenderer';
+import { getFieldConfig, processLayout } from './components/FieldRenderer';
 import layout, { sections } from './layout';
 
 const ProductForm = () => {
@@ -28,9 +28,14 @@ const ProductForm = () => {
             section.fields.map( ( field ) => getFieldConfig( field, section ) )
         );
 
+        const processedLayout = {
+            ...layout,
+            fields: processLayout( layout.fields ),
+        };
+
         return {
             fields: allFields,
-            formLayout: layout as any,
+            formLayout: processedLayout as any,
         };
     }, [] );
 

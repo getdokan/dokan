@@ -60,6 +60,7 @@ class Elements {
     const CROSS_SELL_IDS = 'cross_sell_ids';
     const CATEGORIES = 'category_ids';
     const TAGS = 'tag_ids';
+    const BRANDS = 'brand_ids';
     const DOWNLOADABLE = 'downloadable';
     const DOWNLOADS = 'downloads';
     const DOWNLOAD_LIMIT = 'download_limit';
