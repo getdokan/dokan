@@ -48,6 +48,7 @@ export const getFieldConfig = ( field: FormField ) => {
         placeholder: field.placeholder,
         required: field.required,
         type: field.field_type,
+        multiple: false,
     };
 
     // Map Input Types
@@ -77,6 +78,12 @@ export const getFieldConfig = ( field: FormField ) => {
             mappedField.type = 'number';
             mappedField.elements = getElementsFromOptions( field.options );
             mappedField.Edit = 'select';
+
+            if ( Array.isArray( field.value ) ) {
+                mappedField.type = 'array';
+                mappedField.multiple = true;
+            }
+
             if ( field.name === 'chosen_product_cat[]' ) {
                 mappedField.Edit = CategoriesEdit;
                 mappedField.type = 'array';

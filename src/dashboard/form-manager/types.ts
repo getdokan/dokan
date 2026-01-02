@@ -18,7 +18,7 @@ export type FormField = {
     tooltip: string;
     description: string;
     required: boolean;
-    value: string | number | boolean | null;
+    value: any;
     field_type: string;
     options: { label: string; value: string }[] | Record< string, string >;
     errors: string;

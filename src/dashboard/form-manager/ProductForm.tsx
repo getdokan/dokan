@@ -6,8 +6,12 @@ import layout, { sections } from './layout';
 const ProductForm = () => {
     // 1. Calculate initialData first
     const initialData = useMemo( () => {
+        const mappedValues = [ 'image_id', 'gallery_image_ids' ];
         const entries = sections.flatMap( ( section ) => {
             return section.fields.map( ( field ) => {
+                if ( mappedValues.includes( field.id ) ) {
+                    return [ field.id, field.value.map( ( i: any ) => i.id ) ];
+                }
                 return [ field.id, field.value || '' ];
             } );
         } );
