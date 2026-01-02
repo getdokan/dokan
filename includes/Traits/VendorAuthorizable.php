@@ -26,6 +26,8 @@ trait VendorAuthorizable {
      * - Vendor staff: Can access only their assigned vendor store
      * - Others: Cannot access any vendor store
      *
+     *  @since DOKAN_SINCE
+     *
      * @param int $vendor_id Vendor user ID.
      * @param int $user_id Optional. User ID. Defaults to current user.
      *
@@ -64,6 +66,8 @@ trait VendorAuthorizable {
      * - Vendor staff: Returns their parent vendor's ID (stored in user meta)
      * - Other users: Returns 0 if not associated with any vendor
      *
+     *  @since DOKAN_SINCE
+     *
      * @param int $user_id Optional. The user ID to get the vendor ID for. Defaults to 0 (current user).
      *
      * @return int The vendor/store ID. Returns 0 if the user is not a vendor or vendor staff,
@@ -84,6 +88,8 @@ trait VendorAuthorizable {
      * - The provided value is greater than 0
      * - The vendor ID resolved from the value is greater than 0
      *
+     *  @since DOKAN_SINCE
+     *
      * @param mixed          $value   The value to validate (typically a user ID).
      * @param \WP_REST_Request $request The REST API request object.
      * @param string         $key     The parameter key being validated.
@@ -103,5 +109,17 @@ trait VendorAuthorizable {
 
         // translators: 1) rest api endpoint key name
         return new \WP_Error( 'rest_invalid_param', sprintf( esc_html__( 'No store found with given store id', 'dokan-lite' ), $key ), [ 'status' => 400 ] );
+    }
+
+    /**
+     * Check if a user is vendor staff (not a vendor owner).
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $user_id User ID to check.
+     * @return bool True if user is vendor staff but not a vendor owner.
+     */
+    public function is_staff_only( int $user_id ): bool {
+        return ! dokan_is_user_seller( $user_id, true ) && dokan_is_user_seller( $user_id );
     }
 }

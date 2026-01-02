@@ -413,8 +413,24 @@ class StoreController extends WP_REST_Controller {
                 [ 'status' => 404 ]
             );
         }
+        if ( ! $this->can_access_vendor_store( $store->get_id() ) ) {
+            return new WP_Error(
+                'dokan_rest_store_cannot_access',
+                __( 'You do not have permission to access this store.', 'dokan-lite' ),
+                [ 'status' => 403 ]
+            );
+        }
 
-        $params   = $request->get_params();
+        $params = $request->get_params();
+
+        $restricted_fields = $this->get_restricted_fields_for_update( $store, $request );
+
+		foreach ( $restricted_fields as $field ) {
+			if ( isset( $params[ $field ] ) ) {
+				unset( $params[ $field ] );
+			}
+		}
+
         $updated_store_id = dokan()->vendor->update( $store->get_id(), $params );
 
         if ( is_wp_error( $updated_store_id ) ) {
@@ -429,6 +445,43 @@ class StoreController extends WP_REST_Controller {
         $response    = rest_ensure_response( $stores_data );
 
         return $response;
+    }
+
+    /**
+     * Get restricted fields for store update based on user role.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WeDevs\Dokan\Vendor\Vendor $store Store object.
+     * @param \WP_REST_Request $request Request object.
+     *
+     * @return array Array of restricted field names.
+     */
+    protected function get_restricted_fields_for_update( $store, $request ) {
+        $is_admin = current_user_can( 'manage_options' );
+        $is_vendor = dokan_is_user_seller( get_current_user_id(), true );
+        $restricted_fields = [];
+
+        if ( ! $is_admin && ! $is_vendor ) {
+            $staff_restricted_fields = [
+                'email',
+                'password',
+            ];
+            array_push( $restricted_fields, ...$staff_restricted_fields );
+        }
+
+        if ( ! $is_admin ) {
+            $vendor_restricted_fields = [
+                'dokan_admin_percentage',
+                'dokan_admin_percentage_type',
+                'dokan_admin_additional_fee',
+                'admin_category_commission',
+            ];
+
+            array_push( $restricted_fields, ...$vendor_restricted_fields );
+        }
+
+        return apply_filters( 'dokan_rest_store_restricted_fields_for_update', $restricted_fields, $store, $request );
     }
 
     /**
@@ -673,36 +726,18 @@ class StoreController extends WP_REST_Controller {
         $data = $store->to_array();
 
         $is_authorized = $this->can_access_vendor_store( $store->get_id() );
-        // Add sensitive admin commission data only for authorized users
+
         if ( $is_authorized ) {
-            $commission_settings               = $store->get_commission_settings();
-            $data['admin_category_commission'] = $commission_settings->get_category_commissions();
-            $data['admin_commission']          = $commission_settings->get_percentage();
-            $data['admin_additional_fee']      = $commission_settings->get_flat();
-            $data['admin_commission_type']     = $commission_settings->get_type();
+            $data['admin_category_commission'] = $store->get_commission_settings()->get_category_commissions();
+            $data['admin_commission'] = $store->get_commission_settings()->get_percentage();
+            $data['admin_additional_fee'] = $store->get_commission_settings()->get_flat();
+            $data['admin_commission_type'] = $store->get_commission_settings()->get_type();
         }
 
-        // Filter sensitive data for unauthorized users
-        if ( ! $is_authorized ) {
-            // Respect admin settings for hiding vendor info (same as public store page)
-            if ( dokan_is_vendor_info_hidden( 'address' ) ) {
-                unset( $data['address'] );
-            }
+        $restricted_fields = $this->get_restricted_fields_for_view( $store, $request );
 
-            if ( dokan_is_vendor_info_hidden( 'phone' ) ) {
-                unset( $data['phone'] );
-            }
-
-            // Hide email if admin setting hides it OR vendor doesn't want to show it
-            if ( dokan_is_vendor_info_hidden( 'email' ) || ! $store->show_email() ) {
-                unset( $data['email'] );
-            }
-
-            // Remove payment profiles (sensitive - always hidden from public)
-            unset( $data['payment'] );
-
-            // Remove store enabled status (sensitive - always hidden from public)
-            unset( $data['enabled'] );
+        foreach ( $restricted_fields as $field ) {
+            unset( $data[ $field ] );
         }
 
         $data     = array_merge( $data, apply_filters( 'dokan_rest_store_additional_fields', $additional_fields, $store, $request, $is_authorized ) );
@@ -710,6 +745,59 @@ class StoreController extends WP_REST_Controller {
         $response->add_links( $this->prepare_links( $data, $request ) );
 
         return apply_filters( 'dokan_rest_prepare_store_item_for_response', $response );
+    }
+
+    /**
+     * Get restricted fields for store view based on user authorization.
+     *
+     * Determines which fields should be hidden from the store data response based on:
+     * - User authorization status (authorized users see more data)
+     * - User role (vendor staff cannot see admin commission data)
+     * - Admin settings (for hiding vendor info like address, phone, email)
+     * - Vendor preferences (vendor can choose to hide email)
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WeDevs\Dokan\Vendor\Vendor $store Store object.
+     * @param \WP_REST_Request $request Request object.
+     *
+     * @return array Array of restricted field names that should be removed from the response.
+     */
+    protected function get_restricted_fields_for_view( $store, $request ) {
+        $restricted_fields = [];
+
+        $is_authorized = $this->can_access_vendor_store( $store->get_id() );
+
+        // Restrict admin commission fields for unauthorized users and vendor staff
+        if ( ! $is_authorized || ( $is_authorized && $this->is_staff_only( get_current_user_id() ) ) ) {
+            $restricted_fields[] = 'admin_category_commission';
+            $restricted_fields[] = 'admin_commission';
+            $restricted_fields[] = 'admin_additional_fee';
+            $restricted_fields[] = 'admin_commission_type';
+        }
+
+        // Additional restrictions for unauthorized users (public access)
+        if ( ! $is_authorized ) {
+            // Respect admin settings for hiding vendor info
+            if ( dokan_is_vendor_info_hidden( 'address' ) ) {
+                $restricted_fields[] = 'address';
+            }
+
+            if ( dokan_is_vendor_info_hidden( 'phone' ) ) {
+                $restricted_fields[] = 'phone';
+            }
+
+            // Hide email if admin setting hides it OR vendor doesn't want to show it
+            if ( dokan_is_vendor_info_hidden( 'email' ) || ! $store->show_email() ) {
+                $restricted_fields[] = 'email';
+            }
+
+            // Always hide sensitive payment and store status data from public
+            $restricted_fields[] = 'payment';
+            $restricted_fields[] = 'enabled';
+        }
+
+        return apply_filters( 'dokan_rest_store_restricted_fields_for_view', $restricted_fields, $store, $request );
     }
 
     /**
