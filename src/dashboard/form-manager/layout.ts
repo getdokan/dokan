@@ -73,9 +73,10 @@ const fields = [
                                     type: 'row',
                                     styles: {
                                         image_id: {
-                                            flex: 2,
+                                            display: 'flex',
+                                            flex: 1,
                                         },
-                                        gallery_image_ids: { flex: 2 },
+                                        gallery_image_ids: { flex: 4 },
                                     },
                                 },
                                 children: [ 'image_id', 'gallery_image_ids' ],

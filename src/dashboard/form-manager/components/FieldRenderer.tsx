@@ -81,10 +81,9 @@ export const getFieldConfig = ( field: FormField ) => {
 
             if ( Array.isArray( field.value ) ) {
                 mappedField.type = 'array';
-                mappedField.multiple = true;
             }
 
-            if ( field.name === 'chosen_product_cat[]' ) {
+            if ( field.name === 'chosen_product_cat' ) {
                 mappedField.Edit = CategoriesEdit;
                 mappedField.type = 'array';
             }
@@ -94,8 +93,8 @@ export const getFieldConfig = ( field: FormField ) => {
             mappedField.Edit = FeatureImage;
             break;
         case 'gallery':
-            mappedField.type = 'array';
-            mappedField.Edit = FeatureImage;
+            // mappedField.type = 'array';
+            // mappedField.Edit = FeatureImage;
             break;
         default:
             mappedField.type = 'text';

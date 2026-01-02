@@ -320,7 +320,7 @@ class Init {
             Elements::CATEGORIES, [
                 'title'             => __( 'Categories', 'dokan-lite' ),
                 'field_type'        => 'select',
-                'name'              => 'chosen_product_cat[]',
+                'name'              => 'chosen_product_cat',
                 'placeholder'       => __( 'Select product categories', 'dokan-lite' ),
                 'options'           => ProductCategoryHelper::get_product_categories_tree(),
                 'required'          => true,
