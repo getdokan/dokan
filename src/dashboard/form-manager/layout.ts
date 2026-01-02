@@ -187,6 +187,7 @@ const fields = [
                         layout: {
                             type: 'card',
                             withHeader: true,
+                            isCollapsible: false,
                         },
                         children: [ 'purchase_note' ],
                         ...getLabelAndDescription( 'purchase_note' ),

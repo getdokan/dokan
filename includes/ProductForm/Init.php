@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\ProductForm;
 
 use WC_Product;
+use WeDevs\Dokan\Product\FormData;
 use WeDevs\Dokan\ProductCategory\Helper as ProductCategoryHelper;
 use WeDevs\Dokan\ProductForm\Factory as ProductFormFactory;
 
@@ -355,6 +356,7 @@ class Init {
                 'field_type'        => 'select',
                 'name'              => 'product_tag[]',
                 'placeholder'       => $tags_placeholder,
+                'options'           => FormData::get_product_tags(),
                 'sanitize_callback' => function ( $tags ) {
                     /**
                      * Maximum number of tags a vendor can add.
@@ -397,7 +399,7 @@ class Init {
 
         $section->add_field(
             Elements::BRANDS, [
-                'title'             => __( 'Brands', 'dokan-lite' ),
+                'title'             => __( 'FormData', 'dokan-lite' ),
                 'field_type'        => 'select',
                 'name'              => 'product_brand[]',
                 'placeholder'       => __( 'Select product brands', 'dokan-lite' ),
@@ -423,6 +425,7 @@ class Init {
 
                     return $product->get_brand_ids();
                 },
+                'options'           => FormData::get_products_brands(),
             ]
         );
 
@@ -432,6 +435,20 @@ class Init {
                 'field_type'  => 'image',
                 'name'        => 'image_id',
                 'placeholder' => __( 'Select product image', 'dokan-lite' ),
+                'value_callback'    => function ( $product, $value = '' ) {
+                    if ( '' !== $value ) {
+                        return $value;
+                    }
+
+                    if ( ! $product instanceof WC_Product ) {
+                        return [];
+                    }
+
+                    return [
+                        'id' => $product->get_image_id(),
+                        'url' => wp_get_attachment_url( $product->get_image_id() ),
+                    ];
+                },
             ]
         );
 
@@ -441,6 +458,26 @@ class Init {
                 'field_type'  => 'gallery',
                 'name'        => 'gallery_image_ids',
                 'placeholder' => __( 'Select product gallery images', 'dokan-lite' ),
+                'value_callback'    => function ( $product, $value = '' ) {
+                    if ( '' !== $value ) {
+                        return $value;
+                    }
+
+                    if ( ! $product instanceof WC_Product ) {
+                        return [];
+                    }
+
+                    // attachment urls
+                    $attachment_urls = [];
+                    foreach ( $product->get_gallery_image_ids() as $attachment_id ) {
+                        $attachment_urls[] = [
+                            'id' => $attachment_id,
+                            'url' => wp_get_attachment_url( $attachment_id ),
+                        ];
+                    }
+
+                    return $attachment_urls;
+                },
             ]
         );
 

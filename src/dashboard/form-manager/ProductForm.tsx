@@ -6,9 +6,11 @@ import layout, { sections } from './layout';
 const ProductForm = () => {
     // 1. Calculate initialData first
     const initialData = useMemo( () => {
-        const entries = sections.flatMap( ( section ) =>
-            section.fields.map( ( field ) => [ field.id, field.value || '' ] )
-        );
+        const entries = sections.flatMap( ( section ) => {
+            return section.fields.map( ( field ) => {
+                return [ field.id, field.value || '' ];
+            } );
+        } );
         return Object.fromEntries( entries );
     }, [] );
 
@@ -24,9 +26,9 @@ const ProductForm = () => {
 
     // 4. Fields and Layout
     const { fields, formLayout } = useMemo( () => {
-        const allFields: any = sections.flatMap( ( section ) =>
-            section.fields.map( ( field ) => getFieldConfig( field, section ) )
-        );
+        const allFields: any = sections.flatMap( ( section ) => {
+            return section.fields.map( ( field ) => getFieldConfig( field ) );
+        } );
 
         const processedLayout = {
             ...layout,

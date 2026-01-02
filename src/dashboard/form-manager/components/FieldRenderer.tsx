@@ -1,7 +1,7 @@
 import { DokanTooltip } from '@src/components';
 import { sanitizeHTML } from '@src/utilities';
 import { Info } from 'lucide-react';
-import { FormField, Section } from '../types';
+import { FormField } from '../types';
 import DateTimePickerEdit from './DateTimePickerEdit';
 import FeatureImage from './FeatureImage';
 import RichTextEdit from './RichTextEdit';
@@ -19,7 +19,7 @@ const getElementsFromOptions = ( options: any ) => {
     } ) );
 };
 
-export const getFieldConfig = ( field: FormField, section: Section ) => {
+export const getFieldConfig = ( field: FormField ) => {
     const mappedField = {
         ...field,
         label: (
@@ -77,7 +77,7 @@ export const getFieldConfig = ( field: FormField, section: Section ) => {
             mappedField.type = 'number';
             mappedField.elements = getElementsFromOptions( field.options );
             mappedField.Edit = 'select';
-            if ( field.name == 'chosen_product_cat[]' ) {
+            if ( field.name === 'chosen_product_cat[]' ) {
                 mappedField.Edit = CategoriesEdit;
                 mappedField.type = 'array';
             }
@@ -112,8 +112,12 @@ export const getFieldConfig = ( field: FormField, section: Section ) => {
             const depValue = data[ depField ];
 
             let targetValue = value;
-            if ( value === 'on' ) targetValue = true;
-            if ( value === 'off' ) targetValue = false;
+            if ( value === 'on' ) {
+                targetValue = true;
+            }
+            if ( value === 'off' ) {
+                targetValue = false;
+            }
 
             if ( operator === 'equal' ) {
                 return depValue === targetValue;
