@@ -25,7 +25,7 @@ class Init {
      */
     public function __construct() {
         add_action( 'init', [ $this, 'init_form_fields' ], 10 );
-        add_action( 'dokan_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
+        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ], 4 );
     }
 
 	public function get_form_fields(): array {

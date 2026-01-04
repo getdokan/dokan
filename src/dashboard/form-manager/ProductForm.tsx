@@ -10,7 +10,12 @@ const ProductForm = () => {
         const entries = sections.flatMap( ( section ) => {
             return section.fields.map( ( field ) => {
                 if ( mappedValues.includes( field.id ) ) {
-                    return [ field.id, field.value.map( ( i: any ) => i.id ) ];
+                    if ( field.value && Array.isArray( field.value ) ) {
+                        return [
+                            field.id,
+                            field.value.map( ( img: any ) => img.id ),
+                        ];
+                    }
                 }
                 return [ field.id, field.value || '' ];
             } );

@@ -49,31 +49,26 @@ export const ImagePreview = ( {
 
 const FeatureImage = ( { field, onChange }: any ) => {
     const onSelect = ( value: any ) => {
-        let ids, values;
-
-        if ( Array.isArray( value ) ) {
-            ids = value.map( ( item: any ) => item.id );
-            values = value;
-        } else {
-            ids = value.id;
-            values = value;
-        }
-
         onChange( {
-            [ field.id ]: ids,
-            [ `$${ field.id }_value` ]: values,
+            [ field.id ]: value.id,
         } );
+        field.value = [
+            {
+                id: value.id,
+                url: value.url,
+                alt: value.alt,
+            },
+        ];
     };
 
     const onRemove = () => {
         onChange( {
             [ field.id ]: [],
-            [ `$${ field.id }_value` ]: [],
         } );
+        field.value = [];
     };
 
-    const multiple = field.field_type === 'gallery';
-    const images = field.value;
+    const images = field.value ? field.value : [];
 
     return (
         <CustomField label={ field.label } className={ `${ field.id }-field` }>
