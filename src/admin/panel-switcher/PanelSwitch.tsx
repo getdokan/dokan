@@ -21,6 +21,7 @@ const PanelSwitch = () => {
             'withdraw',
             'vendors',
             'settings',
+            'changelog',
             'store-reviews',
             'verifications',
             'product-advertising',
@@ -31,6 +32,7 @@ const PanelSwitch = () => {
             'dokan-seller-badge',
             'wholesale-customer',
             'admin-store-support',
+            'product-qa',
         ]
     ) as string[];
 

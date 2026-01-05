@@ -158,6 +158,7 @@ class LegacySwitcher implements Hookable {
                 'dokan-seller-badge'  => 'seller-badge',
                 'product-advertising' => 'advertising',
                 'admin-store-support' => 'store-support',
+                'product-qa'          => 'product-qa',
             ]
         );
 
