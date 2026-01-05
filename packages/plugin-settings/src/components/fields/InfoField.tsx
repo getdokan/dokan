@@ -4,6 +4,8 @@ import type { FieldProps } from '../../types';
  * InfoField Component
  *
  * A read-only informational field for displaying text or HTML content.
+ * @param root0
+ * @param root0.element
  */
 const InfoField = ( { element }: FieldProps ) => {
     if ( ! element.display ) {
@@ -36,4 +38,3 @@ const InfoField = ( { element }: FieldProps ) => {
 };
 
 export default InfoField;
-

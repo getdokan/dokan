@@ -25,7 +25,7 @@ import {
 import settingsStore from '@dokan/stores/adminSettings';
 import type { SettingsElement } from '@wedevs/plugin-settings';
 
-// Import Dokan-specific field components
+// Import Dokan-specific field components (only truly custom ones)
 import CategoryBasedCommission from './Elements/Fields/Commission/CategoryBasedCommission';
 import CombineInput from './Elements/Fields/Commission/CombineInput';
 import CustomizeRadio from './Elements/Fields/CustomizeRadio';
@@ -33,43 +33,20 @@ import DokanColorPicker from './Elements/Fields/DokanColorPicker';
 import DokanCopyButtonField from './Elements/Fields/DokanCopyButtonField';
 import DokanCurrency from './Elements/Fields/DokanCurrency';
 import DokanDoubleInput from './Elements/Fields/DokanDoubleInput';
-import DokanEmail from './Elements/Fields/DokanEmail';
-import DokanFieldLabel from './Elements/Fields/DokanFieldLabel';
 import DokanFileUploadField from './Elements/Fields/DokanFileUpload';
-import DokanHtmlField from './Elements/Fields/DokanHtmlField';
-import DokanInfoField from './Elements/Fields/DokanInfoField';
-import DokanMultiCheck from './Elements/Fields/DokanMultiCheck';
-import DokanNumber from './Elements/Fields/DokanNumber';
-import DokanPassword from './Elements/Fields/DokanPassword';
 import DokanRadioCapsule from './Elements/Fields/DokanRadioCapsule';
 import DokanRefreshSelectField from './Elements/Fields/DokanRefreshSelectField';
-import DokanSelect from './Elements/Fields/DokanSelect';
 import DokanSingleProductPreview from './Elements/Fields/DokanSingleProductPreview';
 import DokanShowHideField from './Elements/Fields/DokanShowHideField';
-import DokanSwitch from './Elements/Fields/DokanSwitch';
-import DokanTel from './Elements/Fields/DokanTel';
-import DokanTextArea from './Elements/Fields/DokanTextArea';
-import DokanTextField from './Elements/Fields/DokanTextField';
 import DokanVendorInfoPreview from './Elements/Fields/DokanVendorInfoPreview';
 import DokanRichText from './Elements/Fields/DokanRichText';
 import DokanRepeater from './Elements/Fields/DokanRepeater';
 import WithdrawSchedule from './Elements/Fields/WithdrawSchedule';
 
-// Register all Dokan-specific field types with the package's registry
+// Register only Dokan-specific field types
+// Generic fields (text, select, switch, etc.) use package defaults
 const registerDokanFields = () => {
-    // Basic fields
-    registerField( 'text', DokanTextField );
-    registerField( 'select', DokanSelect );
-    registerField( 'switch', DokanSwitch );
-    registerField( 'password', DokanPassword );
-    registerField( 'email', DokanEmail );
-    registerField( 'number', DokanNumber );
-    registerField( 'textarea', DokanTextArea );
-    registerField( 'tel', DokanTel );
-
-    // Advanced fields
-    registerField( 'checkbox_group', DokanMultiCheck );
-    registerField( 'multicheck', DokanMultiCheck );
+    // Advanced Dokan-specific fields
     registerField( 'rich_text', DokanRichText );
     registerField( 'radio_capsule', DokanRadioCapsule );
     registerField( 'customize_radio', CustomizeRadio );
@@ -81,21 +58,15 @@ const registerDokanFields = () => {
     registerField( 'category_based_commission', CategoryBasedCommission );
     registerField( 'combine_input', CombineInput );
 
-    // Special fields
+    // Special Dokan fields
     registerField( 'refresh_select', DokanRefreshSelectField );
-    registerField( 'info', DokanInfoField );
     registerField( 'vendor_info_preview', DokanVendorInfoPreview );
     registerField( 'single_product_preview', DokanSingleProductPreview );
-    registerField( 'base_field_label', DokanFieldLabel );
-    registerField( 'html', DokanHtmlField );
     registerField( 'show_hide', DokanShowHideField );
     registerField( 'select_color_picker', DokanColorPicker );
     registerField( 'copy_field', DokanCopyButtonField );
     registerField( 'file_upload', DokanFileUploadField );
     registerField( 'withdraw_schedule', WithdrawSchedule );
-
-    // Default fallback
-    registerField( 'default', DokanInfoField );
 };
 
 // Register fields once
@@ -124,6 +95,9 @@ const DashboardSwitchLink = () => {
 
 /**
  * Custom SettingsParser that uses Dokan's registered field components
+ * @param root0
+ * @param root0.element
+ * @param root0.onValueChange
  */
 const DokanSettingsParser = ( {
     element,

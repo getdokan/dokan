@@ -9,6 +9,12 @@ import CheckboxField from './CheckboxField';
 import RadioField from './RadioField';
 import TextAreaField from './TextAreaField';
 import PasswordField from './PasswordField';
+import EmailField from './EmailField';
+import TelField from './TelField';
+import InfoField from './InfoField';
+import HtmlField from './HtmlField';
+import MultiCheckField from './MultiCheckField';
+import ColorPickerField from './ColorPickerField';
 
 interface ExtendedFieldProps extends FieldProps {
     /**
@@ -21,6 +27,10 @@ interface ExtendedFieldProps extends FieldProps {
  * FieldParser Component
  *
  * Parses and renders the appropriate field component based on variant.
+ * @param root0
+ * @param root0.element
+ * @param root0.onValueChange
+ * @param root0.filterPrefix
  */
 const FieldParser = ( {
     element,
@@ -142,11 +152,79 @@ const FieldParser = ( {
                 element
             ) as JSX.Element;
 
+        case 'email':
+            return applyFilters(
+                `${ filterPrefix }_email_field`,
+                <EmailField
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                />,
+                element
+            ) as JSX.Element;
+
+        case 'tel':
+            return applyFilters(
+                `${ filterPrefix }_tel_field`,
+                <TelField
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                />,
+                element
+            ) as JSX.Element;
+
+        case 'info':
+            return applyFilters(
+                `${ filterPrefix }_info_field`,
+                <InfoField
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                />,
+                element
+            ) as JSX.Element;
+
+        case 'html':
+            return applyFilters(
+                `${ filterPrefix }_html_field`,
+                <HtmlField
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                />,
+                element
+            ) as JSX.Element;
+
+        case 'multicheck':
+        case 'checkbox_group':
+            return applyFilters(
+                `${ filterPrefix }_multicheck_field`,
+                <MultiCheckField
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                />,
+                element
+            ) as JSX.Element;
+
+        case 'color_picker':
+        case 'select_color_picker':
+            return applyFilters(
+                `${ filterPrefix }_color_picker_field`,
+                <ColorPickerField
+                    key={ element.hook_key }
+                    element={ element }
+                    onValueChange={ onValueChange }
+                />,
+                element
+            ) as JSX.Element;
+
         default:
             // Allow filtering for unknown field types
             return applyFilters(
                 `${ filterPrefix }_default_field`,
-                <TextField
+                <InfoField
                     key={ element.hook_key }
                     element={ element }
                     onValueChange={ onValueChange }
@@ -157,4 +235,3 @@ const FieldParser = ( {
 };
 
 export default FieldParser;
-

@@ -25,7 +25,7 @@ export function registerField(
  * Get a registered field component.
  *
  * @param type - Field type identifier.
- * @returns The registered component or undefined.
+ * @return The registered component or undefined.
  */
 export function getField(
     type: string
@@ -37,7 +37,7 @@ export function getField(
  * Check if a field type is registered.
  *
  * @param type - Field type identifier.
- * @returns True if the type is registered.
+ * @return True if the type is registered.
  */
 export function hasField( type: string ): boolean {
     return fieldRegistry.has( type );
@@ -46,7 +46,7 @@ export function hasField( type: string ): boolean {
 /**
  * Get all registered field types.
  *
- * @returns Array of registered field type names.
+ * @return Array of registered field type names.
  */
 export function getRegisteredFieldTypes(): string[] {
     return Array.from( fieldRegistry.keys() );
@@ -55,9 +55,8 @@ export function getRegisteredFieldTypes(): string[] {
 /**
  * Get all registered fields as a map.
  *
- * @returns Map of field type to component.
+ * @return Map of field type to component.
  */
 export function getAllFields(): Map< string, ComponentType< FieldProps > > {
     return new Map( fieldRegistry );
 }
-
