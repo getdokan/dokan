@@ -14,6 +14,7 @@ import AdminDashboard from '../pages/dashboard';
 import VendorsPage from '../pages/vendors';
 import ReverseWithdrawalPage from '../pages/reverse-withdrawal';
 import ReverseWithdrawalTransactionPage from 'admin/dashboard/pages/reverse-withdrawal/ReverseWithdrawalTransaction';
+import ChangelogPage from '../pages/changelog';
 
 export type DokanAdminRoute = {
     id: string;
@@ -78,6 +79,11 @@ const getAdminRoutes = () => {
             id: 'settings',
             element: <SettingsPage />,
             path: '/settings',
+        },
+        {
+            id: 'changelog',
+            element: <ChangelogPage />,
+            path: '/changelog',
         },
     ];
 
