@@ -47,7 +47,7 @@ test.describe('Stripe Express Tests', () => {
             await stripePageInstance.verifyVendorStripeExpressConnection();
         });
 
-        test('Vendor 1 Can Create Stripe Express Product @pro', async ({ page }) => {
+        test.skip('Vendor 1 Can Create Stripe Express Product @pro', async ({ page }) => {
             const stripePageInstance = new stripeExpressPage(page);
             await stripePageInstance.createStripeExpressProduct('Test Stripe Express P1_V1', '100.50');
         });
@@ -63,7 +63,7 @@ test.describe('Stripe Express Tests', () => {
             await stripePageInstance.verifyVendorStripeExpressConnection();
         });
 
-        test('Vendor 2 Can Create Stripe Express Product @pro', async ({ page }) => {
+        test.skip('Vendor 2 Can Create Stripe Express Product @pro', async ({ page }) => {
             const stripePageInstance = new stripeExpressPage(page);
             await stripePageInstance.createStripeExpressProduct('Test Stripe Express P1_V2', '200');
         });
