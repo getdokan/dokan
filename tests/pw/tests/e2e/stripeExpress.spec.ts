@@ -53,12 +53,10 @@ test.describe('Stripe Express Tests', () => {
             storageState: 'playwright/.auth/vendor2StorageState.json'
         });
 
-        // Add vendor 2 tests here
-        // Example:
-        // test('Vendor 2 Can Connect Stripe Express Account @pro', async ({ page }) => {
-        //     const stripePageInstance = new stripeExpressPage(page);
-        //     // Add test steps
-        // });
+        test('Vendor 2 Is Connected With Stripe Express @pro', async ({ page }) => {
+            const stripePageInstance = new stripeExpressPage(page);
+            await stripePageInstance.verifyVendorStripeExpressConnection();
+        });
     });
 
     test.describe('Customer Payment with Stripe Express', () => {
