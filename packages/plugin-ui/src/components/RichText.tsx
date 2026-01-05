@@ -7,23 +7,60 @@ import {
 import { __ } from '@wordpress/i18n';
 import Quill, { QuillOptions } from 'quill';
 import 'quill/dist/quill.snow.css';
+import '../styles/richtext.css';
+import type { BaseFieldProps } from '../types';
+
+export interface RichTextProps extends BaseFieldProps {
+    /**
+     * Quill editor options
+     */
+    quillOptions?: Partial< QuillOptions >;
+
+    /**
+     * Custom toolbar configuration
+     */
+    toolbar?: boolean | string | Array< string | object >;
+
+    /**
+     * Media upload handler (for image/video)
+     */
+    onMediaUpload?: ( type: 'image' | 'video' ) => Promise< {
+        url: string;
+        alt?: string;
+        title?: string;
+    } >;
+
+    /**
+     * Placeholder text
+     */
+    placeholder?: string;
+
+    /**
+     * Theme ('snow' | 'bubble')
+     */
+    theme?: 'snow' | 'bubble';
+
+    /**
+     * Sanitize HTML function
+     */
+    sanitizeHTML?: ( html: string ) => string;
+}
 
 /**
- * Opens the WordPress media uploader to select an image or video.
- *
- * @param onSelect - Callback function when media is selected
- * @param type     - Media type ('image' or 'video')
+ * Opens WordPress media uploader (if available).
+ * @param onSelect
+ * @param type
  */
 const openWpMediaUploader = (
-    onSelect: ( url: string, attachment: Record< string, unknown > ) => void,
+    onSelect: ( url: string, attachment: any ) => void,
     type = 'image'
 ) => {
-    // @ts-ignore - WordPress global
+    // @ts-ignore
     if ( typeof wp === 'undefined' || ! wp.media ) {
         return;
     }
 
-    // @ts-ignore - WordPress global
+    // @ts-ignore
     const frame = wp.media( {
         title: __( 'Select or Upload Media', 'wedevs-plugin-ui' ),
         button: {
@@ -44,92 +81,24 @@ const openWpMediaUploader = (
 };
 
 /**
- * Basic HTML sanitizer for security.
- *
- * @param html - HTML string to sanitize
- */
-const sanitizeHTML = ( html: string ): string => {
-    const doc = new DOMParser().parseFromString( html, 'text/html' );
-    // Remove script tags
-    const scripts = doc.querySelectorAll( 'script' );
-    scripts.forEach( ( script ) => script.remove() );
-    // Remove event handlers
-    const allElements = doc.querySelectorAll( '*' );
-    allElements.forEach( ( el ) => {
-        Array.from( el.attributes ).forEach( ( attr ) => {
-            if ( attr.name.startsWith( 'on' ) ) {
-                el.removeAttribute( attr.name );
-            }
-        } );
-    } );
-    return doc.body.innerHTML;
-};
-
-export interface RichTextProps extends Omit< QuillOptions, 'modules' > {
-    /**
-     * The HTML content to display in the editor.
-     */
-    value?: string;
-
-    /**
-     * Callback that returns the new HTML content when it changes.
-     */
-    onChange?: ( value: string ) => void;
-
-    /**
-     * Placeholder text when editor is empty.
-     */
-    placeholder?: string;
-
-    /**
-     * Whether the editor is read-only.
-     */
-    readOnly?: boolean;
-
-    /**
-     * Additional CSS classes.
-     */
-    className?: string;
-
-    /**
-     * Minimum height of the editor.
-     */
-    minHeight?: number | string;
-
-    /**
-     * Enable WordPress media uploader for images.
-     */
-    enableWpMedia?: boolean;
-
-    /**
-     * Custom toolbar configuration.
-     */
-    toolbar?: QuillOptions[ 'modules' ][ 'toolbar' ];
-
-    /**
-     * Custom modules configuration.
-     */
-    modules?: QuillOptions[ 'modules' ];
-}
-
-/**
  * RichText Component
  *
- * A Quill-based rich text editor with WordPress integration.
+ * A WYSIWYG rich text editor using Quill.
  */
 const RichText = forwardRef< Quill, RichTextProps >( ( props, ref ) => {
     const {
-        value = '',
+        value,
+        defaultValue,
         onChange,
-        placeholder,
+        disabled = false,
         readOnly = false,
-        className = '',
-        minHeight = 200,
-        enableWpMedia = true,
-        toolbar,
-        modules: customModules,
+        placeholder,
+        quillOptions,
+        toolbar = true,
+        onMediaUpload,
         theme = 'snow',
-        ...quillProps
+        sanitizeHTML: customSanitizeHTML,
+        className = '',
     } = props;
 
     const containerRef = useRef< HTMLDivElement >( null );
@@ -137,14 +106,17 @@ const RichText = forwardRef< Quill, RichTextProps >( ( props, ref ) => {
     const onChangeRef = useRef( onChange );
     const isInternalChange = useRef( false );
 
-    // Expose the Quill instance via the forwarded ref.
+    // Default sanitize function (basic)
+    const sanitizeHTML = customSanitizeHTML || ( ( html: string ) => html );
+
+    // Expose the Quill instance via the forwarded ref
     useImperativeHandle( ref, () => quillInstanceRef.current as Quill, [] );
 
     useEffect( () => {
         onChangeRef.current = onChange;
     }, [ onChange ] );
 
-    // Initialize the Quill editor.
+    // Initialize the Quill editor
     useEffect( () => {
         if ( ! containerRef.current ) {
             return;
@@ -154,85 +126,158 @@ const RichText = forwardRef< Quill, RichTextProps >( ( props, ref ) => {
             containerRef.current.ownerDocument.createElement( 'div' )
         );
 
-        // WordPress media handlers
-        const wpImageHandler = () => {
+        // Custom image handler
+        const customImageHandler = () => {
             const quill = quillInstanceRef.current;
-            if ( ! quill ) return;
+            if ( ! quill ) {
+                return;
+            }
 
-            openWpMediaUploader( ( url, attachment ) => {
+            const handleImage = ( url: string, alt?: string ) => {
                 const range = quill.getSelection( true );
-                const altText =
-                    ( attachment.alt as string ) ||
-                    ( attachment.title as string ) ||
-                    '';
+                const imgHtml = sanitizeHTML(
+                    `<img src="${ url }" alt="${ alt || '' }" />`
+                );
                 quill.clipboard.dangerouslyPasteHTML(
                     range.index,
-                    `<img src="${ url }" alt="${ altText }" />`,
+                    imgHtml,
                     'user'
                 );
                 quill.setSelection( range.index + 1, 'silent' );
-            }, 'image' );
+            };
+
+            if ( onMediaUpload ) {
+                onMediaUpload( 'image' )
+                    .then( ( media ) => {
+                        handleImage( media.url, media.alt );
+                    } )
+                    .catch( () => {
+                        // Fallback to WordPress media uploader if available
+                        openWpMediaUploader( ( url, attachment ) => {
+                            handleImage(
+                                url,
+                                attachment.alt || attachment.title
+                            );
+                        }, 'image' );
+                    } );
+            } else {
+                // Use WordPress media uploader if available
+                openWpMediaUploader( ( url, attachment ) => {
+                    handleImage( url, attachment.alt || attachment.title );
+                }, 'image' );
+            }
         };
 
-        const wpVideoHandler = () => {
+        // Custom video handler
+        const customVideoHandler = () => {
             const quill = quillInstanceRef.current;
-            if ( ! quill ) return;
+            if ( ! quill ) {
+                return;
+            }
 
-            openWpMediaUploader( ( url ) => {
+            const handleVideo = ( url: string ) => {
                 const range = quill.getSelection( true );
+                const videoHtml = sanitizeHTML(
+                    `<video class="ql-video" height="280" width="500" controls src="${ url }"></video>`
+                );
                 quill.clipboard.dangerouslyPasteHTML(
                     range.index,
-                    `<video class="ql-video" height="280" width="500" controls src="${ url }"></video>`,
+                    videoHtml,
                     'user'
                 );
                 quill.setSelection( range.index + 1, 'silent' );
-            }, 'video' );
+            };
+
+            if ( onMediaUpload ) {
+                onMediaUpload( 'video' )
+                    .then( ( media ) => {
+                        handleVideo( media.url );
+                    } )
+                    .catch( () => {
+                        openWpMediaUploader( ( url ) => {
+                            handleVideo( url );
+                        }, 'video' );
+                    } );
+            } else {
+                openWpMediaUploader( ( url ) => {
+                    handleVideo( url );
+                }, 'video' );
+            }
         };
 
         // Default toolbar configuration
-        const defaultToolbar = toolbar || [
-            [ { header: [ 1, 2, 3, 4, 5, 6, false ] } ],
-            [ 'bold', 'italic', 'underline', 'strike', 'blockquote' ],
-            [ { list: 'ordered' }, { list: 'bullet' } ],
-            [ { indent: '-1' }, { indent: '+1' } ],
-            [ { color: [] }, { background: [] } ],
-            [ 'link', 'image' ],
-            [ 'clean' ],
-        ];
+        const defaultToolbar = Array.isArray( toolbar )
+            ? toolbar
+            : toolbar === true
+            ? [
+                  [ { header: [ 1, 2, 3, 4, 5, 6, false ] } ],
+                  [ 'bold', 'italic', 'underline', 'strike', 'blockquote' ],
+                  [ { list: 'ordered' }, { list: 'bullet' } ],
+                  [ { indent: '-1' }, { indent: '+1' } ],
+                  [ { color: [] }, { background: [] } ],
+                  [ 'link', 'image', 'video' ],
+                  [ 'clean' ],
+              ]
+            : [];
 
         const defaultModules: QuillOptions[ 'modules' ] = {
-            toolbar: {
-                container: defaultToolbar,
-                handlers: enableWpMedia
-                    ? {
-                          image: wpImageHandler,
-                          video: wpVideoHandler,
-                      }
-                    : {},
-            },
+            toolbar:
+                toolbar === false
+                    ? false
+                    : {
+                          container: defaultToolbar,
+                          handlers: {
+                              image: customImageHandler,
+                              video: customVideoHandler,
+                          },
+                      },
         };
 
-        // Merge modules
+        // Merge with custom modules
         const modules: QuillOptions[ 'modules' ] = {
             ...defaultModules,
-            ...customModules,
+            ...quillOptions?.modules,
+            toolbar:
+                toolbar === false
+                    ? false
+                    : {
+                          ...( defaultModules.toolbar as object ),
+                          ...( quillOptions?.modules?.toolbar as object ),
+                          handlers: {
+                              ...(
+                                  defaultModules.toolbar as {
+                                      handlers?: object;
+                                  }
+                               )?.handlers,
+                              ...(
+                                  quillOptions?.modules?.toolbar as {
+                                      handlers?: object;
+                                  }
+                               )?.handlers,
+                          },
+                      },
         };
 
         const quill = new Quill( editorContainer, {
             theme,
             modules,
-            readOnly,
-            placeholder,
-            ...quillProps,
+            readOnly: readOnly || disabled,
+            placeholder:
+                placeholder || __( 'Enter your content…', 'wedevs-plugin-ui' ),
+            ...quillOptions,
         } );
 
         quillInstanceRef.current = quill;
 
-        if ( value ) {
-            quill.clipboard.dangerouslyPasteHTML( sanitizeHTML( value ) );
+        const initialValue =
+            ( value as string ) || ( defaultValue as string ) || '';
+        if ( initialValue ) {
+            quill.clipboard.dangerouslyPasteHTML(
+                sanitizeHTML( initialValue )
+            );
         }
 
-        quill.on( 'text-change', ( _delta, _oldDelta, source ) => {
+        quill.on( 'text-change', ( delta, oldDelta, source ) => {
             if ( source === 'user' && onChangeRef.current ) {
                 const newHtml = quill.root.innerHTML;
                 isInternalChange.current = true;
@@ -249,7 +294,7 @@ const RichText = forwardRef< Quill, RichTextProps >( ( props, ref ) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [] );
 
-    // Handle external value changes
+    // Handle value prop changes
     useEffect( () => {
         if ( isInternalChange.current ) {
             isInternalChange.current = false;
@@ -257,9 +302,12 @@ const RichText = forwardRef< Quill, RichTextProps >( ( props, ref ) => {
         }
 
         const quill = quillInstanceRef.current;
-        if ( quill && value !== quill.root.innerHTML ) {
+        const currentValue = ( value as string ) || '';
+        if ( quill && currentValue !== quill.root.innerHTML ) {
             const selection = quill.getSelection();
-            quill.clipboard.dangerouslyPasteHTML( sanitizeHTML( value || '' ) );
+            quill.clipboard.dangerouslyPasteHTML(
+                sanitizeHTML( currentValue )
+            );
             if ( selection ) {
                 quill.setSelection(
                     selection.index,
@@ -268,24 +316,17 @@ const RichText = forwardRef< Quill, RichTextProps >( ( props, ref ) => {
                 );
             }
         }
-    }, [ value ] );
+    }, [ value, sanitizeHTML ] );
 
-    // Toggle read-only state
+    // Handle read-only state changes
     useEffect( () => {
-        quillInstanceRef.current?.enable( ! readOnly );
-    }, [ readOnly ] );
-
-    const minHeightStyle =
-        typeof minHeight === 'number' ? `${ minHeight }px` : minHeight;
+        quillInstanceRef.current?.enable( ! readOnly && ! disabled );
+    }, [ readOnly, disabled ] );
 
     return (
         <div
             ref={ containerRef }
-            className={ `plugin-ui-richtext ${ className }` }
-            style={ {
-                // @ts-ignore - CSS custom property
-                '--plugin-ui-richtext-min-height': minHeightStyle,
-            } }
+            className={ `plugin-ui-rich-text ${ className }` }
         />
     );
 } );
@@ -293,4 +334,3 @@ const RichText = forwardRef< Quill, RichTextProps >( ( props, ref ) => {
 RichText.displayName = 'RichText';
 
 export default RichText;
-

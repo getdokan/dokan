@@ -1,0 +1,57 @@
+/**
+ * RichText Editor Styles
+ *
+ * Additional styles for Quill editor integration.
+ */
+
+.plugin-ui-rich-text {
+    min-height: 200px;
+}
+
+.plugin-ui-rich-text .ql-container {
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.plugin-ui-rich-text .ql-editor {
+    min-height: 200px;
+}
+
+.plugin-ui-rich-text .ql-editor.ql-blank::before {
+    color: #9ca3af;
+    font-style: normal;
+}
+
+.plugin-ui-rich-text .ql-toolbar {
+    border-top: 1px solid #e5e7eb;
+    border-left: 1px solid #e5e7eb;
+    border-right: 1px solid #e5e7eb;
+    border-bottom: none;
+    border-radius: 0.375rem 0.375rem 0 0;
+    background: #f9fafb;
+}
+
+.plugin-ui-rich-text .ql-container {
+    border-bottom: 1px solid #e5e7eb;
+    border-left: 1px solid #e5e7eb;
+    border-right: 1px solid #e5e7eb;
+    border-top: none;
+    border-radius: 0 0 0.375rem 0.375rem;
+}
+
+.plugin-ui-rich-text .ql-toolbar button:hover,
+.plugin-ui-rich-text .ql-toolbar button.ql-active {
+    color: #6366f1;
+}
+
+.plugin-ui-rich-text .ql-toolbar button:hover .ql-stroke,
+.plugin-ui-rich-text .ql-toolbar button.ql-active .ql-stroke {
+    stroke: #6366f1;
+}
+
+.plugin-ui-rich-text .ql-toolbar button:hover .ql-fill,
+.plugin-ui-rich-text .ql-toolbar button.ql-active .ql-fill {
+    fill: #6366f1;
+}
+
