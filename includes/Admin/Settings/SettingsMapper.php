@@ -295,7 +295,6 @@ class SettingsMapper {
         'dokan_product_subscription.enable_pricing'                  => 'vendor.vendor_subscription.vendor_subscription.vendor_subscription',
         'dokan_product_subscription.subscription_pack'               => 'vendor.vendor_subscription.vendor_subscription.subscription_view_page',
         'dokan_product_subscription.enable_subscription_pack_in_reg' => 'vendor.vendor_subscription.vendor_subscription.subscription_in_registration',
-        'dokan_product_subscription.notify_by_email'                 => 'vendor.vendor_subscription.vendor_subscription.email_notification_expiry',
         'dokan_product_subscription.no_of_days_before_mail'          => 'vendor.vendor_subscription.vendor_subscription.alert_days_before_expiry',
         'dokan_product_subscription.product_status_after_end'        => 'vendor.vendor_subscription.vendor_subscription.products_status_on_expiry',
         'dokan_product_subscription.cancelling_email_subject'        => 'vendor.vendor_subscription.vendor_subscription.cancelling_email_subject',
