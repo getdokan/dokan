@@ -29,6 +29,20 @@ class Assets {
         }
     }
 
+    public static function get_wc_handler( $handler ): string {
+        // map legacy handlers to new ones
+        $supported_handlers = [ 'jquery-blockui', 'jquery-tiptip' ];
+        // Return original handler if not in our supported list
+        if ( ! in_array( $handler, $supported_handlers, true ) ) {
+            return $handler;
+        }
+        // For WC 10.3.0+, use 'wc-' prefix
+        if ( version_compare( WC()->version, '10.3.0', '>=' ) ) {
+            return 'wc-' . $handler;
+        }
+        return $handler;
+    }
+
     /**
      * Load global admin and promo notices scripts
      *
@@ -376,6 +390,7 @@ class Assets {
      */
     public function get_scripts() {
         global $wp_version;
+        $jquery_tiptip = self::get_wc_handler( 'jquery-tiptip' );
 
         $frontend_shipping_asset = require DOKAN_DIR . '/assets/js/frontend.asset.php';
 
@@ -493,7 +508,7 @@ class Assets {
             ],
             'dokan-script'              => [
                 'src'     => $asset_url . '/js/dokan.js',
-                'deps'    => [ 'imgareaselect', 'customize-base', 'customize-model', 'wp-i18n', 'jquery-tiptip', 'moment', 'dokan-date-range-picker', 'dokan-accounting' ],
+                'deps'    => [ 'imgareaselect', 'customize-base', 'customize-model', 'wp-i18n', $jquery_tiptip, 'moment', 'dokan-date-range-picker', 'dokan-accounting' ],
                 'version' => filemtime( $asset_path . 'js/dokan.js' ),
             ],
             'dokan-vue-vendor'          => [
@@ -584,8 +599,8 @@ class Assets {
             ];
         }
 
-        if ( ! wp_script_is( 'jquery-tiptip', 'registered' ) ) {
-            $scripts['jquery-tiptip'] = [
+        if ( ! wp_script_is( $jquery_tiptip, 'registered' ) ) {
+            $scripts[ $jquery_tiptip ] = [
                 'src'  => WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js',
                 'deps' => $require_dompurify ? [ 'jquery', 'dompurify' ] : [ 'jquery' ],
             ];

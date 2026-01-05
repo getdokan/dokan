@@ -4,6 +4,42 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.2.4',
+        'released' => '2025-12-26',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Added a Pending Vendors tab on the WordPress admin Users screen to view vendors awaiting approval.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added a bulk action on the WordPress admin Users screen to approve multiple pending vendors at once, including per-user validation and permission checks.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added an admin notice view on the WordPress admin Users screen that summarizes how many vendors were approved after performing bulk actions.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Improved compatibility with recent WooCommerce changes to script handling, making setup wizard and frontend script loading more reliable.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Redesigned the Admin Panel "Changelog" page template for a better look and user experience.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Improved shipping tax calculations so shipping taxes are computed more accurately per-order, taking vendor cart item tax classes into account for multi-vendor orders.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.2.3',
         'released' => '2025-12-22',
         'changes'  => [

@@ -25,7 +25,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '4.2.3';
+    public $version = '4.2.4';
 
     /**
      * Instance of self
