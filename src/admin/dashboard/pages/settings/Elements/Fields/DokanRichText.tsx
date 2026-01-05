@@ -1,44 +1,37 @@
-import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { DokanFieldLabel } from '../../../../../../components/fields';
-import RichText from '../../../../../../components/richtext/RichText';
+import { RichText, FieldLabel } from '@wedevs/plugin-ui';
 import { dispatch } from '@wordpress/data';
 import settingsStore from '../../../../../../stores/adminSettings';
 
-const DokanRichText = ( { element } ) => {
+const DokanRichText = ( { element, onValueChange } ) => {
     if ( ! element.display ) {
-        return <></>;
+        return null;
     }
 
-    const [ value, setValue ] = useState< string >(
-        element?.value || element?.default || ''
-    );
-    const onValueChange = ( updatedElement ) => {
-        // Dispatch the updated value to the settings store
-        dispatch( settingsStore ).updateSettingsValue( updatedElement );
-    };
-
     const handleChange = ( newValue: string ) => {
-        setValue( newValue );
-        if ( onValueChange ) {
-            onValueChange( { ...element, value: newValue } );
-        }
+        const updatedElement = { ...element, value: newValue };
+        onValueChange?.( updatedElement );
+        dispatch( settingsStore ).updateSettingsValue( updatedElement );
     };
 
     return (
         <div className="space-y-3 p-5 w-full">
-            <div className="gap-4 flex items-center">
-                <DokanFieldLabel
-                    titleFontWeight="bold"
-                    title={ element.title || '' }
-                    helperText={ element.description || '' }
-                    wrapperClassNames={ element.title ? 'pb-2' : '' }
+            { ( element.title || element.description ) && (
+                <FieldLabel
+                    title={ element.title }
+                    description={ element.description }
+                    tooltip={ element.helper_text }
                     imageUrl={ element?.image_url }
+                    htmlFor={ element.id }
+                    isBold={ true }
+                    className={ element.title ? 'pb-2' : '' }
                 />
-            </div>
+            ) }
 
             <RichText
-                value={ value }
+                id={ element.id }
+                value={ element.value as string }
+                defaultValue={ element.default as string }
                 onChange={ handleChange }
                 readOnly={ element.disabled || false }
                 placeholder={
