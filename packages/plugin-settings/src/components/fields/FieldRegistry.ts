@@ -52,3 +52,12 @@ export function getRegisteredFieldTypes(): string[] {
     return Array.from( fieldRegistry.keys() );
 }
 
+/**
+ * Get all registered fields as a map.
+ *
+ * @returns Map of field type to component.
+ */
+export function getAllFields(): Map< string, ComponentType< FieldProps > > {
+    return new Map( fieldRegistry );
+}
+

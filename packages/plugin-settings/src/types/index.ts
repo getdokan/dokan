@@ -140,4 +140,3 @@ export interface SettingsParserProps {
     element: SettingsElement;
     onValueChange?: ( element: SettingsElement ) => void;
 }
-

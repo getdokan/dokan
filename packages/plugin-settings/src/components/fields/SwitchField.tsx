@@ -5,62 +5,75 @@ import FieldLabel from './FieldLabel';
 /**
  * SwitchField Component
  *
- * Renders a toggle switch field.
+ * A generic toggle/switch field for settings.
  */
 const SwitchField = ( { element, onValueChange }: FieldProps ) => {
-    const enableState = element.enable_state || { label: 'On', value: 'on' };
-    const disableState = element.disable_state || { label: 'Off', value: 'off' };
+    const enableValue = element.enable_state?.value ?? 'on';
+    const disableValue = element.disable_state?.value ?? 'off';
 
-    const isEnabled = element.value === enableState.value ||
-        element.value === true ||
-        element.value === '1' ||
-        element.value === 1;
+    const isChecked = element.value === enableValue;
 
-    const handleChange = useCallback( () => {
-        onValueChange?.( {
-            ...element,
-            value: isEnabled ? disableState.value : enableState.value,
-        } );
-    }, [ element, onValueChange, isEnabled, enableState, disableState ] );
+    const handleChange = useCallback(
+        ( e: React.ChangeEvent< HTMLInputElement > ) => {
+            onValueChange?.( {
+                ...element,
+                value: e.target.checked ? enableValue : disableValue,
+            } );
+        },
+        [ element, onValueChange, enableValue, disableValue ]
+    );
+
+    if ( ! element.display ) {
+        return null;
+    }
 
     const hasLabel = Boolean( element.title );
 
     return (
-        <div className={ `grid grid-cols-12 gap-2 justify-between w-full p-4 ${ element.css_class || '' }` }>
+        <div
+            className={ `grid grid-cols-12 gap-2 justify-between items-center w-full p-4 ${
+                element.css_class || ''
+            }` }
+        >
             { hasLabel && (
                 <div className="sm:col-span-8 col-span-12">
                     <FieldLabel
                         title={ element.title }
                         description={ element.description }
-                        tooltip={ element.tooltip }
+                        tooltip={ element.helper_text }
+                        imageUrl={ element.image_url }
+                        htmlFor={ element.id }
                     />
                 </div>
             ) }
-            <div className={ hasLabel ? 'sm:col-span-4 col-span-12 flex items-center' : 'col-span-12' }>
-                <button
-                    type="button"
-                    role="switch"
-                    aria-checked={ isEnabled }
-                    disabled={ element.disabled }
-                    onClick={ handleChange }
-                    className={ `relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${
-                        isEnabled ? 'bg-indigo-600' : 'bg-gray-200'
-                    }` }
-                >
-                    <span
-                        aria-hidden="true"
-                        className={ `pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                            isEnabled ? 'translate-x-5' : 'translate-x-0'
-                        }` }
+            <div
+                className={
+                    hasLabel
+                        ? 'sm:col-span-4 col-span-12 flex justify-end'
+                        : 'col-span-12'
+                }
+            >
+                <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                        id={ element.id }
+                        type="checkbox"
+                        checked={ isChecked }
+                        onChange={ handleChange }
+                        disabled={ element.disabled }
+                        className="sr-only peer"
                     />
-                </button>
-                <span className="ml-3 text-sm text-gray-600">
-                    { isEnabled ? enableState.label : disableState.label }
-                </span>
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600 peer-disabled:opacity-50 peer-disabled:cursor-not-allowed"></div>
+                    { element.enable_state?.label && (
+                        <span className="ml-3 text-sm font-medium text-gray-700">
+                            { isChecked
+                                ? element.enable_state.label
+                                : element.disable_state?.label }
+                        </span>
+                    ) }
+                </label>
             </div>
         </div>
     );
 };
 
 export default SwitchField;
-

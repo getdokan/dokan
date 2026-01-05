@@ -3,13 +3,13 @@ import type { FieldProps } from '../../types';
 import FieldLabel from './FieldLabel';
 
 /**
- * SelectField Component
+ * TelField Component
  *
- * A generic select/dropdown field for settings.
+ * A generic telephone input field for settings.
  */
-const SelectField = ( { element, onValueChange }: FieldProps ) => {
+const TelField = ( { element, onValueChange }: FieldProps ) => {
     const handleChange = useCallback(
-        ( e: React.ChangeEvent< HTMLSelectElement > ) => {
+        ( e: React.ChangeEvent< HTMLInputElement > ) => {
             onValueChange?.( {
                 ...element,
                 value: e.target.value,
@@ -45,30 +45,23 @@ const SelectField = ( { element, onValueChange }: FieldProps ) => {
             ) }
             <div
                 className={
-                    hasLabel
-                        ? 'sm:col-span-4 col-span-12'
-                        : 'col-span-12'
+                    hasLabel ? 'sm:col-span-4 col-span-12' : 'col-span-12'
                 }
             >
-                <select
+                <input
                     id={ element.id }
+                    type="tel"
                     value={ value }
                     onChange={ handleChange }
+                    placeholder={ element.placeholder as string }
                     disabled={ element.disabled }
-                    className="block w-full max-w-full sm:w-56 sm:justify-self-end rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
-                >
-                    { element.placeholder && (
-                        <option value="">{ element.placeholder }</option>
-                    ) }
-                    { element.options?.map( ( option ) => (
-                        <option key={ String( option.value ) } value={ option.value }>
-                            { option.title }
-                        </option>
-                    ) ) }
-                </select>
+                    readOnly={ element.readonly }
+                    className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
+                />
             </div>
         </div>
     );
 };
 
-export default SelectField;
+export default TelField;
+

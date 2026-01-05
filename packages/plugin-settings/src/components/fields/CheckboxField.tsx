@@ -1,17 +1,13 @@
 import { useCallback } from '@wordpress/element';
 import type { FieldProps } from '../../types';
+import FieldLabel from './FieldLabel';
 
 /**
  * CheckboxField Component
  *
- * Renders a checkbox input field.
+ * A generic single checkbox field for settings.
  */
 const CheckboxField = ( { element, onValueChange }: FieldProps ) => {
-    const isChecked = Boolean( element.value ) ||
-        element.value === 'on' ||
-        element.value === '1' ||
-        element.value === 1;
-
     const handleChange = useCallback(
         ( e: React.ChangeEvent< HTMLInputElement > ) => {
             onValueChange?.( {
@@ -22,8 +18,18 @@ const CheckboxField = ( { element, onValueChange }: FieldProps ) => {
         [ element, onValueChange ]
     );
 
+    if ( ! element.display ) {
+        return null;
+    }
+
+    const isChecked = Boolean( element.value ?? element.default );
+
     return (
-        <div className={ `flex items-start p-4 ${ element.css_class || '' }` }>
+        <div
+            className={ `flex items-start gap-3 w-full p-4 ${
+                element.css_class || ''
+            }` }
+        >
             <div className="flex items-center h-5">
                 <input
                     id={ element.id }
@@ -34,17 +40,19 @@ const CheckboxField = ( { element, onValueChange }: FieldProps ) => {
                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 />
             </div>
-            <div className="ml-3">
+            <div className="flex-1">
                 { element.title && (
                     <label
                         htmlFor={ element.id }
-                        className="text-sm font-medium text-gray-700"
+                        className="font-medium text-gray-700 cursor-pointer"
                     >
                         { element.title }
                     </label>
                 ) }
                 { element.description && (
-                    <p className="text-sm text-gray-500">{ element.description }</p>
+                    <p className="text-sm text-gray-500 mt-1">
+                        { element.description }
+                    </p>
                 ) }
             </div>
         </div>
@@ -52,4 +60,3 @@ const CheckboxField = ( { element, onValueChange }: FieldProps ) => {
 };
 
 export default CheckboxField;
-

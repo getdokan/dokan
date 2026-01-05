@@ -16,6 +16,26 @@ export {
     useSettingsContext,
 } from './SettingsProvider';
 
-// Field components
-export * from './fields';
+// Field components - re-export all from fields
+export {
+    FieldParser,
+    FieldLabel,
+    TextField,
+    NumberField,
+    EmailField,
+    TelField,
+    PasswordField,
+    TextAreaField,
+    SelectField,
+    CheckboxField,
+    RadioField,
+    MultiCheckField,
+    SwitchField,
+    ColorPickerField,
+    InfoField,
+    HtmlField,
+    registerField,
+    getField,
+    getAllFields,
+} from './fields';
 

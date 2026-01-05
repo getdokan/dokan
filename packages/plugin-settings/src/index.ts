@@ -51,17 +51,24 @@ export {
     PageHeading,
     // Field components
     FieldParser,
+    FieldLabel,
     TextField,
     NumberField,
+    EmailField,
+    TelField,
+    PasswordField,
+    TextAreaField,
     SelectField,
-    SwitchField,
     CheckboxField,
     RadioField,
-    TextAreaField,
-    PasswordField,
-    FieldLabel,
+    MultiCheckField,
+    SwitchField,
+    ColorPickerField,
+    InfoField,
+    HtmlField,
     // Field registry
     registerField,
     getField,
+    getAllFields,
 } from './components';
 

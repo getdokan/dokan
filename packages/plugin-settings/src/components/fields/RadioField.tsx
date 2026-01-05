@@ -5,11 +5,11 @@ import FieldLabel from './FieldLabel';
 /**
  * RadioField Component
  *
- * Renders a radio button group field.
+ * A generic radio button group field for settings.
  */
 const RadioField = ( { element, onValueChange }: FieldProps ) => {
     const handleChange = useCallback(
-        ( value: string | number ) => () => {
+        ( value: string | number ) => {
             onValueChange?.( {
                 ...element,
                 value,
@@ -18,44 +18,52 @@ const RadioField = ( { element, onValueChange }: FieldProps ) => {
         [ element, onValueChange ]
     );
 
-    const hasLabel = Boolean( element.title );
+    if ( ! element.display ) {
+        return null;
+    }
+
     const currentValue = element.value ?? element.default;
-    const options = element.options || [];
 
     return (
-        <div className={ `p-4 ${ element.css_class || '' }` }>
-            { hasLabel && (
+        <div
+            className={ `flex flex-col gap-4 w-full p-4 ${
+                element.css_class || ''
+            }` }
+        >
+            { ( element.title || element.description ) && (
                 <FieldLabel
                     title={ element.title }
                     description={ element.description }
-                    tooltip={ element.tooltip }
+                    tooltip={ element.helper_text }
+                    imageUrl={ element.image_url }
                 />
             ) }
-            <div className="mt-2 space-y-2">
-                { options.map( ( option ) => (
-                    <div key={ option.value } className="flex items-center">
+            <div className="flex flex-col gap-3">
+                { element.options?.map( ( option ) => (
+                    <label
+                        key={ String( option.value ) }
+                        className="flex items-center gap-3 cursor-pointer"
+                    >
                         <input
-                            id={ `${ element.id }-${ option.value }` }
                             type="radio"
                             name={ element.id }
                             value={ option.value }
                             checked={ currentValue === option.value }
-                            onChange={ handleChange( option.value ) }
+                            onChange={ () => handleChange( option.value ) }
                             disabled={ element.disabled }
                             className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
                         />
-                        <label
-                            htmlFor={ `${ element.id }-${ option.value }` }
-                            className="ml-3 block text-sm text-gray-700"
-                        >
-                            { option.title }
+                        <div>
+                            <span className="text-sm font-medium text-gray-700">
+                                { option.title }
+                            </span>
                             { option.description && (
-                                <span className="block text-xs text-gray-500">
+                                <p className="text-xs text-gray-500">
                                     { option.description }
-                                </span>
+                                </p>
                             ) }
-                        </label>
-                    </div>
+                        </div>
+                    </label>
                 ) ) }
             </div>
         </div>
@@ -63,4 +71,3 @@ const RadioField = ( { element, onValueChange }: FieldProps ) => {
 };
 
 export default RadioField;
-
