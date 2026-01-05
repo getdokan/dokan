@@ -32,6 +32,7 @@ export interface SettingsElement {
     type: string;
     variant?: string;
     title?: string;
+    new_title?: string;
     description?: string;
     tooltip?: string;
     icon?: string;
@@ -40,6 +41,7 @@ export interface SettingsElement {
     dependency_key?: string;
     doc_link?: string;
     css_class?: string;
+    wrapper_class?: string;
     helper_text?: string;
     image_url?: string;
     priority?: number;
@@ -55,8 +57,19 @@ export interface SettingsElement {
     min?: number;
     max?: number;
     step?: number;
+    increment?: number;
     rows?: number;
     multiple?: boolean;
+    prefix?: string;
+    suffix?: string;
+    divider?: boolean;
+    radio_variant?: 'simple' | 'card' | 'template' | string;
+    items?: Array< {
+        key: string;
+        title: string;
+        required?: boolean;
+        order?: number | string;
+    } >;
     enable_state?: {
         label: string;
         value: string | number;

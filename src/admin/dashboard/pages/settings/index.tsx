@@ -1,17 +1,107 @@
+/**
+ * Dokan Admin Settings Page
+ *
+ * Uses the @wedevs/plugin-settings package for settings framework.
+ */
 import { __ } from '@wordpress/i18n';
 import { useDispatch, useSelect } from '@wordpress/data';
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect, useState, useMemo } from '@wordpress/element';
 import { SaveIcon } from 'lucide-react';
-import settingsStore from '@dokan/stores/adminSettings';
-import { SettingsElement } from '../../../../stores/adminSettings/types';
-import Menu from './Elements/Menu';
-import Tab from './Elements/Tab';
-import SettingsParser from './Elements/SettingsParser';
-import PageHeading from './Elements/PageHeading';
 import { twMerge } from 'tailwind-merge';
 
+// Import from plugin-settings package
+import {
+    Menu,
+    Tab,
+    PageHeading,
+    SettingsParser,
+    Section,
+    SubSection,
+    FieldGroup,
+    registerField,
+} from '@wedevs/plugin-settings';
+
+// Import store and types
+import settingsStore from '@dokan/stores/adminSettings';
+import type { SettingsElement } from '@wedevs/plugin-settings';
+
+// Import Dokan-specific field components
+import CategoryBasedCommission from './Elements/Fields/Commission/CategoryBasedCommission';
+import CombineInput from './Elements/Fields/Commission/CombineInput';
+import CustomizeRadio from './Elements/Fields/CustomizeRadio';
+import DokanColorPicker from './Elements/Fields/DokanColorPicker';
+import DokanCopyButtonField from './Elements/Fields/DokanCopyButtonField';
+import DokanCurrency from './Elements/Fields/DokanCurrency';
+import DokanDoubleInput from './Elements/Fields/DokanDoubleInput';
+import DokanEmail from './Elements/Fields/DokanEmail';
+import DokanFieldLabel from './Elements/Fields/DokanFieldLabel';
+import DokanFileUploadField from './Elements/Fields/DokanFileUpload';
+import DokanHtmlField from './Elements/Fields/DokanHtmlField';
+import DokanInfoField from './Elements/Fields/DokanInfoField';
+import DokanMultiCheck from './Elements/Fields/DokanMultiCheck';
+import DokanNumber from './Elements/Fields/DokanNumber';
+import DokanPassword from './Elements/Fields/DokanPassword';
+import DokanRadioCapsule from './Elements/Fields/DokanRadioCapsule';
+import DokanRefreshSelectField from './Elements/Fields/DokanRefreshSelectField';
+import DokanSelect from './Elements/Fields/DokanSelect';
+import DokanSingleProductPreview from './Elements/Fields/DokanSingleProductPreview';
+import DokanShowHideField from './Elements/Fields/DokanShowHideField';
+import DokanSwitch from './Elements/Fields/DokanSwitch';
+import DokanTel from './Elements/Fields/DokanTel';
+import DokanTextArea from './Elements/Fields/DokanTextArea';
+import DokanTextField from './Elements/Fields/DokanTextField';
+import DokanVendorInfoPreview from './Elements/Fields/DokanVendorInfoPreview';
+import DokanRichText from './Elements/Fields/DokanRichText';
+import DokanRepeater from './Elements/Fields/DokanRepeater';
+import WithdrawSchedule from './Elements/Fields/WithdrawSchedule';
+
+// Register all Dokan-specific field types with the package's registry
+const registerDokanFields = () => {
+    // Basic fields
+    registerField( 'text', DokanTextField );
+    registerField( 'select', DokanSelect );
+    registerField( 'switch', DokanSwitch );
+    registerField( 'password', DokanPassword );
+    registerField( 'email', DokanEmail );
+    registerField( 'number', DokanNumber );
+    registerField( 'textarea', DokanTextArea );
+    registerField( 'tel', DokanTel );
+
+    // Advanced fields
+    registerField( 'checkbox_group', DokanMultiCheck );
+    registerField( 'multicheck', DokanMultiCheck );
+    registerField( 'rich_text', DokanRichText );
+    registerField( 'radio_capsule', DokanRadioCapsule );
+    registerField( 'customize_radio', CustomizeRadio );
+    registerField( 'currency', DokanCurrency );
+    registerField( 'double_input', DokanDoubleInput );
+    registerField( 'repeater', DokanRepeater );
+
+    // Commission fields
+    registerField( 'category_based_commission', CategoryBasedCommission );
+    registerField( 'combine_input', CombineInput );
+
+    // Special fields
+    registerField( 'refresh_select', DokanRefreshSelectField );
+    registerField( 'info', DokanInfoField );
+    registerField( 'vendor_info_preview', DokanVendorInfoPreview );
+    registerField( 'single_product_preview', DokanSingleProductPreview );
+    registerField( 'base_field_label', DokanFieldLabel );
+    registerField( 'html', DokanHtmlField );
+    registerField( 'show_hide', DokanShowHideField );
+    registerField( 'select_color_picker', DokanColorPicker );
+    registerField( 'copy_field', DokanCopyButtonField );
+    registerField( 'file_upload', DokanFileUploadField );
+    registerField( 'withdraw_schedule', WithdrawSchedule );
+
+    // Default fallback
+    registerField( 'default', DokanInfoField );
+};
+
+// Register fields once
+registerDokanFields();
+
 const DashboardSwitchLink = () => {
-    // Get the switch URL from localized settings
     const switchUrl = dokanAdminDashboardSettings?.legacy_settings_url || '#';
 
     return (
@@ -29,6 +119,30 @@ const DashboardSwitchLink = () => {
                 </a>
             </div>
         </div>
+    );
+};
+
+/**
+ * Custom SettingsParser that uses Dokan's registered field components
+ */
+const DokanSettingsParser = ( {
+    element,
+    onValueChange,
+}: {
+    element: SettingsElement;
+    onValueChange: ( element: SettingsElement ) => void;
+} ) => {
+    return (
+        <SettingsParser
+            element={ element }
+            onValueChange={ onValueChange }
+            components={ {
+                Section,
+                SubSection,
+                FieldGroup,
+            } }
+            filterPrefix="dokan_admin_settings"
+        />
     );
 };
 
@@ -62,7 +176,6 @@ const SettingsPage = () => {
                 ( child ) => child.type === 'page'
             );
 
-            // Get all the subpages from the parent pages children array.
             const maybePages: SettingsElement[] = maybeParentPages
                 .map( ( child ) => child.children )
                 .flat()
@@ -159,7 +272,6 @@ const SettingsPage = () => {
         if ( ! page ) {
             return;
         }
-
         setSelectedPage( page );
     };
 
@@ -167,7 +279,6 @@ const SettingsPage = () => {
         if ( ! tab ) {
             return;
         }
-
         setSelectedTab( tab );
     };
 
@@ -186,11 +297,9 @@ const SettingsPage = () => {
             .saveSettings( allSettings )
             .then( () => {
                 setIsSaving( false );
-                // TODO: Say updated.
             } )
-            .catch( ( err ) => {
+            .catch( () => {
                 setIsSaving( false );
-                // TODO: Say Error.
             } );
 
         wp.hooks.doAction(
@@ -199,8 +308,7 @@ const SettingsPage = () => {
         );
     };
 
-    // Get current page/tab information for heading
-    const getCurrentPageInfo = () => {
+    const pageInfo = useMemo( () => {
         let currentPage: SettingsElement | undefined;
         let currentTab: SettingsElement | undefined;
 
@@ -216,7 +324,6 @@ const SettingsPage = () => {
             currentTab = tabs.find( ( tab ) => tab.id === selectedTab );
         }
 
-        // Priority: Tab > Page > Default Settings
         if ( currentTab ) {
             return {
                 title: currentTab.title || __( 'Settings', 'dokan-lite' ),
@@ -234,9 +341,8 @@ const SettingsPage = () => {
             title: __( 'Settings', 'dokan-lite' ),
             description: __( 'Configure your store settings', 'dokan-lite' ),
         };
-    };
+    }, [ selectedPage, selectedTab, pages, tabs ] );
 
-    const pageInfo = getCurrentPageInfo();
     const allElementsAreFields = elements.every(
         ( element ) => element.type === 'field'
     );
@@ -253,7 +359,6 @@ const SettingsPage = () => {
                     <div className="lg:grid lg:grid-cols-12 lg:divide-x h-full">
                         { pages && '' !== selectedPage && pages.length > 0 && (
                             <Menu
-                                key="admin-settings-menu"
                                 pages={ parentPages }
                                 loading={ loading }
                                 activePage={ selectedPage }
@@ -264,7 +369,6 @@ const SettingsPage = () => {
                         <div className="space-y-6 lg:p-7 lg:py-12 lg:col-span-9 pt-10">
                             { tabs && '' !== selectedTab && (
                                 <Tab
-                                    key="admin-settings-tab"
                                     tabs={ tabs }
                                     loading={ loading }
                                     selectedTab={ selectedTab }
@@ -292,7 +396,7 @@ const SettingsPage = () => {
                                 { elements.map(
                                     ( element: SettingsElement ) => {
                                         return (
-                                            <SettingsParser
+                                            <DokanSettingsParser
                                                 key={
                                                     element.hook_key +
                                                     '-settings-parser'

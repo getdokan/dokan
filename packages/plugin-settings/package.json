@@ -2,31 +2,34 @@
     "name": "@wedevs/plugin-settings",
     "version": "1.0.0",
     "description": "A reusable WordPress settings framework for building admin settings pages",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
+    "main": "src/index.ts",
+    "types": "src/index.ts",
     "exports": {
         ".": {
-            "import": "./dist/index.js",
-            "require": "./dist/index.cjs",
-            "types": "./dist/index.d.ts"
+            "import": "./src/index.ts",
+            "require": "./src/index.ts",
+            "types": "./src/index.ts"
         },
         "./components": {
-            "import": "./dist/components/index.js",
-            "types": "./dist/components/index.d.ts"
+            "import": "./src/components/index.ts",
+            "types": "./src/components/index.ts"
         },
         "./stores": {
-            "import": "./dist/stores/index.js",
-            "types": "./dist/stores/index.d.ts"
+            "import": "./src/stores/index.ts",
+            "types": "./src/stores/index.ts"
         },
         "./utils": {
-            "import": "./dist/utils/index.js",
-            "types": "./dist/utils/index.d.ts"
+            "import": "./src/utils/index.ts",
+            "types": "./src/utils/index.ts"
         },
         "./hooks": {
-            "import": "./dist/hooks/index.js",
-            "types": "./dist/hooks/index.d.ts"
+            "import": "./src/hooks/index.ts",
+            "types": "./src/hooks/index.ts"
         },
-        "./styles.css": "./dist/styles.css"
+        "./types": {
+            "import": "./src/types/index.ts",
+            "types": "./src/types/index.ts"
+        }
     },
     "files": [
         "dist",

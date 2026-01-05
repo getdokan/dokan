@@ -10,12 +10,23 @@ import RadioField from './RadioField';
 import TextAreaField from './TextAreaField';
 import PasswordField from './PasswordField';
 
+interface ExtendedFieldProps extends FieldProps {
+    /**
+     * Filter prefix for WordPress hooks.
+     */
+    filterPrefix?: string;
+}
+
 /**
  * FieldParser Component
  *
  * Parses and renders the appropriate field component based on variant.
  */
-const FieldParser = ( { element, onValueChange }: FieldProps ) => {
+const FieldParser = ( {
+    element,
+    onValueChange,
+    filterPrefix = 'plugin_settings',
+}: ExtendedFieldProps ) => {
     if ( ! element.display ) {
         return null;
     }
@@ -25,20 +36,27 @@ const FieldParser = ( { element, onValueChange }: FieldProps ) => {
     // Check for custom registered field first
     const CustomField = getField( variant );
     if ( CustomField ) {
-        return (
+        const rendered = (
             <CustomField
                 key={ element.hook_key }
                 element={ element }
                 onValueChange={ onValueChange }
             />
         );
+
+        // Apply filter for custom fields
+        return applyFilters(
+            `${ filterPrefix }_${ variant }_field_parser`,
+            rendered,
+            element
+        ) as JSX.Element;
     }
 
     // Built-in field types
     switch ( variant ) {
         case 'text':
             return applyFilters(
-                'plugin_settings_text_field',
+                `${ filterPrefix }_text_field`,
                 <TextField
                     key={ element.hook_key }
                     element={ element }
@@ -49,7 +67,7 @@ const FieldParser = ( { element, onValueChange }: FieldProps ) => {
 
         case 'number':
             return applyFilters(
-                'plugin_settings_number_field',
+                `${ filterPrefix }_number_field`,
                 <NumberField
                     key={ element.hook_key }
                     element={ element }
@@ -60,7 +78,7 @@ const FieldParser = ( { element, onValueChange }: FieldProps ) => {
 
         case 'select':
             return applyFilters(
-                'plugin_settings_select_field',
+                `${ filterPrefix }_select_field`,
                 <SelectField
                     key={ element.hook_key }
                     element={ element }
@@ -71,7 +89,7 @@ const FieldParser = ( { element, onValueChange }: FieldProps ) => {
 
         case 'switch':
             return applyFilters(
-                'plugin_settings_switch_field',
+                `${ filterPrefix }_switch_field`,
                 <SwitchField
                     key={ element.hook_key }
                     element={ element }
@@ -82,7 +100,7 @@ const FieldParser = ( { element, onValueChange }: FieldProps ) => {
 
         case 'checkbox':
             return applyFilters(
-                'plugin_settings_checkbox_field',
+                `${ filterPrefix }_checkbox_field`,
                 <CheckboxField
                     key={ element.hook_key }
                     element={ element }
@@ -93,7 +111,7 @@ const FieldParser = ( { element, onValueChange }: FieldProps ) => {
 
         case 'radio':
             return applyFilters(
-                'plugin_settings_radio_field',
+                `${ filterPrefix }_radio_field`,
                 <RadioField
                     key={ element.hook_key }
                     element={ element }
@@ -104,7 +122,7 @@ const FieldParser = ( { element, onValueChange }: FieldProps ) => {
 
         case 'textarea':
             return applyFilters(
-                'plugin_settings_textarea_field',
+                `${ filterPrefix }_textarea_field`,
                 <TextAreaField
                     key={ element.hook_key }
                     element={ element }
@@ -115,7 +133,7 @@ const FieldParser = ( { element, onValueChange }: FieldProps ) => {
 
         case 'password':
             return applyFilters(
-                'plugin_settings_password_field',
+                `${ filterPrefix }_password_field`,
                 <PasswordField
                     key={ element.hook_key }
                     element={ element }
@@ -127,7 +145,7 @@ const FieldParser = ( { element, onValueChange }: FieldProps ) => {
         default:
             // Allow filtering for unknown field types
             return applyFilters(
-                'plugin_settings_default_field',
+                `${ filterPrefix }_default_field`,
                 <TextField
                     key={ element.hook_key }
                     element={ element }
