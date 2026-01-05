@@ -225,7 +225,7 @@ class TransactionPage extends AbstractPage {
             ->set_icon( 'FileSpreadsheet' )
             ->set_title( esc_html__( 'Withdraw', 'dokan-lite' ) )
             ->set_description( esc_html__( 'Set up available withdrawal methods and transaction conditions for vendors.', 'dokan-lite' ) )
-            ->set_doc_link( esc_url( 'https://wedevs.com/docs/dokan/vendor-settings/withdraw/' ) )
+            ->set_doc_link( esc_url( 'https://dokan.co/docs/wordpress/withdraw/' ) )
             ->add(
                 ElementFactory::section( 'section_withdraw_charge' )
                     ->set_title( esc_html__( 'Withdraw Methods and Charges', 'dokan-lite' ) )
@@ -235,18 +235,19 @@ class TransactionPage extends AbstractPage {
                             ->add(
                                 ElementFactory::field( 'paypal_withdraw', 'switch' )
                                     ->set_title( esc_html__( 'PayPal', 'dokan-lite' ) )
+                                    ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/transaction/paypal.svg' )
                                     ->set_description( esc_html__( 'Enable PayPal as a withdrawal method for vendors.', 'dokan-lite' ) )
                                     ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'on' )
                                     ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), 'off' )
-                                    ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/transaction/paypal.svg' )
-                                    ->set_default( 'on' )
+                                    ->set_default( 'off' )
                             )
                             ->add(
                                 ElementFactory::field( 'paypal_withdraw_charges', 'combine_input' )
                                     ->set_title( esc_html__( 'Withdraw charges', 'dokan-lite' ) )
                                     ->set_tooltip( esc_html__( 'Set withdrawal charges for PayPal method.', 'dokan-lite' ) )
-                                    ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group.paypal_withdraw', 'on', true, 'display', 'show', '===' )
-                                    ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group.paypal_withdraw', 'off', true, 'display', 'hide', '===' )
+                                    ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal.paypal_withdraw', 'on', true, 'display', 'show', '===' )
+                                    ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal.paypal_withdraw', 'off', true, 'display', 'hide', '===' )
+                                    
                                     ->set_value(
                                         [
                                             'additional_fee'   => '0.00',
@@ -318,7 +319,7 @@ class TransactionPage extends AbstractPage {
                         ElementFactory::field( 'minimum_withdraw_limit', 'number' )
                             ->set_title( esc_html__( 'Minimum Withdraw Limit', 'dokan-lite' ) )
                             ->set_description( esc_html__( 'Minimum balance required to make a withdraw request. Leave blank to set no minimum limits.', 'dokan-lite' ) )
-                            ->set_postfix( esc_html__( '$', 'dokan-lite' ) )
+                            ->set_prefix( get_woocommerce_currency_symbol() )
                             ->set_default( '50' )
                     )
             )
@@ -363,7 +364,7 @@ class TransactionPage extends AbstractPage {
                 ElementFactory::field( 'reverse_balance_threshold', 'number' )
                     ->set_title( sprintf( '%1$s (%2$s)', esc_html__( 'Reverse Balance Threshold', 'dokan-lite' ), get_woocommerce_currency() ), )
                     ->set_description( esc_html__( 'Set the amount that triggers automatic withdrawal actions.', 'dokan-lite' ) )
-                    ->set_prefix( 'DollarSign' )
+                    ->set_prefix( get_woocommerce_currency_symbol() )
                     ->set_addon_icon( true )
                     ->set_step( 0.5 )
                     ->set_minimum( 0 )
@@ -387,6 +388,8 @@ class TransactionPage extends AbstractPage {
                 ElementFactory::field( 'due_period', 'number' )
                     ->set_title( esc_html__( 'Grace Period', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Number of days to wait before enforcing collection actions. Set to 0 for immediate action.', 'dokan-lite' ) )
+                    ->set_addon_icon( true )
+                    ->set_prefix( 'Calendar' )
                     ->set_postfix( esc_html__( 'Days', 'dokan-lite' ) )
                     ->set_step( 1 )
                     ->set_minimum( 0 )
