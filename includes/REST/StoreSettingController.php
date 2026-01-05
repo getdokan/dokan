@@ -9,12 +9,11 @@ use WP_Error;
 
 /**
  * StoreSettings API Controller
- *
  * @package dokan
  *
  * @author weDevs <info@wedevs.com>
  */
-class StoreSettingController extends WP_REST_Controller {
+class StoreSettingController extends StoreController {
     /**
      * Endpoint namespace
      *
@@ -83,44 +82,31 @@ class StoreSettingController extends WP_REST_Controller {
      * @return WP_Error|\WP_REST_Response
      */
     public function update_settings( $request ) {
-        $vendor   = $this->get_vendor( $request );
-        $params   = $request->get_params();
-        $store_id = dokan()->vendor->update( $vendor->get_id(), $params );
+        $vendor_id = (int) $request->get_param( 'vendor_id' );
+        $request->set_param( 'id', $vendor_id );
+        $response = parent::update_store( $request );
 
-        if ( is_wp_error( $store_id ) ) {
-            return new WP_Error( $store_id->get_error_code(), $store_id->get_error_message() );
+        if ( is_wp_error( $response ) ) {
+            return $response;
         }
 
-        $store = dokan()->vendor->get( $store_id );
+        $store = dokan()->vendor->get( $vendor_id );
 
         do_action( 'dokan_rest_store_settings_after_update', $store, $request );
-
-        $stores_data = $this->prepare_item_for_response( $store, $request );
-        $response    = rest_ensure_response( $stores_data );
 
         return $response;
     }
 
     /**
-     * @param $request
+     * @param \WP_REST_Request $request
      *
      * @return mixed|WP_Error|\WP_HTTP_Response|\WP_REST_Response
      */
     public function get_settings( $request ) {
-        $vendor   = $this->get_vendor( $request );
-        $response = dokan_get_store_info( $vendor->id );
+        $vendor_id = (int) $request->get_param( 'vendor_id' );
+        $request->set_param( 'id', $vendor_id );
 
-        $methods_data = dokan_get_container()->get( 'dashboard' )->templates->settings->get_seller_payment_methods( $vendor->get_id() );
-
-        $response['bank_payment_required_fields'] = dokan_bank_payment_required_fields();
-        $response['active_payment_methods']       = $methods_data['active_methods'] ?? [];
-        $response['connected_methods']            = $methods_data['connected_methods'] ?? [];
-        $response['disconnected_methods']         = $methods_data['disconnected_methods'] ?? [];
-        $response['withdraw_options']             = dokan_withdraw_get_methods();
-        $response['fields_placeholders']          = dokan_bank_payment_fields_placeholders();
-        $response['chargeable_methods']           = dokan_withdraw_get_chargeable_methods();
-
-        return rest_ensure_response( $response );
+        return parent::get_store( $request );
     }
 
     /**
@@ -199,7 +185,8 @@ class StoreSettingController extends WP_REST_Controller {
      * @return \WP_REST_Response $response Response data.
      */
     public function prepare_item_for_response( $store, $request, $additional_fields = [] ) {
-        $data     = $store->to_array();
+        $response = parent::prepare_item_for_response( $store, $request, $additional_fields );
+        $data = $response->get_data();
         $data     = array_merge( $data, apply_filters( 'dokan_rest_store_settings_additional_fields', $additional_fields, $store, $request ) );
         $response = rest_ensure_response( $data );
         $response->add_links( $this->prepare_links( $data, $request ) );
