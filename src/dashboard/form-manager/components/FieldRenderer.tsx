@@ -4,6 +4,33 @@ import { Info } from 'lucide-react';
 import { FormField } from '../types';
 import { getFieldConfigFromFactory } from '../factories';
 
+const checkDependency = (
+    dependencyCondition: any,
+    data: Record< string, any >
+) => {
+    const item = dependencyCondition;
+    if ( typeof item === 'object' && ! Array.isArray( item ) ) {
+        const { field: depField, operator, value } = dependencyCondition;
+        const depValue = data[ depField ];
+
+        let targetValue = value;
+        if ( value === 'on' ) {
+            targetValue = true;
+        }
+        if ( value === 'off' ) {
+            targetValue = false;
+        }
+
+        if ( operator === 'equal' ) {
+            return depValue === targetValue;
+        }
+        if ( operator === 'not_equal' ) {
+            return depValue !== targetValue;
+        }
+    }
+    return true;
+};
+
 export const getFieldConfig = ( field: FormField ) => {
     const mappedField = {
         ...field,
@@ -44,31 +71,7 @@ export const getFieldConfig = ( field: FormField ) => {
         if ( ! field.visibility ) {
             return false;
         }
-        const item = field.dependency_condition;
-        if ( typeof item === 'object' && ! Array.isArray( item ) ) {
-            const {
-                field: depField,
-                operator,
-                value,
-            } = field.dependency_condition;
-            const depValue = data[ depField ];
-
-            let targetValue = value;
-            if ( value === 'on' ) {
-                targetValue = true;
-            }
-            if ( value === 'off' ) {
-                targetValue = false;
-            }
-
-            if ( operator === 'equal' ) {
-                return depValue === targetValue;
-            }
-            if ( operator === 'not_equal' ) {
-                return depValue !== targetValue;
-            }
-        }
-        return true;
+        return checkDependency( field.dependency_condition, data );
     };
 
     if ( ! field.help_content && ! field.description ) {
