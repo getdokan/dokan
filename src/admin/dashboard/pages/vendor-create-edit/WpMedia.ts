@@ -55,10 +55,10 @@ export default function wpMedia(
     croppingHeight?: number
 ) {
     const calculateImageSelectOptions = ( attachment, controller ) => {
-        const xInit = croppingWidth
+        let xInit = croppingWidth
             ? parseInt( croppingWidth, 10 )
             : parseInt( dokanAdminDashboard.store_banner_dimension.width, 10 );
-        const yInit = croppingHeight
+        let yInit = croppingHeight
             ? parseInt( croppingHeight, 10 )
             : parseInt( dokanAdminDashboard.store_banner_dimension.height, 10 );
         const flexWidth = !! parseInt(
@@ -70,8 +70,10 @@ export default function wpMedia(
             10
         );
 
-        const realWidth = attachment.get( 'width' );
-        const realHeight = attachment.get( 'height' );
+        let ratio, xImg, yImg, realHeight, realWidth, imgSelectOptions;
+
+        realWidth = attachment.get( 'width' );
+        realHeight = attachment.get( 'height' );
 
         const control = controller.get( 'control' );
 
@@ -87,7 +89,19 @@ export default function wpMedia(
             )
         );
 
-        const imgSelectOptions = {
+        ratio = xInit / yInit;
+        xImg = realWidth;
+        yImg = realHeight;
+
+        if ( xImg / yImg > ratio ) {
+            yInit = yImg;
+            xInit = yInit * ratio;
+        } else {
+            xInit = xImg;
+            yInit = xInit / ratio;
+        }
+
+        imgSelectOptions = {
             handles: true,
             keys: true,
             instance: true,
@@ -98,10 +112,17 @@ export default function wpMedia(
             y1: 0,
             x2: xInit,
             y2: yInit,
-            aspectRatio: xInit + ':' + yInit,
-            maxHeight: yInit,
-            maxWidth: xInit,
         };
+
+        if ( flexHeight === false && flexWidth === false ) {
+            imgSelectOptions.aspectRatio = xInit + ':' + yInit;
+        }
+        if ( flexHeight === false ) {
+            imgSelectOptions.maxHeight = yInit;
+        }
+        if ( flexWidth === false ) {
+            imgSelectOptions.maxWidth = xInit;
+        }
 
         return imgSelectOptions;
     };
