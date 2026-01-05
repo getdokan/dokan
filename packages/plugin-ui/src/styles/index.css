@@ -1,0 +1,47 @@
+/**
+ * @wedevs/plugin-ui Styles
+ *
+ * Base styles and CSS custom properties for UI components.
+ */
+
+/* CSS Custom Properties */
+:root {
+    --plugin-ui-primary: #6366f1;
+    --plugin-ui-primary-hover: #4f46e5;
+    --plugin-ui-success: #10b981;
+    --plugin-ui-warning: #f59e0b;
+    --plugin-ui-error: #ef4444;
+    --plugin-ui-info: #3b82f6;
+    
+    --plugin-ui-gray-50: #f9fafb;
+    --plugin-ui-gray-100: #f3f4f6;
+    --plugin-ui-gray-200: #e5e7eb;
+    --plugin-ui-gray-300: #d1d5db;
+    --plugin-ui-gray-400: #9ca3af;
+    --plugin-ui-gray-500: #6b7280;
+    --plugin-ui-gray-600: #4b5563;
+    --plugin-ui-gray-700: #374151;
+    --plugin-ui-gray-800: #1f2937;
+    --plugin-ui-gray-900: #111827;
+    
+    --plugin-ui-radius-sm: 0.25rem;
+    --plugin-ui-radius-md: 0.375rem;
+    --plugin-ui-radius-lg: 0.5rem;
+    
+    --plugin-ui-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --plugin-ui-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+/* Focus ring utilities */
+.plugin-ui-focus-ring {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--plugin-ui-primary);
+}
+
+/* Transition utilities */
+.plugin-ui-transition {
+    transition-property: color, background-color, border-color, opacity, box-shadow, transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+

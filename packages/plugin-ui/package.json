@@ -1,0 +1,70 @@
+{
+    "name": "@wedevs/plugin-ui",
+    "version": "1.0.0",
+    "description": "Reusable UI components for WordPress plugins",
+    "main": "src/index.ts",
+    "module": "src/index.ts",
+    "types": "src/index.ts",
+    "exports": {
+        ".": {
+            "import": "./src/index.ts",
+            "require": "./src/index.ts",
+            "types": "./src/index.ts"
+        },
+        "./components": {
+            "import": "./src/components/index.ts",
+            "require": "./src/components/index.ts",
+            "types": "./src/components/index.ts"
+        },
+        "./hooks": {
+            "import": "./src/hooks/index.ts",
+            "require": "./src/hooks/index.ts",
+            "types": "./src/hooks/index.ts"
+        },
+        "./utils": {
+            "import": "./src/utils/index.ts",
+            "require": "./src/utils/index.ts",
+            "types": "./src/utils/index.ts"
+        },
+        "./styles.css": "./src/styles/index.css"
+    },
+    "files": [
+        "src"
+    ],
+    "scripts": {
+        "build": "tsc",
+        "lint": "eslint src --ext .ts,.tsx",
+        "typecheck": "tsc --noEmit"
+    },
+    "peerDependencies": {
+        "@wordpress/components": ">=19.0.0",
+        "@wordpress/element": ">=4.0.0",
+        "@wordpress/i18n": ">=4.0.0",
+        "@wordpress/hooks": ">=3.0.0",
+        "react": ">=17.0.0",
+        "react-dom": ">=17.0.0"
+    },
+    "dependencies": {
+        "clsx": "^2.0.0",
+        "tailwind-merge": "^2.0.0"
+    },
+    "devDependencies": {
+        "@types/react": "^18.0.0",
+        "@types/react-dom": "^18.0.0",
+        "typescript": "^5.0.0"
+    },
+    "keywords": [
+        "wordpress",
+        "ui",
+        "components",
+        "react",
+        "wedevs"
+    ],
+    "author": "weDevs",
+    "license": "GPL-2.0-or-later",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/weDevsOfficial/plugin-ui"
+    }
+}
+
