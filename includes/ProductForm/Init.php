@@ -579,6 +579,19 @@ class Init {
                 'name'        => '_sku',
             ]
         );
+        $section->add_field(
+            Elements::GLOBAL_UNIQUE_ID, [
+                'title'       => sprintf(
+                    '%s <span>(%s)</span>',
+                    esc_html__( 'GTIN, UPC, EAN, or ISBN', 'dokan-lite' ),
+                    esc_html__( 'Product Identifiers', 'dokan-lite' )
+				),
+                'tooltip' => __( 'Enter a barcode or any other identifier unique to this product. It can help you list this product on other channels or marketplaces.', 'dokan-lite' ),
+                'placeholder' => __( 'Enter code', 'dokan-lite' ),
+                'field_type'  => 'text',
+                'name'        => '_global_unique_id',
+            ]
+        );
 
         $section->add_field(
             Elements::STOCK_STATUS, [
@@ -707,8 +720,8 @@ class Init {
 
         $section->add_field(
             Elements::SOLD_INDIVIDUALLY, [
-                'title'                 => __( 'Allow only one quantity of this product to be bought in a single order', 'dokan-lite' ),
-                'description'           => __( 'Check to let customers to purchase only 1 item in a single order. This is particularly useful for items that have limited quantity, for example art or handmade goods.', 'dokan-lite' ),
+                'title'                 => __( 'Limit purchases to 1 item per order', 'dokan-lite' ),
+                'tooltip'           => __( 'Check to let customers to purchase only 1 item in a single order. This is particularly useful for items that have limited quantity, for example art or handmade goods.', 'dokan-lite' ),
                 'field_type'            => 'checkbox',
                 'name'                  => '_sold_individually',
                 'additional_properties' => [
@@ -753,6 +766,12 @@ class Init {
                 'sanitize_callback' => function ( $file_names, $file_urls, $file_hashes ) {
                     return dokan()->product->prepare_downloads( $file_names, $file_urls, $file_hashes );
                 },
+                'dependency_condition' => [
+                    'section'  => 'general',
+                    'field'    => Elements::DOWNLOADABLE,
+                    'operator' => 'equal',
+                    'value'    => 'on',
+                ],
             ]
         );
 
@@ -774,6 +793,12 @@ class Init {
 
                     return '';
                 },
+                'dependency_condition' => [
+                    'section'  => 'general',
+                    'field'    => Elements::DOWNLOADABLE,
+                    'operator' => 'equal',
+                    'value'    => 'on',
+                ],
             ]
         );
 
@@ -795,6 +820,12 @@ class Init {
 
                     return '';
                 },
+                'dependency_condition' => [
+                    'section'  => 'general',
+                    'field'    => Elements::DOWNLOADABLE,
+                    'operator' => 'equal',
+                    'value'    => 'on',
+                ],
             ]
         );
     }

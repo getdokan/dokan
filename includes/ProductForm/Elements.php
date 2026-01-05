@@ -26,6 +26,7 @@ class Elements {
     const PURCHASE_NOTE = 'purchase_note';
     const FEATURED = 'featured';
     const SKU = 'sku';
+    const GLOBAL_UNIQUE_ID = '_global_unique_id';
     const WEIGHT = 'weight';
     const DIMENSIONS = 'dimensions';
     const DIMENSIONS_HEIGHT = 'height';

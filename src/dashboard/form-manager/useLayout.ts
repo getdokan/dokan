@@ -110,7 +110,9 @@ export default function useLayout() {
                                 },
                                 children: [
                                     'sku',
+                                    '_global_unique_id',
                                     'stock_status',
+                                    'manage_stock',
                                     'stock_quantity',
                                     'low_stock_amount',
                                     'backorders',
@@ -126,10 +128,18 @@ export default function useLayout() {
                                 },
                                 children: [
                                     '_disable_shipping',
-                                    'weight',
-                                    'length',
-                                    'width',
-                                    'height',
+                                    {
+                                        id: 'shipping-dimension',
+                                        layout: {
+                                            type: 'row',
+                                        },
+                                        children: [
+                                            'weight',
+                                            'length',
+                                            'width',
+                                            'height',
+                                        ],
+                                    },
                                     'shipping_class_id',
                                     '_overwrite_shipping',
                                     '_additional_price',

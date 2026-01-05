@@ -129,6 +129,9 @@ export const getFieldConfig = ( field: FormField ) => {
             if ( operator === 'equal' ) {
                 return depValue === targetValue;
             }
+            if ( operator === 'not_equal' ) {
+                return depValue !== targetValue;
+            }
         }
         return true;
     };
