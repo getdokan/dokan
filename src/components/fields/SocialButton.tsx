@@ -1,4 +1,3 @@
-import GoogleIcon from '../Icons/GoogleIcon';
 import { useState } from '@wordpress/element';
 import { twMerge } from 'tailwind-merge';
 
@@ -11,7 +10,7 @@ interface SocialButtonProps {
 }
 
 // Figma Google icon asset (replace with local asset if needed)
-const GOOGLE_ICON = <GoogleIcon />;
+const GOOGLE_ICON = <div>Google</div>;
 
 const getNetworkConfig = ( network: string, hovered: boolean ) => {
     switch ( network ) {
