@@ -445,10 +445,8 @@ class Init {
                     }
 
                     return [
-                        [
-                            'id' => $product->get_image_id(),
-                            'url' => wp_get_attachment_url( $product->get_image_id() ),
-                        ],
+                        'id' => $product->get_image_id(),
+                        'url' => wp_get_attachment_url( $product->get_image_id() ),
                     ];
                 },
             ]

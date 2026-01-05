@@ -1,27 +1,31 @@
 import { DataForm } from '@wordpress/dataviews';
 import { useCallback, useMemo, useState } from '@wordpress/element';
 import { getFieldConfig, processLayout } from './components/FieldRenderer';
-import layout, { sections } from './layout';
+import useLayout from './useLayout';
 
 const ProductForm = () => {
+    const { fields: layoutFields, sections } = useLayout();
     // 1. Calculate initialData first
     const initialData = useMemo( () => {
-        const mappedValues = [ 'image_id', 'gallery_image_ids' ];
         const entries = sections.flatMap( ( section ) => {
             return section.fields.map( ( field ) => {
-                if ( mappedValues.includes( field.id ) ) {
-                    if ( field.value && Array.isArray( field.value ) ) {
-                        return [
-                            field.id,
-                            field.value.map( ( img: any ) => img.id ),
-                        ];
-                    }
+                if ( field.id === 'image_id' && field.value ) {
+                    return [ field.id, field.value.id ];
+                }
+                if (
+                    field.id === 'gallery_image_ids' &&
+                    Array.isArray( field.value )
+                ) {
+                    return [
+                        field.id,
+                        field.value.map( ( img: any ) => img.id ),
+                    ];
                 }
                 return [ field.id, field.value || '' ];
             } );
         } );
         return Object.fromEntries( entries );
-    }, [] );
+    }, [ sections ] );
 
     // 2. State
     const [ product, setProduct ] = useState< any >( {
@@ -40,15 +44,15 @@ const ProductForm = () => {
         } );
 
         const processedLayout = {
-            ...layout,
-            fields: processLayout( layout.fields ),
+            ...layoutFields,
+            fields: processLayout( layoutFields ),
         };
 
         return {
             fields: allFields,
             formLayout: processedLayout as any,
         };
-    }, [] );
+    }, [ sections, layoutFields ] );
 
     // eslint-disable-next-line no-console
     console.log( { 'Form Layout:': formLayout, fields, data: product } );
