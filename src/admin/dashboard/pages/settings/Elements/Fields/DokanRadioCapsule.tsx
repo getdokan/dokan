@@ -1,40 +1,43 @@
 import { dispatch } from '@wordpress/data';
-import {
-    DokanFieldLabel,
-    DokanRadioCapsule as BaseRadioCapsule,
-} from '../../../../../../components/fields';
+import { RadioCapsule, FieldLabel } from '@wedevs/plugin-ui';
 import settingsStore from '../../../../../../stores/adminSettings';
 
-export default function DokanRadioCapsule( { element } ) {
+export default function DokanRadioCapsule( { element, onValueChange } ) {
     if ( ! element.display ) {
         return null;
     }
-    const onValueChange = ( updatedElement ) => {
-        // Dispatch the updated value to the settings store
+
+    const handleChange = ( val: string | number ) => {
+        const updatedElement = { ...element, value: val };
+        onValueChange?.( updatedElement );
         dispatch( settingsStore ).updateSettingsValue( updatedElement );
     };
 
     return (
-        <div className="flex flex-wrap gap-4 justify-between items-center w-full p-5 ">
-            <DokanFieldLabel
-                title={ element.title }
-                titleFontWeight="bold"
-                helperText={ element.description }
-                tooltip={ element.helper_text }
-                imageUrl={ element?.image_url }
-            />
-            <BaseRadioCapsule
+        <div className="flex flex-wrap gap-4 justify-between items-center w-full p-5">
+            { ( element.title || element.description ) && (
+                <FieldLabel
+                    title={ element.title }
+                    description={ element.description }
+                    tooltip={ element.helper_text }
+                    imageUrl={ element?.image_url }
+                    htmlFor={ element.id }
+                    isBold={ true }
+                />
+            ) }
+            <RadioCapsule
+                name={ element.id }
+                value={ element.value as string | number }
+                defaultValue={ element.default as string | number }
                 options={
                     element.options?.map( ( option ) => ( {
+                        label: option.title,
                         value: option.value,
-                        title: option.title,
                         icon: option.icon,
                     } ) ) || []
                 }
-                selected={ element.value || element.default }
-                onChange={ ( val ) =>
-                    onValueChange( { ...element, value: val } )
-                }
+                onChange={ handleChange }
+                disabled={ element.disabled }
             />
         </div>
     );

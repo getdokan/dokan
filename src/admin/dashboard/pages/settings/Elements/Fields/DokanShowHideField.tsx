@@ -1,27 +1,31 @@
-import { ShowHideField } from '../../../../../../components/fields';
-import DokanFieldLabel from '../../../../../../components/fields/DokanFieldLabel';
 import { dispatch } from '@wordpress/data';
+import { PasswordField, FieldLabel } from '@wedevs/plugin-ui';
 import settingsStore from '../../../../../../stores/adminSettings';
 
-export default function DokanShowHideField( { element } ) {
+export default function DokanShowHideField( { element, onValueChange } ) {
     if ( ! element.display ) {
         return null;
     }
-    const onValueChange = ( updatedElement ) => {
-        // Dispatch the updated value to the settings store
+
+    const handleChange = ( value: string ) => {
+        const updatedElement = { ...element, value };
+        onValueChange?.( updatedElement );
         dispatch( settingsStore ).updateSettingsValue( updatedElement );
     };
+
     const hasTitle = Boolean( element.title && element.title.length > 0 );
+
     return (
         <div className="grid grid-cols-6 p-4 gap-4 w-full">
             { hasTitle && (
                 <div className="md:col-span-2 col-span-6">
-                    <DokanFieldLabel
+                    <FieldLabel
                         title={ element.title }
-                        helperText={ element.description }
+                        description={ element.description }
                         tooltip={ element.helper_text }
-                        titleFontWeight="bold"
                         imageUrl={ element?.image_url }
+                        htmlFor={ element.id }
+                        isBold={ true }
                     />
                 </div>
             ) }
@@ -30,13 +34,14 @@ export default function DokanShowHideField( { element } ) {
                     hasTitle ? 'md:col-span-4 col-span-6' : 'col-span-6'
                 }
             >
-                <ShowHideField
-                    value={ element.value }
+                <PasswordField
+                    id={ element.id }
+                    value={ element.value as string }
+                    defaultValue={ element.default as string }
+                    onChange={ handleChange }
+                    placeholder={ element.placeholder as string }
                     disabled={ element.disabled }
-                    placeholder={ element.placeholder }
-                    onChange={ ( value ) =>
-                        onValueChange( { ...element, value } )
-                    }
+                    showToggle={ true }
                 />
             </div>
         </div>
