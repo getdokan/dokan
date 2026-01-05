@@ -159,150 +159,140 @@ function RequestWithdrawBtn( {
         }
     }, [ error ] );
 
-    const WithdrawRequestForm = () => {
-        return (
-            <>
-                { hasPaymentMethods ? (
-                    <>
-                        <div>
-                            <SearchableSelect
-                                label={ __( 'Withdraw method', 'dokan-lite' ) }
-                                value={ getSelectValue( withdrawMethod ) }
-                                onChange={ ( e ) => {
-                                    setWithdrawMethod( e.value );
-                                    calculateWithdrawCharge(
-                                        e.value,
-                                        unformatNumber( withdrawAmount )
-                                    );
-                                } }
-                                options={ settings?.data?.payment_methods }
-                            />
-                        </div>
-                        <div className="mt-3">
-                            <DokanPriceInput
-                                namespace="withdraw-request"
-                                label={ __( 'Withdraw amount', 'dokan-lite' ) }
-                                value={ withdrawAmount }
-                                onChange={ (
-                                    formatedValue,
-                                    unformattedValue
-                                ) => {
-                                    debouncedWithdrawAmount(
-                                        formatedValue,
-                                        unformattedValue
-                                    );
-                                } }
-                                input={ {
-                                    id: 'withdraw-amount',
-                                    name: 'withdraw-amount',
-                                    placeholder: __(
-                                        'Enter amount',
-                                        'dokan-lite'
-                                    ),
-                                } }
-                            />
-                        </div>
-                        <div className="mt-3">
-                            <SimpleInput
-                                label={ __( 'Withdraw charge', 'dokan-lite' ) }
-                                value={
-                                    isLoading
-                                        ? __( 'Calculating…', 'dokan-lite' )
-                                        : decodeEntities(
-                                              getChargeFormated() as string
-                                          )
-                                }
-                                input={ {
-                                    id: 'withdraw-charge',
-                                    name: 'withdraw-charge',
-                                    type: 'text',
-                                    placeholder: '',
-                                    disabled: true,
-                                } }
-                            />
-                        </div>
-                        <div className="mt-3">
-                            <SimpleInput
-                                label={ __(
-                                    'Receivable amount',
-                                    'dokan-lite'
-                                ) }
-                                value={
-                                    isLoading
-                                        ? __( 'Calculating…', 'dokan-lite' )
-                                        : decodeEntities(
-                                              getRecivableFormated() as string
-                                          )
-                                }
-                                input={ {
-                                    id: 'receivable-amount',
-                                    name: 'receivable-amount',
-                                    type: 'text',
-                                    placeholder: '',
-                                    disabled: true,
-                                } }
-                            />
-                        </div>
-                    </>
-                ) : (
-                    <DokanAlert
-                        variant="warning"
-                        label={ __(
-                            'No payment methods found to submit a withdrawal request.',
-                            'dokan-lite'
-                        ) }
-                    >
-                        <div className="text-sm mt-1 font-light">
-                            <RawHTML>
-                                { sprintf(
-                                    /* translators: %s: opening and closing anchor tags for "payment methods" link */
-                                    __(
-                                        'Please set up your %1$spayment methods%2$s first.',
-                                        'dokan-lite'
-                                    ),
-                                    `<a href="${ window?.dokanFrontend?.withdraw?.paymentSettingUrl }" class="dokan-link">`,
-                                    '</a>'
-                                ) }
-                            </RawHTML>
-                        </div>
-                    </DokanAlert>
-                ) }
-            </>
-        );
-    };
-
     useEffect( () => {
         if ( settings?.data?.payment_methods.length > 0 ) {
             setWithdrawMethod( settings?.data?.payment_methods[ 0 ].value );
         }
     }, [ settings ] );
 
-    const ModalContent = () => {
-        if ( hasWithdrawRequests ) {
-            return (
-                <SimpleAlert
-                    type="danger"
-                    color="red"
+    const withdrawRequestFormContent = hasPaymentMethods ? (
+        <>
+            <div>
+                <SearchableSelect
+                    label={ __( 'Withdraw method', 'dokan-lite' ) }
+                    value={ getSelectValue( withdrawMethod ) }
+                    onChange={ ( e ) => {
+                        setWithdrawMethod( e.value );
+                        calculateWithdrawCharge(
+                            e.value,
+                            unformatNumber( withdrawAmount )
+                        );
+                    } }
+                    options={ settings?.data?.payment_methods }
+                />
+            </div>
+            <div className="mt-3">
+                <DokanPriceInput
+                    namespace="withdraw-request"
+                    label={ __( 'Withdraw amount', 'dokan-lite' ) }
+                    value={ withdrawAmount }
+                    onChange={ (
+                        formatedValue,
+                        unformattedValue
+                    ) => {
+                        debouncedWithdrawAmount(
+                            formatedValue,
+                            unformattedValue
+                        );
+                    } }
+                    input={ {
+                        id: 'withdraw-amount',
+                        name: 'withdraw-amount',
+                        placeholder: __(
+                            'Enter amount',
+                            'dokan-lite'
+                        ),
+                    } }
+                />
+            </div>
+            <div className="mt-3">
+                <SimpleInput
+                    label={ __( 'Withdraw charge', 'dokan-lite' ) }
+                    value={
+                        isLoading
+                            ? __( 'Calculating…', 'dokan-lite' )
+                            : decodeEntities(
+                                getChargeFormated() as string
+                            )
+                    }
+                    input={ {
+                        id: 'withdraw-charge',
+                        name: 'withdraw-charge',
+                        type: 'text',
+                        placeholder: '',
+                        disabled: true,
+                    } }
+                />
+            </div>
+            <div className="mt-3">
+                <SimpleInput
                     label={ __(
-                        'You already have pending withdraw request(s). Please submit your request after approval or cancellation of your previous request.',
+                        'Receivable amount',
                         'dokan-lite'
                     ) }
+                    value={
+                        isLoading
+                            ? __( 'Calculating…', 'dokan-lite' )
+                            : decodeEntities(
+                                getRecivableFormated() as string
+                            )
+                    }
+                    input={ {
+                        id: 'receivable-amount',
+                        name: 'receivable-amount',
+                        type: 'text',
+                        placeholder: '',
+                        disabled: true,
+                    } }
                 />
-            );
-        } else if ( ! hasSuffcientBalance ) {
-            return (
-                <SimpleAlert
-                    type="danger"
-                    color="red"
-                    label={ __(
-                        "You don't have sufficient balance for a withdraw request!",
-                        'dokan-lite'
+            </div>
+        </>
+    ) : (
+        <DokanAlert
+            variant="warning"
+            label={ __(
+                'No payment methods found to submit a withdrawal request.',
+                'dokan-lite'
+            ) }
+        >
+            <div className="text-sm mt-1 font-light">
+                <RawHTML>
+                    { sprintf(
+                        /* translators: %s: opening and closing anchor tags for "payment methods" link */
+                        __(
+                            'Please set up your %1$spayment methods%2$s first.',
+                            'dokan-lite'
+                        ),
+                        `<a href="${ window?.dokanFrontend?.withdraw?.paymentSettingUrl }" class="dokan-link">`,
+                        '</a>'
                     ) }
-                />
-            );
-        }
-        return <WithdrawRequestForm />;
-    };
+                </RawHTML>
+            </div>
+        </DokanAlert>
+    );
+
+    // Inline JSX for modal content (not a nested component)
+    const modalContent = hasWithdrawRequests ? (
+        <SimpleAlert
+            type="danger"
+            color="red"
+            label={ __(
+                'You already have pending withdraw request(s). Please submit your request after approval or cancellation of your previous request.',
+                'dokan-lite'
+            ) }
+        />
+    ) : ! hasSuffcientBalance ? (
+        <SimpleAlert
+            type="danger"
+            color="red"
+            label={ __(
+                "You don't have sufficient balance for a withdraw request!",
+                'dokan-lite'
+            ) }
+        />
+    ) : (
+        withdrawRequestFormContent
+    );
 
     const ModalFooter = () => {
         return (
@@ -333,9 +323,12 @@ function RequestWithdrawBtn( {
 
     const RequestWithdraw = () => {
         return (
-            <DokanButton onClick={ () => setIsOpen( true ) }>
-                { __( 'Request Withdraw', 'dokan-lite' ) }
-            </DokanButton>
+            // @ts-ignore
+            window?.dokanFrontend?.withdraw?.isManualWithdrawEnable && (
+                <DokanButton onClick={ () => setIsOpen( true ) }>
+                    { __( 'Request Withdraw', 'dokan-lite' ) }
+                </DokanButton>
+            )
         );
     };
 
@@ -355,7 +348,7 @@ function RequestWithdrawBtn( {
                 onClose={ () => setIsOpen( false ) }
                 onConfirm={ handleCreateWithdraw }
                 dialogTitle={ __( 'Send Withdraw Request', 'dokan-lite' ) }
-                dialogContent={ <ModalContent /> }
+                dialogContent={ modalContent }
                 dialogFooterContent={ <ModalFooter /> }
                 className="min-w-[600px] dokan-withdraw-style-reset"
                 modalClassName="dokan-layout"

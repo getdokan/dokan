@@ -9,6 +9,7 @@ import MostReportedVendorsSkeleton from './Skeleton';
 import { applyFilters } from '@wordpress/hooks';
 import { truncate } from '../../../../../../utilities';
 import { DokanTooltip as Tooltip } from '@dokan/components';
+import { ShortContent } from '@dokan/components';
 
 const MostReportedVendorsSection = () => {
     const { data, loading, error } =
@@ -52,7 +53,7 @@ const MostReportedVendorsSection = () => {
             label: __( 'Rank', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item } ) => (
-                <div className="font-medium text-center text-gray-900">
+                <div className="font-medium text-center text-gray-900 px-2">
                     { item.rank }
                 </div>
             ),
@@ -62,17 +63,10 @@ const MostReportedVendorsSection = () => {
             label: __( 'Vendor Name', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item } ) => (
-                <div className="font-medium text-gray-900">
-                    <Tooltip
-                        content={ <RawHTML>{ item.vendor_name }</RawHTML> }
-                    >
-                        <div className="w-fit">
-                            <RawHTML>
-                                { truncate( item.vendor_name, 50 ) }
-                            </RawHTML>
-                        </div>
-                    </Tooltip>
-                </div>
+                <ShortContent
+                    content={ item.vendor_name }
+                    className="font-medium text-gray-900"
+                />
             ),
         },
         {
@@ -92,7 +86,10 @@ const MostReportedVendorsSection = () => {
     }
 
     return (
-        <Section title={ __( 'Most Reported Vendors', 'dokan-lite' ) }>
+        <Section
+            className="mt-4 lg:!mt-8"
+            title={ __( 'Most Reported Vendors', 'dokan-lite' ) }
+        >
             { ! error ? (
                 <div className="relative overflow-x-auto shadow-md sm:rounded-lg bg-white">
                     <DataViews

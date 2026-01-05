@@ -121,6 +121,8 @@ export interface Vendor {
 
     shop_url: URLString;
 
+    switch_url?: string;
+
     toc_enabled: boolean;
     store_toc: string;
 

@@ -208,6 +208,11 @@ class ProductControllerV2 extends ProductController {
             'default'           => array(),
             'sanitize_callback' => 'wp_parse_id_list',
         );
+        $params['include_variations'] = array(
+            'description' => __( 'If true matched product variations will be added to the collection', 'dokan-lite' ),
+            'type'        => 'boolean',
+            'default'     => false,
+        );
 
         return $params;
     }
@@ -244,13 +249,13 @@ class ProductControllerV2 extends ProductController {
      */
     protected function prepare_objects_query( $request ) {
         $args = parent::prepare_objects_query( $request );
+        unset( $args['author'] );
 
         $args = array_merge(
             $args,
             array(
                 'posts_per_page' => isset( $request['per_page'] ) ? $request['per_page'] : 10,
                 'paged'          => isset( $request['page'] ) ? $request['page'] : 1,
-                'author'         => dokan_get_current_user_id(),
                 'orderby'        => isset( $request['orderby'] ) ? $request['orderby'] : 'date',
                 'post_type'      => 'product',
                 'date_query'     => [],
@@ -269,8 +274,10 @@ class ProductControllerV2 extends ProductController {
         $product_types  = apply_filters( 'dokan_product_types', [ 'simple' => __( 'Simple', 'dokan-lite' ) ] );
 
         // If any vendor it trying to access other products then we need to replace author id by current user id.
-        if ( $request->get_param( 'author' ) && ! current_user_can( dokana_admin_menu_capability() ) ) {
+        if ( ! current_user_can( dokana_admin_menu_capability() ) ) {
             $args['author'] = dokan_get_current_user_id();
+        } elseif ( $request->get_param( 'author' ) ) {
+            $args['author'] = $request->get_param( 'author' );
         }
 
         // Pagination page number.
@@ -312,6 +319,20 @@ class ProductControllerV2 extends ProductController {
                 'key'     => '_stock_status',
                 'value'   => sanitize_text_field( wp_unslash( $request['stock_status'] ) ),
                 'compare' => ' = ',
+            );
+        }
+
+        // Include variations but exclude parent variable products when requested.
+        if ( isset( $request['include_variations'] ) && true === wc_string_to_bool( $request['include_variations'] ) ) {
+            $args['post_type'] = [ $this->post_type, 'product_variation' ];
+
+            // Exclude parent variable products so only variations (and other non-variable products) are included.
+            // Variations are a different post type and won't be affected by this taxonomy filter.
+            $args['tax_query'][] = array(
+                'taxonomy' => 'product_type',
+                'field'    => 'slug',
+                'terms'    => array( 'variable' ),
+                'operator' => 'NOT IN',
             );
         }
 

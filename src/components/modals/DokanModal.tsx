@@ -32,6 +32,7 @@ interface DokanModalProps {
     loading?: boolean;
     confirmButtonVariant?: ButtonVariant;
     hideCancelButton?: boolean;
+    confirmButtonDisabled?: boolean;
 }
 
 const DokanModal = ( {
@@ -57,6 +58,7 @@ const DokanModal = ( {
     loading = false,
     confirmButtonVariant = 'primary',
     hideCancelButton = false,
+    confirmButtonDisabled = false,
 }: DokanModalProps ) => {
     if ( ! namespace ) {
         throw new Error(
@@ -220,7 +222,11 @@ const DokanModal = ( {
                                           onClick={ handleConfirm }
                                           variant={ confirmButtonVariant }
                                           loading={ isSubmitting || loading }
-                                          disabled={ isSubmitting || loading }
+                                          disabled={
+                                              isSubmitting ||
+                                              loading ||
+                                              confirmButtonDisabled
+                                          }
                                       >
                                           { confirmButtonText ||
                                               __(
