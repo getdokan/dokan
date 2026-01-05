@@ -37,10 +37,12 @@
         "typecheck": "tsc --noEmit"
     },
     "peerDependencies": {
+        "@wordpress/block-editor": ">=12.0.0",
         "@wordpress/components": ">=19.0.0",
         "@wordpress/element": ">=4.0.0",
         "@wordpress/i18n": ">=4.0.0",
         "@wordpress/hooks": ">=3.0.0",
+        "quill": ">=2.0.0",
         "react": ">=17.0.0",
         "react-dom": ">=17.0.0"
     },

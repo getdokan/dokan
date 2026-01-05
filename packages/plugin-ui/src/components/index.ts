@@ -21,6 +21,8 @@ export { default as ColorPicker } from './ColorPicker';
 export { default as TimePicker } from './TimePicker';
 export { default as FileUpload } from './FileUpload';
 export { default as CopyField } from './CopyField';
+export { default as RichText } from './RichText';
+export { default as Repeater } from './Repeater';
 
 // Display
 export { default as FieldLabel } from './FieldLabel';
@@ -41,5 +43,6 @@ export type { SwitchProps } from './Switch';
 export type { ColorPickerProps } from './ColorPicker';
 export type { TimePickerProps } from './TimePicker';
 export type { CopyFieldProps } from './CopyField';
+export type { RichTextProps } from './RichText';
 export type { InfoBoxProps } from './InfoBox';
 
