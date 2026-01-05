@@ -222,5 +222,26 @@ export default function useLayout() {
         ];
     }, [] );
 
-    return { fields, sections };
+    const initialData = useMemo( () => {
+        const entries = sections.flatMap( ( section ) => {
+            return section.fields.map( ( field ) => {
+                if ( field.id === 'image_id' && field.value ) {
+                    return [ field.id, field.value.id ];
+                }
+                if (
+                    field.id === 'gallery_image_ids' &&
+                    Array.isArray( field.value )
+                ) {
+                    return [
+                        field.id,
+                        field.value.map( ( img: any ) => img.id ),
+                    ];
+                }
+                return [ field.id, field.value || '' ];
+            } );
+        } );
+        return Object.fromEntries( entries );
+    }, [] );
+
+    return { fields, sections, initialData };
 }

@@ -27,3 +27,12 @@ export type FormField = {
     left_icon?: string;
     right_icon?: string;
 } & Field< any >;
+
+export type FieldConfig = Partial< FormField > & {
+    type?: string;
+    Edit?: any;
+    elements?: any[];
+    [ key: string ]: any;
+};
+
+export type FieldHandler = ( field: FormField ) => FieldConfig;

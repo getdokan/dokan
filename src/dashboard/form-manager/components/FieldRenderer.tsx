@@ -2,23 +2,7 @@ import { DokanTooltip } from '@src/components';
 import { sanitizeHTML } from '@src/utilities';
 import { Info } from 'lucide-react';
 import { FormField } from '../types';
-import DateTimePickerEdit from './DateTimePickerEdit';
-import FeatureImage from './FeatureImage';
-import RichTextEdit from './RichTextEdit';
-import TextWithAddon from './TextWithAddon';
-import CategoriesEdit from './CategoriesEdit';
-import GalleryImages from './GalleryImages';
-
-const getElementsFromOptions = ( options: any ) => {
-    if ( Array.isArray( options ) ) {
-        return options;
-    }
-
-    return Object.entries( options ).map( ( [ value, label ] ) => ( {
-        label,
-        value,
-    } ) );
-};
+import { getFieldConfigFromFactory } from '../factories';
 
 export const getFieldConfig = ( field: FormField ) => {
     const mappedField = {
@@ -52,57 +36,8 @@ export const getFieldConfig = ( field: FormField ) => {
         multiple: false,
     };
 
-    // Map Input Types
-    switch ( field.field_type ) {
-        case 'textarea':
-        case 'rich_text':
-            mappedField.type = 'text';
-            mappedField.Edit = RichTextEdit;
-            break;
-        case 'checkbox':
-            mappedField.type = 'boolean';
-            mappedField.Edit = 'checkbox';
-            break;
-        case 'radio':
-            mappedField.type = 'text';
-            mappedField.Edit = 'radio';
-            break;
-        case 'number':
-            mappedField.type = 'integer';
-            break;
-        case 'date':
-        case 'datetime':
-            mappedField.type = 'datetime';
-            mappedField.Edit = DateTimePickerEdit;
-            break;
-        case 'select':
-            mappedField.type = 'number';
-            mappedField.elements = getElementsFromOptions( field.options );
-            mappedField.Edit = 'select';
-
-            if ( Array.isArray( field.value ) ) {
-                mappedField.type = 'array';
-            }
-
-            if ( field.name === 'chosen_product_cat' ) {
-                mappedField.Edit = CategoriesEdit;
-                mappedField.type = 'array';
-            }
-            break;
-        case 'image':
-            mappedField.type = 'integer';
-            mappedField.Edit = FeatureImage;
-            break;
-        case 'gallery':
-            mappedField.type = 'array';
-            mappedField.Edit = GalleryImages;
-            break;
-        default:
-            mappedField.type = 'text';
-            if ( field.left_icon || field.right_icon ) {
-                mappedField.Edit = TextWithAddon;
-            }
-    }
+    const specificConfig = getFieldConfigFromFactory( field );
+    Object.assign( mappedField, specificConfig );
 
     // Handle Visibility/Dependency
     mappedField.isVisible = ( data: Record< string, any > ) => {
