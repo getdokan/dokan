@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6be158b6a5cc2161316d5e1659af025b",
+    "content-hash": "ab1e328ea64cbefbff1959bfe807ddec",
     "packages": [
         {
             "name": "appsero/client",
@@ -133,6 +133,37 @@
                 "source": "https://github.com/jakeasmith/http_build_url"
             },
             "time": "2017-05-01T15:36:40+00:00"
+        },
+        {
+            "name": "wedevs/plugin-settings",
+            "version": "dev-feat/plugin-settings-integration",
+            "dist": {
+                "type": "path",
+                "url": "./packages/plugin-settings",
+                "reference": "3e53923fbc6bea69c64c19ccadaf19aa32d0b3e5"
+            },
+            "require": {
+                "php": ">=7.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "WeDevs\\PluginSettings\\": "includes/"
+                }
+            },
+            "license": [
+                "GPL-2.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "weDevs",
+                    "email": "developer@wedevs.com"
+                }
+            ],
+            "description": "A reusable WordPress settings framework for building admin settings pages",
+            "transport-options": {
+                "relative": true
+            }
         }
     ],
     "packages-dev": [
