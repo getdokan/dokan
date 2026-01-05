@@ -1,0 +1,67 @@
+{
+    "name": "@wedevs/plugin-settings",
+    "version": "1.0.0",
+    "description": "A reusable WordPress settings framework for building admin settings pages",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs",
+            "types": "./dist/index.d.ts"
+        },
+        "./components": {
+            "import": "./dist/components/index.js",
+            "types": "./dist/components/index.d.ts"
+        },
+        "./stores": {
+            "import": "./dist/stores/index.js",
+            "types": "./dist/stores/index.d.ts"
+        },
+        "./utils": {
+            "import": "./dist/utils/index.js",
+            "types": "./dist/utils/index.d.ts"
+        },
+        "./hooks": {
+            "import": "./dist/hooks/index.js",
+            "types": "./dist/hooks/index.d.ts"
+        },
+        "./styles.css": "./dist/styles.css"
+    },
+    "files": [
+        "dist",
+        "src"
+    ],
+    "scripts": {
+        "build": "tsc && npm run build:css",
+        "build:css": "tailwindcss -i ./src/styles/index.css -o ./dist/styles.css --minify",
+        "dev": "tsc --watch",
+        "lint": "eslint src --ext .ts,.tsx",
+        "test": "jest"
+    },
+    "peerDependencies": {
+        "@wordpress/api-fetch": ">=6.0.0",
+        "@wordpress/data": ">=9.0.0",
+        "@wordpress/element": ">=5.0.0",
+        "@wordpress/hooks": ">=3.0.0",
+        "@wordpress/i18n": ">=4.0.0",
+        "react": ">=18.0.0",
+        "react-dom": ">=18.0.0",
+        "tailwind-merge": ">=2.0.0"
+    },
+    "devDependencies": {
+        "@types/react": "^18.0.0",
+        "@types/react-dom": "^18.0.0",
+        "typescript": "^5.0.0"
+    },
+    "keywords": [
+        "wordpress",
+        "settings",
+        "admin",
+        "react",
+        "framework"
+    ],
+    "author": "weDevs <developer@wedevs.com>",
+    "license": "GPL-2.0-or-later"
+}
+

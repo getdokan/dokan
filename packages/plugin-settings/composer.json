@@ -1,0 +1,24 @@
+{
+    "name": "wedevs/plugin-settings",
+    "description": "A reusable WordPress settings framework for building admin settings pages",
+    "type": "library",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "weDevs",
+            "email": "developer@wedevs.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "WeDevs\\PluginSettings\\": "includes/"
+        }
+    },
+    "require": {
+        "php": ">=7.4"
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
+

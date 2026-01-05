@@ -11,11 +11,18 @@
   ],
   "minimum-stability": "dev",
   "prefer-stable": true,
+  "repositories": [
+    {
+      "type": "path",
+      "url": "./packages/plugin-settings"
+    }
+  ],
   "require": {
     "php": ">=7.4",
     "appsero/client": "^v2.0.4",
     "jakeasmith/http_build_url": "^1",
-    "appsero/updater": "^v2.3.1"
+    "appsero/updater": "^v2.3.1",
+    "wedevs/plugin-settings": "*"
   },
   "require-dev": {
     "wp-coding-standards/wpcs": "dev-develop",
