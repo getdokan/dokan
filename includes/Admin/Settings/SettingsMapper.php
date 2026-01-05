@@ -36,7 +36,7 @@ class SettingsMapper {
         'dokan_selling.hide_customer_info'                           => 'general.marketplace.marketplace_settings.show_customer_details_to_vendors',
         'dokan_selling.enable_guest_user_enquiry'                    => 'general.marketplace.marketplace_settings.guest_product_enquiry',
         // Inverted meaning: hide add to cart -> visibility toggle
-        'dokan_selling.catalog_mode_hide_add_to_cart_button'         => 'general.marketplace.marketplace_settings.add_to_cart_button_visibility',
+        'dokan_selling.catalog_mode_hide_add_to_cart_button' => 'general.marketplace.marketplace_settings.add_to_cart_button_visibility',
         // Live Search
         'dokan_live_search_setting.live_search_option'               => 'general.marketplace.live_search.search_box_radio',
 
@@ -55,14 +55,14 @@ class SettingsMapper {
         'dokan_appearance.gmap_api_key'                              => 'general.location.map_api_configuration.google_map_api_key.google_map_api_key',
         'dokan_appearance.mapbox_access_token'                       => 'general.location.map_api_configuration.mapbox_api_key.mapbox_api_key',
         'dokan_geolocation.show_locations_map'                       => 'general.location.map_display_settings.location_map_position',
-        'dokan_geolocation.show_filters_before_locations_map'        => 'general.location.map_display_settings.show_filters_before_map',
+        'dokan_geolocation.show_filters_before_locations_map' => 'general.location.map_display_settings.show_filters_before_map',
         'dokan_geolocation.distance_unit'                            => 'general.location.map_display_settings.radius_search_unit',
         'dokan_geolocation.distance_min'                             => 'general.location.map_display_settings.radius_search_min_distance',
         'dokan_geolocation.distance_max'                             => 'general.location.map_display_settings.radius_search_max_distance',
         'dokan_geolocation.map_zoom'                                 => 'general.location.map_display_settings.map_zoom_level',
         // Note: Old had two separate controls for placement; new consolidates to a single multi-select
         'dokan_geolocation.show_location_map_pages'                  => 'general.location.map_placement.map_placement_locations',
-        'dokan_geolocation.show_product_location_in_wc_tab'          => 'general.location.map_placement.map_placement_locations',
+        'dokan_geolocation.show_product_location_in_wc_tab' => 'general.location.map_placement.map_placement_locations',
 
         // =========================
         // Appearance > Store Page
@@ -108,15 +108,15 @@ class SettingsMapper {
         //Main shipment tracking toggle
         'dokan_shipping_status_setting.enabled'                      => 'shipment.shipment-setting-page.shipment-settings.allows_shipment_tracking',
         // Allow marking shipments as received. This field will visible only if shipment tracking is enabled.
-        'dokan_shipping_status_setting.allow_mark_received'          => 'shipment.shipment-setting-page.shipment-settings.allow_mark_received',
+        'dokan_shipping_status_setting.allow_mark_received' => 'shipment.shipment-setting-page.shipment-settings.allow_mark_received',
         // ShipStation logging
         'dokan_general.enable_shipstation_logging'                   => 'shipment.shipment-setting-page.shipment-settings.enable_shipstation_logging',
 
         // Shipping Provider
-        'dokan_shipping_status_setting.shipping_status_provider'     => 'shipment.shipment-setting-page.shipment-provider',
+        'dokan_shipping_status_setting.shipping_status_provider' => 'shipment.shipment-setting-page.shipment-provider',
         // Shipping Status (repeatable field in old UI maps to repeatable section in new UI)
         //'dokan_shipping_status_setting.shipment_status.shipping_status_list' => 'shipment.shipment-setting-page.shipment-settings.shipment-status.shipping_status_list',
-        'dokan_shipping_status_setting.shipping_status_list'         => 'shipment.shipment-setting-page.shipment-status.shipping_status_list',
+        'dokan_shipping_status_setting.shipping_status_list' => 'shipment.shipment-setting-page.shipment-status.shipping_status_list',
 
         // =========================
         // Moderation > RMA
@@ -136,12 +136,12 @@ class SettingsMapper {
         'dokan_live_chat.chat_button_product_page'                   => 'moderation.livechat.livechat_settings.livechat_product_page_button',
 
         // Moderation > Store Support
-        'dokan_store_support_setting.enabled_for_customer_order'     => 'moderation.store_support.store_support_settings.store_support_order_details',
+        'dokan_store_support_setting.enabled_for_customer_order' => 'moderation.store_support.store_support_settings.store_support_order_details',
         'dokan_store_support_setting.support_button_label'           => 'moderation.store_support.store_support_settings.store_support_button_label',
-        'dokan_store_support_setting.store_support_product_page'     => 'moderation.store_support.store_support_settings.store_support_product_page',
+        'dokan_store_support_setting.store_support_product_page' => 'moderation.store_support.store_support_settings.store_support_product_page',
 
         // Moderation > Report Abuse
-        'dokan_report_abuse.reported_by_logged_in_users_only'        => 'moderation.report_abuse.report_abuse_settings.report_abuse_reported_by',
+        'dokan_report_abuse.reported_by_logged_in_users_only' => 'moderation.report_abuse.report_abuse_settings.report_abuse_reported_by',
         'dokan_report_abuse.abuse_reasons'                           => 'moderation.report_abuse.report_abuse_settings.report_abuse_reasons',
         //'dokan_rma.rma_reasons'                    => 'moderation.report_abuse.reasons_for_abuse_reports.report_abuse_reasons',
 
@@ -150,7 +150,7 @@ class SettingsMapper {
         // =========================
 
         // Main settings
-        'dokan_delivery_time.allow_vendor_override_settings'         => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.allow_vendor_override_settings',
+        'dokan_delivery_time.allow_vendor_override_settings' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.allow_vendor_override_settings',
         'dokan_delivery_time.selection_required'                     => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.selection_required',
         'dokan_delivery_time.delivery_date_label'                    => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_date_label',
         'dokan_delivery_time.preorder_date'                          => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.preorder_date',
@@ -176,7 +176,7 @@ class SettingsMapper {
         // =========================
 
         // Main settings
-        'dokan_delivery_time.allow_vendor_override_settings'         => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.allow_vendor_override_settings',
+        'dokan_delivery_time.allow_vendor_override_settings' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.allow_vendor_override_settings',
         'dokan_delivery_time.selection_required'                     => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.selection_required',
         'dokan_delivery_time.delivery_date_label'                    => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_date_label',
         'dokan_delivery_time.preorder_date'                          => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.preorder_date',
@@ -203,7 +203,7 @@ class SettingsMapper {
         'dokan_selling.commission_type'                              => 'transaction.commission.commission.commission_type',
         'dokan_selling.admin_percentage'                             => 'transaction.commission.commission.admin_commission.admin_percentage',
         'dokan_selling.additional_fee'                               => 'transaction.commission.commission.admin_commission.additional_fee',
-        'dokan_selling.reset_sub_category_when_edit_all_category'    => 'transaction.commission.commission.reset_sub_category_when_edit_all_category',
+        'dokan_selling.reset_sub_category_when_edit_all_category' => 'transaction.commission.commission.reset_sub_category_when_edit_all_category',
         'dokan_selling.commission_category_based_values'             => 'transaction.commission.commission.commission_category_based_values',
 
         // Transaction > Fees
@@ -225,7 +225,7 @@ class SettingsMapper {
         // Transaction > Reverse Withdrawal
         'dokan_reverse_withdrawal.enabled'                           => 'transaction.reverse_withdrawal.reverse_withdrawal_section.enabled',
         'dokan_reverse_withdrawal.billing_type'                      => 'transaction.reverse_withdrawal.reverse_withdrawal_section.billing_type',
-        'dokan_reverse_withdrawal.reverse_balance_threshold'         => 'transaction.reverse_withdrawal.reverse_withdrawal_section.reverse_balance_threshold',
+        'dokan_reverse_withdrawal.reverse_balance_threshold' => 'transaction.reverse_withdrawal.reverse_withdrawal_section.reverse_balance_threshold',
         'dokan_reverse_withdrawal.monthly_billing_day'               => 'transaction.reverse_withdrawal.reverse_withdrawal_section.monthly_billing_day',
         'dokan_reverse_withdrawal.due_period'                        => 'transaction.reverse_withdrawal.reverse_withdrawal_section.due_period',
         'dokan_reverse_withdrawal.failed_actions'                    => 'transaction.reverse_withdrawal.reverse_withdrawal_section.failed_actions',
@@ -295,9 +295,9 @@ class SettingsMapper {
         'dokan_product_subscription.enable_pricing'                  => 'vendor.vendor_subscription.vendor_subscription.vendor_subscription',
         'dokan_product_subscription.subscription_pack'               => 'vendor.vendor_subscription.vendor_subscription.subscription_view_page',
         'dokan_product_subscription.enable_subscription_pack_in_reg' => 'vendor.vendor_subscription.vendor_subscription.subscription_in_registration',
-        'dokan_product_subscription.no_of_days_before_mail'          => 'vendor.vendor_subscription.vendor_subscription.alert_days_before_expiry',
-        'dokan_product_subscription.product_status_after_end'        => 'vendor.vendor_subscription.vendor_subscription.products_status_on_expiry',
-        'dokan_product_subscription.cancelling_email_subject'        => 'vendor.vendor_subscription.vendor_subscription.cancelling_email_subject',
+        'dokan_product_subscription.no_of_days_before_mail' => 'vendor.vendor_subscription.vendor_subscription.alert_days_before_expiry',
+        'dokan_product_subscription.product_status_after_end' => 'vendor.vendor_subscription.vendor_subscription.products_status_on_expiry',
+        'dokan_product_subscription.cancelling_email_subject' => 'vendor.vendor_subscription.vendor_subscription.cancelling_email_subject',
         'dokan_product_subscription.cancelling_email_body'           => 'vendor.vendor_subscription.vendor_subscription.cancelling_email_body',
         'dokan_product_subscription.alert_email_subject'             => 'vendor.vendor_subscription.vendor_subscription.alert_email_subject',
         'dokan_product_subscription.alert_email_body'                => 'vendor.vendor_subscription.vendor_subscription.alert_email_body',
@@ -322,14 +322,14 @@ class SettingsMapper {
         'dokan_verification_sms_gateways.active_gateway'             => 'verification.sms-gateways-page.sms-provider.sms_provider',
 
         // Twilio Settings
-        'dokan_verification_sms_gateways.twilio_enable_status'       => 'verification.sms-gateways-page.sms-provider.connect_to_twilio',
+        'dokan_verification_sms_gateways.twilio_enable_status' => 'verification.sms-gateways-page.sms-provider.connect_to_twilio',
         'dokan_verification_sms_gateways.twilio_number'              => 'verification.sms-gateways-page.sms-provider.from_number',
         'dokan_verification_sms_gateways.twilio_username'            => 'verification.sms-gateways-page.sms-provider.account_sid',
         'dokan_verification_sms_gateways.twilio_pass'                => 'verification.sms-gateways-page.sms-provider.auth_token',
         'dokan_verification_sms_gateways.twilio_code_type'           => 'verification.sms-gateways-page.sms-provider.sms_code_type',
 
         // Nexmo/Vonage Settings (using the flattened structure)
-        'dokan_verification_sms_gateways.nexmo_enable_status'        => 'verification.sms-gateways-page.sms-provider.connect_to_vonage',
+        'dokan_verification_sms_gateways.nexmo_enable_status' => 'verification.sms-gateways-page.sms-provider.connect_to_vonage',
         'dokan_verification_sms_gateways.nexmo_username'             => 'verification.sms-gateways-page.sms-provider.vonage_api_key',
         'dokan_verification_sms_gateways.nexmo_pass'                 => 'verification.sms-gateways-page.sms-provider.vonage_api_secret',
 
@@ -346,10 +346,10 @@ class SettingsMapper {
         'dokan_product_advertisement.expire_after_days'              => 'product.product_advertisement.advertisement_expire_days',
         'dokan_product_advertisement.cost'                           => 'product.product_advertisement.advertisement_cost_usd',
         'dokan_product_advertisement.per_product_enabled'            => 'product.product_advertisement.vendor_can_purchase_advertisement',
-        'dokan_product_advertisement.vendor_subscription_enabled'    => 'product.product_advertisement.advertisement_in_subscription',
+        'dokan_product_advertisement.vendor_subscription_enabled' => 'product.product_advertisement.advertisement_in_subscription',
         'dokan_product_advertisement.featured'                       => 'product.product_advertisement.mark_advertised_as_featured',
         'dokan_product_advertisement.catalog_priority'               => 'product.product_advertisement.display_advertised_on_top',
-        'dokan_product_advertisement.hide_out_of_stock_items'        => 'product.product_advertisement.out_of_stock_visibility',
+        'dokan_product_advertisement.hide_out_of_stock_items' => 'product.product_advertisement.out_of_stock_visibility',
 
         // Product > Printful (App & Size Guide)
         'dokan_printful.app_id'                                      => 'product.printful_integration.printful_api_settings.printful_api_settings_group.printful_client_id',
@@ -372,12 +372,12 @@ class SettingsMapper {
         'dokan_quote_settings.redirect_to_quote_page'                => 'product.request_for_quote.redirect_to_quote_page',
         'dokan_quote_settings.decrease_offered_price'                => 'product.request_for_quote.decrease_offered_price',
         'dokan_quote_settings.enable_convert_to_order'               => 'product.request_for_quote.convert_to_order',
-        'dokan_quote_settings.enable_quote_converter_display'        => 'product.request_for_quote.quote_converter_display',
+        'dokan_quote_settings.enable_quote_converter_display' => 'product.request_for_quote.quote_converter_display',
 
         // Product > Wholesale
         'dokan_wholesale.wholesale_price_display'                    => 'product.wholesale.display_wholesale_pricing_to',
         'dokan_wholesale.display_price_in_shop_archieve'             => 'product.wholesale.wholesale_price_on_shop_archive',
-        'dokan_wholesale.need_approval_for_wholesale_customer'       => 'product.wholesale.need_approval_for_customer',
+        'dokan_wholesale.need_approval_for_wholesale_customer' => 'product.wholesale.need_approval_for_customer',
 
         // =========================
         // AI Assist > Product Generation
