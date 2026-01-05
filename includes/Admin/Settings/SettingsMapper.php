@@ -97,8 +97,8 @@ class SettingsMapper {
         // Compliance > EU Compliance (Germanized)
         // =========================
         'dokan_germanized.vendor_registration'                       => 'compliance.eu_compliance.eu_compliance_settings.eu_vendor_registration_display',
-        'dokan_germanized.vendor_fields'                             => 'compliance.eu_compliance.vendor_extra_fields.vendor_extra_fields',
-        'dokan_germanized.customer_fields'                           => 'compliance.eu_compliance.customer_extra_fields.customer_extra_fields',
+        'dokan_germanized.vendor_fields'                             => 'compliance.eu_compliance.eu_compliance_settings.vendor_extra_fields',
+        'dokan_germanized.customer_fields'                           => 'compliance.eu_compliance.eu_compliance_settings.customer_extra_fields',
         'dokan_germanized.enabled_germanized'                        => 'compliance.eu_compliance.eu_compliance_settings.germanized_support_vendors',
         'dokan_germanized.override_invoice_number'                   => 'compliance.eu_compliance.eu_compliance_settings.vendor_invoice_number_override',
 
