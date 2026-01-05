@@ -26,7 +26,7 @@ trait VendorAuthorizable {
      * - Vendor staff: Can access only their assigned vendor store
      * - Others: Cannot access any vendor store
      *
-     *  @since DOKAN_SINCE
+     *  @since 4.2.5
      *
      * @param int $vendor_id Vendor user ID.
      * @param int $user_id Optional. User ID. Defaults to current user.
@@ -66,7 +66,7 @@ trait VendorAuthorizable {
      * - Vendor staff: Returns their parent vendor's ID (stored in user meta)
      * - Other users: Returns 0 if not associated with any vendor
      *
-     *  @since DOKAN_SINCE
+     *  @since 4.2.5
      *
      * @param int $user_id Optional. The user ID to get the vendor ID for. Defaults to 0 (current user).
      *
@@ -88,7 +88,7 @@ trait VendorAuthorizable {
      * - The provided value is greater than 0
      * - The vendor ID resolved from the value is greater than 0
      *
-     *  @since DOKAN_SINCE
+     *  @since 4.2.5
      *
      * @param mixed          $value   The value to validate (typically a user ID).
      * @param \WP_REST_Request $request The REST API request object.
@@ -114,7 +114,7 @@ trait VendorAuthorizable {
     /**
      * Check if a user is vendor staff (not a vendor owner).
      *
-     * @since DOKAN_SINCE
+     * @since 4.2.5
      *
      * @param int $user_id User ID to check.
      * @return bool True if user is vendor staff but not a vendor owner.

@@ -1,3 +1,8 @@
+### v4.2.5 ( Jan 05, 2026 ) ###
+- **fix:** Add translation support to store performance report labels.
+- **fix:** Social profile URL's not accessible for staff users.
+- **fix:** Prevented unauthorized changes to administrator accounts.
+
 ### v4.2.4 ( Dec 26, 2025 ) ###
 - **new:** Added a Pending Vendors tab on the WordPress admin Users screen to view vendors awaiting approval.
 - **new:** Added a bulk action on the WordPress admin Users screen to approve multiple pending vendors at once, including per-user validation and permission checks.

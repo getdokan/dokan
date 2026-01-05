@@ -451,7 +451,7 @@ class StoreController extends WP_REST_Controller {
     /**
      * Get restricted fields for store update based on user role.
      *
-     * @since DOKAN_SINCE
+     * @since 4.2.5
      *
      * @param \WeDevs\Dokan\Vendor\Vendor $store Store object.
      * @param \WP_REST_Request $request Request object.
@@ -757,7 +757,7 @@ class StoreController extends WP_REST_Controller {
      * - Admin settings (for hiding vendor info like address, phone, email)
      * - Vendor preferences (vendor can choose to hide email)
      *
-     * @since DOKAN_SINCE
+     * @since 4.2.5
      *
      * @param \WeDevs\Dokan\Vendor\Vendor $store Store object.
      * @param \WP_REST_Request $request Request object.
