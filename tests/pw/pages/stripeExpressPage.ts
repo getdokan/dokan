@@ -18,6 +18,10 @@ export class stripeExpressPage {
 
     // Vendor Dashboard Locators
     readonly stripeExpressDashboardLoginButton: Locator;
+    readonly addProductLink: Locator;
+    readonly productTitleInput: Locator;
+    readonly regularPriceInput: Locator;
+    readonly publishButton: Locator;
 
     // Customer Locators
     // Add locators here
@@ -31,6 +35,10 @@ export class stripeExpressPage {
 
         // Vendor Dashboard Locators
         this.stripeExpressDashboardLoginButton = page.locator("//button[@id='dokan-stripe-express-dashboard-login']");
+        this.addProductLink = page.locator("//span[@class='dokan-add-product-link']//a[1]");
+        this.productTitleInput = page.locator("//input[@id='post_title']");
+        this.regularPriceInput = page.locator('#_regular_price:visible');
+        this.publishButton = page.locator("(//input[@id='publish'])[1]");
     }
 
     // Navigation Methods
@@ -57,6 +65,13 @@ export class stripeExpressPage {
         // Vendor navigation to Stripe Express payment settings
         const baseUrl = process.env.BASE_URL || 'https://dokanautomation.test';
         await this.page.goto(`${baseUrl}/dashboard/settings/payment-manage-dokan_stripe_express-edit/`);
+        await this.page.waitForLoadState('domcontentloaded');
+    }
+
+    async goToVendorProductsPage() {
+        // Vendor navigation to products page
+        const baseUrl = process.env.BASE_URL || 'https://dokanautomation.test';
+        await this.page.goto(`${baseUrl}/dashboard/products/`);
         await this.page.waitForLoadState('domcontentloaded');
     }
 
@@ -150,6 +165,31 @@ export class stripeExpressPage {
         
         // Verify the button is visible (vendor is connected)
         await expect(this.stripeExpressDashboardLoginButton).toBeVisible();
+    }
+
+    async createStripeExpressProduct(productTitle: string, price: string) {
+        await this.goToVendorProductsPage();
+        
+        // Wait for add product link to be visible and clickable
+        await this.addProductLink.waitFor({ state: 'visible' });
+        await this.addProductLink.click();
+        
+        // Wait for product title input to be visible
+        await this.productTitleInput.waitFor({ state: 'visible' });
+        await this.productTitleInput.click();
+        await this.productTitleInput.fill(productTitle);
+        
+        // Wait for regular price input to be visible
+        await this.regularPriceInput.waitFor({ state: 'visible' });
+        await this.regularPriceInput.click();
+        await this.regularPriceInput.fill(price);
+        
+        // Wait for publish button to be visible and clickable
+        await this.publishButton.waitFor({ state: 'visible' });
+        await this.publishButton.click();
+        
+        // Wait for the page to update after publishing
+        await this.page.waitForLoadState('domcontentloaded');
     }
 
     // Customer Methods
