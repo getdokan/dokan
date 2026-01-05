@@ -321,7 +321,8 @@ class StoreController extends WP_REST_Controller {
     public function get_store( $request ) {
         $requested_id = absint( $request->get_param( 'id' ) );
 
-        $store = dokan()->vendor->get( $requested_id );
+        $store_id = $this->get_vendor_id_for_user( $requested_id );
+		$store = dokan()->vendor->get( $store_id );
 
         if ( ! $store || ! $store->get_id() ) {
             return new WP_Error(
@@ -768,8 +769,10 @@ class StoreController extends WP_REST_Controller {
 
         $is_authorized = $this->can_access_vendor_store( $store->get_id() );
 
-        // Restrict admin commission fields for unauthorized users and vendor staff
-        if ( ! $is_authorized || ( $is_authorized && $this->is_staff_only( get_current_user_id() ) ) ) {
+        $is_admin = current_user_can( 'manage_options' );
+
+        // Restrict admin commission fields for all except admins and vendor only
+        if ( ! $is_admin && ! dokan_is_user_seller( get_current_user_id(), true ) ) {
             $restricted_fields[] = 'admin_category_commission';
             $restricted_fields[] = 'admin_commission';
             $restricted_fields[] = 'admin_additional_fee';
