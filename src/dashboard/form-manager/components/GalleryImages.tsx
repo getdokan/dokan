@@ -2,6 +2,7 @@ import { DokanButton, MediaUploader } from '@src/components';
 import { __ } from '@wordpress/i18n';
 import { Upload, X } from 'lucide-react';
 import CustomField from './CustomField';
+import { Button } from '@wordpress/components';
 
 export const ImagePreview = ( {
     images,
@@ -20,7 +21,7 @@ export const ImagePreview = ( {
             { items.map( ( item: any, index: number ) => (
                 <div
                     key={ index }
-                    className="relative group border border-gray-200 rounded-md overflow-hidden"
+                    className="relative group border border-gray-200 rounded-md overflow-hidden w-20 h-20"
                 >
                     <img
                         src={ item.url }
@@ -43,46 +44,46 @@ export const ImagePreview = ( {
     );
 };
 
-const FeatureImage = ( { field, onChange }: any ) => {
+const GalleryImages = ( { field, onChange }: any ) => {
     const onSelect = ( value: any ) => {
+        const images = field.value ? field.value : [];
+        const newImages = value.map( ( img: any ) => ( {
+            id: img.id,
+            url: img.url,
+            alt: img.alt,
+        } ) );
+        const newValues = [ ...images, ...newImages ];
         onChange( {
-            [ field.id ]: value.id,
+            [ field.id ]: newValues.map( ( img: any ) => img.id ),
         } );
-        field.value = [
-            {
-                id: value.id,
-                url: value.url,
-                alt: value.alt,
-            },
-        ];
+        field.value = newValues;
     };
 
-    const onRemove = () => {
+    const onRemove = ( index: number ) => {
+        const images = field.value ? field.value : [];
+        const newValues = images.filter( ( _: any, i: number ) => i !== index );
         onChange( {
-            [ field.id ]: [],
+            [ field.id ]: newValues.map( ( img: any ) => img.id ),
         } );
-        field.value = [];
+        field.value = newValues;
     };
+
+    const images = field.value ? field.value : [];
 
     return (
-        <CustomField label={ field.label } className={ `${ field.id }-field` }>
-            { field.value.url ? (
-                <ImagePreview images={ field.value } onRemove={ onRemove } />
-            ) : (
-                <MediaUploader
-                    onSelect={ onSelect }
-                    className={ `dokan-product-${ field.id }` }
-                >
-                    <DokanButton variant="secondary" className="uppercase">
-                        <Upload size={ 16 } />
-                        { __( 'Upload File', 'dokan-lite' ) }
-                    </DokanButton>
-                    <span>
-                        { __( 'A product cover image here.', 'dokan-lite' ) }
-                    </span>
-                </MediaUploader>
-            ) }
+        <CustomField className={ `${ field.id }-field` }>
+            <ImagePreview images={ images } onRemove={ onRemove } />
+            <MediaUploader
+                onSelect={ onSelect }
+                className={ `dokan-product-${ field.id } border border-gray-200 rounded-md overflow-hidden w-20 h-20` }
+                multiple={ true }
+            >
+                <Button>
+                    <Upload size={ 16 } />
+                </Button>
+            </MediaUploader>
         </CustomField>
     );
 };
-export default FeatureImage;
+
+export default GalleryImages;

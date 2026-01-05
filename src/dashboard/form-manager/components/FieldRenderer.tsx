@@ -7,6 +7,7 @@ import FeatureImage from './FeatureImage';
 import RichTextEdit from './RichTextEdit';
 import TextWithAddon from './TextWithAddon';
 import CategoriesEdit from './CategoriesEdit';
+import GalleryImages from './GalleryImages';
 
 const getElementsFromOptions = ( options: any ) => {
     if ( Array.isArray( options ) ) {
@@ -93,8 +94,8 @@ export const getFieldConfig = ( field: FormField ) => {
             mappedField.Edit = FeatureImage;
             break;
         case 'gallery':
-            // mappedField.type = 'array';
-            // mappedField.Edit = FeatureImage;
+            mappedField.type = 'array';
+            mappedField.Edit = GalleryImages;
             break;
         default:
             mappedField.type = 'text';

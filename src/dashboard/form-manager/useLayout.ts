@@ -72,12 +72,17 @@ export default function useLayout() {
                                         id: 'product-image',
                                         layout: {
                                             type: 'row',
+                                            alignment: 'start',
                                             styles: {
                                                 image_id: {
-                                                    display: 'flex',
-                                                    flex: 1,
+                                                    flex: '0 0 232px',
+                                                    width: '232px',
+                                                    height: '232px',
+                                                    marginRight: '10px',
                                                 },
-                                                gallery_image_ids: { flex: 4 },
+                                                gallery_image_ids: {
+                                                    flex: '1 1 0%',
+                                                },
                                             },
                                         },
                                         children: [
