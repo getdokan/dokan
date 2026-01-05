@@ -33,7 +33,7 @@ const { performanceIndicators: indicators } = getAdminSetting(
             {
                 stat: 'revenue/total_sales',
                 chart: 'total_sales',
-                label: 'Total sales',
+                label: __( 'Total sales', 'dokan-lite' ),
                 _links: {
                     api: [
                         {
@@ -50,7 +50,7 @@ const { performanceIndicators: indicators } = getAdminSetting(
             {
                 stat: 'revenue/net_revenue',
                 chart: 'net_revenue',
-                label: 'Net sales',
+                label: __( 'Net sales', 'dokan-lite' ),
                 _links: {
                     api: [
                         {
@@ -67,7 +67,7 @@ const { performanceIndicators: indicators } = getAdminSetting(
             {
                 stat: 'orders/orders_count',
                 chart: 'orders_count',
-                label: 'Orders',
+                label: __( 'Orders', 'dokan-lite' ),
                 _links: {
                     api: [
                         {
@@ -84,7 +84,7 @@ const { performanceIndicators: indicators } = getAdminSetting(
             {
                 stat: 'orders/avg_order_value',
                 chart: 'avg_order_value',
-                label: 'Average order value',
+                label: __( 'Average order value', 'dokan-lite' ),
                 _links: {
                     api: [
                         {
@@ -101,7 +101,7 @@ const { performanceIndicators: indicators } = getAdminSetting(
             {
                 stat: 'products/items_sold',
                 chart: 'items_sold',
-                label: 'Products sold',
+                label: __( 'Products sold', 'dokan-lite' ),
                 _links: {
                     api: [
                         {
@@ -118,7 +118,7 @@ const { performanceIndicators: indicators } = getAdminSetting(
             {
                 stat: 'revenue/refunds',
                 chart: 'refunds',
-                label: 'Returns',
+                label: __( 'Returns', 'dokan-lite' ),
                 _links: {
                     api: [
                         {
@@ -135,7 +135,7 @@ const { performanceIndicators: indicators } = getAdminSetting(
             {
                 stat: 'coupons/orders_count',
                 chart: 'orders_count',
-                label: 'Discounted orders',
+                label: __( 'Discounted orders', 'dokan-lite' ),
                 _links: {
                     api: [
                         {
@@ -152,7 +152,7 @@ const { performanceIndicators: indicators } = getAdminSetting(
             {
                 stat: 'coupons/amount',
                 chart: 'amount',
-                label: 'Net discount amount',
+                label: __( 'Net discount amount', 'dokan-lite' ),
                 _links: {
                     api: [
                         {
@@ -169,7 +169,7 @@ const { performanceIndicators: indicators } = getAdminSetting(
             {
                 stat: 'taxes/total_tax',
                 chart: 'total_tax',
-                label: 'Total tax',
+                label: __( 'Total tax', 'dokan-lite' ),
                 _links: {
                     api: [
                         {
@@ -186,7 +186,7 @@ const { performanceIndicators: indicators } = getAdminSetting(
             {
                 stat: 'taxes/order_tax',
                 chart: 'order_tax',
-                label: 'Order tax',
+                label: __( 'Order tax', 'dokan-lite' ),
                 _links: {
                     api: [
                         {
@@ -203,7 +203,7 @@ const { performanceIndicators: indicators } = getAdminSetting(
             {
                 stat: 'taxes/shipping_tax',
                 chart: 'shipping_tax',
-                label: 'Shipping tax',
+                label: __( 'Shipping tax', 'dokan-lite' ),
                 _links: {
                     api: [
                         {
@@ -220,7 +220,7 @@ const { performanceIndicators: indicators } = getAdminSetting(
             {
                 stat: 'revenue/shipping',
                 chart: 'shipping',
-                label: 'Shipping',
+                label: __( 'Shipping', 'dokan-lite' ),
                 _links: {
                     api: [
                         {
@@ -237,7 +237,7 @@ const { performanceIndicators: indicators } = getAdminSetting(
             {
                 stat: 'downloads/download_count',
                 chart: 'download_count',
-                label: 'Downloads',
+                label: __( 'Downloads', 'dokan-lite' ),
                 _links: {
                     api: [
                         {
@@ -254,7 +254,7 @@ const { performanceIndicators: indicators } = getAdminSetting(
             {
                 stat: 'revenue/gross_sales',
                 chart: 'gross_sales',
-                label: 'Gross sales',
+                label: __( 'Gross sales', 'dokan-lite' ),
                 _links: {
                     api: [
                         {
@@ -271,7 +271,7 @@ const { performanceIndicators: indicators } = getAdminSetting(
             {
                 stat: 'variations/items_sold',
                 chart: 'items_sold',
-                label: 'Variations Sold',
+                label: __( 'Variations Sold', 'dokan-lite' ),
                 _links: {
                     api: [
                         {
