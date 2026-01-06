@@ -5,6 +5,9 @@ namespace WeDevs\Dokan\Product;
 use WeDevs\Dokan\Commission\Formula\Fixed;
 use WeDevs\Dokan\ProductCategory\Helper;
 use WC_Product;
+use WeDevs\Dokan\ProductForm\Factory as ProductFormFactory;
+use WeDevs\Dokan\ProductForm\Field;
+use WeDevs\Dokan\ProductForm\Section;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -53,11 +56,10 @@ class Hooks {
         add_action( 'woocommerce_product_options_advanced', array( $this, 'add_per_product_commission_options' ), 15 );
         add_action( 'woocommerce_process_product_meta_simple', array( $this, 'save_per_product_commission_options' ), 15 );
         add_action( 'woocommerce_process_product_meta_variable', array( $this, 'save_per_product_commission_options' ), 15 );
-        add_action( 'dokan_product_content_inside_area_before', [ $this, 'load_react_template' ] );
-    }
 
-    public function load_react_template() {
-        echo '<div id="product-form-manager-template"></div>';
+        add_action( 'dokan_after_add_product_btn', [ $this, 'add_new_product_link' ] );
+        add_action( 'dokan_render_product_form_manager_template', [ $this, 'load_product_edit_template' ] );
+        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ], 4 );
     }
 
     /**
@@ -201,11 +203,11 @@ class Hooks {
         <div class="dokan-store-products-filter-area dokan-clearfix">
             <form class="dokan-store-products-ordeby" method="get">
                 <input type="text" name="product_name" class="product-name-search dokan-store-products-filter-search"
-                       placeholder="<?php esc_attr_e( 'Enter product name', 'dokan-lite' ); ?>" autocomplete="off"
-                       data-store_id="<?php echo esc_attr( $store_id ); ?>">
+                        placeholder="<?php esc_attr_e( 'Enter product name', 'dokan-lite' ); ?>" autocomplete="off"
+                        data-store_id="<?php echo esc_attr( $store_id ); ?>">
                 <div id="dokan-store-products-search-result" class="dokan-ajax-store-products-search-result"></div>
                 <input type="submit" name="search_store_products" class="search-store-products dokan-btn-theme"
-                       value="<?php esc_attr_e( 'Search', 'dokan-lite' ); ?>">
+                        value="<?php esc_attr_e( 'Search', 'dokan-lite' ); ?>">
 
                 <?php if ( is_array( $orderby_options['catalogs'] ) && isset( $orderby_options['orderby'] ) ) : ?>
                     <select name="product_orderby" class="orderby orderby-search"
@@ -621,5 +623,113 @@ class Hooks {
 
         $brand_ids = $product_data['product_brand'] ?? array();
         dokan()->product->save_brands( $product_id, $brand_ids );
+    }
+
+    public function add_new_product_link() {
+        $add_product_url = add_query_arg(
+            [
+                'form_manager' => 'true',
+            ],
+            dokan_edit_product_url( 0, true )
+        );
+        ?>
+        <a href="<?php echo esc_url( $add_product_url ); ?>" class="dokan-btn dokan-btn-theme">
+            <i class="fas fa-briefcase">&nbsp;</i>
+            <?php esc_html_e( 'Form Manager', 'dokan-lite' ); ?>
+        </a>
+        <?php
+    }
+
+    public function load_product_edit_template() {
+        // check for permission
+        if ( ! current_user_can( 'dokan_edit_product' ) ) {
+            dokan_get_template_part(
+                'global/dokan-error', '', [
+                    'deleted' => false,
+                    'message' => __( 'You have no permission to view this page', 'dokan-lite' ),
+                ]
+            );
+
+            return;
+        }
+
+        // check if seller is enabled for selling
+        if ( ! dokan_is_seller_enabled( dokan_get_current_user_id() ) ) {
+            dokan_seller_not_enabled_notice();
+            return;
+        }
+
+        dokan_get_template_part( 'products/form-manager', '', );
+    }
+
+    public function get_form_fields(): array {
+		$product_id = isset( $_GET['product_id'] ) ? intval( $_GET['product_id'] ) : 0; // phpcs:ignore
+		$product    = wc_get_product( $product_id );
+
+        foreach ( ProductFormFactory::get_sections() as $section ) {
+            /** @var Section $section */
+            if ( is_wp_error( $section ) ) {
+                continue;
+            }
+
+            $fields = [];
+
+            foreach ( $section->get_fields() as $field ) {
+                /** @var Field $field */
+                if ( is_wp_error( $field ) || ! $field->is_visible() ) {
+                    continue;
+                }
+
+                $value = '';
+                if ( $product ) {
+                    try {
+                        $value = $field->get_value( $product );
+                    } catch ( \Throwable $e ) {
+                        dokan_log( 'Error getting value for product ' . $product->get_id() . ': ' . $e->getMessage() );
+                    }
+                }
+
+                $fields[] = [
+                    'id'          => $field->get_id(),
+                    'name'        => $field->get_name(),
+                    'title'       => $field->get_title(),
+                    'help'        => $field->get_help_content(),
+                    'placeholder' => $field->get_placeholder(),
+                    'help_content' => $field->get_help_content(),
+                    'tooltip'     => $field->get_tooltip(),
+                    'description' => $field->get_description(),
+                    'required'    => $field->is_required(),
+                    'value'       => $value,
+                    'field_type'  => $field->get_field_type(),
+                    'options'     => $field->get_options( $product ),
+                    'errors'      => $field->get_error_message(),
+                    'visibility'  => $field->is_visible(),
+                    'dependency_condition' => $field->get_dependency_condition(),
+                    'left_icon'     => $field->get_left_icon(),
+                ];
+            }
+
+            $sections[] = [
+                'id'     => $section->get_id(),
+                'title'  => $section->get_title(),
+                'order'  => $section->get_order(),
+                'description' => $section->get_description(),
+                'fields' => $fields,
+            ];
+        }
+		return $sections;
+	}
+
+    public function enqueue_scripts() {
+        // load the form manager
+        wp_enqueue_script( 'dokan-product-form-manager' );
+        wp_enqueue_style( 'dokan-product-form-manager' );
+        wp_localize_script(
+            'dokan-product-form-manager',
+            'dokanFormManager',
+            [
+                'sections' => $this->get_form_fields(),
+            ]
+        );
     }
 }
