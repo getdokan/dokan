@@ -21,7 +21,7 @@ test.afterAll(async ({ browser }) => {
 
 test.describe('Stripe Express Tests', () => {
 
-    test.describe.skip('Admin Stripe Express Management', () => {
+    test.describe('Admin Stripe Express Management', () => {
         test.use({
             storageState: 'playwright/.auth/adminStorageState.json'
         });
@@ -37,7 +37,7 @@ test.describe('Stripe Express Tests', () => {
         });
     });
 
-    test.describe.skip('Vendor 1 Stripe Express', () => {
+    test.describe('Vendor 1 Stripe Express', () => {
         test.use({
             storageState: 'playwright/.auth/vendorStorageState.json'
         });
@@ -47,13 +47,13 @@ test.describe('Stripe Express Tests', () => {
             await stripePageInstance.verifyVendorStripeExpressConnection();
         });
 
-        test.skip('Vendor 1 Can Create Stripe Express Product @pro', async ({ page }) => {
+        test('Vendor 1 Can Create Stripe Express Product @pro', async ({ page }) => {
             const stripePageInstance = new stripeExpressPage(page);
             await stripePageInstance.createStripeExpressProduct('Test Stripe Express P1_V1', '100.50');
         });
     });
 
-    test.describe.skip('Vendor 2 Stripe Express', () => {
+    test.describe('Vendor 2 Stripe Express', () => {
         test.use({
             storageState: 'playwright/.auth/vendor2StorageState.json'
         });
@@ -63,7 +63,7 @@ test.describe('Stripe Express Tests', () => {
             await stripePageInstance.verifyVendorStripeExpressConnection();
         });
 
-        test.skip('Vendor 2 Can Create Stripe Express Product @pro', async ({ page }) => {
+        test('Vendor 2 Can Create Stripe Express Product @pro', async ({ page }) => {
             const stripePageInstance = new stripeExpressPage(page);
             await stripePageInstance.createStripeExpressProduct('Test Stripe Express P1_V2', '200');
         });
