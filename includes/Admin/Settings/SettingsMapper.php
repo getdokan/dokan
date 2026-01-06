@@ -302,6 +302,10 @@ class SettingsMapper {
         'dokan_product_subscription.alert_email_subject'             => 'vendor.vendor_subscription.vendor_subscription.alert_email_subject',
         'dokan_product_subscription.alert_email_body'                => 'vendor.vendor_subscription.vendor_subscription.alert_email_body',
 
+        // Vendor > Store Stats
+        'dokan_vendor_analytics.profile'                             => 'vendor.store_state.store_stats_section.analytics_authenticated_group.analytics_profile',
+        'dokan_vendor_analytics.add_tracking_code'                   => 'vendor.store_state.store_stats_section.analytics_add_tracking_code',
+
         // Vendor > Single Product Multi Vendor
         'dokan_spmv.enable_pricing'                                  => 'vendor.single_product_multi_vendor.single_product_multi_vendor.single_product_multiple_vendor',
         'dokan_spmv.sell_item_btn'                                   => 'vendor.single_product_multi_vendor.single_product_multi_vendor.sell_item_button_text',
