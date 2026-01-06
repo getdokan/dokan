@@ -87,6 +87,30 @@ class SettingsMapper {
         'dokan_colors.store_color_pallete'                           => 'appearance.dashboard-color-customizer-page.dokan-store-colors.dashboard_color_customizer',
 
         // =========================
+        // Appearance > Storefront Socials
+        // =========================
+
+        // Facebook
+        'dokan_verification.facebook_enable_status'                  => 'appearance.storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_enabled',
+        'dokan_verification.fb_app_id'                               => 'appearance.storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_app_id',
+        'dokan_verification.fb_app_secret'                           => 'appearance.storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_app_secret',
+
+        // Twitter/X
+        'dokan_verification.twitter_enable_status'                   => 'appearance.storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_enabled',
+        'dokan_verification.twitter_app_id'                          => 'appearance.storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_api_key',
+        'dokan_verification.twitter_app_secret'                      => 'appearance.storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_api_secret',
+
+        // Google
+        'dokan_verification.google_enable_status'                    => 'appearance.storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_enabled',
+        'dokan_verification.google_app_id'                           => 'appearance.storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_client_id',
+        'dokan_verification.google_app_secret'                       => 'appearance.storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_client_secret',
+
+        // LinkedIn
+        'dokan_verification.linkedin_enable_status'                  => 'appearance.storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_enabled',
+        'dokan_verification.linkedin_app_id'                         => 'appearance.storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_client_id',
+        'dokan_verification.linkedin_app_secret'                     => 'appearance.storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_client_secret',
+
+        // =========================
         // Compliance > Privacy
         // =========================
         'dokan_privacy.enable_privacy'                               => 'compliance.privacy.privacy_settings.privacy_policy_display',
@@ -414,6 +438,7 @@ class SettingsMapper {
     public function set_map( array $map ): self {
         $this->map = $map;
         $this->build_reverse_map();
+
         return $this;
     }
 
@@ -467,9 +492,9 @@ class SettingsMapper {
     /**
      * Helper: set a value into a nested array using dot notation.
      *
-     * @param array  $array The array to modify (passed by reference).
-     * @param string $path  Dot-notated path (e.g. foo.bar.baz).
-     * @param mixed  $value Value to set.
+     * @param array $array The array to modify (passed by reference).
+     * @param string $path Dot-notated path (e.g. foo.bar.baz).
+     * @param mixed $value Value to set.
      */
     public static function set_value_by_path( array &$array, string $path, $value ): void {
         if ( '' === $path ) {
@@ -505,13 +530,14 @@ class SettingsMapper {
             }
             $ref = $ref[ $key ];
         }
+
         return $ref;
     }
 
     /**
      * Helper: check if a dot-notated path exists in an array.
      *
-     * @param array  $array
+     * @param array $array
      * @param string $path
      *
      * @return bool
@@ -528,6 +554,7 @@ class SettingsMapper {
             }
             $ref = $ref[ $key ];
         }
+
         return true;
     }
 
@@ -535,8 +562,8 @@ class SettingsMapper {
      * Helper: unset a value in a nested array using dot notation.
      * No-op if path does not exist.
      *
-     * @param array  $array Array to modify (passed by reference).
-     * @param string $path  Dot-notated path.
+     * @param array $array Array to modify (passed by reference).
+     * @param string $path Dot-notated path.
      */
     public static function unset_by_path( array &$array, string $path ): void {
         if ( '' === $path ) {
