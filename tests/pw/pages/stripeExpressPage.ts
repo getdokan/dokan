@@ -248,52 +248,56 @@ export class stripeExpressPage {
         await this.billingLastName.click();
         await this.billingLastName.fill('c1');
         
-        // Select country
-        await this.billingCountry.click();
-        await this.billingCountry.selectOption({ label: 'United States (US)' });
+        // Select country - first click the visible textbox to open dropdown
+        await this.page.getByRole('textbox', { name: 'United States (US)' }).click();
+        // Then interact with the combobox that appears
+        await this.page.getByRole('combobox').filter({ hasText: /^$/ }).click();
+        await this.page.getByRole('combobox').filter({ hasText: /^$/ }).fill('united states');
+        await this.page.getByRole('option', { name: 'United States (US)', exact: true }).click();
         
         // Fill city
         await this.billingCity.click();
         await this.billingCity.fill('New York');
         
-        // Select state
-        await this.billingState.waitFor({ state: 'visible' });
-        await this.billingState.click();
-        await this.billingState.selectOption({ label: 'New York' });
+        // Select state - first click the visible textbox to open dropdown
+        await this.page.getByRole('textbox', { name: 'New York' }).click();
+        // Then interact with the combobox that appears
+        await this.page.getByRole('combobox').filter({ hasText: /^$/ }).click();
+        await this.page.getByRole('combobox').filter({ hasText: /^$/ }).fill('New York');
+        await this.page.getByRole('option', { name: 'New York' }).click();
         
         // Fill postcode
         await this.billingPostcode.click();
         await this.billingPostcode.fill('10003');
         
         // Select Stripe Express payment method
-        await this.stripeExpressPaymentMethod.waitFor({ state: 'visible' });
-        await this.stripeExpressPaymentMethod.click();
+        await this.page.getByText('Stripe Express', { exact: true }).click();
         
-        // Wait for Stripe iframe to be ready
-        await this.page.waitForSelector('iframe[name*="__privateStripeFrame"]', { state: 'visible', timeout: 10000 });
-        const stripeFrame = this.page.frameLocator('iframe[name*="__privateStripeFrame"]').first();
+        // Wait for the correct Stripe iframe (the payment input frame, not Google Pay)
+        // This can take 5-6 seconds to load
+        await this.page.waitForSelector('iframe[title="Secure payment input frame"]', { state: 'visible', timeout: 15000 });
+        const stripeFrame = this.page.locator('iframe[title="Secure payment input frame"]').contentFrame();
         
         // Fill card number
-        const cardNumberInput = stripeFrame.locator('input[name="cardnumber"]');
-        await cardNumberInput.waitFor({ state: 'visible', timeout: 10000 });
-        await cardNumberInput.fill('4242424242424242');
+        await stripeFrame.getByRole('textbox', { name: 'Card number' }).click();
+        await stripeFrame.getByRole('textbox', { name: 'Card number' }).fill('4242 4242 4242 4242');
         
         // Fill expiry date
-        const expiryInput = stripeFrame.locator('input[name="exp-date"]');
-        await expiryInput.waitFor({ state: 'visible' });
-        await expiryInput.fill('1129');
+        await stripeFrame.getByRole('textbox', { name: 'Expiration date MM / YY' }).click();
+        await stripeFrame.getByRole('textbox', { name: 'Expiration date MM / YY' }).fill('11 / 29');
         
         // Fill CVC
-        const cvcInput = stripeFrame.locator('input[name="cvc"]');
-        await cvcInput.waitFor({ state: 'visible' });
-        await cvcInput.fill('111');
+        await stripeFrame.getByRole('textbox', { name: 'Security code' }).click();
+        await stripeFrame.getByRole('textbox', { name: 'Security code' }).fill('111');
         
-        // Place order
-        await this.placeOrderButton.waitFor({ state: 'visible' });
-        await this.placeOrderButton.click();
+        // Place order - scroll into view and wait for it to be ready
+        const placeOrderButton = this.page.getByRole('button', { name: 'Place Order' });
+        await placeOrderButton.scrollIntoViewIfNeeded();
+        await placeOrderButton.waitFor({ state: 'visible' });
+        await placeOrderButton.click();
         
-        // Wait for payment processing and order completion
-        await this.page.waitForURL('**/order-received/**', { timeout: 30000 });
+        // Wait for payment processing and order completion (can take longer for Stripe)
+        await this.page.waitForURL('**/order-received/**', { timeout: 60000 });
         
         // Verify we're on order received page or success
         expect(this.page.url()).toContain('order-received');

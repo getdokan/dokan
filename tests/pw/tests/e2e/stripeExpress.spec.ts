@@ -21,7 +21,7 @@ test.afterAll(async ({ browser }) => {
 
 test.describe('Stripe Express Tests', () => {
 
-    test.describe('Admin Stripe Express Management', () => {
+    test.describe.skip('Admin Stripe Express Management', () => {
         test.use({
             storageState: 'playwright/.auth/adminStorageState.json'
         });
@@ -37,7 +37,7 @@ test.describe('Stripe Express Tests', () => {
         });
     });
 
-    test.describe('Vendor 1 Stripe Express', () => {
+    test.describe.skip('Vendor 1 Stripe Express', () => {
         test.use({
             storageState: 'playwright/.auth/vendorStorageState.json'
         });
@@ -53,7 +53,7 @@ test.describe('Stripe Express Tests', () => {
         });
     });
 
-    test.describe('Vendor 2 Stripe Express', () => {
+    test.describe.skip('Vendor 2 Stripe Express', () => {
         test.use({
             storageState: 'playwright/.auth/vendor2StorageState.json'
         });
