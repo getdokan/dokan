@@ -74,12 +74,10 @@ test.describe('Stripe Express Tests', () => {
             storageState: 'playwright/.auth/customerStorageState.json'
         });
 
-        // Add customer tests here
-        // Example:
-        // test('Customer Can Make Payment via Stripe Express @pro', async ({ page }) => {
-        //     const stripePageInstance = new stripeExpressPage(page);
-        //     // Add test steps
-        // });
+        test('Customer 1 Can Make Payment via Stripe Express @pro', async ({ page }) => {
+            const stripePageInstance = new stripeExpressPage(page);
+            await stripePageInstance.purchaseProductWithStripeExpress('test-stripe-express-p1_v1');
+        });
     });
 });
 
