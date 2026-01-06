@@ -631,11 +631,13 @@ const VendorsPage = ( props ) => {
                                 isPrimary: false,
                                 callback: ( item ) => {
                                     const vendor: Vendor = item[ 0 ] as Vendor;
-                                    window.location.href =
+                                    window.open(
                                         // @ts-ignore
                                         dokanAdminDashboard.urls.adminRoot +
                                         'edit.php?post_type=product&author=' +
-                                        vendor?.id;
+                                        vendor?.id,
+                                        '_blank'
+                                    );
                                 },
                             },
                             {
@@ -660,12 +662,13 @@ const VendorsPage = ( props ) => {
                                 supportsBulk: false,
                                 callback: ( item ) => {
                                     const vendor: Vendor = item[ 0 ] as Vendor;
-                                    window.location.href =
+                                    window.open(
                                         // @ts-ignore
-                                        dokanAdminDashboard.urls
-                                            .adminOrderListUrl +
+                                        dokanAdminDashboard.urls.adminOrderListUrl +
                                         '&vendor_id=' +
-                                        vendor?.id;
+                                        vendor?.id,
+                                        '_blank'
+                                    );
                                 },
                             },
                             {
