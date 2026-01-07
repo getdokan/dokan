@@ -56,7 +56,6 @@ export default function DokanSwitch( { element } ) {
         setIsModalOpen( false );
         setIsConfirmChecked( false );
     };
-    console.log( element, ':::::element' );
     return (
         <>
             <div
