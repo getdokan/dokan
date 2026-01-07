@@ -305,7 +305,72 @@ export class stripeExpressPage {
 
     // Cleanup Methods
     async cleanup() {
-        // Add cleanup logic here if needed
+        const baseUrl = process.env.BASE_URL || 'https://dokanautomation.test';
+        
+        // Navigate to products page
+        await this.page.goto(`${baseUrl}/wp-admin/edit.php?post_type=product`);
+        await this.page.waitForLoadState('domcontentloaded');
+        
+        // Delete Product 1: Test Stripe Express P1_V1
+        await this.page.getByRole('searchbox', { name: 'Search products:' }).click();
+        await this.page.getByRole('searchbox', { name: 'Search products:' }).fill('Test Stripe Express P1_V1');
+        await this.page.getByRole('button', { name: 'Search products' }).click();
+        await this.page.waitForLoadState('domcontentloaded');
+        
+        // Check if product exists
+        const product1Checkbox = this.page.getByRole('checkbox', { name: 'Select Test Stripe Express' });
+        const product1Exists = await product1Checkbox.isVisible().catch(() => false);
+        
+        if (product1Exists) {
+            await product1Checkbox.check();
+            await this.page.locator('#bulk-action-selector-top').selectOption('trash');
+            await this.page.locator('#doaction').click();
+            await this.page.waitForLoadState('domcontentloaded');
+        } else {
+            console.log('Product "Test Stripe Express P1_V1" not found, skipping deletion');
+        }
+        
+        // Refresh the page
+        await this.page.reload();
+        await this.page.waitForLoadState('domcontentloaded');
+        
+        // Delete Product 2: Test Stripe Express P1_V2
+        await this.page.getByRole('searchbox', { name: 'Search products:' }).click();
+        await this.page.getByRole('searchbox', { name: 'Search products:' }).fill('Test Stripe Express P1_V2');
+        await this.page.getByRole('button', { name: 'Search products' }).click();
+        await this.page.waitForLoadState('domcontentloaded');
+        
+        // Check if product exists
+        const product2Checkbox = this.page.getByRole('checkbox', { name: 'Select Test Stripe Express' });
+        const product2Exists = await product2Checkbox.isVisible().catch(() => false);
+        
+        if (product2Exists) {
+            await product2Checkbox.check();
+            await this.page.locator('#bulk-action-selector-top').selectOption('trash');
+            await this.page.locator('#doaction').click();
+            await this.page.waitForLoadState('domcontentloaded');
+        } else {
+            console.log('Product "Test Stripe Express P1_V2" not found, skipping deletion');
+        }
+        
+        // Refresh the page
+        await this.page.reload();
+        await this.page.waitForLoadState('domcontentloaded');
+        
+        // Go to trash and permanently delete all
+        const trashLink = this.page.getByRole('link', { name: 'Trash' });
+        const trashExists = await trashLink.isVisible().catch(() => false);
+        
+        if (trashExists) {
+            await trashLink.click();
+            await this.page.waitForLoadState('domcontentloaded');
+            
+            // Click Delete Permanently button
+            await this.page.locator('#posts-filter div').filter({ hasText: 'Select bulk action Bulk actions Restore Apply Auction filter By' }).locator('#delete_all').click();
+            await this.page.waitForLoadState('domcontentloaded');
+        } else {
+            console.log('No items in trash, cleanup complete');
+        }
     }
 }
 
