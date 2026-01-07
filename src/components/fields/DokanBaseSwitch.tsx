@@ -15,6 +15,7 @@ interface DokanBaseSwitchProps {
     disabled?: boolean;
     id?: string;
     required?: boolean;
+    switcherType?: 'error' | string;
 }
 
 const DokanBaseSwitch = ( {
@@ -25,6 +26,7 @@ const DokanBaseSwitch = ( {
     label,
     color = 'primary',
     defaultChecked,
+    switcherType,
     ...others
 }: DokanBaseSwitchProps ) => {
     return (
