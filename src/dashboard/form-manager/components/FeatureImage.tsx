@@ -16,7 +16,7 @@ export const ImagePreview = ( {
     }
 
     return (
-        <div className="flex flex-wrap gap-3 mt-3">
+        <div className="flex flex-wrap gap-3">
             { items.map( ( item: any, index: number ) => (
                 <div
                     key={ index }
@@ -65,7 +65,7 @@ const FeatureImage = ( { field, onChange }: any ) => {
     };
 
     return (
-        <CustomField label={ field.label } className={ `${ field.id }-field` }>
+        <CustomField className={ `${ field.id }-field` }>
             { field.value.url ? (
                 <ImagePreview images={ field.value } onRemove={ onRemove } />
             ) : (

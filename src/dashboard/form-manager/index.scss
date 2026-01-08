@@ -48,7 +48,9 @@
         flex-direction: column;
     }
     .gallery_image_ids-field {
-        flex-direction: row;
+        display: flex;
+        align-items: center;
+        flex-direction: row !important;
     }
     .dokan-product-gallery_image_ids {
         gap: 10px;

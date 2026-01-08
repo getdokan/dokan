@@ -1,8 +1,7 @@
-import { DokanButton, MediaUploader } from '@src/components';
-import { __ } from '@wordpress/i18n';
+import { MediaUploader } from '@src/components';
+import { Button } from '@wordpress/components';
 import { Upload, X } from 'lucide-react';
 import CustomField from './CustomField';
-import { Button } from '@wordpress/components';
 
 export const ImagePreview = ( {
     images,
@@ -17,7 +16,7 @@ export const ImagePreview = ( {
     }
 
     return (
-        <div className="flex flex-wrap gap-3 mt-3">
+        <div className="flex flex-wrap gap-3">
             { items.map( ( item: any, index: number ) => (
                 <div
                     key={ index }
