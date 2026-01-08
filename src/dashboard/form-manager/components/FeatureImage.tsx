@@ -26,7 +26,7 @@ const FeatureImage = ( { field, onChange }: any ) => {
     };
 
     return (
-        <CustomField className={ `${ field.id }-field` }>
+        <CustomField className={ `dokan-product-${ field.id }-field` }>
             { image?.url ? (
                 <ImagePreview images={ image } onRemove={ onRemove } />
             ) : (

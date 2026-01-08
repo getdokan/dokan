@@ -33,7 +33,7 @@ const GalleryImages = ( { field, onChange }: any ) => {
     };
 
     return (
-        <CustomField className={ `${ field.id }-field` }>
+        <CustomField className={ `dokan-product-${ field.id }-field` }>
             <ImagePreview
                 images={ images }
                 onRemove={ onRemove }

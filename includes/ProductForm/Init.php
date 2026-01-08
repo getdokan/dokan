@@ -320,7 +320,7 @@ class Init {
 
         $section->add_field(
             Elements::BRANDS, [
-                'title'             => __( 'FormData', 'dokan-lite' ),
+                'title'             => __( 'Brands', 'dokan-lite' ),
                 'field_type'        => 'select',
                 'name'              => 'product_brand[]',
                 'placeholder'       => __( 'Select product brands', 'dokan-lite' ),
@@ -771,7 +771,7 @@ class Init {
         $section->add_field(
             Elements::STATUS, [
                 'title'      => __( 'Status', 'dokan-lite' ),
-                'field_type' => 'select',
+                'field_type' => 'radio',
                 'name'       => 'status',
                 'options'    => [],
                 'options_callback' => function ( $product, $value = [] ) {

@@ -10,6 +10,9 @@
     .dataforms-layouts-card__field-header {
         border-bottom: 1px solid #ddd !important;
     }
+    legend.components-base-control__label {
+        margin-left: 0 !important;
+    }
     .flex {
         display: flex;
     }
@@ -29,7 +32,7 @@
         border-left: none;
     }
 
-    .image_id-field {
+    .dokan-product-image_id-field {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -52,7 +55,7 @@
         justify-content: center;
         flex-direction: column;
     }
-    .gallery_image_ids-field {
+    .dokan-product-gallery_image_ids-field {
         display: flex;
         align-items: center;
         flex-direction: row !important;

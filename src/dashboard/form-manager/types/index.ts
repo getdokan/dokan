@@ -31,7 +31,6 @@ export type FormField = {
     dependency_condition?: DependencyCondition;
     visibility: boolean;
     left_icon?: string;
-    right_icon?: string;
 } & Field< any >;
 
 export type FieldConfig = Partial< FormField > & {

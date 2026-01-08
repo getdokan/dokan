@@ -52,7 +52,7 @@ export default function useLayouts(
      * @param {string} fieldId The ID of the field.
      * @return {Object} Object containing label and description.
      */
-    const getLabelAndDescription = useCallback(
+    const getFieldHeading = useCallback(
         ( fieldId: string ) => {
             const field = getField( fieldId );
             if ( ! field ) {
@@ -221,7 +221,7 @@ export default function useLayouts(
                                     'backorders',
                                     'sold_individually',
                                 ],
-                                ...getLabelAndDescription( 'inventory' ),
+                                ...getFieldHeading( 'inventory' ),
                             },
                             {
                                 id: 'shipping',
@@ -251,7 +251,7 @@ export default function useLayouts(
                                     '_additional_qty',
                                     '_dps_processing_time',
                                 ],
-                                ...getLabelAndDescription( 'shipping' ),
+                                ...getFieldHeading( 'shipping' ),
                             },
                             {
                                 id: 'linked',
@@ -264,7 +264,7 @@ export default function useLayouts(
                                     'cross_sell_ids',
                                     'children',
                                 ],
-                                ...getLabelAndDescription( 'linked' ),
+                                ...getFieldHeading( 'linked' ),
                             },
                             {
                                 id: 'downloadable-options',
@@ -277,7 +277,7 @@ export default function useLayouts(
                                     'download_limit',
                                     'download_expiry',
                                 ],
-                                ...getLabelAndDescription( 'downloadable' ),
+                                ...getFieldHeading( 'downloadable' ),
                             },
                             {
                                 id: 'others',
@@ -286,7 +286,7 @@ export default function useLayouts(
                                     withHeader: true,
                                 },
                                 children: [ 'product_url', 'button_text' ],
-                                ...getLabelAndDescription( 'others' ),
+                                ...getFieldHeading( 'others' ),
                             },
                         ],
                     },
@@ -316,7 +316,7 @@ export default function useLayouts(
                                     isCollapsible: false,
                                 },
                                 children: [ 'purchase_note' ],
-                                ...getLabelAndDescription( 'purchase_note' ),
+                                ...getFieldHeading( 'purchase_note' ),
                             },
                         ],
                     },
@@ -325,7 +325,7 @@ export default function useLayouts(
         ];
 
         return processLayout( layouts );
-    }, [ getLabelAndDescription, processLayout ] );
+    }, [ getFieldHeading, processLayout ] );
 
     return { formLayouts };
 }

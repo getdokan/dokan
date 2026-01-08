@@ -14,10 +14,10 @@ export const checkDependency = (
         const depValue = data[ depField ];
 
         let targetValue = value;
-        if ( value === 'on' ) {
+        if ( value === 'on' || value === 'yes' ) {
             targetValue = true;
         }
-        if ( value === 'off' ) {
+        if ( value === 'off' || value === 'no' ) {
             targetValue = false;
         }
 
@@ -60,7 +60,6 @@ export const getFieldConfig = ( field: FormField ) => {
         placeholder: field.placeholder,
         required: field.required,
         type: field.field_type,
-        multiple: false,
     };
 
     const specificConfig = getFieldConfigFromFactory( field );

@@ -4,7 +4,6 @@
         "lib": ["ESNext", "DOM"],
         "target": "ESNext",
         "module": "ESNext",
-        "allowJs": true,
         "checkJs": false,
         "jsx": "react-jsx",
 
@@ -44,9 +43,6 @@
         "sourceMap": true,
         "removeComments": true,
         "skipLibCheck": true,
-
-        // Extensions
-        "extensions": [".js", ".jsx", ".ts", ".tsx", ".json"]
     },
     "include": [
         "src/**/*",

@@ -1,16 +1,13 @@
+import { DokanButton } from '@dokan/components';
 import { DataForm } from '@wordpress/dataviews';
 import { useCallback, useMemo, useState } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 import { getFieldConfig } from './components/FieldRenderer';
 import { Section } from './types';
 import useLayouts from './useLayouts';
 const sections = ( window as any ).dokanFormManager.sections as Section[];
 
 const App = () => {
-    // Stable onChange
-    const onChange = useCallback( ( newData: Record< string, any > ) => {
-        setProduct( ( prev: any ) => ( { ...prev, ...newData } ) );
-    }, [] );
-
     // Fields and Layout
     const fields = useMemo( () => {
         return sections.flatMap( ( section ) => {
@@ -33,6 +30,12 @@ const App = () => {
                         field.value.map( ( img: any ) => img.id ),
                     ];
                 }
+                if ( field.field_type === 'checkbox' ) {
+                    return [
+                        field.id,
+                        field.value === 'yes' || field.value === 'on',
+                    ];
+                }
                 return [ field.id, field.value || '' ];
             } );
         } );
@@ -41,18 +44,48 @@ const App = () => {
 
     const [ product, setProduct ] = useState< any >( initialData );
     const { formLayouts } = useLayouts( sections, fields, product );
+    const [ isLoading, setIsLoading ] = useState( false );
+
+    // Stable onChange
+    const onChange = useCallback( ( newData: Record< string, any > ) => {
+        setProduct( ( prev: any ) => ( { ...prev, ...newData } ) );
+    }, [] );
+
+    const submitHandler = ( e: any ) => {
+        e.preventDefault();
+        setIsLoading( true );
+
+        // Simulate async operation
+        setTimeout( () => {
+            setIsLoading( false );
+        }, 1000 );
+    };
 
     // eslint-disable-next-line no-console
     console.log( { formLayouts, fields, product } );
 
     return (
         <div className="dokan-product-form-manager dokan-layout">
-            <DataForm
-                data={ product }
-                fields={ fields }
-                form={ { fields: formLayouts } }
-                onChange={ onChange }
-            />
+            <form onSubmit={ submitHandler }>
+                <div className="flex justify-between mb-4">
+                    <div className="text-2xl font-semibold ">
+                        { __( 'Edit Product', 'dokan-lite' ) }
+                    </div>
+                    <DokanButton
+                        type="submit"
+                        variant="secondary"
+                        loading={ isLoading }
+                        disabled={ isLoading }
+                        label={ __( 'Save Changes', 'dokan-lite' ) }
+                    />
+                </div>
+                <DataForm
+                    data={ product }
+                    fields={ fields }
+                    form={ { fields: formLayouts } }
+                    onChange={ onChange }
+                />
+            </form>
         </div>
     );
 };

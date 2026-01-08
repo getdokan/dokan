@@ -4,29 +4,38 @@ import FeatureImage from '../components/FeatureImage';
 import GalleryImages from '../components/GalleryImages';
 import RichTextEdit from '../components/RichTextEdit';
 import TextWithAddon from '../components/TextWithAddon';
-import { FieldHandler } from '../types';
+import { FieldConfig, FieldHandler, FormField } from '../types';
 
 /**
  * Helper function to normalize options into an array of label/value objects.
  * Handles both array and object formats for options.
  *
- * @param {any} options The options to process.
+ * @param {FormField} field The options to process.
  *
  * @return {Array} Array of options with label and value.
  */
-const getElementsFromOptions = ( options: any ) => {
+export const getElementsFromOptions = ( field?: FormField ) => {
+    const { options, placeholder } = field || {};
     if ( ! options ) {
         return [];
     }
 
+    let normalizedOptions = [];
     if ( Array.isArray( options ) ) {
-        return options;
+        normalizedOptions = [ ...options ]; // Clone to prevent mutation of the original array
+    } else {
+        normalizedOptions = Object.entries( options ).map(
+            ( [ value, label ] ) => ( {
+                label,
+                value,
+            } )
+        );
     }
 
-    return Object.entries( options ).map( ( [ value, label ] ) => ( {
-        label,
-        value,
-    } ) );
+    if ( placeholder ) {
+        normalizedOptions.unshift( { label: placeholder, value: '' } );
+    }
+    return normalizedOptions;
 };
 
 /**
@@ -57,8 +66,9 @@ export const checkboxHandler: FieldHandler = () => ( {
  * @param {Object} field The field configuration.
  * @return {Object} Configuration object with type 'text' and 'radio' edit type.
  */
-export const radioHandler: FieldHandler = () => ( {
+export const radioHandler: FieldHandler = ( field ) => ( {
     type: 'text',
+    elements: getElementsFromOptions( field ),
     Edit: 'radio',
 } );
 
@@ -92,7 +102,7 @@ export const dateHandler: FieldHandler = () => ( {
 export const selectHandler: FieldHandler = ( field ) => {
     const config: any = {
         type: 'number',
-        elements: getElementsFromOptions( field?.options ),
+        elements: getElementsFromOptions( field ),
         Edit: 'select',
     };
 
@@ -137,11 +147,12 @@ export const galleryHandler: FieldHandler = () => ( {
  * @return {Object} Configuration object with type 'text' and optionally TextWithAddon component.
  */
 export const defaultHandler: FieldHandler = ( field ) => {
-    const config: any = {
+    const config: FieldConfig = {
         type: 'text',
     };
-    if ( field?.left_icon || field?.right_icon ) {
+    if ( field?.left_icon ) {
         config.Edit = TextWithAddon;
+        config.type = 'number';
     }
     return config;
 };
