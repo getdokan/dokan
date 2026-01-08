@@ -132,6 +132,8 @@ class SettingsMapper {
         'dokan_live_chat.provider'                                   => 'moderation.livechat.livechat_settings.livechat_provider',
         'dokan_live_chat.app_id'                                     => 'moderation.livechat.livechat_settings.livechat_app_id',
         'dokan_live_chat.app_secret'                                 => 'moderation.livechat.livechat_settings.livechat_app_secret',
+        'dokan_live_chat.wa_opening_method'                          => 'moderation.livechat.livechat_settings.wa_opening_method',
+        'dokan_live_chat.wa_pre_filled_message'                      => 'moderation.livechat.livechat_settings.wa_pre_filled_message',
         'dokan_live_chat.chat_button_seller_page'                    => 'moderation.livechat.livechat_settings.livechat_vendor_page_button',
         'dokan_live_chat.chat_button_product_page'                   => 'moderation.livechat.livechat_settings.livechat_product_page_button',
 

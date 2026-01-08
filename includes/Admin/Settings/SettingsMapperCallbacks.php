@@ -17,6 +17,7 @@ class SettingsMapperCallbacks implements Hookable {
         add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_cod_payments' ], 10, 4 );
         add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_welcome_wizard' ], 10, 4 );
         add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_delivery_support' ], 10, 4 );
+        add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_abuse_reported_by' ], 10, 4 );
         add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_report_abuse_reasons_old_to_new' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_report_abuse_reasons_new_to_old' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_report_rma_reasons_old_to_new' ], 10, 3 );
@@ -429,6 +430,42 @@ class SettingsMapperCallbacks implements Hookable {
             }
             return $old_value;
         }
+        return $value;
+    }
+
+    /**
+     * Function for mapping abuse reported by settings between old and new settings.
+     *
+     * Maps legacy 'on'/'off' values to new 'all_users'/'logged_in_users' values and vice versa.
+     * Returns immediately if the value is null.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string|null $value The current value to map
+     * @param string      $to_indicator Direction of mapping: 'old_to_new' or 'new_to_old'
+     * @param string      $old_key The legacy setting key
+     * @param string      $new_key The new settings dot-path key
+     *
+     * @return string|null The mapped value or null if input is null
+     */
+    public function map_abuse_reported_by( $value, $to_indicator, $old_key, $new_key ) {
+        $old = 'dokan_report_abuse.reported_by_logged_in_users_only';
+        $new = 'moderation.report_abuse.report_abuse_settings.report_abuse_reported_by';
+
+        if ( is_null( $value ) || $old !== $old_key || $new !== $new_key ) {
+            return $value;
+        }
+
+        // OLD → NEW (off/on → include/exclude)
+        if ( $to_indicator === 'old_to_new' ) {
+            return $value !== 'on' ? 'all_users' : 'logged_in_users';
+        }
+
+        // NEW → OLD (include/exclude → off/on)
+        if ( $to_indicator === 'new_to_old' ) {
+            return $value !== 'all_users' ? 'on' : 'off';
+        }
+
         return $value;
     }
 
@@ -869,19 +906,19 @@ class SettingsMapperCallbacks implements Hookable {
      * @return array
      */
     public function map_discount_edit_old_to_new( $value, $old_key, $new_key ) {
+        $old_data_key = 'dokan_selling.discount_edit';
+        $new_data_key = 'vendor.vendor_capabilities.vendor_capabilities.discount_settings';
 
-        if ( 'dokan_selling.discount_edit' !== $old_key || 'vendor.vendor_capabilities.vendor_capabilities.discount_settings' !== $new_key || is_null( $value ) ) {
+        if ( $old_data_key !== $old_key || $new_data_key !== $new_key || is_null( $value ) ) {
             return $value;
         }
 
         $mapped = [];
 
-        if ( is_array( $value ) ) {
-            foreach ( $value as $option_key => $option_value ) {
-                if ( ! empty( $option_value ) ) {
-                    // selected in old format
-                    $mapped[] = $option_key;
-                }
+        foreach ( $value as $option_key => $option_value ) {
+            if ( ! empty( $option_value ) ) {
+                // Selected in the old format.
+                $mapped[] = $option_key;
             }
         }
 
@@ -898,8 +935,10 @@ class SettingsMapperCallbacks implements Hookable {
      * @return array
      */
     public function map_discount_edit_new_to_old( $value, $old_key, $new_key ) {
+        $old_data_key = 'dokan_selling.discount_edit';
+        $new_data_key = 'vendor.vendor_capabilities.vendor_capabilities.discount_settings';
 
-        if ( 'dokan_selling.discount_edit' !== $old_key || 'vendor.vendor_capabilities.vendor_capabilities.discount_settings' !== $new_key || is_null( $value ) ) {
+        if ( $old_data_key !== $old_key || $new_data_key !== $new_key || is_null( $value ) ) {
             return $value;
         }
 
