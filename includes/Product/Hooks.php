@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\Product;
 use WeDevs\Dokan\Commission\Formula\Fixed;
 use WeDevs\Dokan\ProductCategory\Helper;
 use WC_Product;
+use WC_Product_Simple;
 use WeDevs\Dokan\ProductForm\Factory as ProductFormFactory;
 use WeDevs\Dokan\ProductForm\Field;
 use WeDevs\Dokan\ProductForm\Section;
@@ -658,8 +659,18 @@ class Hooks {
             dokan_seller_not_enabled_notice();
             return;
         }
+        $post_id = isset( $_GET['product_id'] ) ? intval( wp_unslash( $_GET['product_id'] ) ) : 0; //phpcs:ignore
 
-        dokan_get_template_part( 'products/form-manager', '', );
+        if ( ! $post_id ) {
+            // this is `add new` product page
+            $product = new WC_Product_Simple();
+            $product->set_status( 'auto-draft' );
+            $product->save();
+        } else {
+            $product = wc_get_product( $post_id );
+        }
+
+        dokan_get_template_part( 'products/form-manager', '', [ 'product' => $product ] );
     }
 
     public function get_form_fields(): array {

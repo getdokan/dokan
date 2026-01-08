@@ -2,45 +2,16 @@
 /**
  * Dokan Dashboard Product Edit Template
  *
- * @since 2.4
+ * @since DOKAN_SINCE
  *
  * @var $product WC_Product instance of WC_Product object
- * @var $from_shortcode bool if the template loaded from shortcode
+ *
  * @package dokan
  */
 
 defined( 'ABSPATH' ) || exit;
 
 global $post; // phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
-
-// apply security check for theme
-if ( ! current_user_can( 'dokan_edit_product' ) ) {
-	dokan_get_template_part(
-		'global/dokan-error', '', [
-			'deleted' => false,
-			'message' => __( 'You have no permission to view this page', 'dokan-lite' ),
-		]
-	);
-	return;
-}
-
-// check if seller is enabled for selling
-if ( ! dokan_is_seller_enabled( dokan_get_current_user_id() ) ) {
-	dokan_seller_not_enabled_notice();
-	return;
-}
-
-// while calling from theme, we need to check if the product id is passed or not
-$post_id = isset( $_GET['product_id'] ) ? intval( wp_unslash( $_GET['product_id'] ) ) : $post->ID; //phpcs:ignore
-if ( ! $post_id ) {
-	// this is `add new` product page
-	$product = new WC_Product_Simple();
-	$product->set_status( 'auto-draft' );
-	$product->save();
-} else {
-	$product = wc_get_product( $post_id );
-}
-
 
 $post = get_post( $product->get_id() );
 
