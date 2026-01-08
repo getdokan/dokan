@@ -323,37 +323,51 @@ class Orders {
      * @return array
      */
     private function add_pagination_info( $limit, $page, $order_count ) {
-    	$num_of_pages = ceil( $order_count / $limit );
-    	$base_url     = dokan_get_navigation_url( 'orders' );
+        $num_of_pages = ceil( $order_count / $limit );
+        $base_url     = dokan_get_navigation_url( 'orders' );
 
-    	$add_args     = array();
-    	$allowed_args = array(
-    		'customer_id',
-    		'order_date_start',
-    		'order_date_end',
-    		'order_status',
-    		'search',
-    		'limit',
-    		'seller_order_filter_nonce',
-    	);
+        $add_args = array();
 
-    	foreach ( $allowed_args as $key ) {
-    		if ( isset( $_GET[ $key ] ) && $_GET[ $key ] !== '' ) {
-    			$add_args[ $key ] = sanitize_text_field( wp_unslash( $_GET[ $key ] ) );
-    		}
-    	}
+        if ( isset( $_GET['customer_id'] ) && '' !== $_GET['customer_id'] ) {
+            $add_args['customer_id'] = absint( wp_unslash( $_GET['customer_id'] ) );
+        }
 
-    	// Generate pagination links.
-    	$page_links = paginate_links(
-    		array(
-    			'current'  => max( 1, (int) $page ),
-    			'total'    => $num_of_pages,
-    			'base'     => trailingslashit( $base_url ) . '%_%',
-    			'format'   => '?pagenum=%#%',
-    			'add_args' => $add_args,
-    			'type'     => 'array',
-    		)
-    	);
+        if ( isset( $_GET['order_date_start'] ) && '' !== $_GET['order_date_start'] ) {
+            $add_args['order_date_start'] = sanitize_key( wp_unslash( $_GET['order_date_start'] ) );
+        }
+
+        if ( isset( $_GET['order_date_end'] ) && '' !== $_GET['order_date_end'] ) {
+            $add_args['order_date_end'] = sanitize_key( wp_unslash( $_GET['order_date_end'] ) );
+        }
+
+        if ( isset( $_GET['order_status'] ) && '' !== $_GET['order_status'] ) {
+            $add_args['order_status'] = sanitize_key( wp_unslash( $_GET['order_status'] ) );
+        }
+
+        if ( isset( $_GET['search'] ) && '' !== $_GET['search'] ) {
+            $add_args['search'] = sanitize_text_field( wp_unslash( $_GET['search'] ) );
+        }
+
+        if ( isset( $_GET['limit'] ) && '' !== $_GET['limit'] ) {
+            $add_args['limit'] = absint( wp_unslash( $_GET['limit'] ) );
+        }
+
+        if ( isset( $_GET['seller_order_filter_nonce'] ) && '' !== $_GET['seller_order_filter_nonce'] ) {
+            $add_args['seller_order_filter_nonce'] = sanitize_key(
+                wp_unslash( $_GET['seller_order_filter_nonce'] )
+            );
+        }
+
+        $page_links = paginate_links(
+            array(
+                'current'  => max( 1, (int) $page ),
+                'total'    => $num_of_pages,
+                'base'     => trailingslashit( $base_url ) . '%_%',
+                'format'   => '?pagenum=%#%',
+                'add_args' => $add_args,
+                'type'     => 'array',
+            )
+        );
 
         $args = array(
     		'num_of_pages' => $num_of_pages,
