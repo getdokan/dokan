@@ -323,25 +323,44 @@ class Orders {
      * @return array
      */
     private function add_pagination_info( $limit, $page, $order_count ) {
-        $num_of_pages = ceil( $order_count / $limit );
-        $base_url     = dokan_get_navigation_url( 'orders' );
-        $page_links   = paginate_links(
-            [
-                'current'  => $page,
-                'total'    => $num_of_pages,
-                'base'     => $base_url . '%_%',
-                'format'   => '?pagenum=%#%&seller_order_filter_nonce=' . wp_create_nonce( 'seller-order-filter-nonce' ),
-                'add_args' => false,
-                'type'     => 'array',
-            ]
-        );
+    	$num_of_pages = ceil( $order_count / $limit );
+    	$base_url     = dokan_get_navigation_url( 'orders' );
 
-        $args = [
-            'num_of_pages' => $num_of_pages,
-            'page_links'   => $page_links,
-        ];
+    	$add_args     = array();
+    	$allowed_args = array(
+    		'customer_id',
+    		'order_date_start',
+    		'order_date_end',
+    		'order_status',
+    		'search',
+    		'limit',
+    		'seller_order_filter_nonce',
+    	);
 
-        return $args;
+    	foreach ( $allowed_args as $key ) {
+    		if ( isset( $_GET[ $key ] ) && $_GET[ $key ] !== '' ) {
+    			$add_args[ $key ] = sanitize_text_field( wp_unslash( $_GET[ $key ] ) );
+    		}
+    	}
+
+    	// Generate pagination links.
+    	$page_links = paginate_links(
+    		array(
+    			'current'  => max( 1, (int) $page ),
+    			'total'    => $num_of_pages,
+    			'base'     => trailingslashit( $base_url ) . '%_%',
+    			'format'   => '?pagenum=%#%',
+    			'add_args' => $add_args,
+    			'type'     => 'array',
+    		)
+    	);
+
+        $args = array(
+    		'num_of_pages' => $num_of_pages,
+    		'page_links'   => $page_links,
+    	);
+
+    	return $args;
     }
 
     /**
