@@ -54,6 +54,13 @@
         gap: 10px;
         flex-wrap: wrap;
         flex-direction: row;
+        height: 110px;
+        width: 110px;
+        img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
     }
     .woocommerce-tree-select-control__control {
         padding: 5px 10px;

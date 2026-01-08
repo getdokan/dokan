@@ -1,10 +1,10 @@
 import { DokanTooltip } from '@src/components';
-import { sanitizeHTML } from '@src/utilities';
 import { Info } from 'lucide-react';
-import { FormField } from '../types';
+import { sanitizeHTML } from '../../../utilities';
 import { getFieldConfigFromFactory } from '../factories';
+import { FormField } from '../types';
 
-const checkDependency = (
+export const checkDependency = (
     dependencyCondition: any,
     data: Record< string, any >
 ) => {
@@ -80,39 +80,6 @@ export const getFieldConfig = ( field: FormField ) => {
     }
 
     return mappedField;
-};
-
-export const processLayout = ( layoutFields: any[] ) => {
-    return layoutFields.map( ( field ) => {
-        if ( typeof field === 'string' ) {
-            return field;
-        }
-
-        const newField = { ...field };
-
-        if ( newField.layout?.type === 'card' && newField.description ) {
-            newField.label = (
-                <div className="dokan-form-card-header-content">
-                    <div className="dokan-form-card-title">
-                        { newField.label }
-                    </div>
-                    <div
-                        className="dokan-form-card-description"
-                        dangerouslySetInnerHTML={ {
-                            __html: sanitizeHTML( newField.description ),
-                        } }
-                    />
-                </div>
-            );
-            delete newField.description;
-        }
-
-        if ( newField.children ) {
-            newField.children = processLayout( newField.children );
-        }
-
-        return newField;
-    } );
 };
 
 const FieldRenderer = () => {
