@@ -547,7 +547,7 @@ const WithdrawPage = () => {
         <button
             type="button"
             className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-[#575757] hover:bg-[#7047EB] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={ isExporting }
+            disabled={ isExporting || data?.length === 0 }
             onClick={ async () => {
                 setIsExporting( true );
                 setExportProgress( 0 );
