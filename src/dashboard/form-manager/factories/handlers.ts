@@ -4,6 +4,7 @@ import FeatureImage from '../components/FeatureImage';
 import GalleryImages from '../components/GalleryImages';
 import PriceEdit from '../components/PriceEdit';
 import RichTextEdit from '../components/RichTextEdit';
+import SelectEdit from '../components/SelectEdit';
 import { FieldConfig, FieldHandler, FormField } from '../types';
 
 /**
@@ -15,7 +16,7 @@ import { FieldConfig, FieldHandler, FormField } from '../types';
  * @return {Array} Array of options with label and value.
  */
 export const getElementsFromOptions = ( field?: FormField ) => {
-    const { options, placeholder } = field || {};
+    const { options } = field || {};
     if ( ! options ) {
         return [];
     }
@@ -30,10 +31,6 @@ export const getElementsFromOptions = ( field?: FormField ) => {
                 value,
             } )
         );
-    }
-
-    if ( placeholder ) {
-        normalizedOptions.unshift( { label: placeholder, value: '' } );
     }
     return normalizedOptions;
 };
@@ -103,16 +100,18 @@ export const selectHandler: FieldHandler = ( field ) => {
     const config: any = {
         type: 'number',
         elements: getElementsFromOptions( field ),
-        Edit: 'select',
+        Edit: SelectEdit,
     };
 
     if ( Array.isArray( field?.value ) ) {
         config.type = 'array';
+        config.multiple = true;
     }
 
     if ( field?.name === 'chosen_product_cat' ) {
         config.Edit = CategoriesEdit;
         config.type = 'array';
+        config.multiple = true;
     }
     return config;
 };

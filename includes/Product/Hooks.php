@@ -660,14 +660,14 @@ class Hooks {
             return;
         }
         $post_id = isset( $_GET['product_id'] ) ? intval( wp_unslash( $_GET['product_id'] ) ) : 0; //phpcs:ignore
-        $new_product = false;
+        $new_product = 0;
 
         if ( ! $post_id ) {
             // this is `add new` product page
             $product = new WC_Product_Simple();
             $product->set_status( 'auto-draft' );
             $product->save();
-            $new_product = true;
+            $new_product = 1;
         } else {
             $product = wc_get_product( $post_id );
         }

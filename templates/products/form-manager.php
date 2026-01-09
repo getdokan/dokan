@@ -5,6 +5,7 @@
  * @since DOKAN_SINCE
  *
  * @var $product WC_Product instance of WC_Product object
+ * @var $new_product boolean indicates whether it's a new product or not
  *
  * @package dokan
  */

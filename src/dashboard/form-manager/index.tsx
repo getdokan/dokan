@@ -1,9 +1,14 @@
+import domReady from '@wordpress/dom-ready';
 import { createRoot } from '@wordpress/element';
-import './index.scss';
 import App from './App';
+import './index.scss';
 
-const container = document.getElementById( 'product-form-manager-template' );
-if ( container ) {
-    const root = createRoot( container );
-    root.render( <App /> );
-}
+domReady( () => {
+    const container = document.getElementById(
+        'product-form-manager-template'
+    );
+    if ( container ) {
+        const root = createRoot( container );
+        root.render( <App /> );
+    }
+} );

@@ -8,6 +8,9 @@ import { Section } from './types';
 const sections = ( window as any ).dokanFormManager.sections as Section[];
 
 const App = () => {
+    const [ isNewProduct ] = useState(
+        ( document.getElementById( 'dokan_new_product' ) as any )?.value
+    );
     // Fields and Layout
     const fields = useMemo( () => {
         return sections.flatMap( ( section ) => {
@@ -62,21 +65,27 @@ const App = () => {
     };
 
     // eslint-disable-next-line no-console
-    console.log( { formLayouts, fields, product } );
+    console.log( { formLayouts, fields, isNewProduct } );
 
     return (
         <div className="dokan-product-form-manager dokan-layout">
             <form onSubmit={ submitHandler }>
                 <div className="flex justify-between mb-4">
                     <div className="text-2xl font-semibold ">
-                        { __( 'Edit Product', 'dokan-lite' ) }
+                        { Number( isNewProduct )
+                            ? __( 'New Product', 'dokan-lite' )
+                            : __( 'Edit Product', 'dokan-lite' ) }
                     </div>
                     <DokanButton
                         type="submit"
                         variant="secondary"
                         loading={ isLoading }
                         disabled={ isLoading }
-                        label={ __( 'Save Changes', 'dokan-lite' ) }
+                        label={
+                            Number( isNewProduct )
+                                ? __( 'Save Changes', 'dokan-lite' )
+                                : __( 'Update Product', 'dokan-lite' )
+                        }
                     />
                 </div>
                 <DataForm
