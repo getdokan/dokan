@@ -11,8 +11,8 @@
                 "../../../woocommerce-subscriptions"
             ],
             "config": {
-                "WP_MEMORY_LIMIT": "512M",
-                "WP_MAX_MEMORY_LIMIT": "512M"
+                "WP_MEMORY_LIMIT": "1024M",
+                "WP_MAX_MEMORY_LIMIT": "1024M"
             },
             "mappings": {
                 "wp-data": "./wp-data",

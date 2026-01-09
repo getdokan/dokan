@@ -74,7 +74,7 @@ setup.describe('site setup', () => {
     setup('activate Woocommerce booking', { tag: ['@pro'] }, async () => {
         try {
             // Increase memory limit before activation
-            await helpers.exeCommandWpcli('config set WP_MEMORY_LIMIT 512M');
+            await helpers.exeCommandWpcli('wp config set WP_MEMORY_LIMIT 512M');
             await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.woocommerceBookings));
         } catch (error) {
             console.log('WooCommerce Bookings activation had issues, but continuing...');

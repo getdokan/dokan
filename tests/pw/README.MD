@@ -1,389 +1,391 @@
-# Dokan E2E-API Tests :test_tube: (Playwright :performing_arts:)
+# 🎭 Dokan E2E & API Tests (Playwright)
 
-### :fire: Automated E2E and API tests for Dokan plugin. :fire:
+Automated E2E and API tests for Dokan Lite and Dokan Pro using Playwright.
 
-<br/>
+---
 
-## :bookmark: Table of contents
+## 📚 Documentation
 
-- [Pre-requisites :pushpin:](#pre-requisites)
-    - [Install Node](#install-node)
-    - [Install NVM](#install-nvm)
-    - [Install Docker](#install-docker)
+For complete Docker setup instructions, see **[DOCKER-SETUP.md](./DOCKER-SETUP.md)** - our comprehensive guide covering:
+- First-time setup
+- Docker management
+- Running tests
+- Troubleshooting
+- Switching between Lite and Pro
+- Daily usage
 
- <br/>
+---
 
-- [Prep for tests :construction:](#prep-for-tests)
-    - [Build Dokan plugin](#build-dokan-plugin)
-    - [Install Dependencies](#install-dependencies)
-    - [Start Wordpress Environment](#start-wordpress-environment)
-    - [Create Env file](#create-env-file)
+## ⚡ Quick Start (Docker - Recommended)
 
-<br/>
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v18+)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- For Pro: Dokan Pro plugin at `wp-content/plugins/dokan-pro`
 
-- [Running tests :test_tube: ](#running-tests)
-    - [How to run test projects](#how-to-run-test-projects)
-    - [How to run tests](#how-to-run-tests)
-    - [How to skip tests](#how-to-skip-tests)
-    - [How to debug tests](#how-to-debug-tests)
-    - [How to serve reports](#how-to-serve-reports)
-
-<br/>
-
-- [Contributing to Dokan-e2e-api-test](#Contributing-to-dokan-e2e-api-test)
-    - [How to wright tests](#how-to-run-tests)
-
-<br/>
-
-## :pushpin: Pre-requisites
-
-#### :o: Install Node
-
-&emsp;Follow instructions on the [Node site](https://nodejs.org/en/download/) to install Node.
-
-#### :o: Install NVM
-
-&emsp;Follow instructions in the [NVM repository](https://github.com/nvm-sh/nvm) to install NVM.
-
-#### :o: Install Docker [Skip if are using local site]
-
-&emsp;Follow instructions on the [Docker Desktop](https://docs.docker.com/docker-for-mac/install/) to install Docker.
-
-<br/>
-
-## :construction: Prep for tests
-
-Preparation for running tests involves conducting necessary tasks and arrangements to ensure a smooth and efficient testing process. This may include setting up the testing environment, configuring dependencies, initializing resources, and performing any required setup actions.
-
-<br/>
-
-### :o: Build Dokan plugin
-
-<br/>
-
-:radio_button: Go to dokan project root directory and run
-
-    composer i --no-dev && composer du -o && npm i && npm run build
-
-<br/>
-### :o: Install Dependencies
-
-<br/>
-
-:radio_button: Go to project directory
-
-    cd tests/pw
-
-<br/>
-
-:radio_button: Install dependencies
-
-```
-npm i
-```
-
-<br/>
-
-:radio_button: Install browser
-
-```
+### 1. Install Dependencies
+```bash
+cd tests/pw
+npm install
 npx playwright install chromium
 ```
 
-<br/>
+### 2. Configure Environment
+Create `.env` file (see `.env.example` for all options):
 
-### :o: Start Wordpress Environment
+```bash
+# Admin Credentials
+ADMIN=shohan
+ADMIN_PASSWORD=01dokan01
 
-<br/>
+# Test Users
+VENDOR=vendor1
+VENDOR2=vendor2
+CUSTOMER=customer1
+CUSTOMER2=customer2
+USER_PASSWORD=01dokan01
 
-:radio_button: Go to project directory
-
-    cd tests/pw
-
-<br/>
-
-:radio_button: Start Environment
-
-    npm run wp-env start
-
-<br/>
-
-### :o: Create Env file
-
-Environment (env) file is used for storing configuration settings and variables specific to the testing environment. It allows managing and customizing the testing environment settings easily without modifying the test code. It provides flexibility and enables seamless configuration changes between different testing environments, ensuring efficient and effective testing of the project.
-
-<br/>
-
-Create .env file according to .env.example file
-
-<br/>
-
-```
-# Plugin Configuration
-ADMIN=John_Doe                                                                  [Admin username]
-ADMIN_PASSWORD=AdminPass123                                                     [Password for the admin account]
-VENDOR=David_Johnson                                                            [Vendor username]
-VENDOR2=Jhonathon_Smith                                                         [Vendor username]
-CUSTOMER=Michael_Williams                                                       [Customer username]
-CUSTOMER2=Robert_Thomas                                                         [Customer username]
-USER_PASSWORD=Passw0rd123                                                       [Password for all other users]
-DOKAN_PRO=true                                                                  [Dokan pro active status]
-LICENSE_KEY=license_key                                                         [Dokan License key]
-GMAP=map_key                                                                    [Google Maps API key]
-MAPBOX=mapbox_key                                                               [Mapbox Maps API key]
-TALKJS_APP_ID=talkjs_app_id                                                     [TalkJS App ID]
-TALKJS_APP_SECRET=talkjs_app_secret                                             [TalkJS App Secret]
-VONAGE_API_KEY=vonage_key                                                       [Vonage SMS API key]
-VONAGE_API_SECRET=vonage_secret                                                 [Vonage SMS API secret]
-FB_APP_ID=facebook_app_id                                                       [Facebook App ID]
-FB_APP_SECRET=facebook_app_secret                                               [Facebook App secret]
-PRINTFUL_APP_ID=printful_app_id                                                 [Printful App ID]
-PRINTFUL_APP_SECRET=printful_app_secret                                         [Printful App secret]
-RECAPTCHA_SITE_KEY=recaptcha_site_key                                           [reCAPTCHA site key]
-RECAPTCHA_SECRET_KEY=recaptcha_secret_key                                       [reCAPTCHA secret key]
-TEST_PUBLISH_KEY_STRIPE=test_publish_key_stripe                                 [Stripe publish key]
-TEST_SECRET_KEY_STRIPE=test_secret_key_stripe                                   [Stripe secret key]
-TEST_CLIENT_ID_STRIPE=test_client_id_stripe                                     [Stripe client ID]
-SANDBOX_CLIENT_ID_MANGOPAY=sandbox_client_id_mangopay                           [Mangopay sandbox client ID]
-SANDBOX_API_KEY_MANGOPAY=sandbox_api_key_mangopay                               [Mangopay sandbox API key]
-TEST_KEY_ID_RAZORPAY=test_key_id_razorpay                                       [Razorpay key ID]
-TEST_KEY_SECRET_RAZORPAY=test_key_secret_razorpay                               [Razorpay key secret]
-TEST_PUBLISH_KEY_STRIPE_EXPRESS=test_publish_key_stripe_express                 [Stripe Express publish key]
-TEST_SECRET_KEY_STRIPE_EXPRESS=test_secret_key_stripe_express                   [Stripe Express secret key]
-TEST_MERCHANT_ID_PAYPAL_MARKETPLACE=test_merchant_id                            [PayPal Merchant ID]
-TEST_CLIENT_ID_PAYPAL_MARKETPLACE=test_client_id_paypal_marketplace             [PayPal Marketplace Client ID]
-TEST_CLIENT_SECRET_PAYPAL_MARKETPLACE=test_client_secret_paypal_marketplace     [PayPal Marketplace Client Secret]
+# Dokan Configuration
+DOKAN_PRO=true              # Set to false for Lite
+LICENSE_KEY=your_license_key
+GMAP=your_google_maps_key
 
 # Playwright Configuration
-BASE_URL=https://example.com                                                    [Base URL of the test site]
-CI=true                                                                         [CI/CD environment indicator]
-SLOWMO=10                                                                       [Slow down test execution by provided seconds] [optional]
-NO_SETUP=true                                                                   [Whether not to run setup tests before actual tests] [optional]
-LOCAL=true                                                                      [Local testing indicator] [optional]
-NON_HEADLESS=true                                                               [browser mode indicator] [optional]
-SITE_PATH=/users/rk/sites/dokan                                                 [Path of the local test site][only for local testing]
+BASE_URL=http://localhost:9999
+HEADLESS=false
+CI=true                     # MUST be true for Docker
 
-# Database Configuration
-DB_HOST_NAME=localhost                                                          [Database server hostname or IP address]
-DB_USER_NAME=dbuser                                                             [Database username]
-DB_USER_PASSWORD=dbpassword                                                     [Database user password]
-DATABASE=mywpdb                                                                 [Database name]
-DB_PORT=3306                                                                    [Database connection port]
+# Database Configuration (Docker defaults - DO NOT CHANGE)
+DB_HOST_NAME=localhost
+DB_USER_NAME=root
+DB_USER_PASSWORD=password
+DATABASE=tests-wordpress
+DB_PORT=9998
+DB_PREFIX=wp
+
+# REST API (CRITICAL - DO NOT CHANGE)
+SERVER_URL=http://localhost:9999/?rest_route=
+```
+
+### 3. Start Docker & Setup
+```bash
+# Start Docker environment
+npm run start:env
+
+# Sync admin credentials from .env
+npm run sync:admin
+
+# Run complete setup (plugins, users, test data)
+npm run docker:setup
+```
+
+**Expected output:** ✅ 65 passed | ⊘ 1 skipped
+
+### 4. Run Tests
+```bash
+# Run E2E tests
+npm run test:e2e
+
+# Run API tests
+npm run test:api
+
+# Run specific test file
+npm run test:e2e -- tests/e2e/products.spec.ts
+```
+
+---
+
+## 🔧 Common Commands
+
+### Docker Management
+| Command | Description |
+|---------|-------------|
+| `npm run start:env` | Start Docker containers |
+| `npm run stop:env` | Stop Docker containers |
+| `npm run restart:env` | Restart Docker |
+| `npm run reset:env` | Destroy & restart (fresh start) |
+| `npm run sync:admin` | Create/update admin from .env |
+
+### Test Setup
+| Command | Description |
+|---------|-------------|
+| `npm run docker:setup` | Full setup (plugins + users + data) |
+| `npm run docker:reset` | Reset database + run setup |
+| `npm run restore:pages` | Restore trashed WooCommerce pages |
+
+### Running Tests
+| Command | Description |
+|---------|-------------|
+| `npm run test:e2e` | Run E2E tests |
+| `npm run test:api` | Run API tests |
+| `npm run test:e2e:ui` | Run in UI mode |
+| `npm run test:e2e:debug` | Run in debug mode |
+| `npm run test:report` | View HTML report |
+
+---
+
+## 🐛 Troubleshooting
+
+### Docker Issues
+```bash
+# If wp-env fails to start
+rm -rf ~/.wp-env
+npm run start:env
+
+# If containers stopped
+npm run start:env
+npm run sync:admin
+```
+
+### REST API Errors (404/405)
+✅ **Already Fixed** - `.env` uses `SERVER_URL=http://localhost:9999/?rest_route=` (query string format)
+
+### Admin Login Fails
+```bash
+# Resync admin credentials from .env
+npm run sync:admin
+```
+
+### Missing Pages
+```bash
+# Restore all trashed pages
+npm run restore:pages
+```
+
+For detailed troubleshooting, see **[DOCKER-SETUP.md](./DOCKER-SETUP.md)** - Section "🐛 Troubleshooting"
+
+---
+
+## 📁 Project Structure
+
+```
+tests/pw/
+├── .env                        # Your environment configuration
+├── .env.example                # Example configuration
+├── .wp-env.json                # Docker config for Lite
+├── .wp-env.override.json       # Docker config for Pro (overrides)
+├── package.json                # NPM scripts
+├── playwright.config.ts        # Playwright main config
+├── e2e.config.ts               # E2E test config
+├── api.config.ts               # API test config
+├── DOCKER-SETUP.md            # 📖 Complete Docker guide
+├── README.MD                   # This file
+├── tests/
+│   ├── e2e/                   # E2E test specs
+│   │   ├── _site.setup.ts     # WordPress/plugin setup
+│   │   ├── _auth.setup.ts     # User authentication
+│   │   └── _env.setup.ts      # Test data setup
+│   └── api/                   # API test specs
+├── pages/                      # Page Object Models
+├── utils/                      # Helper utilities
+└── playwright/                 # Test artifacts
+```
+
+---
+
+## 🔄 Switching Between Lite and Pro
+
+### For Dokan Lite:
+```bash
+# 1. Edit .env
+DOKAN_PRO=false
+
+# 2. Restart & setup
+npm run reset:env
+npm run sync:admin
+npm run docker:setup
+
+# 3. Run Lite tests
+npm run test:e2e -- --grep @lite
+```
+
+### For Dokan Pro:
+```bash
+# 1. Edit .env
+DOKAN_PRO=true
+
+# 2. Restart & setup
+npm run reset:env
+npm run sync:admin
+npm run docker:setup
+
+# 3. Run Pro tests
+npm run test:e2e -- --grep @pro
+```
+
+---
+
+## 📋 Test Tags
+
+Tests are organized with tags:
+
+| Tag | Description |
+|-----|-------------|
+| `@lite` | Works with both Lite and Pro |
+| `@liteOnly` | Only for Lite |
+| `@pro` | Requires Pro |
+| `@admin` | Admin-only features |
+
+**Examples:**
+```bash
+# Run only Lite tests
+npx playwright test --grep @lite
+
+# Run Pro tests
+npx playwright test --grep @pro
+
+# Exclude Pro tests
+npx playwright test --grep-invert @pro
+```
+
+---
+
+## 🌐 Access Points
+
+| Service | URL | Credentials |
+|---------|-----|-------------|
+| WordPress Site | http://localhost:9999 | - |
+| WP Admin | http://localhost:9999/wp-admin | ADMIN / ADMIN_PASSWORD from .env |
+| Dokan Dashboard | http://localhost:9999/dashboard | Vendor credentials |
+| Vendor Stores | http://localhost:9999/store/vendor1 | - |
+| My Account | http://localhost:9999/my-account | Any user from .env |
+
+---
+
+## 🔑 Environment Variables
+
+### Required for Docker:
+```bash
+ADMIN=your_username              # Custom admin username
+ADMIN_PASSWORD=your_password     # Custom admin password
+CI=true                          # MUST be true for Docker
+BASE_URL=http://localhost:9999   # Docker test site URL
+SERVER_URL=http://localhost:9999/?rest_route=  # CRITICAL for REST API
+```
+
+### Database (Docker - DO NOT CHANGE):
+```bash
+DB_HOST_NAME=localhost
+DB_USER_NAME=root
+DB_USER_PASSWORD=password
+DATABASE=tests-wordpress
+DB_PORT=9998
 DB_PREFIX=wp
 ```
 
-<br/>
+---
 
+## 📖 Additional Resources
 
-<br/>
+- **[DOCKER-SETUP.md](./DOCKER-SETUP.md)** - Complete Docker guide with troubleshooting
+- **[Playwright Documentation](https://playwright.dev/)** - Official Playwright docs
+- **[@wordpress/env](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/)** - wp-env documentation
 
-### Pre-define data only for doker instance
+---
 
-```
-ADMIN: admin
-ADMIN_PASSWORD: password
-DB_HOST_NAME: localhost
-DB_USER_NAME: root
-DB_USER_PASSWORD: password
-DB_PORT: 9998                       [should be same with port mentioned in wp-env.json]
-DATABASE: tests-wordpress
-DB_PREFIX: wp
-```
+## 🛠️ Local Site Setup (Non-Docker)
 
-<br/>
+For local WordPress installations (not recommended):
 
-## :test_tube: Running tests
+1. Set up local WordPress with Dokan
+2. Configure `.env` with your local site details
+3. Set `CI=false` and `LOCAL=true`
+4. Provide `SITE_PATH` for WP-CLI commands
+5. Run: `npm run site:reset`
 
-Running tests involves executing the predefined test cases or scripts to evaluate the functionality, performance, or other aspects of a system or software application. By running tests, potential issues, bugs, or errors can be identified, providing insights into the quality and behavior of the system under test. The results obtained from running tests contribute to validating the system's compliance with requirements, verifying expected outcomes, and supporting the overall quality assurance process.
+**Note:** Docker setup is recommended for consistency and isolation.
 
-<br/>
+---
 
-### :o: How to run test projects
+## 🤝 Contributing
 
-<br/>
+### Running Specific Tests
+```bash
+# Run single test file
+npx playwright test tests/e2e/products.spec.ts
 
-:radio_button: Run E2E test project Lite
+# Run tests with specific title
+npx playwright test -g "vendor can create product"
 
-    npx playwright test --project=e2e_tests --grep '@lite|@liteOnly' --config=e2e.config.ts
-
-<br/>
-
-:radio_button: Run API test project Lite
-
-    npx playwright test --project=api_tests --grep '@lite|@liteOnly' --config=api.config.ts
-
-<br/>
-
-:radio_button: Run E2E test project Pro
-
-    npx playwright test --project=e2e_tests --grep '@lite|@pro' --config=e2e.config.ts
-
-<br/>
-
-:radio_button: Run API test project Pro
-
-    npx playwright test --project=api_tests --grep '@lite|@pro' --config=api.config.ts
-
-<br/>
-
-### :o: How to run tests
-
-<br/>
-
-:radio_button: Run all tests
-
-    npx playwright test
-
-<br/>
-
-:radio_button: Run tests in UI Mode
-
-    npx playwright test --ui
-
-<br/>
-
-:radio_button: Run a single test file
-
-    npx playwright test customers.spec.ts
-
-<br/>
-
-:radio_button: Run a set of test files
-
-    npx playwright test tests/products/ tests/customers/
-
-<br/>
-
-:radio_button: Run files that have report or customer in the file name
-
-    npx playwright test report customers
-
-<br/>
-
-:radio_button: Run the test with the title
-
-    npx playwright test -g "customer add customer details"
-
-<br/>
-
-:radio_button: Run a single project
-
-    npx playwright test --project=e2e_tests
-
-<br/>
-
-:radio_button: Run group of tests with certain tag
-
-    npx playwright test --grep @pro
-
-<br/>
-
-:radio_button: Run multiple groups of tags
-
-    npx playwright test --grep @lite | @pro
-
-<br/>
-
-:radio_button: Skip the tests with a certain tag:
-
-    npx playwright test --grep-invert @pro
-
-<br/>
-
-:radio_button: Run tests on specific browser
-
-    npx playwright test --project=chromium
-
-<br/>
-
-:radio_button: Run tests in headed mode
-
-    npx playwright test --headed
-
-<br/>
-
-### :o: How to debug tests
-
-<br/>
-
-:radio_button: Run all tests with debug flag
-
-    npx playwright test --debug
-
-<br/>
-
-:radio_button: Run a single test with debug flag
-
-    npx playwright test customers.spec.ts --debug
-
-<br/>
-
-:radio_button: Debug start form specific test line number [where the test(.. is defined]
-
-    npx playwright test customers.spec.ts:20 --debug
-
-<br/>
-
-### :o: How to serve reports
-
-<br/>
-
-:radio_button: Server test report
-
-    npx playwright show-report
-
-
-## Setup steps for Dokan pro
-
-### :o: Clone & Build Dokan pro plugin
-
-<br/>
-
-:radio_button: Clone and Go to dokan-pro project root directory and run
-
-    composer i --no-dev && composer du -o && npm i && npm run build
-
-<br/>
-
-### :o: Clone Requied Woocommerce Plugins
-
-<br/>
-
-:radio_button: Clone all requied woocommerce plugins and store them in a single folder
-
-<br/>
-
-### update plugin paths in .wp-env.override
-
-:radio_button: rename the file as .wp-env.override.json [it will overide plugins mentioned in .wp-env.json]
-
-:radio_button: store the plugins as the paths mentioned in the .wp-env.override or update the paths according to pw folder
-
-```
-.
-├── plugins
-│   └── dokan                      # Dokan Lite plugin (cloned from `getdokan/dokan`)
-│       └── tests
-│           └── pw                # Playwright tests and wp-env setup
-│               ├── wp-data
-│               ├── playwright
-│               ├── playwright-report
-│               └── .wp-env.override.json
-├── woo-plugins
-│   └── tests
-│       └── plugins               # WooCommerce related zipped plugins
-│           ├── woocommerce-bookings
-│           ├── woocommerce-product-addons
-│           ├── woocommerce-simple-auctions
-│           └── woocommerce-subscriptions
-├── node_modules                  # Installed dependencies (after npm ci / install)
-├── dokan-pro.php                 # Dokan Pro plugin base (assumed root)
-├── composer.lock / package-lock.json
-└── ...                           # Other project root files
-
+# Run in UI mode for debugging
+npm run test:e2e:ui
 ```
 
-###  Start Wordpress Environment
-:radio_button: follow previously mentioned steps for start wordpress environment and run pro projects to run pro tests
+### Code Quality
+```bash
+# Type checking
+npm run type
 
+# Linting
+npm run lint
+npm run lint:fix
 
+# Formatting
+npm run prettier
+npm run prettier:fix
+```
+
+---
+
+## 📊 Test Reports
+
+After running tests:
+
+```bash
+# View HTML report
+npm run test:report
+
+# View trace for failed tests
+npm run test:trace
+```
+
+Reports are automatically generated in `playwright-report/` directory.
+
+---
+
+## 💡 Pro Tips
+
+1. **Keep Docker running** between test runs for faster execution
+2. **Use `npm run docker:reset`** for a quick fresh start
+3. **Check `.env` first** when tests fail - credentials must match WordPress
+4. **Use tags** to run specific test groups: `--grep @pro` or `--grep @lite`
+5. **View HTML reports** after tests: `npm run test:report`
+6. **Check Docker logs** if containers crash: `docker logs tests-cli`
+7. **Always run `npm run sync:admin`** after starting Docker to ensure credentials match
+
+---
+
+## ✨ What Gets Created
+
+After `npm run docker:setup`, you'll have:
+
+### Users:
+- **Admin**: `ADMIN` from .env (e.g., `shohan`)
+- **Vendors**: `vendor1`, `vendor2` (sellers)
+- **Customers**: `customer1`, `customer2`
+
+### Plugins (Pro mode):
+- WooCommerce
+- Dokan Lite
+- Dokan Pro
+- WooCommerce Bookings
+- WooCommerce Product Addons
+- WooCommerce Simple Auctions
+- WooCommerce Subscriptions
+- Basic Auth (for REST API)
+
+### Test Data:
+- 2 Vendor stores with products
+- Tax rates & shipping zones
+- Payment gateways (BACS, Cheque, COD)
+- Categories, tags, attributes
+- Sample coupons
+- **41 Dokan Pro modules activated**
+
+---
+
+## 🚀 Ready to Test!
+
+Your Dokan test environment is ready. For detailed information and troubleshooting, see **[DOCKER-SETUP.md](./DOCKER-SETUP.md)**.
+
+Happy Testing! 🎉
