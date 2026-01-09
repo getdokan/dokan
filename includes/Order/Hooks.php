@@ -457,8 +457,13 @@ class Hooks {
      */
     public function restore_reduced_order_stock( $order ) {
         // seems in rest request, there is no such issue like (stock reduced by twice), so return early
-        if ( defined( 'REST_REQUEST' ) && strpos( $_SERVER['REQUEST_URI'], 'wc/store' ) === false ) {
-            return;
+        if ( defined( 'REST_REQUEST' ) ) {
+            $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+            $clean_uri   = esc_url_raw( wp_unslash( $request_uri ) );
+
+            if ( strpos( $clean_uri, 'wc/store' ) === false ) {
+                return;
+            }
         }
 
         // seems it's not a parent order so return early
