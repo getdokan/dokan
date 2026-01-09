@@ -36,7 +36,7 @@ const SelectEdit = ( { data, field, onChange }: any ) => {
             <Select
                 options={ field.elements }
                 // @ts-ignore
-                isMulti={ Boolean( field.multiple ) }
+                isMulti={ field.multiple }
                 placeholder={ field.placeholder }
                 value={ selectedValue }
                 selectedValue={ selectedValue }

@@ -7,7 +7,6 @@ const DateTimePickerEdit = ( { data, field, onChange }: any ) => (
             placeholder={ field.placeholder }
             currentDate={ data[ field.id ] }
             onChange={ ( value: string ) => {
-                console.log( 'DateTimePickerEdit value:', value );
                 onChange( { [ field.id ]: value } );
             } }
         />

@@ -5,6 +5,7 @@ const AsyncSelectEdit = ( { data, field, onChange }: any ) => {
     return (
         <CustomField label={ field.label }>
             <ProductAsyncSelect
+                prefetch={ true }
                 value={ data[ field.id ] }
                 onChange={ ( value: any ) => {
                     onChange( { [ field.id ]: value } );

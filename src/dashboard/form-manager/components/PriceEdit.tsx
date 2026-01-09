@@ -1,4 +1,4 @@
-import { formatPrice } from '@dokan/utilities';
+import { formatPrice } from '@src/utilities';
 import { DokanPriceInput } from '@src/components';
 import apiFetch from '@wordpress/api-fetch';
 import { useState } from '@wordpress/element';
@@ -6,7 +6,9 @@ import { addQueryArgs } from '@wordpress/url';
 import CustomField from './CustomField';
 
 const PriceEdit = ( { data, field, onChange }: any ) => {
-    const [ vendorEarning, setVendorEarning ] = useState( data[ field.id ] ); // Assuming vendor earns 90% of the price
+    const [ vendorEarning, setVendorEarning ] = useState(
+        Number( data[ field.id ] )
+    );
 
     const vendorEarningHandler = async ( price: number ) => {
         if ( field.id === 'regular_price' ) {
@@ -54,7 +56,7 @@ const PriceEdit = ( { data, field, onChange }: any ) => {
                 } }
                 onChange={ ( _, rawValue ) => {
                     onChange( { [ field.id ]: rawValue } );
-                    vendorEarningHandler( rawValue );
+                    void vendorEarningHandler( rawValue );
                 } }
             />
         </CustomField>

@@ -1,4 +1,4 @@
-import { DokanButton } from '@dokan/components';
+import { DokanButton } from '@src/components';
 import { DataForm } from '@wordpress/dataviews';
 import { useCallback, useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';

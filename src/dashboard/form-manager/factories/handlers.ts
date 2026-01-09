@@ -39,7 +39,6 @@ export const getElementsFromOptions = ( field?: FormField ) => {
 /**
  * Handler for text fields using a Rich Text Editor.
  *
- * @param {Object} field The field configuration.
  * @return {Object} Configuration object with type 'text' and RichTextEdit component.
  */
 export const textFieldHandler: FieldHandler = () => ( {
@@ -50,7 +49,6 @@ export const textFieldHandler: FieldHandler = () => ( {
 /**
  * Handler for checkbox fields.
  *
- * @param {Object} field The field configuration.
  * @return {Object} Configuration object with type 'boolean' and 'checkbox' edit type.
  */
 export const checkboxHandler: FieldHandler = () => ( {
@@ -73,7 +71,6 @@ export const radioHandler: FieldHandler = ( field ) => ( {
 /**
  * Handler for numeric fields.
  *
- * @param {Object} field The field configuration.
  * @return {Object} Configuration object with type 'integer'.
  */
 export const numberHandler: FieldHandler = () => ( {
@@ -82,7 +79,7 @@ export const numberHandler: FieldHandler = () => ( {
 
 /**
  * Handler for date fields.
- * @param {Object} field The field configuration.
+ *
  * @return {Object} Configuration object with type 'datetime' and DateTimePickerEdit component.
  */
 export const dateHandler: FieldHandler = () => ( {
@@ -143,7 +140,6 @@ export const multiSelectHandler: FieldHandler = ( field ) => {
 /**
  * Handler for single image upload fields.
  *
- * @param {Object} [field] The field configuration.
  * @return {Object} Configuration object with type 'integer' and FeatureImage component.
  */
 export const imageHandler: FieldHandler = () => ( {
@@ -154,7 +150,6 @@ export const imageHandler: FieldHandler = () => ( {
 /**
  * Handler for image gallery fields.
  *
- * @param {Object} [field] The field configuration.
  * @return {Object} Configuration object with type 'array' and GalleryImages component.
  */
 export const galleryHandler: FieldHandler = () => ( {
