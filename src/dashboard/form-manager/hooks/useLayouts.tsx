@@ -1,3 +1,4 @@
+import { useWindowDimensions } from '@src/hooks';
 import { sanitizeHTML } from '@src/utilities';
 import { useCallback, useMemo } from '@wordpress/element';
 import { checkDependency } from '../components/FieldRenderer';
@@ -18,6 +19,7 @@ export default function useLayouts(
     fields: FormField[],
     product: Record< string, any >
 ) {
+    const { width } = useWindowDimensions();
     /**
      * Helper to find a field or section by ID.
      * Searches through sections and their nested fields.
@@ -127,21 +129,31 @@ export default function useLayouts(
         [ fields, product ]
     );
 
+    // Define root layout based on window width
+    const rootLayout = useMemo( () => {
+        if ( width && width > 768 ) {
+            return {
+                type: 'row',
+                alignment: 'start',
+                styles: {
+                    left_column: { flex: '1 1 0%' },
+                    right_column: { flex: '0 0 265px' },
+                },
+            };
+        }
+        return {
+            type: 'regular',
+        };
+    }, [ width ] );
+
     const formLayouts = useMemo( () => {
         const layouts = [
             {
-                id: 'main-layout',
-                layout: {
-                    type: 'row',
-                    alignment: 'start',
-                    styles: {
-                        'left-column': { flex: 5, marginRight: '10px' },
-                        'right-column': { flex: 2 },
-                    },
-                },
+                id: 'main_layout',
+                layout: rootLayout,
                 children: [
                     {
-                        id: 'left-column',
+                        id: 'left_column',
                         children: [
                             {
                                 id: 'general',
@@ -294,7 +306,7 @@ export default function useLayouts(
                         ],
                     },
                     {
-                        id: 'right-column',
+                        id: 'right_column',
                         children: [
                             {
                                 id: 'organize-product',
@@ -302,7 +314,6 @@ export default function useLayouts(
                                     type: 'card',
                                     isCollapsible: false,
                                 },
-                                label: 'Organize Product',
                                 children: [
                                     'status',
                                     'catalog_visibility',
@@ -327,8 +338,119 @@ export default function useLayouts(
             },
         ];
 
-        return processLayout( layouts );
-    }, [ getFieldHeading, processLayout ] );
+        const usedFields = new Set< string >();
+
+        /**
+         * Helper to collect all used field IDs from the layout.
+         *
+         * @param {Array} items Layout items.
+         */
+        const collectUsedFields = ( items: any[] ) => {
+            items.forEach( ( item ) => {
+                if ( typeof item === 'string' ) {
+                    usedFields.add( item );
+                    return;
+                }
+                if ( item.children ) {
+                    collectUsedFields( item.children );
+                }
+            } );
+        };
+        collectUsedFields( layouts );
+
+        const remainingFieldsBySection: Record< string, string[] > = {};
+
+        // Identify fields that are not in the layout
+        sections.forEach( ( section ) => {
+            section.fields.forEach( ( field ) => {
+                if ( usedFields.has( field.id ) ) {
+                    return;
+                }
+
+                // Use field's section_id if available, otherwise fall back to the section's id
+                const targetSectionId = field.section_id || section.id;
+
+                if ( ! remainingFieldsBySection[ targetSectionId ] ) {
+                    remainingFieldsBySection[ targetSectionId ] = [];
+                }
+
+                remainingFieldsBySection[ targetSectionId ].push( field.id );
+            } );
+        } );
+
+        /**
+         * Helper to inject remaining fields into the layout.
+         *
+         * @param {Array} items Layout items.
+         * @return {Array} Updated layout items.
+         */
+        const injectRemainingFields = ( items: any[] ): any[] => {
+            return items.map( ( item ) => {
+                if ( typeof item === 'string' ) {
+                    return item;
+                }
+                const newItem = { ...item };
+
+                // Append if section ID matches
+                if ( newItem.id && remainingFieldsBySection[ newItem.id ] ) {
+                    newItem.children = [
+                        ...( newItem.children || [] ),
+                        ...remainingFieldsBySection[ newItem.id ],
+                    ];
+                    delete remainingFieldsBySection[ newItem.id ];
+                }
+
+                if ( newItem.children ) {
+                    newItem.children = injectRemainingFields(
+                        newItem.children
+                    );
+                }
+                return newItem;
+            } );
+        };
+
+        let updatedLayouts = injectRemainingFields( layouts );
+
+        // Create new cards for sections not found in the existing layout
+        const newSections = Object.keys( remainingFieldsBySection ).map(
+            ( sectionId ) => ( {
+                id: sectionId,
+                layout: {
+                    type: 'card',
+                    withHeader: true,
+                },
+                children: remainingFieldsBySection[ sectionId ],
+                ...getFieldHeading( sectionId ),
+            } )
+        );
+
+        if ( newSections.length > 0 ) {
+            // Append new sections to the left column
+            const appendToLeftColumn = ( items: any[] ): any[] => {
+                return items.map( ( item ) => {
+                    if (
+                        typeof item !== 'string' &&
+                        item.id === 'left_column'
+                    ) {
+                        return {
+                            ...item,
+                            children: [ ...item.children, ...newSections ],
+                        };
+                    }
+                    if ( typeof item !== 'string' && item.children ) {
+                        return {
+                            ...item,
+                            children: appendToLeftColumn( item.children ),
+                        };
+                    }
+                    return item;
+                } );
+            };
+            updatedLayouts = appendToLeftColumn( updatedLayouts );
+        }
+
+        return processLayout( updatedLayouts );
+    }, [ getFieldHeading, processLayout, sections, rootLayout ] );
 
     return { formLayouts };
 }
