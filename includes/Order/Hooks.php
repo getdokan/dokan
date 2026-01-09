@@ -457,7 +457,7 @@ class Hooks {
      */
     public function restore_reduced_order_stock( $order ) {
         // seems in rest request, there is no such issue like (stock reduced by twice), so return early
-        if ( defined( 'REST_REQUEST' ) ) {
+        if ( defined( 'REST_REQUEST' ) && strpos( $_SERVER['REQUEST_URI'], 'wc/store' ) === false ) {
             return;
         }
 
