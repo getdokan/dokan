@@ -6,6 +6,7 @@ use WeDevs\Dokan\Admin\Dashboard\Dashboard;
 use WeDevs\Dokan\Admin\Dashboard\LegacySwitcher;
 use WeDevs\Dokan\Admin\Dashboard\Pages\Modules;
 use WeDevs\Dokan\Admin\Dashboard\Pages\ProFeatures;
+use WeDevs\Dokan\Admin\Dashboard\Pages\Settings;
 use WeDevs\Dokan\Admin\Dashboard\Pages\SetupGuide;
 use WeDevs\Dokan\Admin\Dashboard\Pages\Status;
 use WeDevs\Dokan\Admin\Dashboard\Pages\Withdraw;
@@ -13,6 +14,7 @@ use WeDevs\Dokan\Admin\Dashboard\Pages\Vendors;
 use WeDevs\Dokan\Admin\OnboardingSetup\AdminSetupGuide;
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
 use WeDevs\Dokan\Admin\Dashboard\Pages\ReverseWithdrawal;
+use WeDevs\Dokan\Admin\Settings\Settings as AdminSettingsProvider;
 
 /**
  * Admin Dashboard API Service Provider
@@ -55,5 +57,6 @@ class AdminDashboardServiceProvider extends BaseServiceProvider {
         }
 
         $this->add_tags( $this->share_with_implements_tags( SetupGuide::class )->addArgument( AdminSetupGuide::class ), $this->tags );
+        $this->add_tags( $this->share_with_implements_tags( Settings::class )->addArgument( AdminSettingsProvider::class ), $this->tags );
     }
 }
