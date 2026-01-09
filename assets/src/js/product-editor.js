@@ -443,7 +443,7 @@
             } );
             $( '.product_tag_search' ).select2( {
                 allowClear: false,
-                tokenSeparators: [ ',', ' ' ],
+                tokenSeparators: [ ',' ],
                 tags:
                     dokan.product_vendors_can_create_tags &&
                     'on' === dokan.product_vendors_can_create_tags,
