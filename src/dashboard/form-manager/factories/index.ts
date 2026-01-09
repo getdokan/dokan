@@ -1,16 +1,16 @@
-import { FormField } from '../types';
+import { FieldHandler, FormField } from '../types';
 import {
-    textFieldHandler,
     checkboxHandler,
-    radioHandler,
-    numberHandler,
     dateHandler,
-    selectHandler,
-    imageHandler,
-    galleryHandler,
     defaultHandler,
+    galleryHandler,
+    imageHandler,
+    multiSelectHandler,
+    numberHandler,
+    radioHandler,
+    selectHandler,
+    textFieldHandler,
 } from './handlers';
-import { FieldHandler } from '../types';
 
 const handlers: Record< string, FieldHandler > = {
     textarea: textFieldHandler,
@@ -21,6 +21,7 @@ const handlers: Record< string, FieldHandler > = {
     date: dateHandler,
     datetime: dateHandler,
     select: selectHandler,
+    multiselect: multiSelectHandler,
     image: imageHandler,
     gallery: galleryHandler,
 };

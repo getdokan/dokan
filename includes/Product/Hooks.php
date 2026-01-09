@@ -720,18 +720,20 @@ class Hooks {
                 }
 
                 $fields[] = [
-                    'id'          => $field->get_id(),
-                    'name'        => $field->get_name(),
-                    'title'       => $field->get_title(),
-                    'placeholder' => $field->get_placeholder(),
-                    'help_content' => $field->get_help_content(),
-                    'tooltip'     => $field->get_tooltip(),
-                    'description' => $field->get_description(),
-                    'required'    => $field->is_required(),
-                    'value'       => $value,
-                    'field_type'  => $field->get_field_type(),
-                    'options'     => $field->get_options( $product ),
-                    'visibility'  => $field->is_visible(),
+                    'id'            => $field->get_id(),
+                    'name'          => $field->get_name(),
+                    'title'         => $field->get_title(),
+                    'tooltip'       => $field->get_tooltip(),
+                    'section_id'    => $section->get_id(),
+                    'is_custom'     => $field->is_custom(),
+                    'description'   => $field->get_description(),
+                    'required'      => $field->is_required(),
+                    'value'         => $value,
+                    'field_type'    => $field->get_field_type(),
+                    'options'       => $field->get_options( $product ),
+                    'visibility'    => $field->is_visible(),
+                    'placeholder'   => $field->get_placeholder(),
+                    'help_content'  => $field->get_help_content(),
                     'dependency_condition' => $field->get_dependency_condition(),
                 ];
             }

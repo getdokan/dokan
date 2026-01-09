@@ -102,6 +102,7 @@ export const selectHandler: FieldHandler = ( field ) => {
         type: 'number',
         elements: getElementsFromOptions( field ),
         Edit: SelectEdit,
+        multiple: false,
     };
 
     if ( Array.isArray( field?.value ) ) {
@@ -116,9 +117,26 @@ export const selectHandler: FieldHandler = ( field ) => {
     }
     // async select fields
     const asyncSelectFields = [ 'upsell_ids', 'cross_sell_ids', 'children' ];
-    if ( asyncSelectFields.includes( field?.id || '' ) ) {
+    if ( asyncSelectFields.includes( field!.id ) ) {
         config.Edit = AsyncSelectEdit;
     }
+    return config;
+};
+
+/**
+ * Handler for select/dropdown fields.
+ * Handles normal select options and special cases like product categories.
+ *
+ * @param {Object} [field] The field configuration.
+ * @return {Object} Configuration object including type, elements, and Edit component.
+ */
+export const multiSelectHandler: FieldHandler = ( field ) => {
+    const config: any = {
+        type: 'array',
+        elements: getElementsFromOptions( field ),
+        Edit: SelectEdit,
+        multiple: true,
+    };
     return config;
 };
 

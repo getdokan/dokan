@@ -16,9 +16,10 @@ export interface Section {
 
 export type FormField = {
     id: string;
+    section_id: string;
     name: string;
     title: string;
-    help: string;
+    is_custom: boolean;
     placeholder: string;
     help_content: string;
     tooltip: string;
