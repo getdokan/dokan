@@ -13,6 +13,10 @@
     legend.components-base-control__label {
         margin-left: 0 !important;
     }
+    .components-input-control__label {
+        display: flex !important;
+        gap: 2px;
+    }
     .flex {
         display: flex;
     }
@@ -74,7 +78,7 @@
         }
     }
     .woocommerce-tree-select-control__control {
-        padding: 5px 10px;
+        padding: 0 10px !important;
     }
     .dokan-form-card-title {
         font-size: 14px;

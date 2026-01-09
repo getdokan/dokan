@@ -672,6 +672,17 @@ class Hooks {
             $product = wc_get_product( $post_id );
         }
 
+        if ( ! $product ) {
+            dokan_get_template_part(
+                'global/dokan-error', '', [
+                    'deleted' => false,
+                    'message' => __( 'Product not found', 'dokan-lite' ),
+                ]
+            );
+
+            return;
+        }
+
         dokan_get_template_part(
             'products/form-manager',
             '', [
@@ -722,7 +733,6 @@ class Hooks {
                     'options'     => $field->get_options( $product ),
                     'visibility'  => $field->is_visible(),
                     'dependency_condition' => $field->get_dependency_condition(),
-                    'left_icon'     => $field->get_left_icon(),
                 ];
             }
 
