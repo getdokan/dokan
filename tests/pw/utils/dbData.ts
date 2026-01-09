@@ -2185,7 +2185,7 @@ export const dbData = {
             'live_chat',
             'live_search',
             'mangopay',
-            'moip',
+            // 'moip', // Deprecated - removed in Dokan Pro 4.2+
             'order_min_max',
             'paypal_marketplace',
             'printful',

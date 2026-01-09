@@ -10,6 +10,10 @@
                 "../../../woocommerce-simple-auctions",
                 "../../../woocommerce-subscriptions"
             ],
+            "config": {
+                "WP_MEMORY_LIMIT": "512M",
+                "WP_MAX_MEMORY_LIMIT": "512M"
+            },
             "mappings": {
                 "wp-data": "./wp-data",
                 "wp-content/debug.log": "./wp-data/debug.log",
