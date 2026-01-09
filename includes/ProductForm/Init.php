@@ -48,7 +48,6 @@ class Init {
      * @return void
      */
     public function init_general_fields() {
-        $currency = get_woocommerce_currency_symbol();
         $section = Factory::add_section(
             'general',
             [
@@ -141,7 +140,12 @@ class Init {
                 'field_type'  => 'text',
                 'name'        => '_regular_price',
                 'placeholder' => '0.00',
-                'left_icon'   => $currency,
+                'dependency_condition' => [
+                    'section'  => 'general',
+                    'field'    => Elements::TYPE,
+                    'operator' => 'equal',
+                    'value'    => 'simple',
+                ],
             ]
         );
 
@@ -151,7 +155,12 @@ class Init {
                 'field_type'  => 'text',
                 'name'        => '_sale_price',
                 'placeholder' => '0.00',
-                'left_icon'   => $currency,
+                'dependency_condition' => [
+                    'section'  => 'general',
+                    'field'    => Elements::TYPE,
+                    'operator' => 'equal',
+                    'value'    => 'simple',
+                ],
             ]
         );
 
@@ -174,6 +183,12 @@ class Init {
 
                     return $product->get_date_on_sale_to( 'edit' ) ? $product->get_date_on_sale_to( 'edit' )->getTimestamp() : false;
                 },
+                'dependency_condition' => [
+                    'section'  => 'general',
+                    'field'    => Elements::TYPE,
+                    'operator' => 'equal',
+                    'value'    => 'simple',
+                ],
             ]
         );
 

@@ -65,7 +65,7 @@ const App = () => {
     };
 
     // eslint-disable-next-line no-console
-    console.log( { formLayouts, fields, isNewProduct } );
+    console.log( { formLayouts, fields, isNewProduct, product } );
 
     return (
         <div className="dokan-product-form-manager dokan-layout">

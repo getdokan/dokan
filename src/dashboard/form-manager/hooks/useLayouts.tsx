@@ -247,8 +247,16 @@ export default function useLayouts(
                                     'tax_class',
                                     'shipping_class_id',
                                     '_overwrite_shipping',
-                                    '_additional_price',
-                                    '_additional_qty',
+                                    {
+                                        id: 'overwrite_shipping_price_qty',
+                                        layout: {
+                                            type: 'row',
+                                        },
+                                        children: [
+                                            '_additional_price',
+                                            '_additional_qty',
+                                        ],
+                                    },
                                     '_dps_processing_time',
                                 ],
                                 ...getFieldHeading( 'shipping' ),

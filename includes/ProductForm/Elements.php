@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Elements {
     const ID = 'id';
-    const TYPE = 'type';
+    const TYPE = 'product_type';
     const NAME = 'name';
     const DESCRIPTION = 'description';
     const SHORT_DESCRIPTION = 'short_description';

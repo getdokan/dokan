@@ -27,9 +27,10 @@
     }
     .form-manager-price-input {
         background: white;
+        border: 1px solid #e1e1e1;
         border-top-left-radius: 0 !important;
         border-bottom-left-radius: 0 !important;
-        border-left: none;
+        border-left: none !important;
     }
 
     .dokan-product-image_id-field {

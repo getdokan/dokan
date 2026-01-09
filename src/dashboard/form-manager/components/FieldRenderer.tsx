@@ -2,15 +2,20 @@ import { DokanTooltip } from '@src/components';
 import { Info } from 'lucide-react';
 import { sanitizeHTML } from '../../../utilities';
 import { getFieldConfigFromFactory } from '../factories';
-import { FormField } from '../types';
+import { DependencyCondition, FormField } from '../types';
 
 export const checkDependency = (
-    dependencyCondition: any,
+    depsCondition: DependencyCondition | DependencyCondition[] | undefined,
     data: Record< string, any >
-) => {
-    const item = dependencyCondition;
-    if ( typeof item === 'object' && ! Array.isArray( item ) ) {
-        const { field: depField, operator, value } = dependencyCondition;
+): boolean => {
+    if ( Array.isArray( depsCondition ) ) {
+        return depsCondition.every( ( condition ) =>
+            checkDependency( condition, data )
+        );
+    }
+
+    if ( typeof depsCondition === 'object' && depsCondition !== null ) {
+        const { field: depField, operator, value } = depsCondition;
         const depValue = data[ depField ];
 
         let targetValue = value;
@@ -60,6 +65,9 @@ export const getFieldConfig = ( field: FormField ) => {
         placeholder: field.placeholder,
         required: field.required,
         type: field.field_type,
+        isValid: {
+            required: field.required,
+        },
     };
 
     const specificConfig = getFieldConfigFromFactory( field );

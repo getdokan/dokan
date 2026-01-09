@@ -1,3 +1,4 @@
+import AsyncSelectEdit from '../components/AsyncSelectEdit';
 import CategoriesEdit from '../components/CategoriesEdit';
 import DateTimePickerEdit from '../components/DateTimePickerEdit';
 import FeatureImage from '../components/FeatureImage';
@@ -112,6 +113,11 @@ export const selectHandler: FieldHandler = ( field ) => {
         config.Edit = CategoriesEdit;
         config.type = 'array';
         config.multiple = true;
+    }
+    // async select fields
+    const asyncSelectFields = [ 'upsell_ids', 'cross_sell_ids', 'children' ];
+    if ( asyncSelectFields.includes( field?.id || '' ) ) {
+        config.Edit = AsyncSelectEdit;
     }
     return config;
 };
