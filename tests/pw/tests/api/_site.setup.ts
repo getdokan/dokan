@@ -6,7 +6,7 @@ import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 import { helpers } from '@utils/helpers';
 
-const { CI, BASE_URL } = process.env;
+const { CI, c } = process.env;
 
 setup.describe('site setup', () => {
     let apiUtils: ApiUtils;
