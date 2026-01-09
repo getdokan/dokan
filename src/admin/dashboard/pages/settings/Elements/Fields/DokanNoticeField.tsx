@@ -15,21 +15,30 @@ const DokanNoticeField = ( { element }: { element: any } ) => {
         notice_description,
         link_title,
         link_url,
+        active_tab,
     } = element;
 
     const noticeStyles = {
-        error: 'bg-red-50 border-red-200 text-red-800',
+        error: 'bg-[#E64E6112] border-[#571B231A] text-[#9F2225]',
         info: 'bg-blue-50 border-blue-200 text-blue-800',
-        warning: 'bg-yellow-50 border-yellow-200 text-yellow-800',
+        warning: 'bg-[#DEA10012] border-[#571B231A] text-[#8A610F]',
     };
 
     const iconColors = {
-        error: 'text-red-500',
-        info: 'text-blue-500',
+        error: '#E64B5E',
+        info: '#1E3A8A',
         warning: '#DBA941',
     };
 
     const handleLinkClick = () => {
+        if ( active_tab ) {
+            if ( typeof localStorage !== 'undefined' ) {
+                localStorage.setItem( 'dokan_active_settings_tab', active_tab );
+            }
+            window.location.reload();
+            return;
+        }
+
         if ( link_url ) {
             window.open( link_url, '_self', 'noopener,noreferrer' );
         }

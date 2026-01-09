@@ -68,12 +68,41 @@ class NoticeField extends Field {
     protected $link_icon = '';
 
     /**
+     * Active tab.
+     *
+     * @var string $active_tab Active tab.
+     */
+    protected $active_tab = '';
+
+    /**
      * Constructor.
      *
      * @param string $id Input ID.
      */
     public function __construct( string $id ) {
         $this->id = $id;
+    }
+
+    /**
+     * Get active tab.
+     *
+     * @return string
+     */
+    public function get_active_tab(): string {
+        return $this->active_tab;
+    }
+
+    /**
+     * Set active tab.
+     *
+     * @param string $active_tab Active tab.
+     *
+     * @return NoticeField
+     */
+    public function set_active_tab( string $active_tab ): NoticeField {
+        $this->active_tab = $active_tab;
+
+        return $this;
     }
 
     /**
@@ -255,6 +284,7 @@ class NoticeField extends Field {
         $data['link_title']         = $this->get_link_title();
         $data['link_url']           = $this->get_url();
         $data['link_icon']          = $this->get_link_icon();
+        $data['active_tab']         = $this->get_active_tab();
 
         return $data;
     }
