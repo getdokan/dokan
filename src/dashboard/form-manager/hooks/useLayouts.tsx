@@ -154,10 +154,14 @@ export default function useLayouts(
                                     'product_type',
                                     {
                                         id: 'digital-options',
-                                        type: 'group',
+                                        layout: {
+                                            type: 'regular',
+                                        },
                                         label: 'Digital Product Options',
                                         children: [ 'downloadable', 'virtual' ],
                                     },
+                                    'product_url',
+                                    'button_text',
                                     'category_ids',
                                     'regular_price',
                                     'sale_price',
@@ -286,15 +290,6 @@ export default function useLayouts(
                                     'download_expiry',
                                 ],
                                 ...getFieldHeading( 'downloadable' ),
-                            },
-                            {
-                                id: 'others',
-                                layout: {
-                                    type: 'card',
-                                    withHeader: true,
-                                },
-                                children: [ 'product_url', 'button_text' ],
-                                ...getFieldHeading( 'others' ),
                             },
                         ],
                     },

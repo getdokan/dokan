@@ -113,6 +113,7 @@ class Init {
                 'field_type'     => 'select',
                 'id'             => 'product_type',
                 'name'           => 'product_type',
+                'required'       => true,
                 'options'        => apply_filters(
                     'dokan_product_types',
                     [
@@ -470,6 +471,12 @@ class Init {
                 'sanitize_callback'     => function ( $value ) {
                     return ! empty( $value ) && 'yes' === $value;
                 },
+                'dependency_condition' => [
+                    'section'  => 'general',
+                    'field'    => Elements::TYPE,
+                    'operator' => 'equal',
+                    'value'    => 'simple',
+                ],
             ]
         );
 
@@ -485,6 +492,12 @@ class Init {
                 'sanitize_callback'     => function ( $value ) {
                     return ! empty( $value ) && 'yes' === $value;
                 },
+                'dependency_condition' => [
+                    'section'  => 'general',
+                    'field'    => Elements::TYPE,
+                    'operator' => 'equal',
+                    'value'    => 'simple',
+                ],
             ]
         );
     }

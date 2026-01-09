@@ -11,6 +11,9 @@ const App = () => {
     const [ isNewProduct ] = useState(
         ( document.getElementById( 'dokan_new_product' ) as any )?.value
     );
+    const [ productId ] = useState(
+        ( document.getElementById( 'dokan_product_id' ) as any )?.value
+    );
     // Fields and Layout
     const fields = useMemo( () => {
         return sections.flatMap( ( section ) => {
@@ -45,7 +48,10 @@ const App = () => {
         return Object.fromEntries( entries );
     }, [] );
 
-    const [ product, setProduct ] = useState< any >( initialData );
+    const [ product, setProduct ] = useState< any >( {
+        ...initialData,
+        product_id: Number( productId ),
+    } );
     const { formLayouts } = useLayouts( sections, fields, product );
     const [ isLoading, setIsLoading ] = useState( false );
 
