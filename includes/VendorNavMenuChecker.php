@@ -42,6 +42,15 @@ class VendorNavMenuChecker {
     protected array $forcefully_resolved_dependencies = [];
 
     /**
+     * Request-scoped map of react_route => url for fast lookup.
+     *
+     * @since 4.0.0
+     *
+     * @var array<string,string>
+     */
+    protected $react_route_url_map = [];
+
+    /**
      * Constructor.
      */
 
@@ -72,20 +81,29 @@ class VendorNavMenuChecker {
      *
      * @return array
      */
-
     public function convert_to_react_menu( array $menu_items ): array {
-        return array_map(
-            function ( $item ) {
-                if ( ! empty( $item['react_route'] ) && $this->is_dependency_resolved( $item['react_route'] ) ) {
-                    $item['url'] = $this->get_url_for_route( $item['react_route'] );
-                }
-                if ( isset( $item['submenu'] ) ) {
-                    $item['submenu'] = $this->convert_to_react_menu( $item['submenu'] );
-                }
-
-                return $item;
-            }, $menu_items
-        );
+    	return array_map(
+    		function ( $item ) {
+    			if ( ! empty( $item['react_route'] ) && $this->is_dependency_resolved( $item['react_route'] ) ) {
+    				$item['url'] = $this->get_url_for_route( $item['react_route'] );
+    			}
+    
+    			// Build request-scoped map for fast lookups in maybe_rewrite_to_react_route().
+    			if ( ! empty( $item['react_route'] ) && ! empty( $item['url'] ) && is_string( $item['react_route'] ) ) {
+    				$route = trim( (string) $item['react_route'], '/' );
+    				if ( $route !== '' ) {
+    					$this->react_route_url_map[ $route ] = (string) $item['url'];
+    				}
+    			}
+    
+    			if ( isset( $item['submenu'] ) ) {
+    				$item['submenu'] = $this->convert_to_react_menu( $item['submenu'] );
+    			}
+    
+    			return $item;
+    		},
+    		$menu_items
+    	);
     }
 
     /**
@@ -95,46 +113,45 @@ class VendorNavMenuChecker {
      *
      * @param string $url URL.
      * @param string $name Name.
-     * @param bool $new_url New URL.
+     * @param bool   $new_url New URL.
      *
      * @return string
      */
-
     public function maybe_rewrite_to_react_route( string $url, $name, $new_url ): string {
-        $name = (string) $name;
-        if ( $name === '' || $name === 'new' ) {
-            return $url;
-        }
-        if ( $new_url ) {
-            return $url;
-        }
-        if ( strpos( $url, '#' ) !== false ) {
-            return $url;
-        }
-
-        remove_filter( 'dokan_get_navigation_url', [ $this, 'maybe_rewrite_to_react_route' ], 5 );
-            // Check if the top level menu exists and has a react route
-        $menus = dokan_get_dashboard_nav();
-
-		foreach ( $menus as $menu ) {
-			$react_route = $menu['react_route'] ?? '';
-			if ( $react_route === $name ) {
-				$url = $menu['url'];
-			}
-
-			if ( isset( $menu['submenu'] ) && is_array( $menu['submenu'] ) ) {
-				foreach ( $menu['submenu'] as $submenu ) {
-					$react_route = $submenu['react_route'] ?? '';
-					if ( $react_route === $name ) {
-						$url = $submenu['url'];
-					}
-				}
-			}
-		}
-
-		add_filter( 'dokan_get_navigation_url', [ $this, 'maybe_rewrite_to_react_route' ], 5, 3 );
-
-        return $url;
+    	$name = trim( (string) $name, '/' );
+    
+    	if ( $name === '' || $name === 'new' ) {
+    		return $url;
+    	}
+    
+    	if ( $new_url ) {
+    		return $url;
+    	}
+    
+    	if ( strpos( $url, '#' ) !== false ) {
+    		return $url;
+    	}
+    
+    	// Fast path: if already mapped during this request, return immediately.
+    	if ( isset( $this->react_route_url_map[ $name ] ) ) {
+    		return $this->react_route_url_map[ $name ];
+    	}
+    
+    	// If the map isn't built yet this request, build it once.
+    	if ( empty( $this->react_route_url_map ) ) {
+    		remove_filter( 'dokan_get_navigation_url', [ $this, 'maybe_rewrite_to_react_route' ], 5 );
+    
+    		// This triggers convert_to_react_menu(), which will populate $this->react_route_url_map.
+    		dokan_get_dashboard_nav();
+    
+    		add_filter( 'dokan_get_navigation_url', [ $this, 'maybe_rewrite_to_react_route' ], 5, 3 );
+    	}
+    
+    	if ( isset( $this->react_route_url_map[ $name ] ) ) {
+    		return $this->react_route_url_map[ $name ];
+    	}
+    
+    	return $url;
     }
 
     /**
