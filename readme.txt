@@ -7,7 +7,7 @@ Tested up to: 6.9
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 4.2.4
+Stable tag: 4.2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -352,6 +352,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v4.2.5 ( Jan 05, 2026 ) =
+- **fix:** Add translation support to store performance report labels.
+- **fix:** Social profile URL's not accessible for staff users.
+- **fix:** Prevented unauthorized changes to administrator accounts.
+
 = v4.2.4 ( Dec 26, 2025 ) =
 - **new:** Added a Pending Vendors tab on the WordPress admin Users screen to view vendors awaiting approval.
 - **new:** Added a bulk action on the WordPress admin Users screen to approve multiple pending vendors at once, including per-user validation and permission checks.
@@ -359,7 +364,6 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **update:** Improved compatibility with recent WooCommerce changes to script handling, making setup wizard and frontend script loading more reliable.
 - **update:** Redesigned the Admin Panel "Changelog" page template for a better look and user experience.
 - **fix:** Improved shipping tax calculations so shipping taxes are computed more accurately per-order, taking vendor cart item tax classes into account for multi-vendor orders.
-
 
 = v4.2.3 ( Dec 22, 2025 ) =
 - **fix:** Compatible vendor store banner image cropper with the latest version.
@@ -388,18 +392,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **fix:** Restored the side-by-side layout for the main Admin Dashboard panel.
 - **fix:** Prevent console warning from admin panel setup guide banner elements.
 - **fix:** Remove setup guide banner for admin setup guide pages.
-
-= v4.2.0 ( Nov 24, 2025 ) =
-- **update:** Ensured full compatibility for the legacy admin panel across Subscriptions, Announcements, Wholesale, Product Ads, Abuse Reports, Seller Badge, and Refund pages.
-- **update:** The vendor dashboard now supports modern, full-width theme layouts, providing a more spacious user experience.
-- **update:** Redesigned the Admin's Reverse Withdrawal page with a modern, easier-to-use interface for faster payment management.
-- **fix:** Corrected a price formatting issue in both HTML and plain text email templates.
-- **fix:** Fixed a redirection issue on the legacy vendor shipping policy page to ensure it works correctly.
-
-= v4.1.5 ( Nov 11, 2025 ) =
-- **update:** Added vendor verification legacy UI support for admin panel to ensure backward compatibility with older interface versions.
-- **update:** Updated all Twitter labels to X to reflect the latest brand changes.
-- **update:** Added custom store URL validation in admin settings to prevent conflicts with WordPress search functionality.
-- **update:** Fixed PHP warnings triggered when saving variable products by improving validation and data handling during product save operations.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
