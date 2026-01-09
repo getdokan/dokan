@@ -3,8 +3,8 @@ import { DataForm } from '@wordpress/dataviews';
 import { useCallback, useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { getFieldConfig } from './components/FieldRenderer';
+import useLayouts from './hooks/useLayouts';
 import { Section } from './types';
-import useLayouts from './useLayouts';
 const sections = ( window as any ).dokanFormManager.sections as Section[];
 
 const App = () => {

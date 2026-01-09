@@ -1,7 +1,7 @@
 import { sanitizeHTML } from '@src/utilities';
 import { useCallback, useMemo } from '@wordpress/element';
-import { checkDependency } from './components/FieldRenderer';
-import { FormField, Section } from './types';
+import { checkDependency } from '../components/FieldRenderer';
+import { FormField, Section } from '../types';
 
 /**
  * Custom hook to manage form layouts.

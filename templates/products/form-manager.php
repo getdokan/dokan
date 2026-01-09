@@ -61,6 +61,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $product->get_id() );
 
             ?>
             <input type="hidden" name="dokan_product_id" id="dokan_product_id" value="<?php echo esc_attr( $product->get_id() ); ?>" />
+            <input type="hidden" name="dokan_new_product" id="dokan_new_product" value="<?php echo esc_attr( $new_product ); ?>" />
             <div id="product-form-manager-template" class="dokan-product-edit-form"></div>
             <?php
             /**

@@ -2,8 +2,8 @@ import CategoriesEdit from '../components/CategoriesEdit';
 import DateTimePickerEdit from '../components/DateTimePickerEdit';
 import FeatureImage from '../components/FeatureImage';
 import GalleryImages from '../components/GalleryImages';
+import PriceEdit from '../components/PriceEdit';
 import RichTextEdit from '../components/RichTextEdit';
-import TextWithAddon from '../components/TextWithAddon';
 import { FieldConfig, FieldHandler, FormField } from '../types';
 
 /**
@@ -150,8 +150,8 @@ export const defaultHandler: FieldHandler = ( field ) => {
     const config: FieldConfig = {
         type: 'text',
     };
-    if ( field?.left_icon ) {
-        config.Edit = TextWithAddon;
+    if ( field?.name?.includes( 'price' ) ) {
+        config.Edit = PriceEdit;
         config.type = 'number';
     }
     return config;

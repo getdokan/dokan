@@ -660,17 +660,25 @@ class Hooks {
             return;
         }
         $post_id = isset( $_GET['product_id'] ) ? intval( wp_unslash( $_GET['product_id'] ) ) : 0; //phpcs:ignore
+        $new_product = false;
 
         if ( ! $post_id ) {
             // this is `add new` product page
             $product = new WC_Product_Simple();
             $product->set_status( 'auto-draft' );
             $product->save();
+            $new_product = true;
         } else {
             $product = wc_get_product( $post_id );
         }
 
-        dokan_get_template_part( 'products/form-manager', '', [ 'product' => $product ] );
+        dokan_get_template_part(
+            'products/form-manager',
+            '', [
+				'product' => $product,
+				'new_product' => $new_product,
+			]
+        );
     }
 
     public function get_form_fields(): array {
