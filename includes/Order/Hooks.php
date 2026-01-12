@@ -55,10 +55,11 @@ class Hooks {
             add_action( 'woocommerce_process_shop_order_meta', 'dokan_sync_insert_order', 60 );
         }
 
-        // restore order stock if it's been reduced by twice
-        add_action( 'woocommerce_reduce_order_stock', [ $this, 'restore_reduced_order_stock' ] );
+        // prevent stock reduction for parent orders
+        add_filter( 'woocommerce_can_reduce_order_stock', [ $this, 'prevent_parent_order_stock_reduction' ], 10, 2 );
 
         add_action( 'woocommerce_reduce_order_stock', [ $this, 'handle_order_notes_for_suborder' ], 99 );
+        add_action( 'woocommerce_reduce_order_item_stock', [ $this, 'sync_parent_order_item_stock' ], 10, 3 );
     }
 
     /**
@@ -449,40 +450,23 @@ class Hooks {
     }
 
     /**
-     * Restore order stock if it's been reduced by twice
+     * Prevent stock reduction for parent orders
      *
-     * @param WC_Order $order
+     * Parent orders should not have their stock reduced. Only sub-orders
+     * should manage stock reductions.
      *
-     * @return void
+     * @param bool     $can_reduce Whether stock can be reduced.
+     * @param WC_Order $order      The order object.
+     *
+     * @return bool False if this is a parent order, true otherwise.
      */
-    public function restore_reduced_order_stock( $order ) {
-        // seems it's not a parent order so return early
-        if ( ! $order->get_meta( 'has_sub_order' ) ) {
-            return;
+    public function prevent_parent_order_stock_reduction( $can_reduce, $order ) {
+        // If this is a parent order (has sub-orders), prevent stock reduction
+        if ( $order->get_meta( 'has_sub_order' ) ) {
+            return false;
         }
 
-        // Loop over all items.
-        foreach ( $order->get_items( 'line_item' ) as $item ) {
-            // Only reduce stock once for each item.
-            $product            = $item->get_product();
-            $item_stock_reduced = $item->get_meta( '_reduced_stock', true );
-
-            if ( ! $item_stock_reduced || ! $product || ! $product->managing_stock() ) {
-                continue;
-            }
-
-            $item_name = $product->get_formatted_name();
-            $new_stock = wc_update_product_stock( $product, $item_stock_reduced, 'increase' );
-
-            if ( is_wp_error( $new_stock ) ) {
-                /* translators: %s item name. */
-                $order->add_order_note( sprintf( __( 'Unable to restore stock for item %s.', 'dokan-lite' ), $item_name ) );
-                continue;
-            }
-
-            $item->delete_meta_data( '_reduced_stock' );
-            $item->save();
-        }
+        return $can_reduce;
     }
 
     /**
@@ -496,7 +480,7 @@ class Hooks {
      */
     public function handle_order_notes_for_suborder( $order ) {
         //return if it has suborder. only continue if this is a suborder
-        if ( ! $order->get_meta( 'has_sub_order' ) ) {
+        if ( $order->get_meta( 'has_sub_order' ) ) {
             return;
         }
 
@@ -523,6 +507,51 @@ class Hooks {
 
                 //here using the woocommerce as text domain because we are using woocommerce text for adding
                 $order->add_order_note( __( 'Stock levels reduced:', 'woocommerce' ) . ' ' . $notes_content ); //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+            }
+        }
+    }
+
+    /**
+     * Sync parent order item stock metadata when sub-order item stock is reduced
+     *
+     * When a sub-order item has its stock reduced, also update the parent order item's
+     * _reduced_stock metadata to keep them in sync.
+     * @param WC_Order_Item_Product $item The sub-order item.
+     * @param array                 $change Change details (product, from, to).
+     * @param WC_Order              $order The sub-order.
+     *
+     * @return void
+     */
+    public function sync_parent_order_item_stock( $item, $change, $order ) {
+        // Only process sub-orders (those with a parent)
+        if ( ! $order->get_parent_id() ) {
+            return;
+        }
+
+        // Get the parent order item ID from the sub-order item meta
+        $parent_item_id = $item->get_meta( '_dokan_parent_order_item_id', true );
+
+        if ( ! $parent_item_id ) {
+            return;
+        }
+
+        // Get the parent order item
+        $parent_order = wc_get_order( $order->get_parent_id() );
+        if ( ! $parent_order ) {
+            return;
+        }
+
+        // Find and update the parent order item
+        foreach ( $parent_order->get_items( 'line_item' ) as $parent_item ) {
+            if ( $parent_item->get_id() == $parent_item_id ) {
+                // Get the quantity from sub-order item
+                $qty = $item->get_quantity();
+
+                // Add or update the _reduced_stock meta in parent order item
+                $parent_item->add_meta_data( '_reduced_stock', $qty, true );
+                $parent_item->save();
+
+                break;
             }
         }
     }
