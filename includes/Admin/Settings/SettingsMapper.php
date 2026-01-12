@@ -161,10 +161,7 @@ class SettingsMapper {
         'dokan_delivery_time.time_slot_minutes'                      => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.time_slot_minutes',
         'dokan_delivery_time.order_per_slot'                         => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.order_per_slot',
         'dokan_delivery_time.delivery_box_info'                      => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_box_info',
-
-        // Delivery support (multicheck - needs special handling like shipping providers)
-//        'dokan_delivery_time.delivery_support'                       => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_support',
-        // 'dokan_delivery_time.delivery_support.store-pickup' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_support',
+        'dokan_delivery_time.delivery_support'                       => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_support',
 
         // Delivery days
         'dokan_delivery_time.delivery_day_monday'                    => 'shipment.dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule.monday',
@@ -193,6 +190,10 @@ class SettingsMapper {
         'dokan_withdraw.withdraw_limit'                              => 'transaction.withdraw_charge.minimum_withdraw_limit_section.minimum_withdraw_limit',
         'dokan_withdraw.withdraw_date_limit'                         => 'transaction.withdraw_charge.withdraw_threshold_section.withdraw_threshold',
         'dokan_withdraw.exclude_cod_payment'                         => 'transaction.withdraw_charge.cod_payments_section.cod_payments',
+        'dokan_withdraw.withdraw_methods'                            => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods',
+        'dokan_withdraw.withdraw_charges'                            => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_charges',
+        'dokan_withdraw.withdraw_method_name'                        => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_method_name',
+        'dokan_withdraw.withdraw_method_type'                        => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_method_type',
 
         //'dokan_withdraw.withdraw_limit'         => 'transaction.withdraw_charge.section_withdraw_charge.minimum_withdraw_limit_section.minimum_withdraw_limit',
         // 'dokan_withdraw.withdraw_order_status'  => 'transaction.withdraw_charge.section_withdraw_charge.manual_withdraw',
