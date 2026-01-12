@@ -20,7 +20,7 @@ class ApiMeta {
 	/**
 	 * Registers Dokan specific user data to the WordPress user API.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.2.5
 	 *
 	 * @return void
 	 */
@@ -38,7 +38,7 @@ class ApiMeta {
 	/**
 	 * Fetches the vendor-specific user data values for returning via the REST API.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.2.5
 	 *
 	 * @param array $user Current user data from REST API.
 	 * @return array Vendor-specific user data including vendor_id.
@@ -55,7 +55,7 @@ class ApiMeta {
 		/**
 		 * Filter the user data values exposed over the WordPress user endpoint.
 		 *
-		 * @since DOKAN_SINCE
+		 * @since 4.2.5
 		 *
 		 * @param array $values Array of user data values.
 		 * @param array $user Current user data from REST API.
@@ -68,7 +68,7 @@ class ApiMeta {
 	 * so that we can track certain preferences or values for vendors.
 	 * Additional fields can be added in the function below, and then used via Dokan's currentUser data.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.2.5
 	 *
 	 * @return array Fields to expose over the WP user endpoint.
 	 */
@@ -76,7 +76,7 @@ class ApiMeta {
 		/**
 		 * Filter user data fields exposed over the WordPress user endpoint.
 		 *
-		 * @since DOKAN_SINCE
+		 * @since 4.2.5
 		 *
 		 * @param array $fields Array of fields to expose over the WP user endpoint.
 		 */
@@ -86,7 +86,7 @@ class ApiMeta {
 	/**
 	 * Helper to retrieve user data fields.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 4.2.5
 	 *
 	 * @param int    $user_id  User ID.
 	 * @param string $field Field name.

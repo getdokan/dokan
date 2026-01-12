@@ -425,4 +425,23 @@ abstract class DokanTestCase extends WP_UnitTestCase {
 
         return $order_factory->create( $order_raw_data );
     }
+
+    /**
+     * Create a vendor staff user for the given vendor ID.
+     *
+     * @param int $vendor_id The vendor ID to associate staff with.
+     * @return int The staff user ID.
+     */
+    protected function create_vendor_staff( int $vendor_id ): int {
+        $staff_id = $this->factory()->user->create(
+            [
+                'role' => 'vendor_staff',
+            ]
+        );
+
+        // Set vendor association
+        update_user_meta( $staff_id, '_vendor_id', $vendor_id );
+
+        return $staff_id;
+    }
 }
