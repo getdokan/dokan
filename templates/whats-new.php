@@ -4,6 +4,26 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.2.5',
+        'released' => '2026-01-05',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Add translation support to store performance report labels.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Social profile URL\'s not accessible for staff users.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Prevented unauthorized changes to administrator accounts.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.2.4',
         'released' => '2025-12-26',
         'changes'  => [
