@@ -494,7 +494,7 @@ class Hooks {
 
         $reduced_qty = $item->get_meta( '_reduced_stock', true );
 
-        // 4. Update the parent item directly in the database
+        // Update the parent item directly in the database
         if ( $reduced_qty ) {
             wc_update_order_item_meta( $parent_item_id, '_reduced_stock', $reduced_qty );
         }
