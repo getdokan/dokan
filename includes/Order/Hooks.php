@@ -543,7 +543,7 @@ class Hooks {
 
         // Find and update the parent order item
         foreach ( $parent_order->get_items( 'line_item' ) as $parent_item ) {
-            if ( $parent_item->get_id() == $parent_item_id ) {
+            if ( $parent_item->get_id() === $parent_item_id ) {
                 // Get the quantity from sub-order item
                 $qty = $item->get_quantity();
 
