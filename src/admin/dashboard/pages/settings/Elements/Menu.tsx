@@ -118,7 +118,7 @@ const Menu = ( {
             ! userHasManuallyNavigated
         ) {
             const { firstSubmenu } = getFirstVisibleMenuAndSubmenu();
-            if ( firstSubmenu && firstSubmenu.id !== activePage ) {
+            if ( firstSubmenu ) {
                 // Only trigger if it's different from current active page
                 setTimeout( () => {
                     onMenuClick( firstSubmenu.id );
