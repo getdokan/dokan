@@ -71,6 +71,10 @@ class BecomeAVendor {
      * @return void
      */
     public function become_a_seller_form_handler() {
+        $store_id                = dokan_get_current_user_id();
+        $existing_dokan_settings = get_user_meta( $store_id, 'dokan_profile_settings', true );
+        $prev_dokan_settings     = ! empty( $existing_dokan_settings ) ? $existing_dokan_settings : [];
+
         if ( ! isset( $_POST['dokan_migration'] ) || ! isset( $_POST['dokan_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['dokan_nonce'] ) ), 'account_migration' ) ) {
             return;
         }
@@ -115,7 +119,7 @@ class BecomeAVendor {
                 'fname'    => isset( $_POST['fname'] ) ? sanitize_text_field( wp_unslash( $_POST['fname'] ) ) : '',
                 'lname'    => isset( $_POST['lname'] ) ? sanitize_text_field( wp_unslash( $_POST['lname'] ) ) : '',
                 'shopname' => isset( $_POST['shopname'] ) ? sanitize_text_field( wp_unslash( $_POST['shopname'] ) ) : '',
-                'address'  => isset( $_POST['dokan_address'] ) && is_array( $_POST['dokan_address'] ) ? map_deep( wp_unslash( $_POST['dokan_address'] ), 'sanitize_text_field' ) : [],
+                'address'  => isset( $_POST['dokan_address'] ) ? wc_clean( wp_unslash( $_POST['dokan_address'] ) ) : $prev_dokan_settings['address'],
                 'phone'    => isset( $_POST['phone'] ) ? dokan_sanitize_phone_number( wp_unslash( $_POST['phone'] ) ) : '',
                 'shopurl'  => isset( $_POST['shopurl'] ) ? sanitize_text_field( wp_unslash( $_POST['shopurl'] ) ) : '',
             ]
