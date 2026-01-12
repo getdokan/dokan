@@ -24,9 +24,10 @@ cd /Users/wedevs/Sites/dokanautomation/wp-content/plugins/dokan-lite/tests/pw
 Create/edit `.env` with your credentials:
 
 ```bash
-# Admin Credentials
+# Admin Configuration (NEW APPROACH - Creates additional admin, keeps default)
 ADMIN=shohan
 ADMIN_PASSWORD=01dokan01
+ADMIN_EMAIL=shohan@wedevs.com
 
 # Test Users
 VENDOR=vendor1
@@ -41,7 +42,7 @@ LICENSE_KEY=your_license_key
 GMAP=your_google_maps_key
 
 # Playwright Configuration
-BASE_URL=http://localhost:9999
+BASE_URL=http://localhost:1112
 HEADLESS=false
 CI=true                     # MUST be true for Docker
 
@@ -50,36 +51,63 @@ DB_HOST_NAME=localhost
 DB_USER_NAME=root
 DB_USER_PASSWORD=password
 DATABASE=tests-wordpress
-DB_PORT=9998
+DB_PORT=2223
 DB_PREFIX=wp
 
 # REST API
-SERVER_URL=http://localhost:9999/?rest_route=
+SERVER_URL=http://localhost:1112/?rest_route=
 ```
 
-### Step 3: Start Docker
+### Step 3: Start Docker (Auto-creates Admin!)
 ```bash
 npm run start:env
 ```
 
-**Wait for:**
+**What this does:**
+1. ✅ Starts Docker containers
+2. ✅ Installs WordPress
+3. ✅ **Automatically creates your admin from `.env`**
+
+**Expected output:**
 ```
 WordPress test site started at http://localhost:9999
 ✔ Done!
+
+🔧 Creating admin user: shohan (shohan@wedevs.com)
+✅ Admin user created! ID: 2
+📧 Email: shohan@wedevs.com
+👤 Username: shohan
+🔑 Password: 01dokan01
+
+ℹ️  Docker default admin (admin/password) still exists for fallback
 ```
 
-### Step 4: Sync Admin Credentials
+**⚠️ If you see Docker warnings:**
+
+You might see this warning (it's **not critical**):
+```
+✖ Error while running docker compose command.
+Warning: Failed to activate plugin. Dokan Pro requires Dokan Lite
+```
+
+**Why?** `.wp-env.override.json` tries to load Dokan Pro before Dokan Lite is activated.
+
+**What happens?** Docker still starts fine, and `create:admin` should still run automatically.
+
+**If admin wasn't created:** Run manually:
 ```bash
-npm run sync:admin
+npm run create:admin
 ```
 
-**What this does:**
-- Reads `ADMIN` and `ADMIN_PASSWORD` from `.env`
-- Creates WordPress admin user to match
-- Removes default `admin` user
-- Prevents pages from being trashed
+**Verify admin exists:**
+```bash
+npm run check:users
+# Should show both 'admin' and 'shohan'
+```
 
-### Step 5: Run Setup
+> **Note:** If you need to start Docker WITHOUT creating admin, use `npm run start:env:basic`
+
+### Step 4: Run Setup
 ```bash
 npm run docker:setup
 ```
@@ -90,20 +118,24 @@ npm run docker:setup
 ⊘ 1 skipped (germanized - optional)
 ```
 
-### Step 6: Verify Setup
+### Step 5: Verify Setup
 ```bash
 # Check plugins active
 npm run wp-env run tests-cli -- wp plugin list --status=active
 
 # Check users created
 npm run wp-env run tests-cli -- wp user list
+# Should show:
+# - admin (ID: 1) - Docker default (admin/password)
+# - shohan (ID: 2) - Your custom admin from .env
 
-# Test login at: http://localhost:9999/wp-login.php
+# Test login at: http://localhost:1112/wp-login.php
 # Username: shohan (from your .env)
 # Password: 01dokan01 (from your .env)
+# OR fallback: admin / password
 ```
 
-### Step 7: Run Tests
+### Step 6: Run Tests
 ```bash
 # Run all E2E tests
 npm run test:e2e
@@ -150,7 +182,7 @@ DOKAN_PRO=false
 npm run reset:env
 
 # 3. Sync admin
-npm run sync:admin
+npm run create:admin
 
 # 4. Run setup
 npm run docker:setup
@@ -168,7 +200,7 @@ DOKAN_PRO=true
 npm run reset:env
 
 # 3. Sync admin
-npm run sync:admin
+npm run create:admin
 
 # 4. Run setup
 npm run docker:setup
@@ -239,7 +271,7 @@ npm run docker:reset
 ### Setup Commands:
 ```bash
 # Sync admin from .env
-npm run sync:admin
+npm run create:admin
 
 # Run complete setup
 npm run docker:setup
@@ -306,7 +338,7 @@ npm run wp-env run tests-cli -- wp plugin list
 
 # If WooCommerce missing, restart Docker
 npm run reset:env
-npm run sync:admin
+npm run create:admin
 npm run docker:setup
 ```
 
@@ -323,7 +355,7 @@ npm run restore:pages
 npm run wp-env run tests-cli -- wp user update shohan --user_pass=01dokan01
 
 # Or resync
-npm run sync:admin
+npm run create:admin
 ```
 
 ### Issue: Git lock file error
@@ -339,7 +371,7 @@ npm run start:env
 npm run stop:env
 
 # Kill process on port
-lsof -ti:9999 | xargs kill -9
+lsof -ti:1112 | xargs kill -9
 
 # Restart
 npm run start:env
@@ -371,7 +403,7 @@ npm run test:e2e -- --workers=2
 **Verify .env has:**
 ```bash
 DB_HOST_NAME=localhost
-DB_PORT=9998
+DB_PORT=2223
 DATABASE=tests-wordpress
 DB_USER_NAME=root
 DB_USER_PASSWORD=password
@@ -503,7 +535,7 @@ pkill -f wp-env
 npm run start:env
 
 # 4. Sync admin
-npm run sync:admin
+npm run create:admin
 
 # 5. Run setup
 npm run docker:setup
@@ -525,7 +557,7 @@ npm run test:e2e
 | `npm run start:env` | Start Docker |
 | `npm run stop:env` | Stop Docker |
 | `npm run reset:env` | Destroy & restart Docker |
-| `npm run sync:admin` | Create admin from .env |
+| `npm run create:admin` | Create admin from .env |
 | `npm run docker:setup` | Full test environment setup |
 | `npm run docker:reset` | Reset DB + run setup |
 | `npm run test:e2e` | Run E2E tests |

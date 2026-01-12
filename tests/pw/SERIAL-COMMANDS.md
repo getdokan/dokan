@@ -13,16 +13,13 @@ This guide shows the **exact serial order** to run Docker commands for Dokan tes
 npm install
 npx playwright install chromium
 
-# STEP 1: Start Docker
+# STEP 1: Start Docker (auto-creates admin!)
 npm run start:env
 
-# STEP 2: Sync Admin
-npm run sync:admin
-
-# STEP 3: Complete Setup
+# STEP 2: Complete Setup
 npm run docker:setup
 
-# STEP 4: Run Tests
+# STEP 3: Run Tests
 npm run test:e2e
 ```
 
@@ -52,7 +49,7 @@ ls node_modules/  # Should see @playwright, @wordpress, etc.
 
 ---
 
-### **STEP 1: Start Docker** 🐳
+### **STEP 1: Start Docker + Create Admin** 🐳
 
 **When:** Every time you want to start testing (first command of the day)
 
@@ -61,62 +58,63 @@ npm run start:env
 ```
 
 **What it does:**
-- Starts Docker containers
-- Downloads WordPress
-- Sets up MySQL database
-- Creates test site at http://localhost:9999
+1. ✅ Starts Docker containers
+2. ✅ Downloads WordPress
+3. ✅ Sets up MySQL database
+4. ✅ Creates test site at http://localhost:9999
+5. ✅ **Automatically creates your admin from `.env`**
 
 **Expected Output:**
 ```
 WordPress test site started at http://localhost:9999
 MySQL for automated testing is listening on port 9998
 ✔ Done! (in 35s)
+
+🔧 Creating admin user: shohan (shohan@wedevs.com)
+✅ Admin user created! ID: 2
+📧 Email: shohan@wedevs.com
+👤 Username: shohan
+🔑 Password: 01dokan01
+
+ℹ️  Docker default admin (admin/password) still exists for fallback
 ```
 
-**Verify:**
+**⚠️ You Might See a Warning (Not Critical):**
+```
+✖ Error while running docker compose command.
+Warning: Failed to activate plugin. Dokan Pro requires Dokan Lite
+```
+
+**This is okay!** Docker still starts fine. The warning happens because `.wp-env.override.json` tries to load Dokan Pro before Dokan Lite is activated. The `docker:setup` command (next step) will activate plugins in the correct order.
+
+**Verify Everything Started:**
 ```bash
+# Check containers running
 docker ps | grep tests
 # Should show 3 running containers:
 # - tests-wordpress-1
 # - tests-cli-1  
 # - tests-mysql-1
-```
 
----
-
-### **STEP 2: Sync Admin Credentials** 👤
-
-**When:** After STEP 1, every time you start Docker
-
-```bash
-npm run sync:admin
-```
-
-**What it does:**
-- Reads `ADMIN` and `ADMIN_PASSWORD` from `.env`
-- Creates WordPress admin user (e.g., `shohan`)
-- Reassigns pages/posts to new admin
-- Deletes default `admin` user
-
-**Expected Output:**
-```
-Syncing admin user: shohan
-✅ Admin user created! ID: 2
-✅ Reassigned pages/posts to new admin
-✅ Default admin removed
-```
-
-**Verify:**
-```bash
+# Check users created (both default and custom)
 npm run check:users
-# Should show your custom admin (e.g., shohan)
+# Should show BOTH:
+# - admin (ID: 1) - Docker default
+# - shohan (ID: 2) - Your custom admin from .env
 ```
+
+**If 'shohan' user is missing:**
+```bash
+npm run create:admin  # Run manually
+```
+
+> **💡 Note:** If you need Docker without admin creation, use `npm run start:env:basic`
 
 ---
 
-### **STEP 3: Complete Setup** ⚙️
+### **STEP 2: Run Complete Setup** ⚙️
 
-**When:** After STEP 2 (run once per Docker session, or after reset)
+**When:** After STEP 1 (run once per Docker session, or after reset)
 
 ```bash
 npm run docker:setup
@@ -151,7 +149,7 @@ npm run check:modules  # Should show: Active modules: 41 (for Pro)
 
 ---
 
-### **STEP 4: Run Tests** 🧪
+### **STEP 3: Run Tests** 🧪
 
 **When:** After STEP 3 completes successfully
 
@@ -186,7 +184,7 @@ Once you've completed STEPS 0-4 once, your daily workflow is:
 ```bash
 # Day 1: Full setup
 npm run start:env       # STEP 1
-npm run sync:admin      # STEP 2
+npm run create:admin      # STEP 2
 npm run docker:setup    # STEP 3
 npm run test:e2e        # STEP 4
 
@@ -212,14 +210,14 @@ npm run test:e2e
 ### **Reset Database Only (Keep containers)**
 ```bash
 npm run reset:db        # Clean DB
-npm run sync:admin      # Recreate admin
+npm run create:admin      # Recreate admin
 npm run docker:setup    # Re-run setup
 ```
 
 ### **Full Reset (Destroy everything)**
 ```bash
 npm run reset:env       # Destroy & restart Docker
-npm run sync:admin      # Recreate admin
+npm run create:admin      # Recreate admin
 npm run docker:setup    # Re-run setup
 ```
 
@@ -266,7 +264,7 @@ cd tests/pw
 
 # Start everything
 npm run start:env       # Wait 30s
-npm run sync:admin      # Wait 5s
+npm run create:admin      # Wait 5s
 npm run docker:setup    # Wait 2min
 
 # Verify
@@ -287,7 +285,7 @@ npm run test:e2e
 ```bash
 npm run stop:env        # Stop everything
 npm run reset:env       # Destroy & restart
-npm run sync:admin      # Recreate admin
+npm run create:admin      # Recreate admin
 npm run docker:setup    # Re-setup
 npm run test:e2e        # Test
 ```
@@ -309,7 +307,7 @@ STEP 0: npm install
          ↓
 STEP 1: npm run start:env
          ↓
-STEP 2: npm run sync:admin
+STEP 2: npm run create:admin
          ↓
 STEP 3: npm run docker:setup
          ├─→ docker:site:setup (plugins)
@@ -334,7 +332,7 @@ STEP 5: npm run test:report
 ### Issue: "Admin login fails"
 **Solution:**
 ```bash
-npm run sync:admin  # Re-sync admin
+npm run create:admin  # Re-sync admin
 ```
 
 ### Issue: "My-account page not found"
@@ -366,7 +364,7 @@ npm run docker:reset       # Reset & re-setup
 3. **Check verification commands** if anything seems wrong
 4. **Keep Docker running** between test runs for speed
 5. **Use `docker:reset`** for quick clean start
-6. **Run `sync:admin` after every Docker restart**
+6. **Run `create:admin` after every Docker restart**
 
 ---
 
@@ -391,7 +389,7 @@ npm run check:pages && npm run check:users && npm run check:plugins && npm run c
 
 **Start from scratch?**
 ```bash
-npm run reset:env && npm run sync:admin && npm run docker:setup
+npm run reset:env && npm run create:admin && npm run docker:setup
 ```
 
 **Just run tests?**

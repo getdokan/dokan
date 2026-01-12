@@ -6,6 +6,10 @@ Automated E2E and API tests for Dokan Lite and Dokan Pro using Playwright.
 
 ## 📚 Documentation
 
+> **🚀 NEW:** Admin creation is now automatic! See [CHANGES.md](./CHANGES.md)
+> 
+> **📋 Quick Reference:** [QUICK-REFERENCE.md](./QUICK-REFERENCE.md) - Commands & credentials cheat sheet
+
 For complete Docker setup instructions, see **[DOCKER-SETUP.md](./DOCKER-SETUP.md)** - our comprehensive guide covering:
 - First-time setup
 - Docker management
@@ -34,9 +38,10 @@ npx playwright install chromium
 Create `.env` file (see `.env.example` for all options):
 
 ```bash
-# Admin Credentials
+# Admin Configuration (Creates additional admin, keeps Docker default)
 ADMIN=shohan
 ADMIN_PASSWORD=01dokan01
+ADMIN_EMAIL=shohan@wedevs.com
 
 # Test Users
 VENDOR=vendor1
@@ -51,7 +56,7 @@ LICENSE_KEY=your_license_key
 GMAP=your_google_maps_key
 
 # Playwright Configuration
-BASE_URL=http://localhost:9999
+BASE_URL=http://localhost:1112
 HEADLESS=false
 CI=true                     # MUST be true for Docker
 
@@ -60,26 +65,29 @@ DB_HOST_NAME=localhost
 DB_USER_NAME=root
 DB_USER_PASSWORD=password
 DATABASE=tests-wordpress
-DB_PORT=9998
+DB_PORT=2223
 DB_PREFIX=wp
 
 # REST API (CRITICAL - DO NOT CHANGE)
-SERVER_URL=http://localhost:9999/?rest_route=
+SERVER_URL=http://localhost:1112/?rest_route=
 ```
 
 ### 3. Start Docker & Setup
 ```bash
-# Start Docker environment
+# Start Docker environment (automatically creates admin!)
 npm run start:env
 
-# Sync admin credentials from .env
-npm run sync:admin
+# If you see a Docker warning, verify admin was created:
+npm run check:users  # Should show 'shohan'
+# If missing, run: npm run create:admin
 
 # Run complete setup (plugins, users, test data)
 npm run docker:setup
 ```
 
 **Expected output:** ✅ 65 passed | ⊘ 1 skipped
+
+> **Note:** You might see a Docker warning about Dokan Pro - this is not critical. Docker still starts fine, and the setup will work correctly.
 
 ### 4. Run Tests
 ```bash
@@ -104,7 +112,7 @@ npm run test:e2e -- tests/e2e/products.spec.ts
 | `npm run stop:env` | Stop Docker containers |
 | `npm run restart:env` | Restart Docker |
 | `npm run reset:env` | Destroy & restart (fresh start) |
-| `npm run sync:admin` | Create/update admin from .env |
+| `npm run create:admin` | Create/update admin from .env |
 
 ### Test Setup
 | Command | Description |
@@ -144,7 +152,7 @@ npm run start:env
 
 # If containers stopped
 npm run start:env
-npm run sync:admin
+npm run create:admin
 ```
 
 ### REST API Errors (404/405)
@@ -153,7 +161,7 @@ npm run sync:admin
 ### Admin Login Fails
 ```bash
 # Resync admin credentials from .env
-npm run sync:admin
+npm run create:admin
 ```
 
 ### Missing Pages (my-account, cart, checkout)
@@ -227,7 +235,7 @@ DOKAN_PRO=false
 
 # 2. Restart & setup
 npm run reset:env
-npm run sync:admin
+npm run create:admin
 npm run docker:setup
 
 # 3. Run Lite tests
@@ -241,7 +249,7 @@ DOKAN_PRO=true
 
 # 2. Restart & setup
 npm run reset:env
-npm run sync:admin
+npm run create:admin
 npm run docker:setup
 
 # 3. Run Pro tests
@@ -304,7 +312,7 @@ DB_HOST_NAME=localhost
 DB_USER_NAME=root
 DB_USER_PASSWORD=password
 DATABASE=tests-wordpress
-DB_PORT=9998
+DB_PORT=2223
 DB_PREFIX=wp
 ```
 
@@ -386,7 +394,7 @@ Reports are automatically generated in `playwright-report/` directory.
 4. **Use tags** to run specific test groups: `--grep @pro` or `--grep @lite`
 5. **View HTML reports** after tests: `npm run test:report`
 6. **Check Docker logs** if containers crash: `docker logs tests-cli`
-7. **Always run `npm run sync:admin`** after starting Docker to ensure credentials match
+7. **Always run `npm run create:admin`** after starting Docker to ensure credentials match
 
 ---
 

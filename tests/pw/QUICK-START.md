@@ -32,23 +32,23 @@ USER_PASSWORD=password
 DOKAN_PRO=false
 LICENSE_KEY=your_license_key
 GMAP=your_google_maps_key
-BASE_URL=http://localhost:9999
+BASE_URL=http://localhost:1112
 HEADLESS=false
 CI=true
 DB_HOST_NAME=localhost
 DB_USER_NAME=root
 DB_USER_PASSWORD=password
 DATABASE=tests-wordpress
-DB_PORT=9998
+DB_PORT=2223
 DB_PREFIX=wp
-SERVER_URL=http://localhost:9999/?rest_route=
+SERVER_URL=http://localhost:1112/?rest_route=
 ```
 
 ### Critical Settings
 - `CI=true` - **MUST** be true for Docker!
 - `DB_PREFIX=wp` - No trailing underscore!
-- `BASE_URL=http://localhost:9999` - Test site (NOT 8888)
-- `SERVER_URL=http://localhost:9999/?rest_route=` - Query string format
+- `BASE_URL=http://localhost:1112` - Test site (NOT 8888)
+- `SERVER_URL=http://localhost:1112/?rest_route=` - Query string format
 - `DOKAN_PRO=false` - For Lite tests only
 
 ## 🔧 Fixed Files
