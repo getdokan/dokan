@@ -56,9 +56,8 @@ class Hooks {
         }
 
         // prevent stock reduction for parent orders
-        add_filter( 'woocommerce_can_reduce_order_stock', [ $this, 'prevent_parent_order_stock_reduction' ], 10, 2 );
+        add_filter( 'woocommerce_can_reduce_order_stock', [ $this, 'prevent_stock_reduction_for_parent_order' ], 10, 2 );
 
-        add_action( 'woocommerce_reduce_order_stock', [ $this, 'handle_order_notes_for_suborder' ], 99 );
         add_action( 'woocommerce_reduce_order_item_stock', [ $this, 'sync_parent_order_item_stock' ], 10, 3 );
     }
 
@@ -421,14 +420,14 @@ class Hooks {
      * @throws Exception When the coupon is invalid for multiple vendors
      */
     public function ensure_coupon_is_valid( bool $valid, WC_Coupon $coupon, WC_Discounts $discounts ): bool {
-        $available_vendors  = [];
+        $available_vendors = [];
 
 	    foreach ( $discounts->get_items() as $item ) {
 		    if ( ! isset( $item->product ) || ! $item->product instanceof WC_Product ) {
 			    continue;
 		    }
 
-		    $available_vendors[]  = (int) dokan_get_vendor_by_product( $item->product->get_id(), true );
+		    $available_vendors[] = (int) dokan_get_vendor_by_product( $item->product->get_id(), true );
 	    }
 
         $available_vendors = array_unique( $available_vendors );
@@ -460,55 +459,13 @@ class Hooks {
      *
      * @return bool False if this is a parent order, true otherwise.
      */
-    public function prevent_parent_order_stock_reduction( $can_reduce, $order ) {
+    public function prevent_stock_reduction_for_parent_order( $can_reduce, $order ) {
         // If this is a parent order (has sub-orders), prevent stock reduction
         if ( $order->get_meta( 'has_sub_order' ) ) {
             return false;
         }
 
         return $can_reduce;
-    }
-
-    /**
-     * Handle stock level wrong calculation in order notes for suborder
-     *
-     * @since 3.8.3
-     *
-     * @param WC_Order $order
-     *
-     * @return void
-     */
-    public function handle_order_notes_for_suborder( $order ) {
-        //return if it has suborder. only continue if this is a suborder
-        if ( $order->get_meta( 'has_sub_order' ) ) {
-            return;
-        }
-
-        $notes = wc_get_order_notes( [ 'order_id' => $order->get_id() ] );
-
-        //change stock level note status instead of deleting
-        foreach ( $notes as $note ) {
-            //here using the woocommerce as text domain because we are using woocommerce text for searching
-            if ( false !== strpos( $note->content, __( 'Stock levels reduced:', 'woocommerce' ) ) ) { //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
-                //update notes status to `hold`, so that it will not show in order details page
-                wp_set_comment_status( $note->id, 'hold' );
-            }
-        }
-
-        //adding stock level notes in order
-        foreach ( $order->get_items( 'line_item' ) as $key => $line_item ) {
-            $product = $line_item->get_product();
-
-            if ( $product->get_manage_stock() ) {
-                $stock_quantity    = $product->get_stock_quantity();
-                $previous_quantity = (int) $stock_quantity + $line_item->get_quantity();
-
-                $notes_content = $product->get_formatted_name() . ' ' . $previous_quantity . '&rarr;' . $stock_quantity;
-
-                //here using the woocommerce as text domain because we are using woocommerce text for adding
-                $order->add_order_note( __( 'Stock levels reduced:', 'woocommerce' ) . ' ' . $notes_content ); //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
-            }
-        }
     }
 
     /**
@@ -535,24 +492,11 @@ class Hooks {
             return;
         }
 
-        // Get the parent order item
-        $parent_order = wc_get_order( $order->get_parent_id() );
-        if ( ! $parent_order ) {
-            return;
+        $reduced_qty = $item->get_meta( '_reduced_stock', true );
+
+        // 4. Update the parent item directly in the database
+        if ( $reduced_qty ) {
+            wc_update_order_item_meta( $parent_item_id, '_reduced_stock', $reduced_qty );
         }
-
-        // Find and update the parent order item
-        foreach ( $parent_order->get_items( 'line_item' ) as $parent_item ) {
-            if ( $parent_item->get_id() === $parent_item_id ) {
-                // Get the quantity from sub-order item
-                $qty = $item->get_quantity();
-
-                // Add or update the _reduced_stock meta in parent order item
-                $parent_item->add_meta_data( '_reduced_stock', $qty, true );
-                $parent_item->save();
-
-                break;
-            }
-        }
-    }
+	}
 }
