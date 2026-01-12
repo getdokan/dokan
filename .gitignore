@@ -12,6 +12,7 @@ package-lock.json
 config.json
 /lib/packages/
 /lib/classes/
+.env
 
 # Composer
 /vendor/
