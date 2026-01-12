@@ -113,6 +113,16 @@ npm run test:e2e -- tests/e2e/products.spec.ts
 | `npm run docker:reset` | Reset database + run setup |
 | `npm run restore:pages` | Restore trashed WooCommerce pages |
 
+### Verification & Debugging
+| Command | Description |
+|---------|-------------|
+| `npm run check:pages` | List all pages with status |
+| `npm run check:users` | List all WordPress users |
+| `npm run check:plugins` | List active plugins |
+| `npm run check:modules` | Count active Dokan modules |
+| `npm run docker:logs` | View WordPress container logs |
+| `npm run docker:logs:cli` | View WP-CLI container logs |
+
 ### Running Tests
 | Command | Description |
 |---------|-------------|
@@ -146,10 +156,35 @@ npm run sync:admin
 npm run sync:admin
 ```
 
-### Missing Pages
+### Missing Pages (my-account, cart, checkout)
 ```bash
+# Check page status
+npm run check:pages
+
 # Restore all trashed pages
 npm run restore:pages
+
+# Verify restoration
+npm run check:pages | grep publish
+```
+
+### Verification Commands
+```bash
+# Check all pages
+npm run check:pages
+
+# Check all users
+npm run check:users
+
+# Check active plugins
+npm run check:plugins
+
+# Count active Dokan modules (should be ~41 for Pro)
+npm run check:modules
+
+# View container logs
+npm run docker:logs
+npm run docker:logs:cli
 ```
 
 For detailed troubleshooting, see **[DOCKER-SETUP.md](./DOCKER-SETUP.md)** - Section "🐛 Troubleshooting"
