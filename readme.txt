@@ -39,7 +39,7 @@ Hear what reputed WordPress influencer and online business strategist, Darrel Wi
 
 Here is how you can build your multivendor marketplace with Dokan.
 
-[https://www.youtube.com/watch?v=rF3zooidxjs]
+[https://youtu.be/_Vv5T7qqhoE?si=RPXD4hksHedNR87W&t=1]
 
 = PLACES WHERE DOKAN HAS BEEN FEATURED =
 
@@ -69,7 +69,7 @@ Here is how you can build your multivendor marketplace with Dokan.
 
 👏 “Best investment we made last year.”
 
-👏 “[Excellent product. Ease of use. Saved hundreds of work hours with lots of additional benefits] (https://www.capterra.com/p/168004/Dokan-Multivendor-Marketplace/reviews/543139/)”
+👏 “[Excellent product. Ease of use. Saved hundreds of work hours with lots of additional benefits](https://www.capterra.com/p/168004/Dokan-Multivendor-Marketplace/reviews/543139/).”
 
 = SUCCESS STORIES WE ARE PROUD TO BE A PART OF =
 
@@ -105,11 +105,12 @@ See Our Official GitHub page: [Official Dokan GitHub](https://github.com/getdoka
 
 = A SCALABLE MARKET =
 
-Dokan Multivendor Marketplace plugin allows you to have an unlimited number of vendors on any marketplace, each with the ability to create an unlimited number of products. Create marketplaces that offer –
-* Physical products
+Dokan Multivendor Marketplace plugin allows you to have an unlimited number of vendors on any marketplace, each with the ability to create an unlimited number of products. Create marketplaces that offer – 
+
+* Physical products 
 * Downloadable products
 * Variable products
-* Bookable products through the [Dokan WC Bookings Integration](https://dokan.co/wordpress/modules/woocommerce-booking-integration/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
+* Bookable products through the [Dokan WC Bookings Integration](https://dokan.co/wordpress/modules/woocommerce-booking-integration/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) 
 * Auction products through the [Dokan Simple Auction Integration](https://dokan.co/wordpress/modules/dokan-simple-auctions/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
 
 = EARN IN MULTIPLE WAYS =
