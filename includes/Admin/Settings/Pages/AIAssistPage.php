@@ -102,8 +102,6 @@ class AIAssistPage extends AbstractPage {
                     )
                     ->add(
                         ElementFactory::field_group( 'chatgpt_api_info_group' )
-                            ->add_dependency( 'product_generation.product_image_section.product_info_generate', 'on', true, 'display', 'show', '===' )
-                            ->add_dependency( 'product_generation.product_image_section.product_info_generate', 'on', true, 'display', 'hide', '!==' )
                             ->add_dependency( 'product_generation.product_image_section.product_info_engine', 'openai', true, 'display', 'show', '===' )
                             ->add_dependency( 'product_generation.product_image_section.product_info_engine', 'openai', true, 'display', 'hide', '!==' )
                             ->add(
@@ -118,6 +116,8 @@ class AIAssistPage extends AbstractPage {
                                             '</a>'
                                         )
                                     )
+                                    ->add_dependency( 'product_generation.product_image_section.product_info_generate', 'on', true, 'display', 'show', '===' )
+                                    ->add_dependency( 'product_generation.product_image_section.product_info_generate', 'on', true, 'display', 'hide', '!==' )
                             )
                             ->add(
                                 ElementFactory::field( 'openai_api_notice', 'info' )
@@ -125,7 +125,6 @@ class AIAssistPage extends AbstractPage {
                                     ->set_description( esc_html__( 'Access your OpenAI dashboard to generate API keys for integration.', 'dokan-lite' ) )
                                     ->set_link_text( esc_html__( 'OpenAI Account', 'dokan-lite' ) )
                                     ->set_link_url( 'https://platform.openai.com/api-keys' )
-                                    ->add_dependency( 'product_info_engine', 'openai', true, 'display', 'show', '===' )
                                     ->add_dependency( 'product_generation.product_image_section.product_info_generate', 'on', true, 'display', 'show', '===' )
                                     ->add_dependency( 'product_generation.product_image_section.product_info_generate', 'on', true, 'display', 'hide', '!==' )
                             )
@@ -134,7 +133,8 @@ class AIAssistPage extends AbstractPage {
                                     ->set_title( esc_html__( 'API Key', 'dokan-lite' ) )
                                     ->set_tooltip( __( 'Enter your OpenAI API key for content generation.', 'dokan-lite' ) )
                                     ->set_placeholder( esc_html__( 'Enter your OpenAI API key', 'dokan-lite' ) )
-                                    ->add_dependency( 'product_info_engine', 'openai', true, 'display', 'show', '===' )
+                                    ->add_dependency( 'product_generation.product_image_section.product_info_generate', 'on', true, 'display', 'show', '===' )
+                                    ->add_dependency( 'product_generation.product_image_section.product_info_generate', 'on', true, 'display', 'hide', '!==' )
                             )
                             ->add(
                                 ElementFactory::field( 'openai_model', 'select' )
@@ -145,8 +145,8 @@ class AIAssistPage extends AbstractPage {
                                     ->add_option( esc_html__( 'ChatGPT 4 Turbo', 'dokan-lite' ), 'gpt-4-turbo' )
                                     ->add_option( esc_html__( 'ChatGPT 3.5 Turbo', 'dokan-lite' ), 'gpt-3.5-turbo' )
                                     ->set_default( 'gpt-4o' )
-                                    ->add_dependency( 'product_generation.product_image_section.product_info_engine', 'openai', true, 'display', 'show', '===' )
-                                    ->add_dependency( 'product_generation.product_image_section.product_info_engine', 'openai', true, 'display', 'hide', '!==' )
+                                    ->add_dependency( 'product_generation.product_image_section.product_info_generate', 'on', true, 'display', 'show', '===' )
+                                    ->add_dependency( 'product_generation.product_image_section.product_info_generate', 'on', true, 'display', 'hide', '!==' )
                             )
                     )
                     ->add(
@@ -165,6 +165,8 @@ class AIAssistPage extends AbstractPage {
                                             '</a>'
                                         )
                                     )
+                                    ->add_dependency( 'product_generation.product_image_section.product_info_generate', 'on', true, 'display', 'show', '===' )
+                                    ->add_dependency( 'product_generation.product_image_section.product_info_generate', 'on', true, 'display', 'hide', '!==' )
                             )
                             ->add(
                                 ElementFactory::field( 'gemini_api_notice', 'info' )
@@ -172,14 +174,16 @@ class AIAssistPage extends AbstractPage {
                                     ->set_description( esc_html__( 'Access your Gemini dashboard to generate API keys for integration.', 'dokan-lite' ) )
                                     ->set_link_text( esc_html__( 'Gemini Account', 'dokan-lite' ) )
                                     ->set_link_url( 'https://aistudio.google.com/app/apikey' )
-                                    ->add_dependency( 'product_info_engine', 'gemini', true, 'display', 'show', '===' )
+                                    ->add_dependency( 'product_generation.product_image_section.product_info_generate', 'on', true, 'display', 'show', '===' )
+                                    ->add_dependency( 'product_generation.product_image_section.product_info_generate', 'on', true, 'display', 'hide', '!==' )
                             )
                             ->add(
                                 ElementFactory::field( 'gemini_api_key', 'show_hide' )
                                     ->set_title( esc_html__( 'API Key', 'dokan-lite' ) )
                                     ->set_tooltip( __( 'Enter your Gemini API key for content generation.', 'dokan-lite' ) )
                                     ->set_placeholder( esc_html__( 'Enter your Gemini API key', 'dokan-lite' ) )
-                                    ->add_dependency( 'product_info_engine', 'gemini', true, 'display', 'show', '===' )
+                                    ->add_dependency( 'product_generation.product_image_section.product_info_generate', 'on', true, 'display', 'show', '===' )
+                                    ->add_dependency( 'product_generation.product_image_section.product_info_generate', 'on', true, 'display', 'hide', '!==' )
                             )
                             ->add(
                                 ElementFactory::field( 'gemini_model', 'select' )
@@ -189,8 +193,8 @@ class AIAssistPage extends AbstractPage {
                                     ->add_option( esc_html__( 'Gemini 2.5 Pro', 'dokan-lite' ), 'gemini-2.5-pro' )
                                     ->add_option( esc_html__( 'Gemini 2.5 Flash Lite', 'dokan-lite' ), 'gemini-2.5-flash-lite' )
                                     ->set_default( 'gemini-2.5-flash' )
-                                    ->add_dependency( 'product_generation.product_image_section.product_info_engine', 'gemini', true, 'display', 'show', '===' )
-                                    ->add_dependency( 'product_generation.product_image_section.product_info_engine', 'gemini', true, 'display', 'hide', '!==' )
+                                    ->add_dependency( 'product_generation.product_image_section.product_info_generate', 'on', true, 'display', 'show', '===' )
+                                    ->add_dependency( 'product_generation.product_image_section.product_info_generate', 'on', true, 'display', 'hide', '!==' )
                             )
                     )
             )
@@ -208,56 +212,101 @@ class AIAssistPage extends AbstractPage {
                         ElementFactory::field( 'product_image_engine', 'select' )
                             ->set_title( esc_html__( 'Engine', 'dokan-lite' ) )
                             ->set_description( esc_html__( 'Select your AI provider for image processing and generation.', 'dokan-lite' ) )
-                            ->add_option( esc_html__( 'Leonardo AI', 'dokan-lite' ), 'leonardo' )
-                            ->add_option( esc_html__( 'DALL-E', 'dokan-lite' ), 'dalle' )
-                            ->add_option( esc_html__( 'Midjourney', 'dokan-lite' ), 'midjourney' )
-                            ->set_default( 'leonardo' )
+                            ->add_option( esc_html__( 'Gemini', 'dokan-lite' ), 'gemini' )
+                            ->add_option( esc_html__( 'BRIA AI', 'dokan-lite' ), 'bria' )
+                            ->set_default( 'gemini' )
                             ->add_dependency( 'product_generation.product_description_section.product_image_enhancement', 'on', true, 'display', 'show', '===' )
                             ->add_dependency( 'product_generation.product_description_section.product_image_enhancement', 'on', true, 'display', 'hide', '!==' )
                     )
                     ->add(
-                        ElementFactory::field_group( 'leonardo_api_info_group' )
-                            ->add_dependency( 'product_generation.product_description_section.product_image_enhancement', 'on', true, 'display', 'show', '===' )
-                            ->add_dependency( 'product_generation.product_description_section.product_image_enhancement', 'on', true, 'display', 'hide', '!==' )
+                        ElementFactory::field_group( 'gemini_api_info_group' )
+                            ->add_dependency( 'product_generation.product_description_section.product_image_engine', 'gemini', true, 'display', 'show', '===' )
+                            ->add_dependency( 'product_generation.product_description_section.product_image_engine', 'gemini', true, 'display', 'hide', '!==' )
                             ->add(
-                                ElementFactory::field( 'leonardo_api_info', 'base_field_label' )
-                                    ->set_title( esc_html__( 'Leonardo AI API', 'dokan-lite' ) )
+                                ElementFactory::field( 'gemini_api_info', 'base_field_label' )
+                                    ->set_title( esc_html__( 'Gemini API', 'dokan-lite' ) )
                                     ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/ai-assist/leonardo-ai-thumbnail.svg' )
                                     ->set_description(
                                         sprintf(
                                             /* translators: 1. Link start tag, 2. Link end tag */
-                                            esc_html__( 'Connect to your Leonardo AI account with your website. %1$sGet Help%2$s', 'dokan-lite' ),
+                                            esc_html__( 'Connect to your Gemini AI account with your website. %1$sGet Help%2$s', 'dokan-lite' ),
                                             '<a href="https://wedevs.com/docs/dokan-lite/leonardo-integration/" target="_blank" rel="noopener noreferrer">',
                                             '</a>'
                                         )
                                     )
-                                    ->add_dependency( 'product_image_engine', 'leonardo', true, 'display', 'show', '===' )
+                                    ->add_dependency( 'product_generation.product_description_section.product_image_enhancement', 'on', true, 'display', 'show', '===' )
+                                    ->add_dependency( 'product_generation.product_description_section.product_image_enhancement', 'on', true, 'display', 'hide', '!==' )
                             )
                             ->add(
-                                ElementFactory::field( 'leonardo_api_notice', 'info' )
+                                ElementFactory::field( 'gemini_api_notice', 'info' )
                                     ->set_title( esc_html__( 'You can get your API Keys in your', 'dokan-lite' ) )
-                                    ->set_link_text( esc_html__( 'Leonardo AI Account', 'dokan-lite' ) )
-                                    ->set_link_url( 'https://leonardo.ai' )
-                                    ->add_dependency( 'product_image_engine', 'leonardo', true, 'display', 'show', '===' )
+                                    ->set_link_text( esc_html__( 'Gemini AI Account', 'dokan-lite' ) )
+                                    ->set_link_url( 'https://aistudio.google.com/app/apikey' )
+                                    ->add_dependency( 'product_generation.product_description_section.product_image_enhancement', 'on', true, 'display', 'show', '===' )
+                                    ->add_dependency( 'product_generation.product_description_section.product_image_enhancement', 'on', true, 'display', 'hide', '!==' )
                             )
                             ->add(
-                                ElementFactory::field( 'leonardo_api_key', 'show_hide' )
+                                ElementFactory::field( 'gemini_api_key', 'show_hide' )
                                     ->set_title( esc_html__( 'API Key', 'dokan-lite' ) )
-                                    ->set_tooltip( __( 'Enter your Leonardo AI API key for image generation.', 'dokan-lite' ) )
-                                    ->set_placeholder( esc_html__( 'Enter your Leonardo AI API key', 'dokan-lite' ) )
-                                    ->add_dependency( 'product_image_engine', 'leonardo', true, 'display', 'show', '===' )
+                                    ->set_tooltip( __( 'Enter your Gemini API key for image generation.', 'dokan-lite' ) )
+                                    ->set_placeholder( esc_html__( 'Enter your Gemini API key', 'dokan-lite' ) )
+                                    ->add_dependency( 'product_generation.product_description_section.product_image_enhancement', 'on', true, 'display', 'show', '===' )
+                                    ->add_dependency( 'product_generation.product_description_section.product_image_enhancement', 'on', true, 'display', 'hide', '!==' )
+                            )
+                            ->add(
+                                ElementFactory::field( 'gemini_model', 'select' )
+                                    ->set_title( esc_html__( 'Model', 'dokan-lite' ) )
+                                    ->set_description( esc_html__( 'Choose the AI model for image enhancement and generation. Different models excel at various image types and styles.', 'dokan-lite' ) )
+                                    ->add_option( esc_html__( 'Gemini 2.5 Flash Image (aka Nano Banana)', 'dokan-lite' ), 'gemini-nano-banana' )
+                                    ->set_default( 'gemini-nano-banana' )
+                                    ->add_dependency( 'product_generation.product_description_section.product_image_enhancement', 'on', true, 'display', 'show', '===' )
+                                    ->add_dependency( 'product_generation.product_description_section.product_image_enhancement', 'on', true, 'display', 'hide', '!==' )
                             )
                     )
                     ->add(
-                        ElementFactory::field( 'leonardo_model', 'select' )
-                            ->set_title( esc_html__( 'Model', 'dokan-lite' ) )
-                            ->set_description( esc_html__( 'Choose the AI model for image enhancement and generation. Different models excel at various image types and styles.', 'dokan-lite' ) )
-                            ->add_option( esc_html__( 'Leonardo Phoenix', 'dokan-lite' ), 'leonardo-phoenix' )
-                            ->add_option( esc_html__( 'Leonardo Vision XL', 'dokan-lite' ), 'leonardo-vision-xl' )
-                            ->add_option( esc_html__( 'Leonardo Diffusion XL', 'dokan-lite' ), 'leonardo-diffusion-xl' )
-                            ->set_default( 'leonardo-phoenix' )
-                            ->add_dependency( 'product_generation.product_description_section.product_image_enhancement', 'on', true, 'display', 'show', '===' )
-                            ->add_dependency( 'product_generation.product_description_section.product_image_enhancement', 'on', true, 'display', 'hide', '!==' )
+                        ElementFactory::field_group( 'bria_api_info_group' )
+                            ->add_dependency( 'product_generation.product_description_section.product_image_engine', 'bria', true, 'display', 'show', '===' )
+                            ->add_dependency( 'product_generation.product_description_section.product_image_engine', 'bria', true, 'display', 'hide', '!==' )
+                            ->add(
+                                ElementFactory::field( 'bria_api_info', 'base_field_label' )
+                                    ->set_title( esc_html__( 'BRIA AI API', 'dokan-lite' ) )
+                                    ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/ai-assist/leonardo-ai-thumbnail.svg' )
+                                    ->set_description(
+                                        sprintf(
+                                            /* translators: 1. Link start tag, 2. Link end tag */
+                                            esc_html__( 'Connect to your BRIA AI account with your website. %1$sGet Help%2$s', 'dokan-lite' ),
+                                            '<a href="https://wedevs.com/docs/dokan-lite/leonardo-integration/" target="_blank" rel="noopener noreferrer">',
+                                            '</a>'
+                                        )
+                                    )
+                                    ->add_dependency( 'product_generation.product_description_section.product_image_enhancement', 'on', true, 'display', 'show', '===' )
+                                    ->add_dependency( 'product_generation.product_description_section.product_image_enhancement', 'on', true, 'display', 'hide', '!==' )
+                            )
+                            ->add(
+                                ElementFactory::field( 'bria_api_notice', 'info' )
+                                    ->set_title( esc_html__( 'You can get your API Keys in your', 'dokan-lite' ) )
+                                    ->set_link_text( esc_html__( 'BRIA AI Account', 'dokan-lite' ) )
+                                    ->set_link_url( 'https://platform.bria.ai/console/account/api-keys' )
+                                    ->add_dependency( 'product_generation.product_description_section.product_image_enhancement', 'on', true, 'display', 'show', '===' )
+                                    ->add_dependency( 'product_generation.product_description_section.product_image_enhancement', 'on', true, 'display', 'hide', '!==' )
+                            )
+                            ->add(
+                                ElementFactory::field( 'bria_api_key', 'show_hide' )
+                                    ->set_title( esc_html__( 'API Key', 'dokan-lite' ) )
+                                    ->set_tooltip( __( 'Enter your BRIA API key for image generation.', 'dokan-lite' ) )
+                                    ->set_placeholder( esc_html__( 'Enter your BRIA API key', 'dokan-lite' ) )
+                                    ->add_dependency( 'product_generation.product_description_section.product_image_enhancement', 'on', true, 'display', 'show', '===' )
+                                    ->add_dependency( 'product_generation.product_description_section.product_image_enhancement', 'on', true, 'display', 'hide', '!==' )
+                            )
+                            ->add(
+                                ElementFactory::field( 'bria_model', 'select' )
+                                    ->set_title( esc_html__( 'Model', 'dokan-lite' ) )
+                                    ->set_description( esc_html__( 'Choose the AI model for image enhancement and generation. Different models excel at various image types and styles.', 'dokan-lite' ) )
+                                    ->add_option( esc_html__( 'Generate Background', 'dokan-lite' ), 'generate-background' )
+                                    ->set_default( 'generate-background' )
+                                    ->add_dependency( 'product_generation.product_description_section.product_image_enhancement', 'on', true, 'display', 'show', '===' )
+                                    ->add_dependency( 'product_generation.product_description_section.product_image_enhancement', 'on', true, 'display', 'hide', '!==' )
+                            )
                     )
             );
 
