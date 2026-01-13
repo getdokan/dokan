@@ -1,3 +1,9 @@
+### v4.2.6 ( Jan 13, 2026 ) ###
+- **update:** Add brand fields in Vendor Product Creation Popup.
+- **update:** Add address fields on customer account migration form.
+- **update:** Add product tags creation separator (,) for vendor dashboard.
+- **fix:** Vendor list page redirection after creating a new vendor.
+
 ### v4.2.5 ( Jan 05, 2026 ) ###
 - **fix:** Add translation support to store performance report labels.
 - **fix:** Social profile URL's not accessible for staff users.

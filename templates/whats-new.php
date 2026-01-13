@@ -4,6 +4,32 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.2.6',
+        'released' => '2026-01-13',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Add brand fields in Vendor Product Creation Popup.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Add address fields on customer account migration form.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Add product tags creation separator (,) for vendor dashboard.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Vendor list page redirection after creating a new vendor.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.2.5',
         'released' => '2026-01-05',
         'changes'  => [

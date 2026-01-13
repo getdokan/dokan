@@ -7,7 +7,7 @@ Tested up to: 6.9
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 4.2.5
+Stable tag: 4.2.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -39,7 +39,7 @@ Hear what reputed WordPress influencer and online business strategist, Darrel Wi
 
 Here is how you can build your multivendor marketplace with Dokan.
 
-[https://www.youtube.com/watch?v=rF3zooidxjs]
+[https://youtu.be/_Vv5T7qqhoE?si=RPXD4hksHedNR87W&t=1]
 
 = PLACES WHERE DOKAN HAS BEEN FEATURED =
 
@@ -69,7 +69,7 @@ Here is how you can build your multivendor marketplace with Dokan.
 
 👏 “Best investment we made last year.”
 
-👏 “[Excellent product. Ease of use. Saved hundreds of work hours with lots of additional benefits] (https://www.capterra.com/p/168004/Dokan-Multivendor-Marketplace/reviews/543139/)”
+👏 “[Excellent product. Ease of use. Saved hundreds of work hours with lots of additional benefits](https://www.capterra.com/p/168004/Dokan-Multivendor-Marketplace/reviews/543139/).”
 
 = SUCCESS STORIES WE ARE PROUD TO BE A PART OF =
 
@@ -105,11 +105,12 @@ See Our Official GitHub page: [Official Dokan GitHub](https://github.com/getdoka
 
 = A SCALABLE MARKET =
 
-Dokan Multivendor Marketplace plugin allows you to have an unlimited number of vendors on any marketplace, each with the ability to create an unlimited number of products. Create marketplaces that offer –
-* Physical products
+Dokan Multivendor Marketplace plugin allows you to have an unlimited number of vendors on any marketplace, each with the ability to create an unlimited number of products. Create marketplaces that offer – 
+
+* Physical products 
 * Downloadable products
 * Variable products
-* Bookable products through the [Dokan WC Bookings Integration](https://dokan.co/wordpress/modules/woocommerce-booking-integration/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
+* Bookable products through the [Dokan WC Bookings Integration](https://dokan.co/wordpress/modules/woocommerce-booking-integration/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) 
 * Auction products through the [Dokan Simple Auction Integration](https://dokan.co/wordpress/modules/dokan-simple-auctions/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
 
 = EARN IN MULTIPLE WAYS =
@@ -352,6 +353,12 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v4.2.6 ( Jan 13, 2026 ) =
+- **update:** Add brand fields in Vendor Product Creation Popup.
+- **update:** Add address fields on customer account migration form.
+- **update:** Add product tags creation separator (,) for vendor dashboard.
+- **fix:** Vendor list page redirection after creating a new vendor.
+
 = v4.2.5 ( Jan 05, 2026 ) =
 - **fix:** Add translation support to store performance report labels.
 - **fix:** Social profile URL's not accessible for staff users.
@@ -370,27 +377,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 = v4.2.2 ( Dec 22, 2025 ) =
 - **fix:** Banner image cropper reflects an error on the vendor store settings.
-
-= v4.2.1 ( Dec 04, 2025 ) =
-- **new:** Added a "Filter by Vendor Sub-orders" option to the WooCommerce Orders page to easily filter specific marketplace orders.
-- **update:** Redesigned the Admin Panel "Not Found" page template for a better look and user experience.
-- **update:** Ensured full compatibility for the legacy admin panel store support page.
-- **update:** Improved how tooltips appear and remain visible in both the Dokan vendor and admin panels.
-- **update:** Clicking the site title in the new vendor dashboard now redirects to the marketplace main site URL.
-- **update:** Added support for legacy URL settings to the "Visit Dashboard" button within the Admin Setup Wizard.
-- **fix:** Applied menu manager support to correctly control the vendor sidebar menus in the new dashboard layout.
-- **fix:** Added the ability to sort the vendor management table by registration date.
-- **fix:** Corrected the default toggle switch states when creating a new vendor to ensure they start in the intended position.
-- **fix:** Added checks to ensure users without a vendor account are redirected to a proper "404 Not Found" page instead of an error.
-- **fix:** Allowed vendors to correctly enter decimal amounts in the withdrawal request popup.
-- **fix:** Ensured that admin-configured banner dimensions are correctly displayed in the admin vendor settings.
-- **fix:** Fixed an issue where manual withdrawal requests now correctly reflect the settings configured by the admin.
-- **fix:** Updated the correct method for translating text (text domain handling) for recommended plugins.
-- **fix:** Prevented the "Complete Your Marketplace Setup" widget from showing up after the vendor has finished all the onboarding steps.
-- **fix:** Added support for including product variations in products rest api requests.
-- **fix:** Stopped unnecessary warnings and notices from appearing during the initial store setup process.
-- **fix:** Restored the side-by-side layout for the main Admin Dashboard panel.
-- **fix:** Prevent console warning from admin panel setup guide banner elements.
-- **fix:** Remove setup guide banner for admin setup guide pages.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
