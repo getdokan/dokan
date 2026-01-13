@@ -178,8 +178,8 @@
         "typescript": "^5.8.2"
     },
     "dependencies": {
-        "@faker-js/faker": "^9.6.0",
-        "@playwright/test": "^1.51.0",
+        "@faker-js/faker": "^10.0.0",
+        "@playwright/test": "^1.57.0",
         "@wordpress/env": "^10.20.0",
         "dotenv": "^16.4.7",
         "mysql2": "^3.13.0",
