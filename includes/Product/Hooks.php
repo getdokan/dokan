@@ -580,7 +580,7 @@ class Hooks {
     /**
      * Add product brand taxonomy template
      *
-     * @since DOKAN_SINCE
+     * @since 4.2.6
      *
      * @return void
      */

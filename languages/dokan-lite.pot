@@ -1,14 +1,14 @@
 # Copyright (c) 2026 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 4.2.5\n"
+"Project-Id-Version: Dokan 4.2.6\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-01-05T11:42:57+00:00\n"
+"POT-Creation-Date: 2026-01-13T06:38:55+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -1014,7 +1014,7 @@ msgstr ""
 #: includes/Admin/OnboardingSetup/Steps/CommissionStep.php:146
 #: includes/Admin/Settings.php:539
 #: includes/Admin/Settings.php:592
-#: includes/Product/Hooks.php:489
+#: includes/Product/Hooks.php:490
 #: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/dokan-setup-wizard-commission.js:1
 #: assets/js/vue-admin.js:2
@@ -2641,7 +2641,7 @@ msgid "Delete"
 msgstr ""
 
 #: includes/Ajax.php:530
-#: includes/Product/Hooks.php:64
+#: includes/Product/Hooks.php:65
 msgid "Error: Nonce verification failed"
 msgstr ""
 
@@ -3292,14 +3292,14 @@ msgstr ""
 
 #: includes/Blocks/ProductBlock.php:40
 #: templates/products/edit-product-single.php:399
-#: templates/products/new-product.php:271
+#: templates/products/new-product.php:273
 #: templates/products/tmpl-add-product-popup.php:18
 msgid "Select tags/Add tags"
 msgstr ""
 
 #: includes/Blocks/ProductBlock.php:40
 #: templates/products/edit-product-single.php:399
-#: templates/products/new-product.php:271
+#: templates/products/new-product.php:273
 #: templates/products/tmpl-add-product-popup.php:18
 msgid "Select product tags"
 msgstr ""
@@ -5771,7 +5771,7 @@ msgid "Catalog"
 msgstr ""
 
 #: includes/Product/functions.php:363
-#: includes/Product/Hooks.php:201
+#: includes/Product/Hooks.php:202
 #: templates/products/listing-filter.php:110
 #: assets/js/components.js:179
 #: assets/js/dashboard-charts.js:1
@@ -5826,29 +5826,29 @@ msgstr ""
 msgid "Relevance"
 msgstr ""
 
-#: includes/Product/Hooks.php:71
+#: includes/Product/Hooks.php:72
 msgid "Products not found with this search"
 msgstr ""
 
-#: includes/Product/Hooks.php:160
+#: includes/Product/Hooks.php:161
 #: templates/orders/commission-meta-box-html.php:85
 msgid "SKU:"
 msgstr ""
 
-#: includes/Product/Hooks.php:197
+#: includes/Product/Hooks.php:198
 msgid "Enter product name"
 msgstr ""
 
-#: includes/Product/Hooks.php:205
+#: includes/Product/Hooks.php:206
 msgid "Shop order"
 msgstr ""
 
-#: includes/Product/Hooks.php:423
+#: includes/Product/Hooks.php:424
 msgid "As this is your own product, the \"Add to Cart\" button has been removed. Please visit as a guest to view it."
 msgstr ""
 
-#: includes/Product/Hooks.php:493
 #: includes/Product/Hooks.php:494
+#: includes/Product/Hooks.php:495
 #: assets/js/vue-admin.js:2
 msgid "When the value is 0, no commissions will be deducted from this vendor."
 msgstr ""
@@ -9683,7 +9683,7 @@ msgstr ""
 
 #: templates/account/become-a-vendor-section.php:16
 #: templates/account/become-a-vendor-section.php:20
-#: templates/account/update-customer-to-vendor.php:78
+#: templates/account/update-customer-to-vendor.php:87
 msgid "Become a Vendor"
 msgstr ""
 
@@ -9707,12 +9707,12 @@ msgstr ""
 msgid "Shop URL"
 msgstr ""
 
-#: templates/account/update-customer-to-vendor.php:67
+#: templates/account/update-customer-to-vendor.php:76
 msgid "Terms &amp; Conditions"
 msgstr ""
 
 #. translators: 1. Terms and conditions of agreement link.
-#: templates/account/update-customer-to-vendor.php:69
+#: templates/account/update-customer-to-vendor.php:78
 msgid "I have read and agree to the %1$s."
 msgstr ""
 
@@ -11096,8 +11096,8 @@ msgid "YYYY-MM-DD"
 msgstr ""
 
 #: templates/products/edit-product-single.php:395
-#: templates/products/new-product.php:270
-#: templates/products/tmpl-add-product-popup.php:104
+#: templates/products/new-product.php:272
+#: templates/products/tmpl-add-product-popup.php:106
 msgid "Tags"
 msgstr ""
 
@@ -11122,7 +11122,7 @@ msgid "Short Description"
 msgstr ""
 
 #: templates/products/edit-product-single.php:518
-#: templates/products/new-product.php:286
+#: templates/products/new-product.php:288
 msgid "Description"
 msgstr ""
 
@@ -11220,15 +11220,15 @@ msgstr ""
 msgid "Short description of the product..."
 msgstr ""
 
-#: templates/products/new-product.php:286
+#: templates/products/new-product.php:288
 msgid "Add your product description"
 msgstr ""
 
-#: templates/products/new-product.php:315
+#: templates/products/new-product.php:317
 msgid "Create & Add New"
 msgstr ""
 
-#: templates/products/new-product.php:318
+#: templates/products/new-product.php:320
 msgid "Create Product"
 msgstr ""
 
@@ -11327,15 +11327,15 @@ msgstr ""
 msgid "Ready to start selling something awesome?"
 msgstr ""
 
-#: templates/products/tmpl-add-product-popup.php:111
+#: templates/products/tmpl-add-product-popup.php:113
 msgid "Enter some short description about this product..."
 msgstr ""
 
-#: templates/products/tmpl-add-product-popup.php:119
+#: templates/products/tmpl-add-product-popup.php:121
 msgid "Create product"
 msgstr ""
 
-#: templates/products/tmpl-add-product-popup.php:129
+#: templates/products/tmpl-add-product-popup.php:131
 msgid "Create & add new"
 msgstr ""
 
