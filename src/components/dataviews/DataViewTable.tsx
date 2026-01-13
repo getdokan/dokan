@@ -75,9 +75,9 @@ const DataViewTable = ( props: DataViewsProps< Item > ) => {
      * Disable sorting & column hiding globally
      */
     const normalizedFields = fields.map( ( field ) => ( {
-        ...field,
         enableSorting: false,
         enableHiding: false,
+        ...field,
     } ) );
     const getDefaultLayouts = ( customLayout: SupportedLayouts ) => {
         const keys = Object?.keys( customLayout );
