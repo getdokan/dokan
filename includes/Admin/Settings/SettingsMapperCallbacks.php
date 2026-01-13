@@ -14,6 +14,7 @@ class SettingsMapperCallbacks implements Hookable {
      */
     public function register_hooks(): void {
         add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_customer_details_visibility' ], 10, 4 );
+        add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_withdraw_options_visibility' ], 10, 4 );
         add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_cod_payments' ], 10, 4 );
         add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_welcome_wizard' ], 10, 4 );
         add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_delivery_support' ], 10, 4 );
@@ -48,15 +49,34 @@ class SettingsMapperCallbacks implements Hookable {
      *
      * @since DOKAN_SINCE
      *
-     * @param $value
-     * @param $to_indicator
-     * @param $old_key
-     * @param $new_key
+     * @param string $value
+     * @param string $to_indicator
+     * @param string $old_key
+     * @param string $new_key
      *
      * @return string|null
      */
     public function map_customer_details_visibility( $value, $to_indicator, $old_key, $new_key ) {
         if ( 'dokan_selling.hide_customer_info' !== $old_key || 'general.marketplace.marketplace_settings.show_customer_details_to_vendors' !== $new_key || is_null( $value ) ) {
+            return $value;
+        }
+        return $value === 'on' ? 'off' : 'on';
+    }
+
+    /**
+     * Function for mapping for withdraw options visibility.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $value
+     * @param string $to_indicator
+     * @param string $old_key
+     * @param string $new_key
+     *
+     * @return string|null
+     */
+    public function map_withdraw_options_visibility( $value, $to_indicator, $old_key, $new_key ) {
+        if ( 'dokan_withdraw.hide_withdraw_option' !== $old_key || 'transaction.withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility' !== $new_key || is_null( $value ) ) {
             return $value;
         }
         return $value === 'on' ? 'off' : 'on';

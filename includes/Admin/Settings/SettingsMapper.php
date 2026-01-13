@@ -189,6 +189,7 @@ class SettingsMapper {
         // Transaction > Withdraw
         'dokan_withdraw.withdraw_limit'                              => 'transaction.withdraw_charge.minimum_withdraw_limit_section.minimum_withdraw_limit',
         'dokan_withdraw.withdraw_date_limit'                         => 'transaction.withdraw_charge.withdraw_threshold_section.withdraw_threshold',
+        'dokan_withdraw.hide_withdraw_option'                        => 'transaction.withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility',
         'dokan_withdraw.exclude_cod_payment'                         => 'transaction.withdraw_charge.cod_payments_section.cod_payments',
         'dokan_withdraw.withdraw_methods'                            => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods',
         'dokan_withdraw.withdraw_charges'                            => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_charges',
