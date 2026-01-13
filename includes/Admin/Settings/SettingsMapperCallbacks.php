@@ -1131,6 +1131,22 @@ class SettingsMapperCallbacks implements Hookable {
                 'enabled' => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_withdraw',
                 'charge'  => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.bank_transfer_withdraw_charges',
             ],
+            'dokan-paypal-marketplace' => [
+                'enabled' => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal_marketplace.paypal_marketplace_withdraw',
+                'charge'  => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal_marketplace.paypal_marketplace_withdraw_charges',
+            ],
+            'dokan_paystack' => [
+                'enabled' => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_paystack.paystack_withdraw',
+                'charge'  => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_paystack.paystack_withdraw_charges',
+            ],
+            'dokan-stripe-connect' => [
+                'enabled' => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_stripe.stripe_withdraw',
+                'charge'  => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_stripe.stripe_withdraw_charges',
+            ],
+            'dokan_razorpay' => [
+                'enabled' => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay.razorpay_withdraw',
+                'charge'  => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay.razorpay_withdraw_charges',
+            ],
         ];
 
         foreach ( $mapping_config as $method_key => $config ) {
@@ -1146,16 +1162,6 @@ class SettingsMapperCallbacks implements Hookable {
             ] );
         }
 
-        // Razorpay (if it exists in old, though not in provided snippet, good to handle if it follows same pattern)
-        if ( isset( $methods['razorpay'] ) ) {
-            $is_enabled = ! empty( $methods['razorpay'] ) ? 'on' : 'off';
-            SettingsMapper::set_value_by_path( $result, 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay.razorpay_withdraw', $is_enabled );
-            $method_charges = $charges['razorpay'] ?? [ 'fixed' => 0, 'percentage' => 0 ];
-            SettingsMapper::set_value_by_path( $result, 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay.razorpay_withdraw_charges', [
-                'additional_fee'   => $method_charges['fixed'] ?? 0,
-                'admin_percentage' => $method_charges['percentage'] ?? 0,
-            ] );
-        }
 
         // Custom method details
         SettingsMapper::set_value_by_path( $result, 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_method_name', $old_withdraw['withdraw_method_name'] ?? '' );
@@ -1200,7 +1206,7 @@ class SettingsMapperCallbacks implements Hookable {
                 'charge_path'  => 'withdraw_methods_group_bank.bank_transfer_withdraw_charges',
                 'old_key'      => 'bank',
             ],
-            'razorpay' => [
+            'dokan_razorpay' => [
                 'enabled_path' => 'withdraw_methods_group_razorpay.razorpay_withdraw',
                 'charge_path'  => 'withdraw_methods_group_razorpay.razorpay_withdraw_charges',
             ],
@@ -1208,6 +1214,20 @@ class SettingsMapperCallbacks implements Hookable {
                 'enabled_path' => 'withdraw_methods_group_custom.custom_withdraw',
                 'charge_path'  => 'withdraw_methods_group_custom.bank_transfer_withdraw_charges',
                 'old_key'      => 'dokan_custom',
+            ],
+            'dokan-paypal-marketplace' => [
+                'enabled_path' => 'withdraw_methods_group_paypal_marketplace.paypal_marketplace_withdraw',
+                'charge_path'  => 'withdraw_methods_group_paypal_marketplace.paypal_marketplace_withdraw_charges',
+                'old_key'      => 'dokan-paypal-marketplace',
+            ],
+            'dokan_paystack' => [
+                'enabled_path' => 'withdraw_methods_group_paystack.paystack_withdraw',
+                'charge_path'  => 'withdraw_methods_group_paystack.paystack_withdraw_charges',
+            ],
+            'dokan-stripe-connect' => [
+                'enabled_path' => 'withdraw_methods_group_stripe.stripe_withdraw',
+                'charge_path'  => 'withdraw_methods_group_stripe.stripe_withdraw_charges',
+                'old_key'      => 'dokan-stripe-connect',
             ],
         ];
 
