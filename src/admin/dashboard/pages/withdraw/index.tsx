@@ -512,9 +512,16 @@ const WithdrawPage = () => {
         titleField: 'vendor',
         status: 'pending',
         layout: { density: 'comfortable' },
-        fields: fields.map( ( field ) =>
-            field.id !== 'vendor' ? field.id : ''
-        ),
+        fields: [
+            'amount',
+            'status',
+            'method',
+            'charge',
+            'payable',
+            'date',
+            'details',
+            'note',
+        ],
     } );
 
     // Handle tab selection for status filtering
