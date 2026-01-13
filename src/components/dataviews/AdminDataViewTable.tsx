@@ -93,7 +93,7 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
         emptyDescription,
     } = props;
     /**
-     * Disable sorting & column hiding everywhere
+     * Disable sorting & column hiding globally
      */
     const normalizedFields = fields.map( ( field ) => ( {
         enableSorting: false,
