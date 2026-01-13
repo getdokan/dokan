@@ -92,7 +92,14 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
         emptyTitle,
         emptyDescription,
     } = props;
-
+    /**
+     * Disable sorting & column hiding everywhere
+     */
+    const normalizedFields = fields.map( ( field ) => ( {
+        enableSorting: false,
+        enableHiding: false,
+        ...field,
+    } ) );
     const defaultLayouts =
         props.defaultLayouts ||
         ( {
@@ -107,7 +114,7 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
         fields: applyFiltersToTableElements(
             namespace,
             'fields',
-            fields,
+            normalizedFields,
             props
         ),
         actions: applyFiltersToTableElements(

@@ -65,7 +65,7 @@ const ReverseWithdrawalTransactionPage = ( { params, navigate } ) => {
         {
             id: 'trn_date',
             label: __( 'Date', 'dokan-lite' ),
-            enableSorting: true,
+            enableSorting: false,
             render: ( { item } ) => {
                 return (
                     <span className="text-[#575757] text-xs">
