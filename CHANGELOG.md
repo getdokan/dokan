@@ -1,3 +1,6 @@
+### v4.2.7 ( Jan 14, 2026 ) ###
+- **fix:** Allow Dokan stock restoration on WC Block Checkout.
+
 ### v4.2.6 ( Jan 13, 2026 ) ###
 - **update:** Add brand fields in Vendor Product Creation Popup.
 - **update:** Add address fields on customer account migration form.

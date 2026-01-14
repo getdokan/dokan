@@ -7,7 +7,7 @@ Tested up to: 6.9
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 4.2.6
+Stable tag: 4.2.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -353,6 +353,9 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v4.2.7 ( Jan 14, 2026 ) =
+- **fix:** Allow Dokan stock restoration on WC Block Checkout.
+
 = v4.2.6 ( Jan 13, 2026 ) =
 - **update:** Add brand fields in Vendor Product Creation Popup.
 - **update:** Add address fields on customer account migration form.
@@ -374,8 +377,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 = v4.2.3 ( Dec 22, 2025 ) =
 - **fix:** Compatible vendor store banner image cropper with the latest version.
-
-= v4.2.2 ( Dec 22, 2025 ) =
-- **fix:** Banner image cropper reflects an error on the vendor store settings.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
