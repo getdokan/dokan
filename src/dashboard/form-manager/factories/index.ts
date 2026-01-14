@@ -1,5 +1,6 @@
 import { FieldHandler, FormField } from '../types';
 import {
+    attributeHandler,
     checkboxHandler,
     dateHandler,
     defaultHandler,
@@ -24,6 +25,7 @@ const handlers: Record< string, FieldHandler > = {
     multiselect: multiSelectHandler,
     image: imageHandler,
     gallery: galleryHandler,
+    attribute: attributeHandler,
 };
 
 export const getFieldConfigFromFactory = ( field: FormField ) => {

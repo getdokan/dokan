@@ -1,4 +1,5 @@
 import AsyncSelectEdit from '../components/AsyncSelectEdit';
+import AttributeEdit from '../components/AttributeEdit';
 import DateTimePickerEdit from '../components/DateTimePickerEdit';
 import FeatureImage from '../components/FeatureImage';
 import GalleryImages from '../components/GalleryImages';
@@ -147,6 +148,18 @@ export const multiSelectHandler: FieldHandler = ( field ) => {
 export const imageHandler: FieldHandler = () => ( {
     type: 'integer',
     Edit: FeatureImage,
+} );
+
+/**
+ * Handler for attributes fields.
+ *
+ * @param {Object} field The field configuration.
+ * @return {Object} Configuration object with type 'array' and AttributeEdit component.
+ */
+export const attributeHandler: FieldHandler = ( field ) => ( {
+    type: 'array',
+    Edit: AttributeEdit,
+    elements: getElementsFromOptions( field ),
 } );
 
 /**

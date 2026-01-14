@@ -208,7 +208,7 @@ class Init {
                         return '';
                     }
 
-                    return $product->get_date_on_sale_from( 'edit' )->date( 'Y-m-d' );
+                    return $product->get_date_on_sale_from( 'edit' ) ? $product->get_date_on_sale_from( 'edit' )->date( 'Y-m-d' ) : '';
                 },
                 'dependency_condition' => [
                     'section'  => 'general',
@@ -234,7 +234,7 @@ class Init {
                         return '';
                     }
 
-                    return $product->get_date_on_sale_to( 'edit' )->date( 'Y-m-d' );
+                    return $product->get_date_on_sale_to( 'edit' ) ? $product->get_date_on_sale_to( 'edit' )->date( 'Y-m-d' ) : '';
                 },
                 'dependency_condition' => [
                     'section'  => 'general',
@@ -494,6 +494,89 @@ class Init {
                     'operator' => 'equal',
                     'value'    => 'simple',
                 ],
+            ]
+        );
+
+        $section->add_field(
+            Elements::ATTRIBUTES, [
+                'title'          => __( 'Attributes', 'dokan-lite' ),
+                'field_type'     => 'attribute',
+                'name'           => 'attributes',
+                'options_callback' => function () {
+                    $attributes = [];
+                    foreach ( wc_get_attribute_taxonomies() as $attr ) {
+                        $taxonomy_name = wc_attribute_taxonomy_name( $attr->attribute_name );
+                        $terms         = get_terms(
+                            [
+								'taxonomy'   => $taxonomy_name,
+								'hide_empty' => false,
+							]
+                        );
+
+                        $term_options = [];
+                        if ( ! is_wp_error( $terms ) ) {
+                            foreach ( $terms as $term ) {
+                                $term_options[] = [
+                                    'label' => $term->name,
+                                    'value' => $term->term_id,
+                                ];
+                            }
+                        }
+
+                        $attributes[] = [
+                            'label' => $attr->attribute_label,
+                            'value' => $attr->attribute_id,
+                            'slug'  => $taxonomy_name,
+                            'terms' => $term_options,
+                        ];
+                    }
+                    return $attributes;
+                },
+                'value_callback' => function ( $product, $value = [] ) {
+                    if ( ! empty( $value ) ) {
+                        return $value;
+                    }
+
+                    if ( ! $product instanceof WC_Product ) {
+                        return [];
+                    }
+
+                    $attributes = [];
+                    foreach ( $product->get_attributes( 'edit' ) as $attr ) {
+                        $terms = [];
+                        if ( $attr->is_taxonomy() && ! empty( $attr->get_options() ) ) {
+                            $wp_terms = get_terms(
+                                [
+									'taxonomy'   => $attr->get_name(),
+									'include'    => $attr->get_options(),
+									'hide_empty' => false,
+								]
+                            );
+
+                            if ( ! is_wp_error( $wp_terms ) ) {
+                                foreach ( $wp_terms as $term ) {
+                                    $terms[] = [
+                                        'label' => $term->name,
+                                        'value' => $term->term_id,
+                                    ];
+                                }
+                            }
+                        }
+
+                        $attributes[] = [
+                            'id'          => $attr->get_id(),
+                            'name'        => $attr->get_name() ? wc_attribute_label( $attr->get_name() ) : '',
+                            'options'     => $attr->get_options(),
+                            'visible'     => $attr->get_visible(),
+                            'variation'   => $attr->get_variation(),
+                            'position'    => $attr->get_position(),
+                            'is_taxonomy' => $attr->is_taxonomy(),
+                            'terms'       => $terms,
+                        ];
+                    }
+
+                    return $attributes;
+                },
             ]
         );
     }

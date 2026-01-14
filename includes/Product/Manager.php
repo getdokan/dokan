@@ -240,14 +240,14 @@ class Manager {
             }
 
             if ( $product->is_type( 'grouped' ) ) {
-                $product->set_manage_stock( 'no' );
-                $product->set_backorders( 'no' );
-                $product->set_stock_quantity( '' );
+                $product->set_manage_stock( false );
+                $product->set_backorders( false );
+                $product->set_stock_quantity( null );
                 $product->set_stock_status( $stock_status );
             } elseif ( $product->is_type( 'external' ) ) {
-                $product->set_manage_stock( 'no' );
-                $product->set_backorders( 'no' );
-                $product->set_stock_quantity( '' );
+                $product->set_manage_stock( false );
+                $product->set_backorders( false );
+                $product->set_stock_quantity( null );
                 $product->set_stock_status( 'instock' );
             } elseif ( $product->get_manage_stock() ) {
                 // Stock status is always determined by children so sync later.
@@ -265,8 +265,8 @@ class Manager {
                 }
             } else {
                 // Don't manage stock.
-                $product->set_manage_stock( 'no' );
-                $product->set_stock_quantity( '' );
+                $product->set_manage_stock( false );
+                $product->set_stock_quantity( null );
                 $product->set_stock_status( $stock_status );
             }
         } elseif ( ! $product->is_type( 'variable' ) ) {
@@ -457,7 +457,7 @@ class Manager {
             return false;
         }
 
-        return $product->delete( [ 'force_delete' => $force ] );
+        return $product->delete( $force );
     }
 
     /**
@@ -583,59 +583,50 @@ class Manager {
                 $attribute_id   = 0;
                 $attribute_name = '';
 
-                // Check ID for global attributes or name for product attributes.
+                // Get ID and Name
                 if ( ! empty( $attribute[ FormElements::ATTRIBUTES_ID ] ) ) {
-                    $attribute_id   = absint( $attribute[ FormElements::ATTRIBUTES_ID ] );
-                    $attribute_name = wc_attribute_taxonomy_name_by_id( $attribute_id );
-                } elseif ( ! empty( $attribute[ FormElements::ATTRIBUTES_NAME ] ) ) {
-                    $attribute_name = wc_clean( $attribute[ FormElements::ATTRIBUTES_NAME ] );
+                    $attribute_id = absint( $attribute[ FormElements::ATTRIBUTES_ID ] );
                 }
 
-                if ( ! $attribute_id && ! $attribute_name ) {
-                    continue;
+                if ( ! empty( $attribute[ FormElements::ATTRIBUTES_NAME ] ) ) {
+                    $attribute_name = wc_clean( esc_html( $attribute[ FormElements::ATTRIBUTES_NAME ] ) );
+                }
+
+                if ( 'pa_' === substr( $attribute_name, 0, 3 ) ) {
+                    $attribute_id = wc_attribute_taxonomy_id_by_name( $attribute_name );
                 }
 
                 if ( $attribute_id ) {
-                    if ( isset( $attribute[ FormElements::ATTRIBUTES_OPTIONS ] ) ) {
-                        $options = $attribute[ FormElements::ATTRIBUTES_OPTIONS ];
-
-                        if ( ! is_array( $attribute[ FormElements::ATTRIBUTES_OPTIONS ] ) ) {
-                            // Text based attributes - Posted values are term names.
-                            $options = explode( WC_DELIMITER, $options );
-                        }
-
-                        $values = array_map( 'wc_sanitize_term_text_based', $options );
-                        $values = array_filter( $values, 'strlen' );
-                    } else {
-                        $values = [];
-                    }
-
-                    if ( ! empty( $values ) ) {
-                        // Add attribute to array, but don't set values.
-                        $attribute_object = new WC_Product_Attribute();
-                        $attribute_object->set_id( $attribute_id );
-                        $attribute_object->set_name( $attribute_name );
-                        $attribute_object->set_options( $values );
-                        $attribute_object->set_position( isset( $attribute[ FormElements::ATTRIBUTES_POSITION ] ) ? (string) absint( $attribute[ FormElements::ATTRIBUTES_POSITION ] ) : '0' );
-                        $attribute_object->set_visible( ( isset( $attribute[ FormElements::ATTRIBUTES_VISIBLE ] ) && $attribute[ FormElements::ATTRIBUTES_VISIBLE ] ) ? 1 : 0 );
-                        $attribute_object->set_variation( ( isset( $attribute[ FormElements::ATTRIBUTES_VARIATION ] ) && $attribute[ FormElements::ATTRIBUTES_VARIATION ] ) ? 1 : 0 );
-                        $attributes[] = $attribute_object;
-                    }
-                } elseif ( isset( $attribute[ FormElements::ATTRIBUTES_OPTIONS ] ) ) {
-                    // Custom attribute - Add attribute to array and set the values.
-                    if ( is_array( $attribute[ FormElements::ATTRIBUTES_OPTIONS ] ) ) {
-                        $values = $attribute[ FormElements::ATTRIBUTES_OPTIONS ];
-                    } else {
-                        $values = explode( WC_DELIMITER, $attribute[ FormElements::ATTRIBUTES_OPTIONS ] );
-                    }
-                    $attribute_object = new WC_Product_Attribute();
-                    $attribute_object->set_name( $attribute_name );
-                    $attribute_object->set_options( $values );
-                    $attribute_object->set_position( isset( $attribute[ FormElements::ATTRIBUTES_POSITION ] ) ? (string) absint( $attribute[ FormElements::ATTRIBUTES_POSITION ] ) : '0' );
-                    $attribute_object->set_visible( ( isset( $attribute[ FormElements::ATTRIBUTES_VISIBLE ] ) && $attribute[ FormElements::ATTRIBUTES_VISIBLE ] ) ? 1 : 0 );
-                    $attribute_object->set_variation( ( isset( $attribute[ FormElements::ATTRIBUTES_VARIATION ] ) && $attribute[ FormElements::ATTRIBUTES_VARIATION ] ) ? 1 : 0 );
-                    $attributes[] = $attribute_object;
+                    $attribute_name = wc_attribute_taxonomy_name_by_id( $attribute_id );
                 }
+
+                if ( ! $attribute_id && empty( $attribute_name ) ) {
+                    continue;
+                }
+
+                $options = isset( $attribute[ FormElements::ATTRIBUTES_OPTIONS ] ) ? $attribute[ FormElements::ATTRIBUTES_OPTIONS ] : '';
+
+                if ( is_array( $options ) ) {
+                    // Term ids sent as array.
+                    $options = wp_parse_id_list( $options );
+                } else {
+                    // Terms or text sent in textarea.
+                    $options = 0 < $attribute_id ? wc_sanitize_textarea( esc_html( wc_sanitize_term_text_based( $options ) ) ) : wc_sanitize_textarea( esc_html( $options ) );
+                    $options = wc_get_text_attributes( $options );
+                }
+
+                if ( empty( $options ) ) {
+                    continue;
+                }
+
+                $attribute_object = new WC_Product_Attribute();
+                $attribute_object->set_id( $attribute_id );
+                $attribute_object->set_name( $attribute_name );
+                $attribute_object->set_options( $options );
+                $attribute_object->set_position( isset( $attribute[ FormElements::ATTRIBUTES_POSITION ] ) ? (string) absint( $attribute[ FormElements::ATTRIBUTES_POSITION ] ) : '0' );
+                $attribute_object->set_visible( ( isset( $attribute[ FormElements::ATTRIBUTES_VISIBLE ] ) && $attribute[ FormElements::ATTRIBUTES_VISIBLE ] ) ? 1 : 0 );
+                $attribute_object->set_variation( ( isset( $attribute[ FormElements::ATTRIBUTES_VARIATION ] ) && $attribute[ FormElements::ATTRIBUTES_VARIATION ] ) ? 1 : 0 );
+                $attributes[] = $attribute_object;
             }
             $product->set_attributes( $attributes );
         }
