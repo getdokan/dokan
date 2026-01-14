@@ -199,9 +199,10 @@ class SettingsMapper {
         'dokan_withdraw.dokan_paystack'                              => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_paystack',
         'dokan_withdraw.dokan_stripe_connect'                        => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_stripe',
         'dokan_withdraw.dokan_razorpay'                              => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay',
+        'dokan_withdraw.disbursement'                                => 'transaction.withdraw_charge.withdraw_option_visibility_section.manual_withdraw',
+//        'dokan_withdraw.disbursement_schedule'                       => 'transaction.withdraw_charge.withdraw_option_visibility_section.manual_withdraw',
 
         //'dokan_withdraw.withdraw_limit'         => 'transaction.withdraw_charge.section_withdraw_charge.minimum_withdraw_limit_section.minimum_withdraw_limit',
-        // 'dokan_withdraw.withdraw_order_status'  => 'transaction.withdraw_charge.section_withdraw_charge.manual_withdraw',
         // 'dokan_withdraw.exclude_cod_payment'    => 'transaction.withdraw_charge.section_withdraw_charge.cod_payments',
         // 'dokan_withdraw.withdraw_date_limit'    => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_threshold',
         // 'dokan_withdraw.hide_withdraw_option'   => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_option_visibility',

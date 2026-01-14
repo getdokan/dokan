@@ -36,6 +36,8 @@ class SettingsMapperCallbacks implements Hookable {
         add_filter( 'dokan_settings_mapper_after_transform_new_to_old', [ $this, 'map_single_product_preview_new_to_old' ], 10, 2 );
         add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_discount_edit_old_to_new' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_discount_edit_new_to_old' ], 10, 3 );
+        add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_withdraw_disbursement_old_to_new' ], 10, 3 );
+        add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_withdraw_disbursement_new_to_old' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_delivery_support_old_to_new' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_delivery_support_new_to_old' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_shipping_status_list_old_to_new' ], 10, 3 );
@@ -552,6 +554,7 @@ class SettingsMapperCallbacks implements Hookable {
         }
         return $old_value;
     }
+
     /**
      * Map vendor info visibility with inverted logic and renamed values
      * OLD: hide_vendor_info ['email', 'phone', 'address'] - items to HIDE
@@ -983,6 +986,68 @@ class SettingsMapperCallbacks implements Hookable {
     }
 
     /**
+     * Function to map discount edit settings from old format to new format
+     *
+     * @param array $value
+     * @param string $old_key
+     * @param string $new_key
+     *
+     * @return array
+     */
+    public function map_withdraw_disbursement_old_to_new( $value, $old_key, $new_key ) {
+        $old_data_key = 'dokan_withdraw.disbursement';
+        $new_data_key = 'transaction.withdraw_charge.withdraw_option_visibility_section.manual_withdraw';
+
+        if ( $old_data_key !== $old_key || $new_data_key !== $new_key || is_null( $value ) ) {
+            return $value;
+        }
+
+        $mapped = [];
+
+        foreach ( $value as $option_key => $option_value ) {
+            if ( ! empty( $option_value ) ) {
+                // Selected in the old format.
+                $mapped[] = $option_key;
+            }
+        }
+
+        return $mapped; // may be empty
+    }
+
+    /**
+     * Function to map discount edit settings from new format to old format
+     *
+     * @param array $value
+     * @param string $old_key
+     * @param string $new_key
+     *
+     * @return array
+     */
+    public function map_withdraw_disbursement_new_to_old( $value, $old_key, $new_key ) {
+        $old_data_key = 'dokan_withdraw.disbursement';
+        $new_data_key = 'transaction.withdraw_charge.withdraw_option_visibility_section.manual_withdraw';
+
+        if ( $old_data_key !== $old_key || $new_data_key !== $new_key || is_null( $value ) ) {
+            return $value;
+        }
+
+        // Old keys must always exist
+        $old_value = [
+            'manual'   => '',
+            'schedule' => '',
+        ];
+
+        if ( is_array( $value ) ) {
+            foreach ( $value as $option_key ) {
+                if ( isset( $old_value[ $option_key ] ) ) {
+                    $old_value[ $option_key ] = $option_key;
+                }
+            }
+        }
+        return $old_value;
+    }
+
+    /**
      * Function to map delivery support settings from old format to new format.
      *
      * @since DOKAN_SINCE
@@ -1262,12 +1327,6 @@ class SettingsMapperCallbacks implements Hookable {
                 'percentage' => $charge_data['admin_percentage'] ?? 0,
             ];
         }
-
-        // Handle dokan-paypal-marketplace and dokan-stripe-connect if they exist in old but not in new UI
-        // These might be handled separately or preserved. For now, let's ensure they are in old_methods if they were there.
-        // Actually, the issue description shows them in old format.
-        // If they are not in the new UI, they might be lost if we overwrite. 
-        // But SettingsMapper usually merges.
         
         $result['dokan_withdraw']['withdraw_methods'] = $old_methods;
         $result['dokan_withdraw']['withdraw_charges'] = $old_charges;
