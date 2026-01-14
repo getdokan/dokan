@@ -416,16 +416,11 @@ class Manager {
 
         $product_id = $product->save();
 
-        // Product Brands.
-        if ( isset( $args[ FormElements::BRANDS ] ) && is_array( $args[ FormElements::BRANDS ] ) ) {
-            $this->save_brands( $product_id, $args[ FormElements::BRANDS ] );
-        }
-
         //call dokan hooks
         if ( ! $is_update ) {
-            do_action( 'dokan_new_product_added', $product_id, [] );
+            do_action( 'dokan_new_product_added', $product_id, $args );
         } else {
-            do_action( 'dokan_product_updated', $product_id, [] );
+            do_action( 'dokan_product_updated', $product_id, $args );
         }
 
         return $this->get( $product_id );
