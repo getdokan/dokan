@@ -156,7 +156,7 @@ class AIAssistPage extends AbstractPage {
                             ->add(
                                 ElementFactory::field( 'gemini_api_info', 'base_field_label' )
                                     ->set_title( esc_html__( 'Gemini API', 'dokan-lite' ) )
-                                    ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/ai-assist/chat-gpt-open-ai.svg' )
+                                    ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/ai-assist/gemini-ai.svg' )
                                     ->set_description(
                                         sprintf(
                                         /* translators: 1. Link start tag, 2. Link end tag */
@@ -225,7 +225,7 @@ class AIAssistPage extends AbstractPage {
                             ->add(
                                 ElementFactory::field( 'gemini_api_info', 'base_field_label' )
                                     ->set_title( esc_html__( 'Gemini API', 'dokan-lite' ) )
-                                    ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/ai-assist/leonardo-ai-thumbnail.svg' )
+                                    ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/ai-assist/gemini-ai.svg' )
                                     ->set_description(
                                         sprintf(
                                             /* translators: 1. Link start tag, 2. Link end tag */
@@ -270,7 +270,7 @@ class AIAssistPage extends AbstractPage {
                             ->add(
                                 ElementFactory::field( 'bria_api_info', 'base_field_label' )
                                     ->set_title( esc_html__( 'BRIA AI API', 'dokan-lite' ) )
-                                    ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/ai-assist/leonardo-ai-thumbnail.svg' )
+                                    ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/ai-assist/bria-ai.svg' )
                                     ->set_description(
                                         sprintf(
                                             /* translators: 1. Link start tag, 2. Link end tag */
