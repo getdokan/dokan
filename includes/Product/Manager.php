@@ -310,12 +310,22 @@ class Manager {
 
         // Product categories.
         if ( isset( $args[ FormElements::CATEGORIES ] ) && is_array( $args[ FormElements::CATEGORIES ] ) ) {
-            $product = $this->save_taxonomy_terms( $product, $args[ FormElements::CATEGORIES ] );
+            $categories = array_map(
+                function ( $category ) {
+                    return (object) [ 'id' => absint( $category ) ];
+                }, $args[ FormElements::CATEGORIES ]
+            );
+            $product = $this->save_taxonomy_terms( $product, $categories );
         }
 
         // Product tags.
         if ( isset( $args[ FormElements::TAGS ] ) && is_array( $args[ FormElements::TAGS ] ) ) {
-            $product = $this->save_taxonomy_terms( $product, $args[ FormElements::TAGS ], 'tag' );
+            $tags = array_map(
+                function ( $tag ) {
+                    return (object) [ 'id' => absint( $tag ) ];
+                }, $args[ FormElements::TAGS ]
+            );
+            $product = $this->save_taxonomy_terms( $product, $tags, 'tag' );
         }
 
         // Downloadable.
@@ -405,6 +415,11 @@ class Manager {
         }
 
         $product_id = $product->save();
+
+        // Product Brands.
+        if ( isset( $args[ FormElements::BRANDS ] ) && is_array( $args[ FormElements::BRANDS ] ) ) {
+            $this->save_brands( $product_id, $args[ FormElements::BRANDS ] );
+        }
 
         //call dokan hooks
         if ( ! $is_update ) {
@@ -586,7 +601,6 @@ class Manager {
                 }
 
                 if ( $attribute_id ) {
-
                     if ( isset( $attribute[ FormElements::ATTRIBUTES_OPTIONS ] ) ) {
                         $options = $attribute[ FormElements::ATTRIBUTES_OPTIONS ];
 

@@ -60,8 +60,8 @@ class Elements {
     const UPSELL_IDS = 'upsell_ids';
     const CROSS_SELL_IDS = 'cross_sell_ids';
     const CATEGORIES = 'category_ids';
-    const TAGS = 'tag_ids';
-    const BRANDS = 'brand_ids';
+    const TAGS = 'product_tag';
+    const BRANDS = 'product_brand';
     const DOWNLOADABLE = 'downloadable';
     const DOWNLOADS = 'downloads';
     const DOWNLOAD_LIMIT = 'download_limit';
@@ -77,5 +77,5 @@ class Elements {
     const ADDITIONAL_SHIPPING_COST_META = '_additional_price';
     const ADDITIONAL_SHIPPING_QUANTITY_META = '_additional_qty';
     const ADDITIONAL_SHIPPING_PROCESSING_TIME_META = '_dps_processing_time';
-    const CREATE_SCHEDULE_FOR_DISCOUNT = '_create_schedule_for_discount';
+    const CREATE_SCHEDULE_FOR_DISCOUNT = 'create_schedule_for_discount';
 }

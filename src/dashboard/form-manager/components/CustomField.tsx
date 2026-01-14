@@ -9,7 +9,7 @@ const CustomField = ( {
 } ) => {
     return (
         <div className={ `flex flex-col gap-1 ${ className }` }>
-            { label && <div className="uppercase">{ label }</div> }
+            { label && label }
             { children }
         </div>
     );

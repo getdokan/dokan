@@ -5,17 +5,15 @@ namespace WeDevs\Dokan\Product;
 class FormData {
 
     /**
-     * Get product brands recursively in a flat array for dropdowns.
+     * Get product brands recursively.
      *
-     * @param int   $parent_id The ID of the parent term (0 for top-level).
-     * @param int   $level     The current recursion depth for indentation.
-     * @param array $results   Pass-by-reference array to collect data.
+     * @param int $parent_id The ID of the parent term (0 for top-level).
      *
      * @return array
      *
      * @since DOKAN_SINCE
      */
-    public static function get_products_brands( int $parent_id = 0, int $level = 0, array &$results = [] ): array {
+    public static function get_products_brands( int $parent_id = 0 ): array {
         $args = apply_filters(
             'dokan_product_brands_args', [
                 'taxonomy'   => 'product_brand',
@@ -27,18 +25,24 @@ class FormData {
         );
 
         $terms = get_terms( $args );
+        $results = [];
 
         if ( ! is_wp_error( $terms ) && ! empty( $terms ) ) {
             foreach ( $terms as $term ) {
-                // Add to our flat results array
-                $results[] = [
+                $children = self::get_products_brands( $term->term_id );
+
+                $data = [
                     'value' => $term->term_id,
                     'slug'  => $term->slug,
                     'label' => $term->name,
                     'parent' => $parent_id,
                 ];
-                // Recursive call to find children of this term
-                self::get_products_brands( $term->term_id, $level + 1, $results );
+
+                if ( ! empty( $children ) ) {
+                    $data['children'] = $children;
+                }
+
+                $results[] = $data;
             }
         }
 

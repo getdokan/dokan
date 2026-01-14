@@ -76,7 +76,7 @@ export default function useLayouts(
      * @param {Array} layoutFields The fields to process for the layout.
      * @return {Array} valid processed fields.
      */
-    const processLayout = useCallback(
+    const layoutBuilder = useCallback(
         ( layoutFields: any[] ) => {
             const processedFields = layoutFields.map( ( field ) => {
                 if ( typeof field === 'string' ) {
@@ -115,7 +115,7 @@ export default function useLayouts(
                 }
 
                 if ( newField.children ) {
-                    newField.children = processLayout( newField.children );
+                    newField.children = layoutBuilder( newField.children );
                 }
 
                 if ( newField.layout && ! newField.children?.length ) {
@@ -136,8 +136,8 @@ export default function useLayouts(
                 type: 'row',
                 alignment: 'start',
                 styles: {
-                    left_column: { flex: '1 1 0%' },
-                    right_column: { flex: '0 0 265px' },
+                    left_column: { flex: '0 0 80%' },
+                    right_column: { flex: '0 0 20%', minWidth: '250px' },
                 },
             };
         }
@@ -175,9 +175,11 @@ export default function useLayouts(
                                     'product_url',
                                     'button_text',
                                     'category_ids',
+                                    'product_tag',
+                                    'product_brand',
                                     'regular_price',
                                     'sale_price',
-                                    '_create_schedule_for_discount',
+                                    'create_schedule_for_discount',
                                     {
                                         id: 'product-discount-schedule',
                                         layout: {
@@ -186,27 +188,6 @@ export default function useLayouts(
                                         children: [
                                             'date_on_sale_from',
                                             'date_on_sale_to',
-                                        ],
-                                    },
-                                    {
-                                        id: 'product-image',
-                                        layout: {
-                                            type: 'row',
-                                            alignment: 'start',
-                                            styles: {
-                                                image_id: {
-                                                    flex: '0 0 232px',
-                                                    width: '232px',
-                                                    height: '232px',
-                                                },
-                                                gallery_image_ids: {
-                                                    flex: '1 1 0%',
-                                                },
-                                            },
-                                        },
-                                        children: [
-                                            'image_id',
-                                            'gallery_image_ids',
                                         ],
                                     },
                                 ],
@@ -259,9 +240,9 @@ export default function useLayouts(
                                             'height',
                                         ],
                                     },
+                                    'shipping_class_id',
                                     'tax_status',
                                     'tax_class',
-                                    'shipping_class_id',
                                     '_overwrite_shipping',
                                     {
                                         id: 'overwrite_shipping_price_qty',
@@ -317,8 +298,8 @@ export default function useLayouts(
                                 children: [
                                     'status',
                                     'catalog_visibility',
-                                    'tag_ids',
-                                    'brand_ids',
+                                    'image_id',
+                                    'gallery_image_ids',
                                     'reviews_allowed',
                                 ],
                             },
@@ -338,6 +319,7 @@ export default function useLayouts(
             },
         ];
 
+        // Collect all used field IDs from the layout
         const usedFields = new Set< string >();
 
         /**
@@ -449,8 +431,8 @@ export default function useLayouts(
             updatedLayouts = appendToLeftColumn( updatedLayouts );
         }
 
-        return processLayout( updatedLayouts );
-    }, [ getFieldHeading, processLayout, sections, rootLayout ] );
+        return layoutBuilder( updatedLayouts );
+    }, [ getFieldHeading, layoutBuilder, sections, rootLayout ] );
 
     return { formLayouts };
 }

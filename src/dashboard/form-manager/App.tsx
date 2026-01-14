@@ -1,3 +1,4 @@
+import { DokanToaster, useToast } from '@getdokan/dokan-ui';
 import { DokanButton } from '@src/components';
 import { DataForm } from '@wordpress/dataviews';
 import { useCallback, useMemo, useState } from '@wordpress/element';
@@ -8,6 +9,7 @@ import { Section } from './types';
 const sections = ( window as any ).dokanFormManager.sections as Section[];
 
 const App = () => {
+    const toast = useToast();
     const [ isNewProduct ] = useState(
         ( document.getElementById( 'dokan_new_product' ) as any )?.value
     );
@@ -50,7 +52,7 @@ const App = () => {
 
     const [ product, setProduct ] = useState< any >( {
         ...initialData,
-        product_id: Number( productId ),
+        id: Number( productId ),
     } );
     const { formLayouts } = useLayouts( sections, fields, product );
     const [ isLoading, setIsLoading ] = useState( false );
@@ -60,18 +62,39 @@ const App = () => {
         setProduct( ( prev: any ) => ( { ...prev, ...newData } ) );
     }, [] );
 
-    const submitHandler = ( e: any ) => {
+    const submitHandler = async ( e: any ) => {
         e.preventDefault();
         setIsLoading( true );
+        // eslint-disable-next-line no-console
+        console.log( { formLayouts, fields, isNewProduct, product } );
 
-        // Simulate async operation
-        setTimeout( () => {
+        try {
+            // @ts-ignore
+            const response = await window.wp.ajax.post(
+                'dokan_save_product_data',
+                {
+                    ...product,
+                    // @ts-ignore
+                    _nonce: window.dokanFormManager.form_manager_nonce,
+                }
+            );
+            if ( response.message ) {
+                toast( {
+                    type: 'success',
+                    title: response.message,
+                } );
+            }
+        } catch ( error ) {
+            toast( {
+                type: 'error',
+                title:
+                    ( error as any )?.message ||
+                    __( 'An error occurred', 'dokan-lite' ),
+            } );
+        } finally {
             setIsLoading( false );
-        }, 1000 );
+        }
     };
-
-    // eslint-disable-next-line no-console
-    console.log( { formLayouts, fields, isNewProduct, product } );
 
     return (
         <div className="dokan-product-form-manager dokan-layout">
@@ -101,6 +124,7 @@ const App = () => {
                     onChange={ onChange }
                 />
             </form>
+            <DokanToaster />
         </div>
     );
 };

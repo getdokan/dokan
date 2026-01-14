@@ -9,6 +9,7 @@ use WC_Product_Simple;
 use WeDevs\Dokan\ProductForm\Factory as ProductFormFactory;
 use WeDevs\Dokan\ProductForm\Field;
 use WeDevs\Dokan\ProductForm\Section;
+use WP_Error;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -60,6 +61,7 @@ class Hooks {
 
         add_action( 'dokan_after_add_product_btn', [ $this, 'add_new_product_link' ] );
         add_action( 'dokan_render_product_form_manager_template', [ $this, 'load_product_edit_template' ] );
+        add_action( 'wp_ajax_dokan_save_product_data', [ $this, 'dokan_save_product_data' ] );
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ], 4 );
     }
 
@@ -695,6 +697,7 @@ class Hooks {
     public function get_form_fields(): array {
 		$product_id = isset( $_GET['product_id'] ) ? intval( $_GET['product_id'] ) : 0; // phpcs:ignore
 		$product    = wc_get_product( $product_id );
+        $sections   = [];
 
         foreach ( ProductFormFactory::get_sections() as $section ) {
             /** @var Section $section */
@@ -749,6 +752,33 @@ class Hooks {
 		return $sections;
 	}
 
+    public function dokan_save_product_data() {
+        if ( ! isset( $_POST['_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_nonce'] ), 'form_manager' ) ) {
+            wp_send_json_error(
+                [
+                    'type'    => 'nonce',
+                    'message' => __( 'Are you cheating?', 'dokan-lite' ),
+                ]
+            );
+        }
+        try {
+			$product = dokan()->product->create( $_POST );
+            wp_send_json_success(
+                [
+					'product' => $product->get_data(),
+					'message'    => __( 'Product saved successfully', 'dokan-lite' ),
+				]
+            );
+		} catch ( \Exception $e ) {
+			wp_send_json_error(
+                [
+                    'status' => false,
+                    'message' => $e->getMessage(),
+                ]
+            );
+		}
+    }
+
     public function enqueue_scripts() {
         // load the form manager
         wp_enqueue_script( 'dokan-product-form-manager' );
@@ -758,6 +788,7 @@ class Hooks {
             'dokanFormManager',
             [
                 'sections' => $this->get_form_fields(),
+                'form_manager_nonce' => wp_create_nonce( 'form_manager' ),
             ]
         );
     }

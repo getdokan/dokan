@@ -170,7 +170,7 @@ class Init {
                 'title'                => __( 'Create Schedule for Discount', 'dokan-lite' ),
                 'field_type'           => 'checkbox',
                 'type'                 => 'other',
-                'name'                 => '_create_schedule_for_discount',
+                'name'                 => 'create_schedule_for_discount',
                 'value_callback'       => function ( $product, $value = '' ) {
                     if ( '' !== $value ) {
                         $time = dokan_current_datetime()->modify( $value );
@@ -368,10 +368,10 @@ class Init {
 
         $section->add_field(
             Elements::FEATURED_IMAGE_ID, [
-                'title'       => __( 'Product Image', 'dokan-lite' ),
+                'title'       => __( 'Feature Image', 'dokan-lite' ),
                 'field_type'  => 'image',
                 'name'        => 'image_id',
-                'placeholder' => __( 'Select product image', 'dokan-lite' ),
+                'tooltip' => __( 'Select product image', 'dokan-lite' ),
                 'value_callback'    => function ( $product, $value = '' ) {
                     if ( '' !== $value ) {
                         return $value;
@@ -391,10 +391,10 @@ class Init {
 
         $section->add_field(
             Elements::GALLERY_IMAGE_IDS, [
-                'title'       => __( 'Product Gallery Image', 'dokan-lite' ),
+                'title'       => __( 'Gallery Image', 'dokan-lite' ),
                 'field_type'  => 'gallery',
                 'name'        => 'gallery_image_ids',
-                'placeholder' => __( 'Select product gallery images', 'dokan-lite' ),
+                'tooltip' => __( 'Select product gallery images', 'dokan-lite' ),
                 'value_callback'    => function ( $product, $value = '' ) {
                     if ( '' !== $value ) {
                         return $value;

@@ -1,11 +1,11 @@
 import AsyncSelectEdit from '../components/AsyncSelectEdit';
-import CategoriesEdit from '../components/CategoriesEdit';
 import DateTimePickerEdit from '../components/DateTimePickerEdit';
 import FeatureImage from '../components/FeatureImage';
 import GalleryImages from '../components/GalleryImages';
 import PriceEdit from '../components/PriceEdit';
 import RichTextEdit from '../components/RichTextEdit';
 import SelectEdit from '../components/SelectEdit';
+import TreeSelectEdit from '../components/TreeSelectEdit';
 import { FieldConfig, FieldHandler, FormField } from '../types';
 
 /**
@@ -107,8 +107,10 @@ export const selectHandler: FieldHandler = ( field ) => {
         config.multiple = true;
     }
 
-    if ( field?.name === 'chosen_product_cat' ) {
-        config.Edit = CategoriesEdit;
+    const treeSelectFields = [ 'category_ids', 'product_tag', 'product_brand' ];
+
+    if ( treeSelectFields.includes( field!.id ) ) {
+        config.Edit = TreeSelectEdit;
         config.type = 'array';
         config.multiple = true;
     }

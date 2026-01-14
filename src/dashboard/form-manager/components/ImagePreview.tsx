@@ -24,7 +24,7 @@ const ImagePreview = ( {
         <div className="flex flex-wrap gap-3">
             { items.map( ( item: any, index: number ) => (
                 <div
-                    key={ index }
+                    key={ item.url }
                     className={ `relative group border border-gray-200 rounded-md overflow-hidden ${ itemClassName }` }
                 >
                     <img

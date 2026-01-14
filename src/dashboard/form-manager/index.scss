@@ -17,17 +17,20 @@
         display: flex !important;
         gap: 2px;
     }
-    .flex {
-        display: flex;
-    }
-    .flex-col {
-        flex-direction: column;
-    }
-    .gap-1 {
-        gap: 0.25rem;
-    }
-    .uppercase {
+    .dokan-form-field-label {
+        font-size: 11px;
+        font-weight: 500;
+        line-height: 1.4;
         text-transform: uppercase;
+        box-sizing: border-box;
+        display: block;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        max-width: 100%;
+        z-index: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
     .form-manager-price-input {
         background: white;
@@ -37,33 +40,21 @@
         border-left: none !important;
     }
 
-    .dokan-product-image_id-field {
+    .dokan-product-image_id {
         display: flex;
         align-items: center;
         justify-content: center;
         flex-direction: column;
         height: 232px;
-        width: 232px;
+        width: 100%;
         border: 1px solid #e9e9e9;
         border-radius: 5px;
         img {
             height: 232px;
-            width: 232px;
+            width: 100%;
             border-radius: 5px;
             object-fit: cover;
         }
-    }
-    .dokan-product-image_id,
-    .dokan-product-gallery_image_ids {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-    }
-    .dokan-product-gallery_image_ids-field {
-        display: flex;
-        align-items: center;
-        flex-direction: row !important;
     }
     .dokan-product-gallery_image_ids {
         gap: 10px;
@@ -78,7 +69,7 @@
         }
     }
     .woocommerce-tree-select-control__control {
-        padding: 0 10px !important;
+        padding: 5px 10px !important;
     }
     .dokan-form-card-title {
         font-size: 14px;

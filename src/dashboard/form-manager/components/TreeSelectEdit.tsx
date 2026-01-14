@@ -1,11 +1,12 @@
 import { TreeSelectPicker } from '@src/components';
 import CustomField from './CustomField';
 
-const CategoriesEdit = ( { data, field, onChange }: any ) => {
+const TreeSelectEdit = ( { data, field, onChange }: any ) => {
     const getOption = ( option: any ) => {
         return {
+            ...option,
             label: option.label,
-            value: option.term_id,
+            value: option.term_id || option.value,
             children: option.children ? option.children.map( getOption ) : [],
         };
     };
@@ -25,4 +26,4 @@ const CategoriesEdit = ( { data, field, onChange }: any ) => {
     );
 };
 
-export default CategoriesEdit;
+export default TreeSelectEdit;

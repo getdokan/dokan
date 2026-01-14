@@ -1,5 +1,4 @@
 import { MediaUploader } from '@src/components';
-import { Button } from '@wordpress/components';
 import { useState } from '@wordpress/element';
 import { Upload } from 'lucide-react';
 import CustomField from './CustomField';
@@ -33,7 +32,7 @@ const GalleryImages = ( { field, onChange }: any ) => {
     };
 
     return (
-        <CustomField className={ `dokan-product-${ field.id }-field` }>
+        <CustomField label={ field.label }>
             <ImagePreview
                 images={ images }
                 onRemove={ onRemove }
@@ -41,12 +40,10 @@ const GalleryImages = ( { field, onChange }: any ) => {
             >
                 <MediaUploader
                     onSelect={ onSelect }
-                    className={ `dokan-product-${ field.id } border border-gray-200 rounded-md overflow-hidden w-20 h-20` }
+                    className={ `dokan-product-${ field.id } flex items-center justify-center border border-gray-200 rounded-md overflow-hidden w-20 h-20` }
                     multiple={ true }
                 >
-                    <Button>
-                        <Upload size={ 16 } />
-                    </Button>
+                    <Upload size={ 16 } />
                 </MediaUploader>
             </ImagePreview>
         </CustomField>

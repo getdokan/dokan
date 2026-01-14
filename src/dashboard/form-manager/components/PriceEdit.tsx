@@ -16,7 +16,7 @@ const PriceEdit = ( { data, field, onChange }: any ) => {
             try {
                 const path = addQueryArgs( '/dokan/v1/commission', {
                     amount: price,
-                    product_id: data.product_id,
+                    product_id: data.id,
                     category_ids: data.category_ids || [],
                     context: 'seller',
                 } );

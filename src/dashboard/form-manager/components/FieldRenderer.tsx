@@ -40,8 +40,9 @@ export const getFieldConfig = ( field: FormField ) => {
     const mappedField = {
         ...field,
         label: (
-            <div className="flex gap-1">
+            <div className="flex gap-1 items-center">
                 <span
+                    className="dokan-form-field-label"
                     dangerouslySetInnerHTML={ {
                         __html: sanitizeHTML( field.title ),
                     } }
