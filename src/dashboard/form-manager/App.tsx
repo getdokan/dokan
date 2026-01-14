@@ -41,7 +41,9 @@ const App = () => {
                 if ( field.field_type === 'checkbox' ) {
                     return [
                         field.id,
-                        field.value === 'yes' || field.value === 'on',
+                        field.value === 'yes' ||
+                            field.value === 'on' ||
+                            field.value === true,
                     ];
                 }
                 return [ field.id, field.value || '' ];
@@ -65,8 +67,6 @@ const App = () => {
     const submitHandler = async ( e: any ) => {
         e.preventDefault();
         setIsLoading( true );
-        // eslint-disable-next-line no-console
-        console.log( { formLayouts, fields, isNewProduct, product } );
 
         try {
             // @ts-ignore
@@ -84,12 +84,10 @@ const App = () => {
                     title: response.message,
                 } );
             }
-        } catch ( error ) {
+        } catch ( error: any ) {
             toast( {
                 type: 'error',
-                title:
-                    ( error as any )?.message ||
-                    __( 'An error occurred', 'dokan-lite' ),
+                title: error.message || __( 'An error occurred', 'dokan-lite' ),
             } );
         } finally {
             setIsLoading( false );

@@ -182,7 +182,7 @@ class Init {
                         return false;
                     }
 
-                    return $product->get_date_on_sale_to( 'edit' ) ? $product->get_date_on_sale_to( 'edit' )->getTimestamp() : false;
+                    return ! empty( $product->get_date_on_sale_to() ?? $product->get_date_on_sale_from() ) ? 'on' : 'off';
                 },
                 'dependency_condition' => [
                     'section'  => 'general',
@@ -201,16 +201,14 @@ class Init {
                 'placeholder'          => 'YYYY-MM-DD',
                 'value_callback'       => function ( $product, $value = '' ) {
                     if ( '' !== $value ) {
-                        $time = dokan_current_datetime()->modify( $value );
-
-                        return $time ? $time->getTimestamp() : false;
+                        return '';
                     }
 
                     if ( ! $product instanceof WC_Product ) {
-                        return false;
+                        return '';
                     }
 
-                    return $product->get_date_on_sale_from( 'edit' ) ? $product->get_date_on_sale_from( 'edit' )->getTimestamp() : false;
+                    return $product->get_date_on_sale_from( 'edit' )->date( 'Y-m-d' );
                 },
                 'dependency_condition' => [
                     'section'  => 'general',
@@ -229,16 +227,14 @@ class Init {
                 'placeholder'          => 'YYYY-MM-DD',
                 'value_callback'       => function ( $product, $value = '' ) {
                     if ( '' !== $value ) {
-                        $time = dokan_current_datetime()->modify( $value );
-
-                        return $time ? $time->getTimestamp() : false;
+                        return '';
                     }
 
                     if ( ! $product instanceof WC_Product ) {
-                        return false;
+                        return '';
                     }
 
-                    return $product->get_date_on_sale_to( 'edit' ) ? $product->get_date_on_sale_to( 'edit' )->getTimestamp() : false;
+                    return $product->get_date_on_sale_to( 'edit' )->date( 'Y-m-d' );
                 },
                 'dependency_condition' => [
                     'section'  => 'general',
