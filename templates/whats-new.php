@@ -4,6 +4,18 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.2.7',
+        'released' => '2026-01-14',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Allow Dokan stock restoration on WC Block Checkout.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.2.6',
         'released' => '2026-01-13',
         'changes'  => [
