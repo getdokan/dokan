@@ -203,7 +203,6 @@ class SettingsMapper {
         // 'dokan_withdraw.hide_withdraw_option'   => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_option_visibility',
 
         // Transaction > Reverse Withdrawal
-        'dokan_reverse_withdrawal.enabled'                           => 'transaction.reverse_withdrawal.reverse_withdrawal_section.enabled',
         'dokan_reverse_withdrawal.billing_type'                      => 'transaction.reverse_withdrawal.reverse_withdrawal_section.billing_type',
         'dokan_reverse_withdrawal.reverse_balance_threshold'         => 'transaction.reverse_withdrawal.reverse_withdrawal_section.reverse_balance_threshold',
         'dokan_reverse_withdrawal.monthly_billing_day'               => 'transaction.reverse_withdrawal.reverse_withdrawal_section.monthly_billing_day',
