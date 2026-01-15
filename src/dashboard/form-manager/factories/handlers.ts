@@ -1,5 +1,5 @@
 import AsyncSelectEdit from '../components/AsyncSelectEdit';
-import AttributeEdit from '../components/AttributeEdit';
+import AttributeVariationEdit from '../components/AttributeVariationEdit';
 import DateTimePickerEdit from '../components/DateTimePickerEdit';
 import FeatureImage from '../components/FeatureImage';
 import GalleryImages from '../components/GalleryImages';
@@ -154,11 +154,11 @@ export const imageHandler: FieldHandler = () => ( {
  * Handler for attributes fields.
  *
  * @param {Object} field The field configuration.
- * @return {Object} Configuration object with type 'array' and AttributeEdit component.
+ * @return {Object} Configuration object with type 'array' and AttributeVariationEdit component.
  */
 export const attributeHandler: FieldHandler = ( field ) => ( {
     type: 'array',
-    Edit: AttributeEdit,
+    Edit: AttributeVariationEdit,
     elements: getElementsFromOptions( field ),
 } );
 

@@ -61,6 +61,7 @@ class Hooks {
 
         add_action( 'dokan_after_add_product_btn', [ $this, 'add_new_product_link' ] );
         add_action( 'dokan_render_product_form_manager_template', [ $this, 'load_product_edit_template' ] );
+        add_action( 'dokan_product_form_manager_inside_content', [ $this, 'load_product_edit_content' ] );
         add_action( 'wp_ajax_dokan_save_product_data', [ $this, 'dokan_save_product_data' ] );
     }
 
@@ -643,6 +644,10 @@ class Hooks {
     }
 
     public function load_product_edit_template() {
+        dokan_get_template_part( 'products/form-manager/form-wrapper' );
+    }
+
+    public function load_product_edit_content() {
         // check for permission
         if ( ! current_user_can( 'dokan_edit_product' ) ) {
             dokan_get_template_part(
@@ -661,7 +666,7 @@ class Hooks {
             return;
         }
         $product_id = isset( $_GET['product_id'] ) ? intval( wp_unslash( $_GET['product_id'] ) ) : 0; //phpcs:ignore
-        $new_product = 0;
+        $new_product = false;
 
         if ( ! $product_id ) {
             // this is `add new` product page
@@ -669,7 +674,7 @@ class Hooks {
             $product->set_status( 'auto-draft' );
             $product->set_name( '' );
             $product->save();
-            $new_product = 1;
+            $new_product = true;
             $product_id     = $product->get_id();
         }
         $product = wc_get_product( $product_id );
@@ -686,10 +691,9 @@ class Hooks {
         }
 
         dokan_get_template_part(
-            'products/form-manager',
+            'products/form-manager/form-content',
             '', [
 				'product' => $product,
-				'new_product' => $new_product,
 			]
         );
         // load scripts

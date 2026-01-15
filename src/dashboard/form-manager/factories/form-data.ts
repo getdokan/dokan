@@ -1,8 +1,8 @@
 import { FormField, Section } from '../types';
 
 interface FieldDataHandler {
-    canHandle( field: FormField ): boolean;
-    getValue( field: FormField ): any;
+    canHandle: ( field: FormField ) => boolean;
+    getValue: ( field: FormField ) => any;
 }
 
 const ImageIdHandler: FieldDataHandler = {
@@ -55,7 +55,7 @@ const dataFactory = {
      * Creates the initial data object from the given sections.
      *
      * @param {Section[]} sections - The sections containing form fields.
-     * @returns {Record< string, any >} The initial data object with field IDs as keys and their values.
+     * @return {Record< string, any >} The initial data object with field IDs as keys and their values.
      */
     create: ( sections: Section[] ): Record< string, any > => {
         const entries = sections.flatMap( ( section ) =>

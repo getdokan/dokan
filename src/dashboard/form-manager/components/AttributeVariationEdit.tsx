@@ -1,11 +1,10 @@
 import { SimpleCheckbox, SimpleInput } from '@getdokan/dokan-ui';
 import { DokanButton, Select } from '@src/components';
+import { useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { useMemo, useState } from 'react';
 import { useFormContext } from '../context/FormContext';
 import CustomField from './CustomField';
 
-// Interface for a single attribute
 interface Attribute {
     id: number; // 0 for custom
     name: string;
@@ -38,28 +37,27 @@ const AttributeCard = ( {
     onChange,
     setExpandedIndices,
 }: AttributeCardProps ) => {
-    const handleRemoveAttribute = ( index: number ) => {
+    const handleRemoveAttribute = ( idx: number ) => {
         const newAttributes = [ ...attributes ];
-        newAttributes.splice( index, 1 );
+        newAttributes.splice( idx, 1 );
         onChange( { [ field.id ]: newAttributes } );
 
         // Update expanded indices: remove the deleted index and shift larger indices down
         setExpandedIndices( ( prev ) => {
-            const newExpanded = prev
-                .filter( ( i ) => i !== index )
-                .map( ( i ) => ( i > index ? i - 1 : i ) );
-            return newExpanded;
+            return prev
+                .filter( ( i ) => i !== idx )
+                .map( ( i ) => ( i > idx ? i - 1 : i ) );
         } );
     };
 
     const handleAttributeChange = (
-        index: number,
+        idx: number,
         key: keyof Attribute,
         value: any
     ) => {
         const newAttributes = [ ...attributes ];
-        newAttributes[ index ] = {
-            ...newAttributes[ index ],
+        newAttributes[ idx ] = {
+            ...newAttributes[ idx ],
             [ key ]: value,
         };
         onChange( { [ field.id ]: newAttributes } );
@@ -72,21 +70,24 @@ const AttributeCard = ( {
         return globalAttr ? globalAttr.terms || [] : [];
     };
 
-    const attributeValues = ( attr: Attribute ) => {
+    const attributeValues = ( attrValue: Attribute ) => {
         return (
             attributeOptions
-                .find( ( opt: any ) => opt.value == attr.id )
+                .find(
+                    ( opt: any ) =>
+                        Number( opt.value ) === Number( attrValue.id )
+                )
                 ?.terms?.filter( ( term: any ) =>
                     ( attr.options as any[] ).includes( term.value )
                 ) || []
         );
     };
 
-    const attributeChangeHandler = ( selected: any, index: number ) => {
+    const attributeChangeHandler = ( selected: any, idx: number ) => {
         const values = selected.map( ( val: any ) => val.value );
         const newAttributes = [ ...attributes ];
-        newAttributes[ index ] = {
-            ...newAttributes[ index ],
+        newAttributes[ idx ] = {
+            ...newAttributes[ idx ],
             options: values,
             terms: selected,
         };
@@ -95,13 +96,12 @@ const AttributeCard = ( {
         } );
     };
 
-    const toggleAccordion = ( index: number ) => {
+    const toggleAccordion = ( idx: number ) => {
         setExpandedIndices( ( prev ) => {
-            if ( prev.includes( index ) ) {
-                return prev.filter( ( i ) => i !== index );
-            } else {
-                return [ ...prev, index ];
+            if ( prev.includes( idx ) ) {
+                return prev.filter( ( i ) => i !== idx );
             }
+            return [ ...prev, idx ];
         } );
     };
 
@@ -117,6 +117,7 @@ const AttributeCard = ( {
     return (
         <div className="border rounded bg-white shadow-sm overflow-hidden">
             <div
+                role="button"
                 className="flex justify-between items-center p-3 bg-gray-50 border-b cursor-pointer select-none"
                 onClick={ () => toggleAccordion( index ) }
             >
@@ -279,7 +280,7 @@ const AttributeCard = ( {
     );
 };
 
-const AttributeEdit = ( { data, field, onChange }: any ) => {
+const AttributeVariationEditor = ( { data, field, onChange }: any ) => {
     const attributes: Attribute[] = data[ field.id ] || [];
     const { isLoading, submitHandler } = useFormContext();
 
@@ -401,4 +402,4 @@ const AttributeEdit = ( { data, field, onChange }: any ) => {
     );
 };
 
-export default AttributeEdit;
+export default AttributeVariationEditor;

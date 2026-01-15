@@ -7,7 +7,6 @@ import {
     useState,
 } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { Dispatch, SetStateAction } from 'react';
 import { checkDependency, getFieldConfig } from '../components/FieldRenderer';
 import { formDataFactory } from '../factories';
 import { Section } from '../types';
@@ -29,9 +28,11 @@ const { sections, ...formData } = (
 
 interface FormContextType {
     product: Record< string, any >;
-    setProduct: Dispatch< SetStateAction< Record< string, any > > >;
+    setProduct: React.Dispatch< React.SetStateAction< Record< string, any > > >;
     errors: Record< string, string >;
-    setErrors: Dispatch< SetStateAction< Record< string, string > > >;
+    setErrors: React.Dispatch<
+        React.SetStateAction< Record< string, string > >
+    >;
     fields: any[];
     isLoading: boolean;
     submitHandler: ( e: React.FormEvent ) => Promise< void >;
@@ -75,7 +76,7 @@ export const FormProvider = ( { children }: { children: React.ReactNode } ) => {
         // Clear error for the field being edited
         const changedFieldId = Object.keys( newData )[ 0 ];
         if ( changedFieldId ) {
-            setErrors( ( prev ) => {
+            setErrors( ( prev: any ) => {
                 if ( ! prev[ changedFieldId ] ) {
                     return prev;
                 }
