@@ -62,7 +62,6 @@ class Hooks {
         add_action( 'dokan_after_add_product_btn', [ $this, 'add_new_product_link' ] );
         add_action( 'dokan_render_product_form_manager_template', [ $this, 'load_product_edit_template' ] );
         add_action( 'wp_ajax_dokan_save_product_data', [ $this, 'dokan_save_product_data' ] );
-        add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ], 4 );
     }
 
     /**
@@ -661,18 +660,19 @@ class Hooks {
             dokan_seller_not_enabled_notice();
             return;
         }
-        $post_id = isset( $_GET['product_id'] ) ? intval( wp_unslash( $_GET['product_id'] ) ) : 0; //phpcs:ignore
+        $product_id = isset( $_GET['product_id'] ) ? intval( wp_unslash( $_GET['product_id'] ) ) : 0; //phpcs:ignore
         $new_product = 0;
 
-        if ( ! $post_id ) {
+        if ( ! $product_id ) {
             // this is `add new` product page
             $product = new WC_Product_Simple();
             $product->set_status( 'auto-draft' );
+            $product->set_name( '' );
             $product->save();
             $new_product = 1;
-        } else {
-            $product = wc_get_product( $post_id );
+            $product_id     = $product->get_id();
         }
+        $product = wc_get_product( $product_id );
 
         if ( ! $product ) {
             dokan_get_template_part(
@@ -692,11 +692,11 @@ class Hooks {
 				'new_product' => $new_product,
 			]
         );
+        $this->enqueue_scripts( $product_id );
     }
 
-    public function get_form_fields(): array {
-		$product_id = isset( $_GET['product_id'] ) ? intval( $_GET['product_id'] ) : 0; // phpcs:ignore
-		$product    = wc_get_product( $product_id );
+    public function get_form_fields( int $product_id ): array {
+        $product    = wc_get_product( $product_id );
         $sections   = [];
 
         foreach ( ProductFormFactory::get_sections() as $section ) {
@@ -779,7 +779,7 @@ class Hooks {
 		}
     }
 
-    public function enqueue_scripts() {
+    public function enqueue_scripts( int $product_id ) {
         // load the form manager
         wp_enqueue_script( 'dokan-product-form-manager' );
         wp_enqueue_style( 'dokan-product-form-manager' );
@@ -787,7 +787,7 @@ class Hooks {
             'dokan-product-form-manager',
             'dokanFormManager',
             [
-                'sections' => $this->get_form_fields(),
+                'sections' => $this->get_form_fields( $product_id ),
                 'form_manager_nonce' => wp_create_nonce( 'form_manager' ),
             ]
         );
