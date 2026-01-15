@@ -25,40 +25,6 @@ class VendorDashboardManager implements Hookable {
     }
 
     /**
-     * Preload data from the countries endpoint.
-     *
-     * @param array $endpoints Array of preloaded endpoints.
-     * @return array
-     */
-    public function add_preload_endpoints( $endpoints ) {
-        $screen_id = ( function_exists( 'get_current_screen' ) && get_current_screen() ) ? get_current_screen()->id : '';
-
-        /**
-         * Should load vendor analytics revenue schema.
-         *
-         * @since DOKAN_SINCE
-         *
-         * @param bool  $load_schema Should load vendor analytics schema.
-         * @param array $endpoints Array of preloaded endpoints.
-         * @param string $screen_id Current screen ID.
-         */
-        $load_analytics_schema = apply_filters(
-            'dokan_analytics_reports_load_vendor_revenue_schema',
-            'woocommerce_page_wc-admin' === $screen_id || dokan_is_seller_dashboard(),
-            $endpoints,
-            $screen_id
-        );
-
-        // Only preload endpoints on wc-admin pages.
-        if ( $load_analytics_schema ) {
-            $endpoints['performanceIndicators'] = '/wc-analytics/reports/performance-indicators/allowed';
-            $endpoints['leaderboards']          = '/wc-analytics/leaderboards/allowed';
-        }
-
-        return $endpoints;
-    }
-
-    /**
      * Add a dummy content to the dashboard.
      *
      * @since 4.0.0
@@ -184,5 +150,44 @@ class VendorDashboardManager implements Hookable {
         array_unshift( $reports, ...$vendor_indicators );
 
         return $reports;
+    }
+
+    /**
+     * Load analytics revenue schema vendor dashboard.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @see https://github.com/woocommerce/woocommerce/blob/8e3b0c45ad771d7fe53ee610f237f4803f1a63bb/plugins/woocommerce/src/Internal/Admin/Analytics.php#L113
+     *
+     * @param array $endpoints Array of preloaded endpoints.
+     *
+     * @return array
+     */
+    public function add_preload_endpoints( array $endpoints ): array {
+        $screen_id = ( function_exists( 'get_current_screen' ) && get_current_screen() ) ? get_current_screen()->id : '';
+
+        /**
+         * Should load vendor analytics revenue schema.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param bool  $load_schema Should load vendor analytics schema.
+         * @param array $endpoints Array of preloaded endpoints.
+         * @param string $screen_id Current screen ID.
+         */
+        $load_analytics_schema = apply_filters(
+            'dokan_analytics_reports_load_vendor_revenue_schema',
+            'woocommerce_page_wc-admin' === $screen_id || dokan_is_seller_dashboard(),
+            $endpoints,
+            $screen_id
+        );
+
+        // Only preload endpoints on wc-admin pages.
+        if ( $load_analytics_schema ) {
+            $endpoints['performanceIndicators'] = '/wc-analytics/reports/performance-indicators/allowed';
+            $endpoints['leaderboards']          = '/wc-analytics/leaderboards/allowed';
+        }
+
+        return $endpoints;
     }
 }
