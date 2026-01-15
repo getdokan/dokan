@@ -9,7 +9,7 @@ use WC_Product_Simple;
 use WeDevs\Dokan\ProductForm\Factory as ProductFormFactory;
 use WeDevs\Dokan\ProductForm\Field;
 use WeDevs\Dokan\ProductForm\Section;
-use WP_Error;
+use Exception;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -692,7 +692,20 @@ class Hooks {
 				'new_product' => $new_product,
 			]
         );
-        $this->enqueue_scripts( $product_id );
+        // load scripts
+        wp_enqueue_script( 'dokan-product-form-manager' );
+        wp_enqueue_style( 'dokan-product-form-manager' );
+        wp_localize_script(
+            'dokan-product-form-manager',
+            'dokanFormManager',
+            [
+                'sections' => $this->get_form_fields( $product_id ),
+                'form_manager_nonce' => wp_create_nonce( 'form_manager' ),
+                'product_id' => $product_id,
+                'is_new_product' => $new_product,
+                'view_product_url' => get_permalink( $product_id ),
+            ]
+        );
     }
 
     public function get_form_fields( int $product_id ): array {
@@ -729,6 +742,7 @@ class Hooks {
                     'tooltip'       => $field->get_tooltip(),
                     'section_id'    => $section->get_id(),
                     'is_custom'     => $field->is_custom(),
+                    'order'         => $field->get_order(),
                     'description'   => $field->get_description(),
                     'required'      => $field->is_required(),
                     'value'         => $value,
@@ -769,7 +783,7 @@ class Hooks {
 					'message'    => __( 'Product saved successfully', 'dokan-lite' ),
 				]
             );
-		} catch ( \Exception $e ) {
+		} catch ( Exception $e ) {
 			wp_send_json_error(
                 [
                     'status' => false,
@@ -777,19 +791,5 @@ class Hooks {
                 ]
             );
 		}
-    }
-
-    public function enqueue_scripts( int $product_id ) {
-        // load the form manager
-        wp_enqueue_script( 'dokan-product-form-manager' );
-        wp_enqueue_style( 'dokan-product-form-manager' );
-        wp_localize_script(
-            'dokan-product-form-manager',
-            'dokanFormManager',
-            [
-                'sections' => $this->get_form_fields( $product_id ),
-                'form_manager_nonce' => wp_create_nonce( 'form_manager' ),
-            ]
-        );
     }
 }

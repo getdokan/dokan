@@ -6,7 +6,14 @@ import { __ } from '@wordpress/i18n';
 import { checkDependency, getFieldConfig } from './components/FieldRenderer';
 import useLayouts from './hooks/useLayouts';
 import { Section } from './types';
-const sections = ( window as any ).dokanFormManager.sections as Section[];
+
+// from localized script
+const { sections } = ( window as any ).dokanFormManager as {
+    sections: Section[];
+    is_new_product: string;
+    product_id: string;
+    view_product_url: string;
+};
 
 const App = () => {
     const toast = useToast();

@@ -136,7 +136,7 @@ export default function useLayouts(
                 type: 'row',
                 alignment: 'start',
                 styles: {
-                    left_column: { flex: '0 0 80%' },
+                    left_column: { flex: '1' },
                     right_column: { flex: '0 0 20%', minWidth: '250px' },
                 },
             };
