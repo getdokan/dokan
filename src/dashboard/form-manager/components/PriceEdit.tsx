@@ -1,5 +1,5 @@
-import { formatPrice } from '@src/utilities';
 import { DokanPriceInput } from '@src/components';
+import { formatPrice } from '@src/utilities';
 import apiFetch from '@wordpress/api-fetch';
 import { useState } from '@wordpress/element';
 import { addQueryArgs } from '@wordpress/url';
@@ -44,7 +44,7 @@ const PriceEdit = ( { data, field, onChange }: any ) => {
     };
 
     return (
-        <CustomField label={ <LabelRenderer /> }>
+        <CustomField label={ <LabelRenderer /> } error={ field.error }>
             <DokanPriceInput
                 label=""
                 value={ data[ field.id ] }

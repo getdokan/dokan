@@ -3,7 +3,7 @@ import CustomField from './CustomField';
 
 const AsyncSelectEdit = ( { data, field, onChange }: any ) => {
     return (
-        <CustomField label={ field.label }>
+        <CustomField label={ field.label } error={ field.error }>
             <ProductAsyncSelect
                 value={ data[ field.id ] }
                 onChange={ ( value: any ) => {

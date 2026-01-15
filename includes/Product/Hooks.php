@@ -624,7 +624,7 @@ class Hooks {
             return;
         }
 
-        $brand_ids = $product_data['product_brand'] ?? array();
+        $brand_ids = ! empty( $product_data['product_brand'] ) ? $product_data['product_brand'] : array();
         dokan()->product->save_brands( $product_id, $brand_ids );
     }
 

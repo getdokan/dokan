@@ -3,7 +3,7 @@ import { DokanButton } from '@src/components';
 import { DataForm } from '@wordpress/dataviews';
 import { useCallback, useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { getFieldConfig } from './components/FieldRenderer';
+import { checkDependency, getFieldConfig } from './components/FieldRenderer';
 import useLayouts from './hooks/useLayouts';
 import { Section } from './types';
 const sections = ( window as any ).dokanFormManager.sections as Section[];
@@ -16,12 +16,21 @@ const App = () => {
     const [ productId ] = useState(
         ( document.getElementById( 'dokan_product_id' ) as any )?.value
     );
+
+    const [ errors, setErrors ] = useState< Record< string, string > >( {} );
+
     // Fields and Layout
     const fields = useMemo( () => {
         return sections.flatMap( ( section ) => {
-            return section.fields.map( ( field ) => getFieldConfig( field ) );
+            return section.fields.map( ( field ) => {
+                const config = getFieldConfig( field );
+                if ( errors[ field.id ] ) {
+                    return { ...config, error: errors[ field.id ] };
+                }
+                return config;
+            } );
         } ) as any[];
-    }, [] );
+    }, [ errors ] );
 
     const initialData = useMemo( () => {
         const entries = sections.flatMap( ( section ) => {
@@ -62,10 +71,80 @@ const App = () => {
     // Stable onChange
     const onChange = useCallback( ( newData: Record< string, any > ) => {
         setProduct( ( prev: any ) => ( { ...prev, ...newData } ) );
+
+        // Clear error for the field being edited
+        const changedFieldId = Object.keys( newData )[ 0 ];
+        if ( changedFieldId ) {
+            setErrors( ( prev ) => {
+                if ( ! prev[ changedFieldId ] ) {
+                    return prev;
+                }
+                const newErrs = { ...prev };
+                delete newErrs[ changedFieldId ];
+                return newErrs;
+            } );
+        }
     }, [] );
+
+    const validateForm = () => {
+        const newErrors: Record< string, string > = {};
+        sections.forEach( ( section ) => {
+            section.fields.forEach( ( field ) => {
+                if ( ! field.required ) {
+                    return;
+                }
+                // Check visibility
+                if ( ! field.visibility ) {
+                    return;
+                }
+                if (
+                    ! checkDependency( field.dependency_condition, product )
+                ) {
+                    return;
+                }
+
+                const value = product[ field.id ];
+                if (
+                    ! value ||
+                    ( Array.isArray( value ) && value.length === 0 )
+                ) {
+                    newErrors[ field.id ] = __(
+                        'Please fill out this field.',
+                        'dokan-lite'
+                    );
+                }
+            } );
+        } );
+
+        if ( Object.keys( newErrors ).length > 0 ) {
+            setErrors( newErrors );
+            toast( {
+                type: 'error',
+                title: __(
+                    'Please fill out all required fields.',
+                    'dokan-lite'
+                ),
+            } );
+            const firstErrorField = document.querySelector( '.is-invalid' );
+            if ( firstErrorField ) {
+                firstErrorField.scrollIntoView( {
+                    behavior: 'smooth',
+                    block: 'center',
+                } );
+            }
+            return false;
+        }
+        setErrors( {} );
+        return true;
+    };
 
     const submitHandler = async ( e: any ) => {
         e.preventDefault();
+
+        // Validation
+        if ( ! validateForm() ) {
+            return;
+        }
         setIsLoading( true );
 
         try {

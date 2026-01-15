@@ -12,7 +12,7 @@ const TreeSelectEdit = ( { data, field, onChange }: any ) => {
     };
     const options = field.options.map( getOption );
     return (
-        <CustomField label={ field.label }>
+        <CustomField label={ field.label } error={ field.error }>
             <TreeSelectPicker
                 placeholder={ field.placeholder }
                 options={ options }

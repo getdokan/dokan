@@ -58,7 +58,7 @@ class Elements {
     const STOCK_QUANTITY = 'stock_quantity';
     const INVENTORY_DELTA = 'inventory_delta';
     const UPSELL_IDS = 'upsell_ids';
-    const CROSS_SELL_IDS = 'cross_sell_ids';
+    const CROSS_SELL_IDS = 'crosssell_ids';
     const CATEGORIES = 'category_ids';
     const TAGS = 'product_tag';
     const BRANDS = 'product_brand';

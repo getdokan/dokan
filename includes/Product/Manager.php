@@ -576,7 +576,7 @@ class Manager {
      * @return WC_Product
      */
     protected function save_product_attribute_data( $product, $args ) {
-        if ( isset( $args[ FormElements::ATTRIBUTES ] ) ) {
+        if ( isset( $args[ FormElements::ATTRIBUTES ] ) && is_array( $args[ FormElements::ATTRIBUTES ] ) ) {
             $attributes = [];
 
             foreach ( $args[ FormElements::ATTRIBUTES ] as $attribute ) {

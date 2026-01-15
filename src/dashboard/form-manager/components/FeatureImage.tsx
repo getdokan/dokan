@@ -26,7 +26,7 @@ const FeatureImage = ( { field, onChange }: any ) => {
     };
 
     return (
-        <CustomField label={ field.label }>
+        <CustomField label={ field.label } error={ field.error }>
             { image?.url ? (
                 <ImagePreview images={ image } onRemove={ onRemove } />
             ) : (

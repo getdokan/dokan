@@ -1,9 +1,9 @@
+import { TextArea } from '@getdokan/dokan-ui';
 import { RichText } from '@src/components';
 import CustomField from './CustomField';
-import { TextArea } from '@getdokan/dokan-ui';
 
 const RichTextEdit = ( { data, field, onChange }: any ) => (
-    <CustomField label={ field.label }>
+    <CustomField label={ field.label } error={ field.error }>
         { field.field_type === 'textarea' ? (
             <TextArea
                 input={ {

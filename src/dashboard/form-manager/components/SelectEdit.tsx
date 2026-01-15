@@ -32,7 +32,7 @@ const SelectEdit = ( { data, field, onChange }: any ) => {
     }
 
     return (
-        <CustomField label={ field.label }>
+        <CustomField label={ field.label } error={ field.error }>
             <Select
                 options={ field.elements }
                 // @ts-ignore

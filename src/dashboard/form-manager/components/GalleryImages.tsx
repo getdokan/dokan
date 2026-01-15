@@ -32,7 +32,7 @@ const GalleryImages = ( { field, onChange }: any ) => {
     };
 
     return (
-        <CustomField label={ field.label }>
+        <CustomField label={ field.label } error={ field.error }>
             <ImagePreview
                 images={ images }
                 onRemove={ onRemove }

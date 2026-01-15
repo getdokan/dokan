@@ -266,7 +266,7 @@ export default function useLayouts(
                                 },
                                 children: [
                                     'upsell_ids',
-                                    'cross_sell_ids',
+                                    'crosssell_ids',
                                     'children',
                                 ],
                                 ...getFieldHeading( 'linked' ),
