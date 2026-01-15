@@ -4,6 +4,7 @@ import { DataForm } from '@wordpress/dataviews';
 import { useCallback, useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { checkDependency, getFieldConfig } from './components/FieldRenderer';
+import { formDataFactory } from './factories';
 import useLayouts from './hooks/useLayouts';
 import { Section } from './types';
 
@@ -39,34 +40,7 @@ const App = () => {
         } ) as any[];
     }, [ errors ] );
 
-    const initialData = useMemo( () => {
-        const entries = sections.flatMap( ( section ) => {
-            return section.fields.map( ( field ) => {
-                if ( field.id === 'image_id' && field.value ) {
-                    return [ field.id, field.value.id ];
-                }
-                if (
-                    field.id === 'gallery_image_ids' &&
-                    Array.isArray( field.value )
-                ) {
-                    return [
-                        field.id,
-                        field.value.map( ( img: any ) => img.id ),
-                    ];
-                }
-                if ( field.field_type === 'checkbox' ) {
-                    return [
-                        field.id,
-                        field.value === 'yes' ||
-                            field.value === 'on' ||
-                            field.value === true,
-                    ];
-                }
-                return [ field.id, field.value || '' ];
-            } );
-        } );
-        return Object.fromEntries( entries );
-    }, [] );
+    const initialData = useMemo( () => formDataFactory.create( sections ), [] );
 
     const [ product, setProduct ] = useState< any >( {
         ...initialData,

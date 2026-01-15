@@ -32,3 +32,5 @@ export const getFieldConfigFromFactory = ( field: FormField ) => {
     const handler = handlers[ field.field_type ] || defaultHandler;
     return handler( field );
 };
+
+export { default as formDataFactory } from './form-data';
