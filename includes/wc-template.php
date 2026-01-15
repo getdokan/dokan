@@ -20,6 +20,7 @@ function dokan_product_seller_info( $item_data, $cart_item ) {
     $item_data[] = array(
         'name'  => __( 'Vendor', 'dokan-lite' ),
         'value' => $vendor->get_shop_name(),
+        'type' => 'vendor', // It is required to identify the vendor data type in REST API.
     );
 
     return $item_data;
