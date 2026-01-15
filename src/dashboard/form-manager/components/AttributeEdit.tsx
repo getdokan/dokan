@@ -1,4 +1,4 @@
-import { SimpleInput } from '@getdokan/dokan-ui';
+import { SimpleCheckbox, SimpleInput } from '@getdokan/dokan-ui';
 import { DokanButton, Select } from '@src/components';
 import { __ } from '@wordpress/i18n';
 import { useMemo, useState } from 'react';
@@ -103,6 +103,16 @@ const AttributeCard = ( {
             }
         } );
     };
+
+    const handleSelectAll = () => {
+        const allOptions = filteredAttributeOptions( attr.id );
+        attributeChangeHandler( allOptions, index );
+    };
+
+    const handleSelectNone = () => {
+        attributeChangeHandler( [], index );
+    };
+
     return (
         <div className="border rounded bg-white shadow-sm overflow-hidden">
             <div
@@ -110,11 +120,11 @@ const AttributeCard = ( {
                 onClick={ () => toggleAccordion( index ) }
             >
                 <div className="font-semibold text-gray-700 text-sm">
-                    { attr.name || __( 'Attribute', 'dokan-lite' ) }
+                    { attr.name || __( 'New Attribute', 'dokan-lite' ) }
                 </div>
                 <div className="flex items-center gap-3">
-                    <button
-                        type="button"
+                    <span
+                        role="button"
                         onClick={ ( e ) => {
                             e.stopPropagation();
                             handleRemoveAttribute( index );
@@ -122,7 +132,7 @@ const AttributeCard = ( {
                         className="text-red-500 hover:text-red-700 text-xs font-medium"
                     >
                         { __( 'Remove', 'dokan-lite' ) }
-                    </button>
+                    </span>
 
                     <span
                         className={ `transform transition-transform duration-200 ${
@@ -180,19 +190,42 @@ const AttributeCard = ( {
                             { __( 'Value(s)', 'dokan-lite' ) }
                         </label>
                         { attr.is_taxonomy ? (
-                            <Select
-                                // @ts-ignore
-                                isMulti
-                                value={ attributeValues( attr ) }
-                                options={ filteredAttributeOptions( attr.id ) }
-                                onChange={ ( selected ) =>
-                                    attributeChangeHandler( selected, index )
-                                }
-                                placeholder={ __(
-                                    'Select terms',
-                                    'dokan-lite'
-                                ) }
-                            />
+                            <>
+                                <Select
+                                    // @ts-ignore
+                                    isMulti
+                                    value={ attributeValues( attr ) }
+                                    options={ filteredAttributeOptions(
+                                        attr.id
+                                    ) }
+                                    onChange={ ( selected ) =>
+                                        attributeChangeHandler(
+                                            selected,
+                                            index
+                                        )
+                                    }
+                                    placeholder={ __(
+                                        'Select terms',
+                                        'dokan-lite'
+                                    ) }
+                                />
+                                <div className="flex justify-start gap-2 items-center mt-2">
+                                    <DokanButton
+                                        type="button"
+                                        variant="secondary"
+                                        onClick={ handleSelectAll }
+                                    >
+                                        { __( 'Select all', 'dokan-lite' ) }
+                                    </DokanButton>
+                                    <DokanButton
+                                        type="button"
+                                        variant="secondary"
+                                        onClick={ handleSelectNone }
+                                    >
+                                        { __( 'Select none', 'dokan-lite' ) }
+                                    </DokanButton>
+                                </div>
+                            </>
                         ) : (
                             <SimpleInput
                                 value={
@@ -220,8 +253,7 @@ const AttributeCard = ( {
 
                     <div className="col-span-1 md:col-span-2 mt-2 text-sm text-gray-600">
                         <label className="inline-flex items-center">
-                            <input
-                                type="checkbox"
+                            <SimpleCheckbox
                                 checked={ attr.visible }
                                 onChange={ ( e ) =>
                                     handleAttributeChange(
@@ -230,7 +262,9 @@ const AttributeCard = ( {
                                         e.target.checked
                                     )
                                 }
-                                className="mr-2 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                input={ {
+                                    id: `dokan-attr-${ attr.id }`,
+                                } }
                             />
                             { __(
                                 'Visible on the product page',
@@ -335,7 +369,7 @@ const AttributeEdit = ( { data, field, onChange }: any ) => {
                                 setSelectedAttrAdd( val )
                             }
                             placeholder={ __(
-                                'Custom Attribute',
+                                'Add existing attribute or custom',
                                 'dokan-lite'
                             ) }
                             isClearable={ false }
@@ -346,7 +380,7 @@ const AttributeEdit = ( { data, field, onChange }: any ) => {
                         variant="secondary"
                         onClick={ handleAddAttribute }
                     >
-                        { __( 'Add', 'dokan-lite' ) }
+                        { __( 'Add New', 'dokan-lite' ) }
                     </DokanButton>
                 </div>
             </div>
