@@ -362,8 +362,8 @@ class SettingsMapper {
         // AI Assist > Product Generation
         // =========================
         'dokan_ai.dokan_ai_engine'                                   => 'ai_assist.product_generation.product_image_section.product_info_engine',
-        'dokan_ai.dokan_ai_openai_api_key'                           => 'ai_assist.product_generation.product_image_section.chatgpt_api_info_group.openai_api_key',
-        'dokan_ai.dokan_ai_openai_model'                             => 'ai_assist.product_generation.product_image_section.chatgpt_api_info_group.openai_model',
+        'dokan_ai.dokan_ai_openai_api_key'                           => 'ai_assist.product_generation.product_image_section.openai_api_info_group.openai_api_key',
+        'dokan_ai.dokan_ai_openai_model'                             => 'ai_assist.product_generation.product_image_section.openai_api_info_group.openai_model',
         'dokan_ai.dokan_ai_gemini_api_key'                           => 'ai_assist.product_generation.product_image_section.gemini_api_info_group.gemini_api_key',
         'dokan_ai.dokan_ai_gemini_model'                             => 'ai_assist.product_generation.product_image_section.gemini_api_info_group.gemini_model',
 
@@ -374,8 +374,8 @@ class SettingsMapper {
         'dokan_ai.dokan_ai_image_engine'                             => 'ai_assist.product_generation.product_description_section.product_image_engine',
         'dokan_ai.dokan_ai_image_gemini_api_key'                     => 'ai_assist.product_generation.product_description_section.gemini_api_info_group.gemini_api_key',
         'dokan_ai.dokan_ai_image_gemini_model'                       => 'ai_assist.product_generation.product_description_section.gemini_api_info_group.gemini_model',
-        'dokan_ai.dokan_ai_image_bria-ai_api_key'                    => 'ai_assist.product_generation.product_description_section.bria_api_info_group.bria_api_key',
-        'dokan_ai.dokan_ai_image_bria-ai_model'                      => 'ai_assist.product_generation.product_description_section.bria_api_info_group.bria_model',
+        'dokan_ai.dokan_ai_image_bria-ai_api_key'                    => 'ai_assist.product_generation.product_description_section.bria-ai_api_info_group.bria-ai_api_key',
+        'dokan_ai.dokan_ai_image_bria-ai_model'                      => 'ai_assist.product_generation.product_description_section.bria-ai_api_info_group.bria-ai_model',
     ];
 
     /**

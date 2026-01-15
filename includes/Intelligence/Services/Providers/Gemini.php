@@ -35,4 +35,8 @@ class Gemini extends Provider {
     public function get_api_key_url(): string {
         return 'https://aistudio.google.com/app/apikey';
     }
+
+	public function get_image_url(): string {
+		return plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/ai-assist/gemini-ai.svg';
+	}
 }
