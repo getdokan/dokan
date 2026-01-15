@@ -9,6 +9,7 @@ import Tab from './Elements/Tab';
 import SettingsParser from './Elements/SettingsParser';
 import PageHeading from './Elements/PageHeading';
 import { twMerge } from 'tailwind-merge';
+import SettingsSkeleton from './components/SettingsSkeleton';
 
 const DashboardSwitchLink = () => {
     // Get the switch URL from localized settings
@@ -240,6 +241,10 @@ const SettingsPage = () => {
     const allElementsAreFields = elements.every(
         ( element ) => element.type === 'field'
     );
+
+    if ( ! loading ) {
+        return <SettingsSkeleton />;
+    }
 
     return (
         <>
