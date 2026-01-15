@@ -2,6 +2,7 @@ import { SimpleCheckbox, SimpleInput } from '@getdokan/dokan-ui';
 import { DokanButton, Select } from '@src/components';
 import { __ } from '@wordpress/i18n';
 import { useMemo, useState } from 'react';
+import { useFormContext } from '../context/FormContext';
 import CustomField from './CustomField';
 
 // Interface for a single attribute
@@ -280,6 +281,7 @@ const AttributeCard = ( {
 
 const AttributeEdit = ( { data, field, onChange }: any ) => {
     const attributes: Attribute[] = data[ field.id ] || [];
+    const { isLoading, submitHandler } = useFormContext();
 
     // Using a separate state to manage the "Add new" selection
     const [ selectedAttrAdd, setSelectedAttrAdd ] = useState< any >( null );
@@ -383,6 +385,17 @@ const AttributeEdit = ( { data, field, onChange }: any ) => {
                         { __( 'Add New', 'dokan-lite' ) }
                     </DokanButton>
                 </div>
+                { attributes.length > 0 && (
+                    <div>
+                        <DokanButton
+                            type="button"
+                            variant="secondary"
+                            onClick={ submitHandler }
+                            disabled={ isLoading }
+                            label={ __( 'Save Attributes', 'dokan-lite' ) }
+                        />
+                    </div>
+                ) }
             </div>
         </CustomField>
     );

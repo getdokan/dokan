@@ -58,10 +58,15 @@
     }
     .dokan-product-gallery_image_ids {
         gap: 10px;
+        display: flex;
         flex-wrap: wrap;
         flex-direction: row;
-        height: 110px;
-        width: 110px;
+        align-items: center;
+        justify-content: center;
+        height: 80px;
+        width: 80px;
+        border: 1px solid #e9e9e9;
+        border-radius: 5px;
         img {
             height: 100%;
             width: 100%;

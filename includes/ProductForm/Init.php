@@ -23,7 +23,7 @@ class Init {
      * @return void
      */
     public function __construct() {
-        add_action( 'init', [ $this, 'init_form_fields' ], 10 );
+        add_action( 'init', [ $this, 'init_form_fields' ] );
     }
 
     /**
@@ -38,6 +38,7 @@ class Init {
         $this->init_inventory_fields();
         $this->init_downloadable_fields();
         $this->init_other_fields();
+        do_action( 'dokan_product_form_fields_init' );
     }
 
     /**
@@ -579,6 +580,7 @@ class Init {
                 },
             ]
         );
+        do_action( 'dokan_product_form_general_fields_init', $section );
     }
 
     /**
@@ -760,6 +762,7 @@ class Init {
                 },
             ]
         );
+        do_action( 'dokan_product_form_inventory_fields_init', $section );
     }
 
     /**
@@ -856,6 +859,7 @@ class Init {
                 ],
             ]
         );
+        do_action( 'dokan_product_form_downloadable_fields_init', $section );
     }
 
     /**
@@ -968,5 +972,7 @@ class Init {
                 },
             ]
         );
+
+        do_action( 'dokan_product_form_other_fields_init', $section );
     }
 }

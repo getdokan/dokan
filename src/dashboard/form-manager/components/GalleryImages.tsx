@@ -36,11 +36,11 @@ const GalleryImages = ( { field, onChange }: any ) => {
             <ImagePreview
                 images={ images }
                 onRemove={ onRemove }
-                itemClassName="w-20 h-20"
+                itemClassName={ `dokan-product-${ field.id }` }
             >
                 <MediaUploader
                     onSelect={ onSelect }
-                    className={ `dokan-product-${ field.id } flex items-center justify-center border border-gray-200 rounded-md overflow-hidden w-20 h-20` }
+                    className={ `dokan-product-${ field.id }` }
                     multiple={ true }
                 >
                     <Upload size={ 16 } />
