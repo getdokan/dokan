@@ -28,6 +28,10 @@ const expressionEvaluator = (
             return value1 != value2;
         case '!==':
             return value1 !== value2;
+        case 'in':
+            return Array.isArray( value1 ) ? value1.includes( value2 ) : false;
+        case 'not_in':
+            return Array.isArray( value1 ) ? ! value1.includes( value2 ) : true;
         default:
             return value1 === value2;
     }

@@ -60,6 +60,7 @@ export type SettingsElement = {
     helper_text?: string;
     image_url?: string;
     divider?: boolean;
+    is_automated?: boolean;
 };
 
 export interface SettingsProps {

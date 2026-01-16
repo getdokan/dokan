@@ -14,9 +14,12 @@ class SettingsMapperCallbacks implements Hookable {
      */
     public function register_hooks(): void {
         add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_customer_details_visibility' ], 10, 4 );
+        add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_withdraw_options_visibility' ], 10, 4 );
         add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_cod_payments' ], 10, 4 );
         add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_welcome_wizard' ], 10, 4 );
         add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_delivery_support' ], 10, 4 );
+        add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_abuse_reported_by' ], 10, 4 );
+        add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_schedule_withdraw_disbursement' ], 10, 4 );
         add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_report_abuse_reasons_old_to_new' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_report_abuse_reasons_new_to_old' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_report_rma_reasons_old_to_new' ], 10, 3 );
@@ -34,8 +37,21 @@ class SettingsMapperCallbacks implements Hookable {
         add_filter( 'dokan_settings_mapper_after_transform_new_to_old', [ $this, 'map_single_product_preview_new_to_old' ], 10, 2 );
         add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_discount_edit_old_to_new' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_discount_edit_new_to_old' ], 10, 3 );
+        add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_withdraw_disbursement_old_to_new' ], 10, 3 );
+        add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_withdraw_disbursement_new_to_old' ], 10, 3 );
+
+//        add_filter( 'dokan_settings_mapper_after_transform_old_to_new', [ $this, 'map_disbursement_schedule_old_to_new_post' ], 10, 2 );
+//        add_filter( 'dokan_settings_mapper_after_transform_new_to_old', [ $this, 'map_disbursement_schedule_new_to_old_post' ], 10, 2 );
+
+//        add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_schedule_day_old_to_new' ], 10, 4 );
+//        add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_schedule_day_new_to_old' ], 10, 4 );
+
+        add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_delivery_support_old_to_new' ], 10, 3 );
+        add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_delivery_support_new_to_old' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_shipping_status_list_old_to_new' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_shipping_status_list_new_to_old' ], 10, 3 );
+        add_filter( 'dokan_settings_mapper_after_transform_old_to_new', [ $this, 'map_withdraw_methods_old_to_new' ], 10, 2 );
+        add_filter( 'dokan_settings_mapper_after_transform_new_to_old', [ $this, 'map_withdraw_methods_new_to_old' ], 10, 2 );
     }
 
     /**
@@ -43,15 +59,34 @@ class SettingsMapperCallbacks implements Hookable {
      *
      * @since DOKAN_SINCE
      *
-     * @param $value
-     * @param $to_indicator
-     * @param $old_key
-     * @param $new_key
+     * @param string $value
+     * @param string $to_indicator
+     * @param string $old_key
+     * @param string $new_key
      *
      * @return string|null
      */
     public function map_customer_details_visibility( $value, $to_indicator, $old_key, $new_key ) {
         if ( 'dokan_selling.hide_customer_info' !== $old_key || 'general.marketplace.marketplace_settings.show_customer_details_to_vendors' !== $new_key || is_null( $value ) ) {
+            return $value;
+        }
+        return $value === 'on' ? 'off' : 'on';
+    }
+
+    /**
+     * Function for mapping for withdraw options visibility.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $value
+     * @param string $to_indicator
+     * @param string $old_key
+     * @param string $new_key
+     *
+     * @return string|null
+     */
+    public function map_withdraw_options_visibility( $value, $to_indicator, $old_key, $new_key ) {
+        if ( 'dokan_withdraw.hide_withdraw_option' !== $old_key || 'transaction.withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility' !== $new_key || is_null( $value ) ) {
             return $value;
         }
         return $value === 'on' ? 'off' : 'on';
@@ -217,7 +252,7 @@ class SettingsMapperCallbacks implements Hookable {
      * @return array
      */
     public function map_vendor_extra_fields_old_to_new( $value, $old_key, $new_key ) {
-        if ( 'dokan_germanized.vendor_fields' !== $old_key || 'compliance.eu_compliance.vendor_extra_fields.vendor_extra_fields' !== $new_key || is_null( $value ) ) {
+        if ( 'dokan_germanized.vendor_fields' !== $old_key || 'compliance.eu_compliance.eu_compliance_settings.vendor_extra_fields' !== $new_key || is_null( $value ) ) {
             return $value;
         }
 
@@ -250,7 +285,7 @@ class SettingsMapperCallbacks implements Hookable {
      */
     public function map_vendor_extra_fields_new_to_old( $value, $old_key, $new_key ) {
 
-        if ( 'dokan_germanized.vendor_fields' !== $old_key || 'compliance.eu_compliance.vendor_extra_fields.vendor_extra_fields' !== $new_key || is_null( $value ) ) {
+        if ( 'dokan_germanized.vendor_fields' !== $old_key || 'compliance.eu_compliance.eu_compliance_settings.vendor_extra_fields' !== $new_key || is_null( $value ) ) {
             return $value;
         }
         $old_value = [
@@ -298,7 +333,7 @@ class SettingsMapperCallbacks implements Hookable {
      */
     public function map_customer_extra_fields_old_to_new( $value, $old_key, $new_key ) {
 
-        if ( 'dokan_germanized.customer_fields' !== $old_key || 'compliance.eu_compliance.customer_extra_fields.customer_extra_fields' !== $new_key || is_null( $value ) ) {
+        if ( 'dokan_germanized.customer_fields' !== $old_key || 'compliance.eu_compliance.eu_compliance_settings.customer_extra_fields' !== $new_key || is_null( $value ) ) {
             return $value;
         }
 
@@ -334,7 +369,7 @@ class SettingsMapperCallbacks implements Hookable {
      */
     public function map_customer_extra_fields_new_to_old( $value, $old_key, $new_key ) {
 
-        if ( 'dokan_germanized.customer_fields' !== $old_key || 'compliance.eu_compliance.customer_extra_fields.customer_extra_fields' !== $new_key || is_null( $value ) ) {
+        if ( 'dokan_germanized.customer_fields' !== $old_key || 'compliance.eu_compliance.eu_compliance_settings.customer_extra_fields' !== $new_key || is_null( $value ) ) {
             return $value;
         }
 
@@ -433,6 +468,88 @@ class SettingsMapperCallbacks implements Hookable {
     }
 
     /**
+     * Function for mapping abuse reported by settings between old and new settings.
+     *
+     * Maps legacy 'on'/'off' values to new 'all_users'/'logged_in_users' values and vice versa.
+     * Returns immediately if the value is null.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string|null $value The current value to map
+     * @param string      $to_indicator Direction of mapping: 'old_to_new' or 'new_to_old'
+     * @param string      $old_key The legacy setting key
+     * @param string      $new_key The new settings dot-path key
+     *
+     * @return string|null The mapped value or null if input is null
+     */
+    public function map_abuse_reported_by( $value, $to_indicator, $old_key, $new_key ) {
+        $old = 'dokan_report_abuse.reported_by_logged_in_users_only';
+        $new = 'moderation.report_abuse.report_abuse_settings.report_abuse_reported_by';
+
+        if ( is_null( $value ) || $old !== $old_key || $new !== $new_key ) {
+            return $value;
+        }
+
+        // OLD → NEW (off/on → include/exclude)
+        if ( $to_indicator === 'old_to_new' ) {
+            return $value !== 'on' ? 'all_users' : 'logged_in_users';
+        }
+
+        // NEW → OLD (include/exclude → off/on)
+        if ( $to_indicator === 'new_to_old' ) {
+            return $value !== 'all_users' ? 'on' : 'off';
+        }
+
+        return $value;
+    }
+
+    /**
+     * Function for mapping schedule withdraw disbursement settings between old and new settings.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string|null $value The current value to map
+     * @param string      $to_indicator Direction of mapping: 'old_to_new' or 'new_to_old'
+     * @param string      $old_key The legacy setting key
+     * @param string      $new_key The new settings dot-path key
+     *
+     * @return string|null The mapped value or null if input is null
+     */
+    public function map_schedule_withdraw_disbursement( $value, $to_indicator, $old_key, $new_key ) {
+        $old = 'dokan_withdraw.disbursement_schedule';
+        $new = 'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw';
+
+        if ( is_null( $value ) || $old !== $old_key || $new !== $new_key ) {
+            return $value;
+        }
+
+        $schedule_options = apply_filters(
+            'dokan_withdraw_schedule_option_keys',
+            [
+                'quarterly',
+                'monthly',
+                'schedule_biweekly',
+                'schedule_weekly',
+            ]
+        );
+
+        error_log( print_r( 'ready:', 1 ) );
+        error_log( print_r( $value, 1 ) );
+
+        // OLD → NEW (off/on → include/exclude)
+        if ( $to_indicator === 'old_to_new' ) {
+            return in_array( $value, $schedule_options, true ) ? 'on' : 'off';
+        }
+
+        // NEW → OLD (include/exclude → off/on)
+//        if ( $to_indicator === 'new_to_old' ) {
+//            return $value !== 'all_users' ? 'on' : 'off';
+//        }
+
+        return $value;
+    }
+
+    /**
      * Function to map after grace period failed actions from old format to new format
      *
      * @param array $value
@@ -491,11 +608,12 @@ class SettingsMapperCallbacks implements Hookable {
         }
         return $old_value;
     }
+
     /**
      * Map vendor info visibility with inverted logic and renamed values
      * OLD: hide_vendor_info ['email', 'phone', 'address'] - items to HIDE
      * NEW: vendor_info_visibility ['store_email', 'store_phone', 'store_address'] - items to SHOW
-     * 
+     *
      * @since DOKAN_SINCE
      * @param mixed $value
      * @param string $to_indicator Direction: 'new_to_old' or 'old_to_new'
@@ -510,11 +628,11 @@ class SettingsMapperCallbacks implements Hookable {
         if ( 'dokan_appearance.hide_vendor_info' !== $old_key || 'appearance.store.vendor_info_visibility_section.vendor_info_visibility' !== $new_key ) {
             return $value;
         }
-        
+
         if ( is_null( $value ) ) {
             return $value;
         }
-        
+
         // Mapping between old and new field names
         $field_map = [
             'email'   => 'store_email',
@@ -528,11 +646,11 @@ class SettingsMapperCallbacks implements Hookable {
 
         if ( 'old_to_new' === $to_indicator ) {
             // OLD → NEW: ['email'=>'email', 'phone'=>''] (associative) → ['store_email'=>'', 'store_phone'=>1] (associative)
-            
+
             if ( ! is_array( $value ) ) {
                 $value = [];
             }
-            
+
             // Extract hidden items from old format (non-empty values = hidden)
             $hidden_items_old = [];
             foreach ( $all_values_old as $old_key_check ) {
@@ -560,17 +678,17 @@ class SettingsMapperCallbacks implements Hookable {
                     $result_array[ $new_key ] = 1;   // Shown = 1
                 }
             }
-            
+
             return $result_array;
         }
 
         if ( 'new_to_old' === $to_indicator ) {
             // NEW → OLD: ['store_email'=>1, 'store_phone'=>''] (associative) → ['email'=>'', 'phone'=>'phone'] (associative)
-            
+
             if ( ! is_array( $value ) ) {
                 $value = [];
             }
-            
+
             // Extract shown items (value = 1 or truthy = SHOWN)
             $shown_items_new = [];
             foreach ( $value as $key => $val ) {
@@ -605,7 +723,7 @@ class SettingsMapperCallbacks implements Hookable {
     /**
      * Map location placement from old (two settings) to new (one multi-select)
      * Old → New direction
-     * 
+     *
      * @since DOKAN_SINCE
      * @param array $result The converted new settings array
      * @param array $legacy_values The source legacy settings array
@@ -654,7 +772,7 @@ class SettingsMapperCallbacks implements Hookable {
     /**
      * Map location placement from new (one multi-select) to old (two settings)
      * New → Old direction
-     * 
+     *
      * @since DOKAN_SINCE
      * @param array $result The converted legacy settings array
      * @param array $pages_values The source new settings array
@@ -688,20 +806,20 @@ class SettingsMapperCallbacks implements Hookable {
 
         return $result;
     }
-     /**
+    /**
      * Map single product preview from old (three separate settings) to new (one multi-checkbox)
      * Old → New direction
-     * 
+     *
      * OLD settings:
      * - dokan_general.show_vendor_info: 'on' = SHOW, 'off' = HIDE
      * - dokan_general.enabled_more_products_tab: 'on' = SHOW, 'off' = HIDE
      * - dokan_selling.disable_shipping_tab: 'on' = HIDE, 'off' = SHOW (inverted!)
-     * 
+     *
      * NEW setting:
      * - appearance.store.single_product_preview_section.single_product_preview
      *   {vendor_info: true, more_products_tab: true, shipping_tab: true}
      *   true = SHOW, false = HIDE
-     * 
+     *
      * @since DOKAN_SINCE
      * @param array $result The converted new settings array
      * @param array $legacy_values The source legacy settings array
@@ -776,7 +894,7 @@ class SettingsMapperCallbacks implements Hookable {
     /**
      * Map single product preview from new (one multi-checkbox) to old (three separate settings)
      * New → Old direction
-     * 
+     *
      * @since DOKAN_SINCE
      * @param array $result The converted legacy settings array
      * @param array $pages_values The source new settings array
@@ -869,19 +987,19 @@ class SettingsMapperCallbacks implements Hookable {
      * @return array
      */
     public function map_discount_edit_old_to_new( $value, $old_key, $new_key ) {
+        $old_data_key = 'dokan_selling.discount_edit';
+        $new_data_key = 'vendor.vendor_capabilities.vendor_capabilities.discount_settings';
 
-        if ( 'dokan_selling.discount_edit' !== $old_key || 'vendor.vendor_capabilities.vendor_capabilities.discount_settings' !== $new_key || is_null( $value ) ) {
+        if ( $old_data_key !== $old_key || $new_data_key !== $new_key || is_null( $value ) ) {
             return $value;
         }
 
         $mapped = [];
 
-        if ( is_array( $value ) ) {
-            foreach ( $value as $option_key => $option_value ) {
-                if ( ! empty( $option_value ) ) {
-                    // selected in old format
-                    $mapped[] = $option_key;
-                }
+        foreach ( $value as $option_key => $option_value ) {
+            if ( ! empty( $option_value ) ) {
+                // Selected in the old format.
+                $mapped[] = $option_key;
             }
         }
 
@@ -898,8 +1016,10 @@ class SettingsMapperCallbacks implements Hookable {
      * @return array
      */
     public function map_discount_edit_new_to_old( $value, $old_key, $new_key ) {
+        $old_data_key = 'dokan_selling.discount_edit';
+        $new_data_key = 'vendor.vendor_capabilities.vendor_capabilities.discount_settings';
 
-        if ( 'dokan_selling.discount_edit' !== $old_key || 'vendor.vendor_capabilities.vendor_capabilities.discount_settings' !== $new_key || is_null( $value ) ) {
+        if ( $old_data_key !== $old_key || $new_data_key !== $new_key || is_null( $value ) ) {
             return $value;
         }
 
@@ -908,6 +1028,345 @@ class SettingsMapperCallbacks implements Hookable {
             'order-discount'   => '',
             'product-discount' => '',
         ];
+
+        if ( is_array( $value ) ) {
+            foreach ( $value as $option_key ) {
+                if ( isset( $old_value[ $option_key ] ) ) {
+                    $old_value[ $option_key ] = $option_key;
+                }
+            }
+        }
+        return $old_value;
+    }
+
+    /**
+     * Function to map discount edit settings from old format to new format
+     *
+     * @param array $value
+     * @param string $old_key
+     * @param string $new_key
+     *
+     * @return array
+     */
+    public function map_withdraw_disbursement_old_to_new( $value, $old_key, $new_key ) {
+        $old_data_key = 'dokan_withdraw.disbursement';
+        $new_data_key = 'transaction.withdraw_charge.withdraw_option_visibility_section.manual_withdraw';
+
+        if ( $old_data_key !== $old_key || $new_data_key !== $new_key || is_null( $value ) ) {
+            return $value;
+        }
+
+        $mapped = [];
+
+        foreach ( $value as $option_key => $option_value ) {
+            if ( ! empty( $option_value ) ) {
+                // Selected in the old format.
+                $mapped[] = $option_key;
+            }
+        }
+
+        return $mapped; // may be empty
+    }
+
+    /**
+     * Function to map discount edit settings from new format to old format
+     *
+     * @param array $value
+     * @param string $old_key
+     * @param string $new_key
+     *
+     * @return array
+     */
+    public function map_withdraw_disbursement_new_to_old( $value, $old_key, $new_key ) {
+        $old_data_key = 'dokan_withdraw.disbursement';
+        $new_data_key = 'transaction.withdraw_charge.withdraw_option_visibility_section.manual_withdraw';
+
+        if ( $old_data_key !== $old_key || $new_data_key !== $new_key || is_null( $value ) ) {
+            return $value;
+        }
+
+        // Old keys must always exist
+        $old_value = [
+            'manual'   => '',
+            'schedule' => '',
+        ];
+
+        if ( is_array( $value ) ) {
+            foreach ( $value as $option_key ) {
+                if ( isset( $old_value[ $option_key ] ) ) {
+                    $old_value[ $option_key ] = $option_key;
+                }
+            }
+        }
+        return $old_value;
+    }
+
+    /**
+     * Post-transform legacy settings to new settings for disbursement schedule.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $result
+     * @param array $legacy_values
+     *
+     * @return array
+     */
+    public function map_disbursement_schedule_old_to_new_post( $result, $legacy_values ) {
+        if ( ! isset( $legacy_values['dokan_withdraw']['disbursement_schedule'] ) ) {
+            return $result;
+        }
+        $disbursement_schedule = $legacy_values['dokan_withdraw']['disbursement_schedule'];
+
+        $schedules = [
+            'quarterly' => 'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw',
+            'monthly'   => 'transaction.withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw',
+            'biweekly'  => 'transaction.withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw',
+            'weekly'    => 'transaction.withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw',
+        ];
+
+        $any_on = false;
+        foreach ( $schedules as $legacy_key => $new_path ) {
+            $value = isset( $disbursement_schedule[ $legacy_key ] ) ? 'on' : 'off';
+            if ( $value === 'on' ) {
+                $any_on = true;
+            }
+            SettingsMapper::set_value_by_path( $result, $new_path, $value );
+        }
+
+        // Also ensure manual_withdraw multicheck contains 'schedule' if any schedule is enabled
+        if ( $any_on ) {
+            $manual_withdraw = SettingsMapper::get_value_by_path( $result, 'transaction.withdraw_charge.withdraw_option_visibility_section.manual_withdraw', [] );
+            if ( ! is_array( $manual_withdraw ) ) {
+                $manual_withdraw = (array) $manual_withdraw;
+            }
+
+            if ( ! in_array( 'schedule', $manual_withdraw, true ) ) {
+                $manual_withdraw[] = 'schedule';
+                SettingsMapper::set_value_by_path( $result, 'transaction.withdraw_charge.withdraw_option_visibility_section.manual_withdraw', array_values( array_unique( $manual_withdraw ) ) );
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Post-transform new settings to legacy settings for disbursement schedule.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $result
+     * @param array $pages_values
+     *
+     * @return array
+     */
+    public function map_disbursement_schedule_new_to_old_post( $result, $pages_values ) {
+        $manual_withdraw = SettingsMapper::get_value_by_path( $pages_values, 'transaction.withdraw_charge.withdraw_option_visibility_section.manual_withdraw', null );
+
+        if ( is_null( $manual_withdraw ) ) {
+            return $result;
+        }
+
+        if ( ! is_array( $manual_withdraw ) || ! in_array( 'schedule', $manual_withdraw, true ) ) {
+            if ( ! isset( $result['dokan_withdraw'] ) ) {
+                $result['dokan_withdraw'] = [];
+            }
+            $result['dokan_withdraw']['disbursement_schedule'] = [];
+            return $result;
+        }
+
+        $schedules = [
+            'quarterly' => 'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw',
+            'monthly'   => 'transaction.withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw',
+            'biweekly'  => 'transaction.withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw',
+            'weekly'    => 'transaction.withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw',
+        ];
+
+        $legacy_schedule = [];
+        foreach ( $schedules as $legacy_key => $new_path ) {
+            if ( SettingsMapper::get_value_by_path( $pages_values, $new_path ) === 'on' ) {
+                $legacy_schedule[ $legacy_key ] = $legacy_key;
+            }
+        }
+
+        if ( ! isset( $result['dokan_withdraw'] ) ) {
+            $result['dokan_withdraw'] = [];
+        }
+        $result['dokan_withdraw']['disbursement_schedule'] = $legacy_schedule;
+
+        return $result;
+    }
+
+    /**
+     * Maps schedule day settings from legacy to new.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param mixed  $value
+     * @param string $old_key
+     * @param string $new_key
+     * @param array  $legacy_values
+     *
+     * @return mixed
+     */
+    public function map_schedule_day_old_to_new( $value, $old_key, $new_key, $legacy_values ) {
+        if ( ! is_array( $value ) && $old_key !== 'dokan_withdraw.weekly_schedule' ) {
+            return $value;
+        }
+
+        switch ( $old_key ) {
+            case 'dokan_withdraw.quarterly_schedule':
+            case 'dokan_withdraw.monthly_schedule':
+            case 'dokan_withdraw.biweekly_schedule':
+                return isset( $value['days'] ) ? $this->get_day_number( $value['days'] ) : '1';
+            case 'dokan_withdraw.weekly_schedule':
+                return $value; // It's already 'monday', 'tuesday', etc.
+        }
+
+        return $value;
+    }
+
+    /**
+     * Maps schedule day settings from new to legacy.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param mixed  $value
+     * @param string $old_key
+     * @param string $new_key
+     * @param array  $pages_values
+     *
+     * @return mixed
+     */
+    public function map_schedule_day_new_to_old( $value, $old_key, $new_key, $pages_values ) {
+        $day_keys = [
+            'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_day',
+            'transaction.withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw_day',
+            'transaction.withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_day',
+            'transaction.withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw_day',
+        ];
+
+        if ( ! in_array( $new_key, $day_keys, true ) ) {
+            return $value;
+        }
+
+        if ( $new_key === 'transaction.withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw_day' ) {
+            return $value;
+        }
+
+        $legacy_map = [
+            'dokan_withdraw.quarterly_schedule' => [ 'month' => 'march', 'week' => '1', 'days' => 'monday' ],
+            'dokan_withdraw.monthly_schedule'   => [ 'week' => '1', 'days' => 'monday' ],
+            'dokan_withdraw.biweekly_schedule'  => [ 'week' => '1', 'days' => 'monday' ],
+        ];
+
+        if ( isset( $legacy_map[ $old_key ] ) ) {
+            $result = $legacy_map[ $old_key ];
+            $result['days'] = $this->get_day_name( $value );
+            return $result;
+        }
+
+        return $value;
+    }
+
+    /**
+     * Get day number from day name.
+     *
+     * @param string $day_name
+     * @return string
+     */
+    private function get_day_number( $day_name ) {
+        if ( is_array( $day_name ) ) {
+            return '1';
+        }
+        $days = [
+            'monday'    => '1',
+            'tuesday'   => '2',
+            'wednesday' => '3',
+            'thursday'  => '4',
+            'friday'    => '5',
+            'saturday'  => '6',
+            'sunday'    => '7',
+        ];
+        return $days[ strtolower( $day_name ) ] ?? '1';
+    }
+
+    /**
+     * Get day name from day number.
+     *
+     * @param string $day_number
+     * @return string
+     */
+    private function get_day_name( $day_number ) {
+        if ( is_array( $day_number ) ) {
+            return 'monday';
+        }
+        $days = [
+            '1' => 'monday',
+            '2' => 'tuesday',
+            '3' => 'wednesday',
+            '4' => 'thursday',
+            '5' => 'friday',
+            '6' => 'saturday',
+            '7' => 'sunday',
+        ];
+        return $days[ $day_number ] ?? 'monday';
+    }
+
+    /**
+     * Function to map delivery support settings from old format to new format.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array  $value
+     * @param string $old_key
+     * @param string $new_key
+     *
+     * @return array
+     */
+    public function map_delivery_support_old_to_new( $value, $old_key, $new_key ) {
+        $old_data_key = 'dokan_delivery_time.delivery_support';
+        $new_data_key = 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_support';
+
+        if ( $old_data_key !== $old_key || $new_data_key !== $new_key || is_null( $value ) ) {
+            return $value;
+        }
+
+        $mapped = [];
+
+        foreach ( $value as $option_value ) {
+            if ( ! empty( $option_value ) ) {
+                // Selected in the old format.
+                $mapped[] = $option_value;
+            }
+        }
+
+        return $mapped; // may be empty
+    }
+
+    /**
+     * Function to map delivery support settings from new format to old format.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array  $value
+     * @param string $old_key
+     * @param string $new_key
+     *
+     * @return array
+     */
+    public function map_delivery_support_new_to_old( $value, $old_key, $new_key ) {
+        $old_data_key = 'dokan_delivery_time.delivery_support';
+        $new_data_key = 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_support';
+
+        if ( $old_data_key !== $old_key || $new_data_key !== $new_key || is_null( $value ) ) {
+            return $value;
+        }
+
+        // Old keys must always exist
+        $old_value = apply_filters( 'dokan_delivery_support_default_old_value', [
+            'delivery'     => '',
+            'store-pickup' => '',
+        ] );
 
         if ( is_array( $value ) ) {
             foreach ( $value as $option_key ) {
@@ -986,4 +1445,158 @@ class SettingsMapperCallbacks implements Hookable {
         return $old_value;
     }
 
+    /**
+     * Map withdraw methods from old (multiple settings) to new (grouped sections)
+     * Old → New direction
+     *
+     * @since DOKAN_SINCE
+     * @param array $result The converted new settings array
+     * @param array $legacy_values The source legacy settings array
+     * @return array Modified result
+     */
+    public function map_withdraw_methods_old_to_new( $result, $legacy_values ) {
+        $old_withdraw = $legacy_values['dokan_withdraw'] ?? [];
+        if ( empty( $old_withdraw ) ) {
+            return $result;
+        }
+
+        $methods = $old_withdraw['withdraw_methods'] ?? [];
+        $charges = $old_withdraw['withdraw_charges'] ?? [];
+
+        $mapping_config = [
+            'paypal' => [
+                'enabled' => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal.paypal_withdraw',
+                'charge'  => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal.paypal_withdraw_charges',
+            ],
+            'skrill' => [
+                'enabled' => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_skrill.skrill_withdraw',
+                'charge'  => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_skrill.skrill_withdraw_charges',
+            ],
+            'bank'   => [
+                'enabled' => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_bank.bank_transfer_withdraw',
+                'charge'  => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_bank.bank_transfer_withdraw_charges',
+            ],
+            'dokan_custom' => [
+                'enabled' => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_withdraw',
+                'charge'  => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.bank_transfer_withdraw_charges',
+            ],
+            'dokan-paypal-marketplace' => [
+                'enabled' => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal_marketplace.paypal_marketplace_withdraw',
+                'charge'  => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal_marketplace.paypal_marketplace_withdraw_charges',
+            ],
+            'dokan_paystack' => [
+                'enabled' => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_paystack.paystack_withdraw',
+                'charge'  => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_paystack.paystack_withdraw_charges',
+            ],
+            'dokan-stripe-connect' => [
+                'enabled' => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_stripe.stripe_withdraw',
+                'charge'  => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_stripe.stripe_withdraw_charges',
+            ],
+            'dokan_razorpay' => [
+                'enabled' => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay.razorpay_withdraw',
+                'charge'  => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay.razorpay_withdraw_charges',
+            ],
+        ];
+
+        foreach ( $mapping_config as $method_key => $config ) {
+            // Check if method is enabled
+            $is_enabled = ! empty( $methods[ $method_key ] ) ? 'on' : 'off';
+            SettingsMapper::set_value_by_path( $result, $config['enabled'], $is_enabled );
+
+            // Handle charges
+            $method_charges = $charges[ $method_key ] ?? [ 'fixed' => 0, 'percentage' => 0 ];
+            SettingsMapper::set_value_by_path( $result, $config['charge'], [
+                'additional_fee'   => $method_charges['fixed'] ?? 0,
+                'admin_percentage' => $method_charges['percentage'] ?? 0,
+            ] );
+        }
+
+
+        // Custom method details
+        SettingsMapper::set_value_by_path( $result, 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_method_name', $old_withdraw['withdraw_method_name'] ?? '' );
+        SettingsMapper::set_value_by_path( $result, 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_method_type', $old_withdraw['withdraw_method_type'] ?? '' );
+
+        return $result;
+    }
+
+    /**
+     * Map withdraw methods from new (grouped sections) to old (multiple settings)
+     * New → Old direction
+     *
+     * @since DOKAN_SINCE
+     * @param array $result The converted legacy settings array
+     * @param array $new_values The source new settings array
+     * @return array Modified result
+     */
+    public function map_withdraw_methods_new_to_old( $result, $new_values ) {
+        $withdraw_charge = SettingsMapper::get_value_by_path( $new_values, 'transaction.withdraw_charge.section_withdraw_charge', [] );
+        if ( empty( $withdraw_charge ) ) {
+            return $result;
+        }
+
+        if ( ! isset( $result['dokan_withdraw'] ) ) {
+            $result['dokan_withdraw'] = [];
+        }
+
+        $old_methods = [];
+        $old_charges = [];
+
+        $mapping_config = [
+            'paypal' => [
+                'enabled_path' => 'withdraw_methods_group_paypal.paypal_withdraw',
+                'charge_path'  => 'withdraw_methods_group_paypal.paypal_withdraw_charges',
+            ],
+            'skrill' => [
+                'enabled_path' => 'withdraw_methods_group_skrill.skrill_withdraw',
+                'charge_path'  => 'withdraw_methods_group_skrill.skrill_withdraw_charges',
+            ],
+            'bank'   => [
+                'enabled_path' => 'withdraw_methods_group_bank.bank_transfer_withdraw',
+                'charge_path'  => 'withdraw_methods_group_bank.bank_transfer_withdraw_charges',
+                'old_key'      => 'bank',
+            ],
+            'dokan_razorpay' => [
+                'enabled_path' => 'withdraw_methods_group_razorpay.razorpay_withdraw',
+                'charge_path'  => 'withdraw_methods_group_razorpay.razorpay_withdraw_charges',
+            ],
+            'dokan_custom' => [
+                'enabled_path' => 'withdraw_methods_group_custom.custom_withdraw',
+                'charge_path'  => 'withdraw_methods_group_custom.bank_transfer_withdraw_charges',
+                'old_key'      => 'dokan_custom',
+            ],
+            'dokan-paypal-marketplace' => [
+                'enabled_path' => 'withdraw_methods_group_paypal_marketplace.paypal_marketplace_withdraw',
+                'charge_path'  => 'withdraw_methods_group_paypal_marketplace.paypal_marketplace_withdraw_charges',
+                'old_key'      => 'dokan-paypal-marketplace',
+            ],
+            'dokan_paystack' => [
+                'enabled_path' => 'withdraw_methods_group_paystack.paystack_withdraw',
+                'charge_path'  => 'withdraw_methods_group_paystack.paystack_withdraw_charges',
+            ],
+            'dokan-stripe-connect' => [
+                'enabled_path' => 'withdraw_methods_group_stripe.stripe_withdraw',
+                'charge_path'  => 'withdraw_methods_group_stripe.stripe_withdraw_charges',
+                'old_key'      => 'dokan-stripe-connect',
+            ],
+        ];
+
+        foreach ( $mapping_config as $old_key => $config ) {
+            $is_enabled = SettingsMapper::get_value_by_path( $withdraw_charge, $config['enabled_path'], 'off' );
+            $method_key = $config['old_key'] ?? $old_key;
+            $old_methods[ $method_key ] = ( $is_enabled === 'on' ) ? $method_key : '';
+
+            $charge_data = SettingsMapper::get_value_by_path( $withdraw_charge, $config['charge_path'], [] );
+            $old_charges[ $method_key ] = [
+                'fixed'      => $charge_data['additional_fee'] ?? 0,
+                'percentage' => $charge_data['admin_percentage'] ?? 0,
+            ];
+        }
+
+        $result['dokan_withdraw']['withdraw_methods'] = $old_methods;
+        $result['dokan_withdraw']['withdraw_charges'] = $old_charges;
+        $result['dokan_withdraw']['withdraw_method_name'] = SettingsMapper::get_value_by_path( $withdraw_charge, 'withdraw_methods_group_custom.custom_method_name', '' );
+        $result['dokan_withdraw']['withdraw_method_type'] = SettingsMapper::get_value_by_path( $withdraw_charge, 'withdraw_methods_group_custom.custom_method_type', '' );
+
+        return $result;
+    }
 }

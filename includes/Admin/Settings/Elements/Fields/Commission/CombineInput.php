@@ -31,6 +31,13 @@ class CombineInput extends Field {
     protected $admin_percentage = '';
 
     /**
+     * Is automated.
+     *
+     * @var bool $is_automated Is automated.
+     */
+    protected $is_automated = false;
+
+    /**
      * Constructor.
      *
      * @param string $id Input ID.
@@ -84,6 +91,28 @@ class CombineInput extends Field {
     }
 
     /**
+     * Get is automated.
+     *
+     * @return bool
+     */
+    public function get_is_automated(): bool {
+        return $this->is_automated;
+    }
+
+    /**
+     * Set is automated.
+     *
+     * @param bool $is_automated Is automated.
+     *
+     * @return CombineInput
+     */
+    public function set_is_automated( bool $is_automated ): CombineInput {
+        $this->is_automated = $is_automated;
+
+        return $this;
+    }
+
+    /**
      * Data validation.
      *
      * @param mixed $data Data for validation.
@@ -103,6 +132,7 @@ class CombineInput extends Field {
         $data                     = parent::populate();
         $data['additional_fee']   = $this->get_additional_fee();
         $data['admin_percentage'] = $this->get_admin_percentage();
+        $data['is_automated']     = $this->get_is_automated();
         $data['value']            = $this->get_value();
 
         return $data;

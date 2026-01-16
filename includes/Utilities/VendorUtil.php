@@ -62,7 +62,7 @@ class VendorUtil {
      * - Vendor staff: Returns their parent vendor's ID (stored in user meta)
      * - Other users: Returns 0 if not associated with any vendor
      *
-     * @since DOKAN_SINCE
+     * @since 4.2.5
      *
      * @param int $user_id Optional. The user ID to get the vendor ID for. Defaults to 0 (current user).
      *
