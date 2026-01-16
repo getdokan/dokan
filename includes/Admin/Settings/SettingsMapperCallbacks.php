@@ -252,7 +252,7 @@ class SettingsMapperCallbacks implements Hookable {
      * @return array
      */
     public function map_vendor_extra_fields_old_to_new( $value, $old_key, $new_key ) {
-        if ( 'dokan_germanized.vendor_fields' !== $old_key || 'compliance.eu_compliance.vendor_extra_fields.vendor_extra_fields' !== $new_key || is_null( $value ) ) {
+        if ( 'dokan_germanized.vendor_fields' !== $old_key || 'compliance.eu_compliance.eu_compliance_settings.vendor_extra_fields' !== $new_key || is_null( $value ) ) {
             return $value;
         }
 
@@ -285,7 +285,7 @@ class SettingsMapperCallbacks implements Hookable {
      */
     public function map_vendor_extra_fields_new_to_old( $value, $old_key, $new_key ) {
 
-        if ( 'dokan_germanized.vendor_fields' !== $old_key || 'compliance.eu_compliance.vendor_extra_fields.vendor_extra_fields' !== $new_key || is_null( $value ) ) {
+        if ( 'dokan_germanized.vendor_fields' !== $old_key || 'compliance.eu_compliance.eu_compliance_settings.vendor_extra_fields' !== $new_key || is_null( $value ) ) {
             return $value;
         }
         $old_value = [
@@ -333,7 +333,7 @@ class SettingsMapperCallbacks implements Hookable {
      */
     public function map_customer_extra_fields_old_to_new( $value, $old_key, $new_key ) {
 
-        if ( 'dokan_germanized.customer_fields' !== $old_key || 'compliance.eu_compliance.customer_extra_fields.customer_extra_fields' !== $new_key || is_null( $value ) ) {
+        if ( 'dokan_germanized.customer_fields' !== $old_key || 'compliance.eu_compliance.eu_compliance_settings.customer_extra_fields' !== $new_key || is_null( $value ) ) {
             return $value;
         }
 
@@ -369,7 +369,7 @@ class SettingsMapperCallbacks implements Hookable {
      */
     public function map_customer_extra_fields_new_to_old( $value, $old_key, $new_key ) {
 
-        if ( 'dokan_germanized.customer_fields' !== $old_key || 'compliance.eu_compliance.customer_extra_fields.customer_extra_fields' !== $new_key || is_null( $value ) ) {
+        if ( 'dokan_germanized.customer_fields' !== $old_key || 'compliance.eu_compliance.eu_compliance_settings.customer_extra_fields' !== $new_key || is_null( $value ) ) {
             return $value;
         }
 
@@ -613,7 +613,7 @@ class SettingsMapperCallbacks implements Hookable {
      * Map vendor info visibility with inverted logic and renamed values
      * OLD: hide_vendor_info ['email', 'phone', 'address'] - items to HIDE
      * NEW: vendor_info_visibility ['store_email', 'store_phone', 'store_address'] - items to SHOW
-     * 
+     *
      * @since DOKAN_SINCE
      * @param mixed $value
      * @param string $to_indicator Direction: 'new_to_old' or 'old_to_new'
@@ -628,11 +628,11 @@ class SettingsMapperCallbacks implements Hookable {
         if ( 'dokan_appearance.hide_vendor_info' !== $old_key || 'appearance.store.vendor_info_visibility_section.vendor_info_visibility' !== $new_key ) {
             return $value;
         }
-        
+
         if ( is_null( $value ) ) {
             return $value;
         }
-        
+
         // Mapping between old and new field names
         $field_map = [
             'email'   => 'store_email',
@@ -646,11 +646,11 @@ class SettingsMapperCallbacks implements Hookable {
 
         if ( 'old_to_new' === $to_indicator ) {
             // OLD → NEW: ['email'=>'email', 'phone'=>''] (associative) → ['store_email'=>'', 'store_phone'=>1] (associative)
-            
+
             if ( ! is_array( $value ) ) {
                 $value = [];
             }
-            
+
             // Extract hidden items from old format (non-empty values = hidden)
             $hidden_items_old = [];
             foreach ( $all_values_old as $old_key_check ) {
@@ -678,17 +678,17 @@ class SettingsMapperCallbacks implements Hookable {
                     $result_array[ $new_key ] = 1;   // Shown = 1
                 }
             }
-            
+
             return $result_array;
         }
 
         if ( 'new_to_old' === $to_indicator ) {
             // NEW → OLD: ['store_email'=>1, 'store_phone'=>''] (associative) → ['email'=>'', 'phone'=>'phone'] (associative)
-            
+
             if ( ! is_array( $value ) ) {
                 $value = [];
             }
-            
+
             // Extract shown items (value = 1 or truthy = SHOWN)
             $shown_items_new = [];
             foreach ( $value as $key => $val ) {
@@ -723,7 +723,7 @@ class SettingsMapperCallbacks implements Hookable {
     /**
      * Map location placement from old (two settings) to new (one multi-select)
      * Old → New direction
-     * 
+     *
      * @since DOKAN_SINCE
      * @param array $result The converted new settings array
      * @param array $legacy_values The source legacy settings array
@@ -772,7 +772,7 @@ class SettingsMapperCallbacks implements Hookable {
     /**
      * Map location placement from new (one multi-select) to old (two settings)
      * New → Old direction
-     * 
+     *
      * @since DOKAN_SINCE
      * @param array $result The converted legacy settings array
      * @param array $pages_values The source new settings array
@@ -806,20 +806,20 @@ class SettingsMapperCallbacks implements Hookable {
 
         return $result;
     }
-     /**
+    /**
      * Map single product preview from old (three separate settings) to new (one multi-checkbox)
      * Old → New direction
-     * 
+     *
      * OLD settings:
      * - dokan_general.show_vendor_info: 'on' = SHOW, 'off' = HIDE
      * - dokan_general.enabled_more_products_tab: 'on' = SHOW, 'off' = HIDE
      * - dokan_selling.disable_shipping_tab: 'on' = HIDE, 'off' = SHOW (inverted!)
-     * 
+     *
      * NEW setting:
      * - appearance.store.single_product_preview_section.single_product_preview
      *   {vendor_info: true, more_products_tab: true, shipping_tab: true}
      *   true = SHOW, false = HIDE
-     * 
+     *
      * @since DOKAN_SINCE
      * @param array $result The converted new settings array
      * @param array $legacy_values The source legacy settings array
@@ -894,7 +894,7 @@ class SettingsMapperCallbacks implements Hookable {
     /**
      * Map single product preview from new (one multi-checkbox) to old (three separate settings)
      * New → Old direction
-     * 
+     *
      * @since DOKAN_SINCE
      * @param array $result The converted legacy settings array
      * @param array $pages_values The source new settings array
@@ -1445,7 +1445,6 @@ class SettingsMapperCallbacks implements Hookable {
         return $old_value;
     }
 
-
     /**
      * Map withdraw methods from old (multiple settings) to new (grouped sections)
      * Old → New direction
@@ -1592,7 +1591,7 @@ class SettingsMapperCallbacks implements Hookable {
                 'percentage' => $charge_data['admin_percentage'] ?? 0,
             ];
         }
-        
+
         $result['dokan_withdraw']['withdraw_methods'] = $old_methods;
         $result['dokan_withdraw']['withdraw_charges'] = $old_charges;
         $result['dokan_withdraw']['withdraw_method_name'] = SettingsMapper::get_value_by_path( $withdraw_charge, 'withdraw_methods_group_custom.custom_method_name', '' );
