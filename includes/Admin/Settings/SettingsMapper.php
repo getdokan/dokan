@@ -116,6 +116,8 @@ class SettingsMapper {
         'dokan_privacy.enable_privacy'                               => 'compliance.privacy.privacy_settings.privacy_policy_display',
         'dokan_privacy.privacy_page'                                 => 'compliance.privacy.privacy_settings.privacy_policy_page',
         'dokan_privacy.privacy_policy'                               => 'compliance.privacy.privacy_policy_content.privacy_policy_content',
+        'dokan_general.admin_access'                                 => 'compliance.privacy.admin_access_section.admin_access',
+        'dokan_general.data_clear_on_uninstall'                      => 'compliance.privacy.data_clear_section.data_clear_on_uninstall',
 
         // =========================
         // Compliance > EU Compliance (Germanized)
