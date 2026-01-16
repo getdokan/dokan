@@ -171,9 +171,9 @@ class VendorDashboardManager implements Hookable {
          *
          * @since DOKAN_SINCE
          *
-         * @param bool  $load_schema Should load vendor analytics schema.
-         * @param array $endpoints Array of preloaded endpoints.
-         * @param string $screen_id Current screen ID.
+         * @param bool   $load_schema Should load vendor analytics schema.
+         * @param array  $endpoints   Array of preloaded endpoints.
+         * @param string $screen_id   Current screen ID.
          */
         $load_analytics_schema = apply_filters(
             'dokan_analytics_reports_load_vendor_revenue_schema',
