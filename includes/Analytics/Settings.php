@@ -54,19 +54,6 @@ class Settings implements Hookable {
 			 */
 			$preload_data_endpoints = apply_filters( 'woocommerce_component_settings_preload_endpoints', $analytics_instances->add_preload_endpoints( [] ) );
 
-//            $preload_data_endpoints = $analytics_instances->add_preload_endpoints( [] );
-//
-//            // If WC skipped adding performanceIndicators or leaderboards because of the screen check, add them manually for Dokan
-//            if ( dokan_is_seller_dashboard() ) {
-//                $preload_data_endpoints['performanceIndicators'] = $preload_data_endpoints['performanceIndicators'] ?? '/wc-analytics/reports/performance-indicators/allowed';
-//                $preload_data_endpoints['leaderboards']          = $preload_data_endpoints['leaderboards'] ?? '/wc-analytics/leaderboards/allowed';
-//            }
-//
-//            /**
-//             * WooCommerce Source @see https://github.com/woocommerce/woocommerce/blob/17bf0b56214cf69ca01117193c591e904b19d97b/plugins/woocommerce/src/Internal/Admin/Settings.php#L154-L159
-//             */
-//            $preload_data_endpoints = apply_filters( 'woocommerce_component_settings_preload_endpoints', $preload_data_endpoints );
-
 			if ( ! empty( $preload_data_endpoints ) ) {
 				$preload_data = array_reduce(
                     array_values( $preload_data_endpoints ),
