@@ -1,7 +1,7 @@
 import { twMerge } from 'tailwind-merge';
 import  DokanTooltip from '../DokanTooltip';
 import { RawHTML } from '@wordpress/element';
-import { Info } from 'lucide-react';
+import { Info, TriangleAlert } from 'lucide-react';
 
 interface InputLabelProps {
     title: string;
@@ -14,6 +14,7 @@ interface InputLabelProps {
     wrapperClassNames?: string;
     labelClassName?: string;
     imageUrl?: string;
+    fieldType?: string;
 }
 
 const DokanBaseFieldLabel = ( {
@@ -26,6 +27,7 @@ const DokanBaseFieldLabel = ( {
     wrapperClassNames,
     labelClassName = '',
     imageUrl,
+    fieldType,
 }: InputLabelProps ) => {
     return (
         <div
@@ -48,13 +50,18 @@ const DokanBaseFieldLabel = ( {
                                     ? 'font-bold'
                                     : 'font-light'
                             } `,
-                            labelClassName
+                            labelClassName,
+                            fieldType === 'error' &&
+                                'text-[#9F2225] flex gap-2.5 items-center'
                         ) }
                     >
                         { typeof title === 'string' ? (
                             <RawHTML>{ title }</RawHTML>
                         ) : (
                             title
+                        ) }
+                        { fieldType === 'error' && (
+                            <TriangleAlert size={ 16 } color={ '#E6455E' } />
                         ) }
                     </label>
                     { tooltip && (
@@ -71,7 +78,12 @@ const DokanBaseFieldLabel = ( {
                 { helperText && (
                     <div>
                         { typeof helperText === 'string' ? (
-                            <p className="text-sm font-light">
+                            <p
+                                className={ twMerge(
+                                    'text-sm font-light',
+                                    fieldType === 'error' && 'text-[#9F2225]'
+                                ) }
+                            >
                                 <RawHTML>{ helperText }</RawHTML>
                             </p>
                         ) : null }
