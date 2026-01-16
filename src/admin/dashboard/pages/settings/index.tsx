@@ -9,7 +9,9 @@ import Tab from './Elements/Tab';
 import SettingsParser from './Elements/SettingsParser';
 import PageHeading from './Elements/PageHeading';
 import { twMerge } from 'tailwind-merge';
+import { applyFilters } from '@wordpress/hooks';
 import SettingsSkeleton from './components/SettingsSkeleton';
+import AdminNotices from 'admin/dashboard/pages/dashboard/components/AdminNotices';
 
 const DashboardSwitchLink = () => {
     // Get the switch URL from localized settings
@@ -242,6 +244,12 @@ const SettingsPage = () => {
         ( element ) => element.type === 'field'
     );
 
+    const noticeScopes = applyFilters( 'dokan_admin_dashboard_notices_scopes', [
+        { scope: 'global', endpoint: 'admin' },
+        { scope: '', endpoint: 'admin' },
+        { scope: 'promo', endpoint: 'promo' },
+    ] );
+
     return (
         <>
             <div className="min-h-screen h-full">
@@ -250,6 +258,16 @@ const SettingsPage = () => {
                 >
                     { __( 'Settings', 'dokan-lite' ) }
                 </h2>
+
+                { noticeScopes?.map( ( noticeConfig ) => (
+                    <AdminNotices
+                        key={ `${ noticeConfig.endpoint }-${
+                            noticeConfig.scope || 'local'
+                        }` }
+                        endpoint={ noticeConfig.endpoint }
+                        scope={ noticeConfig.scope }
+                    />
+                ) ) }
 
                 { ! loading ? (
                     <main className="w-full lg:px-0 lg:bg-white h-full lg:shadow rounded-lg overflow-hidden">
