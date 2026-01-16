@@ -156,6 +156,8 @@ class SettingsMapper {
         'dokan_live_chat.provider'                                   => 'moderation.livechat.livechat_settings.livechat_provider',
         'dokan_live_chat.app_id'                                     => 'moderation.livechat.livechat_settings.livechat_app_id',
         'dokan_live_chat.app_secret'                                 => 'moderation.livechat.livechat_settings.livechat_app_secret',
+        'dokan_live_chat.wa_opening_method'                          => 'moderation.livechat.livechat_settings.wa_opening_method',
+        'dokan_live_chat.wa_pre_filled_message'                      => 'moderation.livechat.livechat_settings.wa_pre_filled_message',
         'dokan_live_chat.chat_button_seller_page'                    => 'moderation.livechat.livechat_settings.livechat_vendor_page_button',
         'dokan_live_chat.chat_button_product_page'                   => 'moderation.livechat.livechat_settings.livechat_product_page_button',
 
@@ -177,40 +179,13 @@ class SettingsMapper {
         'dokan_delivery_time.allow_vendor_override_settings'         => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.allow_vendor_override_settings',
         'dokan_delivery_time.selection_required'                     => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.selection_required',
         'dokan_delivery_time.delivery_date_label'                    => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_date_label',
+        'dokan_delivery_time.delivery_buffer_unit'                   => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_buffer_unit',
         'dokan_delivery_time.preorder_date'                          => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.preorder_date',
+        'dokan_delivery_time.delivery_buffer_value'                  => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_buffer_value',
         'dokan_delivery_time.time_slot_minutes'                      => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.time_slot_minutes',
         'dokan_delivery_time.order_per_slot'                         => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.order_per_slot',
         'dokan_delivery_time.delivery_box_info'                      => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_box_info',
-
-        // Delivery support (multicheck - needs special handling like shipping providers)
         'dokan_delivery_time.delivery_support'                       => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_support',
-        // 'dokan_delivery_time.delivery_support.store-pickup' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_support',
-
-        // Delivery days
-        'dokan_delivery_time.delivery_day_monday'                    => 'shipment.dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule.monday',
-        'dokan_delivery_time.delivery_day_tuesday'                   => 'shipment.dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule.tuesday',
-        'dokan_delivery_time.delivery_day_wednesday'                 => 'shipment.dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule.wednesday',
-        'dokan_delivery_time.delivery_day_thursday'                  => 'shipment.dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule.thursday',
-        'dokan_delivery_time.delivery_day_friday'                    => 'shipment.dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule.friday',
-        'dokan_delivery_time.delivery_day_saturday'                  => 'shipment.dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule.saturday',
-        'dokan_delivery_time.delivery_day_sunday'                    => 'shipment.dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule.sunday',
-
-        // =========================
-        // Delivery Time Settings
-        // =========================
-
-        // Main settings
-        'dokan_delivery_time.allow_vendor_override_settings'         => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.allow_vendor_override_settings',
-        'dokan_delivery_time.selection_required'                     => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.selection_required',
-        'dokan_delivery_time.delivery_date_label'                    => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_date_label',
-        'dokan_delivery_time.preorder_date'                          => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.preorder_date',
-        'dokan_delivery_time.time_slot_minutes'                      => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.time_slot_minutes',
-        'dokan_delivery_time.order_per_slot'                         => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.order_per_slot',
-        'dokan_delivery_time.delivery_box_info'                      => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_box_info',
-
-        // Delivery support (multicheck - needs special handling like shipping providers)
-        // 'dokan_delivery_time.delivery_support.delivery' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_support',
-        // 'dokan_delivery_time.delivery_support.store-pickup' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_support',
 
         // Delivery days
         'dokan_delivery_time.delivery_day_monday'                    => 'shipment.dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule.monday',
@@ -238,10 +213,31 @@ class SettingsMapper {
         // Transaction > Withdraw
         'dokan_withdraw.withdraw_limit'                              => 'transaction.withdraw_charge.minimum_withdraw_limit_section.minimum_withdraw_limit',
         'dokan_withdraw.withdraw_date_limit'                         => 'transaction.withdraw_charge.withdraw_threshold_section.withdraw_threshold',
+        'dokan_withdraw.hide_withdraw_option'                        => 'transaction.withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility',
         'dokan_withdraw.exclude_cod_payment'                         => 'transaction.withdraw_charge.cod_payments_section.cod_payments',
+        'dokan_withdraw.withdraw_methods'                            => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods',
+        'dokan_withdraw.withdraw_charges'                            => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_charges',
+        'dokan_withdraw.withdraw_method_name'                        => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_method_name',
+        'dokan_withdraw.withdraw_method_type'                        => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_method_type',
+        'dokan_withdraw.dokan_paypal_marketplace'                    => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal_marketplace',
+        'dokan_withdraw.dokan_paystack'                              => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_paystack',
+        'dokan_withdraw.dokan_stripe_connect'                        => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_stripe',
+        'dokan_withdraw.dokan_razorpay'                              => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay',
+        'dokan_withdraw.disbursement'                                => 'transaction.withdraw_charge.withdraw_option_visibility_section.manual_withdraw',
+//        'dokan_withdraw.disbursement_schedule'                       => 'transaction.withdraw_charge.withdraw_option_visibility_section.manual_withdraw', // Shared with disbursement
+
+        // New mappings for individual switches
+        'dokan_withdraw.disbursement_schedule'             => 'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw',
+//        'dokan_withdraw.disbursement_schedule.monthly'               => 'transaction.withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw',
+//        'dokan_withdraw.disbursement_schedule.schedule_biweekly'     => 'transaction.withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw',
+//        'dokan_withdraw.disbursement_schedule.schedule_weekly'       => 'transaction.withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw',
+
+//        'dokan_withdraw.quarterly_schedule'                          => 'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_day',
+//        'dokan_withdraw.monthly_schedule'                            => 'transaction.withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw_day',
+//        'dokan_withdraw.biweekly_schedule'                           => 'transaction.withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_day',
+//        'dokan_withdraw.weekly_schedule'                             => 'transaction.withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw_day',
 
         //'dokan_withdraw.withdraw_limit'         => 'transaction.withdraw_charge.section_withdraw_charge.minimum_withdraw_limit_section.minimum_withdraw_limit',
-        // 'dokan_withdraw.withdraw_order_status'  => 'transaction.withdraw_charge.section_withdraw_charge.manual_withdraw',
         // 'dokan_withdraw.exclude_cod_payment'    => 'transaction.withdraw_charge.section_withdraw_charge.cod_payments',
         // 'dokan_withdraw.withdraw_date_limit'    => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_threshold',
         // 'dokan_withdraw.hide_withdraw_option'   => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_option_visibility',
@@ -407,8 +403,20 @@ class SettingsMapper {
         // AI Assist > Product Generation
         // =========================
         'dokan_ai.dokan_ai_engine'                                   => 'ai_assist.product_generation.product_image_section.product_info_engine',
-        'dokan_ai.dokan_ai_chatgpt_api_key'                          => 'ai_assist.product_generation.chatgpt_api_info_group.openai_api_key',
-        'dokan_ai.dokan_ai_chatgpt_model'                            => 'ai_assist.product_generation.product_image_section.openai_model',
+        'dokan_ai.dokan_ai_openai_api_key'                           => 'ai_assist.product_generation.product_image_section.openai_api_info_group.openai_api_key',
+        'dokan_ai.dokan_ai_openai_model'                             => 'ai_assist.product_generation.product_image_section.openai_api_info_group.openai_model',
+        'dokan_ai.dokan_ai_gemini_api_key'                           => 'ai_assist.product_generation.product_image_section.gemini_api_info_group.gemini_api_key',
+        'dokan_ai.dokan_ai_gemini_model'                             => 'ai_assist.product_generation.product_image_section.gemini_api_info_group.gemini_model',
+
+        // =========================
+        // AI Assist > Image Enhancer
+        // =========================
+        'dokan_ai.dokan_ai_image_gen_availability'                   => 'ai_assist.product_generation.product_description_section.product_image_enhancement',
+        'dokan_ai.dokan_ai_image_engine'                             => 'ai_assist.product_generation.product_description_section.product_image_engine',
+        'dokan_ai.dokan_ai_image_gemini_api_key'                     => 'ai_assist.product_generation.product_description_section.gemini_api_info_group.gemini_api_key',
+        'dokan_ai.dokan_ai_image_gemini_model'                       => 'ai_assist.product_generation.product_description_section.gemini_api_info_group.gemini_model',
+        'dokan_ai.dokan_ai_image_bria-ai_api_key'                    => 'ai_assist.product_generation.product_description_section.bria-ai_api_info_group.bria-ai_api_key',
+        'dokan_ai.dokan_ai_image_bria-ai_model'                      => 'ai_assist.product_generation.product_description_section.bria-ai_api_info_group.bria-ai_model',
     ];
 
     /**

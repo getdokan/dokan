@@ -117,6 +117,7 @@ export interface CombineInputProps {
     title?: string;
     description?: string;
     hookKey?: string;
+    isAutomated?: boolean;
 
     // Callbacks
     onValueChange: ( updatedValues: FixedCommissionInputValues ) => void;

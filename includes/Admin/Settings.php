@@ -220,7 +220,7 @@ class Settings {
                             $existing = [];
                         }
 
-                        $fields = array_replace_recursive( $existing, $fields );
+                        $fields = $this->settings_recursive_replace( $existing, $fields );
                     }
                 );
 
@@ -290,6 +290,36 @@ class Settings {
         }
 
         return $options;
+    }
+
+    /**
+     * Handle settings recursively replace.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $existing
+     * @param array $new
+     *
+     * @return array
+     */
+    protected function settings_recursive_replace( array $existing, array $new ): array {
+        foreach ( $new as $key => $value ) {
+            // Explicit empty array must overwrite.
+            if ( is_array( $value ) && empty( $value ) ) {
+                $existing[ $key ] = [];
+                continue;
+            }
+
+            if ( is_array( $value ) && isset( $existing[ $key ] ) && is_array( $existing[ $key ] ) ) {
+                // Important: even if $value is empty, this should overwrite
+                $existing[ $key ] = $this->settings_recursive_replace( $existing[ $key ], $value );
+            } else {
+                // Always replace it, even with an empty array or empty value
+                $existing[ $key ] = $value;
+            }
+        }
+
+        return $existing;
     }
 
     /**
