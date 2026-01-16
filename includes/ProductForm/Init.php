@@ -37,6 +37,7 @@ class Init {
         $this->init_general_fields();
         $this->init_inventory_fields();
         $this->init_downloadable_fields();
+        $this->init_attribute_fields();
         $this->init_other_fields();
         do_action( 'dokan_product_form_fields_init' );
     }
@@ -498,88 +499,6 @@ class Init {
             ]
         );
 
-        $section->add_field(
-            Elements::ATTRIBUTES, [
-                'title'          => __( 'Attributes', 'dokan-lite' ),
-                'field_type'     => 'attribute',
-                'name'           => 'attributes',
-                'options_callback' => function () {
-                    $attributes = [];
-                    foreach ( wc_get_attribute_taxonomies() as $attr ) {
-                        $taxonomy_name = wc_attribute_taxonomy_name( $attr->attribute_name );
-                        $terms         = get_terms(
-                            [
-								'taxonomy'   => $taxonomy_name,
-								'hide_empty' => false,
-							]
-                        );
-
-                        $term_options = [];
-                        if ( ! is_wp_error( $terms ) ) {
-                            foreach ( $terms as $term ) {
-                                $term_options[] = [
-                                    'label' => $term->name,
-                                    'value' => $term->term_id,
-                                ];
-                            }
-                        }
-
-                        $attributes[] = [
-                            'label' => $attr->attribute_label,
-                            'value' => $attr->attribute_id,
-                            'slug'  => $taxonomy_name,
-                            'terms' => $term_options,
-                        ];
-                    }
-                    return $attributes;
-                },
-                'value_callback' => function ( $product, $value = [] ) {
-                    if ( ! empty( $value ) ) {
-                        return $value;
-                    }
-
-                    if ( ! $product instanceof WC_Product ) {
-                        return [];
-                    }
-
-                    $attributes = [];
-                    foreach ( $product->get_attributes( 'edit' ) as $attr ) {
-                        $terms = [];
-                        if ( $attr->is_taxonomy() && ! empty( $attr->get_options() ) ) {
-                            $wp_terms = get_terms(
-                                [
-									'taxonomy'   => $attr->get_name(),
-									'include'    => $attr->get_options(),
-									'hide_empty' => false,
-								]
-                            );
-
-                            if ( ! is_wp_error( $wp_terms ) ) {
-                                foreach ( $wp_terms as $term ) {
-                                    $terms[] = [
-                                        'label' => $term->name,
-                                        'value' => $term->term_id,
-                                    ];
-                                }
-                            }
-                        }
-
-                        $attributes[] = [
-                            'id'          => $attr->get_id(),
-                            'name'        => $attr->get_name() ? wc_attribute_label( $attr->get_name() ) : '',
-                            'options'     => $attr->get_options(),
-                            'visible'     => $attr->get_visible(),
-                            'variation'   => $attr->get_variation(),
-                            'position'    => $attr->get_position(),
-                            'is_taxonomy' => $attr->is_taxonomy(),
-                            'terms'       => $terms,
-                        ];
-                    }
-
-                    return $attributes;
-                },
-            ]
-        );
         do_action( 'dokan_product_form_general_fields_init', $section );
     }
 
@@ -860,6 +779,109 @@ class Init {
             ]
         );
         do_action( 'dokan_product_form_downloadable_fields_init', $section );
+    }
+
+
+
+    /**
+     * Init Attribute fields
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function init_attribute_fields() {
+        $section = Factory::add_section(
+            'attributes',
+            [
+                'title'       => __( 'Attributes', 'dokan-lite' ),
+                'description' => __( 'Manage attributes and variations for this variable product.', 'dokan-lite' ),
+                'order'       => 30,
+            ]
+        );
+
+        $section->add_field(
+            Elements::ATTRIBUTES, [
+                'title'          => __( 'Attributes', 'dokan-lite' ),
+                'field_type'     => 'attribute',
+                'name'           => 'attributes',
+                'options_callback' => function () {
+                    $attributes = [];
+                    foreach ( wc_get_attribute_taxonomies() as $attr ) {
+                        $taxonomy_name = wc_attribute_taxonomy_name( $attr->attribute_name );
+                        $terms         = get_terms(
+                            [
+								'taxonomy'   => $taxonomy_name,
+								'hide_empty' => false,
+							]
+                        );
+
+                        $term_options = [];
+                        if ( ! is_wp_error( $terms ) ) {
+                            foreach ( $terms as $term ) {
+                                $term_options[] = [
+                                    'label' => $term->name,
+                                    'value' => $term->term_id,
+                                ];
+                            }
+                        }
+
+                        $attributes[] = [
+                            'label' => $attr->attribute_label,
+                            'value' => $attr->attribute_id,
+                            'slug'  => $taxonomy_name,
+                            'terms' => $term_options,
+                        ];
+                    }
+                    return $attributes;
+                },
+                'value_callback' => function ( $product, $value = [] ) {
+                    if ( ! empty( $value ) ) {
+                        return $value;
+                    }
+
+                    if ( ! $product instanceof WC_Product ) {
+                        return [];
+                    }
+
+                    $attributes = [];
+                    foreach ( $product->get_attributes( 'edit' ) as $attr ) {
+                        $terms = [];
+                        if ( $attr->is_taxonomy() && ! empty( $attr->get_options() ) ) {
+                            $wp_terms = get_terms(
+                                [
+									'taxonomy'   => $attr->get_name(),
+									'include'    => $attr->get_options(),
+									'hide_empty' => false,
+								]
+                            );
+
+                            if ( ! is_wp_error( $wp_terms ) ) {
+                                foreach ( $wp_terms as $term ) {
+                                    $terms[] = [
+                                        'label' => $term->name,
+                                        'value' => $term->term_id,
+                                    ];
+                                }
+                            }
+                        }
+
+                        $attributes[] = [
+                            'id'          => $attr->get_id(),
+                            'name'        => $attr->get_name() ? wc_attribute_label( $attr->get_name() ) : '',
+                            'options'     => $attr->get_options(),
+                            'visible'     => $attr->get_visible(),
+                            'variation'   => $attr->get_variation(),
+                            'position'    => $attr->get_position(),
+                            'is_taxonomy' => $attr->is_taxonomy(),
+                            'terms'       => $terms,
+                        ];
+                    }
+
+                    return $attributes;
+                },
+            ]
+        );
     }
 
     /**

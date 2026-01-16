@@ -18,6 +18,7 @@ interface DokanFormManagerData {
     view_product_url: string;
     form_manager_nonce: string;
     vendor_earning: number;
+    variations: any[];
 }
 
 // from localized script
@@ -68,6 +69,7 @@ export const FormProvider = ( { children }: { children: React.ReactNode } ) => {
         ...initialData,
         id: Number( formData.product_id ),
         vendor_earning: formData.vendor_earning,
+        variations: formData.variations || [],
     } );
 
     const [ isLoading, setIsLoading ] = useState( false );
@@ -183,19 +185,20 @@ export const FormProvider = ( { children }: { children: React.ReactNode } ) => {
     };
 
     const isNewProduct = Boolean( formData.is_new_product );
+    const productUrl = formData.view_product_url;
 
     const value = {
         product,
         errors,
         fields,
         sections,
+        productUrl,
         isNewProduct,
         setProduct,
         setErrors,
         isLoading,
         submitHandler,
         onChange,
-        productUrl: formData.view_product_url,
     };
 
     return (

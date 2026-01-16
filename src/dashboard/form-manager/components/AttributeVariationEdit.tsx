@@ -5,7 +5,7 @@ import { __ } from '@wordpress/i18n';
 import { useFormContext } from '../context/FormContext';
 import CustomField from './CustomField';
 
-interface Attribute {
+export interface Attribute {
     id: number; // 0 for custom
     name: string;
     options: string[] | string | number[];
@@ -18,36 +18,28 @@ interface Attribute {
 
 type AttributeCardProps = {
     attr: Attribute;
-    index: number;
-    isExpanded: boolean;
-    attributeOptions: any[];
     field: any;
+    index: number;
+    productType?: string;
+    attributeOptions: any[];
     attributes: Attribute[];
     onChange: ( updatedData: any ) => void;
-    setExpandedIndices: React.Dispatch< React.SetStateAction< number[] > >;
 };
 
 const AttributeCard = ( {
     attr,
     index,
-    isExpanded,
     attributeOptions,
     field,
     attributes,
     onChange,
-    setExpandedIndices,
+    productType,
 }: AttributeCardProps ) => {
+    const [ isExpanded, setIsExpanded ] = useState( false );
     const handleRemoveAttribute = ( idx: number ) => {
         const newAttributes = [ ...attributes ];
         newAttributes.splice( idx, 1 );
         onChange( { [ field.id ]: newAttributes } );
-
-        // Update expanded indices: remove the deleted index and shift larger indices down
-        setExpandedIndices( ( prev ) => {
-            return prev
-                .filter( ( i ) => i !== idx )
-                .map( ( i ) => ( i > idx ? i - 1 : i ) );
-        } );
     };
 
     const handleAttributeChange = (
@@ -96,13 +88,8 @@ const AttributeCard = ( {
         } );
     };
 
-    const toggleAccordion = ( idx: number ) => {
-        setExpandedIndices( ( prev ) => {
-            if ( prev.includes( idx ) ) {
-                return prev.filter( ( i ) => i !== idx );
-            }
-            return [ ...prev, idx ];
-        } );
+    const toggleAccordion = () => {
+        setIsExpanded( ! isExpanded );
     };
 
     const handleSelectAll = () => {
@@ -119,7 +106,7 @@ const AttributeCard = ( {
             <div
                 role="button"
                 className="flex justify-between items-center p-3 bg-gray-50 border-b cursor-pointer select-none"
-                onClick={ () => toggleAccordion( index ) }
+                onClick={ toggleAccordion }
             >
                 <div className="font-semibold text-gray-700 text-sm">
                     { attr.name || __( 'New Attribute', 'dokan-lite' ) }
@@ -253,7 +240,7 @@ const AttributeCard = ( {
                         ) }
                     </div>
 
-                    <div className="col-span-1 md:col-span-2 mt-2 text-sm text-gray-600">
+                    <div className="col-span-1 md:col-span-2 mt-2 text-sm text-gray-600 flex flex-col md:flex-row gap-4">
                         <label className="inline-flex items-center">
                             <SimpleCheckbox
                                 checked={ attr.visible }
@@ -265,7 +252,7 @@ const AttributeCard = ( {
                                     )
                                 }
                                 input={ {
-                                    id: `dokan-attr-${ attr.id }`,
+                                    id: `dokan-attr-visible-${ index }-${ attr.id }`,
                                 } }
                             />
                             { __(
@@ -273,6 +260,25 @@ const AttributeCard = ( {
                                 'dokan-lite'
                             ) }
                         </label>
+
+                        { productType === 'variable' && (
+                            <label className="inline-flex items-center">
+                                <SimpleCheckbox
+                                    checked={ attr.variation }
+                                    onChange={ ( e ) =>
+                                        handleAttributeChange(
+                                            index,
+                                            'variation',
+                                            e.target.checked
+                                        )
+                                    }
+                                    input={ {
+                                        id: `dokan-attr-variation-${ index }-${ attr.id }`,
+                                    } }
+                                />
+                                { __( 'Used for variations', 'dokan-lite' ) }
+                            </label>
+                        ) }
                     </div>
                 </div>
             ) }
@@ -283,12 +289,10 @@ const AttributeCard = ( {
 const AttributeVariationEditor = ( { data, field, onChange }: any ) => {
     const attributes: Attribute[] = data[ field.id ] || [];
     const { isLoading, submitHandler } = useFormContext();
+    const { product_type: productType } = data;
 
     // Using a separate state to manage the "Add new" selection
     const [ selectedAttrAdd, setSelectedAttrAdd ] = useState< any >( null );
-
-    // State to track expanded attribute cards
-    const [ expandedIndices, setExpandedIndices ] = useState< number[] >( [] );
 
     // Available global attributes from field configuration
     const globalAttributeOptions = useMemo( () => {
@@ -334,10 +338,6 @@ const AttributeVariationEditor = ( { data, field, onChange }: any ) => {
 
         const newAttributes = [ ...attributes, newAttribute ];
         onChange( { [ field.id ]: newAttributes } );
-
-        // Expand the new attribute (last index)
-        setExpandedIndices( ( prev ) => [ ...prev, attributes.length ] );
-
         setSelectedAttrAdd( null );
     };
 
@@ -346,18 +346,16 @@ const AttributeVariationEditor = ( { data, field, onChange }: any ) => {
             <div className="flex flex-col gap-4">
                 { /* Attribute List */ }
                 { attributes.map( ( attr, index ) => {
-                    const isExpanded = expandedIndices.includes( index );
                     return (
                         <AttributeCard
                             key={ index }
                             attr={ attr }
-                            index={ index }
-                            isExpanded={ isExpanded }
-                            attributeOptions={ globalAttributeOptions }
                             field={ field }
+                            index={ index }
                             attributes={ attributes }
+                            productType={ productType }
+                            attributeOptions={ globalAttributeOptions }
                             onChange={ onChange }
-                            setExpandedIndices={ setExpandedIndices }
                         />
                     );
                 } ) }
@@ -385,18 +383,18 @@ const AttributeVariationEditor = ( { data, field, onChange }: any ) => {
                     >
                         { __( 'Add New', 'dokan-lite' ) }
                     </DokanButton>
+                    { attributes.length > 0 && (
+                        <div>
+                            <DokanButton
+                                type="button"
+                                variant="secondary"
+                                onClick={ submitHandler }
+                                disabled={ isLoading }
+                                label={ __( 'Save Attributes', 'dokan-lite' ) }
+                            />
+                        </div>
+                    ) }
                 </div>
-                { attributes.length > 0 && (
-                    <div>
-                        <DokanButton
-                            type="button"
-                            variant="secondary"
-                            onClick={ submitHandler }
-                            disabled={ isLoading }
-                            label={ __( 'Save Attributes', 'dokan-lite' ) }
-                        />
-                    </div>
-                ) }
             </div>
         </CustomField>
     );
