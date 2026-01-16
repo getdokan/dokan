@@ -3,31 +3,26 @@ import { __ } from '@wordpress/i18n';
 const SettingsSkeleton = () => {
     return (
         <div className="min-h-screen h-full">
-            {/* Settings Title - Outside the main container */}
-            <h2 className="text-2xl text-[#25252D] font-bold my-6 lg:mb-8 lg:mt-10">
-                {__('Settings', 'dokan-lite')}
-            </h2>
-
             <main className="w-full lg:px-0 lg:bg-white h-full lg:shadow rounded-lg overflow-hidden">
                 <div className="lg:grid lg:grid-cols-12 lg:divide-x h-full">
-                    {/* Sidebar Menu Skeleton */}
-                    <div className="lg:col-span-3 p-9 space-y-1">
+                    { /* Sidebar Menu Skeleton */ }
+                    <div className="lg:col-span-3 p-7 lg:py-12 space-y-1">
                         <div className="animate-pulse">
-                            {/* Search Box */}
+                            { /* Search Box */ }
                             <div className="mb-4">
                                 <div className="h-10 bg-gray-200 rounded border"></div>
                             </div>
 
-                            {/* Menu Section 1 */}
+                            { /* Menu Section 1 */ }
                             <div className="space-y-1">
-                                {/* Parent Item with Icon */}
+                                { /* Parent Item with Icon */ }
                                 <div className="flex items-center gap-3">
                                     <div className="h-7 w-7 bg-gray-200 rounded"></div>
                                     <div className="h-7 w-20 bg-gray-200 rounded flex-1"></div>
                                     <div className="h-5 w-5 bg-gray-200 rounded"></div>
                                 </div>
-                                
-                                {/* Child Items */}
+
+                                { /* Child Items */ }
                                 <div className="flex items-center pl-11 py-2">
                                     <div className="h-5 w-24 bg-gray-200 rounded"></div>
                                 </div>
@@ -36,16 +31,16 @@ const SettingsSkeleton = () => {
                                 </div>
                             </div>
 
-                            {/* Menu Section 2 */}
+                            { /* Menu Section 2 */ }
                             <div className="space-y-1 mt-4">
-                                {/* Parent Item with Icon */}
+                                { /* Parent Item with Icon */ }
                                 <div className="flex items-center gap-3">
                                     <div className="h-7 w-7 bg-gray-200 rounded"></div>
                                     <div className="h-7 w-16 bg-gray-200 rounded flex-1"></div>
                                     <div className="h-5 w-5 bg-gray-200 rounded"></div>
                                 </div>
-                                
-                                {/* Child Items */}
+
+                                { /* Child Items */ }
                                 <div className="flex items-center pl-11 py-2">
                                     <div className="h-5 w-32 bg-gray-200 rounded"></div>
                                 </div>
@@ -60,9 +55,9 @@ const SettingsSkeleton = () => {
                                 </div>
                             </div>
 
-                            {/* Menu Section 3 */}
+                            { /* Menu Section 3 */ }
                             <div className="space-y-1 mt-4">
-                                {/* Parent Item with Icon */}
+                                { /* Parent Item with Icon */ }
                                 <div className="flex items-center gap-3">
                                     <div className="h-7 w-7 bg-gray-200 rounded"></div>
                                     <div className="h-7 w-20 bg-gray-200 rounded flex-1"></div>
@@ -70,9 +65,9 @@ const SettingsSkeleton = () => {
                                 </div>
                             </div>
 
-                            {/* Menu Section 4 */}
+                            { /* Menu Section 4 */ }
                             <div className="space-y-1 mt-4">
-                                {/* Parent Item with Icon */}
+                                { /* Parent Item with Icon */ }
                                 <div className="flex items-center gap-3">
                                     <div className="h-7 w-7 bg-gray-200 rounded"></div>
                                     <div className="h-7 w-20 bg-gray-200 rounded flex-1"></div>
@@ -80,9 +75,9 @@ const SettingsSkeleton = () => {
                                 </div>
                             </div>
 
-                            {/* Menu Section 5 */}
+                            { /* Menu Section 5 */ }
                             <div className="space-y-1 mt-4">
-                                {/* Parent Item with Icon */}
+                                { /* Parent Item with Icon */ }
                                 <div className="flex items-center gap-3">
                                     <div className="h-7 w-7 bg-gray-200 rounded"></div>
                                     <div className="h-7 w-20 bg-gray-200 rounded flex-1"></div>
@@ -92,22 +87,22 @@ const SettingsSkeleton = () => {
                         </div>
                     </div>
 
-                    {/* Content Area Skeleton */}
+                    { /* Content Area Skeleton */ }
                     <div className="space-y-6 lg:p-7 lg:py-12 lg:col-span-9 pt-10">
                         <div className="animate-pulse">
-                            {/* Page Header with Documentation Link */}
+                            { /* Page Header with Documentation Link */ }
                             <div className="mb-6 flex items-start justify-between">
                                 <div className="flex-1">
                                     <div className="h-8 w-64 bg-gray-200 rounded mb-3"></div>
                                     <div className="h-5 w-96 bg-gray-200 rounded"></div>
                                 </div>
-                                {/* Documentation Link Box */}
+                                { /* Documentation Link Box */ }
                                 <div className="h-10 w-32 bg-gray-200 rounded ml-4"></div>
                             </div>
 
-                            {/* Settings Options */}
+                            { /* Settings Options */ }
                             <div className="bg-white rounded-lg border border-[#E9E9E9] divide-y divide-gray-200">
-                               {/* Field 1  */}
+                                { /* Field 1  */ }
                                 <div className="p-6 flex items-start justify-between">
                                     <div className="space-y-2 flex-1">
                                         <div className="h-6 w-64 bg-gray-200 rounded"></div>
@@ -116,7 +111,7 @@ const SettingsSkeleton = () => {
                                     <div className="h-10 w-32 bg-gray-200 rounded ml-4"></div>
                                 </div>
 
-                                {/* Field 2  */}
+                                { /* Field 2  */ }
                                 <div className="p-6 flex items-start justify-between">
                                     <div className="space-y-2 flex-1">
                                         <div className="h-6 w-64 bg-gray-200 rounded"></div>
@@ -125,7 +120,7 @@ const SettingsSkeleton = () => {
                                     <div className="h-6 w-11 bg-gray-200 rounded-full"></div>
                                 </div>
 
-                                {/* Field 3 */}
+                                { /* Field 3 */ }
                                 <div className="p-6 flex items-start justify-between">
                                     <div className="space-y-2 flex-1">
                                         <div className="h-6 w-64 bg-gray-200 rounded"></div>
@@ -137,7 +132,7 @@ const SettingsSkeleton = () => {
                                     </div>
                                 </div>
 
-                                {/* Field 4 */}
+                                { /* Field 4 */ }
                                 <div className="p-6 flex items-start justify-between">
                                     <div className="space-y-2 flex-1">
                                         <div className="h-5 w-64 bg-gray-200 rounded"></div>
@@ -146,7 +141,7 @@ const SettingsSkeleton = () => {
                                     <div className="h-6 w-11 bg-gray-200 rounded-full"></div>
                                 </div>
 
-                                {/* Field 5  */}
+                                { /* Field 5  */ }
                                 <div className="p-6 flex items-start justify-between">
                                     <div className="space-y-2 flex-1">
                                         <div className="h-5 w-56 bg-gray-200 rounded"></div>
