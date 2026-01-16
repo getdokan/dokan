@@ -87,18 +87,44 @@ class SettingsMapper {
         'dokan_colors.store_color_pallete'                           => 'appearance.dashboard-color-customizer-page.dokan-store-colors.dashboard_color_customizer',
 
         // =========================
+        // Appearance > Storefront Socials
+        // =========================
+
+        // Facebook
+        'dokan_verification.facebook_enable_status'                  => 'appearance.storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_enabled',
+        'dokan_verification.fb_app_id'                               => 'appearance.storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_app_id',
+        'dokan_verification.fb_app_secret'                           => 'appearance.storefont_social_onboarding.storefont_social_onboarding_section.facebook_api_group.facebook_app_secret',
+
+        // Twitter/X
+        'dokan_verification.twitter_enable_status'                   => 'appearance.storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_enabled',
+        'dokan_verification.twitter_app_id'                          => 'appearance.storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_api_key',
+        'dokan_verification.twitter_app_secret'                      => 'appearance.storefont_social_onboarding.storefont_social_onboarding_section.x_api_group.x_api_secret',
+
+        // Google
+        'dokan_verification.google_enable_status'                    => 'appearance.storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_enabled',
+        'dokan_verification.google_app_id'                           => 'appearance.storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_client_id',
+        'dokan_verification.google_app_secret'                       => 'appearance.storefont_social_onboarding.storefont_social_onboarding_section.google_api_group.google_client_secret',
+
+        // LinkedIn
+        'dokan_verification.linkedin_enable_status'                  => 'appearance.storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_enabled',
+        'dokan_verification.linkedin_app_id'                         => 'appearance.storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_client_id',
+        'dokan_verification.linkedin_app_secret'                     => 'appearance.storefont_social_onboarding.storefont_social_onboarding_section.linkedin_api_group.linkedin_client_secret',
+
+        // =========================
         // Compliance > Privacy
         // =========================
         'dokan_privacy.enable_privacy'                               => 'compliance.privacy.privacy_settings.privacy_policy_display',
         'dokan_privacy.privacy_page'                                 => 'compliance.privacy.privacy_settings.privacy_policy_page',
         'dokan_privacy.privacy_policy'                               => 'compliance.privacy.privacy_policy_content.privacy_policy_content',
+        'dokan_general.admin_access'                                 => 'compliance.privacy.admin_access_section.admin_access',
+        'dokan_general.data_clear_on_uninstall'                      => 'compliance.privacy.data_clear_section.data_clear_on_uninstall',
 
         // =========================
         // Compliance > EU Compliance (Germanized)
         // =========================
         'dokan_germanized.vendor_registration'                       => 'compliance.eu_compliance.eu_compliance_settings.eu_vendor_registration_display',
-        'dokan_germanized.vendor_fields'                             => 'compliance.eu_compliance.vendor_extra_fields.vendor_extra_fields',
-        'dokan_germanized.customer_fields'                           => 'compliance.eu_compliance.customer_extra_fields.customer_extra_fields',
+        'dokan_germanized.vendor_fields'                             => 'compliance.eu_compliance.eu_compliance_settings.vendor_extra_fields',
+        'dokan_germanized.customer_fields'                           => 'compliance.eu_compliance.eu_compliance_settings.customer_extra_fields',
         'dokan_germanized.enabled_germanized'                        => 'compliance.eu_compliance.eu_compliance_settings.germanized_support_vendors',
         'dokan_germanized.override_invoice_number'                   => 'compliance.eu_compliance.eu_compliance_settings.vendor_invoice_number_override',
 
@@ -161,10 +187,7 @@ class SettingsMapper {
         'dokan_delivery_time.time_slot_minutes'                      => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.time_slot_minutes',
         'dokan_delivery_time.order_per_slot'                         => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.order_per_slot',
         'dokan_delivery_time.delivery_box_info'                      => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_box_info',
-
-        // Delivery support (multicheck - needs special handling like shipping providers)
-//        'dokan_delivery_time.delivery_support'                       => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_support',
-        // 'dokan_delivery_time.delivery_support.store-pickup' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_support',
+        'dokan_delivery_time.delivery_support'                       => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_support',
 
         // Delivery days
         'dokan_delivery_time.delivery_day_monday'                    => 'shipment.dashboard-delivery-days-page.dashboard-delivery-days-page.delivery_days_schedule.monday',
@@ -192,10 +215,31 @@ class SettingsMapper {
         // Transaction > Withdraw
         'dokan_withdraw.withdraw_limit'                              => 'transaction.withdraw_charge.minimum_withdraw_limit_section.minimum_withdraw_limit',
         'dokan_withdraw.withdraw_date_limit'                         => 'transaction.withdraw_charge.withdraw_threshold_section.withdraw_threshold',
+        'dokan_withdraw.hide_withdraw_option'                        => 'transaction.withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility',
         'dokan_withdraw.exclude_cod_payment'                         => 'transaction.withdraw_charge.cod_payments_section.cod_payments',
+        'dokan_withdraw.withdraw_methods'                            => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods',
+        'dokan_withdraw.withdraw_charges'                            => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_charges',
+        'dokan_withdraw.withdraw_method_name'                        => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_method_name',
+        'dokan_withdraw.withdraw_method_type'                        => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_method_type',
+        'dokan_withdraw.dokan_paypal_marketplace'                    => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal_marketplace',
+        'dokan_withdraw.dokan_paystack'                              => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_paystack',
+        'dokan_withdraw.dokan_stripe_connect'                        => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_stripe',
+        'dokan_withdraw.dokan_razorpay'                              => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay',
+        'dokan_withdraw.disbursement'                                => 'transaction.withdraw_charge.withdraw_option_visibility_section.manual_withdraw',
+//        'dokan_withdraw.disbursement_schedule'                       => 'transaction.withdraw_charge.withdraw_option_visibility_section.manual_withdraw', // Shared with disbursement
+
+        // New mappings for individual switches
+        'dokan_withdraw.disbursement_schedule'             => 'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw',
+//        'dokan_withdraw.disbursement_schedule.monthly'               => 'transaction.withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw',
+//        'dokan_withdraw.disbursement_schedule.schedule_biweekly'     => 'transaction.withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw',
+//        'dokan_withdraw.disbursement_schedule.schedule_weekly'       => 'transaction.withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw',
+
+//        'dokan_withdraw.quarterly_schedule'                          => 'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_day',
+//        'dokan_withdraw.monthly_schedule'                            => 'transaction.withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw_day',
+//        'dokan_withdraw.biweekly_schedule'                           => 'transaction.withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_day',
+//        'dokan_withdraw.weekly_schedule'                             => 'transaction.withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw_day',
 
         //'dokan_withdraw.withdraw_limit'         => 'transaction.withdraw_charge.section_withdraw_charge.minimum_withdraw_limit_section.minimum_withdraw_limit',
-        // 'dokan_withdraw.withdraw_order_status'  => 'transaction.withdraw_charge.section_withdraw_charge.manual_withdraw',
         // 'dokan_withdraw.exclude_cod_payment'    => 'transaction.withdraw_charge.section_withdraw_charge.cod_payments',
         // 'dokan_withdraw.withdraw_date_limit'    => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_threshold',
         // 'dokan_withdraw.hide_withdraw_option'   => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_option_visibility',
@@ -280,6 +324,10 @@ class SettingsMapper {
         'dokan_product_subscription.alert_email_subject'             => 'vendor.vendor_subscription.vendor_subscription.alert_email_subject',
         'dokan_product_subscription.alert_email_body'                => 'vendor.vendor_subscription.vendor_subscription.alert_email_body',
 
+        // Vendor > Store Stats
+        'dokan_vendor_analytics.profile'                             => 'vendor.store_state.store_stats_section.analytics_authenticated_group.analytics_profile',
+        'dokan_vendor_analytics.add_tracking_code'                   => 'vendor.store_state.store_stats_section.analytics_add_tracking_code',
+
         // Vendor > Single Product Multi Vendor
         'dokan_spmv.enable_pricing'                                  => 'vendor.single_product_multi_vendor.single_product_multi_vendor.single_product_multiple_vendor',
         'dokan_spmv.sell_item_btn'                                   => 'vendor.single_product_multi_vendor.single_product_multi_vendor.sell_item_button_text',
@@ -361,8 +409,20 @@ class SettingsMapper {
         // AI Assist > Product Generation
         // =========================
         'dokan_ai.dokan_ai_engine'                                   => 'ai_assist.product_generation.product_image_section.product_info_engine',
-        'dokan_ai.dokan_ai_chatgpt_api_key'                          => 'ai_assist.product_generation.chatgpt_api_info_group.openai_api_key',
-        'dokan_ai.dokan_ai_chatgpt_model'                            => 'ai_assist.product_generation.product_image_section.openai_model',
+        'dokan_ai.dokan_ai_openai_api_key'                           => 'ai_assist.product_generation.product_image_section.openai_api_info_group.openai_api_key',
+        'dokan_ai.dokan_ai_openai_model'                             => 'ai_assist.product_generation.product_image_section.openai_api_info_group.openai_model',
+        'dokan_ai.dokan_ai_gemini_api_key'                           => 'ai_assist.product_generation.product_image_section.gemini_api_info_group.gemini_api_key',
+        'dokan_ai.dokan_ai_gemini_model'                             => 'ai_assist.product_generation.product_image_section.gemini_api_info_group.gemini_model',
+
+        // =========================
+        // AI Assist > Image Enhancer
+        // =========================
+        'dokan_ai.dokan_ai_image_gen_availability'                   => 'ai_assist.product_generation.product_description_section.product_image_enhancement',
+        'dokan_ai.dokan_ai_image_engine'                             => 'ai_assist.product_generation.product_description_section.product_image_engine',
+        'dokan_ai.dokan_ai_image_gemini_api_key'                     => 'ai_assist.product_generation.product_description_section.gemini_api_info_group.gemini_api_key',
+        'dokan_ai.dokan_ai_image_gemini_model'                       => 'ai_assist.product_generation.product_description_section.gemini_api_info_group.gemini_model',
+        'dokan_ai.dokan_ai_image_bria-ai_api_key'                    => 'ai_assist.product_generation.product_description_section.bria-ai_api_info_group.bria-ai_api_key',
+        'dokan_ai.dokan_ai_image_bria-ai_model'                      => 'ai_assist.product_generation.product_description_section.bria-ai_api_info_group.bria-ai_model',
     ];
 
     /**
@@ -392,6 +452,7 @@ class SettingsMapper {
     public function set_map( array $map ): self {
         $this->map = $map;
         $this->build_reverse_map();
+
         return $this;
     }
 
@@ -445,9 +506,9 @@ class SettingsMapper {
     /**
      * Helper: set a value into a nested array using dot notation.
      *
-     * @param array  $array The array to modify (passed by reference).
-     * @param string $path  Dot-notated path (e.g. foo.bar.baz).
-     * @param mixed  $value Value to set.
+     * @param array $array The array to modify (passed by reference).
+     * @param string $path Dot-notated path (e.g. foo.bar.baz).
+     * @param mixed $value Value to set.
      */
     public static function set_value_by_path( array &$array, string $path, $value ): void {
         if ( '' === $path ) {
@@ -483,13 +544,14 @@ class SettingsMapper {
             }
             $ref = $ref[ $key ];
         }
+
         return $ref;
     }
 
     /**
      * Helper: check if a dot-notated path exists in an array.
      *
-     * @param array  $array
+     * @param array $array
      * @param string $path
      *
      * @return bool
@@ -506,6 +568,7 @@ class SettingsMapper {
             }
             $ref = $ref[ $key ];
         }
+
         return true;
     }
 
@@ -513,8 +576,8 @@ class SettingsMapper {
      * Helper: unset a value in a nested array using dot notation.
      * No-op if path does not exist.
      *
-     * @param array  $array Array to modify (passed by reference).
-     * @param string $path  Dot-notated path.
+     * @param array $array Array to modify (passed by reference).
+     * @param string $path Dot-notated path.
      */
     public static function unset_by_path( array &$array, string $path ): void {
         if ( '' === $path ) {

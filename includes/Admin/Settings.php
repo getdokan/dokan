@@ -304,6 +304,12 @@ class Settings {
      */
     protected function settings_recursive_replace( array $existing, array $new ): array {
         foreach ( $new as $key => $value ) {
+            // Explicit empty array must overwrite.
+            if ( is_array( $value ) && empty( $value ) ) {
+                $existing[ $key ] = [];
+                continue;
+            }
+
             if ( is_array( $value ) && isset( $existing[ $key ] ) && is_array( $existing[ $key ] ) ) {
                 // Important: even if $value is empty, this should overwrite
                 $existing[ $key ] = $this->settings_recursive_replace( $existing[ $key ], $value );
