@@ -17,6 +17,7 @@ interface DokanFormManagerData {
     product_id: string;
     view_product_url: string;
     form_manager_nonce: string;
+    vendor_earning: number;
 }
 
 // from localized script
@@ -38,6 +39,7 @@ interface FormContextType {
     submitHandler: ( e: React.FormEvent ) => Promise< void >;
     onChange: ( newData: Record< string, any > ) => void;
     isNewProduct: boolean;
+    productUrl: string;
     sections: Section[];
 }
 
@@ -65,6 +67,7 @@ export const FormProvider = ( { children }: { children: React.ReactNode } ) => {
     const [ product, setProduct ] = useState< Record< string, any > >( {
         ...initialData,
         id: Number( formData.product_id ),
+        vendor_earning: formData.vendor_earning,
     } );
 
     const [ isLoading, setIsLoading ] = useState( false );
@@ -192,6 +195,7 @@ export const FormProvider = ( { children }: { children: React.ReactNode } ) => {
         isLoading,
         submitHandler,
         onChange,
+        productUrl: formData.view_product_url,
     };
 
     return (

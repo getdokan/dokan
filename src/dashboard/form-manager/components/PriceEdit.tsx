@@ -7,7 +7,7 @@ import CustomField from './CustomField';
 
 const PriceEdit = ( { data, field, onChange }: any ) => {
     const [ vendorEarning, setVendorEarning ] = useState(
-        Number( data[ field.id ] )
+        Number( data.vendor_earning )
     );
 
     const vendorEarningHandler = async ( price: number ) => {

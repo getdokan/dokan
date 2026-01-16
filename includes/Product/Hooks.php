@@ -696,6 +696,7 @@ class Hooks {
 				'product' => $product,
 			]
         );
+        $vendor_earning = dokan()->commission->get_earning_by_product( $product_id );
         // load scripts
         wp_enqueue_script( 'dokan-product-form-manager' );
         wp_enqueue_style( 'dokan-product-form-manager' );
@@ -708,6 +709,7 @@ class Hooks {
                 'product_id' => $product_id,
                 'is_new_product' => $new_product,
                 'view_product_url' => get_permalink( $product_id ),
+                'vendor_earning' => $vendor_earning,
             ]
         );
     }
