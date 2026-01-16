@@ -9,6 +9,9 @@ import Tab from './Elements/Tab';
 import SettingsParser from './Elements/SettingsParser';
 import PageHeading from './Elements/PageHeading';
 import { twMerge } from 'tailwind-merge';
+import { applyFilters } from '@wordpress/hooks';
+import SettingsSkeleton from './components/SettingsSkeleton';
+import AdminNotices from 'admin/dashboard/pages/dashboard/components/AdminNotices';
 
 const DashboardSwitchLink = () => {
     // Get the switch URL from localized settings
@@ -241,6 +244,12 @@ const SettingsPage = () => {
         ( element ) => element.type === 'field'
     );
 
+    const noticeScopes = applyFilters( 'dokan_admin_dashboard_notices_scopes', [
+        { scope: 'global', endpoint: 'admin' },
+        { scope: '', endpoint: 'admin' },
+        { scope: 'promo', endpoint: 'promo' },
+    ] );
+
     return (
         <>
             <div className="min-h-screen h-full">
@@ -249,86 +258,105 @@ const SettingsPage = () => {
                 >
                     { __( 'Settings', 'dokan-lite' ) }
                 </h2>
-                <main className="w-full lg:px-0 lg:bg-white h-full lg:shadow rounded-lg overflow-hidden">
-                    <div className="lg:grid lg:grid-cols-12 lg:divide-x h-full">
-                        { pages && '' !== selectedPage && pages.length > 0 && (
-                            <Menu
-                                key="admin-settings-menu"
-                                pages={ parentPages }
-                                loading={ loading }
-                                activePage={ selectedPage }
-                                onMenuClick={ onMenuClick }
-                            />
-                        ) }
 
-                        <div className="space-y-6 lg:p-7 lg:py-12 lg:col-span-9 pt-10">
-                            { tabs && '' !== selectedTab && (
-                                <Tab
-                                    key="admin-settings-tab"
-                                    tabs={ tabs }
-                                    loading={ loading }
-                                    selectedTab={ selectedTab }
-                                    onTabClick={ onTabClick }
-                                />
-                            ) }
-                            { pageInfo.title && (
-                                <PageHeading
-                                    title={ pageInfo.title }
-                                    description={ pageInfo.description }
-                                    documentationLink={
-                                        pageInfo.documentationLink
-                                    }
-                                />
-                            ) }
-                            <div
-                                className={ `flex flex-col bg-white rounded-lg ${ twMerge(
-                                    allElementsAreFields &&
-                                        ( pageInfo?.title ||
-                                            pageInfo?.description )
-                                        ? 'divide-gray-200 divide-y border border-[#E9E9E9] rounded'
-                                        : 'gap-6'
-                                ) }` }
-                            >
-                                { elements.map(
-                                    ( element: SettingsElement ) => {
-                                        return (
-                                            <SettingsParser
-                                                key={
-                                                    element.hook_key +
-                                                    '-settings-parser'
-                                                }
-                                                element={ element }
-                                                onValueChange={ onValueChange }
+                { noticeScopes?.map( ( noticeConfig ) => (
+                    <AdminNotices
+                        key={ `${ noticeConfig.endpoint }-${
+                            noticeConfig.scope || 'local'
+                        }` }
+                        endpoint={ noticeConfig.endpoint }
+                        scope={ noticeConfig.scope }
+                    />
+                ) ) }
+
+                { ! loading ? (
+                    <main className="w-full lg:px-0 lg:bg-white h-full lg:shadow rounded-lg overflow-hidden">
+                        <div className="lg:grid lg:grid-cols-12 lg:divide-x h-full">
+                            { pages &&
+                                '' !== selectedPage &&
+                                pages.length > 0 && (
+                                    <Menu
+                                        key="admin-settings-menu"
+                                        pages={ parentPages }
+                                        loading={ loading }
+                                        activePage={ selectedPage }
+                                        onMenuClick={ onMenuClick }
+                                    />
+                                ) }
+
+                            <div className="space-y-6 lg:p-7 lg:py-12 lg:col-span-9 pt-10">
+                                { tabs && '' !== selectedTab && (
+                                    <Tab
+                                        key="admin-settings-tab"
+                                        tabs={ tabs }
+                                        loading={ loading }
+                                        selectedTab={ selectedTab }
+                                        onTabClick={ onTabClick }
+                                    />
+                                ) }
+                                { pageInfo.title && (
+                                    <PageHeading
+                                        title={ pageInfo.title }
+                                        description={ pageInfo.description }
+                                        documentationLink={
+                                            pageInfo.documentationLink
+                                        }
+                                    />
+                                ) }
+                                <div
+                                    className={ `flex flex-col bg-white rounded-lg ${ twMerge(
+                                        allElementsAreFields &&
+                                            ( pageInfo?.title ||
+                                                pageInfo?.description )
+                                            ? 'divide-gray-200 divide-y border border-[#E9E9E9] rounded'
+                                            : 'gap-6'
+                                    ) }` }
+                                >
+                                    { elements.map(
+                                        ( element: SettingsElement ) => {
+                                            return (
+                                                <SettingsParser
+                                                    key={
+                                                        element.hook_key +
+                                                        '-settings-parser'
+                                                    }
+                                                    element={ element }
+                                                    onValueChange={
+                                                        onValueChange
+                                                    }
+                                                />
+                                            );
+                                        }
+                                    ) }
+                                </div>
+
+                                { needSaving && (
+                                    <div
+                                        id="dokan-admin-settings-save-btn"
+                                        className="sticky flex justify-end bottom-0 !mt-8 py-5"
+                                    >
+                                        <button
+                                            type="button"
+                                            disabled={ isSaving }
+                                            onClick={ saveSettings }
+                                            className="inline-flex shadow shadow-lg shadow-gray-800/30 items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                        >
+                                            <SaveIcon
+                                                className="-ml-1 mr-3 h-5 w-5"
+                                                aria-hidden="true"
                                             />
-                                        );
-                                    }
+                                            { isSaving
+                                                ? __( 'Saving..', 'dokan-lite' )
+                                                : __( 'Save', 'dokan-lite' ) }
+                                        </button>
+                                    </div>
                                 ) }
                             </div>
-
-                            { needSaving && (
-                                <div
-                                    id="dokan-admin-settings-save-btn"
-                                    className="sticky flex justify-end bottom-0 !mt-8 py-5"
-                                >
-                                    <button
-                                        type="button"
-                                        disabled={ isSaving }
-                                        onClick={ saveSettings }
-                                        className="inline-flex shadow shadow-lg shadow-gray-800/30 items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                    >
-                                        <SaveIcon
-                                            className="-ml-1 mr-3 h-5 w-5"
-                                            aria-hidden="true"
-                                        />
-                                        { isSaving
-                                            ? __( 'Saving..', 'dokan-lite' )
-                                            : __( 'Save', 'dokan-lite' ) }
-                                    </button>
-                                </div>
-                            ) }
                         </div>
-                    </div>
-                </main>
+                    </main>
+                ) : (
+                    <SettingsSkeleton />
+                ) }
 
                 { dokanAdminDashboardSettings?.legacy_settings_url && (
                     <DashboardSwitchLink />

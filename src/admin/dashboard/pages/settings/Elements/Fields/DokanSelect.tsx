@@ -20,7 +20,7 @@ export default function DokanSelect( { element } ) {
             id={ element.hook_key }
         >
             { hasTitle && (
-                <div className={ 'sm:col-span-8 col-span-12' }>
+                <div className={ 'sm:col-span-8 col-span-12 self-center' }>
                     <DokanFieldLabel
                         title={ element.title }
                         titleFontWeight="bold"
