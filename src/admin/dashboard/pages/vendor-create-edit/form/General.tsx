@@ -1,4 +1,4 @@
-import { __, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { Mail, Trash, Upload, Pencil } from 'lucide-react';
 import { Card, SimpleInput, ToggleSwitch } from '@getdokan/dokan-ui';
 import { DokanButton } from '@dokan/components';
@@ -47,18 +47,6 @@ export const General = ( {
     countries,
 }: GeneralProps ) => {
     const defaultUrl = getDefaultStoreUrl();
-
-    const bannerWidth = wp?.hooks?.applyFilters(
-        'dokan_store_banner_width_dimension',
-        625,
-        vendor
-    );
-
-    const bannerHeight = wp?.hooks?.applyFilters(
-        'dokan_store_banner_height_dimension',
-        300,
-        vendor
-    );
 
     const storeUrl = () => {
         // @ts-ignore
@@ -316,11 +304,9 @@ export const General = ( {
                                         { __( 'Banner', 'dokan-lite' ) }
                                     </label>
                                     <span className="text-neutral-400 -mt-1">
-                                        { sprintf(
-                                            /* translators: 1) banner width, 2) banner height. */
-                                            __( 'Size - %1$s X %2$s px' ),
-                                            bannerWidth,
-                                            bannerHeight
+                                        { __(
+                                            'Size - 600 X 325 px',
+                                            'dokan-lite'
                                         ) }
                                     </span>
                                 </div>
@@ -331,11 +317,7 @@ export const General = ( {
                                             size="sm"
                                             className="h-8"
                                             onClick={ () =>
-                                                wpMedia(
-                                                    setBanner,
-                                                    bannerWidth,
-                                                    bannerHeight
-                                                )
+                                                wpMedia( setBanner )
                                             }
                                         >
                                             { vendor?.banner ? (
@@ -386,13 +368,7 @@ export const General = ( {
                                         variant="secondary"
                                         size="sm"
                                         className="h-8"
-                                        onClick={ () =>
-                                            wpMedia(
-                                                setBanner,
-                                                bannerWidth,
-                                                bannerHeight
-                                            )
-                                        }
+                                        onClick={ () => wpMedia( setBanner ) }
                                     >
                                         <Upload size={ 15 } />
                                         <span>

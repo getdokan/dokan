@@ -4,6 +4,124 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.2.7',
+        'released' => '2026-01-14',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Allow Dokan stock restoration on WC Block Checkout.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.2.6',
+        'released' => '2026-01-13',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Add brand fields in Vendor Product Creation Popup.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Add address fields on customer account migration form.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Add product tags creation separator (,) for vendor dashboard.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Vendor list page redirection after creating a new vendor.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.2.5',
+        'released' => '2026-01-05',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Add translation support to store performance report labels.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Social profile URL\'s not accessible for staff users.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Prevented unauthorized changes to administrator accounts.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.2.4',
+        'released' => '2025-12-26',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Added a Pending Vendors tab on the WordPress admin Users screen to view vendors awaiting approval.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added a bulk action on the WordPress admin Users screen to approve multiple pending vendors at once, including per-user validation and permission checks.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added an admin notice view on the WordPress admin Users screen that summarizes how many vendors were approved after performing bulk actions.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Improved compatibility with recent WooCommerce changes to script handling, making setup wizard and frontend script loading more reliable.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Redesigned the Admin Panel "Changelog" page template for a better look and user experience.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Improved shipping tax calculations so shipping taxes are computed more accurately per-order, taking vendor cart item tax classes into account for multi-vendor orders.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.2.3',
+        'released' => '2025-12-22',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Compatible vendor store banner image cropper with the latest version.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.2.2',
+        'released' => '2025-12-22',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Banner image cropper reflects an error on the vendor store settings.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.2.1',
         'released' => '2025-12-04',
         'changes'  => [
