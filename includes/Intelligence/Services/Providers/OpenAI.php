@@ -35,6 +35,13 @@ class OpenAI extends Provider {
         return 'https://platform.openai.com/api-keys';
     }
 
+    /**
+     * Get the image url.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
     public function get_image_url(): string {
 		return plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/ai-assist/chat-gpt-open-ai.svg';
 	}

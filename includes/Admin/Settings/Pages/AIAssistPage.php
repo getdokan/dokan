@@ -131,7 +131,7 @@ class AIAssistPage extends AbstractPage {
      * @param object $provider Provider object
      * @return void
      */
-    private function add_text_provider_fields( $section, $provider_id, $provider ) {
+    protected function add_text_provider_fields( $section, $provider_id, $provider ) {
         $field_group = ElementFactory::field_group( $provider_id . '_api_info_group' )
             ->add_dependency( 'product_generation.product_image_section.product_info_engine', $provider_id, true, 'display', 'show', '===' )
             ->add_dependency( 'product_generation.product_image_section.product_info_engine', $provider_id, true, 'display', 'hide', '!==' );
@@ -139,7 +139,13 @@ class AIAssistPage extends AbstractPage {
         // API Info Label
         $field_group->add(
             ElementFactory::field( $provider_id . '_api_info', 'base_field_label' )
-                ->set_title( sprintf( esc_html__( '%s API', 'dokan-lite' ), $provider->get_title() ) )
+                ->set_title(
+                    sprintf(
+                        /* translators: %s: Provider title */
+                        esc_html__( '%s API', 'dokan-lite' ),
+                        $provider->get_title()
+                    )
+                )
                 ->set_image_url( $provider->get_image_url() )
                 ->set_description(
                     sprintf(
@@ -157,9 +163,27 @@ class AIAssistPage extends AbstractPage {
         // API Notice
         $field_group->add(
             ElementFactory::field( $provider_id . '_api_notice', 'info' )
-                ->set_title( sprintf( esc_html__( 'You can get your API Keys in your %s Account.', 'dokan-lite' ), $provider->get_title() ) )
-                ->set_description( sprintf( esc_html__( 'Access your %s dashboard to generate API keys for integration.', 'dokan-lite' ), $provider->get_title() ) )
-                ->set_link_text( sprintf( esc_html__( '%s Account', 'dokan-lite' ), $provider->get_title() ) )
+                ->set_title(
+                    sprintf(
+                        /* translators: %s: Provider title */
+                        esc_html__( 'You can get your API Keys in your %s Account.', 'dokan-lite' ),
+                        $provider->get_title()
+                    )
+                )
+                ->set_description(
+                    sprintf(
+                        /* translators: %s: Provider title */
+                        esc_html__( 'Access your %s dashboard to generate API keys for integration.', 'dokan-lite' ),
+                        $provider->get_title()
+                    )
+                )
+                ->set_link_text(
+                    sprintf(
+                        /* translators: %s: Provider title */
+                        esc_html__( '%s Account', 'dokan-lite' ),
+                        $provider->get_title()
+                    )
+                )
                 ->set_link_url( $provider->get_api_key_url() )
                 ->add_dependency( 'product_generation.product_image_section.product_info_generate', 'on', true, 'display', 'show', '===' )
                 ->add_dependency( 'product_generation.product_image_section.product_info_generate', 'on', true, 'display', 'hide', '!==' )
@@ -169,8 +193,20 @@ class AIAssistPage extends AbstractPage {
         $field_group->add(
             ElementFactory::field( $provider_id . '_api_key', 'show_hide' )
                 ->set_title( esc_html__( 'API Key', 'dokan-lite' ) )
-                ->set_tooltip( sprintf( __( 'Enter your %s API key for content generation.', 'dokan-lite' ), $provider->get_title() ) )
-                ->set_placeholder( sprintf( esc_html__( 'Enter your %s API key', 'dokan-lite' ), $provider->get_title() ) )
+                ->set_tooltip(
+                    sprintf(
+                        /* translators: %s: Provider title */
+                        __( 'Enter your %s API key for content generation.', 'dokan-lite' ),
+                        $provider->get_title()
+                    )
+                )
+                ->set_placeholder(
+                    sprintf(
+                        /* translators: %s: Provider title */
+                        esc_html__( 'Enter your %s API key', 'dokan-lite' ),
+                        $provider->get_title()
+                    )
+                )
                 ->add_dependency( 'product_generation.product_image_section.product_info_generate', 'on', true, 'display', 'show', '===' )
                 ->add_dependency( 'product_generation.product_image_section.product_info_generate', 'on', true, 'display', 'hide', '!==' )
         );
