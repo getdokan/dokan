@@ -235,7 +235,7 @@ class TransactionPage extends AbstractPage {
                             ->add(
                                 ElementFactory::field( 'paypal_withdraw', 'switch' )
                                     ->set_title( esc_html__( 'PayPal', 'dokan-lite' ) )
-                                    ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/transaction/paypal.svg' )
+                                    ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/images/admin-settings-icons/transaction/paypal.svg' )
                                     ->set_description( esc_html__( 'Enable PayPal as a withdrawal method for vendors.', 'dokan-lite' ) )
                                     ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'on' )
                                     ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), 'off' )
@@ -262,7 +262,7 @@ class TransactionPage extends AbstractPage {
                             ->add(
                                 ElementFactory::field( 'bank_transfer_withdraw', 'switch' )
                                     ->set_title( esc_html__( 'Bank Transfer', 'dokan-lite' ) )
-                                    ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/transaction/bank-transfer.svg' )
+                                    ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/images/admin-settings-icons/transaction/bank-transfer.svg' )
                                     ->set_description( esc_html__( 'Enable Bank Transfer as a withdrawal method for vendors.', 'dokan-lite' ) )
                                     ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'on' )
                                     ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), 'off' )

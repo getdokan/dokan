@@ -44,6 +44,6 @@ class Gemini extends Provider {
      * @return string
      */
 	public function get_image_url(): string {
-		return plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/ai-assist/gemini-ai.svg';
+		return plugin_dir_url( DOKAN_FILE ) . 'assets/images/admin-settings-icons/ai-assist/gemini-ai.svg';
 	}
 }
