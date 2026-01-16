@@ -48,28 +48,8 @@ const DokanInfoField = ( {
                                 onClick={ handleLinkClick }
                                 className="text-[#575757] text-xs underline underline-offset-1 hover:text-[#AB92F6] transition-colors"
                             >
-                                { element.link_text }
+                                { element.link_text } ↗
                             </button>
-
-                            {
-                                <div className="w-[13px] h-[13px] flex items-center justify-center">
-                                    <svg
-                                        width="10"
-                                        height="10"
-                                        viewBox="0 0 10 10"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <path
-                                            d="M5.33333 1H8.58333M8.58333 1V4.25M8.58333 1L1 8.58333"
-                                            stroke="currentColor"
-                                            strokeWidth="1.08333"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                    </svg>
-                                </div>
-                            }
                         </div>
                     ) }
                 </div>
