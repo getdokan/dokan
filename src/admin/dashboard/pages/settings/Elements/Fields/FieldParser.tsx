@@ -13,6 +13,7 @@ import DokanFileUploadField from './DokanFileUpload';
 import DokanHtmlField from './DokanHtmlField';
 import DokanInfoField from './DokanInfoField';
 import DokanMultiCheck from './DokanMultiCheck';
+import DokanNoticeField from './DokanNoticeField';
 import DokanNumber from './DokanNumber';
 import DokanPassword from './DokanPassword';
 import DokanRadioCapsule from './DokanRadioCapsule';
@@ -207,6 +208,16 @@ const FieldParser = ( { element }: SettingsProps ) => {
             return applyFilters(
                 'dokan_admin_settings_html_field_parser',
                 <DokanHtmlField key={ element.hook_key } element={ element } />,
+                element
+            );
+
+        case 'notice':
+            return applyFilters(
+                'dokan_admin_settings_notice_field_parser',
+                <DokanNoticeField
+                    key={ element.hook_key }
+                    element={ element }
+                />,
                 element
             );
 
