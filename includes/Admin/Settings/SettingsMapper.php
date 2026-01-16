@@ -189,14 +189,31 @@ class SettingsMapper {
         // Transaction > Withdraw
         'dokan_withdraw.withdraw_limit'                              => 'transaction.withdraw_charge.minimum_withdraw_limit_section.minimum_withdraw_limit',
         'dokan_withdraw.withdraw_date_limit'                         => 'transaction.withdraw_charge.withdraw_threshold_section.withdraw_threshold',
+        'dokan_withdraw.hide_withdraw_option'                        => 'transaction.withdraw_charge.withdraw_option_visibility_section.withdraw_option_visibility',
         'dokan_withdraw.exclude_cod_payment'                         => 'transaction.withdraw_charge.cod_payments_section.cod_payments',
         'dokan_withdraw.withdraw_methods'                            => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods',
         'dokan_withdraw.withdraw_charges'                            => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_charges',
         'dokan_withdraw.withdraw_method_name'                        => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_method_name',
         'dokan_withdraw.withdraw_method_type'                        => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_custom.custom_method_type',
+        'dokan_withdraw.dokan_paypal_marketplace'                    => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal_marketplace',
+        'dokan_withdraw.dokan_paystack'                              => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_paystack',
+        'dokan_withdraw.dokan_stripe_connect'                        => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_stripe',
+        'dokan_withdraw.dokan_razorpay'                              => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_methods_group_razorpay',
+        'dokan_withdraw.disbursement'                                => 'transaction.withdraw_charge.withdraw_option_visibility_section.manual_withdraw',
+//        'dokan_withdraw.disbursement_schedule'                       => 'transaction.withdraw_charge.withdraw_option_visibility_section.manual_withdraw', // Shared with disbursement
+
+        // New mappings for individual switches
+        'dokan_withdraw.disbursement_schedule'             => 'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw',
+//        'dokan_withdraw.disbursement_schedule.monthly'               => 'transaction.withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw',
+//        'dokan_withdraw.disbursement_schedule.schedule_biweekly'     => 'transaction.withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw',
+//        'dokan_withdraw.disbursement_schedule.schedule_weekly'       => 'transaction.withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw',
+
+//        'dokan_withdraw.quarterly_schedule'                          => 'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_day',
+//        'dokan_withdraw.monthly_schedule'                            => 'transaction.withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw_day',
+//        'dokan_withdraw.biweekly_schedule'                           => 'transaction.withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_day',
+//        'dokan_withdraw.weekly_schedule'                             => 'transaction.withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw_day',
 
         //'dokan_withdraw.withdraw_limit'         => 'transaction.withdraw_charge.section_withdraw_charge.minimum_withdraw_limit_section.minimum_withdraw_limit',
-        // 'dokan_withdraw.withdraw_order_status'  => 'transaction.withdraw_charge.section_withdraw_charge.manual_withdraw',
         // 'dokan_withdraw.exclude_cod_payment'    => 'transaction.withdraw_charge.section_withdraw_charge.cod_payments',
         // 'dokan_withdraw.withdraw_date_limit'    => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_threshold',
         // 'dokan_withdraw.hide_withdraw_option'   => 'transaction.withdraw_charge.section_withdraw_charge.withdraw_option_visibility',
