@@ -1,4 +1,4 @@
-import { MaskedInput } from '@getdokan/dokan-ui';
+import { Badge, MaskedInput } from '@getdokan/dokan-ui';
 import { debounce } from '@wordpress/compose';
 import { RawHTML, useCallback, useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
@@ -12,6 +12,7 @@ const FixedCommissionInput = ( {
     description,
     hookKey,
     onValueChange,
+    isAutomated = false,
     display = true,
     debounceDelay = 500,
 }: CombineInputProps ) => {
@@ -148,37 +149,53 @@ const FixedCommissionInput = ( {
                     hasContent ? 'justify-end' : 'justify-start'
                 ) }
             >
-                <MaskedInput
-                    value={ formatValue( localValues.admin_percentage ) }
-                    addOnRight={ <span>{ __( '%', 'dokan-lite' ) }</span> }
-                    onChange={ ( e ) =>
-                        debouncedPercentageChange( e.target.value )
-                    }
-                    maskRule={ {
-                        numeral: true,
-                        delimiter: currency?.thousand ?? ',',
-                        numeralDecimalMark: currency?.decimal ?? '.',
-                        numeralDecimalScale: currency?.precision ?? 2,
-                    } }
-                    className={ `w-24 h-10 rounded rounded-r-none focus:border-gray-300 focus:ring-0 !border-r-0 !rounded-r-none` }
-                />
+                { isAutomated ? (
+                    <Badge
+                        color="gray"
+                        className="px-3 py-1 text-sm font-medium"
+                        label={ __( 'Automated', 'dokan-lite' ) }
+                    />
+                ) : (
+                    <>
+                        <MaskedInput
+                            value={ formatValue(
+                                localValues.admin_percentage
+                            ) }
+                            addOnRight={
+                                <span>{ __( '%', 'dokan-lite' ) }</span>
+                            }
+                            onChange={ ( e ) =>
+                                debouncedPercentageChange( e.target.value )
+                            }
+                            maskRule={ {
+                                numeral: true,
+                                delimiter: currency?.thousand ?? ',',
+                                numeralDecimalMark: currency?.decimal ?? '.',
+                                numeralDecimalScale: currency?.precision ?? 2,
+                            } }
+                            className={ `w-24 h-10 rounded rounded-r-none focus:border-gray-300 focus:ring-0 !border-r-0 !rounded-r-none` }
+                        />
 
-                <div className="text-gray-500 text-lg">
-                    { __( '+', 'dokan-lite' ) }
-                </div>
+                        <div className="text-gray-500 text-lg">
+                            { __( '+', 'dokan-lite' ) }
+                        </div>
 
-                <MaskedInput
-                    addOnLeft={ currency?.symbol }
-                    value={ formatValue( localValues.additional_fee ) }
-                    onChange={ ( e ) => debouncedFixedChange( e.target.value ) }
-                    maskRule={ {
-                        numeral: true,
-                        delimiter: currency?.thousand ?? ',',
-                        numeralDecimalMark: currency?.decimal ?? '.',
-                        numeralDecimalScale: currency?.precision ?? 2,
-                    } }
-                    className={ `w-24 h-10 rounded focus:border-gray-300 focus:ring-0 !border-l-0 !rounded-l-none` }
-                />
+                        <MaskedInput
+                            addOnLeft={ currency?.symbol }
+                            value={ formatValue( localValues.additional_fee ) }
+                            onChange={ ( e ) =>
+                                debouncedFixedChange( e.target.value )
+                            }
+                            maskRule={ {
+                                numeral: true,
+                                delimiter: currency?.thousand ?? ',',
+                                numeralDecimalMark: currency?.decimal ?? '.',
+                                numeralDecimalScale: currency?.precision ?? 2,
+                            } }
+                            className={ `w-24 h-10 rounded focus:border-gray-300 focus:ring-0 !border-l-0 !rounded-l-none` }
+                        />
+                    </>
+                ) }
             </div>
         </div>
     );
