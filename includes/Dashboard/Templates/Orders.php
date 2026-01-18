@@ -328,31 +328,31 @@ class Orders {
 
         $add_args = array();
 
-        if ( isset( $_GET['customer_id'] ) && '' !== $_GET['customer_id'] ) {
+        if ( ! empty( $_GET['customer_id'] ) ) {
             $add_args['customer_id'] = absint( wp_unslash( $_GET['customer_id'] ) );
         }
 
-        if ( isset( $_GET['order_date_start'] ) && '' !== $_GET['order_date_start'] ) {
+        if ( ! empty( $_GET['order_date_start'] ) ) {
             $add_args['order_date_start'] = sanitize_key( wp_unslash( $_GET['order_date_start'] ) );
         }
 
-        if ( isset( $_GET['order_date_end'] ) && '' !== $_GET['order_date_end'] ) {
+        if ( ! empty( $_GET['order_date_end'] ) ) {
             $add_args['order_date_end'] = sanitize_key( wp_unslash( $_GET['order_date_end'] ) );
         }
 
-        if ( isset( $_GET['order_status'] ) && '' !== $_GET['order_status'] ) {
+        if ( ! empty( $_GET['order_status'] ) ) {
             $add_args['order_status'] = sanitize_key( wp_unslash( $_GET['order_status'] ) );
         }
 
-        if ( isset( $_GET['search'] ) && '' !== $_GET['search'] ) {
+        if ( ! empty( $_GET['search'] ) ) {
             $add_args['search'] = sanitize_text_field( wp_unslash( $_GET['search'] ) );
         }
 
-        if ( isset( $_GET['limit'] ) && '' !== $_GET['limit'] ) {
+        if ( ! empty( $_GET['limit'] ) ) {
             $add_args['limit'] = absint( wp_unslash( $_GET['limit'] ) );
         }
 
-        if ( isset( $_GET['seller_order_filter_nonce'] ) && '' !== $_GET['seller_order_filter_nonce'] ) {
+        if ( ! empty( $_GET['seller_order_filter_nonce'] ) ) {
             $add_args['seller_order_filter_nonce'] = sanitize_key(
                 wp_unslash( $_GET['seller_order_filter_nonce'] )
             );
