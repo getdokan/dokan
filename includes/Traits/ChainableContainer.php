@@ -25,10 +25,8 @@ trait ChainableContainer {
      * Unserializing instances of this class is forbidden.
      *
      * @since 3.7.21
-     *
-     * @param array $data Unserialized data.
      */
-    public function __unserialize( array $data ): void {
+    public function __wakeup() {
         $message = ' Backtrace: ' . wp_debug_backtrace_summary();
         _doing_it_wrong( __METHOD__, $message . esc_html__( 'Unserializing instances of this class is forbidden.', 'dokan-lite' ), DOKAN_PLUGIN_VERSION ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     }
