@@ -232,6 +232,19 @@ class Settings {
      * @return void
      */
     public function load_payment_content( $slug_suffix ) {
+        // check staff permissions
+        if ( ! current_user_can( 'dokan_view_store_payment_menu' ) ) {
+            dokan_get_template_part(
+                'global/dokan-error',
+                '',
+                [
+                    'deleted' => false,
+                    'message' => __( 'You have no permission to view this page', 'dokan-lite' ),
+                ]
+            );
+
+            return;
+        }
         $seller_id = dokan_get_current_user_id();
         $data = $this->get_seller_payment_methods( $seller_id );
         $connected_methods = $data['connected_methods'];

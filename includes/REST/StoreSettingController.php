@@ -115,6 +115,9 @@ class StoreSettingController extends StoreController {
      * @return bool|WP_Error
      */
     public function get_settings_permission_callback() {
+        if( ! current_user_can( 'manage_woocommerce' ) ) {
+            return false;
+        }
         $vendor = $this->get_vendor();
 
         if ( is_wp_error( $vendor ) ) {
