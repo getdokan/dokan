@@ -122,7 +122,12 @@ function WithdrawPaymentRow( {
             );
         }
 
-        return settings.withdraw_options[ selectedMethod ];
+        return (
+            settings?.withdraw_options?.[ selectedMethod ] ??
+            settings?.connected_methods?.[ selectedMethod ]?.title ??
+            settings?.disconnected_methods?.[ selectedMethod ]?.title ??
+            selectedMethod
+        );
     };
 
     const getPaymentMethodDescription = ( method ) => {

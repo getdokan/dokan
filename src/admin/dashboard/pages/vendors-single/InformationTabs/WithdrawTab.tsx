@@ -90,6 +90,25 @@ const WithdrawTab = ( { vendor }: WithdrawTabProps ) => {
         return <WithdrawTabSkeleton />;
     }
 
+    // If no withdraw method is globally enabled from Dokan settings,
+    // show a single clear message instead of connected / not connected sections.
+    const activeMethods = settings?.active_payment_methods || {};
+    const hasActiveMethods = Object.keys( activeMethods ).length > 0;
+
+    if ( ! hasActiveMethods ) {
+        return (
+            <Card className="bg-white shadow p-6">
+                <DokanAlert
+                    label={ __(
+                        'No withdraw method is available. Please enable payment method from settings.',
+                        'dokan-lite'
+                    ) }
+                    variant="info"
+                />
+            </Card>
+        );
+    }
+
     return (
         <Card className="bg-white shadow p-6">
             <div>
