@@ -1,9 +1,8 @@
 import { __, sprintf } from '@wordpress/i18n';
+import { Modal } from '@wordpress/components';
 import { Slot } from '@wordpress/components';
 import { kebabCase } from '../../utilities';
 import { debounce } from '@wordpress/compose';
-import { Modal } from '@getdokan/dokan-ui';
-import { ModalProps } from '@getdokan/dokan-ui/dist/components/Modal';
 import { useCallback, useEffect, useState } from '@wordpress/element';
 import DialogIcon from './DialogIcon';
 import DokanButton, { ButtonVariant } from '../Button';
@@ -13,7 +12,6 @@ interface DokanModalProps {
     isOpen: boolean;
     namespace: string;
     className?: string;
-    modalProps?: Partial< ModalProps >;
     modalClassName?: string;
     modalBodyClassName?: string;
     modalFooterClassName?: string;
@@ -33,13 +31,15 @@ interface DokanModalProps {
     confirmButtonVariant?: ButtonVariant;
     hideCancelButton?: boolean;
     confirmButtonDisabled?: boolean;
+    isDismissible?: boolean;
+    shouldCloseOnClickOutside?: boolean;
+    shouldCloseOnEsc?: boolean;
 }
 
 const DokanModal = ( {
     isOpen,
     onClose,
     className,
-    modalProps = {},
     modalClassName,
     modalBodyClassName,
     modalFooterClassName,
@@ -59,6 +59,9 @@ const DokanModal = ( {
     confirmButtonVariant = 'primary',
     hideCancelButton = false,
     confirmButtonDisabled = false,
+    isDismissible = true,
+    shouldCloseOnClickOutside = true,
+    shouldCloseOnEsc = true,
 }: DokanModalProps ) => {
     if ( ! namespace ) {
         throw new Error(
@@ -67,16 +70,46 @@ const DokanModal = ( {
     }
 
     useEffect( () => {
-        const portalRoot = document.querySelector( '#headlessui-portal-root' );
-        if ( portalRoot ) {
-            portalRoot.classList.add( 'dokan-layout' );
-            portalRoot.style.display = 'block';
-        } else {
-            const div = document.createElement( 'div' );
-            div.id = 'headlessui-portal-root';
-            div.classList.add( 'dokan-layout' );
-            div.style.display = 'block';
-            document.body.appendChild( div );
+
+        // Add styles to override WordPress default modal styles
+        if ( isOpen ) {
+            const style = document.createElement( 'style' );
+            style.id = 'dokan-modal-override';
+            style.textContent = `
+                .dokan-custom-modal.components-modal__frame {
+                    background: transparent !important;
+                    box-shadow: none !important;
+                    border: none !important;
+                    padding: 0 !important;
+                    max-width: none !important;
+                    width: auto !important;
+                    max-height: none !important;
+                    height: auto !important;
+                    position: absolute !important;
+                    top: 50% !important;
+                    left: 50% !important;
+                    transform: translate(-50%, -50%) !important;
+                    margin: 0 !important;
+                    overflow: visible !important;
+                }
+                .dokan-custom-modal .components-modal__content {
+                    padding: 0 !important;
+                    margin: 0 !important;
+                    overflow: visible !important;
+                    max-height: none !important;
+                    height: auto !important;
+                }
+                .dokan-custom-modal .components-modal__header {
+                    display: none !important;
+                }
+                .components-modal__screen-overlay {
+                    background-color: rgba(0, 0, 0, 0.75) !important;
+                }
+            `;
+            
+            if ( ! document.getElementById( 'dokan-modal-override' ) ) {
+                document.head.appendChild( style );
+            }
         }
     }, [ isOpen ] );
 
@@ -100,76 +133,98 @@ const DokanModal = ( {
         [ onConfirm, onClose ]
     );
 
+    if ( ! isOpen ) {
+        return null;
+    }
+
     return (
         <Modal
-            isOpen={ isOpen }
-            onClose={ onClose }
+            onRequestClose={ onClose }
             className={ twMerge(
-                `dokan-layout bg-transparent shadow-none flex justify-center w-fit`,
+                `dokan-custom-modal dokan-layout bg-transparent shadow-none`,
                 modalClassName
             ) }
-            { ...modalProps }
+            isDismissible={ isDismissible }
+            shouldCloseOnClickOutside={ shouldCloseOnClickOutside }
+            shouldCloseOnEsc={ shouldCloseOnEsc }
+            __experimentalHideHeader={ true }
         >
             <div
                 className={ twMerge(
-                    'relative text-left bg-white w-full max-w-xl rounded transition-all transform shadow-xl self-center z-0',
+                    'relative text-left bg-white w-full max-w-xl rounded-lg transition-all transform shadow-xl',
                     className
                 ) }
             >
+                {/* Close Button - Top Right */}
+                { isDismissible && (
+                    <button
+                        onClick={ onClose }
+                        className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors z-10"
+                        aria-label="Close"
+                    >
+                        <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={ 2 }
+                                d="M6 18L18 6M6 6l12 12"
+                            />
+                        </svg>
+                    </button>
+                ) }
+
+                {/* Modal Header/Title */}
                 { dialogHeader === false
                     ? null
                     : dialogHeader || (
-                          <Modal.Title className={ `border-b` }>
+                          <div className="px-6 py-4 border-b border-gray-200">
                               <Slot
                                   name={ `dokan-before-dialog-header-${ dialogNamespace }` }
                                   fillProps={ { namespace } }
                               />
 
-                              {
-                                  <div className="text-gray-900">
-                                      { dialogTitle ||
-                                          __(
-                                              'Confirmation Dialog',
-                                              'dokan-lite'
-                                          ) }
-                                  </div>
-                              }
+                              <h2 className="text-lg font-semibold text-gray-900 leading-6 pr-8">
+                                  { dialogTitle ||
+                                      __( 'Confirmation Dialog', 'dokan-lite' ) }
+                              </h2>
 
                               <Slot
                                   name={ `dokan-after-dialog-header-${ dialogNamespace }` }
                                   fillProps={ { namespace } }
                               />
-                          </Modal.Title>
+                          </div>
                       ) }
-                <Modal.Content className={ modalBodyClassName }>
+
+                {/* Modal Content/Body */}
+                <div className={ twMerge( 'px-6 py-5', modalBodyClassName ) }>
                     <Slot
                         name={ `dokan-before-${ dialogNamespace }-dialog-content` }
                         fillProps={ { namespace } }
                     />
 
                     { dialogContent || (
-                        <div className="sm:flex sm:items-start min-h-32">
+                        <div className="flex items-start gap-4">
                             { dialogIcon || (
-                                <div
-                                    className={ `flex items-center justify-center flex-shrink-0 w-14 h-14 bg-red-50 border border-red-50 rounded-full` }
-                                >
+                                <div className="flex items-center justify-center flex-shrink-0 w-12 h-12 bg-red-50 rounded-full">
                                     <DialogIcon />
                                 </div>
                             ) }
-                            <div className="mt-3 sm:ml-4 sm:mt-0 sm:text-left">
+                            <div className="flex-1">
                                 <h3
-                                    className="text-base font-semibold text-gray-900"
+                                    className="text-base font-semibold text-gray-900 mb-1"
                                     dangerouslySetInnerHTML={ {
                                         __html:
                                             confirmationTitle ||
-                                            __(
-                                                'Delete Confirmation',
-                                                'dokan-lite'
-                                            ),
+                                            __( 'Delete Confirmation', 'dokan-lite' ),
                                     } }
                                 ></h3>
-                                <div
-                                    className="mt-2"
+                                <p
+                                    className="text-sm text-gray-500 leading-relaxed"
                                     dangerouslySetInnerHTML={ {
                                         __html:
                                             confirmationDescription ||
@@ -183,7 +238,7 @@ const DokanModal = ( {
                                                 '</strong>'
                                             ),
                                     } }
-                                ></div>
+                                ></p>
                             </div>
                         </div>
                     ) }
@@ -192,20 +247,20 @@ const DokanModal = ( {
                         name={ `dokan-after-${ dialogNamespace }-dialog-content` }
                         fillProps={ { namespace } }
                     />
-                </Modal.Content>
+                </div>
+
+                {/* Modal Footer */}
                 { dialogFooter === false
                     ? null
                     : dialogFooter || (
-                          <Modal.Footer
+                          <div
                               className={ twMerge(
-                                  'border-t flex items-center justify-end gap-3',
+                                  'px-6 py-4 border-t border-gray-200 flex items-center justify-end gap-3',
                                   modalFooterClassName
                               ) }
                           >
                               { dialogFooterContent || (
-                                  <div
-                                      className={ `flex items-center justify-end gap-3` }
-                                  >
+                                  <>
                                       { hideCancelButton || (
                                           <DokanButton
                                               onClick={ onClose }
@@ -229,14 +284,11 @@ const DokanModal = ( {
                                           }
                                       >
                                           { confirmButtonText ||
-                                              __(
-                                                  'Yes, Delete',
-                                                  'dokan-lite'
-                                              ) }
+                                              __( 'Yes, Delete', 'dokan-lite' ) }
                                       </DokanButton>
-                                  </div>
+                                  </>
                               ) }
-                          </Modal.Footer>
+                          </div>
                       ) }
             </div>
         </Modal>
