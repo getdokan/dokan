@@ -52,3 +52,30 @@ export type FieldConfig = Partial< FormField > & {
 };
 
 export type FieldHandler = ( field?: FormField ) => FieldConfig;
+
+export type VariationType = {
+    id: number;
+    parent_id: number;
+    menu_order: number;
+    attributes: {
+        label: string;
+        value: string;
+        selected_value: {
+            label: string;
+            value: string;
+        };
+        options: any;
+    }[];
+};
+
+export interface Attribute {
+    id: number; // 0 for custom
+    name: string;
+    value: string;
+    options: string[] | string | number[];
+    visible: boolean;
+    variation: boolean;
+    position: number;
+    is_taxonomy?: boolean;
+    terms?: { label: string; value: number }[];
+}

@@ -1,26 +1,31 @@
 import { DokanButton, Select } from '@src/components';
 import { DataForm } from '@wordpress/dataviews';
-import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { useFormContext } from '../../context/FormContext';
+import { useVariationContext } from '../../context/VariationContext';
 import useVariationLayout from '../../hooks/useVariationLayout';
-import { VariationType } from './VariationCard';
+import { VariationType } from '../../types';
 
 type VariationInternalFormProps = {
     variation: VariationType;
 };
 
 const VariationInternalForm = ( { variation }: VariationInternalFormProps ) => {
-    const { product, fields, onChange, submitHandler, isLoading } =
-        useFormContext();
-    const { formLayouts } = useVariationLayout();
+    const {
+        product,
+        fields,
+        isLoading,
+        submitHandler,
+        onChange: dataFormChange,
+    } = useFormContext();
 
-    const [ attributes, setAttributes ] = useState( variation.attributes );
+    const { updateVariation } = useVariationContext();
+    const { formLayouts } = useVariationLayout();
 
     return (
         <div className="flex flex-col gap-4">
             <div className="grid grid-cols-4 gap-4">
-                { attributes.map( ( attr, idx: number ) => {
+                { variation.attributes.map( ( attr, idx: number ) => {
                     return (
                         <div key={ idx }>
                             <Select
@@ -28,13 +33,17 @@ const VariationInternalForm = ( { variation }: VariationInternalFormProps ) => {
                                 placeholder={ attr.label }
                                 value={ attr.selected_value }
                                 onChange={ ( value: any ) => {
-                                    const newAttributes = [ ...attributes ];
+                                    const newAttributes = [
+                                        ...variation.attributes,
+                                    ];
                                     newAttributes[ idx ] = {
                                         ...newAttributes[ idx ],
                                         selected_value: value,
                                     };
-                                    setAttributes( newAttributes );
-                                    onChange( { attributes: newAttributes } );
+                                    updateVariation( {
+                                        ...variation,
+                                        attributes: newAttributes,
+                                    } );
                                 } }
                             />
                         </div>
@@ -45,7 +54,7 @@ const VariationInternalForm = ( { variation }: VariationInternalFormProps ) => {
                 data={ product }
                 fields={ fields }
                 form={ formLayouts }
-                onChange={ onChange }
+                onChange={ dataFormChange }
             />
 
             <div className="flex justify-end">
@@ -54,7 +63,7 @@ const VariationInternalForm = ( { variation }: VariationInternalFormProps ) => {
                     variant="primary"
                     disabled={ isLoading }
                     loading={ isLoading }
-                    onClick={ ( e: any ) => submitHandler( e ) }
+                    onClick={ submitHandler }
                 >
                     { __( 'Save Variation', 'dokan-lite' ) }
                 </DokanButton>

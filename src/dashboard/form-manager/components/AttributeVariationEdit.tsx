@@ -2,28 +2,27 @@ import { DokanButton, Select } from '@src/components';
 import { useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { useFormContext } from '../context/FormContext';
+import { VariationProvider } from '../context/VariationContext';
+import { Attribute, VariationType } from '../types';
 import CustomField from './CustomField';
-import AttributeCard, { Attribute } from './variation/AttributeCard';
+import AttributeCard from './variation/AttributeCard';
 import VariationForm from './variation/VariationForm';
 
 const AttributeVariationEditor = ( { data, field, onChange }: any ) => {
     const attributes: Attribute[] = data[ field.id ] || [];
     const { isLoading, submitHandler } = useFormContext();
     const { product_type: productType } = data;
+    const options = field.elements || [];
+    const [ cardExpanded, setCardExpanded ] = useState( false );
 
     // Using a separate state to manage the "Add new" selection
     const [ selectedAttrAdd, setSelectedAttrAdd ] = useState< any >( null );
-
-    // Available global attributes from field configuration
-    const globalAttributeOptions = useMemo( () => {
-        return field.elements || [];
-    }, [ field.elements ] );
 
     // Options for the "Add new" dropdown: Custom + Global Attributes
     const addOptions = useMemo( () => {
         const options = [
             { label: __( 'Custom Attribute', 'dokan-lite' ), value: '' },
-            ...globalAttributeOptions,
+            ...field.elements,
         ];
         return options.filter( ( opt ) => {
             // Exclude already added attributes
@@ -34,7 +33,7 @@ const AttributeVariationEditor = ( { data, field, onChange }: any ) => {
                 return false;
             } );
         } );
-    }, [ globalAttributeOptions, attributes ] );
+    }, [ field.elements, attributes ] );
 
     const handleAddAttribute = () => {
         const newAttribute: Attribute = {
@@ -60,26 +59,45 @@ const AttributeVariationEditor = ( { data, field, onChange }: any ) => {
         const newAttributes = [ ...attributes, newAttribute ];
         onChange( { [ field.id ]: newAttributes } );
         setSelectedAttrAdd( null );
+        setCardExpanded( true );
+    };
+
+    const handleUpdateAttribute = ( index: number, updatedAttr: Attribute ) => {
+        const newAttributes = [ ...attributes ];
+        newAttributes[ index ] = updatedAttr;
+        onChange( { [ field.id ]: newAttributes } );
+    };
+
+    const handleRemoveAttribute = ( index: number ) => {
+        const newAttributes = [ ...attributes ];
+        newAttributes.splice( index, 1 );
+        onChange( { [ field.id ]: newAttributes } );
+    };
+
+    const onUpdateVariations = ( newVariations: VariationType[] ) => {
+        onChange( { variations: newVariations } );
     };
 
     return (
         <CustomField label={ field.label } error={ field.error }>
             <div className="flex flex-col gap-4">
                 { /* Attribute List */ }
-                { attributes.map( ( attr, index ) => {
-                    return (
-                        <AttributeCard
-                            key={ index }
-                            attr={ attr }
-                            field={ field }
-                            index={ index }
-                            attributes={ attributes }
-                            productType={ productType }
-                            attributeOptions={ globalAttributeOptions }
-                            onChange={ onChange }
-                        />
-                    );
-                } ) }
+                { attributes.map( ( attr, index ) => (
+                    <AttributeCard
+                        key={ index }
+                        attr={ attr }
+                        options={ options }
+                        productType={ productType }
+                        cardExpanded={ cardExpanded }
+                        onUpdate={ ( updatedAttr ) =>
+                            handleUpdateAttribute( index, updatedAttr )
+                        }
+                        onRemove={ ( e ) => {
+                            e.stopPropagation();
+                            handleRemoveAttribute( index );
+                        } }
+                    />
+                ) ) }
 
                 { /* Add New Section */ }
                 <div className="flex gap-2 items-center">
@@ -118,7 +136,16 @@ const AttributeVariationEditor = ( { data, field, onChange }: any ) => {
                 </div>
 
                 { productType === 'variable' && (
-                    <VariationForm product={ data } attributes={ attributes } />
+                    <VariationProvider
+                        defaultAttributes={ attributes }
+                        variations={ data.variations || [] }
+                        onUpdateVariations={ onUpdateVariations }
+                    >
+                        <VariationForm
+                            product={ data }
+                            attributes={ attributes }
+                        />
+                    </VariationProvider>
                 ) }
             </div>
         </CustomField>

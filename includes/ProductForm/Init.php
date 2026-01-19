@@ -518,6 +518,12 @@ class Init {
                 'field_type'  => 'select',
                 'name'        => '_stock_status',
                 'options'     => wc_get_product_stock_status_options(),
+                'dependency_condition'  => [
+                    'section'  => 'inventory',
+                    'field'    => Elements::MANAGE_STOCK,
+                    'operator' => 'not_equal',
+                    'value'    => 'on',
+                ],
             ]
         );
 

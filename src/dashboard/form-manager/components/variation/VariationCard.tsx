@@ -1,125 +1,17 @@
-import { useToast } from '@getdokan/dokan-ui';
 import apiFetch from '@wordpress/api-fetch';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { FormProvider } from '../../context/FormContext';
-import { Section } from '../../types';
-import { Attribute } from './AttributeCard';
+import { useVariationContext } from '../../context/VariationContext';
+import { Section, VariationType } from '../../types';
 import VariationInternalForm from './VariationInternalForm';
-
-declare let dokan: any;
-declare let jQuery: any;
-
-export type VariationType = {
-    id: number;
-    parent_id: number;
-    menu_order: number;
-    attributes: {
-        label: string;
-        value: string;
-        selected_value: {
-            label: string;
-            value: string;
-        };
-        options: any;
-    }[];
-};
-
-interface PrepareVariationPayloadArgs {
-    variation: VariationType;
-    data: Record< string, any >;
-    defaultAttributes?: Attribute[];
-    menuOrder?: number;
-}
 
 type VariationCardProps = {
     variation: VariationType;
-    defaultAttributes?: Attribute[];
 };
 
-const preparePayload = ( {
-    variation,
-    data,
-    defaultAttributes = [],
-    menuOrder = 0,
-}: PrepareVariationPayloadArgs ) => {
-    const formData = new FormData();
-    formData.append( 'action', 'dokan_save_variations' );
-    formData.append( 'product_type', 'variable' );
-    formData.append( 'product_id', String( variation.parent_id ) );
-    formData.append( 'security', dokan.save_variations_nonce );
-    formData.append(
-        `variation_menu_order[${ menuOrder }]`,
-        menuOrder.toString()
-    );
-    formData.append( `variable_enabled[${ menuOrder }]`, 'yes' );
-
-    // Variation ID
-    formData.append(
-        `variable_post_id[${ menuOrder }]`,
-        String( variation.id )
-    );
-
-    // Standard Text/Select Fields
-    const fieldMap: Record< string, string > = {
-        id: 'variable_post_id',
-        date_on_sale_from: 'variable_sale_price_dates_from',
-        date_on_sale_to: 'variable_sale_price_dates_to',
-        image_id: 'upload_image_id',
-        downloadable: 'variable_is_downloadable',
-        virtual: 'variable_is_virtual',
-        stock_quantity: 'variable_stock',
-    };
-
-    // Attributes
-    const attributes = variation.attributes;
-
-    if ( attributes.length ) {
-        attributes.forEach( ( attr ) => {
-            formData.append(
-                `attribute_${ attr.value }[${ menuOrder }]`,
-                attr.selected_value?.value || ''
-            );
-        } );
-    }
-    // default attributes from parent product
-    if ( defaultAttributes?.length ) {
-        defaultAttributes.forEach( ( attr ) => {
-            formData.append(
-                `default_attribute_${ attr.value }`,
-                '' // Default attribute value can be set here if needed
-            );
-        } );
-    }
-
-    Object.keys( data ).forEach( ( key ) => {
-        if ( key === 'attributes' ) {
-            return;
-        }
-        // prefix field names if not in map
-        const prefix = key.startsWith( '_' ) ? 'variable' : 'variable_';
-
-        if ( fieldMap[ key ] ) {
-            formData.append(
-                `${ fieldMap[ key ] }[${ menuOrder }]`,
-                data[ key ]
-            );
-        } else {
-            formData.append(
-                `${ prefix }${ key }[${ menuOrder }]`,
-                data[ key ]
-            );
-        }
-    } );
-
-    return formData;
-};
-
-const VariationCard = ( {
-    variation,
-    defaultAttributes,
-}: VariationCardProps ) => {
-    const toast = useToast();
+const VariationCard = ( { variation }: VariationCardProps ) => {
+    const { saveVariation } = useVariationContext();
     const [ isExpanded, setIsExpanded ] = useState( false );
     const [ sections, setSections ] = useState< Section[] >( [] );
     const [ vendorEarning, setVendorEarning ] = useState< number >( 0 );
@@ -146,29 +38,7 @@ const VariationCard = ( {
     };
 
     const handleVariationSave = async ( data: Record< string, any > ) => {
-        const formData = preparePayload( {
-            data,
-            variation,
-            defaultAttributes,
-            menuOrder: variation.menu_order,
-        } );
-
-        try {
-            const response = await jQuery.ajax( {
-                url: dokan.ajaxurl,
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-            } );
-            console.log( 'Variation saved successfully:', response );
-            toast( {
-                type: 'success',
-                title: response.data.message,
-            } );
-        } catch ( error ) {
-            console.error( 'Error saving variation:', error );
-        }
+        await saveVariation( variation, data );
     };
 
     return (

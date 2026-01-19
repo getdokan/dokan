@@ -63,7 +63,6 @@ const useVariationLayout = () => {
                 },
                 children: [ 'date_on_sale_from', 'date_on_sale_to' ],
             },
-            'manage_stock',
             'stock_quantity',
             'low_stock_amount',
             'backorders',

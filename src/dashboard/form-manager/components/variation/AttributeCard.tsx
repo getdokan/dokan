@@ -2,71 +2,48 @@ import { SimpleCheckbox, SimpleInput } from '@getdokan/dokan-ui';
 import { DokanButton, Select } from '@src/components';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-
-export interface Attribute {
-    id: number; // 0 for custom
-    name: string;
-    value: string;
-    options: string[] | string | number[];
-    visible: boolean;
-    variation: boolean;
-    position: number;
-    is_taxonomy?: boolean;
-    terms?: { label: string; value: number }[];
-}
+import { Attribute } from '../../types';
 
 export type AttributeCardProps = {
     attr: Attribute;
-    field: any;
-    index: number;
     productType?: string;
-    attributeOptions: any[];
-    attributes: Attribute[];
-    onChange: ( updatedData: any ) => void;
+    cardExpanded?: boolean;
+    options: any[];
+    onUpdate: ( updatedAttribute: Attribute ) => void;
+    onRemove: ( e: React.MouseEvent< HTMLSpanElement, MouseEvent > ) => void;
 };
 
 const AttributeCard = ( {
     attr,
-    index,
-    attributeOptions,
-    field,
-    attributes,
-    onChange,
+    options,
+    onUpdate,
+    onRemove,
     productType,
+    cardExpanded,
 }: AttributeCardProps ) => {
-    const [ isExpanded, setIsExpanded ] = useState( false );
-    const handleRemoveAttribute = ( idx: number ) => {
-        const newAttributes = [ ...attributes ];
-        newAttributes.splice( idx, 1 );
-        onChange( { [ field.id ]: newAttributes } );
-    };
+    const [ isExpanded, setIsExpanded ] = useState( cardExpanded );
 
-    const handleAttributeChange = (
-        idx: number,
-        key: keyof Attribute,
-        value: any
-    ) => {
-        const newAttributes = [ ...attributes ];
-        newAttributes[ idx ] = {
-            ...newAttributes[ idx ],
+    const handleAttributeChange = ( key: keyof Attribute, value: any ) => {
+        onUpdate( {
+            ...attr,
             [ key ]: value,
-        };
-        onChange( { [ field.id ]: newAttributes } );
+        } );
     };
 
-    const filteredAttributeOptions = ( attrId: number ) => {
-        const globalAttr = attributeOptions.find(
-            ( opt: any ) => Number( opt.value ) === Number( attrId )
+    const attributeOptions = ( attrId: number ) => {
+        return (
+            options.find(
+                ( option: any ) => Number( option.value ) === Number( attrId )
+            )?.terms || []
         );
-        return globalAttr ? globalAttr.terms || [] : [];
     };
 
     const attributeValues = ( attrValue: Attribute ) => {
         return (
-            attributeOptions
+            options
                 .find(
-                    ( opt: any ) =>
-                        Number( opt.value ) === Number( attrValue.id )
+                    ( option: any ) =>
+                        Number( option.value ) === Number( attrValue.id )
                 )
                 ?.terms?.filter( ( term: any ) =>
                     ( attr.options as any[] ).includes( term.value )
@@ -74,16 +51,12 @@ const AttributeCard = ( {
         );
     };
 
-    const attributeChangeHandler = ( selected: any, idx: number ) => {
+    const attributeChangeHandler = ( selected: any ) => {
         const values = selected.map( ( val: any ) => val.value );
-        const newAttributes = [ ...attributes ];
-        newAttributes[ idx ] = {
-            ...newAttributes[ idx ],
+        onUpdate( {
+            ...attr,
             options: values,
             terms: selected,
-        };
-        onChange( {
-            [ field.id ]: newAttributes,
         } );
     };
 
@@ -92,12 +65,12 @@ const AttributeCard = ( {
     };
 
     const handleSelectAll = () => {
-        const allOptions = filteredAttributeOptions( attr.id );
-        attributeChangeHandler( allOptions, index );
+        const allOptions = attributeOptions( attr.id );
+        attributeChangeHandler( allOptions );
     };
 
     const handleSelectNone = () => {
-        attributeChangeHandler( [], index );
+        attributeChangeHandler( [] );
     };
 
     return (
@@ -113,10 +86,7 @@ const AttributeCard = ( {
                 <div className="flex items-center gap-3">
                     <span
                         role="button"
-                        onClick={ ( e ) => {
-                            e.stopPropagation();
-                            handleRemoveAttribute( index );
-                        } }
+                        onClick={ onRemove }
                         className="text-red-500 hover:text-red-700 text-xs font-medium"
                     >
                         { __( 'Remove', 'dokan-lite' ) }
@@ -155,11 +125,7 @@ const AttributeCard = ( {
                         <SimpleInput
                             value={ attr.name }
                             onChange={ ( e ) =>
-                                handleAttributeChange(
-                                    index,
-                                    'name',
-                                    e.target.value
-                                )
+                                handleAttributeChange( 'name', e.target.value )
                             }
                             disabled={ !! attr.is_taxonomy }
                             className="w-full px-3 py-2 border rounded text-sm disabled:bg-gray-100 disabled:text-gray-500"
@@ -183,14 +149,9 @@ const AttributeCard = ( {
                                     // @ts-ignore
                                     isMulti
                                     value={ attributeValues( attr ) }
-                                    options={ filteredAttributeOptions(
-                                        attr.id
-                                    ) }
+                                    options={ attributeOptions( attr.id ) }
                                     onChange={ ( selected ) =>
-                                        attributeChangeHandler(
-                                            selected,
-                                            index
-                                        )
+                                        attributeChangeHandler( selected )
                                     }
                                     placeholder={ __(
                                         'Select terms',
@@ -223,7 +184,6 @@ const AttributeCard = ( {
                                 }
                                 onChange={ ( e ) =>
                                     handleAttributeChange(
-                                        index,
                                         'options',
                                         e.target.value
                                     )
@@ -245,13 +205,12 @@ const AttributeCard = ( {
                                 checked={ attr.visible }
                                 onChange={ ( e ) =>
                                     handleAttributeChange(
-                                        index,
                                         'visible',
                                         e.target.checked
                                     )
                                 }
                                 input={ {
-                                    id: `dokan-attr-visible-${ index }-${ attr.id }`,
+                                    id: `dokan-attr-visible-${ attr.id }`,
                                 } }
                             />
                             { __(
@@ -266,13 +225,12 @@ const AttributeCard = ( {
                                     checked={ attr.variation }
                                     onChange={ ( e ) =>
                                         handleAttributeChange(
-                                            index,
                                             'variation',
                                             e.target.checked
                                         )
                                     }
                                     input={ {
-                                        id: `dokan-attr-variation-${ index }-${ attr.id }`,
+                                        id: `dokan-attr-variation-${ attr.id }`,
                                     } }
                                 />
                                 { __( 'Used for variations', 'dokan-lite' ) }
