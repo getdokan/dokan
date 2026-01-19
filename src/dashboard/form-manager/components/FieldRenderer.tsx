@@ -2,39 +2,8 @@ import { DokanTooltip } from '@src/components';
 import { Info } from 'lucide-react';
 import { sanitizeHTML } from '../../../utilities';
 import { getFieldConfigFromFactory } from '../factories';
-import { DependencyCondition, FormField } from '../types';
-
-export const checkDependency = (
-    depsCondition: DependencyCondition | DependencyCondition[] | undefined,
-    data: Record< string, any >
-): boolean => {
-    if ( Array.isArray( depsCondition ) ) {
-        return depsCondition.every( ( condition ) =>
-            checkDependency( condition, data )
-        );
-    }
-
-    if ( typeof depsCondition === 'object' && depsCondition !== null ) {
-        const { field: depField, operator, value } = depsCondition;
-        const depValue = data[ depField ];
-
-        let targetValue = value;
-        if ( value === 'on' || value === 'yes' ) {
-            targetValue = true;
-        }
-        if ( value === 'off' || value === 'no' ) {
-            targetValue = false;
-        }
-
-        if ( operator === 'equal' ) {
-            return depValue === targetValue;
-        }
-        if ( operator === 'not_equal' ) {
-            return depValue !== targetValue;
-        }
-    }
-    return true;
-};
+import { FormField } from '../types';
+import { checkDependency } from '../utils';
 
 export const getFieldConfig = ( field: FormField ) => {
     const mappedField = {

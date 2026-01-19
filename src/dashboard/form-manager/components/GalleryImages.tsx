@@ -5,14 +5,9 @@ import CustomField from './CustomField';
 import ImagePreview from './ImagePreview';
 
 const GalleryImages = ( { field, onChange }: any ) => {
-    const [ images, setImages ] = useState( field.value || [] );
+    const [ files, setFiles ] = useState( field.value || [] );
     const onSelect = ( value: any ) => {
-        const newImages = value.map( ( img: any ) => ( {
-            id: img.id,
-            url: img.url,
-            alt: img.alt,
-        } ) );
-        const newValues = [ ...images, ...newImages ];
+        const newValues = [ ...files, ...value ];
         // find unique images based on id
         const uniqueValues = newValues.filter( ( img, index, self ) => {
             return index === self.findIndex( ( t ) => t.id === img.id );
@@ -20,21 +15,21 @@ const GalleryImages = ( { field, onChange }: any ) => {
         onChange( {
             [ field.id ]: uniqueValues.map( ( img: any ) => img.id ),
         } );
-        setImages( uniqueValues );
+        setFiles( uniqueValues );
     };
 
     const onRemove = ( index: number ) => {
-        const newValues = images.filter( ( _: any, i: number ) => i !== index );
+        const newValues = files.filter( ( _: any, i: number ) => i !== index );
         onChange( {
             [ field.id ]: newValues.map( ( img: any ) => img.id ),
         } );
-        setImages( newValues );
+        setFiles( newValues );
     };
 
     return (
         <CustomField label={ field.label } error={ field.error }>
             <ImagePreview
-                images={ images }
+                images={ files }
                 onRemove={ onRemove }
                 itemClassName={ `dokan-product-${ field.id }` }
             >

@@ -1,5 +1,15 @@
 import { Field } from '@wordpress/dataviews';
 
+export interface DokanFormManagerData {
+    sections: Section[];
+    is_new_product: string;
+    product_id: string;
+    view_product_url: string;
+    form_manager_nonce: string;
+    vendor_earning: number;
+    variations: any[];
+}
+
 export interface DependencyCondition {
     field: string;
     operator: 'equal' | 'not_equal';
@@ -29,7 +39,8 @@ export type FormField = {
     field_type: string;
     options: { label: string; value: string }[] | Record< string, string >;
     errors: string;
-    dependency_condition?: DependencyCondition;
+    dependency_condition: DependencyCondition;
+    hide_on_product_types: string[];
     visibility: boolean;
 } & Field< any >;
 

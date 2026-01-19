@@ -63,6 +63,16 @@
             object-fit: cover;
         }
     }
+    .variation-form {
+        .dokan-product-image_id {
+            height: 232px;
+            width: 232px;
+        }
+        img {
+            height: 232px;
+            width: 232px;
+        }
+    }
     .dokan-product-gallery_image_ids {
         gap: 10px;
         display: flex;

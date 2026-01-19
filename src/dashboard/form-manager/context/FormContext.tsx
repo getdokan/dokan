@@ -7,26 +7,9 @@ import {
     useState,
 } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { checkDependency, getFieldConfig } from '../components/FieldRenderer';
+import { getFieldConfig } from '../components/FieldRenderer';
 import { formDataFactory } from '../factories';
 import { Section } from '../types';
-
-interface DokanFormManagerData {
-    sections: Section[];
-    is_new_product: string;
-    product_id: string;
-    view_product_url: string;
-    form_manager_nonce: string;
-    vendor_earning: number;
-    variations: any[];
-}
-
-// from localized script
-const { sections, ...formData } = (
-    window as unknown as {
-        dokanFormManager: DokanFormManagerData;
-    }
- ).dokanFormManager;
 
 interface FormContextType {
     product: Record< string, any >;
@@ -39,14 +22,33 @@ interface FormContextType {
     isLoading: boolean;
     submitHandler: ( e: React.FormEvent ) => Promise< void >;
     onChange: ( newData: Record< string, any > ) => void;
-    isNewProduct: boolean;
-    productUrl: string;
     sections: Section[];
 }
 
 const FormContext = createContext< FormContextType | undefined >( undefined );
 
-export const FormProvider = ( { children }: { children: React.ReactNode } ) => {
+interface FormProviderProps {
+    children: React.ReactNode;
+    sections: Section[];
+    productId: number;
+    vendorEarning: number;
+    variations?: any[];
+    onSubmit: ( data: Record< string, any > ) => Promise< any >;
+    validator?: (
+        sections: Section[],
+        values: Record< string, any >
+    ) => Record< string, string >;
+}
+
+export const FormProvider = ( {
+    children,
+    sections,
+    productId,
+    vendorEarning,
+    variations = [],
+    onSubmit,
+    validator,
+}: FormProviderProps ) => {
     const toast = useToast();
     const [ errors, setErrors ] = useState< Record< string, string > >( {} );
 
@@ -61,15 +63,18 @@ export const FormProvider = ( { children }: { children: React.ReactNode } ) => {
                 return config;
             } );
         } ) as any[];
-    }, [ errors ] );
+    }, [ errors, sections ] );
 
-    const initialData = useMemo( () => formDataFactory.create( sections ), [] );
+    const defaultData = useMemo(
+        () => formDataFactory.create( sections ),
+        [ sections ]
+    );
 
     const [ product, setProduct ] = useState< Record< string, any > >( {
-        ...initialData,
-        id: Number( formData.product_id ),
-        vendor_earning: formData.vendor_earning,
-        variations: formData.variations || [],
+        ...defaultData,
+        id: productId,
+        vendor_earning: vendorEarning,
+        variations: variations,
     } );
 
     const [ isLoading, setIsLoading ] = useState( false );
@@ -93,34 +98,10 @@ export const FormProvider = ( { children }: { children: React.ReactNode } ) => {
     }, [] );
 
     const validateForm = () => {
-        const newErrors: Record< string, string > = {};
-        sections.forEach( ( section ) => {
-            section.fields.forEach( ( field ) => {
-                if ( ! field.required ) {
-                    return;
-                }
-                // Check visibility
-                if ( ! field.visibility ) {
-                    return;
-                }
-                if (
-                    ! checkDependency( field.dependency_condition, product )
-                ) {
-                    return;
-                }
-
-                const value = product[ field.id ];
-                if (
-                    ! value ||
-                    ( Array.isArray( value ) && value.length === 0 )
-                ) {
-                    newErrors[ field.id ] = __(
-                        'Please fill out this field.',
-                        'dokan-lite'
-                    );
-                }
-            } );
-        } );
+        if ( ! validator ) {
+            return true;
+        }
+        const newErrors = validator( sections, product );
 
         if ( Object.keys( newErrors ).length > 0 ) {
             setErrors( newErrors );
@@ -147,6 +128,7 @@ export const FormProvider = ( { children }: { children: React.ReactNode } ) => {
     const submitHandler = async ( e: React.FormEvent ) => {
         if ( e && e.preventDefault ) {
             e.preventDefault();
+            e.stopPropagation();
         }
 
         // Validation
@@ -156,15 +138,9 @@ export const FormProvider = ( { children }: { children: React.ReactNode } ) => {
         setIsLoading( true );
 
         try {
-            // @ts-ignore
-            const response = await window.wp.ajax.post(
-                'dokan_save_product_data',
-                {
-                    ...product,
-                    _nonce: formData.form_manager_nonce,
-                }
-            );
-            if ( response.message ) {
+            const response = await onSubmit( product );
+
+            if ( response && response.message ) {
                 toast( {
                     type: 'success',
                     title: response.message,
@@ -172,33 +148,27 @@ export const FormProvider = ( { children }: { children: React.ReactNode } ) => {
             }
         } catch ( error: unknown ) {
             const err = error as Error | { message?: string };
-            const errorMessage =
-                ( err && 'message' in err ? err.message : '' ) ||
-                __( 'An error occurred', 'dokan-lite' );
             toast( {
                 type: 'error',
-                title: errorMessage,
+                title: err.message || __( 'An error occurred', 'dokan-lite' ),
             } );
+            // eslint-disable-next-line no-console
+            console.error( 'Error submitting form:', error );
         } finally {
             setIsLoading( false );
         }
     };
-
-    const isNewProduct = Boolean( formData.is_new_product );
-    const productUrl = formData.view_product_url;
 
     const value = {
         product,
         errors,
         fields,
         sections,
-        productUrl,
-        isNewProduct,
         setProduct,
         setErrors,
         isLoading,
-        submitHandler,
         onChange,
+        submitHandler,
     };
 
     return (

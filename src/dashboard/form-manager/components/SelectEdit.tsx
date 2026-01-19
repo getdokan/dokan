@@ -35,11 +35,9 @@ const SelectEdit = ( { data, field, onChange }: any ) => {
         <CustomField label={ field.label } error={ field.error }>
             <Select
                 options={ field.elements }
-                // @ts-ignore
                 isMulti={ field.multiple }
                 placeholder={ field.placeholder }
                 value={ selectedValue }
-                selectedValue={ selectedValue }
                 onChange={ ( input: any ) => {
                     if ( field.multiple ) {
                         const values = Array.isArray( input )

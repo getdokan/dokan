@@ -2,6 +2,7 @@ import AsyncSelectEdit from '../components/AsyncSelectEdit';
 import AttributeVariationEdit from '../components/AttributeVariationEdit';
 import DateTimePickerEdit from '../components/DateTimePickerEdit';
 import FeatureImage from '../components/FeatureImage';
+import FileUploadEdit from '../components/FileUploadEdit';
 import GalleryImages from '../components/GalleryImages';
 import PriceEdit from '../components/PriceEdit';
 import RichTextEdit from '../components/RichTextEdit';
@@ -148,6 +149,16 @@ export const multiSelectHandler: FieldHandler = ( field ) => {
 export const imageHandler: FieldHandler = () => ( {
     type: 'integer',
     Edit: FeatureImage,
+} );
+
+/**
+ * Handler for downloadable fields.
+ *
+ * @return {Object} Configuration object with type 'integer' and FileUploadEdit component.
+ */
+export const downloadableHandler: FieldHandler = () => ( {
+    type: 'integer',
+    Edit: FileUploadEdit,
 } );
 
 /**

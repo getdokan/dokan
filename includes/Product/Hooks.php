@@ -6,9 +6,6 @@ use WeDevs\Dokan\Commission\Formula\Fixed;
 use WeDevs\Dokan\ProductCategory\Helper;
 use WC_Product;
 use WC_Product_Simple;
-use WeDevs\Dokan\ProductForm\Factory as ProductFormFactory;
-use WeDevs\Dokan\ProductForm\Field;
-use WeDevs\Dokan\ProductForm\Section;
 use Exception;
 
 defined( 'ABSPATH' ) || exit;
@@ -704,73 +701,16 @@ class Hooks {
             'dokan-product-form-manager',
             'dokanFormManager',
             [
-                'sections' => $this->get_form_fields( $product_id ),
+                'sections' => FormManager::get_form_fields( $product_id ),
                 'form_manager_nonce' => wp_create_nonce( 'form_manager' ),
                 'product_id' => $product_id,
                 'is_new_product' => $new_product,
                 'view_product_url' => get_permalink( $product_id ),
                 'vendor_earning' => $vendor_earning,
+                'variations' => FormManager::get_product_variations( $product_id ),
             ]
         );
     }
-
-    public function get_form_fields( int $product_id ): array {
-        $product    = wc_get_product( $product_id );
-        $sections   = [];
-
-        foreach ( ProductFormFactory::get_sections() as $section ) {
-            /** @var Section $section */
-            if ( is_wp_error( $section ) ) {
-                continue;
-            }
-
-            $fields = [];
-
-            foreach ( $section->get_fields() as $field ) {
-                /** @var Field $field */
-                if ( is_wp_error( $field ) || ! $field->is_visible() ) {
-                    continue;
-                }
-
-                $value = '';
-                if ( $product ) {
-                    try {
-                        $value = $field->get_value( $product );
-                    } catch ( \Throwable $e ) {
-                        dokan_log( 'Error getting value for product ' . $product->get_id() . ': ' . $e->getMessage() );
-                    }
-                }
-
-                $fields[] = [
-                    'id'            => $field->get_id(),
-                    'name'          => $field->get_name(),
-                    'title'         => $field->get_title(),
-                    'tooltip'       => $field->get_tooltip(),
-                    'section_id'    => $section->get_id(),
-                    'is_custom'     => $field->is_custom(),
-                    'order'         => $field->get_order(),
-                    'description'   => $field->get_description(),
-                    'required'      => $field->is_required(),
-                    'value'         => $value,
-                    'field_type'    => $field->get_field_type(),
-                    'options'       => $field->get_options( $product ),
-                    'visibility'    => $field->is_visible(),
-                    'placeholder'   => $field->get_placeholder(),
-                    'help_content'  => $field->get_help_content(),
-                    'dependency_condition' => $field->get_dependency_condition(),
-                ];
-            }
-
-            $sections[] = [
-                'id'     => $section->get_id(),
-                'title'  => $section->get_title(),
-                'order'  => $section->get_order(),
-                'description' => $section->get_description(),
-                'fields' => $fields,
-            ];
-        }
-		return $sections;
-	}
 
     public function dokan_save_product_data() {
         if ( ! isset( $_POST['_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_nonce'] ), 'form_manager' ) ) {

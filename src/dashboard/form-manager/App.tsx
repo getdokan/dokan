@@ -5,20 +5,23 @@ import { __ } from '@wordpress/i18n';
 import { ExternalLink } from 'lucide-react';
 import { FormProvider, useFormContext } from './context/FormContext';
 import useLayouts from './hooks/useLayouts';
+import { DokanFormManagerData } from './types';
+import { validateProductForm } from './utils';
+
+const { sections, ...formData } = (
+    window as unknown as {
+        dokanFormManager: DokanFormManagerData;
+    }
+ ).dokanFormManager;
 
 const FormManager = () => {
-    const {
-        product,
-        fields,
-        isLoading,
-        submitHandler,
-        onChange,
-        isNewProduct,
-        sections,
-        productUrl,
-    } = useFormContext();
+    const { product, fields, isLoading, submitHandler, onChange, sections } =
+        useFormContext();
 
     const { formLayouts } = useLayouts( sections, fields, product );
+
+    const productUrl = formData.view_product_url;
+    const isNewProduct = Boolean( formData.is_new_product );
 
     return (
         <form onSubmit={ submitHandler }>
@@ -64,7 +67,7 @@ const FormManager = () => {
             <DataForm
                 data={ product }
                 fields={ fields }
-                form={ { fields: formLayouts } }
+                form={ formLayouts }
                 onChange={ onChange }
             />
         </form>
@@ -72,9 +75,27 @@ const FormManager = () => {
 };
 
 const App = () => {
+    const productId = Number( formData.product_id );
+
+    const onSubmit = async ( product: Record< string, any > ) => {
+        // @ts-ignore
+        const response = await window.wp.ajax.post( 'dokan_save_product_data', {
+            ...product,
+            _nonce: formData.form_manager_nonce,
+        } );
+        return response;
+    };
+
     return (
         <div className="dokan-product-form-manager dokan-layout">
-            <FormProvider>
+            <FormProvider
+                sections={ sections }
+                productId={ productId }
+                variations={ formData.variations }
+                vendorEarning={ formData.vendor_earning }
+                validator={ validateProductForm }
+                onSubmit={ onSubmit }
+            >
                 <FormManager />
             </FormProvider>
             <DokanToaster />

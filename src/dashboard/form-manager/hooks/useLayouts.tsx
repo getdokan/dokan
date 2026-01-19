@@ -1,8 +1,13 @@
 import { useWindowDimensions } from '@src/hooks';
-import { sanitizeHTML } from '@src/utilities';
 import { useCallback, useMemo } from '@wordpress/element';
-import { checkDependency } from '../components/FieldRenderer';
 import { FormField, Section } from '../types';
+import {
+    appendToLeftColumn,
+    collectUsedFields,
+    getRemainingFields,
+    injectRemainingFields,
+    layoutBuilder,
+} from '../utils';
 
 /**
  * Custom hook to manage form layouts.
@@ -76,55 +81,9 @@ export default function useLayouts(
      * @param {Array} layoutFields The fields to process for the layout.
      * @return {Array} valid processed fields.
      */
-    const layoutBuilder = useCallback(
+    const processLayout = useCallback(
         ( layoutFields: any[] ) => {
-            const processedFields = layoutFields.map( ( field ) => {
-                if ( typeof field === 'string' ) {
-                    const fieldData = fields.find( ( f ) => f.id === field );
-                    if ( ! fieldData ) {
-                        return null;
-                    }
-                    const condition = fieldData.dependency_condition;
-                    if ( ! checkDependency( condition, product ) ) {
-                        return null;
-                    }
-                    return field;
-                }
-                const newField = { ...field };
-
-                if (
-                    newField.layout?.type === 'card' &&
-                    newField.description
-                ) {
-                    newField.label = (
-                        <div className="dokan-form-card-header-content">
-                            <div className="dokan-form-card-title">
-                                { newField.label }
-                            </div>
-                            <div
-                                className="dokan-form-card-description"
-                                dangerouslySetInnerHTML={ {
-                                    __html: sanitizeHTML(
-                                        newField.description
-                                    ),
-                                } }
-                            />
-                        </div>
-                    );
-                    delete newField.description;
-                }
-
-                if ( newField.children ) {
-                    newField.children = layoutBuilder( newField.children );
-                }
-
-                if ( newField.layout && ! newField.children?.length ) {
-                    return null;
-                }
-
-                return newField;
-            } );
-            return processedFields.filter( Boolean );
+            return layoutBuilder( layoutFields, fields, product );
         },
         [ fields, product ]
     );
@@ -210,7 +169,7 @@ export default function useLayouts(
                                 },
                                 children: [
                                     'sku',
-                                    '_global_unique_id',
+                                    'global_unique_id',
                                     'stock_status',
                                     'manage_stock',
                                     'stock_quantity',
@@ -227,7 +186,7 @@ export default function useLayouts(
                                     withHeader: true,
                                 },
                                 children: [
-                                    '_disable_shipping',
+                                    'disable_shipping',
                                     {
                                         id: 'shipping-dimension',
                                         layout: {
@@ -243,18 +202,18 @@ export default function useLayouts(
                                     'shipping_class_id',
                                     'tax_status',
                                     'tax_class',
-                                    '_overwrite_shipping',
+                                    'overwrite_shipping',
                                     {
                                         id: 'overwrite_shipping_price_qty',
                                         layout: {
                                             type: 'row',
                                         },
                                         children: [
-                                            '_additional_price',
-                                            '_additional_qty',
+                                            'additional_price',
+                                            'additional_qty',
                                         ],
                                     },
-                                    '_dps_processing_time',
+                                    'dps_processing_time',
                                 ],
                                 ...getFieldHeading( 'shipping' ),
                             },
@@ -320,78 +279,15 @@ export default function useLayouts(
         ];
 
         // Collect all used field IDs from the layout
-        const usedFields = new Set< string >();
-
-        /**
-         * Helper to collect all used field IDs from the layout.
-         *
-         * @param {Array} items Layout items.
-         */
-        const collectUsedFields = ( items: any[] ) => {
-            items.forEach( ( item ) => {
-                if ( typeof item === 'string' ) {
-                    usedFields.add( item );
-                    return;
-                }
-                if ( item.children ) {
-                    collectUsedFields( item.children );
-                }
-            } );
-        };
-        collectUsedFields( layouts );
-
-        const remainingFieldsBySection: Record< string, string[] > = {};
-
-        // Identify fields that are not in the layout
-        sections.forEach( ( section ) => {
-            section.fields.forEach( ( field ) => {
-                if ( usedFields.has( field.id ) ) {
-                    return;
-                }
-
-                // Use field's section_id if available, otherwise fall back to the section's id
-                const targetSectionId = field.section_id || section.id;
-
-                if ( ! remainingFieldsBySection[ targetSectionId ] ) {
-                    remainingFieldsBySection[ targetSectionId ] = [];
-                }
-
-                remainingFieldsBySection[ targetSectionId ].push( field.id );
-            } );
-        } );
-
-        /**
-         * Helper to inject remaining fields into the layout.
-         *
-         * @param {Array} items Layout items.
-         * @return {Array} Updated layout items.
-         */
-        const injectRemainingFields = ( items: any[] ): any[] => {
-            return items.map( ( item ) => {
-                if ( typeof item === 'string' ) {
-                    return item;
-                }
-                const newItem = { ...item };
-
-                // Append if section ID matches
-                if ( newItem.id && remainingFieldsBySection[ newItem.id ] ) {
-                    newItem.children = [
-                        ...( newItem.children || [] ),
-                        ...remainingFieldsBySection[ newItem.id ],
-                    ];
-                    delete remainingFieldsBySection[ newItem.id ];
-                }
-
-                if ( newItem.children ) {
-                    newItem.children = injectRemainingFields(
-                        newItem.children
-                    );
-                }
-                return newItem;
-            } );
-        };
-
-        let updatedLayouts = injectRemainingFields( layouts );
+        const usedFields = collectUsedFields( layouts );
+        const remainingFieldsBySection = getRemainingFields(
+            sections,
+            usedFields
+        );
+        let updatedLayouts = injectRemainingFields(
+            layouts,
+            remainingFieldsBySection
+        );
 
         // Create new cards for sections not found in the existing layout
         const newSections = Object.keys( remainingFieldsBySection ).map(
@@ -407,32 +303,13 @@ export default function useLayouts(
         );
 
         if ( newSections.length > 0 ) {
-            // Append new sections to the left column
-            const appendToLeftColumn = ( items: any[] ): any[] => {
-                return items.map( ( item ) => {
-                    if (
-                        typeof item !== 'string' &&
-                        item.id === 'left_column'
-                    ) {
-                        return {
-                            ...item,
-                            children: [ ...item.children, ...newSections ],
-                        };
-                    }
-                    if ( typeof item !== 'string' && item.children ) {
-                        return {
-                            ...item,
-                            children: appendToLeftColumn( item.children ),
-                        };
-                    }
-                    return item;
-                } );
-            };
-            updatedLayouts = appendToLeftColumn( updatedLayouts );
+            updatedLayouts = appendToLeftColumn( updatedLayouts, newSections );
         }
 
-        return layoutBuilder( updatedLayouts );
-    }, [ getFieldHeading, layoutBuilder, sections, rootLayout ] );
+        return {
+            fields: processLayout( updatedLayouts ),
+        };
+    }, [ getFieldHeading, processLayout, sections, rootLayout ] );
 
-    return { formLayouts };
+    return { formLayouts, getFieldHeading, getField, width };
 }
