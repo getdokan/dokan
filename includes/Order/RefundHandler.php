@@ -87,7 +87,7 @@ class RefundHandler implements Hookable {
      * @param bool $ret
      * @param \WC_Order_Refund $refund_order
      * @param \WC_Order $order
-     * @return bool 
+     * @return bool
      */
     public function exclude_cod_payment( $ret, $refund_order, $order ) {
         // return if $order is not an instance of WC_Order
