@@ -5,7 +5,7 @@ import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 
 // Fast version with minimal setup and optimized execution
-test.describe.skip('Booking Product test - Fast Execution', () => {
+test.describe('Booking Product test - Fast Execution', () => {
     // Reduce global timeout to 30 seconds for faster failure detection
     test.setTimeout(30000); 
 
