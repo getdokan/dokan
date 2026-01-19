@@ -46,7 +46,6 @@
         "install:chromium:deps": "playwright install --with-deps chromium",
         "install:browsers": "playwright install",
         "install:browsers:deps": "playwright install --with-deps",
-
         "_comment_docker": "═══════════════════════════════════════════════════════",
         "_comment_docker_desc": "DOCKER ENVIRONMENT MANAGEMENT",
         "_comment_docker_usage": "Primary commands for Docker-based testing",
@@ -59,7 +58,6 @@
         "reset:db": "wp-env clean all && wp-env start",
         "update:env": "wp-env start -- --update",
         "wp-env": "wp-env",
-
         "_comment_setup": "═══════════════════════════════════════════════════════",
         "_comment_setup_desc": "TEST ENVIRONMENT SETUP",
         "_comment_setup_usage": "IMPORTANT: Run create:admin AFTER start:env!",
@@ -72,7 +70,6 @@
         "docker:env:setup": "npx playwright test --project=e2e_setup",
         "docker:reset": "npm run reset:db && npm run create:admin && npm run docker:setup",
         "docker:full": "npm run start:env && npm run create:admin && npm run docker:setup",
-
         "_comment_local": "═══════════════════════════════════════════════════════",
         "_comment_local_desc": "LOCAL SITE SETUP (Non-Docker)",
         "_comment_local_usage": "For testing against existing WordPress installations",
@@ -81,7 +78,6 @@
         "site:setup": "SKIP_DOKAN=true npx playwright test --project=local_site_setup",
         "env:setup": "npx playwright test --project=e2e_setup",
         "auth:setup": "NO_SETUP=true npx playwright test --project=auth_setup",
-
         "_comment_testing": "═══════════════════════════════════════════════════════",
         "_comment_testing_desc": "TEST EXECUTION",
         "_comment_testing_usage": "Run E2E and API tests",
@@ -93,7 +89,6 @@
         "test:e2e:pro": "DOKAN_PRO=true npx playwright test --project=e2e_tests --grep '@pro'",
         "test:api:lite": "npx playwright test --project=api_tests --config=api.config.ts --grep '@lite'",
         "test:api:pro": "DOKAN_PRO=true npx playwright test --project=api_tests --config=api.config.ts --grep '@pro'",
-
         "_comment_test_modes": "═══════════════════════════════════════════════════════",
         "_comment_test_modes_desc": "TEST EXECUTION MODES",
         "_comment_test_modes_usage": "Different ways to run and debug tests",
@@ -103,7 +98,6 @@
         "test:debug": "npx playwright test --project=e2e_tests --debug",
         "test:codegen": "playwright codegen",
         "test:coverage": "npx playwright test --project=coverage_report --reporter=null",
-
         "_comment_reporting": "═══════════════════════════════════════════════════════",
         "_comment_reporting_desc": "TEST REPORTING & ANALYSIS",
         "_comment_reporting_usage": "View test results and generate reports",
@@ -113,7 +107,6 @@
         "report:merge": "npx playwright merge-reports --reporter html",
         "report:allure": "allure generate playwright-report/allure-report -o allure-report --clean",
         "report:allure:open": "allure open allure-report",
-
         "_comment_verification": "═══════════════════════════════════════════════════════",
         "_comment_verification_desc": "VERIFICATION & DEBUGGING",
         "_comment_verification_usage": "Check WordPress state and debug issues",
@@ -126,7 +119,6 @@
         "docker:logs:cli": "docker logs tests-cli-1 --tail=50",
         "docker:ps": "docker ps -f name=tests",
         "docker:port": "docker ps -f ancestor='mariadb' -f name='tests-mysql' --format='{{.Ports}}'",
-
         "_comment_utilities": "═══════════════════════════════════════════════════════",
         "_comment_utilities_desc": "UTILITY & MAINTENANCE",
         "_comment_utilities_usage": "Code quality, type checking, and maintenance",
@@ -139,7 +131,6 @@
         "format:fix": "prettier . --write",
         "deps:check": "npm-check-updates",
         "deps:update": "npm-check-updates -u && npm install",
-
         "_comment_deprecated": "═══════════════════════════════════════════════════════",
         "_comment_deprecated_desc": "DEPRECATED COMMANDS (Backwards Compatibility)",
         "_comment_deprecated_usage": "These redirect to new commands - use new ones!",
@@ -184,6 +175,7 @@
         "dotenv": "^16.4.7",
         "mysql2": "^3.13.0",
         "php-serialize": "^5.1.2",
+        "playwright": "^1.57.0",
         "zod": "^3.24.2"
     }
 }
