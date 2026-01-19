@@ -87,7 +87,7 @@ class RefundHandler implements Hookable {
      * @param bool $ret
      * @param \WC_Order_Refund $refund_order
      * @param \WC_Order $order
-     * @return bool
+     * @return bool 
      */
     public function exclude_cod_payment( $ret, $refund_order, $order ) {
         // return if $order is not an instance of WC_Order
@@ -95,17 +95,33 @@ class RefundHandler implements Hookable {
             return $ret;
         }
 
-        // if cod is not payment method return
-        if ( 'cod' !== $order->get_payment_method() ) {
-            return $ret;
-        }
+        $order_id   = $order->get_id();
+        $new_status = $order->get_status();
+        /**
+         * Get the base setting from Dokan options
+         */
+        $exclude_cod_option = 'on' === dokan_get_option( 'exclude_cod_payment', 'dokan_withdraw', 'off' );
 
         /**
-         * If `exclude_cod_payment` is enabled, don't include the fund in vendor's refund balance.
+         * Calculate the default logic (Is it COD and is the option ON?)
          */
-        $exclude_cod_payment = 'on' === dokan_get_option( 'exclude_cod_payment', 'dokan_withdraw', 'off' );
+        $should_exclude_cod_payment = $exclude_cod_option && 'cod' === $order->get_payment_method();
 
-        if ( $exclude_cod_payment ) {
+        /**
+         * Apply the filter so other plugins (like wePOS) can override this.
+         * Use the exact same filter name for consistency across the whole system.
+         */
+        $should_exclude_cod_payment = apply_filters(
+            'dokan_order_refund_should_exclude_from_vendor_balance',
+            $should_exclude_cod_payment,
+            $order,
+            $order_id,
+            $new_status,
+            $exclude_cod_option,
+            $refund_order,
+        );
+
+        if ( $should_exclude_cod_payment ) {
             return false;
         }
 
