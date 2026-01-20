@@ -480,6 +480,17 @@ class Settings {
             }
         }
 
+        // Validate Terms & Conditions: if enabled, content must not be empty
+        $enable_tnc = isset( $_POST['dokan_store_tnc_enable'] ) && 'on' === sanitize_text_field( wp_unslash( $_POST['dokan_store_tnc_enable'] ) );
+        if ( $enable_tnc ) {
+            $store_tnc = isset( $_POST['dokan_store_tnc'] ) ? wp_unslash( $_POST['dokan_store_tnc'] ) : '';
+            $store_tnc_clean = wp_strip_all_tags( $store_tnc );
+            
+            if ( empty( trim( $store_tnc_clean ) ) ) {
+                $error->add( 'dokan_tnc_content', __( 'Please add Terms & Conditions content before saving settings.', 'dokan-lite' ) );
+            }
+        }
+
         if ( $error->get_error_codes() ) {
             return $error;
         }
