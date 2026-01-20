@@ -229,7 +229,7 @@ class SettingsMapper {
 //        'dokan_withdraw.disbursement_schedule'                       => 'transaction.withdraw_charge.withdraw_option_visibility_section.manual_withdraw', // Shared with disbursement
 
         // New mappings for individual switches
-        'dokan_withdraw.disbursement_schedule'             => 'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw',
+//        'dokan_withdraw.disbursement_schedule'             => 'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw',
 //        'dokan_withdraw.disbursement_schedule.monthly'               => 'transaction.withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw',
 //        'dokan_withdraw.disbursement_schedule.schedule_biweekly'     => 'transaction.withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw',
 //        'dokan_withdraw.disbursement_schedule.schedule_weekly'       => 'transaction.withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw',
@@ -246,6 +246,7 @@ class SettingsMapper {
 
         // Transaction > Reverse Withdrawal
         'dokan_reverse_withdrawal.enabled'                           => 'transaction.reverse_withdrawal.reverse_withdrawal_section.enabled',
+        'dokan_reverse_withdrawal.payment_gateways'                  => 'transaction.reverse_withdrawal.reverse_withdrawal_section.enabled',
         'dokan_reverse_withdrawal.billing_type'                      => 'transaction.reverse_withdrawal.reverse_withdrawal_section.billing_type',
         'dokan_reverse_withdrawal.reverse_balance_threshold'         => 'transaction.reverse_withdrawal.reverse_withdrawal_section.reverse_balance_threshold',
         'dokan_reverse_withdrawal.monthly_billing_day'               => 'transaction.reverse_withdrawal.reverse_withdrawal_section.monthly_billing_day',
