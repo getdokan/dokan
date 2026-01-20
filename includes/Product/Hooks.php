@@ -5,8 +5,6 @@ namespace WeDevs\Dokan\Product;
 use WeDevs\Dokan\Commission\Formula\Fixed;
 use WeDevs\Dokan\ProductCategory\Helper;
 use WC_Product;
-use WC_Product_Simple;
-use Exception;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -55,11 +53,6 @@ class Hooks {
         add_action( 'woocommerce_product_options_advanced', array( $this, 'add_per_product_commission_options' ), 15 );
         add_action( 'woocommerce_process_product_meta_simple', array( $this, 'save_per_product_commission_options' ), 15 );
         add_action( 'woocommerce_process_product_meta_variable', array( $this, 'save_per_product_commission_options' ), 15 );
-
-        add_action( 'dokan_after_add_product_btn', [ $this, 'add_new_product_link' ] );
-        add_action( 'dokan_render_product_form_manager_template', [ $this, 'load_product_edit_template' ] );
-        add_action( 'dokan_product_form_manager_inside_content', [ $this, 'load_product_edit_content' ] );
-        add_action( 'wp_ajax_dokan_save_product_data', [ $this, 'dokan_save_product_data' ] );
     }
 
     /**
@@ -623,119 +616,5 @@ class Hooks {
 
         $brand_ids = ! empty( $product_data['product_brand'] ) ? $product_data['product_brand'] : array();
         dokan()->product->save_brands( $product_id, $brand_ids );
-    }
-
-    public function add_new_product_link() {
-        $add_product_url = add_query_arg(
-            [
-                'form_manager' => 'true',
-            ],
-            dokan_edit_product_url( 0, true )
-        );
-        ?>
-        <a href="<?php echo esc_url( $add_product_url ); ?>" class="dokan-btn dokan-btn-theme">
-            <i class="fas fa-briefcase">&nbsp;</i>
-            <?php esc_html_e( 'Form Manager', 'dokan-lite' ); ?>
-        </a>
-        <?php
-    }
-
-    public function load_product_edit_template() {
-        dokan_get_template_part( 'products/form-manager/form-wrapper' );
-    }
-
-    public function load_product_edit_content() {
-        // check for permission
-        if ( ! current_user_can( 'dokan_edit_product' ) ) {
-            dokan_get_template_part(
-                'global/dokan-error', '', [
-                    'deleted' => false,
-                    'message' => __( 'You have no permission to view this page', 'dokan-lite' ),
-                ]
-            );
-
-            return;
-        }
-
-        // check if seller is enabled for selling
-        if ( ! dokan_is_seller_enabled( dokan_get_current_user_id() ) ) {
-            dokan_seller_not_enabled_notice();
-            return;
-        }
-        $product_id = isset( $_GET['product_id'] ) ? intval( wp_unslash( $_GET['product_id'] ) ) : 0; //phpcs:ignore
-        $new_product = false;
-
-        if ( ! $product_id ) {
-            // this is `add new` product page
-            $product = new WC_Product_Simple();
-            $product->set_status( 'auto-draft' );
-            $product->set_name( '' );
-            $product->save();
-            $new_product = true;
-            $product_id     = $product->get_id();
-        }
-        $product = wc_get_product( $product_id );
-
-        if ( ! $product ) {
-            dokan_get_template_part(
-                'global/dokan-error', '', [
-                    'deleted' => false,
-                    'message' => __( 'Product not found', 'dokan-lite' ),
-                ]
-            );
-
-            return;
-        }
-
-        dokan_get_template_part(
-            'products/form-manager/form-content',
-            '', [
-				'product' => $product,
-			]
-        );
-        $vendor_earning = dokan()->commission->get_earning_by_product( $product_id );
-        // load scripts
-        wp_enqueue_script( 'dokan-product-form-manager' );
-        wp_enqueue_style( 'dokan-product-form-manager' );
-        wp_localize_script(
-            'dokan-product-form-manager',
-            'dokanFormManager',
-            [
-                'sections' => FormManager::get_form_fields( $product_id ),
-                'form_manager_nonce' => wp_create_nonce( 'form_manager' ),
-                'product_id' => $product_id,
-                'is_new_product' => $new_product,
-                'view_product_url' => get_permalink( $product_id ),
-                'vendor_earning' => $vendor_earning,
-                'variations' => FormManager::get_product_variations( $product_id ),
-            ]
-        );
-    }
-
-    public function dokan_save_product_data() {
-        if ( ! isset( $_POST['_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_nonce'] ), 'form_manager' ) ) {
-            wp_send_json_error(
-                [
-                    'type'    => 'nonce',
-                    'message' => __( 'Are you cheating?', 'dokan-lite' ),
-                ]
-            );
-        }
-        try {
-			$product = dokan()->product->create( $_POST );
-            wp_send_json_success(
-                [
-					'product' => $product->get_data(),
-					'message'    => __( 'Product saved successfully', 'dokan-lite' ),
-				]
-            );
-		} catch ( Exception $e ) {
-			wp_send_json_error(
-                [
-                    'status' => false,
-                    'message' => $e->getMessage(),
-                ]
-            );
-		}
     }
 }
