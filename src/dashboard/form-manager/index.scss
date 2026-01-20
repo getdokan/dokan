@@ -1,0 +1,103 @@
+.dokan-dashboard-content:has(.dokan-product-form-manager) {
+    background-color: #f0f0f1;
+}
+
+.dokan-product-form-manager {
+    .components-card-header,
+    .components-card-body {
+        padding: 20px !important;
+    }
+    .dataforms-layouts-card__field-header {
+        border-bottom: 1px solid #ddd !important;
+    }
+    legend.components-base-control__label {
+        margin-left: 0 !important;
+    }
+    .components-input-control__label {
+        display: flex !important;
+        gap: 2px;
+    }
+    .components-input-control__backdrop {
+        border-radius: 5px !important;
+        border: 1px solid #e9e9e9 !important;
+    }
+    .react-select__value-container {
+        padding-left: 10px;
+    }
+    .dokan-form-field-label {
+        font-size: 11px;
+        font-weight: 500;
+        line-height: 1.4;
+        text-transform: uppercase;
+        box-sizing: border-box;
+        display: block;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        max-width: 100%;
+        z-index: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .form-manager-price-input {
+        background: white;
+        border: 1px solid #e1e1e1;
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+        border-left: none !important;
+    }
+
+    .dokan-product-image_id {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        height: 232px;
+        width: 100%;
+        border: 1px solid #e9e9e9;
+        border-radius: 5px;
+        img {
+            height: 232px;
+            width: 100%;
+            border-radius: 5px;
+            object-fit: cover;
+        }
+    }
+    .variation-form {
+        .dokan-product-image_id {
+            height: 232px;
+            width: 232px;
+        }
+        img {
+            height: 232px;
+            width: 232px;
+        }
+    }
+    .dokan-product-gallery_image_ids {
+        gap: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        height: 80px;
+        width: 80px;
+        border: 1px solid #e9e9e9;
+        border-radius: 5px;
+        img {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+    }
+    .dokan-form-card-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #25252d;
+    }
+    .dokan-form-card-description {
+        font-size: 14px;
+        font-weight: 400;
+        color: #828282;
+    }
+}

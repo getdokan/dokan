@@ -161,6 +161,17 @@ class Products {
             $product = wc_get_product( $product_id );
         }
 
+        if ( empty( $product ) ) {
+            dokan_get_template_part(
+                'global/dokan-error', '', [
+                    'deleted' => false,
+                    'message' => __( 'Product not found.', 'dokan-lite' ),
+                ]
+            );
+
+            return;
+        }
+
         if ( ! dokan_is_product_author( $product->get_id() ) ) {
             dokan_get_template_part(
                 'global/dokan-error', '', [

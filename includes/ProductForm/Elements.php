@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Elements {
     const ID = 'id';
-    const TYPE = 'type';
+    const TYPE = 'product_type';
     const NAME = 'name';
     const DESCRIPTION = 'description';
     const SHORT_DESCRIPTION = 'short_description';
@@ -26,6 +26,7 @@ class Elements {
     const PURCHASE_NOTE = 'purchase_note';
     const FEATURED = 'featured';
     const SKU = 'sku';
+    const GLOBAL_UNIQUE_ID = 'global_unique_id';
     const WEIGHT = 'weight';
     const DIMENSIONS = 'dimensions';
     const DIMENSIONS_HEIGHT = 'height';
@@ -57,9 +58,10 @@ class Elements {
     const STOCK_QUANTITY = 'stock_quantity';
     const INVENTORY_DELTA = 'inventory_delta';
     const UPSELL_IDS = 'upsell_ids';
-    const CROSS_SELL_IDS = 'cross_sell_ids';
+    const CROSS_SELL_IDS = 'crosssell_ids';
     const CATEGORIES = 'category_ids';
-    const TAGS = 'tag_ids';
+    const TAGS = 'product_tag';
+    const BRANDS = 'product_brand';
     const DOWNLOADABLE = 'downloadable';
     const DOWNLOADS = 'downloads';
     const DOWNLOAD_LIMIT = 'download_limit';
@@ -70,9 +72,10 @@ class Elements {
     const FEATURED_IMAGE_ID = 'image_id';
     const GALLERY_IMAGE_IDS = 'gallery_image_ids';
     const META_DATA = 'meta_data';
-    const DISABLE_SHIPPING_META = '_disable_shipping';
-    const OVERWRITE_SHIPPING_META = '_overwrite_shipping';
-    const ADDITIONAL_SHIPPING_COST_META = '_additional_price';
-    const ADDITIONAL_SHIPPING_QUANTITY_META = '_additional_qty';
-    const ADDITIONAL_SHIPPING_PROCESSING_TIME_META = '_dps_processing_time';
+    const DISABLE_SHIPPING_META = 'disable_shipping';
+    const OVERWRITE_SHIPPING_META = 'overwrite_shipping';
+    const ADDITIONAL_SHIPPING_COST_META = 'additional_price';
+    const ADDITIONAL_SHIPPING_QUANTITY_META = 'additional_qty';
+    const ADDITIONAL_SHIPPING_PROCESSING_TIME_META = 'dps_processing_time';
+    const CREATE_SCHEDULE_FOR_DISCOUNT = 'create_schedule_for_discount';
 }

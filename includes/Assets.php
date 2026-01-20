@@ -7,7 +7,6 @@ use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
 use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\Utilities\OrderUtil;
-use WeDevs\Dokan\ProductForm\Factory as ProductFormFactory;
 use WeDevs\Dokan\Utilities\ReportUtil;
 
 class Assets {
@@ -379,6 +378,11 @@ class Assets {
                 'deps'    => [ 'wp-components' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/components.css' ),
             ],
+            'dokan-product-form-manager' => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/js/form-manager.css',
+                'deps'    => [ 'wp-components' ],
+                'version' => filemtime( DOKAN_DIR . '/assets/js/form-manager.css' ),
+            ],
         ];
 
         return $styles;
@@ -693,18 +697,18 @@ class Assets {
             ];
         }
 
-        return $scripts;
-    }
-
-    public function get_product_fields() {
-        $temp_fields = [];
-        foreach ( ProductFormFactory::get_fields() as $field_id => $field ) {
-            $temp_fields[ $field_id ] = $field->toArray();
+        $product_form_manager = DOKAN_DIR . '/assets/js/form-manager.asset.php';
+        if ( file_exists( $product_form_manager ) ) {
+            $form_asset = require $product_form_manager;
+            $scripts['dokan-product-form-manager'] = [
+                'version' => $form_asset['version'],
+                'src'     => $asset_url . '/js/form-manager.js',
+                'deps'    => array_merge( $form_asset['dependencies'], [ 'dokan-react-components' ] ),
+            ];
         }
 
-        return json_encode( $temp_fields );
+        return $scripts;
     }
-
     /**
      * Registers WooCommerce Admin scripts for the React-based Dokan Vendor dashboard.
      *
@@ -784,7 +788,6 @@ class Assets {
             'currency_format'              => esc_attr( str_replace( [ '%1$s', '%2$s' ], [ '%s', '%v' ], get_woocommerce_price_format() ) ), // For accounting JS
             'round_at_subtotal'            => get_option( 'woocommerce_tax_round_at_subtotal', 'no' ),
             'product_types'                => apply_filters( 'dokan_product_types', [ 'simple' ] ),
-            'product_form_fields'          => $this->get_product_fields(),
             'loading_img'                  => DOKAN_PLUGIN_ASSEST . '/images/loading.gif',
             'store_product_search_nonce'   => wp_create_nonce( 'dokan_store_product_search_nonce' ),
             'i18n_download_permission'     => __( 'Are you sure you want to revoke access to this download?', 'dokan-lite' ),

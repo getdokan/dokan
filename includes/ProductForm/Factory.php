@@ -45,6 +45,7 @@ class Factory {
      *                     'additional_args' => [], // (array) additional arguments for the field
      *                     'description'      => '', // (string) description of the field
      *                     'help_content'     => '', // (string) help content for the field
+     *                     'tooltip'          => '', // (string) tooltip content for the field
      *                     'visibility'       => true, // (bool) field visibility, if the field is visible under frontend
      *                     'required'         => false, // (bool) by default, all fields are not required
      *                     'order'            => 30, // (int) field order

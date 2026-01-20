@@ -1,0 +1,66 @@
+import { DokanTooltip } from '@src/components';
+import { Info } from 'lucide-react';
+import { sanitizeHTML } from '../../../utilities';
+import { getFieldConfigFromFactory } from '../factories';
+import { FormField } from '../types';
+import { checkDependency } from '../utils';
+
+export const getFieldConfig = ( field: FormField ) => {
+    const mappedField = {
+        ...field,
+        label: (
+            <div className="flex gap-1 items-center">
+                <span
+                    className="dokan-form-field-label"
+                    dangerouslySetInnerHTML={ {
+                        __html: sanitizeHTML( field.title ),
+                    } }
+                />
+                { field.tooltip && (
+                    <DokanTooltip content={ field.tooltip }>
+                        <Info size={ 16 } />
+                    </DokanTooltip>
+                ) }
+            </div>
+        ),
+        description: (
+            <span
+                dangerouslySetInnerHTML={ {
+                    __html: sanitizeHTML(
+                        field.help_content || field.description
+                    ),
+                } }
+            />
+        ),
+        placeholder: field.placeholder,
+        required: field.required,
+        type: field.field_type,
+        isValid: {
+            required: field.required,
+        },
+    };
+
+    const specificConfig = getFieldConfigFromFactory( field );
+    Object.assign( mappedField, specificConfig );
+
+    // Handle Visibility/Dependency
+    mappedField.isVisible = ( data: Record< string, any > ) => {
+        if ( ! field.visibility ) {
+            return false;
+        }
+        return checkDependency( field.dependency_condition, data );
+    };
+
+    if ( ! field.help_content && ! field.description ) {
+        // @ts-ignore
+        delete mappedField.description;
+    }
+
+    return mappedField;
+};
+
+const FieldRenderer = () => {
+    return null;
+};
+
+export default FieldRenderer;

@@ -15,6 +15,7 @@ use WC_Product_Factory;
 use WC_Product_Download;
 use WeDevs\Dokan\ProductCategory\Categories;
 use WeDevs\Dokan\Abstracts\DokanRESTController;
+use WeDevs\Dokan\Product\FormManager;
 use WeDevs\Dokan\Product\ProductAttribute;
 
 /**
@@ -313,6 +314,22 @@ class ProductController extends DokanRESTController {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_multistep_categories' ],
                     'permission_callback' => [ $this, 'get_product_permissions_check' ],
+                ],
+            ]
+        );
+
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/fields', [
+                'args' => [
+                    'id' => [
+                        'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
+                        'type'        => 'integer',
+                    ],
+                ],
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_item_fields' ],
+                    'permission_callback' => [ $this, 'get_single_product_permissions_check' ],
                 ],
             ]
         );
@@ -1737,6 +1754,30 @@ class ProductController extends DokanRESTController {
         $categories = apply_filters( 'dokan_rest_product_categories', $categories_controller->get() );
 
         return rest_ensure_response( $categories );
+    }
+
+    /**
+     * Get item fields for form manager
+     *
+     * @param WP_REST_Request $request Request data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return WP_REST_Response|WP_Error
+     */
+    public function get_item_fields( $request ) {
+        $product_id = $request->get_param( 'id' );
+        $product    = wc_get_product( $product_id );
+        if ( ! $product ) {
+            return new WP_Error( 'dokan_rest_product_invalid_id', __( 'Invalid product ID.', 'dokan-lite' ), [ 'status' => 404 ] );
+        }
+
+        return rest_ensure_response(
+            [
+				'sections' => FormManager::get_form_fields( $product_id ),
+				'vendor_earning' => dokan()->commission->get_earning_by_product( $product_id ),
+			]
+        );
     }
 
     /**

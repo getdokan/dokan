@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\ProductForm;
 
 use WC_Product;
+use WeDevs\Dokan\Product\FormManager as FormData;
 use WeDevs\Dokan\ProductCategory\Helper as ProductCategoryHelper;
 
 defined( 'ABSPATH' ) || exit;
@@ -22,7 +23,7 @@ class Init {
      * @return void
      */
     public function __construct() {
-        add_action( 'init', [ $this, 'init_form_fields' ], 10 );
+        add_action( 'init', [ $this, 'init_form_fields' ] );
     }
 
     /**
@@ -37,6 +38,7 @@ class Init {
         $this->init_inventory_fields();
         $this->init_downloadable_fields();
         $this->init_other_fields();
+        do_action( 'dokan_product_form_fields_init' );
     }
 
     /**
@@ -59,7 +61,7 @@ class Init {
         $section->add_field(
             Elements::NAME,
             [
-                'title'          => __( 'Title', 'dokan-lite' ),
+                'title'          => __( 'Product Title', 'dokan-lite' ),
                 'field_type'     => 'text',
                 'name'           => 'post_title',
                 'placeholder'    => __( 'Enter product title...', 'dokan-lite' ),
@@ -82,7 +84,7 @@ class Init {
         $section->add_field(
             Elements::SLUG,
             [
-                'title'             => __( 'Slug', 'dokan-lite' ),
+                'title'             => __( 'Permalink', 'dokan-lite' ),
                 'field_type'        => 'text',
                 'type'              => 'other',
                 'name'              => 'slug',
@@ -110,9 +112,9 @@ class Init {
             Elements::TYPE, [
                 'title'          => __( 'Product Type', 'dokan-lite' ),
                 'field_type'     => 'select',
-                'type'           => 'other',
                 'id'             => 'product_type',
                 'name'           => 'product_type',
+                'required'       => true,
                 'options'        => apply_filters(
                     'dokan_product_types',
                     [
@@ -120,6 +122,7 @@ class Init {
                     ]
                 ),
                 'help_content'   => __( 'Choose Variable if your product has multiple attributes - like sizes, colors, quality etc', 'dokan-lite' ),
+                'tooltip'       => __( 'Choose product type.', 'dokan-lite' ),
                 'value_callback' => function ( $product, $value = '' ) {
                     if ( '' !== $value ) {
                         return $value;
@@ -144,7 +147,7 @@ class Init {
 
         $section->add_field(
             Elements::SALE_PRICE, [
-                'title'       => __( 'Discounted Price', 'dokan-lite' ),
+                'title'       => __( 'Sale Price', 'dokan-lite' ),
                 'field_type'  => 'text',
                 'name'        => '_sale_price',
                 'placeholder' => '0.00',
@@ -152,11 +155,11 @@ class Init {
         );
 
         $section->add_field(
-            Elements::DATE_ON_SALE_FROM, [
-                'title'                => __( 'From', 'dokan-lite' ),
-                'field_type'           => 'text',
-                'name'                 => '_sale_price_dates_from',
-                'placeholder'          => 'YYYY-MM-DD',
+            Elements::CREATE_SCHEDULE_FOR_DISCOUNT, [
+                'title'                => __( 'Create Schedule for Discount', 'dokan-lite' ),
+                'field_type'           => 'checkbox',
+                'type'                 => 'other',
+                'name'                 => 'create_schedule_for_discount',
                 'value_callback'       => function ( $product, $value = '' ) {
                     if ( '' !== $value ) {
                         $time = dokan_current_datetime()->modify( $value );
@@ -168,11 +171,31 @@ class Init {
                         return false;
                     }
 
-                    return $product->get_date_on_sale_from( 'edit' ) ? $product->get_date_on_sale_from( 'edit' )->getTimestamp() : false;
+                    return ! empty( $product->get_date_on_sale_to() ?? $product->get_date_on_sale_from() ) ? 'on' : 'off';
+                },
+            ]
+        );
+
+        $section->add_field(
+            Elements::DATE_ON_SALE_FROM, [
+                'title'                => __( 'From', 'dokan-lite' ),
+                'field_type'           => 'date',
+                'name'                 => '_sale_price_dates_from',
+                'placeholder'          => 'YYYY-MM-DD',
+                'value_callback'       => function ( $product, $value = '' ) {
+                    if ( '' !== $value ) {
+                        return '';
+                    }
+
+                    if ( ! $product instanceof WC_Product ) {
+                        return '';
+                    }
+
+                    return $product->get_date_on_sale_from( 'edit' ) ? $product->get_date_on_sale_from( 'edit' )->date( 'Y-m-d' ) : '';
                 },
                 'dependency_condition' => [
                     'section'  => 'general',
-                    'field'    => Elements::SALE_PRICE,
+                    'field'    => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
                     'operator' => 'equal',
                     'value'    => 'on',
                 ],
@@ -182,25 +205,23 @@ class Init {
         $section->add_field(
             Elements::DATE_ON_SALE_TO, [
                 'title'                => __( 'To', 'dokan-lite' ),
-                'field_type'           => 'text',
+                'field_type'           => 'date',
                 'name'                 => '_sale_price_dates_to',
                 'placeholder'          => 'YYYY-MM-DD',
                 'value_callback'       => function ( $product, $value = '' ) {
                     if ( '' !== $value ) {
-                        $time = dokan_current_datetime()->modify( $value );
-
-                        return $time ? $time->getTimestamp() : false;
+                        return '';
                     }
 
                     if ( ! $product instanceof WC_Product ) {
-                        return false;
+                        return '';
                     }
 
-                    return $product->get_date_on_sale_to( 'edit' ) ? $product->get_date_on_sale_to( 'edit' )->getTimestamp() : false;
+                    return $product->get_date_on_sale_to( 'edit' ) ? $product->get_date_on_sale_to( 'edit' )->date( 'Y-m-d' ) : '';
                 },
                 'dependency_condition' => [
                     'section'  => 'general',
-                    'field'    => Elements::SALE_PRICE,
+                    'field'    => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
                     'operator' => 'equal',
                     'value'    => 'on',
                 ],
@@ -215,9 +236,9 @@ class Init {
             Elements::CATEGORIES, [
                 'title'             => __( 'Categories', 'dokan-lite' ),
                 'field_type'        => 'select',
-                'name'              => 'chosen_product_cat[]',
+                'name'              => 'chosen_product_cat',
                 'placeholder'       => __( 'Select product categories', 'dokan-lite' ),
-                'options'           => [],
+                'options'           => ProductCategoryHelper::get_product_categories_tree(),
                 'required'          => true,
                 'error_msg'         => $category_error_message,
                 'sanitize_callback' => function ( array $categories, WC_Product $product ) {
@@ -251,6 +272,7 @@ class Init {
                 'field_type'        => 'select',
                 'name'              => 'product_tag[]',
                 'placeholder'       => $tags_placeholder,
+                'options'           => FormData::get_product_tags(),
                 'sanitize_callback' => function ( $tags ) {
                     /**
                      * Maximum number of tags a vendor can add.
@@ -292,27 +314,93 @@ class Init {
         );
 
         $section->add_field(
+            Elements::BRANDS, [
+                'title'             => __( 'Brands', 'dokan-lite' ),
+                'field_type'        => 'select',
+                'name'              => 'product_brand[]',
+                'placeholder'       => __( 'Select product brands', 'dokan-lite' ),
+                'sanitize_callback' => function ( $brands ) {
+                    return array_map(
+                        function ( $brand ) {
+                            if ( is_numeric( $brand ) ) {
+                                return absint( $brand );
+                            } else {
+                                return sanitize_text_field( $brand );
+                            }
+                        }, (array) $brands
+                    );
+                },
+                'value_callback'    => function ( $product, $value = '' ) {
+                    if ( '' !== $value ) {
+                        return $value;
+                    }
+
+                    if ( ! $product instanceof WC_Product ) {
+                        return [];
+                    }
+
+                    return $product->get_brand_ids();
+                },
+                'options'           => FormData::get_products_brands(),
+            ]
+        );
+
+        $section->add_field(
             Elements::FEATURED_IMAGE_ID, [
-                'title'       => __( 'Product Image', 'dokan-lite' ),
+                'title'       => __( 'Feature Image', 'dokan-lite' ),
                 'field_type'  => 'image',
                 'name'        => 'image_id',
-                'placeholder' => __( 'Select product image', 'dokan-lite' ),
+                'tooltip' => __( 'Select product image', 'dokan-lite' ),
+                'value_callback'    => function ( $product, $value = '' ) {
+                    if ( '' !== $value ) {
+                        return $value;
+                    }
+
+                    if ( ! $product instanceof WC_Product ) {
+                        return [];
+                    }
+
+                    return [
+                        'id' => $product->get_image_id(),
+                        'url' => wp_get_attachment_url( $product->get_image_id() ),
+                    ];
+                },
             ]
         );
 
         $section->add_field(
             Elements::GALLERY_IMAGE_IDS, [
-                'title'       => __( 'Product Gallery', 'dokan-lite' ),
+                'title'       => __( 'Gallery Image', 'dokan-lite' ),
                 'field_type'  => 'gallery',
                 'name'        => 'gallery_image_ids',
-                'placeholder' => __( 'Select product gallery images', 'dokan-lite' ),
+                'tooltip' => __( 'Select product gallery images', 'dokan-lite' ),
+                'value_callback'    => function ( $product, $value = '' ) {
+                    if ( '' !== $value ) {
+                        return $value;
+                    }
+
+                    if ( ! $product instanceof WC_Product ) {
+                        return [];
+                    }
+
+                    // attachment urls
+                    $attachment_urls = [];
+                    foreach ( $product->get_gallery_image_ids() as $attachment_id ) {
+                        $attachment_urls[] = [
+                            'id' => $attachment_id,
+                            'url' => wp_get_attachment_url( $attachment_id ),
+                        ];
+                    }
+
+                    return $attachment_urls;
+                },
             ]
         );
 
         $section->add_field(
             Elements::SHORT_DESCRIPTION, [
                 'title'          => __( 'Short Description', 'dokan-lite' ),
-                'field_type'     => 'textarea',
+                'field_type'     => 'rich_text',
                 'name'           => 'post_excerpt',
                 'placeholder'    => __( 'Enter product short description', 'dokan-lite' ),
                 'value_callback' => function ( $product, $value = '' ) {
@@ -332,7 +420,7 @@ class Init {
         $section->add_field(
             Elements::DESCRIPTION, [
                 'title'          => __( 'Description', 'dokan-lite' ),
-                'field_type'     => 'textarea',
+                'field_type'     => 'rich_text',
                 'name'           => 'post_content',
                 'placeholder'    => __( 'Enter product description', 'dokan-lite' ),
                 'required'       => true,
@@ -353,7 +441,7 @@ class Init {
         $section->add_field(
             Elements::DOWNLOADABLE, [
                 'title'                 => __( 'Downloadable', 'dokan-lite' ),
-                'description'           => __( 'Downloadable products give access to a file upon purchase.', 'dokan-lite' ),
+                'tooltip'               => __( 'Downloadable products give access to a file upon purchase.', 'dokan-lite' ),
                 'field_type'            => 'checkbox',
                 'name'                  => '_downloadable',
                 'additional_properties' => [
@@ -368,7 +456,7 @@ class Init {
         $section->add_field(
             Elements::VIRTUAL, [
                 'title'                 => __( 'Virtual', 'dokan-lite' ),
-                'description'           => __( 'Virtual products are intangible and are not shipped.', 'dokan-lite' ),
+                'tooltip'           => __( 'Virtual products are intangible and are not shipped.', 'dokan-lite' ),
                 'field_type'            => 'checkbox',
                 'name'                  => '_virtual',
                 'additional_properties' => [
@@ -379,6 +467,8 @@ class Init {
                 },
             ]
         );
+
+        do_action( 'dokan_product_form_general_fields_init', $section );
     }
 
     /**
@@ -407,6 +497,19 @@ class Init {
                 'name'        => '_sku',
             ]
         );
+        $section->add_field(
+            Elements::GLOBAL_UNIQUE_ID, [
+                'title'       => sprintf(
+                    '%s <span>(%s)</span>',
+                    esc_html__( 'GTIN, UPC, EAN, or ISBN', 'dokan-lite' ),
+                    esc_html__( 'Product Identifiers', 'dokan-lite' )
+				),
+                'tooltip' => __( 'Enter a barcode or any other identifier unique to this product. It can help you list this product on other channels or marketplaces.', 'dokan-lite' ),
+                'placeholder' => __( 'Enter code', 'dokan-lite' ),
+                'field_type'  => 'text',
+                'name'        => '_global_unique_id',
+            ]
+        );
 
         $section->add_field(
             Elements::STOCK_STATUS, [
@@ -415,6 +518,12 @@ class Init {
                 'field_type'  => 'select',
                 'name'        => '_stock_status',
                 'options'     => wc_get_product_stock_status_options(),
+                'dependency_condition'  => [
+                    'section'  => 'inventory',
+                    'field'    => Elements::MANAGE_STOCK,
+                    'operator' => 'not_equal',
+                    'value'    => 'on',
+                ],
             ]
         );
 
@@ -535,8 +644,8 @@ class Init {
 
         $section->add_field(
             Elements::SOLD_INDIVIDUALLY, [
-                'title'                 => __( 'Allow only one quantity of this product to be bought in a single order', 'dokan-lite' ),
-                'description'           => __( 'Check to let customers to purchase only 1 item in a single order. This is particularly useful for items that have limited quantity, for example art or handmade goods.', 'dokan-lite' ),
+                'title'                 => __( 'Limit purchases to 1 item per order', 'dokan-lite' ),
+                'tooltip'           => __( 'Check to let customers to purchase only 1 item in a single order. This is particularly useful for items that have limited quantity, for example art or handmade goods.', 'dokan-lite' ),
                 'field_type'            => 'checkbox',
                 'name'                  => '_sold_individually',
                 'additional_properties' => [
@@ -547,6 +656,7 @@ class Init {
                 },
             ]
         );
+        do_action( 'dokan_product_form_inventory_fields_init', $section );
     }
 
     /**
@@ -581,6 +691,32 @@ class Init {
                 'sanitize_callback' => function ( $file_names, $file_urls, $file_hashes ) {
                     return dokan()->product->prepare_downloads( $file_names, $file_urls, $file_hashes );
                 },
+                'dependency_condition' => [
+                    'section'  => 'general',
+                    'field'    => Elements::DOWNLOADABLE,
+                    'operator' => 'equal',
+                    'value'    => 'on',
+                ],
+                'value_callback'    => function ( $product, $value = [] ) {
+                    if ( ! empty( $value ) ) {
+                        return $value;
+                    }
+
+                    if ( ! $product instanceof WC_Product ) {
+                        return [];
+                    }
+
+                    $downloads = [];
+                    foreach ( $product->get_downloads() as $download_id => $download ) {
+                        $downloads[] = [
+                            'title' => $download['name'],
+                            'url' => $download['file'],
+                            'id'   => $download_id,
+                        ];
+                    }
+
+                    return $downloads;
+                },
             ]
         );
 
@@ -602,6 +738,25 @@ class Init {
 
                     return '';
                 },
+                'value_callback'        => function ( $product, $value = '' ) {
+                    if ( '' !== $value ) {
+                        return $value;
+                    }
+
+                    if ( ! $product instanceof WC_Product ) {
+                        return '';
+                    }
+
+                    $download_limit = $product->get_download_limit();
+
+                    return '' === $download_limit ? '' : absint( $download_limit );
+                },
+                'dependency_condition' => [
+                    'section'  => 'general',
+                    'field'    => Elements::DOWNLOADABLE,
+                    'operator' => 'equal',
+                    'value'    => 'on',
+                ],
             ]
         );
 
@@ -623,8 +778,28 @@ class Init {
 
                     return '';
                 },
+                'value_callback'        => function ( $product, $value = '' ) {
+                    if ( '' !== $value ) {
+                        return $value;
+                    }
+
+                    if ( ! $product instanceof WC_Product ) {
+                        return '';
+                    }
+
+                    $download_expiry = $product->get_download_expiry();
+
+                    return '' === $download_expiry ? '' : absint( $download_expiry );
+                },
+                'dependency_condition' => [
+                    'section'  => 'general',
+                    'field'    => Elements::DOWNLOADABLE,
+                    'operator' => 'equal',
+                    'value'    => 'on',
+                ],
             ]
         );
+        do_action( 'dokan_product_form_downloadable_fields_init', $section );
     }
 
     /**
@@ -646,8 +821,8 @@ class Init {
 
         $section->add_field(
             Elements::STATUS, [
-                'title'      => __( 'Product Status', 'dokan-lite' ),
-                'field_type' => 'select',
+                'title'      => __( 'Status', 'dokan-lite' ),
+                'field_type' => 'radio',
                 'name'       => 'status',
                 'options'    => [],
                 'options_callback' => function ( $product, $value = [] ) {
@@ -707,7 +882,8 @@ class Init {
                 'title'             => __( 'Purchase Note', 'dokan-lite' ),
                 'field_type'        => 'textarea',
                 'name'              => '_purchase_note',
-                'placeholder'       => __( 'Customer will get this info in their order email', 'dokan-lite' ),
+                'description'       => __( 'Customer will get this in order email.', 'dokan-lite' ),
+                'placeholder'       => __( 'Purchase Note', 'dokan-lite' ),
                 'sanitize_callback' => 'wp_kses_post',
             ]
         );
@@ -736,5 +912,7 @@ class Init {
                 },
             ]
         );
+
+        do_action( 'dokan_product_form_other_fields_init', $section );
     }
 }

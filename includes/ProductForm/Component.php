@@ -39,12 +39,14 @@ abstract class Component {
         'title'                  => '', // label for the field
         'description'            => '', // description of the field
         'help_content'           => '', // help content for the field
+        'tooltip'                => '', // tooltip content for the field
         'visibility'             => true, // field visibility, if the field is visible under frontend
         'required'               => false, // by default, all fields are not required
         'dependency_condition'   => [], // dependency condition for the field
         'order'                  => 30, // sorting sequence order for the field
         'error_message'          => '',
         'show_in_admin_settings' => true,
+        'hide_on_product_types'  => [],
     ];
 
     public function __construct( string $id, array $args = [] ) {
@@ -174,6 +176,34 @@ abstract class Component {
      */
     public function set_help_content( string $help_content ): self {
         $this->data['help_content'] = wp_kses_post( $help_content );
+
+        return $this;
+    }
+
+    /**
+     * Get field tooltip content
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    public function get_tooltip(): string {
+        return $this->data['tooltip'];
+    }
+
+    /**
+     * Set field tooltip content, validated with
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $tooltip
+     *
+     * @see   wp_kses_post()
+     *
+     * @return $this
+     */
+    public function set_tooltip( string $tooltip ): self {
+        $this->data['tooltip'] = wp_kses_post( $tooltip );
 
         return $this;
     }
@@ -365,6 +395,32 @@ abstract class Component {
      */
     public function is_shown_in_admin_settings(): bool {
         return $this->get_show_in_admin_settings();
+    }
+
+    /**
+     * Get hide on product types
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public function get_hide_on_product_types(): array {
+        return (array) $this->data['hide_on_product_types'];
+    }
+
+    /**
+     * Set hide on product types
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $product_types
+     *
+     * @return $this
+     */
+    public function set_hide_on_product_types( array $product_types ): self {
+        $this->data['hide_on_product_types'] = array_map( 'sanitize_key', $product_types );
+
+        return $this;
     }
 
     /**
