@@ -1,12 +1,10 @@
 import { DokanButton, Select } from '@src/components';
 import { DataForm } from '@wordpress/dataviews';
-import { useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { useFormContext } from '../../context/FormContext';
 import { useVariationContext } from '../../context/VariationContext';
-import useVariationLayout from '../../hooks/useVariationLayout';
+import useVariationLayouts from '../../hooks/useVariationLayouts';
 import { VariationType } from '../../types';
-import { layoutBuilder } from '../../utils';
 
 type VariationInternalFormProps = {
     variation: VariationType;
@@ -21,19 +19,8 @@ const VariationInternalForm = ( { variation }: VariationInternalFormProps ) => {
         onChange: dataFormChange,
     } = useFormContext();
 
-    const { updateVariation, } = useVariationContext();
-    const { formLayouts } = useVariationLayout();
-
-    const processedFormLayouts = useMemo( () => {
-        return {
-            ...formLayouts,
-            fields: layoutBuilder(
-                formLayouts,
-                fields,
-                product,
-            ),
-        };
-    }, [ formLayouts, fields, product ] );
+    const { updateVariation } = useVariationContext();
+    const { formLayouts } = useVariationLayouts( fields, product );
 
     return (
         <div className="flex flex-col gap-4">
@@ -66,7 +53,7 @@ const VariationInternalForm = ( { variation }: VariationInternalFormProps ) => {
             <DataForm
                 data={ product }
                 fields={ fields }
-                form={ processedFormLayouts }
+                form={ formLayouts }
                 onChange={ dataFormChange }
             />
 

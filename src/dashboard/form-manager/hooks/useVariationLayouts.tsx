@@ -1,8 +1,13 @@
 import { useMemo } from '@wordpress/element';
+import { FormField } from '../types';
+import { layoutBuilder } from '../utils';
 
-const useVariationLayout = () => {
+const useVariationLayouts = (
+    fields: FormField[],
+    product: Record< string, any >
+) => {
     const formLayouts = useMemo( () => {
-        const fields = [
+        const layouts = [
             {
                 id: 'variation-image-sku',
                 layout: {
@@ -98,12 +103,14 @@ const useVariationLayout = () => {
             },
         ];
 
-        return fields;
-    }, [] );
+        return {
+            fields: layoutBuilder( layouts, fields, product, 'variation' ),
+        };
+    }, [ fields, product ] );
 
     return {
         formLayouts,
     };
 };
 
-export default useVariationLayout;
+export default useVariationLayouts;

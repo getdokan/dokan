@@ -4,6 +4,7 @@ import { FormField, Section } from '../types';
 import {
     appendToLeftColumn,
     collectUsedFields,
+    getField,
     getRemainingFields,
     injectRemainingFields,
     layoutBuilder,
@@ -25,43 +26,17 @@ export default function useLayouts(
     product: Record< string, any >
 ) {
     const { width } = useWindowDimensions();
-    /**
-     * Helper to find a field or section by ID.
-     * Searches through sections and their nested fields.
-     *
-     * @param {string} fieldId The ID of the field to find.
-     * @return {object|null} The field or section object if found, null otherwise.
-     */
-    const getField = useCallback(
-        ( fieldId: string ) => {
-            const section = sections.find( ( sec ) => sec.id === fieldId );
-            if ( section ) {
-                return section;
-            }
-
-            for ( const sec of sections ) {
-                if ( sec.fields.length ) {
-                    for ( const field of sec.fields ) {
-                        if ( field.id === fieldId ) {
-                            return field;
-                        }
-                    }
-                }
-            }
-            return null;
-        },
-        [ sections ]
-    );
 
     /**
      * helper to get label and description for a field.
      *
      * @param {string} fieldId The ID of the field.
+     *
      * @return {Object} Object containing label and description.
      */
     const getFieldHeading = useCallback(
         ( fieldId: string ) => {
-            const field = getField( fieldId );
+            const field = getField( sections, fieldId );
             if ( ! field ) {
                 return {};
             }
@@ -70,27 +45,7 @@ export default function useLayouts(
                 description: field.description,
             };
         },
-        [ getField ]
-    );
-
-    /**
-     * Recursive function to process layout fields.
-     * Handles string references, card creation, and child processing.
-     * Also filters out empty cards (cards with no visible children).
-     *
-     * @param {Array} layoutFields The fields to process for the layout.
-     * @return {Array} valid processed fields.
-     */
-    const processLayout = useCallback(
-        ( layoutFields: any[] ) => {
-            return layoutBuilder(
-                layoutFields,
-                fields,
-                product,
-                product.product_type
-            );
-        },
-        [ fields, product ]
+        [ sections ]
     );
 
     // Define root layout based on window width
@@ -312,9 +267,14 @@ export default function useLayouts(
         }
 
         return {
-            fields: processLayout( updatedLayouts ),
+            fields: layoutBuilder(
+                updatedLayouts,
+                fields,
+                product,
+                product.product_type
+            ),
         };
-    }, [ getFieldHeading, processLayout, sections, rootLayout ] );
+    }, [ rootLayout, getFieldHeading, sections, fields, product ] );
 
-    return { formLayouts, getFieldHeading, getField, width };
+    return { formLayouts, width };
 }

@@ -164,10 +164,17 @@ export const VariationProvider = ( {
 
         try {
             const response: any = await ajaxRequest( formData );
-            toast( {
-                type: 'success',
-                title: response.data.message,
-            } );
+            if ( response.success ) {
+                toast( {
+                    type: 'success',
+                    title: __( 'Variation saved successfully', 'dokan-lite' ),
+                } );
+            } else {
+                toast( {
+                    type: 'error',
+                    title: __( 'Error saving variation', 'dokan-lite' ),
+                } );
+            }
         } catch ( error ) {
             console.error( 'Error saving variation:', error );
             toast( {

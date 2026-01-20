@@ -2,6 +2,7 @@ import { DokanPriceInput } from '@src/components';
 import { formatPrice } from '@src/utilities';
 import apiFetch from '@wordpress/api-fetch';
 import { useState } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 import { addQueryArgs } from '@wordpress/url';
 import CustomField from './CustomField';
 
@@ -14,13 +15,14 @@ const PriceEdit = ( { data, field, onChange }: any ) => {
         if ( field.id === 'regular_price' ) {
             // fetch the vendor earning
             try {
-                const path = addQueryArgs( '/dokan/v1/commission', {
-                    amount: price,
-                    product_id: data.id,
-                    category_ids: data.category_ids || [],
-                    context: 'seller',
+                const response = await apiFetch( {
+                    path: addQueryArgs( '/dokan/v1/commission', {
+                        amount: price,
+                        product_id: data.id,
+                        category_ids: data.category_ids || [],
+                        context: 'seller',
+                    } ),
                 } );
-                const response = await apiFetch( { path } );
                 setVendorEarning( Number( response ) );
             } catch ( error ) {
                 setVendorEarning( 0 );
@@ -33,9 +35,12 @@ const PriceEdit = ( { data, field, onChange }: any ) => {
             return (
                 <div className="flex gap-1 items-center">
                     { field.label }{ ' ' }
-                    <span className="text-xs font-normal text-gray-500">
-                        ( Your Earn: { formatPrice( vendorEarning ) } )
-                    </span>
+                    { vendorEarning > 0 && (
+                        <span className="text-xs font-normal text-gray-500">
+                            ( { __( 'Your Earn:', 'dokan-lite' ) }{ ' ' }
+                            { formatPrice( vendorEarning ) } )
+                        </span>
+                    ) }
                 </div>
             );
         }

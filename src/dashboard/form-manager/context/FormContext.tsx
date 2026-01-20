@@ -138,14 +138,7 @@ export const FormProvider = ( {
         setIsLoading( true );
 
         try {
-            const response = await onSubmit( product );
-
-            if ( response.data.message ) {
-                toast( {
-                    type: 'success',
-                    title: response.data.message,
-                } );
-            }
+            await onSubmit( product );
         } catch ( error: unknown ) {
             const err = error as Error | { message?: string };
             toast( {

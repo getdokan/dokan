@@ -29,6 +29,33 @@ export const ajaxRequest = (
     } );
 };
 
+/**
+ * Helper to find a field or section by ID.
+ * Searches through sections and their nested fields.
+ *
+ * @param {Array}  sections The available sections in the form.
+ * @param {string} fieldId  The ID of the field to find.
+ *
+ * @return {object|null} The field or section object if found, null otherwise.
+ */
+export const getField = ( sections: Section[], fieldId: string ) => {
+    const section = sections.find( ( sec ) => sec.id === fieldId );
+    if ( section ) {
+        return section;
+    }
+
+    for ( const sec of sections ) {
+        if ( sec.fields.length ) {
+            for ( const field of sec.fields ) {
+                if ( field.id === fieldId ) {
+                    return field;
+                }
+            }
+        }
+    }
+    return null;
+};
+
 export const validateProductForm = (
     sections: Section[],
     values: Record< string, any >
@@ -79,7 +106,7 @@ export const checkDependency = (
         );
     }
 
-    if ( typeof depsCondition === 'object' && depsCondition !== null ) {
+    if ( typeof depsCondition === 'object' ) {
         const { field: depField, operator, value } = depsCondition;
         const depValue = data[ depField ];
 
@@ -106,10 +133,10 @@ export const checkDependency = (
  * Handles string references, card creation, and child processing.
  * Also filters out empty cards (cards with no visible children).
  *
- * @param {Array}  layoutFields The fields to process for the layout.
- * @param {Array}  fields       All available form fields.
- * @param {Object} product      The current product data for dependency checking.
- * @param {string} scope        The scope of the layout (e.g. 'product', 'variation').
+ * @param {Array}  layouts The fields to process for the layout
+ * @param {Array}  fields  All available form fields.
+ * @param {Object} product The current product data for dependency checking.
+ * @param {string} scope   The scope of the layout (e.g. 'product', 'variation').
  *
  * @return {Array} valid processed fields.
  */
@@ -208,8 +235,8 @@ export const appendToLeftColumn = (
 /**
  * Helper to collect all used field IDs from the layout.
  *
- * @param {Array} items Layout items.
- * @param {Set} usedFields Set to store used fields.
+ * @param {Array} items      Layout items.
+ * @param {Set}   usedFields Set to store used fields.
  *
  * @return {Set} Set of used fields.
  */
