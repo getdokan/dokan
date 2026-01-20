@@ -352,11 +352,9 @@ class Orders {
             $add_args['limit'] = absint( wp_unslash( $_GET['limit'] ) );
         }
 
-        if ( ! empty( $_GET['seller_order_filter_nonce'] ) ) {
-            $add_args['seller_order_filter_nonce'] = sanitize_key(
-                wp_unslash( $_GET['seller_order_filter_nonce'] )
-            );
-        }
+        $add_args['seller_order_filter_nonce'] = ! empty( $_GET['seller_order_filter_nonce'] )
+        ? sanitize_key( wp_unslash( $_GET['seller_order_filter_nonce'] ) )
+        : wp_create_nonce( 'seller-order-filter-nonce' );
 
         $page_links = paginate_links(
             array(
