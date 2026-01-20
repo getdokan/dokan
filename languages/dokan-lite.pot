@@ -1,14 +1,14 @@
 # Copyright (c) 2026 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 4.2.7\n"
+"Project-Id-Version: Dokan 4.2.8\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-01-14T10:18:42+00:00\n"
+"POT-Creation-Date: 2026-01-20T10:36:12+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -16,8 +16,8 @@ msgstr ""
 #. Plugin Name of the plugin
 #: dokan.php
 #: includes/Admin/AdminBar.php:46
-#: includes/Admin/Menu.php:45
-#: includes/Admin/Menu.php:46
+#: includes/Admin/Menu.php:49
+#: includes/Admin/Menu.php:50
 #: includes/Customizer.php:56
 #: includes/Privacy.php:30
 #: assets/js/vendor-dashboard/layout/index.js:172
@@ -51,7 +51,7 @@ msgstr ""
 
 #: dokan-class.php:414
 #: includes/Admin/AdminBar.php:74
-#: includes/Admin/Menu.php:69
+#: includes/Admin/Menu.php:73
 #: includes/Dashboard/Templates/Settings.php:61
 #: includes/Dashboard/Templates/Settings.php:68
 #: includes/functions-dashboard-navigation.php:67
@@ -148,7 +148,7 @@ msgstr ""
 
 #: includes/Admin/AdminBar.php:56
 #: includes/Admin/Dashboard/Dashboard.php:108
-#: includes/Admin/Menu.php:55
+#: includes/Admin/Menu.php:59
 #: includes/Admin/Settings.php:783
 #: includes/functions-dashboard-navigation.php:34
 #: includes/Install/Installer.php:233
@@ -160,8 +160,8 @@ msgstr ""
 
 #: includes/Admin/AdminBar.php:65
 #: includes/Admin/Dashboard/Pages/Withdraw.php:24
-#: includes/Admin/Menu.php:34
-#: includes/Admin/Menu.php:56
+#: includes/Admin/Menu.php:38
+#: includes/Admin/Menu.php:60
 #: includes/Admin/OnboardingSetup/Steps/WithdrawStep.php:104
 #: includes/Admin/OnboardingSetup/Steps/WithdrawStep.php:107
 #: includes/Admin/SetupWizard.php:294
@@ -606,7 +606,7 @@ msgid "Reverse Withdrawal Management"
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/ReverseWithdrawal.php:24
-#: includes/Admin/Menu.php:57
+#: includes/Admin/Menu.php:61
 #: includes/Admin/Settings.php:363
 #: includes/ReverseWithdrawal/Hooks.php:252
 #: templates/reverse-withdrawal/header.php:9
@@ -653,7 +653,7 @@ msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Vendors.php:12
 #: includes/Admin/Dashboard/Pages/Vendors.php:13
-#: includes/Admin/Menu.php:61
+#: includes/Admin/Menu.php:65
 #: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/vue-admin.js:2
 msgid "Vendors"
@@ -711,8 +711,8 @@ msgstr ""
 #: includes/Order/Admin/Hooks.php:105
 #: includes/Order/Admin/Hooks.php:423
 #: includes/wc-template.php:21
-#: includes/wc-template.php:166
-#: includes/wc-template.php:337
+#: includes/wc-template.php:167
+#: includes/wc-template.php:338
 #: templates/my-orders.php:29
 #: templates/orders/sub-order-related-order-meta-box-html.php:41
 #: assets/js/components.js:179
@@ -735,15 +735,15 @@ msgid "Unauthorized operation"
 msgstr ""
 
 #. translators: %s: withdraw count
-#: includes/Admin/Menu.php:40
+#: includes/Admin/Menu.php:44
 msgid "Withdraw %s"
 msgstr ""
 
-#: includes/Admin/Menu.php:68
+#: includes/Admin/Menu.php:72
 msgid "<span style=\"color:#f18500\">Help</span>"
 msgstr ""
 
-#: includes/Admin/Menu.php:81
+#: includes/Admin/Menu.php:85
 msgid "Chat with us"
 msgstr ""
 
@@ -2669,37 +2669,37 @@ msgstr ""
 msgid "id param is required"
 msgstr ""
 
-#: includes/Analytics/VendorDashboardManager.php:85
+#: includes/Analytics/VendorDashboardManager.php:87
 msgid "Seller Totals."
 msgstr ""
 
-#: includes/Analytics/VendorDashboardManager.php:96
+#: includes/Analytics/VendorDashboardManager.php:98
 #: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/vue-admin.js:2
 msgid "Total Earning"
 msgstr ""
 
-#: includes/Analytics/VendorDashboardManager.php:97
+#: includes/Analytics/VendorDashboardManager.php:99
 msgid "Total Vendor Earning"
 msgstr ""
 
-#: includes/Analytics/VendorDashboardManager.php:106
+#: includes/Analytics/VendorDashboardManager.php:108
 msgid "Marketplace Discount"
 msgstr ""
 
-#: includes/Analytics/VendorDashboardManager.php:116
+#: includes/Analytics/VendorDashboardManager.php:118
 msgid "Store Discount"
 msgstr ""
 
-#: includes/Analytics/VendorDashboardManager.php:117
+#: includes/Analytics/VendorDashboardManager.php:119
 msgid "Total Vendor Discount"
 msgstr ""
 
-#: includes/Analytics/VendorDashboardManager.php:127
+#: includes/Analytics/VendorDashboardManager.php:129
 msgid "Marketplace Commission"
 msgstr ""
 
-#: includes/Analytics/VendorDashboardManager.php:128
+#: includes/Analytics/VendorDashboardManager.php:130
 #: assets/js/dokan-admin-dashboard.js:179
 msgid "Total Commission"
 msgstr ""
@@ -3493,7 +3493,7 @@ msgid "Layout 4"
 msgstr ""
 
 #: includes/Customizer.php:185
-#: includes/wc-template.php:40
+#: includes/wc-template.php:41
 msgid "Vendor Info"
 msgstr ""
 
@@ -7015,7 +7015,7 @@ msgstr ""
 #: includes/REST/StoreController.php:178
 #: includes/REST/StoreController.php:210
 #: includes/REST/WithdrawController.php:91
-#: includes/REST/WithdrawController.php:958
+#: includes/REST/WithdrawController.php:959
 msgid "Unique identifier for the object."
 msgstr ""
 
@@ -7990,7 +7990,7 @@ msgstr ""
 
 #: includes/REST/StoreSettingController.php:125
 #: includes/REST/WithdrawController.php:329
-#: includes/REST/WithdrawController.php:466
+#: includes/REST/WithdrawController.php:467
 msgid "No vendor found"
 msgstr ""
 
@@ -8182,68 +8182,68 @@ msgstr ""
 msgid "Withdraw not found"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:456
+#: includes/REST/WithdrawController.php:457
 msgid "User does not have permission to withdraw"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:470
+#: includes/REST/WithdrawController.php:471
 msgid "You already have a pending withdraw request"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:801
+#: includes/REST/WithdrawController.php:802
 msgid "Invalid withdraw amount. The withdraw charge is greater than the withdraw amount"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:964
+#: includes/REST/WithdrawController.php:965
 msgid "Requested User"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:971
+#: includes/REST/WithdrawController.php:972
 msgid "Requested User ID"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:977
+#: includes/REST/WithdrawController.php:978
 msgid "The amount of discount. Should always be numeric, even if setting a percentage."
 msgstr ""
 
-#: includes/REST/WithdrawController.php:982
+#: includes/REST/WithdrawController.php:983
 msgid "The date the withdraw request has beed created in the site's timezone."
 msgstr ""
 
-#: includes/REST/WithdrawController.php:989
+#: includes/REST/WithdrawController.php:990
 msgid "Withdraw status"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:997
+#: includes/REST/WithdrawController.php:998
 #: templates/withdraw/request-form.php:15
 msgid "Withdraw Method"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:1004
+#: includes/REST/WithdrawController.php:1005
 msgid "Withdraw Notes"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:1010
+#: includes/REST/WithdrawController.php:1011
 msgid "User IP"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:1035
+#: includes/REST/WithdrawController.php:1036
 msgid "Unique identifier for the payment method."
 msgstr ""
 
-#: includes/REST/WithdrawController.php:1042
+#: includes/REST/WithdrawController.php:1043
 msgid "Title for the payment method."
 msgstr ""
 
-#: includes/REST/WithdrawController.php:1069
+#: includes/REST/WithdrawController.php:1070
 msgid "List of withdraw IDs to be approved"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:1079
+#: includes/REST/WithdrawController.php:1080
 msgid "List of withdraw IDs to be cancelled"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:1089
+#: includes/REST/WithdrawController.php:1090
 msgid "List of withdraw IDs to be deleted"
 msgstr ""
 
@@ -9368,12 +9368,12 @@ msgstr ""
 msgid "Reviews cannot be posted for products that you own."
 msgstr ""
 
-#: includes/wc-template.php:175
+#: includes/wc-template.php:176
 #: templates/products/dokan-products-edit-bulk-commission.php:20
 msgid "— No change —"
 msgstr ""
 
-#: includes/wc-template.php:306
+#: includes/wc-template.php:307
 msgid "Go to Vendor Dashboard"
 msgstr ""
 

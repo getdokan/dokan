@@ -155,7 +155,7 @@ class VendorDashboardManager implements Hookable {
     /**
      * Load analytics revenue schema vendor dashboard.
      *
-     * @since DOKAN_SINCE
+     * @since 4.2.8
      *
      * @see https://github.com/woocommerce/woocommerce/blob/8e3b0c45ad771d7fe53ee610f237f4803f1a63bb/plugins/woocommerce/src/Internal/Admin/Analytics.php#L113
      *
@@ -169,7 +169,7 @@ class VendorDashboardManager implements Hookable {
         /**
          * Should load vendor analytics revenue schema.
          *
-         * @since DOKAN_SINCE
+         * @since 4.2.8
          *
          * @param bool   $load_schema Should load vendor analytics schema.
          * @param array  $endpoints   Array of preloaded endpoints.

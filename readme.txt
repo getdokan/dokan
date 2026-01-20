@@ -7,7 +7,7 @@ Tested up to: 6.9
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 4.2.7
+Stable tag: 4.2.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -353,6 +353,13 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v4.2.8 ( Jan 20, 2026 ) =
+- **update:** Restore vendor revenue widget for vendor dashboard.
+- **update:** Improve query arguments on admin withdraw pages to support filtering options.
+- **fix:** Preserve order filters when paginating vendor dashboard orders.
+- **fix:** Prevent Dokan menu from appearing for users without permission.
+- **fix:** Resolve PHP deprecated warnings in the withdraw controller.
+
 = v4.2.7 ( Jan 14, 2026 ) =
 - **fix:** Allow Dokan stock restoration on WC Block Checkout.
 
@@ -374,8 +381,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **update:** Improved compatibility with recent WooCommerce changes to script handling, making setup wizard and frontend script loading more reliable.
 - **update:** Redesigned the Admin Panel "Changelog" page template for a better look and user experience.
 - **fix:** Improved shipping tax calculations so shipping taxes are computed more accurately per-order, taking vendor cart item tax classes into account for multi-vendor orders.
-
-= v4.2.3 ( Dec 22, 2025 ) =
-- **fix:** Compatible vendor store banner image cropper with the latest version.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
