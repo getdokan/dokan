@@ -35,11 +35,10 @@ class AdminOnboardingControllerTest extends DokanTestCase {
 
 	/**
 	 * Setup test environment
-     * @test
      * @return void
 	 */
-	public function setUp(): void {
-		parent::setUp();
+	public function set_up(): void {
+		parent::set_up();
 
 		global $wp_rest_server;
         $wp_rest_server = new WP_REST_Server();

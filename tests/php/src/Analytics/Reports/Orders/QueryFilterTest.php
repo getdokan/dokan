@@ -123,9 +123,20 @@ class QueryFilterTest extends ReportTestCase {
 
         $this->assertEquals( count( $sub_ids ), count( $report_data ) );
 
-        foreach ( $sub_ids as $index => $s_id ) {
+        foreach ( $sub_ids as $s_id ) {
             $sub_order = wc_get_order( $s_id );
-            $order_data = $report_data[ $index ];
+
+            // Find the matching order data from report
+            $order_data = array_reduce(
+                $report_data,
+                function ( $carry, $item ) use ( $s_id ) {
+                    if ( null === $carry && ( $item['order_id'] ?? null ) === $s_id ) {
+                        return $item;
+                    }
+                    return $carry;
+                },
+                null
+            );
 
             $this->assertEquals( $s_id, $order_data['order_id'] );
             $this->assertEquals( floatval( $sub_order->get_total() ), $order_data['total_sales'] );
