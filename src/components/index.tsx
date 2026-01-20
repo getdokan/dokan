@@ -46,7 +46,6 @@ export { default as DokanTooltip } from './DokanTooltip';
 export { default as UserCard } from './UserCard';
 export { default as ShortContent } from './ShortContent';
 export { default as DebouncedInput } from './DebouncedInput';
-export { default as TreeSelectPicker } from './TreeSelectPicker';
 
 // Commission Components
 export * from './commission';
