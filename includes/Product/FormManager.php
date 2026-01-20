@@ -2,7 +2,6 @@
 
 namespace WeDevs\Dokan\Product;
 
-use WeDevs\Dokan\Contracts\Hookable;
 use WeDevs\Dokan\ProductForm\Factory;
 use WeDevs\Dokan\ProductForm\Field;
 use WeDevs\Dokan\ProductForm\Section;
@@ -17,7 +16,6 @@ class FormManager {
      * @since DOKAN_SINCE
      */
     public function __construct() {
-        error_log( 'Registering FormManager hooks' );
         add_action( 'dokan_after_add_product_btn', [ $this, 'add_new_product_link' ] );
         add_action( 'dokan_render_product_form_manager_template', [ $this, 'load_product_edit_template' ] );
         add_action( 'dokan_product_form_manager_inside_content', [ $this, 'load_product_edit_content' ] );
