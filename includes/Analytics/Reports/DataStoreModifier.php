@@ -26,7 +26,7 @@ class DataStoreModifier implements Hookable {
     /**
      * Add Dokan column types to the WooCommerce reports.
      *
-     * @since DOKAN_SINCE
+     * @since 4.2.8
      *
      * @param array $column_types
      * @return array
