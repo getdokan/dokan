@@ -407,11 +407,11 @@ class FormManager {
      * @return void
      */
     public function dokan_get_product_variations() {
-        if ( ! isset( $_GET['product_id'] ) ) {// phpcs:ignore
+        if ( ! isset( $_REQUEST['product_id'] ) ) {// phpcs:ignore
             wp_send_json_error( __( 'Product ID is required', 'dokan-lite' ) );
         }
 
-        $product_id = intval( wp_unslash( $_GET['product_id'] ) ); // phpcs:ignore
+        $product_id = intval( wp_unslash( $_REQUEST['product_id'] ) ); // phpcs:ignore
         $variations = self::get_product_variations( $product_id );
 
         wp_send_json_success( $variations );

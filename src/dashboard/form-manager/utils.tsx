@@ -2,6 +2,33 @@ import { sanitizeHTML } from '@src/utilities';
 import { __ } from '@wordpress/i18n';
 import { DependencyCondition, FormField, Section } from './types';
 
+declare let dokan: any;
+declare let jQuery: any;
+
+export const ajaxRequest = (
+    data: Record< string, any > | FormData,
+    method: string = 'POST'
+) => {
+    return new Promise( ( resolve, reject ) => {
+        const options: any = {
+            data,
+            url: dokan.ajaxurl,
+            type: method,
+            success( response: any ) {
+                resolve( response );
+            },
+            error( error: any ) {
+                reject( error );
+            },
+        };
+        if ( data instanceof FormData ) {
+            options.processData = false;
+            options.contentType = false;
+        }
+        jQuery.ajax( options );
+    } );
+};
+
 export const validateProductForm = (
     sections: Section[],
     values: Record< string, any >

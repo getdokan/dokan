@@ -2,10 +2,10 @@ import { useToast } from '@getdokan/dokan-ui';
 import { createContext, useContext } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Attribute, VariationType } from '../types';
+import { ajaxRequest } from '../utils';
 
 // Declare globals
 declare let dokan: any;
-declare let jQuery: any;
 
 interface PrepareVariationPayloadArgs {
     variation: VariationType;
@@ -101,6 +101,7 @@ export interface VariationContextType {
     generateVariations: () => void;
     addVariation: () => void;
     updateVariation: ( variation: VariationType ) => void;
+    removeVariation: ( variation: VariationType ) => void;
 }
 
 export const VariationContext = createContext<
@@ -162,14 +163,7 @@ export const VariationProvider = ( {
         } );
 
         try {
-            const response = await jQuery.ajax( {
-                url: dokan.ajaxurl,
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-            } );
-            console.log( 'Variation saved successfully:', response );
+            const response: any = await ajaxRequest( formData );
             toast( {
                 type: 'success',
                 title: response.data.message,
@@ -184,15 +178,10 @@ export const VariationProvider = ( {
     };
 
     const fetchVariations = async () => {
-        console.log( 'Fetching variations...', productId );
         try {
-            const response = await jQuery.ajax( {
-                url: dokan.ajaxurl,
-                type: 'GET',
-                data: {
-                    action: 'dokan_get_product_variations',
-                    product_id: productId,
-                },
+            const response: any = await ajaxRequest( {
+                action: 'dokan_get_product_variations',
+                product_id: productId,
             } );
             onUpdateVariations( response.data || [] );
         } catch ( error ) {
@@ -202,27 +191,24 @@ export const VariationProvider = ( {
                 title: __( 'Error fetching variations', 'dokan-lite' ),
             } );
         }
-    }
+    };
 
     const generateVariations = async () => {
         // specific logic to generate variations
         if (
             confirm(
-                'Are you sure you want to generate variations? This will overwrite existing variations.'
+                __(
+                    'Are you sure you want to generate variations? This will overwrite existing variations.',
+                    'dokan-lite'
+                )
             )
         ) {
-            const data = {
+            const response: any = await ajaxRequest( {
                 action: 'dokan_link_all_variations',
                 post_id: productId,
                 security: dokan.link_variation_nonce,
-            };
-            const response = await jQuery.ajax( {
-                url: dokan.ajaxurl,
-                type: 'POST',
-                data,
             } );
             await fetchVariations();
-            console.log( 'Variations generated successfully:', response );
             toast( {
                 type: 'success',
                 title: response.data.message,
@@ -230,9 +216,49 @@ export const VariationProvider = ( {
         }
     };
 
-    const addVariation = () => {
-        console.log( 'Adding manual variation...' );
-        // specific logic to add manual variation
+    const addVariation = async () => {
+        try {
+            const response: any = await ajaxRequest( {
+                action: 'dokan_add_variation',
+                post_id: productId,
+                security: dokan.add_variation_nonce,
+                loop: 0,
+            } );
+            await fetchVariations();
+            toast( {
+                type: 'success',
+                title: response.data.message,
+            } );
+        } catch ( error ) {
+            console.error( 'Error adding variation:', error );
+        }
+    };
+
+    const removeVariation = async ( variation: VariationType ) => {
+        if (
+            ! confirm(
+                __(
+                    'Are you sure you want to remove this variation?',
+                    'dokan-lite'
+                )
+            )
+        ) {
+            return;
+        }
+        try {
+            const response: any = await ajaxRequest( {
+                action: 'dokan_remove_variation',
+                'variation_ids[]': variation.id,
+                security: dokan.delete_variations_nonce,
+            } );
+            await fetchVariations();
+            toast( {
+                type: 'success',
+                title: response.data.message,
+            } );
+        } catch ( error ) {
+            console.error( 'Error removing variation:', error );
+        }
     };
 
     const value = {
@@ -241,6 +267,7 @@ export const VariationProvider = ( {
         generateVariations,
         addVariation,
         updateVariation,
+        removeVariation,
     };
 
     return (

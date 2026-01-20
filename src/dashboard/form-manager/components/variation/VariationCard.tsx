@@ -11,7 +11,7 @@ type VariationCardProps = {
 };
 
 const VariationCard = ( { variation }: VariationCardProps ) => {
-    const { saveVariation } = useVariationContext();
+    const { saveVariation, removeVariation } = useVariationContext();
     const [ isExpanded, setIsExpanded ] = useState( false );
     const [ sections, setSections ] = useState< Section[] >( [] );
     const [ vendorEarning, setVendorEarning ] = useState< number >( 0 );
@@ -54,6 +54,11 @@ const VariationCard = ( { variation }: VariationCardProps ) => {
                 <div className="flex items-center gap-3">
                     <span
                         role="button"
+                        onClick={ ( e ) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            removeVariation( variation );
+                        } }
                         className="text-red-500 hover:text-red-700 text-xs font-medium"
                     >
                         { __( 'Remove', 'dokan-lite' ) }

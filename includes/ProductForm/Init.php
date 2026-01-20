@@ -264,7 +264,6 @@ class Init {
 
                     return $product->get_category_ids();
                 },
-                'hidden_scope'  => [ 'variable' ],
             ]
         );
 
@@ -314,7 +313,6 @@ class Init {
 
                     return $product->get_tag_ids();
                 },
-                'hidden_scope'  => [ 'variable' ],
             ]
         );
 
@@ -347,7 +345,6 @@ class Init {
                     return $product->get_brand_ids();
                 },
                 'options'           => FormData::get_products_brands(),
-                'hidden_scope'  => [ 'variable' ],
             ]
         );
 

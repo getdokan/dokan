@@ -6,7 +6,7 @@ import { ExternalLink } from 'lucide-react';
 import { FormProvider, useFormContext } from './context/FormContext';
 import useLayouts from './hooks/useLayouts';
 import { DokanFormManagerData } from './types';
-import { validateProductForm } from './utils';
+import { ajaxRequest, validateProductForm } from './utils';
 
 const { sections, ...formData } = (
     window as unknown as {
@@ -78,9 +78,9 @@ const App = () => {
     const productId = Number( formData.product_id );
 
     const onSubmit = async ( product: Record< string, any > ) => {
-        // @ts-ignore
-        const response = await window.wp.ajax.post( 'dokan_save_product_data', {
+        const response = await ajaxRequest( {
             ...product,
+            action: 'dokan_save_product_data',
             _nonce: formData.form_manager_nonce,
         } );
         return response;

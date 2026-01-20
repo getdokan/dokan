@@ -140,10 +140,10 @@ export const FormProvider = ( {
         try {
             const response = await onSubmit( product );
 
-            if ( response && response.message ) {
+            if ( response.data.message ) {
                 toast( {
                     type: 'success',
-                    title: response.message,
+                    title: response.data.message,
                 } );
             }
         } catch ( error: unknown ) {
