@@ -16,28 +16,95 @@ permissions:
   checks: write
 
 jobs:
-  runPHPCSInspection:
-    name: Run PHPCS inspection
+  setup:
+    name: Setup Project
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Required for push events to detect changed files
 
-      - name: Setup PHP Project
-        uses: ./.github/actions/setup-php-project
+      - name: Use desired version of NodeJS
+        uses: actions/setup-node@v4
         with:
-          php-tools: 'cs2pr, composer:v2'
+          node-version: 20
+          cache: npm
+
+      - name: Npm install and build
+        run: |
+          npm i
+          npm run build
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          coverage: none
+          tools: cs2pr, composer:v2
+
+      - name: Get composer cache directory
+        id: composercache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composercache.outputs.dir }}
+          key: "${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}"
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress || composer update --prefer-dist --no-progress
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: project-setup
+          path: |
+            node_modules/
+            vendor/
+            build/
+          if-no-files-found: ignore
+          retention-days: 1
+
+  runPHPCSInspection:
+    name: Run PHPCS inspection
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Required for push events to detect changed files
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: project-setup
+          path: .
+
+      - name: Setup PHP (PHPCS tools only)
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          coverage: none
+          tools: cs2pr, composer:v2
 
       - id: changes
         if: github.event_name == 'pull_request'
         run: |
           URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files"
-          FILES=$(curl --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' -s -X GET -G $URL | jq -r '.[] | select(.filename | endswith(".php")) | .filename' | tr '\n' ' ')
-          if [ -z "$FILES" ]; then
+          ALL_FILES=$(curl --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' -s -X GET -G $URL | jq -r '.[] | select(.filename | endswith(".php")) | .filename')
+          EXISTING_FILES=""
+          for file in $ALL_FILES; do
+            if [ -f "$file" ]; then
+              EXISTING_FILES="$EXISTING_FILES $file"
+            fi
+          done
+          EXISTING_FILES=$(echo "$EXISTING_FILES" | xargs)  # Trim whitespace
+          if [ -z "$EXISTING_FILES" ]; then
             echo "files=" >> $GITHUB_OUTPUT
           else
-            echo "files=$FILES" >> $GITHUB_OUTPUT
+            echo "files=$EXISTING_FILES" >> $GITHUB_OUTPUT
           fi
 
       - id: changed-files
@@ -49,6 +116,7 @@ jobs:
 
       - name: Detect coding standard violations
         continue-on-error: true
+        id: phpcs-check
         run: |
           if [ "${{ github.event_name }}" == "pull_request" ]; then
             FILES="${{ steps.changes.outputs.files }}"
@@ -59,19 +127,34 @@ jobs:
           # Filter only PHP files and remove empty lines
           FILES=$(echo "$FILES" | tr ' ' '\n' | grep -E '\.php$' | grep -v '^$' | tr '\n' ' ')
           
-          if [ -z "$FILES" ] || [ "$FILES" = " " ]; then
-            echo "No PHP files to check"
-            touch phpcs-report.json phpcs-report.xml
+          # Filter out files that don't exist (deleted files)
+          EXISTING_FILES=""
+          for file in $FILES; do
+            if [ -f "$file" ]; then
+              EXISTING_FILES="$EXISTING_FILES $file"
+            fi
+          done
+          EXISTING_FILES=$(echo "$EXISTING_FILES" | xargs)  # Trim whitespace
+          
+          if [ -z "$EXISTING_FILES" ] || [ "$EXISTING_FILES" = " " ]; then
+            echo "No PHP files to check (all files may have been deleted)"
+            echo "has_files=false" >> $GITHUB_OUTPUT
+            # Create valid empty XML structure
+            echo '<?xml version="1.0" encoding="UTF-8"?>' > phpcs-report.xml
+            echo '<checkstyle version="3.0.0">' >> phpcs-report.xml
+            echo '</checkstyle>' >> phpcs-report.xml
+            echo '{"totals":{"errors":0,"warnings":0,"fixable":0},"files":[]}' > phpcs-report.json
             exit 0
           fi
           
-          echo "Checking files: $FILES"
-          echo "$FILES" | xargs vendor/bin/phpcs -q --report=checkstyle | cs2pr --graceful-warnings || true
-          echo "$FILES" | xargs vendor/bin/phpcs --report=json --report-file=phpcs-report.json || true
-          echo "$FILES" | xargs vendor/bin/phpcs --report=checkstyle --report-file=phpcs-report.xml || true
+          echo "has_files=true" >> $GITHUB_OUTPUT
+          echo "Checking files: $EXISTING_FILES"
+          echo "$EXISTING_FILES" | xargs vendor/bin/phpcs -q --report=checkstyle | cs2pr --graceful-warnings || true
+          echo "$EXISTING_FILES" | xargs vendor/bin/phpcs --report=json --report-file=phpcs-report.json || true
+          echo "$EXISTING_FILES" | xargs vendor/bin/phpcs --report=checkstyle --report-file=phpcs-report.xml || true
 
       - name: Publish PHPCS results
-        if: always()
+        if: always() && steps.phpcs-check.outputs.has_files == 'true'
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
           files: phpcs-report.xml
@@ -96,11 +179,28 @@ jobs:
   runPHPUnitTests:
     name: Run PHPUnit tests
     runs-on: ubuntu-latest
+    needs: setup
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup PHP Project
-        uses: ./.github/actions/setup-php-project
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: project-setup
+          path: .
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Setup PHP (Composer only)
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          coverage: none
+          tools: composer:v2
 
       - name: Start WordPress Environment
         run: |
@@ -110,7 +210,7 @@ jobs:
         continue-on-error: true
         id: phpunit-test
         run: |
-            wp-env run cli --env-cwd=wp-content/plugins/dokan vendor/bin/phpunit -c phpunit.xml --log-junit phpunit-report.xml || true
+            npm run phpunit -- --log-junit phpunit-report.xml || true
 
       - name: Publish PHPUnit test results
         if: always()
