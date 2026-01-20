@@ -1,3 +1,17 @@
+### v4.2.7 ( Jan 14, 2026 ) ###
+- **fix:** Allow Dokan stock restoration on WC Block Checkout.
+
+### v4.2.6 ( Jan 13, 2026 ) ###
+- **update:** Add brand fields in Vendor Product Creation Popup.
+- **update:** Add address fields on customer account migration form.
+- **update:** Add product tags creation separator (,) for vendor dashboard.
+- **fix:** Vendor list page redirection after creating a new vendor.
+
+### v4.2.5 ( Jan 05, 2026 ) ###
+- **fix:** Add translation support to store performance report labels.
+- **fix:** Social profile URL's not accessible for staff users.
+- **fix:** Prevented unauthorized changes to administrator accounts.
+
 ### v4.2.4 ( Dec 26, 2025 ) ###
 - **new:** Added a Pending Vendors tab on the WordPress admin Users screen to view vendors awaiting approval.
 - **new:** Added a bulk action on the WordPress admin Users screen to approve multiple pending vendors at once, including per-user validation and permission checks.

@@ -4,6 +4,64 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.2.7',
+        'released' => '2026-01-14',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Allow Dokan stock restoration on WC Block Checkout.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.2.6',
+        'released' => '2026-01-13',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Add brand fields in Vendor Product Creation Popup.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Add address fields on customer account migration form.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Add product tags creation separator (,) for vendor dashboard.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Vendor list page redirection after creating a new vendor.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.2.5',
+        'released' => '2026-01-05',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Add translation support to store performance report labels.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Social profile URL\'s not accessible for staff users.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Prevented unauthorized changes to administrator accounts.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.2.4',
         'released' => '2025-12-26',
         'changes'  => [
