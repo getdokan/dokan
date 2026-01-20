@@ -156,6 +156,9 @@ class Field extends Component {
 
         if ( $this->is_prop() ) {
             $method_name = 'get_' . $field_name;
+            if ( ! method_exists( $product, $method_name ) ) {
+                return '';
+            }
             return $product->{$method_name}();
         } elseif ( $this->is_meta() || $this->is_custom() ) {
             return $product->get_meta( $field_name );

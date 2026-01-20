@@ -191,7 +191,7 @@ export default function useLayouts(
                                     withHeader: true,
                                 },
                                 children: [
-                                    'disable_shipping',
+                                    '_disable_shipping',
                                     {
                                         id: 'shipping-dimension',
                                         layout: {
@@ -207,18 +207,18 @@ export default function useLayouts(
                                     'shipping_class_id',
                                     'tax_status',
                                     'tax_class',
-                                    'overwrite_shipping',
+                                    '_overwrite_shipping',
                                     {
                                         id: 'overwrite_shipping_price_qty',
                                         layout: {
                                             type: 'row',
                                         },
                                         children: [
-                                            'additional_price',
-                                            'additional_qty',
+                                            '_additional_price',
+                                            '_additional_qty',
                                         ],
                                     },
-                                    'dps_processing_time',
+                                    '_dps_processing_time',
                                 ],
                                 ...getFieldHeading( 'shipping' ),
                             },

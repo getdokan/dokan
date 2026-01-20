@@ -67,7 +67,7 @@ const useVariationLayout = () => {
             'low_stock_amount',
             'backorders',
             'stock_status',
-            'disable_shipping',
+            '_disable_shipping',
             {
                 id: 'variation-shipping-dimension',
                 layout: {

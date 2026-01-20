@@ -542,18 +542,18 @@ class Manager {
             }
 
             // Height.
-            if ( isset( $data[ FormElements::DIMENSIONS ][ FormElements::DIMENSIONS_HEIGHT ] ) ) {
-                $product->set_height( $data[ FormElements::DIMENSIONS ][ FormElements::DIMENSIONS_HEIGHT ] );
+            if ( isset( $data[ FormElements::DIMENSIONS_HEIGHT ] ) ) {
+                $product->set_height( $data[ FormElements::DIMENSIONS_HEIGHT ] );
             }
 
             // Width.
-            if ( isset( $data[ FormElements::DIMENSIONS ][ FormElements::DIMENSIONS_WIDTH ] ) ) {
-                $product->set_width( $data[ FormElements::DIMENSIONS ][ FormElements::DIMENSIONS_WIDTH ] );
+            if ( isset( $data[ FormElements::DIMENSIONS_WIDTH ] ) ) {
+                $product->set_width( $data[ FormElements::DIMENSIONS_WIDTH ] );
             }
 
             // Length.
-            if ( isset( $data[ FormElements::DIMENSIONS ][ FormElements::DIMENSIONS_LENGTH ] ) ) {
-                $product->set_length( $data[ FormElements::DIMENSIONS ][ FormElements::DIMENSIONS_LENGTH ] );
+            if ( isset( $data[ FormElements::DIMENSIONS_LENGTH ] ) ) {
+                $product->set_length( $data[ FormElements::DIMENSIONS_LENGTH ] );
             }
         }
 
