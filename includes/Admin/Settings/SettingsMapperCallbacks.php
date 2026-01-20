@@ -19,7 +19,6 @@ class SettingsMapperCallbacks implements Hookable {
         add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_welcome_wizard' ], 10, 4 );
         add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_delivery_support' ], 10, 4 );
         add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_abuse_reported_by' ], 10, 4 );
-        add_filter( 'dokan_settings_mapper_transform_value', [ $this, 'map_schedule_withdraw_disbursement' ], 10, 4 );
         add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_report_abuse_reasons_old_to_new' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_report_abuse_reasons_new_to_old' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_report_rma_reasons_old_to_new' ], 10, 3 );
@@ -40,11 +39,8 @@ class SettingsMapperCallbacks implements Hookable {
         add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_withdraw_disbursement_old_to_new' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_withdraw_disbursement_new_to_old' ], 10, 3 );
 
-//        add_filter( 'dokan_settings_mapper_after_transform_old_to_new', [ $this, 'map_disbursement_schedule_old_to_new_post' ], 10, 2 );
-//        add_filter( 'dokan_settings_mapper_after_transform_new_to_old', [ $this, 'map_disbursement_schedule_new_to_old_post' ], 10, 2 );
-
-//        add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_schedule_day_old_to_new' ], 10, 4 );
-//        add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_schedule_day_new_to_old' ], 10, 4 );
+        add_filter( 'dokan_settings_mapper_after_transform_old_to_new', [ $this, 'map_disbursement_schedule_old_to_new' ], 10, 2 );
+        add_filter( 'dokan_settings_mapper_after_transform_new_to_old', [ $this, 'map_disbursement_schedule_new_to_old' ], 10, 2 );
 
         add_filter( 'dokan_settings_mapper_transform_value_old_to_new', [ $this, 'map_delivery_support_old_to_new' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_delivery_support_new_to_old' ], 10, 3 );
@@ -52,6 +48,8 @@ class SettingsMapperCallbacks implements Hookable {
         add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_shipping_status_list_new_to_old' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_after_transform_old_to_new', [ $this, 'map_withdraw_methods_old_to_new' ], 10, 2 );
         add_filter( 'dokan_settings_mapper_after_transform_new_to_old', [ $this, 'map_withdraw_methods_new_to_old' ], 10, 2 );
+        add_filter( 'dokan_settings_mapper_after_transform_old_to_new', [ $this, 'map_reverse_withdrawal_enabled_old_to_new' ], 10, 2 );
+        add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_reverse_withdrawal_enabled_new_to_old' ], 10, 4 );
     }
 
     /**
@@ -499,52 +497,6 @@ class SettingsMapperCallbacks implements Hookable {
         if ( $to_indicator === 'new_to_old' ) {
             return $value !== 'all_users' ? 'on' : 'off';
         }
-
-        return $value;
-    }
-
-    /**
-     * Function for mapping schedule withdraw disbursement settings between old and new settings.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param string|null $value The current value to map
-     * @param string      $to_indicator Direction of mapping: 'old_to_new' or 'new_to_old'
-     * @param string      $old_key The legacy setting key
-     * @param string      $new_key The new settings dot-path key
-     *
-     * @return string|null The mapped value or null if input is null
-     */
-    public function map_schedule_withdraw_disbursement( $value, $to_indicator, $old_key, $new_key ) {
-        $old = 'dokan_withdraw.disbursement_schedule';
-        $new = 'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw';
-
-        if ( is_null( $value ) || $old !== $old_key || $new !== $new_key ) {
-            return $value;
-        }
-
-        $schedule_options = apply_filters(
-            'dokan_withdraw_schedule_option_keys',
-            [
-                'quarterly',
-                'monthly',
-                'schedule_biweekly',
-                'schedule_weekly',
-            ]
-        );
-
-        error_log( print_r( 'ready:', 1 ) );
-        error_log( print_r( $value, 1 ) );
-
-        // OLD → NEW (off/on → include/exclude)
-        if ( $to_indicator === 'old_to_new' ) {
-            return in_array( $value, $schedule_options, true ) ? 'on' : 'off';
-        }
-
-        // NEW → OLD (include/exclude → off/on)
-//        if ( $to_indicator === 'new_to_old' ) {
-//            return $value !== 'all_users' ? 'on' : 'off';
-//        }
 
         return $value;
     }
@@ -1111,7 +1063,7 @@ class SettingsMapperCallbacks implements Hookable {
      *
      * @return array
      */
-    public function map_disbursement_schedule_old_to_new_post( $result, $legacy_values ) {
+    public function map_disbursement_schedule_old_to_new( $result, $legacy_values ) {
         if ( ! isset( $legacy_values['dokan_withdraw']['disbursement_schedule'] ) ) {
             return $result;
         }
@@ -1126,7 +1078,7 @@ class SettingsMapperCallbacks implements Hookable {
 
         $any_on = false;
         foreach ( $schedules as $legacy_key => $new_path ) {
-            $value = isset( $disbursement_schedule[ $legacy_key ] ) ? 'on' : 'off';
+            $value = ! empty( $disbursement_schedule[ $legacy_key ] ) ? 'on' : 'off';
             if ( $value === 'on' ) {
                 $any_on = true;
             }
@@ -1159,7 +1111,7 @@ class SettingsMapperCallbacks implements Hookable {
      *
      * @return array
      */
-    public function map_disbursement_schedule_new_to_old_post( $result, $pages_values ) {
+    public function map_disbursement_schedule_new_to_old( $result, $pages_values ) {
         $manual_withdraw = SettingsMapper::get_value_by_path( $pages_values, 'transaction.withdraw_charge.withdraw_option_visibility_section.manual_withdraw', null );
 
         if ( is_null( $manual_withdraw ) ) {
@@ -1183,14 +1135,13 @@ class SettingsMapperCallbacks implements Hookable {
 
         $legacy_schedule = [];
         foreach ( $schedules as $legacy_key => $new_path ) {
-            if ( SettingsMapper::get_value_by_path( $pages_values, $new_path ) === 'on' ) {
-                $legacy_schedule[ $legacy_key ] = $legacy_key;
-            }
+            $legacy_schedule[ $legacy_key ] = SettingsMapper::get_value_by_path( $pages_values, $new_path ) === 'on' ? $legacy_key : '';
         }
 
         if ( ! isset( $result['dokan_withdraw'] ) ) {
             $result['dokan_withdraw'] = [];
         }
+
         $result['dokan_withdraw']['disbursement_schedule'] = $legacy_schedule;
 
         return $result;
@@ -1598,5 +1549,102 @@ class SettingsMapperCallbacks implements Hookable {
         $result['dokan_withdraw']['withdraw_method_type'] = SettingsMapper::get_value_by_path( $withdraw_charge, 'withdraw_methods_group_custom.custom_method_type', '' );
 
         return $result;
+    }
+
+    /**
+     * Map reverse withdrawal enabled from legacy to new settings.
+     *
+     * Legacy has two settings:
+     * - enabled: 'on'/'off'
+     * - payment_gateways: array( 'cod' => 'cod' or '' )
+     *
+     * New has one setting:
+     * - reverse_withdrawal.reverse_withdrawal_section.enabled: 'on'/'off'
+     *
+     * Logic: if legacy enabled = 'on' AND payment_gateways['cod'] = 'cod' then new enabled = 'on', otherwise 'off'
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $result The converted new settings array
+     * @param array $legacy_values The source legacy settings array
+     *
+     * @return array Modified result
+     */
+    public function map_reverse_withdrawal_enabled_old_to_new( $result, $legacy_values ) {
+        if ( ! isset( $legacy_values['dokan_reverse_withdrawal'] ) ) {
+            return $result;
+        }
+
+        $reverse_withdrawal = $legacy_values['dokan_reverse_withdrawal'];
+        $enabled            = $reverse_withdrawal['enabled'] ?? 'off';
+        $payment_gateways   = $reverse_withdrawal['payment_gateways'] ?? [];
+
+        // Check if enabled is 'on' AND payment_gateways['cod'] is 'cod'
+        $cod_enabled = ( $payment_gateways['cod'] ?? '' ) === 'cod';
+        $new_enabled = ( $enabled === 'on' && $cod_enabled ) ? 'on' : 'off';
+
+        SettingsMapper::set_value_by_path( $result, 'transaction.reverse_withdrawal.reverse_withdrawal_section.enabled', $new_enabled );
+
+        return $result;
+    }
+
+    /**
+     * Map reverse withdrawal enabled from new to legacy settings.
+     *
+     * New has one setting:
+     * - transaction.reverse_withdrawal.reverse_withdrawal_section.enabled: 'on'/'off'
+     *
+     * Legacy has two settings:
+     * - dokan_reverse_withdrawal.enabled: 'on'/'off'
+     * - dokan_reverse_withdrawal.payment_gateways: array( 'cod' => 'cod' or '' )
+     *
+     * Logic: if new enabled = 'on' then legacy enabled = 'on' AND payment_gateways['cod'] = 'cod'
+     *        if new enabled = 'off' then legacy enabled = 'off' AND payment_gateways['cod'] = ''
+     *
+     * This function is called per-mapping via dokan_settings_mapper_transform_value_new_to_old hook.
+     * It checks if the new_key matches the reverse withdrawal enabled path and old_key is either
+     * 'enabled' or 'payment_gateways', then returns the appropriate transformed value.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param mixed  $value       The current value being transformed
+     * @param string $old_key     The legacy setting key (e.g., 'dokan_reverse_withdrawal.enabled')
+     * @param string $new_key     The new settings dot-path key
+     * @param array  $pages_values The source new settings array
+     *
+     * @return mixed The transformed value
+     */
+    public function map_reverse_withdrawal_enabled_new_to_old( $value, $old_key, $new_key, $pages_values ) {
+        $old_gateway_key = 'dokan_reverse_withdrawal.enabled';
+        $old_enabled_key = 'dokan_reverse_withdrawal.payment_gateways';
+        $new_data_key    = 'transaction.reverse_withdrawal.reverse_withdrawal_section.enabled';
+
+        // Only handle reverse withdrawal enabled mapping.
+        if ( $new_data_key !== $new_key || ( $old_gateway_key !== $old_key && $old_enabled_key !== $old_key ) || is_null( $value ) ) {
+            return $value;
+        }
+
+        $new_enabled = SettingsMapper::get_value_by_path(
+            $pages_values,
+            'transaction.reverse_withdrawal.reverse_withdrawal_section.enabled'
+        );
+
+        if ( is_null( $new_enabled ) ) {
+            return $value;
+        }
+
+        $is_enabled = ( 'on' === $new_enabled );
+
+        switch ( $old_key ) {
+            case 'dokan_reverse_withdrawal.enabled':
+                return $is_enabled ? 'on' : 'off';
+
+            case 'dokan_reverse_withdrawal.payment_gateways':
+                return $is_enabled
+                    ? [ 'cod' => 'cod' ]
+                    : [ 'cod' => '' ];
+        }
+
+        return $value;
     }
 }
