@@ -1,0 +1,44 @@
+name: 'Setup PHP Project'
+description: 'Setup Node.js, build assets, PHP, and install Composer dependencies'
+inputs:
+  php-tools:
+    description: 'Comma-separated list of PHP tools to install (e.g., cs2pr, composer:v2)'
+    required: false
+    default: 'composer:v2'
+runs:
+  using: 'composite'
+  steps:
+    - name: Use desired version of NodeJS
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: npm
+
+    - name: Npm install and build
+      shell: bash
+      run: |
+        npm i
+        npm run build
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.4'
+        coverage: none
+        tools: ${{ inputs.php-tools }}
+
+    - name: Get composer cache directory
+      id: composercache
+      shell: bash
+      run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+    - name: Cache dependencies
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.composercache.outputs.dir }}
+        key: "${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}"
+        restore-keys: ${{ runner.os }}-composer-
+
+    - name: Install dependencies
+      shell: bash
+      run: composer install --prefer-dist --no-progress || composer update --prefer-dist --no-progress

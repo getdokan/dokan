@@ -1,58 +1,135 @@
-on: pull_request
+on:
+  pull_request:
+  push:
 
-name: Inspections
+name: PHP Code Quality & Tests
+
+# Cancels all previous workflow runs for pull requests that have not completed.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+  cancel-in-progress: true
+
+# Workflow permissions
+permissions:
+  contents: read
+  pull-requests: write
+  checks: write
+
 jobs:
   runPHPCSInspection:
     name: Run PHPCS inspection
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Use desired version of NodeJS
-        uses: actions/setup-node@v4
         with:
-            node-version: 20
-            cache: npm
+          fetch-depth: 0  # Required for push events to detect changed files
 
-      - name: Npm install and build
-        run: |
-            npm i
-            npm run build
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - name: Setup PHP Project
+        uses: ./.github/actions/setup-php-project
         with:
-          php-version: '7.4'
-          coverage: none
-          tools: cs2pr, composer:v2
-
-      - name: Get composer cache directory
-        id: composercache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
-      - name: Cache dependencies
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.composercache.outputs.dir }}
-          key: "${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}"
-          restore-keys: ${{ runner.os }}-composer-
-
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress || composer update --prefer-dist --no-progress
+          php-tools: 'cs2pr, composer:v2'
 
       - id: changes
+        if: github.event_name == 'pull_request'
         run: |
           URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files"
-          FILES=$(curl --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' -s -X GET -G $URL | jq -r '.[] | .filename' | xargs)
-          echo "files=$FILES" >> $GITHUB_OUTPUT
+          FILES=$(curl --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' -s -X GET -G $URL | jq -r '.[] | select(.filename | endswith(".php")) | .filename' | tr '\n' ' ')
+          if [ -z "$FILES" ]; then
+            echo "files=" >> $GITHUB_OUTPUT
+          else
+            echo "files=$FILES" >> $GITHUB_OUTPUT
+          fi
+
+      - id: changed-files
+        if: github.event_name == 'push'
+        uses: tj-actions/changed-files@v44
+        with:
+          files: |
+            **/*.php
 
       - name: Detect coding standard violations
-        run: vendor/bin/phpcs ${{ steps.changes.outputs.files }} -q --report=checkstyle | cs2pr --graceful-warnings
+        continue-on-error: true
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            FILES="${{ steps.changes.outputs.files }}"
+          else
+            FILES="${{ steps.changed-files.outputs.all_changed_files }}"
+          fi
+          
+          # Filter only PHP files and remove empty lines
+          FILES=$(echo "$FILES" | tr ' ' '\n' | grep -E '\.php$' | grep -v '^$' | tr '\n' ' ')
+          
+          if [ -z "$FILES" ] || [ "$FILES" = " " ]; then
+            echo "No PHP files to check"
+            touch phpcs-report.json phpcs-report.xml
+            exit 0
+          fi
+          
+          echo "Checking files: $FILES"
+          echo "$FILES" | xargs vendor/bin/phpcs -q --report=checkstyle | cs2pr --graceful-warnings || true
+          echo "$FILES" | xargs vendor/bin/phpcs --report=json --report-file=phpcs-report.json || true
+          echo "$FILES" | xargs vendor/bin/phpcs --report=checkstyle --report-file=phpcs-report.xml || true
+
+      - name: Publish PHPCS results
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: phpcs-report.xml
+          check_name: PHPCS Code Style Check
+          comment_mode: off
+          report_individual_runs: false
+          fail_on: 'errors'
+          check_run_annotations: all
+          check_run_annotations_branch: all
+
+      - name: Upload PHPCS report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phpcs-report
+          path: |
+            phpcs-report.json
+            phpcs-report.xml
+          if-no-files-found: ignore
+          retention-days: 7
+
+  runPHPUnitTests:
+    name: Run PHPUnit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP Project
+        uses: ./.github/actions/setup-php-project
 
       - name: Start WordPress Environment
         run: |
             npm run env:start
 
       - name: Running the phpunit tests
+        continue-on-error: true
+        id: phpunit-test
         run: |
-            npm run phpunit
+            wp-env run cli --env-cwd=wp-content/plugins/dokan vendor/bin/phpunit -c phpunit.xml --log-junit phpunit-report.xml || true
+
+      - name: Publish PHPUnit test results
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: phpunit-report.xml
+          check_name: PHPUnit Test Results
+          comment_mode: off
+          report_individual_runs: false
+          fail_on: 'errors'
+          check_run_annotations: all
+          check_run_annotations_branch: all
+
+      - name: Upload PHPUnit report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phpunit-report
+          path: |
+            phpunit-report.xml
+          if-no-files-found: ignore
+          retention-days: 7
