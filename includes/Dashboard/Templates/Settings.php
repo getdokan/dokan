@@ -29,7 +29,6 @@ class Settings {
         add_action( 'dokan_settings_content_area_header', [ $this, 'render_settings_load_progressbar' ], 20 );
         add_action( 'dokan_settings_content', [ $this, 'render_settings_content' ], 10 );
         add_filter( 'dokan_payment_method_title', [ $this, 'get_method_frontend_title' ], 10, 2 );
-        add_filter( 'dokan_rest_store_settings_additional_fields', [ $this, 'add_payment_methods_to_rest_response' ], 10, 3 );
     }
 
     /**
@@ -882,35 +881,5 @@ class Settings {
         }
 
         return $title;
-    }
-
-    /**
-     * Add payment methods data to REST API response for admin withdraw tab.
-     *
-     * @since 4.2.6
-     *
-     * @param array $additional_fields Additional fields to add to response.
-     * @param \WeDevs\Dokan\Vendor\Vendor $store Store object.
-     * @param \WP_REST_Request $request Request object.
-     *
-     * @return array
-     */
-    public function add_payment_methods_to_rest_response( $additional_fields, $store, $request ) {
-        $vendor_id = method_exists( $store, 'get_id' ) ? (int) $store->get_id() : 0;
-
-        if ( $vendor_id > 0 ) {
-            // Get payment methods data using the same logic as vendor dashboard.
-            $payment_data = $this->get_seller_payment_methods( $vendor_id );
-
-            // Add flag to indicate if any withdraw method is globally available.
-            $additional_fields['withdraw_methods_available'] = ! empty( $payment_data['active_methods'] );
-
-            // Add payment method data.
-            $additional_fields['active_payment_methods'] = $payment_data['active_methods'];
-            $additional_fields['connected_methods']     = $payment_data['connected_methods'];
-            $additional_fields['disconnected_methods']   = $payment_data['disconnected_methods'];
-        }
-
-        return $additional_fields;
     }
 }
