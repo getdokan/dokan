@@ -122,7 +122,7 @@ interface VariationProviderProps {
     productId: number;
     variations?: VariationType[];
     defaultAttributes: Attribute[];
-    onUpdateVariations?: ( variations: VariationType[] ) => void;
+    onUpdateVariations: ( variations: VariationType[] ) => void;
 }
 
 export const VariationProvider = ( {
@@ -183,8 +183,28 @@ export const VariationProvider = ( {
         }
     };
 
+    const fetchVariations = async () => {
+        console.log( 'Fetching variations...', productId );
+        try {
+            const response = await jQuery.ajax( {
+                url: dokan.ajaxurl,
+                type: 'GET',
+                data: {
+                    action: 'dokan_get_product_variations',
+                    product_id: productId,
+                },
+            } );
+            onUpdateVariations( response.data || [] );
+        } catch ( error ) {
+            console.error( 'Error fetching variations:', error );
+            toast( {
+                type: 'error',
+                title: __( 'Error fetching variations', 'dokan-lite' ),
+            } );
+        }
+    }
+
     const generateVariations = async () => {
-        console.log( 'Generating variations...', productId );
         // specific logic to generate variations
         if (
             confirm(
@@ -201,6 +221,7 @@ export const VariationProvider = ( {
                 type: 'POST',
                 data,
             } );
+            await fetchVariations();
             console.log( 'Variations generated successfully:', response );
             toast( {
                 type: 'success',

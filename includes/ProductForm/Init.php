@@ -142,6 +142,7 @@ class Init {
                 'field_type'  => 'text',
                 'name'        => '_regular_price',
                 'placeholder' => '0.00',
+                'hidden_scope'  => [ 'variable' ],
             ]
         );
 
@@ -151,7 +152,8 @@ class Init {
                 'field_type'  => 'text',
                 'name'        => '_sale_price',
                 'placeholder' => '0.00',
-            ]
+                'hidden_scope'  => [ 'variable' ],
+            ],
         );
 
         $section->add_field(
@@ -173,6 +175,7 @@ class Init {
 
                     return ! empty( $product->get_date_on_sale_to() ?? $product->get_date_on_sale_from() ) ? 'on' : 'off';
                 },
+                'hidden_scope'  => [ 'variable' ],
             ]
         );
 
@@ -261,6 +264,7 @@ class Init {
 
                     return $product->get_category_ids();
                 },
+                'hidden_scope'  => [ 'variable' ],
             ]
         );
 
@@ -310,6 +314,7 @@ class Init {
 
                     return $product->get_tag_ids();
                 },
+                'hidden_scope'  => [ 'variable' ],
             ]
         );
 
@@ -342,6 +347,7 @@ class Init {
                     return $product->get_brand_ids();
                 },
                 'options'           => FormData::get_products_brands(),
+                'hidden_scope'  => [ 'variable' ],
             ]
         );
 
@@ -450,6 +456,7 @@ class Init {
                 'sanitize_callback'     => function ( $value ) {
                     return ! empty( $value ) && 'yes' === $value;
                 },
+                'hidden_scope'  => [ 'variable' ],
             ]
         );
 
@@ -465,6 +472,7 @@ class Init {
                 'sanitize_callback'     => function ( $value ) {
                     return ! empty( $value ) && 'yes' === $value;
                 },
+                'hidden_scope'  => [ 'variable' ],
             ]
         );
 

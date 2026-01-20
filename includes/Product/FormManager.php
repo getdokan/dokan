@@ -20,6 +20,7 @@ class FormManager {
         add_action( 'dokan_render_product_form_manager_template', [ $this, 'load_product_edit_template' ] );
         add_action( 'dokan_product_form_manager_inside_content', [ $this, 'load_product_edit_content' ] );
         add_action( 'wp_ajax_dokan_save_product_data', [ $this, 'dokan_save_product_data' ] );
+        add_action( 'wp_ajax_dokan_get_product_variations', [ $this, 'dokan_get_product_variations' ] );
     }
 
     /**
@@ -218,7 +219,7 @@ class FormManager {
                     'help_content'  => $field->get_help_content(),
                     // dependency
                     'dependency_condition' => $field->get_dependency_condition(),
-                    'hide_on_product_types' => $field->get_hide_on_product_types(),
+                    'hidden_scope' => $field->get_hidden_scope( $product ),
                 ];
             }
 
@@ -396,5 +397,23 @@ class FormManager {
         }
 
         return $data;
+    }
+
+    /**
+     * AJAX handler to get product variations.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function dokan_get_product_variations() {
+        if ( ! isset( $_GET['product_id'] ) ) {// phpcs:ignore
+            wp_send_json_error( __( 'Product ID is required', 'dokan-lite' ) );
+        }
+
+        $product_id = intval( wp_unslash( $_GET['product_id'] ) ); // phpcs:ignore
+        $variations = self::get_product_variations( $product_id );
+
+        wp_send_json_success( $variations );
     }
 }

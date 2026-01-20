@@ -82,18 +82,28 @@ export const checkDependency = (
  * @param {Array}  layoutFields The fields to process for the layout.
  * @param {Array}  fields       All available form fields.
  * @param {Object} product      The current product data for dependency checking.
+ * @param {string} scope        The scope of the layout (e.g. 'product', 'variation').
  *
  * @return {Array} valid processed fields.
  */
 export const layoutBuilder = (
-    layoutFields: any[],
+    layouts: any[],
     fields: FormField[],
-    product: Record< string, any >
+    product: Record< string, any >,
+    scope: string = 'product'
 ): any[] => {
-    const processedFields = layoutFields.map( ( field ) => {
+    const mappedLayouts = layouts.map( ( field ) => {
         if ( typeof field === 'string' ) {
             const fieldData = fields.find( ( f ) => f.id === field );
             if ( ! fieldData ) {
+                return null;
+            }
+            // Check hidden scope
+            if (
+                scope &&
+                fieldData.hidden_scope &&
+                fieldData.hidden_scope.includes( scope )
+            ) {
                 return null;
             }
             const condition = fieldData.dependency_condition;
@@ -125,7 +135,8 @@ export const layoutBuilder = (
             newField.children = layoutBuilder(
                 newField.children,
                 fields,
-                product
+                product,
+                scope
             );
         }
 
@@ -135,7 +146,7 @@ export const layoutBuilder = (
 
         return newField;
     } );
-    return processedFields.filter( Boolean );
+    return mappedLayouts.filter( Boolean );
 };
 
 /**

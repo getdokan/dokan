@@ -40,7 +40,7 @@ export type FormField = {
     options: { label: string; value: string }[] | Record< string, string >;
     errors: string;
     dependency_condition: DependencyCondition;
-    hide_on_product_types: string[];
+    hidden_scope: string[];
     visibility: boolean;
 } & Field< any >;
 

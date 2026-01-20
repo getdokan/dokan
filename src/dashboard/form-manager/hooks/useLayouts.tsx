@@ -83,7 +83,12 @@ export default function useLayouts(
      */
     const processLayout = useCallback(
         ( layoutFields: any[] ) => {
-            return layoutBuilder( layoutFields, fields, product );
+            return layoutBuilder(
+                layoutFields,
+                fields,
+                product,
+                product.product_type
+            );
         },
         [ fields, product ]
     );
@@ -157,8 +162,8 @@ export default function useLayouts(
                                     type: 'card',
                                 },
                                 children: [
-                                    'short_description',
                                     'description',
+                                    'short_description',
                                 ],
                             },
                             {
@@ -170,8 +175,8 @@ export default function useLayouts(
                                 children: [
                                     'sku',
                                     'global_unique_id',
-                                    'stock_status',
                                     'manage_stock',
+                                    'stock_status',
                                     'stock_quantity',
                                     'low_stock_amount',
                                     'backorders',

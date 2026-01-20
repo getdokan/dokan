@@ -46,7 +46,8 @@ abstract class Component {
         'order'                  => 30, // sorting sequence order for the field
         'error_message'          => '',
         'show_in_admin_settings' => true,
-        'hide_on_product_types'  => [],
+        'hidden_scope'           => [],
+        'hidden_scope_callback'  => '',
     ];
 
     public function __construct( string $id, array $args = [] ) {
@@ -404,8 +405,15 @@ abstract class Component {
      *
      * @return array
      */
-    public function get_hide_on_product_types(): array {
-        return (array) $this->data['hide_on_product_types'];
+    public function get_hidden_scope( ...$value ): array {
+        $callback = $this->get_hidden_scope_callback();
+
+        if ( ! empty( $callback ) && is_callable( $callback ) ) {
+            $value[] = $this->data['hidden_scope'];
+            return (array) call_user_func( $callback, ...$value );
+        }
+
+        return (array) $this->data['hidden_scope'];
     }
 
     /**
@@ -417,8 +425,34 @@ abstract class Component {
      *
      * @return $this
      */
-    public function set_hide_on_product_types( array $product_types ): self {
-        $this->data['hide_on_product_types'] = array_map( 'sanitize_key', $product_types );
+    public function set_hidden_scope( array $product_types ): self {
+        $this->data['hidden_scope'] = array_map( 'sanitize_key', $product_types );
+
+        return $this;
+    }
+
+    /**
+     * Get hidden scope callback
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return callable|string
+     */
+    public function get_hidden_scope_callback() {
+        return $this->data['hidden_scope_callback'];
+    }
+
+    /**
+     * Set hidden scope callback
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param callable|string $method
+     *
+     * @return $this
+     */
+    public function set_hidden_scope_callback( $method ): self {
+        $this->data['hidden_scope_callback'] = $method;
 
         return $this;
     }

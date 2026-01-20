@@ -98,7 +98,7 @@ const useVariationLayout = () => {
             },
         ];
 
-        return { fields } as any;
+        return fields;
     }, [] );
 
     return {
