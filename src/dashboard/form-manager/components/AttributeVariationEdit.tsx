@@ -137,14 +137,12 @@ const AttributeVariationEditor = ( { data, field, onChange }: any ) => {
 
                 { productType === 'variable' && (
                     <VariationProvider
+                        productId={ data.id }
                         defaultAttributes={ attributes }
                         variations={ data.variations || [] }
                         onUpdateVariations={ onUpdateVariations }
                     >
-                        <VariationForm
-                            product={ data }
-                            attributes={ attributes }
-                        />
+                        <VariationForm attributes={ attributes } />
                     </VariationProvider>
                 ) }
             </div>

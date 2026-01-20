@@ -93,6 +93,7 @@ const preparePayload = ( {
 };
 
 export interface VariationContextType {
+    variations: VariationType[];
     saveVariation: (
         variation: VariationType,
         data: Record< string, any >
@@ -118,6 +119,7 @@ export const useVariationContext = () => {
 
 interface VariationProviderProps {
     children: React.ReactNode;
+    productId: number;
     variations?: VariationType[];
     defaultAttributes: Attribute[];
     onUpdateVariations?: ( variations: VariationType[] ) => void;
@@ -125,6 +127,7 @@ interface VariationProviderProps {
 
 export const VariationProvider = ( {
     children,
+    productId,
     variations = [],
     defaultAttributes,
     onUpdateVariations,
@@ -180,9 +183,30 @@ export const VariationProvider = ( {
         }
     };
 
-    const generateVariations = () => {
-        console.log( 'Generating variations...' );
+    const generateVariations = async () => {
+        console.log( 'Generating variations...', productId );
         // specific logic to generate variations
+        if (
+            confirm(
+                'Are you sure you want to generate variations? This will overwrite existing variations.'
+            )
+        ) {
+            const data = {
+                action: 'dokan_link_all_variations',
+                post_id: productId,
+                security: dokan.link_variation_nonce,
+            };
+            const response = await jQuery.ajax( {
+                url: dokan.ajaxurl,
+                type: 'POST',
+                data,
+            } );
+            console.log( 'Variations generated successfully:', response );
+            toast( {
+                type: 'success',
+                title: response.data.message,
+            } );
+        }
     };
 
     const addVariation = () => {
@@ -191,6 +215,7 @@ export const VariationProvider = ( {
     };
 
     const value = {
+        variations,
         saveVariation,
         generateVariations,
         addVariation,

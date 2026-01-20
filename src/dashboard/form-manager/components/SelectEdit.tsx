@@ -58,7 +58,6 @@ const flattenOptions = ( options: Option[], level = 0 ): Option[] => {
 const SelectEdit = ( { data, field, onChange }: any ) => {
     // Determine Data Source: 'options' (Tree) vs 'elements' (Simple)
     const rawOptions = ( field.elements || [] ) as Option[];
-    console.log( 'Raw Options:', rawOptions );
 
     // Detect if it's a tree structure (has children) or explicitly using 'options' key
     const isTreeMode = rawOptions.some(
