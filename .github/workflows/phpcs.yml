@@ -24,17 +24,6 @@ jobs:
         with:
           fetch-depth: 0  # Required for push events to detect changed files
 
-      - name: Use desired version of NodeJS
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-
-      - name: Npm install and build
-        run: |
-          npm i
-          npm run build
-
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -56,17 +45,6 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress || composer update --prefer-dist --no-progress
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: project-setup
-          path: |
-            node_modules/
-            vendor/
-            build/
-          if-no-files-found: ignore
-          retention-days: 1
-
   runPHPCSInspection:
     name: Run PHPCS inspection
     runs-on: ubuntu-latest
@@ -76,18 +54,26 @@ jobs:
         with:
           fetch-depth: 0  # Required for push events to detect changed files
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: project-setup
-          path: .
-
       - name: Setup PHP (PHPCS tools only)
         uses: shivammathur/setup-php@v2
         with:
           php-version: '7.4'
           coverage: none
           tools: cs2pr, composer:v2
+
+      - name: Get composer cache directory
+        id: composercache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composercache.outputs.dir }}
+          key: "${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}"
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress || composer update --prefer-dist --no-progress
 
       - id: changes
         if: github.event_name == 'pull_request'
@@ -183,17 +169,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: project-setup
-          path: .
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
+
+      - name: Install npm dependencies
+        run: npm ci
 
       - name: Setup PHP (Composer only)
         uses: shivammathur/setup-php@v2
@@ -201,6 +184,20 @@ jobs:
           php-version: '7.4'
           coverage: none
           tools: composer:v2
+
+      - name: Get composer cache directory
+        id: composercache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composercache.outputs.dir }}
+          key: "${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}"
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress || composer update --prefer-dist --no-progress
 
       - name: Start WordPress Environment
         run: |
