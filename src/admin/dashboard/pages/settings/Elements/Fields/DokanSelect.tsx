@@ -4,8 +4,10 @@ import {
     DokanSelect as BaseDokanSelect,
 } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
+import { twMerge } from 'tailwind-merge';
+import { RawHTML } from '@wordpress/element';
 
-export default function DokanSelect( { element } ) {
+export default function DokanSelect( { element, isSingleLineRow = false } ) {
     if ( ! element.display ) {
         return null;
     }
@@ -14,13 +16,24 @@ export default function DokanSelect( { element } ) {
         dispatch( settingsStore ).updateSettingsValue( updatedElement );
     };
     const hasTitle = Boolean( element.title && element.title.length > 0 );
+
     return (
         <div
-            className="grid-cols-12 grid gap-2 justify-between w-full p-4"
+            className={ twMerge(
+                'p-4',
+                isSingleLineRow
+                    ? 'inline-block'
+                    : 'grid-cols-12 grid gap-2 justify-between w-full'
+            ) }
             id={ element.hook_key }
         >
             { hasTitle && (
-                <div className={ 'sm:col-span-8 col-span-12 self-center' }>
+                <div
+                    className={ twMerge(
+                        'sm:col-span-8 col-span-12 self-center',
+                        isSingleLineRow && 'mb-2'
+                    ) }
+                >
                     <DokanFieldLabel
                         title={ element.title }
                         titleFontWeight="bold"
@@ -44,15 +57,16 @@ export default function DokanSelect( { element } ) {
                     }
                     options={
                         element.options?.map( ( option ) => ( {
-                            label: option.title,
+                            label: <RawHTML>{ option.title }</RawHTML>,
                             value: option.value,
                         } ) ) || []
                     }
                     disabled={ element.disabled }
                     placeholder={ element.placeholder || '' }
-                    containerClassName={
-                        'max-w-full sm:!w-[14rem] sm:justify-self-end '
-                    }
+                    containerClassName={ twMerge(
+                        'max-w-full sm:!w-[14rem] sm:justify-self-end',
+                        isSingleLineRow && 'sm:!w-[12rem]'
+                    ) }
                 />
             </div>
         </div>

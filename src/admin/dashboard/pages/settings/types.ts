@@ -61,6 +61,7 @@ export type SettingsElement = {
     image_url?: string;
     divider?: boolean;
     is_automated?: boolean;
+    isSingleLineRow?: boolean;
 };
 
 export interface SettingsProps {
