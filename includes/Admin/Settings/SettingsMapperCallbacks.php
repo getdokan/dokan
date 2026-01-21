@@ -1085,6 +1085,42 @@ class SettingsMapperCallbacks implements Hookable {
             SettingsMapper::set_value_by_path( $result, $new_path, $value );
         }
 
+        // Populate individual fields for quarterly
+        if ( isset( $legacy_values['dokan_withdraw']['quarterly_schedule'] ) ) {
+            $qs = $legacy_values['dokan_withdraw']['quarterly_schedule'];
+            if ( is_array( $qs ) ) {
+                SettingsMapper::set_value_by_path( $result, 'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month', $qs['month'] ?? 'march' );
+                SettingsMapper::set_value_by_path( $result, 'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_week', $qs['week'] ?? '1' );
+                SettingsMapper::set_value_by_path( $result, 'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_day', $qs['days'] ?? 'monday' );
+            }
+        }
+
+        // Populate individual fields for monthly
+        if ( isset( $legacy_values['dokan_withdraw']['monthly_schedule'] ) ) {
+            $ms = $legacy_values['dokan_withdraw']['monthly_schedule'];
+            if ( is_array( $ms ) ) {
+                SettingsMapper::set_value_by_path( $result, 'transaction.withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw_week', $ms['week'] ?? '1' );
+                SettingsMapper::set_value_by_path( $result, 'transaction.withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw_day', $ms['days'] ?? 'monday' );
+            }
+        }
+
+        // Populate individual fields for biweekly
+        if ( isset( $legacy_values['dokan_withdraw']['biweekly_schedule'] ) ) {
+            $bs = $legacy_values['dokan_withdraw']['biweekly_schedule'];
+            if ( is_array( $bs ) ) {
+                SettingsMapper::set_value_by_path( $result, 'transaction.withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_week', $bs['week'] ?? '1' );
+                SettingsMapper::set_value_by_path( $result, 'transaction.withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_day', $bs['days'] ?? 'monday' );
+            }
+        }
+
+        // Populate individual fields for weekly
+        if ( isset( $legacy_values['dokan_withdraw']['weekly_schedule'] ) ) {
+            $ws = $legacy_values['dokan_withdraw']['weekly_schedule'];
+            if ( ! is_array( $ws ) ) {
+                SettingsMapper::set_value_by_path( $result, 'transaction.withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw_day', $ws );
+            }
+        }
+
         // Also ensure manual_withdraw multicheck contains 'schedule' if any schedule is enabled
         if ( $any_on ) {
             $manual_withdraw = SettingsMapper::get_value_by_path( $result, 'transaction.withdraw_charge.withdraw_option_visibility_section.manual_withdraw', [] );
@@ -1144,11 +1180,39 @@ class SettingsMapperCallbacks implements Hookable {
 
         $result['dokan_withdraw']['disbursement_schedule'] = $legacy_schedule;
 
+        // Populate individual fields for quarterly
+        $result['dokan_withdraw']['quarterly_schedule'] = [
+            'month' => SettingsMapper::get_value_by_path( $pages_values, 'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month', 'march' ),
+            'week'  => SettingsMapper::get_value_by_path( $pages_values, 'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_week', '1' ),
+            'days'  => SettingsMapper::get_value_by_path( $pages_values, 'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_day', 'monday' ),
+        ];
+
+        // Populate individual fields for monthly
+        $result['dokan_withdraw']['monthly_schedule'] = [
+            'week' => SettingsMapper::get_value_by_path( $pages_values, 'transaction.withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw_week', '1' ),
+            'days' => SettingsMapper::get_value_by_path( $pages_values, 'transaction.withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw_day', 'monday' ),
+        ];
+
+        // Populate individual fields for biweekly
+        $result['dokan_withdraw']['biweekly_schedule'] = [
+            'week' => SettingsMapper::get_value_by_path( $pages_values, 'transaction.withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_week', '1' ),
+            'days' => SettingsMapper::get_value_by_path( $pages_values, 'transaction.withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_day', 'monday' ),
+        ];
+
+        // Populate individual fields for weekly
+        $result['dokan_withdraw']['weekly_schedule'] = SettingsMapper::get_value_by_path( $pages_values, 'transaction.withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw_day', 'monday' );
+
         return $result;
     }
 
     /**
      * Maps schedule day settings from legacy to new.
+     *
+     * Legacy format:
+     * - quarterly_schedule: { month: 'march', week: '1', days: 'monday' }
+     * - monthly_schedule: { week: '1', days: 'monday' }
+     * - biweekly_schedule: { week: '1', days: 'monday' }
+     * - weekly_schedule: 'monday' (string)
      *
      * @since DOKAN_SINCE
      *
@@ -1159,18 +1223,31 @@ class SettingsMapperCallbacks implements Hookable {
      *
      * @return mixed
      */
-    public function map_schedule_day_old_to_new( $value, $old_key, $new_key, $legacy_values ) {
-        if ( ! is_array( $value ) && $old_key !== 'dokan_withdraw.weekly_schedule' ) {
-            return $value;
+    public function map_schedule_day_old_to_new( $value, $old_key, $new_key, $legacy_values = [] ) {
+        // Handle quarterly_schedule - extract month for the month field
+        if ( $old_key === 'dokan_withdraw.quarterly_schedule' && is_array( $value ) ) {
+            if ( $new_key === 'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month' ) {
+                return $value['month'] ?? 'march';
+            }
         }
 
-        switch ( $old_key ) {
-            case 'dokan_withdraw.quarterly_schedule':
-            case 'dokan_withdraw.monthly_schedule':
-            case 'dokan_withdraw.biweekly_schedule':
-                return isset( $value['days'] ) ? $this->get_day_number( $value['days'] ) : '1';
-            case 'dokan_withdraw.weekly_schedule':
-                return $value; // It's already 'monday', 'tuesday', etc.
+        // Handle monthly_schedule - extract week for the week field
+        if ( $old_key === 'dokan_withdraw.monthly_schedule' && is_array( $value ) ) {
+            if ( $new_key === 'transaction.withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw_week' ) {
+                return $value['week'] ?? '1';
+            }
+        }
+
+        // Handle biweekly_schedule - extract week for the week field
+        if ( $old_key === 'dokan_withdraw.biweekly_schedule' && is_array( $value ) ) {
+            if ( $new_key === 'transaction.withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_week' ) {
+                return $value['week'] ?? '1';
+            }
+        }
+
+        // Handle weekly_schedule - it's already a string (day name)
+        if ( $old_key === 'dokan_withdraw.weekly_schedule' && ! is_array( $value ) ) {
+            return $value;
         }
 
         return $value;
@@ -1178,6 +1255,8 @@ class SettingsMapperCallbacks implements Hookable {
 
     /**
      * Maps schedule day settings from new to legacy.
+     *
+     * New format has individual fields, legacy format uses arrays.
      *
      * @since DOKAN_SINCE
      *
@@ -1188,79 +1267,48 @@ class SettingsMapperCallbacks implements Hookable {
      *
      * @return mixed
      */
-    public function map_schedule_day_new_to_old( $value, $old_key, $new_key, $pages_values ) {
-        $day_keys = [
-            'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_day',
-            'transaction.withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw_day',
-            'transaction.withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_day',
-            'transaction.withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw_day',
-        ];
+    public function map_schedule_day_new_to_old( $value, $old_key, $new_key, $pages_values = [] ) {
+        // Handle quarterly_schedule - reconstruct the array from individual fields
+        if ( $old_key === 'dokan_withdraw.quarterly_schedule' && $new_key === 'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month' ) {
+            $month = SettingsMapper::get_value_by_path( $pages_values, 'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_month', 'march' );
+            $week  = SettingsMapper::get_value_by_path( $pages_values, 'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_week', '1' );
+            $days  = SettingsMapper::get_value_by_path( $pages_values, 'transaction.withdraw_charge.withdraw_option_visibility_section.quarterly_withdraw_sub_section.quarterly_withdraw_group.quarterly_withdraw_day', 'monday' );
 
-        if ( ! in_array( $new_key, $day_keys, true ) ) {
-            return $value;
+            return [
+                'month' => $month,
+                'week'  => $week,
+                'days'  => $days,
+            ];
         }
 
-        if ( $new_key === 'transaction.withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw_day' ) {
-            return $value;
+        // Handle monthly_schedule - reconstruct the array from individual fields
+        if ( $old_key === 'dokan_withdraw.monthly_schedule' && $new_key === 'transaction.withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw_week' ) {
+            $week = SettingsMapper::get_value_by_path( $pages_values, 'transaction.withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw_week', '1' );
+            $days = SettingsMapper::get_value_by_path( $pages_values, 'transaction.withdraw_charge.withdraw_option_visibility_section.monthly_withdraw_sub_section.monthly_withdraw_group.monthly_withdraw_day', 'monday' );
+
+            return [
+                'week' => $week,
+                'days' => $days,
+            ];
         }
 
-        $legacy_map = [
-            'dokan_withdraw.quarterly_schedule' => [ 'month' => 'march', 'week' => '1', 'days' => 'monday' ],
-            'dokan_withdraw.monthly_schedule'   => [ 'week' => '1', 'days' => 'monday' ],
-            'dokan_withdraw.biweekly_schedule'  => [ 'week' => '1', 'days' => 'monday' ],
-        ];
+        // Handle biweekly_schedule - reconstruct the array from individual fields
+        if ( $old_key === 'dokan_withdraw.biweekly_schedule' && $new_key === 'transaction.withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_week' ) {
+            $week = SettingsMapper::get_value_by_path( $pages_values, 'transaction.withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_week', '1' );
+            $days = SettingsMapper::get_value_by_path( $pages_values, 'transaction.withdraw_charge.withdraw_option_visibility_section.biweekly_withdraw_sub_section.biweekly_withdraw_group.biweekly_withdraw_day', 'monday' );
 
-        if ( isset( $legacy_map[ $old_key ] ) ) {
-            $result = $legacy_map[ $old_key ];
-            $result['days'] = $this->get_day_name( $value );
-            return $result;
+            return [
+                'week' => $week,
+                'days' => $days,
+            ];
+        }
+
+        // Handle weekly_schedule - it's just a string (day name)
+        if ( $old_key === 'dokan_withdraw.weekly_schedule' && $new_key === 'transaction.withdraw_charge.withdraw_option_visibility_section.weekly_withdraw_sub_section.weekly_withdraw_group.weekly_withdraw_day' ) {
+            return $value;
         }
 
         return $value;
-    }
-
-    /**
-     * Get day number from day name.
-     *
-     * @param string $day_name
-     * @return string
-     */
-    private function get_day_number( $day_name ) {
-        if ( is_array( $day_name ) ) {
-            return '1';
-        }
-        $days = [
-            'monday'    => '1',
-            'tuesday'   => '2',
-            'wednesday' => '3',
-            'thursday'  => '4',
-            'friday'    => '5',
-            'saturday'  => '6',
-            'sunday'    => '7',
-        ];
-        return $days[ strtolower( $day_name ) ] ?? '1';
-    }
-
-    /**
-     * Get day name from day number.
-     *
-     * @param string $day_number
-     * @return string
-     */
-    private function get_day_name( $day_number ) {
-        if ( is_array( $day_number ) ) {
-            return 'monday';
-        }
-        $days = [
-            '1' => 'monday',
-            '2' => 'tuesday',
-            '3' => 'wednesday',
-            '4' => 'thursday',
-            '5' => 'friday',
-            '6' => 'saturday',
-            '7' => 'sunday',
-        ];
-        return $days[ $day_number ] ?? 'monday';
     }
 
     /**

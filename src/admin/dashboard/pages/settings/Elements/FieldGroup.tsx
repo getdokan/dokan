@@ -12,21 +12,6 @@ const FieldGroup = ( {
 
     return (
         <div className="flex flex-col  w-full">
-            { element?.title ||
-                ( element?.description && (
-                    <div className={ 'p-4' }>
-                        <p
-                            id={ element.hook_key }
-                            className="block text-sm font-medium text-gray-700"
-                        >
-                            { element.title }
-                        </p>
-                        <p className="mt-1 text-sm text-gray-500">
-                            { element.description }
-                        </p>
-                    </div>
-                ) ) }
-
             <div className="w-full ">
                 { element.children.map( ( child ) => {
                     return (
@@ -37,6 +22,10 @@ const FieldGroup = ( {
                             }
                             onValueChange={ onValueChange }
                             getSetting={ getSetting }
+                            isSingleLineRow={
+                                element?.content_class ===
+                                'dokan-single-line-row'
+                            }
                         />
                     );
                 } ) }

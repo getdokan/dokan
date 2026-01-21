@@ -30,7 +30,7 @@ import DokanRichText from './DokanRichText';
 import DokanRepeater from './DokanRepeater';
 import WithdrawSchedule from './WithdrawSchedule';
 
-const FieldParser = ( { element }: SettingsProps ) => {
+const FieldParser = ( { element, isSingleLineRow = false }: SettingsProps ) => {
     switch ( element.variant ) {
         case 'text':
             return applyFilters(
@@ -42,7 +42,11 @@ const FieldParser = ( { element }: SettingsProps ) => {
         case 'select':
             return applyFilters(
                 'dokan_admin_settings_select_field_parser',
-                <DokanSelect key={ element.hook_key } element={ element } />,
+                <DokanSelect
+                    key={ element.hook_key }
+                    element={ element }
+                    isSingleLineRow={ isSingleLineRow }
+                />,
                 element
             );
 
