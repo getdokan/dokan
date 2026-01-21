@@ -1,3 +1,10 @@
+### v4.2.8 ( Jan 20, 2026 ) ###
+- **update:** Restore vendor revenue widget for vendor dashboard.
+- **update:** Improve query arguments on admin withdraw pages to support filtering options.
+- **fix:** Preserve order filters when paginating vendor dashboard orders.
+- **fix:** Prevent Dokan menu from appearing for users without permission.
+- **fix:** Resolve PHP deprecated warnings in the withdraw controller.
+
 ### v4.2.7 ( Jan 14, 2026 ) ###
 - **fix:** Allow Dokan stock restoration on WC Block Checkout.
 

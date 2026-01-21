@@ -551,6 +551,7 @@ const WithdrawPage = () => {
                     // Attempt to hit export endpoint via same query params.
                     const path = addQueryArgs( 'dokan/v2/withdraw', {
                         ...view,
+                        ...filterArgs,
                         is_export: true,
                     } );
                     const res = await apiFetch( { path } );

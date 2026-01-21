@@ -198,7 +198,7 @@ abstract class DokanTestCase extends WP_UnitTestCase {
      *
      * @return void
      */
-    public function run_all_pending(): void {
+    public function run_all_pending_queue(): void {
         WC_Helper_Queue::run_all_pending();
     }
 
@@ -207,7 +207,7 @@ abstract class DokanTestCase extends WP_UnitTestCase {
      *
      * @return void
      */
-    public function cancel_all_pending(): void {
+    public function cancel_all_pending_queue(): void {
         WC_Helper_Queue::cancel_all_pending();
     }
 
