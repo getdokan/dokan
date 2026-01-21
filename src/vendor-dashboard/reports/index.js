@@ -54,8 +54,5 @@ domReady( () => {
                 <HydratedPageLayout />
             </ErrorBoundary>
         );
-    } else {
-        // eslint-disable-next-line no-console
-        console.error( `No DOM found by element ID: ${ mountElementId }` );
     }
 } );

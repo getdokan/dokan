@@ -515,6 +515,8 @@
                 :fieldData="fieldData"
                 :is="settingsComponent"
                 :fieldValue="fieldValue"
+                :all-settings-values="allSettingsValues"
+                :setting-fields='settingFields'
                 :assetsUrl="dokanAssetsUrl"
                 :validationErrors="validationErrors"
                 :toggleLoadingState="toggleLoadingState"
@@ -561,7 +563,7 @@
             WithdrawCharges
         },
 
-        props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors', 'dokanAssetsUrl'],
+        props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors', 'dokanAssetsUrl', 'settingFields'],
 
         data() {
             return {
