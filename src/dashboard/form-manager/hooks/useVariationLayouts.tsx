@@ -1,8 +1,9 @@
 import { useMemo } from '@wordpress/element';
-import { FormField } from '../types';
+import { FormField, Section } from '../types';
 import { layoutBuilder } from '../utils';
 
 const useVariationLayouts = (
+    sections: Section[],
     fields: FormField[],
     product: Record< string, any >
 ) => {
@@ -104,9 +105,15 @@ const useVariationLayouts = (
         ];
 
         return {
-            fields: layoutBuilder( layouts, fields, product, 'variation' ),
+            fields: layoutBuilder(
+                layouts,
+                sections,
+                fields,
+                product,
+                'variation'
+            ),
         };
-    }, [ fields, product ] );
+    }, [ sections, fields, product ] );
 
     return {
         formLayouts,

@@ -133,20 +133,49 @@ export const checkDependency = (
  * Handles string references, card creation, and child processing.
  * Also filters out empty cards (cards with no visible children).
  *
- * @param {Array}  layouts The fields to process for the layout
- * @param {Array}  fields  All available form fields.
- * @param {Object} product The current product data for dependency checking.
- * @param {string} scope   The scope of the layout (e.g. 'product', 'variation').
+ * @param {Array}  layouts  The fields to process for the layout
+ * @param {Array}  sections The available sections in the form (used for sorting).
+ * @param {Array}  fields   All available form fields.
+ * @param {Object} product  The current product data for dependency checking.
+ * @param {string} scope    The scope of the layout (e.g. 'product', 'variation').
  *
  * @return {Array} valid processed fields.
  */
 export const layoutBuilder = (
     layouts: any[],
+    sections: Section[] = [],
     fields: FormField[],
     product: Record< string, any >,
     scope: string = 'product'
 ): any[] => {
-    const mappedLayouts = layouts.map( ( field ) => {
+    // Helper to get order from field/section/layout item
+    const getOrder = ( item: any ) => {
+        if ( typeof item === 'string' ) {
+            const field = fields.find( ( f ) => f.id === item );
+            return field && field.order ? field.order : 30;
+        }
+
+        if ( typeof item.order === 'number' ) {
+            return item.order;
+        }
+
+        if ( item.id ) {
+            // Check sections list
+            const section = sections.find( ( s ) => s.id === item.id );
+            if ( section && section.order ) {
+                return section.order;
+            }
+        }
+
+        return 30;
+    };
+
+    // Sort layouts based on order logic
+    const sortedLayouts = [ ...layouts ].sort( ( a, b ) => {
+        return getOrder( a ) - getOrder( b );
+    } );
+
+    const mappedLayouts = sortedLayouts.map( ( field ) => {
         if ( typeof field === 'string' ) {
             const fieldData = fields.find( ( f ) => f.id === field );
             if ( ! fieldData ) {
@@ -188,6 +217,7 @@ export const layoutBuilder = (
         if ( newField.children ) {
             newField.children = layoutBuilder(
                 newField.children,
+                sections,
                 fields,
                 product,
                 scope

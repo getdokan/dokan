@@ -269,6 +269,7 @@ export default function useLayouts(
         return {
             fields: layoutBuilder(
                 updatedLayouts,
+                sections,
                 fields,
                 product,
                 product.product_type

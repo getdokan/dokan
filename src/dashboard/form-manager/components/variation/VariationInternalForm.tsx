@@ -13,6 +13,7 @@ type VariationInternalFormProps = {
 const VariationInternalForm = ( { variation }: VariationInternalFormProps ) => {
     const {
         product,
+        sections,
         fields,
         isLoading,
         submitHandler,
@@ -20,7 +21,7 @@ const VariationInternalForm = ( { variation }: VariationInternalFormProps ) => {
     } = useFormContext();
 
     const { updateVariation } = useVariationContext();
-    const { formLayouts } = useVariationLayouts( fields, product );
+    const { formLayouts } = useVariationLayouts( sections, fields, product );
 
     return (
         <div className="flex flex-col gap-4">
