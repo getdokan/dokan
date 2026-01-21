@@ -79,20 +79,24 @@ class VendorPage extends AbstractPage {
      * @return void
      */
     public function describe_settings(): void {
+        $enable_selling_status_list = dokan_get_container()->get( AdminSettings::class )->new_seller_enable_selling_statuses();
+        $enable_selling_field       = ElementFactory::field( 'enable_selling', 'radio_capsule' )
+            ->set_title( esc_html__( 'Enable Selling', 'dokan-lite' ) )
+            ->set_tooltip( esc_html__( 'If checked, vendors will have permission to sell immediately after registration. If unchecked, newly registered vendors cannot add products until selling capability is activated manually from admin dashboard.', 'dokan-lite' ) )
+            ->set_description( esc_html__( 'Immediately enable selling for newly registered vendors.', 'dokan-lite' ) )
+            ->set_default( 'automatically' );
+
+        // Load all selling status list.
+        foreach ( $enable_selling_status_list as $status => $label ) {
+            $enable_selling_field->add_option( $label, $status );
+        }
+
         $vendor_onboarding = ElementFactory::sub_page( 'vendor_onboarding' )
             ->set_title( esc_html__( 'Vendor Onboarding', 'dokan-lite' ) )
             ->set_priority( 100 )
             ->set_description( esc_html__( 'Control the onboarding experience for vendors joining your marketplace.', 'dokan-lite' ) )
             ->set_doc_link( 'https://wedevs.com/docs/dokan-lite/vendor-onboarding/' )
-            ->add(
-                ElementFactory::field( 'enable_selling', 'radio_capsule' )
-                    ->set_title( esc_html__( 'Enable Selling', 'dokan-lite' ) )
-                    ->set_tooltip( esc_html__( 'If checked, vendors will have permission to sell immediately after registration. If unchecked, newly registered vendors cannot add products until selling capability is activated manually from admin dashboard.', 'dokan-lite' ) )
-                    ->set_description( esc_html__( 'Immediately enable selling for newly registered vendors.', 'dokan-lite' ) )
-                    ->add_option( esc_html__( 'Automatically', 'dokan-lite' ), 'automatically' )
-                    ->add_option( esc_html__( 'Manually', 'dokan-lite' ), 'manually' )
-                    ->set_default( 'automatically' )
-            )
+            ->add( $enable_selling_field )
             ->add(
                 ElementFactory::field( 'address_fields', 'switch' )
                     ->set_title( esc_html__( 'Address Fields', 'dokan-lite' ) )
