@@ -6,6 +6,24 @@ import {
 import settingsStore from '../../../../../../stores/adminSettings';
 import { twMerge } from 'tailwind-merge';
 import { RawHTML } from '@wordpress/element';
+import * as LucideIcons from 'lucide-react';
+
+const getIcon = ( iconName: string ) => {
+    const iconProps = { className: 'w-5 h-5 text-[#828282]' };
+
+    // Get the icon component by name.
+    const IconComponent = ( LucideIcons as any )[ iconName ];
+
+    // If the icon is not found, use a fallback icon.
+    if ( ! IconComponent ) {
+        console.warn(
+            `Icon "${ iconName }" not found in Lucide React. Using fallback.`
+        );
+        return <LucideIcons.Settings { ...iconProps } />;
+    }
+
+    return <IconComponent { ...iconProps } />;
+};
 
 export default function DokanSelect( { element, isSingleLineRow = false } ) {
     if ( ! element.display ) {
@@ -57,7 +75,14 @@ export default function DokanSelect( { element, isSingleLineRow = false } ) {
                     }
                     options={
                         element.options?.map( ( option ) => ( {
-                            label: <RawHTML>{ option.title }</RawHTML>,
+                            label: option?.icon_name ? (
+                                <div className={ 'flex gap-2.5' }>
+                                    { getIcon( option?.icon_name ) }
+                                    <RawHTML>{ option.title }</RawHTML>
+                                </div>
+                            ) : (
+                                <RawHTML>{ option.title }</RawHTML>
+                            ),
                             value: option.value,
                         } ) ) || []
                     }

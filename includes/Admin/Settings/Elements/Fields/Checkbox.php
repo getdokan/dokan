@@ -48,16 +48,24 @@ class Checkbox extends Text {
 	/**
 	 * Add an option.
 	 *
-	 * @param string      $option option to Display.
-	 * @param string|null $value value for the checkbox option. Default is null.
+	 * @param string      $option Option to Display.
+	 * @param string|null $value  Value for the checkbox option. Default is null.
+     * @param string|null $icon   Optional icon name to render before option title.
 	 *
 	 * @return Checkbox|Select|Radio
 	 */
-	public function add_option( string $option, string $value ) {
-		$this->options[] = array(
-			'value' => $value,
-			'title' => $option,
-		);
+	public function add_option( string $option, string $value, string $icon = '' ) {
+        $option = array(
+            'value' => $value,
+            'title' => $option,
+        );
+
+        if ( ! empty( $icon ) ) {
+            $option['icon_name'] = $icon;
+        }
+
+        $this->options[] = $option;
+
 		return $this;
 	}
 
