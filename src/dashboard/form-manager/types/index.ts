@@ -42,6 +42,7 @@ export type FormField = {
     dependency_condition: DependencyCondition;
     hidden_scope: string[];
     visibility: boolean;
+    order: number;
 } & Field< any >;
 
 export type FieldConfig = Partial< FormField > & {

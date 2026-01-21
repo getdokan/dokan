@@ -117,8 +117,8 @@ export default function useLayouts(
                                     type: 'card',
                                 },
                                 children: [
-                                    'description',
                                     'short_description',
+                                    'description',
                                 ],
                             },
                             {
