@@ -42,7 +42,7 @@ export const getElementsFromOptions = ( field?: FormField ) => {
  *
  * @return {Object} Configuration object with type 'text' and RichTextEdit component.
  */
-export const textFieldHandler: FieldHandler = () => ( {
+export const editorFieldHandler: FieldHandler = () => ( {
     type: 'text',
     Edit: RichTextEdit,
 } );

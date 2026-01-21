@@ -5,18 +5,18 @@ import {
     dateHandler,
     defaultHandler,
     downloadableHandler,
+    editorFieldHandler,
     galleryHandler,
     imageHandler,
     multiSelectHandler,
     numberHandler,
     radioHandler,
     selectHandler,
-    textFieldHandler,
 } from './handlers';
 
 const handlers: Record< string, FieldHandler > = {
-    textarea: textFieldHandler,
-    rich_text: textFieldHandler,
+    textarea: editorFieldHandler,
+    editor: editorFieldHandler,
     checkbox: checkboxHandler,
     radio: radioHandler,
     number: numberHandler,

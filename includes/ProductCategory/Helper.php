@@ -403,4 +403,43 @@ class Helper {
          */
         return apply_filters( 'dokan_get_product_categories_tree', $tree, $categories );
     }
+
+    /**
+	 * Get all ancestors of chosen categories.
+	 *
+	 * @since DOKAN_SINCE
+	 *
+	 * @param \WC_Product|int $product
+	 * @param array $chosen_categories
+	 *
+	 * @return array
+	 */
+
+    public static function get_object_terms_from_chosen_categories( $product, $chosen_categories = [] ) {
+		if ( is_numeric( $product ) ) {
+			$product = wc_get_product( $product );
+		}
+
+		if ( ! $product ) {
+			return [];
+		}
+
+		if ( empty( $chosen_categories ) || ! is_array( $chosen_categories ) ) {
+			// get chosen categories from product meta
+			$chosen_categories = self::get_product_chosen_category( $product->get_id() );
+		}
+
+		$all_ancestors = [];
+		// If category middle selection is true, then we will save only the chosen categories or we will save all the ancestors.
+		if ( self::is_any_category_selection_enabled() ) {
+			$all_ancestors = $chosen_categories;
+		} else {
+			// we need to assign all ancestor of chosen category to add to the given product
+			foreach ( $chosen_categories as $term_id ) {
+				$all_ancestors = array_merge( $all_ancestors, get_ancestors( $term_id, 'product_cat' ), [ (int) $term_id ] );
+			}
+		}
+
+		return array_map( 'absint', array_unique( $all_ancestors ) );
+	}
 }
