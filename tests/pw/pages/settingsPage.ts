@@ -120,6 +120,7 @@ export class SettingsPage extends AdminPage {
 
         // vendor capabilities
         await this.enableSwitcher(settingsAdmin.selling.enableSelling);
+        await this.enableSwitcher(settingsAdmin.selling.onePageProductCreate);
         await this.enableSwitcher(settingsAdmin.selling.orderStatusChange);
         await this.enableSwitcher(settingsAdmin.selling.selectAnyCategory);
         if (DOKAN_PRO) {
