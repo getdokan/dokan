@@ -4,6 +4,36 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.2.8',
+        'released' => '2026-01-20',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Restore vendor revenue widget for vendor dashboard.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Improve query arguments on admin withdraw pages to support filtering options.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Preserve order filters when paginating vendor dashboard orders.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Prevent Dokan menu from appearing for users without permission.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Resolve PHP deprecated warnings in the withdraw controller.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.2.7',
         'released' => '2026-01-14',
         'changes'  => [
