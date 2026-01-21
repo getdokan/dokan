@@ -31,11 +31,11 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
     update_post_meta( $post_id, '_virtual', $is_virtual );
 
     // Gallery Images
-    if ( isset( $data['gallery_image_ids'] ) ) {
-        $attachment_ids     = apply_filters( 'dokan_restrict_product_gallery_images_on_edit', wp_unslash( $data['gallery_image_ids'] ) );
-        $attachment_ids_arr = array_filter( explode( ',', wc_clean( $attachment_ids ) ) );
+    if ( isset( $data['product_image_gallery'] ) ) {
+        $data = apply_filters( 'dokan_restrict_product_image_gallery_on_edit', $data );
 
-        update_post_meta( $post_id, '_product_image_gallery', implode( ',', $attachment_ids_arr ) );
+        $attachment_ids = array_filter( explode( ',', wc_clean( $data['product_image_gallery'] ) ) );
+        update_post_meta( $post_id, '_product_image_gallery', implode( ',', $attachment_ids ) );
     }
 
     // Check product visibility and purchase note

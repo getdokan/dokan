@@ -607,7 +607,7 @@ function dokan_post_input_box( $post_id, $meta_key, $attr = [], $type = 'text' )
     $name          = isset( $attr['name'] ) ? esc_attr( $attr['name'] ) : $meta_key;
     $value         = isset( $attr['value'] ) ? $attr['value'] : get_post_meta( $post_id, $meta_key, true );
     $size          = isset( $attr['size'] ) ? $attr['size'] : 30;
-    $required      = ! empty( $attr['required'] ) ? 'required' : '';
+    $required      = isset( $attr['required'] ) ? 'required' : '';
 
     switch ( $type ) {
         case 'text':
@@ -657,7 +657,6 @@ function dokan_post_input_box( $post_id, $meta_key, $attr = [], $type = 'text' )
 
         case 'checkbox':
             $label = isset( $attr['label'] ) ? $attr['label'] : '';
-            $desc  = isset( $attr['desc'] ) ? $attr['desc'] : '';
             $class = ( $class === 'dokan-form-control' ) ? '' : $class;
             ?>
 
@@ -665,14 +664,8 @@ function dokan_post_input_box( $post_id, $meta_key, $attr = [], $type = 'text' )
                 <input type="hidden" name="<?php echo esc_attr( $name ); ?>" value="no">
                 <input <?php echo esc_attr( $required ); ?> name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" value="yes" type="checkbox"<?php checked( $value, 'yes' ); ?>>
                 <?php echo esc_html( $label ); ?>
-                <?php if ( $desc ) { ?>
-                    <i
-                        class="fas fa-question-circle tips"
-                        aria-hidden="true"
-                        data-title="<?php echo esc_attr( $desc ); ?>">
-                    </i>
-                <?php } ?>
             </label>
+
             <?php
             break;
 
@@ -730,7 +723,7 @@ function dokan_post_input_box( $post_id, $meta_key, $attr = [], $type = 'text' )
 function dokan_get_post_status( $status = '' ) {
     $statuses = apply_filters(
         'dokan_get_post_status', [
-            'publish' => __( 'Published', 'dokan-lite' ),
+            'publish' => __( 'Online', 'dokan-lite' ),
             'draft'   => __( 'Draft', 'dokan-lite' ),
             'pending' => __( 'Pending Review', 'dokan-lite' ),
             'future'  => __( 'Scheduled', 'dokan-lite' ),

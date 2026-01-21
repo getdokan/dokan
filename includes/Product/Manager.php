@@ -3,16 +3,12 @@
 namespace WeDevs\Dokan\Product;
 
 use WC_Product;
-use WC_Product_Attribute;
 use WC_Product_Download;
 use WeDevs\Dokan\Cache;
 use WeDevs\Dokan\Commission\Model\Setting;
 use WeDevs\Dokan\Commission\Settings\Product;
 use WP_Error;
 use WP_Query;
-use WeDevs\Dokan\ProductForm\Elements as FormElements;
-
-defined( 'ABSPATH' ) || exit;
 
 /**
  * Product manager Class
@@ -34,7 +30,7 @@ class Manager {
         $defaults = [
             'post_type'      => 'product',
             'post_status'    => $post_statuses,
-            'posts_per_page' => -1,
+            'posts_per_page' => - 1,
             'orderby'        => 'post_date ID',
             'order'          => 'DESC',
             'paged'          => 1,
@@ -77,99 +73,100 @@ class Manager {
      * @return WC_Product|null|false
      */
     public function create( $args = [] ) {
-        $product_id = isset( $args[ FormElements::ID ] ) ? absint( $args[ FormElements::ID ] ) : 0;
-        $is_update  = ! empty( $product_id );
+        $id = isset( $args['id'] ) ? absint( $args['id'] ) : 0;
 
         // Type is the most important part here because we need to be using the correct class and methods.
-        if ( isset( $args[ FormElements::TYPE ] ) ) {
-            $classname = \WC_Product_Factory::get_classname_from_product_type( $args[ FormElements::TYPE ] );
+        if ( isset( $args['type'] ) ) {
+            $classname = \WC_Product_Factory::get_classname_from_product_type( $args['type'] );
 
             if ( ! class_exists( $classname ) ) {
                 $classname = 'WC_Product_Simple';
             }
 
-            $product = new $classname( $product_id );
-        } elseif ( isset( $args[ FormElements::ID ] ) ) {
-            $product = wc_get_product( $product_id );
+            $product = new $classname( $id );
+        } elseif ( isset( $args['id'] ) ) {
+            $product = wc_get_product( $id );
         } else {
             $product = new \WC_Product_Simple();
         }
 
         // Post title.
-        if ( isset( $args[ FormElements::NAME ] ) ) {
-            $product->set_name( wp_filter_post_kses( $args[ FormElements::NAME ] ) );
+        if ( isset( $args['name'] ) ) {
+            $product->set_name( wp_filter_post_kses( $args['name'] ) );
         }
 
         // Post content.
-        if ( isset( $args[ FormElements::DESCRIPTION ] ) ) {
-            $product->set_description( wp_filter_post_kses( $args[ FormElements::DESCRIPTION ] ) );
+        if ( isset( $args['description'] ) ) {
+            $product->set_description( wp_filter_post_kses( $args['description'] ) );
         }
 
         // Post excerpt.
-        if ( isset( $args[ FormElements::SHORT_DESCRIPTION ] ) ) {
-            $product->set_short_description( wp_filter_post_kses( $args[ FormElements::SHORT_DESCRIPTION ] ) );
+        if ( isset( $args['short_description'] ) ) {
+            $product->set_short_description( wp_filter_post_kses( $args['short_description'] ) );
         }
 
         // Post status.
-        if ( isset( $args[ FormElements::STATUS ] ) ) {
-            $product->set_status( get_post_status_object( $args[ FormElements::STATUS ] ) ? $args[ FormElements::STATUS ] : 'draft' );
+        if ( isset( $args['status'] ) ) {
+            $product->set_status( get_post_status_object( $args['status'] ) ? $args['status'] : 'draft' );
         }
 
         // Post slug.
-        if ( isset( $args[ FormElements::SLUG ] ) ) {
-            $product->set_slug( $args[ FormElements::SLUG ] );
+        if ( isset( $args['slug'] ) ) {
+            $product->set_slug( $args['slug'] );
         }
 
         // Menu order.
-        if ( isset( $args[ FormElements::MENU_ORDER ] ) ) {
-            $product->set_menu_order( $args[ FormElements::MENU_ORDER ] );
+        if ( isset( $args['menu_order'] ) ) {
+            $product->set_menu_order( $args['menu_order'] );
         }
 
         // Comment status.
-        if ( isset( $args[ FormElements::REVIEWS_ALLOWED ] ) ) {
-            $product->set_reviews_allowed( $args[ FormElements::REVIEWS_ALLOWED ] );
+        if ( isset( $args['reviews_allowed'] ) ) {
+            $product->set_reviews_allowed( $args['reviews_allowed'] );
         }
 
         // Virtual.
-        if ( isset( $args[ FormElements::VIRTUAL ] ) ) {
-            $product->set_virtual( $args[ FormElements::VIRTUAL ] );
+        if ( isset( $args['virtual'] ) ) {
+            $product->set_virtual( $args['virtual'] );
         }
 
         // Tax status.
-        if ( isset( $args[ FormElements::TAX_STATUS ] ) ) {
-            $product->set_tax_status( $args[ FormElements::TAX_STATUS ] );
+        if ( isset( $args['tax_status'] ) ) {
+            $product->set_tax_status( $args['tax_status'] );
         }
 
         // Tax Class.
-        if ( isset( $args[ FormElements::TAX_CLASS ] ) ) {
-            $product->set_tax_class( $args[ FormElements::TAX_CLASS ] );
+        if ( isset( $args['tax_class'] ) ) {
+            $product->set_tax_class( $args['tax_class'] );
         }
 
         // Catalog Visibility.
-        if ( isset( $args[ FormElements::CATALOG_VISIBILITY ] ) ) {
-            $product->set_catalog_visibility( $args[ FormElements::CATALOG_VISIBILITY ] );
+        if ( isset( $args['catalog_visibility'] ) ) {
+            $product->set_catalog_visibility( $args['catalog_visibility'] );
         }
 
         // Purchase Note.
-        if ( isset( $args[ FormElements::PURCHASE_NOTE ] ) ) {
-            $product->set_purchase_note( wp_kses_post( wp_unslash( $args[ FormElements::PURCHASE_NOTE ] ) ) );
+        if ( isset( $args['purchase_note'] ) ) {
+            $product->set_purchase_note( wp_kses_post( wp_unslash( $args['purchase_note'] ) ) );
         }
 
         // Featured Product.
-        if ( isset( $args[ FormElements::FEATURED ] ) ) {
-            $product->set_featured( $args[ FormElements::FEATURED ] );
+        if ( isset( $args['featured'] ) ) {
+            $product->set_featured( $args['featured'] );
         }
 
         // Shipping data.
         $product = $this->save_product_shipping_data( $product, $args );
 
         // SKU.
-        if ( isset( $args[ FormElements::SKU ] ) ) {
-            $product->set_sku( wc_clean( $args[ FormElements::SKU ] ) );
+        if ( isset( $args['sku'] ) ) {
+            $product->set_sku( wc_clean( $args['sku'] ) );
         }
 
         // Attributes.
-        $product = $this->save_product_attribute_data( $product, $args );
+        if ( isset( $args['attributes'] ) ) {
+            $product->set_attributes( $args['attributes'] );
+        }
 
         // Sales and prices.
         if ( in_array( $product->get_type(), [ 'variable', 'grouped' ], true ) ) {
@@ -180,45 +177,45 @@ class Manager {
             $product->set_price( '' );
         } else {
             // Regular Price.
-            if ( isset( $args[ FormElements::REGULAR_PRICE ] ) ) {
-                $product->set_regular_price( $args[ FormElements::REGULAR_PRICE ] );
+            if ( isset( $args['regular_price'] ) ) {
+                $product->set_regular_price( $args['regular_price'] );
             }
 
             // Sale Price.
-            if ( isset( $args[ FormElements::SALE_PRICE ] ) ) {
-                $product->set_sale_price( $args[ FormElements::SALE_PRICE ] );
+            if ( isset( $args['sale_price'] ) ) {
+                $product->set_sale_price( $args['sale_price'] );
             }
 
-            if ( isset( $args[ FormElements::DATE_ON_SALE_FROM ] ) ) {
-                $product->set_date_on_sale_from( $args[ FormElements::DATE_ON_SALE_FROM ] );
+            if ( isset( $args['date_on_sale_from'] ) ) {
+                $product->set_date_on_sale_from( $args['date_on_sale_from'] );
             }
 
-            if ( isset( $args[ FormElements::DATE_ON_SALE_FROM_GMT ] ) ) {
-                $product->set_date_on_sale_from( $args[ FormElements::DATE_ON_SALE_FROM_GMT ] ? strtotime( $args[ FormElements::DATE_ON_SALE_FROM_GMT ] ) : null );
+            if ( isset( $args['date_on_sale_from_gmt'] ) ) {
+                $product->set_date_on_sale_from( $args['date_on_sale_from_gmt'] ? strtotime( $args['date_on_sale_from_gmt'] ) : null );
             }
 
-            if ( isset( $args[ FormElements::DATE_ON_SALE_TO ] ) ) {
-                $product->set_date_on_sale_to( $args[ FormElements::DATE_ON_SALE_TO ] );
+            if ( isset( $args['date_on_sale_to'] ) ) {
+                $product->set_date_on_sale_to( $args['date_on_sale_to'] );
             }
 
-            if ( isset( $args[ FormElements::DATE_ON_SALE_TO_GMT ] ) ) {
-                $product->set_date_on_sale_to( $args[ FormElements::DATE_ON_SALE_TO_GMT ] ? strtotime( $args[ FormElements::DATE_ON_SALE_TO_GMT ] ) : null );
+            if ( isset( $args['date_on_sale_to_gmt'] ) ) {
+                $product->set_date_on_sale_to( $args['date_on_sale_to_gmt'] ? strtotime( $args['date_on_sale_to_gmt'] ) : null );
             }
         }
 
         // Product parent ID.
-        if ( isset( $args[ FormElements::PARENT_ID ] ) ) {
-            $product->set_parent_id( $args[ FormElements::PARENT_ID ] );
+        if ( isset( $args['parent_id'] ) ) {
+            $product->set_parent_id( $args['parent_id'] );
         }
 
         // Sold individually.
-        if ( isset( $args[ FormElements::SOLD_INDIVIDUALLY ] ) ) {
-            $product->set_sold_individually( $args[ FormElements::SOLD_INDIVIDUALLY ] );
+        if ( isset( $args['sold_individually'] ) ) {
+            $product->set_sold_individually( $args['sold_individually'] );
         }
 
         // Stock status; stock_status has priority over in_stock.
-        if ( isset( $args[ FormElements::STOCK_STATUS ] ) ) {
-            $stock_status = $args[ FormElements::STOCK_STATUS ];
+        if ( isset( $args['stock_status'] ) ) {
+            $stock_status = $args['stock_status'];
         } else {
             $stock_status = $product->get_stock_status();
         }
@@ -226,28 +223,24 @@ class Manager {
         // Stock data.
         if ( 'yes' === get_option( 'woocommerce_manage_stock' ) ) {
             // Manage stock.
-            if ( isset( $args[ FormElements::MANAGE_STOCK ] ) ) {
-                $product->set_manage_stock( $args[ FormElements::MANAGE_STOCK ] );
-            }
-
-            if ( isset( $args[ FormElements::LOW_STOCK_AMOUNT ] ) ) {
-                $product->set_low_stock_amount( $args[ FormElements::LOW_STOCK_AMOUNT ] );
+            if ( isset( $args['manage_stock'] ) ) {
+                $product->set_manage_stock( $args['manage_stock'] );
             }
 
             // Backorders.
-            if ( isset( $args[ FormElements::BACKORDERS ] ) ) {
-                $product->set_backorders( $args[ FormElements::BACKORDERS ] );
+            if ( isset( $args['backorders'] ) ) {
+                $product->set_backorders( $args['backorders'] );
             }
 
             if ( $product->is_type( 'grouped' ) ) {
-                $product->set_manage_stock( false );
-                $product->set_backorders( false );
-                $product->set_stock_quantity( null );
+                $product->set_manage_stock( 'no' );
+                $product->set_backorders( 'no' );
+                $product->set_stock_quantity( '' );
                 $product->set_stock_status( $stock_status );
             } elseif ( $product->is_type( 'external' ) ) {
-                $product->set_manage_stock( false );
-                $product->set_backorders( false );
-                $product->set_stock_quantity( null );
+                $product->set_manage_stock( 'no' );
+                $product->set_backorders( 'no' );
+                $product->set_stock_quantity( '' );
                 $product->set_stock_status( 'instock' );
             } elseif ( $product->get_manage_stock() ) {
                 // Stock status is always determined by children so sync later.
@@ -256,17 +249,17 @@ class Manager {
                 }
 
                 // Stock quantity.
-                if ( isset( $args[ FormElements::STOCK_QUANTITY ] ) ) {
-                    $product->set_stock_quantity( wc_stock_amount( $args[ FormElements::STOCK_QUANTITY ] ) );
-                } elseif ( isset( $args[ FormElements::INVENTORY_DELTA ] ) ) {
+                if ( isset( $args['stock_quantity'] ) ) {
+                    $product->set_stock_quantity( wc_stock_amount( $args['stock_quantity'] ) );
+                } elseif ( isset( $args['inventory_delta'] ) ) {
                     $stock_quantity = wc_stock_amount( $product->get_stock_quantity() );
-                    $stock_quantity += wc_stock_amount( $args[ FormElements::INVENTORY_DELTA ] );
+                    $stock_quantity += wc_stock_amount( $args['inventory_delta'] );
                     $product->set_stock_quantity( wc_stock_amount( $stock_quantity ) );
                 }
             } else {
                 // Don't manage stock.
-                $product->set_manage_stock( false );
-                $product->set_stock_quantity( null );
+                $product->set_manage_stock( 'no' );
+                $product->set_stock_quantity( '' );
                 $product->set_stock_status( $stock_status );
             }
         } elseif ( ! $product->is_type( 'variable' ) ) {
@@ -277,9 +270,9 @@ class Manager {
         $product = $this->maybe_update_stock_status( $product, $stock_status );
 
         // Upsells.
-        if ( isset( $args[ FormElements::UPSELL_IDS ] ) ) {
+        if ( isset( $args['upsell_ids'] ) ) {
             $upsells = [];
-            $ids     = $args[ FormElements::UPSELL_IDS ];
+            $ids     = $args['upsell_ids'];
 
             if ( ! empty( $ids ) ) {
                 foreach ( $ids as $id ) {
@@ -293,9 +286,9 @@ class Manager {
         }
 
         // Cross sells.
-        if ( isset( $args[ FormElements::CROSS_SELL_IDS ] ) ) {
+        if ( isset( $args['cross_sell_ids'] ) ) {
             $crosssells = [];
-            $ids        = $args[ FormElements::CROSS_SELL_IDS ];
+            $ids        = $args['cross_sell_ids'];
 
             if ( ! empty( $ids ) ) {
                 foreach ( $ids as $id ) {
@@ -309,57 +302,47 @@ class Manager {
         }
 
         // Product categories.
-        if ( isset( $args[ FormElements::CATEGORIES ] ) && is_array( $args[ FormElements::CATEGORIES ] ) ) {
-            $categories = array_map(
-                function ( $category ) {
-                    return (object) [ 'id' => absint( $category ) ];
-                }, $args[ FormElements::CATEGORIES ]
-            );
-            $product = $this->save_taxonomy_terms( $product, $categories );
+        if ( isset( $args['categories'] ) && is_array( $args['categories'] ) ) {
+            $product = $this->save_taxonomy_terms( $product, $args['categories'] );
         }
 
         // Product tags.
-        if ( isset( $args[ FormElements::TAGS ] ) && is_array( $args[ FormElements::TAGS ] ) ) {
-            $tags = array_map(
-                function ( $tag ) {
-                    return (object) [ 'id' => absint( $tag ) ];
-                }, $args[ FormElements::TAGS ]
-            );
-            $product = $this->save_taxonomy_terms( $product, $tags, 'tag' );
+        if ( isset( $args['tags'] ) && is_array( $args['tags'] ) ) {
+            $product = $this->save_taxonomy_terms( $product, $args['tags'], 'tag' );
         }
 
         // Downloadable.
-        if ( isset( $args[ FormElements::DOWNLOADABLE ] ) ) {
-            $product->set_downloadable( $args[ FormElements::DOWNLOADABLE ] );
+        if ( isset( $args['downloadable'] ) ) {
+            $product->set_downloadable( $args['downloadable'] );
         }
 
         // Downloadable options.
         if ( $product->get_downloadable() ) {
 
             // Downloadable files.
-            if ( isset( $args[ FormElements::DOWNLOADS ] ) && is_array( $args[ FormElements::DOWNLOADS ] ) ) {
-                $product = $this->save_downloadable_files( $product, $args[ FormElements::DOWNLOADS ] );
+            if ( isset( $args['downloads'] ) && is_array( $args['downloads'] ) ) {
+                $product = $this->save_downloadable_files( $product, $args['downloads'] );
             }
 
             // Download limit.
-            if ( isset( $args[ FormElements::DOWNLOAD_LIMIT ] ) ) {
-                $product->set_download_limit( $args[ FormElements::DOWNLOAD_LIMIT ] );
+            if ( isset( $args['download_limit'] ) ) {
+                $product->set_download_limit( $args['download_limit'] );
             }
 
             // Download expiry.
-            if ( isset( $args[ FormElements::DOWNLOAD_EXPIRY ] ) ) {
-                $product->set_download_expiry( $args[ FormElements::DOWNLOAD_EXPIRY ] );
+            if ( isset( $args['download_expiry'] ) ) {
+                $product->set_download_expiry( $args['download_expiry'] );
             }
         }
 
         // Product url and button text for external products.
         if ( $product->is_type( 'external' ) ) {
-            if ( isset( $args[ FormElements::EXTERNAL_URL ] ) ) {
-                $product->set_product_url( $args[ FormElements::EXTERNAL_URL ] );
+            if ( isset( $args['external_url'] ) ) {
+                $product->set_product_url( $args['external_url'] );
             }
 
-            if ( isset( $args[ FormElements::BUTTON_TEXT ] ) ) {
-                $product->set_button_text( $args[ FormElements::BUTTON_TEXT ] );
+            if ( isset( $args['button_text'] ) ) {
+                $product->set_button_text( $args['button_text'] );
             }
         }
 
@@ -369,95 +352,51 @@ class Manager {
         }
 
         // Set children for a grouped product.
-        if ( $product->is_type( 'grouped' ) && isset( $args[ FormElements::GROUP_PRODUCTS ] ) ) {
-            $product->set_children( $args[ FormElements::GROUP_PRODUCTS ] );
+        if ( $product->is_type( 'grouped' ) && isset( $args['grouped_products'] ) ) {
+            $product->set_children( $args['grouped_products'] );
         }
 
         // Set featured image id
-        if ( ! empty( $args[ FormElements::FEATURED_IMAGE_ID ] ) ) {
-            $product->set_image_id( $args[ FormElements::FEATURED_IMAGE_ID ] );
+        if ( ! empty( $args['featured_image_id'] ) ) {
+            $product->set_image_id( $args['featured_image_id'] );
         }
 
         // Set gallery image ids
-        if ( ! empty( $args[ FormElements::GALLERY_IMAGE_IDS ] ) ) {
-            $product->set_gallery_image_ids( $args[ FormElements::GALLERY_IMAGE_IDS ] );
+        if ( ! empty( $args['gallery_image_ids'] ) ) {
+            $product->set_gallery_image_ids( $args['gallery_image_ids'] );
         }
 
         // Allow set meta_data.
-        if ( ! empty( $args[ FormElements::META_DATA ] ) && is_array( $args[ FormElements::META_DATA ] ) ) {
-            foreach ( $args[ FormElements::META_DATA ] as $meta ) {
+        if ( ! empty( $args['meta_data'] ) && is_array( $args['meta_data'] ) ) {
+            foreach ( $args['meta_data'] as $meta ) {
                 $product->update_meta_data( $meta['key'], $meta['value'], isset( $meta['id'] ) ? $meta['id'] : '' );
             }
         }
 
+        if ( ! empty( $args['date_created'] ) ) {
+            $date = rest_parse_date( $args['date_created'] );
+
+            if ( $date ) {
+                $product->set_date_created( $date );
+            }
+        }
+
+        if ( ! empty( $args['date_created_gmt'] ) ) {
+            $date = rest_parse_date( $args['date_created_gmt'], true );
+
+            if ( $date ) {
+                $product->set_date_created( $date );
+            }
+        }
+
         // Set total sales for newly created product
-        if ( ! $is_update ) {
-            // Set date created.
-            if ( ! empty( $args[ FormElements::DATE_CREATED ] ) ) {
-                $date = rest_parse_date( $args[ FormElements::DATE_CREATED ] );
-
-                if ( $date ) {
-                    $product->set_date_created( $date );
-                }
-            }
-
-            // set date created gmt
-            if ( ! empty( $args[ FormElements::DATE_CREATED_GMT ] ) ) {
-                $date = rest_parse_date( $args[ FormElements::DATE_CREATED_GMT ], true );
-
-                if ( $date ) {
-                    $product->set_date_created( $date );
-                }
-            }
-
-            // Set total sales to zero
+        if ( ! empty( $id ) ) {
             $product->set_total_sales( 0 );
         }
 
         $product_id = $product->save();
 
-        //call dokan hooks
-        if ( ! $is_update ) {
-            do_action( 'dokan_new_product_added', $product_id, $args );
-        } else {
-            do_action( 'dokan_product_updated', $product_id, $args );
-        }
-
-        return $this->get( $product_id );
-    }
-
-    /**
-     * Update product data
-     *
-     * @since 3.0.0
-     *
-     * @return WC_Product|WP_Error|false
-     */
-    public function update( $args = [] ) {
-        $id = isset( $args['id'] ) ? absint( $args['id'] ) : 0;
-
-        if ( empty( $id ) ) {
-            return new WP_Error( 'no-id-found', __( 'No product ID found for updating', 'dokan-lite' ), [ 'status' => 401 ] );
-        }
-
-        return $this->create( $args );
-    }
-
-    /**
-     * Delete product data
-     *
-     * @since 3.0.0
-     *
-     * @return bool
-     */
-    public function delete( $product_id, $force = false ) {
-        $product = $this->get( $product_id );
-
-        if ( ! $product ) {
-            return false;
-        }
-
-        return $product->delete( $force );
+        return wc_get_product( $product_id );
     }
 
     /**
@@ -465,7 +404,7 @@ class Manager {
      *
      * @since 3.0.0
      *
-     * @param WC_Product       $product Product instance.
+     * @param WC_Product      $product Product instance.
      * @param \WP_REST_Request $request Request data.
      *
      * @return WC_Product
@@ -522,6 +461,39 @@ class Manager {
     }
 
     /**
+     * Update product data
+     *
+     * @since 3.0.0
+     *
+     * @return WC_Product|WP_Error|false
+     */
+    public function update( $args = [] ) {
+        $id = isset( $args['id'] ) ? absint( $args['id'] ) : 0;
+
+        if ( empty( $id ) ) {
+            return new WP_Error( 'no-id-found', __( 'No product ID found for updating', 'dokan-lite' ), [ 'status' => 401 ] );
+        }
+
+        return $this->create( $args );
+    }
+
+    /**
+     * Delete product data
+     *
+     * @since 3.0.0
+     *
+     * @return WC_Product|null|false
+     */
+    public function delete( $product_id, $force = false ) {
+        $product = $this->get( $product_id );
+        if ( $product ) {
+            $product->delete( [ 'force_delete' => $force ] );
+        }
+
+        return $product;
+    }
+
+    /**
      * Save product shipping data.
      *
      * @param WC_Product $product Product instance.
@@ -531,104 +503,37 @@ class Manager {
      */
     protected function save_product_shipping_data( $product, $data ) {
         // Virtual.
-        if ( isset( $data[ FormElements::VIRTUAL ] ) && true === $data[ FormElements::VIRTUAL ] ) {
+        if ( isset( $data['virtual'] ) && true === $data['virtual'] ) {
             $product->set_weight( '' );
             $product->set_height( '' );
             $product->set_length( '' );
             $product->set_width( '' );
         } else {
-            if ( isset( $data[ FormElements::WEIGHT ] ) ) {
-                $product->set_weight( $data[ FormElements::WEIGHT ] );
+            if ( isset( $data['weight'] ) ) {
+                $product->set_weight( $data['weight'] );
             }
 
             // Height.
-            if ( isset( $data[ FormElements::DIMENSIONS_HEIGHT ] ) ) {
-                $product->set_height( $data[ FormElements::DIMENSIONS_HEIGHT ] );
+            if ( isset( $data['dimensions']['height'] ) ) {
+                $product->set_height( $data['dimensions']['height'] );
             }
 
             // Width.
-            if ( isset( $data[ FormElements::DIMENSIONS_WIDTH ] ) ) {
-                $product->set_width( $data[ FormElements::DIMENSIONS_WIDTH ] );
+            if ( isset( $data['dimensions']['width'] ) ) {
+                $product->set_width( $data['dimensions']['width'] );
             }
 
             // Length.
-            if ( isset( $data[ FormElements::DIMENSIONS_LENGTH ] ) ) {
-                $product->set_length( $data[ FormElements::DIMENSIONS_LENGTH ] );
+            if ( isset( $data['dimensions']['length'] ) ) {
+                $product->set_length( $data['dimensions']['length'] );
             }
         }
 
         // Shipping class.
-        if ( isset( $data[ FormElements::SHIPPING_CLASS ] ) ) {
+        if ( isset( $data['shipping_class'] ) ) {
             $data_store        = $product->get_data_store();
-            $shipping_class_id = $data_store->get_shipping_class_id_by_slug( wc_clean( $data[ FormElements::SHIPPING_CLASS ] ) );
+            $shipping_class_id = $data_store->get_shipping_class_id_by_slug( wc_clean( $data['shipping_class'] ) );
             $product->set_shipping_class_id( $shipping_class_id );
-        }
-
-        return $product;
-    }
-
-    /**
-     * Save product attribute data.
-     *
-     * @param WC_Product $product Product instance.
-     * @param array      $args    Product data's.
-     *
-     * @return WC_Product
-     */
-    protected function save_product_attribute_data( $product, $args ) {
-        if ( isset( $args[ FormElements::ATTRIBUTES ] ) && is_array( $args[ FormElements::ATTRIBUTES ] ) ) {
-            $attributes = [];
-
-            foreach ( $args[ FormElements::ATTRIBUTES ] as $attribute ) {
-                $attribute_id   = 0;
-                $attribute_name = '';
-
-                // Get ID and Name
-                if ( ! empty( $attribute[ FormElements::ATTRIBUTES_ID ] ) ) {
-                    $attribute_id = absint( $attribute[ FormElements::ATTRIBUTES_ID ] );
-                }
-
-                if ( ! empty( $attribute[ FormElements::ATTRIBUTES_NAME ] ) ) {
-                    $attribute_name = wc_clean( esc_html( $attribute[ FormElements::ATTRIBUTES_NAME ] ) );
-                }
-
-                if ( 'pa_' === substr( $attribute_name, 0, 3 ) ) {
-                    $attribute_id = wc_attribute_taxonomy_id_by_name( $attribute_name );
-                }
-
-                if ( $attribute_id ) {
-                    $attribute_name = wc_attribute_taxonomy_name_by_id( $attribute_id );
-                }
-
-                if ( ! $attribute_id && empty( $attribute_name ) ) {
-                    continue;
-                }
-
-                $options = isset( $attribute[ FormElements::ATTRIBUTES_OPTIONS ] ) ? $attribute[ FormElements::ATTRIBUTES_OPTIONS ] : '';
-
-                if ( is_array( $options ) ) {
-                    // Term ids sent as array.
-                    $options = wp_parse_id_list( $options );
-                } else {
-                    // Terms or text sent in textarea.
-                    $options = 0 < $attribute_id ? wc_sanitize_textarea( esc_html( wc_sanitize_term_text_based( $options ) ) ) : wc_sanitize_textarea( esc_html( $options ) );
-                    $options = wc_get_text_attributes( $options );
-                }
-
-                if ( empty( $options ) ) {
-                    continue;
-                }
-
-                $attribute_object = new WC_Product_Attribute();
-                $attribute_object->set_id( $attribute_id );
-                $attribute_object->set_name( $attribute_name );
-                $attribute_object->set_options( $options );
-                $attribute_object->set_position( isset( $attribute[ FormElements::ATTRIBUTES_POSITION ] ) ? (string) absint( $attribute[ FormElements::ATTRIBUTES_POSITION ] ) : '0' );
-                $attribute_object->set_visible( ( isset( $attribute[ FormElements::ATTRIBUTES_VISIBLE ] ) && $attribute[ FormElements::ATTRIBUTES_VISIBLE ] ) ? 1 : 0 );
-                $attribute_object->set_variation( ( isset( $attribute[ FormElements::ATTRIBUTES_VARIATION ] ) && $attribute[ FormElements::ATTRIBUTES_VARIATION ] ) ? 1 : 0 );
-                $attributes[] = $attribute_object;
-            }
-            $product->set_attributes( $attributes );
         }
 
         return $product;
@@ -644,12 +549,10 @@ class Manager {
      * @return WC_Product
      */
     protected function save_taxonomy_terms( $product, $terms, $taxonomy = 'cat' ) {
-        $term_ids = wp_list_pluck( $terms, 'id' );
-
         if ( 'cat' === $taxonomy ) {
-            $product->set_category_ids( $term_ids );
+            $product->set_category_ids( $terms );
         } elseif ( 'tag' === $taxonomy ) {
-            $product->set_tag_ids( $term_ids );
+            $product->set_tag_ids( $terms );
         }
 
         return $product;
@@ -658,8 +561,8 @@ class Manager {
     /**
      * Save downloadable files.
      *
-     * @param WC_Product $product   Product instance.
-     * @param array      $downloads Downloads data.
+     * @param WC_Product $product    Product instance.
+     * @param array      $downloads  Downloads data.
      *
      * @return WC_Product
      */
@@ -692,7 +595,10 @@ class Manager {
      * @return mixed
      */
     protected function maybe_update_stock_status( $product, $stock_status ) {
-        if ( isset( $stock_status ) ) {
+        if ( $product->is_type( 'external' ) ) {
+            // External products are always in stock.
+            $product->set_stock_status( 'instock' );
+        } elseif ( isset( $stock_status ) ) {
             if ( $product->is_type( 'variable' ) && ! $product->get_manage_stock() ) {
                 // Stock status is determined by children.
                 foreach ( $product->get_children() as $child_id ) {
@@ -709,37 +615,6 @@ class Manager {
         }
 
         return $product;
-    }
-
-    /**
-     * Prepare downloads for save.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array $file_names  File names.
-     * @param array $file_urls   File urls.
-     * @param array $file_hashes File hashes.
-     *
-     * @return array
-     */
-    public function prepare_downloads( $file_names, $file_urls, $file_hashes ) {
-        $downloads = [];
-
-        if ( ! empty( $file_urls ) ) {
-            $file_url_size = count( $file_urls );
-
-            for ( $i = 0; $i < $file_url_size; $i++ ) {
-                if ( ! empty( $file_urls[ $i ] ) ) {
-                    $downloads[] = [
-                        'name'        => wc_clean( $file_names[ $i ] ),
-                        'file'        => wp_unslash( trim( $file_urls[ $i ] ) ),
-                        'download_id' => wc_clean( $file_hashes[ $i ] ),
-                    ];
-                }
-            }
-        }
-
-        return $downloads;
     }
 
     /**
@@ -806,7 +681,7 @@ class Manager {
         $args['orderby']  = 'meta_value_num';
 
         $product_visibility_term_ids = wc_get_product_visibility_term_ids();
-        $args['tax_query'][]         = [ // phpcs:ignore
+        $args['tax_query'][]           = [ // phpcs:ignore
             'taxonomy' => 'product_visibility',
             'field'    => 'term_taxonomy_id',
             'terms'    => is_search() ? $product_visibility_term_ids['exclude-from-search'] : $product_visibility_term_ids['exclude-from-catalog'],

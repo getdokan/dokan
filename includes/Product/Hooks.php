@@ -6,8 +6,6 @@ use WeDevs\Dokan\Commission\Formula\Fixed;
 use WeDevs\Dokan\ProductCategory\Helper;
 use WC_Product;
 
-defined( 'ABSPATH' ) || exit;
-
 /**
  * Admin Hooks
  *
@@ -33,7 +31,7 @@ class Hooks {
         add_action( 'woocommerce_new_product', [ $this, 'update_category_data_for_new_and_update_product' ], 10, 1 );
         add_action( 'woocommerce_update_product', [ $this, 'update_category_data_for_new_and_update_product' ], 10, 1 );
         add_filter( 'dokan_post_status', [ $this, 'set_product_status' ], 1, 2 );
-        add_filter( 'dokan_product_edit_meta_data', [ $this, 'set_new_product_email_status' ], 1, 3 );
+        add_action( 'dokan_new_product_added', [ $this, 'set_new_product_email_status' ], 1, 1 );
 
         // Add WooCommerce product brands support.
         add_action( 'dokan_new_product_added', [ $this, 'update_product_brands_by_id' ], 10, 2 );
@@ -197,11 +195,11 @@ class Hooks {
         <div class="dokan-store-products-filter-area dokan-clearfix">
             <form class="dokan-store-products-ordeby" method="get">
                 <input type="text" name="product_name" class="product-name-search dokan-store-products-filter-search"
-                        placeholder="<?php esc_attr_e( 'Enter product name', 'dokan-lite' ); ?>" autocomplete="off"
-                        data-store_id="<?php echo esc_attr( $store_id ); ?>">
+                       placeholder="<?php esc_attr_e( 'Enter product name', 'dokan-lite' ); ?>" autocomplete="off"
+                       data-store_id="<?php echo esc_attr( $store_id ); ?>">
                 <div id="dokan-store-products-search-result" class="dokan-ajax-store-products-search-result"></div>
                 <input type="submit" name="search_store_products" class="search-store-products dokan-btn-theme"
-                        value="<?php esc_attr_e( 'Search', 'dokan-lite' ); ?>">
+                       value="<?php esc_attr_e( 'Search', 'dokan-lite' ); ?>">
 
                 <?php if ( is_array( $orderby_options['catalogs'] ) && isset( $orderby_options['orderby'] ) ) : ?>
                     <select name="product_orderby" class="orderby orderby-search"
@@ -378,20 +376,16 @@ class Hooks {
      *
      * @since 3.8.2
      *
-     * @param array $meta_data
-     * @param WC_Product $product
-     * @param bool $is_new_product
+     * @param int|WC_Product $product_id
      *
-     * @return array
+     * @return void
      */
-    public function set_new_product_email_status( array $meta_data, WC_Product $product, bool $is_new_product ) {
-        if ( ! $is_new_product ) {
-            return $meta_data;
+    public function set_new_product_email_status( $product_id ) {
+        if ( is_a( $product_id, 'WC_Product' ) ) {
+            $product_id->update_meta_data( '_dokan_new_product_email_sent', 'no' );
+        } else {
+            update_post_meta( $product_id, '_dokan_new_product_email_sent', 'no' );
         }
-
-        $meta_data['_dokan_new_product_email_sent'] = 'no';
-
-        return $meta_data;
     }
 
     /**
@@ -628,7 +622,7 @@ class Hooks {
             return;
         }
 
-        $brand_ids = ! empty( $product_data['product_brand'] ) ? $product_data['product_brand'] : array();
+        $brand_ids = $product_data['product_brand'] ?? array();
         dokan()->product->save_brands( $product_id, $brand_ids );
     }
 }

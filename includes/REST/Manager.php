@@ -188,10 +188,10 @@ class Manager {
      * @return array Modified controller map
      */
     public function register_export_controllers( array $controller_map ): array {
-		//        // Ensure the WithdrawExportController class is loaded for background processing
-		//        if ( ! class_exists( '\WeDevs\Dokan\REST\WithdrawExportController' ) ) {
-		//            require_once DOKAN_DIR . '/includes/REST/WithdrawExportController.php';
-		//        }
+//        // Ensure the WithdrawExportController class is loaded for background processing
+//        if ( ! class_exists( '\WeDevs\Dokan\REST\WithdrawExportController' ) ) {
+//            require_once DOKAN_DIR . '/includes/REST/WithdrawExportController.php';
+//        }
 
         $controller_map['withdraws'] = '\WeDevs\Dokan\REST\WithdrawExportController';
 

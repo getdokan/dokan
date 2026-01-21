@@ -20,6 +20,8 @@ class VendorDashboardManager implements Hookable {
         add_filter( 'woocommerce_rest_report_sort_performance_indicators', [ $this, 'sort_performance_indicators' ] );
         // TODO: Need to review latest woocommerce release to resolve deprecated code usage.
         add_filter( 'woocommerce_rest_api_option_permissions', [ $this, 'add_option_check_permissions' ], 10, 2 );
+
+        add_filter( 'woocommerce_component_settings_preload_endpoints', array( $this, 'add_preload_endpoints' ), 20 );
     }
 
     /**
@@ -148,5 +150,44 @@ class VendorDashboardManager implements Hookable {
         array_unshift( $reports, ...$vendor_indicators );
 
         return $reports;
+    }
+
+    /**
+     * Load analytics revenue schema vendor dashboard.
+     *
+     * @since 4.2.8
+     *
+     * @see https://github.com/woocommerce/woocommerce/blob/8e3b0c45ad771d7fe53ee610f237f4803f1a63bb/plugins/woocommerce/src/Internal/Admin/Analytics.php#L113
+     *
+     * @param array $endpoints Array of preloaded endpoints.
+     *
+     * @return array
+     */
+    public function add_preload_endpoints( array $endpoints ): array {
+        $screen_id = ( function_exists( 'get_current_screen' ) && get_current_screen() ) ? get_current_screen()->id : '';
+
+        /**
+         * Should load vendor analytics revenue schema.
+         *
+         * @since 4.2.8
+         *
+         * @param bool   $load_schema Should load vendor analytics schema.
+         * @param array  $endpoints   Array of preloaded endpoints.
+         * @param string $screen_id   Current screen ID.
+         */
+        $load_analytics_schema = apply_filters(
+            'dokan_analytics_reports_load_vendor_revenue_schema',
+            'woocommerce_page_wc-admin' === $screen_id || dokan_is_seller_dashboard(),
+            $endpoints,
+            $screen_id
+        );
+
+        // Only preload endpoints on wc-admin pages.
+        if ( $load_analytics_schema ) {
+            $endpoints['performanceIndicators'] = '/wc-analytics/reports/performance-indicators/allowed';
+            $endpoints['leaderboards']          = '/wc-analytics/leaderboards/allowed';
+        }
+
+        return $endpoints;
     }
 }

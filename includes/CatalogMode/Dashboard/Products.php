@@ -29,7 +29,8 @@ class Products {
         // render catalog mode section under single product edit page
         add_action( 'dokan_product_edit_after_options', [ $this, 'render_product_section' ], 99, 1 );
         // save catalog mode section data
-        add_filter( 'dokan_product_edit_meta_data', [ $this, 'add_catalog_mode_data' ], 13, 1 );
+        add_action( 'dokan_product_updated', [ $this, 'save_catalog_mode_data' ], 13 );
+        add_action( 'dokan_new_product_added', [ $this, 'save_catalog_mode_data' ], 13 );
     }
 
     /**
@@ -47,23 +48,20 @@ class Products {
             return;
         }
 
+        // get product data
         $product = wc_get_product( $product_id );
-        if ( ! $product ) {
-            return;
-        }
-
-        // return if product type is auction
-        if ( 'auction' === $product->get_type() ) {
+        // return if product type is optional
+        if ( ! $product || 'auction' === $product->get_type() ) {
             return;
         }
 
         $defaults = Helper::get_defaults();
         // check for saved values
-        $catalog_mode_data = $product->get_meta( '_dokan_catalog_mode', true );
+        $catalog_mode_data = get_post_meta( $product_id, '_dokan_catalog_mode', true );
 
         //load template
         dokan_get_template_part(
-            'products/edit/sections/catalog-mode-content', '', [
+            'products/catalog-mode-content', '', [
                 'product_id' => $product_id,
                 'saved_data' => $catalog_mode_data ? $catalog_mode_data : $defaults,
             ]
@@ -75,17 +73,17 @@ class Products {
      *
      * @since 3.6.4
      *
-     * @param array $meta_data
+     * @param $product_id int
      *
-     * @return array
+     * @return void
      */
-    public function add_catalog_mode_data( array $meta_data ) {
+    public function save_catalog_mode_data( $product_id ) {
         if ( ! isset( $_POST['_dokan_catalog_mode_frontend_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_dokan_catalog_mode_frontend_nonce'] ), 'dokan_catalog_mode_frontend' ) ) {
-            return $meta_data;
+            return;
         }
 
         if ( ! dokan_is_user_seller( dokan_get_current_user_id() ) ) {
-            return $meta_data;
+            return;
         }
 
         $catalog_mode_data = [
@@ -98,8 +96,6 @@ class Products {
             $catalog_mode_data['hide_product_price'] = 'off';
         }
 
-        $meta_data['_dokan_catalog_mode'] = $catalog_mode_data;
-
-        return $meta_data;
+        update_post_meta( $product_id, '_dokan_catalog_mode', $catalog_mode_data );
     }
 }

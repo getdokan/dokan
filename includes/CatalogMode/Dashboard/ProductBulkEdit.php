@@ -72,12 +72,6 @@ class ProductBulkEdit {
         // loop through the products and update the status
         if ( ! empty( $product_ids ) ) {
             foreach ( $product_ids as $product_id ) {
-                // get product object
-                $product = wc_get_product( $product_id );
-                if ( ! $product ) {
-                    continue;
-                }
-
                 // get existing product data
                 $catalog_mode_data = Helper::get_catalog_mode_data_by_product( $product_id );
                 $count++;
@@ -87,7 +81,7 @@ class ProductBulkEdit {
                         if ( Helper::hide_add_to_cart_button_option_is_enabled_by_admin() ) {
                             $catalog_mode_data['hide_add_to_cart_button'] = 'on';
                         }
-                        // if admin didn't enable hide product price, set this value to off
+                        // if admin didn't enabled hide product price, set this value to off
                         if ( ! Helper::hide_product_price_option_is_enabled_by_admin() ) {
                             $catalog_mode_data['hide_product_price'] = 'off';
                         }
@@ -98,10 +92,8 @@ class ProductBulkEdit {
                         $catalog_mode_data['hide_product_price']      = 'off';
                         break;
                 }
-
                 // finally save catalog mode data
-                $product->add_meta_data( '_dokan_catalog_mode', $catalog_mode_data, true );
-                $product->save();
+                update_post_meta( $product_id, '_dokan_catalog_mode', $catalog_mode_data );
             }
         }
         wp_safe_redirect(
