@@ -184,9 +184,12 @@ class SettingsMapperCallbacks implements Hookable {
      * @return array
      */
     public function map_report_rma_reasons_new_to_old( $value, $old_key, $new_key ) {
-        if ( is_null( $value ) || 'dokan_rma.rma_reasons' !== $old_key || 'moderation.rma.reasons_of_rma_settings.rma_reasons' !== $new_key ) {
+        $old_data_key = 'dokan_rma.rma_reasons';
+        $new_data_key = 'moderation.rma.reasons_of_rma_settings.rma_reasons';
+        if ( is_null( $value ) || $old_data_key !== $old_key || $new_data_key !== $new_key ) {
             return $value;
         }
+
         $old_value = [];
         foreach ( (array) $value as $item ) {
             $old_value[] = [
@@ -194,6 +197,10 @@ class SettingsMapperCallbacks implements Hookable {
                 'value' => $item['title'] ?? '',
             ];
         }
+
+//        error_log( 'loaded here:' );
+//        error_log( print_r( $old_value, true ) );
+
         return $old_value;
     }
 
@@ -207,9 +214,12 @@ class SettingsMapperCallbacks implements Hookable {
      * @return array
      */
     public function map_report_rma_reasons_old_to_new( $value, $old_key, $new_key ) {
-        if ( is_null( $value ) || 'dokan_rma.rma_reasons' !== $old_key || 'moderation.rma.reasons_of_rma_settings.rma_reasons' !== $new_key ) {
+        $old_data_key = 'dokan_rma.rma_reasons';
+        $new_data_key = 'moderation.rma.reasons_of_rma_settings.rma_reasons';
+        if ( is_null( $value ) || $old_data_key !== $old_key || $new_data_key !== $new_key ) {
             return $value;
         }
+
         $new_value = [];
         foreach ( (array) $value as $index => $item ) {
             // Old format has 'id' and 'value'; new format expects 'id', 'title', 'order'
