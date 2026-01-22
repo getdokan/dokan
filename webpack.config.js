@@ -12,6 +12,15 @@ const DependencyExtractionWebpackPlugin = require( '@wordpress/dependency-extrac
 
 const updatedConfig = {
     mode: defaultConfig.mode,
+    watchOptions: {
+        ignored: [
+            '**/node_modules/**',
+            '**/assets/js/**',
+            '**/assets/css/**',
+            '**/assets/images/**',
+            '**/assets/font/**',
+        ],
+    },
     entry: {
         ...entryPoints,
         components: {
