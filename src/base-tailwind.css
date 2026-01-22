@@ -1,5 +1,5 @@
-@import "tailwindcss";
-
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
 /* ============================================
    Tailwind v4 Theme Configuration
    Simplified color system with CSS variable support
@@ -84,13 +84,12 @@
 
 .dokan-layout {
     @import "tailwindcss/preflight.css" layer(base);
-    @import "tailwindcss/utilities.css" layer(utilities);
+    @import "tailwindcss/utilities.css";
 
     /* Import custom component styles */
     @import './dokan-components.css';
 
-    @import '@getdokan/dokan-ui/dist/dokan-ui.css';
-
     border-color: var(--color-border);
 
 }
+@import '@getdokan/dokan-ui/dist/dokan-ui.css';
