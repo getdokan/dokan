@@ -585,16 +585,6 @@ class Dashboard implements Hookable {
                 $this->settings()
             ), 'before'
         );
-        $rating_html = $this->get_footer_rating_html();
-        $js = <<<JS
-        document.addEventListener('DOMContentLoaded', function() {
-            var container = document.getElementById('dokan-admin-footer-rating-container');
-            if (container) {
-                container.innerHTML = `$rating_html`;
-            }
-        });
-        JS;
-        wp_add_inline_script( $this->script_key, $js, 'after' );
     }
 
     /**
@@ -654,30 +644,9 @@ class Dashboard implements Hookable {
             return $text;
         }
 
-        $rating_html = $this->get_footer_rating_html();
-        $dom_element = '<span id="dokan-admin-switching" class="dokan-layout dokan-admin-page-body"></span>';
+        $dom_element = '<span id="dokan-admin-switching" class="dokan-layout dokan-admin-page-body" style="display: block; padding-top: 0.5rem; padding-bottom: 0.25rem; "></span><span id="footer-thankyou" style="display: block; font-weight: bold; font-style: normal; padding-bottom: 0.5rem;">Enjoyed Dokan? Please leave us a <a href="https://wordpress.org/support/plugin/dokan-lite/reviews?rate=5#new-post" target="_blank" class="wc-rating-link" aria-label="five star"">★★★★★</a> rating. We really appreciate your support.</span>';
 
-        return $dom_element . '<br/>' . $rating_html;
-    }
-    /**
-     * Get the footer rating HTML.
-     *
-     * @since 4.1.3
-     *
-     * @return string The footer rating HTML
-     */
-    private function get_footer_rating_html(): string {
-         $reviews_url = 'https://wordpress.org/support/plugin/dokan-lite/reviews/';
-
-        $plugin_name = 'Dokan';
-
-        $footer_text = sprintf(
-            __( 'Enjoyed %1$s? Please leave us a %2$s rating. We really appreciate your support!', 'dokan-lite' ),
-            '<span class="dokan-footer-thankyou"><strong>' . esc_html( $plugin_name ) . '</strong>',
-            '<a href="' . esc_url( $reviews_url ) . '" target="_blank" class="dokan-footer-rating-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</a></span>'
-        );
-
-        return '<span id="dokan-admin-footer-rating">' . $footer_text . '</span>';
+        return $dom_element;
     }
 
     /**
