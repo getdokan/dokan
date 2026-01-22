@@ -70,9 +70,9 @@ class SettingsMapper {
         'dokan_general.store_products_per_page'                      => 'appearance.store.products_page.store_product_per_page',
         'dokan_appearance.store_header_template'                     => 'appearance.store.store_template.store_template',
         // Banner size combined into a double input in new UI
-        'dokan_appearance.store_banner_width'                        => 'appearance.store.store_banner_dimension_section.store_banner_dimension',
-        'dokan_appearance.store_banner_height'                       => 'appearance.store.store_banner_dimension_section.store_banner_dimension',
-        'dokan_appearance.store_open_close'                          => 'appearance.store.store_clossing_time_widget_section.store_clossing_time_widget',
+        'dokan_appearance.store_banner_width'                        => 'appearance.store.store_banner_dimension_section.store_banner_dimension.first',
+        'dokan_appearance.store_banner_height'                       => 'appearance.store.store_banner_dimension_section.store_banner_dimension.second',
+        'dokan_appearance.store_open_close'                          => 'appearance.store.store_time_widget_section.store_time_widget',
         'dokan_appearance.enable_theme_store_sidebar'                => 'appearance.store.store_sidebar_section.store_opening_time',
         'dokan_appearance.hide_vendor_info'                          => 'appearance.store.vendor_info_visibility_section.vendor_info_visibility',
         'dokan_appearance.disable_dokan_fontawesome'                 => 'appearance.store.dokan_font_section.dokan_font',
@@ -80,6 +80,8 @@ class SettingsMapper {
         'dokan_appearance.recaptcha_enable_status'                   => 'appearance.store.google_recaptcha.google_recaptcha_settings.recaptcha',
         'dokan_appearance.recaptcha_site_key'                        => 'appearance.store.google_recaptcha.google_recaptcha_settings.recaptcha_site_key',
         'dokan_appearance.recaptcha_secret_key'                      => 'appearance.store.google_recaptcha.google_recaptcha_settings.recaptcha_secret_key',
+        //show contact form on store sidebar
+        'dokan_appearance.contact_seller'                            => 'appearance.store.store_contact_form_section.store_clossing_time_widget',
 
         // =========================
         // Appearance > Dashboard Color Customizer
@@ -231,7 +233,7 @@ class SettingsMapper {
         'dokan_reverse_withdrawal.enabled'                           => 'transaction.reverse_withdrawal.reverse_withdrawal_section.enabled',
         'dokan_reverse_withdrawal.payment_gateways'                  => 'transaction.reverse_withdrawal.reverse_withdrawal_section.enabled',
         'dokan_reverse_withdrawal.billing_type'                      => 'transaction.reverse_withdrawal.reverse_withdrawal_section.billing_type',
-        'dokan_reverse_withdrawal.reverse_balance_threshold'         => 'transaction.reverse_withdrawal.reverse_withdrawal_section.reverse_balance_threshold',
+        'dokan_reverse_withdrawal.reverse_balance_threshold' => 'transaction.reverse_withdrawal.reverse_withdrawal_section.reverse_balance_threshold',
         'dokan_reverse_withdrawal.monthly_billing_day'               => 'transaction.reverse_withdrawal.reverse_withdrawal_section.monthly_billing_day',
         'dokan_reverse_withdrawal.due_period'                        => 'transaction.reverse_withdrawal.reverse_withdrawal_section.due_period',
         'dokan_reverse_withdrawal.failed_actions'                    => 'transaction.reverse_withdrawal.reverse_withdrawal_section.failed_actions',
@@ -332,16 +334,16 @@ class SettingsMapper {
         'dokan_verification_sms_gateways.active_gateway'             => 'verification.sms-gateways-page.sms-provider.sms_provider',
 
         // Twilio Settings
-        'dokan_verification_sms_gateways.twilio_enable_status' => 'verification.sms-gateways-page.sms-provider.connect_to_twilio',
-        'dokan_verification_sms_gateways.twilio_number'              => 'verification.sms-gateways-page.sms-provider.from_number',
-        'dokan_verification_sms_gateways.twilio_username'            => 'verification.sms-gateways-page.sms-provider.account_sid',
-        'dokan_verification_sms_gateways.twilio_pass'                => 'verification.sms-gateways-page.sms-provider.auth_token',
-        'dokan_verification_sms_gateways.twilio_code_type'           => 'verification.sms-gateways-page.sms-provider.sms_code_type',
+        'dokan_verification_sms_gateways.twilio_enable_status'       => 'verification.sms-gateways-page.sms-provider.twilio_api_group.connect_to_twilio',
+        'dokan_verification_sms_gateways.twilio_number'              => 'verification.sms-gateways-page.sms-provider.twilio_api_group.from_number',
+        'dokan_verification_sms_gateways.twilio_username'            => 'verification.sms-gateways-page.sms-provider.twilio_api_group.account_sid',
+        'dokan_verification_sms_gateways.twilio_pass'                => 'verification.sms-gateways-page.sms-provider.twilio_api_group.auth_token',
+        'dokan_verification_sms_gateways.twilio_code_type'           => 'verification.sms-gateways-page.sms-provider.twilio_api_group.sms_code_type',
 
         // Nexmo/Vonage Settings (using the flattened structure)
-        'dokan_verification_sms_gateways.nexmo_enable_status' => 'verification.sms-gateways-page.sms-provider.connect_to_vonage',
-        'dokan_verification_sms_gateways.nexmo_username'             => 'verification.sms-gateways-page.sms-provider.vonage_api_key',
-        'dokan_verification_sms_gateways.nexmo_pass'                 => 'verification.sms-gateways-page.sms-provider.vonage_api_secret',
+        'dokan_verification_sms_gateways.nexmo_enable_status'        => 'verification.sms-gateways-page.sms-provider.vonage_api_group.connect_to_vonage',
+        'dokan_verification_sms_gateways.nexmo_username'             => 'verification.sms-gateways-page.sms-provider.vonage_api_group.nexmo_username',
+        'dokan_verification_sms_gateways.nexmo_pass'                 => 'verification.sms-gateways-page.sms-provider.vonage_api_group.nexmo_pass',
 
         // Sender Section
         'dokan_verification_sms_gateways.sender_name'                => 'verification.sms-gateways-page.sender.sender_name',
