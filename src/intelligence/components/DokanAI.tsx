@@ -1,12 +1,16 @@
-import Tooltip from '../../components/DokanTooltip';
+import {
+    DokanAlert,
+    DokanButton,
+    DokanModal,
+    DokanTooltip as Tooltip,
+} from '@dokan/components';
+import { useMutationObserver } from '@dokan/hooks';
+import { SimpleInput, TextArea } from '@getdokan/dokan-ui';
 import { useEffect, useState } from '@wordpress/element';
-import { Modal, SimpleInput, TextArea } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import { generateAiContent } from '../utils/api';
 import { updateWordPressField } from '../utils/dom';
 import ResponseHistory from './ResponseHistory';
-import { useMutationObserver } from '../../hooks';
-import { DokanAlert, DokanButton, DokanModal } from '../../components';
 import AISkeleton from './Skeleton';
 
 const initialIndex = {
