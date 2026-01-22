@@ -1,9 +1,6 @@
-@use '../base-tailwind';
-@config './tailwind.config.js';
-
 .dokan-dashboard header.dokan-ai-prompt {
     margin: 0 0 10px 0;
-    border-bottom: 1px solid #EDEDED;
+    border-bottom: 1px solid #ededed;
     padding: 0 0 10px 0;
     line-height: 1.25;
 }

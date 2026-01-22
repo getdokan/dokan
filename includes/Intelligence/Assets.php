@@ -26,13 +26,6 @@ class Assets implements Hookable {
         }
         $asset = include $asset;
 
-        wp_register_style(
-            'dokan-ai-style',
-            DOKAN_PLUGIN_ASSEST . '/css/dokan-intelligence.css',
-            [ 'dokan-react-components', 'dokan-react-frontend' ],
-            $asset['version']
-        );
-
         wp_register_script(
             'dokan-ai-script',
             DOKAN_PLUGIN_ASSEST . '/js/dokan-intelligence.js',
@@ -53,7 +46,6 @@ class Assets implements Hookable {
             return;
         }
 
-        wp_enqueue_style( 'dokan-ai-style' );
         wp_enqueue_script( 'dokan-ai-script' );
         wp_set_script_translations( 'dokan-ai-script', 'dokan-lite' );
     }

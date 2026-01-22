@@ -483,7 +483,7 @@ class Dashboard implements Hookable {
             wp_register_style(
                 $this->setup_guide_key,
                 DOKAN_PLUGIN_ASSEST . '/css/setup-guide-banner.css',
-                [],
+                [ 'dokan-tailwind' ],
                 $version
             );
 
@@ -644,7 +644,9 @@ class Dashboard implements Hookable {
             return $text;
         }
 
-        $dom_element = '<span id="dokan-admin-switching" class="dokan-layout dokan-admin-page-body"></span><br/>';
+        $dom_element = '<span id="dokan-admin-switching" class="dokan-layout dokan-admin-page-body"></span><br/>
+        <span id="footer-thankyou">If you like <strong>Dokan</strong> please leave us a <a href="https://wordpress.org/support/plugin/dokan-lite/reviews?rate=5#new-post" target="_blank" class="wc-rating-link" aria-label="five star" data-rated="Thanks :)">★★★★★</a> rating. A huge thanks in advance!</span>
+        ';
 
         return $dom_element;
     }

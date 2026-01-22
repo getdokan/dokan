@@ -1,5 +1,6 @@
 const entryPoints = {
-    'dokan-tailwind': './src/tailwind.css',
+    // Single Tailwind CSS entry - all other modules use this shared bundle
+    'dokan-tailwind': './src/base-tailwind.css',
 
     frontend: './src/dashboard/index.tsx',
     'dokan-admin-dashboard': './src/admin/dashboard/index.tsx',

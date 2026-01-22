@@ -79,7 +79,7 @@ class Assets {
         if ( 'toplevel_page_dokan' === $hook ) {
             $localize_script           = $this->get_admin_localized_scripts();
             $vue_admin_localize_script = $this->get_vue_admin_localized_scripts();
-
+            wp_enqueue_style( 'dokan-tailwind' );
             // Load common styles and scripts
             wp_enqueue_script( 'dokan-tinymce' );
             wp_enqueue_style( 'dokan-admin-css' );

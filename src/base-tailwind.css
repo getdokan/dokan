@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+/* ============================================
+   Tailwind v4 Theme Configuration
+   Simplified color system with CSS variable support
+   ============================================ */
+@theme {
+    /* Custom breakpoints */
+    --breakpoint-d-xs: 360px;
+
+    /* Primary Colors - Single source of truth */
+    --color-primary: var(--dokan-primary-color, #7047eb);
+    --color-primary-hover: var(--dokan-primary-hover-color, #502bbf);
+    --color-primary-light: var(--dokan-primary-light-color, #daceff);
+    --color-primary-dark: var(--dokan-primary-dark-color, #322067);
+
+    /* Text colors on colored backgrounds (for contrast) */
+    --color-on-primary: var(--dokan-on-primary-color, #ffffff);
+    --color-on-info: var(--dokan-on-info-color, #ffffff);
+    --color-on-success: var(--dokan-on-success-color, #ffffff);
+    --color-on-warning: var(--dokan-on-warning-color, #ffffff);
+    --color-on-danger: var(--dokan-on-danger-color, #ffffff);
+
+    /* Neutral Colors */
+    --color-neutral-50: #fafafa;
+    --color-neutral-100: #f5f5f5;
+    --color-neutral-200: #e5e5e5;
+    --color-neutral-300: #d4d4d4;
+    --color-neutral-400: #a3a3a3;
+    --color-neutral-500: #737373;
+    --color-neutral-600: #525252;
+    --color-neutral-700: #404040;
+    --color-neutral-800: #262626;
+    --color-neutral-900: #171717;
+
+    /* Border Colors */
+    --color-border: var(--dokan-border-color, #e5e5e5);
+    --color-border-light: var(--dokan-border-light-color, #f5f5f5);
+    --color-border-dark: var(--dokan-border-dark-color, #d4d4d4);
+
+    /* Semantic Colors */
+    --color-info: #0b76b7;
+    --color-info-light: #e9f9ff;
+    --color-info-hover: #2795d7;
+
+    --color-success: #07a67e;
+    --color-success-light: #daf8e6;
+    --color-success-hover: #11b68c;
+
+    --color-warning: #e9a905;
+    --color-warning-light: #fffbeb;
+    --color-warning-hover: #fbbf24;
+
+    --color-danger: #e3050c;
+    --color-danger-light: #fef3f3;
+    --color-danger-hover: #f23030;
+
+    /* Sidebar Colors */
+    --color-sidebar: var(--dokan-sidebar-bg, #322067);
+    --color-sidebar-hover: var(--dokan-sidebar-hover-bg, #7047eb);
+    --color-sidebar-text: var(--dokan-sidebar-text, #daceff);
+    --color-sidebar-text-hover: var(--dokan-sidebar-text-hover, #ffffff);
+}
+
+/* Base layer styles */
+@layer base {
+    :root {
+        --colors-primary-500: var(--color-primary);
+        --wp-components-color-accent: var(--color-primary);
+        --wp-components-color-accent-darker-20: var(--color-primary-hover);
+    }
+
+    /* Headless UI portal visibility fix */
+    #headlessui-portal-root {
+        display: none;
+    }
+
+    /* Z-index for popover/modal layers */
+    div[data-radix-popper-content-wrapper],
+    div[data-headlessui-state="open"][role="dialog"] {
+        z-index: 999 !important;
+    }
+}
+
+.dokan-layout {
+    @import "tailwindcss/preflight.css" layer(base);
+    @import "tailwindcss/utilities.css" layer(utilities);
+
+    /* Import custom component styles */
+    @import './dokan-components.css';
+
+    @import '@getdokan/dokan-ui/dist/dokan-ui.css';
+
+    border-color: var(--color-border);
+
+}
