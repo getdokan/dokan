@@ -41,8 +41,6 @@ class SettingsMapperCallbacks implements Hookable {
         add_filter( 'dokan_settings_mapper_transform_value_new_to_old', [ $this, 'map_shipping_status_list_new_to_old' ], 10, 3 );
         add_filter( 'dokan_settings_mapper_after_transform_old_to_new', [ $this, 'map_withdraw_methods_old_to_new' ], 10, 2 );
         add_filter( 'dokan_settings_mapper_after_transform_new_to_old', [ $this, 'map_withdraw_methods_new_to_old' ], 10, 2 );
-        add_filter( 'dokan_settings_mapper_after_transform_new_to_old', [ $this, 'map_reverse_withdraw_activation_new_to_old' ], 10, 2 );
-        add_filter( 'dokan_settings_mapper_after_transform_old_to_new', [ $this, 'map_reverse_withdraw_activation_old_to_new' ], 10, 2 );
     }
 
     /**
@@ -1235,68 +1233,6 @@ class SettingsMapperCallbacks implements Hookable {
         $result['dokan_withdraw']['withdraw_charges'] = $old_charges;
         $result['dokan_withdraw']['withdraw_method_name'] = SettingsMapper::get_value_by_path( $withdraw_charge, 'withdraw_methods_group_custom.custom_method_name', '' );
         $result['dokan_withdraw']['withdraw_method_type'] = SettingsMapper::get_value_by_path( $withdraw_charge, 'withdraw_methods_group_custom.custom_method_type', '' );
-
-        return $result;
-    }
-
-    /**
-     * Map reverse withdrawal activation from old to new settings
-     * Old → New direction
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array $result The converted new settings array
-     * @param array $legacy_values The source legacy settings array
-     *
-     * @return array Modified result
-     */
-    public function map_reverse_withdraw_activation_old_to_new( $result, $legacy_values ) {
-        $has_cod = isset( $legacy_values['dokan_reverse_withdrawal']['payment_gateways']['cod'] );
-        $has_enabled = isset( $legacy_values['dokan_reverse_withdrawal']['enabled'] );
-
-        if ( ! $has_cod || ! $has_enabled ) {
-            return $result;
-        }
-
-        $enabled = $legacy_values['dokan_reverse_withdrawal']['enabled'];
-        $cod = $legacy_values['dokan_reverse_withdrawal']['payment_gateways']['cod'];
-
-        $is_active_reverse_withdraw = ( ( $enabled === 'on' ) && ( $cod === 'cod' ) ) ? 'on' : 'off';
-
-        SettingsMapper::set_value_by_path(
-            $result,
-            'transaction.reverse_withdrawal.reverse_withdrawal_section.enabled',
-            $is_active_reverse_withdraw
-        );
-
-        return $result;
-    }
-
-    /**
-     * Map reverse withdrawal activation from new to old settings
-     * New → Old direction
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array $result The converted legacy settings array
-     * @param array $pages_values The source new settings array
-     *
-     * @return array Modified result
-     */
-    public function map_reverse_withdraw_activation_new_to_old( $result, $pages_values ) {
-        $is_active_reverse_withdraw = SettingsMapper::get_value_by_path(
-            $pages_values,
-            'transaction.reverse_withdrawal.reverse_withdrawal_section.enabled',
-            null
-        );
-
-        if ( $is_active_reverse_withdraw === 'on' ) {
-            $result['dokan_reverse_withdrawal']['enabled'] = 'on';
-            $result['dokan_reverse_withdrawal']['payment_gateways']['cod'] = 'cod';
-        } else {
-            $result['dokan_reverse_withdrawal']['enabled'] = 'off';
-            $result['dokan_reverse_withdrawal']['payment_gateways']['cod'] = '';
-        }
 
         return $result;
     }
