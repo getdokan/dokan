@@ -108,7 +108,7 @@ const FileUploadEdit = ( { field, onChange }: any ) => {
                                     } }
                                 />
                             </div>
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 flex-1">
                                 <MediaUploader
                                     onSelect={ ( val: any ) =>
                                         onSelectFile( val, index )

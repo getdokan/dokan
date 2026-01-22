@@ -82,7 +82,7 @@ export default function useLayouts(
                                 children: [
                                     'name',
                                     'slug',
-                                    'product_type',
+                                    'type',
                                     {
                                         id: 'digital-options',
                                         layout: {
@@ -159,7 +159,7 @@ export default function useLayouts(
                                             'height',
                                         ],
                                     },
-                                    'shipping_class_id',
+                                    'shipping_class',
                                     'tax_status',
                                     'tax_class',
                                     '_overwrite_shipping',
@@ -176,32 +176,6 @@ export default function useLayouts(
                                     '_dps_processing_time',
                                 ],
                                 ...getFieldHeading( 'shipping' ),
-                            },
-                            {
-                                id: 'linked',
-                                layout: {
-                                    type: 'card',
-                                    withHeader: true,
-                                },
-                                children: [
-                                    'upsell_ids',
-                                    'crosssell_ids',
-                                    'children',
-                                ],
-                                ...getFieldHeading( 'linked' ),
-                            },
-                            {
-                                id: 'downloadable-options',
-                                layout: {
-                                    type: 'card',
-                                    withHeader: true,
-                                },
-                                children: [
-                                    'downloads',
-                                    'download_limit',
-                                    'download_expiry',
-                                ],
-                                ...getFieldHeading( 'downloadable' ),
                             },
                         ],
                     },
@@ -272,7 +246,7 @@ export default function useLayouts(
                 sections,
                 fields,
                 product,
-                product.product_type
+                product.type
             ),
         };
     }, [ rootLayout, getFieldHeading, sections, fields, product ] );

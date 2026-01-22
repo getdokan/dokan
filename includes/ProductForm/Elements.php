@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
  */
 class Elements {
     const ID = 'id';
-    const TYPE = 'product_type';
+    const TYPE = 'type';
     const NAME = 'name';
     const DESCRIPTION = 'description';
     const SHORT_DESCRIPTION = 'short_description';
@@ -32,7 +32,7 @@ class Elements {
     const DIMENSIONS_HEIGHT = 'height';
     const DIMENSIONS_WIDTH = 'width';
     const DIMENSIONS_LENGTH = 'length';
-    const SHIPPING_CLASS = 'shipping_class_id';
+    const SHIPPING_CLASS = 'shipping_class';
     const ATTRIBUTES = 'attributes';
     const ATTRIBUTES_ID = 'id';
     const ATTRIBUTES_NAME = 'name';
@@ -58,7 +58,7 @@ class Elements {
     const STOCK_QUANTITY = 'stock_quantity';
     const INVENTORY_DELTA = 'inventory_delta';
     const UPSELL_IDS = 'upsell_ids';
-    const CROSS_SELL_IDS = 'crosssell_ids';
+    const CROSS_SELL_IDS = 'cross_sell_ids';
     const CATEGORIES = 'category_ids';
     const TAGS = 'product_tag';
     const BRANDS = 'product_brand';

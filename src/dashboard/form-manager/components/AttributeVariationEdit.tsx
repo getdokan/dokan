@@ -11,7 +11,7 @@ import VariationForm from './variation/VariationForm';
 const AttributeVariationEditor = ( { data, field, onChange }: any ) => {
     const attributes: Attribute[] = data[ field.id ] || [];
     const { isLoading, submitHandler } = useFormContext();
-    const { product_type: productType } = data;
+    const { type: productType } = data;
     const options = field.elements || [];
     const [ cardExpanded, setCardExpanded ] = useState( false );
 
@@ -39,7 +39,7 @@ const AttributeVariationEditor = ( { data, field, onChange }: any ) => {
         const newAttribute: Attribute = {
             id: 0,
             name: '',
-            options: '',
+            options: [],
             visible: true,
             variation: false,
             position: attributes.length,

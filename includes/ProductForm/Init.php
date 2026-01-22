@@ -112,7 +112,6 @@ class Init {
             Elements::TYPE, [
                 'title'          => __( 'Product Type', 'dokan-lite' ),
                 'field_type'     => 'select',
-                'id'             => 'product_type',
                 'name'           => 'product_type',
                 'required'       => true,
                 'options'        => apply_filters(
@@ -489,7 +488,7 @@ class Init {
             [
                 'title'       => __( 'Inventory', 'dokan-lite' ),
                 'description' => __( 'Manage inventory for this product', 'dokan-lite' ),
-                'order'       => 20,
+                'order'       => 30,
             ]
         );
 
@@ -509,10 +508,10 @@ class Init {
                     esc_html__( 'GTIN, UPC, EAN, or ISBN', 'dokan-lite' ),
                     esc_html__( 'Product Identifiers', 'dokan-lite' )
 				),
-                'tooltip' => __( 'Enter a barcode or any other identifier unique to this product. It can help you list this product on other channels or marketplaces.', 'dokan-lite' ),
-                'placeholder' => __( 'Enter code', 'dokan-lite' ),
                 'field_type'  => 'text',
                 'name'        => '_global_unique_id',
+                'tooltip'     => __( 'Enter a barcode or any other identifier unique to this product. It can help you list this product on other channels or marketplaces.', 'dokan-lite' ),
+                'placeholder' => __( 'Enter code', 'dokan-lite' ),
             ]
         );
 
@@ -649,10 +648,10 @@ class Init {
 
         $section->add_field(
             Elements::SOLD_INDIVIDUALLY, [
-                'title'                 => __( 'Limit purchases to 1 item per order', 'dokan-lite' ),
-                'tooltip'           => __( 'Check to let customers to purchase only 1 item in a single order. This is particularly useful for items that have limited quantity, for example art or handmade goods.', 'dokan-lite' ),
+                'title'                 => __( 'Allow only one quantity of this product to be bought in a single order.', 'dokan-lite' ),
                 'field_type'            => 'checkbox',
                 'name'                  => '_sold_individually',
+                'tooltip'               => __( 'Check to let customers to purchase only 1 item in a single order. This is particularly useful for items that have limited quantity, for example art or handmade goods.', 'dokan-lite' ),
                 'additional_properties' => [
                     'value' => 'yes',
                 ],

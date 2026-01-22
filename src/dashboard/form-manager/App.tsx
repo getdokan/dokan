@@ -1,12 +1,13 @@
-import { DokanToaster } from '@getdokan/dokan-ui';
+import { DokanToaster, useToast } from '@getdokan/dokan-ui';
 import { DokanButton, DokanTooltip } from '@src/components';
+import apiFetch from '@wordpress/api-fetch';
 import { DataForm } from '@wordpress/dataviews';
 import { __ } from '@wordpress/i18n';
 import { ExternalLink } from 'lucide-react';
 import { FormProvider, useFormContext } from './context/FormContext';
 import useLayouts from './hooks/useLayouts';
-import { DokanFormManagerData } from './types';
-import { ajaxRequest, validateProductForm } from './utils';
+import { Attribute, DokanFormManagerData } from './types';
+import { validateProductForm } from './utils';
 
 const { sections, ...formData } = (
     window as unknown as {
@@ -74,16 +75,113 @@ const FormManager = () => {
     );
 };
 
+const preparePayload = ( product: Record< string, any > ) => {
+    // 1. convert empty strings to null
+    Object.keys( product ).forEach( ( key ) => {
+        if ( product[ key ] === '' ) {
+            product[ key ] = null;
+        }
+    } );
+
+    // 2. map categories, tags, brands, images, dimensions
+    product.categories = product.category_ids.map( ( category: number ) => ( {
+        id: category,
+    } ) );
+    delete product.category_ids;
+
+    product.tags = product.product_tag.map( ( tag: number ) => ( {
+        id: tag,
+    } ) );
+    delete product.product_tag;
+
+    product.brands = product.product_brand.map( ( brand: number ) => ( {
+        id: brand,
+    } ) );
+    delete product.product_brand;
+
+    product.images = product.image_id ? [ { id: product.image_id } ] : [];
+    delete product.image_id;
+
+    const images = product.gallery_image_ids?.map( ( image: number ) => ( {
+        id: image,
+    } ) );
+
+    product.images = [ ...product.images, ...images ];
+    delete product.gallery_image_ids;
+
+    product.dimensions = {
+        length: String( product[ 'length' ] ),
+        width: String( product[ 'width' ] ),
+        height: String( product[ 'height' ] ),
+    };
+    delete product.length;
+    delete product.width;
+    delete product.height;
+
+    product.shipping_class = String( product.shipping_class );
+    product.product_shipping_class = String( product.shipping_class );
+    product._disable_shipping = product._disable_shipping ? 'no' : 'yes';
+
+    product.upsell_ids = product.upsell_ids
+        .map( ( u: any ) => Number( u.value ) )
+        .filter( Boolean );
+    product.cross_sell_ids = product.cross_sell_ids
+        .map( ( c: any ) => Number( c.value ) )
+        .filter( Boolean );
+
+    // attributes processing
+    if ( Array.isArray( product.attributes ) ) {
+        product.attributes = product.attributes.map(
+            ( attr: Attribute, index ) => {
+                return {
+                    id: attr.id,
+                    name: attr.name,
+                    position: Number( attr.position ) || index,
+                    visible: Boolean( attr.visible ),
+                    variation: Boolean( attr.variation ),
+                    options: attr.options.map( ( o: any ) => {
+                        return (
+                            attr.terms?.find(
+                                ( t: any ) => Number( t.value ) === Number( o )
+                            )?.label || String( o )
+                        );
+                    } ),
+                };
+            }
+        );
+    }
+
+    return product;
+};
+
 const App = () => {
+    const toast = useToast();
     const productId = Number( formData.product_id );
 
+    const path = productId
+        ? `dokan/v3/products/${ productId }`
+        : 'dokan/v3/products';
+
     const onSubmit = async ( product: Record< string, any > ) => {
-        const response = await ajaxRequest( {
-            ...product,
-            action: 'dokan_save_product_data',
-            _nonce: formData.form_manager_nonce,
-        } );
-        return response;
+        try {
+            await apiFetch( {
+                path,
+                method: productId ? 'PUT' : 'POST',
+                data: preparePayload( { ...product } ),
+            } );
+            toast( {
+                type: 'success',
+                title: __( 'Product saved successfully.', 'dokan-lite' ),
+            } );
+        } catch ( err: any ) {
+            toast( {
+                type: 'error',
+                title:
+                    err.message || __( 'Error saving product.', 'dokan-lite' ),
+            } );
+            // eslint-disable-next-line no-console
+            console.error( 'Error saving product:', err );
+        }
     };
 
     return (

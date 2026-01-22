@@ -11,7 +11,7 @@ const PriceEdit = ( { data, field, onChange }: any ) => {
         Number( data.vendor_earning )
     );
 
-    const vendorEarningHandler = async ( price: number ) => {
+    const vendorEarningHandler = async ( price: string ) => {
         if ( field.id === 'regular_price' ) {
             // fetch the vendor earning
             try {
@@ -60,8 +60,9 @@ const PriceEdit = ( { data, field, onChange }: any ) => {
                     placeholder: field.placeholder || '',
                 } }
                 onChange={ ( _, rawValue ) => {
-                    onChange( { [ field.id ]: rawValue } );
-                    void vendorEarningHandler( rawValue );
+                    const value = String( rawValue );
+                    onChange( { [ field.id ]: value } );
+                    void vendorEarningHandler( value );
                 } }
             />
         </CustomField>

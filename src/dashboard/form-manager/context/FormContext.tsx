@@ -141,12 +141,7 @@ export const FormProvider = ( {
             await onSubmit( product );
         } catch ( error: unknown ) {
             const err = error as Error | { message?: string };
-            toast( {
-                type: 'error',
-                title: err.message || __( 'An error occurred', 'dokan-lite' ),
-            } );
-            // eslint-disable-next-line no-console
-            console.error( 'Error submitting form:', error );
+            throw new Error( err.message || 'Error submitting form' );
         } finally {
             setIsLoading( false );
         }

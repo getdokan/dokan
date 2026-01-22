@@ -28,17 +28,14 @@ const VariationCard = ( { variation }: VariationCardProps ) => {
                 sections: Section[];
                 vendor_earning: number;
             } >( {
-                path: `/dokan/v1/products/${ variation.id }/fields`,
+                path: `/dokan/v3/products/${ variation.id }/fields`,
             } );
             setSections( response.sections );
             setVendorEarning( response.vendor_earning );
         } catch ( error ) {
+            // eslint-disable-next-line no-console
             console.error( 'Error fetching variation data:', error );
         }
-    };
-
-    const handleVariationSave = async ( data: Record< string, any > ) => {
-        await saveVariation( variation, data );
     };
 
     return (
@@ -97,7 +94,9 @@ const VariationCard = ( { variation }: VariationCardProps ) => {
                         sections={ sections }
                         productId={ variation.id }
                         vendorEarning={ vendorEarning }
-                        onSubmit={ handleVariationSave }
+                        onSubmit={ ( data ) =>
+                            saveVariation( variation, data )
+                        }
                     >
                         <VariationInternalForm variation={ variation } />
                     </FormProvider>

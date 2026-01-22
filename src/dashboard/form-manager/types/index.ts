@@ -70,10 +70,10 @@ export type VariationType = {
 };
 
 export interface Attribute {
-    id: number; // 0 for custom
+    id: number;
     name: string;
     value: string;
-    options: string[] | string | number[];
+    options: any[];
     visible: boolean;
     variation: boolean;
     position: number;

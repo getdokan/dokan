@@ -11,7 +11,7 @@ const RichTextEdit = ( { data, field, onChange }: any ) => (
                     placeholder: field.placeholder,
                     rows: 5,
                 } }
-                value={ data[ field.id ] }
+                value={ data[ field.id ] || '' }
                 onChange={ ( e ) => {
                     onChange( { [ field.id ]: e.target.value } );
                 } }
