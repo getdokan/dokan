@@ -12,6 +12,7 @@ use WeDevs\Dokan\Admin\Settings\Elements\Fields\Currency;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\DoubleInput;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\InfoField;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\MultiCheck;
+use WeDevs\Dokan\Admin\Settings\Elements\Fields\NoticeField;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Number;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Password;
 use WeDevs\Dokan\Admin\Settings\Elements\Fields\Radio;
@@ -86,6 +87,7 @@ class Field extends SettingsElement {
         'base_field_label'          => BaseFieldLabel::class,
         'customize_radio'           => CustomizeRadio::class,
         'html'                      => HtmlField::class,
+        'notice'                    => NoticeField::class,
         'repeater'                  => Repeater::class,
         'rich_text'                 => RichText::class,
         'show_hide'                 => ShowHide::class,

@@ -7,6 +7,7 @@ use WeDevs\Dokan\Utilities\AdminSettings;
 use WP_Error;
 use WeDevs\Dokan\Exceptions\DokanException;
 use WeDevs\Dokan\Traits\AjaxResponseError;
+use WeDevs\Dokan\Traits\SettingsRecursion;
 use WeDevs\Dokan\Admin\Settings\LegacyTransformer;
 use WeDevs\Dokan\Admin\Settings\Settings as NewAdminSettingsManager;
 use WeDevs\Dokan\Admin\Settings\SettingsMapper;
@@ -21,6 +22,7 @@ use WeDevs\Dokan\Admin\Settings\SettingsMapper;
 class Settings {
 
     use AjaxResponseError;
+    use SettingsRecursion;
 
     /**
      * Load automatically when class initiate
@@ -290,30 +292,6 @@ class Settings {
         }
 
         return $options;
-    }
-
-    /**
-     * Handle settings recursively replace.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array $existing
-     * @param array $new
-     *
-     * @return array
-     */
-    protected function settings_recursive_replace( array $existing, array $new ): array {
-        foreach ( $new as $key => $value ) {
-            if ( is_array( $value ) && isset( $existing[ $key ] ) && is_array( $existing[ $key ] ) ) {
-                // Important: even if $value is empty, this should overwrite
-                $existing[ $key ] = $this->settings_recursive_replace( $existing[ $key ], $value );
-            } else {
-                // Always replace it, even with an empty array or empty value
-                $existing[ $key ] = $value;
-            }
-        }
-
-        return $existing;
     }
 
     /**

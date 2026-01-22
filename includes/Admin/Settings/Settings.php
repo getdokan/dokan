@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Admin\Settings;
 
 use WeDevs\Dokan\Admin\Settings\Pages\AbstractPage;
+use WeDevs\Dokan\Traits\SettingsRecursion;
 
 /**
  * The settings provider class.
@@ -10,6 +11,8 @@ use WeDevs\Dokan\Admin\Settings\Pages\AbstractPage;
  * @since DOKAN_SINCE
  */
 class Settings {
+
+    use SettingsRecursion;
 
     /**
      * Settings Pages.
@@ -137,7 +140,11 @@ class Settings {
                         if ( ! is_array( $existing ) ) {
                             $existing = [];
                         }
-                        $merged = array_replace_recursive( $existing, $fields );
+//                        error_log( print_r( $existing, true ) );
+//                        error_log( print_r( ':break:', true ) );
+//                        error_log( print_r( $fields, true ) );
+                        $merged = $this->settings_recursive_replace( $existing, $fields );
+//                        error_log( print_r( $merged, true ) );
                         update_option( $legacy_section, $merged );
                     }
                 }

@@ -2,7 +2,7 @@ import { SettingsProps } from '../StepSettings';
 import Section from './Section';
 import SubSection from './SubSection';
 import FieldParser from './Fields/FieldParser';
-import FieldGroup from './FiendGroup';
+import FieldGroup from './FieldGroup';
 import { applyFilters } from '@wordpress/hooks';
 
 const SettingsParser = ( {

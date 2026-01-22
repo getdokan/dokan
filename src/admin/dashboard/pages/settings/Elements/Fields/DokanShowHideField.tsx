@@ -30,10 +30,6 @@ export default function DokanShowHideField( { element } ) {
                 </div>
             ) }
             <div
-                // className={ twMerge(
-                //     hasTitle && 'md:col-span-2',
-                //     'col-span-6'
-                // ) }
                 className={
                     hasTitle
                         ? 'md:col-span-4 col-span-6 self-center'

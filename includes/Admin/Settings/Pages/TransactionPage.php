@@ -235,11 +235,11 @@ class TransactionPage extends AbstractPage {
                             ->add(
                                 ElementFactory::field( 'paypal_withdraw', 'switch' )
                                     ->set_title( esc_html__( 'PayPal', 'dokan-lite' ) )
-                                    ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/transaction/paypal.svg' )
+                                    ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/images/admin-settings-icons/transaction/paypal.svg' )
                                     ->set_description( esc_html__( 'Enable PayPal as a withdrawal method for vendors.', 'dokan-lite' ) )
                                     ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'on' )
                                     ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), 'off' )
-                                    ->set_default( 'off' )
+                                    ->set_default( 'on' )
                             )
                             ->add(
                                 ElementFactory::field( 'paypal_withdraw_charges', 'combine_input' )
@@ -247,34 +247,6 @@ class TransactionPage extends AbstractPage {
                                     ->set_tooltip( esc_html__( 'Set withdrawal charges for PayPal method.', 'dokan-lite' ) )
                                     ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal.paypal_withdraw', 'on', true, 'display', 'show', '===' )
                                     ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal.paypal_withdraw', 'off', true, 'display', 'hide', '===' )
-                                    
-                                    ->set_value(
-                                        [
-                                            'additional_fee'   => '0.00',
-                                            'admin_percentage' => '0.00',
-                                        ]
-                                    )
-                                    ->set_admin_percentage( '0.00' )
-                                    ->set_additional_fee( '0.00' )
-                            )
-                    )
-                    ->add(
-                        ElementFactory::field_group( 'withdraw_methods_group_skrill' )
-                            ->add(
-                                ElementFactory::field( 'skrill_withdraw', 'switch' )
-                                    ->set_title( esc_html__( 'Skrill', 'dokan-lite' ) )
-                                    ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/transaction/skrill.svg' )
-                                    ->set_description( esc_html__( 'Enable Skrill as a withdrawal method for vendors.', 'dokan-lite' ) )
-                                    ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'on' )
-                                    ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), 'off' )
-                                    ->set_default( 'off' )
-                            )
-                            ->add(
-                                ElementFactory::field( 'skrill_withdraw_charges', 'combine_input' )
-                                    ->set_title( esc_html__( 'Withdraw charges', 'dokan-lite' ) )
-                                    ->set_tooltip( esc_html__( 'Set withdrawal charges for PayPal method.', 'dokan-lite' ) )
-                                    ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_skrill.skrill_withdraw', 'on', true, 'display', 'show', '===' )
-                                    ->add_dependency( 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_skrill.skrill_withdraw', 'off', true, 'display', 'hide', '===' )
                                     ->set_value(
                                         [
                                             'additional_fee'   => '0.00',
@@ -290,7 +262,7 @@ class TransactionPage extends AbstractPage {
                             ->add(
                                 ElementFactory::field( 'bank_transfer_withdraw', 'switch' )
                                     ->set_title( esc_html__( 'Bank Transfer', 'dokan-lite' ) )
-                                    ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/transaction/bank-transfer.svg' )
+                                    ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/images/admin-settings-icons/transaction/bank-transfer.svg' )
                                     ->set_description( esc_html__( 'Enable Bank Transfer as a withdrawal method for vendors.', 'dokan-lite' ) )
                                     ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'on' )
                                     ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), 'off' )

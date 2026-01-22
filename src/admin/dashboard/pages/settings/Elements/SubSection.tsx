@@ -21,7 +21,7 @@ const SubSection = ( {
     );
 
     return (
-        <div className="col-span-4 bg-white rounded-lg">
+        <div className="col-span-4 bg-white">
             { ( element.title || element.description ) && (
                 <div className={ `mb-6` }>
                     <h2
