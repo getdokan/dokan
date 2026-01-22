@@ -123,7 +123,7 @@ vendor store page.', 'dokan-lite'
                                             ->set_default( 'off' )
                                             ->set_enable_state( esc_html__( 'Enable', 'dokan-lite' ), 'on' )
                                             ->set_disable_state( esc_html__( 'Disable', 'dokan-lite' ), 'off' )
-                                            ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/src/images/social-onboarding/google.svg' )
+                                            ->set_image_url( plugin_dir_url( DOKAN_FILE ) . 'assets/images/admin-settings-icons/social-onboarding/google.svg' )
                                     )
                                     ->add(
                                         ElementFactory::field( 'recaptcha_info', 'info' )
