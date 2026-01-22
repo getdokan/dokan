@@ -204,28 +204,28 @@ vendor store page.', 'dokan-lite'
                                         [
                                             'title'       => esc_html__( 'Template 1', 'dokan-lite' ),
                                             'value'       => 'default',
-                                            'image'       => DOKAN_PLUGIN_ASSEST . '/src/images/store/store-page-template-one.svg',
+                                            'image'       => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/store/store-page-template-one.svg',
                                         ]
                                     )
                                     ->add_enhanced_option(
                                         [
                                             'title'       => esc_html__( 'Template 2', 'dokan-lite' ),
                                             'value'       => 'layout1',
-                                            'image'       => DOKAN_PLUGIN_ASSEST . '/src/images/store/store-page-template-two.svg',
+                                            'image'       => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/store/store-page-template-two.svg',
                                         ]
                                     )
                                     ->add_enhanced_option(
                                         [
                                             'title'       => esc_html__( 'Template 3', 'dokan-lite' ),
                                             'value'       => 'layout2',
-                                            'image'       => DOKAN_PLUGIN_ASSEST . '/src/images/store/store-page-template-three.svg',
+                                            'image'       => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/store/store-page-template-three.svg',
                                         ]
                                     )
                                     ->add_enhanced_option(
                                         [
                                             'title'       => esc_html__( 'Template 4', 'dokan-lite' ),
                                             'value'       => 'layout3',
-                                            'image'       => DOKAN_PLUGIN_ASSEST . '/src/images/store/store-page-template-four.svg',
+                                            'image'       => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/store/store-page-template-four.svg',
                                         ]
                                     )
                                     ->set_variant( 'template' )
