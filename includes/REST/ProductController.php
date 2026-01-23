@@ -323,7 +323,7 @@ class ProductController extends DokanRESTController {
             $this->namespace, '/' . $this->base . '/grant-downloadable-access', [
                 [
                     'methods'             => WP_REST_Server::CREATABLE,
-                    'callback'            => [ $this, 'get_grant_downloadable_access' ],
+                    'callback'            => [ $this, 'grant_downloadable_access' ],
                     'permission_callback' => [ $this, 'get_product_permissions_check' ],
                     'args'                => [
                         'order_id' => [
@@ -338,6 +338,16 @@ class ProductController extends DokanRESTController {
                                 'type' => 'integer',
                             ],
                             'required'    => true,
+                        ],
+                        'download_remaining' => [
+                            'description' => __( 'Download Remaining', 'dokan-lite' ),
+                            'type'        => 'integer',
+                            'required'    => false,
+                        ],
+                        'access_expires' => [
+                            'description' => __( 'Access Expires', 'dokan-lite' ),
+                            'type'        => 'date',
+                            'required'    => false,
                         ],
                     ],
                 ],
@@ -1798,9 +1808,11 @@ class ProductController extends DokanRESTController {
         return rest_ensure_response( $categories );
     }
 
-    public function get_grant_downloadable_access( $request ) {
+    public function grant_downloadable_access( $request ) {
         $order_id     = $request->get_param( 'order_id' );
         $product_ids  = $request->get_param( 'product_ids' );
+        $remaining    = $request->get_param( 'download_remaining' );
+        $expiry       = $request->get_param( 'access_expires' );
 
         if ( ! is_array( $product_ids ) ) {
             $product_ids = [ $product_ids ];
@@ -1823,12 +1835,18 @@ class ProductController extends DokanRESTController {
 
                     if ( $inserted_id ) {
                         $download = new WC_Customer_Download( $inserted_id );
+                        if ( $remaining ) {
+                            $download->set_downloads_remaining( $remaining );
+                        }
+                        if ( $expiry ) {
+                            $download->set_access_expires( $expiry );
+                        }
+                        $download->save();
                         $granted_files[] = [
                             'name'               => $file->get_name(),
                             'file'               => $file->get_file(),
                             'download_id'        => $download->get_download_id(),
-                            'product_id'         => $download->get_product_id(),
-                            'product_name'       => $product->get_name(),
+                            'permission_id'      => $download->get_id(),
                             'download_name'      => $file->get_name(),
                             'order_id'           => $download->get_order_id(),
                             'order_key'          => $download->get_order_key(),
