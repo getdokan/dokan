@@ -97,9 +97,7 @@ class RefundHandler implements Hookable {
 
         $order_id   = $order->get_id();
         $new_status = $order->get_status();
-        /**
-         * Get the base setting from Dokan options
-         */
+
         $exclude_cod_option = 'on' === dokan_get_option( 'exclude_cod_payment', 'dokan_withdraw', 'off' );
 
         /**
@@ -110,6 +108,14 @@ class RefundHandler implements Hookable {
         /**
          * Apply the filter so other plugins (like wePOS) can override this.
          * Use the exact same filter name for consistency across the whole system.
+         * 
+         * @since DOKAN_SINCE
+         * @param bool     $should_exclude_cod_payment Whether to exclude the payment.
+         * @param WC_Order $order                      The main WooCommerce order object.
+         * @param int      $order_id                   The ID of the main order.
+         * @param string   $new_status                 The new status of the order.
+         * @param string   $exclude_cod_option         The value of the 'exclude COD' setting.
+         * @param WC_Order $refund_order               The specific refund order object.
          */
         $should_exclude_cod_payment = apply_filters(
             'dokan_order_refund_should_exclude_from_vendor_balance',
