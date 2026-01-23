@@ -55,14 +55,14 @@ class SettingsMapper {
         'dokan_appearance.gmap_api_key'                              => 'general.location.map_api_configuration.google_map_api_key.google_map_api_key',
         'dokan_appearance.mapbox_access_token'                       => 'general.location.map_api_configuration.mapbox_api_key.mapbox_api_key',
         'dokan_geolocation.show_locations_map'                       => 'general.location.map_display_settings.location_map_position',
-        'dokan_geolocation.show_filters_before_locations_map'        => 'general.location.map_display_settings.show_filters_before_map',
+        'dokan_geolocation.show_filters_before_locations_map' => 'general.location.map_display_settings.show_filters_before_map',
         'dokan_geolocation.distance_unit'                            => 'general.location.map_display_settings.radius_search_unit',
         'dokan_geolocation.distance_min'                             => 'general.location.map_display_settings.radius_search_min_distance',
         'dokan_geolocation.distance_max'                             => 'general.location.map_display_settings.radius_search_max_distance',
         'dokan_geolocation.map_zoom'                                 => 'general.location.map_display_settings.map_zoom_level',
         // Note: Old had two separate controls for placement; new consolidates to a single multi-select
         'dokan_geolocation.show_location_map_pages'                  => 'general.location.map_placement.map_placement_locations',
-        'dokan_geolocation.show_product_location_in_wc_tab'          => 'general.location.map_placement.map_placement_locations',
+        'dokan_geolocation.show_product_location_in_wc_tab' => 'general.location.map_placement.map_placement_locations',
 
         // =========================
         // Appearance > Store Page
@@ -136,15 +136,15 @@ class SettingsMapper {
         //Main shipment tracking toggle
         'dokan_shipping_status_setting.enabled'                      => 'shipment.shipment-setting-page.shipment-settings.allows_shipment_tracking',
         // Allow marking shipments as received. This field will visible only if shipment tracking is enabled.
-        'dokan_shipping_status_setting.allow_mark_received'          => 'shipment.shipment-setting-page.shipment-settings.allow_mark_received',
+        'dokan_shipping_status_setting.allow_mark_received' => 'shipment.shipment-setting-page.shipment-settings.allow_mark_received',
         // ShipStation logging
         'dokan_general.enable_shipstation_logging'                   => 'shipment.shipment-setting-page.shipment-settings.enable_shipstation_logging',
 
         // Shipping Provider
-        'dokan_shipping_status_setting.shipping_status_provider'     => 'shipment.shipment-setting-page.shipment-provider',
+        'dokan_shipping_status_setting.shipping_status_provider' => 'shipment.shipment-setting-page.shipment-provider',
         // Shipping Status (repeatable field in old UI maps to repeatable section in new UI)
         //'dokan_shipping_status_setting.shipment_status.shipping_status_list' => 'shipment.shipment-setting-page.shipment-settings.shipment-status.shipping_status_list',
-        'dokan_shipping_status_setting.shipping_status_list'         => 'shipment.shipment-setting-page.shipment-status.shipping_status_list',
+        'dokan_shipping_status_setting.shipping_status_list' => 'shipment.shipment-setting-page.shipment-status.shipping_status_list',
 
         // =========================
         // Moderation > RMA
@@ -166,12 +166,12 @@ class SettingsMapper {
         'dokan_live_chat.chat_button_product_page'                   => 'moderation.livechat.livechat_settings.livechat_product_page_button',
 
         // Moderation > Store Support
-        'dokan_store_support_setting.enabled_for_customer_order'     => 'moderation.store_support.store_support_settings.store_support_order_details',
+        'dokan_store_support_setting.enabled_for_customer_order' => 'moderation.store_support.store_support_settings.store_support_order_details',
         'dokan_store_support_setting.support_button_label'           => 'moderation.store_support.store_support_settings.store_support_button_label',
-        'dokan_store_support_setting.store_support_product_page'     => 'moderation.store_support.store_support_settings.store_support_product_page',
+        'dokan_store_support_setting.store_support_product_page' => 'moderation.store_support.store_support_settings.store_support_product_page',
 
         // Moderation > Report Abuse
-        'dokan_report_abuse.reported_by_logged_in_users_only'        => 'moderation.report_abuse.report_abuse_settings.report_abuse_reported_by',
+        'dokan_report_abuse.reported_by_logged_in_users_only' => 'moderation.report_abuse.report_abuse_settings.report_abuse_reported_by',
         'dokan_report_abuse.abuse_reasons'                           => 'moderation.report_abuse.report_abuse_settings.report_abuse_reasons',
         //'dokan_rma.rma_reasons'                    => 'moderation.report_abuse.reasons_for_abuse_reports.report_abuse_reasons',
 
@@ -180,7 +180,7 @@ class SettingsMapper {
         // =========================
 
         // Main settings
-        'dokan_delivery_time.allow_vendor_override_settings'         => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.allow_vendor_override_settings',
+        'dokan_delivery_time.allow_vendor_override_settings' => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.allow_vendor_override_settings',
         'dokan_delivery_time.selection_required'                     => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.selection_required',
         'dokan_delivery_time.delivery_date_label'                    => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_date_label',
         'dokan_delivery_time.delivery_buffer_unit'                   => 'shipment.dashboard-delivery-days-page.dokan_delivery_time.delivery_buffer_unit',
