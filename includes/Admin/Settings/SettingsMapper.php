@@ -36,7 +36,7 @@ class SettingsMapper {
         'dokan_selling.hide_customer_info'                           => 'general.marketplace.marketplace_settings.show_customer_details_to_vendors',
         'dokan_selling.enable_guest_user_enquiry'                    => 'general.marketplace.marketplace_settings.guest_product_enquiry',
         // Inverted meaning: hide add to cart -> visibility toggle
-        'dokan_selling.catalog_mode_hide_add_to_cart_button'    => 'general.marketplace.marketplace_settings.add_to_cart_button_visibility',
+        'dokan_selling.catalog_mode_hide_add_to_cart_button'         => 'general.marketplace.marketplace_settings.add_to_cart_button_visibility',
         // Live Search
         'dokan_live_search_setting.live_search_option'               => 'general.marketplace.live_search.search_box_radio',
 
@@ -389,7 +389,7 @@ class SettingsMapper {
         // Product > Wholesale
         'dokan_wholesale.wholesale_price_display'                    => 'product.wholesale.display_wholesale_pricing_to',
         'dokan_wholesale.display_price_in_shop_archieve'             => 'product.wholesale.wholesale_price_on_shop_archive',
-        'dokan_wholesale.need_approval_for_wholesale_customer' => 'product.wholesale.need_approval_for_customer',
+        'dokan_wholesale.need_approval_for_wholesale_customer'       => 'product.wholesale.need_approval_for_customer',
 
         // =========================
         // AI Assist > Product Generation
