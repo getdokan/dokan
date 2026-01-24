@@ -289,7 +289,7 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
         // dokan store open close scripts starts //
         var store_opencolse = $( '.store-open-close' );
         store_opencolse.hide();
-
+        let timeFormatMoment = window.dokan_get_i18n_time_format().replace(/\\(.)/g, '[$1]');
         $( '#dokan-store-time-enable' ).on( 'change', function() {
             var self = $(this);
 
@@ -323,18 +323,25 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
                 lang          : dokan_helper.timepicker_locale,
                 minTime       : '12:00 am',
                 maxTime       : '11:30 pm',
-                timeFormat    : '<?php echo esc_js( wc_time_format() ); ?>',
+                timeFormat    : dokan_helper.i18n_time_format,
                 scrollDefault : 'now',
             });
 
             // Add validation for store time when changed.
             $( '.dokan-store-times' ).on( 'change', '.dokan-form-group', function () {
-                const self              = $( this ),
-                    openValue           = self.find( '.opening-time' ).val(),
-                    closeValue          = self.find( '.closing-time' ).val(),
-                    formattedOpenValue  = moment( openValue, 'hh:mm a' ).format( 'HH:mm' ),
-                    formattedCloseValue = moment( closeValue, 'hh:mm a' ).format( 'HH:mm' );
-
+                const self                = $( this ),
+                      openValue           = self.find( '.opening-time' ).val(),
+                      closeValue          = self.find( '.closing-time' ).val(),
+                      $openInputHidden    = self.find( '.opening-time-hidden' ),
+                      $closeInputHidden   = self.find( '.closing-time-hidden' ),
+                      formattedOpenValue  = moment( openValue, timeFormatMoment ).format( 'HH:mm' ),
+                      formattedCloseValue = moment( closeValue, timeFormatMoment ).format( 'HH:mm' );
+                
+                let openValueSelected  = moment( openValue, timeFormatMoment ).format('hh:mm a' );
+                let closeValueSelected = moment( closeValue, timeFormatMoment ).format('hh:mm a' );
+                
+                $openInputHidden.val( openValueSelected );
+                $closeInputHidden.val( closeValueSelected );  
                 if ( formattedOpenValue > formattedCloseValue ) {
                     self.find( 'input.dokan-form-control' ).css({ 'border-color': '#F87171', 'color': '#F87171' });
                 } else {
@@ -345,7 +352,9 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
             $( 'input[name="dokan_update_store_settings"]' ).on( 'click', function ( e ) {
                 $( '.dokan-store-times' ).each( function () {
                     const self              = $( this ),
-                        open_or_close       = self.find( '.dokan-on-off' ).val();
+                          $openInputHidden  = self.find( '.opening-time-hidden' ),
+                          $closeInputHidden = self.find( '.closing-time-hidden' ),
+                          open_or_close     = self.find( '.dokan-on-off' ).val();
 
                     // check if today is open
                     if ( 'close' === open_or_close ) {
@@ -366,9 +375,14 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
                         return false;
                     }
 
-                    const formattedOpenValue  = moment( openValue, 'hh:mm a' ).format( 'HH:mm' ),
-                        formattedCloseValue = moment( closeValue, 'hh:mm a' ).format( 'HH:mm' );
+                    const formattedOpenValue  = moment( openValue, timeFormatMoment ).format( 'HH:mm' ),
+                        formattedCloseValue = moment( closeValue, timeFormatMoment ).format( 'HH:mm' );
 
+                    let openValueSelected  = moment(openValue, timeFormatMoment ).format('hh:mm a');
+                    let closeValueSelected = moment(closeValue, timeFormatMoment ).format('hh:mm a');
+
+                    $openInputHidden.val(openValueSelected);
+                    $closeInputHidden.val(closeValueSelected);
                     if ( formattedOpenValue >= formattedCloseValue ) {
                         self.find( 'input.dokan-form-control' ).css({ 'border-color': '#F87171', 'color': '#F87171' });
                         self.find( '.opening-time' ).focus();

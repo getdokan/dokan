@@ -618,11 +618,11 @@ class Settings {
 
                 // Check & make 12 hours format data for save.
                 $opening_timestamp = dokan_get_timestamp( $opening_time );
-                $opening_time      = dokan_convert_date_format( $opening_time, wc_time_format(), 'g:i a' );
+                $opening_time      = dokan_convert_date_format( $opening_time, 'g:i a', 'g:i a' );
 
                 // Check & make 12 hours format data for save.
                 $closing_timestamp = dokan_get_timestamp( $closing_time );
-                $closing_time      = dokan_convert_date_format( $closing_time, wc_time_format(), 'g:i a' );
+                $closing_time      = dokan_convert_date_format( $closing_time, 'g:i a', 'g:i a' );
 
                 // If our opening time is less than closing time.
                 if ( $opening_timestamp > $closing_timestamp ) {
