@@ -25,11 +25,11 @@
                 <label for="opening-time[<?php echo esc_attr( $day_key ); ?>]" class="time" style="visibility: <?php echo isset( $status ) && $status === 'open' ? 'visible' : 'hidden'; ?>" >
                     <input type="text" class="dokan-form-control opening-time"
                         id="opening-time[<?php echo esc_attr( $day_key ); ?>]" placeholder="00:00"
-                        value="<?php echo $opening_time; ?>"/>
+                        value="<?php echo esc_attr( $opening_time ); ?>"/>
                     <input type="hidden"
                         name="opening_time[<?php echo esc_attr( $day_key ); ?>]" 
                         class="opening-time-hidden"
-                        value="<?php echo $opening_time; ?>"/>
+                        value="<?php echo esc_attr( $opening_time ); ?>"/>
                 </label>
                 <label for="closing-time[<?php echo esc_attr( $day_key ); ?>]" class="time" style="visibility: <?php echo isset( $status ) && $status === 'open' ? 'visible' : 'hidden'; ?>" >
                     <input type="text" class="dokan-form-control closing-time"
