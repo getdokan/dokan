@@ -477,7 +477,6 @@ class StoreController extends WP_REST_Controller {
                 'dokan_admin_percentage_type',
                 'dokan_admin_additional_fee',
                 'admin_category_commission',
-                'enable_manual_order',
             ];
 
             array_push( $restricted_fields, ...$vendor_restricted_fields );

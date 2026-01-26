@@ -239,7 +239,7 @@ class Settings {
                 '',
                 [
                     'deleted' => false,
-                    'message' => __( 'You have no permission to view this page', 'dokan-lite' ),
+                    'message' => esc_html__( 'You have no permission to view this page', 'dokan-lite' ),
                 ]
             );
 
