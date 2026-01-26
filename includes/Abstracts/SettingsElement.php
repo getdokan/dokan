@@ -514,6 +514,37 @@ abstract class SettingsElement {
 	}
 
 	/**
+	 * Collect validation errors from this element and its children.
+	 *
+	 * Call this after validate() returns false to get detailed errors.
+	 *
+	 * @since DOKAN_SINCE
+	 *
+	 * @return array Array of validation error arrays.
+	 */
+	public function collect_validation_errors(): array {
+		$errors = [];
+
+		// Check if this element has a validation error
+		if ( method_exists( $this, 'get_validation_error' ) ) {
+			$error = $this->get_validation_error();
+			if ( $error ) {
+				$errors[] = $error;
+			}
+		}
+
+		// Recursively collect from children
+		if ( $this->is_support_children() ) {
+			foreach ( $this->get_children() as $child ) {
+				$child_errors = $child->collect_validation_errors();
+				$errors = array_merge( $errors, $child_errors );
+			}
+		}
+
+		return $errors;
+	}
+
+	/**
 	 * Populate The settings array.
 	 *
 	 * @return array

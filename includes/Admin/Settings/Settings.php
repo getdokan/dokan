@@ -104,11 +104,13 @@ class Settings {
      *
      * @since DOKAN_SINCE
      *
-     * @param  array  $data  The data to save.
+     * @param  array  $data           The data to save.
+     * @param  bool   $save_old       Whether to save to legacy options.
+     * @param  bool   $skip_validate  Whether to skip validation (useful when already validated).
      *
      * @throws \Exception
      */
-    public function save( array $data, bool $save_old = true ): void {
+    public function save( array $data, bool $save_old = true, bool $skip_validate = false ): void {
         // Mirror new settings saves back to legacy options as well.
         $transformer = new LegacyTransformer();
 
@@ -116,8 +118,8 @@ class Settings {
             $page_id = $page->get_id();
 
             if ( isset( $data[ $page_id ] ) ) {
-                // Save into the new storage for this page
-                $page->save( $data[ $page_id ] );
+                // Save into the new storage for this page (skip validation since controller already validated)
+                $page->save( $data[ $page_id ], $skip_validate );
 
                 if ( ! $save_old ) {
                     continue;
@@ -140,11 +142,7 @@ class Settings {
                         if ( ! is_array( $existing ) ) {
                             $existing = [];
                         }
-//                        error_log( print_r( $existing, true ) );
-//                        error_log( print_r( ':break:', true ) );
-//                        error_log( print_r( $fields, true ) );
                         $merged = $this->settings_recursive_replace( $existing, $fields );
-//                        error_log( print_r( $merged, true ) );
                         update_option( $legacy_section, $merged );
                     }
                 }

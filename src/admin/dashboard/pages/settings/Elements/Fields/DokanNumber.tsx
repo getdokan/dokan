@@ -69,7 +69,7 @@ export default function DokanNumber( { element } ) {
                 }
             >
                 <BaseDokanNumber
-                    value={ element.value || element?.defaultValue || '' }
+                    value={ element?.value ?? element?.defaultValue ?? '' }
                     onChange={ ( val ) =>
                         onValueChange( { ...element, value: val } )
                     }

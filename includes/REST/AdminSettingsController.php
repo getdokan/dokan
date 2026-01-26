@@ -94,6 +94,41 @@ class AdminSettingsController extends DokanBaseAdminController {
             $settings_manager = dokan_get_container()->get( Settings::class );
 
             $settings_manager->save( $this->parse_settings_data( $request->get_params() ) );
+//            /**
+//             * @var Settings $settings_manager The admin settings manager.
+//             */
+//            $settings_manager = dokan_get_container()->get( Settings::class );
+//            $parsed_data      = $this->parse_settings_data( $request->get_params() );
+//
+//            // Validate before saving and collect errors
+//            $validation_errors = [];
+//            foreach ( $settings_manager->get_pages() as $page ) {
+//                $page_id = $page->get_id();
+//                if ( isset( $parsed_data[ $page_id ] ) ) {
+//                    $page->hydrate_data(); // Ensure page structure is loaded
+//
+//                    // Validate the data
+//                    if ( ! $page->validate( $parsed_data[ $page_id ] ) ) {
+//                        // Collect validation errors from the page tree
+//                        $validation_errors = array_merge( $validation_errors, $page->collect_validation_errors() );
+//                    }
+//                }
+//            }
+//
+//            // Return errors if validation failed
+//            if ( ! empty( $validation_errors ) ) {
+//                return new \WP_Error(
+//                    'dokan_settings_validation_error',
+//                    __( 'Validation failed.', 'dokan-lite' ),
+//                    [
+//                        'status' => 400,
+//                        'errors' => $validation_errors,
+//                    ]
+//                );
+//            }
+//
+//            // Skip validation in save() since we already validated above
+//            $settings_manager->save( $parsed_data, true, true );
         } catch ( \Exception $e ) {
             return new \WP_Error( 'dokan_rest_invalid_settings', $e->getMessage(), [ 'status' => 400 ] );
         }

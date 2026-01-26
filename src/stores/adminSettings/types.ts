@@ -50,6 +50,13 @@ export interface SettingsElement {
     doc_link?: string;
 }
 
+export interface FieldValidationError {
+    hook_key: string;
+    field: string;
+    error_type: string;
+    message: string;
+}
+
 export type SettingsState = {
     settings: SettingsElement[];
     originalSettings: SettingsElement[];
@@ -58,4 +65,6 @@ export type SettingsState = {
     saving: boolean;
     needSaving: boolean;
     searchText: string;
+    changedElements: Record< string, SettingsElement >; // Track changed elements by hook_key
+    fieldErrors: FieldValidationError[];
 };

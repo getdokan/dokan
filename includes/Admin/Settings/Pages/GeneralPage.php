@@ -193,6 +193,40 @@ class GeneralPage extends AbstractPage {
                                     )
                                     ->set_placeholder( esc_html__( 'Store', 'dokan-lite' ) )
                                     ->set_default( 'store' )
+//                                    ->set_validation_error_messages(
+//                                        [
+//                                            'reserved_slug' => esc_html__( 'This URL is reserved. Please choose a different value.', 'dokan-lite' ),
+//                                            'invalid'       => esc_html__( 'Store URL can only contain lowercase letters, numbers, and hyphens.', 'dokan-lite' ),
+//                                        ]
+//                                    )
+//                                    ->set_validation_rules(
+//                                        [
+//                                            [
+//                                                'type'       => 'pattern',
+//                                                'value'      => '^[a-z0-9-]+$',
+//                                                'error_type' => 'invalid',
+//                                            ],
+//                                            [
+//                                                'type'       => 'reserved_values',
+//                                                'value'      => dokan_get_reserved_url_slugs(),
+//                                                'error_type' => 'reserved_slug',
+//                                            ],
+//                                        ]
+//                                    )
+//                                    ->set_validator(
+//                                        function ( $value ) {
+//                                            $reserved_slugs = dokan_get_reserved_url_slugs();
+//                                            if ( in_array( $value, $reserved_slugs, true ) ) {
+//                                                return new \WP_Error( 'reserved_slug', '' );
+//                                            }
+//
+//                                            if ( ! preg_match( '/^[a-z0-9-]+$/', $value ) ) {
+//                                                return new \WP_Error( 'invalid', '' );
+//                                            }
+//
+//                                            return true;
+//                                        }
+//                                    )
                             )
                     )
             )

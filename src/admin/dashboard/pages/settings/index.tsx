@@ -163,6 +163,8 @@ const SettingsPage = () => {
             return;
         }
 
+        // Reset settings to original values and set needSaving to false when menu changes
+        dispatch( settingsStore ).resetSettings();
         setSelectedPage( page );
     };
 

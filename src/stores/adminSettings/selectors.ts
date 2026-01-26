@@ -51,5 +51,25 @@ const selectors = {
         const { searchText } = state;
         return searchText;
     },
+
+    getOriginalSettings( state: SettingsState ) {
+        const { originalSettings } = state;
+        return originalSettings;
+    },
+
+    getFieldErrors( state: SettingsState ) {
+        const { fieldErrors } = state;
+        return fieldErrors || [];
+    },
+
+    getFieldError( state: SettingsState, hookKey: string ) {
+        const { fieldErrors } = state;
+        return fieldErrors?.find( ( error ) => error.hook_key === hookKey );
+    },
+
+    hasFieldErrors( state: SettingsState ) {
+        const { fieldErrors } = state;
+        return fieldErrors && fieldErrors.length > 0;
+    },
 };
 export default selectors;

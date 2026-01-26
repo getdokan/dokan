@@ -1,4 +1,4 @@
-import { RawHTML, useEffect, useState } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 import { SimpleInput } from '@getdokan/dokan-ui';
 import { twMerge } from 'tailwind-merge';
 

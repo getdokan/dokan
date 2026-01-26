@@ -8,6 +8,8 @@ const SETTINGS_DEFAULT_STATE: SettingsState = {
     saving: false,
     needSaving: false,
     searchText: '',
+    changedElements: {},
+    fieldErrors: [],
 };
 
 export default SETTINGS_DEFAULT_STATE;

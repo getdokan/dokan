@@ -66,6 +66,7 @@ const CustomizeRadio = ( { element }: SettingsProps ) => {
                 disabled={ element?.disabled || false }
                 divider={ element?.divider }
             />
+            <span className="hidden md:!grid-cols-3"></span>
         </div>
     );
 };

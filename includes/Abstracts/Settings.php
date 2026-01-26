@@ -116,15 +116,18 @@ abstract class Settings extends SettingsElement {
 	/**
 	 * Save data for these settings.
 	 *
-	 * @param mixed $data Data to be stored.
+	 * @param mixed $data          Data to be stored.
+	 * @param bool  $skip_validate Whether to skip validation (useful when already validated).
 	 *
 	 * @return bool
 	 * @throws Exception If data could not be stored.
 	 */
-	public function save( $data ): bool {
-		$valid = $this->validate( $data );
-		if ( ! $valid ) {
-			throw new Exception( esc_html__( 'Settings values must be valid.', 'dokan-lite' ) );
+	public function save( $data, bool $skip_validate = false ): bool {
+		if ( ! $skip_validate ) {
+			$valid = $this->validate( $data );
+			if ( ! $valid ) {
+				throw new Exception( esc_html__( 'Settings values must be valid.', 'dokan-lite' ) );
+			}
 		}
 
 		$data = $this->sanitize( $data );
