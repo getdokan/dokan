@@ -1822,8 +1822,11 @@ class ProductController extends DokanRESTController {
         $granted_files = [];
 
         foreach ( $product_ids as $product_id ) {
-            $product = dokan()->product->get( $product_id );
-            $files   = $product->get_downloads();
+            $product = wc_get_product( $product_id );
+            if ( ! $product ) {
+                continue;
+            }
+            $files = $product->get_downloads();
 
             if ( ! $order->get_billing_email() ) {
                 continue;
@@ -1831,10 +1834,30 @@ class ProductController extends DokanRESTController {
 
             if ( $files ) {
                 foreach ( $files as $download_id => $file ) {
-                    $inserted_id = wc_downloadable_file_permission( $download_id, $product_id, $order );
+                    $data_store           = WC_Data_Store::load( 'customer-download' );
+                    $existing_permissions = $data_store->get_downloads(
+                        [
+                            'order_id'    => $order->get_id(),
+                            'product_id'  => $product_id,
+                            'download_id' => $download_id,
+                            'limit'       => 1,
+                        ]
+                    );
 
-                    if ( $inserted_id ) {
-                        $download = new WC_Customer_Download( $inserted_id );
+                    $download    = null;
+                    $inserted_id = 0;
+
+                    if ( ! empty( $existing_permissions ) ) {
+                        $download    = reset( $existing_permissions );
+                        $inserted_id = $download->get_id();
+                    } else {
+                        $inserted_id = wc_downloadable_file_permission( $download_id, $product_id, $order );
+                        if ( $inserted_id ) {
+                            $download = new WC_Customer_Download( $inserted_id );
+                        }
+                    }
+
+                    if ( $download ) {
                         if ( $remaining ) {
                             $download->set_downloads_remaining( $remaining );
                         }
