@@ -231,7 +231,7 @@ class Settings {
      *
      * @return bool Returns true if validation passes, false otherwise
      */
-    private function validate_payment_access( $active_methods ) {
+    protected function validate_payment_access( $active_methods ) {
         // Check staff permissions
         if ( ! current_user_can( 'dokan_view_store_payment_menu' ) ) {
             dokan_get_template_part(
