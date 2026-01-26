@@ -223,16 +223,16 @@ class Settings {
     }
 
     /**
-     * Load Payment Content
+     * Validate payment access and check active methods
      *
      * @since 2.4
      *
-     * @param string $slug_suffix
+     * @param array $active_methods
      *
-     * @return void
+     * @return bool Returns true if validation passes, false otherwise
      */
-    public function load_payment_content( $slug_suffix ) {
-        // check staff permissions
+    private function validate_payment_access( $active_methods ) {
+        // Check staff permissions
         if ( ! current_user_can( 'dokan_view_store_payment_menu' ) ) {
             dokan_get_template_part(
                 'global/dokan-error',
@@ -243,25 +243,44 @@ class Settings {
                 ]
             );
 
-            return;
+            return false;
         }
-        $seller_id = dokan_get_current_user_id();
-        $data = $this->get_seller_payment_methods( $seller_id );
-        $connected_methods = $data['connected_methods'];
-        $disconnected_methods = $data['disconnected_methods'];
-        $active_methods = $data['active_methods'];
 
-        //no payment method is active, show informative message
+        // Check if payment methods are available
         if ( empty( $active_methods ) ) {
             dokan_get_template_part(
                 'global/dokan-error',
                 '',
                 [
                     'deleted' => false,
-                    'message' => __( 'No withdraw method is available. Please contact site admin.', 'dokan-lite' ),
+                    'message' => esc_html__( 'No withdraw method is available. Please contact site admin.', 'dokan-lite' ),
                 ]
             );
 
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Load Payment Content
+     *
+     * @since 2.4
+     *
+     * @param string $slug_suffix
+     *
+     * @return void
+     */
+    public function load_payment_content( $slug_suffix ) {
+        $seller_id = dokan_get_current_user_id();
+        $data = $this->get_seller_payment_methods( $seller_id );
+        $connected_methods = $data['connected_methods'];
+        $disconnected_methods = $data['disconnected_methods'];
+        $active_methods = $data['active_methods'];
+
+        // Check permissions and validate payment methods
+        if ( ! $this->validate_payment_access( $active_methods ) ) {
             return;
         }
 
