@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Dokan Dashboard Settings Store Form Template
+ * Dokan Dashboard Settings Store Form Templates
  *
  * @since 2.4
  */
@@ -83,7 +84,8 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
                 $help_text = sprintf(
                     // translators: 1) store banner width 2) store banner height
                     __( 'Upload a banner for your store. Banner size is (%1$sx%2$s) pixels.', 'dokan-lite' ),
-                    $banner_width, $banner_height
+                    $banner_width,
+                    $banner_height
                 );
 
                 echo esc_html( apply_filters( 'dokan_banner_upload_help', $help_text ) );
@@ -153,7 +155,7 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
                 <div class="checkbox">
                     <label>
                         <input type="hidden" name="setting_show_email" value="no">
-                        <input type="checkbox" name="setting_show_email" value="yes"<?php checked( $show_email, 'yes' ); ?>> <?php esc_html_e( 'Show email address in store', 'dokan-lite' ); ?>
+                        <input type="checkbox" name="setting_show_email" value="yes" <?php checked( $show_email, 'yes' ); ?>> <?php esc_html_e( 'Show email address in store', 'dokan-lite' ); ?>
                     </label>
                 </div>
             </div>
@@ -173,7 +175,8 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
             <div class="dokan-w6 dokan-text-left">
                 <?php
                 dokan_get_template(
-                    'maps/dokan-maps-with-search.php', [
+                    'maps/dokan-maps-with-search.php',
+                    [
                         'map_location' => $map_location,
                         'map_address'  => $map_address,
                     ]
@@ -188,7 +191,7 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
     $tnc_enable = dokan_get_option( 'seller_enable_terms_and_conditions', 'dokan_general', 'off' );
 
     if ( $tnc_enable === 'on' ) {
-        ?>
+		?>
         <div class="dokan-form-group">
             <label class="dokan-w3 dokan-control-label"><?php esc_html_e( 'Terms and Conditions', 'dokan-lite' ); ?></label>
             <div class="dokan-w5 dokan-text-left dokan_tock_check">
@@ -215,7 +218,7 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
             </div>
         </div>
 
-        <?php
+		<?php
     }
     ?>
 
@@ -281,116 +284,135 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
     .dokan-settings-content .dokan-settings-area .dokan-banner .dokan-remove-banner-image {
         height: <?php echo esc_attr( $banner_height ) . 'px'; ?>;
     }
-
 </style>
 <script type="text/javascript">
-
     (function($) {
         // dokan store open close scripts starts //
-        var store_opencolse = $( '.store-open-close' );
+        var store_opencolse = $('.store-open-close');
         store_opencolse.hide();
         let timeFormatMoment = window.dokan_get_i18n_time_format().replace(/\\(.)/g, '[$1]');
-        $( '#dokan-store-time-enable' ).on( 'change', function() {
+        $('#dokan-store-time-enable').on('change', function() {
             var self = $(this);
 
-            if ( self.prop( 'checked' ) ) {
+            if (self.prop('checked')) {
                 store_opencolse.hide().fadeIn();
             } else {
                 store_opencolse.fadeOut();
             }
-        } );
+        });
 
         $('#dokan-store-time-enable').trigger('change');
 
         // Show & hide our opening, closing time fields by using this change event.
-        $( '.dokan-on-off' ).on( 'change', function() {
-            const self = $( this );
+        $('.dokan-on-off').on('change', function() {
+            const self = $(this);
 
-            if ( self.val() === 'open' ) {
-                self.closest('.dokan-form-group').find('.time').css({'visibility': 'visible'});
+            if (self.val() === 'open') {
+                self.closest('.dokan-form-group').find('.time').css({
+                    'visibility': 'visible'
+                });
             } else {
-                self.closest('.dokan-form-group').find('.time').css({'visibility': 'hidden'});
+                self.closest('.dokan-form-group').find('.time').css({
+                    'visibility': 'hidden'
+                });
                 self.closest('.store-open-close').find('.dokan-w6').removeClass('dokan-text-left');
-                self.closest('.store-open-close').find('.dokan-w6').css({'width': 'auto'});
+                self.closest('.store-open-close').find('.dokan-w6').css({
+                    'width': 'auto'
+                });
             }
 
-        } );
+        });
 
         <?php if ( ! dokan()->is_pro_exists() ) : ?>
             // Set timepicker jquery here.
-            $( '.dokan-store-times .time .dokan-form-control' ).timepicker({
-                step          : 30,
-                lang          : dokan_helper.timepicker_locale,
-                minTime       : '12:00 am',
-                maxTime       : '11:30 pm',
-                timeFormat    : dokan_helper.i18n_time_format,
-                scrollDefault : 'now',
+            $('.dokan-store-times .time .dokan-form-control').timepicker({
+                step: 30,
+                lang: dokan_helper.timepicker_locale,
+                minTime: '12:00 am',
+                maxTime: '11:30 pm',
+                timeFormat: dokan_helper.i18n_time_format,
+                scrollDefault: 'now',
             });
 
             // Add validation for store time when changed.
-            $( '.dokan-store-times' ).on( 'change', '.dokan-form-group', function () {
-                const self                = $( this ),
-                      openValue           = self.find( '.opening-time' ).val(),
-                      closeValue          = self.find( '.closing-time' ).val(),
-                      $openInputHidden    = self.find( '.opening-time-hidden' ),
-                      $closeInputHidden   = self.find( '.closing-time-hidden' ),
-                      formattedOpenValue  = moment( openValue, timeFormatMoment ).format( 'HH:mm' ),
-                      formattedCloseValue = moment( closeValue, timeFormatMoment ).format( 'HH:mm' );
-                
-                let openValueSelected  = moment( openValue, timeFormatMoment ).format('hh:mm a' );
-                let closeValueSelected = moment( closeValue, timeFormatMoment ).format('hh:mm a' );
-                
-                $openInputHidden.val( openValueSelected );
-                $closeInputHidden.val( closeValueSelected );  
-                if ( formattedOpenValue > formattedCloseValue ) {
-                    self.find( 'input.dokan-form-control' ).css({ 'border-color': '#F87171', 'color': '#F87171' });
+            $('.dokan-store-times').on('change', '.dokan-form-group', function() {
+                const self = $(this),
+                    openValue = self.find('.opening-time').val(),
+                    closeValue = self.find('.closing-time').val(),
+                    $openInputHidden = self.find('.opening-time-hidden'),
+                    $closeInputHidden = self.find('.closing-time-hidden'),
+                    formattedOpenValue = moment(openValue, timeFormatMoment).format('HH:mm'),
+                    formattedCloseValue = moment(closeValue, timeFormatMoment).format('HH:mm');
+
+                let openValueSelected = moment(openValue, timeFormatMoment).format('hh:mm a');
+                let closeValueSelected = moment(closeValue, timeFormatMoment).format('hh:mm a');
+
+                $openInputHidden.val(openValueSelected);
+                $closeInputHidden.val(closeValueSelected);
+                if (formattedOpenValue > formattedCloseValue) {
+                    self.find('input.dokan-form-control').css({
+                        'border-color': '#F87171',
+                        'color': '#F87171'
+                    });
                 } else {
-                    self.find( 'input.dokan-form-control' ).css({ 'border-color': '#bbb', 'color': '#4e4e4e' });
+                    self.find('input.dokan-form-control').css({
+                        'border-color': '#bbb',
+                        'color': '#4e4e4e'
+                    });
                 }
             });
 
-            $( 'input[name="dokan_update_store_settings"]' ).on( 'click', function ( e ) {
-                $( '.dokan-store-times' ).each( function () {
-                    const self              = $( this ),
-                          $openInputHidden  = self.find( '.opening-time-hidden' ),
-                          $closeInputHidden = self.find( '.closing-time-hidden' ),
-                          open_or_close     = self.find( '.dokan-on-off' ).val();
+            $('input[name="dokan_update_store_settings"]').on('click', function(e) {
+                $('.dokan-store-times').each(function() {
+                    const self = $(this),
+                        $openInputHidden = self.find('.opening-time-hidden'),
+                        $closeInputHidden = self.find('.closing-time-hidden'),
+                        open_or_close = self.find('.dokan-on-off').val();
 
                     // check if today is open
-                    if ( 'close' === open_or_close ) {
+                    if ('close' === open_or_close) {
                         return;
                     }
 
-                    const openValue         = self.find( '.opening-time' ).val(),
-                        closeValue          = self.find( '.closing-time' ).val();
+                    const openValue = self.find('.opening-time').val(),
+                        closeValue = self.find('.closing-time').val();
 
-                    if ( ! openValue || ! closeValue ) {
-                        self.find( 'input.dokan-form-control' ).css({ 'border-color': '#F87171', 'color': '#F87171' });
-                        if ( ! openValue ) {
-                            self.find( '.opening-time' ).focus();
+                    if (!openValue || !closeValue) {
+                        self.find('input.dokan-form-control').css({
+                            'border-color': '#F87171',
+                            'color': '#F87171'
+                        });
+                        if (!openValue) {
+                            self.find('.opening-time').focus();
                         } else {
-                            self.find( '.closing-time' ).focus();
+                            self.find('.closing-time').focus();
                         }
                         e.preventDefault();
                         return false;
                     }
 
-                    const formattedOpenValue  = moment( openValue, timeFormatMoment ).format( 'HH:mm' ),
-                        formattedCloseValue = moment( closeValue, timeFormatMoment ).format( 'HH:mm' );
+                    const formattedOpenValue = moment(openValue, timeFormatMoment).format('HH:mm'),
+                        formattedCloseValue = moment(closeValue, timeFormatMoment).format('HH:mm');
 
-                    let openValueSelected  = moment(openValue, timeFormatMoment ).format('hh:mm a');
-                    let closeValueSelected = moment(closeValue, timeFormatMoment ).format('hh:mm a');
+                    let openValueSelected = moment(openValue, timeFormatMoment).format('hh:mm a');
+                    let closeValueSelected = moment(closeValue, timeFormatMoment).format('hh:mm a');
 
                     $openInputHidden.val(openValueSelected);
                     $closeInputHidden.val(closeValueSelected);
-                    if ( formattedOpenValue >= formattedCloseValue ) {
-                        self.find( 'input.dokan-form-control' ).css({ 'border-color': '#F87171', 'color': '#F87171' });
-                        self.find( '.opening-time' ).focus();
+                    if (formattedOpenValue >= formattedCloseValue) {
+                        self.find('input.dokan-form-control').css({
+                            'border-color': '#F87171',
+                            'color': '#F87171'
+                        });
+                        self.find('.opening-time').focus();
                         e.preventDefault();
                         return false;
                     }
 
-                    self.find( 'input.dokan-form-control' ).css({ 'border-color': '#bbb', 'color': '#4e4e4e' });
+                    self.find('input.dokan-form-control').css({
+                        'border-color': '#bbb',
+                        'color': '#4e4e4e'
+                    });
                 });
             });
         <?php endif; ?>
@@ -400,12 +422,12 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
 
             const savedState = '<?php echo esc_html( $address_state ); ?>';
 
-            if ( ! savedState || 'N/A' === savedState ) {
+            if (!savedState || 'N/A' === savedState) {
                 $('#dokan-states-box').hide();
             }
 
             // Sanitize phone number field.
-            $( '#setting_phone' ).on( 'keydown', dokan_sanitize_phone_number );
+            $('#setting_phone').on('keydown', dokan_sanitize_phone_number);
         });
     })(jQuery);
 </script>
