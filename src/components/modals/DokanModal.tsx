@@ -3,10 +3,12 @@ import { Modal } from '@wordpress/components';
 import { Slot } from '@wordpress/components';
 import { kebabCase } from '../../utilities';
 import { debounce } from '@wordpress/compose';
-import { useCallback, useEffect, useState } from '@wordpress/element';
+import { useCallback, useState } from '@wordpress/element';
 import DialogIcon from './DialogIcon';
 import DokanButton, { ButtonVariant } from '../Button';
 import { twMerge } from 'tailwind-merge';
+import { X } from 'lucide-react';
+import './style.scss';
 
 interface DokanModalProps {
     isOpen: boolean;
@@ -22,6 +24,7 @@ interface DokanModalProps {
     confirmButtonText?: string;
     confirmationTitle?: string;
     confirmationDescription?: string;
+    cancelIcon?: JSX.Element;
     dialogIcon?: JSX.Element;
     dialogHeader?: JSX.Element | false;
     dialogContent?: JSX.Element;
@@ -36,82 +39,41 @@ interface DokanModalProps {
     shouldCloseOnEsc?: boolean;
 }
 
-const DokanModal = ( {
-    isOpen,
-    onClose,
-    className,
-    modalClassName,
-    modalBodyClassName,
-    modalFooterClassName,
-    onConfirm,
-    namespace,
-    dialogTitle,
-    cancelButtonText,
-    confirmButtonText,
-    confirmationTitle,
-    confirmationDescription,
-    dialogIcon,
-    dialogHeader,
-    dialogFooter,
-    dialogFooterContent,
-    dialogContent,
-    loading = false,
-    confirmButtonVariant = 'primary',
-    hideCancelButton = false,
-    confirmButtonDisabled = false,
-    isDismissible = true,
-    shouldCloseOnClickOutside = true,
-    shouldCloseOnEsc = true,
-}: DokanModalProps ) => {
+const DokanModal = ( props: DokanModalProps ) => {
+    const {
+        isOpen,
+        onClose,
+        className,
+        modalClassName,
+        modalBodyClassName,
+        modalFooterClassName,
+        onConfirm,
+        namespace,
+        dialogTitle,
+        cancelButtonText,
+        confirmButtonText,
+        confirmationTitle,
+        confirmationDescription,
+        cancelIcon,
+        dialogIcon,
+        dialogHeader,
+        dialogFooter,
+        dialogFooterContent,
+        dialogContent,
+        loading = false,
+        confirmButtonVariant = 'primary',
+        hideCancelButton = false,
+        confirmButtonDisabled = false,
+        isDismissible = true,
+        shouldCloseOnClickOutside = true,
+        shouldCloseOnEsc = true
+    } = props;
+
     if ( ! namespace ) {
         throw new Error(
             'Namespace is required for the Confirmation Modal component'
         );
     }
-
-    useEffect( () => {
-
-        // Add styles to override WordPress default modal styles
-        if ( isOpen ) {
-            const style = document.createElement( 'style' );
-            style.id = 'dokan-modal-override';
-            style.textContent = `
-                .dokan-custom-modal.components-modal__frame {
-                    background: transparent !important;
-                    box-shadow: none !important;
-                    border: none !important;
-                    padding: 0 !important;
-                    max-width: none !important;
-                    width: auto !important;
-                    max-height: none !important;
-                    height: auto !important;
-                    position: absolute !important;
-                    top: 50% !important;
-                    left: 50% !important;
-                    transform: translate(-50%, -50%) !important;
-                    margin: 0 !important;
-                    overflow: visible !important;
-                }
-                .dokan-custom-modal .components-modal__content {
-                    padding: 0 !important;
-                    margin: 0 !important;
-                    overflow: visible !important;
-                    max-height: none !important;
-                    height: auto !important;
-                }
-                .dokan-custom-modal .components-modal__header {
-                    display: none !important;
-                }
-                .components-modal__screen-overlay {
-                    background-color: rgba(0, 0, 0, 0.75) !important;
-                }
-            `;
-            
-            if ( ! document.getElementById( 'dokan-modal-override' ) ) {
-                document.head.appendChild( style );
-            }
-        }
-    }, [ isOpen ] );
 
     const dialogNamespace = kebabCase
         ? kebabCase( namespace || '' )
@@ -139,6 +101,7 @@ const DokanModal = ( {
 
     return (
         <Modal
+            { ...props }
             onRequestClose={ onClose }
             className={ twMerge(
                 `dokan-custom-modal dokan-layout bg-transparent shadow-none`,
@@ -156,27 +119,17 @@ const DokanModal = ( {
                 ) }
             >
                 {/* Close Button - Top Right */}
-                { isDismissible && (
-                    <button
-                        onClick={ onClose }
-                        className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors z-10"
-                        aria-label="Close"
-                    >
-                        <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
+                { isDismissible === false
+                    ? null
+                    : cancelIcon || (
+                        <button
+                            onClick={ onClose }
+                            className="absolute top-4 right-4 p-1 rounded-full text-gray-400 hover:text-red-600 hover:bg-red-50 hover:border hover:border-red-600 transition-all duration-200 z-10"
+                            aria-label="Close"
                         >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={ 2 }
-                                d="M6 18L18 6M6 6l12 12"
-                            />
-                        </svg>
-                    </button>
-                ) }
+                            <X className="w-5 h-5" />
+                        </button>
+                    ) }
 
                 {/* Modal Header/Title */}
                 { dialogHeader === false
