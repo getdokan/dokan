@@ -273,11 +273,11 @@ class Settings {
      * @return void
      */
     public function load_payment_content( $slug_suffix ) {
-        $seller_id = dokan_get_current_user_id();
-        $data = $this->get_seller_payment_methods( $seller_id );
-        $connected_methods = $data['connected_methods'];
+        $seller_id            = dokan_get_current_user_id();
+        $data                 = $this->get_seller_payment_methods( $seller_id );
+        $connected_methods    = $data['connected_methods'];
         $disconnected_methods = $data['disconnected_methods'];
-        $active_methods = $data['active_methods'];
+        $active_methods       = $data['active_methods'];
 
         // Check permissions and validate payment methods
         if ( ! $this->validate_payment_access( $active_methods ) ) {
