@@ -225,7 +225,7 @@ class Settings {
     /**
      * Validate payment access and check active methods
      *
-     * @since 2.4
+     * @since DOKAN_SINCE
      *
      * @param array $active_methods
      *
