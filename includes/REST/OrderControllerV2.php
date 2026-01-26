@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\REST;
 
+use WC_Customer_Download;
 use WC_Data_Store;
 use WP_Error;
 use WP_REST_Server;
@@ -58,6 +59,16 @@ class OrderControllerV2 extends OrderController {
                                 'description' => __( 'Download product IDs.', 'dokan-lite' ),
                                 'required' => true,
                             ],
+                        ],
+                        'download_remaining' => [
+                            'type'        => 'integer',
+                            'description' => __( 'Download remaining.', 'dokan-lite' ),
+                            'required'    => false,
+                        ],
+                        'access_expires' => [
+                            'type'        => 'string',
+                            'description' => __( 'Access expires.', 'dokan-lite' ),
+                            'required'    => false,
                         ],
                     ],
                 ],
@@ -230,6 +241,8 @@ class OrderControllerV2 extends OrderController {
     public function grant_order_downloads( $requests ) {
         $order_id     = intval( $requests->get_param( 'id' ) );
         $product_ids  = array_filter( array_map( 'absint', (array) wp_unslash( $requests->get_param( 'ids' ) ) ) );
+        $remaining    = $requests->get_param( 'download_remaining' );
+        $expiry       = $requests->get_param( 'access_expires' );
         $file_counter = 0;
         $order        = dokan()->order->get( $order_id );
         $data         = [];
@@ -243,7 +256,37 @@ class OrderControllerV2 extends OrderController {
             $files = $product->get_downloads();
 
             foreach ( $files as $download_id => $file ) {
-                $inserted_id = wc_downloadable_file_permission( $download_id, $product_id, $order );
+                $data_store           = WC_Data_Store::load( 'customer-download' );
+                $existing_permissions = $data_store->get_downloads(
+                    [
+                        'order_id'    => $order->get_id(),
+                        'product_id'  => $product_id,
+                        'download_id' => $download_id,
+                        'limit'       => 1,
+                    ]
+                );
+
+                $download    = null;
+                $inserted_id = 0;
+
+                if ( ! empty( $existing_permissions ) ) {
+                    $download    = reset( $existing_permissions );
+                    $inserted_id = $download->get_id();
+                } else {
+                    $inserted_id = wc_downloadable_file_permission( $download_id, $product_id, $order );
+                    if ( $inserted_id ) {
+                        $download = new WC_Customer_Download( $inserted_id );
+                        if ( $download ) {
+                            if ( $remaining ) {
+                                $download->set_downloads_remaining( $remaining );
+                            }
+                            if ( $expiry ) {
+                                $download->set_access_expires( $expiry );
+                            }
+                            $download->save();
+                        }
+                    }
+                }
 
                 if ( $inserted_id ) {
                     ++$file_counter;

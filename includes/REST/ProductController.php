@@ -2,9 +2,7 @@
 
 namespace WeDevs\Dokan\REST;
 
-use WC_Customer_Download;
 use WC_Data;
-use WC_Data_Store;
 use WC_Product;
 use WC_Product_Variation;
 use WP_Error;
@@ -315,73 +313,6 @@ class ProductController extends DokanRESTController {
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_multistep_categories' ],
                     'permission_callback' => [ $this, 'get_product_permissions_check' ],
-                ],
-            ]
-        );
-
-        register_rest_route(
-            $this->namespace, '/' . $this->base . '/grant-downloadable-access', [
-                [
-                    'methods'             => WP_REST_Server::CREATABLE,
-                    'callback'            => [ $this, 'grant_downloadable_access' ],
-                    'permission_callback' => [ $this, 'get_product_permissions_check' ],
-                    'args'                => [
-                        'order_id' => [
-                            'description' => __( 'Order ID', 'dokan-lite' ),
-                            'type'        => 'integer',
-                            'required'    => true,
-                        ],
-                        'product_ids' => [
-                            'description' => __( 'Product IDs', 'dokan-lite' ),
-                            'type'        => 'array',
-                            'items'       => [
-                                'type' => 'integer',
-                            ],
-                            'required'    => true,
-                        ],
-                        'download_remaining' => [
-                            'description' => __( 'Download Remaining', 'dokan-lite' ),
-                            'type'        => 'integer',
-                            'required'    => false,
-                        ],
-                        'access_expires' => [
-                            'description' => __( 'Access Expires', 'dokan-lite' ),
-                            'type'        => 'date',
-                            'required'    => false,
-                        ],
-                    ],
-                ],
-            ]
-        );
-
-        register_rest_route(
-            $this->namespace, '/' . $this->base . '/revoke-downloadable-access', [
-                [
-                    'methods'             => WP_REST_Server::CREATABLE,
-                    'callback'            => [ $this, 'revoke_access_to_download' ],
-                    'permission_callback' => [ $this, 'get_product_permissions_check' ],
-                    'args'                => [
-                        'download_id' => [
-                            'description' => __( 'Download ID', 'dokan-lite' ),
-                            'type'        => 'string',
-                            'required'    => true,
-                        ],
-                        'product_id' => [
-                            'description' => __( 'Product ID', 'dokan-lite' ),
-                            'type'        => 'integer',
-                            'required'    => true,
-                        ],
-                        'order_id' => [
-                            'description' => __( 'Order ID', 'dokan-lite' ),
-                            'type'        => 'integer',
-                            'required'    => true,
-                        ],
-                        'permission_id' => [
-                            'description' => __( 'Permission ID', 'dokan-lite' ),
-                            'type'        => 'integer',
-                            'required'    => true,
-                        ],
-                    ],
                 ],
             ]
         );
@@ -1806,128 +1737,6 @@ class ProductController extends DokanRESTController {
         $categories = apply_filters( 'dokan_rest_product_categories', $categories_controller->get() );
 
         return rest_ensure_response( $categories );
-    }
-
-    public function grant_downloadable_access( $request ) {
-        $order_id     = $request->get_param( 'order_id' );
-        $product_ids  = $request->get_param( 'product_ids' );
-        $remaining    = $request->get_param( 'download_remaining' );
-        $expiry       = $request->get_param( 'access_expires' );
-
-        if ( ! is_array( $product_ids ) ) {
-            $product_ids = [ $product_ids ];
-        }
-
-        $order         = dokan()->order->get( $order_id );
-        $granted_files = [];
-
-        foreach ( $product_ids as $product_id ) {
-            $product = wc_get_product( $product_id );
-            if ( ! $product ) {
-                continue;
-            }
-            $files = $product->get_downloads();
-
-            if ( ! $order->get_billing_email() ) {
-                continue;
-            }
-
-            if ( $files ) {
-                foreach ( $files as $download_id => $file ) {
-                    $data_store           = WC_Data_Store::load( 'customer-download' );
-                    $existing_permissions = $data_store->get_downloads(
-                        [
-                            'order_id'    => $order->get_id(),
-                            'product_id'  => $product_id,
-                            'download_id' => $download_id,
-                            'limit'       => 1,
-                        ]
-                    );
-
-                    $download    = null;
-                    $inserted_id = 0;
-
-                    if ( ! empty( $existing_permissions ) ) {
-                        $download    = reset( $existing_permissions );
-                        $inserted_id = $download->get_id();
-                    } else {
-                        $inserted_id = wc_downloadable_file_permission( $download_id, $product_id, $order );
-                        if ( $inserted_id ) {
-                            $download = new WC_Customer_Download( $inserted_id );
-                        }
-                    }
-
-                    if ( $download ) {
-                        if ( $remaining ) {
-                            $download->set_downloads_remaining( $remaining );
-                        }
-                        if ( $expiry ) {
-                            $download->set_access_expires( $expiry );
-                        }
-                        $download->save();
-                        $granted_files[] = [
-                            'name'               => $file->get_name(),
-                            'file'               => $file->get_file(),
-                            'download_id'        => $download->get_download_id(),
-                            'permission_id'      => $download->get_id(),
-                            'download_name'      => $file->get_name(),
-                            'order_id'           => $download->get_order_id(),
-                            'order_key'          => $download->get_order_key(),
-                            'remaining'          => $download->get_downloads_remaining(),
-                            'access_expires'     => $download->get_access_expires() ? wc_rest_prepare_date_response( $download->get_access_expires() ) : null,
-                        ];
-                    }
-                }
-            }
-        }
-
-        return rest_ensure_response(
-            [
-                'success'       => true,
-                'message'       => __( 'Downloadable access granted successfully.', 'dokan-lite' ),
-                'files' => $granted_files,
-            ]
-        );
-    }
-
-    /**
-     * Revoke file download access for customer.
-     *
-     * @since 4.0.0
-     *
-     * @param WP_REST_Request $request Request object.
-     *
-     * @return WP_REST_Response|WP_Error
-     */
-    public function revoke_access_to_download( $request ) {
-        $download_id   = $request->get_param( 'download_id' );
-        $product_id    = $request->get_param( 'product_id' );
-        $order_id      = $request->get_param( 'order_id' );
-        $permission_id = $request->get_param( 'permission_id' );
-
-        if ( empty( $permission_id ) ) {
-            return new WP_Error(
-                'dokan_rest_missing_permission_id',
-                __( 'Permission ID is required.', 'dokan-lite' ),
-                [ 'status' => 400 ]
-            );
-        }
-
-        $data_store = WC_Data_Store::load( 'customer-download' );
-        $data_store->delete_by_id( absint( $permission_id ) );
-
-        do_action( 'woocommerce_ajax_revoke_access_to_product_download', $download_id, $product_id, $order_id, $permission_id );
-
-        return rest_ensure_response(
-            [
-                'success'       => true,
-                'message'       => __( 'Download access revoked successfully.', 'dokan-lite' ),
-                'download_id'   => $download_id,
-                'product_id'    => $product_id,
-                'order_id'      => $order_id,
-                'permission_id' => $permission_id,
-            ]
-        );
     }
 
     /**
