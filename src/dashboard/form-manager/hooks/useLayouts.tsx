@@ -41,7 +41,7 @@ export default function useLayouts(
                 return {};
             }
             return {
-                label: field.title,
+                label: field.label,
                 description: field.description,
             };
         },

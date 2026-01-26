@@ -203,8 +203,7 @@ class FormManager {
 
                 $fields[] = [
                     'id'            => $field->get_id(),
-                    'name'          => $field->get_name(),
-                    'title'         => $field->get_title(),
+                    'label'         => $field->get_label(),
                     'tooltip'       => $field->get_tooltip(),
                     'section_id'    => $section->get_id(),
                     'is_custom'     => $field->is_custom(),
@@ -216,7 +215,6 @@ class FormManager {
                     'options'       => $field->get_options( $product ),
                     'visibility'    => $field->is_visible(),
                     'placeholder'   => $field->get_placeholder(),
-                    'help_content'  => $field->get_help_content(),
                     // dependency
                     'dependency_condition' => $field->get_dependency_condition(),
                     'hidden_scope' => $field->get_hidden_scope( $product ),
@@ -225,7 +223,7 @@ class FormManager {
 
             $sections[] = [
                 'id'     => $section->get_id(),
-                'title'  => $section->get_title(),
+                'label'  => $section->get_label(),
                 'order'  => $section->get_order(),
                 'description' => $section->get_description(),
                 'fields' => $fields,

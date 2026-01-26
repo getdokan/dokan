@@ -13,7 +13,7 @@ export const getFieldConfig = ( field: FormField ) => {
                 <span
                     className="dokan-form-field-label"
                     dangerouslySetInnerHTML={ {
-                        __html: sanitizeHTML( field.title ),
+                        __html: sanitizeHTML( field.label ),
                     } }
                 />
                 { field.tooltip && (
@@ -26,9 +26,7 @@ export const getFieldConfig = ( field: FormField ) => {
         description: (
             <span
                 dangerouslySetInnerHTML={ {
-                    __html: sanitizeHTML(
-                        field.help_content || field.description
-                    ),
+                    __html: sanitizeHTML( field.description ),
                 } }
             />
         ),
@@ -51,7 +49,7 @@ export const getFieldConfig = ( field: FormField ) => {
         return checkDependency( field.dependency_condition, data );
     };
 
-    if ( ! field.help_content && ! field.description ) {
+    if ( ! field.description ) {
         // @ts-ignore
         delete mappedField.description;
     }

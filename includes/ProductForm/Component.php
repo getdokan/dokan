@@ -24,7 +24,7 @@ abstract class Component {
      */
     protected $required_fields = [
         'id',
-        'title',
+        'label',
     ];
 
     /**
@@ -36,9 +36,8 @@ abstract class Component {
      */
     protected $data = [
         'id'                     => '', // html id attribute of the field, required
-        'title'                  => '', // label for the field
+        'label'                  => '', // label for the field
         'description'            => '', // description of the field
-        'help_content'           => '', // help content for the field
         'tooltip'                => '', // tooltip content for the field
         'visibility'             => true, // field visibility, if the field is visible under frontend
         'required'               => false, // by default, all fields are not required
@@ -104,8 +103,8 @@ abstract class Component {
      *
      * @return string
      */
-    public function get_title(): string {
-        return $this->data['title'];
+    public function get_label(): string {
+        return $this->data['label'];
     }
 
     /**
@@ -113,14 +112,14 @@ abstract class Component {
      *
      * @since DOKAN_SINCE
      *
-     * @param string $title
+     * @param string $label
      *
      * @see   wp_kses_post()
      *
      * @return $this
      */
-    public function set_title( string $title ): self {
-        $this->data['title'] = wp_kses_post( $title );
+    public function set_label( string $label ): self {
+        $this->data['label'] = wp_kses_post( $label );
 
         return $this;
     }
@@ -149,34 +148,6 @@ abstract class Component {
      */
     public function set_description( string $description ): self {
         $this->data['description'] = wp_kses_post( $description );
-
-        return $this;
-    }
-
-    /**
-     * Get field help content
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return string
-     */
-    public function get_help_content(): string {
-        return $this->data['help_content'];
-    }
-
-    /**
-     * Set field help content, validated with
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param string $help_content
-     *
-     * @see   wp_kses_post()
-     *
-     * @return $this
-     */
-    public function set_help_content( string $help_content ): self {
-        $this->data['help_content'] = wp_kses_post( $help_content );
 
         return $this;
     }

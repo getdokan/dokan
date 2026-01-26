@@ -17,7 +17,7 @@ export interface DependencyCondition {
 }
 export interface Section {
     id: string;
-    title: string;
+    label: string;
     description: string;
     order: number;
     fields: FormField[];
@@ -27,11 +27,9 @@ export interface Section {
 export type FormField = {
     id: string;
     section_id: string;
-    name: string;
-    title: string;
+    label: string;
     is_custom: boolean;
     placeholder: string;
-    help_content: string;
     tooltip: string;
     description: string;
     required: boolean;

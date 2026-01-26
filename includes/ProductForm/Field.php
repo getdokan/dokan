@@ -20,9 +20,9 @@ class Field extends Component {
      */
     protected $required_fields = [
         'id',
-        'title',
-        'section',
         'type',
+        'label',
+        'section',
     ];
 
     /**
@@ -36,11 +36,10 @@ class Field extends Component {
      */
     public function __construct( string $id, array $args = [] ) {
         $data       = [
-            'name'                  => '', // html name attribute of the field, if not exists id value will be used as name
+            'type'                  => 'prop', // field type, accept value can be 'prop', 'meta' or 'other', 'custom'
             'value'                 => '', // html value attribute of the field
             'property'              => '', // if exists, this will be the name of the field
             'section'               => '', // section id, required
-            'type'                  => 'prop', // field type, accept value can be 'prop', 'meta' or 'other', 'custom'
             'field_type'            => '', // html field type
             'placeholder'           => '', // html placeholder attribute value for the field
             'options'               => [], // if the field is select, radio, checkbox, etc
@@ -69,34 +68,6 @@ class Field extends Component {
                 )
             );
         }
-    }
-
-    /**
-     * Get field name
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return string
-     */
-    public function get_name(): string {
-        return $this->data['name'];
-    }
-
-    /**
-     * Set field name, validated by sanitize_text_field()
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param string $name
-     *
-     * @see   sanitize_text_field()
-     *
-     * @return $this
-     */
-    public function set_name( string $name ): Field {
-        $this->data['name'] = sanitize_text_field( $name );
-
-        return $this;
     }
 
     /**
@@ -149,7 +120,7 @@ class Field extends Component {
             return '';
         }
 
-        $field_name = sanitize_key( $this->get_name() );
+        $field_name = sanitize_key( $this->get_id() );
         if ( $this->is_prop() && 0 === strpos( $field_name, '_' ) ) {
             $field_name = preg_replace( '/_/', '', $field_name, 1 );
         }

@@ -186,7 +186,7 @@ export const defaultHandler: FieldHandler = ( field ) => {
     const config: FieldConfig = {
         type: 'text',
     };
-    if ( field?.name?.includes( 'price' ) ) {
+    if ( field?.id?.includes( 'price' ) ) {
         config.Edit = PriceEdit;
         config.type = 'number';
     }
