@@ -1,6 +1,5 @@
 import { __, sprintf } from '@wordpress/i18n';
-import { Modal } from '@wordpress/components';
-import { Slot } from '@wordpress/components';
+import { Modal, Slot } from '@wordpress/components';
 import { kebabCase } from '../../utilities';
 import { debounce } from '@wordpress/compose';
 import { useCallback, useState } from '@wordpress/element';

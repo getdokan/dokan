@@ -128,7 +128,7 @@ class Hooks {
         /**
          * Filter whether the order should be excluded from vendor withdrawal balance.
          *
-         * @since DOKAN_SINCE
+         * @since 4.2.9
          *
          * @param bool     $should_exclude_cod_payment Whether to exclude COD payment from balance.
          * @param WC_Order $order                      Order object.
