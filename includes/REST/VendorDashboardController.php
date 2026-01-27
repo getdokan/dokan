@@ -7,6 +7,8 @@ use DatePeriod;
 use DateTime;
 use DateTimeZone;
 use Exception;
+use WeDevs\Dokan\Intelligence\Manager;
+use WeDevs\Dokan\Intelligence\Services\Model;
 use WeDevs\Dokan\Utilities\VendorUtil;
 use WP_Error;
 use WP_HTTP_Response;
@@ -380,6 +382,11 @@ class VendorDashboardController extends \WP_REST_Controller {
         $icon_id  = get_option( 'site_icon' );
         $favicon  = $icon_id ? wp_get_attachment_image_url( $icon_id, 'full' ) : '';
 
+        $is_enabled = dokan_get_option( 'dokan_ai_image_gen_availability', 'dokan_ai', 'off' ) === 'on';
+        $manager = dokan()->get_container()->get( Manager::class );
+        $is_text_configured = $manager->is_configured();
+        $is_image_configured = $is_enabled && $manager->is_configured( Model::SUPPORTS_IMAGE );
+
         return rest_ensure_response(
             [
                 'site_title'            => get_bloginfo( 'name' ),
@@ -409,6 +416,10 @@ class VendorDashboardController extends \WP_REST_Controller {
                 'week_start_on'         => get_option( 'start_of_week' ),
                 'store_color'           => dokan_get_option( 'store_color_pallete', 'dokan_colors', [] ),
                 'timezone_utc'          => $timezone_utc,
+                'ai_settings'           => [
+                    'ai_text_enable'    => $is_text_configured,
+                    'ai_image_enable'   => $is_image_configured,
+                ],
             ]
         );
     }
@@ -582,6 +593,12 @@ class VendorDashboardController extends \WP_REST_Controller {
                 ],
                 'store_color' => [
                     'description' => esc_html__( 'Store color.', 'dokan-lite' ),
+                    'type'        => 'object',
+                    'context'     => [ 'view' ],
+                    'readonly'    => true,
+                ],
+                'ai_settings'    => [
+                    'description' => esc_html__( 'Store AI Settings.', 'dokan-lite' ),
                     'type'        => 'object',
                     'context'     => [ 'view' ],
                     'readonly'    => true,
