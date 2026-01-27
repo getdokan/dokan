@@ -66,6 +66,13 @@ abstract class SettingsElement {
 	protected $dependencies = array();
 
 	/**
+	 * The settings validations.
+	 *
+	 * @var array $validations Validations.
+	 */
+	protected $validations = array();
+
+	/**
 	 * Settings Type.
 	 *
 	 * @var string $type Settings Type.
@@ -447,6 +454,61 @@ abstract class SettingsElement {
 	}
 
 	/**
+	 * Get element validation array.
+     *
+     * @since DOKAN_SINCE
+	 *
+	 * @return array
+	 */
+	public function get_validations(): array {
+		$dependency_key = $this->get_dependency_key();
+
+		return array_map(
+			function ( $validation ) use ( $dependency_key ) {
+				$validation['self'] = $dependency_key;
+				return $validation;
+			},
+			$this->validations
+		);
+	}
+
+	/**
+	 * Set Validations.
+     *
+     * @SINCE DOKAN_SINCE
+	 *
+	 * @param array $validations Validations.
+	 *
+	 * @return SettingsElement
+	 */
+	public function set_validations( array $validations ): SettingsElement {
+		$this->validations = $validations;
+
+		return $this;
+	}
+
+	/**
+	 * Add Validation to the SettingsElement.
+     *
+     * @since DOKAN_SINCE
+	 *
+	 * @param string $rules    Validation rules (e.g., 'required|not_in_array|not_empty').
+	 * @param array  $params   Additional parameters for validation.
+	 * @param string $message  Custom error message.
+	 *
+	 * @return SettingsElement
+	 */
+	public function add_validation( string $rules, array $params = array(), string $message = '' ): SettingsElement {
+		$this->validations[] = array(
+			'rules'   => $rules,
+			'params'  => $params,
+			'message' => $message,
+		);
+
+		return $this;
+	}
+
+	/**
 	 * Add child element.
 	 *
 	 * @param SettingsElement $element Settings element.
@@ -538,6 +600,7 @@ abstract class SettingsElement {
 			'description'    => $this->get_description(),
 			'dependency_key' => $this->get_dependency_key(),
 			'dependencies'   => $this->get_dependencies(),
+			'validations'    => $this->get_validations(),
 		);
 
         /**

@@ -245,7 +245,7 @@ vendor store page.', 'dokan-lite'
                                         esc_html__( 'Disable', 'dokan-lite' ),
                                         'off'
                                     )
-                                    ->set_default( 'off' )
+                                    ->set_default( 'on' )
                                     ->set_helper_text( esc_html__( 'Note: This option works only if the theme supports WooCommerce single product page sidebar.', 'dokan-lite' ) )
                             )
                     )

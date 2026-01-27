@@ -1,4 +1,4 @@
-import { SettingsElement } from '../pages/setup-guide/StepSettings';
+import { SettingsElement } from '../../../stores/adminSettings/types';
 
 const settingsElementFinderReplacer = (
     settings: SettingsElement[],
