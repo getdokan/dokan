@@ -482,7 +482,7 @@ class Settings {
         $enable_tnc = isset( $_POST['dokan_store_tnc_enable'] ) && 'on' === sanitize_text_field( wp_unslash( $_POST['dokan_store_tnc_enable'] ) );
 
         if ( $enable_tnc ) {
-            $store_tnc = isset( $_POST['dokan_store_tnc'] ) ? wp_unslash( $_POST['dokan_store_tnc'] ) : '';
+            $store_tnc = isset( $_POST['dokan_store_tnc'] ) ? wp_kses_post( wp_unslash( $_POST['dokan_store_tnc'] ) ) : '';
 
             $store_tnc_clean = wp_strip_all_tags( $store_tnc );
             $store_tnc_clean = html_entity_decode( $store_tnc_clean, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
@@ -656,7 +656,7 @@ class Settings {
                 ];
             }
 
-            $store_tnc_raw = isset( $_POST['dokan_store_tnc'] ) ? wp_unslash( $_POST['dokan_store_tnc'] ) : '';
+            $store_tnc_raw = isset( $_POST['dokan_store_tnc'] ) ? wp_kses_post( wp_unslash( $_POST['dokan_store_tnc'] ) ) : '';
 
             $store_tnc_processed = '';
 
@@ -666,7 +666,7 @@ class Settings {
                 $store_tnc_clean = preg_replace( '/[\s\x{00A0}\x{200B}\x{FEFF}]+/u', '', $store_tnc_clean );
 
                 if ( ! empty( $store_tnc_clean ) ) {
-                    $store_tnc_processed = wp_kses_post( $store_tnc_raw );
+                    $store_tnc_processed = $store_tnc_raw;
                 }
             }
 
