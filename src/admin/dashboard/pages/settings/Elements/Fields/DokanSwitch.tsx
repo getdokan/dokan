@@ -75,6 +75,7 @@ export default function DokanSwitch( { element } ) {
                             imageUrl={ element?.image_url }
                             wrapperClassNames={ 'w-full items-center' }
                             fieldType={ element.switcher_type }
+                            validationError={ element?.validationError }
                         />
                     </div>
                 ) }

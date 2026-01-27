@@ -24,6 +24,7 @@ export default function DokanMultiCheck( { element } ) {
                     helperText={ element.description }
                     tooltip={ element.tooltip }
                     imageUrl={ element?.image_url }
+                    validationError={ element?.validationError }
                 />
             ) }
             <DokanCheckboxGroup

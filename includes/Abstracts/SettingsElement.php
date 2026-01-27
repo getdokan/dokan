@@ -493,16 +493,16 @@ abstract class SettingsElement {
      * @since DOKAN_SINCE
 	 *
 	 * @param string $rules    Validation rules (e.g., 'required|not_in_array|not_empty').
-	 * @param array  $params   Additional parameters for validation.
 	 * @param string $message  Custom error message.
+	 * @param array  $params   Additional parameters for validation.
 	 *
 	 * @return SettingsElement
 	 */
-	public function add_validation( string $rules, array $params = array(), string $message = '' ): SettingsElement {
+	public function add_validation( string $rules, string $message = '', array $params = array() ): SettingsElement {
 		$this->validations[] = array(
 			'rules'   => $rules,
-			'params'  => $params,
 			'message' => $message,
+			'params'  => $params,
 		);
 
 		return $this;
