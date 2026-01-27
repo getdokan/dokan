@@ -4,7 +4,7 @@
  *
  * Displays the "Enjoyed Dokan?" rating request in admin footer.
  *
- * @Dokan 4.0.0
+ * @since DOKAN_SINCE
  *
  * @package dokan
  */
