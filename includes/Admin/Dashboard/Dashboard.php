@@ -644,9 +644,12 @@ class Dashboard implements Hookable {
             return $text;
         }
 
-        $dom_element = '<span id="dokan-admin-switching" class="dokan-layout dokan-admin-page-body" style="display: block; padding-top: 0.5rem; padding-bottom: 0.25rem; "></span><span id="footer-thankyou" style="display: block; font-weight: bold; font-style: normal; padding-bottom: 0.5rem;">Enjoyed Dokan? Please leave us a <a href="https://wordpress.org/support/plugin/dokan-lite/reviews?rate=5#new-post" target="_blank" class="wc-rating-link" aria-label="five star"">★★★★★</a> rating. We really appreciate your support.</span>';
+        $dom_element = '<span id="dokan-admin-switching" class="dokan-layout dokan-admin-page-body" style="display: block; padding-top: 0.5rem; padding-bottom: 0.25rem;"></span>';
 
-        return $dom_element;
+        ob_start();
+        dokan_get_template_part( 'global/global-review-rating' );
+
+        return $dom_element . ob_get_clean();
     }
 
     /**
