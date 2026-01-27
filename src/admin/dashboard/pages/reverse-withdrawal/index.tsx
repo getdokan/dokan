@@ -67,7 +67,7 @@ const ReverseWithdrawalPage = ( props ) => {
         {
             id: 'balance',
             label: __( 'Amount', 'dokan-lite' ),
-            enableSorting: true,
+            enableSorting: false,
             render: ( { item } ) => (
                 <span className="font-semibold text-xs text-[#575757]">
                     { price( item.balance ) }
@@ -77,7 +77,7 @@ const ReverseWithdrawalPage = ( props ) => {
         {
             id: 'last_payment_date',
             label: __( 'Date', 'dokan-lite' ),
-            enableSorting: true,
+            enableSorting: false,
             render: ( { item } ) => {
                 return (
                     <span className="text-[#575757] text-xs">

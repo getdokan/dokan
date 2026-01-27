@@ -123,7 +123,29 @@ class Hooks {
          */
         $exclude_cod_payment = 'on' === dokan_get_option( 'exclude_cod_payment', 'dokan_withdraw', 'off' );
 
-        if ( $exclude_cod_payment && 'cod' === $order->get_payment_method() ) {
+        $should_exclude_cod_payment = $exclude_cod_payment && 'cod' === $order->get_payment_method();
+
+        /**
+         * Filter whether the order should be excluded from vendor withdrawal balance.
+         *
+         * @since 4.2.9
+         *
+         * @param bool     $should_exclude_cod_payment Whether to exclude COD payment from balance.
+         * @param WC_Order $order                      Order object.
+         * @param int      $order_id                   Order ID.
+         * @param string   $new_status                 New order status.
+         * @param bool     $exclude_cod_payment        Whether exclude COD option is enabled.
+         */
+        $should_exclude_cod_payment = apply_filters(
+            'dokan_order_should_exclude_from_vendor_balance',
+            $should_exclude_cod_payment,
+            $order,
+            $order_id,
+            $new_status,
+            $exclude_cod_payment
+        );
+
+        if ( $should_exclude_cod_payment ) {
             return;
         }
 
