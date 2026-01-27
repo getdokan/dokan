@@ -104,9 +104,14 @@ export interface VariationContextType {
     removeVariation: ( variation: VariationType ) => void;
 }
 
-export const VariationContext = createContext<
-    VariationContextType | undefined
->( undefined );
+export const VariationContext = createContext< VariationContextType >( {
+    variations: [],
+    saveVariation: () => Promise.resolve(),
+    generateVariations: () => {},
+    addVariation: () => {},
+    updateVariation: () => {},
+    removeVariation: () => {},
+} );
 
 export const useVariationContext = () => {
     const context = useContext( VariationContext );

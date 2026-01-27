@@ -40,6 +40,9 @@ const useVariationLayouts = (
                     type: 'row',
                     alignment: 'start',
                     styles: {
+                        enabled: {
+                            width: 'max-content',
+                        },
                         downloadable: {
                             width: 'max-content',
                         },
@@ -51,7 +54,12 @@ const useVariationLayouts = (
                         },
                     },
                 },
-                children: [ 'downloadable', 'virtual', 'manage_stock' ],
+                children: [
+                    'enabled',
+                    'downloadable',
+                    'virtual',
+                    'manage_stock',
+                ],
             },
             {
                 id: 'variation-prices',

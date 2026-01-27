@@ -436,14 +436,25 @@ class Init {
                 'sanitize_callback'     => function ( $value ) {
                     return ! empty( $value ) && 'yes' === $value;
                 },
-                'hidden_scope'  => [ 'variable' ],
+                'hidden_scope'          => [ 'variable' ],
+                'value_callback'        => function ( $product, $value = '' ) {
+                    if ( '' !== $value ) {
+                        return $value;
+                    }
+
+                    if ( ! $product instanceof WC_Product ) {
+                        return '';
+                    }
+
+                    return $product->is_downloadable() ? 'yes' : 'no';
+                },
             ]
         );
 
         $section->add_field(
             Elements::VIRTUAL, [
                 'label'                 => __( 'Virtual', 'dokan-lite' ),
-                'tooltip'           => __( 'Virtual products are intangible and are not shipped.', 'dokan-lite' ),
+                'tooltip'               => __( 'Virtual products are intangible and are not shipped.', 'dokan-lite' ),
                 'field_type'            => 'checkbox',
                 'additional_properties' => [
                     'value' => 'yes',
@@ -451,7 +462,7 @@ class Init {
                 'sanitize_callback'     => function ( $value ) {
                     return ! empty( $value ) && 'yes' === $value;
                 },
-                'hidden_scope'  => [ 'variable' ],
+                'hidden_scope'          => [ 'variable' ],
             ]
         );
 
@@ -514,7 +525,7 @@ class Init {
         $section->add_field(
             Elements::MANAGE_STOCK, [
                 'label'                 => __( 'Enable product stock management', 'dokan-lite' ),
-                'description'           => __( 'Manage stock level (quantity)', 'dokan-lite' ),
+                'tooltip'               => __( 'Manage stock level (quantity)', 'dokan-lite' ),
                 'field_type'            => 'checkbox',
                 'additional_properties' => [
                     'value' => 'yes',

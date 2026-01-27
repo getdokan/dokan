@@ -89,8 +89,8 @@ const AttributeVariationEditor = ( { data, field, onChange }: any ) => {
                         options={ options }
                         productType={ productType }
                         cardExpanded={ cardExpanded }
-                        onUpdate={ ( updatedAttr ) =>
-                            handleUpdateAttribute( index, updatedAttr )
+                        onUpdate={ ( value ) =>
+                            handleUpdateAttribute( index, value )
                         }
                         onRemove={ ( e ) => {
                             e.stopPropagation();

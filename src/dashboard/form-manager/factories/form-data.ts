@@ -25,7 +25,9 @@ const CheckboxHandler: FieldDataHandler = {
         return (
             field.value === 'yes' ||
             field.value === 'on' ||
-            field.value === true
+            field.value === true ||
+            field.value === 1 ||
+            field.value === '1'
         );
     },
 };

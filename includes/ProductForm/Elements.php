@@ -12,6 +12,10 @@ defined( 'ABSPATH' ) || exit;
 class Elements {
     const ID = 'id';
     const TYPE = 'type';
+    const PRODUCT_TYPE_SIMPLE = 'simple';
+    const PRODUCT_TYPE_VARIABLE = 'variable';
+    const PRODUCT_TYPE_GROUPED = 'grouped';
+    const PRODUCT_TYPE_EXTERNAL = 'external';
     const NAME = 'name';
     const DESCRIPTION = 'description';
     const SHORT_DESCRIPTION = 'short_description';
