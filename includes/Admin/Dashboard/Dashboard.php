@@ -644,12 +644,10 @@ class Dashboard implements Hookable {
             return $text;
         }
 
-        $dom_element = '<span id="dokan-admin-switching" class="dokan-layout dokan-admin-page-body" style="display: block; padding-top: 0.5rem; padding-bottom: 0.25rem;"></span>';
-
         ob_start();
         dokan_get_template_part( 'global/global-review-rating' );
 
-        return $dom_element . ob_get_clean();
+        return ob_get_clean();
     }
 
     /**
