@@ -4,6 +4,40 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.2.9',
+        'released' => '2026-01-27',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Replace DokanModal dependency from dokan-ui with WordPress Modal.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Add user feedback link across Dokan admin pages.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Introduce a customizable option to exclude vendor order balance.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Add AI text and image enhancer settings to vendor preferences.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Improve default table interactions in Dokan admin.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Handle vendor payment settings permission properly for Vendor staff.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.2.8',
         'released' => '2026-01-20',
         'changes'  => [

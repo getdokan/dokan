@@ -109,7 +109,7 @@ class RefundHandler implements Hookable {
          * Apply the filter so other plugins (like wePOS) can override this.
          * Use the exact same filter name for consistency across the whole system.
          *
-         * @since DOKAN_SINCE
+         * @since 4.2.9
          * @param bool     $should_exclude_cod_payment Whether to exclude the payment.
          * @param WC_Order $order                      The main WooCommerce order object.
          * @param int      $order_id                   The ID of the main order.

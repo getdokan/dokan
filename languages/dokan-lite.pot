@@ -1,14 +1,14 @@
 # Copyright (c) 2026 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 4.2.8\n"
+"Project-Id-Version: Dokan 4.2.9\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-01-20T10:36:12+00:00\n"
+"POT-Creation-Date: 2026-01-27T12:15:51+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -2561,14 +2561,14 @@ msgid "Something wrong, please try again later"
 msgstr ""
 
 #: includes/Ajax.php:108
-#: includes/Dashboard/Templates/Settings.php:343
-#: includes/Dashboard/Templates/Settings.php:348
-#: includes/Dashboard/Templates/Settings.php:358
-#: includes/Dashboard/Templates/Settings.php:370
-#: includes/Dashboard/Templates/Settings.php:382
-#: includes/Dashboard/Templates/Settings.php:420
-#: includes/Dashboard/Templates/Settings.php:457
-#: includes/Dashboard/Templates/Settings.php:502
+#: includes/Dashboard/Templates/Settings.php:375
+#: includes/Dashboard/Templates/Settings.php:380
+#: includes/Dashboard/Templates/Settings.php:390
+#: includes/Dashboard/Templates/Settings.php:402
+#: includes/Dashboard/Templates/Settings.php:414
+#: includes/Dashboard/Templates/Settings.php:452
+#: includes/Dashboard/Templates/Settings.php:489
+#: includes/Dashboard/Templates/Settings.php:534
 #: includes/Dashboard/Templates/Withdraw.php:116
 #: includes/Withdraw/Hooks.php:165
 #: includes/Withdraw/Hooks.php:240
@@ -3610,6 +3610,7 @@ msgstr ""
 
 #: includes/Dashboard/Templates/Products.php:223
 #: includes/Dashboard/Templates/Settings.php:139
+#: includes/Dashboard/Templates/Settings.php:242
 #: includes/Shortcodes/Dashboard.php:32
 #: templates/global/no-permission.php:54
 msgid "You have no permission to view this page"
@@ -3689,72 +3690,72 @@ msgstr ""
 msgid "These are the withdraw methods available for you. Please update your payment information below to submit withdraw requests and get your store payments seamlessly."
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:248
+#: includes/Dashboard/Templates/Settings.php:256
 msgid "No withdraw method is available. Please contact site admin."
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:314
+#: includes/Dashboard/Templates/Settings.php:346
 msgid "Invalid withdraw method. Please contact site admin"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:354
+#: includes/Dashboard/Templates/Settings.php:386
 msgid "Pemission denied social"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:366
-#: includes/Dashboard/Templates/Settings.php:378
+#: includes/Dashboard/Templates/Settings.php:398
+#: includes/Dashboard/Templates/Settings.php:410
 msgid "Pemission denied"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:388
+#: includes/Dashboard/Templates/Settings.php:420
 msgid "Failed to process data, invalid submission"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:398
+#: includes/Dashboard/Templates/Settings.php:430
 msgid "Your information has been saved successfully"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:427
-#: includes/Dashboard/Templates/Settings.php:470
+#: includes/Dashboard/Templates/Settings.php:459
+#: includes/Dashboard/Templates/Settings.php:502
 msgid "Store type required"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:435
-#: includes/Dashboard/Templates/Settings.php:478
-#: includes/Dashboard/Templates/Settings.php:513
-#: includes/Dashboard/Templates/Settings.php:523
+#: includes/Dashboard/Templates/Settings.php:467
+#: includes/Dashboard/Templates/Settings.php:510
+#: includes/Dashboard/Templates/Settings.php:545
+#: includes/Dashboard/Templates/Settings.php:555
 msgid "Invalid email"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:465
+#: includes/Dashboard/Templates/Settings.php:497
 msgid "Store name required"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:539
+#: includes/Dashboard/Templates/Settings.php:571
 msgid "Invalid Account Type"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:544
+#: includes/Dashboard/Templates/Settings.php:576
 msgid "You must attest that the bank account is yours."
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:713
+#: includes/Dashboard/Templates/Settings.php:745
 msgid "Book"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:714
+#: includes/Dashboard/Templates/Settings.php:746
 msgid "Dress"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:715
+#: includes/Dashboard/Templates/Settings.php:747
 msgid "Electronic"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:735
+#: includes/Dashboard/Templates/Settings.php:767
 msgid "Bank Account Settings"
 msgstr ""
 
-#: includes/Dashboard/Templates/Settings.php:740
+#: includes/Dashboard/Templates/Settings.php:772
 msgid "Paypal Settings"
 msgstr ""
 
@@ -5314,24 +5315,24 @@ msgstr ""
 msgid "Customer Note"
 msgstr ""
 
-#: includes/Order/Hooks.php:371
+#: includes/Order/Hooks.php:393
 msgid "Marked as completed because it contains digital products only."
 msgstr ""
 
-#: includes/Order/Hooks.php:385
+#: includes/Order/Hooks.php:407
 msgid "Mark parent order completed when all child orders are completed."
 msgstr ""
 
-#: includes/Order/Hooks.php:436
+#: includes/Order/Hooks.php:458
 msgid "This coupon is invalid for multiple vendors."
 msgstr ""
 
 #. translators: 1: Order ID, 2: Refund ID, 3: Refund Amount
-#: includes/Order/RefundHandler.php:192
+#: includes/Order/RefundHandler.php:214
 msgid "Dokan refund adjustment error: Seller not found, Order ID: %1$d, Refund ID: %2$d, Refund Amount: %3$f "
 msgstr ""
 
-#: includes/Order/RefundHandler.php:210
+#: includes/Order/RefundHandler.php:232
 msgid "Refunded by Dokan"
 msgstr ""
 
@@ -7172,7 +7173,7 @@ msgid "True the prices included tax during checkout."
 msgstr ""
 
 #: includes/REST/OrderController.php:1046
-#: includes/REST/VendorDashboardController.php:603
+#: includes/REST/VendorDashboardController.php:620
 msgid "User ID who owns the order. 0 for guests."
 msgstr ""
 
@@ -8028,135 +8029,139 @@ msgstr ""
 msgid "Settings value"
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:70
+#: includes/REST/VendorDashboardController.php:72
 msgid "From Date"
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:76
+#: includes/REST/VendorDashboardController.php:78
 msgid "To Date"
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:81
+#: includes/REST/VendorDashboardController.php:83
 msgid "Returns all sales reports if true"
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:88
+#: includes/REST/VendorDashboardController.php:90
 msgid "Group By"
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:428
+#: includes/REST/VendorDashboardController.php:439
 msgid "Site title."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:434
+#: includes/REST/VendorDashboardController.php:445
 msgid "Tagline."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:440
+#: includes/REST/VendorDashboardController.php:451
 msgid "Favicon."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:446
+#: includes/REST/VendorDashboardController.php:457
 msgid "Payment currency."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:452
+#: includes/REST/VendorDashboardController.php:463
 msgid "Currency Options."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:458
+#: includes/REST/VendorDashboardController.php:469
 msgid "Payment currency position."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:464
+#: includes/REST/VendorDashboardController.php:475
 msgid "Currency symbol."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:470
+#: includes/REST/VendorDashboardController.php:481
 msgid "Decimal separator."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:476
+#: includes/REST/VendorDashboardController.php:487
 msgid "Thousand separator."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:482
+#: includes/REST/VendorDashboardController.php:493
 msgid "Decimal point."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:488
+#: includes/REST/VendorDashboardController.php:499
 msgid "Tax Calculation enabled or not."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:494
+#: includes/REST/VendorDashboardController.php:505
 msgid "Tax display in cart price."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:500
+#: includes/REST/VendorDashboardController.php:511
 msgid "Tax Tax price round up in subtotal."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:506
+#: includes/REST/VendorDashboardController.php:517
 msgid "Coupon enabled in store."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:512
+#: includes/REST/VendorDashboardController.php:523
 msgid "Compound coupon calculation."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:518
+#: includes/REST/VendorDashboardController.php:529
 msgid "Measurement unit for weight."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:524
+#: includes/REST/VendorDashboardController.php:535
 msgid "Measurement unit for dimension."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:530
+#: includes/REST/VendorDashboardController.php:541
 msgid "Enabled product reviews."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:536
+#: includes/REST/VendorDashboardController.php:547
 msgid "Enabled product rating."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:542
+#: includes/REST/VendorDashboardController.php:553
 msgid "Enabled product stock management."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:548
+#: includes/REST/VendorDashboardController.php:559
 msgid "Store timezone."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:554
+#: includes/REST/VendorDashboardController.php:565
 msgid "Store date format."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:560
+#: includes/REST/VendorDashboardController.php:571
 msgid "Store time format."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:566
+#: includes/REST/VendorDashboardController.php:577
 msgid "Store UTC time."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:572
+#: includes/REST/VendorDashboardController.php:583
 msgid "Store language."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:578
+#: includes/REST/VendorDashboardController.php:589
 msgid "Store start of week."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:584
+#: includes/REST/VendorDashboardController.php:595
 msgid "Store color."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:609
+#: includes/REST/VendorDashboardController.php:601
+msgid "Store AI Settings."
+msgstr ""
+
+#: includes/REST/VendorDashboardController.php:626
 msgid "Start date to show orders"
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:616
+#: includes/REST/VendorDashboardController.php:633
 msgid "End date to show orders"
 msgstr ""
 
@@ -10413,6 +10418,18 @@ msgstr ""
 #. translators: 1) withdraw page url
 #: templates/emails/withdraw-new.php:56
 msgid "You can approve or deny it by going <a href=\"%s\"> here </a>"
+msgstr ""
+
+#: templates/global/global-review-rating.php:16
+msgid "Enjoyed Dokan? Please leave us a"
+msgstr ""
+
+#: templates/global/global-review-rating.php:17
+msgid "five star"
+msgstr ""
+
+#: templates/global/global-review-rating.php:20
+msgid "rating. We really appreciate your support."
 msgstr ""
 
 #. translators: 1) cart total amount
