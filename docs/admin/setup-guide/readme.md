@@ -2,17 +2,18 @@
 
 - [Introduction](#introduction)
 - [1. Adding a New Step](#adding-a-new-step)
-    - [Create a New Step Class](#create-a-new-step-class)
-    - [Register Your Step in Service Provider](#register-your-step-in-service-provider)
+  - [Create a New Step Class](#create-a-new-step-class)
+  - [Register Your Step in Service Provider](#register-your-step-in-service-provider)
 - [2. Adding New Field Types](#adding-new-field-types)
-    - [Create PHP Field Class](#create-php-field-class)
-    - [Register Your Field in Field Class](#register-your-field-in-field-class)
-    - [Create React Component for Your Field](#create-react-component-for-your-field)
-    - [Update FieldParser to Include Your Field](#update-fieldparser-to-include-your-field)
+  - [Create PHP Field Class](#create-php-field-class)
+  - [Register Your Field in Field Class](#register-your-field-in-field-class)
+  - [Create React Component for Your Field](#create-react-component-for-your-field)
+  - [Update FieldParser to Include Your Field](#update-fieldparser-to-include-your-field)
 - [3. Accessing Field Settings](#accessing-field-settings)
 - [4. Creating New Admin Dashboard Pages](#creating-new-admin-dashboard-pages)
 
 ## Introduction
+
 The Dokan Admin Setup Guide provides a structured, step-by-step onboarding experience for administrators configuring a Dokan marketplace.  
 
 This documentation covers how to create custom setup steps, implement UI components, and integrate with Dokan's settings system. With examples for both PHP and React implementation, developers can extend the onboarding process with additional configuration steps tailored to their marketplace requirements.
@@ -20,13 +21,14 @@ This documentation covers how to create custom setup steps, implement UI compone
 ## Adding a New Step
 
 ### Create a New Step Class
+
 Create a new PHP class that extends `AbstractStep`:
 
 ```php
 <?php
 namespace WeDevs\Dokan\Admin\OnboardingSetup\Steps;
 
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\ComponentFactory as Factory;
+use WeDevs\Dokan\FieldFactory\FieldFactory;
 
 class YourNewStep extends AbstractStep {
 
@@ -109,20 +111,31 @@ class YourNewStep extends AbstractStep {
         $default_settings = $this->get_default_settings();
         $current_options  = get_option( 'dokan_your_settings_option', $default_settings );
 
-        // Define the UI using ComponentFactory
-        $this->set_title( esc_html__( 'Your New Step', 'dokan-lite' ) )
-            ->add(
-                Factory::section( 'main_section' )
-                    ->set_title( esc_html__( 'Section Title', 'dokan-lite' ) )
-                    ->add(
-                        Factory::field( 'option_1', 'text' )
-                            ->set_title( esc_html__( 'Option 1', 'dokan-lite' ) )
-                            ->set_description( esc_html__( 'Description for option 1', 'dokan-lite' ) )
-                            ->set_default( $default_settings['option_1'] )
-                            ->set_value( $current_options['option_1'] ?? $default_settings['option_1'] )
-                    )
-                    // Add more fields as needed
-            );
+        // Define the UI using FieldFactory
+        $this->set_title( esc_html__( 'Your New Step', 'dokan-lite' ) );
+
+        // Create fields using FieldFactory
+        $option_1_field = FieldFactory::text(
+            'option_1',
+            esc_html__( 'Option 1', 'dokan-lite' ),
+            [
+                'description' => esc_html__( 'Description for option 1', 'dokan-lite' ),
+                'default'     => $default_settings['option_1'],
+                'value'       => $current_options['option_1'] ?? $default_settings['option_1'],
+            ]
+        );
+
+        // Create section with children
+        $section = FieldFactory::section(
+            'main_section',
+            esc_html__( 'Section Title', 'dokan-lite' ),
+            [
+                $option_1_field,
+                // Add more fields as needed
+            ]
+        );
+
+        $this->add_field_factory_element( $section );
     }
 
     /**
@@ -154,6 +167,7 @@ class YourNewStep extends AbstractStep {
 ```
 
 ### Register Your Step in Service Provider
+
 Add your step class to the `AdminSetupGuideServiceProvider`:
 
 ```php
@@ -194,88 +208,76 @@ class AdminSetupGuideServiceProvider extends BaseServiceProvider {
 ## Adding New Field Types
 
 ### Create PHP Field Class
-Create a new PHP class for your field in `WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields`:
+
+Create a new PHP class for your field in `WeDevs\Dokan\FieldFactory\Elements\Fields`:
 
 ```php
 <?php
-namespace WeDevs\Dokan\Admin\OnboardingSetup\Components\Fields;
+namespace WeDevs\Dokan\FieldFactory\Elements\Fields;
 
-use WeDevs\Dokan\Abstracts\SettingsElement;
+use WeDevs\Dokan\FieldFactory\Abstracts\AbstractField;
 
-class YourCustomField extends SettingsElement {
+class YourCustomField extends AbstractField {
 
     /**
-     * The type of the field.
+     * Field type (DataViews API).
      *
      * @var string
      */
-    protected $type = 'field';
+    protected string $field_type = 'text';
 
     /**
-     * The variant of the field.
+     * Field variant (edit control type).
      *
      * @var string
      */
-    protected $variant = 'your_custom_field';
+    protected string $variant = 'your_custom_field';
 
     /**
-     * Data validation.
-     *
-     * @param mixed $data Data for validation.
-     *
-     * @return bool
+     * {@inheritdoc}
      */
-    public function data_validation( $data ): bool {
-        // Implement validation logic
-        return true;
+    public function get_category(): string {
+        return 'field';
     }
 
     /**
-     * Sanitize data for storage.
-     *
-     * @param mixed $data Data for sanitization.
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function sanitize_element( $data ) {
-        // Implement sanitization logic.
-        return sanitize_text_field( wp_unslash( $data ) );
-    }
+    public function validate( array $item = [] ): array {
+        $this->errors = [];
+        $value        = $this->get_value( $item );
 
-    /**
-     * Escape data for display.
-     *
-     * @param mixed $data Data for display.
-     *
-     * @return mixed
-     */
-    public function escape_element( $data ) {
-        // Implement escaping logic.
-        return esc_html( $data );
+        // Add your custom validation logic here
+        if ( empty( $value ) ) {
+            $this->errors['required'] = [
+                'type'    => 'invalid',
+                'message' => __( 'This field is required.', 'dokan-lite' ),
+            ];
+        }
+
+        return [
+            'valid'  => empty( $this->errors ),
+            'errors' => $this->errors,
+        ];
     }
 }
 ```
 
-### Register Your Field in Field Class
+### Register Your Field in Element Registry
 
-Add your field to the map in `WeDevs\Dokan\Admin\OnboardingSetup\Components\Field` class :
+Register your field using the `dokan_field_factory_register_elements` hook:
 
 ```php
-private $field_map = array(
-    'text'              => Text::class,
-    'number'            => Number::class,
-    'checkbox'          => Checkbox::class,
-    'select'            => Select::class,
-    'radio'             => Radio::class,
-    'tel'               => Tel::class,
-    'password'          => Password::class,
-    'radio_box'         => RadioBox::class,
-    'switch'            => Switcher::class,
-    'multicheck'        => MultiCheck::class,
-    'currency'          => Currency::class,
-    'combine_input'     => CombineInput::class,
-    'your_custom_field' => YourCustomField::class, // Add your field class.
-);
+<?php
+add_action( 'dokan_field_factory_register_elements', function( $registry ) {
+    $registry->register(
+        'field:your_custom_field',
+        WeDevs\Dokan\FieldFactory\Elements\Fields\YourCustomField::class
+    );
+    
+    // Optional: add alias for convenience
+    $registry->add_alias( 'your_custom_field', 'field:your_custom_field' );
+} );
 ```
 
 ### Create React Component for Your Field
@@ -527,6 +529,7 @@ class YourCustomPage extends AbstractPage {
 ```
 
 #### Important Properties and Methods
+
 ##### Menu Configuration Properties
 
 - **page_title:** The title displayed in the browser tab and page header.

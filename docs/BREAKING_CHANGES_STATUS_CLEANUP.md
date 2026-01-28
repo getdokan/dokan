@@ -25,7 +25,7 @@ This document identifies **potential breaking changes** from removing legacy Sta
 - **Status**: No breaking changes
 - **Hooks Preserved**:
   - `dokan_status_after_describing_elements` - Still fires with `Status` instance
-  - `dokan_status_field_factory_elements` - Still works (filter)
+  - `dokan_status_field_elements` - Still works (filter)
   - `dokan_status_element_render_{hook_key}` - Still fires (filter)
 - **Files**: `includes/Admin/Status/Status.php`, `includes/FieldFactory/Adapters/StatusElementAdapter.php`
 

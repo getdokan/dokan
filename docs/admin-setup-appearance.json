@@ -1,0 +1,186 @@
+[
+    {
+        "id": "appearance",
+        "type": "section",
+        "title": "Appearance",
+        "icon": "",
+        "display": true,
+        "hook_key": "dokan_admin_onboarding_setup_step_appearance_appearance",
+        "children": [
+            {
+                "id": "store-info",
+                "type": "subsection",
+                "title": "Store Info",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_appearance_appearance_store-info",
+                "children": [
+                    {
+                        "id": "contact_seller",
+                        "type": "field",
+                        "title": "Contact Form on Store Page",
+                        "icon": "",
+                        "display": true,
+                        "hook_key": "dokan_admin_onboarding_setup_step_appearance_appearance_store-info_contact_seller",
+                        "children": [],
+                        "description": "Display a contact form on vendor store pages for customer inquiries",
+                        "dependency_key": "appearance.store-info.contact_seller",
+                        "dependencies": [],
+                        "variant": "radio",
+                        "value": "on",
+                        "default": "on",
+                        "placeholder": "",
+                        "readonly": false,
+                        "disabled": false,
+                        "size": 20,
+                        "options": [
+                            {
+                                "value": "off",
+                                "title": "Hide"
+                            },
+                            {
+                                "value": "on",
+                                "title": "Show"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "enable_theme_store_sidebar",
+                        "type": "field",
+                        "title": "Store Sidebar From Theme",
+                        "icon": "",
+                        "display": true,
+                        "hook_key": "dokan_admin_onboarding_setup_step_appearance_appearance_store-info_enable_theme_store_sidebar",
+                        "children": [],
+                        "description": "Show/hide the sidebar on vendor store pages",
+                        "dependency_key": "appearance.store-info.enable_theme_store_sidebar",
+                        "dependencies": [],
+                        "variant": "radio",
+                        "value": "off",
+                        "default": "off",
+                        "placeholder": "",
+                        "readonly": false,
+                        "disabled": false,
+                        "size": 20,
+                        "options": [
+                            {
+                                "value": "off",
+                                "title": "Hide"
+                            },
+                            {
+                                "value": "on",
+                                "title": "Show"
+                            }
+                        ]
+                    }
+                ],
+                "description": "",
+                "dependency_key": "appearance.store-info",
+                "dependencies": []
+            },
+            {
+                "id": "vendor-info",
+                "type": "subsection",
+                "title": "Vendor Info on Product Page",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_appearance_appearance_vendor-info",
+                "children": [
+                    {
+                        "id": "email",
+                        "type": "field",
+                        "title": "Email Address",
+                        "icon": "",
+                        "display": true,
+                        "hook_key": "dokan_admin_onboarding_setup_step_appearance_appearance_vendor-info_email",
+                        "children": [],
+                        "description": "",
+                        "dependency_key": "appearance.vendor-info.email",
+                        "dependencies": [],
+                        "variant": "radio",
+                        "value": "",
+                        "default": "",
+                        "placeholder": "",
+                        "readonly": false,
+                        "disabled": false,
+                        "size": 20,
+                        "options": [
+                            {
+                                "value": "",
+                                "title": "Hide"
+                            },
+                            {
+                                "value": "email",
+                                "title": "Show"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "phone",
+                        "type": "field",
+                        "title": "Phone Number",
+                        "icon": "",
+                        "display": true,
+                        "hook_key": "dokan_admin_onboarding_setup_step_appearance_appearance_vendor-info_phone",
+                        "children": [],
+                        "description": "",
+                        "dependency_key": "appearance.vendor-info.phone",
+                        "dependencies": [],
+                        "variant": "radio",
+                        "value": "",
+                        "default": "",
+                        "placeholder": "",
+                        "readonly": false,
+                        "disabled": false,
+                        "size": 20,
+                        "options": [
+                            {
+                                "value": "",
+                                "title": "Hide"
+                            },
+                            {
+                                "value": "phone",
+                                "title": "Show"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "address",
+                        "type": "field",
+                        "title": "Store Address",
+                        "icon": "",
+                        "display": true,
+                        "hook_key": "dokan_admin_onboarding_setup_step_appearance_appearance_vendor-info_address",
+                        "children": [],
+                        "description": "",
+                        "dependency_key": "appearance.vendor-info.address",
+                        "dependencies": [],
+                        "variant": "radio",
+                        "value": "",
+                        "default": "",
+                        "placeholder": "",
+                        "readonly": false,
+                        "disabled": false,
+                        "size": 20,
+                        "options": [
+                            {
+                                "value": "",
+                                "title": "Hide"
+                            },
+                            {
+                                "value": "address",
+                                "title": "Show"
+                            }
+                        ]
+                    }
+                ],
+                "description": "",
+                "dependency_key": "appearance.vendor-info",
+                "dependencies": []
+            }
+        ],
+        "description": "",
+        "dependency_key": "appearance",
+        "dependencies": []
+    }
+]

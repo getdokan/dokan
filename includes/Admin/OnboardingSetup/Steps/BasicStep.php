@@ -2,7 +2,7 @@
 
 namespace WeDevs\Dokan\Admin\OnboardingSetup\Steps;
 
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\ComponentFactory as Factory;
+use WeDevs\Dokan\FieldFactory\FieldFactory;
 
 class BasicStep extends AbstractStep {
 
@@ -97,56 +97,119 @@ class BasicStep extends AbstractStep {
         $default_settings = $this->get_default_settings();
         $dokan_selling    = get_option( 'dokan_selling', $default_settings );
 
-        $this
-            ->set_title( esc_html__( 'Basic', 'dokan-lite' ) )
-            ->add(
-                Factory::section( 'basic' )
-                    ->set_title( esc_html__( 'Basic', 'dokan-lite' ) )
-                    ->add(
-                        Factory::field( 'shipping_fee_recipient', 'radio_box' )
-                            ->set_title( esc_html__( 'Shipping Fee Recipient', 'dokan-lite' ) )
-                            ->set_description( esc_html__( 'Choose who receives shipping charges - Admin keeps all shipping fees or Vendors receive fees for their products', 'dokan-lite' ) )
-                            ->add_option( esc_html__( 'Admin', 'dokan-lite' ), 'admin' )
-                            ->add_option( esc_html__( 'Vendor', 'dokan-lite' ), 'seller' )
-                            ->set_default( $default_settings['shipping_fee_recipient'] )
-                            ->set_value( $dokan_selling['shipping_fee_recipient'] ?? $default_settings['shipping_fee_recipient'] )
-                    )->add(
-                        Factory::field( 'tax_fee_recipient', 'radio_box' )
-                            ->set_title( esc_html__( 'Product Tax Fee Recipient', 'dokan-lite' ) )
-                            ->set_description( esc_html__( 'Determine who collects product taxes - Admin manages all tax collection or Vendors handle their product taxes', 'dokan-lite' ) )
-                            ->add_option( esc_html__( 'Admin', 'dokan-lite' ), 'admin' )
-                            ->add_option( esc_html__( 'Vendor', 'dokan-lite' ), 'seller' )
-                            ->set_default( $default_settings['tax_fee_recipient'] )
-                            ->set_value( $dokan_selling['tax_fee_recipient'] ?? $default_settings['tax_fee_recipient'] )
-                    )
-                    ->add(
-                        Factory::field( 'shipping_tax_fee_recipient', 'radio_box' )
-                            ->set_title( esc_html__( 'Shipping Tax Fee Recipient', 'dokan-lite' ) )
-                            ->set_description( esc_html__( 'Select who receives shipping tax - Admin centralizes all shipping tax or Vendors collect shipping tax for their orders', 'dokan-lite' ) )
-                            ->add_option( esc_html__( 'Admin', 'dokan-lite' ), 'admin' )
-                            ->add_option( esc_html__( 'Vendor', 'dokan-lite' ), 'seller' )
-                            ->set_default( $default_settings['shipping_tax_fee_recipient'] )
-                            ->set_value( $dokan_selling['shipping_tax_fee_recipient'] ?? $default_settings['shipping_tax_fee_recipient'] )
-                    )
-                    ->add(
-                        Factory::field( 'order_status_change', 'switch' )
-                            ->set_title( esc_html__( 'Vendors can change order status', 'dokan-lite' ) )
-                            ->set_description( esc_html__( 'Allow vendors to update order statuses (processing, completed, etc.) for their products', 'dokan-lite' ) )
-                            ->set_default( $default_settings['order_status_change'] )
-                            ->set_value( $dokan_selling['order_status_change'] ?? $default_settings['order_status_change'] )
-                            ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'on' )
-                            ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), 'off' )
-                    )
-                    ->add(
-                        Factory::field( 'new_seller_enable_selling', 'switch' )
-                            ->set_title( esc_html__( 'New Vendor Selling Directly', 'dokan-lite' ) )
-                            ->set_description( esc_html__( 'Automatically enable selling capabilities for newly registered vendors', 'dokan-lite' ) )
-                            ->set_default( $default_settings['new_seller_enable_selling'] )
-                            ->set_value( $dokan_selling['new_seller_enable_selling'] ?? $default_settings['new_seller_enable_selling'] )
-                            ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'on' )
-                            ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), 'off' )
-                    )
-            );
+        $this->set_title( esc_html__( 'Basic', 'dokan-lite' ) );
+
+        // Create fields using FieldFactory
+        $shipping_fee_field = FieldFactory::radio_box(
+            'shipping_fee_recipient',
+            esc_html__( 'Shipping Fee Recipient', 'dokan-lite' ),
+            [
+                [
+					'value' => 'admin',
+					'label' => esc_html__( 'Admin', 'dokan-lite' ),
+				],
+                [
+					'value' => 'seller',
+					'label' => esc_html__( 'Vendor', 'dokan-lite' ),
+				],
+            ],
+            [
+                'description' => esc_html__( 'Choose who receives shipping charges - Admin keeps all shipping fees or Vendors receive fees for their products', 'dokan-lite' ),
+                'default'     => $default_settings['shipping_fee_recipient'],
+                'value'       => $dokan_selling['shipping_fee_recipient'] ?? $default_settings['shipping_fee_recipient'],
+            ]
+        );
+
+        $tax_fee_field = FieldFactory::radio_box(
+            'tax_fee_recipient',
+            esc_html__( 'Product Tax Fee Recipient', 'dokan-lite' ),
+            [
+                [
+					'value' => 'admin',
+					'label' => esc_html__( 'Admin', 'dokan-lite' ),
+				],
+                [
+					'value' => 'seller',
+					'label' => esc_html__( 'Vendor', 'dokan-lite' ),
+				],
+            ],
+            [
+                'description' => esc_html__( 'Determine who collects product taxes - Admin manages all tax collection or Vendors handle their product taxes', 'dokan-lite' ),
+                'default'     => $default_settings['tax_fee_recipient'],
+                'value'       => $dokan_selling['tax_fee_recipient'] ?? $default_settings['tax_fee_recipient'],
+            ]
+        );
+
+        $shipping_tax_field = FieldFactory::radio_box(
+            'shipping_tax_fee_recipient',
+            esc_html__( 'Shipping Tax Fee Recipient', 'dokan-lite' ),
+            [
+                [
+					'value' => 'admin',
+					'label' => esc_html__( 'Admin', 'dokan-lite' ),
+				],
+                [
+					'value' => 'seller',
+					'label' => esc_html__( 'Vendor', 'dokan-lite' ),
+				],
+            ],
+            [
+                'description' => esc_html__( 'Select who receives shipping tax - Admin centralizes all shipping tax or Vendors collect shipping tax for their orders', 'dokan-lite' ),
+                'default'     => $default_settings['shipping_tax_fee_recipient'],
+                'value'       => $dokan_selling['shipping_tax_fee_recipient'] ?? $default_settings['shipping_tax_fee_recipient'],
+            ]
+        );
+
+        $order_status_field = FieldFactory::toggle(
+            'order_status_change',
+            esc_html__( 'Vendors can change order status', 'dokan-lite' ),
+            [
+                'description'   => esc_html__( 'Allow vendors to update order statuses (processing, completed, etc.) for their products', 'dokan-lite' ),
+                'default'       => $default_settings['order_status_change'] === 'on',
+                'value'         => ( $dokan_selling['order_status_change'] ?? $default_settings['order_status_change'] ) === 'on',
+                'enable_state'  => [
+					'value' => 'on',
+					'title' => esc_html__( 'Enabled', 'dokan-lite' ),
+				],
+                'disable_state' => [
+					'value' => 'off',
+					'title' => esc_html__( 'Disabled', 'dokan-lite' ),
+				],
+            ]
+        );
+
+        $new_seller_field = FieldFactory::toggle(
+            'new_seller_enable_selling',
+            esc_html__( 'New Vendor Selling Directly', 'dokan-lite' ),
+            [
+                'description'   => esc_html__( 'Automatically enable selling capabilities for newly registered vendors', 'dokan-lite' ),
+                'default'       => $default_settings['new_seller_enable_selling'] === 'on',
+                'value'         => ( $dokan_selling['new_seller_enable_selling'] ?? $default_settings['new_seller_enable_selling'] ) === 'on',
+                'enable_state'  => [
+					'value' => 'on',
+					'title' => esc_html__( 'Enabled', 'dokan-lite' ),
+				],
+                'disable_state' => [
+					'value' => 'off',
+					'title' => esc_html__( 'Disabled', 'dokan-lite' ),
+				],
+            ]
+        );
+
+        // Create section with children
+        $section = FieldFactory::section(
+            'basic',
+            esc_html__( 'Basic', 'dokan-lite' ),
+            [
+                $shipping_fee_field,
+                $tax_fee_field,
+                $shipping_tax_field,
+                $order_status_field,
+                $new_seller_field,
+            ]
+        );
+
+        $this->add_field_factory_element( $section );
     }
 
     /**

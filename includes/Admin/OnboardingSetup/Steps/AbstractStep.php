@@ -4,6 +4,8 @@ namespace WeDevs\Dokan\Admin\OnboardingSetup\Steps;
 
 use WeDevs\Dokan\Abstracts\Settings;
 use WeDevs\Dokan\Contracts\Hookable;
+use WeDevs\Dokan\FieldFactory\Adapters\SettingsElementAdapter;
+use WeDevs\Dokan\FieldFactory\Contracts\ElementInterface;
 
 /**
  * The abstract step class.
@@ -11,6 +13,13 @@ use WeDevs\Dokan\Contracts\Hookable;
  * @since 4.0.0
  */
 abstract class AbstractStep extends Settings implements StepInterface, Hookable {
+
+	/**
+	 * FieldFactory elements container.
+	 *
+	 * @var ElementInterface[]
+	 */
+	protected array $field_elements = [];
 
     /**
      * The step ID.
@@ -199,6 +208,69 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
         return apply_filters( 'dokan_admin_setup_guide_step_' . $this->get_id() . '_options', $this->settings_options );
     }
 
+	/**
+	 * Override populate to use FieldFactory.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array
+	 */
+	public function populate(): array {
+		// Build FieldFactory elements if not already built
+		if ( empty( $this->field_elements ) ) {
+			$this->describe_settings();
+		}
+
+		// Convert FieldFactory elements to SettingsElement format.
+		if ( ! empty( $this->field_elements ) ) {
+			$hook_key = $this->get_hook_key();
+			$dependency_key = $this->get_dependency_key();
+			$converted = SettingsElementAdapter::to_settings_format_array( $this->field_elements, $hook_key, $dependency_key );
+
+			return $converted;
+		}
+
+		// Fallback to parent implementation
+		return parent::populate();
+	}
+
+	/**
+	 * Add FieldFactory element.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param ElementInterface $element FieldFactory element.
+	 *
+	 * @return self
+	 */
+	public function add_field_factory_element( ElementInterface $element ): self {
+		$this->field_elements[] = $element;
+		return $this;
+	}
+
+	/**
+	 * Get FieldFactory elements.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return ElementInterface[]
+	 */
+	public function get_field_elements(): array {
+		return $this->field_elements;
+	}
+
+	/**
+	 * Clear FieldFactory elements.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return self
+	 */
+	public function clear_field_elements(): self {
+		$this->field_elements = [];
+		return $this;
+	}
+
     /**
      * Get the settings options.
      *
@@ -254,4 +326,23 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
     public function mark_as_complete() {
         update_option( $this->storage_key . '_completed', true );
     }
+
+	/**
+	 * Override populate_children_only to use FieldFactory.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array
+	 */
+	public function populate_children_only(): array {
+		$populated = $this->populate();
+
+		// New contract: populate() returns array-of-elements.
+		if ( isset( $populated[0] ) && is_array( $populated[0] ) ) {
+			return $populated[0]['children'] ?? [];
+		}
+
+		// Legacy/other contract: populate() returns a single element array.
+		return is_array( $populated ) ? ( $populated['children'] ?? [] ) : [];
+	}
 }

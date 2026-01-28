@@ -14,6 +14,7 @@ use WeDevs\Dokan\Test\DokanTestCase;
  * Class FieldValueTest
  *
  * Tests for field value getting and setting.
+ * @group field-factory
  */
 class FieldValueTest extends DokanTestCase {
 

@@ -2,7 +2,8 @@
 
 namespace WeDevs\Dokan\Admin\OnboardingSetup\Steps;
 
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\ComponentFactory as Factory;
+use WeDevs\Dokan\FieldFactory\FieldFactory;
+use WeDevs\Dokan\ProductCategory\Categories;
 
 class CommissionStep extends AbstractStep {
 
@@ -101,58 +102,152 @@ class CommissionStep extends AbstractStep {
         $default_settings = $this->get_default_settings();
         $dokan_selling    = get_option( 'dokan_selling', $default_settings );
 
-        $this
-            ->set_title( esc_html__( 'Commission', 'dokan-lite' ) )
-            ->add(
-                Factory::section( 'commission' )
-                    ->set_title( esc_html__( 'Commission', 'dokan-lite' ) )
-                    ->add(
-                        Factory::field( 'commission_type', 'select' )
-                            ->set_title( esc_html__( 'Commission Type', 'dokan-lite' ) )
-                            ->set_description( esc_html__( 'Select a commission type for your marketplace', 'dokan-lite' ) )
-                            ->add_option( esc_html__( 'Fixed', 'dokan-lite' ), 'fixed' )
-                            ->add_option( esc_html__( 'Category Based', 'dokan-lite' ), 'category_based' )
-                            ->set_default( $default_settings['commission_type'] )
-                            ->set_value( $dokan_selling['commission_type'] ?? $default_settings['commission_type'] )
-                    )
-                    ->add(
-                        Factory::field( 'admin_commission', 'combine_input' )
-                            ->set_title( __( 'Admin Commission', 'dokan-lite' ) )
-                            ->set_description( esc_html__( 'Amount you will get from sales in both percentage and fixed fee', 'dokan-lite' ) )
-                            ->add_dependency( 'commission.commission_type', 'fixed', true, 'display', 'hide', '!==' )
-                            ->add_dependency( 'commission.commission_type', 'fixed', true, 'display', 'show', '===' )
-                            ->set_admin_percentage( $dokan_selling['admin_percentage'] ?? $default_settings['admin_percentage'] )
-                            ->set_additional_fee( $dokan_selling['additional_fee'] ?? $default_settings['additional_fee'] )
-                            ->set_value(
-                                [
-                                    'additional_fee'   => $dokan_selling['additional_fee'] ?? $default_settings['additional_fee'],
-                                    'admin_percentage' => $dokan_selling['admin_percentage'] ?? $default_settings['admin_percentage'],
-                                ]
-                            )
-                    )
-                    ->add(
-                        Factory::field( 'reset_sub_category_when_edit_all_category', 'switch' )
-                            ->set_title( __( 'Apply Parent Category Commission to All Subcategories', 'dokan-lite' ) )
-                            ->set_description( esc_html__( "Important: 'All Categories' commission serves as your marketplace's default rate and cannot be empty. If 0 is given in value, then the marketplace will deduct no commission from vendors", 'dokan-lite' ) )
-                            ->add_dependency( 'commission.commission_type', 'category_based', true, 'display', 'hide', '!==' )
-                            ->add_dependency( 'commission.commission_type', 'category_based', true, 'display', 'show', '===' )
-                            ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'on' )
-                            ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), 'off' )
-                            ->set_default( $default_settings['reset_sub_category_when_edit_all_category'] )
-                            ->set_value( $dokan_selling['reset_sub_category_when_edit_all_category'] ?? $default_settings['reset_sub_category_when_edit_all_category'] )
-                    )
-                    ->add(
-                        Factory::field( 'commission_category_based_values', 'category_based_commission' )
-                            ->set_title( esc_html__( 'Admin Commission', 'dokan-lite' ) )
-                            ->set_description( esc_html__( 'Amount you will get from each sale', 'dokan-lite' ) )
-                            ->add_dependency( 'commission.commission_type', 'category_based', true, 'display', 'hide', '!==' )
-                            ->add_dependency( 'commission.commission_type', 'category_based', true, 'display', 'show', '===' )
-                            ->add_dependency( 'commission.reset_sub_category_when_edit_all_category', 'on', true, 'custom', 'custom', '===' )
-                            ->add_dependency( 'commission.reset_sub_category_when_edit_all_category', 'off', true, 'custom', 'custom', '===' )
-                            ->set_reset_subcategory( $dokan_selling['reset_sub_category_when_edit_all_category'] ?? $default_settings['reset_sub_category_when_edit_all_category'] )
-                            ->set_value( (array) ( $dokan_selling['commission_category_based_values'] ?? $default_settings['commission_category_based_values'] ) )
-                    )
-            );
+        $this->set_title( esc_html__( 'Commission', 'dokan-lite' ) );
+
+		// Build product category map (matches legacy setup-guide payload shape).
+		$categories = ( new Categories() )->get();
+
+        // Commission Type field
+        $commission_type_field = FieldFactory::select(
+            'commission_type',
+            esc_html__( 'Commission Type', 'dokan-lite' ),
+            [
+                [
+					'value' => 'fixed',
+					'label' => esc_html__( 'Fixed', 'dokan-lite' ),
+				],
+                [
+					'value' => 'category_based',
+					'label' => esc_html__( 'Category Based', 'dokan-lite' ),
+				],
+            ],
+            [
+                'description' => esc_html__( 'Select a commission type for your marketplace', 'dokan-lite' ),
+                'default'     => $default_settings['commission_type'],
+                'value'       => $dokan_selling['commission_type'] ?? $default_settings['commission_type'],
+            ]
+        );
+
+        // Admin Commission (combine_input) field
+        $admin_commission_field = FieldFactory::create(
+			[
+				'id'          => 'admin_commission',
+				'type'        => 'field',
+				'variant'     => 'combine_input',
+				'title'       => esc_html__( 'Admin Commission', 'dokan-lite' ),
+				'description' => esc_html__( 'Amount you will get from sales in both percentage and fixed fee', 'dokan-lite' ),
+				'default'     => [
+					'additional_fee'   => $default_settings['additional_fee'],
+					'admin_percentage' => $default_settings['admin_percentage'],
+				],
+				'value'       => [
+					'additional_fee'   => $dokan_selling['additional_fee'] ?? $default_settings['additional_fee'],
+					'admin_percentage' => $dokan_selling['admin_percentage'] ?? $default_settings['admin_percentage'],
+				],
+				'inputs'      => [
+					[
+						'id'      => 'admin_percentage',
+						'label'   => esc_html__( 'Percentage', 'dokan-lite' ),
+						'type'    => 'number',
+						'postfix' => '%',
+						'default' => $default_settings['admin_percentage'],
+					],
+					[
+						'id'      => 'additional_fee',
+						'label'   => esc_html__( 'Fixed Fee', 'dokan-lite' ),
+						'type'    => 'number',
+						'prefix'  => get_woocommerce_currency_symbol(),
+						'default' => $default_settings['additional_fee'],
+					],
+				],
+				'dependencies' => [
+					[
+						'field'    => 'commission.commission_type',
+						'value'    => 'fixed',
+						'operator' => '===',
+					],
+				],
+			]
+		);
+
+        // Reset Subcategory field
+        $reset_subcategory_field = FieldFactory::toggle(
+            'reset_sub_category_when_edit_all_category',
+            esc_html__( 'Apply Parent Category Commission to All Subcategories', 'dokan-lite' ),
+            [
+                'description'   => esc_html__( "Important: 'All Categories' commission serves as your marketplace's default rate and cannot be empty. If 0 is given in value, then the marketplace will deduct no commission from vendors", 'dokan-lite' ),
+                'default'       => $default_settings['reset_sub_category_when_edit_all_category'] === 'on',
+                'value'         => ( $dokan_selling['reset_sub_category_when_edit_all_category'] ?? $default_settings['reset_sub_category_when_edit_all_category'] ) === 'on',
+                'enable_state'  => [
+					'value' => 'on',
+					'title' => esc_html__( 'Enabled', 'dokan-lite' ),
+				],
+                'disable_state' => [
+					'value' => 'off',
+					'title' => esc_html__( 'Disabled', 'dokan-lite' ),
+				],
+                'dependencies'  => [
+                    [
+                        'field'    => 'commission.commission_type',
+                        'value'    => 'category_based',
+                        'operator' => '===',
+                    ],
+                ],
+            ]
+        );
+
+        // Category Based Commission field (custom field type)
+        $category_based_field = FieldFactory::create(
+			[
+				'id'               => 'commission_category_based_values',
+				'type'             => 'field',
+				'variant'          => 'category_based_commission',
+				'title'            => esc_html__( 'Admin Commission', 'dokan-lite' ),
+				'description'      => esc_html__( 'Amount you will get from each sale', 'dokan-lite' ),
+				'default'          => $default_settings['commission_category_based_values'],
+				'value'            => $dokan_selling['commission_category_based_values'] ?? $default_settings['commission_category_based_values'],
+				'categories'       => $categories,
+				'reset_subcategory' => $dokan_selling['reset_sub_category_when_edit_all_category'] ?? $default_settings['reset_sub_category_when_edit_all_category'],
+				'dependencies'     => [
+					[
+						'field'    => 'commission.commission_type',
+						'value'    => 'category_based',
+						'operator' => '===',
+					],
+					// Keep legacy "custom" dependencies (frontend behavior parity).
+					[
+						'key'        => 'commission.reset_sub_category_when_edit_all_category',
+						'value'      => 'on',
+						'to_self'    => true,
+						'attribute'  => 'custom',
+						'effect'     => 'custom',
+						'comparison' => '===',
+					],
+					[
+						'key'        => 'commission.reset_sub_category_when_edit_all_category',
+						'value'      => 'off',
+						'to_self'    => true,
+						'attribute'  => 'custom',
+						'effect'     => 'custom',
+						'comparison' => '===',
+					],
+				],
+			]
+		);
+
+        // Create section with all fields
+        $section = FieldFactory::section(
+            'commission',
+            esc_html__( 'Commission', 'dokan-lite' ),
+            [
+                $commission_type_field,
+                $admin_commission_field,
+                $reset_subcategory_field,
+                $category_based_field,
+            ]
+        );
+
+        $this->add_field_factory_element( $section );
     }
 
     /**

@@ -24,6 +24,7 @@ use WeDevs\Dokan\Test\DokanTestCase;
  * Class FieldFactoryTest
  *
  * Tests for the FieldFactory static facade.
+ * @group field-factory
  */
 class FieldFactoryTest extends DokanTestCase {
 

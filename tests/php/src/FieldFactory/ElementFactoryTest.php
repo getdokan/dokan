@@ -15,13 +15,13 @@ use WeDevs\Dokan\FieldFactory\Elements\Fields\TextField;
 use WeDevs\Dokan\FieldFactory\Elements\Fields\SelectField;
 use WeDevs\Dokan\FieldFactory\Elements\Layouts\Section;
 use WeDevs\Dokan\FieldFactory\Elements\Containers\Page;
-use InvalidArgumentException;
 use WeDevs\Dokan\Test\DokanTestCase;
 
 /**
  * Class ElementFactoryTest
  *
  * Tests for the ElementFactory class.
+ * @group field-factory
  */
 class ElementFactoryTest extends DokanTestCase {
 

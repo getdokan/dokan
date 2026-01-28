@@ -166,6 +166,7 @@ class ElementRegistry {
         $this->register( 'field:copy_field', $base_namespace . 'Fields\\CopyField' );
         $this->register( 'field:combine_input', $base_namespace . 'Fields\\CombineInputField' );
         $this->register( 'field:double_input', $base_namespace . 'Fields\\CombineInputField' );
+        $this->register( 'field:category_based_commission', $base_namespace . 'Fields\\CategoryBasedCommissionField' );
         $this->register( 'field:repeater', $base_namespace . 'Fields\\RepeaterField' );
 
         // =========================================
@@ -234,6 +235,7 @@ class ElementRegistry {
         $this->add_alias( 'copy_field', 'field:copy_field' );
         $this->add_alias( 'combine_input', 'field:combine_input' );
         $this->add_alias( 'double_input', 'field:double_input' );
+        $this->add_alias( 'category_based_commission', 'field:category_based_commission' );
         $this->add_alias( 'repeater', 'field:repeater' );
 
         // File aliases

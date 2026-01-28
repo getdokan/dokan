@@ -1,0 +1,266 @@
+[
+    {
+        "id": "commission",
+        "type": "section",
+        "title": "Commission",
+        "icon": "",
+        "display": true,
+        "hook_key": "dokan_admin_onboarding_setup_step_commission_commission",
+        "children": [
+            {
+                "id": "commission_type",
+                "type": "field",
+                "title": "Commission Type",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_commission_commission_commission_type",
+                "children": [],
+                "description": "Select a commission type for your marketplace",
+                "dependency_key": "commission.commission_type",
+                "dependencies": [],
+                "variant": "select",
+                "value": "fixed",
+                "default": "fixed",
+                "placeholder": "",
+                "readonly": false,
+                "disabled": false,
+                "size": 20,
+                "options": [
+                    {
+                        "value": "fixed",
+                        "title": "Fixed"
+                    },
+                    {
+                        "value": "category_based",
+                        "title": "Category Based"
+                    }
+                ]
+            },
+            {
+                "id": "admin_commission",
+                "type": "field",
+                "title": "Admin Commission",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_commission_commission_admin_commission",
+                "children": [],
+                "description": "Amount you will get from sales in both percentage and fixed fee",
+                "dependency_key": "commission.admin_commission",
+                "dependencies": [
+                    {
+                        "key": "commission.commission_type",
+                        "value": "fixed",
+                        "to_self": true,
+                        "attribute": "display",
+                        "effect": "hide",
+                        "comparison": "!==",
+                        "self": "commission.admin_commission"
+                    },
+                    {
+                        "key": "commission.commission_type",
+                        "value": "fixed",
+                        "to_self": true,
+                        "attribute": "display",
+                        "effect": "show",
+                        "comparison": "===",
+                        "self": "commission.admin_commission"
+                    }
+                ],
+                "variant": "combine_input",
+                "value": {
+                    "additional_fee": "0",
+                    "admin_percentage": "10"
+                },
+                "additional_fee": "0",
+                "admin_percentage": "10"
+            },
+            {
+                "id": "reset_sub_category_when_edit_all_category",
+                "type": "field",
+                "title": "Apply Parent Category Commission to All Subcategories",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_commission_commission_reset_sub_category_when_edit_all_category",
+                "children": [],
+                "description": "Important: &#039;All Categories&#039; commission serves as your marketplace&#039;s default rate and cannot be empty. If 0 is given in value, then the marketplace will deduct no commission from vendors",
+                "dependency_key": "commission.reset_sub_category_when_edit_all_category",
+                "dependencies": [
+                    {
+                        "key": "commission.commission_type",
+                        "value": "category_based",
+                        "to_self": true,
+                        "attribute": "display",
+                        "effect": "hide",
+                        "comparison": "!==",
+                        "self": "commission.reset_sub_category_when_edit_all_category"
+                    },
+                    {
+                        "key": "commission.commission_type",
+                        "value": "category_based",
+                        "to_self": true,
+                        "attribute": "display",
+                        "effect": "show",
+                        "comparison": "===",
+                        "self": "commission.reset_sub_category_when_edit_all_category"
+                    }
+                ],
+                "variant": "switch",
+                "value": "on",
+                "default": "on",
+                "placeholder": "",
+                "readonly": false,
+                "disabled": false,
+                "size": 20,
+                "options": [],
+                "enable_state": {
+                    "value": "on",
+                    "title": "Enabled"
+                },
+                "disable_state": {
+                    "value": "off",
+                    "title": "Disabled"
+                }
+            },
+            {
+                "id": "commission_category_based_values",
+                "type": "field",
+                "title": "Admin Commission",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_commission_commission_commission_category_based_values",
+                "children": [],
+                "description": "Amount you will get from each sale",
+                "dependency_key": "commission.commission_category_based_values",
+                "dependencies": [
+                    {
+                        "key": "commission.commission_type",
+                        "value": "category_based",
+                        "to_self": true,
+                        "attribute": "display",
+                        "effect": "hide",
+                        "comparison": "!==",
+                        "self": "commission.commission_category_based_values"
+                    },
+                    {
+                        "key": "commission.commission_type",
+                        "value": "category_based",
+                        "to_self": true,
+                        "attribute": "display",
+                        "effect": "show",
+                        "comparison": "===",
+                        "self": "commission.commission_category_based_values"
+                    },
+                    {
+                        "key": "commission.reset_sub_category_when_edit_all_category",
+                        "value": "on",
+                        "to_self": true,
+                        "attribute": "custom",
+                        "effect": "custom",
+                        "comparison": "===",
+                        "self": "commission.commission_category_based_values"
+                    },
+                    {
+                        "key": "commission.reset_sub_category_when_edit_all_category",
+                        "value": "off",
+                        "to_self": true,
+                        "attribute": "custom",
+                        "effect": "custom",
+                        "comparison": "===",
+                        "self": "commission.commission_category_based_values"
+                    }
+                ],
+                "variant": "category_based_commission",
+                "value": {
+                    "all": {
+                        "flat": "0",
+                        "percentage": "10"
+                    },
+                    "items": {
+                        "31": {
+                            "flat": "5",
+                            "percentage": "20"
+                        }
+                    }
+                },
+                "categories": {
+                    "15": {
+                        "term_id": 15,
+                        "name": "Uncategorized",
+                        "parent_id": 0,
+                        "children": [],
+                        "parents": [],
+                        "breadcumb": [ "Uncategorized" ]
+                    },
+                    "17": {
+                        "term_id": 17,
+                        "name": "Clothing",
+                        "parent_id": 0,
+                        "children": [ 20, 19, 18 ],
+                        "parents": [],
+                        "breadcumb": [ "Clothing", "Clothing" ]
+                    },
+                    "18": {
+                        "term_id": 18,
+                        "name": "Tshirts",
+                        "parent_id": 17,
+                        "children": [],
+                        "parents": [ 17 ],
+                        "breadcumb": [ "Clothing" ]
+                    },
+                    "19": {
+                        "term_id": 19,
+                        "name": "Hoodies",
+                        "parent_id": 17,
+                        "children": [],
+                        "parents": [ 17 ],
+                        "breadcumb": [ "Clothing" ]
+                    },
+                    "20": {
+                        "term_id": 20,
+                        "name": "Accessories",
+                        "parent_id": 17,
+                        "children": [],
+                        "parents": [ 17 ],
+                        "breadcumb": [ "Clothing" ]
+                    },
+                    "21": {
+                        "term_id": 21,
+                        "name": "Music",
+                        "parent_id": 0,
+                        "children": [],
+                        "parents": [],
+                        "breadcumb": [ "Music" ]
+                    },
+                    "22": {
+                        "term_id": 22,
+                        "name": "Decor",
+                        "parent_id": 0,
+                        "children": [],
+                        "parents": [],
+                        "breadcumb": [ "Decor" ]
+                    },
+                    "31": {
+                        "term_id": 31,
+                        "name": "T-Shirt",
+                        "parent_id": 0,
+                        "children": [],
+                        "parents": [],
+                        "breadcumb": [ "T-Shirt" ]
+                    },
+                    "42": {
+                        "term_id": 42,
+                        "name": "Smartphone",
+                        "parent_id": 0,
+                        "children": [],
+                        "parents": [],
+                        "breadcumb": [ "Smartphone" ]
+                    }
+                },
+                "reset_subcategory": "on"
+            }
+        ],
+        "description": "",
+        "dependency_key": "commission",
+        "dependencies": []
+    }
+]

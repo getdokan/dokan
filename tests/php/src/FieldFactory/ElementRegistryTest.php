@@ -10,14 +10,13 @@ namespace WeDevs\Dokan\Test\FieldFactory;
 use WeDevs\Dokan\FieldFactory\Registry\ElementRegistry;
 use WeDevs\Dokan\FieldFactory\Elements\Fields\TextField;
 use WeDevs\Dokan\FieldFactory\Elements\Fields\SelectField;
-use WeDevs\Dokan\FieldFactory\Elements\Layouts\Section;
-use InvalidArgumentException;
 use WeDevs\Dokan\Test\DokanTestCase;
 
 /**
  * Class ElementRegistryTest
  *
  * Tests for the ElementRegistry class.
+ * @group field-factory
  */
 class ElementRegistryTest extends DokanTestCase {
 

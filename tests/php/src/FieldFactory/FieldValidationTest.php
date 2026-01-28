@@ -8,13 +8,13 @@
 namespace WeDevs\Dokan\Test\FieldFactory;
 
 use WeDevs\Dokan\FieldFactory\FieldFactory;
-use WeDevs\Dokan\FieldFactory\Registry\ElementRegistry;
 use WeDevs\Dokan\Test\DokanTestCase;
 
 /**
  * Class FieldValidationTest
  *
  * Tests for field validation functionality.
+ * @group field-factory
  */
 class FieldValidationTest extends DokanTestCase {
 

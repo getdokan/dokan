@@ -2,7 +2,7 @@
 
 namespace WeDevs\Dokan\Admin\OnboardingSetup\Steps;
 
-use WeDevs\Dokan\Admin\OnboardingSetup\Components\ComponentFactory as Factory;
+use WeDevs\Dokan\FieldFactory\FieldFactory;
 
 class AppearanceStep extends AbstractStep {
 
@@ -93,61 +93,110 @@ class AppearanceStep extends AbstractStep {
         $default_settings = $this->get_default_settings();
         $dokan_appearance = get_option( 'dokan_appearance', $default_settings );
 
-        $this->set_title( esc_html__( 'Appearance', 'dokan-lite' ) )
-            ->add(
-                Factory::section( 'appearance' )
-                    ->set_title( esc_html__( 'Appearance', 'dokan-lite' ) )
-                    ->add(
-                        Factory::sub_section( 'store-info' )
-                            ->set_title( esc_html__( 'Store Info', 'dokan-lite' ) )
-                            ->add(
-                                Factory::field( 'contact_seller', 'radio' )
-                                    ->set_title( esc_html__( 'Contact Form on Store Page', 'dokan-lite' ) )
-                                    ->set_description( esc_html__( 'Display a contact form on vendor store pages for customer inquiries', 'dokan-lite' ) )
-                                    ->add_option( esc_html__( 'Hide', 'dokan-lite' ), 'off' )
-                                    ->add_option( esc_html__( 'Show', 'dokan-lite' ), 'on' )
-                                    ->set_default( $default_settings['contact_seller'] )
-                                    ->set_value( $dokan_appearance['contact_seller'] ?? $default_settings['contact_seller'] )
-                            )
-                            ->add(
-                                Factory::field( 'enable_theme_store_sidebar', 'radio' )
-                                    ->set_title( esc_html__( 'Store Sidebar From Theme', 'dokan-lite' ) )
-                                    ->set_description( esc_html__( 'Show/hide the sidebar on vendor store pages', 'dokan-lite' ) )
-                                    ->add_option( esc_html__( 'Hide', 'dokan-lite' ), 'off' )
-                                    ->add_option( esc_html__( 'Show', 'dokan-lite' ), 'on' )
-                                    ->set_default( $default_settings['enable_theme_store_sidebar'] )
-                                    ->set_value( $dokan_appearance['enable_theme_store_sidebar'] ?? $default_settings['enable_theme_store_sidebar'] )
-                            )
-                    )
-                    ->add(
-                        Factory::sub_section( 'vendor-info' )
-                            ->set_title( esc_html__( 'Vendor Info on Product Page', 'dokan-lite' ) )
-                            ->add(
-                                Factory::field( 'email', 'radio' )
-                                    ->set_title( esc_html__( 'Email Address', 'dokan-lite' ) )
-                                    ->add_option( esc_html__( 'Hide', 'dokan-lite' ), '' )
-                                    ->add_option( esc_html__( 'Show', 'dokan-lite' ), 'email' )
-                                    ->set_default( $default_settings['hide_vendor_info']['email'] )
-                                    ->set_value( $dokan_appearance['hide_vendor_info']['email'] ?? $default_settings['hide_vendor_info']['email'] )
-                            )
-                            ->add(
-                                Factory::field( 'phone', 'radio' )
-                                    ->set_title( esc_html__( 'Phone Number', 'dokan-lite' ) )
-                                    ->add_option( esc_html__( 'Hide', 'dokan-lite' ), '' )
-                                    ->add_option( esc_html__( 'Show', 'dokan-lite' ), 'phone' )
-                                    ->set_default( $default_settings['hide_vendor_info']['phone'] )
-                                    ->set_value( $dokan_appearance['hide_vendor_info']['phone'] ?? $default_settings['hide_vendor_info']['phone'] )
-                            )
-                            ->add(
-                                Factory::field( 'address', 'radio' )
-                                    ->set_title( esc_html__( 'Store Address', 'dokan-lite' ) )
-                                    ->add_option( esc_html__( 'Hide', 'dokan-lite' ), '' )
-                                    ->add_option( esc_html__( 'Show', 'dokan-lite' ), 'address' )
-                                    ->set_default( $default_settings['hide_vendor_info']['address'] )
-                                    ->set_value( $dokan_appearance['hide_vendor_info']['address'] ?? $default_settings['hide_vendor_info']['address'] )
-                            )
-                    )
-            );
+        $this->set_title( esc_html__( 'Appearance', 'dokan-lite' ) );
+
+        // Store Info subsection fields
+        $contact_seller_field = FieldFactory::radio(
+            'contact_seller',
+            esc_html__( 'Contact Form on Store Page', 'dokan-lite' ),
+            [
+                [ 'value' => 'off', 'label' => esc_html__( 'Hide', 'dokan-lite' ) ],
+                [ 'value' => 'on', 'label' => esc_html__( 'Show', 'dokan-lite' ) ],
+            ],
+            [
+                'description' => esc_html__( 'Display a contact form on vendor store pages for customer inquiries', 'dokan-lite' ),
+                'default'     => $default_settings['contact_seller'],
+                'value'       => $dokan_appearance['contact_seller'] ?? $default_settings['contact_seller'],
+            ]
+        );
+
+        $store_sidebar_field = FieldFactory::radio(
+            'enable_theme_store_sidebar',
+            esc_html__( 'Store Sidebar From Theme', 'dokan-lite' ),
+            [
+                [ 'value' => 'off', 'label' => esc_html__( 'Hide', 'dokan-lite' ) ],
+                [ 'value' => 'on', 'label' => esc_html__( 'Show', 'dokan-lite' ) ],
+            ],
+            [
+                'description' => esc_html__( 'Show/hide the sidebar on vendor store pages', 'dokan-lite' ),
+                'default'     => $default_settings['enable_theme_store_sidebar'],
+                'value'       => $dokan_appearance['enable_theme_store_sidebar'] ?? $default_settings['enable_theme_store_sidebar'],
+            ]
+        );
+
+        // Vendor Info subsection fields
+        $email_field = FieldFactory::radio(
+            'email',
+            esc_html__( 'Email Address', 'dokan-lite' ),
+            [
+                [ 'value' => '', 'label' => esc_html__( 'Hide', 'dokan-lite' ) ],
+                [ 'value' => 'email', 'label' => esc_html__( 'Show', 'dokan-lite' ) ],
+            ],
+            [
+                'default' => $default_settings['hide_vendor_info']['email'],
+                'value'   => $dokan_appearance['hide_vendor_info']['email'] ?? $default_settings['hide_vendor_info']['email'],
+            ]
+        );
+
+        $phone_field = FieldFactory::radio(
+            'phone',
+            esc_html__( 'Phone Number', 'dokan-lite' ),
+            [
+                [ 'value' => '', 'label' => esc_html__( 'Hide', 'dokan-lite' ) ],
+                [ 'value' => 'phone', 'label' => esc_html__( 'Show', 'dokan-lite' ) ],
+            ],
+            [
+                'default' => $default_settings['hide_vendor_info']['phone'],
+                'value'   => $dokan_appearance['hide_vendor_info']['phone'] ?? $default_settings['hide_vendor_info']['phone'],
+            ]
+        );
+
+        $address_field = FieldFactory::radio(
+            'address',
+            esc_html__( 'Store Address', 'dokan-lite' ),
+            [
+                [ 'value' => '', 'label' => esc_html__( 'Hide', 'dokan-lite' ) ],
+                [ 'value' => 'address', 'label' => esc_html__( 'Show', 'dokan-lite' ) ],
+            ],
+            [
+                'default' => $default_settings['hide_vendor_info']['address'],
+                'value'   => $dokan_appearance['hide_vendor_info']['address'] ?? $default_settings['hide_vendor_info']['address'],
+            ]
+        );
+
+        // Create subsections
+        $store_info_subsection = FieldFactory::create( [
+            'id'       => 'store-info',
+            'type'     => 'subsection',
+            'title'    => esc_html__( 'Store Info', 'dokan-lite' ),
+            'children' => [
+                $contact_seller_field,
+                $store_sidebar_field,
+            ],
+        ] );
+
+        $vendor_info_subsection = FieldFactory::create( [
+            'id'       => 'vendor-info',
+            'type'     => 'subsection',
+            'title'    => esc_html__( 'Vendor Info on Product Page', 'dokan-lite' ),
+            'children' => [
+                $email_field,
+                $phone_field,
+                $address_field,
+            ],
+        ] );
+
+        // Create main section
+        $section = FieldFactory::section(
+            'appearance',
+            esc_html__( 'Appearance', 'dokan-lite' ),
+            [
+                $store_info_subsection,
+                $vendor_info_subsection,
+            ]
+        );
+
+        $this->add_field_factory_element( $section );
     }
 
     /**

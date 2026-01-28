@@ -8,7 +8,6 @@
 namespace WeDevs\Dokan\Test\FieldFactory;
 
 use WeDevs\Dokan\FieldFactory\FieldFactory;
-use WeDevs\Dokan\FieldFactory\Registry\ElementRegistry;
 use WeDevs\Dokan\FieldFactory\Contracts\ContainerInterface;
 use WeDevs\Dokan\FieldFactory\Contracts\FieldInterface;
 use WeDevs\Dokan\FieldFactory\Elements\Containers\Page;
@@ -21,6 +20,7 @@ use WeDevs\Dokan\Test\DokanTestCase;
  * Class ContainerTest
  *
  * Tests for container elements (Page, Section, etc.).
+ * @group field-factory
  */
 class ContainerTest extends DokanTestCase {
 

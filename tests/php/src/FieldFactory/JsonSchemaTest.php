@@ -16,6 +16,7 @@ use WeDevs\Dokan\Test\DokanTestCase;
  * Class JsonSchemaTest
  *
  * Tests for JSON schema-based element creation (end-to-end).
+ * @group field-factory
  */
 class JsonSchemaTest extends DokanTestCase {
 

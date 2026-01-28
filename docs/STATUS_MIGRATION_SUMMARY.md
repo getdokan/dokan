@@ -11,12 +11,14 @@ The `Status` class has been successfully migrated to use the Unified Field Facto
 **Purpose**: Converts FieldFactory elements to StatusElement render format for backward compatibility.
 
 **Key Features**:
+
 - Converts FieldFactory `to_array()` output to StatusElement `render()` format
 - Handles type-specific properties (table headers, paragraph content)
 - Recursively converts nested structures
 - Maintains filter hooks for backward compatibility
 
 **Usage**:
+
 ```php
 $field_factory_element = FieldFactory::section('test', 'Test Section');
 $status_format = StatusElementAdapter::to_status_format($field_factory_element);
@@ -25,6 +27,7 @@ $status_format = StatusElementAdapter::to_status_format($field_factory_element);
 ### 2. Migrated Status Class (`includes/Admin/Status/Status.php`)
 
 **Key Changes**:
+
 - ✅ Uses FieldFactory internally by default
 - ✅ Maintains backward compatibility with `StatusElement` via `add()` method
 - ✅ Converts legacy `StatusElement` to FieldFactory automatically
@@ -32,13 +35,15 @@ $status_format = StatusElementAdapter::to_status_format($field_factory_element);
 - ✅ Preserves all existing hooks and filters
 
 **New Methods**:
+
 - `add_field_factory_element(ElementInterface $element)` - Add FieldFactory element
-- `add_field_factory_elements(array $elements)` - Add multiple elements
-- `get_field_factory_elements()` - Get all FieldFactory elements
-- `clear_field_factory_elements()` - Clear all elements
+- `add_field_elements(array $elements)` - Add multiple elements
+- `get_field_elements()` - Get all FieldFactory elements
+- `clear_field_elements()` - Clear all elements
 - `is_using_field_factory()` - Check if using FieldFactory
 
 **Backward Compatibility**:
+
 - `render()` method returns same format as before
 - `add(StatusElement $element)` still works (converts automatically)
 - All hooks (`dokan_status_after_describing_elements`) still work
@@ -47,6 +52,7 @@ $status_format = StatusElementAdapter::to_status_format($field_factory_element);
 ### 3. Created Comprehensive Unit Tests (`tests/php/src/Admin/Status/StatusMigrationTest.php`)
 
 **Test Coverage**:
+
 - ✅ Status instantiation
 - ✅ FieldFactory element addition
 - ✅ Render output format validation
@@ -64,17 +70,20 @@ $status_format = StatusElementAdapter::to_status_format($field_factory_element);
 ## Migration Benefits
 
 ### 1. Single Source of Truth
+
 - All UI elements now use Unified Field Factory
 - Consistent element structure across the codebase
 - Easier to maintain and extend
 
 ### 2. Backward Compatibility
+
 - ✅ Existing code continues to work
 - ✅ `VendorNavMenuChecker` works without changes
 - ✅ REST API returns same format
 - ✅ Frontend receives same data structure
 
 ### 3. Future-Proof
+
 - Easy to add new element types
 - Consistent API across all pages
 - Better testability
@@ -82,6 +91,7 @@ $status_format = StatusElementAdapter::to_status_format($field_factory_element);
 ## Usage Examples
 
 ### Using FieldFactory (New Way)
+
 ```php
 $status = new Status();
 
@@ -117,6 +127,7 @@ $output = $status->render(); // Returns StatusElement format
 ```
 
 ### Using Legacy StatusElementFactory (Still Works)
+
 ```php
 $status = new Status();
 
@@ -134,23 +145,30 @@ $output = $status->render(); // Returns StatusElement format
 ## Integration Points
 
 ### 1. VendorNavMenuChecker
+
 **Status**: ✅ Works without changes
+
 - Uses `$status->add()` which now converts StatusElement to FieldFactory
 - No code changes required
 
 ### 2. REST API (`AdminDashboardController::get_status()`)
+
 **Status**: ✅ Works without changes
+
 - Uses `$status->render()` which returns same format
 - Frontend receives identical data structure
 
 ### 3. Frontend (React/TypeScript)
+
 **Status**: ✅ No changes required
+
 - Receives same data structure from REST API
 - All element types work as before
 
 ## Feature Flags
 
 ### Enable/Disable FieldFactory
+
 ```php
 // Disable FieldFactory (use legacy)
 add_filter('dokan_status_use_field_factory', '__return_false');
@@ -160,8 +178,9 @@ add_filter('dokan_status_use_field_factory', '__return_true');
 ```
 
 ### Modify Elements Before Rendering
+
 ```php
-add_filter('dokan_status_field_factory_elements', function($elements, $status) {
+add_filter('dokan_status_field_elements', function($elements, $status) {
     // Modify elements before rendering
     return $elements;
 }, 10, 2);
@@ -170,11 +189,13 @@ add_filter('dokan_status_field_factory_elements', function($elements, $status) {
 ## Testing
 
 ### Run Tests
+
 ```bash
 vendor/bin/phpunit tests/php/src/Admin/Status/StatusMigrationTest.php
 ```
 
 ### Test Coverage
+
 - ✅ Unit tests for all new methods
 - ✅ Integration tests for backward compatibility
 - ✅ Conversion tests for StatusElement → FieldFactory

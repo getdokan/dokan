@@ -1,0 +1,158 @@
+[
+    {
+        "id": "basic",
+        "type": "section",
+        "title": "Basic",
+        "icon": "",
+        "display": true,
+        "hook_key": "dokan_admin_onboarding_setup_step_basic_basic",
+        "children": [
+            {
+                "id": "shipping_fee_recipient",
+                "type": "field",
+                "title": "Shipping Fee Recipient",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_basic_basic_shipping_fee_recipient",
+                "children": [],
+                "description": "Choose who receives shipping charges - Admin keeps all shipping fees or Vendors receive fees for their products",
+                "dependency_key": "basic.shipping_fee_recipient",
+                "dependencies": [],
+                "variant": "radio_box",
+                "value": "seller",
+                "default": "seller",
+                "placeholder": "",
+                "readonly": false,
+                "disabled": false,
+                "size": 20,
+                "options": [
+                    {
+                        "value": "admin",
+                        "title": "Admin"
+                    },
+                    {
+                        "value": "seller",
+                        "title": "Vendor"
+                    }
+                ]
+            },
+            {
+                "id": "tax_fee_recipient",
+                "type": "field",
+                "title": "Product Tax Fee Recipient",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_basic_basic_tax_fee_recipient",
+                "children": [],
+                "description": "Determine who collects product taxes - Admin manages all tax collection or Vendors handle their product taxes",
+                "dependency_key": "basic.tax_fee_recipient",
+                "dependencies": [],
+                "variant": "radio_box",
+                "value": "seller",
+                "default": "seller",
+                "placeholder": "",
+                "readonly": false,
+                "disabled": false,
+                "size": 20,
+                "options": [
+                    {
+                        "value": "admin",
+                        "title": "Admin"
+                    },
+                    {
+                        "value": "seller",
+                        "title": "Vendor"
+                    }
+                ]
+            },
+            {
+                "id": "shipping_tax_fee_recipient",
+                "type": "field",
+                "title": "Shipping Tax Fee Recipient",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_basic_basic_shipping_tax_fee_recipient",
+                "children": [],
+                "description": "Select who receives shipping tax - Admin centralizes all shipping tax or Vendors collect shipping tax for their orders",
+                "dependency_key": "basic.shipping_tax_fee_recipient",
+                "dependencies": [],
+                "variant": "radio_box",
+                "value": "seller",
+                "default": "seller",
+                "placeholder": "",
+                "readonly": false,
+                "disabled": false,
+                "size": 20,
+                "options": [
+                    {
+                        "value": "admin",
+                        "title": "Admin"
+                    },
+                    {
+                        "value": "seller",
+                        "title": "Vendor"
+                    }
+                ]
+            },
+            {
+                "id": "order_status_change",
+                "type": "field",
+                "title": "Vendors can change order status",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_basic_basic_order_status_change",
+                "children": [],
+                "description": "Allow vendors to update order statuses (processing, completed, etc.) for their products",
+                "dependency_key": "basic.order_status_change",
+                "dependencies": [],
+                "variant": "switch",
+                "value": "on",
+                "default": "on",
+                "placeholder": "",
+                "readonly": false,
+                "disabled": false,
+                "size": 20,
+                "options": [],
+                "enable_state": {
+                    "value": "on",
+                    "title": "Enabled"
+                },
+                "disable_state": {
+                    "value": "off",
+                    "title": "Disabled"
+                }
+            },
+            {
+                "id": "new_seller_enable_selling",
+                "type": "field",
+                "title": "New Vendor Selling Directly",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_basic_basic_new_seller_enable_selling",
+                "children": [],
+                "description": "Automatically enable selling capabilities for newly registered vendors",
+                "dependency_key": "basic.new_seller_enable_selling",
+                "dependencies": [],
+                "variant": "switch",
+                "value": "manually",
+                "default": "on",
+                "placeholder": "",
+                "readonly": false,
+                "disabled": false,
+                "size": 20,
+                "options": [],
+                "enable_state": {
+                    "value": "on",
+                    "title": "Enabled"
+                },
+                "disable_state": {
+                    "value": "off",
+                    "title": "Disabled"
+                }
+            }
+        ],
+        "description": "",
+        "dependency_key": "basic",
+        "dependencies": []
+    }
+]

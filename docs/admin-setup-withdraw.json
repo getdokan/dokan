@@ -1,0 +1,153 @@
+[
+    {
+        "id": "withdraw",
+        "type": "section",
+        "title": "Withdraw",
+        "icon": "",
+        "display": true,
+        "hook_key": "dokan_admin_onboarding_setup_step_withdraw_withdraw",
+        "children": [
+            {
+                "id": "paypal",
+                "type": "field",
+                "title": "PayPal",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_withdraw_withdraw_paypal",
+                "children": [],
+                "description": "Enable PayPal for your vendor as a withdraw method",
+                "dependency_key": "withdraw.paypal",
+                "dependencies": [],
+                "variant": "switch",
+                "value": "",
+                "default": "paypal",
+                "placeholder": "",
+                "readonly": false,
+                "disabled": false,
+                "size": 20,
+                "options": [],
+                "enable_state": {
+                    "value": "paypal",
+                    "title": "Enabled"
+                },
+                "disable_state": {
+                    "value": "",
+                    "title": "Disabled"
+                }
+            },
+            {
+                "id": "bank",
+                "type": "field",
+                "title": "Bank Transfer",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_withdraw_withdraw_bank",
+                "children": [],
+                "description": "Enable Bank Transfer for your vendor as a withdraw method",
+                "dependency_key": "withdraw.bank",
+                "dependencies": [],
+                "variant": "switch",
+                "value": "bank",
+                "default": "",
+                "placeholder": "",
+                "readonly": false,
+                "disabled": false,
+                "size": 20,
+                "options": [],
+                "enable_state": {
+                    "value": "bank",
+                    "title": "Enabled"
+                },
+                "disable_state": {
+                    "value": "",
+                    "title": "Disabled"
+                }
+            },
+            {
+                "id": "skrill",
+                "type": "field",
+                "title": "Skrill",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_withdraw_withdraw_skrill",
+                "children": [],
+                "description": "Enable Skrill for your vendor as a withdraw method",
+                "dependency_key": "withdraw.skrill",
+                "dependencies": [],
+                "variant": "switch",
+                "value": "",
+                "default": "",
+                "placeholder": "",
+                "readonly": false,
+                "disabled": false,
+                "size": 20,
+                "options": [],
+                "enable_state": {
+                    "value": "skrill",
+                    "title": "Enabled"
+                },
+                "disable_state": {
+                    "value": "",
+                    "title": "Disabled"
+                }
+            },
+            {
+                "id": "withdraw_limit",
+                "type": "field",
+                "title": "Minimum Withdraw Limits",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_withdraw_withdraw_withdraw_limit",
+                "children": [],
+                "description": "Set the minimum balance required before vendors can request withdrawals",
+                "dependency_key": "withdraw.withdraw_limit",
+                "dependencies": [],
+                "variant": "currency",
+                "value": "50",
+                "default": "50",
+                "placeholder": "",
+                "readonly": false,
+                "disabled": false,
+                "size": 20,
+                "currency_symbol": "&#36;"
+            },
+            {
+                "id": "withdraw_order_status",
+                "type": "field",
+                "title": "Order Status for Withdraw",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_withdraw_withdraw_withdraw_order_status",
+                "children": [],
+                "description": "Define which order status makes funds eligible for withdrawal",
+                "dependency_key": "withdraw.withdraw_order_status",
+                "dependencies": [],
+                "variant": "multicheck",
+                "value": {
+                    "wc-completed": "wc-completed",
+                    "wc-processing": "wc-processing"
+                },
+                "default": {
+                    "wc-completed": "wc-completed"
+                },
+                "options": [
+                    {
+                        "value": "wc-completed",
+                        "title": "Completed"
+                    },
+                    {
+                        "value": "wc-processing",
+                        "title": "Processing"
+                    },
+                    {
+                        "value": "wc-on-hold",
+                        "title": "On Hold"
+                    }
+                ]
+            }
+        ],
+        "description": "",
+        "dependency_key": "withdraw",
+        "dependencies": []
+    }
+]
