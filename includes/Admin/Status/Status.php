@@ -3,81 +3,171 @@
 namespace WeDevs\Dokan\Admin\Status;
 
 use Exception;
-use WeDevs\Dokan\Abstracts\StatusElement;
-use WeDevs\Dokan\VendorNavMenuChecker;
+use WeDevs\Dokan\FieldFactory\Adapters\StatusElementAdapter;
+use WeDevs\Dokan\FieldFactory\Contracts\ElementInterface;
 
-class Status extends StatusElement {
+/**
+ * Status Class
+ *
+ * Fully migrated to use Unified Field Factory.
+ *
+ * @since 4.0.0
+ */
+class Status {
 
-    protected bool $support_children = true;
-    protected string $hook_key = 'dokan_status';
+	/**
+	 * FieldFactory elements container.
+	 *
+	 * @var ElementInterface[]
+	 */
+	protected array $elements = [];
 
-    public function __construct() {
-        parent::__construct( 'dokan-status' );
-    }
+	/**
+	 * Hook key for filters.
+	 *
+	 * @var string
+	 */
+	protected string $hook_key = 'dokan_status';
 
-    /**
-     * @inheritDoc
-     */
-    public function escape_data( string $data ): string {
-        return $data;
-    }
+	/**
+	 * Constructor.
+	 */
+	public function __construct() {
+		// Constructor can be extended if needed
+	}
 
-    public function render(): array {
-        try {
-            $this->describe();
-        } catch ( Exception $e ) {
-            dokan_log( $e->getMessage() );
-        }
-        return parent::render()['children'];
-    }
+	/**
+	 * Render status elements.
+	 *
+	 * @return array StatusElement render format for frontend compatibility.
+	 */
+	public function render(): array {
+		try {
+			$this->describe();
+		} catch ( Exception $e ) {
+			dokan_log( $e->getMessage() );
+		}
 
-    /**
-     * Describe the settings options.
-     *
-     * @return void
-     * @throws Exception
-     */
-    public function describe() {
-		//        $this->add(
-		//            StatusElementFactory::heading( 'main_heading' )
-		//                ->set_title( __( 'Dokan Status', 'dokan-lite' ) )
-		//                ->set_description( __( 'Check the status of your Dokan installation.', 'dokan-lite' ) )
-		//        );
+		// Convert FieldFactory elements to StatusElement format for frontend
+		return StatusElementAdapter::to_status_format_array( $this->elements );
+	}
 
-		//        $this->add(
-		//            StatusElementFactory::section( 'overridden_features' )
-		//                ->set_title( __( 'Overridden Templates', 'dokan-lite' ) )
-		//                ->set_description( __( 'The templates currently overridden that is preventing enabling new features.', 'dokan-lite' ) )
-		//                ->add(
-		//                    StatusElementFactory::table( 'override_table' )
-		//                        ->set_title( __( 'General Heading', 'dokan-lite' ) )
-		//                        ->set_headers(
-		//                            [
-		//                                __( 'Template', 'dokan-lite' ),
-		//                                __( 'Feature', 'dokan-lite' ),
-		//                                'Action',
-		//                            ]
-		//                        )
-		//                        ->add(
-		//                            StatusElementFactory::table_row( 'override_row' )
-		//                                ->add(
-		//                                    StatusElementFactory::table_column( 'template' )
-		//                                        ->add(
-		//                                            StatusElementFactory::paragraph( 'file' )
-		//                                                ->set_title( __( 'FileA.php', 'dokan-lite' ) )
-		//                                        )
-		//                                )
-		//                                ->add(
-		//                                    StatusElementFactory::table_column( 'action' )
-		//                                        ->add(
-		//                                            StatusElementFactory::button( 'action' )
-		//                                                ->set_title( __( 'Remove', 'dokan-lite' ) )
-		//                                        )
-		//                                )
-		//                        )
-		//                )
-		//        );
+	/**
+	 * Describe the status elements using FieldFactory.
+	 *
+	 * @return void
+	 * @throws Exception
+	 */
+	public function describe(): void {
+		// If elements already exist (e.g., added programmatically or in tests),
+		// skip the describe logic and only fire the hook
+		if ( ! empty( $this->elements ) ) {
+			/**
+			 * Action hook fired after describing status elements.
+			 * Allows other classes (like VendorNavMenuChecker) to add elements.
+			 *
+			 * @since 4.0.0
+			 *
+			 * @param Status $status Status instance.
+			 */
+			do_action( 'dokan_status_after_describing_elements', $this );
+			return;
+		}
 
-        do_action( 'dokan_status_after_describing_elements', $this );
-    }
+		// Build status elements using FieldFactory
+		// This method can be extended by child classes or via filters
+		$this->elements = [];
+
+		/**
+		 * Filter to modify FieldFactory elements before rendering.
+		 *
+		 * @since 4.0.0
+		 *
+		 * @param ElementInterface[] $elements FieldFactory elements.
+		 * @param Status             $status   Status instance.
+		 *
+		 * @return ElementInterface[] Modified elements.
+		 */
+		$this->elements = apply_filters(
+			'dokan_status_field_elements',
+			$this->elements,
+			$this
+		);
+
+		/**
+		 * Action hook fired after describing status elements.
+		 * Allows other classes (like VendorNavMenuChecker) to add elements.
+		 *
+		 * @since 4.0.0
+		 *
+		 * @param Status $status Status instance.
+		 */
+		do_action( 'dokan_status_after_describing_elements', $this );
+	}
+
+	/**
+	 * Add FieldFactory element.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param ElementInterface $element FieldFactory element.
+	 *
+	 * @return self
+	 */
+	public function add( ElementInterface $element ): self {
+		$this->elements[] = $element;
+		return $this;
+	}
+
+	/**
+	 * Add multiple FieldFactory elements.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param ElementInterface[] $elements FieldFactory elements.
+	 *
+	 * @return self
+	 */
+	public function add_elements( array $elements ): self {
+		foreach ( $elements as $element ) {
+			if ( $element instanceof ElementInterface ) {
+				$this->elements[] = $element;
+			}
+		}
+		return $this;
+	}
+
+	/**
+	 * Get FieldFactory elements.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return ElementInterface[]
+	 */
+	public function get_elements(): array {
+		return $this->elements;
+	}
+
+	/**
+	 * Clear all elements.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return self
+	 */
+	public function clear(): self {
+		$this->elements = [];
+		return $this;
+	}
+
+	/**
+	 * Get hook key.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string
+	 */
+	public function get_hook_key(): string {
+		return $this->hook_key;
+	}
 }

@@ -4,7 +4,7 @@ namespace WeDevs\Dokan;
 
 use Exception;
 use WeDevs\Dokan\Admin\Status\Status;
-use WeDevs\Dokan\Admin\Status\StatusElementFactory;
+use WeDevs\Dokan\FieldFactory\FieldFactory;
 
 class VendorNavMenuChecker {
 
@@ -332,78 +332,103 @@ class VendorNavMenuChecker {
             return;
         }
 
-        if ( ! empty( $overridden_templates ) ) {
-            $template_table = StatusElementFactory::table( 'override_templates_table' )
-                ->set_title( __( 'Overridden Template Table', 'dokan-lite' ) )
-                ->set_headers(
-                    [
-                        __( 'Template', 'dokan-lite' ),
-                    ]
-                );
+        $section_children = [];
 
+        // Build template table if templates exist
+        if ( ! empty( $overridden_templates ) ) {
+            $table_rows = [];
             foreach ( $overridden_templates as $id => $template ) {
-                $template_table->add(
-                    StatusElementFactory::table_row( 'override_row_' . $id )
-                        ->add(
-                            StatusElementFactory::table_column( 'template_' . $id )
-                                ->add(
-                                    StatusElementFactory::paragraph( 'file_location_' . $id )
-                                        ->set_title( '<code>' . $template . '</code>' )
-                                )
-                                ->add(
-                                    StatusElementFactory::paragraph( 'file_location_' . $id . '_instruction' )
-                                        ->set_title( __( 'Please Remove the above file to enable new features.', 'dokan-lite' ) )
-                                )
-                        )
-                );
+                $table_rows[] = [
+                    'id'      => 'override_row_' . $id,
+                    'type'    => 'table-row',
+                    'children' => [
+                        [
+                            'id'      => 'template_' . $id,
+                            'type'    => 'table-column',
+                            'children' => [
+                                [
+                                    'id'      => 'file_location_' . $id,
+                                    'type'    => 'paragraph',
+                                    'content' => '<code>' . esc_html( $template ) . '</code>',
+                                ],
+                                [
+                                    'id'      => 'file_location_' . $id . '_instruction',
+                                    'type'    => 'paragraph',
+                                    'content' => __( 'Please Remove the above file to enable new features.', 'dokan-lite' ),
+                                ],
+                            ],
+                        ],
+                    ],
+                ];
             }
+
+            $section_children[] = [
+                'id'      => 'override_templates_table',
+                'type'    => 'table',
+                'title'   => __( 'Overridden Template Table', 'dokan-lite' ),
+                'headers' => [ __( 'Template', 'dokan-lite' ) ],
+                'children' => $table_rows,
+            ];
         }
 
+        // Build route table if routes exist
         if ( ! empty( $overridden_routes ) ) {
-            $route_table = StatusElementFactory::table( 'override_features_table' )
-                ->set_title( __( 'Overridden Template Table', 'dokan-lite' ) )
-                ->set_headers(
-                    [
-                        __( 'Route', 'dokan-lite' ),
-                        __( 'Override Status', 'dokan-lite' ),
-                    ]
-                );
-
+            $table_rows = [];
             foreach ( $overridden_routes as $route => $clearance ) {
-                $route_table->add(
-                    StatusElementFactory::table_row( 'override_feature_row_' . $route )
-                        ->add(
-                            StatusElementFactory::table_column( 'route_coll_' . $route )
-                                ->add(
-                                    StatusElementFactory::paragraph( 'route_' . $route )
-                                        ->set_title( '<code>' . $route . '</code>' )
-                                )
-                        )
-                        ->add(
-                            StatusElementFactory::table_column( 'status_coll_' . $route )
-                                ->add(
-                                    StatusElementFactory::paragraph( 'status_' . $route )
-                                        ->set_title( $clearance ? __( 'Forcefully enabled new feature.', 'dokan-lite' ) : __( 'Forcefully disabled new feature.', 'dokan-lite' ) )
-                                )
-                        )
-                );
+                $table_rows[] = [
+                    'id'      => 'override_feature_row_' . $route,
+                    'type'    => 'table-row',
+                    'children' => [
+                        [
+                            'id'      => 'route_coll_' . $route,
+                            'type'    => 'table-column',
+                            'children' => [
+                                [
+                                    'id'      => 'route_' . $route,
+                                    'type'    => 'paragraph',
+                                    'content' => '<code>' . esc_html( $route ) . '</code>',
+                                ],
+                            ],
+                        ],
+                        [
+                            'id'      => 'status_coll_' . $route,
+                            'type'    => 'table-column',
+                            'children' => [
+                                [
+                                    'id'      => 'status_' . $route,
+                                    'type'    => 'paragraph',
+                                    'content' => $clearance
+                                        ? __( 'Forcefully enabled new feature.', 'dokan-lite' )
+                                        : __( 'Forcefully disabled new feature.', 'dokan-lite' ),
+                                ],
+                            ],
+                        ],
+                    ],
+                ];
             }
+
+            $section_children[] = [
+                'id'      => 'override_features_table',
+                'type'    => 'table',
+                'title'   => __( 'Overridden Template Table', 'dokan-lite' ),
+                'headers' => [
+                    __( 'Route', 'dokan-lite' ),
+                    __( 'Override Status', 'dokan-lite' ),
+                ],
+                'children' => $table_rows,
+            ];
         }
 
-        $section = StatusElementFactory::section( 'overridden_features' )
-            ->set_title( __( 'Overridden Templates or Routes', 'dokan-lite' ) )
-            ->set_description( __( 'The listed templates or vendor dashboard routes are currently overridden, which are preventing enabling new features.', 'dokan-lite' ) );
-
-        if ( ! empty( $overridden_templates ) ) {
-            $section->add( $template_table );
-        }
-
-        if ( ! empty( $overridden_routes ) ) {
-            $section->add( $route_table );
-        }
-
-        $status->add(
-            $section
+        // Create section with tables
+        $section = FieldFactory::section(
+            'overridden_features',
+            __( 'Overridden Templates or Routes', 'dokan-lite' ),
+            $section_children,
+            [
+                'description' => __( 'The listed templates or vendor dashboard routes are currently overridden, which are preventing enabling new features.', 'dokan-lite' ),
+            ]
         );
+
+        $status->add( $section );
     }
 }
