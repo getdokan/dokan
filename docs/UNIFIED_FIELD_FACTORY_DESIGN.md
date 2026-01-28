@@ -19,6 +19,9 @@
 8. [JSON Parsing & Rendering Demo](#8-json-parsing--rendering-demo)
 9. [Implementation Plan](#9-implementation-plan)
 10. [Trade-offs & Scalability Analysis](#10-trade-offs--scalability-analysis)
+11. [Summary](#11-summary)
+12. [Implementation Examples (Dokan)](#12-implementation-examples-dokan)
+13. [Customization & Hooks](#13-customization--hooks)
 
 ---
 
@@ -311,12 +314,6 @@ DataViews field types supported:
 | `enableSorting`   | `is_sorting_enabled()` |
 | `enableHiding`    | `is_hiding_enabled()` |
 
-### 4.4 Filter Operators
-
-> Note: The core FieldFactory no longer exposes filter operator helpers.
-> Filtering is expected to be implemented at the query layer (e.g., analytics
-> query filters), not on individual field elements.
-
 ---
 
 ## 5. Core Interfaces & Abstract Classes
@@ -469,19 +466,12 @@ use WeDevs\Dokan\FieldFactory\Contracts\ContainerInterface;
 
 class ElementFactory {
     private ElementRegistry $registry;
-    private SchemaNormalizer $normalizer;
 
-    public function __construct(
-        ?ElementRegistry $registry = null,
-        ?SchemaNormalizer $normalizer = null
-    ) {
-        $this->registry   = $registry ?? ElementRegistry::get_instance();
-        $this->normalizer = $normalizer ?? new SchemaNormalizer();
+    public function __construct( ?ElementRegistry $registry = null ) {
+        $this->registry = $registry ?? ElementRegistry::get_instance();
     }
 
     public function create( array $config ): ElementInterface {
-        $config = $this->normalizer->normalize_element( $config );
-
         $type    = $config['type'] ?? 'field';
         $variant = $config['variant'] ?? $config['field_type'] ?? null;
 
@@ -499,8 +489,10 @@ class ElementFactory {
     }
 
     public function create_from_data( array $data ): array {
-        $normalized = $this->normalizer->normalize( $data );
-        return array_map( fn( $config ) => $this->create( $config ), $normalized );
+        return array_map(
+            fn( $config ) => $this->create( $config ),
+            $data
+        );
     }
 }
 ```
@@ -509,26 +501,7 @@ class ElementFactory {
 
 ## 8. JSON Parsing & Rendering Demo
 
-### 8.1 Basic Usage
-
-```php
-<?php
-use WeDevs\Dokan\FieldFactory\Factory\ElementFactory;
-
-$factory = new ElementFactory();
-
-// Parse JSON file
-$elements = $factory->create_from_data(
-    json_decode( file_get_contents( 'admin-settings-data.json' ), true )
-);
-
-// Convert to array for REST API
-$output = array_map( fn( $el ) => $el->to_array(), $elements );
-
-wp_send_json_success( $output );
-```
-
-### 8.2 Working with Fields
+### 8.1 Working with Fields
 
 ```php
 <?php
@@ -562,7 +535,7 @@ if ( ! $result['valid'] ) {
 
 ```php
 <?php
-add_action( 'dokan_field_factory_register_elements', function( $registry ) {
+add_action( 'dokan_field_register_elements', function( $registry ) {
     $registry->register(
         'field:color_picker',
         My_Plugin\Fields\ColorPickerField::class
@@ -676,18 +649,14 @@ add_action( 'dokan_field_factory_register_elements', function( $registry ) {
 ### 10.3 Extensibility
 
 ```php
-// Register custom field
-add_action( 'dokan_field_factory_register_elements', function( $registry ) {
-    $registry->register( 'field:map', My_Map_Field::class );
-});
-
-// Modify element after creation
-add_filter( 'dokan_field_factory_element_created', function( $element, $config ) {
-    if ( $element->get_variant() === 'switch' ) {
-        $element->set_property( 'data-analytics', 'track' );
+// Register custom field (example)
+add_action(
+    'init',
+    function () {
+        $registry = \WeDevs\Dokan\FieldFactory\Registry\ElementRegistry::get_instance();
+        $registry->register( 'field:map', \WeDevs\Dokan\FieldFactory\Elements\Fields\MapField::class );
     }
-    return $element;
-}, 10, 2 );
+);
 ```
 
 ---
@@ -734,29 +703,306 @@ This Unified Field Factory provides:
 
 Two approaches are supported:
 
-| Approach | Best For | Example |
-|----------|----------|---------|
-| **JSON-Based** | Dynamic configs, REST APIs | `FieldFactory::create_from_data($config)` |
-| **Class-Based** | Programmatic building | `FieldFactory::text('id', 'Label')` |
+| Approach      | Best For                      | Example                                  |
+|--------------|-------------------------------|------------------------------------------|
+| **JSON-Based** | Dynamic configs, REST APIs    | `FieldFactory::create_from_data($config)` |
+| **Class-Based** | Programmatic building         | `FieldFactory::text('id', 'Label')`       |
 
 ```php
 use WeDevs\Dokan\FieldFactory\FieldFactory;
 
 // JSON-based
-$elements = FieldFactory::create_from_data([
-    ['id' => 'section', 'type' => 'section', 'title' => 'Settings', 'children' => [...]]
-]);
+$elements = FieldFactory::create_from_data( [
+    [
+        'id'       => 'section',
+        'type'     => 'section',
+        'title'    => 'Settings',
+        'children' => [ /* ... */ ],
+    ],
+] );
 
 // Class-based
-$field = FieldFactory::text('name', 'Store Name', ['required' => true]);
-
-// Validate
-$result = FieldFactory::validate($elements, $data);
+$field = FieldFactory::text( 'name', 'Store Name', [ 'required' => true ] );
 
 // Convert to array for REST/frontend
-$schema = FieldFactory::to_array($elements);
+$schema = array_map(
+    static fn( $el ) => $el->to_array(),
+    $elements
+);
 ```
 
-> **See:** [Implementation Guide](./FIELD_FACTORY_IMPLEMENTATION_GUIDE.md) for complete examples.
+Additional field types can be added by extending `AbstractField` and registering them
+in `ElementRegistry` (for example, in an `init` hook).
 
-Additional field types can be added by extending `AbstractField` and registering via the `dokan_field_factory_register_elements` hook.
+---
+
+## 12. Implementation Examples (Dokan)
+
+### 12.1 Admin Setup Guide Steps
+
+Each onboarding step (`BasicStep`, `CommissionStep`, etc.) now **describes its UI with FieldFactory**
+and lets the `SettingsElementAdapter` convert to the legacy SettingsElement JSON used by the React UI.
+
+**Step class (simplified):**
+
+```php
+use WeDevs\Dokan\Admin\OnboardingSetup\Steps\AbstractStep;
+use WeDevs\Dokan\FieldFactory\FieldFactory;
+
+class BasicStep extends AbstractStep {
+    protected $id = 'basic';
+
+    public function describe_settings(): void {
+        $default_settings = $this->get_default_settings();
+        $dokan_selling    = get_option( 'dokan_selling', $default_settings );
+
+        $this->set_title( esc_html__( 'Basic', 'dokan-lite' ) );
+
+        $shipping_fee_field = FieldFactory::radio_box(
+            'shipping_fee_recipient',
+            esc_html__( 'Shipping Fee Recipient', 'dokan-lite' ),
+            [
+                [ 'value' => 'admin',  'label' => esc_html__( 'Admin', 'dokan-lite' ) ],
+                [ 'value' => 'seller', 'label' => esc_html__( 'Vendor', 'dokan-lite' ) ],
+            ],
+            [
+                'description' => esc_html__( 'Choose who receives shipping charges.', 'dokan-lite' ),
+                'default'     => $default_settings['shipping_fee_recipient'],
+                'value'       => $dokan_selling['shipping_fee_recipient'] ?? $default_settings['shipping_fee_recipient'],
+            ]
+        );
+
+        $section = FieldFactory::section(
+            'basic',
+            esc_html__( 'Basic', 'dokan-lite' ),
+            [ $shipping_fee_field /*, ... other fields ... */ ]
+        );
+
+        $this->add_field_element( $section );
+    }
+}
+```
+
+**Populate path used by REST controller:**
+
+```php
+use WeDevs\Dokan\FieldFactory\Adapters\SettingsElementAdapter;
+
+public function populate(): array {
+    if ( empty( $this->field_elements ) ) {
+        $this->describe_settings();
+    }
+
+    if ( ! empty( $this->field_elements ) ) {
+        $hook_key       = $this->get_hook_key();
+        $dependency_key = $this->get_dependency_key();
+
+        return SettingsElementAdapter::to_settings_format_array(
+            $this->field_elements,
+            $hook_key,
+            $dependency_key
+        );
+    }
+
+    return parent::populate();
+}
+```
+
+The **Admin Setup Guide REST controller** simply calls `$step->populate()` and returns the array,
+keeping the frontend contract unchanged while the backend uses FieldFactory internally.
+
+### 12.2 Status Page Migration
+
+The **Status** page now uses FieldFactory and `StatusElementAdapter` in the same pattern:
+
+```php
+use WeDevs\Dokan\Admin\Status\Status;
+use WeDevs\Dokan\FieldFactory\FieldFactory;
+
+class Status {
+    protected array $elements = [];
+
+    public function describe(): void {
+        // Build elements with FieldFactory or via hooks.
+        $section = FieldFactory::section(
+            'overridden_features',
+            esc_html__( 'Overridden Templates', 'dokan-lite' ),
+            [
+                FieldFactory::create(
+                    [
+                        'id'       => 'override_table',
+                        'type'     => 'table',
+                        'headers'  => [ 'Template', 'Feature', 'Action' ],
+                        'children' => [ /* rows */ ],
+                    ]
+                ),
+            ]
+        );
+
+        $this->elements = [ $section ];
+    }
+}
+```
+
+```php
+use WeDevs\Dokan\FieldFactory\Adapters\StatusElementAdapter;
+
+public function render(): array {
+    try {
+        $this->describe();
+    } catch ( \Exception $e ) {
+        dokan_log( $e->getMessage() );
+    }
+
+    // Convert FieldFactory elements to StatusElement render format.
+    return StatusElementAdapter::to_status_format_array( $this->elements );
+}
+```
+
+The **Status REST endpoint** returns the array from `render()`, so existing views continue to work
+while the implementation uses the unified FieldFactory internally.
+
+---
+
+## 13. Customization & Hooks
+
+The Unified Field Factory is designed to be **developer‑friendly and extensible**. Most extension
+points are exposed via familiar `add_action()` / `add_filter()` hooks so you can:
+
+- Register new FieldFactory element types
+- Modify FieldFactory instances as they are created
+- Inject or alter Admin Setup Guide and Status page elements without forking core code
+
+### 13.1 Register a custom FieldFactory element
+
+Register new element types (fields, layouts, containers) by using the runtime
+`ElementRegistry` directly. A typical pattern is to hook into `init` (or your plugin's
+bootstrap) and register your types there:
+
+```php
+use WeDevs\Dokan\FieldFactory\Elements\Fields\MyCustomField;
+use WeDevs\Dokan\FieldFactory\Registry\ElementRegistry;
+
+add_action(
+    'init',
+    function () {
+        $registry = ElementRegistry::get_instance();
+
+        // Register a new field type: field:my_custom
+        $registry->register( 'field:my_custom', MyCustomField::class );
+
+        // Optional: add a short alias so you can use \"my_custom\" as `variant`
+        $registry->add_alias( 'my_custom', 'field:my_custom' );
+    }
+);
+```
+
+You can then use the new field from PHP or JSON:
+
+```php
+use WeDevs\Dokan\FieldFactory\FieldFactory;
+
+$field = FieldFactory::create( [
+    'id'      => 'my_custom_field',
+    'type'    => 'field',
+    'variant' => 'my_custom',
+    'title'   => __( 'My Custom Field', 'dokan-lite' ),
+] );
+```
+
+### 13.2 Extend the Admin Setup Guide
+
+The Admin Setup Guide exposes several hooks for step and element customisation.
+
+**Add a new step:**
+
+```php
+use WeDevs\Dokan\Admin\OnboardingSetup\Steps\YourNewStep;
+
+add_filter(
+    'dokan_admin_setup_guide_steps',
+    function ( array $steps ): array {
+        $steps[] = new YourNewStep();
+        return $steps;
+    }
+);
+```
+
+**Modify SettingsElement output for a specific field:**
+
+Each SettingsElement has a unique `hook_key`. `SettingsElementAdapter` exposes a
+`dokan_settings_element_populate_{$hook_key}` filter you can use to adjust the final JSON sent to
+the frontend. For example, to tweak the description of the `shipping_fee_recipient` field on the
+`basic` step:
+
+```php
+add_filter(
+    'dokan_settings_element_populate_dokan_admin_onboarding_setup_step_basic_shipping_fee_recipient',
+    function ( array $element, $field ) {
+        // Append extra helper text
+        $element['description'] .= ' ' . __( 'Custom note from my plugin.', 'my-textdomain' );
+        return $element;
+    },
+    10,
+    2
+);
+```
+
+> **Note:** When altering SettingsElement JSON, keep the existing contract intact
+> (`id`, `type`, `variant`, `hook_key`, `dependency_key`, `children`, etc.) so the React
+> components in `src/admin/onboarding-setup` continue to work as expected.
+
+### 13.3 Extend the Status page
+
+The Status page uses FieldFactory + `StatusElementAdapter` and exposes hooks to add or modify
+status blocks.
+
+**Inject a new status section:**
+
+```php
+use WeDevs\Dokan\Admin\Status\Status;
+use WeDevs\Dokan\FieldFactory\FieldFactory;
+
+add_action(
+    'dokan_status_after_describing_elements',
+    function ( Status $status ) {
+        $section = FieldFactory::section(
+            'my_custom_status',
+            __( 'My Custom Status', 'dokan-lite' ),
+            [
+                FieldFactory::text(
+                    'note',
+                    __( 'Note', 'dokan-lite' ),
+                    [ 'default' => __( 'Everything looks good.', 'dokan-lite' ) ],
+                ),
+            ]
+        );
+
+        $status->add( $section );
+    }
+);
+```
+
+**Adjust a rendered status element (legacy JSON):**
+
+When `Status::render()` converts FieldFactory elements to the legacy status JSON, it fires a
+`dokan_status_element_render_{$hook_key}` filter for each element. You can use this to apply
+last‑mile tweaks without touching the PHP classes:
+
+```php
+add_filter(
+    'dokan_status_element_render_dokan_status_overridden_features_override_table',
+    function ( array $element, $field ) {
+        // Add a custom CSS class to the table wrapper
+        $element['classes'][] = 'my-custom-status-table';
+        return $element;
+    },
+    10,
+    2
+);
+```
+
+These hooks give you a **safe, forward‑compatible extension surface**: you can alter behaviour,
+labels, defaults, and visibility of fields and sections while keeping the core FieldFactory and
+adapter implementations intact. For additional frontend‑side customisation, see the guides under
+`docs/frontend/` (e.g. `frontend/hooks.md`, `frontend/components.md`).

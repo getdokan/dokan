@@ -265,11 +265,11 @@ class YourCustomField extends AbstractField {
 
 ### Register Your Field in Element Registry
 
-Register your field using the `dokan_field_factory_register_elements` hook:
+Register your field using the `dokan_field_register_elements` hook:
 
 ```php
 <?php
-add_action( 'dokan_field_factory_register_elements', function( $registry ) {
+add_action( 'dokan_field_register_elements', function( $registry ) {
     $registry->register(
         'field:your_custom_field',
         WeDevs\Dokan\FieldFactory\Elements\Fields\YourCustomField::class

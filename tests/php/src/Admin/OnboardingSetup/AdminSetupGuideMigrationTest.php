@@ -59,9 +59,9 @@ class AdminSetupGuideMigrationTest extends DokanTestCase {
 	}
 
 	/**
-	 * Test BasicStep uses FieldFactory elements.
+	 * Test BasicStep uses Field elements.
 	 */
-	public function test_basic_step_uses_field_factory(): void {
+	public function test_basic_step_uses_field_elements(): void {
 		$step = new BasicStep();
 		$step->describe_settings();
 
@@ -340,9 +340,9 @@ class AdminSetupGuideMigrationTest extends DokanTestCase {
 	}
 
 	/**
-	 * Test CommissionStep uses FieldFactory.
+	 * Test CommissionStep uses Field elements.
 	 */
-	public function test_commission_step_uses_field_factory(): void {
+	public function test_commission_step_uses_field_elements(): void {
 		$step = new CommissionStep();
 		$step->describe_settings();
 
@@ -366,9 +366,9 @@ class AdminSetupGuideMigrationTest extends DokanTestCase {
 	}
 
 	/**
-	 * Test WithdrawStep uses FieldFactory.
+	 * Test WithdrawStep uses Field elements.
 	 */
-	public function test_withdraw_step_uses_field_factory(): void {
+	public function test_withdraw_step_uses_field_elements(): void {
 		$step = new WithdrawStep();
 		$step->describe_settings();
 
@@ -392,9 +392,9 @@ class AdminSetupGuideMigrationTest extends DokanTestCase {
 	}
 
 	/**
-	 * Test AppearanceStep uses FieldFactory.
+	 * Test AppearanceStep uses Field elements.
 	 */
-	public function test_appearance_step_uses_field_factory(): void {
+	public function test_appearance_step_uses_field_elements(): void {
 		$step = new AppearanceStep();
 		$step->describe_settings();
 

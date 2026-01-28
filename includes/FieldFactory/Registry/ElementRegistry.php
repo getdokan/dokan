@@ -411,7 +411,7 @@ class ElementRegistry {
          *
          * @param ElementRegistry $registry The registry instance.
          */
-        do_action( 'dokan_field_factory_register_elements', $this );
+        do_action( 'dokan_field_register_elements', $this );
     }
 
     /**

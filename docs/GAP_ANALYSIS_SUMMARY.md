@@ -163,8 +163,8 @@
 ### Step 1: Create Adapters
 
 ```php
-// SettingsElementAdapter::to_field_factory($settingsElement)
-// StatusElementAdapter::to_field_factory($statusElement)
+// SettingsElementAdapter::to_field($settingsElement)
+// StatusElementAdapter::to_field($statusElement)
 // ValueHydrator::hydrate_from_option($element, $option_name)
 ```
 
@@ -191,8 +191,8 @@ return [
 ### Step 4: Update REST Controllers
 
 ```php
-// Use feature flag
-if (apply_filters('dokan_use_field_factory', false)) {
+// Use feature flag (example only)
+if ( apply_filters( 'dokan_use_field_elements', false ) ) {
     $output = $step->populate_via_factory();
 } else {
     $output = $step->populate(); // Legacy
