@@ -1,0 +1,445 @@
+[
+    {
+        "id": "overridden_features",
+        "title": "Overridden Templates or Routes",
+        "description": "The listed templates or vendor dashboard routes are currently overridden, which are preventing enabling new features.",
+        "icon": "",
+        "type": "section",
+        "data": "",
+        "hook_key": "dokan_status_overridden_features",
+        "children": [
+            {
+                "id": "override_templates_table",
+                "title": "Overridden Template Table",
+                "description": "",
+                "icon": "",
+                "type": "table",
+                "data": "",
+                "hook_key": "dokan_status_overridden_features_override_templates_table",
+                "children": [
+                    {
+                        "id": "override_row_0",
+                        "title": "",
+                        "description": "",
+                        "icon": "",
+                        "type": "table-row",
+                        "data": "",
+                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_0",
+                        "children": [
+                            {
+                                "id": "template_0",
+                                "title": "",
+                                "description": "",
+                                "icon": "",
+                                "type": "table-column",
+                                "data": "",
+                                "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_0_template_0",
+                                "children": [
+                                    {
+                                        "id": "file_location_0",
+                                        "title": "<code>/Users/kzaman/Herd/dokan/wp-content/themes/storefront/dokan/withdraw/withdraw-dashboard.php</code>",
+                                        "description": "",
+                                        "icon": "",
+                                        "type": "paragraph",
+                                        "data": "",
+                                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_0_template_0_file_location_0",
+                                        "children": []
+                                    },
+                                    {
+                                        "id": "file_location_0_instruction",
+                                        "title": "Please Remove the above file to enable new features.",
+                                        "description": "",
+                                        "icon": "",
+                                        "type": "paragraph",
+                                        "data": "",
+                                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_0_template_0_file_location_0_instruction",
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": "override_row_1",
+                        "title": "",
+                        "description": "",
+                        "icon": "",
+                        "type": "table-row",
+                        "data": "",
+                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_1",
+                        "children": [
+                            {
+                                "id": "template_1",
+                                "title": "",
+                                "description": "",
+                                "icon": "",
+                                "type": "table-column",
+                                "data": "",
+                                "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_1_template_1",
+                                "children": [
+                                    {
+                                        "id": "file_location_1",
+                                        "title": "<code>/Users/kzaman/Herd/dokan/wp-content/themes/storefront/dokan/withdraw/withdraw.php</code>",
+                                        "description": "",
+                                        "icon": "",
+                                        "type": "paragraph",
+                                        "data": "",
+                                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_1_template_1_file_location_1",
+                                        "children": []
+                                    },
+                                    {
+                                        "id": "file_location_1_instruction",
+                                        "title": "Please Remove the above file to enable new features.",
+                                        "description": "",
+                                        "icon": "",
+                                        "type": "paragraph",
+                                        "data": "",
+                                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_1_template_1_file_location_1_instruction",
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": "override_row_2",
+                        "title": "",
+                        "description": "",
+                        "icon": "",
+                        "type": "table-row",
+                        "data": "",
+                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_2",
+                        "children": [
+                            {
+                                "id": "template_2",
+                                "title": "",
+                                "description": "",
+                                "icon": "",
+                                "type": "table-column",
+                                "data": "",
+                                "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_2_template_2",
+                                "children": [
+                                    {
+                                        "id": "file_location_2",
+                                        "title": "<code>/Users/kzaman/Herd/dokan/wp-content/themes/storefront/dokan/withdraw/header.php</code>",
+                                        "description": "",
+                                        "icon": "",
+                                        "type": "paragraph",
+                                        "data": "",
+                                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_2_template_2_file_location_2",
+                                        "children": []
+                                    },
+                                    {
+                                        "id": "file_location_2_instruction",
+                                        "title": "Please Remove the above file to enable new features.",
+                                        "description": "",
+                                        "icon": "",
+                                        "type": "paragraph",
+                                        "data": "",
+                                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_2_template_2_file_location_2_instruction",
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": "override_row_3",
+                        "title": "",
+                        "description": "",
+                        "icon": "",
+                        "type": "table-row",
+                        "data": "",
+                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_3",
+                        "children": [
+                            {
+                                "id": "template_3",
+                                "title": "",
+                                "description": "",
+                                "icon": "",
+                                "type": "table-column",
+                                "data": "",
+                                "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_3_template_3",
+                                "children": [
+                                    {
+                                        "id": "file_location_3",
+                                        "title": "<code>/Users/kzaman/Herd/dokan/wp-content/themes/storefront/dokan/withdraw/status-listing.php</code>",
+                                        "description": "",
+                                        "icon": "",
+                                        "type": "paragraph",
+                                        "data": "",
+                                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_3_template_3_file_location_3",
+                                        "children": []
+                                    },
+                                    {
+                                        "id": "file_location_3_instruction",
+                                        "title": "Please Remove the above file to enable new features.",
+                                        "description": "",
+                                        "icon": "",
+                                        "type": "paragraph",
+                                        "data": "",
+                                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_3_template_3_file_location_3_instruction",
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": "override_row_4",
+                        "title": "",
+                        "description": "",
+                        "icon": "",
+                        "type": "table-row",
+                        "data": "",
+                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_4",
+                        "children": [
+                            {
+                                "id": "template_4",
+                                "title": "",
+                                "description": "",
+                                "icon": "",
+                                "type": "table-column",
+                                "data": "",
+                                "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_4_template_4",
+                                "children": [
+                                    {
+                                        "id": "file_location_4",
+                                        "title": "<code>/Users/kzaman/Herd/dokan/wp-content/themes/storefront/dokan/withdraw/pending-request-listing.php</code>",
+                                        "description": "",
+                                        "icon": "",
+                                        "type": "paragraph",
+                                        "data": "",
+                                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_4_template_4_file_location_4",
+                                        "children": []
+                                    },
+                                    {
+                                        "id": "file_location_4_instruction",
+                                        "title": "Please Remove the above file to enable new features.",
+                                        "description": "",
+                                        "icon": "",
+                                        "type": "paragraph",
+                                        "data": "",
+                                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_4_template_4_file_location_4_instruction",
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": "override_row_5",
+                        "title": "",
+                        "description": "",
+                        "icon": "",
+                        "type": "table-row",
+                        "data": "",
+                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_5",
+                        "children": [
+                            {
+                                "id": "template_5",
+                                "title": "",
+                                "description": "",
+                                "icon": "",
+                                "type": "table-column",
+                                "data": "",
+                                "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_5_template_5",
+                                "children": [
+                                    {
+                                        "id": "file_location_5",
+                                        "title": "<code>/Users/kzaman/Herd/dokan/wp-content/themes/storefront/dokan/withdraw/approved-request-listing.php</code>",
+                                        "description": "",
+                                        "icon": "",
+                                        "type": "paragraph",
+                                        "data": "",
+                                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_5_template_5_file_location_5",
+                                        "children": []
+                                    },
+                                    {
+                                        "id": "file_location_5_instruction",
+                                        "title": "Please Remove the above file to enable new features.",
+                                        "description": "",
+                                        "icon": "",
+                                        "type": "paragraph",
+                                        "data": "",
+                                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_5_template_5_file_location_5_instruction",
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": "override_row_6",
+                        "title": "",
+                        "description": "",
+                        "icon": "",
+                        "type": "table-row",
+                        "data": "",
+                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_6",
+                        "children": [
+                            {
+                                "id": "template_6",
+                                "title": "",
+                                "description": "",
+                                "icon": "",
+                                "type": "table-column",
+                                "data": "",
+                                "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_6_template_6",
+                                "children": [
+                                    {
+                                        "id": "file_location_6",
+                                        "title": "<code>/Users/kzaman/Herd/dokan/wp-content/themes/storefront/dokan/withdraw/cancelled-request-listing.php</code>",
+                                        "description": "",
+                                        "icon": "",
+                                        "type": "paragraph",
+                                        "data": "",
+                                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_6_template_6_file_location_6",
+                                        "children": []
+                                    },
+                                    {
+                                        "id": "file_location_6_instruction",
+                                        "title": "Please Remove the above file to enable new features.",
+                                        "description": "",
+                                        "icon": "",
+                                        "type": "paragraph",
+                                        "data": "",
+                                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_6_template_6_file_location_6_instruction",
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": "override_row_7",
+                        "title": "",
+                        "description": "",
+                        "icon": "",
+                        "type": "table-row",
+                        "data": "",
+                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_7",
+                        "children": [
+                            {
+                                "id": "template_7",
+                                "title": "",
+                                "description": "",
+                                "icon": "",
+                                "type": "table-column",
+                                "data": "",
+                                "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_7_template_7",
+                                "children": [
+                                    {
+                                        "id": "file_location_7",
+                                        "title": "<code>/Users/kzaman/Herd/dokan/wp-content/themes/storefront/dokan/withdraw/tmpl-withdraw-request-popup.php</code>",
+                                        "description": "",
+                                        "icon": "",
+                                        "type": "paragraph",
+                                        "data": "",
+                                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_7_template_7_file_location_7",
+                                        "children": []
+                                    },
+                                    {
+                                        "id": "file_location_7_instruction",
+                                        "title": "Please Remove the above file to enable new features.",
+                                        "description": "",
+                                        "icon": "",
+                                        "type": "paragraph",
+                                        "data": "",
+                                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_7_template_7_file_location_7_instruction",
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": "override_row_8",
+                        "title": "",
+                        "description": "",
+                        "icon": "",
+                        "type": "table-row",
+                        "data": "",
+                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_8",
+                        "children": [
+                            {
+                                "id": "template_8",
+                                "title": "",
+                                "description": "",
+                                "icon": "",
+                                "type": "table-column",
+                                "data": "",
+                                "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_8_template_8",
+                                "children": [
+                                    {
+                                        "id": "file_location_8",
+                                        "title": "<code>/Users/kzaman/Herd/dokan/wp-content/themes/storefront/dokan/withdraw/request-form.php</code>",
+                                        "description": "",
+                                        "icon": "",
+                                        "type": "paragraph",
+                                        "data": "",
+                                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_8_template_8_file_location_8",
+                                        "children": []
+                                    },
+                                    {
+                                        "id": "file_location_8_instruction",
+                                        "title": "Please Remove the above file to enable new features.",
+                                        "description": "",
+                                        "icon": "",
+                                        "type": "paragraph",
+                                        "data": "",
+                                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_8_template_8_file_location_8_instruction",
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "id": "override_row_9",
+                        "title": "",
+                        "description": "",
+                        "icon": "",
+                        "type": "table-row",
+                        "data": "",
+                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_9",
+                        "children": [
+                            {
+                                "id": "template_9",
+                                "title": "",
+                                "description": "",
+                                "icon": "",
+                                "type": "table-column",
+                                "data": "",
+                                "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_9_template_9",
+                                "children": [
+                                    {
+                                        "id": "file_location_9",
+                                        "title": "<code>/Users/kzaman/Herd/dokan/wp-content/themes/storefront/dokan/withdraw/pending-request-listing-dashboard.php</code>",
+                                        "description": "",
+                                        "icon": "",
+                                        "type": "paragraph",
+                                        "data": "",
+                                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_9_template_9_file_location_9",
+                                        "children": []
+                                    },
+                                    {
+                                        "id": "file_location_9_instruction",
+                                        "title": "Please Remove the above file to enable new features.",
+                                        "description": "",
+                                        "icon": "",
+                                        "type": "paragraph",
+                                        "data": "",
+                                        "hook_key": "dokan_status_overridden_features_override_templates_table_override_row_9_template_9_file_location_9_instruction",
+                                        "children": []
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "headers": [ "Template" ]
+            }
+        ]
+    }
+]

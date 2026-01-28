@@ -1,0 +1,757 @@
+[
+    {
+        "id": "basic",
+        "type": "section",
+        "title": "Basic",
+        "icon": "",
+        "display": true,
+        "hook_key": "dokan_admin_onboarding_setup_step_basic_basic",
+        "children": [
+            {
+                "id": "shipping_fee_recipient",
+                "type": "field",
+                "title": "Shipping Fee Recipient",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_basic_basic_shipping_fee_recipient",
+                "children": [],
+                "description": "Choose who receives shipping charges - Admin keeps all shipping fees or Vendors receive fees for their products",
+                "dependency_key": "basic.shipping_fee_recipient",
+                "dependencies": [],
+                "variant": "radio_box",
+                "value": "seller",
+                "default": "seller",
+                "placeholder": "",
+                "readonly": false,
+                "disabled": false,
+                "size": 20,
+                "options": [
+                    {
+                        "value": "admin",
+                        "title": "Admin"
+                    },
+                    {
+                        "value": "seller",
+                        "title": "Vendor"
+                    }
+                ]
+            },
+            {
+                "id": "tax_fee_recipient",
+                "type": "field",
+                "title": "Product Tax Fee Recipient",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_basic_basic_tax_fee_recipient",
+                "children": [],
+                "description": "Determine who collects product taxes - Admin manages all tax collection or Vendors handle their product taxes",
+                "dependency_key": "basic.tax_fee_recipient",
+                "dependencies": [],
+                "variant": "radio_box",
+                "value": "seller",
+                "default": "seller",
+                "placeholder": "",
+                "readonly": false,
+                "disabled": false,
+                "size": 20,
+                "options": [
+                    {
+                        "value": "admin",
+                        "title": "Admin"
+                    },
+                    {
+                        "value": "seller",
+                        "title": "Vendor"
+                    }
+                ]
+            },
+            {
+                "id": "shipping_tax_fee_recipient",
+                "type": "field",
+                "title": "Shipping Tax Fee Recipient",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_basic_basic_shipping_tax_fee_recipient",
+                "children": [],
+                "description": "Select who receives shipping tax - Admin centralizes all shipping tax or Vendors collect shipping tax for their orders",
+                "dependency_key": "basic.shipping_tax_fee_recipient",
+                "dependencies": [],
+                "variant": "radio_box",
+                "value": "seller",
+                "default": "seller",
+                "placeholder": "",
+                "readonly": false,
+                "disabled": false,
+                "size": 20,
+                "options": [
+                    {
+                        "value": "admin",
+                        "title": "Admin"
+                    },
+                    {
+                        "value": "seller",
+                        "title": "Vendor"
+                    }
+                ]
+            },
+            {
+                "id": "order_status_change",
+                "type": "field",
+                "title": "Vendors can change order status",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_basic_basic_order_status_change",
+                "children": [],
+                "description": "Allow vendors to update order statuses (processing, completed, etc.) for their products",
+                "dependency_key": "basic.order_status_change",
+                "dependencies": [],
+                "variant": "switch",
+                "value": "on",
+                "default": "on",
+                "placeholder": "",
+                "readonly": false,
+                "disabled": false,
+                "size": 20,
+                "options": [],
+                "enable_state": {
+                    "value": "on",
+                    "title": "Enabled"
+                },
+                "disable_state": {
+                    "value": "off",
+                    "title": "Disabled"
+                }
+            },
+            {
+                "id": "new_seller_enable_selling",
+                "type": "field",
+                "title": "New Vendor Selling Directly",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_basic_basic_new_seller_enable_selling",
+                "children": [],
+                "description": "Automatically enable selling capabilities for newly registered vendors",
+                "dependency_key": "basic.new_seller_enable_selling",
+                "dependencies": [],
+                "variant": "switch",
+                "value": "manually",
+                "default": "on",
+                "placeholder": "",
+                "readonly": false,
+                "disabled": false,
+                "size": 20,
+                "options": [],
+                "enable_state": {
+                    "value": "on",
+                    "title": "Enabled"
+                },
+                "disable_state": {
+                    "value": "off",
+                    "title": "Disabled"
+                }
+            }
+        ],
+        "description": "",
+        "dependency_key": "basic",
+        "dependencies": []
+    },
+    {
+        "id": "commission",
+        "type": "section",
+        "title": "Commission",
+        "icon": "",
+        "display": true,
+        "hook_key": "dokan_admin_onboarding_setup_step_commission_commission",
+        "children": [
+            {
+                "id": "commission_type",
+                "type": "field",
+                "title": "Commission Type",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_commission_commission_commission_type",
+                "children": [],
+                "description": "Select a commission type for your marketplace",
+                "dependency_key": "commission.commission_type",
+                "dependencies": [],
+                "variant": "select",
+                "value": "fixed",
+                "default": "fixed",
+                "placeholder": "",
+                "readonly": false,
+                "disabled": false,
+                "size": 20,
+                "options": [
+                    {
+                        "value": "fixed",
+                        "title": "Fixed"
+                    },
+                    {
+                        "value": "category_based",
+                        "title": "Category Based"
+                    }
+                ]
+            },
+            {
+                "id": "admin_commission",
+                "type": "field",
+                "title": "Admin Commission",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_commission_commission_admin_commission",
+                "children": [],
+                "description": "Amount you will get from sales in both percentage and fixed fee",
+                "dependency_key": "commission.admin_commission",
+                "dependencies": [
+                    {
+                        "key": "commission.commission_type",
+                        "value": "fixed",
+                        "to_self": true,
+                        "attribute": "display",
+                        "effect": "hide",
+                        "comparison": "!==",
+                        "self": "commission.admin_commission"
+                    },
+                    {
+                        "key": "commission.commission_type",
+                        "value": "fixed",
+                        "to_self": true,
+                        "attribute": "display",
+                        "effect": "show",
+                        "comparison": "===",
+                        "self": "commission.admin_commission"
+                    }
+                ],
+                "variant": "combine_input",
+                "value": {
+                    "additional_fee": "0",
+                    "admin_percentage": "10"
+                },
+                "additional_fee": "0",
+                "admin_percentage": "10"
+            },
+            {
+                "id": "reset_sub_category_when_edit_all_category",
+                "type": "field",
+                "title": "Apply Parent Category Commission to All Subcategories",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_commission_commission_reset_sub_category_when_edit_all_category",
+                "children": [],
+                "description": "Important: &#039;All Categories&#039; commission serves as your marketplace&#039;s default rate and cannot be empty. If 0 is given in value, then the marketplace will deduct no commission from vendors",
+                "dependency_key": "commission.reset_sub_category_when_edit_all_category",
+                "dependencies": [
+                    {
+                        "key": "commission.commission_type",
+                        "value": "category_based",
+                        "to_self": true,
+                        "attribute": "display",
+                        "effect": "hide",
+                        "comparison": "!==",
+                        "self": "commission.reset_sub_category_when_edit_all_category"
+                    },
+                    {
+                        "key": "commission.commission_type",
+                        "value": "category_based",
+                        "to_self": true,
+                        "attribute": "display",
+                        "effect": "show",
+                        "comparison": "===",
+                        "self": "commission.reset_sub_category_when_edit_all_category"
+                    }
+                ],
+                "variant": "switch",
+                "value": "on",
+                "default": "on",
+                "placeholder": "",
+                "readonly": false,
+                "disabled": false,
+                "size": 20,
+                "options": [],
+                "enable_state": {
+                    "value": "on",
+                    "title": "Enabled"
+                },
+                "disable_state": {
+                    "value": "off",
+                    "title": "Disabled"
+                }
+            },
+            {
+                "id": "commission_category_based_values",
+                "type": "field",
+                "title": "Admin Commission",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_commission_commission_commission_category_based_values",
+                "children": [],
+                "description": "Amount you will get from each sale",
+                "dependency_key": "commission.commission_category_based_values",
+                "dependencies": [
+                    {
+                        "key": "commission.commission_type",
+                        "value": "category_based",
+                        "to_self": true,
+                        "attribute": "display",
+                        "effect": "hide",
+                        "comparison": "!==",
+                        "self": "commission.commission_category_based_values"
+                    },
+                    {
+                        "key": "commission.commission_type",
+                        "value": "category_based",
+                        "to_self": true,
+                        "attribute": "display",
+                        "effect": "show",
+                        "comparison": "===",
+                        "self": "commission.commission_category_based_values"
+                    },
+                    {
+                        "key": "commission.reset_sub_category_when_edit_all_category",
+                        "value": "on",
+                        "to_self": true,
+                        "attribute": "custom",
+                        "effect": "custom",
+                        "comparison": "===",
+                        "self": "commission.commission_category_based_values"
+                    },
+                    {
+                        "key": "commission.reset_sub_category_when_edit_all_category",
+                        "value": "off",
+                        "to_self": true,
+                        "attribute": "custom",
+                        "effect": "custom",
+                        "comparison": "===",
+                        "self": "commission.commission_category_based_values"
+                    }
+                ],
+                "variant": "category_based_commission",
+                "value": {
+                    "all": {
+                        "flat": "0",
+                        "percentage": "10"
+                    },
+                    "items": {
+                        "31": {
+                            "flat": "5",
+                            "percentage": "20"
+                        }
+                    }
+                },
+                "categories": {
+                    "15": {
+                        "term_id": 15,
+                        "name": "Uncategorized",
+                        "parent_id": 0,
+                        "children": [],
+                        "parents": [],
+                        "breadcumb": [ "Uncategorized" ]
+                    },
+                    "17": {
+                        "term_id": 17,
+                        "name": "Clothing",
+                        "parent_id": 0,
+                        "children": [ 20, 19, 18 ],
+                        "parents": [],
+                        "breadcumb": [ "Clothing", "Clothing" ]
+                    },
+                    "18": {
+                        "term_id": 18,
+                        "name": "Tshirts",
+                        "parent_id": 17,
+                        "children": [],
+                        "parents": [ 17 ],
+                        "breadcumb": [ "Clothing" ]
+                    },
+                    "19": {
+                        "term_id": 19,
+                        "name": "Hoodies",
+                        "parent_id": 17,
+                        "children": [],
+                        "parents": [ 17 ],
+                        "breadcumb": [ "Clothing" ]
+                    },
+                    "20": {
+                        "term_id": 20,
+                        "name": "Accessories",
+                        "parent_id": 17,
+                        "children": [],
+                        "parents": [ 17 ],
+                        "breadcumb": [ "Clothing" ]
+                    },
+                    "21": {
+                        "term_id": 21,
+                        "name": "Music",
+                        "parent_id": 0,
+                        "children": [],
+                        "parents": [],
+                        "breadcumb": [ "Music" ]
+                    },
+                    "22": {
+                        "term_id": 22,
+                        "name": "Decor",
+                        "parent_id": 0,
+                        "children": [],
+                        "parents": [],
+                        "breadcumb": [ "Decor" ]
+                    },
+                    "31": {
+                        "term_id": 31,
+                        "name": "T-Shirt",
+                        "parent_id": 0,
+                        "children": [],
+                        "parents": [],
+                        "breadcumb": [ "T-Shirt" ]
+                    },
+                    "42": {
+                        "term_id": 42,
+                        "name": "Smartphone",
+                        "parent_id": 0,
+                        "children": [],
+                        "parents": [],
+                        "breadcumb": [ "Smartphone" ]
+                    }
+                },
+                "reset_subcategory": "on"
+            }
+        ],
+        "description": "",
+        "dependency_key": "commission",
+        "dependencies": []
+    },
+    {
+        "id": "withdraw",
+        "type": "section",
+        "title": "Withdraw",
+        "icon": "",
+        "display": true,
+        "hook_key": "dokan_admin_onboarding_setup_step_withdraw_withdraw",
+        "children": [
+            {
+                "id": "paypal",
+                "type": "field",
+                "title": "PayPal",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_withdraw_withdraw_paypal",
+                "children": [],
+                "description": "Enable PayPal for your vendor as a withdraw method",
+                "dependency_key": "withdraw.paypal",
+                "dependencies": [],
+                "variant": "switch",
+                "value": "",
+                "default": "paypal",
+                "placeholder": "",
+                "readonly": false,
+                "disabled": false,
+                "size": 20,
+                "options": [],
+                "enable_state": {
+                    "value": "paypal",
+                    "title": "Enabled"
+                },
+                "disable_state": {
+                    "value": "",
+                    "title": "Disabled"
+                }
+            },
+            {
+                "id": "bank",
+                "type": "field",
+                "title": "Bank Transfer",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_withdraw_withdraw_bank",
+                "children": [],
+                "description": "Enable Bank Transfer for your vendor as a withdraw method",
+                "dependency_key": "withdraw.bank",
+                "dependencies": [],
+                "variant": "switch",
+                "value": "bank",
+                "default": "",
+                "placeholder": "",
+                "readonly": false,
+                "disabled": false,
+                "size": 20,
+                "options": [],
+                "enable_state": {
+                    "value": "bank",
+                    "title": "Enabled"
+                },
+                "disable_state": {
+                    "value": "",
+                    "title": "Disabled"
+                }
+            },
+            {
+                "id": "skrill",
+                "type": "field",
+                "title": "Skrill",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_withdraw_withdraw_skrill",
+                "children": [],
+                "description": "Enable Skrill for your vendor as a withdraw method",
+                "dependency_key": "withdraw.skrill",
+                "dependencies": [],
+                "variant": "switch",
+                "value": "",
+                "default": "",
+                "placeholder": "",
+                "readonly": false,
+                "disabled": false,
+                "size": 20,
+                "options": [],
+                "enable_state": {
+                    "value": "skrill",
+                    "title": "Enabled"
+                },
+                "disable_state": {
+                    "value": "",
+                    "title": "Disabled"
+                }
+            },
+            {
+                "id": "withdraw_limit",
+                "type": "field",
+                "title": "Minimum Withdraw Limits",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_withdraw_withdraw_withdraw_limit",
+                "children": [],
+                "description": "Set the minimum balance required before vendors can request withdrawals",
+                "dependency_key": "withdraw.withdraw_limit",
+                "dependencies": [],
+                "variant": "currency",
+                "value": "50",
+                "default": "50",
+                "placeholder": "",
+                "readonly": false,
+                "disabled": false,
+                "size": 20,
+                "currency_symbol": "&#36;"
+            },
+            {
+                "id": "withdraw_order_status",
+                "type": "field",
+                "title": "Order Status for Withdraw",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_withdraw_withdraw_withdraw_order_status",
+                "children": [],
+                "description": "Define which order status makes funds eligible for withdrawal",
+                "dependency_key": "withdraw.withdraw_order_status",
+                "dependencies": [],
+                "variant": "multicheck",
+                "value": {
+                    "wc-completed": "wc-completed",
+                    "wc-processing": "wc-processing"
+                },
+                "default": {
+                    "wc-completed": "wc-completed"
+                },
+                "options": [
+                    {
+                        "value": "wc-completed",
+                        "title": "Completed"
+                    },
+                    {
+                        "value": "wc-processing",
+                        "title": "Processing"
+                    },
+                    {
+                        "value": "wc-on-hold",
+                        "title": "On Hold"
+                    }
+                ]
+            }
+        ],
+        "description": "",
+        "dependency_key": "withdraw",
+        "dependencies": []
+    },
+    {
+        "id": "appearance",
+        "type": "section",
+        "title": "Appearance",
+        "icon": "",
+        "display": true,
+        "hook_key": "dokan_admin_onboarding_setup_step_appearance_appearance",
+        "children": [
+            {
+                "id": "store-info",
+                "type": "subsection",
+                "title": "Store Info",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_appearance_appearance_store-info",
+                "children": [
+                    {
+                        "id": "contact_seller",
+                        "type": "field",
+                        "title": "Contact Form on Store Page",
+                        "icon": "",
+                        "display": true,
+                        "hook_key": "dokan_admin_onboarding_setup_step_appearance_appearance_store-info_contact_seller",
+                        "children": [],
+                        "description": "Display a contact form on vendor store pages for customer inquiries",
+                        "dependency_key": "appearance.store-info.contact_seller",
+                        "dependencies": [],
+                        "variant": "radio",
+                        "value": "on",
+                        "default": "on",
+                        "placeholder": "",
+                        "readonly": false,
+                        "disabled": false,
+                        "size": 20,
+                        "options": [
+                            {
+                                "value": "off",
+                                "title": "Hide"
+                            },
+                            {
+                                "value": "on",
+                                "title": "Show"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "enable_theme_store_sidebar",
+                        "type": "field",
+                        "title": "Store Sidebar From Theme",
+                        "icon": "",
+                        "display": true,
+                        "hook_key": "dokan_admin_onboarding_setup_step_appearance_appearance_store-info_enable_theme_store_sidebar",
+                        "children": [],
+                        "description": "Show/hide the sidebar on vendor store pages",
+                        "dependency_key": "appearance.store-info.enable_theme_store_sidebar",
+                        "dependencies": [],
+                        "variant": "radio",
+                        "value": "off",
+                        "default": "off",
+                        "placeholder": "",
+                        "readonly": false,
+                        "disabled": false,
+                        "size": 20,
+                        "options": [
+                            {
+                                "value": "off",
+                                "title": "Hide"
+                            },
+                            {
+                                "value": "on",
+                                "title": "Show"
+                            }
+                        ]
+                    }
+                ],
+                "description": "",
+                "dependency_key": "appearance.store-info",
+                "dependencies": []
+            },
+            {
+                "id": "vendor-info",
+                "type": "subsection",
+                "title": "Vendor Info on Product Page",
+                "icon": "",
+                "display": true,
+                "hook_key": "dokan_admin_onboarding_setup_step_appearance_appearance_vendor-info",
+                "children": [
+                    {
+                        "id": "email",
+                        "type": "field",
+                        "title": "Email Address",
+                        "icon": "",
+                        "display": true,
+                        "hook_key": "dokan_admin_onboarding_setup_step_appearance_appearance_vendor-info_email",
+                        "children": [],
+                        "description": "",
+                        "dependency_key": "appearance.vendor-info.email",
+                        "dependencies": [],
+                        "variant": "radio",
+                        "value": "",
+                        "default": "",
+                        "placeholder": "",
+                        "readonly": false,
+                        "disabled": false,
+                        "size": 20,
+                        "options": [
+                            {
+                                "value": "",
+                                "title": "Hide"
+                            },
+                            {
+                                "value": "email",
+                                "title": "Show"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "phone",
+                        "type": "field",
+                        "title": "Phone Number",
+                        "icon": "",
+                        "display": true,
+                        "hook_key": "dokan_admin_onboarding_setup_step_appearance_appearance_vendor-info_phone",
+                        "children": [],
+                        "description": "",
+                        "dependency_key": "appearance.vendor-info.phone",
+                        "dependencies": [],
+                        "variant": "radio",
+                        "value": "",
+                        "default": "",
+                        "placeholder": "",
+                        "readonly": false,
+                        "disabled": false,
+                        "size": 20,
+                        "options": [
+                            {
+                                "value": "",
+                                "title": "Hide"
+                            },
+                            {
+                                "value": "phone",
+                                "title": "Show"
+                            }
+                        ]
+                    },
+                    {
+                        "id": "address",
+                        "type": "field",
+                        "title": "Store Address",
+                        "icon": "",
+                        "display": true,
+                        "hook_key": "dokan_admin_onboarding_setup_step_appearance_appearance_vendor-info_address",
+                        "children": [],
+                        "description": "",
+                        "dependency_key": "appearance.vendor-info.address",
+                        "dependencies": [],
+                        "variant": "radio",
+                        "value": "",
+                        "default": "",
+                        "placeholder": "",
+                        "readonly": false,
+                        "disabled": false,
+                        "size": 20,
+                        "options": [
+                            {
+                                "value": "",
+                                "title": "Hide"
+                            },
+                            {
+                                "value": "address",
+                                "title": "Show"
+                            }
+                        ]
+                    }
+                ],
+                "description": "",
+                "dependency_key": "appearance.vendor-info",
+                "dependencies": []
+            }
+        ],
+        "description": "",
+        "dependency_key": "appearance",
+        "dependencies": []
+    }
+]

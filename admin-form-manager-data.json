@@ -1,0 +1,1320 @@
+{
+    "sections": [
+        {
+            "id": "general",
+            "label": "General",
+            "order": 10,
+            "description": "",
+            "fields": [
+                {
+                    "id": "name",
+                    "label": "Product Title",
+                    "tooltip": "",
+                    "section_id": "general",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": true,
+                    "value": "AUTO-DRAFT",
+                    "field_type": "text",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "Enter product title...",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                },
+                {
+                    "id": "slug",
+                    "label": "Permalink",
+                    "tooltip": "",
+                    "section_id": "general",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "",
+                    "field_type": "text",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "Enter product slug...",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                },
+                {
+                    "id": "type",
+                    "label": "Product Type",
+                    "tooltip": "Choose product type.",
+                    "section_id": "general",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "Choose Variable if your product has multiple attributes - like sizes, colors, quality etc",
+                    "required": true,
+                    "value": "simple",
+                    "field_type": "select",
+                    "options": {
+                        "simple": "Simple",
+                        "variable": "Variable",
+                        "external": "External/Affiliate product",
+                        "grouped": "Group Product"
+                    },
+                    "visibility": true,
+                    "placeholder": "",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                },
+                {
+                    "id": "regular_price",
+                    "label": "Price",
+                    "tooltip": "",
+                    "section_id": "general",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "",
+                    "field_type": "text",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "0.00",
+                    "dependency_condition": [],
+                    "hidden_scope": [ "variable" ]
+                },
+                {
+                    "id": "sale_price",
+                    "label": "Sale Price",
+                    "tooltip": "",
+                    "section_id": "general",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "",
+                    "field_type": "text",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "0.00",
+                    "dependency_condition": [],
+                    "hidden_scope": [ "variable" ]
+                },
+                {
+                    "id": "create_schedule_for_discount",
+                    "label": "Create Schedule for Discount",
+                    "tooltip": "",
+                    "section_id": "general",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "off",
+                    "field_type": "checkbox",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "",
+                    "dependency_condition": [],
+                    "hidden_scope": [ "variable" ]
+                },
+                {
+                    "id": "date_on_sale_from",
+                    "label": "From",
+                    "tooltip": "",
+                    "section_id": "general",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "",
+                    "field_type": "date",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "YYYY-MM-DD",
+                    "dependency_condition": {
+                        "section": "general",
+                        "field": "create_schedule_for_discount",
+                        "operator": "equal",
+                        "value": "on"
+                    },
+                    "hidden_scope": []
+                },
+                {
+                    "id": "date_on_sale_to",
+                    "label": "To",
+                    "tooltip": "",
+                    "section_id": "general",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "",
+                    "field_type": "date",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "YYYY-MM-DD",
+                    "dependency_condition": {
+                        "section": "general",
+                        "field": "create_schedule_for_discount",
+                        "operator": "equal",
+                        "value": "on"
+                    },
+                    "hidden_scope": []
+                },
+                {
+                    "id": "category_ids",
+                    "label": "Categories",
+                    "tooltip": "",
+                    "section_id": "general",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": true,
+                    "value": [ 15 ],
+                    "field_type": "select",
+                    "options": [
+                        {
+                            "value": "t-shirt",
+                            "label": "T-Shirt",
+                            "parent": 0,
+                            "count": 8,
+                            "slug": "t-shirt",
+                            "term_id": 31,
+                            "children": []
+                        },
+                        {
+                            "value": "uncategorized",
+                            "label": "Uncategorized",
+                            "parent": 0,
+                            "count": 7,
+                            "slug": "uncategorized",
+                            "term_id": 15,
+                            "children": []
+                        },
+                        {
+                            "value": "clothing",
+                            "label": "Clothing",
+                            "parent": 0,
+                            "count": 11,
+                            "slug": "clothing",
+                            "term_id": 17,
+                            "children": [
+                                {
+                                    "value": "accessories",
+                                    "label": "Accessories",
+                                    "parent": 17,
+                                    "count": 4,
+                                    "slug": "accessories",
+                                    "term_id": 20,
+                                    "children": []
+                                },
+                                {
+                                    "value": "hoodies",
+                                    "label": "Hoodies",
+                                    "parent": 17,
+                                    "count": 3,
+                                    "slug": "hoodies",
+                                    "term_id": 19,
+                                    "children": []
+                                },
+                                {
+                                    "value": "tshirts",
+                                    "label": "Tshirts",
+                                    "parent": 17,
+                                    "count": 3,
+                                    "slug": "tshirts",
+                                    "term_id": 18,
+                                    "children": []
+                                }
+                            ]
+                        },
+                        {
+                            "value": "decor",
+                            "label": "Decor",
+                            "parent": 0,
+                            "count": 1,
+                            "slug": "decor",
+                            "term_id": 22,
+                            "children": []
+                        },
+                        {
+                            "value": "music",
+                            "label": "Music",
+                            "parent": 0,
+                            "count": 2,
+                            "slug": "music",
+                            "term_id": 21,
+                            "children": []
+                        },
+                        {
+                            "value": "smartphone",
+                            "label": "Smartphone",
+                            "parent": 0,
+                            "count": 0,
+                            "slug": "smartphone",
+                            "term_id": 42,
+                            "children": []
+                        }
+                    ],
+                    "visibility": true,
+                    "placeholder": "Select product categories",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                },
+                {
+                    "id": "product_tag",
+                    "label": "Tags",
+                    "tooltip": "",
+                    "section_id": "general",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": [],
+                    "field_type": "select",
+                    "options": [
+                        {
+                            "value": 32,
+                            "slug": "dokan-dummy-data",
+                            "label": "Dokan dummy data"
+                        },
+                        {
+                            "value": 67,
+                            "slug": "test-tag",
+                            "label": "Test Tag"
+                        }
+                    ],
+                    "visibility": true,
+                    "placeholder": "Select product tags",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                },
+                {
+                    "id": "product_brand",
+                    "label": "Brands",
+                    "tooltip": "",
+                    "section_id": "general",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": [],
+                    "field_type": "select",
+                    "options": [
+                        {
+                            "value": 41,
+                            "slug": "iphone",
+                            "label": "iPhone",
+                            "parent": 0,
+                            "children": [
+                                {
+                                    "value": 66,
+                                    "slug": "123",
+                                    "label": "123",
+                                    "parent": 41
+                                }
+                            ]
+                        },
+                        {
+                            "value": 68,
+                            "slug": "test",
+                            "label": "Test",
+                            "parent": 0
+                        }
+                    ],
+                    "visibility": true,
+                    "placeholder": "Select product brands",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                },
+                {
+                    "id": "image_id",
+                    "label": "Feature Image",
+                    "tooltip": "Select product image",
+                    "section_id": "general",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": {
+                        "id": "",
+                        "url": false
+                    },
+                    "field_type": "image",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                },
+                {
+                    "id": "gallery_image_ids",
+                    "label": "Gallery Image",
+                    "tooltip": "Select product gallery images",
+                    "section_id": "general",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": [],
+                    "field_type": "gallery",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                },
+                {
+                    "id": "short_description",
+                    "label": "Short Description",
+                    "tooltip": "",
+                    "section_id": "general",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "",
+                    "field_type": "editor",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "Enter product short description",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                },
+                {
+                    "id": "description",
+                    "label": "Description",
+                    "tooltip": "",
+                    "section_id": "general",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": true,
+                    "value": "",
+                    "field_type": "editor",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "Enter product description",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                },
+                {
+                    "id": "downloadable",
+                    "label": "Downloadable",
+                    "tooltip": "Downloadable products give access to a file upon purchase.",
+                    "section_id": "general",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "no",
+                    "field_type": "checkbox",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "",
+                    "dependency_condition": [],
+                    "hidden_scope": [ "variable" ]
+                },
+                {
+                    "id": "virtual",
+                    "label": "Virtual",
+                    "tooltip": "Virtual products are intangible and are not shipped.",
+                    "section_id": "general",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": false,
+                    "field_type": "checkbox",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "",
+                    "dependency_condition": [],
+                    "hidden_scope": [ "variable" ]
+                },
+                {
+                    "id": "product_url",
+                    "label": "Product URL",
+                    "tooltip": "",
+                    "section_id": "general",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "",
+                    "field_type": "text",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "https://",
+                    "dependency_condition": {
+                        "section": "general",
+                        "field": "type",
+                        "operator": "equal",
+                        "value": "external"
+                    },
+                    "hidden_scope": []
+                },
+                {
+                    "id": "button_text",
+                    "label": "Button text",
+                    "tooltip": "",
+                    "section_id": "general",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "",
+                    "field_type": "text",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "Buy product",
+                    "dependency_condition": {
+                        "section": "general",
+                        "field": "type",
+                        "operator": "equal",
+                        "value": "external"
+                    },
+                    "hidden_scope": []
+                }
+            ]
+        },
+        {
+            "id": "inventory",
+            "label": "Inventory",
+            "order": 30,
+            "description": "Manage inventory for this product",
+            "fields": [
+                {
+                    "id": "sku",
+                    "label": "SKU <span>(Stock Keeping Unit)</span>",
+                    "tooltip": "",
+                    "section_id": "inventory",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "SKU refers to a Stock-keeping unit, a unique identifier for each distinct product and service that can be purchased.",
+                    "required": false,
+                    "value": "",
+                    "field_type": "text",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "Enter product SKU",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                },
+                {
+                    "id": "global_unique_id",
+                    "label": "GTIN, UPC, EAN, or ISBN <span>(Product Identifiers)</span>",
+                    "tooltip": "Enter a barcode or any other identifier unique to this product. It can help you list this product on other channels or marketplaces.",
+                    "section_id": "inventory",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "",
+                    "field_type": "text",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "Enter code",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                },
+                {
+                    "id": "stock_status",
+                    "label": "Stock Status",
+                    "tooltip": "",
+                    "section_id": "inventory",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "Controls whether or not the product is listed as \"in stock\" or \"out of stock\" on the frontend.",
+                    "required": false,
+                    "value": "instock",
+                    "field_type": "select",
+                    "options": {
+                        "instock": "In stock",
+                        "outofstock": "Out of stock",
+                        "onbackorder": "On backorder"
+                    },
+                    "visibility": true,
+                    "placeholder": "",
+                    "dependency_condition": {
+                        "section": "inventory",
+                        "field": "manage_stock",
+                        "operator": "not_equal",
+                        "value": "on"
+                    },
+                    "hidden_scope": []
+                },
+                {
+                    "id": "manage_stock",
+                    "label": "Enable product stock management",
+                    "tooltip": "Manage stock level (quantity)",
+                    "section_id": "inventory",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": false,
+                    "field_type": "checkbox",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                },
+                {
+                    "id": "stock_quantity",
+                    "label": "Stock quantity",
+                    "tooltip": "",
+                    "section_id": "inventory",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "Stock quantity. If this is a variable product this value will be used to control stock for all variations, unless you define stock at variation level.",
+                    "required": false,
+                    "value": null,
+                    "field_type": "number",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "1",
+                    "dependency_condition": {
+                        "section": "inventory",
+                        "field": "manage_stock",
+                        "operator": "equal",
+                        "value": "on"
+                    },
+                    "hidden_scope": []
+                },
+                {
+                    "id": "low_stock_amount",
+                    "label": "Low stock threshold",
+                    "tooltip": "",
+                    "section_id": "inventory",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "When product stock reaches this amount you will be notified by email. It is possible to define different values for each variation individually.",
+                    "required": false,
+                    "value": "",
+                    "field_type": "number",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "Store-wide threshold (2)",
+                    "dependency_condition": {
+                        "section": "inventory",
+                        "field": "manage_stock",
+                        "operator": "equal",
+                        "value": "on"
+                    },
+                    "hidden_scope": []
+                },
+                {
+                    "id": "backorders",
+                    "label": "Allow Backorders",
+                    "tooltip": "",
+                    "section_id": "inventory",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "If managing stock, this controls whether or not backorders are allowed. If enabled, stock quantity can go below 0.",
+                    "required": false,
+                    "value": "no",
+                    "field_type": "select",
+                    "options": {
+                        "no": "Do not allow",
+                        "notify": "Allow, but notify customer",
+                        "yes": "Allow"
+                    },
+                    "visibility": true,
+                    "placeholder": "",
+                    "dependency_condition": {
+                        "section": "inventory",
+                        "field": "manage_stock",
+                        "operator": "equal",
+                        "value": "on"
+                    },
+                    "hidden_scope": []
+                },
+                {
+                    "id": "sold_individually",
+                    "label": "Allow only one quantity of this product to be bought in a single order.",
+                    "tooltip": "Check to let customers to purchase only 1 item in a single order. This is particularly useful for items that have limited quantity, for example art or handmade goods.",
+                    "section_id": "inventory",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": false,
+                    "field_type": "checkbox",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                }
+            ]
+        },
+        {
+            "id": "downloadable",
+            "label": "Downloadable Options",
+            "order": 30,
+            "description": "Configure your downloadable product settings",
+            "fields": [
+                {
+                    "id": "downloads",
+                    "label": "Downloadable Files",
+                    "tooltip": "",
+                    "section_id": "downloadable",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "Upload files that customers can download after purchase.",
+                    "required": false,
+                    "value": [],
+                    "field_type": "downloadable",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "",
+                    "dependency_condition": {
+                        "section": "general",
+                        "field": "downloadable",
+                        "operator": "equal",
+                        "value": "on"
+                    },
+                    "hidden_scope": []
+                },
+                {
+                    "id": "download_limit",
+                    "label": "Download Limit",
+                    "tooltip": "",
+                    "section_id": "downloadable",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "Leave blank for unlimited re-downloads.",
+                    "required": false,
+                    "value": 1,
+                    "field_type": "number",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "Unlimited",
+                    "dependency_condition": {
+                        "section": "general",
+                        "field": "downloadable",
+                        "operator": "equal",
+                        "value": "on"
+                    },
+                    "hidden_scope": []
+                },
+                {
+                    "id": "download_expiry",
+                    "label": "Download Expiry",
+                    "tooltip": "",
+                    "section_id": "downloadable",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "Enter the number of days before a download link expires, or leave blank.",
+                    "required": false,
+                    "value": 1,
+                    "field_type": "number",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "Never",
+                    "dependency_condition": {
+                        "section": "general",
+                        "field": "downloadable",
+                        "operator": "equal",
+                        "value": "on"
+                    },
+                    "hidden_scope": []
+                }
+            ]
+        },
+        {
+            "id": "others",
+            "label": "Other Options",
+            "order": 30,
+            "description": "Set your extra product options",
+            "fields": [
+                {
+                    "id": "status",
+                    "label": "Status",
+                    "tooltip": "",
+                    "section_id": "others",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "publish",
+                    "field_type": "radio",
+                    "options": {
+                        "publish": "Online",
+                        "draft": "Draft"
+                    },
+                    "visibility": true,
+                    "placeholder": "",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                },
+                {
+                    "id": "catalog_visibility",
+                    "label": "Visibility",
+                    "tooltip": "",
+                    "section_id": "others",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "visible",
+                    "field_type": "select",
+                    "options": {
+                        "visible": "Visible",
+                        "catalog": "Catalog",
+                        "search": "Search",
+                        "hidden": "Hidden"
+                    },
+                    "visibility": true,
+                    "placeholder": "",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                },
+                {
+                    "id": "purchase_note",
+                    "label": "Purchase Note",
+                    "tooltip": "",
+                    "section_id": "others",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "Customer will get this in order email.",
+                    "required": false,
+                    "value": "",
+                    "field_type": "textarea",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "Purchase Note",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                },
+                {
+                    "id": "reviews_allowed",
+                    "label": "Enable product reviews",
+                    "tooltip": "",
+                    "section_id": "others",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": true,
+                    "field_type": "checkbox",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                }
+            ]
+        },
+        {
+            "id": "attributes-and-variations",
+            "label": "Attributes",
+            "order": 30,
+            "description": "Manage attributes and variations for this variable product.",
+            "fields": [
+                {
+                    "id": "attributes",
+                    "label": "Attributes",
+                    "tooltip": "",
+                    "section_id": "attributes-and-variations",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": [],
+                    "field_type": "attribute",
+                    "options": [
+                        {
+                            "label": "Color",
+                            "value": "1",
+                            "slug": "pa_color",
+                            "terms": [
+                                {
+                                    "label": "Blue",
+                                    "value": 23
+                                },
+                                {
+                                    "label": "Gray",
+                                    "value": 29
+                                },
+                                {
+                                    "label": "Green",
+                                    "value": 24
+                                },
+                                {
+                                    "label": "Red",
+                                    "value": 25
+                                },
+                                {
+                                    "label": "Yellow",
+                                    "value": 30
+                                }
+                            ]
+                        },
+                        {
+                            "label": "Size",
+                            "value": "2",
+                            "slug": "pa_size",
+                            "terms": [
+                                {
+                                    "label": "Large",
+                                    "value": 26
+                                },
+                                {
+                                    "label": "Medium",
+                                    "value": 27
+                                },
+                                {
+                                    "label": "Small",
+                                    "value": 28
+                                },
+                                {
+                                    "label": "XS",
+                                    "value": 69
+                                }
+                            ]
+                        }
+                    ],
+                    "visibility": true,
+                    "placeholder": "",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                },
+                {
+                    "id": "enabled",
+                    "label": "Enabled",
+                    "tooltip": "",
+                    "section_id": "attributes-and-variations",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": false,
+                    "field_type": "checkbox",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "",
+                    "dependency_condition": {
+                        "field": "type",
+                        "operator": "not_equal",
+                        "value": "variable"
+                    },
+                    "hidden_scope": [ "variable" ]
+                }
+            ]
+        },
+        {
+            "id": "shipping",
+            "label": "Shipping and Tax",
+            "order": 30,
+            "description": "Manage shipping and tax for this product",
+            "fields": [
+                {
+                    "id": "_disable_shipping",
+                    "label": "This product requires shipping",
+                    "tooltip": "",
+                    "section_id": "shipping",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": true,
+                    "field_type": "checkbox",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                },
+                {
+                    "id": "weight",
+                    "label": "Weight",
+                    "tooltip": "",
+                    "section_id": "shipping",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "",
+                    "field_type": "text",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "0.00",
+                    "dependency_condition": {
+                        "field": "_disable_shipping",
+                        "operator": "equal",
+                        "value": "on"
+                    },
+                    "hidden_scope": []
+                },
+                {
+                    "id": "length",
+                    "label": "Length",
+                    "tooltip": "",
+                    "section_id": "shipping",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "",
+                    "field_type": "text",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "0.00",
+                    "dependency_condition": {
+                        "field": "_disable_shipping",
+                        "operator": "equal",
+                        "value": "on"
+                    },
+                    "hidden_scope": []
+                },
+                {
+                    "id": "width",
+                    "label": "Width",
+                    "tooltip": "",
+                    "section_id": "shipping",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "",
+                    "field_type": "text",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "0.00",
+                    "dependency_condition": {
+                        "field": "_disable_shipping",
+                        "operator": "equal",
+                        "value": "on"
+                    },
+                    "hidden_scope": []
+                },
+                {
+                    "id": "height",
+                    "label": "Height",
+                    "tooltip": "",
+                    "section_id": "shipping",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "",
+                    "field_type": "text",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "0.00",
+                    "dependency_condition": {
+                        "field": "_disable_shipping",
+                        "operator": "equal",
+                        "value": "on"
+                    },
+                    "hidden_scope": []
+                },
+                {
+                    "id": "shipping_class",
+                    "label": "Shipping Class",
+                    "tooltip": "",
+                    "section_id": "shipping",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": 0,
+                    "field_type": "select",
+                    "options": [
+                        {
+                            "label": "No shipping class",
+                            "value": "none"
+                        },
+                        {
+                            "label": "Havy",
+                            "value": 84
+                        },
+                        {
+                            "label": "Test",
+                            "value": 85
+                        }
+                    ],
+                    "visibility": true,
+                    "placeholder": "Select shipping class",
+                    "dependency_condition": {
+                        "field": "_disable_shipping",
+                        "operator": "equal",
+                        "value": "on"
+                    },
+                    "hidden_scope": []
+                },
+                {
+                    "id": "tax_status",
+                    "label": "Tax Status",
+                    "tooltip": "",
+                    "section_id": "shipping",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "taxable",
+                    "field_type": "select",
+                    "options": {
+                        "taxable": "Taxable",
+                        "shipping": "Shipping only",
+                        "none": "None"
+                    },
+                    "visibility": true,
+                    "placeholder": "",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                },
+                {
+                    "id": "tax_class",
+                    "label": "Tax Class",
+                    "tooltip": "",
+                    "section_id": "shipping",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "",
+                    "field_type": "select",
+                    "options": {
+                        "": "Standard",
+                        "reduced-rate": "Reduced rate",
+                        "zero-rate": "Zero rate"
+                    },
+                    "visibility": true,
+                    "placeholder": "",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                },
+                {
+                    "id": "_overwrite_shipping",
+                    "label": "Override your store's default shipping cost for this product",
+                    "tooltip": "",
+                    "section_id": "shipping",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "",
+                    "field_type": "checkbox",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                },
+                {
+                    "id": "_additional_price",
+                    "label": "Additional cost",
+                    "tooltip": "",
+                    "section_id": "shipping",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "",
+                    "field_type": "number",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "0.00",
+                    "dependency_condition": {
+                        "field": "_overwrite_shipping",
+                        "operator": "equal",
+                        "value": "on"
+                    },
+                    "hidden_scope": []
+                },
+                {
+                    "id": "_additional_qty",
+                    "label": "Per Qty Additional Price",
+                    "tooltip": "",
+                    "section_id": "shipping",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "",
+                    "field_type": "number",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "0",
+                    "dependency_condition": {
+                        "field": "_overwrite_shipping",
+                        "operator": "equal",
+                        "value": "on"
+                    },
+                    "hidden_scope": []
+                },
+                {
+                    "id": "_dps_processing_time",
+                    "label": "Processing Time",
+                    "tooltip": "",
+                    "section_id": "shipping",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "",
+                    "field_type": "select",
+                    "options": {
+                        "1": "1 business day",
+                        "2": "1-2 business days",
+                        "3": "1-3 business days",
+                        "4": "3-5 business days",
+                        "5": "1-2 weeks",
+                        "6": "2-3 weeks",
+                        "7": "3-4 weeks",
+                        "8": "4-6 weeks",
+                        "9": "6-8 weeks",
+                        "": "Ready to ship in..."
+                    },
+                    "visibility": true,
+                    "placeholder": "",
+                    "dependency_condition": {
+                        "field": "_overwrite_shipping",
+                        "operator": "equal",
+                        "value": "on"
+                    },
+                    "hidden_scope": []
+                }
+            ]
+        },
+        {
+            "id": "linked",
+            "label": "Linked Products",
+            "order": 30,
+            "description": "Set your linked products for upsell and cross-sells",
+            "fields": [
+                {
+                    "id": "upsell_ids",
+                    "label": "Upsells",
+                    "tooltip": "",
+                    "section_id": "linked",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": [],
+                    "field_type": "select",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "Search for a product...",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                },
+                {
+                    "id": "cross_sell_ids",
+                    "label": "Cross-sells",
+                    "tooltip": "",
+                    "section_id": "linked",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": [],
+                    "field_type": "select",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "Search for a product...",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                },
+                {
+                    "id": "children",
+                    "label": "Grouped products",
+                    "tooltip": "",
+                    "section_id": "linked",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": [],
+                    "field_type": "select",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "Search for a product...",
+                    "dependency_condition": {
+                        "section": "general",
+                        "field": "type",
+                        "operator": "equal",
+                        "value": "grouped"
+                    },
+                    "hidden_scope": []
+                }
+            ]
+        },
+        {
+            "id": "discount",
+            "label": "Discount Options",
+            "order": 30,
+            "description": "Set your discount for this product",
+            "fields": [
+                {
+                    "id": "_is_lot_discount",
+                    "label": "Enable bulk discount",
+                    "tooltip": "",
+                    "section_id": "discount",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "",
+                    "field_type": "checkbox",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "",
+                    "dependency_condition": [],
+                    "hidden_scope": []
+                },
+                {
+                    "id": "_lot_discount_quantity",
+                    "label": "Minimum quantity",
+                    "tooltip": "",
+                    "section_id": "discount",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "",
+                    "field_type": "number",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "0",
+                    "dependency_condition": {
+                        "section": "discount",
+                        "field": "_is_lot_discount",
+                        "operator": "equal",
+                        "value": "on"
+                    },
+                    "hidden_scope": []
+                },
+                {
+                    "id": "_lot_discount_amount",
+                    "label": "Discount %",
+                    "tooltip": "",
+                    "section_id": "discount",
+                    "is_custom": false,
+                    "order": 30,
+                    "description": "",
+                    "required": false,
+                    "value": "",
+                    "field_type": "number",
+                    "options": [],
+                    "visibility": true,
+                    "placeholder": "Percentage",
+                    "dependency_condition": {
+                        "section": "discount",
+                        "field": "_is_lot_discount",
+                        "operator": "equal",
+                        "value": "on"
+                    },
+                    "hidden_scope": []
+                }
+            ]
+        }
+    ],
+    "form_manager_nonce": "82b695ff28",
+    "product_id": "4814",
+    "is_new_product": "1",
+    "view_product_url": "https://dokan.test/?post_type=product&p=4814",
+    "vendor_earning": "0",
+    "variations": []
+}

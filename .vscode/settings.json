@@ -1,0 +1,19 @@
+{
+    "intelephense.environment.includePaths": [ "../../../../" ],
+    "php.workspace.includePath": "../../../../",
+    "editor.formatOnSave": true,
+    "phpSniffer.autoDetect": true,
+    "eslint.enable": true,
+    "phpSniffer.run": "onSave",
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "never",
+        "source.organizeImports": "never"
+    },
+    "[php]": {
+        "editor.defaultFormatter": "wongjn.php-sniffer"
+    },
+    "[vue]": {
+        "editor.formatOnSave": false
+    },
+    "cSpell.words": [ "ABSPATH", "backorders", "kses", "phpunit" ]
+}
