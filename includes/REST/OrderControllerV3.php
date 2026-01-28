@@ -34,21 +34,25 @@ class OrderControllerV3 extends OrderControllerV2 {
 						return ! empty( $product_item->get_id() ) && ! empty( $download->product_id ) && absint( $product_item->get_id() ) === absint( $download->product_id );
 					}
                 );
-                $product = reset( $product );
+                $product = ! empty( $product ) ? reset( $product ) : null;
 
-                $download->product = [
-                    'id'   => $product->get_id(),
-                    'name' => $product->get_name(),
-                    'slug' => $product->get_slug(),
-                    'link' => $product->get_permalink(),
-                ];
+                if ( $product ) {
+                    $download->product = [
+                        'id'   => $product->get_id(),
+                        'name' => $product->get_name(),
+                        'slug' => $product->get_slug(),
+                        'link' => $product->get_permalink(),
+                    ];
 
-                /**
-                 * @var $file \WC_Product_Download
-                 */
-                $file                              = $product->get_file( $download->download_id );
-                $download->file_data               = $file->get_data();
-                $download->file_data['file_title'] = wc_get_filename_from_url( $product->get_file_download_path( $download->download_id ) );
+                    /**
+                     * @var \WC_Product_Download|false $file
+                     */
+                    $file = $product->get_file( $download->download_id );
+                    if ( $file instanceof \WC_Product_Download ) {
+                        $download->file_data               = $file->get_data();
+                        $download->file_data['file_title'] = wc_get_filename_from_url( $product->get_file_download_path( $download->download_id ) );
+                    }
+                }
 
                 return $download;
             },

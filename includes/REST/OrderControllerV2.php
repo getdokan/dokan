@@ -136,10 +136,6 @@ class OrderControllerV2 extends OrderController {
     public function get_order_downloads( $request ) {
         global $wpdb;
 
-        $user_id   = dokan_get_current_user_id();
-        $data      = [];
-        $downloads = [];
-
         $download_permissions = $wpdb->get_results(
             $wpdb->prepare(
                 "
@@ -149,38 +145,27 @@ class OrderControllerV2 extends OrderController {
             )
         );
 
-        $product_ids = wp_list_pluck( $download_permissions, 'product_id' );
-        $product_ids = array_unique( $product_ids );
+        $product_ids = array_unique( wp_list_pluck( $download_permissions, 'product_id' ) );
 
-        $products = wc_get_products(
-            [
-                'include' => $product_ids,
-            ]
-        );
-
-        $existing_product_ids = wp_list_pluck( $products, 'id' );
-
-        $downloads = array_filter(
-            $download_permissions,
-            function ( $download ) use ( $existing_product_ids ) {
-                return in_array( $download->product_id, $existing_product_ids );
+        // Create a lookup map for products by ID.
+        $products = [];
+        foreach ( $product_ids as $product_id ) {
+            $product = wc_get_product( $product_id );
+            if ( ! $product ) {
+                continue;
             }
-        );
+            $products[ $product_id ] = $product;
+        }
 
-        $downloads = array_map(
-            function ( $download ) use ( $products, $request ) {
-                    $filter_items = array_filter(
-                        $products,
-                        function ( $product ) use ( $download ) {
-                            return $product->get_id() === intval( $download->product_id );
-                        }
-                    );
-                    $download->product = reset( $filter_items );
-
-                    return $this->prepare_data_for_response( $download, $request );
-            },
-            $downloads
-        );
+        // Filter downloads with existing products and prepare response.
+        $downloads = [];
+        foreach ( $download_permissions as $download ) {
+            $product_id = intval( $download->product_id );
+            if ( isset( $products_by_id[ $product_id ] ) ) {
+                $download->product = $products[ $product_id ];
+                $downloads[] = $this->prepare_data_for_response( $download, $request );
+            }
+        }
 
         $data = $this->format_downloads_data( $downloads, $products );
 
@@ -256,37 +241,21 @@ class OrderControllerV2 extends OrderController {
             $files = $product->get_downloads();
 
             foreach ( $files as $download_id => $file ) {
-                $data_store           = WC_Data_Store::load( 'customer-download' );
-                $existing_permissions = $data_store->get_downloads(
-                    [
-                        'order_id'    => $order->get_id(),
-                        'product_id'  => $product_id,
-                        'download_id' => $download_id,
-                        'limit'       => 1,
-                    ]
-                );
-
-                $download    = null;
-                $inserted_id = 0;
-
-                if ( ! empty( $existing_permissions ) ) {
-                    $download    = reset( $existing_permissions );
-                    $inserted_id = $download->get_id();
-                } else {
-                    $inserted_id = wc_downloadable_file_permission( $download_id, $product_id, $order );
-                    if ( $inserted_id ) {
-                        $download = new WC_Customer_Download( $inserted_id );
-                        if ( $download ) {
-                            if ( $remaining ) {
-                                $download->set_downloads_remaining( $remaining );
-                            }
-                            if ( $expiry ) {
-                                $download->set_access_expires( $expiry );
-                            }
-                            $download->save();
-                        }
-                    }
+                $inserted_id = wc_downloadable_file_permission( $download_id, $product_id, $order );
+                if ( ! $inserted_id ) {
+                    continue;
                 }
+
+                $download = new WC_Customer_Download( $inserted_id );
+				if ( $download ) {
+					if ( $remaining ) {
+						$download->set_downloads_remaining( $remaining );
+					}
+					if ( $expiry ) {
+						$download->set_access_expires( $expiry );
+					}
+					$download->save();
+				}
 
                 if ( $inserted_id ) {
                     ++$file_counter;
