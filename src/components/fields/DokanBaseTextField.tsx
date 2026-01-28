@@ -1,4 +1,4 @@
-import { RawHTML, useEffect, useState } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 import { SimpleInput } from '@getdokan/dokan-ui';
 import { twMerge } from 'tailwind-merge';
 
@@ -85,7 +85,7 @@ const DokanBaseTextField = ( {
     return (
         <div
             className={ twMerge(
-                `flex items-center flex-1  gap-4 h-10  w-full `,
+                `flex items-center flex-1 gap-4 h-full w-full `,
                 containerClassName
             ) }
         >

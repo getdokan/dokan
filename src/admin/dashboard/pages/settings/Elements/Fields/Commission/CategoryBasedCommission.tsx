@@ -67,6 +67,7 @@ const CategoryBasedCommission = ( { element }: SettingsProps ) => {
         resetSubCategoryValue,
         onCommissionChange: handleCommissionChange,
         display: element.display,
+        validationError: element.validationError,
     };
 
     return <CategoryBasedCommissionPure { ...pureComponentProps } />;

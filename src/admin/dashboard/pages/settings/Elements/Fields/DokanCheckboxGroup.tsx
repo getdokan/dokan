@@ -1,5 +1,5 @@
 import { dispatch } from '@wordpress/data';
-import React from 'react';
+import { isEqual } from 'lodash';
 import { twMerge } from 'tailwind-merge';
 import {
     DokanCheckboxGroup as BaseCheckboxGroup,
@@ -33,9 +33,11 @@ export default function DokanCheckboxGroup( { element, className } ) {
                     } ) ) || []
                 }
                 defaultValue={ element.value || [] }
-                onChange={ ( values ) =>
-                    onValueChange( { ...element, value: values } )
-                }
+                onChange={ ( values ) => {
+                    if ( ! isEqual( values, element.value || [] ) ) {
+                        onValueChange( { ...element, value: values } );
+                    }
+                } }
             />
         </div>
     );

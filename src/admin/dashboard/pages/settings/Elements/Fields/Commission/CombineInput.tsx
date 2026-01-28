@@ -47,6 +47,7 @@ const CombineInput = ( { element }: SettingsProps ) => {
         onValueChange: handleValueChange,
         display: element.display,
         isAutomated: element.is_automated || false,
+        validationError: element.validationError,
     };
 
     return <FixedCommissionInput { ...pureComponentProps } />;

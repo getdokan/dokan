@@ -56,9 +56,10 @@ export default function DokanSelect( { element, isSingleLineRow = false } ) {
                         title={ element.title }
                         titleFontWeight="bold"
                         helperText={ element.description }
-                        tooltip={ element.helper_text }
+                        tooltip={ element.tooltip }
                         imageUrl={ element?.image_url }
                         wrapperClassNames={ 'w-full' }
+                        validationError={ element?.validationError }
                     />
                 </div>
             ) }

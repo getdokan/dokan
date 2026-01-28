@@ -1,6 +1,7 @@
 import { SimpleCheckboxGroup } from '@getdokan/dokan-ui';
 import { dispatch } from '@wordpress/data';
-import { useState } from '@wordpress/element';
+import { isEqual } from 'lodash';
+import { useState, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { DokanFieldLabel } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
@@ -129,6 +130,7 @@ export default function DokanSingleProductPreview( { element } ) {
                 shipping_tab: true,
             }
     );
+    const isInitialMount = useRef( true );
 
     const onValueChange = ( updatedElement ) => {
         // Dispatch the updated value to the settings store
@@ -136,12 +138,23 @@ export default function DokanSingleProductPreview( { element } ) {
     };
 
     const handleCheckboxChange = ( selectedValues ) => {
+        // Skip the initial onChange call that happens on mount
+        if ( isInitialMount.current ) {
+            isInitialMount.current = false;
+            return;
+        }
+
         // Convert array of selected values to object format
         const newValues = {
             vendor_info: selectedValues.includes( 'vendor_info' ),
             more_products_tab: selectedValues.includes( 'more_products_tab' ),
             shipping_tab: selectedValues.includes( 'shipping_tab' ),
         };
+
+        if ( isEqual( newValues, checkboxValues ) ) {
+            return;
+        }
+
         setCheckboxValues( newValues );
         onValueChange( { ...element, value: newValues } );
     };
