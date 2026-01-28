@@ -243,7 +243,7 @@ abstract class AbstractStep extends Settings implements StepInterface, Hookable 
 	 *
 	 * @return self
 	 */
-	public function add_field_factory_element( ElementInterface $element ): self {
+	public function add_field_element( ElementInterface $element ): self {
 		$this->field_elements[] = $element;
 		return $this;
 	}

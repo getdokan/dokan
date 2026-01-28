@@ -36,7 +36,7 @@ $status_format = StatusElementAdapter::to_status_format($field_factory_element);
 
 **New Methods**:
 
-- `add_field_factory_element(ElementInterface $element)` - Add FieldFactory element
+- `add_field_element(ElementInterface $element)` - Add FieldFactory element
 - `add_field_elements(array $elements)` - Add multiple elements
 - `get_field_elements()` - Get all FieldFactory elements
 - `clear_field_elements()` - Clear all elements
@@ -122,7 +122,7 @@ $section = FieldFactory::section('test_section', 'Test Section', [
     ]),
 ]);
 
-$status->add_field_factory_element($section);
+$status->add_field_element($section);
 $output = $status->render(); // Returns StatusElement format
 ```
 

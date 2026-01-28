@@ -247,7 +247,7 @@ class CommissionStep extends AbstractStep {
             ]
         );
 
-        $this->add_field_factory_element( $section );
+        $this->add_field_element( $section );
     }
 
     /**

@@ -579,7 +579,7 @@ $section = FieldFactory::section('overridden_features', 'Overridden Templates', 
         ],
     ]),
 ]);
-$this->add_field_factory_element($section);
+$this->add_field_element($section);
 ```
 
 #### 3.3 Update Status REST Endpoint

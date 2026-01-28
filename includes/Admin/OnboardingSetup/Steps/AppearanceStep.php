@@ -100,8 +100,14 @@ class AppearanceStep extends AbstractStep {
             'contact_seller',
             esc_html__( 'Contact Form on Store Page', 'dokan-lite' ),
             [
-                [ 'value' => 'off', 'label' => esc_html__( 'Hide', 'dokan-lite' ) ],
-                [ 'value' => 'on', 'label' => esc_html__( 'Show', 'dokan-lite' ) ],
+                [
+					'value' => 'off',
+					'label' => esc_html__( 'Hide', 'dokan-lite' ),
+				],
+                [
+					'value' => 'on',
+					'label' => esc_html__( 'Show', 'dokan-lite' ),
+				],
             ],
             [
                 'description' => esc_html__( 'Display a contact form on vendor store pages for customer inquiries', 'dokan-lite' ),
@@ -114,8 +120,14 @@ class AppearanceStep extends AbstractStep {
             'enable_theme_store_sidebar',
             esc_html__( 'Store Sidebar From Theme', 'dokan-lite' ),
             [
-                [ 'value' => 'off', 'label' => esc_html__( 'Hide', 'dokan-lite' ) ],
-                [ 'value' => 'on', 'label' => esc_html__( 'Show', 'dokan-lite' ) ],
+                [
+					'value' => 'off',
+					'label' => esc_html__( 'Hide', 'dokan-lite' ),
+				],
+                [
+					'value' => 'on',
+					'label' => esc_html__( 'Show', 'dokan-lite' ),
+				],
             ],
             [
                 'description' => esc_html__( 'Show/hide the sidebar on vendor store pages', 'dokan-lite' ),
@@ -129,8 +141,14 @@ class AppearanceStep extends AbstractStep {
             'email',
             esc_html__( 'Email Address', 'dokan-lite' ),
             [
-                [ 'value' => '', 'label' => esc_html__( 'Hide', 'dokan-lite' ) ],
-                [ 'value' => 'email', 'label' => esc_html__( 'Show', 'dokan-lite' ) ],
+                [
+					'value' => '',
+					'label' => esc_html__( 'Hide', 'dokan-lite' ),
+				],
+                [
+					'value' => 'email',
+					'label' => esc_html__( 'Show', 'dokan-lite' ),
+				],
             ],
             [
                 'default' => $default_settings['hide_vendor_info']['email'],
@@ -142,8 +160,14 @@ class AppearanceStep extends AbstractStep {
             'phone',
             esc_html__( 'Phone Number', 'dokan-lite' ),
             [
-                [ 'value' => '', 'label' => esc_html__( 'Hide', 'dokan-lite' ) ],
-                [ 'value' => 'phone', 'label' => esc_html__( 'Show', 'dokan-lite' ) ],
+                [
+					'value' => '',
+					'label' => esc_html__( 'Hide', 'dokan-lite' ),
+				],
+                [
+					'value' => 'phone',
+					'label' => esc_html__( 'Show', 'dokan-lite' ),
+				],
             ],
             [
                 'default' => $default_settings['hide_vendor_info']['phone'],
@@ -155,8 +179,14 @@ class AppearanceStep extends AbstractStep {
             'address',
             esc_html__( 'Store Address', 'dokan-lite' ),
             [
-                [ 'value' => '', 'label' => esc_html__( 'Hide', 'dokan-lite' ) ],
-                [ 'value' => 'address', 'label' => esc_html__( 'Show', 'dokan-lite' ) ],
+                [
+					'value' => '',
+					'label' => esc_html__( 'Hide', 'dokan-lite' ),
+				],
+                [
+					'value' => 'address',
+					'label' => esc_html__( 'Show', 'dokan-lite' ),
+				],
             ],
             [
                 'default' => $default_settings['hide_vendor_info']['address'],
@@ -165,26 +195,30 @@ class AppearanceStep extends AbstractStep {
         );
 
         // Create subsections
-        $store_info_subsection = FieldFactory::create( [
-            'id'       => 'store-info',
-            'type'     => 'subsection',
-            'title'    => esc_html__( 'Store Info', 'dokan-lite' ),
-            'children' => [
-                $contact_seller_field,
-                $store_sidebar_field,
-            ],
-        ] );
+        $store_info_subsection = FieldFactory::create(
+            [
+				'id'       => 'store-info',
+				'type'     => 'subsection',
+				'title'    => esc_html__( 'Store Info', 'dokan-lite' ),
+				'children' => [
+					$contact_seller_field,
+					$store_sidebar_field,
+				],
+			]
+        );
 
-        $vendor_info_subsection = FieldFactory::create( [
-            'id'       => 'vendor-info',
-            'type'     => 'subsection',
-            'title'    => esc_html__( 'Vendor Info on Product Page', 'dokan-lite' ),
-            'children' => [
-                $email_field,
-                $phone_field,
-                $address_field,
-            ],
-        ] );
+        $vendor_info_subsection = FieldFactory::create(
+            [
+				'id'       => 'vendor-info',
+				'type'     => 'subsection',
+				'title'    => esc_html__( 'Vendor Info on Product Page', 'dokan-lite' ),
+				'children' => [
+					$email_field,
+					$phone_field,
+					$address_field,
+				],
+			]
+        );
 
         // Create main section
         $section = FieldFactory::section(
@@ -196,7 +230,7 @@ class AppearanceStep extends AbstractStep {
             ]
         );
 
-        $this->add_field_factory_element( $section );
+        $this->add_field_element( $section );
     }
 
     /**
