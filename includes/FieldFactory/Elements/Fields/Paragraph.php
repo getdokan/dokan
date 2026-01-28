@@ -1,14 +1,12 @@
 <?php
 /**
- * Paragraph Element
- *
  * Text paragraph display element.
  *
- * @package WeDevs\Dokan\FieldFactory\Elements\Display
+ * @package WeDevs\Dokan\FieldFactory\Elements\Fields
  * @since   DOKAN_SINCE
  */
 
-namespace WeDevs\Dokan\FieldFactory\Elements\Display;
+namespace WeDevs\Dokan\FieldFactory\Elements\Fields;
 
 use WeDevs\Dokan\FieldFactory\Abstracts\AbstractElement;
 

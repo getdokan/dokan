@@ -115,7 +115,7 @@ class ElementRegistry {
         // =========================================
         // Display Elements
         // =========================================
-        $this->register( 'paragraph', $base_namespace . 'Display\\Paragraph' );
+        $this->register( 'paragraph', $base_namespace . 'Fields\\Paragraph' );
 
         // =========================================
         // Core Fields

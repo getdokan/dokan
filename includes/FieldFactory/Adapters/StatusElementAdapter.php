@@ -12,7 +12,7 @@ namespace WeDevs\Dokan\FieldFactory\Adapters;
 
 use WeDevs\Dokan\FieldFactory\Contracts\ContainerInterface;
 use WeDevs\Dokan\FieldFactory\Contracts\ElementInterface;
-use WeDevs\Dokan\FieldFactory\Elements\Display\Paragraph;
+use WeDevs\Dokan\FieldFactory\Elements\Fields\Paragraph;
 use WeDevs\Dokan\FieldFactory\Elements\Tables\Table;
 
 /**
