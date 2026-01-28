@@ -9,9 +9,19 @@ export type SettingsElementDependency = {
     comparison?: string;
 };
 
+export type SettingsElementValidationParams =
+    | {
+          min?: number | string | null;
+          max?: number | string | null;
+          values?: ( string | number )[];
+      }
+    | ( string | number )[]
+    | string
+    | number;
+
 export type SettingsElementValidation = {
     rules?: string;
-    params?: any;
+    params?: SettingsElementValidationParams;
     message?: string;
     self?: string;
     currentValue?: any;

@@ -56,6 +56,101 @@ const isValueEmpty = ( value: any ): boolean => {
     return false;
 };
 
+/**
+ * Extract values list from params for in_array/not_in validation.
+ * Handles both indexed arrays and associative arrays with 'values' key.
+ *
+ * @param {any} params The validation params.
+ *
+ * @return {any[]} Array of values to check against.
+ */
+const getValuesFromParams = ( params: any ): any[] => {
+    if ( ! params ) {
+        return [];
+    }
+
+    // If params has 'values' key (normalized structure from PHP)
+    if ( params.values && Array.isArray( params.values ) ) {
+        return params.values.filter( ( item: any ) => ! isValueEmpty( item ) );
+    }
+
+    // If params is already an array (legacy indexed array)
+    if ( Array.isArray( params ) ) {
+        return params.filter( ( item ) => ! isValueEmpty( item ) );
+    }
+
+    // If params is an object (associative array), extract values
+    if ( typeof params === 'object' ) {
+        return Object.values( params ).filter(
+            ( item ) => ! isValueEmpty( item )
+        );
+    }
+
+    return [];
+};
+
+/**
+ * Extract min value from params.
+ * Handles both indexed arrays and associative arrays with 'min' key.
+ *
+ * @param {any} params The validation params.
+ *
+ * @return {number} The minimum value.
+ */
+const getMinFromParams = ( params: any ): number => {
+    if ( ! params ) {
+        return 0;
+    }
+
+    // If params has 'min' key (normalized structure from PHP)
+    if ( params.min !== undefined && params.min !== null ) {
+        return parseFloat( params.min );
+    }
+
+    // If params is an array (legacy indexed array), first element is min
+    if ( Array.isArray( params ) && params.length > 0 ) {
+        return parseFloat( params[ 0 ] );
+    }
+
+    // If params is a string/number
+    if ( typeof params === 'string' || typeof params === 'number' ) {
+        return parseFloat( params as string );
+    }
+
+    return 0;
+};
+
+/**
+ * Extract max value from params.
+ * Handles both indexed arrays and associative arrays with 'max' key.
+ *
+ * @param {any} params The validation params.
+ *
+ * @return {number} The maximum value.
+ */
+const getMaxFromParams = ( params: any ): number => {
+    if ( ! params ) {
+        return Infinity;
+    }
+
+    // If params has 'max' key (normalized structure from PHP)
+    if ( params.max !== undefined && params.max !== null ) {
+        return parseFloat( params.max );
+    }
+
+    // If params is an array (legacy indexed array), second element is max
+    if ( Array.isArray( params ) && params.length > 1 ) {
+        return parseFloat( params[ 1 ] );
+    }
+
+    // If params is a string/number
+    if ( typeof params === 'string' || typeof params === 'number' ) {
+        return parseFloat( params as string );
+    }
+
+    return Infinity;
+};
+
 const validateRule = (
     value: any,
     rule: string,
@@ -70,9 +165,7 @@ const validateRule = (
             };
 
         case 'not_in':
-            const restrictedList = Array.isArray( params )
-                ? params.filter( ( item ) => ! isValueEmpty( item ) )
-                : [];
+            const restrictedList = getValuesFromParams( params );
 
             if ( restrictedList.length === 0 || isValueEmpty( value ) ) {
                 return { isValid: true, errorMessage: '' };
@@ -89,9 +182,7 @@ const validateRule = (
             };
 
         case 'in_array':
-            const allowedList = Array.isArray( params )
-                ? params.filter( ( item ) => ! isValueEmpty( item ) )
-                : [];
+            const allowedList = getValuesFromParams( params );
 
             if ( allowedList.length === 0 ) {
                 return { isValid: true, errorMessage: '' };
@@ -115,9 +206,7 @@ const validateRule = (
             };
 
         case 'min_value':
-            const minValue = Array.isArray( params )
-                ? parseFloat( params[ 0 ] )
-                : parseFloat( params as string );
+            const minValue = getMinFromParams( params );
             return {
                 isValid:
                     isValueEmpty( value ) || parseFloat( value ) >= minValue,
@@ -129,9 +218,7 @@ const validateRule = (
             };
 
         case 'max_value':
-            const maxValue = Array.isArray( params )
-                ? parseFloat( params[ 1 ] )
-                : parseFloat( params as string );
+            const maxValue = getMaxFromParams( params );
             return {
                 isValid:
                     isValueEmpty( value ) || parseFloat( value ) <= maxValue,

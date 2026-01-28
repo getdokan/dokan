@@ -489,23 +489,86 @@ abstract class SettingsElement {
 
 	/**
 	 * Add Validation to the SettingsElement.
-     *
-     * @since DOKAN_SINCE
 	 *
-	 * @param string $rules    Validation rules (e.g., 'required|not_in_array|not_empty').
-	 * @param string $message  Custom error message.
-	 * @param array  $params   Additional parameters for validation.
+	 * @since DOKAN_SINCE
+	 *
+	 * Supports multiple formats:
+	 *
+	 * Format 1: Multiple rules as pipe-separated string
+	 * ->add_validation( 'required|not_empty|min_value', 'Error message' )
+	 *
+	 * Format 2: Rules as array with params
+	 * ->add_validation( ['not_empty', 'min_value' => 10, 'max_value' => 1440 ], 'Error message' )
+	 *
+	 * @param string|array $rules   Validation rules (string or array).
+	 * @param string       $message Custom error message.
 	 *
 	 * @return SettingsElement
 	 */
-	public function add_validation( string $rules, string $message = '', array $params = array() ): SettingsElement {
+	public function add_validation( $rules, string $message = '' ): SettingsElement {
+		$rules_list = array();
+		$params     = array();
+
+		if ( is_string( $rules ) ) {
+			$rules_list[] = $rules;
+		}
+
+		if ( is_array( $rules ) ) {
+			foreach ( $rules as $key => $value ) {
+				if ( is_int( $key ) ) {
+					// Indexed value - rule name or error message.
+					if ( $this->is_validation_rule( $value ) ) {
+						$rules_list[] = $value;
+					} elseif ( empty( $message ) ) {
+						$message = $value;
+					}
+					continue;
+				}
+
+				// Associative key - rule name with its param value.
+				$rules_list[] = $key;
+
+				if ( in_array( $key, array( 'min_value', 'max_value' ), true ) ) {
+					$params[ str_replace( '_value', '', $key ) ] = $value;
+				} elseif ( in_array( $key, array( 'in_array', 'not_in' ), true ) ) {
+					$params['values'] = (array) $value;
+				}
+			}
+		}
+
 		$this->validations[] = array(
-			'rules'   => $rules,
+			'rules'   => implode( '|', $rules_list ),
 			'message' => $message,
 			'params'  => $params,
 		);
 
 		return $this;
+	}
+
+	/**
+	 * Check if a string is a valid validation rule name.
+	 *
+	 * @since DOKAN_SINCE
+	 *
+	 * @param mixed $value The value to check.
+	 *
+	 * @return bool True if it's a validation rule name.
+	 */
+	protected function is_validation_rule( $value ): bool {
+		if ( ! is_string( $value ) ) {
+			return false;
+		}
+
+		$validation_rules = array(
+			'required',
+			'not_empty',
+			'min_value',
+			'max_value',
+			'in_array',
+			'not_in',
+		);
+
+		return in_array( $value, $validation_rules, true );
 	}
 
 	/**
@@ -552,6 +615,8 @@ abstract class SettingsElement {
 
 	/**
 	 * Validate the Data.
+	 *
+	 * @since DOKAN_SINCE Updated to support error messages from data_validation.
 	 *
 	 * @param mixed $data Data to store.
 	 *
@@ -642,6 +707,8 @@ abstract class SettingsElement {
 
 	/**
 	 * Data Validation condition.
+	 *
+	 * @since DOKAN_SINCE Updated return type to support error messages.
 	 *
 	 * @param mixed $data Data for validation.
 	 *
