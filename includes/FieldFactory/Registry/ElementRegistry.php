@@ -1,14 +1,9 @@
 <?php
 /**
- * Element Registry
- *
- * Registry pattern for element type to class mapping.
- * Aligned with WordPress DataViews Fields API types.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-dataviews/#fields-api
+ * Registry for element type to class mapping.
  *
  * @package WeDevs\Dokan\FieldFactory\Registry
- * @since   SUSPENDED
+ * @since   DOKAN_SINCE
  */
 
 namespace WeDevs\Dokan\FieldFactory\Registry;
@@ -16,9 +11,6 @@ namespace WeDevs\Dokan\FieldFactory\Registry;
 use WeDevs\Dokan\FieldFactory\Contracts\ElementInterface;
 use InvalidArgumentException;
 
-/**
- * Class ElementRegistry
- */
 class ElementRegistry {
 
     /**

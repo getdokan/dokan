@@ -1,18 +1,13 @@
 <?php
 /**
- * Copy Field Element
- *
  * Text field with copy-to-clipboard functionality.
  *
  * @package WeDevs\Dokan\FieldFactory\Elements\Fields
- * @since   SUSPENDED
+ * @since   DOKAN_SINCE
  */
 
 namespace WeDevs\Dokan\FieldFactory\Elements\Fields;
 
-/**
- * Class CopyField
- */
 class CopyField extends TextField {
 
     /**

@@ -5,16 +5,13 @@
  * Section/group label field (display only).
  *
  * @package WeDevs\Dokan\FieldFactory\Elements\Fields
- * @since   SUSPENDED
+ * @since   DOKAN_SINCE
  */
 
 namespace WeDevs\Dokan\FieldFactory\Elements\Fields;
 
 use WeDevs\Dokan\FieldFactory\Abstracts\AbstractField;
 
-/**
- * Class BaseLabelField
- */
 class BaseLabelField extends AbstractField {
 
     /**

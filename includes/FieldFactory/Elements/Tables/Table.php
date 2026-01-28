@@ -1,20 +1,15 @@
 <?php
 /**
- * Table Element
- *
  * Table container for structured data display.
  *
  * @package WeDevs\Dokan\FieldFactory\Elements\Tables
- * @since   SUSPENDED
+ * @since   DOKAN_SINCE
  */
 
 namespace WeDevs\Dokan\FieldFactory\Elements\Tables;
 
 use WeDevs\Dokan\FieldFactory\Abstracts\AbstractContainer;
 use WeDevs\Dokan\FieldFactory\Contracts\ElementInterface;
-/**
- * Class Table
- */
 class Table extends AbstractContainer {
 
     /**

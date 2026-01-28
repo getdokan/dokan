@@ -1,11 +1,9 @@
 <?php
 /**
- * Element Factory
- *
- * Main factory for creating element instances from configuration.
+ * Element factory for creating element instances from configuration.
  *
  * @package WeDevs\Dokan\FieldFactory\Factory
- * @since   SUSPENDED
+ * @since   DOKAN_SINCE
  */
 
 namespace WeDevs\Dokan\FieldFactory\Factory;
@@ -15,9 +13,6 @@ use WeDevs\Dokan\FieldFactory\Contracts\ElementInterface;
 use WeDevs\Dokan\FieldFactory\Registry\ElementRegistry;
 use InvalidArgumentException;
 
-/**
- * Class ElementFactory
- */
 class ElementFactory {
 
     /**

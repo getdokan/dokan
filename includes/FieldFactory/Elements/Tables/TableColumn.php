@@ -1,20 +1,14 @@
 <?php
 /**
- * Table Column Element
- *
- * Column container for table row.
+ * Column container for table rows.
  *
  * @package WeDevs\Dokan\FieldFactory\Elements\Tables
- * @since   SUSPENDED
+ * @since   DOKAN_SINCE
  */
 
 namespace WeDevs\Dokan\FieldFactory\Elements\Tables;
 
 use WeDevs\Dokan\FieldFactory\Abstracts\AbstractContainer;
-
-/**
- * Class TableColumn
- */
 class TableColumn extends AbstractContainer {
 
     /**

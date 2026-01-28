@@ -1,20 +1,15 @@
 <?php
 /**
- * Abstract Element
- *
  * Base implementation for all UI elements.
  *
  * @package WeDevs\Dokan\FieldFactory\Abstracts
- * @since   SUSPENDED
+ * @since   DOKAN_SINCE
  */
 
 namespace WeDevs\Dokan\FieldFactory\Abstracts;
 
 use WeDevs\Dokan\FieldFactory\Contracts\ElementInterface;
 
-/**
- * Class AbstractElement
- */
 abstract class AbstractElement implements ElementInterface {
 
     /**

@@ -1,20 +1,15 @@
 <?php
 /**
- * Multicheck Field Element
- *
- * Multiple checkbox selection field.
+ * Multiple checkbox selection field element.
  *
  * @package WeDevs\Dokan\FieldFactory\Elements\Fields
- * @since   SUSPENDED
+ * @since   DOKAN_SINCE
  */
 
 namespace WeDevs\Dokan\FieldFactory\Elements\Fields;
 
 use WeDevs\Dokan\FieldFactory\Abstracts\AbstractField;
 
-/**
- * Class MulticheckField
- */
 class MulticheckField extends AbstractField {
 
     /**

@@ -5,16 +5,13 @@
  * Groups related fields together.
  *
  * @package WeDevs\Dokan\FieldFactory\Elements\Layouts
- * @since   SUSPENDED
+ * @since   DOKAN_SINCE
  */
 
 namespace WeDevs\Dokan\FieldFactory\Elements\Layouts;
 
 use WeDevs\Dokan\FieldFactory\Abstracts\AbstractContainer;
 
-/**
- * Class FieldGroup
- */
 class FieldGroup extends AbstractContainer {
 
     /**

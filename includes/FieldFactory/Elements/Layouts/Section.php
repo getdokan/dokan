@@ -5,16 +5,13 @@
  * A section is a container that groups related fields or subsections.
  *
  * @package WeDevs\Dokan\FieldFactory\Elements\Layouts
- * @since   SUSPENDED
+ * @since   DOKAN_SINCE
  */
 
 namespace WeDevs\Dokan\FieldFactory\Elements\Layouts;
 
 use WeDevs\Dokan\FieldFactory\Abstracts\AbstractContainer;
 
-/**
- * Class Section
- */
 class Section extends AbstractContainer {
 
     /**

@@ -1,12 +1,9 @@
 <?php
 /**
- * Field Factory Main Class
- *
- * Main entry point for the Unified Field Factory system.
- * Provides static methods for easy access and WordPress integration.
+ * Field Factory main entry point.
  *
  * @package WeDevs\Dokan\FieldFactory
- * @since   SUSPENDED
+ * @since   DOKAN_SINCE
  */
 
 namespace WeDevs\Dokan\FieldFactory;
@@ -17,9 +14,6 @@ use WeDevs\Dokan\FieldFactory\Contracts\FieldInterface;
 use WeDevs\Dokan\FieldFactory\Factory\ElementFactory;
 use WeDevs\Dokan\FieldFactory\Registry\ElementRegistry;
 
-/**
- * Class FieldFactory
- */
 class FieldFactory {
 
     /**

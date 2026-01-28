@@ -5,16 +5,13 @@
  * Text paragraph display element.
  *
  * @package WeDevs\Dokan\FieldFactory\Elements\Display
- * @since   SUSPENDED
+ * @since   DOKAN_SINCE
  */
 
 namespace WeDevs\Dokan\FieldFactory\Elements\Display;
 
 use WeDevs\Dokan\FieldFactory\Abstracts\AbstractElement;
 
-/**
- * Class Paragraph
- */
 class Paragraph extends AbstractElement {
 
     /**

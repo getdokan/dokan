@@ -1,22 +1,15 @@
 <?php
 /**
- * Abstract Field
- *
- * Base implementation for field elements aligned with WordPress DataViews Fields API.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-dataviews/#fields-api
+ * Base implementation for field elements.
  *
  * @package WeDevs\Dokan\FieldFactory\Abstracts
- * @since   SUSPENDED
+ * @since   DOKAN_SINCE
  */
 
 namespace WeDevs\Dokan\FieldFactory\Abstracts;
 
 use WeDevs\Dokan\FieldFactory\Contracts\FieldInterface;
 
-/**
- * Class AbstractField
- */
 abstract class AbstractField extends AbstractElement implements FieldInterface {
 
     /**

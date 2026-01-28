@@ -1,20 +1,14 @@
 <?php
 /**
- * Page Container Element
- *
- * A page is a top-level container for settings or admin sections.
+ * Top-level container for settings or admin sections.
  *
  * @package WeDevs\Dokan\FieldFactory\Elements\Containers
- * @since   SUSPENDED
+ * @since   DOKAN_SINCE
  */
 
 namespace WeDevs\Dokan\FieldFactory\Elements\Containers;
 
 use WeDevs\Dokan\FieldFactory\Abstracts\AbstractContainer;
-
-/**
- * Class Page
- */
 class Page extends AbstractContainer {
 
     /**

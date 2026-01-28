@@ -5,16 +5,13 @@
  * A subpage is a child container within a page.
  *
  * @package WeDevs\Dokan\FieldFactory\Elements\Containers
- * @since   SUSPENDED
+ * @since   DOKAN_SINCE
  */
 
 namespace WeDevs\Dokan\FieldFactory\Elements\Containers;
 
 use WeDevs\Dokan\FieldFactory\Abstracts\AbstractContainer;
 
-/**
- * Class Subpage
- */
 class Subpage extends AbstractContainer {
 
     /**

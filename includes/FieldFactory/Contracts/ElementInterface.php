@@ -5,7 +5,7 @@
  * Base contract for all UI elements in the field factory.
  *
  * @package WeDevs\Dokan\FieldFactory\Contracts
- * @since   SUSPENDED
+ * @since   DOKAN_SINCE
  */
 
 namespace WeDevs\Dokan\FieldFactory\Contracts;

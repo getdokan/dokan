@@ -7,7 +7,7 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-dataviews/#fields-api
  *
  * @package WeDevs\Dokan\FieldFactory\Contracts
- * @since   SUSPENDED
+ * @since   DOKAN_SINCE
  */
 
 namespace WeDevs\Dokan\FieldFactory\Contracts;

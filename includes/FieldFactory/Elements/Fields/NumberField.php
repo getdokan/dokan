@@ -1,22 +1,15 @@
 <?php
 /**
- * Number Field Element
- *
- * Numeric input field aligned with WordPress DataViews Fields API.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-dataviews/#fields-api
+ * Number Field Element.
  *
  * @package WeDevs\Dokan\FieldFactory\Elements\Fields
- * @since   SUSPENDED
+ * @since   DOKAN_SINCE
  */
 
 namespace WeDevs\Dokan\FieldFactory\Elements\Fields;
 
 use WeDevs\Dokan\FieldFactory\Abstracts\AbstractField;
 
-/**
- * Class NumberField
- */
 class NumberField extends AbstractField {
 
     /**

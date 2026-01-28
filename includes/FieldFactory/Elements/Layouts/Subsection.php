@@ -1,20 +1,14 @@
 <?php
 /**
- * Subsection Layout Element
- *
- * A subsection is a nested container within a section.
+ * Nested container within a section.
  *
  * @package WeDevs\Dokan\FieldFactory\Elements\Layouts
- * @since   SUSPENDED
+ * @since   DOKAN_SINCE
  */
 
 namespace WeDevs\Dokan\FieldFactory\Elements\Layouts;
 
 use WeDevs\Dokan\FieldFactory\Abstracts\AbstractContainer;
-
-/**
- * Class Subsection
- */
 class Subsection extends AbstractContainer {
 
     /**

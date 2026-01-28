@@ -5,16 +5,13 @@
  * File/media upload field with WordPress Media Library integration.
  *
  * @package WeDevs\Dokan\FieldFactory\Elements\Fields
- * @since   SUSPENDED
+ * @since   DOKAN_SINCE
  */
 
 namespace WeDevs\Dokan\FieldFactory\Elements\Fields;
 
 use WeDevs\Dokan\FieldFactory\Abstracts\AbstractField;
 
-/**
- * Class FileUploadField
- */
 class FileUploadField extends AbstractField {
 
     /**

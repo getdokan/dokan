@@ -1,7 +1,5 @@
 <?php
 /**
- * Category Based Commission Field
- *
  * Custom field used by Admin Setup Guide (commission step).
  *
  * @package WeDevs\Dokan\FieldFactory\Elements\Fields
@@ -11,9 +9,6 @@ namespace WeDevs\Dokan\FieldFactory\Elements\Fields;
 
 use WeDevs\Dokan\FieldFactory\Abstracts\AbstractField;
 
-/**
- * Class CategoryBasedCommissionField
- */
 class CategoryBasedCommissionField extends AbstractField {
 
 	/**

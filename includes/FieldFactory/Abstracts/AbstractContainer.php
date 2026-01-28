@@ -1,11 +1,9 @@
 <?php
 /**
- * Abstract Container
- *
  * Base implementation for elements that can contain children.
  *
  * @package WeDevs\Dokan\FieldFactory\Abstracts
- * @since   SUSPENDED
+ * @since   DOKAN_SINCE
  */
 
 namespace WeDevs\Dokan\FieldFactory\Abstracts;
@@ -13,9 +11,6 @@ namespace WeDevs\Dokan\FieldFactory\Abstracts;
 use WeDevs\Dokan\FieldFactory\Contracts\ContainerInterface;
 use WeDevs\Dokan\FieldFactory\Contracts\ElementInterface;
 
-/**
- * Class AbstractContainer
- */
 abstract class AbstractContainer extends AbstractElement implements ContainerInterface {
 
     /**

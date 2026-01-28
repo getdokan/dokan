@@ -1,21 +1,15 @@
 <?php
 /**
- * Table Row Element
- *
- * Row container for table.
+ * Row container for tables.
  *
  * @package WeDevs\Dokan\FieldFactory\Elements\Tables
- * @since   SUSPENDED
+ * @since   DOKAN_SINCE
  */
 
 namespace WeDevs\Dokan\FieldFactory\Elements\Tables;
 
 use WeDevs\Dokan\FieldFactory\Abstracts\AbstractContainer;
 use WeDevs\Dokan\FieldFactory\Contracts\ElementInterface;
-
-/**
- * Class TableRow
- */
 class TableRow extends AbstractContainer {
 
     /**

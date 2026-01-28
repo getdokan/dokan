@@ -1,22 +1,15 @@
 <?php
 /**
- * Switch Field Element
- *
- * Toggle switch (boolean) field aligned with WordPress DataViews Fields API.
- *
- * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-dataviews/#fields-api
+ * Toggle switch (boolean) field element.
  *
  * @package WeDevs\Dokan\FieldFactory\Elements\Fields
- * @since   SUSPENDED
+ * @since   DOKAN_SINCE
  */
 
 namespace WeDevs\Dokan\FieldFactory\Elements\Fields;
 
 use WeDevs\Dokan\FieldFactory\Abstracts\AbstractField;
 
-/**
- * Class SwitchField
- */
 class SwitchField extends AbstractField {
 
     /**
