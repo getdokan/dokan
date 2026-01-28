@@ -193,11 +193,17 @@ class GeneralPage extends AbstractPage {
                                     )
                                     ->set_placeholder( esc_html__( 'Store', 'dokan-lite' ) )
                                     ->set_default( 'store' )
+                                    ->set_custom_validation(
+                                        function ( $value ) {
+                                            // Return true if value is NOT in the reserved list (validation passes).
+                                            // Return false if value IS in the reserved list (validation fails).
+                                            return ! in_array( $value, dokan_get_reserved_url_slugs(), true );
+                                        }
+                                    )
                                     ->add_validation(
-                                        'not_in',
+                                        [ 'not_in' => dokan_get_reserved_url_slugs() ],
                                         /* translators: %s: Store URL. */
-                                        esc_html__( 'The store URL "%s" is reserved by WordPress and cannot be used. Please choose a different value like "store".', 'dokan-lite' ),
-                                        dokan_get_reserved_url_slugs()
+                                        sprintf( esc_html__( 'The store URL "%s" is reserved by WordPress and cannot be used. Please choose a different value like "store".', 'dokan-lite' ), '%s' )
                                     )
                             )
                     )

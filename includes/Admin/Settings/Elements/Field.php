@@ -136,9 +136,11 @@ class Field extends SettingsElement {
 	/**
 	 * Data validation.
 	 *
+	 * @since DOKAN_SINCE Updated return type to support error messages.
+	 *
 	 * @param mixed $data Data for validation.
 	 *
-	 * @return bool
+	 * @return bool|string True if valid, false if invalid, or error message string.
 	 */
 	public function data_validation( $data ): bool {
 		return isset( $data );
