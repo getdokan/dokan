@@ -1,9 +1,10 @@
-import { useState } from '@wordpress/element';
+import { useState, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { DokanFieldLabel } from '../../../../../../components/fields';
 import { SimpleCheckboxGroup } from '@getdokan/dokan-ui';
 import settingsStore from '../../../../../../stores/adminSettings';
 import { dispatch } from '@wordpress/data';
+import { isEqual } from 'lodash';
 
 interface VendorPreviewImageProps {
     showEmail: boolean;
@@ -115,6 +116,7 @@ export default function DokanVendorInfoPreview( { element } ) {
                 store_address: true,
             }
     );
+    const isInitialMount = useRef( true );
 
     const onValueChange = ( updatedElement ) => {
         // Dispatch the updated value to the settings store
@@ -122,12 +124,23 @@ export default function DokanVendorInfoPreview( { element } ) {
     };
 
     const handleCheckboxChange = ( selectedValues ) => {
+        // Skip the initial onChange call that happens on mount
+        if ( isInitialMount.current ) {
+            isInitialMount.current = false;
+            return;
+        }
+
         // Convert array of selected values to object format
         const newValues = {
             store_email: selectedValues.includes( 'store_email' ),
             store_phone: selectedValues.includes( 'store_phone' ),
             store_address: selectedValues.includes( 'store_address' ),
         };
+
+        if ( isEqual( newValues, checkboxValues ) ) {
+            return;
+        }
+
         setCheckboxValues( newValues );
         onValueChange( { ...element, value: newValues } );
     };
@@ -147,14 +160,14 @@ export default function DokanVendorInfoPreview( { element } ) {
         },
     ];
 
+    if ( ! element.display ) {
+        return null;
+    }
+
     // Convert current values to array format for SimpleCheckboxGroup
     const selectedValues = Object.keys( checkboxValues ).filter(
         ( key ) => checkboxValues[ key ]
     );
-
-    if ( ! element.display ) {
-        return null;
-    }
 
     return (
         <div className="bg-white  p-5">

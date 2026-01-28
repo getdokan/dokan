@@ -60,6 +60,7 @@ export default function DokanNumber( { element } ) {
                         tooltip={ element.tooltip }
                         imageUrl={ element?.image_url }
                         wrapperClassNames={ 'w-full' }
+                        validationError={ element?.validationError }
                     />
                 </div>
             ) }
@@ -69,7 +70,7 @@ export default function DokanNumber( { element } ) {
                 }
             >
                 <BaseDokanNumber
-                    value={ element.value || element?.defaultValue || '' }
+                    value={ element?.value ?? element?.defaultValue ?? '' }
                     onChange={ ( val ) =>
                         onValueChange( { ...element, value: val } )
                     }

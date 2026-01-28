@@ -1,5 +1,5 @@
 import { twMerge } from 'tailwind-merge';
-import  DokanTooltip from '../DokanTooltip';
+import DokanTooltip from '../DokanTooltip';
 import { RawHTML } from '@wordpress/element';
 import { Info, TriangleAlert } from 'lucide-react';
 
@@ -15,6 +15,7 @@ interface InputLabelProps {
     labelClassName?: string;
     imageUrl?: string;
     fieldType?: string;
+    validationError?: string;
 }
 
 const DokanBaseFieldLabel = ( {
@@ -28,7 +29,10 @@ const DokanBaseFieldLabel = ( {
     labelClassName = '',
     imageUrl,
     fieldType,
+    validationError = '',
 }: InputLabelProps ) => {
+    const hasError = Boolean( validationError );
+
     return (
         <div
             className={ twMerge(
@@ -88,6 +92,11 @@ const DokanBaseFieldLabel = ( {
                             </p>
                         ) : null }
                     </div>
+                ) }
+                { hasError && (
+                    <i className={ 'text-sm font-light text-[#9F2225]' }>
+                        <RawHTML>{ validationError }</RawHTML>
+                    </i>
                 ) }
             </div>
         </div>

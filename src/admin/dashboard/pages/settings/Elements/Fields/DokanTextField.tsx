@@ -30,6 +30,7 @@ export default function DokanTextField( { element } ) {
                         tooltip={ element.tooltip }
                         imageUrl={ element?.image_url }
                         wrapperClassNames={ 'w-full' }
+                        validationError={ element?.validationError }
                     />
                 </div>
             ) }

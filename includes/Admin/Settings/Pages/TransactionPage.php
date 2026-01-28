@@ -154,6 +154,10 @@ class TransactionPage extends AbstractPage {
                             'admin_percentage' => $dokan_selling['admin_percentage'] ?? $default_settings['admin_percentage'],
                         ]
                     )
+                    ->add_validation(
+                        'not_empty',
+                        esc_html__( 'Both percentage and fixed fee is required.', 'dokan-lite' )
+                    )
             )
             ->add(
                 ElementFactory::field( 'reset_sub_category_when_edit_all_category', 'switch' )
@@ -177,6 +181,10 @@ class TransactionPage extends AbstractPage {
                     ->add_dependency( 'commission.commission.reset_sub_category_when_edit_all_category', 'off', true, 'custom', 'custom', '===' )
                     ->set_reset_subcategory( $dokan_selling['reset_sub_category_when_edit_all_category'] ?? $default_settings['reset_sub_category_when_edit_all_category'] )
                     ->set_value( (array) ( $dokan_selling['commission_category_based_values'] ?? $default_settings['commission_category_based_values'] ) )
+                    ->add_validation(
+                        'not_empty',
+                        esc_html__( 'Both percentage and fixed fee is required.', 'dokan-lite' )
+                    )
             );
 
         // Add the commission section to commission page
@@ -255,6 +263,10 @@ class TransactionPage extends AbstractPage {
                                     )
                                     ->set_admin_percentage( '0.00' )
                                     ->set_additional_fee( '0.00' )
+                                    ->add_validation(
+                                        'not_empty',
+                                        esc_html__( 'Both percentage and fixed fee is required.', 'dokan-lite' )
+                                    )
                             )
                     )
                     ->add(
@@ -282,6 +294,10 @@ class TransactionPage extends AbstractPage {
                                     )
                                     ->set_admin_percentage( '0.00' )
                                     ->set_additional_fee( '0.00' )
+                                    ->add_validation(
+                                        'not_empty',
+                                        esc_html__( 'Both percentage and fixed fee is required.', 'dokan-lite' )
+                                    )
                             )
                     )
             )
