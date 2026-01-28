@@ -70,16 +70,6 @@ class ShowHideField extends SwitchField {
     /**
      * {@inheritdoc}
      */
-    public function get_value_formatted( array $item = [] ): string {
-        if ( $this->is_on( $item ) ) {
-            return $this->enable_state['title'] ?? __( 'Visible', 'dokan-lite' );
-        }
-        return $this->disable_state['title'] ?? __( 'Hidden', 'dokan-lite' );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function to_array(): array {
         return array_merge(
             parent::to_array(),

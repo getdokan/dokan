@@ -147,25 +147,6 @@ class MulticheckField extends AbstractField {
     /**
      * {@inheritdoc}
      */
-    public function get_value_formatted( array $item = [] ): string {
-        $values = $this->get_value( $item );
-        $labels = [];
-
-        foreach ( $values as $value ) {
-            foreach ( $this->elements as $element ) {
-                if ( ( $element['value'] ?? null ) === $value ) {
-                    $labels[] = $element['label'] ?? $value;
-                    break;
-                }
-            }
-        }
-
-        return implode( ', ', $labels );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function validate( array $item = [] ): array {
         $result = parent::validate( $item );
         $values = $this->get_value( $item );
@@ -213,13 +194,6 @@ class MulticheckField extends AbstractField {
             'valid'  => empty( $this->errors ),
             'errors' => $this->errors,
         ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function get_default_operators(): array {
-        return [ 'isAny', 'isNone', 'isAll' ];
     }
 
     /**

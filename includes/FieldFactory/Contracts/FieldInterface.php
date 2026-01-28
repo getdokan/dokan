@@ -64,15 +64,6 @@ interface FieldInterface extends ElementInterface {
     public function set_value( $value ): array;
 
     /**
-     * Get formatted value for display.
-     *
-     * @param array $item The data item.
-     *
-     * @return string
-     */
-    public function get_value_formatted( array $item = [] ): string;
-
-    /**
      * Get default value.
      *
      * @return mixed
@@ -105,7 +96,7 @@ interface FieldInterface extends ElementInterface {
      *
      * @return bool
      */
-    public function is_read_only(): bool;
+	public function is_read_only(): bool;
 
     /**
      * Check if field should be visible.
@@ -146,24 +137,6 @@ interface FieldInterface extends ElementInterface {
      */
     public function is_hiding_enabled(): bool;
 
-    /**
-     * Check if global search is enabled.
-     *
-     * @return bool
-     */
-    public function is_global_search_enabled(): bool;
-
-    /**
-     * Get filter configuration.
-     *
-     * @return array|false Filter config or false if filtering disabled.
-     */
-    public function get_filter_by();
-
-    /**
-     * Get format configuration.
-     *
-     * @return array Format settings for display.
-     */
-    public function get_format(): array;
+	// Note: Filtering/formatting helpers (`get_value_formatted`, `get_filter_by`, `get_format`, etc.)
+	// have been removed from the core FieldFactory API to simplify the surface area.
 }

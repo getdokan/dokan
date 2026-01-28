@@ -78,13 +78,6 @@ abstract class AbstractField extends AbstractElement implements FieldInterface {
     protected string $placeholder = '';
 
     /**
-     * Whether field is read-only.
-     *
-     * @var bool
-     */
-    protected bool $read_only = false;
-
-    /**
      * Whether sorting is enabled.
      *
      * @var bool
@@ -97,13 +90,6 @@ abstract class AbstractField extends AbstractElement implements FieldInterface {
      * @var bool
      */
     protected bool $enable_hiding = true;
-
-    /**
-     * Whether global search is enabled.
-     *
-     * @var bool
-     */
-    protected bool $enable_global_search = false;
 
     /**
      * Validation rules configuration.
@@ -126,29 +112,6 @@ abstract class AbstractField extends AbstractElement implements FieldInterface {
      * @var array
      */
     protected array $visibility = [];
-
-    /**
-     * Filter configuration.
-     *
-     * Structure: [
-     *   'operators' => ['is', 'isNot', ...],
-     *   'isPrimary' => bool
-     * ]
-     * Set to false to disable filtering.
-     *
-     * @var array|bool
-     */
-    protected $filter_by = [];
-
-    /**
-     * Format configuration for display.
-     *
-     * For dates: ['date' => 'F j, Y', 'weekStartsOn' => 1]
-     * For numbers: ['separatorThousand' => ',', 'separatorDecimal' => '.', 'decimals' => 2]
-     *
-     * @var array
-     */
-    protected array $format = [];
 
     /**
      * Helper text displayed below field.
@@ -284,15 +247,10 @@ abstract class AbstractField extends AbstractElement implements FieldInterface {
                 'elements',
                 'options', // Legacy alias for elements
                 'placeholder',
-                'read_only',
-                'readonly', // Legacy alias
                 'enable_sorting',
                 'enable_hiding',
-                'enable_global_search',
                 'is_valid',
                 'visibility',
-                'filter_by',
-                'format',
                 'helper_text',
                 'size',
                 'prefix',
@@ -322,11 +280,6 @@ abstract class AbstractField extends AbstractElement implements FieldInterface {
         // Convert legacy options to elements format
         if ( ! empty( $this->options ) && empty( $this->elements ) ) {
             $this->elements = $this->normalize_elements( $this->options );
-        }
-
-        // Handle legacy readonly spelling
-        if ( isset( $config['readonly'] ) ) {
-            $this->read_only = (bool) $config['readonly'];
         }
 
         // Convert required shorthand to is_valid structure
@@ -420,84 +373,10 @@ abstract class AbstractField extends AbstractElement implements FieldInterface {
         return $this->value;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function get_value_formatted( array $item = [] ): string {
-        $value = $this->get_value( $item );
-
-        if ( $value === null || $value === '' ) {
-            return '';
-        }
-
-        // Check if value matches an element
-        foreach ( $this->elements as $element ) {
-            $element_value = $element['value'] ?? null;
-            if ( $element_value === $value ) {
-                return $element['label'] ?? (string) $value;
-            }
-        }
-
-        // Apply format based on field type
-        switch ( $this->field_type ) {
-            case 'integer':
-                return $this->format_integer( $value );
-            case 'number':
-                return $this->format_number( $value );
-            case 'date':
-            case 'datetime':
-                return $this->format_date( $value );
-            case 'boolean':
-                return $value ? __( 'Yes', 'dokan-lite' ) : __( 'No', 'dokan-lite' );
-            default:
-                return (string) $value;
-        }
-    }
-
-    /**
-     * Format integer value.
-     *
-     * @param mixed $value Value to format.
-     *
-     * @return string
-     */
-    protected function format_integer( $value ): string {
-        $separator = $this->format['separatorThousand'] ?? ',';
-        return number_format( (int) $value, 0, '', $separator );
-    }
-
-    /**
-     * Format number value.
-     *
-     * @param mixed $value Value to format.
-     *
-     * @return string
-     */
-    protected function format_number( $value ): string {
-        $decimals      = $this->format['decimals'] ?? 2;
-        $dec_separator = $this->format['separatorDecimal'] ?? '.';
-        $thousands     = $this->format['separatorThousand'] ?? ',';
-
-        return number_format( (float) $value, $decimals, $dec_separator, $thousands );
-    }
-
-    /**
-     * Format date value.
-     *
-     * @param mixed $value Value to format.
-     *
-     * @return string
-     */
-    protected function format_date( $value ): string {
-        $format = $this->format['date'] ?? get_option( 'date_format', 'F j, Y' );
-
-        if ( is_numeric( $value ) ) {
-            return date_i18n( $format, $value );
-        }
-
-        $timestamp = strtotime( $value );
-        return $timestamp ? date_i18n( $format, $timestamp ) : (string) $value;
-    }
+    // get_value_formatted() and low-level format helpers have been removed from
+    // the core FieldFactory abstraction to keep the API focused on value
+    // management and validation. Formatting is expected to be handled at the
+    // presentation layer (e.g., React components or view templates).
 
     /**
      * {@inheritdoc}
@@ -584,7 +463,9 @@ abstract class AbstractField extends AbstractElement implements FieldInterface {
      * {@inheritdoc}
      */
     public function is_read_only(): bool {
-        return $this->read_only;
+        // Core FieldFactory no longer manages read-only state; callers
+        // can treat all FieldFactory fields as editable by default.
+        return false;
     }
 
     /**
@@ -726,108 +607,19 @@ abstract class AbstractField extends AbstractElement implements FieldInterface {
         return $this->errors;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function is_sorting_enabled(): bool {
-        return $this->enable_sorting;
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function is_sorting_enabled(): bool {
+		return $this->enable_sorting;
+	}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function is_hiding_enabled(): bool {
-        return $this->enable_hiding;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function is_global_search_enabled(): bool {
-        return $this->enable_global_search;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function get_filter_by() {
-        return $this->filter_by;
-    }
-
-    /**
-     * Check if filtering is enabled.
-     *
-     * @return bool
-     */
-    public function is_filterable(): bool {
-        return $this->filter_by !== false;
-    }
-
-    /**
-     * Check if filter is primary.
-     *
-     * @return bool
-     */
-    public function is_primary_filter(): bool {
-        if ( is_array( $this->filter_by ) ) {
-            return ! empty( $this->filter_by['isPrimary'] );
-        }
-        return false;
-    }
-
-    /**
-     * Get filter operators.
-     *
-     * @return array
-     */
-    public function get_filter_operators(): array {
-        if ( is_array( $this->filter_by ) && isset( $this->filter_by['operators'] ) ) {
-            return $this->filter_by['operators'];
-        }
-
-        // Default operators based on field type
-        return $this->get_default_operators();
-    }
-
-    /**
-     * Get default filter operators based on field type.
-     *
-     * @return array
-     */
-    protected function get_default_operators(): array {
-        switch ( $this->field_type ) {
-            case 'array':
-                return [ 'isAny', 'isNone', 'isAll' ];
-            case 'boolean':
-                return [ 'is', 'isNot' ];
-            case 'date':
-                return [ 'on', 'notOn', 'before', 'after', 'inThePast', 'over', 'between' ];
-            case 'datetime':
-                return [ 'on', 'notOn', 'before', 'after', 'inThePast', 'over' ];
-            case 'integer':
-            case 'number':
-                return [ 'is', 'isNot', 'lessThan', 'greaterThan', 'between' ];
-            case 'text':
-            case 'email':
-            case 'url':
-            case 'telephone':
-                return [ 'is', 'isNot', 'contains', 'startsWith' ];
-            case 'color':
-                return [ 'is', 'isNot', 'isAny', 'isNone' ];
-            case 'media':
-            case 'password':
-                return [];
-            default:
-                return [ 'is', 'isNot' ];
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function get_format(): array {
-        return $this->format;
-    }
+	/**
+	 * {@inheritdoc}
+	 */
+	public function is_hiding_enabled(): bool {
+		return $this->enable_hiding;
+	}
 
     /**
      * Get helper text.
@@ -906,16 +698,12 @@ abstract class AbstractField extends AbstractElement implements FieldInterface {
                 'default'              => $this->default,
                 'elements'             => $this->elements,
                 'placeholder'          => $this->placeholder,
-                'read_only'            => $this->read_only,
                 'required'             => $this->is_required(),
                 'disabled'             => $this->disabled,
                 'enable_sorting'       => $this->enable_sorting,
                 'enable_hiding'        => $this->enable_hiding,
-                'enable_global_search' => $this->enable_global_search,
                 'is_valid'             => $this->is_valid,
                 'visibility'           => $this->visibility,
-                'filter_by'            => $this->filter_by,
-                'format'               => $this->format,
                 'helper_text'          => $this->helper_text,
                 'size'                 => $this->size,
                 'prefix'               => $this->prefix,

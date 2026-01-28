@@ -155,13 +155,6 @@ class ColorPickerField extends AbstractField {
     /**
      * {@inheritdoc}
      */
-    protected function get_default_operators(): array {
-        return [ 'is', 'isNot', 'isAny', 'isNone' ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function to_array(): array {
         return array_merge(
             parent::to_array(),

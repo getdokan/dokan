@@ -121,48 +121,4 @@ class SelectField extends AbstractField {
     public function is_clearable(): bool {
         return $this->clearable;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function get_value_formatted( array $item = [] ): string {
-        $value = $this->get_value( $item );
-
-        if ( $value === null || $value === '' ) {
-            return '';
-        }
-
-        // Handle multiple values
-        if ( $this->multiple && is_array( $value ) ) {
-            $labels = [];
-            foreach ( $value as $val ) {
-                foreach ( $this->elements as $element ) {
-                    if ( ( $element['value'] ?? null ) === $val ) {
-                        $labels[] = $element['label'] ?? $val;
-                        break;
-                    }
-                }
-            }
-            return implode( ', ', $labels );
-        }
-
-        // Single value
-        foreach ( $this->elements as $element ) {
-            if ( ( $element['value'] ?? null ) === $value ) {
-                return $element['label'] ?? (string) $value;
-            }
-        }
-
-        return (string) $value;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function get_default_operators(): array {
-        if ( $this->multiple ) {
-            return [ 'isAny', 'isNone', 'isAll' ];
-        }
-        return [ 'is', 'isNot' ];
-    }
 }

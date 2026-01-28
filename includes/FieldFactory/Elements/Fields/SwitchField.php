@@ -88,16 +88,6 @@ class SwitchField extends AbstractField {
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function get_value_formatted( array $item = [] ): string {
-        if ( $this->is_on( $item ) ) {
-            return $this->enable_state['title'] ?? __( 'Enabled', 'dokan-lite' );
-        }
-        return $this->disable_state['title'] ?? __( 'Disabled', 'dokan-lite' );
-    }
-
-    /**
      * Get the enabled value.
      *
      * @return mixed
@@ -164,12 +154,5 @@ class SwitchField extends AbstractField {
         }
 
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function get_default_operators(): array {
-        return [ 'is', 'isNot' ];
     }
 }

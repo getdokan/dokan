@@ -145,14 +145,6 @@ class RichTextField extends AbstractField {
     /**
      * {@inheritdoc}
      */
-    public function get_value_formatted( array $item = [] ): string {
-        $value = $this->get_value( $item );
-        return wp_strip_all_tags( $value );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function to_array(): array {
         return array_merge(
             parent::to_array(),

@@ -298,31 +298,24 @@ DataViews field types supported:
 
 | DataViews Property | PHP Implementation |
 |-------------------|-------------------|
-| `id` | `get_id()` |
-| `type` | `get_field_type()` |
-| `label` | `get_label()` |
-| `getValue` | `get_value($item)` |
-| `setValue` | `set_value($value)` |
-| `getValueFormatted` | `get_value_formatted($item)` |
-| `elements` | `get_elements()` |
-| `placeholder` | `get_placeholder()` |
-| `readOnly` | `is_read_only()` |
-| `isValid` | `validate($item)` |
-| `isVisible` | `is_visible($item)` |
-| `enableSorting` | `is_sorting_enabled()` |
-| `enableHiding` | `is_hiding_enabled()` |
-| `enableGlobalSearch` | `is_global_search_enabled()` |
-| `filterBy` | `get_filter_by()` |
-| `format` | `get_format()` |
-| `sort` | `sort($a, $b, $direction)` |
+| `id`              | `get_id()`           |
+| `type`            | `get_field_type()`   |
+| `label`           | `get_label()`        |
+| `getValue`        | `get_value($item)`   |
+| `setValue`        | `set_value($value)`  |
+| `elements`        | `get_elements()`     |
+| `placeholder`     | `get_placeholder()`  |
+| `readOnly`        | `is_read_only()`     |
+| `isValid`         | `validate($item)`    |
+| `isVisible`       | `is_visible($item)`  |
+| `enableSorting`   | `is_sorting_enabled()` |
+| `enableHiding`    | `is_hiding_enabled()` |
 
 ### 4.4 Filter Operators
 
-| Field Type | Default Operators |
-|------------|-------------------|
-| `text` | `is`, `isNot`, `contains`, `startsWith` |
-| `number` | `is`, `isNot`, `lessThan`, `greaterThan`, `between` |
-| `boolean` | `is`, `isNot` |
+> Note: The core FieldFactory no longer exposes filter operator helpers.
+> Filtering is expected to be implemented at the query layer (e.g., analytics
+> query filters), not on individual field elements.
 
 ---
 
@@ -397,9 +390,6 @@ interface FieldInterface extends ElementInterface {
     // DataViews Features
     public function is_sorting_enabled(): bool;
     public function is_hiding_enabled(): bool;
-    public function is_global_search_enabled(): bool;
-    public function get_filter_by();
-    public function get_format(): array;
 }
 ```
 

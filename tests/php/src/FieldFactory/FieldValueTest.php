@@ -271,49 +271,6 @@ class FieldValueTest extends DokanTestCase {
     }
 
     /**
-     * Test get_value_formatted for text field.
-     */
-    public function test_get_value_formatted_text(): void {
-        $field = FieldFactory::text( 'name', 'Name' );
-
-        $formatted = $field->get_value_formatted( [ 'name' => 'John Doe' ] );
-
-        $this->assertEquals( 'John Doe', $formatted );
-    }
-
-    /**
-     * Test get_value_formatted for switch field.
-     */
-    public function test_get_value_formatted_switch(): void {
-        $field = FieldFactory::toggle( 'enabled', 'Enabled' );
-
-        $this->assertEquals( 'Enabled', $field->get_value_formatted( [ 'enabled' => true ] ) );
-        $this->assertEquals( 'Disabled', $field->get_value_formatted( [ 'enabled' => false ] ) );
-    }
-
-    /**
-     * Test get_value_formatted for select field.
-     */
-    public function test_get_value_formatted_select(): void {
-        $field = FieldFactory::select(
-            'country', 'Country', [
-				[
-					'value' => 'US',
-					'label' => 'United States',
-				],
-				[
-					'value' => 'UK',
-					'label' => 'United Kingdom',
-				],
-			]
-        );
-
-        $formatted = $field->get_value_formatted( [ 'country' => 'US' ] );
-
-        $this->assertEquals( 'United States', $formatted );
-    }
-
-    /**
      * Test value type coercion.
      */
     public function test_value_type_coercion(): void {

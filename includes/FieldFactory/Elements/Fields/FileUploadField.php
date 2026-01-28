@@ -191,28 +191,6 @@ class FileUploadField extends AbstractField {
     /**
      * {@inheritdoc}
      */
-    public function get_value_formatted( array $item = [] ): string {
-        $value = $this->get_value( $item );
-
-        if ( $this->multiple && is_array( $value ) ) {
-            return sprintf(
-                /* translators: %d: file count */
-                _n( '%d file', '%d files', count( $value ), 'dokan-lite' ),
-                count( $value )
-            );
-        }
-
-        if ( is_numeric( $value ) ) {
-            $attachment = get_post( $value );
-            return $attachment ? $attachment->post_title : '';
-        }
-
-        return (string) $value;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function validate( array $item = [] ): array {
         $result = parent::validate( $item );
         $value  = $this->get_value( $item );

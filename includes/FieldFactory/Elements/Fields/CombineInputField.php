@@ -126,27 +126,6 @@ class CombineInputField extends AbstractField {
     /**
      * {@inheritdoc}
      */
-    public function get_value_formatted( array $item = [] ): string {
-        $values = $this->get_value( $item );
-        $parts  = [];
-
-        foreach ( $this->inputs as $input ) {
-            $input_id = $input['id'] ?? '';
-            $value    = $values[ $input_id ] ?? '';
-            $prefix   = $input['prefix'] ?? '';
-            $postfix  = $input['postfix'] ?? '';
-
-            if ( $value !== '' ) {
-                $parts[] = $prefix . $value . $postfix;
-            }
-        }
-
-        return implode( ' ' . $this->separator . ' ', $parts );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function validate( array $item = [] ): array {
         $result = parent::validate( $item );
         $values = $this->get_value( $item );

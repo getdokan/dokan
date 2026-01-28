@@ -324,7 +324,6 @@ class AdminSetupGuideMigrationTest extends DokanTestCase {
 				'placeholder' => 'Enter text',
 				'default'     => 'default value',
 				'value'       => 'current value',
-				'read_only'   => true,
 				'disabled'    => false,
 				'size'        => 50,
 			]
@@ -336,7 +335,6 @@ class AdminSetupGuideMigrationTest extends DokanTestCase {
 		$this->assertEquals( 'Enter text', $converted['placeholder'] );
 		$this->assertEquals( 'default value', $converted['default'] );
 		$this->assertEquals( 'current value', $converted['value'] );
-		$this->assertTrue( $converted['readonly'] );
 		$this->assertFalse( $converted['disabled'] );
 		$this->assertEquals( 50, $converted['size'] );
 	}

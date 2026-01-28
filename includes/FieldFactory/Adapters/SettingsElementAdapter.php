@@ -25,7 +25,6 @@ class SettingsElementAdapter {
 	 */
 	private const FIELD_DATA_KEY_MAP = [
 		'placeholder' => 'placeholder',
-		'read_only'   => 'readonly',
 		'disabled'    => 'disabled',
 		'size'        => 'size',
 	];
