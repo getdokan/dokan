@@ -509,12 +509,12 @@ abstract class AbstractField extends AbstractElement implements FieldInterface {
     /**
      * Set default value.
      *
-     * @param mixed $default Default value.
+     * @param mixed $default_data Default value.
      *
      * @return self
      */
-    public function set_default( $default ): self {
-        $this->default = $default;
+    public function set_default( $default_data ): self {
+        $this->default = $default_data;
         return $this;
     }
 
@@ -656,7 +656,7 @@ abstract class AbstractField extends AbstractElement implements FieldInterface {
             case '<=':
                 return $actual <= $expected;
             default:
-                return $actual == $expected;
+                return $actual === $expected;
         }
     }
 

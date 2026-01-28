@@ -114,13 +114,13 @@ class CombineInputField extends AbstractField {
         }
 
         // Initialize with default structure from inputs
-        $default = [];
+        $default_data = [];
         foreach ( $this->inputs as $input ) {
             $input_id             = $input['id'] ?? '';
-            $default[ $input_id ] = $input['default'] ?? '';
+            $default_data[ $input_id ] = $input['default'] ?? '';
         }
 
-        return $default;
+        return $default_data;
     }
 
     /**

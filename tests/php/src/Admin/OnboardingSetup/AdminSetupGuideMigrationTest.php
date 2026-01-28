@@ -251,13 +251,13 @@ class AdminSetupGuideMigrationTest extends DokanTestCase {
 	}
 
 	/**
-	 * Test add_field_factory_element method.
+	 * Test add_field_element method.
 	 */
-	public function test_add_field_factory_element(): void {
+	public function test_add_field_element(): void {
 		$step = new BasicStep();
 		$field = FieldFactory::text( 'test', 'Test Field' );
 
-		$step->add_field_factory_element( $field );
+		$step->add_field_element( $field );
 		$elements = $step->get_field_elements();
 
 		$this->assertNotEmpty( $elements );
