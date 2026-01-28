@@ -133,7 +133,23 @@ class ProductFactory extends WP_UnitTest_Factory_For_Thing {
      * @return WC_Product_Variable
      */
     public function create_variation_product( $product = null ) {
-        return WC_Helper_Product::create_variation_product( $product );
+        $variable_product = WC_Helper_Product::create_variation_product( $product );
+        $product_ids[] = $variable_product->get_id();
+
+        array_push( $product_ids, $variable_product->get_children() );
+
+        foreach ( $product_ids as $product_id ) {
+			if ( $this->seller_id ) {
+				$post_data = [
+					'ID'          => $product_id,
+					'post_author' => $this->seller_id,
+				];
+
+				wp_update_post( $post_data );
+			}
+        }
+
+        return $variable_product;
     }
 
     /**
