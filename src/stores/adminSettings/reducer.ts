@@ -76,12 +76,23 @@ const reducer = ( state = SETTINGS_DEFAULT_STATE, action ) => {
                     validations
                 );
 
+            // Check if any of the changed elements have validation errors
+            const changedHookKeys = [
+                ...Object.keys( changedElements ),
+                action.item.hook_key,
+            ];
+            const hasErrorsInChangedElements = changedHookKeys.some(
+                ( hookKey ) =>
+                    settingsElementFinder( validatedSettings, hookKey )
+                        ?.validationError
+            );
+
             return {
                 ...state,
                 dependencies: [ ...updatedDependencies ],
                 validations: [ ...validations ],
                 settings: [ ...validatedSettings ],
-                needSaving: ! hasErrors,
+                needSaving: ! hasErrorsInChangedElements,
                 hasValidationErrors: hasErrors,
                 changedElements,
             };
