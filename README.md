@@ -124,14 +124,18 @@ Dokan also provides **Composer** scripts for **PHP** development:
 
 ## 🧪 Testing
 
-Dokan follows **Test Driven Development** (TDD) practices to ensure code **quality** and **reliability**. The repository includes comprehensive documentation and resources for **testing** in the `docs/tdd` directory:
+Dokan follows **Test Driven Development** (TDD) practices to ensure code **quality** and **reliability**. The repository includes comprehensive test suites for both **PHP** and **end-to-end** testing.
+
+### PHPUnit Tests
+
+PHPUnit tests are located in the `tests/php` directory with comprehensive documentation in the `docs/tdd` directory:
 
 * [**TDD Overview**](docs/tdd/readme.md): Introduction to **TDD** in **Dokan**.
 * [**Getting Started with Testing**](docs/tdd/get-started.md): Best practices and organization of test cases.
 * [**Test Factories**](docs/tdd/factories.md): Using **factories** to create **test data**.
 * [**Mocking**](docs/tdd/mocking.md): Use mocking to test external functionalities.
 
-To run tests, you can use the **Composer** scripts mentioned above or run **PHPUnit** directly:
+**Run PHPUnit tests:**
 
 ```bash
 # Run all tests
@@ -140,6 +144,38 @@ To run tests, you can use the **Composer** scripts mentioned above or run **PHPU
 # Run tests with a specific filter
 ./vendor/bin/phpunit --filter=test_name
 ```
+
+### E2E & API Tests
+
+End-to-end and API tests use **Playwright** with **TypeScript** and are located in the `tests/pw` directory. The test suite provides comprehensive coverage for both **Dokan Lite** and **Dokan Pro**.
+
+**Features:**
+- ✅ 120+ automated test scenarios
+- ✅ Docker-based test environment
+- ✅ REST API validation
+- ✅ Parallel test execution
+- ✅ Rich reporting with traces and videos
+
+**Quick start:**
+
+```bash
+# Navigate to test directory
+cd tests/pw
+
+# Install dependencies
+npm install
+npx playwright install chromium
+
+# Start Docker environment
+npm run start:env
+npm run docker:setup
+
+# Run tests
+npm run test:e2e
+npm run test:api
+```
+
+**For detailed documentation**, see [**E2E Test Suite Documentation**](tests/pw/README.md)
 
 ## 🛡 Reporting Security Issues
 
