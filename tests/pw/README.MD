@@ -474,8 +474,6 @@ This project is licensed under the GPL-2.0+ License. See the [LICENSE](../../LIC
 
 <div align="center">
 
-**Built with ❤️ by the Dokan Team**
-
 [Website](https://dokan.co) • [Documentation](https://dokan.co/docs/) • [GitHub](https://github.com/getdokan/dokan)
 
 </div>
