@@ -5,6 +5,11 @@
  */
 
 add_action('init', function() {
+    // Skip if running in WP-CLI
+    if (defined('WP_CLI') && WP_CLI) {
+        return;
+    }
+    
     // Only run if .htaccess doesn't exist or is empty
     $htaccess_file = ABSPATH . '.htaccess';
     
@@ -19,7 +24,6 @@ add_action('init', function() {
             
             // If flush_rewrite_rules didn't create the file, create it manually
             if (!file_exists($htaccess_file) || filesize($htaccess_file) == 0) {
-                $home_path = get_home_path();
                 $htaccess_content = <<<EOD
 # BEGIN WordPress
 <IfModule mod_rewrite.c>
