@@ -1,5 +1,5 @@
 import { test } from '@playwright/test';
-import { stripeExpressPage } from '@pages/stripeExpressPage';
+import { stripeExpressPage } from './stripeExpressPage';
 
 // Clean up after ALL tests are completed
 test.afterAll(async ({ browser }) => {
