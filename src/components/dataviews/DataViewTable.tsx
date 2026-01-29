@@ -71,7 +71,14 @@ const DataViewTable = ( props: DataViewsProps< Item > ) => {
         view,
         data,
     } = props;
-
+    /**
+     * Disable sorting & column hiding globally
+     */
+    const normalizedFields = fields.map( ( field ) => ( {
+        enableSorting: false,
+        enableHiding: false,
+        ...field,
+    } ) );
     const getDefaultLayouts = ( customLayout: SupportedLayouts ) => {
         const keys = Object?.keys( customLayout );
         const defaultLayout = {
@@ -106,7 +113,7 @@ const DataViewTable = ( props: DataViewsProps< Item > ) => {
         fields: applyFiltersToTableElements(
             namespace,
             'fields',
-            fields,
+            normalizedFields,
             props
         ),
         actions: applyFiltersToTableElements(

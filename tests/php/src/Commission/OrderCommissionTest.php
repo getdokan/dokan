@@ -8,10 +8,60 @@ use WeDevs\Dokan\Vendor\Coupon;
 
 /**
  * @group commission
+ *
  * @group commission-order
  */
 class OrderCommissionTest extends \WeDevs\Dokan\Test\DokanTestCase {
     protected array $order_data = [];
+
+	protected $seller_id1;
+	protected $seller_id2;
+	protected $customer_id;
+
+	public function set_up() {
+		parent::set_up();
+
+		// Clear commission settings to ensure test isolation
+		$this->clear_commission_settings();
+
+		$this->seller_id1 = $this->factory()->seller->create();
+		$this->seller_id2 = $this->factory()->seller->create();
+		$this->customer_id = $this->factory()->customer->create();
+	}
+
+	/**
+	 * Clear commission settings to default state.
+	 *
+	 * @return void
+	 */
+	protected function clear_commission_settings() {
+		// Reset commission settings to default
+		$default_settings = [
+			'type' => 'flat',
+			'percentage' => 10,
+			'flat' => 0,
+		];
+		( new \WeDevs\Dokan\Commission\Settings\GlobalSetting( 0 ) )->save( $default_settings );
+
+		// Reset dokan_selling options to default
+		$selling_options = get_option( 'dokan_selling', [] );
+		unset( $selling_options['commission_fixed_values'] );
+		unset( $selling_options['commission_type'] );
+		unset( $selling_options['commission_category_based_values'] );
+		update_option( 'dokan_selling', $selling_options );
+	}
+
+	/**
+	 * Clean up after each test to ensure isolation.
+	 *
+	 * @return void
+	 */
+	public function tear_down() {
+		// Reset order data
+		$this->order_data = [];
+
+		parent::tear_down();
+	}
 
     /**
      * @dataProvider get_order_commission_data
@@ -32,8 +82,9 @@ class OrderCommissionTest extends \WeDevs\Dokan\Test\DokanTestCase {
     public function test_calculate_for_order( $case_name, $data, $settings, $expected ) {
         $seller_id = $this->seller_id1;
 
-        $this->set_order_data( $data ['order'] );
         $this->set_settings( $settings );
+
+        $this->set_order_data( $data ['order'] );
 
         $order_id = $this->create_single_vendor_order( $seller_id );
         $order = wc_get_order( $order_id );
@@ -56,7 +107,8 @@ class OrderCommissionTest extends \WeDevs\Dokan\Test\DokanTestCase {
 
         $this->assertEquals( $expected['total'], $order->get_total(), 'Order total should be equal to expected' );
 
-        $order_commission = dokan_get_container()->get( \WeDevs\Dokan\Commission\OrderCommission::class );
+        $order_commission = new \WeDevs\Dokan\Commission\OrderCommission();
+		// var_dump( get_class( $order_commission ) );
         $order_commission->set_order( $order );
         $order_commission->calculate();
 
