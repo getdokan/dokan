@@ -78,9 +78,9 @@ class Text extends Field {
      *
      * @since DOKAN_SINCE
      *
-     * @var callable|null $custom_validation Custom validation callback.
+     * @var callable|null $validation_func Custom validation callback.
      */
-    protected $custom_validation = null;
+    protected $validation_func = null;
 
     /**
      * Constructor.
@@ -300,8 +300,8 @@ class Text extends Field {
      *
      * @return callable|null
      */
-    public function get_custom_validation(): ?callable {
-        return $this->custom_validation;
+    public function get_validation_func(): ?callable {
+        return $this->validation_func;
     }
 
     /**
@@ -316,8 +316,8 @@ class Text extends Field {
      *
      * @return Text
      */
-    public function set_custom_validation( callable $callback ): Text {
-        $this->custom_validation = $callback;
+    public function set_validation_func( callable $callback ): Text {
+        $this->validation_func = $callback;
 
         return $this;
     }
@@ -337,9 +337,9 @@ class Text extends Field {
             return false;
         }
 
-        // If custom_validation is set and callable, execute it.
-        if ( is_callable( $this->custom_validation ?? '' ) ) {
-            return (bool) call_user_func( $this->custom_validation, $data );
+        // If validation_func is set and callable, execute it.
+        if ( is_callable( $this->validation_func ?? '' ) ) {
+            return (bool) call_user_func( $this->validation_func, $data );
         }
 
         return true;
