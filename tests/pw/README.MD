@@ -158,8 +158,6 @@ See `.env.example` for complete configuration template.
 - Use default Docker values unless running locally
 - `SERVER_URL` must use query string format: `?rest_route=`
 
-For detailed configuration options, see [DEPLOYMENT.md](./DEPLOYMENT.md).
-
 ---
 
 ## Running Tests
@@ -352,8 +350,6 @@ jobs:
           path: playwright-report/
 ```
 
-For complete CI/CD examples and deployment procedures, see [DEPLOYMENT.md](./DEPLOYMENT.md).
-
 ---
 
 ## Troubleshooting
@@ -406,8 +402,6 @@ npm run docker:setup
 # Increase timeout in playwright.config.ts
 timeout: 60000  // 60 seconds
 ```
-
-For more troubleshooting, see [DEPLOYMENT.md](./DEPLOYMENT.md#troubleshooting-deployment-issues).
 
 ---
 
@@ -467,8 +461,6 @@ This project is licensed under the GPL-2.0+ License. See the [LICENSE](../../LIC
 
 ### Documentation
 
-- [DEPLOYMENT.md](./DEPLOYMENT.md) - Complete deployment guide
-- [CHANGELOG.md](./CHANGELOG.md) - Version history and changes
 - [Playwright Documentation](https://playwright.dev/)
 - [Dokan Documentation](https://dokan.co/docs/)
 
