@@ -30,6 +30,7 @@ export default function DokanEmail( { element } ) {
                         tooltip={ element.helper_text }
                         imageUrl={ element?.image_url }
                         wrapperClassNames={ 'w-full' }
+                        validationError={ element?.validationError }
                     />
                 </div>
             ) }
