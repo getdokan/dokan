@@ -60,6 +60,10 @@ setup.describe('site setup', () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.dokanPro));
     });
 
+    setup('flush rewrite rules after plugin activation', { tag: ['@lite'] }, async () => {
+        await helpers.exeCommandWpcli(data.commands.wpcli.flushRewrite);
+    });
+
     setup('set dokan license', { tag: ['@pro'] }, async () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.dokanProLicense, dbData.dokan.dokanProLicense);
     });

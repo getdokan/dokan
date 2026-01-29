@@ -2939,6 +2939,7 @@ export const data = {
             activatePlugin: (plugin: string) => `wp plugin activate ${plugin}`,
             activateTheme: (theme: string) => `wp theme activate ${theme}`,
             rewritePermalink: `wp rewrite structure /%postname%/`,
+            flushRewrite: `wp rewrite flush --hard`,
         },
         makePath: (path: string) => `mkdir -p ${path}`,
         deleteFolder: (path: string) => `rm -rf ${path}`,
