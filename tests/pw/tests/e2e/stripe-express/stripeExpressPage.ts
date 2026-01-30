@@ -1,376 +1,210 @@
-import { Page, Locator, expect } from '@playwright/test';
+import { Page } from '@playwright/test';
 
-export class stripeExpressPage {
+export class StripeExpressPage {
     readonly page: Page;
-    
-    // Test Data
-    readonly testData = {
-        // Add test data here as needed
-        // Example:
-        // stripeAccount: {
-        //     email: 'test@example.com',
-        // }
-    };
-
-    // Admin Locators
-    readonly modulesSearchInput: Locator;
-    readonly stripeExpressSlider: Locator;
-
-    // Vendor Dashboard Locators
-    readonly stripeExpressDashboardLoginButton: Locator;
-    readonly addProductLink: Locator;
-    readonly productTitleInput: Locator;
-    readonly regularPriceInput: Locator;
-    readonly publishButton: Locator;
-
-    // Customer Locators
-    readonly addToCartButton: Locator;
-    readonly proceedToCheckoutLink: Locator;
-    readonly billingFirstName: Locator;
-    readonly billingLastName: Locator;
-    readonly billingCountry: Locator;
-    readonly billingCity: Locator;
-    readonly billingState: Locator;
-    readonly billingPostcode: Locator;
-    readonly stripeExpressPaymentMethod: Locator;
-    readonly placeOrderButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
-
-        // Admin Locators
-        this.modulesSearchInput = page.locator("//div[@class='search-box']//input[@placeholder='Search...']");
-        this.stripeExpressSlider = page.locator("//span[@class='slider round']");
-
-        // Vendor Dashboard Locators
-        this.stripeExpressDashboardLoginButton = page.locator("//button[@id='dokan-stripe-express-dashboard-login']");
-        this.addProductLink = page.locator("//span[@class='dokan-add-product-link']//a[1]");
-        this.productTitleInput = page.locator("//input[@id='post_title']");
-        this.regularPriceInput = page.locator('#_regular_price:visible');
-        this.publishButton = page.locator("(//input[@id='publish'])[1]");
-
-        // Customer Locators
-        this.addToCartButton = page.locator('button:has-text("Add to cart")');
-        this.proceedToCheckoutLink = page.getByRole('link', { name: 'Proceed to Checkout' });
-        this.billingFirstName = page.locator('#billing_first_name');
-        this.billingLastName = page.locator('#billing_last_name');
-        this.billingCountry = page.locator('#billing_country');
-        this.billingCity = page.locator('#billing_city');
-        this.billingState = page.locator('#billing_state');
-        this.billingPostcode = page.locator('#billing_postcode');
-        this.stripeExpressPaymentMethod = page.getByLabel('Stripe Express');
-        this.placeOrderButton = page.getByRole('button', { name: 'Place Order' });
     }
+
+    // ============================================
+    // SELECTORS
+    // ============================================
+
+    // Admin Selectors
+    admin = {
+        stripeExpressSettingsUrl: 'http://localhost:9999/wp-admin/admin.php?page=wc-settings&tab=checkout&section=dokan_stripe_express&from=WCADMIN_PAYMENT_SETTINGS',
+        stripeExpressEnabledCheckbox: '#woocommerce_dokan_stripe_express_enabled',
+        modulesUrl: 'http://localhost:9999/wp-admin/admin.php?page=dokan#/modules',
+        searchBox: "div[class='search-box'] input",
+        clearSearchButton: "div[class='search-box'] svg",
+        moduleSlider: '.slider.round',
+        moduleCard: '.module-card',
+        moduleTitle: '.module-card h3',
+        moduleToggle: '.switch input[type="checkbox"]'
+    };
+
+    // Vendor Selectors
+    vendor = {
+        stripeExpressOnboardingUrl: 'http://localhost:9999/dashboard/settings/payment-manage-dokan_stripe_express/?action=stripe_express_onboarding&seller_id=3&_wpnonce=b3f06f28bd',
+        visitExpressDashboardButton: '#dokan-stripe-express-dashboard-login'
+    };
+
+    // Customer Selectors
+    customer = {
+        // Add customer selectors here
+    };
+
+    // Stripe Express Specific Selectors
+    stripeExpress = {
+        // Add Stripe Express specific selectors here
+    };
+
+    // ============================================
+    // TEST DATA
+    // ============================================
+
+    testData = {
+        admin: {
+            // Add admin test data here
+        },
+        vendor: {
+            // Add vendor test data here
+        },
+        customer: {
+            // Add customer test data here
+        },
+        stripeExpress: {
+            // Add Stripe Express specific test data here
+        }
+    };
+
+    // ============================================
+    // HELPER METHODS
+    // ============================================
 
     // Navigation Methods
-    async goToModulesPage() {
-        const baseUrl = process.env.BASE_URL || 'https://dokanautomation.test';
-        await this.page.goto(`${baseUrl}/wp-admin/admin.php?page=dokan#/modules/`);
-        await this.page.waitForLoadState('domcontentloaded');
-    }
-
-    async goToStripeExpressSettings() {
-        // Admin navigation to Stripe Express settings
-        await this.page.goto('/wp-admin/admin.php?page=dokan#/settings');
-        await this.page.waitForLoadState('domcontentloaded');
-    }
-
-    async goToVendorPaymentSettings() {
-        // Vendor navigation to payment settings
-        const baseUrl = process.env.BASE_URL || 'https://dokanautomation.test';
-        await this.page.goto(`${baseUrl}/dashboard/settings/payment`);
-        await this.page.waitForLoadState('domcontentloaded');
-    }
-
-    async goToVendorStripeExpressSettings() {
-        // Vendor navigation to Stripe Express payment settings
-        const baseUrl = process.env.BASE_URL || 'https://dokanautomation.test';
-        await this.page.goto(`${baseUrl}/dashboard/settings/payment-manage-dokan_stripe_express-edit/`);
-        await this.page.waitForLoadState('domcontentloaded');
-    }
-
-    async goToVendorProductsPage() {
-        // Vendor navigation to products page
-        const baseUrl = process.env.BASE_URL || 'https://dokanautomation.test';
-        await this.page.goto(`${baseUrl}/dashboard/products/`);
-        await this.page.waitForLoadState('domcontentloaded');
+    async navigateTo(url: string) {
+        await this.page.goto(url);
     }
 
     // Admin Methods
-    async searchAndActivateStripeExpressModule() {
-        await this.goToModulesPage();
-        
-        // Wait for search input to be visible and clickable
-        await this.modulesSearchInput.waitFor({ state: 'visible' });
-        await this.modulesSearchInput.click();
-        
-        // Type "Stripe Express" in the search input
-        await this.modulesSearchInput.fill('Stripe Express');
-        
-        // Wait for the page to load/filter results dynamically
-        // Wait for the slider to be visible (this indicates the module card has loaded)
-        await this.stripeExpressSlider.waitFor({ state: 'visible' });
-        
-        // Find the associated checkbox - it could be a sibling or parent
-        // Try to find checkbox near the slider element
-        const sliderContainer = this.stripeExpressSlider.locator('..');
-        const checkbox = sliderContainer.locator('input[type="checkbox"]').first();
-        
-        // Wait for checkbox to be attached
-        await checkbox.waitFor({ state: 'attached' });
-        
-        // Check if slider/checkbox is active
-        const isChecked = await checkbox.isChecked();
-        
-        if (!isChecked) {
-            // If not active, click the slider to activate it
-            await this.stripeExpressSlider.click();
-            // Wait for the activation to complete dynamically
-            await expect(checkbox).toBeChecked();
-        }
-        
-        // Verify the module is now active
-        await expect(checkbox).toBeChecked();
+    async adminLogin(username: string, password: string) {
+        // Add admin login logic here
     }
 
-    async searchAndDeactivateStripeConnectModule() {
-        await this.goToModulesPage();
+    async goToStripeExpressSettings() {
+        await this.page.goto(this.admin.stripeExpressSettingsUrl);
+        await this.page.waitForLoadState('networkidle');
+    }
+
+    async isStripeExpressEnabled(): Promise<boolean> {
+        const checkbox = await this.page.locator(this.admin.stripeExpressEnabledCheckbox);
+        return await checkbox.isChecked();
+    }
+
+    async goToModulesPage() {
+        await this.page.goto(this.admin.modulesUrl);
+        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForTimeout(2000); // Wait for modules to load
+    }
+
+    async searchModule(moduleName: string) {
+        await this.page.fill(this.admin.searchBox, moduleName);
+        await this.page.waitForTimeout(1000); // Wait for search results
+    }
+
+    async clearSearch() {
+        await this.page.click(this.admin.clearSearchButton);
+        await this.page.waitForTimeout(1000);
+    }
+
+    async getModuleToggleState(moduleName: string): Promise<boolean> {
+        // Find the module card by title and get its toggle state
+        const moduleCards = await this.page.locator(this.admin.moduleCard).all();
         
-        // Wait for search input to be visible and clickable
-        await this.modulesSearchInput.waitFor({ state: 'visible' });
-        await this.modulesSearchInput.click();
-        
-        // Type "stripe connect" in the search input
-        await this.modulesSearchInput.fill('stripe connect');
-        
-        // Wait for the page to load/filter results dynamically
-        // Wait for the slider to be visible (this indicates the module card has loaded)
-        await this.stripeExpressSlider.waitFor({ state: 'visible' });
-        
-        // Find the associated checkbox - it could be a sibling or parent
-        // Try to find checkbox near the slider element
-        const sliderContainer = this.stripeExpressSlider.locator('..');
-        const checkbox = sliderContainer.locator('input[type="checkbox"]').first();
-        
-        // Wait for checkbox to be attached
-        await checkbox.waitFor({ state: 'attached' });
-        
-        // Check if slider/checkbox is active
-        const isChecked = await checkbox.isChecked();
-        
-        if (isChecked) {
-            // If active, click the slider to deactivate it
-            await this.stripeExpressSlider.click();
-            // Wait for the deactivation to complete dynamically
-            await expect(checkbox).not.toBeChecked();
+        for (const card of moduleCards) {
+            const titleText = await card.locator('h3').textContent();
+            if (titleText?.includes(moduleName)) {
+                const toggle = card.locator(this.admin.moduleToggle);
+                return await toggle.isChecked();
+            }
         }
-        // If already deactivated, skip and pass the test
+        
+        throw new Error(`Module "${moduleName}" not found`);
+    }
+
+    async toggleModule(moduleName: string, enable: boolean) {
+        // Find the module card by title and toggle it
+        const moduleCards = await this.page.locator(this.admin.moduleCard).all();
+        
+        for (const card of moduleCards) {
+            const titleText = await card.locator('h3').textContent();
+            if (titleText?.includes(moduleName)) {
+                const toggle = card.locator(this.admin.moduleToggle);
+                const isCurrentlyEnabled = await toggle.isChecked();
+                
+                // Only click if we need to change the state
+                if (isCurrentlyEnabled !== enable) {
+                    const slider = card.locator(this.admin.moduleSlider);
+                    await slider.click();
+                    await this.page.waitForTimeout(1500); // Wait for toggle animation and save
+                }
+                return;
+            }
+        }
+        
+        throw new Error(`Module "${moduleName}" not found`);
+    }
+
+    async enableModuleIfDisabled(moduleName: string) {
+        const isEnabled = await this.getModuleToggleState(moduleName);
+        if (!isEnabled) {
+            await this.toggleModule(moduleName, true);
+        }
+    }
+
+    async disableModuleIfEnabled(moduleName: string) {
+        const isEnabled = await this.getModuleToggleState(moduleName);
+        if (isEnabled) {
+            await this.toggleModule(moduleName, false);
+        }
     }
 
     // Vendor Methods
-    async verifyVendorStripeExpressConnection() {
-        await this.goToVendorStripeExpressSettings();
-        
-        // Wait dynamically for the page to load and the button to be visible or not visible
-        // First wait for the page to be fully loaded
-        await this.page.waitForLoadState('domcontentloaded');
-        
-        // Wait for the button to either be visible or not visible
-        // If visible, it means vendor is connected
-        // If not visible, vendor is not connected
-        const isVisible = await this.stripeExpressDashboardLoginButton.isVisible().catch(() => false);
-        
-        if (!isVisible) {
-            throw new Error('This Vendor is not conncted with Stripe Express');
-        }
-        
-        // Verify the button is visible (vendor is connected)
-        await expect(this.stripeExpressDashboardLoginButton).toBeVisible();
+    async vendorLogin(username: string, password: string) {
+        // Add vendor login logic here
     }
 
-    async createStripeExpressProduct(productTitle: string, price: string) {
-        await this.goToVendorProductsPage();
-        
-        // Wait for add product link to be visible and clickable
-        await this.addProductLink.waitFor({ state: 'visible' });
-        await this.addProductLink.click();
-        
-        // Wait for product title input to be visible
-        await this.productTitleInput.waitFor({ state: 'visible' });
-        await this.productTitleInput.click();
-        await this.productTitleInput.fill(productTitle);
-        
-        // Wait for regular price input to be visible
-        await this.regularPriceInput.waitFor({ state: 'visible' });
-        await this.regularPriceInput.click();
-        await this.regularPriceInput.fill(price);
-        
-        // Wait for publish button to be visible and clickable
-        await this.publishButton.waitFor({ state: 'visible' });
-        await this.publishButton.click();
-        
-        // Wait for the page to update after publishing
-        await this.page.waitForLoadState('domcontentloaded');
+    async goToStripeExpressOnboarding() {
+        await this.page.goto(this.vendor.stripeExpressOnboardingUrl);
+        await this.page.waitForLoadState('networkidle');
+    }
+
+    async isVisitExpressDashboardButtonVisible(): Promise<boolean> {
+        try {
+            const button = this.page.locator(this.vendor.visitExpressDashboardButton);
+            await button.waitFor({ state: 'visible', timeout: 5000 });
+            return await button.isVisible();
+        } catch {
+            return false;
+        }
+    }
+
+    async getVisitExpressDashboardButtonText(): Promise<string> {
+        const button = this.page.locator(this.vendor.visitExpressDashboardButton);
+        const text = await button.textContent();
+        return text?.trim() || '';
     }
 
     // Customer Methods
-    async purchaseProductWithStripeExpress(productSlug: string = 'test-stripe-express-p1_v1') {
-        const baseUrl = process.env.BASE_URL || 'https://dokanautomation.test';
-        
-        // Navigate to product page
-        await this.page.goto(`${baseUrl}/product/${productSlug}/`);
-        await this.page.waitForLoadState('domcontentloaded');
-        
-        // Add to cart
-        await this.addToCartButton.waitFor({ state: 'visible' });
-        await this.addToCartButton.click();
-        
-        // Wait for "View cart" link or added message to appear
-        await this.page.waitForSelector('a.wc-forward, .woocommerce-message', { timeout: 5000 }).catch(() => null);
-        
-        // Navigate to cart
-        await this.page.goto(`${baseUrl}/cart/`);
-        await this.page.waitForLoadState('domcontentloaded');
-        
-        // Proceed to checkout
-        await this.proceedToCheckoutLink.waitFor({ state: 'visible' });
-        await this.proceedToCheckoutLink.click();
-        
-        // Navigate to classic checkout
-        await this.page.goto(`${baseUrl}/classic-checkout/`);
-        await this.page.waitForLoadState('domcontentloaded');
-        
-        // Fill billing details
-        await this.billingFirstName.waitFor({ state: 'visible' });
-        await this.billingFirstName.click();
-        await this.billingFirstName.fill('Customer1');
-        
-        await this.billingLastName.click();
-        await this.billingLastName.fill('c1');
-        
-        // Select country - first click the visible textbox to open dropdown
-        await this.page.getByRole('textbox', { name: 'United States (US)' }).click();
-        // Then interact with the combobox that appears
-        await this.page.getByRole('combobox').filter({ hasText: /^$/ }).click();
-        await this.page.getByRole('combobox').filter({ hasText: /^$/ }).fill('united states');
-        await this.page.getByRole('option', { name: 'United States (US)', exact: true }).click();
-        
-        // Fill city
-        await this.billingCity.click();
-        await this.billingCity.fill('New York');
-        
-        // Select state - first click the visible textbox to open dropdown
-        await this.page.getByRole('textbox', { name: 'New York' }).click();
-        // Then interact with the combobox that appears
-        await this.page.getByRole('combobox').filter({ hasText: /^$/ }).click();
-        await this.page.getByRole('combobox').filter({ hasText: /^$/ }).fill('New York');
-        await this.page.getByRole('option', { name: 'New York' }).click();
-        
-        // Fill postcode
-        await this.billingPostcode.click();
-        await this.billingPostcode.fill('10003');
-        
-        // Select Stripe Express payment method
-        await this.page.getByText('Stripe Express', { exact: true }).click();
-        
-        // Wait for the correct Stripe iframe (the payment input frame, not Google Pay)
-        // This can take 5-6 seconds to load
-        await this.page.waitForSelector('iframe[title="Secure payment input frame"]', { state: 'visible', timeout: 15000 });
-        const stripeFrame = this.page.locator('iframe[title="Secure payment input frame"]').contentFrame();
-        
-        // Fill card number
-        await stripeFrame.getByRole('textbox', { name: 'Card number' }).click();
-        await stripeFrame.getByRole('textbox', { name: 'Card number' }).fill('4242 4242 4242 4242');
-        
-        // Fill expiry date
-        await stripeFrame.getByRole('textbox', { name: 'Expiration date MM / YY' }).click();
-        await stripeFrame.getByRole('textbox', { name: 'Expiration date MM / YY' }).fill('11 / 29');
-        
-        // Fill CVC
-        await stripeFrame.getByRole('textbox', { name: 'Security code' }).click();
-        await stripeFrame.getByRole('textbox', { name: 'Security code' }).fill('111');
-        
-        // Place order - scroll into view and wait for it to be ready
-        const placeOrderButton = this.page.getByRole('button', { name: 'Place Order' });
-        await placeOrderButton.scrollIntoViewIfNeeded();
-        await placeOrderButton.waitFor({ state: 'visible' });
-        await placeOrderButton.click();
-        
-        // Wait for payment processing and order completion (can take longer for Stripe)
-        await this.page.waitForURL('**/order-received/**', { timeout: 60000 });
-        
-        // Verify we're on order received page or success
-        expect(this.page.url()).toContain('order-received');
+    async customerLogin(username: string, password: string) {
+        // Add customer login logic here
     }
 
-    // Cleanup Methods
-    async cleanup() {
-        const baseUrl = process.env.BASE_URL || 'https://dokanautomation.test';
-        
-        // Navigate to products page
-        await this.page.goto(`${baseUrl}/wp-admin/edit.php?post_type=product`);
-        await this.page.waitForLoadState('domcontentloaded');
-        
-        // Delete Product 1: Test Stripe Express P1_V1
-        await this.page.getByRole('searchbox', { name: 'Search products:' }).click();
-        await this.page.getByRole('searchbox', { name: 'Search products:' }).fill('Test Stripe Express P1_V1');
-        await this.page.getByRole('button', { name: 'Search products' }).click();
-        await this.page.waitForLoadState('domcontentloaded');
-        
-        // Check if product exists
-        const product1Checkbox = this.page.getByRole('checkbox', { name: 'Select Test Stripe Express' });
-        const product1Exists = await product1Checkbox.isVisible().catch(() => false);
-        
-        if (product1Exists) {
-            await product1Checkbox.check();
-            await this.page.locator('#bulk-action-selector-top').selectOption('trash');
-            await this.page.locator('#doaction').click();
-            await this.page.waitForLoadState('domcontentloaded');
-        } else {
-            console.log('Product "Test Stripe Express P1_V1" not found, skipping deletion');
-        }
-        
-        // Refresh the page
-        await this.page.reload();
-        await this.page.waitForLoadState('domcontentloaded');
-        
-        // Delete Product 2: Test Stripe Express P1_V2
-        await this.page.getByRole('searchbox', { name: 'Search products:' }).click();
-        await this.page.getByRole('searchbox', { name: 'Search products:' }).fill('Test Stripe Express P1_V2');
-        await this.page.getByRole('button', { name: 'Search products' }).click();
-        await this.page.waitForLoadState('domcontentloaded');
-        
-        // Check if product exists
-        const product2Checkbox = this.page.getByRole('checkbox', { name: 'Select Test Stripe Express' });
-        const product2Exists = await product2Checkbox.isVisible().catch(() => false);
-        
-        if (product2Exists) {
-            await product2Checkbox.check();
-            await this.page.locator('#bulk-action-selector-top').selectOption('trash');
-            await this.page.locator('#doaction').click();
-            await this.page.waitForLoadState('domcontentloaded');
-        } else {
-            console.log('Product "Test Stripe Express P1_V2" not found, skipping deletion');
-        }
-        
-        // Refresh the page
-        await this.page.reload();
-        await this.page.waitForLoadState('domcontentloaded');
-        
-        // Go to trash and permanently delete all
-        const trashLink = this.page.getByRole('link', { name: 'Trash' });
-        const trashExists = await trashLink.isVisible().catch(() => false);
-        
-        if (trashExists) {
-            await trashLink.click();
-            await this.page.waitForLoadState('domcontentloaded');
-            
-            // Click Delete Permanently button
-            await this.page.locator('#posts-filter div').filter({ hasText: 'Select bulk action Bulk actions Restore Apply Auction filter By' }).locator('#delete_all').click();
-            await this.page.waitForLoadState('domcontentloaded');
-        } else {
-            console.log('No items in trash, cleanup complete');
-        }
+    // Stripe Express Methods
+    async connectStripeExpress() {
+        // Add Stripe Express connection logic here
+    }
+
+    async disconnectStripeExpress() {
+        // Add Stripe Express disconnection logic here
+    }
+
+    // Wait/Utility Methods
+    async waitForElement(selector: string) {
+        await this.page.waitForSelector(selector);
+    }
+
+    async clickElement(selector: string) {
+        await this.page.click(selector);
+    }
+
+    async fillInput(selector: string, value: string) {
+        await this.page.fill(selector, value);
+    }
+
+    async getText(selector: string): Promise<string> {
+        return await this.page.textContent(selector) || '';
     }
 }
-
