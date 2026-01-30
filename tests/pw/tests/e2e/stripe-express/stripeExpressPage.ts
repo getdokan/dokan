@@ -26,13 +26,26 @@ export class StripeExpressPage {
 
     // Vendor Selectors
     vendor = {
-        stripeExpressOnboardingUrl: 'http://localhost:9999/dashboard/settings/payment-manage-dokan_stripe_express/?action=stripe_express_onboarding&seller_id=3&_wpnonce=b3f06f28bd',
+        vendor1: {
+            stripeExpressOnboardingUrl: 'http://localhost:9999/dashboard/settings/payment-manage-dokan_stripe_express/?action=stripe_express_onboarding&seller_id=3&_wpnonce=b3f06f28bd',
+        },
+        vendor2: {
+            stripeExpressOnboardingUrl: 'http://localhost:9999/dashboard/settings/payment-manage-dokan_stripe_express/?action=stripe_express_onboarding&seller_id=5&_wpnonce=e96cdf408f',
+        },
         visitExpressDashboardButton: '#dokan-stripe-express-dashboard-login'
     };
 
     // Customer Selectors
     customer = {
-        // Add customer selectors here
+        shopUrl: 'http://localhost:9999/shop/',
+        checkoutUrl: 'http://localhost:9999/checkout/',
+        addToCartProduct1: "//a[@aria-label='Add to cart: \"p1_v1 (simple)\"']",
+        addToCartProduct2: "a[aria-label='Add to cart: \"p1_v2 (simple)\"']",
+        addToCartButtons: "a.add_to_cart_button, button.add_to_cart_button",
+        stripeExpressPaymentMethod: "span[id='radio-control-wc-payment-method-options-dokan_stripe_express__label'] span[class='wc-block-components-payment-method-label']",
+        placeOrderButton: "button[name='Place Order']",
+        stripeIframeName: '__privateStripeFrame5856',
+        orderReceivedTitle: '.woocommerce-order-received__title, .woocommerce-notice--success'
     };
 
     // Stripe Express Specific Selectors
@@ -156,8 +169,11 @@ export class StripeExpressPage {
         // Add vendor login logic here
     }
 
-    async goToStripeExpressOnboarding() {
-        await this.page.goto(this.vendor.stripeExpressOnboardingUrl);
+    async goToStripeExpressOnboarding(vendorNumber: 1 | 2 = 1) {
+        const url = vendorNumber === 1 
+            ? this.vendor.vendor1.stripeExpressOnboardingUrl 
+            : this.vendor.vendor2.stripeExpressOnboardingUrl;
+        await this.page.goto(url);
         await this.page.waitForLoadState('networkidle');
     }
 
@@ -180,6 +196,250 @@ export class StripeExpressPage {
     // Customer Methods
     async customerLogin(username: string, password: string) {
         // Add customer login logic here
+    }
+
+    async goToShop() {
+        await this.page.goto(this.customer.shopUrl);
+        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForTimeout(2000); // Wait for products to load
+    }
+
+    async goToCheckout() {
+        await this.page.goto(this.customer.checkoutUrl);
+        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForTimeout(2000);
+    }
+
+    async addProduct1ToCart() {
+        try {
+            // Try specific product first
+            const product1 = this.page.locator(this.customer.addToCartProduct1);
+            await product1.waitFor({ state: 'visible', timeout: 5000 });
+            await product1.click();
+        } catch {
+            // If specific product not found, click the first available add to cart button
+            const firstProduct = this.page.locator(this.customer.addToCartButtons).first();
+            await firstProduct.waitFor({ state: 'visible', timeout: 10000 });
+            await firstProduct.click();
+        }
+        await this.page.waitForTimeout(2000); // Wait for cart to update
+    }
+
+    async addProduct2ToCart() {
+        try {
+            // Try specific product first
+            const product2 = this.page.locator(this.customer.addToCartProduct2);
+            await product2.waitFor({ state: 'visible', timeout: 5000 });
+            await product2.click();
+        } catch {
+            // If specific product not found, click the second available add to cart button
+            const secondProduct = this.page.locator(this.customer.addToCartButtons).nth(1);
+            await secondProduct.waitFor({ state: 'visible', timeout: 10000 });
+            await secondProduct.click();
+        }
+        await this.page.waitForTimeout(2000); // Wait for cart to update
+    }
+
+    async selectStripeExpressPayment() {
+        // Click on "Stripe Express" text to select the payment method
+        await this.page.getByText('Stripe Express').click();
+        // Wait for Stripe iframe to load
+        await this.page.waitForTimeout(3000);
+        
+        // Try clicking on any "Card" button or payment method selector on the main page
+        try {
+            // Look for a Card button or payment method option on the checkout page (outside iframe)
+            const cardButtons = [
+                this.page.getByRole('button', { name: 'Card' }),
+                this.page.getByText('Credit or debit card'),
+                this.page.getByText('Card', { exact: true }),
+                this.page.locator('button:has-text("Card")'),
+                this.page.locator('[data-testid*="card"], [class*="card-button"]')
+            ];
+            
+            for (const button of cardButtons) {
+                try {
+                    if (await button.isVisible({ timeout: 1000 })) {
+                        await button.click();
+                        console.log('Clicked Card button on main page');
+                        await this.page.waitForTimeout(2000);
+                        break;
+                    }
+                } catch {}
+            }
+        } catch (e) {
+            console.log('No Card button found on main page');
+        }
+        
+        // After selecting Stripe Express, we need to click on "Card" to show the card input form
+        // The payment element shows multiple options: Card, WeChat Pay, Crypto, etc.
+        try {
+            // Find the iframe with the payment element
+            const frames = this.page.frames();
+            for (const frame of frames) {
+                const frameName = frame.name();
+                if (frameName.includes('__privateStripeFrame')) {
+                    const frameLocator = this.page.locator(`iframe[name="${frameName}"]`).contentFrame();
+                    const content = await frameLocator.locator('body').innerHTML().catch(() => '');
+                    
+                    if (content.includes('p-PaymentElement')) {
+                        console.log('Found payment element frame:', frameName);
+                        
+                        // Click on "Card" option to expand the card payment form
+                        try {
+                            // Wait for "Card" option to be visible and click it
+                            const cardOption = frameLocator.getByText('Card', { exact: true });
+                            await cardOption.waitFor({ state: 'visible', timeout: 5000 });
+                            await cardOption.click();
+                            console.log('✓ Clicked "Card" option to expand card form');
+                            await this.page.waitForTimeout(3000);
+                            break;
+                        } catch (e) {
+                            console.log('Could not click Card option:', e.message);
+                            // Try alternative selectors for Card
+                            try {
+                                await frameLocator.locator('button:has-text("Card"), div:has-text("Card")').first().click({ timeout: 3000 });
+                                console.log('✓ Clicked Card using alternative selector');
+                                await this.page.waitForTimeout(3000);
+                                break;
+                            } catch {}
+                        }
+                    }
+                }
+            }
+        } catch (e) {
+            console.log('Error finding/clicking Card option:', e.message);
+        }
+        
+        // Wait for card form to fully load after clicking Card
+        await this.page.waitForTimeout(3000);
+    }
+
+    async fillStripeCardDetails() {
+        // Wait longer for Stripe to fully initialize
+        await this.page.waitForTimeout(8000);
+        
+        const frames = this.page.frames();
+        let stripeFrame = null;
+        let stripeFrameName = '';
+        let allStripeFrames: string[] = [];
+        
+        console.log('Total frames found:', frames.length);
+        
+        // Collect all Stripe frames
+        for (const frame of frames) {
+            const frameName = frame.name();
+            if (frameName.includes('__privateStripeFrame')) {
+                allStripeFrames.push(frameName);
+            }
+        }
+        
+        console.log('Stripe frames:', allStripeFrames);
+        
+        // Try each Stripe frame to find the one with card inputs
+        for (const frameName of allStripeFrames) {
+            const frameLocator = this.page.locator(`iframe[name="${frameName}"]`).contentFrame();
+            
+            // Check if this frame contains card input fields
+            const hasCardInput = await frameLocator.locator('input[name="number"], input[id*="numberInput"], #payment-numberInput').count().catch(() => 0);
+            console.log(`Frame ${frameName} has ${hasCardInput} card inputs`);
+            
+            if (hasCardInput > 0) {
+                stripeFrame = frameLocator;
+                stripeFrameName = frameName;
+                console.log('✓ Found Stripe card form iframe:', frameName);
+                break;
+            }
+        }
+        
+        // If we still haven't found it, try the last Stripe frame (card form is often the last one loaded)
+        if (!stripeFrame && allStripeFrames.length > 0) {
+            console.log('Card inputs not detected, trying last Stripe iframe as fallback');
+            const lastFrameName = allStripeFrames[allStripeFrames.length - 1];
+            stripeFrame = this.page.locator(`iframe[name="${lastFrameName}"]`).contentFrame();
+            stripeFrameName = lastFrameName;
+            console.log('Using last Stripe frame:', lastFrameName);
+        }
+        
+        if (!stripeFrame) {
+            console.log('Could not find any Stripe iframes');
+            throw new Error('Stripe iframe not found');
+        }
+        
+        // Try to click on Card payment method button (may not always be visible/needed)
+        try {
+            await stripeFrame.getByRole('button', { name: 'Card' }).click({ timeout: 3000 });
+            await this.page.waitForTimeout(2000);
+        } catch {
+            // Card button may not be present or already selected, continue
+        }
+        
+        // Wait for form to be fully ready and loaded
+        await this.page.waitForTimeout(2000);
+        
+        // Use direct CSS selectors (jQuery-style) based on the actual HTML structure
+        // Card Number: id="payment-numberInput", name="number"
+        try {
+            const cardNumberField = stripeFrame.locator('#payment-numberInput').first();
+            await cardNumberField.waitFor({ state: 'visible', timeout: 10000 });
+            await cardNumberField.click();
+            await cardNumberField.fill('4242 4242 4242 4242');
+            console.log('Card number filled successfully');
+        } catch (e) {
+            console.log('Failed with #payment-numberInput, trying name selector:', e.message);
+            try {
+                const cardNumberField = stripeFrame.locator('input[name="number"]').first();
+                await cardNumberField.waitFor({ state: 'visible', timeout: 5000 });
+                await cardNumberField.click();
+                await cardNumberField.fill('4242 4242 4242 4242');
+                console.log('Card number filled using name selector');
+            } catch (e2) {
+                console.log('Failed with name selector, trying autocomplete:', e2.message);
+                const cardNumberField = stripeFrame.locator('input[autocomplete="cc-number"]').first();
+                await cardNumberField.waitFor({ state: 'visible', timeout: 5000 });
+                await cardNumberField.click();
+                await cardNumberField.fill('4242 4242 4242 4242');
+                console.log('Card number filled using autocomplete selector');
+            }
+        }
+        await this.page.waitForTimeout(500);
+        
+        // Expiration Date: id="payment-expiryInput", name="expiry"
+        try {
+            await stripeFrame.locator('#payment-expiryInput').fill('11 / 29');
+            console.log('Expiry filled successfully');
+        } catch {
+            await stripeFrame.locator('input[name="expiry"]').first().fill('11 / 29');
+            console.log('Expiry filled using name selector');
+        }
+        await this.page.waitForTimeout(500);
+        
+        // Security Code: id="payment-cvcInput", name="cvc"
+        try {
+            await stripeFrame.locator('#payment-cvcInput').fill('111');
+            console.log('CVC filled successfully');
+        } catch {
+            await stripeFrame.locator('input[name="cvc"]').first().fill('111');
+            console.log('CVC filled using name selector');
+        }
+        await this.page.waitForTimeout(1000);
+    }
+
+    async placeOrder() {
+        await this.page.getByRole('button', { name: 'Place Order' }).click();
+        // Wait for order processing and redirect to order received page
+        await this.page.waitForLoadState('networkidle', { timeout: 40000 });
+        await this.page.waitForTimeout(3000);
+    }
+
+    async isOrderPlacedSuccessfully(): Promise<boolean> {
+        try {
+            const orderReceived = this.page.locator(this.customer.orderReceivedTitle);
+            await orderReceived.waitFor({ state: 'visible', timeout: 10000 });
+            return await orderReceived.isVisible();
+        } catch {
+            return false;
+        }
     }
 
     // Stripe Express Methods

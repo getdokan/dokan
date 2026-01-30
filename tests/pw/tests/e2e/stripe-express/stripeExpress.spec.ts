@@ -97,7 +97,7 @@ test.describe('Stripe Express Tests @lite', () => {
         await context.close();
     });
 
-    test('Test Case 4 - Verify Visit Express Dashboard Button is Visible', async ({ browser }) => {
+    test('Test Case 4 - Verify Visit Express Dashboard Button is Visible for Vendor 1', async ({ browser }) => {
         test.skip(!isStripeExpressEnabled, 'Stripe Express is not enabled - skipping test');
         
         // Using vendor 1 session storage
@@ -105,8 +105,8 @@ test.describe('Stripe Express Tests @lite', () => {
         const vendorPage = await context.newPage();
         const stripeExpressPage = new StripeExpressPage(vendorPage);
         
-        // Navigate to Stripe Express onboarding page
-        await stripeExpressPage.goToStripeExpressOnboarding();
+        // Navigate to Stripe Express onboarding page for vendor 1
+        await stripeExpressPage.goToStripeExpressOnboarding(1);
         
         // Check if the "Visit Express Dashboard" button is visible
         const isButtonVisible = await stripeExpressPage.isVisitExpressDashboardButtonVisible();
@@ -120,9 +120,60 @@ test.describe('Stripe Express Tests @lite', () => {
         await context.close();
     });
 
-    test('Test Case 5 - Placeholder', async ({ browser }) => {
+    test('Test Case 5 - Verify Visit Express Dashboard Button is Visible for Vendor 2', async ({ browser }) => {
         test.skip(!isStripeExpressEnabled, 'Stripe Express is not enabled - skipping test');
         
-        // TODO: Add test steps
+        // Using vendor 2 session storage
+        const context = await browser.newContext({ storageState: v2 });
+        const vendorPage = await context.newPage();
+        const stripeExpressPage = new StripeExpressPage(vendorPage);
+        
+        // Navigate to Stripe Express onboarding page for vendor 2
+        await stripeExpressPage.goToStripeExpressOnboarding(2);
+        
+        // Check if the "Visit Express Dashboard" button is visible
+        const isButtonVisible = await stripeExpressPage.isVisitExpressDashboardButtonVisible();
+        expect(isButtonVisible, 'Visit Express Dashboard button should be visible').toBe(true);
+        
+        // Verify the button text
+        const buttonText = await stripeExpressPage.getVisitExpressDashboardButtonText();
+        expect(buttonText, 'Button should have correct text').toBe('Visit Express Dashboard');
+        
+        await vendorPage.close();
+        await context.close();
+    });
+
+    test('Test Case 6 - Place Order with Stripe Express Payment', async ({ browser }) => {
+        test.skip(!isStripeExpressEnabled, 'Stripe Express is not enabled - skipping test');
+        test.setTimeout(90000); // Increase timeout to 90 seconds for this test
+        
+        // Using customer 1 session storage
+        const context = await browser.newContext({ storageState: c1 });
+        const customerPage = await context.newPage();
+        const stripeExpressPage = new StripeExpressPage(customerPage);
+        
+        // Go to shop and add products to cart
+        await stripeExpressPage.goToShop();
+        await stripeExpressPage.addProduct1ToCart();
+        await stripeExpressPage.addProduct2ToCart();
+        
+        // Go to checkout
+        await stripeExpressPage.goToCheckout();
+        
+        // Select Stripe Express payment method and wait for modal
+        await stripeExpressPage.selectStripeExpressPayment();
+        
+        // Fill in Stripe card details
+        await stripeExpressPage.fillStripeCardDetails();
+        
+        // Place the order
+        await stripeExpressPage.placeOrder();
+        
+        // Verify order was placed successfully
+        const isOrderSuccessful = await stripeExpressPage.isOrderPlacedSuccessfully();
+        expect(isOrderSuccessful, 'Order should be placed successfully').toBe(true);
+        
+        await customerPage.close();
+        await context.close();
     });
 });
