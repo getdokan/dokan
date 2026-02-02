@@ -187,7 +187,7 @@ npm run check:modules
 
 - **Run Tests:** `npm run test:e2e` or `npm run test:api`
 - **View Documentation:** See [Running Tests](#running-tests) and [Test Organization](#test-organization)
-- **Debug Tests:** `npm run test:e2e:debug` or `npm run test:e2e:ui`
+- **Debug Tests:** `npm run test:debug` or `npm run test:ui`
 
 ---
 
