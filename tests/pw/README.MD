@@ -9,7 +9,8 @@ Comprehensive end-to-end and API testing suite for Dokan Multivendor Marketplace
 - [Overview](#overview)
 - [Prerequisites](#prerequisites)
 - [Quick Start](#quick-start)
-- [Configuration](#configuration)
+- [Configuration](#step-3-configure-environment)
+- [Quick Command Reference](#quick-command-reference)
 - [Running Tests](#running-tests)
 - [Test Organization](#test-organization)
 - [Docker Environment](#docker-environment)
@@ -17,18 +18,13 @@ Comprehensive end-to-end and API testing suite for Dokan Multivendor Marketplace
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 - [License](#license)
+- [Resources](#resources)
 
 ---
 
 ## Overview
 
-This test suite provides comprehensive test coverage for Dokan Lite and Dokan Pro, including:
-
-## Quick Start
-
-# 🚀 Quick Setup Guide
-
-Complete setup instructions for Dokan development and testing environment.
+This test suite provides comprehensive test coverage for Dokan Lite and Dokan Pro, including vendor workflows, admin management, product operations, orders, and REST API endpoints.
 
 ## Prerequisites
 
@@ -39,7 +35,9 @@ Complete setup instructions for Dokan development and testing environment.
 
 ---
 
-## Step 1: Install Plugin Dependencies
+## Quick Start
+
+### Step 1: Install Plugin Dependencies
 
 ```bash
 # Navigate to plugin root
@@ -59,7 +57,7 @@ npm run build
 
 ---
 
-## Step 2: Install Test Suite Dependencies
+### Step 2: Install Test Suite Dependencies
 
 ```bash
 # Navigate to test directory
@@ -74,7 +72,7 @@ npx playwright install chromium
 
 ---
 
-## Step 3: Configure Environment
+### Step 3: Configure Environment
 
 Create a `.env` file in `tests/pw/` directory:
 
@@ -109,7 +107,7 @@ SERVER_URL=http://localhost:9999/?rest_route=
 
 ---
 
-## Development Environment Requirements
+### Development Environment Requirements
 
 On your local development setup (where the test code resides), ensure that **all required plugins are installed and active**:
 
@@ -125,7 +123,7 @@ On your local development setup (where the test code resides), ensure that **all
 
 ---
 
-## Step 4: Start Docker Environment
+### Step 4: Start Docker Environment
 
 ### Option A: Step by Step
 
@@ -148,7 +146,7 @@ npm run docker:full
 
 ---
 
-## Step 5: Verify Setup
+### Step 5: Verify Setup
 
 ```bash
 # Check if plugins are activated
@@ -185,68 +183,10 @@ npm run check:modules
 
 ---
 
-## Troubleshooting
-
-### `start:env` Fails
-
-**Check:**
-1. ✅ Docker Desktop is running
-2. ✅ Composer dependencies installed (`vendor/` directory exists)
-3. ✅ npm dependencies installed (`node_modules/` exists)
-4. ✅ Assets are built (`assets/css/style.css` exists)
-
-**Fix:**
-```bash
-# Rebuild everything
-cd wp-content/plugins/dokan-lite
-composer install
-npm install
-npm run build
-```
-
-### Plugins Don't Activate
-
-**Check:**
-```bash
-npm run check:plugins
-```
-
-**Fix:**
-```bash
-# Run setup again
-npm run docker:setup
-```
-
-### Docker Warning About Dokan Pro
-
-If you see:
-```
-✖ Error while running docker compose command.
-Warning: Failed to activate plugin. Dokan Pro requires Dokan Lite
-```
-
-**This is NOT critical!** Docker still starts. Run:
-```bash
-npm run docker:setup
-```
-
----
-
-## Access Points
-
-| Service | URL | Credentials |
-|---------|-----|-------------|
-| WordPress Site | http://localhost:9999 | - |
-| WP Admin | http://localhost:9999/wp-admin | Your `.env` `ADMIN` credentials |
-| Dokan Dashboard | http://localhost:9999/dashboard | Vendor credentials |
-| Default Admin | http://localhost:9999/wp-admin | `admin` / `password` (fallback) |
-
----
-
 ## Next Steps
 
 - **Run Tests:** `npm run test:e2e` or `npm run test:api`
-- **View Documentation:** See [README.MD](./README.MD) for detailed information
+- **View Documentation:** See [Running Tests](#running-tests) and [Test Organization](#test-organization)
 - **Debug Tests:** `npm run test:e2e:debug` or `npm run test:e2e:ui`
 
 ---
@@ -258,8 +198,11 @@ npm run docker:setup
 3. ⚠️ **Plugin order matters:** Dokan Lite must activate before Dokan Pro
 4. ⚠️ **Create admin separately:** Run `create:admin` after `start:env` (or use `docker:full`)
 
+---
 
-#### E2E Tests
+## Running Tests
+
+### E2E Tests
 
 ```bash
 # Run all E2E tests
@@ -278,7 +221,7 @@ npm run test:debug
 npx playwright test -g "should create product"
 ```
 
-#### API Tests
+### API Tests
 
 ```bash
 # Run all API tests
@@ -393,8 +336,8 @@ test('Admin can create product', async ({ page }) => {
 | Service | URL | Credentials |
 |---------|-----|-------------|
 | WordPress Site | http://localhost:9999 | - |
-| WP Admin | http://localhost:9999/wp-admin | From `.env` |
-| Dokan Dashboard | http://localhost:9999/dashboard | Vendor users |
+| WP Admin | http://localhost:9999/wp-admin | Your `.env` `ADMIN` credentials (or `admin` / `password` fallback) |
+| Dokan Dashboard | http://localhost:9999/dashboard | Vendor credentials |
 
 ---
 
@@ -449,9 +392,50 @@ jobs:
 
 ## Troubleshooting
 
-### Common Issues
+### `start:env` Fails
 
-#### Docker Fails to Start
+**Check:**
+1. ✅ Docker Desktop is running
+2. ✅ Composer dependencies installed (`vendor/` directory exists)
+3. ✅ npm dependencies installed (`node_modules/` exists)
+4. ✅ Assets are built (`assets/css/style.css` exists)
+
+**Fix:**
+```bash
+# Rebuild everything
+cd wp-content/plugins/dokan-lite
+composer install
+npm install
+npm run build
+```
+
+### Plugins Don't Activate
+
+**Check:**
+```bash
+npm run check:plugins
+```
+
+**Fix:**
+```bash
+# Run setup again
+npm run docker:setup
+```
+
+### Docker Warning About Dokan Pro
+
+If you see:
+```
+✖ Error while running docker compose command.
+Warning: Failed to activate plugin. Dokan Pro requires Dokan Lite
+```
+
+**This is NOT critical!** Docker still starts. Run:
+```bash
+npm run docker:setup
+```
+
+### Docker Fails to Start
 
 **Solutions:**
 ```bash
@@ -466,7 +450,7 @@ rm -rf ~/.wp-env
 npm run start:env
 ```
 
-#### Admin User Not Created
+### Admin User Not Created
 
 **Check:**
 ```bash
@@ -478,7 +462,7 @@ npm run check:users
 npm run create:admin
 ```
 
-#### REST API Errors (404/405)
+### REST API Errors (404/405)
 
 **Verify configuration:**
 ```bash
@@ -486,7 +470,7 @@ cat .env | grep SERVER_URL
 # Should be: SERVER_URL=http://localhost:9999/?rest_route=
 ```
 
-#### Tests Timeout
+### Tests Timeout
 
 **Solutions:**
 ```bash
