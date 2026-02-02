@@ -660,10 +660,10 @@ export class ProductsPage extends AdminPage {
         }
     }
 
-    // go to product edit by id
+    // go to product edit by id (uses load for faster navigation when direct URL is known)
     async goToProductEditById(productId: string, nonce: string = PRODUCT_EDIT_NONCE): Promise<void> {
         if (productId && !Number.isNaN(Number(productId))) {
-            await this.gotoUntilNetworkidle(data.subUrls.frontend.vDashboard.productEdit(productId, nonce));
+            await this.goto(data.subUrls.frontend.vDashboard.productEdit(productId, nonce), { waitUntil: 'load' });
         } else {
             await this.goToProductEdit(productId);
         }

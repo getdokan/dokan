@@ -551,7 +551,7 @@ export const data = {
         },
 
         productInfo: {
-            title: `${faker.commerce.productName()}_${faker.string.nanoid(5)}`,
+            title: `${faker.commerce.productAdjective()} ${faker.commerce.product()}`,
 
             permalink: `_${faker.string.nanoid(10)}`,
 
@@ -575,8 +575,8 @@ export const data = {
             },
 
             description: {
-                shortDescription: 'test short description',
-                description: 'test long description',
+                shortDescription: faker.lorem.lines(1),
+                description: faker.lorem.lines(1),
             },
 
             downloadableOptions: {

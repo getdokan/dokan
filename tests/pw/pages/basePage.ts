@@ -1624,7 +1624,7 @@ export class BasePage {
     // assert frame element to contain text
     async toContainTextFrameLocator(frame: string, frameSelector: string, text: string | RegExp, options?: { timeout?: number; intervals?: number[] }): Promise<void> {
         await this.toPass(async () => {
-            const locator = this.page.frameLocator(frame).locator(frameSelector);
+            const locator = this.page.frameLocator(frame).locator(frameSelector)
             await expect(locator).toContainText(text);
         }, options);
     }
