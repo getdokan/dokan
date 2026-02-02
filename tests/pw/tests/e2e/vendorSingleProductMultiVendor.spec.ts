@@ -102,7 +102,7 @@ test.describe('Admin Setting: Vendor -> single_product_multi_vendor', () => {
         });
     });
 
-    test.skip('Old to new Single Product Multi Vendor Settings synchronization', { tag: ['@lite', '@admin', '@migration'] }, async () => {
+    test('Old to new Single Product Multi Vendor Settings synchronization', { tag: ['@lite', '@admin', '@migration'] }, async () => {
         // There is a problem. New page is not well rendering after updating old settings. Need to fix then verify.
         await test.step('Update old settings', async () => {
             await adminSettingsPage.setSaveButtonSelector(adminSettingsPage.oldSaveButtonSelector);

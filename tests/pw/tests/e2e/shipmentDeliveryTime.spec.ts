@@ -115,10 +115,9 @@ const newDataset = {
         },
         {
             // Todo
-            // Delivery time filed will be checked manually. 
-        }
+            // Delivery time filed will be checked manually.
+        },
     ],
-    
 };
 
 test.describe('Admin Setting: Shipment -> dashboard-delivery-days-page', () => {

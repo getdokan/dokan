@@ -28,7 +28,7 @@ const newDataset = {
             type: 'switch',
             value: true,
         },
-        
+
         // Facebook Section - Enable first, then inputs
         {
             selector: '#dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_facebook_api_group_facebook_enabled button[role="switch"]',
@@ -45,7 +45,7 @@ const newDataset = {
         //     type: 'text',
         //     value: 'facebook-app-secret-test-67890',
         // },
-        
+
         // X (Twitter) Section - Enable first, then inputs
         {
             selector: '#dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_x_api_group_x_enabled button[role="switch"]',
@@ -62,7 +62,7 @@ const newDataset = {
             type: 'text',
             value: 'x-api-secret-test-67890',
         },
-        
+
         // Google Section - Enable first, then inputs
         {
             selector: '#dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_google_api_group_google_enabled button[role="switch"]',
@@ -79,7 +79,7 @@ const newDataset = {
             type: 'text',
             value: 'google-client-secret-test-67890',
         },
-        
+
         // LinkedIn Section - Enable first, then inputs
         {
             selector: '#dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_linkedin_api_group_linkedin_enabled button[role="switch"]',
@@ -96,7 +96,7 @@ const newDataset = {
             type: 'text',
             value: 'linkedin-client-secret-test-67890',
         },
-        
+
         // Apple Section - Enable first, then inputs
         {
             selector: '#dokan_settings_appearance_storefont_social_onboarding_storefont_social_onboarding_section_apple_api_group_apple_enabled button[role="switch"]',

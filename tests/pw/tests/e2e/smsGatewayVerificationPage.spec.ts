@@ -20,7 +20,7 @@ const oldDataset = [
                 type: 'text',
                 value: 'Your verification code is: %CODE%',
             },
-             {
+            {
                 selector: 'textarea#dokan_verification_sms_gateways\\[sms_sent_msg\\]',
                 type: 'text',
                 value: 'SMS sent. Please enter your verification code',
@@ -32,8 +32,8 @@ const oldDataset = [
             },
             {
                 selector: 'label[for="1-twilio-active_gateway"]',
-                type: 'dropdown',
-                value: 'Twillo',
+                type: 'buttonOld',
+                value: 'twilio',
             },
             // {
             //     selector: '//input[@id="from_number"]',
@@ -60,28 +60,28 @@ const oldDataset = [
                 type: 'checkbox-switch',
                 value: true,
             },
-        ]
-    }
+        ],
+    },
 ];
 
 // ✅ New UI dataset (from your HTML)
 const newDataset = {
     title: 'Admin Setting: Vendor → Verification SMS Gateways',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_verification >> #dokan_verification_sms-gateways-page',
+    selector: '#dokan_settings_verification >> #dokan_settings_verification_sms-gateways-page',
     fields: [
         {
-            selector: '#dokan_verification_sms-gateways-page_sms-provider_sms_provider #sms_provider',
-            type: 'dropdown',
-            value: 'Twilio',
+            selector: '#dokan_settings_verification_sms-gateways-page_sms-provider_sms_provider button[name="twilio"]',
+            type: 'radio',
+            value: 'true',
         },
         {
-            selector: '#dokan_verification_sms-gateways-page_sms-provider_connect_to_twilio button[role="switch"]',
+            selector: '#dokan_settings_verification_sms-gateways-page_sms-provider_twilio_api_group_connect_to_twilio button[role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_verification_sms-gateways-page_sms-provider_from_number input[type="password"]',
+            selector: '#dokan_settings_verification_sms-gateways-page_sms-provider_twilio_api_group_from_number input[type="password"]',
             type: 'text',
             value: '+1234567890',
         },
@@ -96,9 +96,9 @@ const newDataset = {
             value: 'auth_token_123',
         },
         {
-            selector: '#dokan_verification_sms-gateways-page_sms-provider_sms_code_type #sms_code_type',
-            type: 'dropdown',
-            value: 'Numeric',
+            selector: '#dokan_settings_verification_sms-gateways-page_sms-provider_twilio_api_group_sms_code_type button[name="numeric"]',
+            type: 'radio',
+            value: 'true',
         },
         {
             selector: 'input[placeholder="Enter sender name..."]',
@@ -120,7 +120,7 @@ const newDataset = {
             type: 'text',
             value: 'Unable to send sms. Contact admin',
         },
-    ]
+    ],
 };
 
 // 🧪 TESTS

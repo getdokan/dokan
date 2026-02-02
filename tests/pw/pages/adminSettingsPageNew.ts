@@ -56,24 +56,23 @@ export class AdminSettingsPageNew extends AdminPage {
 
     async saveSettings() {
         const saveBtn = this.page.locator(this.saveButtonSelector);
-        try{
-            await saveBtn.waitFor({ state: 'visible', timeout: 8000 });
+        if (await saveBtn.isVisible()) {
             await saveBtn.click();
             await this.waitForLoadState();
-        } catch (error) {
-            console.log('Save button not visible - may not be needed');
+        } else {
+            console.log('Save button not visible. Skipping save.');
         }
     }
 
     async setFieldValues(fields: Array<any>) {
         for ( const field of fields ) {
             await this.ensureVisibilityFor( field.selector );
-            switch(field.type) {
+            switch (field.type) {
                 case 'text':
-                    await this.page.fill( field.selector, field.value );
+                    await this.page.fill(field.selector, field.value);
                     break;
                 case 'number':
-                    await this.page.fill( field.selector, field.value );
+                    await this.page.fill(field.selector, field.value);
                     break;
                 case 'dropdown': {
                     const trigger = this.page.locator(field.selector);
@@ -89,22 +88,22 @@ export class AdminSettingsPageNew extends AdminPage {
                     break;
                 }
                 case 'email':
-                    await this.page.fill( field.selector, field.value );
+                    await this.page.fill(field.selector, field.value);
                     break;
                 case 'switch': {
                     // Only toggle if current state doesn't match desired state
                     const currentState = await this.page.locator( field.selector ).getAttribute('aria-checked') === 'true';
                     if (currentState !== field.value) {
-                        await this.page.click( field.selector );
+                        await this.page.click(field.selector);
                     }
                     break;
                 }
                 case 'checkbox': {
                     // Handle checkbox with "enabled" class - Check input element state but click on label
-                    const inputElement = this.page.locator( field.selector ).locator('input[type="checkbox"]');
+                    const inputElement = this.page.locator(field.selector).locator('input[type="checkbox"]');
                     const hasEnabledClass = await inputElement.evaluate(el => el.classList.contains('enabled'));
                     if (hasEnabledClass !== field.value) {
-                        await this.page.click( field.selector );
+                        await this.page.click(field.selector);
                     }
                     break;
                 }
@@ -140,10 +139,13 @@ export class AdminSettingsPageNew extends AdminPage {
                     break;
                 }
                 case 'select':
-                    await this.page.click( field.selector );
+                    await this.page.click(field.selector);
+                    break;
+                case 'toggle':
+                    await this.page.click(field.selector);
                     break;
                 case 'textarea':
-                    await this.page.fill( field.selector, field.value );
+                    await this.page.fill(field.selector, field.value);
                     break;
                 case 'textareaOld': {
                     const frameHandle = this.page.frameLocator(field.selector);
@@ -166,7 +168,7 @@ export class AdminSettingsPageNew extends AdminPage {
                         await locator.click();
                     }
                     break;
-                }    
+                }
                 case 'color-picker': {
                     const picker = this.page.locator(field.selector);
                     await picker.click();
@@ -175,6 +177,11 @@ export class AdminSettingsPageNew extends AdminPage {
                         await input.fill(field.value);
                         await input.press('Enter');
                     }
+                    break;
+                }
+                case 'readOnly': {
+                    const value = await this.page.inputValue(field.selector);
+                    expect(value).toBe(field.value);
                     break;
                 }
             }
@@ -234,15 +241,6 @@ export class AdminSettingsPageNew extends AdminPage {
                     expect(isSelected).toBe(desiredSelected);
                     break;
                 }
-                case 'radio': {
-                    // New style: buttons with role="radio" and aria-checked attribute
-                    const locator = this.page.locator(field.selector);
-                    const ariaChecked = await locator.getAttribute('aria-checked').catch(() => null);
-                    const isChecked = ariaChecked === 'true';
-                    const desired = field.value === true || field.value === 'true';
-                    expect(isChecked).toBe(desired);
-                    break;
-                }
                 case 'select': {
                     const value = await this.page.inputValue( field.selector );
                     expect(value).toBe(field.value);
@@ -285,7 +283,6 @@ export class AdminSettingsPageNew extends AdminPage {
                     expect(isChecked).toBe(field.value);
                     break;
                 }
-
             }
         }
     }

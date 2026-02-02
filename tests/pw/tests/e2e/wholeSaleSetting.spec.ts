@@ -38,7 +38,7 @@ const newWholesaleDataset = {
     selector: '#dokan_settings_product >> #dokan_settings_product_wholesale',
     fields: [
         {
-            selector: '#dokan_settings_product_wholesale_display_wholesale_pricing_to button[name="all_users"]',
+            selector: '#dokan_settings_product_wholesale_display_wholesale_pricing_to button[name="all_user"]',
             type: 'radio',
             value: 'true',
         },

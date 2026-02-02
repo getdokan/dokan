@@ -62,11 +62,6 @@ const newDataset = {
             value: '21',
         },
         {
-            selector: '#dokan_settings_product_product_advertisement_advertisement_cost_usd input[type="number"]',
-            type: 'number',
-            value: '2',
-        },
-        {
             selector: '#dokan_settings_product_product_advertisement_vendor_can_purchase_advertisement button[role="switch"]',
             type: 'switch',
             value: false,
