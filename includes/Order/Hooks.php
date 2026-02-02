@@ -70,14 +70,15 @@ class Hooks {
      * @return mixed
      */
     public function get_dokan_commission_meta( $value, $line_item ) {
-        if( $value === '' ) {
+        if ( '' === $value ) {
             $value = $line_item->get_meta( 'dokan_commission_meta', true );
-            if( $value !== '' ) {
+            if ( '' !== $value ) {
                 $line_item->delete_meta_data( 'dokan_commission_meta' );
                 $line_item->update_meta_data( '_dokan_commission_meta', $value );
                 $line_item->save();
             }
         }
+
         return $value;
     }
 
