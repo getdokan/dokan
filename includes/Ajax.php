@@ -266,10 +266,10 @@ class Ajax {
 
                         $template_args = apply_filters(
                             'dokan_order_download_permission_args', [
-                                'download'         => $download,
-                                'product'           => $product,
-                                'file_count'           => $file_count,
-                                'loop' => $loop,
+                                'download'    => $download,
+                                'product'     => $product,
+                                'file_count'  => $file_count,
+                                'loop'        => $loop,
                             ]
                         );
 
