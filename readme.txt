@@ -7,7 +7,7 @@ Tested up to: 6.9
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 4.2.8
+Stable tag: 4.2.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -353,6 +353,14 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v4.2.9 ( Jan 27, 2026 ) =
+- **update:** Replace DokanModal dependency from dokan-ui with WordPress Modal.
+- **update:** Add user feedback link across Dokan admin pages.
+- **update:** Introduce a customizable option to exclude vendor order balance.
+- **update:** Add AI text and image enhancer settings to vendor preferences.
+- **fix:** Improve default table interactions in Dokan admin.
+- **fix:** Handle vendor payment settings permission properly for Vendor staff.
+
 = v4.2.8 ( Jan 20, 2026 ) =
 - **update:** Restore vendor revenue widget for vendor dashboard.
 - **update:** Improve query arguments on admin withdraw pages to support filtering options.
@@ -373,13 +381,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **fix:** Add translation support to store performance report labels.
 - **fix:** Social profile URL's not accessible for staff users.
 - **fix:** Prevented unauthorized changes to administrator accounts.
-
-= v4.2.4 ( Dec 26, 2025 ) =
-- **new:** Added a Pending Vendors tab on the WordPress admin Users screen to view vendors awaiting approval.
-- **new:** Added a bulk action on the WordPress admin Users screen to approve multiple pending vendors at once, including per-user validation and permission checks.
-- **new:** Added an admin notice view on the WordPress admin Users screen that summarizes how many vendors were approved after performing bulk actions.
-- **update:** Improved compatibility with recent WooCommerce changes to script handling, making setup wizard and frontend script loading more reliable.
-- **update:** Redesigned the Admin Panel "Changelog" page template for a better look and user experience.
-- **fix:** Improved shipping tax calculations so shipping taxes are computed more accurately per-order, taking vendor cart item tax classes into account for multi-vendor orders.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
