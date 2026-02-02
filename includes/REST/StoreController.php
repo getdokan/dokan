@@ -727,12 +727,20 @@ class StoreController extends WP_REST_Controller {
         $data = $store->to_array();
 
         $is_authorized = $this->can_access_vendor_store( $store->get_id() );
-
+        $vendor       = dokan()->vendor->get( $store->get_id() );
+        $methods_data = dokan_get_container()->get( 'dashboard' )->templates->settings->get_seller_payment_methods( $vendor->get_id() );
         if ( $is_authorized ) {
             $data['admin_category_commission'] = $store->get_commission_settings()->get_category_commissions();
             $data['admin_commission'] = $store->get_commission_settings()->get_percentage();
             $data['admin_additional_fee'] = $store->get_commission_settings()->get_flat();
             $data['admin_commission_type'] = $store->get_commission_settings()->get_type();
+            $data['bank_payment_required_fields'] = dokan_bank_payment_required_fields();
+            $data['active_payment_methods']       = $methods_data['active_methods'] ?? [];
+            $data['connected_methods']            = $methods_data['connected_methods'] ?? [];
+            $data['disconnected_methods']         = $methods_data['disconnected_methods'] ?? [];
+            $data['withdraw_options']             = dokan_withdraw_get_methods();
+            $data['fields_placeholders']          = dokan_bank_payment_fields_placeholders();
+            $data['chargeable_methods']           = dokan_withdraw_get_chargeable_methods();
         }
 
         $restricted_fields = $this->get_restricted_fields_for_view( $store, $request );
