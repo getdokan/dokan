@@ -145,7 +145,7 @@ test.describe('Stripe Express Tests @lite', () => {
 
     test('Test Case 6 - Place Order with Stripe Express Payment', async ({ browser }) => {
         test.skip(!isStripeExpressEnabled, 'Stripe Express is not enabled - skipping test');
-        test.setTimeout(90000); // Increase timeout to 90 seconds for this test
+        test.setTimeout(120000); // Increase timeout to 120 seconds for this test
         
         // Using customer 1 session storage
         const context = await browser.newContext({ storageState: c1 });

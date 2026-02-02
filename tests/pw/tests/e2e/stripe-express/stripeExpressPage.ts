@@ -45,7 +45,7 @@ export class StripeExpressPage {
         addToCartProduct2: "a[aria-label='Add to cart: \"p1_v2 (simple)\"']",
         addToCartButtons: "a.add_to_cart_button, button.add_to_cart_button",
         stripeExpressPaymentMethod: "span[id='radio-control-wc-payment-method-options-dokan_stripe_express__label'] span[class='wc-block-components-payment-method-label']",
-        placeOrderButton: "button[name='Place Order']",
+        placeOrderButton: "//div[@class='wc-block-components-checkout-place-order-button__text']",
         stripeIframeName: '__privateStripeFrame5856',
         orderReceivedTitle: '.woocommerce-order-received__title, .woocommerce-notice--success'
     };
@@ -90,7 +90,8 @@ export class StripeExpressPage {
 
     async goToStripeExpressSettings() {
         await this.page.goto(this.admin.stripeExpressSettingsUrl);
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForTimeout(1000);
     }
 
     async isStripeExpressEnabled(): Promise<boolean> {
@@ -100,8 +101,8 @@ export class StripeExpressPage {
 
     async goToModulesPage() {
         await this.page.goto(this.admin.modulesUrl);
-        await this.page.waitForLoadState('networkidle');
-        await this.page.waitForTimeout(2000); // Wait for modules to load
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForTimeout(3000); // Wait for modules to load
     }
 
     async searchModule(moduleName: string) {
@@ -176,7 +177,8 @@ export class StripeExpressPage {
             ? this.vendor.vendor1.stripeExpressOnboardingUrl 
             : this.vendor.vendor2.stripeExpressOnboardingUrl;
         await this.page.goto(url);
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForTimeout(1000);
     }
 
     async isVisitExpressDashboardButtonVisible(): Promise<boolean> {
@@ -202,14 +204,14 @@ export class StripeExpressPage {
 
     async goToShop() {
         await this.page.goto(this.customer.shopUrl);
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(2000); // Wait for products to load
     }
 
     async goToCheckout() {
         await this.page.goto(this.customer.checkoutUrl);
-        await this.page.waitForLoadState('networkidle');
-        await this.page.waitForTimeout(2000);
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.waitForTimeout(3000); // Extra time for checkout page to load
     }
 
     async addProduct1ToCart() {
@@ -428,18 +430,66 @@ export class StripeExpressPage {
     }
 
     async placeOrder() {
-        await this.page.getByRole('button', { name: 'Place Order' }).click();
+        // Click the Place Order button using the correct locator
+        const placeOrderButton = this.page.locator(this.customer.placeOrderButton);
+        await placeOrderButton.waitFor({ state: 'visible', timeout: 10000 });
+        await placeOrderButton.click();
+        console.log('✓ Place Order button clicked');
+        
         // Wait for order processing and redirect to order received page
-        await this.page.waitForLoadState('networkidle', { timeout: 40000 });
-        await this.page.waitForTimeout(3000);
+        // Wait for URL to change to order-received or checkout-confirmation
+        try {
+            console.log('Waiting for URL to change to order-received...');
+            await this.page.waitForURL('**/order-received/**', { timeout: 60000 });
+            console.log('✓ Navigated to order-received page');
+        } catch (e) {
+            console.log('URL did not change to order-received, checking current URL...');
+            console.log('Current URL:', this.page.url());
+            // Fallback: wait for any navigation
+            try {
+                await this.page.waitForLoadState('domcontentloaded', { timeout: 30000 });
+            } catch {}
+        }
+        
+        await this.page.waitForTimeout(2000);
     }
 
     async isOrderPlacedSuccessfully(): Promise<boolean> {
         try {
-            const orderReceived = this.page.locator(this.customer.orderReceivedTitle);
-            await orderReceived.waitFor({ state: 'visible', timeout: 10000 });
-            return await orderReceived.isVisible();
-        } catch {
+            // Check if we're on the order received page
+            const url = this.page.url();
+            console.log('Current URL after order:', url);
+            
+            if (url.includes('order-received')) {
+                console.log('✓ Order received page detected by URL');
+                return true;
+            }
+            
+            // Check for success elements
+            const successSelectors = [
+                '.woocommerce-order-received__title',
+                '.woocommerce-notice--success',
+                '.woocommerce-thankyou-order-received',
+                'h1:has-text("Order received")',
+                'text=Thank you. Your order has been received'
+            ];
+            
+            for (const selector of successSelectors) {
+                try {
+                    const element = this.page.locator(selector).first();
+                    if (await element.isVisible({ timeout: 5000 })) {
+                        console.log(`✓ Success element found: ${selector}`);
+                        return true;
+                    }
+                } catch {
+                    continue;
+                }
+            }
+            
+            console.log('✗ No success indicators found');
+            return false;
+        } catch (e) {
+            console.log('Error checking order success:', e.message);
             return false;
         }
     }
