@@ -146,35 +146,6 @@ PHPUnit tests are located in the `tests/php` directory with comprehensive docume
 ```
 
 ### E2E & API Tests
-
-End-to-end and API tests use **Playwright** with **TypeScript** and are located in the `tests/pw` directory. The test suite provides comprehensive coverage for both **Dokan Lite** and **Dokan Pro**.
-
-**Features:**
-- ✅ 120+ automated test scenarios
-- ✅ Docker-based test environment
-- ✅ REST API validation
-- ✅ Parallel test execution
-- ✅ Rich reporting with traces and videos
-
-**Quick start:**
-
-```bash
-# Navigate to test directory
-cd tests/pw
-
-# Install dependencies
-npm install
-npx playwright install chromium
-
-# Start Docker environment
-npm run start:env
-npm run docker:setup
-
-# Run tests
-npm run test:e2e
-npm run test:api
-```
-
 **For detailed documentation**, see [**E2E Test Suite Documentation**](tests/pw/README.md)
 
 ## 🛡 Reporting Security Issues

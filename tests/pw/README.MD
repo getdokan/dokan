@@ -1,9 +1,5 @@
 # Dokan E2E & API Test Automation
 
-[![Playwright](https://img.shields.io/badge/Playwright-45ba4b?style=for-the-badge&logo=playwright&logoColor=white)](https://playwright.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
-
 Comprehensive end-to-end and API testing suite for Dokan Multivendor Marketplace using Playwright and TypeScript.
 
 ---
@@ -28,141 +24,240 @@ Comprehensive end-to-end and API testing suite for Dokan Multivendor Marketplace
 
 This test suite provides comprehensive test coverage for Dokan Lite and Dokan Pro, including:
 
-- **E2E Tests**: Full user journey testing with browser automation
-- **API Tests**: REST API endpoint validation and integration testing
-- **Multi-environment Support**: Docker, local WordPress, and CI/CD environments
-- **Parallel Execution**: Fast test execution with configurable parallelization
-- **Rich Reporting**: HTML reports, traces, screenshots, and videos
+## Quick Start
 
-### Key Features
+# 🚀 Quick Setup Guide
 
-- ✅ 120+ automated test scenarios
-- ✅ Page Object Model (POM) architecture
-- ✅ Dockerized test environment
-- ✅ Database utilities for test data management
-- ✅ Custom Playwright matchers
-- ✅ Comprehensive test fixtures
-- ✅ Support for both Dokan Lite and Pro
-
----
+Complete setup instructions for Dokan development and testing environment.
 
 ## Prerequisites
 
-Ensure the following are installed on your system:
-
-- **Node.js** 16+ ([Download](https://nodejs.org/) or use [NVM](https://github.com/nvm-sh/nvm))
-- **Docker Desktop** ([Download](https://www.docker.com/products/docker-desktop/))
-- **Git** ([Download](https://git-scm.com/downloads))
-- **Composer** (for plugin dependencies)
+- **Node.js** 16+ ([NVM](https://github.com/nvm-sh/nvm) recommended)
+- **Docker Desktop** (must be running)
+- **Composer** (for PHP dependencies)
+- **Git**
 
 ---
 
-## Quick Start
+## Step 1: Install Plugin Dependencies
 
-### 1. Install Dependencies
+```bash
+# Navigate to plugin root
+cd wp-content/plugins/dokan-lite
+
+# Install PHP dependencies
+composer install && composer dump-autoload --optimize
+
+# Install JavaScript dependencies
+npm install
+
+# Build plugin assets (REQUIRED!)
+npm run build
+```
+
+> ⚠️ **Important:** The `npm run build` step is **required** - it generates CSS/JS files needed for the plugin to work.
+
+---
+
+## Step 2: Install Test Suite Dependencies
 
 ```bash
 # Navigate to test directory
-cd wp-content/plugins/dokan-lite/tests/pw
+cd tests/pw
 
-# Install npm dependencies
+# Install test dependencies
 npm install
 
 # Install Playwright browsers
 npx playwright install chromium
 ```
 
-### 2. Configure Environment
+---
 
-Create a `.env` file in the test directory:
+## Step 3: Configure Environment
 
-```bash
-# Copy example configuration
-cp .env.example .env
-
-# Edit with your settings
-nano .env
-```
-
-**Required Variables:**
+Create a `.env` file in `tests/pw/` directory:
 
 ```env
-# Admin Credentials
-ADMIN=admin_username
-ADMIN_PASSWORD=secure_password
+# Admin Configuration (REQUIRED)
+ADMIN=your_admin_username
+ADMIN_PASSWORD=your_secure_password
 ADMIN_EMAIL=admin@example.com
 
 # Dokan Configuration
-DOKAN_PRO=true                              # Set false for Lite only
-LICENSE_KEY=your_dokan_pro_license          # Required for Pro
+DOKAN_PRO=true
+LICENSE_KEY=your_dokan_pro_license_key
 
-# Playwright Configuration
+# Playwright Configuration (REQUIRED)
 BASE_URL=http://localhost:9999
-CI=true                                     # true for Docker
+CI=true
 HEADLESS=false
 
-# Database Configuration (Docker defaults)
+# Database Configuration (Docker defaults - DO NOT CHANGE)
 DB_HOST_NAME=localhost
 DB_USER_NAME=root
 DB_USER_PASSWORD=password
 DATABASE=tests-wordpress
 DB_PORT=9998
+DB_PREFIX=wp
 
-# REST API Configuration
+# REST API (CRITICAL - DO NOT CHANGE)
 SERVER_URL=http://localhost:9999/?rest_route=
 ```
 
-> **⚠️ Security:** Never commit `.env` to version control. It's already in `.gitignore`.
+> ⚠️ **Security:** Never commit your `.env` file - it's already in `.gitignore`.
 
-### 3. Start Docker Environment
+---
+
+## Development Environment Requirements
+
+On your local development setup (where the test code resides), ensure that **all required plugins are installed and active**:
+
+- Dokan  
+- Dokan Pro  
+- WooCommerce Bookings  
+- WooCommerce Product Add-Ons  
+- WooCommerce Simple Auction  
+- WooCommerce Subscriptions  
+
+> **Important:**  
+> The test server references the local site’s plugin directory. Missing plugins in your development environment may cause tests to fail or behave inconsistently.
+
+---
+
+## Step 4: Start Docker Environment
+
+### Option A: Step by Step
 
 ```bash
-# Start Docker containers and create admin
+# 1. Make sure Docker Desktop is running!
+
+# 2. Start WordPress Docker environment
 npm run start:env
 
-# Run complete setup (plugins, test data)
+# 3. Run complete setup (activates plugins, creates test data)
 npm run docker:setup
 ```
 
-**Expected Output:** ✅ 65 passed, ⊘ 1 skipped
-
-### 4. Run Tests
+### Option B: All-in-One (Recommended)
 
 ```bash
-# Run all E2E tests
-npm run test:e2e
-
-# Run all API tests
-npm run test:api
-
-# Run specific test file
-npx playwright test tests/e2e/products.spec.ts
+# Does all 3 steps above automatically
+npm run docker:full
 ```
 
 ---
 
-## Configuration
+## Step 5: Verify Setup
 
-### Environment Variables Reference
+```bash
+# Check if plugins are activated
+npm run check:plugins
 
-See `.env.example` for complete configuration template.
+# Check if users are created
+npm run check:users
 
-**Required for Docker:**
-- `ADMIN`, `ADMIN_PASSWORD`, `ADMIN_EMAIL` - Admin credentials
-- `DOKAN_PRO` - Enable Pro features (true/false)
-- `LICENSE_KEY` - Dokan Pro license (if Pro enabled)
-- `BASE_URL` - Test site URL
-- `CI=true` - Required for Docker environment
+# Check active Dokan modules
+npm run check:modules
+```
 
-**Database Settings:**
-- Use default Docker values unless running locally
-- `SERVER_URL` must use query string format: `?rest_route=`
+**Expected output from `check:plugins`:**
+- ✅ dokan-lite (active)
+- ✅ dokan-pro (active)
+- ✅ woocommerce (active)
+- ✅ master/Basic Auth (active)
 
 ---
 
-## Running Tests
+## Quick Command Reference
 
-### Test Execution Commands
+| Task | Command |
+|------|---------|
+| **Plugin Setup** | `cd wp-content/plugins/dokan-lite` → `composer install` → `npm install` → `npm run build` |
+| **Test Setup** | `cd tests/pw` → `npm install` → `npx playwright install chromium` |
+| **Start Docker** | `npm run start:env` |
+| **Create Admin** | `npm run create:admin` |
+| **Full Setup** | `npm run docker:full` |
+| **Run E2E Tests** | `npm run test:e2e` |
+| **Run API Tests** | `npm run test:api` |
+| **Stop Docker** | `npm run stop:env` |
+| **Reset Environment** | `npm run reset:env` |
+
+---
+
+## Troubleshooting
+
+### `start:env` Fails
+
+**Check:**
+1. ✅ Docker Desktop is running
+2. ✅ Composer dependencies installed (`vendor/` directory exists)
+3. ✅ npm dependencies installed (`node_modules/` exists)
+4. ✅ Assets are built (`assets/css/style.css` exists)
+
+**Fix:**
+```bash
+# Rebuild everything
+cd wp-content/plugins/dokan-lite
+composer install
+npm install
+npm run build
+```
+
+### Plugins Don't Activate
+
+**Check:**
+```bash
+npm run check:plugins
+```
+
+**Fix:**
+```bash
+# Run setup again
+npm run docker:setup
+```
+
+### Docker Warning About Dokan Pro
+
+If you see:
+```
+✖ Error while running docker compose command.
+Warning: Failed to activate plugin. Dokan Pro requires Dokan Lite
+```
+
+**This is NOT critical!** Docker still starts. Run:
+```bash
+npm run docker:setup
+```
+
+---
+
+## Access Points
+
+| Service | URL | Credentials |
+|---------|-----|-------------|
+| WordPress Site | http://localhost:9999 | - |
+| WP Admin | http://localhost:9999/wp-admin | Your `.env` `ADMIN` credentials |
+| Dokan Dashboard | http://localhost:9999/dashboard | Vendor credentials |
+| Default Admin | http://localhost:9999/wp-admin | `admin` / `password` (fallback) |
+
+---
+
+## Next Steps
+
+- **Run Tests:** `npm run test:e2e` or `npm run test:api`
+- **View Documentation:** See [README.MD](./README.MD) for detailed information
+- **Debug Tests:** `npm run test:e2e:debug` or `npm run test:e2e:ui`
+
+---
+
+## Important Notes
+
+1. ⚠️ **Build assets first:** Always run `npm run build` in plugin root before starting Docker
+2. ⚠️ **Docker must be running:** Start Docker Desktop before `npm run start:env`
+3. ⚠️ **Plugin order matters:** Dokan Lite must activate before Dokan Pro
+4. ⚠️ **Create admin separately:** Run `create:admin` after `start:env` (or use `docker:full`)
+
 
 #### E2E Tests
 
