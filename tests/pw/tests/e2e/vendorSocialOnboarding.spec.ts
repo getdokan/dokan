@@ -162,7 +162,7 @@ test.describe('Admin Setting: Vendor -> social_onboarding', () => {
         // }); 
     });
 
-    test.skip('Old to new Social Onboarding Settings synchronization', { tag: ['@lite', '@admin', '@migration'] }, async () => {
+    test('Old to new Social Onboarding Settings synchronization', { tag: ['@lite', '@admin', '@migration'] }, async () => {
         await test.step('Update old settings', async () => {
             await adminSettingsPage.setSaveButtonSelector(adminSettingsPage.oldSaveButtonSelector);
             for (const dataset of oldDataset) {

@@ -29,7 +29,6 @@ const newDataset = {
         {
             selector: '#dokan_settings_product_printful_integration_printful_api_settings_printful_api_settings_group_printful_enable button[role="switch"]',
             type: 'toggle',
-            value: 'on',
         },
         {
             selector: '#dokan_settings_product_printful_integration_printful_api_settings_printful_api_settings_group_printful_app_name input[placeholder="Enter your app name"]',
@@ -56,7 +55,7 @@ const newDataset = {
             type: 'text',
             value: 'Size Guide',
         },
-// Color Picker Fields
+        // Color Picker Fields
         {
             selector: 'label:has-text("Size guide popup text color") >> xpath=ancestor::div[contains(@class,"grid")][contains(@class,"grid-cols-12")][1]//span[contains(@class,"component-color-indicator")]',
             type: 'color-picker',
@@ -82,7 +81,7 @@ const newDataset = {
             type: 'color-picker',
             value: 'rgb(255, 255, 255)',
         },
-         {
+        {
             selector: '#dokan_settings_product_printful_integration_size_guide_settings_size_guide_measurement_unit button[name="inches"][role="radio"]',
             type: 'radio',
             value: 'inches',

@@ -34,7 +34,7 @@ const oldDataset = {
             value: true,
         },
         {
-            selector: '//label[@for="dokan_quote_settings[enable_quote_converter_display]"]//input[@type="checkbox"]',
+            selector: '//label[@for="dokan_quote_settings[enable_quote_converter_display]"]//label[@class="switch tips"]',
             type: 'checkbox',
             value: false,
         },

@@ -53,17 +53,12 @@ const newDataset = {
         {
             selector: '#subscription_view_page',
             type: 'dropdown',
-            value: 'Privacy Policy'
+            value: 'Product Subscription',
         },
         {
             selector: '#dokan_settings_vendor_vendor_subscription_vendor_subscription_subscription_in_registration button[role="switch"]',
             type: 'switch',
             value: false,
-        },
-        {
-            selector: '#dokan_settings_vendor_vendor_subscription_vendor_subscription_email_notification_expiry button[role="switch"]',
-            type: 'switch',
-            value: true,
         },
         {
             selector: '#dokan_settings_vendor_vendor_subscription_vendor_subscription_alert_days_before_expiry input[type="number"]',
@@ -75,7 +70,7 @@ const newDataset = {
             type: 'radio',
             value: 'true',
         },
-    ]
+    ],
 };
 
 test.describe('Admin Setting: Vendor -> vendor_subscription', () => {
