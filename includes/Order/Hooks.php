@@ -60,7 +60,7 @@ class Hooks {
 
         add_action( 'woocommerce_reduce_order_item_stock', [ $this, 'sync_parent_order_item_stock' ], 10, 3 );
 
-        // if _dokan_commission_meta does not exists, search for dokan_commission_meta
+        // TODO: This is for backward compatibility. It renames dokan_commission_meta key to _dokan_commission_meta. Remove this after few versions.
         add_filter( 'woocommerce_order_item_get__dokan_commission_meta', [ $this, 'get_dokan_commission_meta' ], 10, 2 );
     }
 
@@ -69,9 +69,14 @@ class Hooks {
      *
      * @return mixed
      */
-    public function get_dokan_commission_meta( $value, $item ) {
-        if( empty( $value ) ) {
-            return $item->get_meta( 'dokan_commission_meta', true );
+    public function get_dokan_commission_meta( $value, $line_item ) {
+        if( $value === '' ) {
+            $value = $line_item->get_meta( 'dokan_commission_meta', true );
+            if( $value !== '' ) {
+                $line_item->delete_meta_data( 'dokan_commission_meta' );
+                $line_item->update_meta_data( '_dokan_commission_meta', $value );
+                $line_item->save();
+            }
         }
         return $value;
     }
