@@ -45,8 +45,8 @@ const newDataset = {
             value: 'Support',
         },
         {
-            selector: '#dokan_settings_moderation_store_support_store_support_settings_store_support_product_page',
-            type: 'radioLabel',
+            selector: '#dokan_settings_moderation_store_support_store_support_settings_store_support_product_page div[role="radio"][aria-checked="true"][aria-label="Above Product Tab"]',
+            type: 'customize-radio',
             value: 'Above Product Tab'
         }
     ],

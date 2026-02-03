@@ -6,37 +6,22 @@ import { data } from '@utils/testData';
 const oldDataset = {
     title: 'Admin Old Setting: AI Assist',
     url: 'wp-admin/admin.php?page=dokan#/settings',
-    selector: '//h2[contains(text(),"AI Assist Settings")]/ancestor::div[contains(@class,"metabox-holder")]',
+    selector: '//div[@class="nav-title" and contains(text(),"General")] >> //div[@class="nav-title" and contains(text(),"AI Assist")]',
     fields: [
         {
-            selector: '//h3[contains(text(),"AI Product Info Generator")]/ancestor::div[contains(@class,"dokan_ai_product_info")]//input[@type="text"]',
-            type: 'text',
-            value: 'Enabled',
-        },
-        {
-            selector: '//h3[contains(text(),"Engine")]/ancestor::div[contains(@class,"dokan_ai_engine")]//select',
+            selector: '//select[@id="dokan_ai[dokan_ai_engine]"]',
             type: 'select',
             value: 'openai',
         },
         {
-            selector: '//h3[contains(text(),"AI Product Image Enhance")]/ancestor::div[contains(@class,"dokan_ai_image_gen")]//input[@type="checkbox"]',
-            type: 'switch',
-            value: 'on',
-        },
-        {
-            selector: '//h3[contains(text(),"Engine")]/ancestor::div[contains(@class,"dokan_ai_image_engine")]//select',
-            type: 'select',
-            value: 'bria-ai',
-        },
-        {
-            selector: '//h3[contains(text(),"Gemini API Key")]/ancestor::div[contains(@class,"dokan_ai_image_gemini_api_key")]//input[@type="text"]',
+            selector: '//input[@id="dokan_ai[dokan_ai_openai_api_key]"]',
             type: 'text',
-            value: 'test-gemini-api-key-123',
+            value: 'test-openai-api-key-123',
         },
         {
-            selector: '//h3[contains(text(),"Model")]/ancestor::div[contains(@class,"dokan_ai_image_gemini_model")]//select',
+            selector: '//select[@id="dokan_ai[dokan_ai_openai_model]"]',
             type: 'select',
-            value: 'gemini-2.5-flash-image-preview',
+            value: 'gpt-3.5-turbo',
         },
     ],
 };
@@ -44,52 +29,27 @@ const oldDataset = {
 const newDataset = {
     title: 'Admin Setting: AI Assist',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_ai_assist',
+    selector: '#dokan_settings_ai_assist >> #dokan_settings_ai_assist_product_generation',
     fields: [
         {
-            selector: '#dokan_settings_ai_assist_product_generation_product_image_section_product_info_generate button[role="switch"]',
-            type: 'switch',
-            value: 'on',
-        },
-        {
-            selector: '#product_info_engine',
+            selector: '#dokan_settings_ai_assist_product_generation_product_image_section_product_info_engine',
             type: 'select',
-            value: 'Gemini',
+            value: 'OpenAI',
         },
         {
-            selector: '#:r1s5:',
+            selector: '#dokan_settings_ai_assist_product_generation_product_image_section_openai_api_info_group_openai_api_key input[type="password"]',
             type: 'text',
             value: 'test-openai-api-key-123',
         },
         {
-            selector: '#dokan_settings_ai_assist_product_generation_product_image_section_product_info_model',
+            selector: '#openai_model',
             type: 'select',
-            value: 'ChatGPT 4o Mini',
-        },
-        {
-            selector: '#toggle-:r1s7:',
-            type: 'switch',
-            value: 'on',
-        },
-        {
-            selector: '#product_image_engine',
-            type: 'select',
-            value: 'Leonardo AI',
-        },
-        {
-            selector: '#:r1s9:',
-            type: 'text',
-            value: 'test-leonardo-api-key-456',
-        },
-        {
-            selector: '#leonardo_model',
-            type: 'select',
-            value: 'Leonardo Diffusion XL',
+            value: 'GPT-3.5 Turbo',
         },
     ],
 };
 
-test.describe('Admin Setting: AI Assist', () => {
+test.describe('Admin Setting: AI Assist', { tag: ['@pro'] }, () => {
     let loginPage: LoginPage;
     let adminSettingsPage: AdminSettingsPage;
 

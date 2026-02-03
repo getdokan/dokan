@@ -8,20 +8,15 @@ const oldDataset = {
     url: 'wp-admin/admin.php?page=dokan#/settings',
     selector: '//div[@class="nav-title" and contains(text(),"General")] >> //div[@class="nav-title" and contains(text(),"AI Assist")]',
     fields: [
-         {
+        {
             selector: '//select[@id="dokan_ai[dokan_ai_engine]"]',
-            type: 'dropdown',
-            value: 'gemini',
+            type: 'select',
+            value: 'openai',
         },
         {
-            selector: '//input[@id="dokan_ai[dokan_ai_gemini_api_key]"]',
+            selector: '//input[@id="dokan_ai[dokan_ai_openai_api_key]"]',
             type: 'text',
             value: 'your-openai-api-key',
-        },
-        {
-            selector: '//h3[contains(text(),"Model")]/ancestor::div[contains(@class,"dokan_ai_image_gemini_model")]//select',
-            type: 'select',
-            value: 'gemini-2.5-flash-image-preview',
         },
     ],
 };
@@ -34,42 +29,42 @@ const newDataset = {
         {
             selector: '#dokan_settings_ai_assist_product_generation_product_image_section_product_info_generate button[role="switch"]',
             type: 'switch',
-            value: 'on', 
+            value: true,
         },
         {
-            selector: '#dokan_settings_ai_assist_product_generation_product_image_section_product_info_engine',
-            type: 'select',
-            value: 'Gemini', 
+            selector: '#dokan_settings_ai_assist_product_generation_product_image_section_product_info_engine button[role="combobox"]',
+            type: 'radix-dropdown',
+            value: 'Gemini',
         },
         {
-            selector: '#dokan_settings_ai_assist_product_generation_product_image_section_chatgpt_api_info_group_openai_api_key input[type="password"]',
+            selector: '#dokan_settings_ai_assist_product_generation_product_image_section_openai_api_info_group_openai_api_key input[type="password"]',
             type: 'text',
             value: 'your-openai-api-key',
         },
         {
-            selector: '#openai_model',
-            type: 'dropdown',
-            value: 'ChatGPT 4o Mini',
+            selector: '#dokan_settings_ai_assist_product_generation_product_image_section_openai_api_info_group_openai_model button[role="combobox"]',
+            type: 'radix-dropdown',
+            value: 'OpenAI GPT-4o Mini',
         },
         {
             selector: '#dokan_settings_ai_assist_product_generation_product_description_section_product_image_enhancement button[role="switch"]',
             type: 'switch',
-            value: 'on', 
+            value: true,
         },
         {
-            selector: '#product_image_engine',
-            type: 'dropdown',
-            value: 'DALL-E', 
+            selector: '#dokan_settings_ai_assist_product_generation_product_description_section_product_image_engine button[role="combobox"]',
+            type: 'radix-dropdown',
+            value: 'Gemini',
         },
         {
-            selector: '#dokan_settings_ai_assist_product_generation_product_description_section_leonardo_api_info_group_leonardo_api_key input[type="password"]',
+            selector: '#dokan_settings_ai_assist_product_generation_product_description_section_gemini_api_info_group_gemini_api_key input[type="password"]',
             type: 'text',
-            value: 'your-leonardo-api-key',
+            value: 'your-gemini-api-key',
         },
         {
-            selector: '#leonardo_model',
-            type: 'dropdown',
-            value: 'Leonardo Diffusion XL',
+            selector: '#dokan_settings_ai_assist_product_generation_product_description_section_gemini_api_info_group_gemini_model button[role="combobox"]',
+            type: 'radix-dropdown',
+            value: 'Gemini 2.5 Flash Image (aka Nano Banana)',
         },
     ],
 };

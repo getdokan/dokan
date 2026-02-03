@@ -10,117 +10,117 @@ import { da } from '@faker-js/faker/.';
 const oldDataset = [
     {
         title: 'Admin Old Setting: Menu Manager',
-        url: 'wp-admin/admin.php?page=dokan#/settings', 
-        selector: '//div[@class="nav-title" and contains(text(),"General")] >> //div[@class="nav-title" and contains(text(),"Menu Manager")]', 
+        url: 'wp-admin/admin.php?page=dokan#/settings',
+        selector: '//div[@class="nav-title" and contains(text(),"General")] >> //div[@class="nav-title" and contains(text(),"Menu Manager")]',
         fields: [
             {
-                selector: '#switch-wrapper-products label.switch',
+                selector: '.switch-wrapper-placeholder.products label.switch',
                 type: 'checkbox',
                 value: true,
             },
-           {
+            {
                 // Orders toggle
-                selector: '#switch-wrapper-orders label.switch',
+                selector: '.switch-wrapper-placeholder.orders label.switch',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Request Quotes toggle
-                selector: '#switch-wrapper-requested-quotes label.switch',
+                selector: '.switch-wrapper-placeholder.requested-quotes label.switch',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Coupons toggle
-                selector: '#switch-wrapper-coupons label.switch',
+                selector: '.switch-wrapper-placeholder.coupons label.switch',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Reports toggle
-                selector: '#switch-wrapper-reports label.switch',
+                selector: '.switch-wrapper-placeholder.reports label.switch',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Delivery Time toggle
-                selector: '#switch-wrapper-delivery-time-dashboard label.switch',
+                selector: '.switch-wrapper-placeholder.delivery-time-dashboard label.switch',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Reviews toggle
-                selector: '#switch-wrapper-reviews label.switch',
+                selector: '.switch-wrapper-placeholder.reviews label.switch',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Withdraw toggle
-                selector: '#switch-wrapper-withdraw label.switch',
+                selector: '.switch-wrapper-placeholder.withdraw label.switch',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Badge toggle
-                selector: '#switch-wrapper-seller-badge label.switch',
+                selector: '.switch-wrapper-placeholder.seller-badge label.switch',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Product Q&A toggle
-                selector: '#switch-wrapper-product-questions-answers label.switch',
+                selector: '.switch-wrapper-placeholder.product-questions-answers label.switch',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Return Requests toggle
-                selector: '#switch-wrapper-return-request label.switch',
+                selector: '.switch-wrapper-placeholder.return-request label.switch',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Staff toggle
-                selector: '#switch-wrapper-staffs label.switch',
+                selector: '.switch-wrapper-placeholder.staffs label.switch',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Followers toggle
-                selector: '#switch-wrapper-followers label.switch',
+                selector: '.switch-wrapper-placeholder.followers label.switch',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Subscription toggle
-                selector: '#switch-wrapper-subscription label.switch',
+                selector: '.switch-wrapper-placeholder.subscription label.switch',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Announcements toggle
-                selector: '#switch-wrapper-announcement label.switch',
+                selector: '.switch-wrapper-placeholder.announcement label.switch',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Admin Support toggle
-                selector: '#switch-wrapper-vendor-support label.switch',
+                selector: '.switch-wrapper-placeholder.vendor-support label.switch',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Tools toggle
-                selector: '#switch-wrapper-tools label.switch',
+                selector: '.switch-wrapper-placeholder.tools label.switch',
                 type: 'checkbox',
                 value: true,
             },
             {
                 // Support toggle
-                selector: '#switch-wrapper-support label.switch',
+                selector: '.switch-wrapper-placeholder.support label.switch',
                 type: 'checkbox',
                 value: true,
             },
-        ]
+        ],
     },
 ];
 

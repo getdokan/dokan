@@ -38,22 +38,22 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: Email Verification',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_verification >> #dokan_verification_email-verification-page',
+    selector: '#dokan_settings_verification >> #dokan_settings_verification_email-verification-page',
     fields: [
         {
-            selector: '#dokan_verification_email-verification-page_email-verification_enabled button',
+            selector: '#dokan_settings_verification_email-verification-page_email-verification-content_enabled button',
             type: 'switch',
             value: true,
         },
         {
             // Textarea for 'Registration Notice'
-            selector: '#dokan_verification_email-verification-page_registration-notice_registration_notice textarea',
+            selector: '#dokan_settings_verification_email-verification-page_email-verification-content_registration_notice textarea',
             type: 'text',
             value: 'Please verify your email to complete registration.',
         },
         {
             // Textarea for 'Login Notice'
-            selector: '#dokan_verification_email-verification-page_login-notice_login_notice textarea',
+            selector: '#dokan_settings_verification_email-verification-page_email-verification-content_login_notice textarea',
             type: 'text',
             value: 'Your email is unverified. Please check your inbox.',
         },
