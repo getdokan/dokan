@@ -40,6 +40,7 @@ permissions:
 env:
     ADMIN: admin
     ADMIN_PASSWORD: password
+    ADMIN_EMAIL: admin@example.test
     VENDOR: vendor1
     VENDOR2: vendor2
     CUSTOMER: customer1
@@ -57,8 +58,9 @@ env:
     DB_PORT: 9998
     DATABASE: tests-wordpress
     DB_PREFIX: wp
-    PR_NUMBER: ${{ github.event.number }}
-    SHA: ${{ github.event.pull_request.head.sha }}
+    PR_NUMBER: ${{ github.event.pull_request.number }}
+    SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    SERVER_URL: http://localhost:9999/?rest_route=
     SYSTEM_INFO: ./tests/pw/playwright/systemInfo.json
     API_TEST_RESULT: ./tests/pw/playwright-report/api/summary-report/results.json
     E2E_TEST_RESULT: ./tests/pw/playwright-report/e2e/summary-report/results.json
@@ -81,6 +83,14 @@ jobs:
             - name: Checkout testing repo
               id: clone-dokan-lite
               uses: actions/checkout@v4
+
+            # Checkout Dokan Pro (private repo; path relative to workspace for wp-env)
+            - name: Checkout Dokan Pro
+              uses: actions/checkout@v4
+              with:
+                  repository: getdokan/dokan-pro
+                  path: dokan-pro
+                  token: ${{ secrets.DOKAN_PRO_TOKEN }}
 
             # Use desired version of NodeJS
             - name: Use desired version of NodeJS
@@ -114,6 +124,11 @@ jobs:
               run: |
                   mkdir -p wp-data && touch wp-data/debug.log
 
+            # Use CI wp-env config (dokan-lite + dokan-pro from workspace; paths from tests/pw)
+            - name: Prepare wp-env for CI
+              working-directory: tests/pw
+              run: cp .wp-env.ci.json .wp-env.override.json
+
             # Start wordpress environment
             - name: Start WordPress Env
               id: wp-env
@@ -125,6 +140,18 @@ jobs:
                   command: |
                       cd tests/pw
                       npm run start:env
+
+            # Create admin user (required for setup and tests)
+            - name: Create admin user
+              if: success()
+              working-directory: tests/pw
+              run: npm run create:admin
+
+            # Activate plugins and create test data (site_setup, auth_setup, e2e_setup)
+            - name: Setup site and activate plugins
+              if: success()
+              working-directory: tests/pw
+              run: npm run docker:setup
 
             # Get Playwright version
             - name: Get installed Playwright version
@@ -149,15 +176,7 @@ jobs:
               id: pw-install
               if: steps.playwright-cache.outputs.cache-hit != 'true'
               working-directory: tests/pw
-              run: |
-                  npm run pw:chrome-with-deps
-
-            # # Install only the OS dependencies if cache hit
-            # - name: Install Playwright OS dependencies
-            #   if: steps.playwright-cache.outputs.cache-hit == 'true'
-            #   working-directory: tests/pw
-            #   run: |
-            #     npm run pw:chrome-deps-only
+              run: npx playwright install --with-deps chromium
 
             # Run E2E tests
             - name: 🧪 Run e2e tests-${{ matrix.shardIndex }}
@@ -167,13 +186,6 @@ jobs:
               working-directory: tests/pw
               run: |
                   npm run test:e2e -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
-
-            # Run e2e coverage
-            - name: 🧪 Run e2e coverage
-              if: always() && (steps.e2e-test.outcome == 'success' || steps.e2e-test.outcome == 'failure')
-              working-directory: tests/pw
-              run: |
-                  npm run test:e2e:coverage
 
             # # Prepare test summary
             # - name: Prepare test summary
@@ -222,6 +234,14 @@ jobs:
               id: clone-dokan-lite
               uses: actions/checkout@v4
 
+            # Checkout Dokan Pro (private repo; path relative to workspace for wp-env)
+            - name: Checkout Dokan Pro
+              uses: actions/checkout@v4
+              with:
+                  repository: getdokan/dokan-pro
+                  path: dokan-pro
+                  token: ${{ secrets.DOKAN_PRO_TOKEN }}
+
             # Use desired version of NodeJS
             - name: Use desired version of NodeJS
               uses: actions/setup-node@v4
@@ -254,6 +274,11 @@ jobs:
               run: |
                   mkdir -p wp-data && touch wp-data/debug.log
 
+            # Use CI wp-env config (dokan-lite + dokan-pro from workspace; paths from tests/pw)
+            - name: Prepare wp-env for CI
+              working-directory: tests/pw
+              run: cp .wp-env.ci.json .wp-env.override.json
+
             # Start wordpress environment
             - name: Start WordPress Env
               id: wp-env
@@ -265,6 +290,18 @@ jobs:
                   command: |
                       cd tests/pw
                       npm run start:env
+
+            # Create admin user (required for setup and tests)
+            - name: Create admin user
+              if: success()
+              working-directory: tests/pw
+              run: npm run create:admin
+
+            # Activate plugins and create test data (site_setup, auth_setup, e2e_setup)
+            - name: Setup site and activate plugins
+              if: success()
+              working-directory: tests/pw
+              run: npm run docker:setup
 
             # Get Playwright version
             - name: Get installed Playwright version
@@ -289,15 +326,7 @@ jobs:
               id: pw-install
               if: steps.playwright-cache.outputs.cache-hit != 'true'
               working-directory: tests/pw
-              run: |
-                  npm run pw:chrome-with-deps
-
-            # # Install only the OS dependencies if cache hit
-            # - name: Install Playwright OS dependencies
-            #   if: steps.playwright-cache.outputs.cache-hit == 'true'
-            #   working-directory: tests/pw
-            #   run: |
-            #     npm run pw:chrome-deps-only
+              run: npx playwright install --with-deps chromium
 
             # Run API tests
             - name: 🧪 Run api tests-${{ matrix.shardIndex }}
