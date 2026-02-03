@@ -12,18 +12,18 @@ const oldDataset = [
             {
                 selector: '//label[@for="dokan_privacy[enable_privacy]"]//label[@class="switch tips"]',
                 type: 'checkbox',
-                value: true
+                value: true,
             },
             {
                 selector: '//select[@id="dokan_privacy[privacy_page]"]',
                 type: 'select',
-                value: '66' // Request for Quote page
+                value: '12' // Dashboard page for safe side
             },
             {
                 selector: '//div[@class="privacy_policy dokan-settings-field-type-wpeditor"]//iframe[contains(@id,"dokan-tinymce") and contains(@id,"_ifr")]',
                 type: 'textareaOld',
                 value: 'newTest',
-            }
+            },
         ],
     },
 ];
@@ -39,14 +39,14 @@ const newDataset = {
             type: 'switch',
             value: true,
         },
-        
+
         // Privacy Policy Page - Dropdown
         {
             selector: '#privacy_policy_page',
             type: 'dropdown',
-            value: 'Request for Quote',
+            value: 'Dashboard', // Dashboard page for safe side
         },
-        
+
         // Privacy Policy Content - Textarea (Quill Editor)
         {
             selector: '#dokan_settings_compliance_privacy_privacy_policy_content_privacy_policy_content .ql-editor',

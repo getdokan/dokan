@@ -9,23 +9,23 @@ const oldDataset = {
     selector: '//div[@class="nav-title" and contains(text(),"General")] >> //div[@class="nav-title" and contains(text(),"Page Settings")]',
     fields: [
         {
-            selector: '#dokan_pages\\[dashboard\\]',
-            type: 'dropdown',
+            selector: '//select[@id="dokan_pages[dashboard]"]',
+            type: 'select',
             value: 'Dashboard',
         },
         {
-            selector: '#dokan_pages\\[my_orders\\]',
-            type: 'dropdown',
+            selector: '//select[@id="dokan_pages[my_orders]"]',
+            type: 'select',
             value: 'My Orders',
         },
         {
-            selector: '#dokan_pages\\[store_listing\\]',
-            type: 'dropdown',
+            selector: '//select[@id="dokan_pages[store_listing]"]',
+            type: 'select',
             value: 'Store List',
         },
         {
-            selector: '#dokan_pages\\[reg_tc_page\\]',
-            type: 'dropdown',
+            selector: '//select[@id="dokan_pages[reg_tc_page]"]',
+            type: 'select',
             value: 'Terms And Conditions',
         },
     ],

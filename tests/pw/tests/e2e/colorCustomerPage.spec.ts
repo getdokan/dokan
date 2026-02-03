@@ -11,18 +11,17 @@ const oldColorDataset = {
     url: 'wp-admin/admin.php?page=dokan#/settings',
     selector: '//div[@class="nav-title" and contains(text(),"General")] >> //div[@class="nav-title" and contains(text(),"Colors")]',
     fields: [
-       {
+        {
             // Targets the <div> with class 'color_option' and ensures it contains the required title text.
-            selector: '.color_option:has-text("Pre-defined Color Palette")',
-            type: 'radio',
+            selector: '.color_option.active-pallete .color-option-title:has-text("Pre-defined Color Palette")',
+            type: 'customize-radio',
             value: 'true',
         },
-         {
-            selector: '.color-pallete-contents.active-pallete',
-            type: 'radio',
+        {
+            selector: '.color-pallete-contents.active-pallete label:has-text("purple pulse")',
+            type: 'customize-radio',
             value: 'true',
         },
-
     ],
 };
 

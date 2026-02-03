@@ -191,30 +191,30 @@ export class AdminSettingsPageNew extends AdminPage {
     async assertFieldValues(fields: Array<any>) {
         for ( const field of fields ) {
             await this.ensureVisibilityFor( field.selector );
-            switch(field.type) {
+            switch (field.type) {
                 case 'text': {
-                    const value = await this.page.inputValue( field.selector );
+                    const value = await this.page.inputValue(field.selector);
                     expect(value).toBe(field.value);
                     break;
                 }
                 case 'number': {
-                    const value = await this.page.inputValue( field.selector );
+                    const value = await this.page.inputValue(field.selector);
                     expect(value).toBe(field.value);
                     break;
                 }
                 case 'email': {
-                    const value = await this.page.inputValue( field.selector );
+                    const value = await this.page.inputValue(field.selector);
                     expect(value).toBe(field.value);
                     break;
                 }
                 case 'switch': {
-                    const ariaChecked = await this.page.locator( field.selector ).getAttribute('aria-checked');
+                    const ariaChecked = await this.page.locator(field.selector).getAttribute('aria-checked');
                     const isChecked = ariaChecked === 'true';
                     expect(isChecked).toBe(field.value);
                     break;
                 }
                 case 'checkbox': {
-                    const inputElement = this.page.locator( field.selector ).locator('input[type="checkbox"]');
+                    const inputElement = this.page.locator(field.selector).locator('input[type="checkbox"]');
                     const hasEnabledClass = await inputElement.evaluate(el => el.classList.contains('enabled'));
                     console.log('hasEnabledClass', hasEnabledClass);
                     console.log('field.value', field.value);
@@ -222,7 +222,7 @@ export class AdminSettingsPageNew extends AdminPage {
                     break;
                 }
                 case 'radio': {
-                    const ariaChecked = await this.page.locator( field.selector ).getAttribute('aria-checked');
+                    const ariaChecked = await this.page.locator(field.selector).getAttribute('aria-checked');
                     expect(ariaChecked).toBe(field.value);
                     break;
                 }
@@ -242,7 +242,7 @@ export class AdminSettingsPageNew extends AdminPage {
                     break;
                 }
                 case 'select': {
-                    const value = await this.page.inputValue( field.selector );
+                    const value = await this.page.inputValue(field.selector);
                     expect(value).toBe(field.value);
                     break;
                 }
@@ -281,6 +281,11 @@ export class AdminSettingsPageNew extends AdminPage {
                     const locator = this.page.locator(field.selector);
                     const isChecked = await locator.isChecked();
                     expect(isChecked).toBe(field.value);
+                    break;
+                }
+                case 'customize-radio': {
+                    const locator = this.page.locator(field.selector);
+                    await expect(locator).toBeVisible();
                     break;
                 }
             }
