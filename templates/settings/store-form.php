@@ -318,13 +318,22 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
 
         <?php if ( ! dokan()->is_pro_exists() ) : ?>
             // Set timepicker jquery here.
+            const  mapTimepickerLocaleToMoment = (value) => {
+                if(!value) return value;
+
+                return value
+                    .replace(dokan_helper.timepicker_locale.PM, 'PM')
+                    .replace(dokan_helper.timepicker_locale.AM, 'AM')
+                    .replace(dokan_helper.timepicker_locale.pm, 'pm')
+                    .replace(dokan_helper.timepicker_locale.am, 'am');
+            };
             $( '.dokan-store-times .time .dokan-form-control' ).timepicker({
-                step          : 30,
-                lang          : dokan_helper.timepicker_locale,
-                minTime       : '12:00 am',
-                maxTime       : '11:30 pm',
-                timeFormat    : dokan_helper.i18n_time_format,
-                scrollDefault : 'now',
+                    step          : 30,
+                    lang          : dokan_helper.timepicker_locale,
+                    minTime       : '00:00',
+                    maxTime       : '23:30',
+                    timeFormat    : dokan_helper.i18n_time_format,
+                    scrollDefault : 'now',
             });
 
             // Add validation for store time when changed.
@@ -334,11 +343,11 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
                     closeValue = self.find('.closing-time').val(),
                     openInputHidden = self.find('.opening-time-hidden'),
                     closeInputHidden = self.find('.closing-time-hidden'),
-                    formattedOpenValue = moment(openValue, timeFormatMoment).format('HH:mm'),
-                    formattedCloseValue = moment(closeValue, timeFormatMoment).format('HH:mm');
+                    formattedOpenValue = moment(mapTimepickerLocaleToMoment(openValue), timeFormatMoment).format('HH:mm'),
+                    formattedCloseValue = moment(mapTimepickerLocaleToMoment(closeValue), timeFormatMoment).format('HH:mm');
 
-                let openValueSelected = moment(openValue, timeFormatMoment).format('hh:mm a');
-                let closeValueSelected = moment(closeValue, timeFormatMoment).format('hh:mm a');
+                let openValueSelected = moment(mapTimepickerLocaleToMoment(openValue), timeFormatMoment).locale('en').format('hh:mm a');
+                let closeValueSelected = moment(mapTimepickerLocaleToMoment(closeValue), timeFormatMoment).locale('en').format('hh:mm a');
 
                 openInputHidden.val(openValueSelected);
                 closeInputHidden.val(closeValueSelected);
@@ -364,8 +373,10 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
                         return;
                     }
 
-                    const openValue         = self.find( '.opening-time' ).val(),
+                    let openValue         = self.find( '.opening-time' ).val(),
                         closeValue          = self.find( '.closing-time' ).val();
+                    openValue  = mapTimepickerLocaleToMoment(openValue);
+                    closeValue = mapTimepickerLocaleToMoment(closeValue);
 
                     if ( ! openValue || ! closeValue ) {
                         self.find( 'input.dokan-form-control' ).css({ 'border-color': '#F87171', 'color': '#F87171' });
@@ -381,8 +392,8 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
                     const formattedOpenValue  = moment( openValue, timeFormatMoment ).format( 'HH:mm' ),
                         formattedCloseValue = moment( closeValue, timeFormatMoment ).format( 'HH:mm' );
 
-                    let openValueSelected  = moment(openValue, timeFormatMoment ).format('hh:mm a');
-                    let closeValueSelected = moment(closeValue, timeFormatMoment ).format('hh:mm a');
+                    let openValueSelected  = moment(openValue, timeFormatMoment ).locale('en').format('hh:mm a');
+                    let closeValueSelected = moment(closeValue, timeFormatMoment ).locale('en').format('hh:mm a');
 
                     openInputHidden.val(openValueSelected);
                     closeInputHidden.val(closeValueSelected);

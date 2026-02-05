@@ -25,7 +25,7 @@
                 <label for="opening-time[<?php echo esc_attr( $day_key ); ?>]" class="time" style="visibility: <?php echo isset( $status ) && $status === 'open' ? 'visible' : 'hidden'; ?>" >
                     <input type="text" class="dokan-form-control opening-time"
                         id="opening-time[<?php echo esc_attr( $day_key ); ?>]" placeholder="00:00"
-                        value="<?php echo esc_attr( $opening_time ); ?>"/>
+                        value="<?php echo esc_attr( dokan_convert_date_format( $opening_time, 'g:i A', 'H:i' )  ); ?>"/>
                     <input type="hidden"
                         name="opening_time[<?php echo esc_attr( $day_key ); ?>]" 
                         class="opening-time-hidden"
@@ -34,7 +34,7 @@
                 <label for="closing-time[<?php echo esc_attr( $day_key ); ?>]" class="time" style="visibility: <?php echo isset( $status ) && $status === 'open' ? 'visible' : 'hidden'; ?>" >
                     <input type="text" class="dokan-form-control closing-time"
                         id="closing-time[<?php echo esc_attr( $day_key ); ?>]" placeholder="00:00"
-                        value="<?php echo esc_attr( $closing_time === '11:59 pm' ? '11:30 pm' : $closing_time ); ?>"/>
+                        value="<?php echo esc_attr( ! $full_day ? dokan_convert_date_format( $closing_time, 'g:i A', 'H:i' ) : '' ); ?>" />
                     <input type="hidden"
                         name="closing_time[<?php echo esc_attr( $day_key ); ?>]"
                         class="closing-time-hidden"
