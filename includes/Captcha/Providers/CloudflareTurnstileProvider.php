@@ -57,6 +57,8 @@ class CloudflareTurnstileProvider extends AbstractProvider {
         // Register & enqueue Turnstile API
         $handle = 'dokan-turnstile-api';
         if ( ! wp_script_is( $handle, 'registered' ) ) {
+            // @see https://developers.cloudflare.com/turnstile/get-started/client-side-rendering/#1-add-the-turnstile-script
+            // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- Version handled by Cloudflare CDN.
             wp_register_script( $handle, 'https://challenges.cloudflare.com/turnstile/v0/api.js', [], null, true );
         }
         wp_enqueue_script( $handle );
@@ -153,5 +155,4 @@ class CloudflareTurnstileProvider extends AbstractProvider {
 			],
         ];
     }
-
 }
