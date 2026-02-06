@@ -19,6 +19,10 @@ class OrderType {
     public const DOKAN_PARENT_ORDER_REFUND = 3;
     public const DOKAN_SUBORDER_REFUND = 4;
     public const DOKAN_SINGLE_ORDER_REFUND = 5;
+    public const DOKAN_ADVERTISEMENT_PRODUCT_ORDER = 6;
+    public const DOKAN_ADVERTISEMENT_REFUND_ORDER = 7;
+    public const DOKAN_SUBSCRIPTION_ORDER = 8;
+    public const DOKAN_SUBSCRIPTION_REFUND_ORDER = 9;
 
     /**
      * Checks if the given order is related to a Dokan suborder.
@@ -176,9 +180,9 @@ class OrderType {
     }
 
     /**
-     * Gets the list of refund types relevant to admin users.
+     * Gets the list of all order types.
      *
-     * @return array List of admin refund type constants.
+     * @return array List of all order type constants.
      */
     public function get_all_order_types(): array {
         return [
@@ -188,6 +192,10 @@ class OrderType {
             self::DOKAN_PARENT_ORDER_REFUND,
             self::DOKAN_SUBORDER_REFUND,
             self::DOKAN_SINGLE_ORDER_REFUND,
+            self::DOKAN_ADVERTISEMENT_PRODUCT_ORDER,
+            self::DOKAN_ADVERTISEMENT_REFUND_ORDER,
+            self::DOKAN_SUBSCRIPTION_ORDER,
+            self::DOKAN_SUBSCRIPTION_REFUND_ORDER,
         ];
     }
 }
