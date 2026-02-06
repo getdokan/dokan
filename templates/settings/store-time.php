@@ -25,7 +25,7 @@
                 <label for="opening-time[<?php echo esc_attr( $day_key ); ?>]" class="time" style="visibility: <?php echo isset( $status ) && $status === 'open' ? 'visible' : 'hidden'; ?>" >
                     <input type="text" class="dokan-form-control opening-time"
                         id="opening-time[<?php echo esc_attr( $day_key ); ?>]" placeholder="00:00"
-                        value="<?php echo esc_attr( dokan_convert_date_format( $opening_time, 'g:i A', 'H:i' )  ); ?>"/>
+                        value="<?php echo esc_attr( dokan_convert_date_format( $opening_time, 'g:i A', 'H:i' ) ); ?>"/>
                     <input type="hidden"
                         name="opening_time[<?php echo esc_attr( $day_key ); ?>]" 
                         class="opening-time-hidden"

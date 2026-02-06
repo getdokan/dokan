@@ -332,8 +332,7 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
                     lang          : dokan_helper.timepicker_locale,
                     minTime       : '00:00',
                     maxTime       : '23:30',
-                    timeFormat    : dokan_helper.i18n_time_format,
-                    scrollDefault : 'now',
+                    timeFormat    : dokan_helper.i18n_time_format
             });
 
             // Add validation for store time when changed.
