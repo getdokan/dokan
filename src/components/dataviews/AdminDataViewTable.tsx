@@ -18,7 +18,7 @@ import { twMerge } from 'tailwind-merge';
 import { Funnel } from 'lucide-react';
 import { Item } from '@wordpress/components/build-types/navigation/types';
 import ListEmpty from '@src/components/dataviews/ListEmpty';
-import { translatedStrings } from './DataViewTable';
+import { getTranslatedStrings } from './DataViewTable';
 
 type ItemWithId = { id: string };
 
@@ -153,7 +153,7 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
     }
 
     useEffect( () => {
-        setLocaleData( translatedStrings, 'default' );
+        setLocaleData( getTranslatedStrings(), 'default' );
     }, [] );
 
     // Auto-hide filter area when there are no active filters

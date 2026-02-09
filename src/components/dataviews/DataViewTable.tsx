@@ -55,11 +55,10 @@ const applyFiltersToTableElements = (
     );
 };
 
-export const translatedStrings = {
-    '': { domain: 'default', 'plural-forms': 'nplurals=1; plural=0;' },
+export const getTranslatedStrings = () => ( {
     Actions: [ __( 'Actions', 'dokan-lite' ) ],
     'No results': [ __( 'No results', 'dokan-lite' ) ],
-};
+} );
 
 const DataViewTable = ( props: DataViewsProps< Item > ) => {
     if ( ! props.namespace ) {
@@ -146,7 +145,7 @@ const DataViewTable = ( props: DataViewsProps< Item > ) => {
     }
 
     useEffect( () => {
-        setLocaleData( translatedStrings, 'default' );
+        setLocaleData( getTranslatedStrings(), 'default' );
     }, [] );
 
     return (
