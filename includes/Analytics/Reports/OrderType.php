@@ -48,6 +48,8 @@ class OrderType {
     /**
      * Determines the type of the given order based on its relation to Dokan suborders and refunds.
      *
+     * @since DOKAN_SINCE
+     *
      * @param \WC_Abstract_Order $order The order object to classify.
      *
      * @return int The order type constant.
@@ -102,6 +104,8 @@ class OrderType {
      * This method applies a filter hook that allows external modules (like advertisement
      * or subscription modules) to determine the order type from their own context.
      *
+     * @since DOKAN_SINCE
+     *
      * @param \WC_Abstract_Order $order The order object to check.
      *
      * @return int|null The special order type constant, or null if not a special order.
@@ -117,7 +121,7 @@ class OrderType {
         }
 
         /**
-         * Filter hook to determine special order type from external modules.
+         * Filter hook to determine a special order type from external modules.
          *
          * This filter allows modules like Product Advertisement or Vendor Subscription
          * to return their specific order type when they detect their order.
@@ -129,9 +133,7 @@ class OrderType {
          * @param bool      $is_refund      Whether the original order is a refund.
          * @param \WC_Order $order          The original order object (could be refund).
          */
-        $special_order_type = apply_filters( 'dokan_get_order_type', null, $order_to_check, $is_refund, $order );
-
-        return $special_order_type;
+        return apply_filters( 'dokan_get_order_type', null, $order_to_check, $is_refund, $order );
     }
 
     /**
