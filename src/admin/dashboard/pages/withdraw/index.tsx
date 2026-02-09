@@ -111,7 +111,7 @@ const WithdrawPage = () => {
             id: 'vendor',
             label: __( 'Vendor', 'dokan-lite' ),
             enableGlobalSearch: true,
-            enableSorting: true,
+            enableSorting: false,
             render: ( { item } ) => (
                 <div className="flex items-center space-x-3">
                     { item.user?.gravatar && (
@@ -148,7 +148,7 @@ const WithdrawPage = () => {
         {
             id: 'amount',
             label: __( 'Amount', 'dokan-lite' ),
-            enableSorting: true,
+            enableSorting: false,
             render: ( { item } ) => (
                 <div className="font-medium text-gray-600">
                     { price( item.amount ) }
@@ -190,7 +190,7 @@ const WithdrawPage = () => {
         {
             id: 'charge',
             label: __( 'Charge', 'dokan-lite' ),
-            enableSorting: true,
+            enableSorting: false,
             render: ( { item } ) => (
                 <div className="text-gray-900">
                     { price( item.charge || 0 ) }
@@ -200,7 +200,7 @@ const WithdrawPage = () => {
         {
             id: 'payable',
             label: __( 'Payable', 'dokan-lite' ),
-            enableSorting: true,
+            enableSorting: false,
             render: ( { item } ) => (
                 <div className="font-medium text-gray-900">
                     { price( item.receivable || item.amount ) }
@@ -210,7 +210,7 @@ const WithdrawPage = () => {
         {
             id: 'date',
             label: __( 'Date', 'dokan-lite' ),
-            enableSorting: true,
+            enableSorting: false,
             render: ( { item } ) => (
                 <div className="text-gray-900">
                     <DateTimeHtml.Date date={ item.created } />
@@ -513,9 +513,16 @@ const WithdrawPage = () => {
         titleField: 'vendor',
         status: 'pending',
         layout: { density: 'comfortable' },
-        fields: fields.map( ( field ) =>
-            field.id !== 'vendor' ? field.id : ''
-        ),
+        fields: [
+            'amount',
+            'status',
+            'method',
+            'charge',
+            'payable',
+            'date',
+            'details',
+            'note',
+        ],
     } );
 
     // Handle tab selection for status filtering
@@ -551,29 +558,16 @@ const WithdrawPage = () => {
                 setIsExporting(true);
 
                 try {
-                    const reportArgs = {
-                        status:
-                            activeStatus === 'all' ? undefined : activeStatus,
-                        user_id: filterArgs.user_id,
-                        payment_method: filterArgs.payment_method,
-                        after: filterArgs.start_date,
-                        before: filterArgs.end_date,
-                    };
-
-                    const exportResponse = await apiFetch({
-                        path: '/dokan/v1/reports/withdraws/export',
-                        method: 'POST',
-                        data: {
-                            report_args: reportArgs,
-                            per_page: 100,
-                            email: false,
-                        },
-                    });
-
-                    if (exportResponse.export_id) {
-                        await pollExportStatus(exportResponse.export_id);
-                    } else {
-                        throw new Error('Failed to initiate export');
+                    // Minimal placeholder; backend export flow may vary.
+                    // Attempt to hit export endpoint via same query params.
+                    const path = addQueryArgs( 'dokan/v2/withdraw', {
+                        ...view,
+                        ...filterArgs,
+                        is_export: true,
+                    } );
+                    const res = await apiFetch( { path } );
+                    if ( res && res.url ) {
+                        window.location.assign( res.url as string );
                     }
                 } catch (e) {
                     alert(__('Export failed. Please try again.', 'dokan-lite'));

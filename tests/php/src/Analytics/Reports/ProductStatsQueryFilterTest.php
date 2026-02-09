@@ -38,7 +38,7 @@ class ProductStatsQueryFilterTest extends ReportTestCase {
     public function test_products_stats_hook_registered() {
         $order_stats_query_filter = dokan_get_container()->get( QueryFilter::class );
         $order_stats_query_filter->register_hooks();
-        
+
         // Assert the Join Clause filters are registered
         self::assertNotFalse( has_filter( 'woocommerce_analytics_clauses_join_products_stats_total', [ $order_stats_query_filter, 'add_join_subquery' ] ) );
         self::assertNotFalse( has_filter( 'woocommerce_analytics_clauses_join_products_stats_interval', [ $order_stats_query_filter, 'add_join_subquery' ] ) );
@@ -57,7 +57,7 @@ class ProductStatsQueryFilterTest extends ReportTestCase {
 	public function test_dokan_products_states_query_filter_hooks_are_order_stats_update() {
 		$order_id = $this->create_multi_vendor_order();
 
-		$this->run_all_pending();
+		$this->run_all_pending_queue();
 
         $mocking_methods = [
             'add_join_subquery',
@@ -91,7 +91,7 @@ class ProductStatsQueryFilterTest extends ReportTestCase {
     public function test_dokan_products_stats_added_to_wc_select_query_for_seller() {
         $parent_id = $this->create_multi_vendor_order();
 
-		$this->run_all_pending();
+		$this->run_all_pending_queue();
 
         $filter = Mockery::mock( QueryFilter::class . '[should_filter_by_vendor_id]' );
 
@@ -134,7 +134,7 @@ class ProductStatsQueryFilterTest extends ReportTestCase {
     public function test_dokan_products_stats_added_to_wc_select_query_for_admin() {
         $parent_id = $this->create_multi_vendor_order();
 
-		$this->run_all_pending();
+		$this->run_all_pending_queue();
 
         $filter = Mockery::mock( QueryFilter::class . '[should_filter_by_vendor_id]' );
 

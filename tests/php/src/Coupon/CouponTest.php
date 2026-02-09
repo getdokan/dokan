@@ -14,51 +14,22 @@ class CouponTest extends DokanTestCase {
      *
      * @return array[]
      */
-    public function data_provider(): array {
-        $seller_id1 = $this->factory()->seller->create();
-        $seller_id2 = $this->factory()->seller->create();
-
-        // create product category and assign to product
-        $category_id1 = $this->factory()->term->create( [ 'taxonomy' => 'product_cat' ] );
-
-        $product_id1 = $this->factory()->product
-            ->set_seller_id( $seller_id1 )
-            ->create(
-                [
-                    'regular_price' => 50,
-                    'price' => 50,
-                ]
-            );
-        $product_id2 = $this->factory()->product
-            ->set_seller_id( $seller_id2 )
-            ->create(
-                [
-                    'regular_price' => 30,
-                    'price' => 30,
-                ]
-            );
-
-        $customer_id = $this->factory()->customer->create( [ 'email' => 'customer@gmail.com' ] );
-
+    public static function data_provider(): array {
         $order_items = [
 			'status'      => 'wc-completed',
-			'customer_id' => $customer_id,
+			'customer_id' => '{customer_id}',
 			'meta_data'   => [],
 			'line_items'  => [
 				[
-					'product_id' => $product_id1, // price 50
+					'product_id' => '{product_id1}', // price 50
 					'quantity'   => 2,
 				],
 				[
-					'product_id' => $product_id2, // price 30
+					'product_id' => '{product_id2}', // price 30
 					'quantity'   => 1,
 				],
 			],
 		];
-
-        $product = wc_get_product( $product_id1 );
-        $product->set_category_ids( [ $category_id1 ] );
-        $product->save();
 
         return [
             'discount_type_percentage' => [
@@ -125,7 +96,7 @@ class CouponTest extends DokanTestCase {
 							'meta' => [
 								'discount_type' => 'percent',
 								'coupon_amount' => 10,
-								'product_ids' => [ $product_id1 ],
+								'product_ids' => [ '{product_id1}' ],
 							],
 						],
 					],
@@ -144,7 +115,7 @@ class CouponTest extends DokanTestCase {
 							'meta' => [
 								'discount_type' => 'percent',
 								'coupon_amount' => 10,
-								'product_categories' => [ $category_id1 ],
+								'product_categories' => [ '{category_id1}' ],
 							],
 						],
 					],
@@ -163,7 +134,7 @@ class CouponTest extends DokanTestCase {
 							'meta' => [
 								'discount_type' => 'percent',
 								'coupon_amount' => 10,
-								'excluded_product_categories' => [ $category_id1 ],
+								'excluded_product_categories' => [ '{category_id1}' ],
 							],
 						],
 					],
@@ -201,7 +172,7 @@ class CouponTest extends DokanTestCase {
 							'meta' => [
 								'discount_type' => 'percent',
 								'coupon_amount' => 10,
-								'exclude_product_ids' => [ $product_id1 ],
+								'exclude_product_ids' => [ '{product_id1}' ],
 							],
 						],
 					],
@@ -220,13 +191,55 @@ class CouponTest extends DokanTestCase {
      * @dataProvider data_provider
      */
     public function test_coupon( $input, $expected ) {
+        // Create entities
+        $seller_id1 = $this->factory()->seller->create();
+        $seller_id2 = $this->factory()->seller->create();
+        $category_id1 = $this->factory()->term->create( [ 'taxonomy' => 'product_cat' ] );
+        $customer_id = $this->factory()->customer->create( [ 'email' => 'customer@gmail.com' ] );
+
+        $product_id1 = $this->factory()->product
+            ->set_seller_id( $seller_id1 )
+            ->create(
+                [
+                    'regular_price' => 50,
+                    'price' => 50,
+                ]
+            );
+        $product_id2 = $this->factory()->product
+            ->set_seller_id( $seller_id2 )
+            ->create(
+                [
+                    'regular_price' => 30,
+                    'price' => 30,
+                ]
+            );
+
+        // Assign category to product
+        $product = wc_get_product( $product_id1 );
+        $product->set_category_ids( [ $category_id1 ] );
+        $product->save();
+
+        // Replace placeholders
+        $placeholders = [
+            '{seller_id1}' => $seller_id1,
+            '{seller_id2}' => $seller_id2,
+            '{product_id1}' => $product_id1,
+            '{product_id2}' => $product_id2,
+            '{category_id1}' => $category_id1,
+            '{customer_id}' => $customer_id,
+        ];
+
+        $input = wp_json_encode( $input );
+        $input = str_replace( array_keys( $placeholders ), array_values( $placeholders ), $input );
+        $input = json_decode( $input, true );
+
         $order_factory = $this->factory()->order
-        ->set_item_shipping(
-            [
-				'name' => 'Flat Rate',
-				'amount' => 10,
-			]
-        );
+			->set_item_shipping(
+				[
+					'name' => 'Flat Rate',
+					'amount' => 10,
+				]
+			);
 
         foreach ( $input['coupons'] as $coupon ) {
             $coupon_item = $this->factory()->coupon->create_and_get( $coupon );
