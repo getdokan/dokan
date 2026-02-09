@@ -53,6 +53,12 @@ class OrderType {
      * @return int The order type constant.
      */
     public function get_type( \WC_Abstract_Order $order ): int {
+        // Check for special order types first (advertisement and subscription).
+        $special_order_type = $this->get_special_order_type( $order );
+        if ( $special_order_type ) {
+            return $special_order_type;
+        }
+
         $is_suborder_related = $this->is_dokan_suborder_related( $order );
 
         if ( $is_suborder_related ) {
@@ -88,6 +94,44 @@ class OrderType {
         }
 
         return self::DOKAN_PARENT_ORDER;
+    }
+
+    /**
+     * Gets the special order type (advertisement or subscription) if applicable.
+     *
+     * This method applies a filter hook that allows external modules (like advertisement
+     * or subscription modules) to determine the order type from their own context.
+     *
+     * @param \WC_Abstract_Order $order The order object to check.
+     *
+     * @return int|null The special order type constant, or null if not a special order.
+     */
+    protected function get_special_order_type( \WC_Abstract_Order $order ): ?int {
+        $is_refund = $order instanceof WC_Order_Refund;
+
+        // For refunds, get the parent order to check the type.
+        $order_to_check = $is_refund ? wc_get_order( $order->get_parent_id() ) : $order;
+
+        if ( ! $order_to_check ) {
+            return null;
+        }
+
+        /**
+         * Filter hook to determine special order type from external modules.
+         *
+         * This filter allows modules like Product Advertisement or Vendor Subscription
+         * to return their specific order type when they detect their order.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param int|null  $order_type     The order type constant, or null if not a special order.
+         * @param \WC_Order $order_to_check The order object to check (parent order for refunds).
+         * @param bool      $is_refund      Whether the original order is a refund.
+         * @param \WC_Order $order          The original order object (could be refund).
+         */
+        $special_order_type = apply_filters( 'dokan_get_order_type', null, $order_to_check, $is_refund, $order );
+
+        return $special_order_type;
     }
 
     /**
