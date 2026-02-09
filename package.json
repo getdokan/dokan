@@ -1,6 +1,6 @@
 {
   "name": "dokan",
-  "version": "4.2.1",
+  "version": "4.2.9",
   "description": "A WordPress marketplace plugin",
   "author": "Dokan Inc.",
   "license": "GPL",
@@ -17,8 +17,15 @@
     "format": "wp-scripts format",
     "lint:css": "wp-scripts lint-style",
     "lint:js": "wp-scripts lint-js",
-    "release": "npm install && npm run build && npm run clean-files && npm run makepot && npm run version && npm run zip",
-    "release:dev": "npm install && npm run build && npm run clean-files && npm run makepot && npm run zip"
+    "release": "npm install && npm run readme && npm run build && npm run clean-files && npm run makepot && npm run version && npm run zip",
+    "release:dev": "npm install && npm run build && npm run clean-files && npm run makepot && npm run zip",
+    "wp-env": "wp-env",
+    "env:start": "wp-env start",
+    "env:start:coverage": "wp-env start -- --xdebug=profile,trace,debug",
+    "env:stop": "wp-env stop",
+    "phpunit": "wp-env run cli --env-cwd=wp-content/plugins/dokan vendor/bin/phpunit -c phpunit.xml",
+    "phpunit:coverage": "npm run phpunit -- --coverage-text",
+    "test:phpunit": "wp-env start && npm run phpunit && wp-env stop"
   },
   "devDependencies": {
     "@automattic/color-studio": "^2.5.0",
@@ -27,6 +34,7 @@
     "@tailwindcss/typography": "^0.5.15",
     "@wordpress/dependency-extraction-webpack-plugin": "^6.32.0",
     "@wordpress/scripts": "^30.25.0",
+    "@wordpress/env": "^10.26.0",
     "chartjs-adapter-moment": "^1.0.1",
     "debounce": "^1.2.1",
     "eslint-import-resolver-typescript": "^3.7.0",

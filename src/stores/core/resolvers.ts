@@ -78,6 +78,15 @@ const resolvers = {
         async ( { resolveSelect } ) => {
             return await resolveSelect.getCurrentUser();
         },
+
+    /**
+     * Get the vendor ID for the current user.
+     */
+    getVendorId:
+        () =>
+        async ( { resolveSelect } ) => {
+            return await resolveSelect.getCurrentUser();
+        },
 };
 
 export default resolvers;

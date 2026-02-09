@@ -360,9 +360,7 @@ const DokanAI = () => {
                 onClose={ onClose }
                 onConfirm={ () => {} }
                 modalClassName="max-w-2xl"
-                modalProps={ {
-                    showXButton: false,
-                } }
+                isDismissible={ false }
                 dialogHeader={
                     <div className="p-4 font-semibold border-b flex justify-between items-center">
                         <div>
@@ -663,9 +661,7 @@ const DokanAI = () => {
                 onClose={ () => setRegenerateModal( false ) }
                 onConfirm={ () => {} }
                 modalClassName="max-w-md"
-                modalProps={ {
-                    showXButton: false,
-                } }
+                isDismissible={ false }
                 dialogHeader={ false }
                 dialogContent={
                     <div className="text-center p-5">

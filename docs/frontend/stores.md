@@ -225,26 +225,144 @@ the global `dokan.{store-name}-store` when your code is bundled.
 
 The `Dokan Core Store` is a `WordPress Data Store` that provides access to the core data of the `Dokan` plugin. This store is available in the `@dokan/stores/core` package.
 
+## Available Selectors
+
+The core store provides the following selectors:
+
+- `getCurrentUser()` - Get the current user object
+- `hasCap(capability)` - Check if the current user has a specific capability
+- `isVendor()` - Check if the current user is a vendor
+- `isVendorStaff()` - Check if the current user is a vendor staff
+- `getStoreSettings()` - Get the store settings
+- `getGlobalSettings()` - Get the global settings
+- `getVendorId()` - Get the vendor ID for the current user
+
+## Available Actions
+
+- `setCurrentUser(user)` - Set the current user
+- `setStoreSettings(settings)` - Set the store settings
+- `setGlobalSettings(settings)` - Set the global settings
+
+## Usage Examples
+
+### Using Selectors
+
 ```js
 import { useSelect } from '@wordpress/data';
 import coreStore from '@dokan/stores/core';
 
 const App = () => {
+    // Get current user
+    const currentUser = useSelect( ( select ) => {
+        return select( coreStore ).getCurrentUser();
+    }, [] );
+
+    // Check if user is a vendor
+    const isVendor = useSelect( ( select ) => {
+        return select( coreStore ).isVendor();
+    }, [] );
+
+    // Check if user is a vendor staff
     const isVendorStaff = useSelect( ( select ) => {
         return select( coreStore ).isVendorStaff();
     }, [] );
-    
-    const getStoreSettings = useSelect( ( select ) => {
+
+    // Check if user has a specific capability
+    const hasCapability = useSelect( ( select ) => {
+        return select( coreStore ).hasCap( 'dokandar' );
+    }, [] );
+
+    // Get store settings
+    const storeSettings = useSelect( ( select ) => {
         return select( coreStore ).getStoreSettings();
     }, [] );
 
-    const currentUser = useSelect( ( select ) => {
-        return select( coreStore ).getCurrentUser();
+    // Get global settings
+    const globalSettings = useSelect( ( select ) => {
+        return select( coreStore ).getGlobalSettings();
+    }, [] );
+
+    // Get vendor ID
+    const vendorId = useSelect( ( select ) => {
+        return select( coreStore ).getVendorId();
     }, [] );
 };
 ```
 
+### Using Actions
+
+```js
+import { useDispatch } from '@wordpress/data';
+import coreStore from '@dokan/stores/core';
+
+const App = () => {
+    const { setCurrentUser, setStoreSettings, setGlobalSettings } = useDispatch( coreStore );
+
+    // Update current user
+    const updateUser = ( user ) => {
+        setCurrentUser( user );
+    };
+
+    // Update store settings
+    const updateStoreSettings = ( settings ) => {
+        setStoreSettings( settings );
+    };
+
+    // Update global settings
+    const updateGlobalSettings = ( settings ) => {
+        setGlobalSettings( settings );
+    };
+};
+```
+
+### Using Resolvers (Async Data Fetching)
+
+```js
+import { resolveSelect } from '@wordpress/data';
+import coreStore from '@dokan/stores/core';
+
+const App = () => {
+    // Fetch current user asynchronously
+    const fetchCurrentUser = async () => {
+        await resolveSelect( coreStore ).getCurrentUser();
+    };
+
+    // Fetch store settings asynchronously
+    const fetchStoreSettings = async () => {
+        const settings = await resolveSelect( coreStore ).getStoreSettings();
+        return settings;
+    };
+
+    // Fetch global settings asynchronously
+    const fetchGlobalSettings = async () => {
+        await resolveSelect( coreStore ).getGlobalSettings();
+    };
+
+    // Check capability (triggers user fetch if needed)
+    const checkCapability = async ( capability ) => {
+        await resolveSelect( coreStore ).hasCap( capability );
+    };
+
+    // Check if vendor (triggers user fetch if needed)
+    const checkIsVendor = async () => {
+        await resolveSelect( coreStore ).isVendor();
+    };
+
+    // Check if vendor staff (triggers user fetch if needed)
+    const checkIsVendorStaff = async () => {
+        await resolveSelect( coreStore ).isVendorStaff();
+    };
+
+    // Get vendor ID (triggers user fetch if needed)
+    const fetchVendorId = async () => {
+        await resolveSelect( coreStore ).getVendorId();
+    };
+};
+```
+
 ## Use Dokan Hooks
+
+For convenience, you can also use the Dokan hooks which provide a simpler API:
 
 ```js
 import { usePermission, useCurrentUser } from '@dokan/hooks';
@@ -259,5 +377,4 @@ const App = () => {
     const isDokandar = usePermission('dokandar'); // you can pass string as single permission or pass string[] array for multiple permission checking
     const currentUser = useCurrentUser();
 }
-
 ```
