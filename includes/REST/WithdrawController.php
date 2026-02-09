@@ -319,6 +319,10 @@ class WithdrawController extends WP_REST_Controller {
             'orderby'  => 'DESC',
         ];
 
+        if ( $request['is_export'] ) {
+            $args['limit'] = $request['total_items'];
+        }
+
         $user_id = null;
 
         if ( ! current_user_can( 'manage_woocommerce' ) ) {

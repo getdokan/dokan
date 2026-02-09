@@ -89,7 +89,6 @@ const WithdrawPage = () => {
         cancelled: 0,
     } );
     const [ isExporting, setIsExporting ] = useState( false );
-    const [ exportProgress, setExportProgress ] = useState( 0 );
     const [ filterArgs, setFilterArgs ] = useState( {} );
     const [ activeStatus, setActiveStatus ] = useState( 'pending' );
     const [ vendorFilter, setVendorFilter ] = useState< VendorSelect | null >(
@@ -556,6 +555,8 @@ const WithdrawPage = () => {
             className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-[#575757] hover:bg-[#7047EB] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={ isExporting || data?.length === 0 }
             onClick={ async () => {
+                setIsExporting( true );
+
                 try {
                     // Minimal placeholder; backend export flow may vary.
                     // Attempt to hit export endpoint via same query params.
@@ -563,6 +564,7 @@ const WithdrawPage = () => {
                         ...view,
                         ...filterArgs,
                         is_export: true,
+                        total_items: totalItems, // Export all items matching current filters
                     } );
                     const res = await apiFetch( { path } );
                     if ( res && res.url ) {
@@ -574,21 +576,17 @@ const WithdrawPage = () => {
                     alert( __( 'Export failed. Please try again.', 'dokan-lite' ) );
                 } finally {
                     setIsExporting( false );
-                    setExportProgress( 0 );
                 }
             } }
         >
             { isExporting ? (
                 <>
-                    <Loader2 className="animate-spin" size={ 16 } />
-                    { exportProgress > 0
-                        ? __( `Exporting (${ exportProgress }%)`, 'dokan-lite' )
-                        : __( 'Exporting...', 'dokan-lite' )
-                    }
+                    <Loader2 className="animate-spin" size={16} />
+                    { __( 'Exporting...', 'dokan-lite' ) }
                 </>
             ) : (
                 <>
-                    <ArrowDown size={ 16 } />
+                    <ArrowDown size={16} />
                     { __( 'Export', 'dokan-lite' ) }
                 </>
             ) }
@@ -722,8 +720,6 @@ const WithdrawPage = () => {
                     method: 'GET',
                 } );
 
-                console.log( 'Export status:', statusResponse );
-
                 if ( statusResponse.percent_complete === 100 ) {
                     // Export is complete, download the file
                     if ( statusResponse.download_url ) {
@@ -735,7 +731,6 @@ const WithdrawPage = () => {
                         link.click();
                         document.body.removeChild( link );
 
-                        console.log( 'Export completed and downloaded' );
                     } else {
                         throw new Error( 'Download URL not available' );
                     }
