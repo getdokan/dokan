@@ -2,6 +2,7 @@ import { ShowHideField } from '../../../../../../components/fields';
 import DokanFieldLabel from '../../../../../../components/fields/DokanFieldLabel';
 import { dispatch } from '@wordpress/data';
 import settingsStore from '../../../../../../stores/adminSettings';
+import { twMerge } from 'tailwind-merge';
 
 export default function DokanShowHideField( { element } ) {
     if ( ! element.display ) {
@@ -13,13 +14,16 @@ export default function DokanShowHideField( { element } ) {
     };
     const hasTitle = Boolean( element.title && element.title.length > 0 );
     return (
-        <div className="grid grid-cols-6 p-4 gap-4 w-full">
+        <div
+            className="grid grid-cols-6 p-4 gap-4 w-full"
+            id={ element.hook_key }
+        >
             { hasTitle && (
                 <div className="md:col-span-2 col-span-6">
                     <DokanFieldLabel
                         title={ element.title }
                         helperText={ element.description }
-                        tooltip={ element.helper_text }
+                        tooltip={ element.tooltip }
                         titleFontWeight="bold"
                         imageUrl={ element?.image_url }
                     />
@@ -27,7 +31,9 @@ export default function DokanShowHideField( { element } ) {
             ) }
             <div
                 className={
-                    hasTitle ? 'md:col-span-4 col-span-6' : 'col-span-6'
+                    hasTitle
+                        ? 'md:col-span-4 col-span-6 self-center'
+                        : 'col-span-6 self-center'
                 }
             >
                 <ShowHideField

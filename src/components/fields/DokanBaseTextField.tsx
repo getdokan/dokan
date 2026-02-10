@@ -85,7 +85,7 @@ const DokanBaseTextField = ( {
     return (
         <div
             className={ twMerge(
-                `flex items-center flex-1  gap-4 h-10  w-full `,
+                `flex items-center flex-1 gap-4 h-full w-full `,
                 containerClassName
             ) }
         >
@@ -113,8 +113,8 @@ const DokanBaseTextField = ( {
                         placeholder,
                         ...inputProps,
                     } }
-                    addOnLeft={ prefix || null }
-                    addOnRight={ postfix || null }
+                    addOnLeft={ prefix }
+                    addOnRight={ postfix }
                     { ...otherProps }
                 />
             </div>

@@ -16,7 +16,49 @@ class FieldGroup extends SettingsElement {
 	 */
 	protected $type = 'fieldgroup';
 
-	/**
+    /**
+     * Content class for layout styling.
+     *
+     * @var string $content_class Content class.
+     */
+    protected $content_class = '';
+
+    /**
+     * Set content class.
+     *
+     * @param string $content_class Content class.
+     *
+     * @return FieldGroup
+     */
+    public function set_content_class( string $content_class ): FieldGroup {
+        $this->content_class = $content_class;
+
+        return $this;
+    }
+
+    /**
+     * Get content class.
+     *
+     * @return string
+     */
+    public function get_content_class(): string {
+        return $this->content_class;
+    }
+
+    /**
+     * Populate data for display.
+     *
+     * @return array
+     */
+    public function populate(): array {
+        $data = parent::populate();
+
+        $data['content_class'] = $this->get_content_class();
+
+        return $data;
+    }
+
+    /**
 	 * Data validation.
 	 *
 	 * @param mixed $data Data for validation.

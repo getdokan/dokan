@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Admin\Settings;
 
 use WeDevs\Dokan\Admin\Settings\Pages\AbstractPage;
+use WeDevs\Dokan\Traits\SettingsRecursion;
 
 /**
  * The settings provider class.
@@ -10,6 +11,8 @@ use WeDevs\Dokan\Admin\Settings\Pages\AbstractPage;
  * @since DOKAN_SINCE
  */
 class Settings {
+
+    use SettingsRecursion;
 
     /**
      * Settings Pages.
@@ -105,7 +108,7 @@ class Settings {
      *
      * @throws \Exception
      */
-    public function save( array $data ): void {
+    public function save( array $data, bool $save_old = true ): void {
         // Mirror new settings saves back to legacy options as well.
         $transformer = new LegacyTransformer();
 
@@ -115,6 +118,10 @@ class Settings {
             if ( isset( $data[ $page_id ] ) ) {
                 // Save into the new storage for this page
                 $page->save( $data[ $page_id ] );
+
+                if ( ! $save_old ) {
+                    continue;
+                }
 
                 // Also update corresponding legacy options using the mapper/transformer
                 $legacy = $transformer->transform(
@@ -133,7 +140,11 @@ class Settings {
                         if ( ! is_array( $existing ) ) {
                             $existing = [];
                         }
-                        $merged = array_replace_recursive( $existing, $fields );
+//                        error_log( print_r( $existing, true ) );
+//                        error_log( print_r( ':break:', true ) );
+//                        error_log( print_r( $fields, true ) );
+                        $merged = $this->settings_recursive_replace( $existing, $fields );
+//                        error_log( print_r( $merged, true ) );
                         update_option( $legacy_section, $merged );
                     }
                 }

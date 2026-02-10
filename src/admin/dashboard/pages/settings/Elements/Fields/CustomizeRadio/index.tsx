@@ -38,10 +38,8 @@ const CustomizeRadio = ( { element }: SettingsProps ) => {
 
     return (
         <div
-            className={ twMerge(
-                'p-4 space-y-4',
-                element?.wrapper_class || ''
-            ) }
+            className={ twMerge( 'p-4', element?.wrapper_class || '' ) }
+            id={ element.hook_key }
         >
             <DokanFieldLabel
                 title={ element.title || '' }
@@ -65,6 +63,7 @@ const CustomizeRadio = ( { element }: SettingsProps ) => {
                 disabled={ element?.disabled || false }
                 divider={ element?.divider }
             />
+            <span className="hidden md:!grid-cols-3"></span>
         </div>
     );
 };

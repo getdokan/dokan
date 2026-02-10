@@ -72,6 +72,16 @@ class Text extends Field {
      * @var string $image_url Image URL.
      */
     protected $image_url = '';
+
+    /**
+     * Custom validation callback for backend validation.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var callable|null $validation_func Custom validation callback.
+     */
+    protected $validation_func = null;
+
     /**
      * Constructor.
      *
@@ -284,14 +294,55 @@ class Text extends Field {
     }
 
     /**
+     * Get custom validation callback.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return callable|null
+     */
+    public function get_validation_func(): ?callable {
+        return $this->validation_func;
+    }
+
+    /**
+     * Set a custom validation callback for backend validation.
+     *
+     * The callback should accept the data value as the first parameter
+     * and return true if valid, or false if invalid.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param callable $callback Custom validation callback.
+     *
+     * @return Text
+     */
+    public function set_validation_func( callable $callback ): Text {
+        $this->validation_func = $callback;
+
+        return $this;
+    }
+
+    /**
      * Data validation.
+     *
+     * @since DOKAN_SINCE
      *
      * @param mixed $data Data for validation.
      *
-     * @return bool
+     * @return bool|string True if valid, error message string if invalid.
      */
     public function data_validation( $data ): bool {
-        return isset( $data ) && is_string( $data );
+        // Basic type validation.
+        if ( ! isset( $data ) || ! is_string( $data ) ) {
+            return false;
+        }
+
+        // If validation_func is set and callable, execute it.
+        if ( is_callable( $this->validation_func ?? '' ) ) {
+            return (bool) call_user_func( $this->validation_func, $data );
+        }
+
+        return true;
     }
 
     /**

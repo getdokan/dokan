@@ -1,4 +1,5 @@
 import { dispatch } from '@wordpress/data';
+import { isEqual } from 'lodash';
 import {
     DokanCheckboxGroup,
     DokanFieldLabel,
@@ -15,14 +16,15 @@ export default function DokanMultiCheck( { element } ) {
     };
 
     return (
-        <div className="flex flex-col gap-4 p-4 w-full">
+        <div className="flex flex-col gap-4 p-4 w-full" id={ element.hook_key }>
             { ( element?.title || element?.description ) && (
                 <DokanFieldLabel
                     title={ element.title }
                     titleFontWeight="bold"
                     helperText={ element.description }
-                    tooltip={ element.helper_text }
+                    tooltip={ element.tooltip }
                     imageUrl={ element?.image_url }
+                    validationError={ element?.validationError }
                 />
             ) }
             <DokanCheckboxGroup
@@ -32,9 +34,16 @@ export default function DokanMultiCheck( { element } ) {
                         value: option.value,
                     } ) ) || []
                 }
-                defaultValue={ element?.default || [] }
+                defaultValue={ element?.value || element?.default || [] }
                 onChange={ ( values ) => {
-                    onValueChange( { ...element, value: values } );
+                    if (
+                        ! isEqual(
+                            values,
+                            element?.value || element?.default || []
+                        )
+                    ) {
+                        onValueChange( { ...element, value: values } );
+                    }
                 } }
             />
         </div>

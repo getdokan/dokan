@@ -1,8 +1,4 @@
-import {
-    useState,
-    useCallback,
-    useEffect,
-} from '@wordpress/element';
+import { useState, useCallback, useEffect } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 import * as LucideIcons from 'lucide-react';
 import settingsStore from '../../../../../stores/adminSettings';
@@ -122,7 +118,7 @@ const Menu = ( {
             ! userHasManuallyNavigated
         ) {
             const { firstSubmenu } = getFirstVisibleMenuAndSubmenu();
-            if ( firstSubmenu && firstSubmenu.id !== activePage ) {
+            if ( firstSubmenu ) {
                 // Only trigger if it's different from current active page
                 setTimeout( () => {
                     onMenuClick( firstSubmenu.id );
@@ -171,126 +167,153 @@ const Menu = ( {
     );
 
     // Memoize MenuContent to prevent recreation
-    const MenuContent = ( { children }: { children?: JSX.Element } ) => (
-        <div className="space-y-6">
-            { ! loading &&
-                pages.map( ( item ) => {
-                    if ( ! item.display ) {
-                        return null;
-                    }
+    const MenuContent = ( { isMobile }: { isMobile: boolean } ) => {
+        const getEelementID = ( itemKey: string ) => {
+            return isMobile ? `${ itemKey }-mobile` : itemKey;
+        };
 
-                    const isActive =
-                        item.id === activePage ||
-                        item.children?.some(
-                            ( child ) => child.id === activePage
-                        );
+        return (
+            <div className="space-y-6">
+                { ! loading &&
+                    pages.map( ( item ) => {
+                        if ( ! item.display ) {
+                            return null;
+                        }
 
-                    // Check if this should be expanded due to search - allow all menus with visible children
-                    const shouldExpandForSearch =
-                        searchText.trim() &&
-                        item.display &&
-                        item.children &&
-                        item.children.some( ( child ) => child.display );
+                        if ( item.children && item.children.length === 0 ) {
+                            return null;
+                        }
 
-                    return (
-                        <div key={ item.id }>
-                            { ! item.children ? (
-                                <a
-                                    href={ item.id }
-                                    onClick={ ( e ) => {
-                                        e.preventDefault();
-                                        handleMenuClick( item.id );
-                                    } }
-                                    className={ classNames(
-                                        isActive
-                                            ? 'bg-[#efeaff]'
-                                            : 'hover:bg-gray-50',
-                                        'flex items-center gap-2 rounded-[3px] px-0 py-2 text-[14px] font-medium transition-colors',
-                                        isActive
-                                            ? 'text-[#7047eb]'
-                                            : 'text-[#575757]'
-                                    ) }
-                                >
-                                    { getIcon( item.icon || 'Settings' ) }
-                                    <span className="leading-5">
-                                        { item.title }
-                                    </span>
-                                </a>
-                            ) : (
-                                <Disclosure
-                                    as="div"
-                                    defaultOpen={
-                                        isActive || shouldExpandForSearch
-                                    }
-                                >
-                                    { ( { open } ) => (
-                                        <>
-                                            <DisclosureButton
-                                                className={
-                                                    'group flex w-full items-center justify-between rounded-[3px] p-0 text-left text-[14px] font-medium transition-colors'
-                                                }
-                                            >
-                                                <div className="flex items-center gap-2 text-[#575757]">
-                                                    { getIcon(
-                                                        item.icon || 'Settings'
-                                                    ) }
-                                                    <span className="leading-5">
-                                                        { item.title }
-                                                    </span>
-                                                </div>
-                                                <LucideIcons.ChevronDown
-                                                    className={ classNames(
-                                                        'w-3.5 h-3.5 transition-transform',
-                                                        open
-                                                            ? 'rotate-180 text-[#7047EB]'
-                                                            : 'text-[#828282] group-hover:text-[#7047EB]'
-                                                    ) }
-                                                />
-                                            </DisclosureButton>
-                                            <DisclosurePanel className="mt-5 space-y-1.5">
-                                                { getSortedSubpages(
-                                                    item?.children
-                                                )?.map( ( subItem ) => {
-                                                    if ( ! subItem.display ) {
-                                                        return null;
+                        const isActive =
+                            item.id === activePage ||
+                            item.children?.some(
+                                ( child ) => child.id === activePage
+                            );
+
+                        // Check if this should be expanded due to search - allow all menus with visible children
+                        const shouldExpandForSearch =
+                            searchText.trim() &&
+                            item.display &&
+                            item.children &&
+                            item.children.some( ( child ) => child.display );
+
+                        return (
+                            <div
+                                key={ item.id }
+                                id={ getEelementID( item.hook_key ) }
+                            >
+                                { ! item.children ? (
+                                    <a
+                                        href={ item.id }
+                                        onClick={ ( e ) => {
+                                            e.preventDefault();
+                                            handleMenuClick( item.id );
+                                        } }
+                                        className={ classNames(
+                                            isActive
+                                                ? 'bg-[#efeaff]'
+                                                : 'hover:bg-gray-50',
+                                            'flex items-center gap-2 rounded-[3px] px-0 py-2 text-[14px] font-medium transition-colors',
+                                            isActive
+                                                ? 'text-[#7047eb]'
+                                                : 'text-[#575757]'
+                                        ) }
+                                    >
+                                        { getIcon( item.icon || 'Settings' ) }
+                                        <span className="leading-5">
+                                            { item.title }
+                                        </span>
+                                    </a>
+                                ) : (
+                                    <Disclosure
+                                        as="div"
+                                        defaultOpen={
+                                            isActive || shouldExpandForSearch
+                                        }
+                                    >
+                                        { ( { open } ) => (
+                                            <>
+                                                <DisclosureButton
+                                                    className={
+                                                        'group flex w-full items-center justify-between rounded-[3px] p-0 text-left text-[14px] font-medium transition-colors'
                                                     }
+                                                >
+                                                    <div className="flex items-center gap-2 text-[#575757]">
+                                                        { getIcon(
+                                                            item.icon ||
+                                                                'Settings'
+                                                        ) }
+                                                        <span className="leading-5">
+                                                            { item.title }
+                                                        </span>
+                                                    </div>
+                                                    <LucideIcons.ChevronDown
+                                                        className={ classNames(
+                                                            'w-3.5 h-3.5 transition-transform',
+                                                            open
+                                                                ? 'rotate-180 text-[#7047EB]'
+                                                                : 'text-[#828282] group-hover:text-[#7047EB]'
+                                                        ) }
+                                                    />
+                                                </DisclosureButton>
+                                                <DisclosurePanel className="mt-5 space-y-1.5">
+                                                    { getSortedSubpages(
+                                                        item?.children
+                                                    )?.map( ( subItem ) => {
+                                                        if (
+                                                            ! subItem.display
+                                                        ) {
+                                                            return null;
+                                                        }
 
-                                                    const isSubActive =
-                                                        subItem.id ===
-                                                        activePage;
+                                                        const isSubActive =
+                                                            subItem.id ===
+                                                            activePage;
 
-                                                    return (
-                                                        <a
-                                                            key={ subItem.id }
-                                                            href={ subItem.id }
-                                                            onClick={ ( e ) => {
-                                                                e.preventDefault();
-                                                                handleMenuClick(
-                                                                    subItem.id,
-                                                                    item.id
-                                                                );
-                                                            } }
-                                                            className={ classNames(
-                                                                isSubActive
-                                                                    ? 'bg-[#efeaff] text-[#7047eb] font-semibold'
-                                                                    : 'text-[#575757] font-medium hover:bg-[#efeaff] hover:text-[#7047eb]',
-                                                                'block rounded-[3px] px-7 py-2 text-[14px] leading-[1.3] transition-colors focus:!outline-transparent focus:shadow-none skip-color-module'
-                                                            ) }
-                                                        >
-                                                            { subItem.title }
-                                                        </a>
-                                                    );
-                                                } ) }
-                                            </DisclosurePanel>
-                                        </>
-                                    ) }
-                                </Disclosure>
-                            ) }
-                        </div>
-                    );
-                } ) }
-        </div>
-    );
+                                                        return (
+                                                            <a
+                                                                key={
+                                                                    subItem.id
+                                                                }
+                                                                href={
+                                                                    subItem.id
+                                                                }
+                                                                onClick={ (
+                                                                    e
+                                                                ) => {
+                                                                    e.preventDefault();
+                                                                    handleMenuClick(
+                                                                        subItem.id,
+                                                                        item.id
+                                                                    );
+                                                                } }
+                                                                id={ getEelementID(
+                                                                    subItem.hook_key
+                                                                ) }
+                                                                className={ classNames(
+                                                                    isSubActive
+                                                                        ? 'bg-[#efeaff] text-[#7047eb] font-semibold'
+                                                                        : 'text-[#575757] font-medium hover:bg-[#efeaff] hover:text-[#7047eb]',
+                                                                    'block rounded-[3px] px-7 py-2 text-[14px] leading-[1.3] transition-colors focus:!outline-transparent focus:shadow-none skip-color-module'
+                                                                ) }
+                                                            >
+                                                                {
+                                                                    subItem.title
+                                                                }
+                                                            </a>
+                                                        );
+                                                    } ) }
+                                                </DisclosurePanel>
+                                            </>
+                                        ) }
+                                    </Disclosure>
+                                ) }
+                            </div>
+                        );
+                    } ) }
+            </div>
+        );
+    };
 
     return (
         <>
@@ -340,7 +363,7 @@ const Menu = ( {
                     }` }
                 >
                     <nav className="bg-white p-7 lg:py-12">
-                        <MenuContent />
+                        <MenuContent isMobile={ true } />
                     </nav>
                 </div>
             </div>

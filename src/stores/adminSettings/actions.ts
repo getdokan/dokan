@@ -44,6 +44,11 @@ const actions = {
             searchText,
         };
     },
+    resetSettings() {
+        return {
+            type: 'RESET_SETTINGS',
+        };
+    },
     fetchSettings() {
         return async ( { dispatch } ) => {
             dispatch( actions.setLoading( true ) );
@@ -54,10 +59,10 @@ const actions = {
             dispatch( actions.setSettings( response ) );
         };
     },
-    saveSettings( payload: SettingsElement ) {
+    saveSettings( payload: SettingsElement[] ) {
         return async ( { dispatch } ) => {
             dispatch( actions.setSaving( true ) );
-            const response = await apiFetch< SettingsElement >( {
+            const response = await apiFetch< SettingsElement[] >( {
                 path: '/dokan/v1/admin/settings',
                 method: 'POST',
                 data: payload,
@@ -65,7 +70,7 @@ const actions = {
 
             dispatch( actions.setSaving( false ) );
             dispatch( actions.setNeedSaving( false ) );
-            dispatch( actions.updateSettings( response ) );
+            dispatch( actions.setSettings( response as any ) );
         };
     },
 };

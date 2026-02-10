@@ -1,5 +1,5 @@
 import { debounce } from '@wordpress/compose';
-import { useCallback, useMemo, useState } from '@wordpress/element';
+import { RawHTML, useCallback, useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import CategoryRow from './CategoryRow';
 import CategoryTree from './CategoryTree';
@@ -20,9 +20,7 @@ import {
     validatePercentage,
 } from './utils';
 
-const CategoryBasedCommission: React.FC<
-    CategoryBasedCommissionProps
-> = ( {
+const CategoryBasedCommission: React.FC< CategoryBasedCommissionProps > = ( {
     categories,
     commissionValues,
     currency,
@@ -30,6 +28,7 @@ const CategoryBasedCommission: React.FC<
     onCommissionChange,
     display = true,
     debounceDelay = 500,
+    validationError,
 } ) => {
     // Initialize commission state with proper memoization
     const initialCommission = useMemo( (): CommissionValues => {
@@ -312,6 +311,13 @@ const CategoryBasedCommission: React.FC<
                     />
                 ) }
             </div>
+            { validationError && (
+                <div className="p-4 border-[#E9E9E9]">
+                    <i className="text-sm font-light text-[#9F2225]">
+                        <RawHTML>{ validationError }</RawHTML>
+                    </i>
+                </div>
+            ) }
         </div>
     );
 };

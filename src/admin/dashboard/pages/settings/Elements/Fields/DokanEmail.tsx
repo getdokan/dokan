@@ -17,7 +17,10 @@ export default function DokanEmail( { element } ) {
     const hasTitle = Boolean( element.title && element.title.length > 0 );
 
     return (
-        <div className="grid-cols-12 grid gap-2 justify-between w-full p-4">
+        <div
+            className="grid-cols-12 grid gap-2 justify-between w-full p-4"
+            id={ element.hook_key }
+        >
             { hasTitle && (
                 <div className={ 'sm:col-span-8 col-span-12' }>
                     <DokanFieldLabel
@@ -27,6 +30,7 @@ export default function DokanEmail( { element } ) {
                         tooltip={ element.helper_text }
                         imageUrl={ element?.image_url }
                         wrapperClassNames={ 'w-full' }
+                        validationError={ element?.validationError }
                     />
                 </div>
             ) }

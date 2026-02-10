@@ -392,10 +392,11 @@ const DokanRepeater = ( { element }: SettingsProps ) => {
         <>
             <div className="dokan-repeater-field w-full">
                 <DokanFieldLabel
-                    titleFontWeight="light"
-                    wrapperClassNames={ element.title ? 'p-4' : '' }
+                    titleFontWeight="bold"
+                    wrapperClassNames={ element.title ? 'w-full max-w-full p-4 border-b border-gray-200' : '' }
                     title={ element.title || '' }
                     helperText={ element.description }
+                    tooltip={ element?.tooltip ?? '' }
                     imageUrl={ element?.image_url }
                 />
 
@@ -425,7 +426,7 @@ const DokanRepeater = ( { element }: SettingsProps ) => {
                         ) }
                     </div>
                 ) : (
-                    <div className="text-center py-8 text-gray-500">
+                    <div className="text-center text-lg p-6 text-gray-500">
                         <p>{ __( 'No items found.', 'dokan-lite' ) }</p>
                     </div>
                 ) }
@@ -433,7 +434,11 @@ const DokanRepeater = ( { element }: SettingsProps ) => {
                 { /* Add New Item Section */ }
                 <div
                     onClick={ handleAddNew }
-                    className="flex items-center gap-2 cursor-pointer text-[#7047eb] hover:text-[#5a3bc4] transition-colors p-5"
+                    className={ twMerge(
+                        'flex items-center gap-2 cursor-pointer text-[#7047eb] hover:text-[#5a3bc4] transition-colors p-5',
+                        ! ( sortedItems.length > 0 ) &&
+                            'border-t border-gray-200'
+                    ) }
                 >
                     <Plus size={ 16 } />
                     <span className="text-sm font-medium">

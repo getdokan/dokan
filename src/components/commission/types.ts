@@ -94,11 +94,12 @@ export interface CategoryBasedCommissionProps {
     // Display options
     display?: boolean;
     debounceDelay?: number;
+    validationError?: string;
 }
 
 export interface FixedCommissionInputValues {
-    admin_percentage: number;
-    additional_fee: number;
+    admin_percentage: string | number;
+    additional_fee: string | number;
 }
 
 export interface CombineInputProps {
@@ -117,6 +118,7 @@ export interface CombineInputProps {
     title?: string;
     description?: string;
     hookKey?: string;
+    isAutomated?: boolean;
 
     // Callbacks
     onValueChange: ( updatedValues: FixedCommissionInputValues ) => void;
@@ -124,4 +126,5 @@ export interface CombineInputProps {
     // Display options
     display?: boolean;
     debounceDelay?: number;
+    validationError?: string;
 }

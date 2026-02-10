@@ -13,6 +13,7 @@ import DokanFileUploadField from './DokanFileUpload';
 import DokanHtmlField from './DokanHtmlField';
 import DokanInfoField from './DokanInfoField';
 import DokanMultiCheck from './DokanMultiCheck';
+import DokanNoticeField from './DokanNoticeField';
 import DokanNumber from './DokanNumber';
 import DokanPassword from './DokanPassword';
 import DokanRadioCapsule from './DokanRadioCapsule';
@@ -29,7 +30,7 @@ import DokanRichText from './DokanRichText';
 import DokanRepeater from './DokanRepeater';
 import WithdrawSchedule from './WithdrawSchedule';
 
-const FieldParser = ( { element }: SettingsProps ) => {
+const FieldParser = ( { element, isSingleLineRow = false }: SettingsProps ) => {
     switch ( element.variant ) {
         case 'text':
             return applyFilters(
@@ -41,7 +42,11 @@ const FieldParser = ( { element }: SettingsProps ) => {
         case 'select':
             return applyFilters(
                 'dokan_admin_settings_select_field_parser',
-                <DokanSelect key={ element.hook_key } element={ element } />,
+                <DokanSelect
+                    key={ element.hook_key }
+                    element={ element }
+                    isSingleLineRow={ isSingleLineRow }
+                />,
                 element
             );
 
@@ -207,6 +212,16 @@ const FieldParser = ( { element }: SettingsProps ) => {
             return applyFilters(
                 'dokan_admin_settings_html_field_parser',
                 <DokanHtmlField key={ element.hook_key } element={ element } />,
+                element
+            );
+
+        case 'notice':
+            return applyFilters(
+                'dokan_admin_settings_notice_field_parser',
+                <DokanNoticeField
+                    key={ element.hook_key }
+                    element={ element }
+                />,
                 element
             );
 

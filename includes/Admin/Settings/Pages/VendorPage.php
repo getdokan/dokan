@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\Admin\Settings\Pages;
 use WeDevs\Dokan\Admin\Settings\Elements\ElementFactory;
 use WeDevs\Dokan\Admin\Settings\ElementTransformer;
 use WeDevs\Dokan\Admin\Settings;
+use WeDevs\Dokan\Utilities\AdminSettings;
 
 class VendorPage extends AbstractPage {
 
@@ -78,22 +79,28 @@ class VendorPage extends AbstractPage {
      * @return void
      */
     public function describe_settings(): void {
+        $enable_selling_status_list = dokan_get_container()->get( AdminSettings::class )->new_seller_enable_selling_statuses();
+        $enable_selling_field       = ElementFactory::field( 'enable_selling', 'radio_capsule' )
+            ->set_title( esc_html__( 'Enable Selling', 'dokan-lite' ) )
+            ->set_tooltip( esc_html__( 'If checked, vendors will have permission to sell immediately after registration. If unchecked, newly registered vendors cannot add products until selling capability is activated manually from admin dashboard.', 'dokan-lite' ) )
+            ->set_description( esc_html__( 'Immediately enable selling for newly registered vendors.', 'dokan-lite' ) )
+            ->set_default( 'automatically' );
+
+        // Load all selling status list.
+        foreach ( $enable_selling_status_list as $status => $label ) {
+            $enable_selling_field->add_option( $label, $status );
+        }
+
         $vendor_onboarding = ElementFactory::sub_page( 'vendor_onboarding' )
             ->set_title( esc_html__( 'Vendor Onboarding', 'dokan-lite' ) )
             ->set_priority( 100 )
             ->set_description( esc_html__( 'Control the onboarding experience for vendors joining your marketplace.', 'dokan-lite' ) )
             ->set_doc_link( 'https://wedevs.com/docs/dokan-lite/vendor-onboarding/' )
-            ->add(
-                ElementFactory::field( 'enable_selling', 'radio_capsule' )
-                    ->set_title( esc_html__( 'Enable Selling', 'dokan-lite' ) )
-                    ->set_description( esc_html__( 'Immediately enable selling for newly registered vendors.', 'dokan-lite' ) )
-                    ->add_option( esc_html__( 'Automatically', 'dokan-lite' ), 'automatically' )
-                    ->add_option( esc_html__( 'Manually', 'dokan-lite' ), 'manually' )
-                    ->set_default( 'automatically' )
-            )
+            ->add( $enable_selling_field )
             ->add(
                 ElementFactory::field( 'address_fields', 'switch' )
                     ->set_title( esc_html__( 'Address Fields', 'dokan-lite' ) )
+                    ->set_tooltip( esc_html__( 'Add Address Fields on the Vendor Registration form.', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Add Address Fields on the Vendor Registration form.', 'dokan-lite' ) )
                     ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'on' )
                     ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), 'off' )
@@ -104,7 +111,7 @@ class VendorPage extends AbstractPage {
         $vendor_capabilities_page = ElementFactory::sub_page( 'vendor_capabilities' )
             ->set_title( esc_html__( 'Vendor Capabilities', 'dokan-lite' ) )
             ->set_priority( 300 )
-            ->set_description( esc_html__( 'Configure what vendors can do in your marketplace.', 'dokan-lite' ) );
+            ->set_description( esc_html__( 'Configure what vendors can do and control within your marketplace.', 'dokan-lite' ) );
 
         // Create a single section for all vendor capabilities
         $vendor_capabilities_section = ElementFactory::section( 'vendor_capabilities' );
@@ -114,6 +121,7 @@ class VendorPage extends AbstractPage {
             ->add(
                 ElementFactory::field( 'one_page_creation', 'switch' )
                     ->set_title( esc_html__( 'One Page Product Creation', 'dokan-lite' ) )
+                    ->set_tooltip( esc_html__( 'If disabled, instead of a single add product page it will open a pop up window or vendor will redirect to product page when adding new product.', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Add new product in single page view.', 'dokan-lite' ) )
                     ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'on' )
                     ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), 'off' )
@@ -122,14 +130,18 @@ class VendorPage extends AbstractPage {
             ->add(
                 ElementFactory::field( 'product_popup', 'switch' )
                     ->set_title( esc_html__( 'Product Popup', 'dokan-lite' ) )
+                    ->set_tooltip( esc_html__( 'If disabled, instead of a pop up window vendor will redirect to product page when adding new product.', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Add new product in popup view.', 'dokan-lite' ) )
                     ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'on' )
                     ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), 'off' )
                     ->set_default( 'on' )
+                    ->add_dependency( 'vendor_capabilities.vendor_capabilities.one_page_creation', 'on', true, 'display', 'show', '!==' )
+                    ->add_dependency( 'vendor_capabilities.vendor_capabilities.one_page_creation', 'on', true, 'display', 'hide', '===' )
             )
             ->add(
                 ElementFactory::field( 'order_status_change', 'switch' )
                     ->set_title( esc_html__( 'Order Status Change', 'dokan-lite' ) )
+                    ->set_tooltip( esc_html__( 'Checking this will enable sellers to change the order status. If unchecked, only admin can change the order status.', 'dokan-lite' ) )
                     ->set_description( esc_html__( 'Allow vendor to update order status.', 'dokan-lite' ) )
                     ->set_enable_state( esc_html__( 'Enabled', 'dokan-lite' ), 'on' )
                     ->set_disable_state( esc_html__( 'Disabled', 'dokan-lite' ), 'off' )
@@ -148,7 +160,7 @@ class VendorPage extends AbstractPage {
         $vendor_capabilities_page->add( $vendor_capabilities_section );
 
         $this
-            ->set_title( esc_html__( 'Vendor', 'dokan-lite' ) )
+            ->set_title( esc_html__( 'Vendors', 'dokan-lite' ) )
             ->set_description( esc_html__( 'Configure vendor-related settings and capabilities.', 'dokan-lite' ) )
             ->set_icon( 'Users' )
             ->add( $vendor_onboarding )

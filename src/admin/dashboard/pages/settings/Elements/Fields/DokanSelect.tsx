@@ -4,8 +4,28 @@ import {
     DokanSelect as BaseDokanSelect,
 } from '../../../../../../components/fields';
 import settingsStore from '../../../../../../stores/adminSettings';
+import { twMerge } from 'tailwind-merge';
+import { RawHTML } from '@wordpress/element';
+import * as LucideIcons from 'lucide-react';
 
-export default function DokanSelect( { element } ) {
+const getIcon = ( iconName: string ) => {
+    const iconProps = { className: 'w-5 h-5 text-[#828282]' };
+
+    // Get the icon component by name.
+    const IconComponent = ( LucideIcons as any )[ iconName ];
+
+    // If the icon is not found, use a fallback icon.
+    if ( ! IconComponent ) {
+        console.warn(
+            `Icon "${ iconName }" not found in Lucide React. Using fallback.`
+        );
+        return <LucideIcons.Settings { ...iconProps } />;
+    }
+
+    return <IconComponent { ...iconProps } />;
+};
+
+export default function DokanSelect( { element, isSingleLineRow = false } ) {
     if ( ! element.display ) {
         return null;
     }
@@ -14,17 +34,32 @@ export default function DokanSelect( { element } ) {
         dispatch( settingsStore ).updateSettingsValue( updatedElement );
     };
     const hasTitle = Boolean( element.title && element.title.length > 0 );
+
     return (
-        <div className="grid-cols-12 grid gap-2 justify-between w-full p-4">
+        <div
+            className={ twMerge(
+                'p-4',
+                isSingleLineRow
+                    ? 'inline-block'
+                    : 'grid-cols-12 grid gap-2 justify-between w-full'
+            ) }
+            id={ element.hook_key }
+        >
             { hasTitle && (
-                <div className={ 'sm:col-span-8 col-span-12' }>
+                <div
+                    className={ twMerge(
+                        'sm:col-span-8 col-span-12 self-center',
+                        isSingleLineRow && 'mb-2'
+                    ) }
+                >
                     <DokanFieldLabel
                         title={ element.title }
                         titleFontWeight="bold"
                         helperText={ element.description }
-                        tooltip={ element.helper_text }
+                        tooltip={ element.tooltip }
                         imageUrl={ element?.image_url }
                         wrapperClassNames={ 'w-full' }
+                        validationError={ element?.validationError }
                     />
                 </div>
             ) }
@@ -41,14 +76,23 @@ export default function DokanSelect( { element } ) {
                     }
                     options={
                         element.options?.map( ( option ) => ( {
-                            label: option.title,
+                            label: option?.icon_name ? (
+                                <div className={ 'flex gap-2.5' }>
+                                    { getIcon( option?.icon_name ) }
+                                    <RawHTML>{ option.title }</RawHTML>
+                                </div>
+                            ) : (
+                                <RawHTML>{ option.title }</RawHTML>
+                            ),
                             value: option.value,
                         } ) ) || []
                     }
                     disabled={ element.disabled }
-                    containerClassName={
-                        'max-w-full sm:!w-[14rem] sm:justify-self-end '
-                    }
+                    placeholder={ element.placeholder || '' }
+                    containerClassName={ twMerge(
+                        'max-w-full sm:!w-[14rem] sm:justify-self-end',
+                        isSingleLineRow && 'sm:!w-[12rem]'
+                    ) }
                 />
             </div>
         </div>

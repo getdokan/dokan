@@ -19,7 +19,10 @@ const DokanBaseSelect = ( {
 }: DokanBaseSelectProps ) => {
     return (
         <div className={ ` ${ containerClassName }` }>
-            <FormSelect { ...props } />
+            <FormSelect
+                { ...props }
+                portalTarget={ document.querySelector( '.dokan-layout' ) }
+            />
         </div>
     );
 };

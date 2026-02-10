@@ -36,9 +36,6 @@ const CommissionInputs: React.FC< CommissionInputsProps > = ( {
             <div className="w-[142px]">
                 <DebouncedInput
                     component={ MaskedInput }
-                    input={ {
-                        type: 'number',
-                    } }
                     value={ formatValueProp(
                         getCommissionValue( 'percentage', categoryId ) || ''
                     ) }

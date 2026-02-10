@@ -9,6 +9,26 @@ export type SettingsElementDependency = {
     comparison?: string;
 };
 
+export type SettingsElementValidationParams =
+    | {
+          min?: number | string | null;
+          max?: number | string | null;
+          values?: ( string | number )[];
+      }
+    | ( string | number )[]
+    | string
+    | number;
+
+export type SettingsElementValidation = {
+    rules?: string;
+    params?: SettingsElementValidationParams;
+    message?: string;
+    self?: string;
+    currentValue?: any;
+    isValid?: boolean;
+    errorMessage?: string;
+};
+
 export interface SettingsElementOption {
     title: string;
     value: string | number;
@@ -29,6 +49,8 @@ export interface SettingsElement {
     description?: string;
     dependency_key: string;
     dependencies: SettingsElementDependency[];
+    validations?: SettingsElementValidation[];
+    validationError?: string;
     options?: SettingsElementOption[];
     variant?: string;
     image_url?: string;
@@ -54,8 +76,11 @@ export type SettingsState = {
     settings: SettingsElement[];
     originalSettings: SettingsElement[];
     dependencies: SettingsElementDependency[];
+    validations: SettingsElementValidation[];
     loading: boolean;
     saving: boolean;
     needSaving: boolean;
+    hasValidationErrors: boolean;
     searchText: string;
+    changedElements: Record< string, SettingsElement >;
 };
