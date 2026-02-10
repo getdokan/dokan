@@ -7,7 +7,7 @@ use WeDevs\Dokan\Test\DokanTestCase;
 use WP_REST_Request;
 use WP_REST_Server;
 
-class AdminDashboardStatsControllerTest extends DokanTestCase {
+abstract class AdminDashboardStatsControllerTest extends DokanTestCase {
 
     /**
      * @var WP_REST_Server
