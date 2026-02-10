@@ -118,12 +118,12 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
             $store_name = ! empty( $store_info['store_name'] )
                 ? sanitize_title( $store_info['store_name'] )
                 : 'vendor-' . absint( $filters['user_id'] );
-            
+
             // Truncate if too long (max 50 chars for store name part).
             if ( strlen( $store_name ) > 50 ) {
                 $store_name = substr( $store_name, 0, 44 ) . '-trunc';
             }
-            
+
             $parts[] = $store_name;
         }
 
@@ -255,29 +255,29 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
                 $column_value = $withdraw_item['created'] ?? '';
                 break;
 
-            case "paypal_email":
+            case 'paypal_email':
                 $column_value = $withdraw_item['details']['paypal']['email'] ?? '';
                 break;
 
-            case "skrill_email":
+            case 'skrill_email':
                 $column_value = $withdraw_item['details']['skrill']['email'] ?? '';
                 break;
 
-            case "dokan_custom_method":
-            case "dokan_custom_value":
+            case 'dokan_custom_method':
+            case 'dokan_custom_value':
                 $field        = substr_replace( $key, '', 0, 13 );
                 $column_value = $withdraw_item['details']['dokan_custom'][ $field ] ?? '';
                 break;
 
-            case "bank_ac_name":
-            case "bank_ac_number":
-            case "bank_ac_type":
-            case "bank_bank_name":
-            case "bank_bank_addr":
-            case "bank_declaration":
-            case "bank_iban":
-            case "bank_routing_number":
-            case "bank_swift":
+            case 'bank_ac_name':
+            case 'bank_ac_number':
+            case 'bank_ac_type':
+            case 'bank_bank_name':
+            case 'bank_bank_addr':
+            case 'bank_declaration':
+            case 'bank_iban':
+            case 'bank_routing_number':
+            case 'bank_swift':
                 $field        = substr_replace( $key, '', 0, 5 );
                 $column_value = $withdraw_item['details']['bank'][ $field ] ?? '';
                 break;
