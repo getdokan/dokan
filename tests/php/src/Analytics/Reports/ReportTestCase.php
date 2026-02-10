@@ -119,6 +119,12 @@ abstract class ReportTestCase extends DokanTestCase {
 
     public function tear_down() {
         dokan()->get_container()->extend( 'commission' )->setConcrete( new Commission() );
+        // Reset OrderCommission::class binding to ensure mocks don't persist between tests
+        dokan_get_container()->extend( OrderCommission::class )->setConcrete(
+            function () {
+                return new OrderCommission();
+            }
+        );
         parent::tear_down();
     }
 

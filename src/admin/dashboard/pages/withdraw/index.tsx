@@ -110,7 +110,7 @@ const WithdrawPage = () => {
             id: 'vendor',
             label: __( 'Vendor', 'dokan-lite' ),
             enableGlobalSearch: true,
-            enableSorting: true,
+            enableSorting: false,
             render: ( { item } ) => (
                 <div className="flex items-center space-x-3">
                     { item.user?.gravatar && (
@@ -147,7 +147,7 @@ const WithdrawPage = () => {
         {
             id: 'amount',
             label: __( 'Amount', 'dokan-lite' ),
-            enableSorting: true,
+            enableSorting: false,
             render: ( { item } ) => (
                 <div className="font-medium text-gray-600">
                     { price( item.amount ) }
@@ -189,7 +189,7 @@ const WithdrawPage = () => {
         {
             id: 'charge',
             label: __( 'Charge', 'dokan-lite' ),
-            enableSorting: true,
+            enableSorting: false,
             render: ( { item } ) => (
                 <div className="text-gray-900">
                     { price( item.charge || 0 ) }
@@ -199,7 +199,7 @@ const WithdrawPage = () => {
         {
             id: 'payable',
             label: __( 'Payable', 'dokan-lite' ),
-            enableSorting: true,
+            enableSorting: false,
             render: ( { item } ) => (
                 <div className="font-medium text-gray-900">
                     { price( item.receivable || item.amount ) }
@@ -209,7 +209,7 @@ const WithdrawPage = () => {
         {
             id: 'date',
             label: __( 'Date', 'dokan-lite' ),
-            enableSorting: true,
+            enableSorting: false,
             render: ( { item } ) => (
                 <div className="text-gray-900">
                     <DateTimeHtml.Date date={ item.created } />
@@ -512,9 +512,16 @@ const WithdrawPage = () => {
         titleField: 'vendor',
         status: 'pending',
         layout: { density: 'comfortable' },
-        fields: fields.map( ( field ) =>
-            field.id !== 'vendor' ? field.id : ''
-        ),
+        fields: [
+            'amount',
+            'status',
+            'method',
+            'charge',
+            'payable',
+            'date',
+            'details',
+            'note',
+        ],
     } );
 
     // Handle tab selection for status filtering
@@ -551,6 +558,7 @@ const WithdrawPage = () => {
                     // Attempt to hit export endpoint via same query params.
                     const path = addQueryArgs( 'dokan/v2/withdraw', {
                         ...view,
+                        ...filterArgs,
                         is_export: true,
                     } );
                     const res = await apiFetch( { path } );
