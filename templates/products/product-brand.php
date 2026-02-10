@@ -12,7 +12,7 @@
 
 <div class="dokan-form-group">
     <label for="product_brand" class="form-label"><?php esc_html_e( 'Brand', 'dokan-lite' ); ?></label>
-    <select multiple="multiple" id="product_brand" name="product_brand[]" class="product_brand_search dokan-form-control" data-placeholder="<?php esc_attr_e( 'Select brand', 'dokan-lite' ); ?>">
+    <select multiple="multiple" id="product_brand" name="product_brand[]" class="product_brand_search dokan-form-control" data-placeholder="<?php esc_attr_e( 'Select brand', 'dokan-lite' ); ?>" style="width: 100%;">
         <?php if ( ! empty( $product_brands ) ) : ?>
             <?php foreach ( $product_brands as $brand ) : ?>
                 <option value="<?php echo esc_attr( $brand->term_id ); ?>" selected="selected">

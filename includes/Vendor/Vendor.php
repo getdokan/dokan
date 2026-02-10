@@ -1336,6 +1336,10 @@ class Vendor {
         $this->set_payment_prop( 'swift', 'bank', wc_clean( $value ) );
     }
 
+    public function set_address( $value ) {
+        $this->set_prop( 'address', wc_clean( $value ) );
+    }
+
     /**
      * Set street 1
      *

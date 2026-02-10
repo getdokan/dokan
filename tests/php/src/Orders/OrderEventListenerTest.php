@@ -1,11 +1,12 @@
 <?php
 
-namespace WeDevs\Dokan\Test\Order;
+namespace WeDevs\Dokan\Test\Orders;
 
 use WeDevs\Dokan\Order\OrderEventListener;
 use WeDevs\Dokan\Test\DokanTestCase;
 
 /**
+ * @group orders
  * @group order-event-listener
  *
  * @note by default the withdrawal option is enable for completed order.
