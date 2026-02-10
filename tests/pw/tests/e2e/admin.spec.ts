@@ -2,6 +2,8 @@ import { test } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { data } from '@utils/testData';
 
+
+//Admin functionality test suite
 test.describe('Admin functionality test', () => {
     test('admin can login', { tag: ['@lite', '@admin'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
