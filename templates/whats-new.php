@@ -4,6 +4,40 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.2.10',
+        'released' => '2026-02-10',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Refactor download permission handling to use Dokan’s standard template loader.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Prevent misleading payment status messages in Admin Vendor Withdraw.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Improve payment connection messages in Admin Vendor Withdraw.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Ensure store opening hours save correctly with custom date and time formats.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Ensure user subscription renewals work correctly when Dokan is enabled.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Ensure “Actions” and “No results” in DataViews are properly translatable.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.2.9',
         'released' => '2026-01-27',
         'changes'  => [
