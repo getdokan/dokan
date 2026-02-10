@@ -729,11 +729,13 @@ class StoreController extends WP_REST_Controller {
         $is_authorized = $this->can_access_vendor_store( $store->get_id() );
 
         if ( $is_authorized ) {
-            $methods_data = dokan_get_container()->get( 'dashboard' )->templates->settings->get_seller_payment_methods( $store->get_id() );
-            $data['admin_category_commission'] = $store->get_commission_settings()->get_category_commissions();
-            $data['admin_commission'] = $store->get_commission_settings()->get_percentage();
-            $data['admin_additional_fee'] = $store->get_commission_settings()->get_flat();
-            $data['admin_commission_type'] = $store->get_commission_settings()->get_type();
+            $dashboard    = dokan_get_container()->get('dashboard');
+            $methods_data = $dashboard->templates?->settings?->get_seller_payment_methods( $store->get_id() ) ?? [];
+
+            $data['admin_category_commission']    = $store->get_commission_settings()->get_category_commissions();
+            $data['admin_commission']             = $store->get_commission_settings()->get_percentage();
+            $data['admin_additional_fee']         = $store->get_commission_settings()->get_flat();
+            $data['admin_commission_type']        = $store->get_commission_settings()->get_type();
             $data['bank_payment_required_fields'] = dokan_bank_payment_required_fields();
             $data['active_payment_methods']       = $methods_data['active_methods'] ?? [];
             $data['connected_methods']            = $methods_data['connected_methods'] ?? [];
