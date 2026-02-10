@@ -145,7 +145,7 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
                 'vendor_shipping_tax' => $order_commission ? $order_commission->get_vendor_shipping_tax_fee() : 0,
                 'vendor_order_tax'    => $order_commission ? $order_commission->get_vendor_tax_fee() : 0,
                 // Admin Data
-                'admin_earning'       => $order_commission ? $order_commission->get_admin_commission() : 0,
+                'admin_earning'       => $order_commission ? $order_commission->get_admin_total_earning() : 0,
                 'admin_commission'    => $order_commission ? $order_commission->get_admin_commission() : 0,
                 'admin_gateway_fee'   => $order_commission ? $order_commission->get_admin_gateway_fee() : 0,
                 'admin_shipping_fee'  => $order_commission ? $order_commission->get_admin_shipping_fee() : 0,

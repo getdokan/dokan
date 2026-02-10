@@ -22,7 +22,7 @@ const StatCard = ( {
     tooltip = '',
 }: StatCardProps ) => {
     return (
-        <DokanCard className="bg-white rounded shadow flex flex-col p-4 gap-2">
+        <DokanCard className="bg-white rounded-md shadow flex flex-col p-4 gap-2">
             <div className="flex justify-between">
                 <div className="bg-[#F8F6FE] w-10 h-10 rounded flex items-center justify-center text-[#7047EB]">
                     { icon }
