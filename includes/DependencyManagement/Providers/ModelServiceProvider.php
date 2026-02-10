@@ -17,6 +17,8 @@ class ModelServiceProvider extends BaseServiceProvider {
         \WeDevs\Dokan\Models\DataStore\VendorBalanceStore::class,
         \WeDevs\Dokan\Models\DataStore\VendorOrderStatsStore::class,
         \WeDevs\Dokan\Models\DataStore\AdminDashboardStatsStore::class,
+        \WeDevs\Dokan\Models\AdminReportStats::class,
+        \WeDevs\Dokan\Models\DataStore\AdminReportStatsStore::class,
     ];
 
 	/**
