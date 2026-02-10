@@ -283,7 +283,7 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
                 break;
 
             default:
-                $column_value = $withdraw_item[$key] ?? '';
+                $column_value = $withdraw_item[ $key ] ?? '';
         }
 
         return $column_value;
