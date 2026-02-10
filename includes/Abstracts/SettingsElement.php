@@ -85,7 +85,40 @@ abstract class SettingsElement {
 	 * @var string $dependency_key Dependency Key.
 	 */
 	public $dependency_key = '';
+    /**
+     * Page doc link.
+     *
+     * @var string|null $doc_link
+     */
+    protected ?string $doc_link = null;
 
+    /**
+     * Get the subpage doc link.
+     *
+     * @return string|null
+     */
+    public function get_doc_link(): ?string {
+        return $this->doc_link;
+    }
+
+    /**
+     * Help text of the settings element.
+     *
+     * @var string $helpText Help text.
+     */
+    protected $tooltip = '';
+
+    /**
+     * Set the subpage doc link.
+     *
+     * @param string $doc_link
+     *  return SettingsElement
+     */
+    public function set_doc_link( string $doc_link ): SettingsElement {
+        $this->doc_link = $doc_link;
+
+        return $this;
+    }
 	/**
 	 * The constructor.
 	 *
@@ -169,6 +202,28 @@ abstract class SettingsElement {
 
 		return $this;
 	}
+
+    /**
+     * Get the Help Text of the Settings element.
+     *
+     * @return string
+     */
+    public function get_tooltip(): string {
+        return $this->tooltip;
+    }
+
+    /**
+     * Set the Help Text of the Settings element.
+     *
+     * @param string $tooltip Title.
+     *
+     * @return SettingsElement
+     */
+    public function set_tooltip( string $tooltip ): SettingsElement {
+        $this->tooltip = $tooltip;
+
+        return $this;
+    }
 
 	/**
 	 * Get the icon of the Settings element.
@@ -303,7 +358,6 @@ abstract class SettingsElement {
          * @param SettingsElement $this
          */
 		$filtered_children = apply_filters( $this->get_hook_key() . '_children', $this->children, $this ); // phpcs:ignore.
-
 		foreach ( $filtered_children as $child ) {
 			$child->set_hook_key( $this->get_hook_key() . '_' . $child->get_id() );
 			$child->set_dependency_key( trim( $this->get_dependency_key() . '.' . $child->get_id(), '. ' ) );
@@ -441,9 +495,12 @@ abstract class SettingsElement {
 
 		if ( $validity && $this->is_support_children() ) {
 			foreach ( $this->get_children() as $child ) {
-				if ( ! isset( $data[ $child->get_id() ] ) || ! $child->validate( $data[ $child->get_id() ] ) ) {
-					$validity = false;
-					break;
+				// Allow partial updates: only validate child if it is present in the incoming data.
+				if ( isset( $data[ $child->get_id() ] ) ) {
+					if ( ! $child->validate( $data[ $child->get_id() ] ) ) {
+						$validity = false;
+						break;
+					}
 				}
 			}
 		}
@@ -469,6 +526,7 @@ abstract class SettingsElement {
 			'type'           => $this->get_type(),
 			'title'          => $this->get_title(),
 			'icon'           => $this->get_icon(),
+            'tooltip'        => $this->get_tooltip(),
 			'display'        => true, // to manage element display action from dependencies.
 			'hook_key'       => $this->get_hook_key(),
 			'children'       => $children,
@@ -503,9 +561,12 @@ abstract class SettingsElement {
 	public function sanitize( $data ) {
 		$data = $this->sanitize_element( $data );
 
-		if ( $this->is_support_children() ) {
+		if ( $this->is_support_children() && is_array( $data ) ) {
 			foreach ( $this->get_children() as $child ) {
-				$data[ $child->get_id() ] = $child->sanitize( $data[ $child->get_id() ] );
+				// Allow partial updates: only sanitize child if present in incoming data
+				if ( array_key_exists( $child->get_id(), $data ) ) {
+					$data[ $child->get_id() ] = $child->sanitize( $data[ $child->get_id() ] );
+				}
 			}
 		}
 		return $data;

@@ -11,6 +11,7 @@ export {
     // @ts-ignore
 } from '@wordpress/dataviews/wp';
 
+export * from './fields';
 export { default as PriceHtml } from './PriceHtml';
 export { default as DateTimeHtml } from './DateTimeHtml';
 export { default as Filter } from './Filter';
@@ -31,6 +32,7 @@ export { default as DateTimePicker } from './DateTimePicker';
 export { default as DokanTab } from './Tab';
 export { default as NoInformation } from './NoInformation';
 export { default as AdminTab } from './AdminTab';
+export { default as PageHeading } from '../admin/dashboard/pages/settings/Elements/PageHeading';
 export { default as Popover } from './Popover';
 export { default as RichText } from './richtext/RichText';
 export { default as AsyncSelect } from './AsyncSelect';
@@ -46,6 +48,10 @@ export { default as DokanTooltip } from './DokanTooltip';
 export { default as UserCard } from './UserCard';
 export { default as ShortContent } from './ShortContent';
 export { default as DebouncedInput } from './DebouncedInput';
+
+// Commission Components
+export * from './commission';
+export { default as LucideIcon } from './Icons/LucideIcon';
 
 // Commission Components
 export * from './commission';

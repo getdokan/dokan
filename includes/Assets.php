@@ -692,6 +692,18 @@ class Assets {
             ];
         }
 
+        $admin_settings_store = DOKAN_DIR . '/assets/js/admin-settings-store.asset.php';
+        if ( file_exists( $admin_settings_store ) ) {
+            $stores_asset = require $admin_settings_store;
+
+            // Register Product stores.
+            $scripts['dokan-stores-admin-settings'] = [
+                'version' => $stores_asset['version'],
+                'src'     => $asset_url . '/js/admin-settings-store.js',
+                'deps'    => $stores_asset['dependencies'],
+            ];
+        }
+
         return $scripts;
     }
 
@@ -1365,6 +1377,13 @@ class Assets {
                     'dummy_data'        => DOKAN_PLUGIN_ASSEST . '/dummy-data/dokan_dummy_data.csv',
                     'adminOrderListUrl' => OrderUtil::get_admin_order_list_url(),
                     'adminOrderEditUrl' => OrderUtil::get_admin_order_edit_url(),
+                    'dashboard_url'     => add_query_arg(
+                        [
+                            'dokan_admin_dashboard_switching_nonce' => wp_create_nonce( 'dokan_switch_admin_dashboard' ),
+                            'dokan_action'                          => 'switch_dashboard',
+                        ],
+                        admin_url()
+                    ),
                 ],
                 'states'                            => WC()->countries->get_allowed_country_states(),
                 'countries'                         => WC()->countries->get_allowed_countries(),
