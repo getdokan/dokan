@@ -729,7 +729,7 @@ class StoreController extends WP_REST_Controller {
         $is_authorized = $this->can_access_vendor_store( $store->get_id() );
 
         if ( $is_authorized ) {
-            $dashboard    = dokan_get_container()->get('dashboard');
+            $dashboard    = dokan_get_container()->get( 'dashboard' );
             $methods_data = $dashboard->templates->settings->get_seller_payment_methods( $store->get_id() ) ?? [];
 
             $data['admin_category_commission']    = $store->get_commission_settings()->get_category_commissions();
