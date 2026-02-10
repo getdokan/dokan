@@ -264,7 +264,16 @@ class Ajax {
                     if ( $inserted_id ) {
                         $download = new \WC_Customer_Download( $inserted_id );
 
-                        include dirname( __DIR__ ) . '/templates/orders/order-download-permission-html.php';
+                        $template_args = apply_filters(
+                            'dokan_order_download_permission_args', [
+                                'download'    => $download,
+                                'product'     => $product,
+                                'file_count'  => $file_count,
+                                'loop'        => $loop,
+                            ]
+                        );
+
+                        dokan_get_template_part( 'orders/order-download-permission-html', false, $template_args );
 
                         ++$loop;
                         ++$file_count;
