@@ -8,6 +8,10 @@ use WeDevs\Dokan\Test\DokanTestCase;
 use WP_REST_Request;
 use WP_REST_Server;
 
+/**
+ * @group rest-api
+ * @group rest-api-admin-onboarding
+ */
 class AdminOnboardingControllerTest extends DokanTestCase {
 	/**
 	 * @var WP_REST_Server
@@ -31,11 +35,10 @@ class AdminOnboardingControllerTest extends DokanTestCase {
 
 	/**
 	 * Setup test environment
-     * @test
      * @return void
 	 */
-	public function setUp(): void {
-		parent::setUp();
+	public function set_up(): void {
+		parent::set_up();
 
 		global $wp_rest_server;
         $wp_rest_server = new WP_REST_Server();

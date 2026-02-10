@@ -6,6 +6,7 @@ use WeDevs\Dokan\Test\Helpers\WC_Helper_Coupon;
 use WP_UnitTest_Factory_For_Thing;
 use WP_UnitTest_Generator_Sequence;
 
+
 class CouponFactory extends WP_UnitTest_Factory_For_Thing {
     public function __construct( $factory = null ) {
         parent::__construct( $factory );

@@ -380,7 +380,8 @@ class WithdrawController extends WP_REST_Controller {
         $exporter->set_items( $data );
         $exporter->set_page( $step );
         $exporter->set_limit( $args['limit'] );
-        $exporter->set_total_rows( $statuses[ $args['status'] ] );
+        // Determine total rows based on status
+        $exporter->set_total_rows( $statuses[ $args['status'] ] ?? $withdraws->total );
         $exporter->generate_file();
 
         $percent     = $exporter->get_percent_complete();
