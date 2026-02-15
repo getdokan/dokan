@@ -163,6 +163,8 @@ Temporary Items
 .apdisk
 
 # custom files
+# Track package-lock.json in tests/pw (override parent ignore)
+!package-lock.json
 
 #vscode
 .idea/
