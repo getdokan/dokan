@@ -51,8 +51,6 @@ const entryPoints = {
     'page-views': './assets/src/js/page-views.js',
     'dokan-setup-wizard-commission':
         './assets/src/js/setup-wizard/commission/index.js',
-    // Category commission component styles.
-    'dokan-category-commission': '/src/admin/components/Commission/index.js',
     'core-store': {
         import: '/src/stores/core/store.ts',
         library: {
