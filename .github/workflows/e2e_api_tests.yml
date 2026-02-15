@@ -77,10 +77,15 @@ jobs:
                 shardTotal: [3]
 
         steps:
-            # Checkout testing repo
+            # Checkout testing repo (folder is repo name e.g. "dokan"; we need "dokan-lite" for wp-env)
             - name: Checkout testing repo
               id: clone-dokan-lite
               uses: actions/checkout@v4
+
+            # Expose repo as dokan-lite so wp-env activates "dokan-lite" (dokan-pro expects that slug)
+            - name: Prepare dokan-lite folder
+              run: |
+                  ln -s . dokan-lite
 
             # Checkout Dokan Pro (same-repo only; skip on fork PRs where secrets are unavailable)
             - name: Checkout Dokan Pro
@@ -249,10 +254,15 @@ jobs:
                 shardTotal: [1]
 
         steps:
-            # Checkout testing repo
+            # Checkout testing repo (folder is repo name e.g. "dokan"; we need "dokan-lite" for wp-env)
             - name: Checkout testing repo
               id: clone-dokan-lite
               uses: actions/checkout@v4
+
+            # Expose repo as dokan-lite so wp-env activates "dokan-lite" (dokan-pro expects that slug)
+            - name: Prepare dokan-lite folder
+              run: |
+                  ln -s . dokan-lite
 
             # Checkout Dokan Pro (same-repo only; skip on fork PRs where secrets are unavailable)
             - name: Checkout Dokan Pro
@@ -420,10 +430,15 @@ jobs:
             E2E_COVERAGE: ./tests/pw/all-reports/merged-coverage.json
 
         steps:
-            # Checkout testing repo
+            # Checkout testing repo (folder is repo name e.g. "dokan"; we need "dokan-lite" for wp-env)
             - name: Checkout testing repo
               id: clone-dokan-lite
               uses: actions/checkout@v4
+
+            # Expose repo as dokan-lite so wp-env activates "dokan-lite" (dokan-pro expects that slug)
+            - name: Prepare dokan-lite folder
+              run: |
+                  ln -s . dokan-lite
 
             # Checkout Dokan Pro (same-repo only; skip on fork PRs where secrets are unavailable)
             - name: Checkout Dokan Pro
