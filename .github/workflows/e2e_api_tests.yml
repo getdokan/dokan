@@ -82,8 +82,9 @@ jobs:
               id: clone-dokan-lite
               uses: actions/checkout@v4
 
-            # Checkout Dokan Pro (required by .wp-env.override.json; test_utils branch)
+            # Checkout Dokan Pro (same-repo only; skip on fork PRs where secrets are unavailable)
             - name: Checkout Dokan Pro
+              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
               uses: actions/checkout@v4
               with:
                   repository: getdokan/dokan-pro
@@ -122,6 +123,17 @@ jobs:
               working-directory: tests/pw
               run: |
                   mkdir -p wp-data && touch wp-data/debug.log
+
+            # Use lite-only wp-env config when dokan-pro wasn't checked out (no token / fork PR)
+            - name: Prepare wp-env config
+              working-directory: tests/pw
+              run: |
+                  if [ ! -d "../../dokan-pro" ]; then
+                    echo "Dokan Pro not present, using lite-only wp-env config"
+                    cp .wp-env.json .wp-env.override.json
+                  else
+                    echo "Dokan Pro present, using default override"
+                  fi
 
             # Start wordpress environment
             - name: Start WordPress Env
@@ -231,8 +243,9 @@ jobs:
               id: clone-dokan-lite
               uses: actions/checkout@v4
 
-            # Checkout Dokan Pro (required by .wp-env.override.json; test_utils branch)
+            # Checkout Dokan Pro (same-repo only; skip on fork PRs where secrets are unavailable)
             - name: Checkout Dokan Pro
+              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
               uses: actions/checkout@v4
               with:
                   repository: getdokan/dokan-pro
@@ -271,6 +284,17 @@ jobs:
               working-directory: tests/pw
               run: |
                   mkdir -p wp-data && touch wp-data/debug.log
+
+            # Use lite-only wp-env config when dokan-pro wasn't checked out (no token / fork PR)
+            - name: Prepare wp-env config
+              working-directory: tests/pw
+              run: |
+                  if [ ! -d "../../dokan-pro" ]; then
+                    echo "Dokan Pro not present, using lite-only wp-env config"
+                    cp .wp-env.json .wp-env.override.json
+                  else
+                    echo "Dokan Pro present, using default override"
+                  fi
 
             # Start wordpress environment
             - name: Start WordPress Env
@@ -379,8 +403,9 @@ jobs:
               id: clone-dokan-lite
               uses: actions/checkout@v4
 
-            # Checkout Dokan Pro (required by .wp-env.override.json; test_utils branch)
+            # Checkout Dokan Pro (same-repo only; skip on fork PRs where secrets are unavailable)
             - name: Checkout Dokan Pro
+              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
               uses: actions/checkout@v4
               with:
                   repository: getdokan/dokan-pro
