@@ -124,15 +124,16 @@ jobs:
               run: |
                   mkdir -p wp-data && touch wp-data/debug.log
 
-            # Use lite-only wp-env config when dokan-pro wasn't checked out (no token / fork PR)
+            # Use CI config (../../dokan-pro) when dokan-pro present; lite-only when not (e.g. fork PR)
             - name: Prepare wp-env config
               working-directory: tests/pw
               run: |
-                  if [ ! -d "../../dokan-pro" ]; then
+                  if [ -d "../../dokan-pro" ]; then
+                    echo "Dokan Pro present, using .wp-env.ci.json (../../dokan-pro)"
+                    cp .wp-env.ci.json .wp-env.override.json
+                  else
                     echo "Dokan Pro not present, using lite-only wp-env config"
                     cp .wp-env.json .wp-env.override.json
-                  else
-                    echo "Dokan Pro present, using default override"
                   fi
 
             # Start wordpress environment
@@ -285,15 +286,16 @@ jobs:
               run: |
                   mkdir -p wp-data && touch wp-data/debug.log
 
-            # Use lite-only wp-env config when dokan-pro wasn't checked out (no token / fork PR)
+            # Use CI config (../../dokan-pro) when dokan-pro present; lite-only when not (e.g. fork PR)
             - name: Prepare wp-env config
               working-directory: tests/pw
               run: |
-                  if [ ! -d "../../dokan-pro" ]; then
+                  if [ -d "../../dokan-pro" ]; then
+                    echo "Dokan Pro present, using .wp-env.ci.json (../../dokan-pro)"
+                    cp .wp-env.ci.json .wp-env.override.json
+                  else
                     echo "Dokan Pro not present, using lite-only wp-env config"
                     cp .wp-env.json .wp-env.override.json
-                  else
-                    echo "Dokan Pro present, using default override"
                   fi
 
             # Start wordpress environment
