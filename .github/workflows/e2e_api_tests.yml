@@ -82,6 +82,15 @@ jobs:
               id: clone-dokan-lite
               uses: actions/checkout@v4
 
+            # Checkout Dokan Pro (required by .wp-env.override.json; test_utils branch)
+            - name: Checkout Dokan Pro
+              uses: actions/checkout@v4
+              with:
+                  repository: getdokan/dokan-pro
+                  ref: test_utils
+                  path: dokan-pro
+                  token: ${{ secrets.DOKAN_PRO_TOKEN }}
+
             # Use desired version of NodeJS
             - name: Use desired version of NodeJS
               uses: actions/setup-node@v4
@@ -222,6 +231,15 @@ jobs:
               id: clone-dokan-lite
               uses: actions/checkout@v4
 
+            # Checkout Dokan Pro (required by .wp-env.override.json; test_utils branch)
+            - name: Checkout Dokan Pro
+              uses: actions/checkout@v4
+              with:
+                  repository: getdokan/dokan-pro
+                  ref: test_utils
+                  path: dokan-pro
+                  token: ${{ secrets.DOKAN_PRO_TOKEN }}
+
             # Use desired version of NodeJS
             - name: Use desired version of NodeJS
               uses: actions/setup-node@v4
@@ -360,6 +378,15 @@ jobs:
             - name: Checkout testing repo
               id: clone-dokan-lite
               uses: actions/checkout@v4
+
+            # Checkout Dokan Pro (required by .wp-env.override.json; test_utils branch)
+            - name: Checkout Dokan Pro
+              uses: actions/checkout@v4
+              with:
+                  repository: getdokan/dokan-pro
+                  ref: test_utils
+                  path: dokan-pro
+                  token: ${{ secrets.DOKAN_PRO_TOKEN }}
 
             # Use desired version of NodeJS
             - name: Use desired version of NodeJS
