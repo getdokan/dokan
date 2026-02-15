@@ -4,14 +4,14 @@ namespace WeDevs\Dokan\Upgrade\Upgrades;
 
 use WeDevs\Dokan\Abstracts\DokanUpgrader;
 use WeDevs\Dokan\Install\Installer;
-use Automattic\WooCommerce\Admin\ReportsSync;
+use WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses\V_4_2_11_RegenerateReportData;
 
 /**
  * Upgrade class for version DOKAN_SINCE.
  *
  * @since DOKAN_SINCE
  */
-class V_4_2_10 extends DokanUpgrader {
+class V_4_2_11 extends DokanUpgrader {
 
     /**
      * Alter dokan_order_stats table to add new columns and regenerate data.
@@ -29,7 +29,7 @@ class V_4_2_10 extends DokanUpgrader {
         $columns_to_add = [
             'vendor_shipping_tax' => "ALTER TABLE `{$table_name}` ADD COLUMN `vendor_shipping_tax` double NOT NULL DEFAULT '0' AFTER `vendor_discount`",
             'vendor_order_tax'    => "ALTER TABLE `{$table_name}` ADD COLUMN `vendor_order_tax` double NOT NULL DEFAULT '0' AFTER `vendor_shipping_tax`",
-            'admin_earning'       => "ALTER TABLE `{$table_name}` ADD COLUMN `admin_earning` double NOT NULL DEFAULT '0' AFTER `vendor_shipping_tax`",
+            'admin_earning'       => "ALTER TABLE `{$table_name}` ADD COLUMN `admin_earning` double NOT NULL DEFAULT '0' AFTER `vendor_order_tax`",
             'admin_shipping_tax'  => "ALTER TABLE `{$table_name}` ADD COLUMN `admin_shipping_tax` double NOT NULL DEFAULT '0' AFTER `admin_discount`",
             'admin_order_tax'     => "ALTER TABLE `{$table_name}` ADD COLUMN `admin_order_tax` double NOT NULL DEFAULT '0' AFTER `admin_shipping_tax`",
         ];
@@ -45,6 +45,7 @@ class V_4_2_10 extends DokanUpgrader {
         // @codingStandardsIgnoreEnd
 
         // Regenerate the order stats data.
-        ReportsSync::regenerate_report_data( null, false );
+        $processor = new V_4_2_11_RegenerateReportData();
+        $processor->push_to_queue( [ 'regenerate' => true ] )->dispatch_process();
     }
 }

@@ -47,6 +47,7 @@ export { default as UserCard } from './UserCard';
 export { default as ShortContent } from './ShortContent';
 export { default as DebouncedInput } from './DebouncedInput';
 export { default as StatCard } from './StatCard';
+export { default as AdminHeader } from './AdminHeader';
 export {
     default as D3Chart,
     D3ChartConfig,
