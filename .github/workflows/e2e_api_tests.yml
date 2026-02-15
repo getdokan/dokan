@@ -111,6 +111,15 @@ jobs:
                   npm ci || npm i
                   npm run build
 
+            # Build Dokan Pro (after clone; required before wp-env so plugin is ready)
+            - name: Build Dokan Pro
+              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+              run: |
+                  cd dokan-pro
+                  composer i --no-dev -o
+                  npm ci || npm i
+                  npm run build
+
             # Install test dependencies
             - name: Install test dependencies
               working-directory: tests/pw
@@ -124,6 +133,7 @@ jobs:
               run: |
                   mkdir -p wp-data && touch wp-data/debug.log
 
+            # wp-env installs/activates plugins in array order: Basic-Auth → WooCommerce → dokan-lite → dokan-pro
             # Use CI config (../../dokan-pro) when dokan-pro present; lite-only when not (e.g. fork PR)
             - name: Prepare wp-env config
               working-directory: tests/pw
@@ -273,6 +283,15 @@ jobs:
                   npm ci || npm i
                   npm run build
 
+            # Build Dokan Pro (after clone; required before wp-env so plugin is ready)
+            - name: Build Dokan Pro
+              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+              run: |
+                  cd dokan-pro
+                  composer i --no-dev -o
+                  npm ci || npm i
+                  npm run build
+
             # Install test dependencies
             - name: Install test dependencies
               working-directory: tests/pw
@@ -286,6 +305,7 @@ jobs:
               run: |
                   mkdir -p wp-data && touch wp-data/debug.log
 
+            # wp-env installs/activates plugins in array order: Basic-Auth → WooCommerce → dokan-lite → dokan-pro
             # Use CI config (../../dokan-pro) when dokan-pro present; lite-only when not (e.g. fork PR)
             - name: Prepare wp-env config
               working-directory: tests/pw
