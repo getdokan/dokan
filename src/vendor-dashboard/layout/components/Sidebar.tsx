@@ -1,4 +1,8 @@
 // eslint-disable-next-line import/named
+// import { Tooltip } from '@getdokan/dokan-ui';
+import { truncate } from '@src/utilities';
+// import { Tooltip } from '@wordpress/components';
+import { DokanTooltip as Tooltip } from '@src/components';
 import {
     RawHTML,
     RefObject,
@@ -6,14 +10,12 @@ import {
     useRef,
     useState,
 } from '@wordpress/element';
+import { applyFilters } from '@wordpress/hooks';
 import { __, sprintf } from '@wordpress/i18n';
 import * as LucideIcons from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
-import { Tooltip } from '@getdokan/dokan-ui';
-import { truncate } from '@src/utilities';
-import SubmenuPopover from './SubmenuPopover';
 import CountBubble from './CountBubble';
-import { applyFilters } from '@wordpress/hooks';
+import SubmenuPopover from './SubmenuPopover';
 
 const Sidebar = ( {
     collapsed,
@@ -237,8 +239,13 @@ const Sidebar = ( {
                     ) }
 
                     { ! collapsed && (
-                        <Tooltip content={ sideBarTitle }>
-                            <span className="text-2xl font-bold text-white">
+                        <Tooltip
+                            content={
+                                sideBarTitle ||
+                                __( 'Vendor Dashboard', 'dokan-lite' )
+                            }
+                        >
+                            <span className="text-xl font-bold text-white">
                                 { truncate( sideBarTitle, 9 ) }
                             </span>
                         </Tooltip>
@@ -337,7 +344,7 @@ const Sidebar = ( {
                                                     }
                                                 } }
                                                 className={ twMerge(
-                                                    'group skip-color-module relative flex items-center rounded-md font-medium focus:!outline-none py-2.5',
+                                                    'group skip-color-module relative flex items-center rounded-md font-medium focus:!outline-none py-2.5 no-underline',
                                                     collapsed
                                                         ? windowWidth <= 768
                                                             ? 'w-0 max-w-0'
@@ -460,13 +467,16 @@ const Sidebar = ( {
                                                                         key={
                                                                             subkey
                                                                         }
+                                                                        className={
+                                                                            'my-2'
+                                                                        }
                                                                     >
                                                                         <a
                                                                             href={
                                                                                 subitem.url
                                                                             }
                                                                             className={ twMerge(
-                                                                                'group skip-color-module flex items-center py-2.5 px-3 text-sm font-medium rounded-md focus:!outline-none',
+                                                                                'group skip-color-module no-underline flex items-center p-3 text-sm font-medium rounded-md focus:!outline-none',
                                                                                 isSubActive &&
                                                                                     'active'
                                                                             ) }

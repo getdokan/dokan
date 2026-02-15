@@ -1,4 +1,5 @@
 /* Module-specific styles - Tailwind loaded via dokan-tailwind bundle */
+/* @referance '../../base-tailwind.css'; */
 
 .dokan-frontend-layout {
     .dokan-frontend-sidebar {

@@ -30,7 +30,8 @@ table:not(.dataviews-view-table) td {
 }
 
 /* List Reset */
-ul, ol {
+ul,
+ol {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -43,7 +44,12 @@ li {
 }
 
 /* Headings Reset */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     padding: 0;
     margin: 0;
 }
@@ -272,22 +278,30 @@ input[type="reset"] {
 
 .dokan-link-info {
     color: var(--color-info);
-    &:hover { color: var(--color-info-hover); }
+    &:hover {
+        color: var(--color-info-hover);
+    }
 }
 
 .dokan-link-success {
     color: var(--color-success);
-    &:hover { color: var(--color-success-hover); }
+    &:hover {
+        color: var(--color-success-hover);
+    }
 }
 
 .dokan-link-warning {
     color: var(--color-warning);
-    &:hover { color: var(--color-warning-hover); }
+    &:hover {
+        color: var(--color-warning-hover);
+    }
 }
 
 .dokan-link-danger {
     color: var(--color-danger);
-    &:hover { color: var(--color-danger-hover); }
+    &:hover {
+        color: var(--color-danger-hover);
+    }
 }
 
 /* ========== Badge Styles ========== */
@@ -437,7 +451,8 @@ span:has(+ .dokan-react-search-input) {
             border: none !important;
         }
 
-        .components-input-control__input:focus ~ .components-input-control__backdrop {
+        .components-input-control__input:focus
+            ~ .components-input-control__backdrop {
             box-shadow: none !important;
         }
 
@@ -481,12 +496,15 @@ button[data-headlessui-state="checked"] {
     }
 }
 
-
 .dokan-dashboard header.dokan-ai-prompt {
     margin: 0 0 10px 0;
     border-bottom: 1px solid #ededed;
     padding: 0 0 10px 0;
     line-height: 1.25;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #ededed;
+    align-items: stretch;
 }
 .dokan-dashboard header.dokan-ai-prompt {
     display: flex;
@@ -500,4 +518,9 @@ button[data-headlessui-state="checked"] {
     padding: 0 !important;
     border-bottom: none !important;
     width: 100%;
+}
+
+dokan-dashboard header.dokan-ai-prompt #ai-prompt-app {
+    align-self: flex-end;
+    padding-bottom: 10px;
 }

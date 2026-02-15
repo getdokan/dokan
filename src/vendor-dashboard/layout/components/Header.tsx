@@ -1,14 +1,14 @@
-import { useEffect, useState } from '@wordpress/element';
+import { Popover } from '@src/components';
+import { useState } from '@wordpress/element';
+import { decodeEntities } from '@wordpress/html-entities';
+import { __ } from '@wordpress/i18n';
 import * as LucideIcons from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
-import { __ } from '@wordpress/i18n';
-import { Popover } from '@src/components';
 import WPLogo from '../../icons/WPLogo';
-import { decodeEntities } from '@wordpress/html-entities';
 
 const Header = ( { onToggleSidebar }: { onToggleSidebar: () => void } ) => {
     const { user, headerNav } =
-        ( window as any )?.vendorDashboardLayoutConfig || {},
+            ( window as any )?.vendorDashboardLayoutConfig || {},
         { name: userName, avatar: userAvatar } = user || {};
 
     const [ isMenuOpen, setIsMenuOpen ] = useState( false );
@@ -41,7 +41,8 @@ const Header = ( { onToggleSidebar }: { onToggleSidebar: () => void } ) => {
                 <a
                     target="_blank"
                     href={ window.dokan?.urls?.storeUrl || '#' }
-                    className="visit-store group skip-color-module flex items-center text-sm gap-2 font-medium text-[#25252D] focus:!outline-none py-4 px-5"
+                    className="visit-store group skip-color-module flex items-center no-underline text-sm gap-2 font-medium text-[#25252D] focus:!outline-none py-4 px-5"
+                    rel="noreferrer"
                 >
                     <LucideIcons.Globe size={ 16 } className="text-[#828282]" />
                     { __( 'Visit Store', 'dokan-lite' ) }
@@ -99,7 +100,7 @@ const Header = ( { onToggleSidebar }: { onToggleSidebar: () => void } ) => {
                                                     href={ decodeEntities(
                                                         item?.url || '#'
                                                     ) }
-                                                    className="skip-color-module group flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#828282] focus:!outline-none transition-colors duration-150"
+                                                    className="skip-color-module no-underline group flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#828282] focus:!outline-none transition-colors duration-150"
                                                     onClick={ () =>
                                                         setIsMenuOpen( false )
                                                     }
