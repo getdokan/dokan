@@ -3,7 +3,6 @@ import domReady from '@wordpress/dom-ready';
 import Layout from '../layout';
 import getRoutes, { withRouter } from '../routing';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
-import './tailwind.scss';
 import { useSelect } from '@wordpress/data';
 import coreStore from '@dokan/stores/core';
 import Skeleton from '@src/layout/Skeleton';
