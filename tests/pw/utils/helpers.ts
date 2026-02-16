@@ -453,9 +453,12 @@ export const helpers = {
     // execute wp cli command
     async exeCommandWpcli(command: string, directoryPath = process.cwd()) {
         process.chdir(directoryPath);
-        command = CI ? `npm run wp-env run tests-cli  ${command}` : `cd ${SITE_PATH} && ${command}`;
-        // console.log(`Executing command: ${command}`);
-        await this.exeCommand(command);
+        command = CI ? `npm run wp-env run tests-cli -- ${command}` : `cd ${SITE_PATH} && ${command}`;
+        const result = await this.exeCommand(command);
+        // Rethrow so callers can catch (e.g. storefront activate → try install → fallback link)
+        if (result instanceof Error || (result && typeof result === 'object' && 'status' in (result as object))) {
+            throw result;
+        }
     },
 
     // create a new page

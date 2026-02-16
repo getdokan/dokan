@@ -29,10 +29,6 @@ setup.describe('site setup', () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.rewritePermalink);
     });
 
-    setup('activate theme (storefront)', { tag: ['@lite'] }, async () => {
-        await helpers.exeCommandWpcli(data.commands.wpcli.activateTheme(data.installWp.themes.storefront));
-    });
-
     setup('get server url', { tag: ['@lite'] }, async () => {
         setup.skip(!CI, 'skip on local');
         const headers = await apiUtils.getSiteHeaders(BASE_URL);
@@ -49,7 +45,17 @@ setup.describe('site setup', () => {
     });
 
     setup('activate Woocommerce', { tag: ['@lite'] }, async () => {
-        await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.woocommerce));
+        // wp-env installs from woocommerce.latest-stable.zip so slug is woocommerce.latest-stable
+        const wcSlugs = ['woocommerce.latest-stable', data.installWp.plugins.woocommerce];
+        for (const slug of wcSlugs) {
+            try {
+                await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(slug));
+                return;
+            } catch {
+                // try next slug
+            }
+        }
+        throw new Error('Could not activate WooCommerce (tried: ' + wcSlugs.join(', ') + ')');
     });
 
     setup('activate Dokan Lite', { tag: ['@lite'] }, async () => {
@@ -62,6 +68,27 @@ setup.describe('site setup', () => {
 
     setup('flush rewrite rules after plugin activation', { tag: ['@lite'] }, async () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.flushRewrite);
+    });
+
+    setup('activate theme (storefront)', { tag: ['@lite'] }, async () => {
+        // wp-env may install from storefront.latest-stable.zip; slug can be 'storefront' or 'storefront.latest-stable'
+        const storefrontSlugs = ['storefront.latest-stable', data.installWp.themes.storefront];
+        const themesUrl = BASE_URL ? `${BASE_URL}/wp-admin/themes.php` : 'http://localhost:9999/wp-admin/themes.php';
+        const storefrontInstallUrl = 'https://wordpress.org/themes/storefront/';
+        for (const slug of storefrontSlugs) {
+            try {
+                await helpers.exeCommandWpcli(data.commands.wpcli.activateTheme(slug));
+                return;
+            } catch {
+                // try next slug or install
+            }
+        }
+        try {
+            await helpers.exeCommandWpcli(data.commands.wpcli.installTheme(data.installWp.themes.storefront));
+        } catch {
+            console.log(`[storefront] CLI failed. Activate manually: ${themesUrl}`);
+            console.log(`[storefront] Or install from: ${storefrontInstallUrl}`);
+        }
     });
 
     setup('set dokan license', { tag: ['@pro'] }, async () => {
