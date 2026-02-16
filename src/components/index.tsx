@@ -3,7 +3,7 @@ export {
     DataViewsPicker,
     filterSortAndPaginate,
     useFormValidity,
-    VIEW_LAYOUTS,
+    VIEW_LAYOUTS
 } from '@wordpress/dataviews/wp';
 export { default as AdminDataViews } from './dataviews/AdminDataViewTable';
 export { default as DataViews } from './dataviews/DataViewTable';
@@ -48,5 +48,4 @@ export { default as WpDatePicker } from './WpDatePicker';
 
 // Commission Components
 export * from './commission';
-
-import './../base-tailwind.css';
+/* Tailwind + theme loaded via single bundle: components.css (dokan-tailwind handle) */

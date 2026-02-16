@@ -2,6 +2,8 @@ const path = require( 'path' );
 const { VueLoaderPlugin } = require( 'vue-loader' );
 const entryPoints = require( './webpack-entries' );
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
+const rtlcss = require( 'rtlcss' );
+const webpack = require( 'webpack' );
 const isProduction = process.env.NODE_ENV === 'production';
 const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
 const {
@@ -9,6 +11,42 @@ const {
     requestToHandle,
 } = require( './webpack-dependency-mapping' );
 const DependencyExtractionWebpackPlugin = require( '@wordpress/dependency-extraction-webpack-plugin' );
+
+/**
+ * RTL CSS plugin that emits -rtl.css next to each LTR CSS file (same folder).
+ * Avoids dokan-tailwind-rtl.css in assets/js; Tailwind RTL becomes components-rtl.css in assets/css.
+ */
+function DokanRtlCssPlugin() {
+	this.processAssets = ( compilation, callback ) => {
+		const chunks = Array.from( compilation.chunks );
+		chunks.forEach( ( chunk ) => {
+			const files = Array.from( chunk.files );
+			files.filter( ( f ) => path.extname( f ) === '.css' ).forEach( ( filename ) => {
+				const asset = compilation.assets[ filename ];
+				if ( ! asset ) return;
+				const src = asset.source();
+				const dst = rtlcss.process( src );
+				// Emit RTL next to LTR: ../css/components.css → ../css/components-rtl.css
+				const rtlFilename = filename.replace( /\.css$/, '-rtl.css' );
+				compilation.assets[ rtlFilename ] = new webpack.sources.RawSource( dst );
+				chunk.files.add( rtlFilename );
+			} );
+		} );
+		callback();
+	};
+
+	this.apply = ( compiler ) => {
+		compiler.hooks.compilation.tap( 'DokanRtlCssPlugin', ( compilation ) => {
+			compilation.hooks.processAssets.tapAsync(
+				{
+					name: 'DokanRtlCssPlugin',
+					stage: compilation.PROCESS_ASSETS_STAGE_OPTIMIZE,
+				},
+				( _assets, callback ) => this.processAssets( compilation, callback )
+			);
+		} );
+	};
+}
 
 const updatedConfig = {
     mode: defaultConfig.mode,
@@ -94,18 +132,28 @@ const updatedConfig = {
     plugins: [
         ...defaultConfig.plugins.filter(
             ( plugin ) =>
-                plugin.constructor.name !== 'DependencyExtractionWebpackPlugin'
+                plugin.constructor.name !== 'DependencyExtractionWebpackPlugin' &&
+                plugin.constructor.name !== 'MiniCssExtractPlugin' &&
+                plugin.constructor.name !== 'RtlCssPlugin'
         ),
         new MiniCssExtractPlugin( {
             filename: ( { chunk } ) => {
                 if ( chunk.name.match( /\/modules\// ) ) {
                     return `${ chunk.name.replace( '/js/', '/css/' ) }.css`;
                 }
-
+                // Single Tailwind bundle: one file for all Tailwind (theme + utilities + dokan-components)
+                if ( chunk.name === 'dokan-tailwind' ) {
+                    return '../css/components.css';
+                }
+                // Component-only styles (dataviews, richtext, etc.) — Tailwind is in components.css
+                if ( chunk.name === 'components' ) {
+                    return '../css/components-bundle.css';
+                }
                 return '../css/[name].css';
             },
         } ),
 
+        new DokanRtlCssPlugin(),
         new VueLoaderPlugin(),
         new DependencyExtractionWebpackPlugin( {
             requestToExternal,

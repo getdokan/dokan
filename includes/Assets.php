@@ -364,19 +364,21 @@ class Assets {
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-admin-product-style.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-admin-product-style.css' ),
             ],
+            // Single Tailwind bundle (theme + utilities + dokan-components) — one file, no duplication
             'dokan-tailwind'                => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-tailwind.css',
-                'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-tailwind.css' ),
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/components.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/components.css' ),
             ],
             'dokan-react-frontend'   => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/frontend.css',
                 'deps'    => [ 'dokan-react-components' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/frontend.css' ),
             ],
+            // Component-only styles (dataviews, richtext, etc.); Tailwind from dokan-tailwind (components.css)
             'dokan-react-components' => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/css/components.css',
-                'deps'    => [ 'wp-components' ],
-                'version' => filemtime( DOKAN_DIR . '/assets/css/components.css' ),
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/components-bundle.css',
+                'deps'    => [ 'wp-components', 'dokan-tailwind' ],
+                'version' => filemtime( DOKAN_DIR . '/assets/css/components-bundle.css' ),
             ],
         ];
 
