@@ -79,7 +79,7 @@ class Assets {
         if ( 'toplevel_page_dokan' === $hook ) {
             $localize_script           = $this->get_admin_localized_scripts();
             $vue_admin_localize_script = $this->get_vue_admin_localized_scripts();
-            wp_enqueue_style( 'dokan-tailwind' );
+            wp_enqueue_style( 'dokan-react-components' );
             // Load common styles and scripts
             wp_enqueue_script( 'dokan-tinymce' );
             wp_enqueue_style( 'dokan-admin-css' );
@@ -109,10 +109,6 @@ class Assets {
             // fire the admin app
             wp_enqueue_script( 'dokan-vue-admin' );
             wp_localize_script( 'dokan-vue-vendor', 'dokanAdmin', $vue_admin_localize_script );
-
-            if ( version_compare( $wp_version, '5.3', '<' ) ) {
-                wp_enqueue_style( 'dokan-wp-version-before-5-3' );
-            }
 
             wp_enqueue_style( 'dokan-fontawesome' );
 
@@ -322,8 +318,8 @@ class Assets {
                 'version' => filemtime( DOKAN_DIR . '/assets/css/admin.css' ),
             ],
             'dokan-vue-vendor'              => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-vendor.css',
-                'version' => filemtime( DOKAN_DIR . '/assets/css/vue-vendor.css' ),
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-admin.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/vue-admin.css' ),
             ],
             'dokan-vue-bootstrap'           => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-bootstrap.css',
@@ -336,17 +332,14 @@ class Assets {
             ],
             'dokan-vue-admin'               => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-admin.css',
-                'deps'    => [ 'dokan-vue-vendor', 'dokan-vue-bootstrap', 'dokan-tailwind' ],
+                'deps'    => [ 'dokan-vue-vendor', 'dokan-vue-bootstrap', 'dokan-react-components' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/vue-admin.css' ),
             ],
-            'dokan-vue-frontend'            => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-frontend.css',
-                'version' => filemtime( DOKAN_DIR . '/assets/css/vue-frontend.css' ),
-            ],
-            'dokan-wp-version-before-5-3'   => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/css/wp-version-before-5-3.css',
-                'version' => filemtime( DOKAN_DIR . '/assets/css/wp-version-before-5-3.css' ),
-            ],
+            // 'dokan-vue-frontend'            => [
+            //     'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-frontend.css',
+            //     'version' => filemtime( DOKAN_DIR . '/assets/css/vue-frontend.css' ),
+            // ],
+
             'dokan-global-admin-css'        => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/global-admin.css',
                 'deps'    => [ 'dokan-sf-pro-text' ],
@@ -365,7 +358,7 @@ class Assets {
                 'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-admin-product-style.css' ),
             ],
             // Single Tailwind bundle (theme + utilities + dokan-components) — one file, no duplication
-            'dokan-tailwind'                => [
+            'dokan-react-components'                => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/components.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/components.css' ),
             ],
@@ -374,10 +367,10 @@ class Assets {
                 'deps'    => [ 'dokan-react-components' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/frontend.css' ),
             ],
-            // Component-only styles (dataviews, richtext, etc.); Tailwind from dokan-tailwind (components.css)
-            'dokan-react-components' => [
+            // Component-only styles (dataviews, richtext, etc.); Tailwind from dokan-react-components (components.css)
+            'dokan-react-components-bundle' => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/components-bundle.css',
-                'deps'    => [ 'wp-components', 'dokan-tailwind' ],
+                'deps'    => [ 'wp-components', 'dokan-react-components' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/components-bundle.css' ),
             ],
         ];

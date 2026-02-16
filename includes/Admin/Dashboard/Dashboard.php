@@ -483,7 +483,7 @@ class Dashboard implements Hookable {
             wp_register_style(
                 $this->setup_guide_key,
                 DOKAN_PLUGIN_ASSEST . '/css/setup-guide-banner.css',
-                [ 'dokan-tailwind' ],
+                [ 'dokan-react-components' ],
                 $version
             );
 

@@ -85,6 +85,8 @@ const entryPoints = {
             type: 'window',
         },
     },
+    'dokan-admin-commission-suborder-metabox':
+        './src/styles/dokan-admin-commission-suborder-metabox.css',
 };
 
 module.exports = entryPoints;
