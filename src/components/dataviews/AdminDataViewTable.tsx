@@ -13,11 +13,12 @@ import './style.scss';
 import { AdminFilterProps } from '@src/components/AdminFilter';
 import { AdminTabProps } from '@src/components/AdminTab';
 import { AdminTab, AdminFilter } from '@src/components';
-import { __ } from '@wordpress/i18n';
+import { __, setLocaleData } from '@wordpress/i18n';
 import { twMerge } from 'tailwind-merge';
 import { Funnel } from 'lucide-react';
 import { Item } from '@wordpress/components/build-types/navigation/types';
 import ListEmpty from '@src/components/dataviews/ListEmpty';
+import { getTranslatedStrings } from './DataViewTable';
 
 type ItemWithId = { id: string };
 
@@ -150,6 +151,10 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
             [ windowWidth ]
         );
     }
+
+    useEffect( () => {
+        setLocaleData( getTranslatedStrings(), 'default' );
+    }, [] );
 
     // Auto-hide filter area when there are no active filters
     useEffect( () => {

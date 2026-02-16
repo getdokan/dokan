@@ -27,3 +27,4 @@ test-results/
 !/assets/css/vue-vendor.css
 !/assets/css/vue-frontend.css
 !/assets/css/wp-version-before-5-3.css
+.vscode
