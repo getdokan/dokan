@@ -353,12 +353,12 @@ class Ajax {
             wp_send_json_error( $message );
         }
 
-        // Validate recaptcha if site key and secret key exist
-        if ( dokan_get_recaptcha_site_and_secret_keys( true ) ) {
-            $recaptcha_keys     = dokan_get_recaptcha_site_and_secret_keys();
-            $recaptcha_validate = dokan_handle_recaptcha_validation( 'dokan_contact_seller_recaptcha', $recaptcha_token, $recaptcha_keys['secret_key'] );
+        // Validate captcha using the selected provider if available
+        $captcha_manager = dokan_get_container()->get( \WeDevs\Dokan\Captcha\Manager::class );
+        if ( $captcha_manager && $captcha_manager->get_active_provider() ) {
+            $is_valid = $captcha_manager->validate( 'dokan_contact_seller_recaptcha', $recaptcha_token );
 
-            if ( empty( $recaptcha_validate ) ) {
+            if ( empty( $is_valid ) ) {
                 $message = sprintf( $error_template, __( 'reCAPTCHA verification failed!', 'dokan-lite' ) );
                 wp_send_json_error( $message );
             }
