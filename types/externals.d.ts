@@ -58,7 +58,7 @@ declare module '@woocommerce/csv-export' {
   export function downloadCSVFile( fileName: string, content: string ): void;
   export function generateCSVDataFromTable(
     headers: Array< { key: string; label: string } >,
-    rows: Array< Array< string > >
+    rows: Array<Array<{ display: string; value: string | number }>>
   ): string;
   export function generateCSVFileName(
     name: string,

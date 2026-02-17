@@ -30,7 +30,7 @@ import {
  *
  * @param {Array<Object>} data    - Array of data objects.
  * @param {Array<{key: string, label: string}>} headers - Header definitions (key + label).
- * @return {Array<Array<string>>} Rows suitable for CSV generation.
+ * @return {Array<Array<{display: string, value: string | number}>>} Rows suitable for CSV generation.
  */
 export const objectToCSVRows = ( data, headers ) => {
     return data.map( ( item ) =>
@@ -60,8 +60,6 @@ export const objectToCSVRows = ( data, headers ) => {
  */
 export const directDownloadCSV = ( filename, headers, data, params = {} ) => {
     const rows = objectToCSVRows( data, headers );
-
-    //console.log(rows);
 
     downloadCSVFile(
         generateCSVFileName( filename, params ),
