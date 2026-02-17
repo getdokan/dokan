@@ -87,6 +87,8 @@ const entryPoints = {
     },
     'dokan-admin-commission-suborder-metabox':
         './src/styles/dokan-admin-commission-suborder-metabox.css',
+
+    'dokan-vue-vendor': './src/styles/vue-vendor.css',
 };
 
 module.exports = entryPoints;

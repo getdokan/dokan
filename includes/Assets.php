@@ -318,8 +318,8 @@ class Assets {
                 'version' => filemtime( DOKAN_DIR . '/assets/css/admin.css' ),
             ],
             'dokan-vue-vendor'              => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/css/admin.css',
-                'version' => filemtime( DOKAN_DIR . '/assets/css/admin.css' ),
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-vue-vendor.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-vue-vendor.css' ),
             ],
             'dokan-vue-bootstrap'           => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-bootstrap.css',
