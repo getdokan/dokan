@@ -127,7 +127,7 @@ class Menu {
         $has_new_version = Helper::dokan_has_new_version();
 
         // Render the admin dashboard template.
-        echo '<div id="dokan-admin-panel-header"></div>';
+        echo '<div id="dokan-admin-panel-header" class="dokan-layout"></div>';
         echo '<div class="wrap"><div id="dokan-vue-admin"></div></div>';
     }
 }
