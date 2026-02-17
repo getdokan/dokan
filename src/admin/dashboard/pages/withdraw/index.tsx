@@ -574,8 +574,6 @@ const WithdrawPage = () => {
             onClick={ async () => {
                 setIsExporting(true);
 
-                console.log(data, totalItems);
-
                 try {
                     const shouldEmail = data && data.length < totalItems;
 
