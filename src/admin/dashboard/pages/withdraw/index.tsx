@@ -26,18 +26,12 @@ import { Trash, ArrowDown, Home, Calendar, CreditCard, Loader2 } from 'lucide-re
 import { directDownloadCSV } from '@src/utils/download-csv';
 
 // Define withdraw CSV headers
-const WITHDRAW_CSV_HEADERS = [
-    { key: 'id', label: __( 'Withdraw ID', 'dokan-lite' ) },
-    { key: 'user_id', label: __( 'Vendor ID', 'dokan-lite' ) },
-    { key: 'vendor_name', label: __( 'Vendor Name', 'dokan-lite' ) },
-    { key: 'amount', label: __( 'Amount', 'dokan-lite' ) },
-    { key: 'receivable', label: __( 'Payable', 'dokan-lite' ) },
-    { key: 'created', label: __( 'Date', 'dokan-lite' ) },
-    { key: 'status', label: __( 'Status', 'dokan-lite' ) },
-    { key: 'method_title', label: __( 'Payment Method', 'dokan-lite' ) },
-    { key: 'details', label: __( 'Details', 'dokan-lite' ) },
-    { key: 'note', label: __( 'Note', 'dokan-lite' ) },
-];
+const WITHDRAW_CSV_HEADERS = Object.entries(
+    dokanAdminDashboardSettings.withdraw.columns
+).map( ( [ key, value ] ) => ( {
+    key,
+    label: value,
+} ) );
 
 // Define withdraw statuses for tab filtering
 const WITHDRAW_STATUSES = [
@@ -128,7 +122,7 @@ const WithdrawPage = () => {
             id: 'vendor',
             label: __( 'Vendor', 'dokan-lite' ),
             enableGlobalSearch: true,
-            enableSorting: false,
+            enableSorting: true,
             render: ( { item } ) => (
                 <div className="flex items-center space-x-3">
                     { item.user?.gravatar && (
@@ -165,7 +159,7 @@ const WithdrawPage = () => {
         {
             id: 'amount',
             label: __( 'Amount', 'dokan-lite' ),
-            enableSorting: false,
+            enableSorting: true,
             render: ( { item } ) => (
                 <div className="font-medium text-gray-600">
                     { price( item.amount ) }
@@ -207,7 +201,7 @@ const WithdrawPage = () => {
         {
             id: 'charge',
             label: __( 'Charge', 'dokan-lite' ),
-            enableSorting: false,
+            enableSorting: true,
             render: ( { item } ) => (
                 <div className="text-gray-900">
                     { price( item.charge || 0 ) }
@@ -217,7 +211,7 @@ const WithdrawPage = () => {
         {
             id: 'payable',
             label: __( 'Payable', 'dokan-lite' ),
-            enableSorting: false,
+            enableSorting: true,
             render: ( { item } ) => (
                 <div className="font-medium text-gray-900">
                     { price( item.receivable || item.amount ) }
@@ -227,7 +221,7 @@ const WithdrawPage = () => {
         {
             id: 'date',
             label: __( 'Date', 'dokan-lite' ),
-            enableSorting: false,
+            enableSorting: true,
             render: ( { item } ) => (
                 <div className="text-gray-900">
                     <DateTimeHtml.Date date={ item.created } />
@@ -530,16 +524,9 @@ const WithdrawPage = () => {
         titleField: 'vendor',
         status: 'pending',
         layout: { density: 'comfortable' },
-        fields: [
-            'amount',
-            'status',
-            'method',
-            'charge',
-            'payable',
-            'date',
-            'details',
-            'note',
-        ],
+        fields: fields.map( ( field ) =>
+            field.id !== 'vendor' ? field.id : ''
+        ),
     } );
 
     // Handle tab selection for status filtering
@@ -583,6 +570,9 @@ const WithdrawPage = () => {
                             ...item,
                             user_id: item.user?.id,
                             vendor_name: item.user?.store_name,
+                            payment_method: item.method_title,
+                            payable: item.receivable,
+                            date: item.created,
                         } ) );
                         directDownloadCSV( 'withdraws', WITHDRAW_CSV_HEADERS, csvData, filterArgs );
                         return;
