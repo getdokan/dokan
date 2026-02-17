@@ -390,7 +390,8 @@ class Assets {
      */
     public function get_scripts() {
         global $wp_version;
-        $jquery_tiptip = self::get_wc_handler( 'jquery-tiptip' );
+        $jquery_tiptip  = self::get_wc_handler( 'jquery-tiptip' );
+        $jquery_blockui = self::get_wc_handler( 'jquery-blockui' );
 
         $frontend_shipping_asset = require DOKAN_DIR . '/assets/js/frontend.asset.php';
 
@@ -498,7 +499,7 @@ class Assets {
             ],
             'dokan-admin'               => [
                 'src'     => $asset_url . '/js/dokan-admin.js',
-                'deps'    => [ 'jquery', 'wp-i18n' ],
+                'deps'    => [ 'jquery', 'wp-i18n', $jquery_blockui ],
                 'version' => filemtime( $asset_path . 'js/dokan-admin.js' ),
             ],
             'dokan-vendor-registration' => [
@@ -587,6 +588,16 @@ class Assets {
                 'src'     => $asset_url . '/js/frontend.js',
                 'deps'    => array_merge( $frontend_shipping_asset['dependencies'], [ 'wp-core-data', 'dokan-react-components' ] ),
                 'version' => $frontend_shipping_asset['version'],
+            ],
+            'dokan-jquery-tiptip'       => [
+                'src'     => '',
+                'deps'    => [ $jquery_tiptip ],
+                'version' => DOKAN_PLUGIN_VERSION,
+            ],
+            'dokan-jquery-blockui'      => [
+                'src'     => '',
+                'deps'    => [ $jquery_blockui ],
+                'version' => DOKAN_PLUGIN_VERSION,
             ],
         ];
 
