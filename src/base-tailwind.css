@@ -3,7 +3,10 @@
 /* ============================================
    Tailwind v4 Theme Configuration
    Simplified color system with CSS variable support
+
    ============================================ */
+
+@source "../src/";
 @theme {
     /* Custom breakpoints */
     --breakpoint-d-xs: 360px;

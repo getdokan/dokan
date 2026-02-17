@@ -203,7 +203,7 @@ const Sidebar = ( {
             <aside
                 style={ { top: windowWidth > 600 ? adminBar : 0 } }
                 className={ twMerge(
-                    'dokan-frontend-sidebar text-white fixed left-0 bottom-0 z-20 flex flex-col transition-all duration-200',
+                    'dokan-frontend-sidebar bg-primary-500 text-white fixed left-0 bottom-0 z-20 flex flex-col transition-all duration-200',
                     collapsed
                         ? windowWidth <= 768
                             ? 'w-0 max-w-0'
@@ -215,8 +215,9 @@ const Sidebar = ( {
                 <a
                     href={ siteUrl || '/' }
                     className={ twMerge(
-                        'flex items-center gap-3.5 min-h-20 no-underline focus:!outline-none',
-                        collapsed ? 'px-5 justify-center' : 'px-8'
+                        'flex items-center gap-3.5 min-h-20 no-underline focus:!outline-none rounded-md hover:bg-primary-700',
+                        collapsed ? 'px-5 justify-center' : 'px-8',
+                        'hover:bg-primary-hover'
                     ) }
                 >
                     { siteIcon ? (
@@ -312,6 +313,7 @@ const Sidebar = ( {
                                         item?.menu_manager_title || item?.title,
                                         item
                                     ) as string;
+                                    const isMenuItemActive =  isParentActive || isParentActiveCollapsed ;
 
                                     return (
                                         <li
@@ -344,16 +346,16 @@ const Sidebar = ( {
                                                     }
                                                 } }
                                                 className={ twMerge(
-                                                    'group skip-color-module relative flex items-center rounded-md font-medium focus:!outline-none py-2.5 no-underline',
+                                                    'group skip-color-module relative flex items-center rounded-md font-medium focus:!outline-none py-2.5 no-underline hover:bg-primary-hover data-[active=true]:bg-primary-hover',
                                                     collapsed
                                                         ? windowWidth <= 768
                                                             ? 'w-0 max-w-0'
                                                             : 'w-10 max-w-10 justify-center'
                                                         : 'text-sm px-3',
-                                                    ( isParentActive ||
-                                                        isParentActiveCollapsed ) &&
+                                                    (isMenuItemActive) &&
                                                         'active'
                                                 ) }
+                                                data-active={ isMenuItemActive ? 'true' : 'false' }
                                             >
                                                 { /* Icon: turn white when its popover is visible */ }
                                                 <span
