@@ -122,7 +122,7 @@ const WithdrawPage = () => {
             id: 'vendor',
             label: __( 'Vendor', 'dokan-lite' ),
             enableGlobalSearch: true,
-            enableSorting: true,
+            enableSorting: false,
             render: ( { item } ) => (
                 <div className="flex items-center space-x-3">
                     { item.user?.gravatar && (
@@ -159,7 +159,7 @@ const WithdrawPage = () => {
         {
             id: 'amount',
             label: __( 'Amount', 'dokan-lite' ),
-            enableSorting: true,
+            enableSorting: false,
             render: ( { item } ) => (
                 <div className="font-medium text-gray-600">
                     { price( item.amount ) }
@@ -201,7 +201,7 @@ const WithdrawPage = () => {
         {
             id: 'charge',
             label: __( 'Charge', 'dokan-lite' ),
-            enableSorting: true,
+            enableSorting: false,
             render: ( { item } ) => (
                 <div className="text-gray-900">
                     { price( item.charge || 0 ) }
@@ -211,7 +211,7 @@ const WithdrawPage = () => {
         {
             id: 'payable',
             label: __( 'Payable', 'dokan-lite' ),
-            enableSorting: true,
+            enableSorting: false,
             render: ( { item } ) => (
                 <div className="font-medium text-gray-900">
                     { price( item.receivable || item.amount ) }
@@ -221,7 +221,7 @@ const WithdrawPage = () => {
         {
             id: 'date',
             label: __( 'Date', 'dokan-lite' ),
-            enableSorting: true,
+            enableSorting: false,
             render: ( { item } ) => (
                 <div className="text-gray-900">
                     <DateTimeHtml.Date date={ item.created } />
