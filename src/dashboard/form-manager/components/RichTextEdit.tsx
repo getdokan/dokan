@@ -4,7 +4,7 @@ import CustomField from './CustomField';
 
 const RichTextEdit = ( { data, field, onChange }: any ) => (
     <CustomField label={ field.label } error={ field.error }>
-        { field.field_type === 'textarea' ? (
+        { field.variant === 'textarea' ? (
             <TextArea
                 input={ {
                     id: `textarea-${ field.id }`,

@@ -1,7 +1,6 @@
-import { Field } from '@wordpress/dataviews';
-
 export interface DokanFormManagerData {
-    sections: Section[];
+    /** Flat array of form items (type 'section' | 'field') from server. */
+    form_items: FlatFormItem[];
     is_new_product: string;
     product_id: string;
     view_product_url: string;
@@ -12,38 +11,40 @@ export interface DokanFormManagerData {
 
 export interface DependencyCondition {
     field: string;
+    section?: string;
     operator: 'equal' | 'not_equal';
     value: string | boolean | number;
 }
-export interface Section {
-    id: string;
-    label: string;
-    description: string;
-    order: number;
-    fields: FormField[];
-    dependency_condition?: DependencyCondition;
-}
 
-export type FormField = {
+/**
+ * Single item in the flat form array from backend.
+ * Same structure for section and field; discriminated by type.
+ * Sections: type 'section', parent_id null. Fields: type 'field', parent_id section id.
+ * Use as FormField when the item is a field (e.g. in getFieldConfig, handlers).
+ */
+export type FlatFormItem = {
+    type: 'section' | 'field';
     id: string;
-    section_id: string;
+    parent_id: string | null;
     label: string;
-    is_custom: boolean;
-    placeholder: string;
-    tooltip: string;
-    description: string;
-    required: boolean;
-    value: any;
-    field_type: string;
-    options: { label: string; value: string }[] | Record< string, string >;
-    errors: string;
-    dependency_condition: DependencyCondition;
-    hidden_scope: string[];
-    visibility: boolean;
-    order: number;
-} & Field< any >;
+    description?: string;
+    order?: number;
+    placeholder?: string;
+    tooltip?: string;
+    required?: boolean;
+    value?: any;
+    default?: any;
+    variant?: string;
+    options?: { label: string; value: string }[] | Record< string, string >;
+    dependencies?: DependencyCondition[];
+    visibility?: boolean;
+    is_custom?: boolean;
+};
 
-export type FieldConfig = Partial< FormField > & {
+/** Alias for FlatFormItem when used as a field (e.g. getFieldConfig, handlers). */
+export type FormField = FlatFormItem;
+
+export type FieldConfig = Partial< FlatFormItem > & {
     type?: string;
     Edit?: any;
     elements?: any[];

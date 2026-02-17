@@ -3,7 +3,7 @@
 namespace WeDevs\Dokan\REST;
 
 use WC_REST_Products_Controller;
-use WeDevs\Dokan\Product\FormManager;
+use WeDevs\Dokan\ProductForm\PayloadResolver;
 use WeDevs\Dokan\Traits\VendorAuthorizable;
 use WP_REST_Server;
 use WP_REST_Response;
@@ -88,6 +88,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      */
 
     public function create_item( $request ) {
+        $request = $this->resolve_request_payload( $request );
         $product = parent::create_item( $request );
         $params = $request->get_params();
         $product_id = is_wp_error( $product ) ? 0 : (int) $product->data['id'];
@@ -106,11 +107,29 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      */
 
     public function update_item( $request ) {
+        $request = $this->resolve_request_payload( $request );
         $product = parent::update_item( $request );
         $product_id = is_wp_error( $product ) ? 0 : (int) $product->data['id'];
         $params = $request->get_params();
         do_action( 'dokan_product_updated', $product_id, $params );
         return $product;
+    }
+
+    /**
+     * Resolve request body from schema field ids to WC REST product API shape (server-side).
+     *
+     * @param \WP_REST_Request $request Request object.
+     *
+     * @return \WP_REST_Request Request with resolved body when JSON params are present.
+     */
+    private function resolve_request_payload( $request ) {
+        $params = $request->get_json_params();
+        if ( ! is_array( $params ) ) {
+            return $request;
+        }
+        $resolved = PayloadResolver::schema_to_wc_api( $params );
+        $request->set_body( wp_json_encode( $resolved ) );
+        return $request;
     }
 
     /**
@@ -128,12 +147,11 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
         if ( ! $product ) {
             return new WP_Error( 'dokan_rest_product_invalid_id', __( 'Invalid product ID.', 'dokan-lite' ), [ 'status' => 404 ] );
         }
-
         return rest_ensure_response(
             [
-				'sections' => FormManager::get_form_fields( $product_id ),
-				'vendor_earning' => dokan()->commission->get_earning_by_product( $product_id ),
-			]
+                'form_items'     => dokan()->product_form->get_fields( $product_id ),
+                'vendor_earning' => dokan()->commission->get_earning_by_product( $product_id ),
+            ]
         );
     }
 }

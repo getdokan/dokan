@@ -1,6 +1,6 @@
 import { useWindowDimensions } from '@src/hooks';
 import { useCallback, useMemo } from '@wordpress/element';
-import { FormField, Section } from '../types';
+import { FlatFormItem } from '../types';
 import {
     appendToLeftColumn,
     collectUsedFields,
@@ -12,17 +12,15 @@ import {
 
 /**
  * Custom hook to manage form layouts.
- * Processes sections and fields to generate the structure for the form.
+ * Uses flat form items only; layout and field config are derived from formItems.
  *
- * @param {Array}  sections The available sections in the form.
- * @param {Array}  fields   All available form fields.
+ * @param {Array}  formItems Flat array of sections and fields from the server.
  * @param {Object} product  The current product data for dependency checking.
  *
  * @return {Object} Object containing the processed form layouts.
  */
 export default function useLayouts(
-    sections: Section[],
-    fields: FormField[],
+    formItems: FlatFormItem[],
     product: Record< string, any >
 ) {
     const { width } = useWindowDimensions();
@@ -36,16 +34,16 @@ export default function useLayouts(
      */
     const getFieldHeading = useCallback(
         ( fieldId: string ) => {
-            const field = getField( sections, fieldId );
-            if ( ! field ) {
+            const item = getField( formItems, fieldId );
+            if ( ! item ) {
                 return {};
             }
             return {
-                label: field.label,
-                description: field.description,
+                label: item.label,
+                description: item.description,
             };
         },
-        [ sections ]
+        [ formItems ]
     );
 
     // Define root layout based on window width
@@ -212,10 +210,9 @@ export default function useLayouts(
             },
         ];
 
-        // Collect all used field IDs from the layout
         const usedFields = collectUsedFields( layouts );
         const remainingFieldsBySection = getRemainingFields(
-            sections,
+            formItems,
             usedFields
         );
         let updatedLayouts = injectRemainingFields(
@@ -223,7 +220,6 @@ export default function useLayouts(
             remainingFieldsBySection
         );
 
-        // Create new cards for sections not found in the existing layout
         const newSections = Object.keys( remainingFieldsBySection ).map(
             ( sectionId ) => ( {
                 id: sectionId,
@@ -243,13 +239,12 @@ export default function useLayouts(
         return {
             fields: layoutBuilder(
                 updatedLayouts,
-                sections,
-                fields,
+                formItems,
                 product,
                 product.type
             ),
         };
-    }, [ rootLayout, getFieldHeading, sections, fields, product ] );
+    }, [ rootLayout, getFieldHeading, formItems, product ] );
 
     return { formLayouts, width };
 }

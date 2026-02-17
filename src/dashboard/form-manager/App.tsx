@@ -6,20 +6,20 @@ import { __ } from '@wordpress/i18n';
 import { ExternalLink } from 'lucide-react';
 import { FormProvider, useFormContext } from './context/FormContext';
 import useLayouts from './hooks/useLayouts';
-import { Attribute, DokanFormManagerData } from './types';
+import { DokanFormManagerData } from './types';
 import { validateProductForm } from './utils';
 
-const { sections, ...formData } = (
+const { form_items: formItems, ...formData } = (
     window as unknown as {
         dokanFormManager: DokanFormManagerData;
     }
- ).dokanFormManager;
+).dokanFormManager;
 
 const FormManager = () => {
-    const { product, fields, isLoading, submitHandler, onChange, sections } =
+    const { product, fields, isLoading, submitHandler, onChange, formItems } =
         useFormContext();
 
-    const { formLayouts } = useLayouts( sections, fields, product );
+    const { formLayouts } = useLayouts( formItems, product );
 
     const productUrl = formData.view_product_url;
     const isNewProduct = Boolean( formData.is_new_product );
@@ -75,85 +75,6 @@ const FormManager = () => {
     );
 };
 
-const preparePayload = ( product: Record< string, any > ) => {
-    // 1. convert empty strings to null
-    Object.keys( product ).forEach( ( key ) => {
-        if ( product[ key ] === '' ) {
-            product[ key ] = null;
-        }
-    } );
-
-    // 2. map categories, tags, brands, images, dimensions
-    product.categories = product.category_ids.map( ( category: number ) => ( {
-        id: category,
-    } ) );
-    delete product.category_ids;
-
-    product.tags = product.product_tag.map( ( tag: number ) => ( {
-        id: tag,
-    } ) );
-    delete product.product_tag;
-
-    product.brands = product.product_brand.map( ( brand: number ) => ( {
-        id: brand,
-    } ) );
-    delete product.product_brand;
-
-    product.images = product.image_id ? [ { id: product.image_id } ] : [];
-    delete product.image_id;
-
-    const images = product.gallery_image_ids?.map( ( image: number ) => ( {
-        id: image,
-    } ) );
-
-    product.images = [ ...product.images, ...images ];
-    delete product.gallery_image_ids;
-
-    product.dimensions = {
-        length: String( product[ 'length' ] ),
-        width: String( product[ 'width' ] ),
-        height: String( product[ 'height' ] ),
-    };
-    delete product.length;
-    delete product.width;
-    delete product.height;
-
-    product.shipping_class = String( product.shipping_class );
-    product.product_shipping_class = String( product.shipping_class );
-    product._disable_shipping = product._disable_shipping ? 'no' : 'yes';
-
-    product.upsell_ids = product.upsell_ids
-        .map( ( u: any ) => Number( u.value ) )
-        .filter( Boolean );
-    product.cross_sell_ids = product.cross_sell_ids
-        .map( ( c: any ) => Number( c.value ) )
-        .filter( Boolean );
-
-    // attributes processing
-    if ( Array.isArray( product.attributes ) ) {
-        product.attributes = product.attributes.map(
-            ( attr: Attribute, index ) => {
-                return {
-                    id: attr.id,
-                    name: attr.name,
-                    position: Number( attr.position ) || index,
-                    visible: Boolean( attr.visible ),
-                    variation: Boolean( attr.variation ),
-                    options: attr.options.map( ( o: any ) => {
-                        return (
-                            attr.terms?.find(
-                                ( t: any ) => Number( t.value ) === Number( o )
-                            )?.label || String( o )
-                        );
-                    } ),
-                };
-            }
-        );
-    }
-
-    return product;
-};
-
 const App = () => {
     const toast = useToast();
     const productId = Number( formData.product_id );
@@ -162,12 +83,20 @@ const App = () => {
         ? `dokan/v3/products/${ productId }`
         : 'dokan/v3/products';
 
+    const transformPayload = ( product: Record< string, any > ) => {
+        Object.keys( product ).forEach( ( key ) => {
+            if ( product[ key ] === '' ) {
+                delete product[ key ];
+            }
+        } );
+        return product;
+    };
     const onSubmit = async ( product: Record< string, any > ) => {
         try {
             await apiFetch( {
                 path,
                 method: productId ? 'PUT' : 'POST',
-                data: preparePayload( { ...product } ),
+                data: transformPayload( { ...product } ),
             } );
             toast( {
                 type: 'success',
@@ -176,18 +105,16 @@ const App = () => {
         } catch ( err: any ) {
             toast( {
                 type: 'error',
-                title:
-                    err.message || __( 'Error saving product.', 'dokan-lite' ),
+                title: __( 'Error saving product.', 'dokan-lite' ),
             } );
-            // eslint-disable-next-line no-console
-            console.error( 'Error saving product:', err );
+            throw err;
         }
     };
 
     return (
         <div className="dokan-product-form-manager dokan-layout">
             <FormProvider
-                sections={ sections }
+                formItems={ formItems ?? [] }
                 productId={ productId }
                 variations={ formData.variations }
                 vendorEarning={ formData.vendor_earning }

@@ -1,6 +1,6 @@
 import { sanitizeHTML } from '@src/utilities';
 import { __ } from '@wordpress/i18n';
-import { DependencyCondition, FormField, Section } from './types';
+import { DependencyCondition, FlatFormItem } from './types';
 
 declare let dokan: any;
 declare let jQuery: any;
@@ -30,59 +30,81 @@ export const ajaxRequest = (
 };
 
 /**
- * Helper to find a field or section by ID.
- * Searches through sections and their nested fields.
+ * Helper to find a field or section by ID in the flat form items array.
  *
- * @param {Array}  sections The available sections in the form.
- * @param {string} fieldId  The ID of the field to find.
+ * @param {Array}  formItems Flat array of sections and fields.
+ * @param {string} fieldId  The ID of the field or section to find.
  *
- * @return {object|null} The field or section object if found, null otherwise.
+ * @return {object|null} The field or section item if found, null otherwise.
  */
-export const getField = ( sections: Section[], fieldId: string ) => {
-    const section = sections.find( ( sec ) => sec.id === fieldId );
-    if ( section ) {
-        return section;
-    }
-
-    for ( const sec of sections ) {
-        if ( sec.fields.length ) {
-            for ( const field of sec.fields ) {
-                if ( field.id === fieldId ) {
-                    return field;
-                }
-            }
-        }
-    }
-    return null;
+export const getField = (
+    formItems: FlatFormItem[],
+    fieldId: string
+): FlatFormItem | null => {
+    return formItems.find( ( item ) => item.id === fieldId ) ?? null;
 };
 
+/**
+ * Build initial product state from flat form items (field items only).
+ * Uses each field's value with minimal normalization (image_id, gallery, checkbox).
+ */
+function fieldValueForProduct( item: FlatFormItem ): any {
+    if ( item.type !== 'field' ) return undefined;
+    const v = item.value;
+    if ( item.id === 'image_id' && v != null && typeof v === 'object' && 'id' in v ) {
+        return v.id;
+    }
+    if ( item.id === 'gallery_image_ids' && Array.isArray( v ) ) {
+        return v.map( ( img: any ) => ( typeof img === 'object' && img?.id != null ? img.id : img ) );
+    }
+    const variant = item.variant;
+    if ( variant === 'checkbox' ) {
+        return v === 'yes' || v === 'on' || v === true || v === 1 || v === '1';
+    }
+    return v ?? '';
+}
+
+/**
+ * Create initial product data from flat form items.
+ * Returns { [fieldId]: value } for each field item.
+ */
+export function getInitialProductFromFormItems(
+    formItems: FlatFormItem[]
+): Record< string, any > {
+    const entries = formItems
+        .filter( ( i ) => i.type === 'field' )
+        .map( ( item ) => [ item.id, fieldValueForProduct( item ) ] );
+    return Object.fromEntries( entries );
+}
+
 export const validateProductForm = (
-    sections: Section[],
+    formItems: FlatFormItem[],
     values: Record< string, any >
 ): Record< string, string > => {
     const newErrors: Record< string, string > = {};
 
-    sections.forEach( ( section ) => {
-        section.fields.forEach( ( field ) => {
-            if ( ! field.required ) {
-                return;
-            }
-            // Check visibility
-            if ( ! field.visibility ) {
-                return;
-            }
-            if ( ! checkDependency( field.dependency_condition, values ) ) {
-                return;
-            }
+    formItems.forEach( ( item ) => {
+        if ( item.type !== 'field' ) {
+            return;
+        }
+        const field = item;
+        if ( ! field.required ) {
+            return;
+        }
+        if ( field.visibility === false ) {
+            return;
+        }
+        if ( ! resolveDependency( field.dependencies, values ) ) {
+            return;
+        }
 
-            const value = values[ field.id ];
-            if ( ! value || ( Array.isArray( value ) && value.length === 0 ) ) {
-                newErrors[ field.id ] = __(
-                    'Please fill out this field.',
-                    'dokan-lite'
-                );
-            }
-        } );
+        const value = values[ field.id ];
+        if ( ! value || ( Array.isArray( value ) && value.length === 0 ) ) {
+            newErrors[ field.id ] = __(
+                'Please fill out this field.',
+                'dokan-lite'
+            );
+        }
     } );
 
     return newErrors;
@@ -96,13 +118,13 @@ export const validateProductForm = (
  *
  * @return {boolean} True if the dependency is met, false otherwise.
  */
-export const checkDependency = (
+export const resolveDependency = (
     depsCondition: DependencyCondition | DependencyCondition[] | undefined,
     data: Record< string, any >
 ): boolean => {
     if ( Array.isArray( depsCondition ) ) {
         return depsCondition.every( ( condition ) =>
-            checkDependency( condition, data )
+            resolveDependency( condition, data )
         );
     }
 
@@ -132,27 +154,33 @@ export const checkDependency = (
  * Recursive function to process layout fields.
  * Handles string references, card creation, and child processing.
  * Also filters out empty cards (cards with no visible children).
+ * Uses only formItems (flat array); field config is derived from formItems.
  *
- * @param {Array}  layouts  The fields to process for the layout
- * @param {Array}  sections The available sections in the form (used for sorting).
- * @param {Array}  fields   All available form fields.
- * @param {Object} product  The current product data for dependency checking.
- * @param {string} scope    The scope of the layout (e.g. 'product', 'variation').
+ * @param {Array}  layouts   The fields to process for the layout.
+ * @param {Array}  formItems Flat array of sections and fields (type, id, order, hidden_scope, dependencies).
+ * @param {Object} product   The current product data for dependency checking.
+ * @param {string} scope     The scope of the layout (e.g. 'product', 'variation').
  *
  * @return {Array} valid processed fields.
  */
 export const layoutBuilder = (
     layouts: any[],
-    sections: Section[] = [],
-    fields: FormField[],
+    formItems: FlatFormItem[] = [],
     product: Record< string, any >,
     scope: string = 'product'
 ): any[] => {
-    // Helper to get order from field/section/layout item
+    const getFlatField = ( id: string ): FlatFormItem | undefined =>
+        formItems.find(
+            ( i ) => i.type === 'field' && i.id === id
+        );
+
     const getOrder = ( item: any ) => {
         if ( typeof item === 'string' ) {
-            const field = fields.find( ( f ) => f.id === item );
-            return field && field.order ? field.order : 30;
+            const flat = getFlatField( item );
+            if ( flat && typeof flat.order === 'number' ) {
+                return flat.order;
+            }
+            return 30;
         }
 
         if ( typeof item.order === 'number' ) {
@@ -160,37 +188,27 @@ export const layoutBuilder = (
         }
 
         if ( item.id ) {
-            // Check sections list
-            const section = sections.find( ( s ) => s.id === item.id );
-            if ( section && section.order ) {
-                return section.order;
+            const flat = formItems.find( ( i ) => i.id === item.id );
+            if ( flat && 'order' in flat && typeof flat.order === 'number' ) {
+                return flat.order;
             }
         }
 
         return 30;
     };
 
-    // Sort layouts based on order logic
     const sortedLayouts = [ ...layouts ].sort( ( a, b ) => {
         return getOrder( a ) - getOrder( b );
     } );
 
     const mappedLayouts = sortedLayouts.map( ( field ) => {
         if ( typeof field === 'string' ) {
-            const fieldData = fields.find( ( f ) => f.id === field );
-            if ( ! fieldData ) {
+            const flatField = getFlatField( field );
+            if ( ! flatField ) {
                 return null;
             }
-            // Check hidden scope
-            if (
-                scope &&
-                fieldData.hidden_scope &&
-                fieldData.hidden_scope.includes( scope )
-            ) {
-                return null;
-            }
-            const condition = fieldData.dependency_condition;
-            if ( ! checkDependency( condition, product ) ) {
+            const condition = flatField.dependencies;
+            if ( ! resolveDependency( condition, product ) ) {
                 return null;
             }
             return field;
@@ -217,8 +235,7 @@ export const layoutBuilder = (
         if ( newField.children ) {
             newField.children = layoutBuilder(
                 newField.children,
-                sections,
-                fields,
+                formItems,
                 product,
                 scope
             );
@@ -287,34 +304,34 @@ export const collectUsedFields = (
 };
 
 /**
- * Helper to get remaining fields that are not in the layout.
+ * Helper to get remaining fields that are not in the layout (from flat form items).
  *
- * @param {Array} sections   The available sections in the form.
- * @param {Set}   usedFields Set of used fields.
+ * @param {Array} formItems  Flat array of sections and fields.
+ * @param {Set}   usedFields Set of used field ids.
  *
- * @return {Object} Object containing remaining fields by section.
+ * @return {Object} Remaining field ids by section id.
  */
 export const getRemainingFields = (
-    sections: Section[],
+    formItems: FlatFormItem[],
     usedFields: Set< string >
 ): Record< string, string[] > => {
     const remainingFieldsBySection: Record< string, string[] > = {};
 
-    sections.forEach( ( section ) => {
-        section.fields.forEach( ( field ) => {
-            if ( usedFields.has( field.id ) ) {
-                return;
-            }
-
-            // Use field's section_id if available, otherwise fall back to the section's id
-            const targetSectionId = field.section_id || section.id;
-
-            if ( ! remainingFieldsBySection[ targetSectionId ] ) {
-                remainingFieldsBySection[ targetSectionId ] = [];
-            }
-
-            remainingFieldsBySection[ targetSectionId ].push( field.id );
-        } );
+    formItems.forEach( ( item ) => {
+        if ( item.type !== 'field' ) {
+            return;
+        }
+        if ( usedFields.has( item.id ) ) {
+            return;
+        }
+        const sectionId = item.parent_id ?? '';
+        if ( ! sectionId ) {
+            return;
+        }
+        if ( ! remainingFieldsBySection[ sectionId ] ) {
+            remainingFieldsBySection[ sectionId ] = [];
+        }
+        remainingFieldsBySection[ sectionId ].push( item.id );
     } );
 
     return remainingFieldsBySection;

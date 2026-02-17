@@ -8,8 +8,8 @@ import {
 } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { getFieldConfig } from '../components/FieldRenderer';
-import { formDataFactory } from '../factories';
-import { Section } from '../types';
+import { getInitialProductFromFormItems } from '../utils';
+import { FlatFormItem } from '../types';
 
 interface FormContextType {
     product: Record< string, any >;
@@ -22,27 +22,27 @@ interface FormContextType {
     isLoading: boolean;
     submitHandler: ( e: React.FormEvent ) => Promise< void >;
     onChange: ( newData: Record< string, any > ) => void;
-    sections: Section[];
+    formItems: FlatFormItem[];
 }
 
 const FormContext = createContext< FormContextType | undefined >( undefined );
 
 interface FormProviderProps {
     children: React.ReactNode;
-    sections: Section[];
+    formItems: FlatFormItem[];
     productId: number;
     vendorEarning: number;
     variations?: any[];
     onSubmit: ( data: Record< string, any > ) => Promise< any >;
     validator?: (
-        sections: Section[],
+        formItems: FlatFormItem[],
         values: Record< string, any >
     ) => Record< string, string >;
 }
 
 export const FormProvider = ( {
     children,
-    sections,
+    formItems,
     productId,
     vendorEarning,
     variations = [],
@@ -52,22 +52,22 @@ export const FormProvider = ( {
     const toast = useToast();
     const [ errors, setErrors ] = useState< Record< string, string > >( {} );
 
-    // Fields and Layout
     const fields = useMemo( () => {
-        return sections.flatMap( ( section ) => {
-            return section.fields.map( ( field ) => {
-                const config = getFieldConfig( field );
-                if ( errors[ field.id ] ) {
-                    return { ...config, error: errors[ field.id ] };
+        return formItems
+            .filter( ( i ) => i.type === 'field' )
+            .map( ( item ) => {
+                const field = { ...item, parent_id: item.parent_id };
+                const config = getFieldConfig( field as any );
+                if ( errors[ item.id ] ) {
+                    return { ...config, error: errors[ item.id ] };
                 }
                 return config;
-            } );
-        } ) as any[];
-    }, [ errors, sections ] );
+            } ) as any[];
+    }, [ errors, formItems ] );
 
     const defaultData = useMemo(
-        () => formDataFactory.create( sections ),
-        [ sections ]
+        () => getInitialProductFromFormItems( formItems ),
+        [ formItems ]
     );
 
     const [ product, setProduct ] = useState< Record< string, any > >( {
@@ -101,7 +101,7 @@ export const FormProvider = ( {
         if ( ! validator ) {
             return true;
         }
-        const newErrors = validator( sections, product );
+        const newErrors = validator( formItems, product );
 
         if ( Object.keys( newErrors ).length > 0 ) {
             setErrors( newErrors );
@@ -151,7 +151,7 @@ export const FormProvider = ( {
         product,
         errors,
         fields,
-        sections,
+        formItems,
         setProduct,
         setErrors,
         isLoading,

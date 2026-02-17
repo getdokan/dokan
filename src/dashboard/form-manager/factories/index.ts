@@ -31,8 +31,7 @@ const handlers: Record< string, FieldHandler > = {
 };
 
 export const getFieldConfigFromFactory = ( field: FormField ) => {
-    const handler = handlers[ field.field_type ] || defaultHandler;
+    const variant = field.variant ?? '';
+    const handler = handlers[ variant ] || defaultHandler;
     return handler( field );
 };
-
-export { default as formDataFactory } from './form-data';

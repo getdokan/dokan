@@ -3,7 +3,7 @@ import { Info } from 'lucide-react';
 import { sanitizeHTML } from '../../../utilities';
 import { getFieldConfigFromFactory } from '../factories';
 import { FormField } from '../types';
-import { checkDependency } from '../utils';
+import { resolveDependency } from '../utils';
 
 export const getFieldConfig = ( field: FormField ) => {
     const mappedField = {
@@ -26,28 +26,22 @@ export const getFieldConfig = ( field: FormField ) => {
         description: (
             <span
                 dangerouslySetInnerHTML={ {
-                    __html: sanitizeHTML( field.description ),
+                    __html: sanitizeHTML( field.description ?? '' ),
                 } }
             />
         ),
         placeholder: field.placeholder,
-        required: field.required,
-        type: field.field_type,
+        type: field.variant,
         isValid: {
             required: field.required,
+        },
+        isVisible: ( data: Record< string, any > ) => {
+            return resolveDependency( field.dependencies, data );
         },
     };
 
     const specificConfig = getFieldConfigFromFactory( field );
     Object.assign( mappedField, specificConfig );
-
-    // Handle Visibility/Dependency
-    mappedField.isVisible = ( data: Record< string, any > ) => {
-        if ( ! field.visibility ) {
-            return false;
-        }
-        return checkDependency( field.dependency_condition, data );
-    };
 
     if ( ! field.description ) {
         // @ts-ignore
@@ -57,8 +51,3 @@ export const getFieldConfig = ( field: FormField ) => {
     return mappedField;
 };
 
-const FieldRenderer = () => {
-    return null;
-};
-
-export default FieldRenderer;

@@ -3,7 +3,7 @@ import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { FormProvider } from '../../context/FormContext';
 import { useVariationContext } from '../../context/VariationContext';
-import { Section, VariationType } from '../../types';
+import { FlatFormItem, VariationType } from '../../types';
 import VariationInternalForm from './VariationInternalForm';
 
 type VariationCardProps = {
@@ -13,24 +13,24 @@ type VariationCardProps = {
 const VariationCard = ( { variation }: VariationCardProps ) => {
     const { saveVariation, removeVariation } = useVariationContext();
     const [ isExpanded, setIsExpanded ] = useState( false );
-    const [ sections, setSections ] = useState< Section[] >( [] );
+    const [ formItems, setFormItems ] = useState< FlatFormItem[] >( [] );
     const [ vendorEarning, setVendorEarning ] = useState< number >( 0 );
 
     const fetchedVariationData = async () => {
         setIsExpanded( ! isExpanded );
 
-        if ( sections.length > 0 ) {
+        if ( formItems.length > 0 ) {
             return;
         }
 
         try {
             const response = await apiFetch< {
-                sections: Section[];
+                form_items: FlatFormItem[];
                 vendor_earning: number;
             } >( {
                 path: `/dokan/v3/products/${ variation.id }/fields`,
             } );
-            setSections( response.sections );
+            setFormItems( response.form_items ?? [] );
             setVendorEarning( response.vendor_earning );
         } catch ( error ) {
             // eslint-disable-next-line no-console
@@ -89,9 +89,9 @@ const VariationCard = ( { variation }: VariationCardProps ) => {
                     ! isExpanded && 'hidden'
                 }` }
             >
-                { sections.length > 0 ? (
+                { formItems.length > 0 ? (
                     <FormProvider
-                        sections={ sections }
+                        formItems={ formItems }
                         productId={ variation.id }
                         vendorEarning={ vendorEarning }
                         onSubmit={ ( data ) =>

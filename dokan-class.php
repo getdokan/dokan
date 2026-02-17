@@ -18,6 +18,7 @@ use WeDevs\Dokan\DependencyManagement\Container;
  * @property WeDevs\Dokan\Frontend\Frontend $frontend_manager Instance of \WeDevs\Dokan\Frontend\Frontend class
  * @property WeDevs\Dokan\Dashboard\Manager $dashboard Instance of \WeDevs\Dokan\Dashboard\Manager class
  * @property WeDevs\Dokan\Registration $registration Instance of WeDevs\Dokan\Registration class
+ * @property WeDevs\Dokan\ProductForm\ProductForm $product_form Instance of WeDevs\Dokan\ProductForm\ProductForm class
  */
 final class WeDevs_Dokan {
 
