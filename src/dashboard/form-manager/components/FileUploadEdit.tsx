@@ -7,15 +7,25 @@ import { Plus, Upload, X } from 'lucide-react';
 import CustomField from './CustomField';
 
 const FileUploadEdit = ( { field, onChange }: any ) => {
-    const [ files, setFiles ] = useState( field.value || [] );
+    const [ files, setFiles ] = useState(
+        field.value.length > 0
+            ? field.value
+            : [
+                  {
+                      id: '',
+                      name: '',
+                      file: '',
+                  },
+              ]
+    );
 
     const onAddRow = () => {
         const newFiles = [
             ...files,
             {
                 id: '',
-                title: '',
-                url: '',
+                name: '',
+                file: '',
             },
         ];
         setFiles( newFiles );
@@ -47,13 +57,9 @@ const FileUploadEdit = ( { field, onChange }: any ) => {
 
         newFiles[ index ] = {
             ...newFiles[ index ],
-            id: selectedValue.id,
-            url: selectedValue.url,
+            id: String(selectedValue.id),
+            file: selectedValue.url,
             name: selectedValue.title || selectedValue.name,
-            title:
-                newFiles[ index ].title ||
-                selectedValue.title ||
-                selectedValue.name,
         };
 
         setFiles( newFiles );
@@ -70,33 +76,33 @@ const FileUploadEdit = ( { field, onChange }: any ) => {
                         key={ index }
                         className="flex flex-col gap-2 p-3 border border-gray-200 rounded relative bg-white"
                     >
-                        <div className="grid grid-cols-5 gap-2 flex-wrap items-end">
-                            <div className="col-span-2">
+                        <div className="flex flex-wrap items-end gap-2">
+                            <div className="min-w-0 flex-1 basis-0">
                                 <SimpleInput
-                                    value={ file.title || '' }
+                                    value={ file.name || '' }
                                     onChange={ ( e ) =>
                                         updateRow(
                                             index,
-                                            'title',
+                                            'name',
                                             e.target.value
                                         )
                                     }
                                     input={ {
                                         placeholder: __(
-                                            'Enter title',
+                                            'Enter name',
                                             'dokan-lite'
                                         ),
                                     } }
                                 />
                             </div>
 
-                            <div className="col-span-2">
+                            <div className="min-w-0 flex-[2] basis-0">
                                 <SimpleInput
-                                    value={ file.url || '' }
+                                    value={ file.file || '' }
                                     onChange={ ( e ) =>
                                         updateRow(
                                             index,
-                                            'url',
+                                            'file',
                                             e.target.value
                                         )
                                     }
@@ -108,7 +114,7 @@ const FileUploadEdit = ( { field, onChange }: any ) => {
                                     } }
                                 />
                             </div>
-                            <div className="flex gap-2 flex-1">
+                            <div className="flex gap-2 flex-shrink-0 items-center">
                                 <MediaUploader
                                     onSelect={ ( val: any ) =>
                                         onSelectFile( val, index )

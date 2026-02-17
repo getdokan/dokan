@@ -23,19 +23,15 @@ export const getFieldConfig = ( field: FormField ) => {
                 ) }
             </div>
         ),
-        description: (
-            <span
-                dangerouslySetInnerHTML={ {
-                    __html: sanitizeHTML( field.description ?? '' ),
-                } }
-            />
-        ),
         placeholder: field.placeholder,
         type: field.variant,
         isValid: {
             required: field.required,
         },
         isVisible: ( data: Record< string, any > ) => {
+            if ( ! field.visibility ) {
+                return false;
+            }
             return resolveDependency( field.dependencies, data );
         },
     };
@@ -43,11 +39,15 @@ export const getFieldConfig = ( field: FormField ) => {
     const specificConfig = getFieldConfigFromFactory( field );
     Object.assign( mappedField, specificConfig );
 
-    if ( ! field.description ) {
-        // @ts-ignore
-        delete mappedField.description;
+    if ( field.description ) {
+        mappedField.description = (
+            <span
+                dangerouslySetInnerHTML={ {
+                    __html: sanitizeHTML( field.description as string ),
+                } }
+            />
+        );
     }
 
     return mappedField;
 };
-

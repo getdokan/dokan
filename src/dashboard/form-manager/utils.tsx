@@ -48,7 +48,7 @@ export const getField = (
  * Build initial product state from flat form items (field items only).
  * Uses each field's value with minimal normalization (image_id, gallery, checkbox).
  */
-function fieldValueForProduct( item: FlatFormItem ): any {
+export function fieldValueForProduct( item: FlatFormItem ): any {
     if ( item.type !== 'field' ) return undefined;
     const v = item.value;
     if ( item.id === 'image_id' && v != null && typeof v === 'object' && 'id' in v ) {
@@ -62,19 +62,6 @@ function fieldValueForProduct( item: FlatFormItem ): any {
         return v === 'yes' || v === 'on' || v === true || v === 1 || v === '1';
     }
     return v ?? '';
-}
-
-/**
- * Create initial product data from flat form items.
- * Returns { [fieldId]: value } for each field item.
- */
-export function getInitialProductFromFormItems(
-    formItems: FlatFormItem[]
-): Record< string, any > {
-    const entries = formItems
-        .filter( ( i ) => i.type === 'field' )
-        .map( ( item ) => [ item.id, fieldValueForProduct( item ) ] );
-    return Object.fromEntries( entries );
 }
 
 export const validateProductForm = (
@@ -110,11 +97,37 @@ export const validateProductForm = (
     return newErrors;
 };
 
+/** True if value is considered empty (null, undefined, '', whitespace-only, or empty array). */
+function isEmptyValue( val: any ): boolean {
+    if ( val === undefined || val === null ) {
+        return true;
+    }
+    if ( typeof val === 'string' ) {
+        return val.trim() === '';
+    }
+    if ( Array.isArray( val ) ) {
+        return val.length === 0;
+    }
+    return false;
+}
+
+/** Normalize checkbox-like values to boolean for comparison. */
+function normalizeForCompare( val: any ): any {
+    if ( val === 'on' || val === 'yes' || val === true || val === 1 ) {
+        return true;
+    }
+    if ( val === 'off' || val === 'no' || val === false ) {
+        return false;
+    }
+    return val;
+}
+
 /**
  * Check dependency condition for a field.
+ * Uses structure: { comparison, key, value? }. Comparisons: '==', '!=', 'empty', 'not_empty'.
  *
- * @param {Object} depsCondition The dependency condition.
- * @param {Object} data          The data to check against.
+ * @param {Object} depsCondition The dependency condition (or array of conditions; all must pass).
+ * @param {Object} data          The data to check against (e.g. form values keyed by field id).
  *
  * @return {boolean} True if the dependency is met, false otherwise.
  */
@@ -128,26 +141,27 @@ export const resolveDependency = (
         );
     }
 
-    if ( typeof depsCondition === 'object' ) {
-        const { field: depField, operator, value } = depsCondition;
-        const depValue = data[ depField ];
-
-        let targetValue = value;
-        if ( value === 'on' || value === 'yes' ) {
-            targetValue = true;
-        }
-        if ( value === 'off' || value === 'no' ) {
-            targetValue = false;
-        }
-
-        if ( operator === 'equal' ) {
-            return depValue === targetValue;
-        }
-        if ( operator === 'not_equal' ) {
-            return depValue !== targetValue;
-        }
+    if ( ! depsCondition || ! depsCondition.key ) {
+        return true;
     }
-    return true;
+
+    const { key: depKey, comparison, value } = depsCondition;
+    const depValue = data[ depKey ];
+
+    switch ( comparison ) {
+        case 'empty':
+            return isEmptyValue( depValue );
+        case 'not_empty':
+            return ! isEmptyValue( depValue );
+        case '==':
+        case 'equal':
+            return normalizeForCompare( depValue ) === normalizeForCompare( value );
+        case '!=':
+        case 'not_equal':
+            return normalizeForCompare( depValue ) !== normalizeForCompare( value );
+        default:
+            return true;
+    }
 };
 
 /**

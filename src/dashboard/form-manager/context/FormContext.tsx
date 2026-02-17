@@ -8,8 +8,8 @@ import {
 } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { getFieldConfig } from '../components/FieldRenderer';
-import { getInitialProductFromFormItems } from '../utils';
-import { FlatFormItem } from '../types';
+import { fieldValueForProduct } from '../utils';
+import { FlatFormItem, VariationType } from '../types';
 
 interface FormContextType {
     product: Record< string, any >;
@@ -32,7 +32,7 @@ interface FormProviderProps {
     formItems: FlatFormItem[];
     productId: number;
     vendorEarning: number;
-    variations?: any[];
+    variations: VariationType[];
     onSubmit: ( data: Record< string, any > ) => Promise< any >;
     validator?: (
         formItems: FlatFormItem[],
@@ -65,10 +65,12 @@ export const FormProvider = ( {
             } ) as any[];
     }, [ errors, formItems ] );
 
-    const defaultData = useMemo(
-        () => getInitialProductFromFormItems( formItems ),
-        [ formItems ]
-    );
+    const defaultData = useMemo( () => {
+        const entries = formItems
+            .filter( ( i ) => i.type === 'field' )
+            .map( ( item ) => [ item.id, fieldValueForProduct( item ) ] );
+        return Object.fromEntries( entries );
+    }, [ formItems ] );
 
     const [ product, setProduct ] = useState< Record< string, any > >( {
         ...defaultData,
@@ -140,8 +142,7 @@ export const FormProvider = ( {
         try {
             await onSubmit( product );
         } catch ( error: unknown ) {
-            const err = error as Error | { message?: string };
-            throw new Error( err.message || 'Error submitting form' );
+            throw error;
         } finally {
             setIsLoading( false );
         }

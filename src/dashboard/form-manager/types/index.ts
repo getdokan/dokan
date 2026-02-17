@@ -1,19 +1,7 @@
-export interface DokanFormManagerData {
-    /** Flat array of form items (type 'section' | 'field') from server. */
-    form_items: FlatFormItem[];
-    is_new_product: string;
-    product_id: string;
-    view_product_url: string;
-    form_manager_nonce: string;
-    vendor_earning: number;
-    variations: any[];
-}
-
 export interface DependencyCondition {
-    field: string;
-    section?: string;
-    operator: 'equal' | 'not_equal';
-    value: string | boolean | number;
+    key: string;
+    comparison: '==' | '!=' | 'empty' | 'not_empty' | '===' | '!==' | 'not_equal' | 'equal';
+    value?: string | boolean | number;
 }
 
 /**
@@ -27,7 +15,7 @@ export type FlatFormItem = {
     id: string;
     parent_id: string | null;
     label: string;
-    description?: string;
+    description?: string | React.ReactNode;
     order?: number;
     placeholder?: string;
     tooltip?: string;

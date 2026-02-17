@@ -31,6 +31,8 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      * @return void
      */
     public function register_routes() {
+        add_filter( 'rest_pre_dispatch', [ $this, 'resolve_product_payload_before_validation' ], 1, 3 );
+
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base,
@@ -88,7 +90,6 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      */
 
     public function create_item( $request ) {
-        $request = $this->resolve_request_payload( $request );
         $product = parent::create_item( $request );
         $params = $request->get_params();
         $product_id = is_wp_error( $product ) ? 0 : (int) $product->data['id'];
@@ -107,7 +108,6 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      */
 
     public function update_item( $request ) {
-        $request = $this->resolve_request_payload( $request );
         $product = parent::update_item( $request );
         $product_id = is_wp_error( $product ) ? 0 : (int) $product->data['id'];
         $params = $request->get_params();
@@ -116,20 +116,28 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
     }
 
     /**
-     * Resolve request body from schema field ids to WC REST product API shape (server-side).
+     * Resolve product request body before schema validation runs (so WC schema sees WC-shaped payload).
+     * Runs on rest_pre_dispatch so that schema_to_wc_api is applied before args validation.
      *
-     * @param \WP_REST_Request $request Request object.
+     * @param mixed            $result  Response to replace the short-circuit result with.
+     * @param WP_REST_Server  $server  Server instance.
+     * @param WP_REST_Request $request Request used to generate the response.
      *
-     * @return \WP_REST_Request Request with resolved body when JSON params are present.
+     * @return mixed Unchanged result so dispatch continues; request body is modified in place.
      */
-    private function resolve_request_payload( $request ) {
-        $params = $request->get_json_params();
-        if ( ! is_array( $params ) ) {
-            return $request;
+    public function resolve_product_payload_before_validation( $result, $server, $request ) {
+        $route = $request->get_route();
+        $route_normalized = trim( $route, '/' );
+        $prefix = trim( $this->namespace . '/' . $this->rest_base, '/' );
+        // Only resolve for create (dokan/v3/products) or update (dokan/v3/products/123), not for .../fields.
+        if ( $route_normalized !== $prefix && ! preg_match( '#^' . preg_quote( $prefix, '#' ) . '/\d+$#', $route_normalized ) ) {
+            return $result;
         }
+
+        $params = $request->get_params();
         $resolved = PayloadResolver::schema_to_wc_api( $params );
         $request->set_body( wp_json_encode( $resolved ) );
-        return $request;
+        return $result;
     }
 
     /**

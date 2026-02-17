@@ -6,14 +6,18 @@ import { __ } from '@wordpress/i18n';
 import { ExternalLink } from 'lucide-react';
 import { FormProvider, useFormContext } from './context/FormContext';
 import useLayouts from './hooks/useLayouts';
-import { DokanFormManagerData } from './types';
 import { validateProductForm } from './utils';
+import { FlatFormItem, VariationType } from './types';
 
-const { form_items: formItems, ...formData } = (
-    window as unknown as {
-        dokanFormManager: DokanFormManagerData;
-    }
-).dokanFormManager;
+const formManager = ( window as any ).dokanFormManager as {
+    form_items: FlatFormItem[];
+    is_new_product: string;
+    product_id: string;
+    view_product_url: string;
+    form_manager_nonce: string;
+    vendor_earning: number;
+    variations: VariationType[];
+};
 
 const FormManager = () => {
     const { product, fields, isLoading, submitHandler, onChange, formItems } =
@@ -21,8 +25,8 @@ const FormManager = () => {
 
     const { formLayouts } = useLayouts( formItems, product );
 
-    const productUrl = formData.view_product_url;
-    const isNewProduct = Boolean( formData.is_new_product );
+    const productUrl = formManager.view_product_url;
+    const isNewProduct = Boolean( formManager.is_new_product );
 
     return (
         <form onSubmit={ submitHandler }>
@@ -77,7 +81,7 @@ const FormManager = () => {
 
 const App = () => {
     const toast = useToast();
-    const productId = Number( formData.product_id );
+    const productId = Number( formManager.product_id );
 
     const path = productId
         ? `dokan/v3/products/${ productId }`
@@ -105,7 +109,8 @@ const App = () => {
         } catch ( err: any ) {
             toast( {
                 type: 'error',
-                title: __( 'Error saving product.', 'dokan-lite' ),
+                title:
+                    err.message || __( 'Error saving product.', 'dokan-lite' ),
             } );
             throw err;
         }
@@ -114,10 +119,10 @@ const App = () => {
     return (
         <div className="dokan-product-form-manager dokan-layout">
             <FormProvider
-                formItems={ formItems ?? [] }
+                formItems={ formManager.form_items }
                 productId={ productId }
-                variations={ formData.variations }
-                vendorEarning={ formData.vendor_earning }
+                variations={ formManager.variations }
+                vendorEarning={ formManager.vendor_earning }
                 validator={ validateProductForm }
                 onSubmit={ onSubmit }
             >

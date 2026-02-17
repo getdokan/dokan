@@ -2,7 +2,6 @@
 
 namespace WeDevs\Dokan\ProductForm;
 
-use Exception;
 use WC_Product;
 use WeDevs\Dokan\ProductCategory\Helper as ProductCategoryHelper;
 
@@ -31,9 +30,9 @@ class ProductForm {
 
         $dep_downloadable = [
             [
-                'field'    => Elements::DOWNLOADABLE,
-                'operator' => 'equal',
-                'value'    => 'on',
+                'comparison' => '==',
+                'key'        => Elements::DOWNLOADABLE,
+                'value'      => 'on',
             ],
         ];
 
@@ -42,98 +41,120 @@ class ProductForm {
                 'id'        => Elements::SECTION_GENERAL,
                 'parent_id' => null,
                 'type'      => 'section',
-                'label'     => __( 'General', 'dokan-lite' ),
-                'order'     => 10,
-                'required'  => true,
+                'label'      => __( 'General', 'dokan-lite' ),
+                'priority'   => 10,
+                'required'   => true,
+                'visibility' => true,
             ],
             [
                 'id'             => Elements::NAME,
+                'parent_id'      => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'         => __( 'Product Title', 'dokan-lite' ),
                 'variant'        => 'text',
                 'placeholder'   => __( 'Enter product title...', 'dokan-lite' ),
-                'default'       => '',
                 'required'      => true,
+                'priority'      => 30,
+                'visibility'     => true,
             ],
             [
                 'id'               => Elements::SLUG,
+                'parent_id'        => Elements::SECTION_GENERAL,
                 'type'             => 'field',
                 'label'            => __( 'Permalink', 'dokan-lite' ),
                 'variant'          => 'text',
                 'placeholder'      => __( 'Enter product slug...', 'dokan-lite' ),
-                'value'            => '',
-                'default'          => '',
                 'required'         => false,
+                'priority'         => 30,
+                'visibility'       => true,
+                'dependencies'    => [
+                    [
+                        'comparison' => 'not_empty',
+                        'key'        => Elements::SLUG,
+                    ],
+                ],
             ],
             [
                 'id'             => Elements::TYPE,
+                'parent_id'      => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'Product Type', 'dokan-lite' ),
                 'variant'        => 'select',
-                'placeholder'    => '',
                 'value'          => 'simple',
                 'default'        => 'simple',
                 'required'       => true,
                 'options'        => $product_type_options,
                 'description'    => __( 'Choose Variable if your product has multiple attributes - like sizes, colors, quality etc', 'dokan-lite' ),
                 'tooltip'        => __( 'Choose product type.', 'dokan-lite' ),
+                'priority'       => 30,
+                'visibility'     => true,
             ],
             [
                 'id'           => Elements::REGULAR_PRICE,
+                'parent_id'   => Elements::SECTION_GENERAL,
                 'type'         => 'field',
                 'label'        => __( 'Price', 'dokan-lite' ),
                 'variant'      => 'text',
                 'placeholder'  => '0.00',
-                'default'      => '',
+                'priority'     => 30,
+                'visibility'   => true,
             ],
             [
                 'id'           => Elements::SALE_PRICE,
+                'parent_id'   => Elements::SECTION_GENERAL,
                 'type'         => 'field',
                 'label'        => __( 'Sale Price', 'dokan-lite' ),
                 'variant'      => 'text',
                 'placeholder'  => '0.00',
-                'default'      => '',
+                'priority'     => 30,
+                'visibility'   => true,
             ],
             [
                 'id'             => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
+                'parent_id'      => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'Create Schedule for Discount', 'dokan-lite' ),
                 'variant'        => 'checkbox',
-                'placeholder'    => '',
-                'default'        => '',
+                'priority'       => 30,
+                'visibility'     => true,
             ],
             [
                 'id'             => Elements::DATE_ON_SALE_FROM,
+                'parent_id'      => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'From', 'dokan-lite' ),
                 'variant'        => 'date',
                 'placeholder'    => 'YYYY-MM-DD',
-                'default'        => '',
+                'priority'       => 30,
                 'dependencies' => [
                     [
-                        'field'    => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
-                        'operator' => 'equal',
-                        'value'    => 'on',
+                        'comparison' => '==',
+                        'key'        => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
+                        'value'      => 'on',
                     ],
                 ],
+                'visibility'     => true,
             ],
             [
                 'id'             => Elements::DATE_ON_SALE_TO,
+                'parent_id'      => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'To', 'dokan-lite' ),
                 'variant'        => 'date',
                 'placeholder'    => 'YYYY-MM-DD',
-                'default'        => '',
+                'priority'       => 30,
                 'dependencies' => [
                     [
-                        'field'    => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
-                        'operator' => 'equal',
-                        'value'    => 'on',
+                        'comparison' => '==',
+                        'key'        => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
+                        'value'      => 'on',
                     ],
                 ],
+                'visibility'     => true,
             ],
             [
                 'id'               => Elements::CATEGORIES,
+                'parent_id'        => Elements::SECTION_GENERAL,
                 'type'             => 'field',
                 'label'            => __( 'Categories', 'dokan-lite' ),
                 'variant'          => 'select',
@@ -142,9 +163,12 @@ class ProductForm {
                 'default'          => [],
                 'options'          => ProductCategoryHelper::get_product_categories_tree(),
                 'required'         => true,
+                'priority'         => 30,
+                'visibility'       => true,
             ],
             [
                 'id'               => Elements::TAGS,
+                'parent_id'        => Elements::SECTION_GENERAL,
                 'type'             => 'field',
                 'label'            => __( 'Tags', 'dokan-lite' ),
                 'variant'          => 'select',
@@ -152,9 +176,12 @@ class ProductForm {
                 'value'            => [],
                 'default'          => [],
                 'options'          => self::get_product_tags(),
+                'priority'         => 30,
+                'visibility'       => true,
             ],
             [
                 'id'               => Elements::BRANDS,
+                'parent_id'        => Elements::SECTION_GENERAL,
                 'type'             => 'field',
                 'label'            => __( 'Brands', 'dokan-lite' ),
                 'variant'          => 'select',
@@ -162,53 +189,63 @@ class ProductForm {
                 'value'            => [],
                 'default'          => [],
                 'options'          => self::get_products_brands(),
+                'priority'         => 30,
+                'visibility'       => true,
             ],
             [
                 'id'             => Elements::FEATURED_IMAGE_ID,
+                'parent_id'      => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'Feature Image', 'dokan-lite' ),
                 'variant'        => 'image',
-                'placeholder'    => '',
                 'value'          => [],
                 'default'        => [],
                 'tooltip'        => __( 'Select product image', 'dokan-lite' ),
+                'priority'       => 30,
+                'visibility'     => true,
             ],
             [
                 'id'             => Elements::GALLERY_IMAGE_IDS,
+                'parent_id'      => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'Gallery Image', 'dokan-lite' ),
                 'variant'        => 'gallery',
-                'placeholder'    => '',
                 'value'          => [],
                 'default'        => [],
                 'tooltip'        => __( 'Select product gallery images', 'dokan-lite' ),
+                'priority'       => 30,
+                'visibility'     => true,
             ],
             [
                 'id'             => Elements::SHORT_DESCRIPTION,
+                'parent_id'      => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'Short Description', 'dokan-lite' ),
                 'variant'        => 'editor',
                 'placeholder'    => __( 'Enter product short description', 'dokan-lite' ),
-                'default'        => '',
+                'priority'       => 30,
+                'visibility'     => true,
             ],
             [
                 'id'             => Elements::DESCRIPTION,
+                'parent_id'      => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'Description', 'dokan-lite' ),
                 'variant'        => 'editor',
                 'placeholder'    => __( 'Enter product description', 'dokan-lite' ),
-                'default'        => '',
                 'required'       => true,
+                'priority'       => 30,
+                'visibility'     => true,
             ],
             [
                 'id'            => Elements::DOWNLOADABLE,
+                'parent_id'     => Elements::SECTION_GENERAL,
                 'type'          => 'field',
                 'label'         => __( 'Downloadable', 'dokan-lite' ),
                 'variant'       => 'checkbox',
-                'placeholder'   => '',
-                'default'       => '',
                 'tooltip'       => __( 'Downloadable products give access to a file upon purchase.', 'dokan-lite' ),
-                'dependencies'  => [],
+                'priority'      => 30,
+                'visibility'    => true,
             ],
             [
                 'id'            => Elements::VIRTUAL,
@@ -216,9 +253,9 @@ class ProductForm {
                 'type'          => 'field',
                 'label'         => __( 'Virtual', 'dokan-lite' ),
                 'variant'       => 'checkbox',
-                'placeholder'   => '',
-                'default'       => '',
                 'tooltip'       => __( 'Virtual products are intangible and are not shipped.', 'dokan-lite' ),
+                'priority'      => 30,
+                'visibility'    => true,
             ],
         ];
 
@@ -229,7 +266,8 @@ class ProductForm {
                 'type'        => 'section',
                 'label'       => __( 'Inventory', 'dokan-lite' ),
                 'description' => __( 'Manage inventory for this product', 'dokan-lite' ),
-                'order'       => 30,
+                'priority'    => 30,
+                'visibility'  => true,
             ],
             [
                 'id'           => Elements::SKU,
@@ -238,8 +276,9 @@ class ProductForm {
                 'label'        => sprintf( '%s <span>(%s)</span>', esc_html__( 'SKU', 'dokan-lite' ), esc_html__( 'Stock Keeping Unit', 'dokan-lite' ) ),
                 'variant'      => 'text',
                 'placeholder'  => __( 'Enter product SKU', 'dokan-lite' ),
-                'default'      => '',
                 'description'  => __( 'SKU refers to a Stock-keeping unit, a unique identifier for each distinct product and service that can be purchased.', 'dokan-lite' ),
+                'priority'     => 30,
+                'visibility'   => true,
             ],
             [
                 'id'           => Elements::GLOBAL_UNIQUE_ID,
@@ -248,8 +287,9 @@ class ProductForm {
                 'label'        => sprintf( '%s <span>(%s)</span>', esc_html__( 'GTIN, UPC, EAN, or ISBN', 'dokan-lite' ), esc_html__( 'Product Identifiers', 'dokan-lite' ) ),
                 'variant'      => 'text',
                 'placeholder'  => __( 'Enter code', 'dokan-lite' ),
-                'default'      => '',
                 'tooltip'      => __( 'Enter a barcode or any other identifier unique to this product. It can help you list this product on other channels or marketplaces.', 'dokan-lite' ),
+                'priority'     => 30,
+                'visibility'   => true,
             ],
             [
                 'id'           => Elements::STOCK_STATUS,
@@ -257,17 +297,17 @@ class ProductForm {
                 'type'         => 'field',
                 'label'        => __( 'Stock Status', 'dokan-lite' ),
                 'variant'      => 'select',
-                'placeholder'  => '',
-                'default'      => '',
                 'description'  => __( 'Controls whether or not the product is listed as "in stock" or "out of stock" on the frontend.', 'dokan-lite' ),
                 'options'      => wc_get_product_stock_status_options(),
                 'dependencies' => [
                     [
-                        'field'    => Elements::MANAGE_STOCK,
-                        'operator' => 'not_equal',
-                        'value'    => 'on',
+                        'comparison' => '!=',
+                        'key'        => Elements::MANAGE_STOCK,
+                        'value'      => 'on',
                     ],
                 ],
+                'priority'     => 30,
+                'visibility'   => true,
             ],
             [
                 'id'           => Elements::MANAGE_STOCK,
@@ -275,9 +315,9 @@ class ProductForm {
                 'type'         => 'field',
                 'label'        => __( 'Enable product stock management', 'dokan-lite' ),
                 'variant'      => 'checkbox',
-                'placeholder'  => '',
-                'default'      => '',
                 'tooltip'      => __( 'Manage stock level (quantity)', 'dokan-lite' ),
+                'priority'     => 30,
+                'visibility'   => true,
             ],
             [
                 'id'           => Elements::STOCK_QUANTITY,
@@ -290,11 +330,13 @@ class ProductForm {
                 'description'  => __( 'Stock quantity. If this is a variable product this value will be used to control stock for all variations, unless you define stock at variation level.', 'dokan-lite' ),
                 'dependencies' => [
                     [
-                        'field'    => Elements::MANAGE_STOCK,
-                        'operator' => 'equal',
-                        'value'    => 'on',
+                        'comparison' => '==',
+                        'key'        => Elements::MANAGE_STOCK,
+                        'value'      => 'on',
                     ],
                 ],
+                'priority'     => 30,
+                'visibility'   => true,
             ],
             [
                 'id'           => Elements::LOW_STOCK_AMOUNT,
@@ -307,15 +349,16 @@ class ProductForm {
                     esc_attr__( 'Store-wide threshold (%d)', 'dokan-lite' ),
                     esc_attr( get_option( 'woocommerce_notify_low_stock_amount' ) )
                 ),
-                'default'     => '',
                 'description' => __( 'When product stock reaches this amount you will be notified by email. It is possible to define different values for each variation individually.', 'dokan-lite' ),
                 'dependencies' => [
                     [
-                        'field'    => Elements::MANAGE_STOCK,
-                        'operator' => 'equal',
-                        'value'    => 'on',
+                        'comparison' => '==',
+                        'key'        => Elements::MANAGE_STOCK,
+                        'value'      => 'on',
                     ],
                 ],
+                'priority'     => 30,
+                'visibility'   => true,
             ],
             [
                 'id'           => Elements::BACKORDERS,
@@ -323,17 +366,17 @@ class ProductForm {
                 'type'         => 'field',
                 'label'        => __( 'Allow Backorders', 'dokan-lite' ),
                 'variant'      => 'select',
-                'placeholder'  => '',
-                'default'      => '',
                 'description'  => __( 'If managing stock, this controls whether or not backorders are allowed. If enabled, stock quantity can go below 0.', 'dokan-lite' ),
                 'options'      => wc_get_product_backorder_options(),
                 'dependencies' => [
                     [
-                        'field'    => Elements::MANAGE_STOCK,
-                        'operator' => 'equal',
-                        'value'    => 'on',
+                        'comparison' => '==',
+                        'key'        => Elements::MANAGE_STOCK,
+                        'value'      => 'on',
                     ],
                 ],
+                'priority'     => 30,
+                'visibility'   => true,
             ],
             [
                 'id'           => Elements::SOLD_INDIVIDUALLY,
@@ -341,9 +384,9 @@ class ProductForm {
                 'type'         => 'field',
                 'label'        => __( 'Allow only one quantity of this product to be bought in a single order.', 'dokan-lite' ),
                 'variant'      => 'checkbox',
-                'placeholder'  => '',
-                'default'      => '',
                 'tooltip'      => __( 'Check to let customers to purchase only 1 item in a single order. This is particularly useful for items that have limited quantity, for example art or handmade goods.', 'dokan-lite' ),
+                'priority'     => 30,
+                'visibility'   => true,
             ],
         ];
         $downloadable_fields = [
@@ -353,7 +396,8 @@ class ProductForm {
                 'type'         => 'section',
                 'label'        => __( 'Downloadable Options', 'dokan-lite' ),
                 'description'  => __( 'Configure your downloadable product settings', 'dokan-lite' ),
-                'order'        => 30,
+                'priority'     => 30,
+                'visibility'   => true,
                 'dependencies' => $dep_downloadable,
             ],
             [
@@ -362,11 +406,12 @@ class ProductForm {
                 'type'         => 'field',
                 'label'        => __( 'Downloadable Files', 'dokan-lite' ),
                 'variant'      => 'downloadable',
-                'placeholder'     => '',
                 'value'           => [],
                 'default'         => [],
                 'description'     => __( 'Upload files that customers can download after purchase.', 'dokan-lite' ),
                 'dependencies' => $dep_downloadable,
+                'priority'     => 30,
+                'visibility'   => true,
             ],
             [
                 'id'           => Elements::DOWNLOAD_LIMIT,
@@ -375,9 +420,10 @@ class ProductForm {
                 'label'        => __( 'Download Limit', 'dokan-lite' ),
                 'variant'      => 'number',
                 'placeholder'  => __( 'Unlimited', 'dokan-lite' ),
-                'default'      => '',
                 'description'  => __( 'Leave blank for unlimited re-downloads.', 'dokan-lite' ),
                 'dependencies' => $dep_downloadable,
+                'priority'     => 30,
+                'visibility'   => true,
             ],
             [
                 'id'           => Elements::DOWNLOAD_EXPIRY,
@@ -386,9 +432,10 @@ class ProductForm {
                 'label'        => __( 'Download Expiry', 'dokan-lite' ),
                 'variant'      => 'number',
                 'placeholder'  => __( 'Never', 'dokan-lite' ),
-                'default'      => '',
                 'description'  => __( 'Enter the number of days before a download link expires, or leave blank.', 'dokan-lite' ),
                 'dependencies' => $dep_downloadable,
+                'priority'     => 30,
+                'visibility'   => true,
             ],
         ];
         $others_fields = [
@@ -398,7 +445,8 @@ class ProductForm {
                 'type'        => 'section',
                 'label'       => __( 'Other Options', 'dokan-lite' ),
                 'description' => __( 'Set your extra product options', 'dokan-lite' ),
-                'order'       => 30,
+                'priority'    => 30,
+                'visibility'  => true,
             ],
             [
                 'id'           => Elements::STATUS,
@@ -406,10 +454,11 @@ class ProductForm {
                 'type'         => 'field',
                 'label'        => __( 'Status', 'dokan-lite' ),
                 'variant'      => 'radio',
-                'placeholder'  => '',
                 'value'        => 'draft',
                 'default'      => 'draft',
                 'options'      => dokan_get_available_post_status( $product_id ),
+                'priority'     => 30,
+                'visibility'   => true,
             ],
             [
                 'id'           => Elements::CATALOG_VISIBILITY,
@@ -417,9 +466,9 @@ class ProductForm {
                 'type'         => 'field',
                 'label'        => __( 'Visibility', 'dokan-lite' ),
                 'variant'      => 'select',
-                'placeholder'  => '',
-                'default'      => '',
                 'options'      => dokan_get_product_visibility_options(),
+                'priority'     => 30,
+                'visibility'   => true,
             ],
             [
                 'id'           => Elements::PURCHASE_NOTE,
@@ -428,10 +477,9 @@ class ProductForm {
                 'label'        => __( 'Purchase Note', 'dokan-lite' ),
                 'variant'      => 'textarea',
                 'placeholder'     => __( 'Purchase Note', 'dokan-lite' ),
-                'value'            => '',
-                'default'         => '',
                 'description'     => __( 'Customer will get this in order email.', 'dokan-lite' ),
-                'dependencies'    => [],
+                'priority'        => 30,
+                'visibility'      => true,
             ],
             [
                 'id'           => Elements::REVIEWS_ALLOWED,
@@ -439,8 +487,8 @@ class ProductForm {
                 'type'         => 'field',
                 'label'        => __( 'Enable product reviews', 'dokan-lite' ),
                 'variant'      => 'checkbox',
-                'placeholder' => '',
-                'default'     => '',
+                'priority'    => 30,
+                'visibility'  => true,
             ],
         ];
 
@@ -452,6 +500,17 @@ class ProductForm {
         );
 
         $items = apply_filters( 'dokan_product_form_fields', $items, $product_id );
+
+        // Sort the items by priority (fallback to 30 when not set).
+        usort(
+            $items,
+            function ( $a, $b ) {
+                $a_priority = isset( $a['priority'] ) ? (int) $a['priority'] : 30;
+                $b_priority = isset( $b['priority'] ) ? (int) $b['priority'] : 30;
+
+                return $a_priority <=> $b_priority;
+            }
+        );
 
         if ( $product instanceof WC_Product ) {
             foreach ( $items as &$item ) {
@@ -486,6 +545,12 @@ class ProductForm {
         $key = $this->get_field_key_from_id( $field_id );
 
         switch ( $key ) {
+            case Elements::NAME:
+                $name = $product->get_name();
+                if ( $name === 'AUTO-DRAFT' ) {
+                    return '';
+                }
+                return $name;
             case Elements::CREATE_SCHEDULE_FOR_DISCOUNT:
                 return ( ! empty( $product->get_date_on_sale_to() ) || ! empty( $product->get_date_on_sale_from() ) ) ? 'on' : 'off';
             case Elements::DATE_ON_SALE_FROM:
@@ -519,17 +584,15 @@ class ProductForm {
                 return $product->is_downloadable();
             case Elements::VIRTUAL:
                 return $product->is_virtual();
-            case Elements::GLOBAL_UNIQUE_ID:
-                return $product->get_meta( Elements::GLOBAL_UNIQUE_ID );
             case Elements::SOLD_INDIVIDUALLY:
                 return $product->is_sold_individually();
             case Elements::DOWNLOADS:
                 $downloads = [];
-                foreach ( $product->get_downloads() as $download_id => $download ) {
+                foreach ( $product->get_downloads() as $download ) {
                     $downloads[] = [
-                        'id'    => $download_id,
-                        'title' => $download['name'],
-                        'url'   => $download['file'],
+                        'id' => (string) attachment_url_to_postid( $download['file'] ),
+                        'name' => $download['name'],
+                        'file'   => $download['file'],
                     ];
                 }
                 return $downloads;
@@ -545,6 +608,11 @@ class ProductForm {
                 // Get the field name from the key.
                 $field_name = sanitize_key( $key );
 
+                $value = apply_filters( 'dokan_product_form_field_value', '', $field_name, $product );
+                if ( ! empty( $value ) ) {
+                    return $value;
+                }
+
                 // If the field name starts with an underscore, it is a meta field.
                 if ( 0 === strpos( $field_name, '_' ) ) {
                     return $product->get_meta( $field_name );
@@ -558,7 +626,7 @@ class ProductForm {
                     return $product->{$method_name}();
                 }
 
-                return apply_filters( 'dokan_product_form_field_value', '', $field_name, $product );
+                return '';
         }
     }
 
