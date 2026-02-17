@@ -161,6 +161,10 @@ class OrderType {
             self::DOKAN_SUBORDER,
             self::DOKAN_SUBORDER_REFUND,
             self::DOKAN_SINGLE_ORDER_REFUND,
+            self::DOKAN_ADVERTISEMENT_PRODUCT_ORDER,
+            self::DOKAN_ADVERTISEMENT_REFUND_ORDER,
+            self::DOKAN_SUBSCRIPTION_ORDER,
+            self::DOKAN_SUBSCRIPTION_REFUND_ORDER,
         ];
     }
 

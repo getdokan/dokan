@@ -30,10 +30,15 @@ class VendorOrderStatsStore extends BaseDataStore {
             'vendor_gateway_fee'  => '%f',
             'vendor_shipping_fee' => '%f',
             'vendor_discount'     => '%f',
+            'vendor_shipping_tax' => '%f',
+            'vendor_order_tax'    => '%f',
+            'admin_earning'       => '%f',
             'admin_commission'    => '%f',
             'admin_gateway_fee'   => '%f',
             'admin_shipping_fee'  => '%f',
             'admin_discount'      => '%f',
+            'admin_shipping_tax'  => '%f',
+            'admin_order_tax'     => '%f',
             'admin_subsidy'       => '%f',
         ];
     }

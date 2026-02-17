@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from '@wordpress/element';
 import { formatPrice } from '../utilities';
+import { applyFilters } from '@wordpress/hooks';
 
 // Chart configuration constants
 const CHART_CONFIG = {
@@ -202,6 +203,7 @@ const D3Chart = ( {
             .select( 'body' )
             .append( 'div' )
             .attr( 'class', 'tooltip' )
+            .style( 'padding', '10px' )
             .style( 'position', 'absolute' )
             .style( 'background', 'rgba(0, 0, 0, 0.8)' )
             .style( 'color', 'white' )
@@ -255,11 +257,18 @@ const D3Chart = ( {
                     let tooltipContent = `<strong>${ __(
                         'Date:',
                         'dokan-lite'
-                    ) }</strong> ${ d3.timeFormat( '%Y-%m-%d' )( d.date ) }<br/>`;
+                    ) }</strong> ${ d3.timeFormat( '%Y-%m-%d' )(
+                        d.date
+                    ) }<br/>`;
 
                     metrics.forEach( ( metric ) => {
-                        tooltipContent += `<strong>${ metric.label }:</strong> ${ formatValue(
-                            d[ metric.key ]
+                        tooltipContent += `<strong>${
+                            metric.label
+                        }:</strong> ${ applyFilters(
+                            `dokan_admin_chart_tooltip_${ metric.key }_data`,
+                            formatValue( d[ metric.key ] ),
+                            d,
+                            metric.key
                         ) }<br/>`;
                     } );
 
@@ -287,5 +296,8 @@ const D3Chart = ( {
     return <svg ref={ svgRef }></svg>;
 };
 
-export { CHART_CONFIG as D3ChartConfig, defaultMetrics as D3ChartDefaultMetrics };
+export {
+    CHART_CONFIG as D3ChartConfig,
+    defaultMetrics as D3ChartDefaultMetrics,
+};
 export default D3Chart;

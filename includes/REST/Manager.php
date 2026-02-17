@@ -257,7 +257,6 @@ class Manager {
                 DOKAN_DIR . '/includes/REST/AdminOnboardingController.php'         => '\WeDevs\Dokan\REST\AdminOnboardingController',
                 DOKAN_DIR . '/includes/REST/VendorProductCategoriesController.php' => '\WeDevs\Dokan\REST\VendorProductCategoriesController',
                 DOKAN_DIR . '/includes/REST/AdminDashboardStatsController.php'     => '\WeDevs\Dokan\REST\AdminDashboardStatsController',
-                DOKAN_DIR . '/includes/REST/AdminReportStatsController.php'        => '\WeDevs\Dokan\REST\AdminReportStatsController',
                 DOKAN_DIR . '/includes/REST/WithdrawExportController.php'          => '\WeDevs\Dokan\REST\WithdrawExportController',
                 DOKAN_DIR . '/includes/REST/ExportController.php'                  => '\WeDevs\Dokan\REST\ExportController',
             )
