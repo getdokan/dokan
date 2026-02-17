@@ -54,6 +54,18 @@ declare module '@woocommerce/blocks-checkout' {
   export = blocksCheckout;
 }
 
+declare module '@woocommerce/csv-export' {
+  export function downloadCSVFile( fileName: string, content: string ): void;
+  export function generateCSVDataFromTable(
+    headers: Array< { key: string; label: string } >,
+    rows: Array< Array< string > >
+  ): string;
+  export function generateCSVFileName(
+    name: string,
+    params?: Record< string, string >
+  ): string;
+}
+
 // Dokan global packages - mapped to global dokan object
 declare module '@dokan/components' {
   export const DataViews: any;
