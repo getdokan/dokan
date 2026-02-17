@@ -740,7 +740,7 @@ const WithdrawPage = () => {
         }
     };
 
-       // Poll export status and download when ready
+    // Poll export status and download when ready
     const pollExportStatus = async ( exportId ) => {
         const maxAttempts = 60; // Maximum 5 minutes (60 * 5 seconds)
         let attempts = 0;
@@ -757,18 +757,18 @@ const WithdrawPage = () => {
                 if ( statusResponse.percent_complete === 100 ) {
                     // Export is complete, download the file
                     if ( statusResponse.download_url ) {
-                            // Create a temporary link to download the file
-                            const link = document.createElement( 'a' );
-                            link.href = statusResponse.download_url;
-                            link.download = ''; // Let the browser determine the filename
-                            document.body.appendChild( link );
-                            link.click();
-                            document.body.removeChild( link );
+                        // Create a temporary link to download the file
+                        const link = document.createElement( 'a' );
+                        link.href = statusResponse.download_url;
+                        link.download = ''; // Let the browser determine the filename
+                        document.body.appendChild( link );
+                        link.click();
+                        document.body.removeChild( link );
 
-                            console.log( 'Export completed and downloaded' );
-                        } else {
-                            throw new Error( 'Download URL not available' );
-                        }
+                        console.log( 'Export completed and downloaded' );
+                    } else {
+                        throw new Error( 'Download URL not available' );
+                    }
                 } else {
                     // Still processing, check again
                     attempts++;
