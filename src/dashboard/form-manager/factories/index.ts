@@ -12,6 +12,7 @@ import {
     numberHandler,
     radioHandler,
     selectHandler,
+    asyncSelectHandler,
 } from './handlers';
 
 const handlers: Record< string, FieldHandler > = {
@@ -23,6 +24,7 @@ const handlers: Record< string, FieldHandler > = {
     date: dateHandler,
     datetime: dateHandler,
     select: selectHandler,
+    async_select: asyncSelectHandler,
     multiselect: multiSelectHandler,
     image: imageHandler,
     gallery: galleryHandler,

@@ -7,40 +7,12 @@ import GalleryImages from '../components/GalleryImages';
 import PriceEdit from '../components/PriceEdit';
 import RichTextEdit from '../components/RichTextEdit';
 import SelectEdit from '../components/SelectEdit';
-import { FieldConfig, FieldHandler, FormField } from '../types';
-
-/**
- * Helper function to normalize options into an array of label/value objects.
- * Handles both array and object formats for options.
- *
- * @param {FormField} field The options to process.
- *
- * @return {Array} Array of options with label and value.
- */
-export const getElementsFromOptions = ( field?: FormField ) => {
-    const { options } = field || {};
-    if ( ! options ) {
-        return [];
-    }
-
-    let normalizedOptions = [];
-    if ( Array.isArray( options ) ) {
-        normalizedOptions = [ ...options ]; // Clone to prevent mutation of the original array
-    } else {
-        normalizedOptions = Object.entries( options ).map(
-            ( [ value, label ] ) => ( {
-                label,
-                value,
-            } )
-        );
-    }
-    return normalizedOptions;
-};
+import { FieldConfig, FieldHandler } from '../types';
 
 /**
  * Handler for text fields using a Rich Text Editor.
  *
- * @return {Object} Configuration object with type 'text' and RichTextEdit component.
+ * @return Configuration object with type 'text' and RichTextEdit component.
  */
 export const editorFieldHandler: FieldHandler = () => ( {
     type: 'text',
@@ -50,7 +22,7 @@ export const editorFieldHandler: FieldHandler = () => ( {
 /**
  * Handler for checkbox fields.
  *
- * @return {Object} Configuration object with type 'boolean' and 'checkbox' edit type.
+ * @return Configuration object with type 'boolean' and 'checkbox' edit type.
  */
 export const checkboxHandler: FieldHandler = () => ( {
     type: 'boolean',
@@ -60,19 +32,17 @@ export const checkboxHandler: FieldHandler = () => ( {
 /**
  * Handler for radio button fields.
  *
- * @param {Object} field The field configuration.
- * @return {Object} Configuration object with type 'text' and 'radio' edit type.
+ * @return Configuration object with type 'text' and 'radio' edit type.
  */
-export const radioHandler: FieldHandler = ( field ) => ( {
+export const radioHandler: FieldHandler = () => ( {
     type: 'text',
-    elements: getElementsFromOptions( field ),
     Edit: 'radio',
 } );
 
 /**
  * Handler for numeric fields.
  *
- * @return {Object} Configuration object with type 'integer'.
+ * @return Configuration object with type 'integer'.
  */
 export const numberHandler: FieldHandler = () => ( {
     type: 'integer',
@@ -81,7 +51,7 @@ export const numberHandler: FieldHandler = () => ( {
 /**
  * Handler for date fields.
  *
- * @return {Object} Configuration object with type 'datetime' and DateTimePickerEdit component.
+ * @return Configuration object with type 'datetime' and DateTimePickerEdit component.
  */
 export const dateHandler: FieldHandler = () => ( {
     type: 'datetime',
@@ -91,14 +61,10 @@ export const dateHandler: FieldHandler = () => ( {
 /**
  * Handler for select/dropdown fields.
  * Handles normal select options and special cases like product categories.
- *
- * @param {Object} [field] The field configuration.
- * @return {Object} Configuration object including type, elements, and Edit component.
  */
 export const selectHandler: FieldHandler = ( field ) => {
-    const config: any = {
+    const config = {
         type: 'number',
-        elements: getElementsFromOptions( field ),
         Edit: SelectEdit,
         multiple: false,
     };
@@ -107,11 +73,19 @@ export const selectHandler: FieldHandler = ( field ) => {
         config.type = 'array';
         config.multiple = true;
     }
+    return config;
+};
 
-    // async select fields
-    const asyncSelectFields = [ 'upsell_ids', 'cross_sell_ids', 'children' ];
-    if ( asyncSelectFields.includes( field!.id ) ) {
-        config.Edit = AsyncSelectEdit;
+export const asyncSelectHandler: FieldHandler = ( field ) => {
+    const config = {
+        type: 'number',
+        Edit: AsyncSelectEdit,
+        multiple: false,
+    };
+
+    if ( Array.isArray( field?.value ) ) {
+        config.type = 'array';
+        config.multiple = true;
     }
     return config;
 };
@@ -120,13 +94,11 @@ export const selectHandler: FieldHandler = ( field ) => {
  * Handler for select/dropdown fields.
  * Handles normal select options and special cases like product categories.
  *
- * @param {Object} [field] The field configuration.
- * @return {Object} Configuration object including type, elements, and Edit component.
+ * @return Configuration object including type and Edit component.
  */
-export const multiSelectHandler: FieldHandler = ( field ) => {
+export const multiSelectHandler: FieldHandler = () => {
     const config: any = {
         type: 'array',
-        elements: getElementsFromOptions( field ),
         Edit: SelectEdit,
         multiple: true,
     };
@@ -136,7 +108,7 @@ export const multiSelectHandler: FieldHandler = ( field ) => {
 /**
  * Handler for single image upload fields.
  *
- * @return {Object} Configuration object with type 'integer' and FeatureImage component.
+ * @return Configuration object with type 'integer' and FeatureImage component.
  */
 export const imageHandler: FieldHandler = () => ( {
     type: 'integer',
@@ -146,7 +118,7 @@ export const imageHandler: FieldHandler = () => ( {
 /**
  * Handler for downloadable fields.
  *
- * @return {Object} Configuration object with type 'integer' and FileUploadEdit component.
+ * @return Configuration object with type 'integer' and FileUploadEdit component.
  */
 export const downloadableHandler: FieldHandler = () => ( {
     type: 'integer',
@@ -156,19 +128,17 @@ export const downloadableHandler: FieldHandler = () => ( {
 /**
  * Handler for attributes fields.
  *
- * @param {Object} field The field configuration.
- * @return {Object} Configuration object with type 'array' and AttributeVariationEdit component.
+ * @return Configuration object with type 'array' and AttributeVariationEdit component.
  */
-export const attributeHandler: FieldHandler = ( field ) => ( {
+export const attributeHandler: FieldHandler = () => ( {
     type: 'array',
     Edit: AttributeVariationEdit,
-    elements: getElementsFromOptions( field ),
 } );
 
 /**
  * Handler for image gallery fields.
  *
- * @return {Object} Configuration object with type 'array' and GalleryImages component.
+ * @return Configuration object with type 'array' and GalleryImages component.
  */
 export const galleryHandler: FieldHandler = () => ( {
     type: 'array',
@@ -180,7 +150,7 @@ export const galleryHandler: FieldHandler = () => ( {
  * Applies specific components if icons are present, otherwise defaults to text.
  *
  * @param {Object} [field] The field configuration.
- * @return {Object} Configuration object with type 'text' and optionally TextWithAddon component.
+ * @return Configuration object with type 'text' and optionally TextWithAddon component.
  */
 export const defaultHandler: FieldHandler = ( field ) => {
     const config: FieldConfig = {

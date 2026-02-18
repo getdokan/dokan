@@ -11,7 +11,7 @@ type VariationCardProps = {
 };
 
 const VariationCard = ( { variation }: VariationCardProps ) => {
-    const { saveVariation, removeVariation } = useVariationContext();
+    const { removeVariation } = useVariationContext();
     const [ isExpanded, setIsExpanded ] = useState( false );
     const [ formItems, setFormItems ] = useState< FlatFormItem[] >( [] );
     const [ vendorEarning, setVendorEarning ] = useState< number >( 0 );
@@ -94,9 +94,6 @@ const VariationCard = ( { variation }: VariationCardProps ) => {
                         formItems={ formItems }
                         productId={ variation.id }
                         vendorEarning={ vendorEarning }
-                        onSubmit={ ( data ) =>
-                            saveVariation( variation, data )
-                        }
                     >
                         <VariationInternalForm variation={ variation } />
                     </FormProvider>

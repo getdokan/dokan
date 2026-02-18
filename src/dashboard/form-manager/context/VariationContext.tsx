@@ -1,5 +1,5 @@
 import { useToast } from '@getdokan/dokan-ui';
-import { createContext, useContext } from '@wordpress/element';
+import { createContext, useContext, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Attribute, VariationType } from '../types';
 import { ajaxRequest } from '../utils';
@@ -102,6 +102,7 @@ export interface VariationContextType {
     addVariation: () => void;
     updateVariation: ( variation: VariationType ) => void;
     removeVariation: ( variation: VariationType ) => void;
+    isLoading: boolean;
 }
 
 export const VariationContext = createContext< VariationContextType >( {
@@ -111,6 +112,7 @@ export const VariationContext = createContext< VariationContextType >( {
     addVariation: () => {},
     updateVariation: () => {},
     removeVariation: () => {},
+    isLoading: false,
 } );
 
 export const useVariationContext = () => {
@@ -139,6 +141,7 @@ export const VariationProvider = ( {
     onUpdateVariations,
 }: VariationProviderProps ) => {
     const toast = useToast();
+    const [isLoading, setIsLoading] = useState(false);
 
     const updateVariation = ( updatedVariation: VariationType ) => {
         if ( ! onUpdateVariations ) {
@@ -160,6 +163,7 @@ export const VariationProvider = ( {
         variation: VariationType,
         data: Record< string, any >
     ) => {
+        setIsLoading(true);
         const formData = preparePayload( {
             data,
             variation,
@@ -186,6 +190,8 @@ export const VariationProvider = ( {
                 type: 'error',
                 title: __( 'Error saving variation', 'dokan-lite' ),
             } );
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -280,6 +286,7 @@ export const VariationProvider = ( {
         addVariation,
         updateVariation,
         removeVariation,
+        isLoading,
     };
 
     return (

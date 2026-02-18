@@ -1,13 +1,13 @@
 import { DokanToaster, useToast } from '@getdokan/dokan-ui';
-import { DokanButton, DokanTooltip } from '@src/components';
-import apiFetch from '@wordpress/api-fetch';
+import { DokanButton, DokanTooltip, useFormValidity } from '@src/components';
 import { DataForm } from '@wordpress/dataviews';
 import { __ } from '@wordpress/i18n';
 import { ExternalLink } from 'lucide-react';
 import { FormProvider, useFormContext } from './context/FormContext';
 import useLayouts from './hooks/useLayouts';
-import { validateProductForm } from './utils';
 import { FlatFormItem, VariationType } from './types';
+import { useState } from '@wordpress/element';
+import apiFetch from '@wordpress/api-fetch';
 
 const formManager = ( window as any ).dokanFormManager as {
     form_items: FlatFormItem[];
@@ -18,15 +18,22 @@ const formManager = ( window as any ).dokanFormManager as {
     vendor_earning: number;
     variations: VariationType[];
 };
+const productId = Number( formManager.product_id );
 
 const FormManager = () => {
-    const { product, fields, isLoading, submitHandler, onChange, formItems } =
+    const { product, fields, onChange, formItems, isLoading, submitHandler } =
         useFormContext();
 
     const { formLayouts } = useLayouts( formItems, product );
 
     const productUrl = formManager.view_product_url;
     const isNewProduct = Boolean( formManager.is_new_product );
+
+    const { validity, isValid } = useFormValidity(
+        product,
+        fields,
+        formLayouts
+    );
 
     return (
         <form onSubmit={ submitHandler }>
@@ -61,7 +68,7 @@ const FormManager = () => {
                     type="submit"
                     variant="secondary"
                     loading={ isLoading }
-                    disabled={ isLoading }
+                    disabled={ ! isValid || isLoading }
                     label={
                         isNewProduct
                             ? __( 'Save Changes', 'dokan-lite' )
@@ -74,48 +81,13 @@ const FormManager = () => {
                 fields={ fields }
                 form={ formLayouts }
                 onChange={ onChange }
+                validity={ validity }
             />
         </form>
     );
 };
 
 const App = () => {
-    const toast = useToast();
-    const productId = Number( formManager.product_id );
-
-    const path = productId
-        ? `dokan/v3/products/${ productId }`
-        : 'dokan/v3/products';
-
-    const transformPayload = ( product: Record< string, any > ) => {
-        Object.keys( product ).forEach( ( key ) => {
-            if ( product[ key ] === '' ) {
-                delete product[ key ];
-            }
-        } );
-        return product;
-    };
-    const onSubmit = async ( product: Record< string, any > ) => {
-        try {
-            await apiFetch( {
-                path,
-                method: productId ? 'PUT' : 'POST',
-                data: transformPayload( { ...product } ),
-            } );
-            toast( {
-                type: 'success',
-                title: __( 'Product saved successfully.', 'dokan-lite' ),
-            } );
-        } catch ( err: any ) {
-            toast( {
-                type: 'error',
-                title:
-                    err.message || __( 'Error saving product.', 'dokan-lite' ),
-            } );
-            throw err;
-        }
-    };
-
     return (
         <div className="dokan-product-form-manager dokan-layout">
             <FormProvider
@@ -123,8 +95,6 @@ const App = () => {
                 productId={ productId }
                 variations={ formManager.variations }
                 vendorEarning={ formManager.vendor_earning }
-                validator={ validateProductForm }
-                onSubmit={ onSubmit }
             >
                 <FormManager />
             </FormProvider>

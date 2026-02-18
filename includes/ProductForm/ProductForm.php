@@ -54,6 +54,7 @@ class ProductForm {
                 'variant'        => 'text',
                 'placeholder'   => __( 'Enter product title...', 'dokan-lite' ),
                 'required'      => true,
+                'error_message' => __( 'Please enter a product title.', 'dokan-lite' ),
                 'priority'      => 30,
                 'visibility'     => true,
             ],

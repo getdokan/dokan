@@ -11,7 +11,7 @@ export interface DependencyCondition {
  * Use as FormField when the item is a field (e.g. in getFieldConfig, handlers).
  */
 export type FlatFormItem = {
-    type: 'section' | 'field';
+    type: string;
     id: string;
     parent_id: string | null;
     label: string;
@@ -20,6 +20,7 @@ export type FlatFormItem = {
     placeholder?: string;
     tooltip?: string;
     required?: boolean;
+    error_message?: string;
     value?: any;
     default?: any;
     variant?: string;
@@ -33,7 +34,6 @@ export type FlatFormItem = {
 export type FormField = FlatFormItem;
 
 export type FieldConfig = Partial< FlatFormItem > & {
-    type?: string;
     Edit?: any;
     elements?: any[];
     [ key: string ]: any;

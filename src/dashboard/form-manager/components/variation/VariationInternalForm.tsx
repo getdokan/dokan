@@ -15,12 +15,10 @@ const VariationInternalForm = ( { variation }: VariationInternalFormProps ) => {
         product,
         formItems,
         fields,
-        isLoading,
-        submitHandler,
         onChange: dataFormChange,
     } = useFormContext();
 
-    const { updateVariation } = useVariationContext();
+    const { updateVariation, saveVariation, isLoading } = useVariationContext();
     const { formLayouts } = useVariationLayouts( formItems, product );
 
     return (
@@ -64,7 +62,7 @@ const VariationInternalForm = ( { variation }: VariationInternalFormProps ) => {
                     variant="primary"
                     disabled={ isLoading }
                     loading={ isLoading }
-                    onClick={ submitHandler }
+                    onClick={ async () => await saveVariation( variation, product ) }
                 >
                     { __( 'Save Variation', 'dokan-lite' ) }
                 </DokanButton>

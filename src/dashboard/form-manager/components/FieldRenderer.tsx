@@ -6,6 +6,28 @@ import { FormField } from '../types';
 import { resolveDependency } from '../utils';
 
 export const getFieldConfig = ( field: FormField ) => {
+    /**
+     * Helper function to normalize options into an array of label/value objects.
+     */
+    const getElementsFromOptions = ( field?: FormField ) => {
+        const { options } = field || {};
+        if ( ! options ) {
+            return [];
+        }
+
+        let normalizedOptions = [];
+        if ( Array.isArray( options ) ) {
+            normalizedOptions = [ ...options ]; // Clone to prevent mutation of the original array
+        } else {
+            normalizedOptions = Object.entries( options ).map(
+                ( [ value, label ] ) => ( {
+                    label,
+                    value,
+                } )
+            );
+        }
+        return normalizedOptions;
+    };
     const mappedField = {
         ...field,
         label: (
@@ -23,13 +45,26 @@ export const getFieldConfig = ( field: FormField ) => {
                 ) }
             </div>
         ),
-        placeholder: field.placeholder,
         type: field.variant,
+        placeholder: field.placeholder,
+        elements: getElementsFromOptions( field ),
         isValid: {
-            required: field.required,
+            required: field.required || false,
+            // Disable built-in "Value must be one of the elements." so custom validation is used.
+            elements: false,
+            custom: ( value: any ) => {
+                if (
+                    field.required &&
+                    ! value?.[ field.id ] &&
+                    field.error_message
+                ) {
+                    return field.error_message;
+                }
+                return null;
+            },
         },
         isVisible: ( data: Record< string, any > ) => {
-            if ( ! field.visibility ) {
+            if ( field.visibility === false ) {
                 return false;
             }
             return resolveDependency( field.dependencies, data );
