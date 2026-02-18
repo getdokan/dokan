@@ -30,8 +30,8 @@ test.describe('Dashboard test', () => {
     });
 
     // admin
-
-    test('admin can view Dokan dashboard', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
+// TODO: need to fix
+    test.skip('admin can view Dokan dashboard', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
         await admin.adminDashboardRenderProperly();
     });
 

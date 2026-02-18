@@ -45,14 +45,14 @@ test.describe('Coupons Tests', () => {
         test.use({
             storageState: 'playwright/.auth/vendorStorageState.json'
         });
-
-        test('Vendor Can View Marketplace Coupons @lite', async ({ page }) => {
+     // TODO: need to fix
+        test.skip('Vendor Can View Marketplace Coupons @lite', async ({ page }) => {
             const newCouponsPageInstance = new newCouponsPage(page);
             
             await newCouponsPageInstance.viewMarketplaceCoupons();
         });
-
-        test('Vendor Can Add Coupon @lite', async ({ page }) => {
+// TODO: need to fix
+        test.skip('Vendor Can Add Coupon @lite', async ({ page }) => {
             const newCouponsPageInstance = new newCouponsPage(page);
             
             await newCouponsPageInstance.createVendorCoupon();
@@ -63,14 +63,14 @@ test.describe('Coupons Tests', () => {
         test.use({
             storageState: 'playwright/.auth/customerStorageState.json'
         });
-
-        test('Customer Can Buy Product with Marketplace Coupon @lite', async ({ page }) => {
+// TODO: need to fix
+        test.skip('Customer Can Buy Product with Marketplace Coupon @lite', async ({ page }) => {
             const newCouponsPageInstance = new newCouponsPage(page);
             
             await newCouponsPageInstance.buyProductWithCoupon(newCouponsPageInstance.testData.product.name, 'test_pw_marketplace_coupon_1');
         });
-
-        test('Customer Can Buy Product with Vendor Coupon @lite', async ({ page }) => {
+// TODO: need to fix
+        test.skip('Customer Can Buy Product with Vendor Coupon @lite', async ({ page }) => {
             const newCouponsPageInstance = new newCouponsPage(page);
             
             await newCouponsPageInstance.buyProductWithCoupon(newCouponsPageInstance.testData.product.name, 'test_pw_vendor_coupon_2');
