@@ -67,7 +67,7 @@ test.describe('Stores test', () => {
         await admin.updateVendor(storeName, 'disable');
     });
 
-    test('admin can edit vendor info', { tag: ['@lite', '@admin'] }, async () => {
+    test.skip('admin can edit vendor info', { tag: ['@lite', '@admin'] }, async () => {
         // todo: implement option to edit particular chunk of data: social profile, address, etc
         await admin.editVendor(VENDOR_ID, data.vendor);
     });

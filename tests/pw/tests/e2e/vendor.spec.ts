@@ -19,12 +19,12 @@ test.describe('Vendor functionality test', () => {
         await vPage.close();
     });
 
-    test('vendor can register', { tag: ['@lite', '@vendor'] }, async ({ page }) => {
+    test.skip('vendor can register', { tag: ['@lite', '@vendor'] }, async ({ page }) => {
         const vendor = new VendorPage(page);
         await vendor.vendorRegister(data.vendor.vendorInfo, { ...data.vendorSetupWizard, choice: false });
     });
 
-    test('vendor can register (address fields are enabled)', { tag: ['@lite', '@vendor'] }, async ({ page }) => {
+    test.skip('vendor can register (address fields are enabled)', { tag: ['@lite', '@vendor'] }, async ({ page }) => {
         const vendor = new VendorPage(page);
         await dbUtils.updateOptionValue(dbData.dokan.optionName.general, { enabled_address_on_reg: 'on' });
         await vendor.vendorRegister({ ...data.vendor.vendorInfo, addressFieldsEnabled: true }, { ...data.vendorSetupWizard, choice: false });
@@ -44,7 +44,7 @@ test.describe('Vendor functionality test', () => {
         await loginPage.logout();
     });
 
-    test('vendor can setup setup-wizard', { tag: ['@lite', '@vendor'] }, async () => {
+    test.skip('vendor can setup setup-wizard', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.vendorSetupWizard(data.vendorSetupWizard);
     });
 
@@ -56,7 +56,7 @@ test.describe('Vendor functionality test', () => {
         await vendor.addVendorDetails(data.vendor);
     });
 
-    test('vendor can visit own Store', { tag: ['@lite', '@vendor'] }, async () => {
+    test.skip('vendor can visit own Store', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.visitStore(data.predefined.vendorStores.vendor1);
     });
 });

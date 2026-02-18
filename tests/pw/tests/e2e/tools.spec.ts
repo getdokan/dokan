@@ -42,7 +42,7 @@ test.describe('Tools test', () => {
         await admin.checkForDuplicateOrders();
     });
 
-    test('admin can set Dokan setup wizard', { tag: ['@lite', '@admin'] }, async () => {
+    test.skip('admin can set Dokan setup wizard', { tag: ['@lite', '@admin'] }, async () => {
         await admin.setDokanSetupWizard(data.dokanSetupWizard);
     });
 

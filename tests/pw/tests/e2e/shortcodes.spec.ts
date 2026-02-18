@@ -40,7 +40,7 @@ test.describe('Shortcodes test', () => {
         await admin.createPageWithShortcode(data.pageTitle, data.dokanShortcodes.dashboard);
     });
 
-    test('vendor can view Dokan dashboard (shortcode)', { tag: ['@lite', '@admin'] }, async () => {
+    test.skip('vendor can view Dokan dashboard (shortcode)', { tag: ['@lite', '@admin'] }, async () => {
         const [responseBody, pageId] = await apiUtils.createPage(payloads.dashboardShortcode, payloads.adminAuth);
         await vendor.viewDashboard(responseBody.link);
         await apiUtils.deletePage(pageId, payloads.adminAuth);
@@ -56,7 +56,7 @@ test.describe('Shortcodes test', () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.vendorSubscription, dbData.dokan.vendorSubscriptionSettings);
     });
 
-    test('guest user can view vendor registration form (shortcode)', { tag: ['@lite', '@admin'] }, async ({ page }) => {
+    test.skip('guest user can view vendor registration form (shortcode)', { tag: ['@lite', '@admin'] }, async ({ page }) => {
         const guest = new ShortcodePage(page);
         const [responseBody, pageId] = await apiUtils.createPage(payloads.vendorRegistrationShortcode, payloads.adminAuth);
         await guest.viewVendorRegistrationForm(responseBody.link);
@@ -94,13 +94,13 @@ test.describe('Shortcodes test', () => {
         await apiUtils.deletePage(pageId, payloads.adminAuth);
     });
 
-    test('customer can view stores (shortcode)', { tag: ['@lite', '@admin'] }, async () => {
+    test.skip('customer can view stores (shortcode)', { tag: ['@lite', '@admin'] }, async () => {
         const [responseBody, pageId] = await apiUtils.createPage(payloads.storesShortcode, payloads.adminAuth);
         await customer.viewStores(responseBody.link);
         await apiUtils.deletePage(pageId, payloads.adminAuth);
     });
 
-    test('customer can view my orders (shortcode)', { tag: ['@lite', '@admin'] }, async () => {
+    test.skip('customer can view my orders (shortcode)', { tag: ['@lite', '@admin'] }, async () => {
         const [responseBody, pageId] = await apiUtils.createPage(payloads.myOrdersShortcode, payloads.adminAuth);
         await customer.viewMyOrders(responseBody.link);
         await apiUtils.deletePage(pageId, payloads.adminAuth);

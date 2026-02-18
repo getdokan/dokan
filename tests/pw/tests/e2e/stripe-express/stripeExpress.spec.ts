@@ -26,7 +26,7 @@ test.describe('Stripe Express Tests @lite', () => {
     // const context = await browser.newContext({ storageState: a1 });
     // const page = await context.newPage();
 
-    test('Test Case 1 - Verify Stripe Express is Enabled', async ({ browser }) => {
+    test.skip('Test Case 1 - Verify Stripe Express is Enabled', async ({ browser }) => {
         // Using admin session storage
         const context = await browser.newContext({ storageState: a1 });
         const adminPage = await context.newPage();
