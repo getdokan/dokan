@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\ProductForm;
 
 use WC_Product;
 use WeDevs\Dokan\ProductCategory\Helper as ProductCategoryHelper;
+use Exception;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -13,6 +14,67 @@ defined( 'ABSPATH' ) || exit;
  * @since DOKAN_SINCE
  */
 class ProductForm {
+
+    /**
+     * Required field attributes
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var array $required_fields
+     */
+    private array $required_fields = [
+        'id',
+        'type',
+        'variant',
+        'label',
+    ];
+
+    private array $supported_types = [
+        'section',
+        'field',
+    ];
+
+    private array $supported_variants = [
+        'text',
+        'select',
+        'multiselect',
+        'async_select',
+        'checkbox',
+        'textarea',
+        'editor',
+        'radio',
+        'number',
+        'custom',
+        'date',
+        'feature_image',
+        'gallery_images',
+        'downloadable',
+        'attribute',
+    ];
+
+    private function assert_field_schema( array $fields ): array {
+        foreach ( $fields as $field ) {
+            // Check required attributes are present.
+            foreach ( $this->required_fields as $attr ) {
+                // 'variant' is only required for field-type items, not sections.
+                if ( 'variant' === $attr && isset( $field['type'] ) && 'section' === $field['type'] ) {
+                    continue;
+                }
+                if ( ! array_key_exists( $attr, $field ) || empty( $field[ $attr ] ) ) {
+                    throw new Exception(
+                        sprintf( 'Missing required attribute "%s" on field: %s', esc_html( $attr ), esc_html( $field['id'] ?? 'unknown' ) )
+                    );
+                }
+            }
+            if ( ! in_array( $field['type'], $this->supported_types, true ) ) {
+                throw new Exception( sprintf( 'Invalid field type: %s', esc_html( $field['type'] ) ) );
+            }
+            if ( isset( $field['variant'] ) && ! in_array( $field['variant'], $this->supported_variants, true ) ) {
+                error_log( sprintf( 'Invalid field variant: %s', esc_html( $field['variant'] ) ) );
+            }
+        }
+        return $fields;
+    }
 
     /**
      * Get flat form items (sections and fields). Resolves field values when $product_id is provided.
@@ -107,7 +169,13 @@ class ProductForm {
                 'variant'      => 'checkbox',
                 'priority'     => 30,
                 'visibility'   => true,
-                'dependencies' => $dep_non_variable,
+                'dependencies' => [
+                    [
+                        'comparison' => '==',
+                        'key'        => Elements::TYPE,
+                        'value'      => 'variation',
+                    ],
+                ],
             ],
             [
                 'id'           => Elements::REGULAR_PRICE,
@@ -226,7 +294,7 @@ class ProductForm {
                 'parent_id'      => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'Feature Image', 'dokan-lite' ),
-                'variant'        => 'image',
+                'variant'        => 'feature_image',
                 'value'          => [],
                 'default'        => [],
                 'tooltip'        => __( 'Select product image', 'dokan-lite' ),
@@ -238,7 +306,7 @@ class ProductForm {
                 'parent_id'      => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'Gallery Image', 'dokan-lite' ),
-                'variant'        => 'gallery',
+                'variant'        => 'gallery_images',
                 'value'          => [],
                 'default'        => [],
                 'tooltip'        => __( 'Select product gallery images', 'dokan-lite' ),
@@ -540,6 +608,9 @@ class ProductForm {
                 return $a_priority <=> $b_priority;
             }
         );
+
+        // validate the fields
+        $this->assert_field_schema( $items );
 
         if ( $product instanceof WC_Product ) {
             foreach ( $items as &$item ) {

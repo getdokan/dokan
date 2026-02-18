@@ -1,5 +1,6 @@
 import { FieldHandler, FormField } from '../types';
 import {
+    asyncSelectHandler,
     attributeHandler,
     checkboxHandler,
     dateHandler,
@@ -12,7 +13,6 @@ import {
     numberHandler,
     radioHandler,
     selectHandler,
-    asyncSelectHandler,
 } from './handlers';
 
 const handlers: Record< string, FieldHandler > = {
@@ -26,8 +26,8 @@ const handlers: Record< string, FieldHandler > = {
     select: selectHandler,
     async_select: asyncSelectHandler,
     multiselect: multiSelectHandler,
-    image: imageHandler,
-    gallery: galleryHandler,
+    feature_image: imageHandler,
+    gallery_images: galleryHandler,
     attribute: attributeHandler,
     downloadable: downloadableHandler,
 };
