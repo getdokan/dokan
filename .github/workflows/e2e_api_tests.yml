@@ -163,10 +163,6 @@ jobs:
                       cd tests/pw
                       npm run start:env
 
-            - name: Run docker setup
-              working-directory: tests/pw
-              run: npm run docker:setup
-
             # Get Playwright version
             - name: Get installed Playwright version
               id: playwright-version
@@ -199,6 +195,12 @@ jobs:
             #   working-directory: tests/pw
             #   run: |
             #     npm run pw:chrome-deps-only
+
+
+            # Run docker setup..
+            - name: Run docker setup
+              working-directory: tests/pw
+              run: npm run docker:setup
 
             # Run E2E tests
             - name: 🧪 Run e2e tests-${{ matrix.shardIndex }}
@@ -344,10 +346,6 @@ jobs:
                       cd tests/pw
                       npm run start:env
 
-            - name: Run docker setup
-              working-directory: tests/pw
-              run: npm run docker:setup
-
             # Get Playwright version
             - name: Get installed Playwright version
               id: playwright-version
@@ -380,6 +378,11 @@ jobs:
             #   working-directory: tests/pw
             #   run: |
             #     npm run pw:chrome-deps-only
+
+            # Run docker setup..
+            - name: Run docker setup
+              working-directory: tests/pw
+              run: npm run docker:setup
 
             # Run API tests
             - name: 🧪 Run api tests-${{ matrix.shardIndex }}
