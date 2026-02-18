@@ -1,9 +1,9 @@
 import { ProductAsyncSelect } from '@src/components';
-import CustomField from './CustomField';
+import CustomField, { getValidationError } from './CustomField';
 
-const AsyncSelectEdit = ( { data, field, onChange }: any ) => {
+const AsyncSelectEdit = ( { data, field, onChange, validity }: any ) => {
     return (
-        <CustomField label={ field.label } error={ field.error }>
+        <CustomField field={ field } error={ getValidationError( validity ) }>
             <ProductAsyncSelect
                 value={ data[ field.id ] }
                 onChange={ ( value: any ) => {

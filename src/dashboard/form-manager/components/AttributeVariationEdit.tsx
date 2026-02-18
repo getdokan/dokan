@@ -4,11 +4,16 @@ import { __ } from '@wordpress/i18n';
 import { useFormContext } from '../context/FormContext';
 import { VariationProvider } from '../context/VariationContext';
 import { Attribute, VariationType } from '../types';
-import CustomField from './CustomField';
+import CustomField, { getValidationError } from './CustomField';
 import AttributeCard from './variation/AttributeCard';
 import VariationForm from './variation/VariationForm';
 
-const AttributeVariationEditor = ( { data, field, onChange }: any ) => {
+const AttributeVariationEditor = ( {
+    data,
+    field,
+    onChange,
+    validity,
+}: any ) => {
     const attributes: Attribute[] = data[ field.id ] || [];
     const { isLoading, submitHandler } = useFormContext();
     const { type: productType } = data;
@@ -79,7 +84,7 @@ const AttributeVariationEditor = ( { data, field, onChange }: any ) => {
     };
 
     return (
-        <CustomField label={ field.label } error={ field.error }>
+        <CustomField field={ field } error={ getValidationError( validity ) }>
             <div className="flex flex-col gap-4">
                 { /* Attribute List */ }
                 { attributes.map( ( attr, index ) => (

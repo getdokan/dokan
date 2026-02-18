@@ -53,11 +53,19 @@ export const getFieldConfig = ( field: FormField ) => {
             // Disable built-in "Value must be one of the elements." so custom validation is used.
             elements: false,
             custom: ( value: any ) => {
-                if (
-                    field.required &&
-                    ! value?.[ field.id ] &&
-                    field.error_message
-                ) {
+                const isEmpty = ( v: any ) => {
+                    if ( v === null || v === undefined ) {
+                        return true;
+                    }
+                    if ( typeof v === 'string' ) {
+                        return v.trim().length === 0;
+                    }
+                    if ( Array.isArray( v ) ) {
+                        return v.length === 0;
+                    }
+                    return false;
+                };
+                if ( field.required && isEmpty( value?.[ field.id ] ) ) {
                     return field.error_message;
                 }
                 return null;

@@ -110,7 +110,7 @@ export default function useLayouts(
                                 ],
                             },
                             {
-                                id: 'description',
+                                id: 'description_section',
                                 layout: {
                                     type: 'card',
                                 },
@@ -195,7 +195,7 @@ export default function useLayouts(
                                 ],
                             },
                             {
-                                id: 'purchase_note',
+                                id: 'purchase_note_section',
                                 layout: {
                                     type: 'card',
                                     withHeader: true,

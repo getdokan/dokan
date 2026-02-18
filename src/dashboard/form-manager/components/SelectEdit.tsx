@@ -1,7 +1,7 @@
 import { Select } from '@src/components';
 import { CheckSquare, Square } from 'lucide-react';
 import { components } from 'react-select';
-import CustomField from './CustomField';
+import CustomField, { getValidationError } from './CustomField';
 
 type Option = {
     value: string | number;
@@ -55,7 +55,7 @@ const flattenOptions = ( options: Option[], level = 0 ): Option[] => {
     }, [] );
 };
 
-const SelectEdit = ( { data, field, onChange }: any ) => {
+const SelectEdit = ( { data, field, onChange, validity }: any ) => {
     // Determine Data Source: 'options' (Tree) vs 'elements' (Simple)
     const rawOptions = ( field.elements || [] ) as Option[];
 
@@ -104,7 +104,7 @@ const SelectEdit = ( { data, field, onChange }: any ) => {
     const treeComponents = isTreeMode ? { Option: OptionComponent } : undefined;
 
     return (
-        <CustomField label={ field.label } error={ field.error }>
+        <CustomField field={ field } error={ getValidationError( validity ) }>
             <Select
                 options={ options }
                 isMulti={ isMulti }

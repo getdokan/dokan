@@ -4,9 +4,9 @@ import apiFetch from '@wordpress/api-fetch';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { addQueryArgs } from '@wordpress/url';
-import CustomField from './CustomField';
+import CustomField, { getValidationError } from './CustomField';
 
-const PriceEdit = ( { data, field, onChange }: any ) => {
+const PriceEdit = ( { data, field, onChange, validity }: any ) => {
     const [ vendorEarning, setVendorEarning ] = useState(
         Number( data.vendor_earning )
     );
@@ -49,7 +49,11 @@ const PriceEdit = ( { data, field, onChange }: any ) => {
     };
 
     return (
-        <CustomField label={ <LabelRenderer /> } error={ field.error }>
+        <CustomField
+            field={ field }
+            label={ <LabelRenderer /> }
+            error={ getValidationError( validity ) }
+        >
             <DokanPriceInput
                 label=""
                 value={ data[ field.id ] }

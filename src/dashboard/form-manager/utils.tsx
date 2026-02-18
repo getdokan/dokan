@@ -51,11 +51,18 @@ export const getField = (
 export function fieldValueForProduct( item: FlatFormItem ): any {
     if ( item.type !== 'field' ) return undefined;
     const v = item.value;
-    if ( item.id === 'image_id' && v != null && typeof v === 'object' && 'id' in v ) {
+    if (
+        item.id === 'image_id' &&
+        v != null &&
+        typeof v === 'object' &&
+        'id' in v
+    ) {
         return v.id;
     }
     if ( item.id === 'gallery_image_ids' && Array.isArray( v ) ) {
-        return v.map( ( img: any ) => ( typeof img === 'object' && img?.id != null ? img.id : img ) );
+        return v.map( ( img: any ) =>
+            typeof img === 'object' && img?.id != null ? img.id : img
+        );
     }
     const variant = item.variant;
     if ( variant === 'checkbox' ) {
@@ -155,10 +162,14 @@ export const resolveDependency = (
             return ! isEmptyValue( depValue );
         case '==':
         case 'equal':
-            return normalizeForCompare( depValue ) === normalizeForCompare( value );
+            return (
+                normalizeForCompare( depValue ) === normalizeForCompare( value )
+            );
         case '!=':
         case 'not_equal':
-            return normalizeForCompare( depValue ) !== normalizeForCompare( value );
+            return (
+                normalizeForCompare( depValue ) !== normalizeForCompare( value )
+            );
         default:
             return true;
     }
@@ -184,9 +195,7 @@ export const layoutBuilder = (
     scope: string = 'product'
 ): any[] => {
     const getFlatField = ( id: string ): FlatFormItem | undefined =>
-        formItems.find(
-            ( i ) => i.type === 'field' && i.id === id
-        );
+        formItems.find( ( i ) => i.type === 'field' && i.id === id );
 
     const getOrder = ( item: any ) => {
         if ( typeof item === 'string' ) {

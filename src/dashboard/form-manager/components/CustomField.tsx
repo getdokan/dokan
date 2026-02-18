@@ -1,17 +1,44 @@
+import { FormField } from '../types';
+
+/**
+ * Extract the first validation error message from the DataViews validity object.
+ * The validity prop is per-field and shaped like:
+ *   { required?: { type, message? }, elements?: { type, message? }, custom?: { type, message? } }
+ */
+export const getValidationError = ( validity: any ): string | undefined => {
+    if ( ! validity ) {
+        return undefined;
+    }
+    if ( validity.custom?.type === 'invalid' ) {
+        return validity.custom.message || 'This field is invalid.';
+    }
+    if ( validity.required?.type === 'invalid' ) {
+        return validity.required.message || 'Please fill out this field.';
+    }
+    if ( validity.elements?.type === 'invalid' ) {
+        return (
+            validity.elements.message || 'Value must be one of the elements.'
+        );
+    }
+    return undefined;
+};
+
 const CustomField = ( {
     label,
+    field,
     children,
     error,
     className = '',
 }: {
     label?: string | React.ReactNode;
+    field: FormField;
     children: React.ReactNode;
     error?: string;
     className?: string;
 } ) => {
     return (
         <div className={ `flex flex-col gap-1 ${ className }` }>
-            { label && label }
+            { ( label && label ) || field.label }
             { children }
             { /* Validation message */ }
             { error && (

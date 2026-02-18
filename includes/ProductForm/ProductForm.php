@@ -314,7 +314,7 @@ class ProductForm {
                 'id'           => Elements::MANAGE_STOCK,
                 'parent_id'    => Elements::SECTION_INVENTORY,
                 'type'         => 'field',
-                'label'        => __( 'Enable product stock management', 'dokan-lite' ),
+                'label'        => __( 'Manage stock?', 'dokan-lite' ),
                 'variant'      => 'checkbox',
                 'tooltip'      => __( 'Manage stock level (quantity)', 'dokan-lite' ),
                 'priority'     => 30,

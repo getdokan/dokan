@@ -4,9 +4,9 @@ import { MediaUploader } from '@src/components';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Plus, Upload, X } from 'lucide-react';
-import CustomField from './CustomField';
+import CustomField, { getValidationError } from './CustomField';
 
-const FileUploadEdit = ( { field, onChange }: any ) => {
+const FileUploadEdit = ( { field, onChange, validity }: any ) => {
     const [ files, setFiles ] = useState(
         field.value.length > 0
             ? field.value
@@ -57,7 +57,7 @@ const FileUploadEdit = ( { field, onChange }: any ) => {
 
         newFiles[ index ] = {
             ...newFiles[ index ],
-            id: String(selectedValue.id),
+            id: String( selectedValue.id ),
             file: selectedValue.url,
             name: selectedValue.title || selectedValue.name,
         };
@@ -69,7 +69,7 @@ const FileUploadEdit = ( { field, onChange }: any ) => {
     };
 
     return (
-        <CustomField label={ field.label } error={ field.error }>
+        <CustomField field={ field } error={ getValidationError( validity ) }>
             <div className="flex flex-col gap-3">
                 { files.map( ( file: any, index: number ) => (
                     <div

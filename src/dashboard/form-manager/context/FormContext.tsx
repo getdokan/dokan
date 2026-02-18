@@ -18,7 +18,7 @@ interface FormContextType {
     fields: any[];
     onChange: ( newData: Record< string, any > ) => void;
     formItems: FlatFormItem[];
-    submitHandler: ( e: React.FormEvent< HTMLFormElement > ) => Promise< void >;
+    submitHandler: ( e: any ) => Promise< void >;
     isLoading: boolean;
 }
 

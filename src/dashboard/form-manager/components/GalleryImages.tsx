@@ -1,10 +1,10 @@
 import { MediaUploader } from '@src/components';
 import { useState } from '@wordpress/element';
 import { Upload } from 'lucide-react';
-import CustomField from './CustomField';
+import CustomField, { getValidationError } from './CustomField';
 import ImagePreview from './ImagePreview';
 
-const GalleryImages = ( { field, onChange }: any ) => {
+const GalleryImages = ( { field, onChange, validity }: any ) => {
     const [ files, setFiles ] = useState( field.value || [] );
     const onSelect = ( value: any ) => {
         const newValues = [ ...files, ...value ];
@@ -27,7 +27,7 @@ const GalleryImages = ( { field, onChange }: any ) => {
     };
 
     return (
-        <CustomField label={ field.label } error={ field.error }>
+        <CustomField field={ field } error={ getValidationError( validity ) }>
             <ImagePreview
                 images={ files }
                 onRemove={ onRemove }

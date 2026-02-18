@@ -1,8 +1,8 @@
 import { DateTimePicker } from '@src/components';
-import CustomField from './CustomField';
+import CustomField, { getValidationError } from './CustomField';
 
-const DateTimePickerEdit = ( { data, field, onChange }: any ) => (
-    <CustomField label={ field.label } error={ field.error }>
+const DateTimePickerEdit = ( { data, field, onChange, validity }: any ) => (
+    <CustomField field={ field } error={ getValidationError( validity ) }>
         <DateTimePicker
             placeholder={ field.placeholder }
             currentDate={ data[ field.id ] }
