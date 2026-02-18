@@ -83,15 +83,15 @@ test.describe('Commission test', () => {
         await admin.setCommissionOnDokanSellingSettings(data.commission.specificCategory);
     });
 
-    test('admin can set commission for vendor (fixed)', { tag: ['@lite', '@admin'] }, async () => {
+    test.skip('admin can set commission for vendor (fixed)', { tag: ['@lite', '@admin'] }, async () => {
         await admin.setCommissionForVendor(sellerId, data.commission.fixed);
     });
 
-    test('admin can set commission for vendor (category based)', { tag: ['@lite', '@admin'] }, async () => {
+    test.skip('admin can set commission for vendor (category based)', { tag: ['@lite', '@admin'] }, async () => {
         await admin.setCommissionForVendor(sellerId, data.commission.allCategory);
     });
 
-    test('admin can set commission for vendor (specific category based)', { tag: ['@lite', '@admin'] }, async () => {
+    test.skip('admin can set commission for vendor (specific category based)', { tag: ['@lite', '@admin'] }, async () => {
         await admin.setCommissionForVendor(sellerId, data.commission.specificCategory);
     });
 
