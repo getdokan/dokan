@@ -5,7 +5,7 @@ import { __ } from '@wordpress/i18n';
 import { ExternalLink } from 'lucide-react';
 import { FormProvider, useFormContext } from './context/FormContext';
 import useLayouts from './hooks/useLayouts';
-import { FlatFormItem, VariationType } from './types';
+import { FlatFormItem } from './types';
 
 const formManager = ( window as any ).dokanFormManager as {
     form_items: FlatFormItem[];
@@ -14,7 +14,6 @@ const formManager = ( window as any ).dokanFormManager as {
     view_product_url: string;
     form_manager_nonce: string;
     vendor_earning: number;
-    variations: VariationType[];
 };
 const productId = Number( formManager.product_id );
 
@@ -91,7 +90,6 @@ const App = () => {
             <FormProvider
                 formItems={ formManager.form_items }
                 productId={ productId }
-                variations={ formManager.variations }
                 vendorEarning={ formManager.vendor_earning }
             >
                 <FormManager />

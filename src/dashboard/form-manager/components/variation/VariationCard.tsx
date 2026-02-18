@@ -1,13 +1,76 @@
+import { DokanButton, Select } from '@src/components';
 import apiFetch from '@wordpress/api-fetch';
+import { DataForm } from '@wordpress/dataviews';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { FormProvider } from '../../context/FormContext';
+import { FormProvider, useFormContext } from '../../context/FormContext';
 import { useVariationContext } from '../../context/VariationContext';
+import useVariationLayouts from '../../hooks/useVariationLayouts';
 import { FlatFormItem, VariationType } from '../../types';
-import VariationInternalForm from './VariationInternalForm';
 
 type VariationCardProps = {
     variation: VariationType;
+};
+
+const VariationCardContent = ( {
+    variation,
+}: {
+    variation: VariationType;
+} ) => {
+    const { product, formItems, fields, onChange } = useFormContext();
+    const { updateVariation, saveVariation, isLoading } = useVariationContext();
+    const { formLayouts } = useVariationLayouts( formItems, product );
+
+    return (
+        <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-4 gap-4">
+                { variation.attributes.map( ( attr, idx: number ) => {
+                    return (
+                        <div key={ idx }>
+                            <Select
+                                options={ attr.options }
+                                placeholder={ attr.label }
+                                value={ attr.selected_value }
+                                onChange={ ( value: any ) => {
+                                    const newAttributes = [
+                                        ...variation.attributes,
+                                    ];
+                                    newAttributes[ idx ] = {
+                                        ...newAttributes[ idx ],
+                                        selected_value: value,
+                                    };
+                                    updateVariation( {
+                                        ...variation,
+                                        attributes: newAttributes,
+                                    } );
+                                } }
+                            />
+                        </div>
+                    );
+                } ) }
+            </div>
+            <DataForm
+                data={ product }
+                fields={ fields }
+                form={ formLayouts }
+                onChange={ onChange }
+            />
+
+            <div className="flex justify-end">
+                <DokanButton
+                    type="button"
+                    variant="primary"
+                    disabled={ isLoading }
+                    loading={ isLoading }
+                    onClick={ async () => {
+                        await saveVariation( variation, product );
+                    } }
+                >
+                    { __( 'Save Variation', 'dokan-lite' ) }
+                </DokanButton>
+            </div>
+        </div>
+    );
 };
 
 const VariationCard = ( { variation }: VariationCardProps ) => {
@@ -95,7 +158,7 @@ const VariationCard = ( { variation }: VariationCardProps ) => {
                         productId={ variation.id }
                         vendorEarning={ vendorEarning }
                     >
-                        <VariationInternalForm variation={ variation } />
+                        <VariationCardContent variation={ variation } />
                     </FormProvider>
                 ) : (
                     <div className="p-4 text-center text-gray-400">

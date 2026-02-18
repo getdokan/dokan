@@ -11,8 +11,6 @@ class Hooks {
         add_action( 'dokan_after_add_product_btn', [ $this, 'add_new_product_link' ] );
         add_action( 'dokan_render_product_form_manager_template', [ $this, 'load_product_edit_template' ] );
         add_action( 'dokan_product_form_manager_inside_content', [ $this, 'load_product_edit_content' ] );
-        add_action( 'wp_ajax_dokan_save_product_data', [ $this, 'dokan_save_product_data' ] );
-        add_action( 'wp_ajax_dokan_get_product_variations', [ $this, 'dokan_get_product_variations' ] );
     }
 
     /**
@@ -119,58 +117,7 @@ class Hooks {
                 'is_new_product'     => $new_product,
                 'view_product_url'   => get_permalink( $product_id ),
                 'vendor_earning'     => $vendor_earning,
-                'variations'         => dokan()->product_form->get_product_variations( $product_id ),
             ]
         );
-    }
-
-
-    /**
-     * AJAX: Save product data (form manager submit).
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return void
-     */
-    public function dokan_save_product_data() {
-        if ( ! isset( $_POST['_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_nonce'] ), 'form_manager' ) ) {
-            wp_send_json_error(
-                [
-					'type' => 'nonce',
-					'message' => __( 'Are you cheating?', 'dokan-lite' ),
-				]
-            );
-        }
-        try {
-            $product = dokan()->product->create( $_POST );
-            wp_send_json_success(
-                [
-					'product' => $product->get_data(),
-					'message' => __( 'Product saved successfully', 'dokan-lite' ),
-				]
-            );
-        } catch ( Exception $e ) {
-            wp_send_json_error(
-                [
-					'status' => false,
-					'message' => $e->getMessage(),
-				]
-            );
-        }
-    }
-
-    /**
-     * AJAX handler to get product variations.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return void
-     */
-    public function dokan_get_product_variations() {
-        if ( ! isset( $_REQUEST['product_id'] ) ) { // phpcs:ignore
-            wp_send_json_error( __( 'Product ID is required', 'dokan-lite' ) );
-        }
-        $product_id = intval( wp_unslash( $_REQUEST['product_id'] ) ); // phpcs:ignore
-        wp_send_json_success( dokan()->product_form->get_product_variations( $product_id ) );
     }
 }

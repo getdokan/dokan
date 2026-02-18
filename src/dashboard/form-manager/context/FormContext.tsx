@@ -1,3 +1,5 @@
+import { useToast } from '@getdokan/dokan-ui';
+import apiFetch from '@wordpress/api-fetch';
 import {
     createContext,
     useCallback,
@@ -6,15 +8,12 @@ import {
     useState,
 } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { useToast } from '@getdokan/dokan-ui';
 import { getFieldConfig } from '../components/FieldRenderer';
+import { FlatFormItem } from '../types';
 import { fieldValueForProduct } from '../utils';
-import { FlatFormItem, VariationType } from '../types';
-import apiFetch from '@wordpress/api-fetch';
 
 interface FormContextType {
     product: Record< string, any >;
-    setProduct: React.Dispatch< React.SetStateAction< Record< string, any > > >;
     fields: any[];
     onChange: ( newData: Record< string, any > ) => void;
     formItems: FlatFormItem[];
@@ -29,7 +28,6 @@ interface FormProviderProps {
     formItems: FlatFormItem[];
     productId: number;
     vendorEarning: number;
-    variations?: VariationType[];
 }
 const transformPayload = ( product: Record< string, any > ) => {
     const copy = { ...product };
@@ -46,7 +44,6 @@ export const FormProvider = ( {
     formItems,
     productId,
     vendorEarning,
-    variations = [],
 }: FormProviderProps ) => {
     const toast = useToast();
     const [ isLoading, setIsLoading ] = useState( false );
@@ -70,13 +67,11 @@ export const FormProvider = ( {
         ...defaultData,
         id: productId,
         vendor_earning: vendorEarning,
-        variations: variations,
     } );
 
     const onChange = useCallback( ( newData: Record< string, any > ) => {
         setProduct( ( prev ) => ( { ...prev, ...newData } ) );
     }, [] );
-
 
     const submitHandler = async ( e: React.FormEvent< HTMLFormElement > ) => {
         e.preventDefault();
@@ -109,7 +104,6 @@ export const FormProvider = ( {
         product,
         fields,
         formItems,
-        setProduct,
         onChange,
         submitHandler,
         isLoading,

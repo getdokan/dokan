@@ -77,6 +77,18 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
 				],
 			]
         );
+
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/(?P<id>[\d]+)/variations',
+            [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_product_variations' ],
+                    'permission_callback' => [ $this, 'check_permission' ],
+                ],
+            ]
+        );
     }
 
     /**
@@ -161,5 +173,23 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
                 'vendor_earning' => dokan()->commission->get_earning_by_product( $product_id ),
             ]
         );
+    }
+
+    /**
+     * Get product variations for form manager
+     *
+     * @param WP_REST_Request $request Request data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return WP_REST_Response|WP_Error
+     */
+    public function get_product_variations( $request ) {
+        $product_id = $request->get_param( 'id' );
+        $product    = wc_get_product( $product_id );
+        if ( ! $product ) {
+            return new WP_Error( 'dokan_rest_product_invalid_id', __( 'Invalid product ID.', 'dokan-lite' ), [ 'status' => 404 ] );
+        }
+        return rest_ensure_response( dokan()->product_form->get_product_variations( $product_id ) );
     }
 }
