@@ -36,9 +36,13 @@ const CustomField = ( {
     error?: string;
     className?: string;
 } ) => {
+    const fieldKey = `dokan-form-field-${ field.id }`;
+    const classes = `flex flex-col gap-1 ${ fieldKey } ${ className }`;
     return (
-        <div className={ `flex flex-col gap-1 ${ className }` }>
-            { ( label && label ) || field.label }
+        <div id={ fieldKey } className={ classes }>
+            <div className={ `${ fieldKey }-label` }>
+                { ( label && label ) || field.label }
+            </div>
             { children }
             { /* Validation message */ }
             { error && (

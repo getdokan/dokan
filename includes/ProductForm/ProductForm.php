@@ -36,6 +36,15 @@ class ProductForm {
             ],
         ];
 
+        // Hide price fields for variable products (price is set per-variation).
+        $dep_non_variable = [
+            [
+                'comparison' => '!=',
+                'key'        => Elements::TYPE,
+                'value'      => Elements::PRODUCT_TYPE_VARIABLE,
+            ],
+        ];
+
         $general_fields = [
             [
                 'id'        => Elements::SECTION_GENERAL,
@@ -91,24 +100,36 @@ class ProductForm {
                 'visibility'     => true,
             ],
             [
+                'id'           => Elements::ENABLED,
+                'parent_id'    => Elements::SECTION_GENERAL,
+                'type'         => 'field',
+                'label'        => __( 'Enabled', 'dokan-lite' ),
+                'variant'      => 'checkbox',
+                'priority'     => 30,
+                'visibility'   => true,
+                'dependencies' => $dep_non_variable,
+            ],
+            [
                 'id'           => Elements::REGULAR_PRICE,
-                'parent_id'   => Elements::SECTION_GENERAL,
+                'parent_id'    => Elements::SECTION_GENERAL,
                 'type'         => 'field',
                 'label'        => __( 'Price', 'dokan-lite' ),
                 'variant'      => 'text',
                 'placeholder'  => '0.00',
                 'priority'     => 30,
                 'visibility'   => true,
+                'dependencies' => $dep_non_variable,
             ],
             [
                 'id'           => Elements::SALE_PRICE,
-                'parent_id'   => Elements::SECTION_GENERAL,
+                'parent_id'    => Elements::SECTION_GENERAL,
                 'type'         => 'field',
                 'label'        => __( 'Sale Price', 'dokan-lite' ),
                 'variant'      => 'text',
                 'placeholder'  => '0.00',
                 'priority'     => 30,
                 'visibility'   => true,
+                'dependencies' => $dep_non_variable,
             ],
             [
                 'id'             => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
@@ -118,6 +139,7 @@ class ProductForm {
                 'variant'        => 'checkbox',
                 'priority'       => 30,
                 'visibility'     => true,
+                'dependencies'   => $dep_non_variable,
             ],
             [
                 'id'             => Elements::DATE_ON_SALE_FROM,
@@ -127,13 +149,16 @@ class ProductForm {
                 'variant'        => 'date',
                 'placeholder'    => 'YYYY-MM-DD',
                 'priority'       => 30,
-                'dependencies' => [
+                'dependencies' => array_merge(
+                    $dep_non_variable,
                     [
-                        'comparison' => '==',
-                        'key'        => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
-                        'value'      => 'on',
-                    ],
-                ],
+                        [
+                            'comparison' => '==',
+                            'key'        => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
+                            'value'      => 'on',
+                        ],
+                    ]
+                ),
                 'visibility'     => true,
             ],
             [
@@ -144,13 +169,16 @@ class ProductForm {
                 'variant'        => 'date',
                 'placeholder'    => 'YYYY-MM-DD',
                 'priority'       => 30,
-                'dependencies' => [
+                'dependencies' => array_merge(
+                    $dep_non_variable,
                     [
-                        'comparison' => '==',
-                        'key'        => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
-                        'value'      => 'on',
-                    ],
-                ],
+                        [
+                            'comparison' => '==',
+                            'key'        => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
+                            'value'      => 'on',
+                        ],
+                    ]
+                ),
                 'visibility'     => true,
             ],
             [
@@ -605,6 +633,8 @@ class ProductForm {
                 $new_product_status = dokan_get_default_product_status( $seller_id );
                 $current_status     = 'publish' === $new_product_status ? 'publish' : ( 'pending' === $new_product_status ? 'pending' : 'draft' );
                 return apply_filters( 'dokan_post_edit_default_status', $current_status, $product );
+            case Elements::ENABLED:
+                return $product->get_status() === 'publish';
             default:
                 // Get the field name from the key.
                 $field_name = sanitize_key( $key );

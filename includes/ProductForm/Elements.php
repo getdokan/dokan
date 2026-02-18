@@ -11,21 +11,22 @@ defined( 'ABSPATH' ) || exit;
  */
 class Elements {
     // Section ids.
-    const SECTION_GENERAL                  = 'general';
-    const SECTION_INVENTORY                = 'inventory';
-    const SECTION_DOWNLOADABLE             = 'downloadable';
-    const SECTION_OTHERS                   = 'others';
-    const SECTION_SHIPPING                 = 'shipping';
+    const SECTION_GENERAL = 'general';
+    const SECTION_INVENTORY = 'inventory';
+    const SECTION_DOWNLOADABLE = 'downloadable';
+    const SECTION_OTHERS = 'others';
+    const SECTION_SHIPPING = 'shipping';
     const SECTION_ATTRIBUTES_AND_VARIATIONS = 'attributes-and-variations';
-    const SECTION_LINKED                   = 'linked';
-    const ID = 'id';
-    const TYPE = 'type';
     const PRODUCT_TYPE_SIMPLE = 'simple';
     const PRODUCT_TYPE_VARIABLE = 'variable';
     const PRODUCT_TYPE_GROUPED = 'grouped';
     const PRODUCT_TYPE_EXTERNAL = 'external';
+    const SECTION_LINKED = 'linked';
+    const ID = 'id';
+    const TYPE = 'type';
     const NAME = 'name';
     const DESCRIPTION = 'description';
+    const ENABLED = 'enabled';
     const SHORT_DESCRIPTION = 'short_description';
     const STATUS = 'status';
     const SLUG = 'slug';

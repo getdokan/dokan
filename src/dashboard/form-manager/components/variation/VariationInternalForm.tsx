@@ -62,7 +62,9 @@ const VariationInternalForm = ( { variation }: VariationInternalFormProps ) => {
                     variant="primary"
                     disabled={ isLoading }
                     loading={ isLoading }
-                    onClick={ async () => await saveVariation( variation, product ) }
+                    onClick={ async () => {
+                        await saveVariation( variation, product );
+                    } }
                 >
                     { __( 'Save Variation', 'dokan-lite' ) }
                 </DokanButton>

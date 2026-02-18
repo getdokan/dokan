@@ -66,14 +66,17 @@
     }
     .variation-form {
         .dokan-product-image_id {
-            height: 232px;
-            width: 232px;
+            height: 130px;
+            width: 130px;
             max-width: 100%;
         }
         img {
-            height: 232px;
-            width: 232px;
+            height: 130px;
+            width: 130px;
             max-width: 100%;
+        }
+        .dokan-form-field-image_id-label {
+            display: none;
         }
     }
     .dokan-product-gallery_image_ids {

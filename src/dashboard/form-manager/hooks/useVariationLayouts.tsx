@@ -12,52 +12,43 @@ const useVariationLayouts = (
                 id: 'variation-image-sku',
                 layout: {
                     type: 'row',
-                    alignment: 'center',
-                    styles: {
-                        image_id: {
-                            width: 'max-content',
-                        },
-                        variation_sku: {
-                            flex: '1',
-                        },
-                    },
+                    alignment: 'start',
                 },
                 children: [
-                    'image_id',
+                    {
+                        id: 'image-and-digital-options',
+                        layout: {
+                            type: 'row',
+                            alignment: 'start',
+                            styles: {
+                                image_id: {
+                                    width: 'max-content',
+                                },
+                                'variable-downloadable-options': {
+                                    flex: '1',
+                                },
+                            },
+                        },
+                        children: [
+                            'image_id',
+                            {
+                                id: 'variable-downloadable-options',
+                                children: [
+                                    'enabled',
+                                    'downloadable',
+                                    'virtual',
+                                    'manage_stock',
+                                ],
+                            },
+                        ],
+                    },
                     {
                         id: 'variation_sku',
                         layout: {
                             type: 'regular',
                         },
-                        children: [ 'sku', 'global_unique_id' ],
+                        children: [ 'sku' ],
                     },
-                ],
-            },
-            {
-                id: 'variable-digital-options',
-                layout: {
-                    type: 'row',
-                    alignment: 'start',
-                    styles: {
-                        enabled: {
-                            width: 'max-content',
-                        },
-                        downloadable: {
-                            width: 'max-content',
-                        },
-                        virtual: {
-                            width: 'max-content',
-                        },
-                        manage_stock: {
-                            flex: '1',
-                        },
-                    },
-                },
-                children: [
-                    'enabled',
-                    'downloadable',
-                    'virtual',
-                    'manage_stock',
                 ],
             },
             {
@@ -76,23 +67,19 @@ const useVariationLayouts = (
                 },
                 children: [ 'date_on_sale_from', 'date_on_sale_to' ],
             },
-            'stock_quantity',
-            'low_stock_amount',
-            'backorders',
-            'stock_status',
-            '_disable_shipping',
             {
-                id: 'variation-shipping-dimension',
+                id: 'allow-stock_quantity-backorders',
                 layout: {
                     type: 'row',
+                    alignment: 'start',
                 },
-                children: [ 'weight', 'length', 'width', 'height' ],
+                children: [ 'stock_quantity', 'backorders' ],
             },
-            'tax_status',
+            'low_stock_amount',
             'tax_class',
             'description',
             {
-                id: 'variation-downloadable-options',
+                id: 'variation-downloads-fields',
                 layout: {
                     type: 'card',
                     withHeader: true,
@@ -100,7 +87,7 @@ const useVariationLayouts = (
                 children: [
                     'downloads',
                     {
-                        id: 'variation-digital-options-settings',
+                        id: 'variation-downloads-settings',
                         layout: {
                             type: 'row',
                             alignment: 'start',
@@ -112,12 +99,7 @@ const useVariationLayouts = (
         ];
 
         return {
-            fields: layoutBuilder(
-                layouts,
-                formItems,
-                product,
-                'variation'
-            ),
+            fields: layoutBuilder( layouts, formItems, product, 'variation' ),
         };
     }, [ formItems, product ] );
 
