@@ -62,7 +62,7 @@ test.describe('Commission test', () => {
     });
 
     // TODO: need to fix, commission meta box is not visible on new version of dokan in setup wizard
-    test.skip('admin can set commission on Dokan setup wizard (category based)', { tag: ['@lite', '@admin'] }, async () => {
+    test('admin can set commission on Dokan setup wizard (category based)', { tag: ['@lite', '@admin'] }, async () => {
         await admin.setCommissionOnDokanSetupWizard(data.commission.allCategory);
     });
 
