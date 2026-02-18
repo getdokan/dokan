@@ -163,6 +163,10 @@ jobs:
                       cd tests/pw
                       npm run start:env
 
+            - name: Run docker setup
+              working-directory: tests/pw
+              run: npm run docker:setup
+
             # Get Playwright version
             - name: Get installed Playwright version
               id: playwright-version
@@ -339,6 +343,10 @@ jobs:
                   command: |
                       cd tests/pw
                       npm run start:env
+
+            - name: Run docker setup
+              working-directory: tests/pw
+              run: npm run docker:setup
 
             # Get Playwright version
             - name: Get installed Playwright version

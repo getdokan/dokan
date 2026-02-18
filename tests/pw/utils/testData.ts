@@ -44,7 +44,7 @@ const {
     TEST_MERCHANT_ID_PAYPAL_MARKETPLACE,
     TEST_CLIENT_ID_PAYPAL_MARKETPLACE,
     TEST_CLIENT_SECRET_PAYPAL_MARKETPLACE,
-} = process.env as {
+} = process.env as unknown as {
     ADMIN: string;
     ADMIN_PASSWORD: string;
     VENDOR: string;
