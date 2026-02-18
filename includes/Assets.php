@@ -360,9 +360,9 @@ class Assets {
                 'version' => filemtime( DOKAN_DIR . '/assets/css/frontend.css' ),
             ],
             'dokan-react-components' => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/css/components.css',
+                'src'     => DOKAN_PLUGIN_ASSEST . '/js/dokan-tailwind.css',
                 'deps'    => [ 'wp-components' ],
-                'version' => filemtime( DOKAN_DIR . '/assets/css/components.css' ),
+                'version' => filemtime( DOKAN_DIR . '/assets/js/dokan-tailwind.css' ),
             ],
         ];
 
