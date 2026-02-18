@@ -1,13 +1,11 @@
-import { DokanToaster, useToast } from '@getdokan/dokan-ui';
-import { DokanButton, DokanTooltip, useFormValidity } from '@src/components';
-import { DataForm } from '@wordpress/dataviews';
+import { DokanToaster } from '@getdokan/dokan-ui';
+import { DokanButton, DokanTooltip } from '@src/components';
+import { DataForm, useFormValidity } from '@wordpress/dataviews';
 import { __ } from '@wordpress/i18n';
 import { ExternalLink } from 'lucide-react';
 import { FormProvider, useFormContext } from './context/FormContext';
 import useLayouts from './hooks/useLayouts';
 import { FlatFormItem, VariationType } from './types';
-import { useState } from '@wordpress/element';
-import apiFetch from '@wordpress/api-fetch';
 
 const formManager = ( window as any ).dokanFormManager as {
     form_items: FlatFormItem[];
