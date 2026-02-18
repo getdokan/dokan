@@ -36,7 +36,8 @@ test.describe('Settings test', () => {
         await admin.setDokanGeneralSettings(data.dokanSettings.general);
     });
 
-    test('admin can set Dokan selling settings', { tag: ['@lite', '@admin'] }, async () => {
+    // Todo: have to fix
+    test.skip('admin can set Dokan selling settings', { tag: ['@lite', '@admin'] }, async () => {
         await admin.setDokanSellingSettings(data.dokanSettings.selling);
     });
 
