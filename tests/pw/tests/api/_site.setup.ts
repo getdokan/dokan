@@ -63,24 +63,7 @@ setup.describe('site setup', () => {
     });
 
     setup('activate theme (storefront)', { tag: ['@lite'] }, async () => {
-        // wp-env may install from storefront.latest-stable.zip; slug can be 'storefront' or 'storefront.latest-stable'
-        const storefrontSlugs = ['storefront.latest-stable', data.installWp.themes.storefront];
-        const themesUrl = BASE_URL ? `${BASE_URL}/wp-admin/themes.php` : 'http://localhost:9999/wp-admin/themes.php';
-        const storefrontInstallUrl = 'https://wordpress.org/themes/storefront/';
-        for (const slug of storefrontSlugs) {
-            try {
-                await helpers.exeCommandWpcli(data.commands.wpcli.activateTheme(slug));
-                return;
-            } catch {
-                // try next slug or install
-            }
-        }
-        try {
-            await helpers.exeCommandWpcli(data.commands.wpcli.installTheme(data.installWp.themes.storefront));
-        } catch {
-            console.log(`[storefront] CLI failed. Activate manually: ${themesUrl}`);
-            console.log(`[storefront] Or install from: ${storefrontInstallUrl}`);
-        }
+        await helpers.exeCommandWpcli(data.commands.wpcli.activateTheme(data.installWp.themes.storefront));
     });
 
     setup('set dokan license', { tag: ['@pro'] }, async () => {
