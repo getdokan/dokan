@@ -245,4 +245,204 @@ class VendorOrderStatsStore extends BaseDataStore {
 
         return $filled;
     }
+
+    /**
+     * Get report logs or earnings data from the dokan_order_stats table.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $args Query arguments.
+     *
+     * @return array Raw database results.
+     */
+    public function get_report_data( array $args ): array {
+        global $wpdb;
+
+        $orderby  = $args['orderby'] ?? 'order_id';
+        $order    = strtoupper( $args['order'] ?? 'DESC' );
+        $per_page = absint( $args['per_page'] ?? 10 );
+        $page     = absint( $args['page'] ?? 1 );
+        $offset   = ( $page - 1 ) * $per_page;
+
+        $this->clear_all_clauses();
+        $this->add_sql_clause( 'select', 'dos.*, wos.total_sales AS order_total, wos.date_created AS order_date' );
+        $this->add_sql_clause( 'from', "{$wpdb->prefix}dokan_order_stats dos" );
+        $this->add_sql_clause( 'join', "INNER JOIN {$wpdb->prefix}wc_order_stats wos ON dos.order_id = wos.order_id" );
+        $this->apply_report_filters( $args );
+        $this->add_sql_clause( 'order_by', "dos.{$orderby} {$order}" );
+        $this->add_sql_clause( 'limit', "LIMIT {$per_page} OFFSET {$offset}" );
+
+        return $wpdb->get_results( $this->get_query_statement() ) ?: []; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+    }
+
+    /**
+     * Get total count of report logs or earnings from dokan_order_stats table.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $args Query arguments.
+     *
+     * @return int Total count.
+     */
+    public function get_report_count( array $args ): int {
+        global $wpdb;
+
+        $this->clear_all_clauses();
+        $this->add_sql_clause( 'select', 'COUNT(*)' );
+        $this->add_sql_clause( 'from', "{$wpdb->prefix}dokan_order_stats dos" );
+
+//        // Join wc_order_stats for date filtering support.
+//        $start_date = $args['start_date'] ?? '';
+//        $end_date   = $args['end_date'] ?? '';
+//        if ( ! empty( $start_date ) || ! empty( $end_date ) ) {
+//            $this->add_sql_clause( 'join', "INNER JOIN {$wpdb->prefix}wc_order_stats wos ON dos.order_id = wos.order_id" );
+//        }
+
+        $this->apply_report_filters( $args );
+
+        return (int) $wpdb->get_var( $this->get_query_statement() ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+    }
+
+    /**
+     * Get sum of a specific field from dokan_order_stats table.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $field Column name in dokan_order_stats.
+     * @param array  $args  Query arguments.
+     *
+     * @return float Total sum.
+     */
+    public function get_report_sum( string $field, array $args = [] ): float {
+        global $wpdb;
+
+        $allowed_fields = [ 'admin_commission', 'admin_earning', 'vendor_earning', 'vendor_gateway_fee', 'admin_gateway_fee' ];
+        if ( ! in_array( $field, $allowed_fields, true ) ) {
+            return 0;
+        }
+
+        $this->clear_all_clauses();
+        $this->add_sql_clause( 'select', "COALESCE(SUM(dos.{$field}), 0)" );
+        $this->add_sql_clause( 'from', "{$wpdb->prefix}dokan_order_stats dos" );
+
+        $this->apply_report_filters( $args );
+
+        return (float) $wpdb->get_var( $this->get_query_statement() ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+    }
+
+    /**
+     * Apply common filters for report logs or earnings queries.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $args Query arguments.
+     *
+     * @return void
+     */
+    protected function apply_report_filters( array $args ): void {
+        global $wpdb;
+
+        // Filter by earning type (maps to order_type values).
+        $earning_type = $args['earning_type'] ?? '';
+        $order_types  = $args['order_types'] ?? [];
+
+        if ( empty( $order_types ) && ! empty( $earning_type ) ) {
+            switch ( $earning_type ) {
+                case 'commission':
+                    $order_types = [ 1, 2 ];
+                    break;
+                case 'subscription':
+                    $order_types = [ 8 ];
+                    break;
+                case 'advertisement':
+                    $order_types = [ 6 ];
+                    break;
+            }
+        }
+
+        if ( ! empty( $order_types ) ) {
+            $type_placeholders = implode( ', ', array_fill( 0, count( $order_types ), '%d' ) );
+            $this->add_sql_clause( 'where', $wpdb->prepare( " AND dos.order_type IN ($type_placeholders)", ...$order_types ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+        } else {
+            // Only exclude multivendor parent orders (order_type 0).
+            $this->add_sql_clause( 'where', ' AND dos.order_type != 0' );
+        }
+
+        // Filter by vendor_id.
+        $vendor_id = $args['vendor_id'] ?? [];
+        if ( ! empty( $vendor_id ) ) {
+            $vendor_ids = is_array( $vendor_id ) ? array_map( 'absint', $vendor_id ) : [ absint( $vendor_id ) ];
+            $vendor_ids = array_filter( $vendor_ids );
+
+            if ( ! empty( $vendor_ids ) ) {
+                $placeholders = implode( ', ', array_fill( 0, count( $vendor_ids ), '%d' ) );
+                $this->add_sql_clause( 'where', $wpdb->prepare( " AND dos.vendor_id IN ($placeholders)", ...$vendor_ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+            }
+        }
+
+        // Filter by order_id.
+        $order_id = $args['order_id'] ?? [];
+        if ( ! empty( $order_id ) ) {
+            $order_ids = is_array( $order_id ) ? array_map( 'absint', $order_id ) : [ absint( $order_id ) ];
+            $order_ids = array_filter( $order_ids );
+
+            if ( ! empty( $order_ids ) ) {
+                $placeholders = implode( ', ', array_fill( 0, count( $order_ids ), '%d' ) );
+                $this->add_sql_clause( 'where', $wpdb->prepare( " AND dos.order_id IN ($placeholders)", ...$order_ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+            }
+        }
+
+        // Filter by order_status via the WC orders table.
+        $order_status = $args['order_status'] ?? '';
+        if ( ! empty( $order_status ) ) {
+            $statuses = is_array( $order_status ) ? $order_status : explode( ',', $order_status );
+            $statuses = array_map( 'sanitize_text_field', array_filter( $statuses ) );
+
+            if ( ! empty( $statuses ) ) {
+                $placeholders = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
+
+//                if ( $this->is_hpos_enabled() ) {
+//                    $orders_table = $wpdb->prefix . 'wc_orders';
+//                    $this->add_sql_clause( 'join', "INNER JOIN {$orders_table} AS wco ON dos.order_id = wco.id" );
+                    $this->add_sql_clause( 'where', $wpdb->prepare( " AND wos.status IN ($placeholders)", ...$statuses ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+//                } else {
+//                    $this->add_sql_clause( 'join', "INNER JOIN {$wpdb->posts} AS p ON dos.order_id = p.ID" );
+//                    $this->add_sql_clause( 'where', $wpdb->prepare( " AND p.post_status IN ($placeholders)", ...$statuses ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+//                }
+            }
+        }
+
+        // Date filters.
+        $start_date = $args['start_date'] ?? '';
+        $end_date   = $args['end_date'] ?? '';
+
+        if ( $start_date && $end_date ) {
+            // Check if join with wc_order_stats already exists.
+            $join_clause = $this->get_sql_clause( 'join' );
+            if ( false === strpos( $join_clause, 'wc_order_stats' ) ) {
+                $this->add_sql_clause( 'join', "INNER JOIN {$wpdb->prefix}wc_order_stats wos ON dos.order_id = wos.order_id" );
+            }
+
+            $this->add_sql_clause(
+                'where',
+                $wpdb->prepare(
+                    ' AND wos.date_created >= %s AND wos.date_created <= %s',
+                    $start_date . ' 00:00:00',
+                    $end_date . ' 23:59:59'
+                )
+            );
+        }
+    }
+
+    /**
+     * Check if HPOS (High-Performance Order Storage) is enabled.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+//    protected function is_hpos_enabled(): bool {
+//        return class_exists( '\Automattic\WooCommerce\Utilities\OrderUtil' )
+//            && \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled();
+//    }
 }
