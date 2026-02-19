@@ -233,14 +233,14 @@ class Manager {
             }
 
             if ( $product->is_type( 'grouped' ) ) {
-                $product->set_manage_stock( false );
+                $product->set_manage_stock( 'no' );
                 $product->set_backorders( 'no' );
-                $product->set_stock_quantity( null );
+                $product->set_stock_quantity( '' );
                 $product->set_stock_status( $stock_status );
             } elseif ( $product->is_type( 'external' ) ) {
-                $product->set_manage_stock( false );
+                $product->set_manage_stock( 'no' );
                 $product->set_backorders( 'no' );
-                $product->set_stock_quantity( null );
+                $product->set_stock_quantity( '' );
                 $product->set_stock_status( 'instock' );
             } elseif ( $product->get_manage_stock() ) {
                 // Stock status is always determined by children so sync later.
@@ -258,8 +258,8 @@ class Manager {
                 }
             } else {
                 // Don't manage stock.
-                $product->set_manage_stock( false );
-                $product->set_stock_quantity( null );
+                $product->set_manage_stock( 'no' );
+                $product->set_stock_quantity( '' );
                 $product->set_stock_status( $stock_status );
             }
         } elseif ( ! $product->is_type( 'variable' ) ) {
@@ -487,7 +487,7 @@ class Manager {
     public function delete( $product_id, $force = false ) {
         $product = $this->get( $product_id );
         if ( $product ) {
-            $product->delete( $force );
+            $product->delete( [ 'force_delete' => $force ] );
         }
 
         return $product;
@@ -813,36 +813,5 @@ class Manager {
      */
     public function get_brand_ids( int $product_id ): array {
         return $this->get_brands( $product_id, 'ids' );
-    }
-
-    /**
-     * Prepare downloads for save.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array $file_names  File names.
-     * @param array $file_urls   File urls.
-     * @param array $file_hashes File hashes.
-     *
-     * @return array
-     */
-    public function prepare_downloads( $file_names, $file_urls, $file_hashes ) {
-        $downloads = [];
-
-        if ( ! empty( $file_urls ) ) {
-            $file_url_size = count( $file_urls );
-
-            for ( $i = 0; $i < $file_url_size; $i++ ) {
-                if ( ! empty( $file_urls[ $i ] ) ) {
-                    $downloads[] = [
-                        'name'        => wc_clean( $file_names[ $i ] ),
-                        'file'        => wp_unslash( trim( $file_urls[ $i ] ) ),
-                        'download_id' => wc_clean( $file_hashes[ $i ] ),
-                    ];
-                }
-            }
-        }
-
-        return $downloads;
     }
 }
