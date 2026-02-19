@@ -223,6 +223,47 @@ class Settings {
     }
 
     /**
+     * Validate payment access and check active methods
+     *
+     * @since 4.2.9
+     *
+     * @param array $active_methods
+     *
+     * @return bool Returns true if validation passes, false otherwise
+     */
+    protected function validate_payment_access( $active_methods ) {
+        // Check staff permissions
+        if ( ! current_user_can( 'dokan_view_store_payment_menu' ) ) {
+            dokan_get_template_part(
+                'global/dokan-error',
+                '',
+                [
+                    'deleted' => false,
+                    'message' => esc_html__( 'You have no permission to view this page', 'dokan-lite' ),
+                ]
+            );
+
+            return false;
+        }
+
+        // Check if payment methods are available
+        if ( empty( $active_methods ) ) {
+            dokan_get_template_part(
+                'global/dokan-error',
+                '',
+                [
+                    'deleted' => false,
+                    'message' => esc_html__( 'No withdraw method is available. Please contact site admin.', 'dokan-lite' ),
+                ]
+            );
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Load Payment Content
      *
      * @since 2.4
@@ -232,23 +273,14 @@ class Settings {
      * @return void
      */
     public function load_payment_content( $slug_suffix ) {
-        $seller_id = dokan_get_current_user_id();
-        $data = $this->get_seller_payment_methods( $seller_id );
-        $connected_methods = $data['connected_methods'];
+        $seller_id            = dokan_get_current_user_id();
+        $data                 = $this->get_seller_payment_methods( $seller_id );
+        $connected_methods    = $data['connected_methods'];
         $disconnected_methods = $data['disconnected_methods'];
-        $active_methods = $data['active_methods'];
+        $active_methods       = $data['active_methods'];
 
-        //no payment method is active, show informative message
-        if ( empty( $active_methods ) ) {
-            dokan_get_template_part(
-                'global/dokan-error',
-                '',
-                [
-                    'deleted' => false,
-                    'message' => __( 'No withdraw method is available. Please contact site admin.', 'dokan-lite' ),
-                ]
-            );
-
+        // Check permissions and validate payment methods
+        if ( ! $this->validate_payment_access( $active_methods ) ) {
             return;
         }
 
@@ -618,11 +650,11 @@ class Settings {
 
                 // Check & make 12 hours format data for save.
                 $opening_timestamp = dokan_get_timestamp( $opening_time );
-                $opening_time      = dokan_convert_date_format( $opening_time, wc_time_format(), 'g:i a' );
+                $opening_time      = dokan_convert_date_format( $opening_time );
 
                 // Check & make 12 hours format data for save.
                 $closing_timestamp = dokan_get_timestamp( $closing_time );
-                $closing_time      = dokan_convert_date_format( $closing_time, wc_time_format(), 'g:i a' );
+                $closing_time      = dokan_convert_date_format( $closing_time );
 
                 // If our opening time is less than closing time.
                 if ( $opening_timestamp > $closing_timestamp ) {

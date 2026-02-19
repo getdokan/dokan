@@ -1,3 +1,19 @@
+### v4.2.10 ( Feb 10, 2026 ) ###
+- **update:** Refactor download permission handling to use Dokan’s standard template loader.
+- **fix:** Prevent misleading payment status messages in Admin Vendor Withdraw.
+- **fix:** Improve payment connection messages in Admin Vendor Withdraw.
+- **fix:** Ensure store opening hours save correctly with custom date and time formats.
+- **fix:** Ensure user subscription renewals work correctly when Dokan is enabled.
+- **fix:** Ensure “Actions” and “No results” in DataViews are properly translatable.
+
+### v4.2.9 ( Jan 27, 2026 ) ###
+- **update:** Replace DokanModal dependency from dokan-ui with WordPress Modal.
+- **update:** Add user feedback link across Dokan admin pages.
+- **update:** Introduce a customizable option to exclude vendor order balance.
+- **update:** Add AI text and image enhancer settings to vendor preferences.
+- **fix:** Improve default table interactions in Dokan admin.
+- **fix:** Handle vendor payment settings permission properly for Vendor staff.
+
 ### v4.2.8 ( Jan 20, 2026 ) ###
 - **update:** Restore vendor revenue widget for vendor dashboard.
 - **update:** Improve query arguments on admin withdraw pages to support filtering options.
