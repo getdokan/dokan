@@ -61,6 +61,23 @@ class ProductController extends DokanRESTController {
      */
     public function __construct() {
         add_filter( "dokan_rest_{$this->post_type}_object_query", [ $this, 'add_only_downloadable_query' ], 10, 2 );
+        add_filter( 'woocommerce_rest_prepare_product_object', [ $this, 'add_min_max_price_to_variable_product'], 10, 2 );
+    }
+
+    public function add_min_max_price_to_variable_product( $response, $product ) {
+        if ( ! is_a( $product, 'WC_Product' ) ) {
+            return $response;
+        }
+
+        if ( $product->is_type( 'variable' ) ) {
+            $data = $response->get_data();
+
+            $data['min_price'] = $product->get_variation_price( 'min', true );
+            $data['max_price'] = $product->get_variation_price( 'max', true );
+            $response->set_data( $data );
+        }
+
+        return $response;
     }
 
     /**
@@ -895,6 +912,11 @@ class ProductController extends DokanRESTController {
             ],
             'row_actions'           => dokan_product_get_row_action( $product->get_id(), false ),
         ];
+
+        if ( $product->is_type( 'variable' ) ) {
+            $data['min_price'] = $product->get_variation_price( 'min', true );
+            $data['max_price'] = $product->get_variation_price( 'max', true );
+        }
 
         $response = rest_ensure_response( $data );
         $response->add_links( $this->prepare_links( $product, $request ) );
