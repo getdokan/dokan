@@ -86,7 +86,7 @@ const entryPoints = {
             type: 'window',
         },
     },
-    'form-manager': './src/dashboard/form-manager/index.tsx',
+    'product-form': './src/dashboard/product-form/index.tsx',
 };
 
 module.exports = entryPoints;

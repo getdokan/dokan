@@ -379,9 +379,9 @@ class Assets {
                 'version' => filemtime( DOKAN_DIR . '/assets/css/components.css' ),
             ],
             'dokan-product-form-manager' => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/js/form-manager.css',
+                'src'     => DOKAN_PLUGIN_ASSEST . '/js/product-form.css',
                 'deps'    => [ 'wp-components' ],
-                'version' => filemtime( DOKAN_DIR . '/assets/js/form-manager.css' ),
+                'version' => filemtime( DOKAN_DIR . '/assets/js/product-form.css' ),
             ],
         ];
 
@@ -697,12 +697,12 @@ class Assets {
             ];
         }
 
-        $product_form_manager = DOKAN_DIR . '/assets/js/form-manager.asset.php';
+        $product_form_manager = DOKAN_DIR . '/assets/js/product-form.asset.php';
         if ( file_exists( $product_form_manager ) ) {
             $form_asset = require $product_form_manager;
             $scripts['dokan-product-form-manager'] = [
                 'version' => $form_asset['version'],
-                'src'     => $asset_url . '/js/form-manager.js',
+                'src'     => $asset_url . '/js/product-form.js',
                 'deps'    => array_merge( $form_asset['dependencies'], [ 'dokan-react-components' ] ),
             ];
         }

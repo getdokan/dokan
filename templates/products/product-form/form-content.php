@@ -13,4 +13,4 @@ defined( 'ABSPATH' ) || exit;
 
 ?>
 <input type="hidden" name="dokan_product_id" id="dokan_product_id" value="<?php echo esc_attr( $product->get_id() ); ?>" />
-<div id="product-form-manager-template" class="dokan-product-edit-form"></div>
+<div id="product-product-form-template" class="dokan-product-edit-form"></div>

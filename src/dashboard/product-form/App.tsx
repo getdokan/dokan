@@ -86,7 +86,7 @@ const FormManager = () => {
 
 const App = () => {
     return (
-        <div className="dokan-product-form-manager dokan-layout">
+        <div className="dokan-product-product-form dokan-layout">
             <FormProvider
                 formItems={ formManager.form_items }
                 productId={ productId }

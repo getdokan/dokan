@@ -41,7 +41,7 @@ class Hooks {
      * @return void
      */
     public function load_product_edit_template() {
-        dokan_get_template_part( 'products/form-manager/form-wrapper' );
+        dokan_get_template_part( 'products/product-form/form-wrapper' );
     }
 
     /**
@@ -93,7 +93,7 @@ class Hooks {
             return;
         }
 
-        dokan_get_template_part( 'products/form-manager/form-content', '', [ 'product' => $product ] );
+        dokan_get_template_part( 'products/product-form/form-content', '', [ 'product' => $product ] );
 
         $vendor_earning = dokan()->commission->get_earning_by_product( $product_id );
         wp_enqueue_script( 'dokan-product-form-manager' );

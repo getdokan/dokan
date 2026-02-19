@@ -28,7 +28,7 @@
 
         ?>
 
-        <div class="dokan-dashboard-content dokan-product-form-manager-content">
+        <div class="dokan-dashboard-content dokan-product-product-form-content">
             <?php
 
                 /**
@@ -42,7 +42,7 @@
             ?>
 
 
-            <article class="dokan-product-form-manager-area">
+            <article class="dokan-product-product-form-area">
                 <?php
 
                     /**

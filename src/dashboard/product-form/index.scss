@@ -1,8 +1,8 @@
-.dokan-dashboard-content:has(.dokan-product-form-manager) {
+.dokan-dashboard-content:has(.dokan-product-product-form) {
     background-color: #f0f0f1;
 }
 
-.dokan-product-form-manager {
+.dokan-product-product-form {
     .components-card-header,
     .components-card-body {
         padding: 20px !important;
@@ -39,7 +39,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
     }
-    .form-manager-price-input {
+    .product-form-price-input {
         background: white;
         border: 1px solid #e1e1e1;
         border-top-left-radius: 0 !important;

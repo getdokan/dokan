@@ -9,7 +9,7 @@ use Exception;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Product form schema, data resolution, and form-manager support.
+ * Product form schema, data resolution, and product form support.
  *
  * @since DOKAN_SINCE
  */
