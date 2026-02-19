@@ -61,13 +61,13 @@ class ProductForm {
                     continue;
                 }
                 if ( ! array_key_exists( $attr, $field ) || empty( $field[ $attr ] ) ) {
-                    throw new Exception(
+                    error_log(
                         sprintf( 'Missing required attribute "%s" on field: %s', esc_html( $attr ), esc_html( $field['id'] ?? 'unknown' ) )
                     );
                 }
             }
             if ( ! in_array( $field['type'], $this->supported_types, true ) ) {
-                throw new Exception( sprintf( 'Invalid field type: %s', esc_html( $field['type'] ) ) );
+                error_log( sprintf( 'Invalid field type: %s', esc_html( $field['type'] ) ) );
             }
             if ( isset( $field['variant'] ) && ! in_array( $field['variant'], $this->supported_variants, true ) ) {
                 error_log( sprintf( 'Invalid field variant: %s', esc_html( $field['variant'] ) ) );

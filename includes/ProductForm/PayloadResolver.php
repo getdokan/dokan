@@ -152,8 +152,8 @@ class PayloadResolver {
             $out['cross_sell_ids'] = array_map( 'absint', array_filter( $ids ) );
         }
 
-        // grouped products (children): ensure array of ids
-        if ( isset( $out[ Elements::GROUP_PRODUCTS ] ) && is_array( $out[ Elements::GROUP_PRODUCTS ] ) ) {
+        // grouped products (GROUPED_PRODUCTS): ensure array of ids
+        if ( isset( $out[ Elements::GROUPED_PRODUCTS ] ) && is_array( $out[ Elements::GROUPED_PRODUCTS ] ) ) {
             $ids = array_map(
                 static function ( $c ) {
                     if ( is_array( $c ) ) {
@@ -164,9 +164,9 @@ class PayloadResolver {
                     }
                     return (int) $c;
                 },
-                $out[ Elements::GROUP_PRODUCTS ]
+                $out[ Elements::GROUPED_PRODUCTS ]
             );
-            $out[ Elements::GROUP_PRODUCTS ] = array_map( 'absint', array_filter( $ids ) );
+            $out[ Elements::GROUPED_PRODUCTS ] = array_map( 'absint', array_filter( $ids ) );
         }
 
         // attributes: form shape -> WC API shape (id, name, position, visible, variation, options)

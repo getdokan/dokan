@@ -104,8 +104,12 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
     public function create_item( $request ) {
         $product = parent::create_item( $request );
         $params = $request->get_params();
+        // merge all the params with $_POST global variable
+        $_POST = array_merge( $_POST, $params ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
         $product_id = is_wp_error( $product ) ? 0 : (int) $product->data['id'];
         do_action( 'dokan_new_product_added', $product_id, $params );
+        $object = wc_get_product( $product_id );
+        do_action( "dokan_rest_insert_{$this->post_type}_object", $object, $request, true );
         return $product;
     }
 
@@ -123,7 +127,11 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
         $product = parent::update_item( $request );
         $product_id = is_wp_error( $product ) ? 0 : (int) $product->data['id'];
         $params = $request->get_params();
+        // merge all the params with $_POST global variable
+        $_POST = array_merge( $_POST, $params ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
         do_action( 'dokan_product_updated', $product_id, $params );
+        $object = wc_get_product( $product_id );
+        do_action( "dokan_rest_insert_{$this->post_type}_object", $object, $request, false );
         return $product;
     }
 

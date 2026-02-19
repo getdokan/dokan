@@ -79,9 +79,9 @@ class Elements {
     const DOWNLOADS = 'downloads';
     const DOWNLOAD_LIMIT = 'download_limit';
     const DOWNLOAD_EXPIRY = 'download_expiry';
-    const EXTERNAL_URL = 'product_url';
+    const EXTERNAL_URL = 'external_url';
     const BUTTON_TEXT = 'button_text';
-    const GROUP_PRODUCTS = 'children';
+    const GROUPED_PRODUCTS = 'grouped_products';
     const FEATURED_IMAGE_ID = 'image_id';
     const GALLERY_IMAGE_IDS = 'gallery_image_ids';
     const META_DATA = 'meta_data';

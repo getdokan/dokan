@@ -4,7 +4,7 @@ import { FlatFormItem } from '../types';
 import {
     appendToLeftColumn,
     collectUsedFields,
-    getField,
+    getFieldHeading as getFieldHeadingUtils,
     getRemainingFields,
     injectRemainingFields,
     layoutBuilder,
@@ -34,17 +34,8 @@ export default function useLayouts(
      */
     const getFieldHeading = useCallback(
         ( fieldId: string ) => {
-            const item = getField( formItems, fieldId );
-            if ( ! item ) {
-                return {};
-            }
-            return {
-                label: item.label,
-                description: item.description,
-            };
-        },
-        [ formItems ]
-    );
+        return getFieldHeadingUtils( formItems, fieldId );
+    }, [ formItems ] );
 
     // Define root layout based on window width
     const rootLayout = useMemo( () => {
@@ -89,7 +80,7 @@ export default function useLayouts(
                                         label: 'Digital Product Options',
                                         children: [ 'downloadable', 'virtual' ],
                                     },
-                                    'product_url',
+                                    'external_url',
                                     'button_text',
                                     'category_ids',
                                     'product_tag',

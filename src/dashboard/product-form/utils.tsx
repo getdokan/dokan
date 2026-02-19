@@ -45,6 +45,28 @@ export const getField = (
 };
 
 /**
+ * helper to get label and description for a field.
+ *
+ * @param {Array}  formItems Flat array of sections and fields.
+ * @param {string} fieldId The ID of the field.
+ *
+ * @return {Object} Object containing label and description.
+ */
+export const getFieldHeading = (
+    formItems: FlatFormItem[],
+    fieldId: string
+) => {
+    const item = getField( formItems, fieldId );
+    if ( ! item ) {
+        return {};
+    }
+    return {
+        label: item.label,
+        description: item.description,
+    };
+};
+
+/**
  * Build initial product state from flat form items (field items only).
  * Uses each field's value with minimal normalization (image_id, gallery, checkbox).
  */

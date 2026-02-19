@@ -1,6 +1,6 @@
 import { useMemo } from '@wordpress/element';
 import { FlatFormItem } from '../types';
-import { layoutBuilder } from '../utils';
+import { getFieldHeading, layoutBuilder } from '../utils';
 
 const useVariationLayouts = (
     formItems: FlatFormItem[],
@@ -95,6 +95,26 @@ const useVariationLayouts = (
                         children: [ 'download_limit', 'download_expiry' ],
                     },
                 ],
+            },
+            {
+                id: 'variation-wholesale-section',
+                ...getFieldHeading( formItems, 'wholesale_section' ),
+                children: [
+                    'enable_wholesale',
+                    {
+                        id: 'variation-wholesale-section',
+                        layout: {
+                            type: 'row',
+                            alignment: 'start',
+                        },
+                        children: [ 'wholesale_price', 'wholesale_quantity' ],
+                    },
+                ],
+            },
+            {
+                id: 'variation-order-min-max-section',
+                ...getFieldHeading( formItems, 'min_max_section' ),
+                children: [ 'min_quantity', 'max_quantity' ],
             },
         ];
 
