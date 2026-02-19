@@ -37,7 +37,7 @@ const VideoPopup = ( { videoId, module }: VideoPopupProps ) => {
                 isOpen={ isOpen }
                 onClose={ () => setIsOpen( false ) }
                 onConfirm={ () => {} }
-                modalClassName="w-xl rounded overflow-hidden bg-transparent"
+                modalClassName="w-[576px] rounded overflow-hidden bg-transparent"
                 modalBodyClassName=""
                 dialogHeader={ false }
                 dialogContent={
