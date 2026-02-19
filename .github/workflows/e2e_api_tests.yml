@@ -87,15 +87,23 @@ jobs:
               run: |
                   ln -s . dokan-lite
 
-            # Checkout Dokan Pro (same-repo only; skip on fork PRs where secrets are unavailable)
+            # Checkout Dokan Pro from default branch (same-repo only; skip on fork PRs where secrets are unavailable)
             - name: Checkout Dokan Pro
               if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
               uses: actions/checkout@v4
               with:
                   repository: getdokan/dokan-pro
-                  ref: test_utils
                   path: dokan-pro
                   token: ${{ secrets.DOKAN_PRO_TOKEN }}
+
+            # Overlay tests/plugins/ from test_utils branch — contains premium WooCommerce plugins
+            # (wc-bookings, wc-subscriptions, wc-product-addons, wc-simple-auctions)
+            - name: Fetch premium WooCommerce plugins from test_utils
+              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+              working-directory: dokan-pro
+              run: |
+                  git fetch origin test_utils
+                  git checkout origin/test_utils -- tests/plugins/
 
             # Use desired version of NodeJS
             - name: Use desired version of NodeJS
@@ -270,15 +278,23 @@ jobs:
               run: |
                   ln -s . dokan-lite
 
-            # Checkout Dokan Pro (same-repo only; skip on fork PRs where secrets are unavailable)
+            # Checkout Dokan Pro from default branch (same-repo only; skip on fork PRs where secrets are unavailable)
             - name: Checkout Dokan Pro
               if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
               uses: actions/checkout@v4
               with:
                   repository: getdokan/dokan-pro
-                  ref: test_utils
                   path: dokan-pro
                   token: ${{ secrets.DOKAN_PRO_TOKEN }}
+
+            # Overlay tests/plugins/ from test_utils branch — contains premium WooCommerce plugins
+            # (wc-bookings, wc-subscriptions, wc-product-addons, wc-simple-auctions)
+            - name: Fetch premium WooCommerce plugins from test_utils
+              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+              working-directory: dokan-pro
+              run: |
+                  git fetch origin test_utils
+                  git checkout origin/test_utils -- tests/plugins/
 
             # Use desired version of NodeJS
             - name: Use desired version of NodeJS
@@ -451,13 +467,12 @@ jobs:
               run: |
                   ln -s . dokan-lite
 
-            # Checkout Dokan Pro (same-repo only; skip on fork PRs where secrets are unavailable)
+            # Checkout Dokan Pro from default branch (same-repo only; skip on fork PRs where secrets are unavailable)
             - name: Checkout Dokan Pro
               if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
               uses: actions/checkout@v4
               with:
                   repository: getdokan/dokan-pro
-                  ref: test_utils
                   path: dokan-pro
                   token: ${{ secrets.DOKAN_PRO_TOKEN }}
 
