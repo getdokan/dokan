@@ -9,7 +9,7 @@ use WeDevs\Dokan\Captcha\AbstractProvider;
  * Handles readiness, asset registration, field rendering, and server-side
  * verification against Google's reCAPTCHA v3 API.
  *
- * @since DOKAN_SINCE
+ * @since 4.3.0
  */
 class GoogleRecaptchaV3Provider extends AbstractProvider {
     /**

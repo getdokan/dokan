@@ -12,7 +12,7 @@ use WeDevs\Dokan\Contracts\Hookable;
  * asset registration, field rendering and server-side validation. Resolved via
  * Dokan DI container.
  *
- * @since DOKAN_SINCE
+ * @since 4.3.0
  */
 class Manager implements Hookable {
 

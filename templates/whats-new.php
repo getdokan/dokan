@@ -4,6 +4,24 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.3.0',
+        'released' => '2026-02-19',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Add Cloudflare Turnstile support to the Dokan Captcha system.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Ensure jQuery BlockUI and TipTip script handlers load correctly.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.2.10',
         'released' => '2026-02-10',
         'changes'  => [

@@ -493,7 +493,7 @@ class Assets {
             ],
             'dokan-admin'               => [
                 'src'     => $asset_url . '/js/dokan-admin.js',
-                'deps'    => [ 'jquery', 'wp-i18n', $jquery_blockui ],
+                'deps'    => [ 'jquery', 'wp-i18n' ],
                 'version' => filemtime( $asset_path . 'js/dokan-admin.js' ),
             ],
             'dokan-vendor-registration' => [
