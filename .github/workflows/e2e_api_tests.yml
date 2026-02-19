@@ -118,7 +118,9 @@ jobs:
                   restore-keys: ${{ runner.os }}-composer-
 
             - name: Composer install (Dokan-lite)
-              run: composer i --no-dev -o || composer update --no-dev -o
+              run: |
+                  composer i || composer update
+                  composer i --no-dev -o || composer update --no-dev -o
 
             - name: Npm install & build (Dokan-lite)
               run: |
@@ -213,11 +215,13 @@ jobs:
               working-directory: tests/pw
               run: npm ci || npm i
 
-            # Restore pre-built vendor/ and assets/ — skips composer + webpack entirely
+            # Restore pre-built vendor/ and assets/ — skips composer + webpack entirely.
+            # Explicit path: ${{ github.workspace }} avoids v4 creating a plugin-build/ subdirectory.
             - name: Download build artifact
               uses: actions/download-artifact@v4
               with:
                   name: plugin-build
+                  path: ${{ github.workspace }}
 
             # Create wp debuglog file
             - name: Create wp debuglog file
