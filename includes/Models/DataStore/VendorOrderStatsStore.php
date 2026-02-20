@@ -264,10 +264,14 @@ class VendorOrderStatsStore extends BaseDataStore {
         $page     = absint( $args['page'] ?? 1 );
         $offset   = ( $page - 1 ) * $per_page;
 
+        // Get the order statuses to exclude from the report.
+        $exclude_order_statuses = ReportUtil::get_exclude_order_statuses();
+
         $this->clear_all_clauses();
         $this->add_sql_clause( 'select', 'dos.*, wos.total_sales AS order_total, wos.date_created AS order_date' );
         $this->add_sql_clause( 'from', "{$wpdb->prefix}dokan_order_stats dos" );
         $this->add_sql_clause( 'join', "INNER JOIN {$wpdb->prefix}wc_order_stats wos ON dos.order_id = wos.order_id" );
+        $this->add_sql_clause( 'where', " AND wos.status NOT IN ( '" . implode( "','", $exclude_order_statuses ) . "' )" );
         $this->apply_report_filters( $args );
         $this->add_sql_clause( 'order_by', "dos.{$orderby} {$order}" );
         $this->add_sql_clause( 'limit', "LIMIT {$per_page} OFFSET {$offset}" );
@@ -287,9 +291,15 @@ class VendorOrderStatsStore extends BaseDataStore {
     public function get_report_count( array $args ): int {
         global $wpdb;
 
+        // Get the order statuses to exclude from the report.
+        $exclude_order_statuses = ReportUtil::get_exclude_order_statuses();
+
         $this->clear_all_clauses();
         $this->add_sql_clause( 'select', 'COUNT(*)' );
         $this->add_sql_clause( 'from', "{$wpdb->prefix}dokan_order_stats dos" );
+        $this->add_sql_clause( 'join', "JOIN {$wpdb->prefix}wc_order_stats wos ON dos.order_id = wos.order_id" );
+        $this->add_sql_clause( 'where', " AND wos.status NOT IN ( '" . implode( "','", $exclude_order_statuses ) . "' )" );
+
 
 //        // Join wc_order_stats for date filtering support.
 //        $start_date = $args['start_date'] ?? '';
@@ -316,7 +326,7 @@ class VendorOrderStatsStore extends BaseDataStore {
     public function get_report_sum( string $field, array $args = [] ): float {
         global $wpdb;
 
-        $allowed_fields = [ 'admin_commission', 'admin_earning', 'vendor_earning', 'vendor_gateway_fee', 'admin_gateway_fee' ];
+        $allowed_fields = [ 'admin_commission', 'admin_earning', 'vendor_earning', 'vendor_gateway_fee', 'admin_gateway_fee', 'admin_order_tax', 'admin_shipping_fee', 'admin_shipping_tax' ];
         if ( ! in_array( $field, $allowed_fields, true ) ) {
             return 0;
         }
@@ -328,6 +338,42 @@ class VendorOrderStatsStore extends BaseDataStore {
         $this->apply_report_filters( $args );
 
         return (float) $wpdb->get_var( $this->get_query_statement() ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+    }
+
+    /**
+     * Get report summary from dokan_order_stats table.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $args Query arguments.
+     *
+     * @return array Summary totals.
+     */
+    public function get_report_summary( array $args = [] ): array {
+        global $wpdb;
+
+        // Get the order statuses to exclude from the report.
+        $exclude_order_statuses = ReportUtil::get_exclude_order_statuses();
+
+        $this->clear_all_clauses();
+        $this->add_sql_clause( 'select', 'COALESCE(SUM(dos.admin_earning), 0) AS total_earnings,' );
+        $this->add_sql_clause( 'select', 'COALESCE(SUM(dos.admin_commission), 0) AS net_earning,' );
+        $this->add_sql_clause( 'select', 'COALESCE(SUM(CASE WHEN dos.order_type NOT IN (6, 8) THEN dos.admin_commission ELSE 0 END), 0) AS commission,' );
+        $this->add_sql_clause( 'select', 'COALESCE(SUM(CASE WHEN dos.order_type = 8 THEN dos.admin_commission ELSE 0 END), 0) AS subscription_revenue,' );
+        $this->add_sql_clause( 'select', 'COALESCE(SUM(CASE WHEN dos.order_type = 6 THEN dos.admin_commission ELSE 0 END), 0) AS other_revenue' );
+        $this->add_sql_clause( 'from', "{$wpdb->prefix}dokan_order_stats dos" );
+        $this->add_sql_clause( 'join', "JOIN {$wpdb->prefix}wc_order_stats wos ON dos.order_id = wos.order_id" );
+        $this->add_sql_clause( 'where', " AND wos.status NOT IN ( '" . implode( "','", $exclude_order_statuses ) . "' )" );
+
+        $result = $wpdb->get_row( $this->get_query_statement(), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+        return [
+            'total_earnings'       => (float) ( $result['total_earnings'] ?? 0 ),
+            'net_earning'          => (float) ( $result['net_earning'] ?? 0 ),
+            'commission'           => (float) ( $result['commission'] ?? 0 ),
+            'subscription_revenue' => (float) ( $result['subscription_revenue'] ?? 0 ),
+            'other_revenue'        => (float) ( $result['other_revenue'] ?? 0 ),
+        ];
     }
 
     /**
@@ -354,7 +400,7 @@ class VendorOrderStatsStore extends BaseDataStore {
                 case 'subscription':
                     $order_types = [ 8 ];
                     break;
-                case 'advertisement':
+                case 'other_revenue':
                     $order_types = [ 6 ];
                     break;
             }
@@ -364,8 +410,8 @@ class VendorOrderStatsStore extends BaseDataStore {
             $type_placeholders = implode( ', ', array_fill( 0, count( $order_types ), '%d' ) );
             $this->add_sql_clause( 'where', $wpdb->prepare( " AND dos.order_type IN ($type_placeholders)", ...$order_types ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
         } else {
-            // Only exclude multivendor parent orders (order_type 0).
-            $this->add_sql_clause( 'where', ' AND dos.order_type != 0' );
+            // Only exclude multivendor parent orders (order_type 0) and refund types (3, 4, 5, 7, 9).
+            $this->add_sql_clause( 'where', ' AND dos.order_type NOT IN ( 0, 3, 4, 5, 7, 9 )' );
         }
 
         // Filter by vendor_id.
@@ -400,15 +446,7 @@ class VendorOrderStatsStore extends BaseDataStore {
 
             if ( ! empty( $statuses ) ) {
                 $placeholders = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
-
-//                if ( $this->is_hpos_enabled() ) {
-//                    $orders_table = $wpdb->prefix . 'wc_orders';
-//                    $this->add_sql_clause( 'join', "INNER JOIN {$orders_table} AS wco ON dos.order_id = wco.id" );
-                    $this->add_sql_clause( 'where', $wpdb->prepare( " AND wos.status IN ($placeholders)", ...$statuses ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-//                } else {
-//                    $this->add_sql_clause( 'join', "INNER JOIN {$wpdb->posts} AS p ON dos.order_id = p.ID" );
-//                    $this->add_sql_clause( 'where', $wpdb->prepare( " AND p.post_status IN ($placeholders)", ...$statuses ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
-//                }
+                $this->add_sql_clause( 'where', $wpdb->prepare( " AND wos.status IN ($placeholders)", ...$statuses ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
             }
         }
 
@@ -433,16 +471,4 @@ class VendorOrderStatsStore extends BaseDataStore {
             );
         }
     }
-
-    /**
-     * Check if HPOS (High-Performance Order Storage) is enabled.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return bool
-     */
-//    protected function is_hpos_enabled(): bool {
-//        return class_exists( '\Automattic\WooCommerce\Utilities\OrderUtil' )
-//            && \Automattic\WooCommerce\Utilities\OrderUtil::custom_orders_table_usage_is_enabled();
-//    }
 }
