@@ -102,11 +102,20 @@ jobs:
               with:
                   node-version: 20
                   cache: npm
+                  cache-dependency-path: '**/package-lock.json'
+
+            # Cache Composer dependencies for faster installs
+            - name: Cache Composer dependencies
+              uses: actions/cache@v4
+              with:
+                  path: ~/.composer/cache
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-composer-
 
             # Composer install and build (Dokan-lite)
             - name: Composer install and build (Dokan-lite)
               run: |
-                  composer i || composer update
                   composer i --no-dev -o || composer update --no-dev -o
 
             # Npm install and build (Dokan-lite)
@@ -282,11 +291,6 @@ jobs:
         name: api tests
         runs-on: ubuntu-latest
         timeout-minutes: 10
-        strategy:
-            fail-fast: false
-            matrix:
-                shardIndex: [1]
-                shardTotal: [1]
 
         steps:
             # Checkout testing repo (folder is repo name e.g. "dokan"; we need "dokan-lite" for wp-env)
@@ -315,11 +319,20 @@ jobs:
               with:
                   node-version: 20
                   cache: npm
+                  cache-dependency-path: '**/package-lock.json'
+
+            # Cache Composer dependencies for faster installs
+            - name: Cache Composer dependencies
+              uses: actions/cache@v4
+              with:
+                  path: ~/.composer/cache
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-composer-
 
             # Composer install and build (Dokan-lite)
             - name: Composer install and build (Dokan-lite)
               run: |
-                  composer i || composer update
                   composer i --no-dev -o || composer update --no-dev -o
 
             # Npm install and build (Dokan-lite)
@@ -444,13 +457,13 @@ jobs:
               run: npm run docker:setup
 
             # Run API tests
-            - name: 🧪 Run api tests-${{ matrix.shardIndex }}
+            - name: 🧪 Run api tests
               id: api-test
               if: always() && steps.wp-env.outcome == 'success' && ( github.event_name != 'workflow_dispatch'  || ( github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'API' || github.event.inputs.testsuite == 'All')))
               timeout-minutes: 5
               working-directory: tests/pw
               run: |
-                  npm run test:api -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+                  npm run test:api
 
             # # Prepare test summary
             # - name: Prepare test summary
@@ -500,25 +513,10 @@ jobs:
             E2E_COVERAGE: ./tests/pw/all-reports/merged-coverage.json
 
         steps:
-            # Checkout testing repo (folder is repo name e.g. "dokan"; we need "dokan-lite" for wp-env)
+            # Checkout testing repo
             - name: Checkout testing repo
               id: clone-dokan-lite
               uses: actions/checkout@v4
-
-            # Expose repo as dokan-lite so wp-env activates "dokan-lite" (dokan-pro expects that slug)
-            - name: Prepare dokan-lite folder
-              run: |
-                  ln -s . dokan-lite
-
-            # Checkout Dokan Pro (same-repo only; skip on fork PRs where secrets are unavailable)
-            - name: Checkout Dokan Pro
-              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-              uses: actions/checkout@v4
-              with:
-                  repository: getdokan/dokan-pro
-                  ref: test_utils
-                  path: dokan-pro
-                  token: ${{ secrets.DOKAN_PRO_TOKEN }}
 
             # Use desired version of NodeJS
             - name: Use desired version of NodeJS
@@ -526,6 +524,7 @@ jobs:
               with:
                   node-version: 20
                   cache: npm
+                  cache-dependency-path: '**/package-lock.json'
 
             # Install test dependencies
             - name: Install test dependencies
