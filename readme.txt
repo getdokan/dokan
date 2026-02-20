@@ -7,7 +7,7 @@ Tested up to: 6.9
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 4.2.9
+Stable tag: 4.2.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -353,6 +353,14 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v4.2.10 ( Feb 10, 2026 ) =
+- **update:** Refactor download permission handling to use Dokan’s standard template loader.
+- **fix:** Prevent misleading payment status messages in Admin Vendor Withdraw.
+- **fix:** Improve payment connection messages in Admin Vendor Withdraw.
+- **fix:** Ensure store opening hours save correctly with custom date and time formats.
+- **fix:** Ensure user subscription renewals work correctly when Dokan is enabled.
+- **fix:** Ensure “Actions” and “No results” in DataViews are properly translatable.
+
 = v4.2.9 ( Jan 27, 2026 ) =
 - **update:** Replace DokanModal dependency from dokan-ui with WordPress Modal.
 - **update:** Add user feedback link across Dokan admin pages.
@@ -376,10 +384,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **update:** Add address fields on customer account migration form.
 - **update:** Add product tags creation separator (,) for vendor dashboard.
 - **fix:** Vendor list page redirection after creating a new vendor.
-
-= v4.2.5 ( Jan 05, 2026 ) =
-- **fix:** Add translation support to store performance report labels.
-- **fix:** Social profile URL's not accessible for staff users.
-- **fix:** Prevented unauthorized changes to administrator accounts.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

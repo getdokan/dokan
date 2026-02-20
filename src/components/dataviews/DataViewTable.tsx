@@ -10,6 +10,7 @@ import type {
 import { kebabCase, snakeCase } from '@dokan/utilities';
 import { useEffect } from '@wordpress/element';
 import { useWindowDimensions } from '@dokan/hooks';
+import { __, setLocaleData } from '@wordpress/i18n';
 import './style.scss';
 
 type ItemWithId = { id: string };
@@ -53,6 +54,11 @@ const applyFiltersToTableElements = (
         { ...props }
     );
 };
+
+export const getTranslatedStrings = () => ( {
+    Actions: [ __( 'Actions', 'dokan-lite' ) ],
+    'No results': [ __( 'No results', 'dokan-lite' ) ],
+} );
 
 const DataViewTable = ( props: DataViewsProps< Item > ) => {
     if ( ! props.namespace ) {
@@ -137,6 +143,10 @@ const DataViewTable = ( props: DataViewsProps< Item > ) => {
             type: windowWidth <= 768 ? 'list' : 'table',
         }), [ windowWidth ]);
     }
+
+    useEffect( () => {
+        setLocaleData( getTranslatedStrings(), 'default' );
+    }, [] );
 
     return (
         <div id={ tableNameSpace } className={ `dokan-dashboard-datatable` }
