@@ -130,7 +130,7 @@ jobs:
               working-directory: dokan-pro
               run: |
                   git fetch origin test_utils
-                  git checkout test_utils -- tests/plugins
+                  git checkout origin/test_utils -- tests/plugins
 
             # Extract any zipped premium plugins collected from test_utils
             - name: Collect WooCommerce premium plugins
@@ -350,7 +350,7 @@ jobs:
               working-directory: dokan-pro
               run: |
                   git fetch origin test_utils
-                  git checkout test_utils -- tests/plugins
+                  git checkout origin/test_utils -- tests/plugins
 
             # Extract any zipped premium plugins collected from test_utils
             - name: Collect WooCommerce premium plugins
