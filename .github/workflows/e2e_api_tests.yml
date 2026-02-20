@@ -124,6 +124,23 @@ jobs:
                   npm ci || npm i
                   npm run build
 
+            # Collect WooCommerce premium plugin zips from dokan-pro/tests/plugins and extract them
+            - name: Collect WooCommerce premium plugins
+              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+              run: |
+                  PLUGINS_DIR="dokan-pro/tests/plugins"
+                  mkdir -p "$PLUGINS_DIR"
+                  for zip in "$PLUGINS_DIR"/*.zip; do
+                      [ -f "$zip" ] || continue
+                      plugin_dir="${zip%.zip}"
+                      if [ ! -d "$plugin_dir" ]; then
+                          echo "Extracting: $zip"
+                          unzip -q "$zip" -d "$PLUGINS_DIR"
+                      fi
+                  done
+                  echo "Available premium plugins:"
+                  ls -la "$PLUGINS_DIR"
+
             # Install test dependencies
             - name: Install test dependencies
               working-directory: tests/pw
@@ -161,6 +178,19 @@ jobs:
                   command: |
                       cd tests/pw
                       npm run start:env
+
+            # Activate WooCommerce premium plugins and Dokan Pro inside the wp-env container
+            # These plugins are mapped via .wp-env.ci.json but must be explicitly activated via WP-CLI
+            - name: Activate WooCommerce premium plugins
+              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+              working-directory: tests/pw
+              run: |
+                  npm run wp-env run tests-cli wp plugin activate \
+                      woocommerce-bookings \
+                      woocommerce-subscriptions \
+                      woocommerce-product-addons \
+                      woocommerce-simple-auctions \
+                      dokan-pro
 
             # Get Playwright version
             - name: Get installed Playwright version
@@ -307,6 +337,23 @@ jobs:
                   npm ci || npm i
                   npm run build
 
+            # Collect WooCommerce premium plugin zips from dokan-pro/tests/plugins and extract them
+            - name: Collect WooCommerce premium plugins
+              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+              run: |
+                  PLUGINS_DIR="dokan-pro/tests/plugins"
+                  mkdir -p "$PLUGINS_DIR"
+                  for zip in "$PLUGINS_DIR"/*.zip; do
+                      [ -f "$zip" ] || continue
+                      plugin_dir="${zip%.zip}"
+                      if [ ! -d "$plugin_dir" ]; then
+                          echo "Extracting: $zip"
+                          unzip -q "$zip" -d "$PLUGINS_DIR"
+                      fi
+                  done
+                  echo "Available premium plugins:"
+                  ls -la "$PLUGINS_DIR"
+
             # Install test dependencies
             - name: Install test dependencies
               working-directory: tests/pw
@@ -344,6 +391,19 @@ jobs:
                   command: |
                       cd tests/pw
                       npm run start:env
+
+            # Activate WooCommerce premium plugins and Dokan Pro inside the wp-env container
+            # These plugins are mapped via .wp-env.ci.json but must be explicitly activated via WP-CLI
+            - name: Activate WooCommerce premium plugins
+              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+              working-directory: tests/pw
+              run: |
+                  npm run wp-env run tests-cli wp plugin activate \
+                      woocommerce-bookings \
+                      woocommerce-subscriptions \
+                      woocommerce-product-addons \
+                      woocommerce-simple-auctions \
+                      dokan-pro
 
             # Get Playwright version
             - name: Get installed Playwright version
