@@ -8,62 +8,101 @@
 
 @source "../src/";
 @theme {
-    /* Custom breakpoints */
-    --breakpoint-d-xs: 360px;
+    /* ─── Sidebar background ─── */
+    --color-dokan-sidebar:                                    var(--dokan-sidebar-background-color, #322067);
+    --color-dokan-sidebar-hover:                              var(--dokan-sidebar-hover-background-color, #7047EB);
 
-    /* Primary Colors - Single source of truth */
-    --color-primary: var(--dokan-primary-color, #7047eb);
-    --color-primary-hover: var(--dokan-primary-hover-color, #502bbf);
-    --color-primary-light: var(--dokan-primary-light-color, #daceff);
-    --color-primary-dark: var(--dokan-primary-dark-color, #322067);
+    /* ─── Button backgrounds ─── */
+    --color-dokan-btn:                                        var(--dokan-button-background-color, #7047EB);
+    --color-dokan-btn-hover:                                  var(--dokan-button-hover-background-color, #502BBF);
+    --color-dokan-btn-secondary:                              var(--dokan-button-secondary-background-color, #ffffff);
+    --color-dokan-btn-secondary-hover:                        var(--dokan-button-secondary-hover-background-color, #DACEFF82);
+    --color-dokan-btn-tertiary:                               var(--dokan-button-tertiary-background-color, #00000000);
+    --color-dokan-btn-tertiary-hover:                         var(--dokan-button-tertiary-hover-background-color, #DACEFF82);
+    --color-dokan-btn-info:                                   var(--dokan-button-info-background-color, #0B76B7);
+    --color-dokan-btn-info-hover:                             var(--dokan-button-info-hover-background-color, #2795d7);
+    --color-dokan-btn-success:                                var(--dokan-button-success-background-color, #07a67e);
+    --color-dokan-btn-success-hover:                          var(--dokan-button-success-hover-background-color, #11b68c);
+    --color-dokan-btn-warning:                                var(--dokan-button-warning-background-color, #e9a905);
+    --color-dokan-btn-warning-hover:                          var(--dokan-button-warning-hover-background-color, #fbbf24);
+    --color-dokan-btn-danger:                                 var(--dokan-button-danger-background-color, #e3050c);
+    --color-dokan-btn-danger-hover:                           var(--dokan-button-danger-hover-background-color, #f23030);
 
-    /* Text colors on colored backgrounds (for contrast) */
-    --color-on-primary: var(--dokan-on-primary-color, #ffffff);
-    --color-on-info: var(--dokan-on-info-color, #ffffff);
-    --color-on-success: var(--dokan-on-success-color, #ffffff);
-    --color-on-warning: var(--dokan-on-warning-color, #ffffff);
-    --color-on-danger: var(--dokan-on-danger-color, #ffffff);
+    /* ─── Status backgrounds ─── */
+    --color-dokan-info:                                       var(--dokan-info-background-color, #E9F9FF);
+    --color-dokan-info-hover:                                 var(--dokan-info-text-color, #0B76B7);
+    --color-dokan-success:                                    var(--dokan-success-background-color, #DAF8E6);
+    --color-dokan-success-hover:                              var(--dokan-success-text-color, #004434);
+    --color-dokan-warning:                                    var(--dokan-warning-background-color, #FFFBEB);
+    --color-dokan-warning-hover:                              var(--dokan-warning-text-color, #9D5425);
+    --color-dokan-danger:                                     var(--dokan-danger-background-color, #FEF3F3);
+    --color-dokan-danger-hover:                               var(--dokan-danger-text-color, #BC1C21);
 
-    /* Neutral Colors */
-    --color-neutral-50: #fafafa;
-    --color-neutral-100: #f5f5f5;
-    --color-neutral-200: #e5e5e5;
-    --color-neutral-300: #d4d4d4;
-    --color-neutral-400: #a3a3a3;
-    --color-neutral-500: #737373;
-    --color-neutral-600: #525252;
-    --color-neutral-700: #404040;
-    --color-neutral-800: #262626;
-    --color-neutral-900: #171717;
+    /* ─── Sidebar text ─── */
+    --color-dokan-sidebar-text:                               var(--dokan-sidebar-text-color, #DACEFF);
+    --color-dokan-sidebar-text-hover:                         var(--dokan-sidebar-hover-text-color, #ffffff);
 
-    /* Border Colors */
-    --color-border: var(--dokan-border-color, #e5e5e5);
-    --color-border-light: var(--dokan-border-light-color, #f5f5f5);
-    --color-border-dark: var(--dokan-border-dark-color, #d4d4d4);
+    /* ─── Button text ─── */
+    --color-dokan-btn-text:                                   var(--dokan-button-text-color, #ffffff);
+    --color-dokan-btn-text-hover:                             var(--dokan-button-hover-text-color, #ffffff);
+    --color-dokan-btn-secondary-text:                         var(--dokan-button-secondary-text-color, #7047EB);
+    --color-dokan-btn-secondary-text-hover:                   var(--dokan-button-secondary-hover-text-color, #7047EB);
+    --color-dokan-btn-tertiary-text:                          var(--dokan-button-tertiary-text-color, var(--dokan-button-background-color, #7047EB));
+    --color-dokan-btn-tertiary-text-hover:                    var(--dokan-button-tertiary-hover-text-color, var(--dokan-button-background-color, #7047EB));
+    --color-dokan-btn-info-text:                              var(--dokan-button-info-text-color, #ffffff);
+    --color-dokan-btn-info-text-hover:                        var(--dokan-button-info-hover-text-color, #ffffff);
+    --color-dokan-btn-success-text:                           var(--dokan-button-success-text-color, #ffffff);
+    --color-dokan-btn-success-text-hover:                     var(--dokan-button-success-hover-text-color, #ffffff);
+    --color-dokan-btn-warning-text:                           var(--dokan-button-warning-text-color, #ffffff);
+    --color-dokan-btn-warning-text-hover:                     var(--dokan-button-warning-hover-text-color, #ffffff);
+    --color-dokan-btn-danger-text:                            var(--dokan-button-danger-text-color, #ffffff);
+    --color-dokan-btn-danger-text-hover:                      var(--dokan-button-danger-hover-text-color, #ffffff);
 
-    /* Semantic Colors */
-    --color-info: #0b76b7;
-    --color-info-light: #e9f9ff;
-    --color-info-hover: #2795d7;
+    /* ─── Link text ─── */
+    --color-dokan-link:                                       var(--dokan-link-color, #7047EB);
+    --color-dokan-link-hover:                                 var(--dokan-link-hover-color, var(--dokan-sidebar-background-color, #322067));
 
-    --color-success: #07a67e;
-    --color-success-light: #daf8e6;
-    --color-success-hover: #11b68c;
+    /* ─── Status text ─── */
+    --color-dokan-info-text:                                  var(--dokan-info-text-color, #0B76B7);
+    --color-dokan-info-text-hover:                            var(--dokan-info-hover-text-color, #3ea4e1);
+    --color-dokan-info-text-secondary:                        var(--dokan-info-secondary-text-color, #637381);
+    --color-dokan-success-text:                               var(--dokan-success-text-color, #004434);
+    --color-dokan-success-text-hover:                         var(--dokan-success-hover-text-color, #09a77d);
+    --color-dokan-success-text-secondary:                     var(--dokan-success-secondary-text-color, #637381);
+    --color-dokan-warning-text:                               var(--dokan-warning-text-color, #9D5425);
+    --color-dokan-warning-text-hover:                         var(--dokan-warning-hover-text-color, #e9a904);
+    --color-dokan-warning-text-secondary:                     var(--dokan-warning-secondary-text-color, #D0915C);
+    --color-dokan-danger-text:                                var(--dokan-danger-text-color, #BC1C21);
+    --color-dokan-danger-text-hover:                          var(--dokan-danger-hover-text-color, #e5292e);
+    --color-dokan-danger-text-secondary:                      var(--dokan-danger-secondary-text-color, #F56060);
 
-    --color-warning: #e9a905;
-    --color-warning-light: #fffbeb;
-    --color-warning-hover: #fbbf24;
+    /* ─── Button borders ─── */
+    --color-dokan-btn-border:                                 var(--dokan-button-border-color, #7047EB);
+    --color-dokan-btn-border-hover:                           var(--dokan-button-hover-border-color, #370EB1);
+    --color-dokan-btn-secondary-border:                       var(--dokan-button-secondary-border-color, var(--dokan-button-border-color, #7047EB));
+    --color-dokan-btn-secondary-border-hover:                 var(--dokan-button-secondary-hover-border-color, #7047EB);
+    --color-dokan-btn-tertiary-border:                        var(--dokan-button-tertiary-border-color, #00000000);
+    --color-dokan-btn-tertiary-border-hover:                  var(--dokan-button-tertiary-hover-border-color, var(--dokan-button-border-color, #DACEFF82));
 
-    --color-danger: #e3050c;
-    --color-danger-light: #fef3f3;
-    --color-danger-hover: #f23030;
+    /* ─── Status borders ─── */
+    --color-dokan-info-border:                                var(--dokan-info-border-color, #E9F9FFFF);
+    --color-dokan-info-border-hover:                          var(--dokan-info-text-color, #0B76B7);
+    --color-dokan-success-border:                             var(--dokan-success-border-color, #DAF8E6FF);
+    --color-dokan-success-border-hover:                       var(--dokan-success-text-color, #004434);
+    --color-dokan-warning-border:                             var(--dokan-warning-border-color, #FFFBEBFF);
+    --color-dokan-warning-border-hover:                       var(--dokan-warning-text-color, #9D5425);
+    --color-dokan-danger-border:                              var(--dokan-danger-border-color, #FEF3F3FF);
+    --color-dokan-danger-border-hover:                        var(--dokan-danger-text-color, #BC1C21);
 
-    /* Sidebar Colors */
-    --color-sidebar: var(--dokan-sidebar-bg, #322067);
-    --color-sidebar-hover: var(--dokan-sidebar-hover-bg, #7047eb);
-    --color-sidebar-text: var(--dokan-sidebar-text, #daceff);
-    --color-sidebar-text-hover: var(--dokan-sidebar-text-hover, #ffffff);
+    /* ─── Generic / alias colors ─── */
+    --color-dokan-primary:                                    var(--dokan-button-background-color, #7047EB);
+    --color-primary:                                          var(--dokan-button-background-color, #7047EB);
+    --color-dokan-secondary:                                  var(--dokan-button-secondary-background-color, var(--dokan-button-text-color, #ffffff));
+    --color-secondary:                                        var(--dokan-button-secondary-background-color, var(--dokan-button-text-color, #ffffff));
+    --color-dokan-tertiary:                                   var(--dokan-button-tertiary-background-color, #00000000);
+     --color-tertiary:                                        var(--dokan-button-tertiary-background-color, #00000000);
 }
+
 
 /* Base layer styles */
 @layer base {
