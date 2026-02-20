@@ -97,19 +97,5 @@
     
 
 }
-.upgrade-popup-pattern {
-    background-image: url("../assets/src/images/upgrade-popup-bg.png");
-}
-.upgrade-popup-crown {
-    background-image: url("../assets/src/images/upgrade-popup-crown.png");
-}
-.upgrade-popup-saving {
-    background-image: url("../assets/src/images/upgrade-popup-saving.png");
-}
-.upgrade-popup-money {
-    background-image: url("../assets/src/images/upgrade-popup-money.png");
-}
-.close-icon {
-    background-image: url("../assets/src/images/close-icon.png");
-}
+
 @import "@getdokan/dokan-ui/dist/dokan-ui.css";
