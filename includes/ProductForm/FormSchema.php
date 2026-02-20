@@ -4,7 +4,6 @@ namespace WeDevs\Dokan\ProductForm;
 
 use WC_Product;
 use WeDevs\Dokan\ProductCategory\Helper as ProductCategoryHelper;
-use Exception;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -13,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since DOKAN_SINCE
  */
-class ProductForm {
+class FormSchema {
 
     /**
      * Required field attributes
@@ -596,7 +595,7 @@ class ProductForm {
             $others_fields,
         );
 
-        $items = apply_filters( 'dokan_product_form_fields', $items, $product_id );
+        $items = apply_filters( 'dokan_product_form_schema', $items, $product_id );
 
         // Sort the items by priority (fallback to 30 when not set).
         usort(
@@ -710,7 +709,7 @@ class ProductForm {
                 // Get the field name from the key.
                 $field_name = sanitize_key( $key );
 
-                $value = apply_filters( 'dokan_product_form_field_value', '', $field_name, $product );
+                $value = apply_filters( 'dokan_product_form_schema_value', '', $field_name, $product );
                 if ( ! empty( $value ) ) {
                     return $value;
                 }

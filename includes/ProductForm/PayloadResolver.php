@@ -134,7 +134,7 @@ class PayloadResolver {
                 },
                 $out[ Elements::UPSELL_IDS ]
             );
-            $out['upsell_ids'] = array_map( 'absint', array_filter( $ids ) );
+            $out[ Elements::UPSELL_IDS ] = array_map( 'absint', array_filter( $ids ) );
         }
         if ( isset( $out[ Elements::CROSS_SELL_IDS ] ) && is_array( $out[ Elements::CROSS_SELL_IDS ] ) ) {
             $ids = array_map(
@@ -149,7 +149,7 @@ class PayloadResolver {
                 },
                 $out[ Elements::CROSS_SELL_IDS ]
             );
-            $out['cross_sell_ids'] = array_map( 'absint', array_filter( $ids ) );
+            $out[ Elements::CROSS_SELL_IDS ] = array_map( 'absint', array_filter( $ids ) );
         }
 
         // grouped products (GROUPED_PRODUCTS): ensure array of ids
@@ -171,10 +171,10 @@ class PayloadResolver {
 
         // attributes: form shape -> WC API shape (id, name, position, visible, variation, options)
         if ( isset( $out[ Elements::ATTRIBUTES ] ) && is_array( $out[ Elements::ATTRIBUTES ] ) ) {
-            $out['attributes'] = self::transform_attributes_for_api( $out[ Elements::ATTRIBUTES ] );
+            $out[ Elements::ATTRIBUTES ] = self::transform_attributes_for_api( $out[ Elements::ATTRIBUTES ] );
         }
 
-        return apply_filters( 'dokan_product_form_payload_resolver', $out );
+        return apply_filters( 'dokan_product_form_schema_payload', $out );
     }
 
     /**

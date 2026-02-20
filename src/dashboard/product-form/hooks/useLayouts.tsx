@@ -9,6 +9,7 @@ import {
     injectRemainingFields,
     layoutBuilder,
 } from '../utils';
+import { __ } from '@wordpress/i18n';
 
 /**
  * Custom hook to manage form layouts.
@@ -77,7 +78,7 @@ export default function useLayouts(
                                         layout: {
                                             type: 'regular',
                                         },
-                                        label: 'Digital Product Options',
+                                        label: __( 'Digital Product Options', 'dokan-lite' ),
                                         children: [ 'downloadable', 'virtual' ],
                                     },
                                     'external_url',
