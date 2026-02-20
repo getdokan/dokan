@@ -238,7 +238,7 @@ const UpgradeModal = ( {
         <DokanModal
             namespace="upgrade-to-pro"
             modalClassName="max-w-[720px] mt-10 bg-transparent"
-            modalBodyClassName="bg-violet-900 upgrade-popup-pattern bg-cover bg-center bg-no-repeat rounded-lg"
+            modalBodyClassName="bg-violet-900 bg-[url(/assets/images/upgrade-popup-bg.png)] bg-cover bg-center bg-no-repeat rounded-lg"
             isOpen={ isOpen }
             onClose={ onClose }
             dialogHeader={ false }
