@@ -496,7 +496,7 @@ button[data-headlessui-state="checked"] {
     }
 }
 
-.dokan-dashboard header.dokan-ai-prompt {
+.dokan-dashboard-header.dokan-ai-prompt {
     margin: 0 0 10px 0;
     border-bottom: 1px solid #ededed;
     padding: 0 0 10px 0;
@@ -504,23 +504,19 @@ button[data-headlessui-state="checked"] {
     display: flex;
     justify-content: space-between;
     border-bottom: 1px solid #ededed;
-    align-items: stretch;
-}
-.dokan-dashboard header.dokan-ai-prompt {
-    display: flex;
-    justify-content: space-between;
     align-items: center;
     gap: 10px;
     margin-bottom: 25px !important;
 }
-.dokan-dashboard header.dokan-ai-prompt h1 {
+.dokan-dashboard-header.dokan-ai-prompt h1 {
     margin: 0 !important;
     padding: 0 !important;
     border-bottom: none !important;
     width: 100%;
+    font-size: x-large;
 }
 
-dokan-dashboard header.dokan-ai-prompt #ai-prompt-app {
+dokan-dashboard-header.dokan-ai-prompt #ai-prompt-app {
     align-self: flex-end;
     padding-bottom: 10px;
 }
