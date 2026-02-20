@@ -86,12 +86,13 @@ jobs:
               run: |
                   ln -s . dokan-lite
 
-            # Checkout Dokan Pro from default branch (same-repo only; skip on fork PRs where secrets are unavailable)
+            # Checkout Dokan Pro from develop branch (same-repo only; skip on fork PRs where secrets are unavailable)
             - name: Checkout Dokan Pro
               if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
               uses: actions/checkout@v4
               with:
                   repository: getdokan/dokan-pro
+                  ref: develop
                   path: dokan-pro
                   token: ${{ secrets.DOKAN_PRO_TOKEN }}
 
@@ -305,12 +306,13 @@ jobs:
               run: |
                   ln -s . dokan-lite
 
-            # Checkout Dokan Pro from default branch (same-repo only; skip on fork PRs where secrets are unavailable)
+            # Checkout Dokan Pro from develop branch (same-repo only; skip on fork PRs where secrets are unavailable)
             - name: Checkout Dokan Pro
               if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
               uses: actions/checkout@v4
               with:
                   repository: getdokan/dokan-pro
+                  ref: develop
                   path: dokan-pro
                   token: ${{ secrets.DOKAN_PRO_TOKEN }}
 
@@ -522,12 +524,13 @@ jobs:
               run: |
                   ln -s . dokan-lite
 
-            # Checkout Dokan Pro from default branch (same-repo only; skip on fork PRs where secrets are unavailable)
+            # Checkout Dokan Pro from develop branch (same-repo only; skip on fork PRs where secrets are unavailable)
             - name: Checkout Dokan Pro
               if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
               uses: actions/checkout@v4
               with:
                   repository: getdokan/dokan-pro
+                  ref: develop
                   path: dokan-pro
                   token: ${{ secrets.DOKAN_PRO_TOKEN }}
 
