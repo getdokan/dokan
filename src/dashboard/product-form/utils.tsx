@@ -369,7 +369,7 @@ export const getRemainingFields = (
         if ( usedFields.has( item.id ) ) {
             return;
         }
-        const sectionId = item.parent_id ?? '';
+        const sectionId = item.section_id ?? '';
         if ( ! sectionId ) {
             return;
         }

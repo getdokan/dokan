@@ -177,7 +177,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
         }
         return rest_ensure_response(
             [
-                'form_items'     => dokan()->product_form->get_fields( $product_id ),
+                'form_items'     => dokan()->product_form->get_schema( $product_id ),
                 'vendor_earning' => dokan()->commission->get_earning_by_product( $product_id ),
             ]
         );

@@ -76,13 +76,13 @@ class FormSchema {
     }
 
     /**
-     * Get flat form items (sections and fields). Resolves field values when $product_id is provided.
+     * Get flat form schema (sections and fields). Resolves field values when $product_id is provided.
      *
      * @since DOKAN_SINCE
      * @param int $product_id Optional. Product ID to resolve values from.
-     * @return array Form items (sections and fields).
+     * @return array Form schema items (sections and fields).
      */
-    public function get_fields( int $product_id = 0 ): array {
+    public function get_schema( int $product_id = 0 ): array {
         $product = ( $product_id > 0 ) ? wc_get_product( $product_id ) : null;
 
         $can_create_tags = dokan()->is_pro_exists() ? dokan_get_option( 'product_vendors_can_create_tags', 'dokan_selling', 'off' ) : 'off';
@@ -108,9 +108,9 @@ class FormSchema {
 
         $general_fields = [
             [
-                'id'        => Elements::SECTION_GENERAL,
-                'parent_id' => null,
-                'type'      => 'section',
+                'id'         => Elements::SECTION_GENERAL,
+                'section_id' => null,
+                'type'       => 'section',
                 'label'      => __( 'General', 'dokan-lite' ),
                 'priority'   => 10,
                 'required'   => true,
@@ -118,19 +118,19 @@ class FormSchema {
             ],
             [
                 'id'             => Elements::NAME,
-                'parent_id'      => Elements::SECTION_GENERAL,
+                'section_id'   => Elements::SECTION_GENERAL,
                 'type'           => 'field',
-                'label'         => __( 'Product Title', 'dokan-lite' ),
+                'label'          => __( 'Product Title', 'dokan-lite' ),
                 'variant'        => 'text',
-                'placeholder'   => __( 'Enter product title...', 'dokan-lite' ),
-                'required'      => true,
-                'error_message' => __( 'Please enter a product title.', 'dokan-lite' ),
-                'priority'      => 30,
+                'placeholder'    => __( 'Enter product title...', 'dokan-lite' ),
+                'required'       => true,
+                'error_message'  => __( 'Please enter a product title.', 'dokan-lite' ),
+                'priority'       => 30,
                 'visibility'     => true,
             ],
             [
                 'id'               => Elements::SLUG,
-                'parent_id'        => Elements::SECTION_GENERAL,
+                'section_id'       => Elements::SECTION_GENERAL,
                 'type'             => 'field',
                 'label'            => __( 'Permalink', 'dokan-lite' ),
                 'variant'          => 'text',
@@ -138,7 +138,7 @@ class FormSchema {
                 'required'         => false,
                 'priority'         => 30,
                 'visibility'       => true,
-                'dependencies'    => [
+                'dependencies'     => [
                     [
                         'comparison' => 'not_empty',
                         'key'        => Elements::SLUG,
@@ -147,7 +147,7 @@ class FormSchema {
             ],
             [
                 'id'             => Elements::TYPE,
-                'parent_id'      => Elements::SECTION_GENERAL,
+                'section_id'   => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'Product Type', 'dokan-lite' ),
                 'variant'        => 'select',
@@ -162,7 +162,7 @@ class FormSchema {
             ],
             [
                 'id'           => Elements::ENABLED,
-                'parent_id'    => Elements::SECTION_GENERAL,
+                'section_id'  => Elements::SECTION_GENERAL,
                 'type'         => 'field',
                 'label'        => __( 'Enabled', 'dokan-lite' ),
                 'variant'      => 'checkbox',
@@ -178,7 +178,7 @@ class FormSchema {
             ],
             [
                 'id'           => Elements::REGULAR_PRICE,
-                'parent_id'    => Elements::SECTION_GENERAL,
+                'section_id'  => Elements::SECTION_GENERAL,
                 'type'         => 'field',
                 'label'        => __( 'Price', 'dokan-lite' ),
                 'variant'      => 'text',
@@ -189,7 +189,7 @@ class FormSchema {
             ],
             [
                 'id'           => Elements::SALE_PRICE,
-                'parent_id'    => Elements::SECTION_GENERAL,
+                'section_id'  => Elements::SECTION_GENERAL,
                 'type'         => 'field',
                 'label'        => __( 'Sale Price', 'dokan-lite' ),
                 'variant'      => 'text',
@@ -200,7 +200,7 @@ class FormSchema {
             ],
             [
                 'id'             => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
-                'parent_id'      => Elements::SECTION_GENERAL,
+                'section_id'   => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'Create Schedule for Discount', 'dokan-lite' ),
                 'variant'        => 'checkbox',
@@ -210,7 +210,7 @@ class FormSchema {
             ],
             [
                 'id'             => Elements::DATE_ON_SALE_FROM,
-                'parent_id'      => Elements::SECTION_GENERAL,
+                'section_id'   => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'From', 'dokan-lite' ),
                 'variant'        => 'date',
@@ -230,7 +230,7 @@ class FormSchema {
             ],
             [
                 'id'             => Elements::DATE_ON_SALE_TO,
-                'parent_id'      => Elements::SECTION_GENERAL,
+                'section_id'   => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'To', 'dokan-lite' ),
                 'variant'        => 'date',
@@ -250,7 +250,7 @@ class FormSchema {
             ],
             [
                 'id'               => Elements::CATEGORIES,
-                'parent_id'        => Elements::SECTION_GENERAL,
+                'section_id'       => Elements::SECTION_GENERAL,
                 'type'             => 'field',
                 'label'            => __( 'Categories', 'dokan-lite' ),
                 'variant'          => 'select',
@@ -264,7 +264,7 @@ class FormSchema {
             ],
             [
                 'id'               => Elements::TAGS,
-                'parent_id'        => Elements::SECTION_GENERAL,
+                'section_id'       => Elements::SECTION_GENERAL,
                 'type'             => 'field',
                 'label'            => __( 'Tags', 'dokan-lite' ),
                 'variant'          => 'select',
@@ -277,7 +277,7 @@ class FormSchema {
             ],
             [
                 'id'               => Elements::BRANDS,
-                'parent_id'        => Elements::SECTION_GENERAL,
+                'section_id'       => Elements::SECTION_GENERAL,
                 'type'             => 'field',
                 'label'            => __( 'Brands', 'dokan-lite' ),
                 'variant'          => 'select',
@@ -290,7 +290,7 @@ class FormSchema {
             ],
             [
                 'id'             => Elements::FEATURED_IMAGE_ID,
-                'parent_id'      => Elements::SECTION_GENERAL,
+                'section_id'   => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'Feature Image', 'dokan-lite' ),
                 'variant'        => 'feature_image',
@@ -302,7 +302,7 @@ class FormSchema {
             ],
             [
                 'id'             => Elements::GALLERY_IMAGE_IDS,
-                'parent_id'      => Elements::SECTION_GENERAL,
+                'section_id'   => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'Gallery Image', 'dokan-lite' ),
                 'variant'        => 'gallery_images',
@@ -314,7 +314,7 @@ class FormSchema {
             ],
             [
                 'id'             => Elements::SHORT_DESCRIPTION,
-                'parent_id'      => Elements::SECTION_GENERAL,
+                'section_id'   => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'Short Description', 'dokan-lite' ),
                 'variant'        => 'editor',
@@ -324,7 +324,7 @@ class FormSchema {
             ],
             [
                 'id'             => Elements::DESCRIPTION,
-                'parent_id'      => Elements::SECTION_GENERAL,
+                'section_id'   => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'Description', 'dokan-lite' ),
                 'variant'        => 'editor',
@@ -335,7 +335,7 @@ class FormSchema {
             ],
             [
                 'id'            => Elements::DOWNLOADABLE,
-                'parent_id'     => Elements::SECTION_GENERAL,
+                'section_id'   => Elements::SECTION_GENERAL,
                 'type'          => 'field',
                 'label'         => __( 'Downloadable', 'dokan-lite' ),
                 'variant'       => 'checkbox',
@@ -345,7 +345,7 @@ class FormSchema {
             ],
             [
                 'id'            => Elements::VIRTUAL,
-                'parent_id'     => Elements::SECTION_GENERAL,
+                'section_id'   => Elements::SECTION_GENERAL,
                 'type'          => 'field',
                 'label'         => __( 'Virtual', 'dokan-lite' ),
                 'variant'       => 'checkbox',
@@ -358,7 +358,7 @@ class FormSchema {
         $inventory_fields = [
             [
                 'id'          => Elements::SECTION_INVENTORY,
-                'parent_id'   => null,
+                'section_id'  => null,
                 'type'        => 'section',
                 'label'       => __( 'Inventory', 'dokan-lite' ),
                 'description' => __( 'Manage inventory for this product', 'dokan-lite' ),
@@ -367,7 +367,7 @@ class FormSchema {
             ],
             [
                 'id'           => Elements::SKU,
-                'parent_id'    => Elements::SECTION_INVENTORY,
+                'section_id'   => Elements::SECTION_INVENTORY,
                 'type'         => 'field',
                 'label'        => sprintf( '%s <span>(%s)</span>', esc_html__( 'SKU', 'dokan-lite' ), esc_html__( 'Stock Keeping Unit', 'dokan-lite' ) ),
                 'variant'      => 'text',
@@ -378,7 +378,7 @@ class FormSchema {
             ],
             [
                 'id'           => Elements::GLOBAL_UNIQUE_ID,
-                'parent_id'    => Elements::SECTION_INVENTORY,
+                'section_id'   => Elements::SECTION_INVENTORY,
                 'type'         => 'field',
                 'label'        => sprintf( '%s <span>(%s)</span>', esc_html__( 'GTIN, UPC, EAN, or ISBN', 'dokan-lite' ), esc_html__( 'Product Identifiers', 'dokan-lite' ) ),
                 'variant'      => 'text',
@@ -389,7 +389,7 @@ class FormSchema {
             ],
             [
                 'id'           => Elements::STOCK_STATUS,
-                'parent_id'    => Elements::SECTION_INVENTORY,
+                'section_id'   => Elements::SECTION_INVENTORY,
                 'type'         => 'field',
                 'label'        => __( 'Stock Status', 'dokan-lite' ),
                 'variant'      => 'select',
@@ -407,7 +407,7 @@ class FormSchema {
             ],
             [
                 'id'           => Elements::MANAGE_STOCK,
-                'parent_id'    => Elements::SECTION_INVENTORY,
+                'section_id'   => Elements::SECTION_INVENTORY,
                 'type'         => 'field',
                 'label'        => __( 'Manage stock?', 'dokan-lite' ),
                 'variant'      => 'checkbox',
@@ -417,7 +417,7 @@ class FormSchema {
             ],
             [
                 'id'           => Elements::STOCK_QUANTITY,
-                'parent_id'    => Elements::SECTION_INVENTORY,
+                'section_id'   => Elements::SECTION_INVENTORY,
                 'type'         => 'field',
                 'label'        => __( 'Stock quantity', 'dokan-lite' ),
                 'variant'      => 'number',
@@ -436,7 +436,7 @@ class FormSchema {
             ],
             [
                 'id'           => Elements::LOW_STOCK_AMOUNT,
-                'parent_id'    => Elements::SECTION_INVENTORY,
+                'section_id'   => Elements::SECTION_INVENTORY,
                 'type'         => 'field',
                 'label'        => __( 'Low stock threshold', 'dokan-lite' ),
                 'variant'      => 'number',
@@ -458,7 +458,7 @@ class FormSchema {
             ],
             [
                 'id'           => Elements::BACKORDERS,
-                'parent_id'    => Elements::SECTION_INVENTORY,
+                'section_id'   => Elements::SECTION_INVENTORY,
                 'type'         => 'field',
                 'label'        => __( 'Allow Backorders', 'dokan-lite' ),
                 'variant'      => 'select',
@@ -476,7 +476,7 @@ class FormSchema {
             ],
             [
                 'id'           => Elements::SOLD_INDIVIDUALLY,
-                'parent_id'    => Elements::SECTION_INVENTORY,
+                'section_id'   => Elements::SECTION_INVENTORY,
                 'type'         => 'field',
                 'label'        => __( 'Allow only one quantity of this product to be bought in a single order.', 'dokan-lite' ),
                 'variant'      => 'checkbox',
@@ -488,7 +488,7 @@ class FormSchema {
         $downloadable_fields = [
             [
                 'id'           => Elements::SECTION_DOWNLOADABLE,
-                'parent_id'    => null,
+                'section_id'   => null,
                 'type'         => 'section',
                 'label'        => __( 'Downloadable Options', 'dokan-lite' ),
                 'description'  => __( 'Configure your downloadable product settings', 'dokan-lite' ),
@@ -498,7 +498,7 @@ class FormSchema {
             ],
             [
                 'id'           => Elements::DOWNLOADS,
-                'parent_id'    => Elements::SECTION_DOWNLOADABLE,
+                'section_id'   => Elements::SECTION_DOWNLOADABLE,
                 'type'         => 'field',
                 'label'        => __( 'Downloadable Files', 'dokan-lite' ),
                 'variant'      => 'downloadable',
@@ -511,7 +511,7 @@ class FormSchema {
             ],
             [
                 'id'           => Elements::DOWNLOAD_LIMIT,
-                'parent_id'    => Elements::SECTION_DOWNLOADABLE,
+                'section_id'   => Elements::SECTION_DOWNLOADABLE,
                 'type'         => 'field',
                 'label'        => __( 'Download Limit', 'dokan-lite' ),
                 'variant'      => 'number',
@@ -523,7 +523,7 @@ class FormSchema {
             ],
             [
                 'id'           => Elements::DOWNLOAD_EXPIRY,
-                'parent_id'    => Elements::SECTION_DOWNLOADABLE,
+                'section_id'   => Elements::SECTION_DOWNLOADABLE,
                 'type'         => 'field',
                 'label'        => __( 'Download Expiry', 'dokan-lite' ),
                 'variant'      => 'number',
@@ -537,7 +537,7 @@ class FormSchema {
         $others_fields = [
             [
                 'id'          => Elements::SECTION_OTHERS,
-                'parent_id'   => null,
+                'section_id'  => null,
                 'type'        => 'section',
                 'label'       => __( 'Other Options', 'dokan-lite' ),
                 'description' => __( 'Set your extra product options', 'dokan-lite' ),
@@ -546,7 +546,7 @@ class FormSchema {
             ],
             [
                 'id'           => Elements::STATUS,
-                'parent_id'    => Elements::SECTION_OTHERS,
+                'section_id'   => Elements::SECTION_OTHERS,
                 'type'         => 'field',
                 'label'        => __( 'Status', 'dokan-lite' ),
                 'variant'      => 'radio',
@@ -558,7 +558,7 @@ class FormSchema {
             ],
             [
                 'id'           => Elements::CATALOG_VISIBILITY,
-                'parent_id'    => Elements::SECTION_OTHERS,
+                'section_id'   => Elements::SECTION_OTHERS,
                 'type'         => 'field',
                 'label'        => __( 'Visibility', 'dokan-lite' ),
                 'variant'      => 'select',
@@ -568,7 +568,7 @@ class FormSchema {
             ],
             [
                 'id'           => Elements::PURCHASE_NOTE,
-                'parent_id'    => Elements::SECTION_OTHERS,
+                'section_id'   => Elements::SECTION_OTHERS,
                 'type'         => 'field',
                 'label'        => __( 'Purchase Note', 'dokan-lite' ),
                 'variant'      => 'textarea',
@@ -579,12 +579,12 @@ class FormSchema {
             ],
             [
                 'id'           => Elements::REVIEWS_ALLOWED,
-                'parent_id'    => Elements::SECTION_OTHERS,
+                'section_id'   => Elements::SECTION_OTHERS,
                 'type'         => 'field',
                 'label'        => __( 'Enable product reviews', 'dokan-lite' ),
                 'variant'      => 'checkbox',
-                'priority'    => 30,
-                'visibility'  => true,
+                'priority'     => 30,
+                'visibility'   => true,
             ],
         ];
 

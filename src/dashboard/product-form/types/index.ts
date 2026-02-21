@@ -7,13 +7,13 @@ export interface DependencyCondition {
 /**
  * Single item in the flat form array from backend.
  * Same structure for section and field; discriminated by type.
- * Sections: type 'section', parent_id null. Fields: type 'field', parent_id section id.
+ * Sections: type 'section', section_id null. Fields: type 'field', section_id = parent section id.
  * Use as FormField when the item is a field (e.g. in getFieldConfig, handlers).
  */
 export type FlatFormItem = {
     type: string;
     id: string;
-    parent_id: string | null;
+    section_id: string | null;
     label: string;
     description?: string | React.ReactNode;
     order?: number;
