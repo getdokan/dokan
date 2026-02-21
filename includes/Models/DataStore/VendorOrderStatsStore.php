@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\Models\DataStore;
 use DatePeriod;
 use DateInterval;
 use DateTimeImmutable;
+use WeDevs\Dokan\Analytics\Reports\OrderType;
 use WeDevs\Dokan\Utilities\ReportUtil;
 
 /**
@@ -66,7 +67,7 @@ class VendorOrderStatsStore extends BaseDataStore {
     }
 
     /**
-     * Get count of active vendors within a date range.
+     * Get active vendors count within a date range.
      *
      * @since 4.1.0
      *
@@ -85,12 +86,17 @@ class VendorOrderStatsStore extends BaseDataStore {
         $this->add_sql_clause( 'select', 'COUNT(DISTINCT dos.vendor_id)' );
         $this->add_sql_clause( 'from', $this->get_table_name_with_prefix() . ' dos' );
         $this->add_sql_clause( 'join', "JOIN {$wpdb->prefix}wc_order_stats wos ON dos.order_id = wos.order_id" );
-        $this->add_sql_clause( 'where', " AND wos.status NOT IN ( '" . implode( "','", $exclude_order_statuses ) . "' )" );
+
+        if ( ! empty( $exclude_order_statuses ) ) {
+            $placeholders = implode( ', ', array_fill( 0, count( $exclude_order_statuses ), '%s' ) );
+            $this->add_sql_clause( 'where', $wpdb->prepare( " AND wos.status NOT IN ( $placeholders )", ...$exclude_order_statuses ) );
+        }
+
         $this->add_sql_clause( 'where', ' AND dos.vendor_earning > 0' );
         $this->add_sql_clause( 'where', $wpdb->prepare( ' AND wos.date_created BETWEEN %s AND %s', $start_date, $end_date ) );
 
         $query_statement = $this->get_query_statement();
-        $count           = $wpdb->get_var( $query_statement ); // phpcs:ignore
+        $count           = $wpdb->get_var( $query_statement ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
         return apply_filters(
             'dokan_admin_dashboard_active_vendors_count',
@@ -127,7 +133,7 @@ class VendorOrderStatsStore extends BaseDataStore {
         $this->add_sql_clause( 'order_by', 'total_earning DESC' );
         $this->add_sql_clause( 'limit', 'LIMIT ' . $limit );
 
-        $vendors = $wpdb->get_results( $this->get_query_statement(), ARRAY_A ); // phpcs:ignore
+        $vendors = $wpdb->get_results( $this->get_query_statement(), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
         return $vendors ?? [];
     }
@@ -161,7 +167,12 @@ class VendorOrderStatsStore extends BaseDataStore {
         $this->add_sql_clause( 'join', "INNER JOIN {$wpdb->prefix}wc_order_stats wos ON dos.order_id = wos.order_id" );
 
         // Where conditions.
-        $this->add_sql_clause( 'where', " AND wos.status NOT IN ( '" . implode( "','", ReportUtil::get_exclude_order_statuses() ) . "' )" );
+        if ( ! empty( ReportUtil::get_exclude_order_statuses() ) ) {
+            $exclude_order_statuses = ReportUtil::get_exclude_order_statuses();
+            $placeholders           = implode( ', ', array_fill( 0, count( $exclude_order_statuses ), '%s' ) );
+            $this->add_sql_clause( 'where', $wpdb->prepare( " AND wos.status NOT IN ( $placeholders )", ...$exclude_order_statuses ) );
+        }
+
         $this->add_sql_clause( 'where', 'AND wos.total_sales > 0' );
         $this->add_sql_clause(
             'where',
@@ -180,7 +191,7 @@ class VendorOrderStatsStore extends BaseDataStore {
 
         // Build & log query
         $query_statement = $this->get_query_statement();
-        $results         = $wpdb->get_results( $query_statement, ARRAY_A ); // phpcs:ignore
+        $results         = $wpdb->get_results( $query_statement, ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
         if ( $group_by_day ) {
             return array_map(
@@ -249,7 +260,7 @@ class VendorOrderStatsStore extends BaseDataStore {
     /**
      * Get report logs or earnings data from the dokan_order_stats table.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param array $args Query arguments.
      *
@@ -264,17 +275,23 @@ class VendorOrderStatsStore extends BaseDataStore {
         $page     = absint( $args['page'] ?? 1 );
         $offset   = ( $page - 1 ) * $per_page;
 
-        // Get the order statuses to exclude from the report.
-        $exclude_order_statuses = ReportUtil::get_exclude_order_statuses();
+        // Whitelist orderby and order.
+        $allowed_orderby = array_keys( $this->get_fields_with_format() );
+        if ( ! in_array( $orderby, $allowed_orderby, true ) ) {
+            $orderby = 'order_id';
+        }
+
+        if ( ! in_array( $order, [ 'ASC', 'DESC' ], true ) ) {
+            $order = 'DESC';
+        }
 
         $this->clear_all_clauses();
         $this->add_sql_clause( 'select', 'dos.*, wos.total_sales AS order_total, wos.date_created AS order_date' );
         $this->add_sql_clause( 'from', "{$wpdb->prefix}dokan_order_stats dos" );
         $this->add_sql_clause( 'join', "INNER JOIN {$wpdb->prefix}wc_order_stats wos ON dos.order_id = wos.order_id" );
-        $this->add_sql_clause( 'where', " AND wos.status NOT IN ( '" . implode( "','", $exclude_order_statuses ) . "' )" );
         $this->apply_report_filters( $args );
         $this->add_sql_clause( 'order_by', "dos.{$orderby} {$order}" );
-        $this->add_sql_clause( 'limit', "LIMIT {$per_page} OFFSET {$offset}" );
+        $this->add_sql_clause( 'limit', $wpdb->prepare( 'LIMIT %d OFFSET %d', $per_page, $offset ) );
 
         return $wpdb->get_results( $this->get_query_statement() ) ?: []; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
     }
@@ -282,7 +299,7 @@ class VendorOrderStatsStore extends BaseDataStore {
     /**
      * Get total count of report logs or earnings from dokan_order_stats table.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param array $args Query arguments.
      *
@@ -298,15 +315,11 @@ class VendorOrderStatsStore extends BaseDataStore {
         $this->add_sql_clause( 'select', 'COUNT(*)' );
         $this->add_sql_clause( 'from', "{$wpdb->prefix}dokan_order_stats dos" );
         $this->add_sql_clause( 'join', "JOIN {$wpdb->prefix}wc_order_stats wos ON dos.order_id = wos.order_id" );
-        $this->add_sql_clause( 'where', " AND wos.status NOT IN ( '" . implode( "','", $exclude_order_statuses ) . "' )" );
 
-
-//        // Join wc_order_stats for date filtering support.
-//        $start_date = $args['start_date'] ?? '';
-//        $end_date   = $args['end_date'] ?? '';
-//        if ( ! empty( $start_date ) || ! empty( $end_date ) ) {
-//            $this->add_sql_clause( 'join', "INNER JOIN {$wpdb->prefix}wc_order_stats wos ON dos.order_id = wos.order_id" );
-//        }
+        if ( ! empty( $exclude_order_statuses ) ) {
+            $placeholders = implode( ', ', array_fill( 0, count( $exclude_order_statuses ), '%s' ) );
+            $this->add_sql_clause( 'where', $wpdb->prepare( " AND wos.status NOT IN ( $placeholders )", ...$exclude_order_statuses ) );
+        }
 
         $this->apply_report_filters( $args );
 
@@ -314,42 +327,13 @@ class VendorOrderStatsStore extends BaseDataStore {
     }
 
     /**
-     * Get sum of a specific field from dokan_order_stats table.
+     * Get the report summary from the dokan_order_stats table.
      *
-     * @since DOKAN_SINCE
-     *
-     * @param string $field Column name in dokan_order_stats.
-     * @param array  $args  Query arguments.
-     *
-     * @return float Total sum.
-     */
-    public function get_report_sum( string $field, array $args = [] ): float {
-        global $wpdb;
-
-        $allowed_fields = [ 'admin_commission', 'admin_earning', 'vendor_earning', 'vendor_gateway_fee', 'admin_gateway_fee', 'admin_order_tax', 'admin_shipping_fee', 'admin_shipping_tax' ];
-        if ( ! in_array( $field, $allowed_fields, true ) ) {
-            return 0;
-        }
-
-        $this->clear_all_clauses();
-        $this->add_sql_clause( 'select', "COALESCE(SUM(dos.{$field}), 0)" );
-        $this->add_sql_clause( 'from', "{$wpdb->prefix}dokan_order_stats dos" );
-
-        $this->apply_report_filters( $args );
-
-        return (float) $wpdb->get_var( $this->get_query_statement() ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-    }
-
-    /**
-     * Get report summary from dokan_order_stats table.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array $args Query arguments.
+     * @since 4.1.0
      *
      * @return array Summary totals.
      */
-    public function get_report_summary( array $args = [] ): array {
+    public function get_report_summary(): array {
         global $wpdb;
 
         // Get the order statuses to exclude from the report.
@@ -357,13 +341,17 @@ class VendorOrderStatsStore extends BaseDataStore {
 
         $this->clear_all_clauses();
         $this->add_sql_clause( 'select', 'COALESCE(SUM(dos.admin_earning), 0) AS total_earnings,' );
-        $this->add_sql_clause( 'select', 'COALESCE(SUM(dos.admin_commission), 0) AS net_earning,' );
-        $this->add_sql_clause( 'select', 'COALESCE(SUM(CASE WHEN dos.order_type NOT IN (6, 8) THEN dos.admin_commission ELSE 0 END), 0) AS commission,' );
-        $this->add_sql_clause( 'select', 'COALESCE(SUM(CASE WHEN dos.order_type = 8 THEN dos.admin_commission ELSE 0 END), 0) AS subscription_revenue,' );
-        $this->add_sql_clause( 'select', 'COALESCE(SUM(CASE WHEN dos.order_type = 6 THEN dos.admin_commission ELSE 0 END), 0) AS other_revenue' );
+        $this->add_sql_clause( 'select', 'COALESCE(SUM(dos.admin_commission) + SUM(CASE WHEN dos.order_type IN (' . OrderType::DOKAN_SUBSCRIPTION_ORDER . ', ' . OrderType::DOKAN_SUBSCRIPTION_REFUND_ORDER . ', ' . OrderType::DOKAN_ADVERTISEMENT_PRODUCT_ORDER . ', ' . OrderType::DOKAN_ADVERTISEMENT_REFUND_ORDER . ') THEN dos.admin_earning ELSE 0 END), 0) AS net_earning,' );
+        $this->add_sql_clause( 'select', 'COALESCE(SUM(dos.admin_commission), 0) AS commission,' );
+        $this->add_sql_clause( 'select', 'COALESCE(SUM(CASE WHEN dos.order_type IN (' . OrderType::DOKAN_SUBSCRIPTION_ORDER . ', ' . OrderType::DOKAN_SUBSCRIPTION_REFUND_ORDER . ') THEN dos.admin_earning ELSE 0 END), 0) AS subscription_revenue,' );
+        $this->add_sql_clause( 'select', 'COALESCE(SUM(CASE WHEN dos.order_type IN (' . OrderType::DOKAN_ADVERTISEMENT_PRODUCT_ORDER . ', ' . OrderType::DOKAN_ADVERTISEMENT_REFUND_ORDER . ') THEN dos.admin_earning ELSE 0 END), 0) AS other_revenue' );
         $this->add_sql_clause( 'from', "{$wpdb->prefix}dokan_order_stats dos" );
         $this->add_sql_clause( 'join', "JOIN {$wpdb->prefix}wc_order_stats wos ON dos.order_id = wos.order_id" );
-        $this->add_sql_clause( 'where', " AND wos.status NOT IN ( '" . implode( "','", $exclude_order_statuses ) . "' )" );
+
+        if ( ! empty( $exclude_order_statuses ) ) {
+            $placeholders = implode( ', ', array_fill( 0, count( $exclude_order_statuses ), '%s' ) );
+            $this->add_sql_clause( 'where', $wpdb->prepare( " AND wos.status NOT IN ( $placeholders )", ...$exclude_order_statuses ) );
+        }
 
         $result = $wpdb->get_row( $this->get_query_statement(), ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 
@@ -379,13 +367,30 @@ class VendorOrderStatsStore extends BaseDataStore {
     /**
      * Apply common filters for report logs or earnings queries.
      *
-     * @since DOKAN_SINCE
+     * @since 4.1.0
      *
      * @param array $args Query arguments.
      *
      * @return void
      */
     protected function apply_report_filters( array $args ): void {
+        $this->apply_order_type_filter( $args );
+        $this->apply_vendor_filter( $args );
+        $this->apply_order_filter( $args );
+        $this->apply_status_filter( $args );
+        $this->apply_date_filter( $args );
+    }
+
+    /**
+     * Apply order type filter for report logs or earnings queries.
+     *
+     * @since 4.1.0
+     *
+     * @param array $args Query arguments.
+     *
+     * @return void
+     */
+    protected function apply_order_type_filter( array $args ): void {
         global $wpdb;
 
         // Filter by earning type (maps to order_type values).
@@ -395,24 +400,46 @@ class VendorOrderStatsStore extends BaseDataStore {
         if ( empty( $order_types ) && ! empty( $earning_type ) ) {
             switch ( $earning_type ) {
                 case 'commission':
-                    $order_types = [ 1, 2 ];
+                    $order_types = [ OrderType::DOKAN_SINGLE_ORDER, OrderType::DOKAN_SUBORDER ];
                     break;
                 case 'subscription':
-                    $order_types = [ 8 ];
+                    $order_types = [ OrderType::DOKAN_SUBSCRIPTION_ORDER, OrderType::DOKAN_SUBSCRIPTION_REFUND_ORDER ];
                     break;
                 case 'other_revenue':
-                    $order_types = [ 6 ];
+                    $order_types = [ OrderType::DOKAN_ADVERTISEMENT_PRODUCT_ORDER, OrderType::DOKAN_ADVERTISEMENT_REFUND_ORDER ];
                     break;
             }
         }
 
         if ( ! empty( $order_types ) ) {
             $type_placeholders = implode( ', ', array_fill( 0, count( $order_types ), '%d' ) );
-            $this->add_sql_clause( 'where', $wpdb->prepare( " AND dos.order_type IN ($type_placeholders)", ...$order_types ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+            $this->add_sql_clause( 'where', $wpdb->prepare( " AND dos.order_type IN ( $type_placeholders )", ...$order_types ) );
         } else {
             // Only exclude multivendor parent orders (order_type 0) and refund types (3, 4, 5, 7, 9).
-            $this->add_sql_clause( 'where', ' AND dos.order_type NOT IN ( 0, 3, 4, 5, 7, 9 )' );
+            $exclude_order_types = [
+                OrderType::DOKAN_PARENT_ORDER,
+                OrderType::DOKAN_PARENT_ORDER_REFUND,
+                OrderType::DOKAN_SUBORDER_REFUND,
+                OrderType::DOKAN_SINGLE_ORDER_REFUND,
+                OrderType::DOKAN_ADVERTISEMENT_REFUND_ORDER,
+                OrderType::DOKAN_SUBSCRIPTION_REFUND_ORDER,
+            ];
+            $type_placeholders   = implode( ', ', array_fill( 0, count( $exclude_order_types ), '%d' ) );
+            $this->add_sql_clause( 'where', $wpdb->prepare( " AND dos.order_type NOT IN ( $type_placeholders )", ...$exclude_order_types ) );
         }
+    }
+
+    /**
+     * Apply vendor filter for report logs or earnings queries.
+     *
+     * @since 4.1.0
+     *
+     * @param array $args Query arguments.
+     *
+     * @return void
+     */
+    protected function apply_vendor_filter( array $args ): void {
+        global $wpdb;
 
         // Filter by vendor_id.
         $vendor_id = $args['vendor_id'] ?? [];
@@ -422,9 +449,22 @@ class VendorOrderStatsStore extends BaseDataStore {
 
             if ( ! empty( $vendor_ids ) ) {
                 $placeholders = implode( ', ', array_fill( 0, count( $vendor_ids ), '%d' ) );
-                $this->add_sql_clause( 'where', $wpdb->prepare( " AND dos.vendor_id IN ($placeholders)", ...$vendor_ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+                $this->add_sql_clause( 'where', $wpdb->prepare( " AND dos.vendor_id IN ( $placeholders )", ...$vendor_ids ) );
             }
         }
+    }
+
+    /**
+     * Apply order filter for report logs or earnings queries.
+     *
+     * @since 4.1.0
+     *
+     * @param array $args Query arguments.
+     *
+     * @return void
+     */
+    protected function apply_order_filter( array $args ): void {
+        global $wpdb;
 
         // Filter by order_id.
         $order_id = $args['order_id'] ?? [];
@@ -434,9 +474,22 @@ class VendorOrderStatsStore extends BaseDataStore {
 
             if ( ! empty( $order_ids ) ) {
                 $placeholders = implode( ', ', array_fill( 0, count( $order_ids ), '%d' ) );
-                $this->add_sql_clause( 'where', $wpdb->prepare( " AND dos.order_id IN ($placeholders)", ...$order_ids ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+                $this->add_sql_clause( 'where', $wpdb->prepare( " AND dos.order_id IN ( $placeholders )", ...$order_ids ) );
             }
         }
+    }
+
+    /**
+     * Apply order status filter for report logs or earnings queries.
+     *
+     * @since 4.1.0
+     *
+     * @param array $args Query arguments.
+     *
+     * @return void
+     */
+    protected function apply_status_filter( array $args ): void {
+        global $wpdb;
 
         // Filter by order_status via the WC orders table.
         $order_status = $args['order_status'] ?? '';
@@ -446,9 +499,22 @@ class VendorOrderStatsStore extends BaseDataStore {
 
             if ( ! empty( $statuses ) ) {
                 $placeholders = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
-                $this->add_sql_clause( 'where', $wpdb->prepare( " AND wos.status IN ($placeholders)", ...$statuses ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+                $this->add_sql_clause( 'where', $wpdb->prepare( " AND wos.status IN ( $placeholders )", ...$statuses ) );
             }
         }
+    }
+
+    /**
+     * Apply date filter for report logs or earnings queries.
+     *
+     * @since 4.1.0
+     *
+     * @param array $args Query arguments.
+     *
+     * @return void
+     */
+    protected function apply_date_filter( array $args ): void {
+        global $wpdb;
 
         // Date filters.
         $start_date = $args['start_date'] ?? '';

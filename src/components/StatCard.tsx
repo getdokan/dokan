@@ -63,11 +63,9 @@ const StatCard = ( {
                     </Tooltip>
                 ) }
             </div>
-            <Tooltip content={ <RawHTML>{ String( content ) }</RawHTML> }>
-                <div className="text-3xl font-bold text-black -mt-1 -mb-1 w-fit break-words max-w-[275px]">
-                    <RawHTML>{ String( content ) }</RawHTML>
-                </div>
-            </Tooltip>
+            <div className="text-3xl font-bold text-black -mt-1 -mb-1 w-fit break-words max-w-[275px]">
+                <RawHTML>{ String( content ) }</RawHTML>
+            </div>
         </DokanCard>
     );
 };
