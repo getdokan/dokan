@@ -15,6 +15,7 @@ export type FlatFormItem = {
     id: string;
     section_id: string | null;
     label: string;
+    labels?: Record< string, string >;
     description?: string | React.ReactNode;
     order?: number;
     placeholder?: string;

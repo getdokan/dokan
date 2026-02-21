@@ -10,7 +10,7 @@ import {
 import { __ } from '@wordpress/i18n';
 import { getFieldConfig } from '../components/FieldRenderer';
 import { FlatFormItem } from '../types';
-import { fieldValueForProduct } from '../utils';
+import { fieldValueForProduct, resolveLabel } from '../utils';
 
 interface FormContextType {
     product: Record< string, any >;
@@ -47,14 +47,6 @@ export const FormProvider = ( {
 }: FormProviderProps ) => {
     const toast = useToast();
     const [ isLoading, setIsLoading ] = useState( false );
-    const fields = useMemo( () => {
-        return formItems
-            .filter( ( i ) => i.type === 'field' )
-            .map( ( item ) => {
-                const field = { ...item };
-                return getFieldConfig( field as any );
-            } );
-    }, [ formItems ] );
 
     const defaultData = useMemo( () => {
         const entries = formItems
@@ -68,6 +60,19 @@ export const FormProvider = ( {
         id: productId,
         vendor_earning: vendorEarning,
     } );
+
+    const { type: currentProductType } = product;
+    const fields = useMemo( () => {
+        return formItems
+            .filter( ( i ) => i.type === 'field' )
+            .map( ( item ) => {
+                const field = {
+                    ...item,
+                    label: resolveLabel( item, currentProductType ),
+                };
+                return getFieldConfig( field as any );
+            } );
+    }, [ formItems, currentProductType ] );
 
     const onChange = useCallback( ( newData: Record< string, any > ) => {
         setProduct( ( prev ) => ( { ...prev, ...newData } ) );

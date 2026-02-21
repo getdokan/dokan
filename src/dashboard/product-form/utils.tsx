@@ -45,6 +45,22 @@ export const getField = (
 };
 
 /**
+ * Resolve the label for a field item based on the current product type.
+ * Falls back to the default `label` when no type-specific entry exists in `labels`.
+ *
+ * @param {FlatFormItem} item        Form item (field or section).
+ * @param {string}       productType Current product type (e.g. 'simple', 'variable').
+ *
+ * @return {string} Resolved label string.
+ */
+export const resolveLabel = (
+    item: FlatFormItem,
+    productType: string = 'simple'
+): string => {
+    return item.labels?.[ productType ] ?? item.label;
+};
+
+/**
  * helper to get label and description for a field.
  *
  * @param {Array}  formItems Flat array of sections and fields.
