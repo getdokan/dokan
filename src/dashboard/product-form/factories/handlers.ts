@@ -1,7 +1,7 @@
 import AsyncSelectEdit from '../components/AsyncSelectEdit';
 import AttributeVariationEdit from '../components/AttributeVariationEdit';
 import DateTimePickerEdit from '../components/DateTimePickerEdit';
-import FeatureImage from '../components/FeatureImage';
+import ImageEdit from '../components/ImageEdit';
 import FileUploadEdit from '../components/FileUploadEdit';
 import GalleryImages from '../components/GalleryImages';
 import PriceEdit from '../components/PriceEdit';
@@ -108,11 +108,11 @@ export const multiSelectHandler: FieldHandler = () => {
 /**
  * Handler for single image upload fields.
  *
- * @return Configuration object with type 'integer' and FeatureImage component.
+ * @return Configuration object with type 'integer' and ImageEdit component.
  */
 export const imageHandler: FieldHandler = () => ( {
     type: 'integer',
-    Edit: FeatureImage,
+    Edit: ImageEdit,
 } );
 
 /**

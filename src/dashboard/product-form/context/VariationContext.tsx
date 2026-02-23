@@ -8,95 +8,6 @@ import {
 } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Attribute, VariationType } from '../types';
-import { ajaxRequest } from '../utils';
-
-// Declare globals
-declare let dokan: any;
-
-interface PrepareVariationPayloadArgs {
-    variation: VariationType;
-    data: Record< string, any >;
-    defaultAttributes?: Attribute[];
-    menuOrder?: number;
-}
-
-const preparePayload = ( {
-    variation,
-    data,
-    defaultAttributes = [],
-    menuOrder = 0,
-}: PrepareVariationPayloadArgs ) => {
-    const formData = new FormData();
-    formData.append( 'action', 'dokan_save_variations' );
-    formData.append( 'product_type', 'variable' );
-    formData.append( 'product_id', String( variation.parent_id ) );
-    formData.append( 'security', dokan.save_variations_nonce );
-    formData.append(
-        `variation_menu_order[${ menuOrder }]`,
-        menuOrder.toString()
-    );
-    formData.append( `variable_enabled[${ menuOrder }]`, 'yes' );
-
-    // Variation ID
-    formData.append(
-        `variable_post_id[${ menuOrder }]`,
-        String( variation.id )
-    );
-
-    // Standard Text/Select Fields
-    const fieldMap: Record< string, string > = {
-        id: 'variable_post_id',
-        date_on_sale_from: 'variable_sale_price_dates_from',
-        date_on_sale_to: 'variable_sale_price_dates_to',
-        image_id: 'upload_image_id',
-        downloadable: 'variable_is_downloadable',
-        virtual: 'variable_is_virtual',
-        stock_quantity: 'variable_stock',
-    };
-
-    // Attributes
-    const attributes = variation.attributes;
-
-    if ( attributes.length ) {
-        attributes.forEach( ( attr ) => {
-            formData.append(
-                `attribute_${ attr.value }[${ menuOrder }]`,
-                attr.selected_value?.value || ''
-            );
-        } );
-    }
-    // default attributes from parent product
-    if ( defaultAttributes?.length ) {
-        defaultAttributes.forEach( ( attr ) => {
-            formData.append(
-                `default_attribute_${ attr.value }`,
-                '' // Default attribute value can be set here if needed
-            );
-        } );
-    }
-
-    Object.keys( data ).forEach( ( key ) => {
-        if ( key === 'attributes' ) {
-            return;
-        }
-        // prefix field names if not in map
-        const prefix = key.startsWith( '_' ) ? 'variable' : 'variable_';
-
-        if ( fieldMap[ key ] ) {
-            formData.append(
-                `${ fieldMap[ key ] }[${ menuOrder }]`,
-                data[ key ]
-            );
-        } else {
-            formData.append(
-                `${ prefix }${ key }[${ menuOrder }]`,
-                data[ key ]
-            );
-        }
-    } );
-
-    return formData;
-};
 
 export interface VariationContextType {
     variations: VariationType[];
@@ -163,26 +74,30 @@ export const VariationProvider = ( {
         data: Record< string, any >
     ) => {
         setIsLoading( true );
-        const formData = preparePayload( {
-            data,
-            variation,
-            defaultAttributes,
-            menuOrder: variation.menu_order,
-        } );
 
         try {
-            const response: any = await ajaxRequest( formData );
-            if ( response.success ) {
-                toast( {
-                    type: 'success',
-                    title: __( 'Variation saved successfully', 'dokan-lite' ),
-                } );
-            } else {
-                toast( {
-                    type: 'error',
-                    title: __( 'Error saving variation', 'dokan-lite' ),
-                } );
+            const payload: Record< string, any > = { ...data };
+
+            // Map variation attributes to WC REST format.
+            if ( variation.attributes?.length ) {
+                payload.attributes = variation.attributes
+                    .filter( ( attr ) => attr.selected_value )
+                    .map( ( attr ) => ( {
+                        name: attr.value,
+                        option: attr.selected_value?.value || '',
+                    } ) );
             }
+
+            await apiFetch( {
+                path: `/dokan/v2/products/${ variation.parent_id }/variations/${ variation.id }`,
+                method: 'PUT',
+                data: payload,
+            } );
+
+            toast( {
+                type: 'success',
+                title: __( 'Variation saved successfully', 'dokan-lite' ),
+            } );
         } catch ( error ) {
             console.error( 'Error saving variation:', error );
             toast( {
@@ -197,7 +112,7 @@ export const VariationProvider = ( {
     const fetchVariations = async () => {
         try {
             const response: any = await apiFetch( {
-                path: `/dokan/v3/products/${ productId }/variations`,
+                path: `/dokan/v2/products/${ productId }/variations`,
             } );
             setVariations( response || [] );
         } catch ( error ) {
@@ -214,7 +129,6 @@ export const VariationProvider = ( {
     }, [ productId ] );
 
     const generateVariations = async () => {
-        // specific logic to generate variations
         if (
             confirm(
                 __(
@@ -223,26 +137,41 @@ export const VariationProvider = ( {
                 )
             )
         ) {
-            await ajaxRequest( {
-                action: 'dokan_link_all_variations',
-                post_id: productId,
-                security: dokan.link_variation_nonce,
-            } );
-            await fetchVariations();
-            toast( {
-                type: 'success',
-                title: __( 'Variations generated successfully', 'dokan-lite' ),
-            } );
+            try {
+                await apiFetch( {
+                    path: `/dokan/v2/products/${ productId }/variations/generate`,
+                    method: 'POST',
+                    data: { delete: true },
+                } );
+                await fetchVariations();
+                toast( {
+                    type: 'success',
+                    title: __(
+                        'Variations generated successfully',
+                        'dokan-lite'
+                    ),
+                } );
+            } catch ( error ) {
+                console.error( 'Error generating variations:', error );
+                toast( {
+                    type: 'error',
+                    title: __(
+                        'Error generating variations',
+                        'dokan-lite'
+                    ),
+                } );
+            }
         }
     };
 
     const addVariation = async () => {
         try {
-            await ajaxRequest( {
-                action: 'dokan_add_variation',
-                post_id: productId,
-                security: dokan.add_variation_nonce,
-                loop: 0,
+            await apiFetch( {
+                path: `/dokan/v2/products/${ productId }/variations`,
+                method: 'POST',
+                data: {
+                    regular_price: '',
+                },
             } );
             await fetchVariations();
             toast( {
@@ -266,15 +195,18 @@ export const VariationProvider = ( {
             return;
         }
         try {
-            await ajaxRequest( {
-                action: 'dokan_remove_variation',
-                'variation_ids[]': variation.id,
-                security: dokan.delete_variations_nonce,
+            await apiFetch( {
+                path: `/dokan/v2/products/${ variation.parent_id }/variations/${ variation.id }`,
+                method: 'DELETE',
+                data: { force: true },
             } );
             await fetchVariations();
             toast( {
                 type: 'success',
-                title: __( 'Variation removed successfully', 'dokan-lite' ),
+                title: __(
+                    'Variation removed successfully',
+                    'dokan-lite'
+                ),
             } );
         } catch ( error ) {
             console.error( 'Error removing variation:', error );

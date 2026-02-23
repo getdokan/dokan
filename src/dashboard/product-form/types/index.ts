@@ -28,6 +28,7 @@ export type FlatFormItem = {
     options?: { label: string; value: string }[] | Record< string, string >;
     dependencies?: DependencyCondition[];
     visibility?: boolean;
+    product_types?: string[];
     is_custom?: boolean;
 };
 

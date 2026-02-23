@@ -5,7 +5,7 @@ import { Upload } from 'lucide-react';
 import CustomField, { getValidationError } from './CustomField';
 import ImagePreview from './ImagePreview';
 
-const FeatureImage = ( { field, onChange, validity }: any ) => {
+const ImageEdit = ( { field, onChange, validity }: any ) => {
     const [ image, setImage ] = useState( field.value );
     const onSelect = ( value: any ) => {
         onChange( {
@@ -32,18 +32,18 @@ const FeatureImage = ( { field, onChange, validity }: any ) => {
             ) : (
                 <MediaUploader
                     onSelect={ onSelect }
-                    className={ `dokan-product-${ field.id }` }
+                    className={ `dokan-product-image_id` }
                 >
                     <DokanButton variant="secondary" className="uppercase">
                         <Upload size={ 16 } />
                         { __( 'Upload File', 'dokan-lite' ) }
                     </DokanButton>
                     <span>
-                        { __( 'A product cover image here.', 'dokan-lite' ) }
+                        { __( 'Upload a image', 'dokan-lite' ) }
                     </span>
                 </MediaUploader>
             ) }
         </CustomField>
     );
 };
-export default FeatureImage;
+export default ImageEdit;

@@ -8,7 +8,7 @@ import CustomField, { getValidationError } from './CustomField';
 
 const FileUploadEdit = ( { field, onChange, validity }: any ) => {
     const [ files, setFiles ] = useState(
-        field.value.length > 0
+        field.value?.length > 0
             ? field.value
             : [
                   {

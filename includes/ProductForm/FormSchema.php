@@ -43,11 +43,10 @@ class FormSchema {
         'editor',
         'radio',
         'number',
-        'custom',
-        'date',
-        'feature_image',
+        'file',
+        'datetime',
+        'image',
         'gallery_images',
-        'downloadable',
         'attribute',
     ];
 
@@ -66,10 +65,10 @@ class FormSchema {
                 }
             }
             if ( ! in_array( $field['type'], $this->supported_types, true ) ) {
-                error_log( sprintf( 'Invalid field type: %s', esc_html( $field['type'] ) ) );
+                error_log( sprintf( 'Invalid field type: %s and id: %s', esc_html( $field['type'] ), esc_html( $field['id'] ?? 'unknown' ) ) );
             }
             if ( isset( $field['variant'] ) && ! in_array( $field['variant'], $this->supported_variants, true ) ) {
-                error_log( sprintf( 'Invalid field variant: %s', esc_html( $field['variant'] ) ) );
+                error_log( sprintf( 'Invalid field variant: %s and id: %s', esc_html( $field['variant'] ), esc_html( $field['id'] ?? 'unknown' ) ) );
             }
         }
         return $fields;
@@ -228,8 +227,8 @@ class FormSchema {
                 'section_id'   => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'From', 'dokan-lite' ),
-                'variant'        => 'date',
-                'placeholder'    => 'YYYY-MM-DD',
+                'variant'        => 'datetime',
+                'placeholder'    => 'YYYY-MM-DD HH:MM',
                 'priority'       => 30,
                 'dependencies' => array_merge(
                     $dep_non_variable,
@@ -248,8 +247,8 @@ class FormSchema {
                 'section_id'   => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'To', 'dokan-lite' ),
-                'variant'        => 'date',
-                'placeholder'    => 'YYYY-MM-DD',
+                'variant'        => 'datetime',
+                'placeholder'    => 'YYYY-MM-DD HH:MM',
                 'priority'       => 30,
                 'dependencies' => array_merge(
                     $dep_non_variable,
@@ -308,7 +307,7 @@ class FormSchema {
                 'section_id'   => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'Feature Image', 'dokan-lite' ),
-                'variant'        => 'feature_image',
+                'variant'        => 'image',
                 'value'          => [],
                 'default'        => [],
                 'tooltip'        => __( 'Select product image', 'dokan-lite' ),
@@ -628,15 +627,94 @@ class FormSchema {
         // validate the fields
         $this->assert_field_schema( $items );
 
+        $items = apply_filters( 'dokan_product_form_schema_response', $items, $product_id );
+
         if ( $product instanceof WC_Product ) {
             foreach ( $items as &$item ) {
                 if ( $item['type'] === 'field' ) {
-                    $item['value'] = $this->resolve_field_value( $item['id'], $product );
+                    $value = $this->resolve_field_value( $item['id'], $product );
+                    $item['value'] = $this->format_field_value( $value, $item['variant'] ?? 'text' );
                 }
             }
         }
 
-        return apply_filters( 'dokan_product_form_schema_response', $items, $product_id );
+        return $items;
+    }
+
+    /**
+     * Format a resolved field value to the shape expected by the frontend based on variant.
+     *
+     * resolve_field_value() returns raw values (int, array of ints, etc.).
+     * This method transforms them to the structured shape the React frontend expects.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param mixed  $value   Raw resolved value.
+     * @param string $variant Field variant type.
+     *
+     * @return mixed Formatted value.
+     */
+    private function format_field_value( $value, string $variant ) {
+        switch ( $variant ) {
+            case 'image':
+                $image_id = absint( $value );
+
+                return [
+                    'id'  => $image_id,
+                    'url' => $image_id ? wp_get_attachment_url( $image_id ) : '',
+                ];
+
+            case 'file':
+                if ( ! is_array( $value ) || empty( $value ) ) {
+                    return [];
+                }
+
+                // Already in [ { id, file, name }, ... ] shape (e.g. from DOWNLOADS case).
+                if ( isset( $value[0] ) && is_array( $value[0] ) ) {
+                    return $value;
+                }
+
+                // Raw array of attachment IDs from custom meta — resolve to [ { id, file, name } ].
+                return array_filter(
+                    array_map(
+                        function ( $id ) {
+                            $attachment_id = absint( $id );
+                            $url           = $attachment_id ? wp_get_attachment_url( $attachment_id ) : '';
+
+                            if ( ! $url ) {
+                                return null;
+                            }
+
+                            return [
+                                'id'   => $attachment_id,
+                                'file' => $url,
+                                'name' => basename( get_attached_file( $attachment_id ) ?: '' ),
+                            ];
+                        },
+                        $value
+                    )
+                );
+
+            case 'gallery_images':
+                if ( ! is_array( $value ) ) {
+                    return [];
+                }
+
+                return array_map(
+                    function ( $id ) {
+                        $attachment_id = absint( $id );
+
+                        return [
+                            'id'  => $attachment_id,
+                            'url' => $attachment_id ? wp_get_attachment_url( $attachment_id ) : '',
+                        ];
+                    },
+                    $value
+                );
+
+            default:
+                return $value;
+        }
     }
 
     /**
@@ -671,20 +749,9 @@ class FormSchema {
             case Elements::BRANDS:
                 return $product->get_brand_ids();
             case Elements::FEATURED_IMAGE_ID:
-                $image_id = $product->get_image_id();
-                return [
-                    'id'  => $image_id,
-                    'url' => $image_id ? wp_get_attachment_url( $image_id ) : '',
-                ];
+                return $product->get_image_id();
             case Elements::GALLERY_IMAGE_IDS:
-                $urls = [];
-                foreach ( $product->get_gallery_image_ids() as $attachment_id ) {
-                    $urls[] = [
-                        'id'  => $attachment_id,
-                        'url' => wp_get_attachment_url( $attachment_id ),
-                    ];
-                }
-                return $urls;
+                return $product->get_gallery_image_ids();
             case Elements::DOWNLOADABLE:
                 return $product->is_downloadable();
             case Elements::VIRTUAL:
@@ -733,95 +800,16 @@ class FormSchema {
                     return $product->{$method_name}();
                 }
 
+                // Fallback to product meta for custom fields without a dedicated getter.
+                $meta_value = $product->get_meta( $field_name, true );
+                if ( '' !== $meta_value && null !== $meta_value ) {
+                    return $meta_value;
+                }
+
                 return '';
         }
     }
 
-
-    /**
-     * Get product variations for a product (for form manager).
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param int $product_id Product ID.
-     *
-     * @return array
-     */
-    public function get_product_variations( int $product_id ): array {
-        $variations = wc_get_products(
-            [
-				'status'  => [ 'private', 'publish' ],
-				'type'    => 'variation',
-				'parent'  => $product_id,
-				'orderby' => [
-					'menu_order' => 'ASC',
-					'ID' => 'DESC',
-				],
-				'return'  => 'objects',
-			]
-        );
-
-        $variations_data = [];
-        $parent_product  = wc_get_product( $product_id );
-
-        if ( $variations && $parent_product ) {
-            $iteration = 0;
-            foreach ( $variations as $variation ) {
-                /** @var \WC_Product_Variation $variation */
-                $variation_id     = $variation->get_id();
-                $formatted_attrs  = [];
-                $attribute_values = $variation->get_attributes( 'edit' );
-
-                foreach ( $parent_product->get_attributes( 'edit' ) as $attribute ) {
-                    if ( ! $attribute->get_variation() ) {
-                        continue;
-                    }
-                    $selected_val = isset( $attribute_values[ sanitize_title( $attribute->get_name() ) ] )
-                        ? $attribute_values[ sanitize_title( $attribute->get_name() ) ]
-                        : '';
-                    $options = [];
-                    $selected = null;
-
-                    if ( $attribute->is_taxonomy() ) {
-                        foreach ( $attribute->get_terms() as $option ) {
-                            $opt = [
-                                'value' => $option->slug,
-                                'label' => apply_filters( 'woocommerce_variation_option_name', $option->name, $option, $attribute->get_name(), $parent_product ),
-                            ];
-                            $options[] = $opt;
-                            if ( $selected_val === $opt['value'] ) {
-                                $selected = $opt;
-                            }
-                        }
-                    } else {
-                        foreach ( $attribute->get_options() as $option ) {
-                            $opt = [
-                                'value' => $option,
-                                'label' => apply_filters( 'woocommerce_variation_option_name', $option, null, $attribute->get_name(), $parent_product ),
-                            ];
-                            $options[] = $opt;
-                            if ( $selected_val === $opt['value'] ) {
-                                $selected = $opt;
-                            }
-                        }
-                    }
-                    $formatted_attrs[] = [
-                        'label'           => wc_attribute_label( $attribute->get_name() ),
-                        'value'           => sanitize_title( $attribute->get_name() ),
-                        'selected_value'  => $selected,
-                        'options'         => $options,
-                    ];
-                }
-                $variations_data[] = [
-                    'id'         => $variation_id,
-                    'parent_id'  => $product_id,
-                    'menu_order' => $iteration++,
-                    'attributes' => $formatted_attrs,
-                ];
-            }
-        }
-        return $variations_data;
-    }
 
     /**
      * Get product tags for form options.

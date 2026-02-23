@@ -1,5 +1,6 @@
 import { ProductAsyncSelect } from '@src/components';
 import CustomField, { getValidationError } from './CustomField';
+import { components as rsComponents } from 'react-select';
 
 const AsyncSelectEdit = ( { data, field, onChange, validity }: any ) => {
     return (
@@ -11,6 +12,11 @@ const AsyncSelectEdit = ( { data, field, onChange, validity }: any ) => {
                 } }
                 isMulti={ field.multiple }
                 placeholder={ field.placeholder }
+                // @ts-ignore
+                components={ {
+                    MultiValue: rsComponents.MultiValue,
+                    ValueContainer: rsComponents.ValueContainer,
+                } }
             />
         </CustomField>
     );

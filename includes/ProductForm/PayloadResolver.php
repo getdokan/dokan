@@ -41,7 +41,7 @@ class PayloadResolver {
      *
      * @since DOKAN_SINCE
      */
-    private static function strip_empty_values( array $data ): array {
+    public static function strip_empty_values( array $data ): array {
         return array_filter(
             $data,
             static function ( $v ) {
@@ -55,7 +55,7 @@ class PayloadResolver {
      *
      * @since DOKAN_SINCE
      */
-    private static function resolve_meta_booleans( array $data ): array {
+    public static function resolve_meta_booleans( array $data ): array {
         $meta_map = [
             // Form: true = requires shipping → Meta: 'no' = not disabled.
             Elements::DISABLE_SHIPPING_META   => [
@@ -82,7 +82,7 @@ class PayloadResolver {
      *
      * @since DOKAN_SINCE
      */
-    private static function resolve_integer_fields( array $data ): array {
+    public static function resolve_integer_fields( array $data ): array {
         $int_fields = [
             Elements::STOCK_QUANTITY,
             Elements::LOW_STOCK_AMOUNT,
@@ -154,7 +154,7 @@ class PayloadResolver {
      *
      * @since DOKAN_SINCE
      */
-    private static function resolve_dimensions( array $data ): array {
+    public static function resolve_dimensions( array $data ): array {
         $dimension_keys = [
             'length' => Elements::DIMENSIONS_LENGTH,
             'width'  => Elements::DIMENSIONS_WIDTH,
@@ -189,7 +189,7 @@ class PayloadResolver {
      *
      * @since DOKAN_SINCE
      */
-    private static function resolve_shipping_class( array $data ): array {
+    public static function resolve_shipping_class( array $data ): array {
         if ( array_key_exists( Elements::SHIPPING_CLASS, $data ) ) {
             $data['product_shipping_class'] = (string) $data[ Elements::SHIPPING_CLASS ];
             unset( $data[ Elements::SHIPPING_CLASS ] );
@@ -303,7 +303,7 @@ class PayloadResolver {
      *
      * @return int
      */
-    private static function extract_image_id( $image ): int {
+    public static function extract_image_id( $image ): int {
         if ( is_array( $image ) && isset( $image['id'] ) ) {
             return (int) $image['id'];
         }

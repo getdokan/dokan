@@ -75,6 +75,13 @@ export const getFieldConfig = ( field: FormField ) => {
             if ( field.visibility === false ) {
                 return false;
             }
+            if (
+                data.type &&
+                field.product_types &&
+                ! field.product_types.includes( data.type )
+            ) {
+                return false;
+            }
             return resolveDependency( field.dependencies, data );
         },
     };
