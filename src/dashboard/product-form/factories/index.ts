@@ -5,7 +5,7 @@ import {
     checkboxHandler,
     dateHandler,
     defaultHandler,
-    downloadableHandler,
+    fileHandler,
     editorFieldHandler,
     galleryHandler,
     imageHandler,
@@ -29,7 +29,7 @@ const handlers: Record< string, FieldHandler > = {
     feature_image: imageHandler,
     gallery_images: galleryHandler,
     attribute: attributeHandler,
-    downloadable: downloadableHandler,
+    file: fileHandler,
 };
 
 export const getFieldConfigFromFactory = ( field: FormField ) => {

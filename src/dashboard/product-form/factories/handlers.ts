@@ -120,7 +120,7 @@ export const imageHandler: FieldHandler = () => ( {
  *
  * @return Configuration object with type 'integer' and FileUploadEdit component.
  */
-export const downloadableHandler: FieldHandler = () => ( {
+export const fileHandler: FieldHandler = () => ( {
     type: 'integer',
     Edit: FileUploadEdit,
 } );

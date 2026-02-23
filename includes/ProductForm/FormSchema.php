@@ -516,7 +516,7 @@ class FormSchema {
                 'section_id'   => Elements::SECTION_DOWNLOADABLE,
                 'type'         => 'field',
                 'label'        => __( 'Downloadable Files', 'dokan-lite' ),
-                'variant'      => 'downloadable',
+                'variant'      => 'file',
                 'value'           => [],
                 'default'         => [],
                 'description'     => __( 'Upload files that customers can download after purchase.', 'dokan-lite' ),
