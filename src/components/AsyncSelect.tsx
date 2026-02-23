@@ -8,7 +8,7 @@ import DropdownIndicator from '@src/components/select/DropdownIndicator';
 import styles from '@src/components/select/styles';
 import { twMerge } from 'tailwind-merge';
 
-// Local utility to extract a props type of a component without relying on React/WordPress types
+// Local utility to extract a props type of component without relying on React/WordPress types.
 type PropsOf< T > = T extends ( props: infer P ) => any ? P : never;
 
 export type DefaultOption = {
