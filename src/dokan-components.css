@@ -521,6 +521,7 @@ dokan-dashboard-header.dokan-ai-prompt #ai-prompt-app {
     padding-bottom: 10px;
 }
 
+/*** Start Menu Manager Style Fixing ***/
 /* Fixes the outline issue on Menu Manager tabs when focused */
 .tabs a:focus {
     outline: none !important;
@@ -529,4 +530,5 @@ dokan-dashboard-header.dokan-ai-prompt #ai-prompt-app {
 /* Fixes the spacing issue between tabs and content in Menu Manager */
 .tabs-details {
     margin-top: 1rem !important;
-} 
+}
+/*** End of Menu Manager Style Fixing ***/
