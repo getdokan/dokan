@@ -75,6 +75,23 @@ class FormSchema {
         return $fields;
     }
 
+    public function get_product_types(): array {
+        $types = [
+            'simple' => __( 'Simple', 'dokan-lite' ),
+        ];
+        $product_types = apply_filters( 'dokan_product_types', $types );
+        $types = array_map(
+            fn( $key, $type ) => [
+                'label' => $type,
+                'value' => $key,
+			],
+            array_keys( $product_types ),
+            $product_types
+		);
+
+        return $types;
+    }
+
     /**
      * Get flat form schema (sections and fields). Resolves field values when $product_id is provided.
      *
@@ -86,8 +103,6 @@ class FormSchema {
         $product = ( $product_id > 0 ) ? wc_get_product( $product_id ) : null;
 
         $can_create_tags = dokan()->is_pro_exists() ? dokan_get_option( 'product_vendors_can_create_tags', 'dokan_selling', 'off' ) : 'off';
-        // Resolve all options at definition time.
-        $product_type_options = apply_filters( 'dokan_product_types', [ 'simple' => __( 'Simple', 'dokan-lite' ) ] );
 
         $dep_downloadable = [
             [
@@ -154,7 +169,7 @@ class FormSchema {
                 'value'          => 'simple',
                 'default'        => 'simple',
                 'required'       => true,
-                'options'        => $product_type_options,
+                'options'        => $this->get_product_types(),
                 'description'    => __( 'Choose Variable if your product has multiple attributes - like sizes, colors, quality etc', 'dokan-lite' ),
                 'tooltip'        => __( 'Choose product type.', 'dokan-lite' ),
                 'priority'       => 30,
@@ -619,18 +634,7 @@ class FormSchema {
             }
         }
 
-        return $items;
-    }
-
-    /**
-     * Get field key from field id (id is Elements constant value, e.g. name, reviews_allowed).
-     *
-     * @param string $id Field id (Elements constant value).
-     * @return string
-     */
-    private function get_field_key_from_id( string $id ): string {
-        $parts = explode( '.', $id );
-        return end( $parts );
+        return apply_filters( 'dokan_product_form_schema_response', $items, $product_id );
     }
 
     /**
@@ -641,7 +645,7 @@ class FormSchema {
      * @return mixed
      */
     private function resolve_field_value( string $field_id, WC_Product $product ) {
-        $key = $this->get_field_key_from_id( $field_id );
+        $key = $field_id;
 
         switch ( $key ) {
             case Elements::NAME:
