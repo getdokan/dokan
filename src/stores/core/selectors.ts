@@ -87,6 +87,15 @@ const selectors = {
     getGlobalSettings( state: CoreState ) {
         return state.global;
     },
+
+    /**
+     * Get the vendor ID for the current user.
+     *
+     * @param state
+     */
+    getVendorId( state: CoreState ) {
+        return state.currentUser?.dokan_meta?.vendor_id;
+    },
 };
 
 export default selectors;

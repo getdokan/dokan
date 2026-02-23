@@ -26,6 +26,8 @@ class Hooks {
             add_action( 'woocommerce_checkout_create_order_shipping_item', [ $this, 'add_shipping_pack_meta' ], 10, 4 );
             add_filter( 'woocommerce_shipping_package_name', [ $this, 'change_shipping_pack_name' ], 10, 3 );
         }
+
+        add_filter( 'woocommerce_shipping_method_add_rate', [ $this, 'add_shipping_method_rate' ], 10, 3 );
     }
 
     /**
@@ -116,5 +118,32 @@ class Hooks {
         $shipping_label = sprintf( '%s %s', __( 'Shipping: ', 'dokan-lite' ), $vendor->get_shop_name() );
 
         return apply_filters( 'dokan_shipping_package_name', $shipping_label, $i, $package, $vendor );
+    }
+
+    /**
+     * Add shipping tax rate based on vendor product items.
+     *
+     * @since 4.2.4
+     *
+     * @param $rate \WC_Shipping_Rate
+     * @param $args array
+     * @param $wc_shipping_method \WC_Shipping_Method
+     *
+     * @return \WC_Shipping_Rate
+     */
+    public function add_shipping_method_rate( $rate, $args, $wc_shipping_method ) {
+        $taxes      = $rate->get_taxes();
+        $total_cost = $rate->get_cost();
+
+        if ( 'per_order' === $args['calc_tax'] && is_array( $taxes ) && $total_cost > 0 && $wc_shipping_method->is_taxable() ) {
+            $rates = Tax::get_tax_rates( $args );
+
+            if ( is_array( $rates ) && ! empty( $rates ) ) {
+                $taxes = Tax::calc_shipping_tax( $total_cost, $rates );
+                $rate->set_taxes( $taxes );
+            }
+        }
+
+        return $rate;
     }
 }
