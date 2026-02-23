@@ -567,6 +567,7 @@ class FormSchema {
                 'variant'      => 'radio',
                 'value'        => 'draft',
                 'default'      => 'draft',
+                'required'     => true,
                 'options'      => dokan_get_available_post_status( $product_id ),
                 'priority'     => 30,
                 'visibility'   => true,
@@ -579,6 +580,7 @@ class FormSchema {
                 'variant'      => 'select',
                 'options'      => dokan_get_product_visibility_options(),
                 'priority'     => 30,
+                'required'     => true,
                 'visibility'   => true,
             ],
             [

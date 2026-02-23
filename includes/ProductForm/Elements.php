@@ -13,7 +13,7 @@ class Elements {
     // Section ids.
     const SECTION_GENERAL = 'general';
     const SECTION_INVENTORY = 'inventory';
-    const SECTION_DOWNLOADABLE = 'downloadable';
+    const SECTION_DOWNLOADABLE = 'downloadable_options';
     const SECTION_OTHERS = 'others';
     const SECTION_SHIPPING = 'shipping';
     const SECTION_ATTRIBUTES_AND_VARIATIONS = 'attributes-and-variations';

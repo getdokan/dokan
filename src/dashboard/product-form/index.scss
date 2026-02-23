@@ -11,6 +11,8 @@
         border-bottom: 1px solid #ddd !important;
     }
     legend.components-base-control__label {
+        display: flex !important;
+        gap: 2px;
         margin-left: 0 !important;
         background-color: transparent !important;
     }
