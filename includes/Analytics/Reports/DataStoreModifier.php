@@ -80,8 +80,6 @@ class DataStoreModifier implements Hookable {
 			$wc_stores['report-stock-stats'] = \WeDevs\Dokan\Analytics\Reports\Stock\Stats\WcDataStore::class;
 		}
 
-		$wc_stores['report-vendor-orders'] = \WeDevs\Dokan\Analytics\Reports\Orders\VendorDataStore::class;
-
 		return $wc_stores;
 	}
 }

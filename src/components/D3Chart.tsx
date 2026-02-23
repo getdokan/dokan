@@ -203,7 +203,6 @@ const D3Chart = ( {
             .select( 'body' )
             .append( 'div' )
             .attr( 'class', 'tooltip' )
-            .style( 'padding', '10px' )
             .style( 'position', 'absolute' )
             .style( 'background', 'rgba(0, 0, 0, 0.8)' )
             .style( 'color', 'white' )
@@ -250,6 +249,7 @@ const D3Chart = ( {
                     tooltip
                         .transition()
                         .duration( chartConfig.animation.tooltipShow )
+                        .style( 'padding', '10px' )
                         .style( 'opacity', 0.9 );
 
                     const formatValue = ( val: number ) => formatPrice( val );

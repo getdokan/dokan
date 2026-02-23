@@ -4,14 +4,14 @@ namespace WeDevs\Dokan\Upgrade\Upgrades;
 
 use WeDevs\Dokan\Abstracts\DokanUpgrader;
 use WeDevs\Dokan\Install\Installer;
-use WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses\V_4_2_11_RegenerateReportData;
+use WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses\V_4_3_1_RegenerateReportData;
 
 /**
  * Upgrade class for version DOKAN_SINCE.
  *
  * @since DOKAN_SINCE
  */
-class V_4_2_11 extends DokanUpgrader {
+class V_4_3_1 extends DokanUpgrader {
 
     /**
      * Alter dokan_order_stats table to add new columns and regenerate data.
@@ -45,7 +45,7 @@ class V_4_2_11 extends DokanUpgrader {
         // @codingStandardsIgnoreEnd
 
         // Regenerate the order stats data.
-        $processor = new V_4_2_11_RegenerateReportData();
+        $processor = new V_4_3_1_RegenerateReportData();
         $processor->push_to_queue( [ 'regenerate' => true ] )->dispatch_process();
     }
 }

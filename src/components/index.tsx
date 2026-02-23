@@ -54,15 +54,5 @@ export {
     D3ChartDefaultMetrics,
 } from './D3Chart';
 
-// Dashboard Components
-export { default as Section } from '../admin/dashboard/pages/dashboard/Elements/Section';
-export { default as MonthPicker } from '../admin/dashboard/pages/dashboard/Elements/MonthPicker';
-export { default as DynamicIcon } from '../admin/dashboard/pages/dashboard/components/DynamicIcon';
-export { useDashboardApiData } from '../admin/dashboard/pages/dashboard/hooks/useDashboardApiData';
-export * from '../admin/dashboard/pages/dashboard/utils/api';
-export * from '../admin/dashboard/pages/dashboard/types';
-export { default as AllTimeStatsSkeleton } from '../admin/dashboard/pages/dashboard/sections/AllTimeStatsSection/Skeleton';
-export { default as SalesChartSkeleton } from '../admin/dashboard/pages/dashboard/sections/SalesChartSection/Skeleton';
-
 // Commission Components
 export * from './commission';

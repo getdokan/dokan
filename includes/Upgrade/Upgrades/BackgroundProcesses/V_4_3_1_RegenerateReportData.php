@@ -10,7 +10,7 @@ use Automattic\WooCommerce\Admin\ReportsSync;
  *
  * @since DOKAN_SINCE
  */
-class V_4_2_11_RegenerateReportData extends DokanBackgroundProcesses {
+class V_4_3_1_RegenerateReportData extends DokanBackgroundProcesses {
 
     /**
      * @param mixed $item
