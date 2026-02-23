@@ -520,3 +520,13 @@ dokan-dashboard-header.dokan-ai-prompt #ai-prompt-app {
     align-self: flex-end;
     padding-bottom: 10px;
 }
+
+/* Fixes the outline issue on Menu Manager tabs when focused */
+.tabs a:focus {
+    outline: none !important;
+}
+
+/* Fixes the spacing issue between tabs and content in Menu Manager */
+.tabs-details {
+    margin-top: 1rem !important;
+} 
