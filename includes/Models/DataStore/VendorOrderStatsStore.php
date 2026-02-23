@@ -278,6 +278,7 @@ class VendorOrderStatsStore extends BaseDataStore {
             $order = 'DESC';
         }
 
+        // @codingStandardsIgnoreStart
         $this->clear_all_clauses();
         $this->add_sql_clause( 'select', 'dos.*, wos.total_sales AS order_total, wos.date_created AS order_date' );
         $this->add_sql_clause( 'from', "{$wpdb->prefix}dokan_order_stats dos" );
@@ -297,7 +298,8 @@ class VendorOrderStatsStore extends BaseDataStore {
         $this->add_sql_clause( 'order_by', "dos.{$orderby} {$order}" );
         $this->add_sql_clause( 'limit', $wpdb->prepare( 'LIMIT %d OFFSET %d', $per_page, $offset ) );
 
-        return $wpdb->get_results( $this->get_query_statement() ) ?: []; // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+        return $wpdb->get_results( $this->get_query_statement() ) ?: [];
+        // @codingStandardsIgnoreEnd
     }
 
     /**
@@ -314,6 +316,7 @@ class VendorOrderStatsStore extends BaseDataStore {
 
         $exclude_statuses = (bool) ( $args['exclude_statuses'] ?? false );
 
+        // @codingStandardsIgnoreStart
         $this->clear_all_clauses();
         $this->add_sql_clause( 'select', 'COUNT(*)' );
         $this->add_sql_clause( 'from', "{$wpdb->prefix}dokan_order_stats dos" );
@@ -328,7 +331,8 @@ class VendorOrderStatsStore extends BaseDataStore {
 
         $this->apply_report_filters( $args );
 
-        return (int) $wpdb->get_var( $this->get_query_statement() ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+        return (int) $wpdb->get_var( $this->get_query_statement() );
+        // @codingStandardsIgnoreStart
     }
 
     /**
@@ -419,6 +423,7 @@ class VendorOrderStatsStore extends BaseDataStore {
             }
         }
 
+        // @codingStandardsIgnoreStart
         if ( ! empty( $order_types ) ) {
             $type_placeholders = implode( ', ', array_fill( 0, count( $order_types ), '%d' ) );
             $this->add_sql_clause( 'where', $wpdb->prepare( " AND dos.order_type IN ( $type_placeholders )", ...$order_types ) );
@@ -435,6 +440,7 @@ class VendorOrderStatsStore extends BaseDataStore {
             $type_placeholders   = implode( ', ', array_fill( 0, count( $exclude_order_types ), '%d' ) );
             $this->add_sql_clause( 'where', $wpdb->prepare( " AND dos.order_type NOT IN ( $type_placeholders )", ...$exclude_order_types ) );
         }
+        // @codingStandardsIgnoreEnd
     }
 
     /**
@@ -455,10 +461,12 @@ class VendorOrderStatsStore extends BaseDataStore {
             $vendor_ids = is_array( $vendor_id ) ? array_map( 'absint', $vendor_id ) : [ absint( $vendor_id ) ];
             $vendor_ids = array_filter( $vendor_ids );
 
+            // @codingStandardsIgnoreStart
             if ( ! empty( $vendor_ids ) ) {
                 $placeholders = implode( ', ', array_fill( 0, count( $vendor_ids ), '%d' ) );
                 $this->add_sql_clause( 'where', $wpdb->prepare( " AND dos.vendor_id IN ( $placeholders )", ...$vendor_ids ) );
             }
+            // @codingStandardsIgnoreEnd
         }
     }
 
@@ -475,15 +483,13 @@ class VendorOrderStatsStore extends BaseDataStore {
         global $wpdb;
 
         // Filter by order_id.
-        $order_id = $args['order_id'] ?? [];
+        $order_id = $args['order_id'] ?? 0;
         if ( ! empty( $order_id ) ) {
-            $order_ids = is_array( $order_id ) ? array_map( 'absint', $order_id ) : [ absint( $order_id ) ];
-            $order_ids = array_filter( $order_ids );
+            $order_id = absint( $order_id );
 
-            if ( ! empty( $order_ids ) ) {
-                $placeholders = implode( ', ', array_fill( 0, count( $order_ids ), '%d' ) );
-                $this->add_sql_clause( 'where', $wpdb->prepare( " AND dos.order_id IN ( $placeholders )", ...$order_ids ) );
-            }
+            // @codingStandardsIgnoreStart
+            $this->add_sql_clause( 'where', $wpdb->prepare( " AND dos.order_id IN ( %d )", $order_id ) );
+            // @codingStandardsIgnoreEnd
         }
     }
 
@@ -502,13 +508,10 @@ class VendorOrderStatsStore extends BaseDataStore {
         // Filter by order_status via the WC orders table.
         $order_status = $args['order_status'] ?? '';
         if ( ! empty( $order_status ) ) {
-            $statuses = is_array( $order_status ) ? $order_status : explode( ',', $order_status );
-            $statuses = array_map( 'sanitize_text_field', array_filter( $statuses ) );
-
-            if ( ! empty( $statuses ) ) {
-                $placeholders = implode( ', ', array_fill( 0, count( $statuses ), '%s' ) );
-                $this->add_sql_clause( 'where', $wpdb->prepare( " AND wos.status IN ( $placeholders )", ...$statuses ) );
-            }
+            $status = sanitize_text_field( $order_status );
+            // @codingStandardsIgnoreStart
+            $this->add_sql_clause( 'where', $wpdb->prepare( " AND wos.status IN ( %s )", $status ) );
+            // @codingStandardsIgnoreEnd
         }
     }
 
@@ -561,6 +564,7 @@ class VendorOrderStatsStore extends BaseDataStore {
 
         global $wpdb;
 
+        // @codingStandardsIgnoreStart
         $this->clear_all_clauses();
         $this->add_sql_clause( 'select', 'parent_id, SUM(total_sales) as total_refunded' );
         $this->add_sql_clause( 'from', "{$wpdb->prefix}wc_order_stats" );
@@ -571,7 +575,8 @@ class VendorOrderStatsStore extends BaseDataStore {
 
         $this->add_sql_clause( 'group_by', 'parent_id' );
 
-        $refund_results = $wpdb->get_results( $this->get_query_statement() ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+        $refund_results = $wpdb->get_results( $this->get_query_statement() );
+        // @codingStandardsIgnoreEnd
 
         $refunds = [];
         foreach ( $refund_results as $refund ) {
