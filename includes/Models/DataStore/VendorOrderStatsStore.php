@@ -332,7 +332,7 @@ class VendorOrderStatsStore extends BaseDataStore {
         $this->apply_report_filters( $args );
 
         return (int) $wpdb->get_var( $this->get_query_statement() );
-        // @codingStandardsIgnoreStart
+        // @codingStandardsIgnoreEnd
     }
 
     /**
