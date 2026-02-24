@@ -119,7 +119,7 @@ const useVariationLayouts = (
         ];
 
         return {
-            fields: layoutBuilder( layouts, formItems, product, 'variation' ),
+            fields: layoutBuilder( layouts, formItems, product ),
         };
     }, [ formItems, product ] );
 

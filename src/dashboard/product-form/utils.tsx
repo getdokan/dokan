@@ -99,7 +99,7 @@ export const validateProductForm = (
         if ( field.visibility === false ) {
             return;
         }
-        if ( ! resolveDependency( field.dependencies, values ) ) {
+        if ( ! resolveDependency( field, values ) ) {
             return;
         }
 
@@ -140,26 +140,12 @@ function normalizeForCompare( val: any ): any {
     return val;
 }
 
-/**
- * Check dependency condition for a field.
- * Uses structure: { comparison, key, value? }. Comparisons: '==', '!=', 'empty', 'not_empty'.
- *
- * @param {Object} depsCondition The dependency condition (or array of conditions; all must pass).
- * @param {Object} data          The data to check against (e.g. form values keyed by field id).
- *
- * @return {boolean} True if the dependency is met, false otherwise.
- */
-export const resolveDependency = (
-    depsCondition: DependencyCondition | DependencyCondition[] | undefined,
+/** Evaluate a single dependency condition against form data. */
+function resolveCondition(
+    depsCondition: DependencyCondition,
     data: Record< string, any >
-): boolean => {
-    if ( Array.isArray( depsCondition ) ) {
-        return depsCondition.every( ( condition ) =>
-            resolveDependency( condition, data )
-        );
-    }
-
-    if ( ! depsCondition || ! depsCondition.key ) {
+): boolean {
+    if ( ! depsCondition.key ) {
         return true;
     }
 
@@ -172,11 +158,13 @@ export const resolveDependency = (
         case 'not_empty':
             return ! isEmptyValue( depValue );
         case '==':
+        case '===':
         case 'equal':
             return (
                 normalizeForCompare( depValue ) === normalizeForCompare( value )
             );
         case '!=':
+        case '!==':
         case 'not_equal':
             return (
                 normalizeForCompare( depValue ) !== normalizeForCompare( value )
@@ -184,6 +172,34 @@ export const resolveDependency = (
         default:
             return true;
     }
+}
+
+/**
+ * Check whether a field should be active based on its product_types and dependencies.
+ *
+ * @param {FlatFormItem} field The field to check.
+ * @param {Record<string, any>} data  Form values keyed by field id.
+ *
+ * @return {boolean} True if the field's dependencies are met, false otherwise.
+ */
+export const resolveDependency = (
+    field: FlatFormItem,
+    data: Record< string, any >
+): boolean => {
+    if ( field.product_types?.includes( 'variable' ) ) {
+        field.product_types.push( 'variation' );
+    }
+    if ( field.product_types && ! field.product_types.includes( data.type ) ) {
+        return false;
+    }
+
+    if ( ! field.dependencies?.length ) {
+        return true;
+    }
+
+    return field.dependencies.every( ( condition ) => {
+        return resolveCondition( condition, data );
+    } );
 };
 
 /**
@@ -193,20 +209,19 @@ export const resolveDependency = (
  * Uses only formItems (flat array); field config is derived from formItems.
  *
  * @param {Array}  layouts   The fields to process for the layout.
- * @param {Array}  formItems Flat array of sections and fields (type, id, order, hidden_scope, dependencies).
+ * @param {Array}  formItems Flat array of sections and fields (type, id, order, dependencies).
  * @param {Object} product   The current product data for dependency checking.
- * @param {string} scope     The scope of the layout (e.g. 'product', 'variation').
  *
  * @return {Array} valid processed fields.
  */
 export const layoutBuilder = (
     layouts: any[],
     formItems: FlatFormItem[] = [],
-    product: Record< string, any >,
-    scope: string = 'product'
+    product: Record< string, any >
 ): any[] => {
-    const getFlatField = ( id: string ): FlatFormItem | undefined =>
-        formItems.find( ( i ) => i.type === 'field' && i.id === id );
+    const getFlatField = ( id: string ): FlatFormItem | undefined => {
+        return formItems.find( ( i ) => i.type === 'field' && i.id === id );
+    };
 
     const getOrder = ( item: any ) => {
         if ( typeof item === 'string' ) {
@@ -241,8 +256,7 @@ export const layoutBuilder = (
             if ( ! flatField ) {
                 return null;
             }
-            const condition = flatField.dependencies;
-            if ( ! resolveDependency( condition, product ) ) {
+            if ( ! resolveDependency( flatField, product ) ) {
                 return null;
             }
             return field;
@@ -270,8 +284,7 @@ export const layoutBuilder = (
             newField.children = layoutBuilder(
                 newField.children,
                 formItems,
-                product,
-                scope
+                product
             );
         }
 

@@ -36,11 +36,8 @@ const ImageEdit = ( { field, onChange, validity }: any ) => {
                 >
                     <DokanButton variant="secondary" className="uppercase">
                         <Upload size={ 16 } />
-                        { __( 'Upload File', 'dokan-lite' ) }
+                        { __( 'Upload', 'dokan-lite' ) }
                     </DokanButton>
-                    <span>
-                        { __( 'Upload a image', 'dokan-lite' ) }
-                    </span>
                 </MediaUploader>
             ) }
         </CustomField>

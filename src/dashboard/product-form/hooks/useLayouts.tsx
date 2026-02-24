@@ -233,7 +233,6 @@ export default function useLayouts(
                 updatedLayouts,
                 formItems,
                 product,
-                product.type
             ),
         };
     }, [ rootLayout, getFieldHeading, formItems, product ] );
