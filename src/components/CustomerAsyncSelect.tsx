@@ -55,19 +55,28 @@ const CustomerOptionRow = ( props: any ) => {
         <div
             ref={ innerRef }
             { ...innerProps }
-            className="group px-4 py-2 cursor-pointer hover:bg-[#F4F1FE]"
+            className="dokan-layout"
             style={ {
                 backgroundColor: props.isFocused ? '#F4F1FE' : 'transparent',
             } }
         >
-            <div className="font-semibold text-sm text-[#25252D] group-hover:text-[#7047EB]">
-                { data.label }
+            <div className="group px-4 py-2 cursor-pointer hover:bg-[#EFEAFF]">
+                { ( data?.raw?.first_name || data?.raw?.last_name ) && (
+                    <div className="font-semibold text-sm text-[#25252D] group-hover:text-[#7047EB]">
+                        { sprintf(
+                            /* translators: %1$s: First name, %2$s: Last name */
+                            __( '%1$s %2$s', 'dokan-lite' ),
+                            data?.raw?.first_name,
+                            data?.raw?.last_name
+                        ) }
+                    </div>
+                ) }
+                { data.raw?.email && (
+                    <div className="text-xs text-[#A5A5AA] mt-1">
+                        { data.raw?.email }
+                    </div>
+                ) }
             </div>
-            { data.raw?.email && (
-                <div className="text-xs text-[#A5A5AA] mt-1">
-                    { data.raw?.email }
-                </div>
-            ) }
         </div>
     );
 };
