@@ -219,6 +219,10 @@ class PayloadResolver {
         foreach ( $attributes as $index => $attr ) {
             $options = $attr['options'] ?? [];
 
+            if ( ! is_array( $options ) ) {
+                $options = [ $options ];
+            }
+
             if ( isset( $attr['terms'] ) && is_array( $attr['terms'] ) ) {
                 $options = array_map(
                     static function ( $o ) use ( $attr ) {
