@@ -18,6 +18,10 @@ $changelog = [
                     'title'       => 'Ensure jQuery BlockUI and TipTip script handlers load correctly.',
                     'description' => '',
                 ],
+                [
+                    'title'       => 'Resolve store dropdown selection visibility issue in admin Advertisement modal.',
+                    'description' => '',
+                ],
             ],
         ],
     ],

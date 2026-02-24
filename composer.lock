@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "appsero/client",
-            "version": "v2.0.5",
+            "version": "v2.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Appsero/client.git",
-                "reference": "b7766ee150cc8e28125a818a11e770feb9899a71"
+                "reference": "2e553be6a47b387a7b05496f6a6e8d8595dd0d08"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Appsero/client/zipball/b7766ee150cc8e28125a818a11e770feb9899a71",
-                "reference": "b7766ee150cc8e28125a818a11e770feb9899a71",
+                "url": "https://api.github.com/repos/Appsero/client/zipball/2e553be6a47b387a7b05496f6a6e8d8595dd0d08",
+                "reference": "2e553be6a47b387a7b05496f6a6e8d8595dd0d08",
                 "shasum": ""
             },
             "require": {
@@ -56,9 +56,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Appsero/client/issues",
-                "source": "https://github.com/Appsero/client/tree/v2.0.5"
+                "source": "https://github.com/Appsero/client/tree/v2.0.6"
             },
-            "time": "2025-11-24T10:14:59+00:00"
+            "time": "2026-02-24T04:46:05+00:00"
         },
         {
             "name": "appsero/updater",
@@ -4005,12 +4005,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress-Coding-Standards.git",
-                "reference": "3c514da2e6b9fdf0745b704d4c75d3e5b669509e"
+                "reference": "9126fa10ae7b5365368276ef9361da31f87ae94c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/3c514da2e6b9fdf0745b704d4c75d3e5b669509e",
-                "reference": "3c514da2e6b9fdf0745b704d4c75d3e5b669509e",
+                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/9126fa10ae7b5365368276ef9361da31f87ae94c",
+                "reference": "9126fa10ae7b5365368276ef9361da31f87ae94c",
                 "shasum": ""
             },
             "require": {
@@ -4064,7 +4064,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2026-02-20T23:34:57+00:00"
+            "time": "2026-02-24T17:01:32+00:00"
         },
         {
             "name": "wp-phpunit/wp-phpunit",
