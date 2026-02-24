@@ -1,3 +1,5 @@
+import { applyFilters } from '@wordpress/hooks';
+import { FieldHandler, FormField, FieldConfig } from '../types';
 import AsyncSelectEdit from '../components/AsyncSelectEdit';
 import AttributeVariationEdit from '../components/AttributeVariationEdit';
 import DateTimePickerEdit from '../components/DateTimePickerEdit';
@@ -7,14 +9,13 @@ import GalleryImages from '../components/GalleryImages';
 import PriceEdit from '../components/PriceEdit';
 import RichTextEdit from '../components/RichTextEdit';
 import SelectEdit from '../components/SelectEdit';
-import { FieldConfig, FieldHandler } from '../types';
 
 /**
  * Handler for text fields using a Rich Text Editor.
  *
  * @return Configuration object with type 'text' and RichTextEdit component.
  */
-export const editorFieldHandler: FieldHandler = () => ( {
+const editorFieldHandler: FieldHandler = () => ( {
     type: 'text',
     Edit: RichTextEdit,
 } );
@@ -24,7 +25,7 @@ export const editorFieldHandler: FieldHandler = () => ( {
  *
  * @return Configuration object with type 'boolean' and 'checkbox' edit type.
  */
-export const checkboxHandler: FieldHandler = () => ( {
+const checkboxHandler: FieldHandler = () => ( {
     type: 'boolean',
     Edit: 'checkbox',
 } );
@@ -34,7 +35,7 @@ export const checkboxHandler: FieldHandler = () => ( {
  *
  * @return Configuration object with type 'text' and 'radio' edit type.
  */
-export const radioHandler: FieldHandler = () => ( {
+const radioHandler: FieldHandler = () => ( {
     type: 'text',
     Edit: 'radio',
 } );
@@ -44,7 +45,7 @@ export const radioHandler: FieldHandler = () => ( {
  *
  * @return Configuration object with type 'integer'.
  */
-export const numberHandler: FieldHandler = () => ( {
+const numberHandler: FieldHandler = () => ( {
     type: 'integer',
 } );
 
@@ -53,7 +54,7 @@ export const numberHandler: FieldHandler = () => ( {
  *
  * @return Configuration object with type 'datetime' and DateTimePickerEdit component.
  */
-export const dateHandler: FieldHandler = () => ( {
+const dateHandler: FieldHandler = () => ( {
     type: 'datetime',
     Edit: DateTimePickerEdit,
 } );
@@ -62,7 +63,7 @@ export const dateHandler: FieldHandler = () => ( {
  * Handler for select/dropdown fields.
  * Handles normal select options and special cases like product categories.
  */
-export const selectHandler: FieldHandler = ( field ) => {
+const selectHandler: FieldHandler = ( field ) => {
     const config = {
         type: 'number',
         Edit: SelectEdit,
@@ -76,7 +77,7 @@ export const selectHandler: FieldHandler = ( field ) => {
     return config;
 };
 
-export const asyncSelectHandler: FieldHandler = ( field ) => {
+const asyncSelectHandler: FieldHandler = ( field ) => {
     const config = {
         type: 'number',
         Edit: AsyncSelectEdit,
@@ -96,7 +97,7 @@ export const asyncSelectHandler: FieldHandler = ( field ) => {
  *
  * @return Configuration object including type and Edit component.
  */
-export const multiSelectHandler: FieldHandler = () => {
+const multiSelectHandler: FieldHandler = () => {
     const config: any = {
         type: 'array',
         Edit: SelectEdit,
@@ -110,7 +111,7 @@ export const multiSelectHandler: FieldHandler = () => {
  *
  * @return Configuration object with type 'integer' and ImageEdit component.
  */
-export const imageHandler: FieldHandler = () => ( {
+const imageHandler: FieldHandler = () => ( {
     type: 'integer',
     Edit: ImageEdit,
 } );
@@ -120,7 +121,7 @@ export const imageHandler: FieldHandler = () => ( {
  *
  * @return Configuration object with type 'integer' and FileUploadEdit component.
  */
-export const fileHandler: FieldHandler = () => ( {
+const fileHandler: FieldHandler = () => ( {
     type: 'integer',
     Edit: FileUploadEdit,
 } );
@@ -130,7 +131,7 @@ export const fileHandler: FieldHandler = () => ( {
  *
  * @return Configuration object with type 'array' and AttributeVariationEdit component.
  */
-export const attributeHandler: FieldHandler = () => ( {
+const attributeHandler: FieldHandler = () => ( {
     type: 'array',
     Edit: AttributeVariationEdit,
 } );
@@ -140,7 +141,7 @@ export const attributeHandler: FieldHandler = () => ( {
  *
  * @return Configuration object with type 'array' and GalleryImages component.
  */
-export const galleryHandler: FieldHandler = () => ( {
+const galleryHandler: FieldHandler = () => ( {
     type: 'array',
     Edit: GalleryImages,
 } );
@@ -152,7 +153,7 @@ export const galleryHandler: FieldHandler = () => ( {
  * @param {Object} [field] The field configuration.
  * @return Configuration object with type 'text' and optionally TextWithAddon component.
  */
-export const defaultHandler: FieldHandler = ( field ) => {
+const defaultHandler: FieldHandler = ( field ) => {
     const config: FieldConfig = {
         type: 'text',
     };
@@ -161,4 +162,31 @@ export const defaultHandler: FieldHandler = ( field ) => {
         config.type = 'number';
     }
     return config;
+};
+
+export const getFieldConfigFrom = ( field: FormField ) => {
+    let handlers: Record< string, FieldHandler > = {
+        textarea: editorFieldHandler,
+        editor: editorFieldHandler,
+        checkbox: checkboxHandler,
+        radio: radioHandler,
+        number: numberHandler,
+        datetime: dateHandler,
+        select: selectHandler,
+        async_select: asyncSelectHandler,
+        multiselect: multiSelectHandler,
+        image: imageHandler,
+        gallery_images: galleryHandler,
+        attribute: attributeHandler,
+        file: fileHandler,
+    };
+
+    handlers = applyFilters(
+        'dokan_product_form_variant',
+        handlers,
+        field
+    ) as Record< string, FieldHandler >;
+    const variant = field.variant ?? '';
+    const handler = handlers[ variant ] || defaultHandler;
+    return handler( field );
 };

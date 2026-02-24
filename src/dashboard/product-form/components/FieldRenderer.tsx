@@ -1,7 +1,7 @@
 import { DokanTooltip } from '@src/components';
 import { Info } from 'lucide-react';
 import { sanitizeHTML } from '../../../utilities';
-import { getFieldConfigFromFactory } from '../factories';
+import { getFieldConfigFrom } from '../field-config';
 import { FormField } from '../types';
 import { resolveDependency } from '../utils';
 
@@ -79,7 +79,7 @@ export const getFieldConfig = ( field: FormField ) => {
         },
     };
 
-    const specificConfig = getFieldConfigFromFactory( field );
+    const specificConfig = getFieldConfigFrom( field );
     Object.assign( mappedField, specificConfig );
 
     if ( field.description ) {
