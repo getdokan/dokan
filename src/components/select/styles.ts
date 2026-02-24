@@ -34,13 +34,13 @@ const styles = {
     } ),
     menuPortal: ( base: any ) => ( {
         ...base,
-        zIndex: 99999,
+        zIndex: 999999,
         wordBreak: 'break-all',
         minWidth: '18.75rem',
     } ),
     menu: ( base: any ) => ( {
         ...base,
-        zIndex: 9999,
+        zIndex: 999999,
         wordBreak: 'break-all',
     } ),
     menuList: ( base: any ) => ( {
