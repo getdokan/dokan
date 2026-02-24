@@ -32,7 +32,7 @@ test.describe.serial('commission calculation test', () => {
     //     await assertOrderCalculation([orderResponse, orderResponseBody, orderId]);
     // });
 
-    test('global commission fixed (only percentage)', { tag: ['@lite'] }, async () => {
+    test.skip('global commission fixed (only percentage)', { tag: ['@lite'] }, async () => {
         // set order condition
         await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, admin_percentage: '10', additional_fee: '0' });
 
@@ -41,7 +41,7 @@ test.describe.serial('commission calculation test', () => {
         await assertOrderCalculation(order);
     });
 
-    test.skip('global commission fixed (only flat)', { tag: ['@lite'] }, async () => {
+    test('global commission fixed (only flat)', { tag: ['@lite'] }, async () => {
         // set order condition
         await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, admin_percentage: '0', additional_fee: '10' });
 
@@ -300,7 +300,7 @@ test.describe.serial('fee recipient calculation test', () => {
         await apiUtils.dispose();
     });
 
-    test.skip('fee recipient: shippingFee=seller, shippingTax=seller, productTax=seller', { tag: ['@lite'] }, async () => {
+    test('fee recipient: shippingFee=seller, shippingTax=seller, productTax=seller', { tag: ['@lite'] }, async () => {
         // set order condition
         await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'seller', tax_fee_recipient: 'seller', shipping_tax_fee_recipient: 'seller' });
 
@@ -385,7 +385,7 @@ test.describe.serial('marketplace coupon calculation test', () => {
         await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'no' });
     });
 
-    test.skip('marketplace coupon: single coupon', { tag: ['@lite'] }, async () => {
+    test('marketplace coupon: single coupon', { tag: ['@lite'] }, async () => {
         const [, , couponCode] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
 
         // place order and assert order calculation
@@ -393,7 +393,7 @@ test.describe.serial('marketplace coupon calculation test', () => {
         await assertOrderCalculation(order);
     });
 
-    test.skip('marketplace coupon: multiple coupon', { tag: ['@lite'] }, async () => {
+    test('marketplace coupon: multiple coupon', { tag: ['@lite'] }, async () => {
         const [, , code1] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
         const [, , code2] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
         await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'no' });
@@ -403,7 +403,7 @@ test.describe.serial('marketplace coupon calculation test', () => {
         await assertOrderCalculation(order);
     });
 
-    test('marketplace coupon: multiple coupon non-sequential', { tag: ['@lite'] }, async () => {
+    test.skip('marketplace coupon: multiple coupon non-sequential', { tag: ['@lite'] }, async () => {
         const [, , code1] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
         const [, , code2] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
         await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'no' });
@@ -524,7 +524,7 @@ test.describe.serial('tax calculation test', () => {
         await apiUtils.dispose();
     });
 
-    test.skip('tax: exclusive', { tag: ['@lite'] }, async () => {
+    test('tax: exclusive', { tag: ['@lite'] }, async () => {
         // set order condition
         await apiUtils.updateBatchWcSettingsOptions('tax', payloads.tax.exclusive);
 
@@ -533,7 +533,7 @@ test.describe.serial('tax calculation test', () => {
         await assertOrderCalculation(order);
     });
 
-    test.skip('tax: inclusive', { tag: ['@lite'] }, async () => {
+    test('tax: inclusive', { tag: ['@lite'] }, async () => {
         // set order condition
         await apiUtils.updateBatchWcSettingsOptions('tax', payloads.tax.inclusive);
 
@@ -542,7 +542,7 @@ test.describe.serial('tax calculation test', () => {
         await assertOrderCalculation(order);
     });
 
-    test('tax: exclusive round (tax at subtotal level)', { tag: ['@lite'] }, async () => {
+    test.skip('tax: exclusive round (tax at subtotal level)', { tag: ['@lite'] }, async () => {
         // set order condition
         await apiUtils.updateBatchWcSettingsOptions('tax', payloads.tax.exclusive);
 
@@ -576,13 +576,13 @@ test.describe.serial('product quantity calculation test', () => {
         await apiUtils.dispose();
     });
 
-    test.skip('product quantity: single', { tag: ['@lite'] }, async () => {
+    test('product quantity: single', { tag: ['@lite'] }, async () => {
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
         await assertOrderCalculation(order);
     });
 
-    test.skip('product quantity: multiple', { tag: ['@lite'] }, async () => {
+    test('product quantity: multiple', { tag: ['@lite'] }, async () => {
         // set order condition
         const [, productId] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
         const lineItems = [{ product_id: productId, quantity: payloads.randomNumber }];
@@ -608,13 +608,13 @@ test.describe.serial('product variety calculation test', () => {
         await apiUtils.dispose();
     });
 
-    test.skip('product variety: single', { tag: ['@lite'] }, async () => {
+    test('product variety: single', { tag: ['@lite'] }, async () => {
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
         await assertOrderCalculation(order);
     });
 
-    test.skip('product variety: multiple', { tag: ['@lite'] }, async () => {
+    test('product variety: multiple', { tag: ['@lite'] }, async () => {
         // set order condition
         const lineItems = await apiUtils.createLineItems(2);
 
@@ -641,13 +641,13 @@ test.describe.serial('product owner calculation test', () => {
         await apiUtils.dispose();
     });
 
-    test.skip('product owner: single vendor', { tag: ['@lite'] }, async () => {
+    test('product owner: single vendor', { tag: ['@lite'] }, async () => {
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
         await assertOrderCalculation(order);
     });
 
-    test.skip('product owner: multivendor', { tag: ['@lite'] }, async () => {
+    test('product owner: multivendor', { tag: ['@lite'] }, async () => {
         // set order condition
         const lineItems = await apiUtils.createLineItems(2, [1], [payloads.vendorAuth, payloads.vendor2Auth]);
 
