@@ -184,7 +184,7 @@ class Dashboard implements Hookable {
                     [
                         'id'       => 'get-support',
                         'title'    => esc_html__( 'Get Support', 'dokan-lite' ),
-                        'url'      => 'https://wedevs.com/account/tickets/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
+                        'url'      => 'https://dokan.co/contact/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
                         'icon'     => 'support',
                         'external' => true,
                     ],
