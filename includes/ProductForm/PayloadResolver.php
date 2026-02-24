@@ -24,7 +24,6 @@ class PayloadResolver {
      */
     public static function schema_to_wc_api( array $data ): array {
         $out = self::strip_empty_values( $data );
-        $out = self::resolve_meta_booleans( $out );
         $out = self::resolve_integer_fields( $out );
         $out = self::resolve_taxonomies( $out );
         $out = self::resolve_images( $out );
@@ -48,33 +47,6 @@ class PayloadResolver {
                 return $v !== null && $v !== '';
             }
         );
-    }
-
-    /**
-     * Convert boolean meta flags to yes/no strings expected by WooCommerce.
-     *
-     * @since DOKAN_SINCE
-     */
-    public static function resolve_meta_booleans( array $data ): array {
-        $meta_map = [
-            // Form: true = requires shipping → Meta: 'no' = not disabled.
-            Elements::DISABLE_SHIPPING_META   => [
-				true => 'no',
-				false => 'yes',
-			],
-            Elements::OVERWRITE_SHIPPING_META => [
-				true => 'yes',
-				false => 'no',
-			],
-        ];
-
-        foreach ( $meta_map as $key => $mapping ) {
-            if ( array_key_exists( $key, $data ) && is_bool( $data[ $key ] ) ) {
-                $data[ $key ] = $mapping[ $data[ $key ] ];
-            }
-        }
-
-        return $data;
     }
 
     /**

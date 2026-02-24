@@ -644,7 +644,7 @@ class FormSchema {
     /**
      * Format a resolved field value to the shape expected by the frontend based on variant.
      *
-     * resolve_field_value() returns raw values (int, array of ints, etc.).
+     * Resolve_field_value() returns raw values (int, array of ints, etc.).
      * This method transforms them to the structured shape the React frontend expects.
      *
      * @since DOKAN_SINCE
@@ -688,7 +688,7 @@ class FormSchema {
                             return [
                                 'id'   => $attachment_id,
                                 'file' => $url,
-                                'name' => basename( get_attached_file( $attachment_id ) ?: '' ),
+                                'name' => basename( get_attached_file( $attachment_id ) ?? '' ),
                             ];
                         },
                         $value
@@ -783,7 +783,7 @@ class FormSchema {
                 $field_name = sanitize_key( $key );
 
                 $value = apply_filters( 'dokan_product_form_schema_value', '', $field_name, $product );
-                if ( ! empty( $value ) ) {
+                if ( '' !== $value ) {
                     return $value;
                 }
 
