@@ -65,7 +65,7 @@ const SelectEdit = ( { data, field, onChange, validity }: any ) => {
     );
 
     // Prepare Options
-    const options = isTreeMode ? flattenOptions( rawOptions ) : rawOptions;
+    const options = flattenOptions( rawOptions );
 
     // Configuration
     const isMulti = field.multiple ?? ( isTreeMode ? true : false );
