@@ -110,7 +110,7 @@ test.describe('Setup guide functionality test', () => {
             },
             {
                 name: 'Get Support',
-                url: 'https://wedevs.com/account/tickets/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
+                url: 'https://dokan.co/contact/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
             },
             {
                 name: 'Community',
