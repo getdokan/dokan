@@ -248,39 +248,4 @@ class OrderType {
             self::DOKAN_SUBSCRIPTION_REFUND_ORDER,
         ];
     }
-
-    /**
-     * Gets the list of order types relevant to admin earnings.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return array
-     */
-    public function get_admin_earning_order_types(): array {
-        return apply_filters(
-            'dokan_admin_earning_order_types',
-            [
-                self::DOKAN_ADVERTISEMENT_PRODUCT_ORDER,
-                self::DOKAN_ADVERTISEMENT_REFUND_ORDER,
-                self::DOKAN_SUBSCRIPTION_ORDER,
-                self::DOKAN_SUBSCRIPTION_REFUND_ORDER,
-            ]
-        );
-    }
-
-    /**
-     * Determines if the given order is of a type relevant to admin users.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param \WC_Order $order The order object to check.
-     *
-     * @return bool True if the order type is relevant to admin users, false otherwise.
-     */
-    public function is_admin_order_type( $order ): bool {
-        $admin_earning_order_types = $this->get_admin_earning_order_types();
-        $order_type                = $this->get_type( $order );
-
-        return in_array( $order_type, $admin_earning_order_types, true );
-    }
 }
