@@ -59,6 +59,7 @@ export const FormProvider = ( {
         ...defaultData,
         id: productId,
         vendor_earning: vendorEarning,
+        form_manager: true,
     } );
 
     const { type: currentProductType } = product;

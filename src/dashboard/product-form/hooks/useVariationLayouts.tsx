@@ -1,19 +1,34 @@
 import { useMemo } from '@wordpress/element';
 import { FlatFormItem } from '../types';
-import { getFieldHeading, layoutBuilder } from '../utils';
+import {
+    collectUsedFields,
+    getFieldHeading,
+    getRemainingFields,
+    layoutBuilder,
+} from '../utils';
+import { useWindowDimensions } from '@dokan/hooks';
 
 const useVariationLayouts = (
     formItems: FlatFormItem[],
     product: Record< string, any >
 ) => {
+    const { width } = useWindowDimensions();
+    const rootLayout = useMemo( () => {
+        if ( width && width > 768 ) {
+            return {
+                type: 'row',
+                alignment: 'start',
+            };
+        }
+        return {
+            type: 'regular',
+        };
+    }, [ width ] );
     const formLayouts = useMemo( () => {
         const layouts = [
             {
                 id: 'variation-image-sku',
-                layout: {
-                    type: 'row',
-                    alignment: 'start',
-                },
+                layout: rootLayout,
                 children: [
                     {
                         id: 'image-and-digital-options',
@@ -118,8 +133,22 @@ const useVariationLayouts = (
             },
         ];
 
+        const usedFields = collectUsedFields( layouts );
+        // Only show custom fields in variation layouts, not module-registered fields.
+        const customFormItems = formItems.filter( ( item ) => item.is_custom );
+        const remainingFieldsBySection = getRemainingFields(
+            customFormItems,
+            usedFields
+        );
+
+        // Flatten remaining custom fields directly into the layout (no card/header wrapping).
+        const remainingFields = Object.values( remainingFieldsBySection ).flat();
+        const updatedLayouts = remainingFields.length > 0
+            ? [ ...layouts, ...remainingFields ]
+            : layouts;
+
         return {
-            fields: layoutBuilder( layouts, formItems, product ),
+            fields: layoutBuilder( updatedLayouts, formItems, product ),
         };
     }, [ formItems, product ] );
 

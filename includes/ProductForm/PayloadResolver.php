@@ -187,6 +187,7 @@ class PayloadResolver {
                 $data[ $key ] = array_map( 'absint', array_filter( array_map( [ __CLASS__, 'extract_product_id' ], $data[ $key ] ) ) );
             }
         }
+        $data['crosssell_ids'] = $data[ Elements::CROSS_SELL_IDS ] ?? [];
 
         return $data;
     }
