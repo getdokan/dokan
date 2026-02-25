@@ -390,7 +390,8 @@ class Assets {
      */
     public function get_scripts() {
         global $wp_version;
-        $jquery_tiptip = self::get_wc_handler( 'jquery-tiptip' );
+        $jquery_tiptip  = self::get_wc_handler( 'jquery-tiptip' );
+        $jquery_blockui = self::get_wc_handler( 'jquery-blockui' );
 
         $frontend_shipping_asset = require DOKAN_DIR . '/assets/js/frontend.asset.php';
 
@@ -455,12 +456,6 @@ class Assets {
                 'src'  => $asset_url . '/vendors/date-range-picker/daterangepicker.min.js',
                 'deps' => [ 'jquery', 'moment', 'dokan-util-helper' ],
             ],
-            'dokan-google-recaptcha'    => [
-                'src'       => 'https://www.google.com/recaptcha/api.js?render=' . dokan_get_option( 'recaptcha_site_key', 'dokan_appearance' ),
-                'deps'      => [ 'dokan-util-helper' ],
-                'in_footer' => false,
-            ],
-
             // customize scripts
             'customize-base'            => [
                 'src'  => site_url( 'wp-includes/js/customize-base.js' ),
@@ -587,6 +582,16 @@ class Assets {
                 'src'     => $asset_url . '/js/frontend.js',
                 'deps'    => array_merge( $frontend_shipping_asset['dependencies'], [ 'wp-core-data', 'dokan-react-components' ] ),
                 'version' => $frontend_shipping_asset['version'],
+            ],
+            'dokan-jquery-tiptip'       => [
+                'src'     => false,
+                'deps'    => [ $jquery_tiptip ],
+                'version' => DOKAN_PLUGIN_VERSION,
+            ],
+            'dokan-jquery-blockui'      => [
+                'src'     => false,
+                'deps'    => [ $jquery_blockui ],
+                'version' => DOKAN_PLUGIN_VERSION,
             ],
         ];
 
@@ -871,17 +876,9 @@ class Assets {
             wp_enqueue_script( 'dokan-vendor-address' );
         }
 
-        // Scripts for contact form widget google recaptcha
+        // Scripts for contact form captcha (provider managed)
         if ( dokan_is_store_page() || is_product() ) {
-            // Checks if recaptcha site key and secret key exist
-            if ( dokan_get_recaptcha_site_and_secret_keys( true ) ) {
-                $recaptcha_keys = dokan_get_recaptcha_site_and_secret_keys();
-
-                wp_enqueue_script( 'dokan-google-recaptcha' );
-
-                // Localized script for recaptcha
-                wp_localize_script( 'dokan-google-recaptcha', 'dokan_google_recaptcha', [ 'recaptcha_sitekey' => $recaptcha_keys['site_key'] ] );
-            }
+            dokan_get_container()->get( \WeDevs\Dokan\Captcha\Manager::class )->register_assets();
         }
 
         // localized form validate script
@@ -1275,7 +1272,11 @@ class Assets {
             $version   = isset( $script['version'] ) ? $script['version'] : DOKAN_PLUGIN_VERSION;
 
             wp_register_script( $handle, $script['src'], $deps, $version, $in_footer );
-            wp_set_script_translations( $handle, 'dokan-lite', plugin_dir_path( DOKAN_FILE ) . 'languages' );
+
+            // Add this check to avoid translation issues for scripts without a source file.
+            if ( ! empty( $script['src'] ) ) {
+                wp_set_script_translations( $handle, 'dokan-lite', plugin_dir_path( DOKAN_FILE ) . 'languages' );
+            }
         }
     }
 
