@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\Commission;
 
 use WC_Order;
 use WC_Order_Refund;
+use WeDevs\Dokan\Analytics\Reports\OrderType;
 use WeDevs\Dokan\Commission\Contracts\OrderCommissionInterface;
 use WeDevs\Dokan\Commission\Model\Commission;
 
