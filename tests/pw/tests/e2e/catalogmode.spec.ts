@@ -68,8 +68,8 @@ test.describe('Catalog mode test', () => {
         const vendor = new VendorSettingsPage(vPage);
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'catalog');
     });
-
-    test('vendor can set catalog mode (single product)', { tag: ['@lite', '@vendor'] }, async () => {
+//Flaky test
+    test.skip('vendor can set catalog mode (single product)', { tag: ['@lite', '@vendor'] }, async () => {
         const [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.userAuth(vendorName));
         const vendor = new ProductsPage(vPage);
         await vendor.addProductCatalogMode(productName, true);

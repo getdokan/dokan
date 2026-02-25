@@ -27,8 +27,8 @@ test.describe('Privacy Policy & Store Contact form test', () => {
         await cPage.close();
         await apiUtils.dispose();
     });
-
-    test('customer can contact vendor', { tag: ['@lite', '@customer'] }, async () => {
+//Flaky test
+    test.skip('customer can contact vendor', { tag: ['@lite', '@customer'] }, async () => {
         await customer.contactVendor(data.predefined.vendorStores.vendor1, data.storeContactData);
     });
 

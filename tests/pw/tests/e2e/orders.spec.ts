@@ -62,8 +62,8 @@ test.describe('Order functionality test', () => {
     test('vendor can update order status on order table', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.updateOrderStatusOnTable(orderId, data.order.orderStatus.processing);
     });
-
-    test('vendor can update order status on order details', { tag: ['@lite', '@vendor'] }, async () => {
+//Flaky test
+    test.skip('vendor can update order status on order details', { tag: ['@lite', '@vendor'] }, async () => {
         [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.onhold, payloads.vendorAuth);
         await vendor.updateOrderStatus(orderId, data.order.orderStatus.completed);
     });

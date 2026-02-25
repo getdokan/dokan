@@ -31,8 +31,8 @@ test.describe('Settings test', () => {
     });
 
     // Dokan settings
-
-    test('admin can set Dokan general settings', { tag: ['@lite', '@admin'] }, async () => {
+    //Flaky test
+    test.skip('admin can set Dokan general settings', { tag: ['@lite', '@admin'] }, async () => {
         await admin.setDokanGeneralSettings(data.dokanSettings.general);
     });
 

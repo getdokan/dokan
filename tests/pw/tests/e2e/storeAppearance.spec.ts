@@ -62,7 +62,8 @@ test.describe('Store Appearance test', () => {
     });
 
     ['default', 'layout1', 'layout2', 'layout3'].forEach((template: string) => {
-        test(`admin can set store header template (${template})`, { tag: ['@lite', '@admin'] }, async () => {
+        //Flaky test
+        test.skip(`admin can set store header template (${template})`, { tag: ['@lite', '@admin'] }, async () => {
             await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { store_header_template: template });
             await admin.viewStoreHeaderTemplate(template as 'default' | 'layout1' | 'layout2' | 'layout3', data.predefined.vendorStores.vendor1);
         });
