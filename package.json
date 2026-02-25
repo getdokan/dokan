@@ -1,6 +1,6 @@
 {
   "name": "dokan",
-  "version": "4.2.10",
+  "version": "4.3.0",
   "description": "A WordPress marketplace plugin",
   "author": "Dokan Inc.",
   "license": "GPL",
@@ -17,7 +17,7 @@
     "format": "wp-scripts format",
     "lint:css": "wp-scripts lint-style",
     "lint:js": "wp-scripts lint-js",
-    "release": "npm install && npm run readme && npm run build && npm run clean-files && npm run makepot && npm run version && npm run zip",
+    "release": "npm install && npm run build && npm run clean-files && npm run makepot && npm run version && npm run zip",
     "release:dev": "npm install && npm run build && npm run clean-files && npm run makepot && npm run zip",
     "wp-env": "wp-env",
     "env:start": "wp-env start",

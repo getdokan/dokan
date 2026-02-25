@@ -1,3 +1,8 @@
+### v4.3.0 ( Feb 19, 2026 ) ###
+- **update:** Add Cloudflare Turnstile support to the Dokan Captcha system.
+- **fix:** Ensure jQuery BlockUI and TipTip script handlers load correctly.
+- **fix:** Resolve store dropdown selection visibility issue in admin Advertisement modal.
+
 ### v4.2.10 ( Feb 10, 2026 ) ###
 - **update:** Refactor download permission handling to use Dokan’s standard template loader.
 - **fix:** Prevent misleading payment status messages in Admin Vendor Withdraw.

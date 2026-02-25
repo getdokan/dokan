@@ -493,7 +493,7 @@ class Assets {
             ],
             'dokan-admin'               => [
                 'src'     => $asset_url . '/js/dokan-admin.js',
-                'deps'    => [ 'jquery', 'wp-i18n', $jquery_blockui ],
+                'deps'    => [ 'jquery', 'wp-i18n' ],
                 'version' => filemtime( $asset_path . 'js/dokan-admin.js' ),
             ],
             'dokan-vendor-registration' => [
@@ -584,12 +584,12 @@ class Assets {
                 'version' => $frontend_shipping_asset['version'],
             ],
             'dokan-jquery-tiptip'       => [
-                'src'     => '',
+                'src'     => false,
                 'deps'    => [ $jquery_tiptip ],
                 'version' => DOKAN_PLUGIN_VERSION,
             ],
             'dokan-jquery-blockui'      => [
-                'src'     => '',
+                'src'     => false,
                 'deps'    => [ $jquery_blockui ],
                 'version' => DOKAN_PLUGIN_VERSION,
             ],
@@ -1272,7 +1272,11 @@ class Assets {
             $version   = isset( $script['version'] ) ? $script['version'] : DOKAN_PLUGIN_VERSION;
 
             wp_register_script( $handle, $script['src'], $deps, $version, $in_footer );
-            wp_set_script_translations( $handle, 'dokan-lite', plugin_dir_path( DOKAN_FILE ) . 'languages' );
+
+            // Add this check to avoid translation issues for scripts without a source file.
+            if ( ! empty( $script['src'] ) ) {
+                wp_set_script_translations( $handle, 'dokan-lite', plugin_dir_path( DOKAN_FILE ) . 'languages' );
+            }
         }
     }
 
