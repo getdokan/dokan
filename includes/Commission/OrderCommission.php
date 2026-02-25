@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\Commission;
 
 use WC_Order;
 use WC_Order_Refund;
+use WeDevs\Dokan\Analytics\Reports\OrderType;
 use WeDevs\Dokan\Commission\Contracts\OrderCommissionInterface;
 use WeDevs\Dokan\Commission\Model\Commission;
 
@@ -69,10 +70,12 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
         $this->reset_order_commission_data();
 
         $admin_net_commission = 0;
+        $admin_net_earning    = 0;
         $admin_discount       = 0;
         $vendor_net_earning   = 0;
         $vendor_discount      = 0;
 
+        $is_admin_earning_order_type = ( new OrderType() )->is_admin_order_type( $this->order );
         foreach ( $this->order->get_items() as $item_id => $item ) {
             try {
                 $line_item_commission = dokan_get_container()->get( OrderLineItemCommission::class );
@@ -81,12 +84,15 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
                 $line_item_commission->set_item( $item );
 
                 $commission = $line_item_commission->calculate();
-
-                $admin_net_commission += $commission->get_admin_net_commission();
-                $admin_discount       += $commission->get_admin_discount();
-
-                $vendor_net_earning += $commission->get_vendor_net_earning();
-                $vendor_discount    += $commission->get_vendor_discount();
+                if ( $is_admin_earning_order_type ) {
+                    $admin_net_earning += $commission->get_admin_net_commission() + $commission->get_vendor_net_earning();
+                    $admin_discount    += $commission->get_admin_discount() + $commission->get_vendor_discount();
+                } else {
+                    $admin_net_commission += $commission->get_admin_net_commission();
+                    $admin_discount       += $commission->get_admin_discount();
+                    $vendor_net_earning   += $commission->get_vendor_net_earning();
+                    $vendor_discount      += $commission->get_vendor_discount();
+                }
 
                 $this->commission_by_line_item[ $item_id ] = $commission;
             } catch ( \Exception $exception ) {
@@ -102,6 +108,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
             }
         }
         $this->set_admin_net_commission( $admin_net_commission )
+            ->set_admin_net_earning( $admin_net_earning )
             ->set_admin_discount( $admin_discount )
             ->set_vendor_net_earning( $vendor_net_earning )
             ->set_vendor_discount( $vendor_discount );
@@ -486,7 +493,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      * @return float
      */
     public function get_admin_total_earning(): float {
-        return $this->get_admin_commission() + $this->get_total_admin_fees();
+        return $this->get_admin_net_earning() + $this->get_admin_commission() + $this->get_total_admin_fees();
     }
 
     /**
