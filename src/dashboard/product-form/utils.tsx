@@ -186,13 +186,6 @@ export const resolveDependency = (
     field: FlatFormItem,
     data: Record< string, any >
 ): boolean => {
-    if ( field.product_types?.includes( 'variable' ) ) {
-        field.product_types.push( 'variation' );
-    }
-    if ( field.product_types && ! field.product_types.includes( data.type ) ) {
-        return false;
-    }
-
     if ( ! field.dependencies?.length ) {
         return true;
     }

@@ -271,7 +271,7 @@ class FormSchema {
                 'placeholder'      => __( 'Select product categories', 'dokan-lite' ),
                 'value'            => [],
                 'default'          => [],
-                'options'          => ProductCategoryHelper::get_product_categories_tree(),
+                'options'          => ProductCategoryHelper::get_product_categories_tree( true ),
                 'required'         => true,
                 'priority'         => 30,
                 'visibility'       => true,

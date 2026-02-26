@@ -37,11 +37,8 @@ const OptionComponent = ( { children, ...props }: any ) => {
 // Helper to flatten nested options
 const flattenOptions = ( options: Option[], level = 0 ): Option[] => {
     return options.reduce( ( acc: any[], option ) => {
-        // Map term_id to value if strictly needed, or ensure value exists
-        const value = option.term_id || option.value;
         const flatOption = {
             ...option,
-            value,
             level,
         };
 
@@ -56,19 +53,16 @@ const flattenOptions = ( options: Option[], level = 0 ): Option[] => {
 };
 
 const SelectEdit = ( { data, field, onChange, validity }: any ) => {
-    // Determine Data Source: 'options' (Tree) vs 'elements' (Simple)
-    const rawOptions = ( field.elements || [] ) as Option[];
+    // Prepare Options
+    const options = flattenOptions( field.elements || [] );
 
     // Detect if it's a tree structure (has children) or explicitly using 'options' key
-    const isTreeMode = rawOptions.some(
+    const isTreeMode = options.some(
         ( opt: Option ) => opt.children && opt.children.length > 0
     );
 
-    // Prepare Options
-    const options = flattenOptions( rawOptions );
-
     // Configuration
-    const isMulti = field.multiple ?? ( isTreeMode ? true : false );
+    const isMulti = field.multiple;
     const placeholder = field.placeholder;
 
     // Value Resolution
@@ -112,8 +106,6 @@ const SelectEdit = ( { data, field, onChange, validity }: any ) => {
                 value={ getSelectedValue() }
                 // Specific Tree Props
                 components={ treeComponents }
-                closeMenuOnSelect={ ! isTreeMode }
-                hideSelectedOptions={ ! isTreeMode }
                 onChange={ ( input: any ) => {
                     if ( isMulti ) {
                         // Handle multi-select always as array of values

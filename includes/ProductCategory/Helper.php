@@ -348,7 +348,7 @@ class Helper {
      *
      * @return array
      */
-    public static function get_product_categories_tree(): array {
+    public static function get_product_categories_tree( $with_term = false ): array {
         $categories = get_terms(
             [
                 'taxonomy'   => 'product_cat',
@@ -369,7 +369,7 @@ class Helper {
         /**
          * Recursive function to build category tree
          */
-        $build_tree = function ( $parent_id ) use ( &$build_tree, &$by_parent ) {
+        $build_tree = function ( $parent_id ) use ( &$build_tree, &$by_parent, $with_term ) {
             $tree = [];
 
             if ( ! isset( $by_parent[ $parent_id ] ) ) {
@@ -378,7 +378,7 @@ class Helper {
 
             foreach ( $by_parent[ $parent_id ] as $cat ) {
                 $tree[] = [
-                    'value'    => $cat->slug,
+                    'value'    => $with_term ? $cat->term_id : $cat->slug,
                     'label'    => $cat->name,
                     'parent'   => $cat->parent,
                     'count'    => $cat->count,
