@@ -93,13 +93,6 @@ const entryPoints = {
             type: 'window',
         },
     },
-    'product-variations-store': {
-        import: '/src/stores/productVariations/store.ts',
-        library: {
-            name: [ 'dokan', 'productVariationsStore' ],
-            type: 'window',
-        },
-    },
     'product-editor': './src/dashboard/product-editor/index.tsx',
 };
 

@@ -712,25 +712,13 @@ class Assets {
                 'deps'    => $stores_asset['dependencies'],
             ];
         }
-        $product_variations_asset_file = DOKAN_DIR . '/assets/js/product-variations-store.asset.php';
-        if ( file_exists( $product_variations_asset_file ) ) {
-            $stores_asset = require $product_variations_asset_file;
-
-            // Register Product stores.
-            $scripts['dokan-stores-product-variations'] = [
-                'version' => $stores_asset['version'],
-                'src'     => $asset_url . '/js/product-variations-store.js',
-                'deps'    => $stores_asset['dependencies'],
-            ];
-        }
-
         $product_editor_manager = DOKAN_DIR . '/assets/js/product-editor.asset.php';
         if ( file_exists( $product_editor_manager ) ) {
             $editor_asset = require $product_editor_manager;
             $scripts['dokan-product-editor'] = [
                 'version' => $editor_asset['version'],
                 'src'     => $asset_url . '/js/product-editor.js',
-                'deps'    => array_merge( $editor_asset['dependencies'], [ 'dokan-react-components', 'dokan-stores-product-editor', 'dokan-stores-product-variations' ] ),
+                'deps'    => array_merge( $editor_asset['dependencies'], [ 'dokan-react-components', 'dokan-stores-product-editor' ] ),
             ];
         }
 

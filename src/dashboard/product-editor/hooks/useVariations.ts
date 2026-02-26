@@ -3,7 +3,7 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import { useCallback } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 // @ts-ignore
-import productVariationsStore from '@dokan/stores/product-variations';
+import productEditorStore from '@dokan/stores/product-editor';
 import { VariationType } from '../types';
 
 /**
@@ -15,16 +15,16 @@ export function useVariations( productId: number ) {
 
     const { variations, isLoading } = useSelect(
         ( select ) => ( {
-            variations: select( productVariationsStore ).getVariations(
+            variations: select( productEditorStore ).getVariations(
                 productId
             ),
             isLoading:
-                select( productVariationsStore ).isLoading( productId ),
+                select( productEditorStore ).isVariationsLoading( productId ),
         } ),
         [ productId ]
     );
 
-    const dispatch = useDispatch( productVariationsStore );
+    const dispatch = useDispatch( productEditorStore );
 
     const saveVariation = useCallback(
         async ( variation: VariationType, data: Record< string, any > ) => {

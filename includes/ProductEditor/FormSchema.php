@@ -742,16 +742,10 @@ class FormSchema {
             case Elements::DATE_ON_SALE_TO:
                 $to = $product->get_date_on_sale_to( 'edit' );
                 return $to ? $to->date( 'Y-m-d' ) : '';
-            case Elements::CATEGORIES:
-                return $product->get_category_ids();
             case Elements::TAGS:
                 return $product->get_tag_ids();
             case Elements::BRANDS:
                 return $product->get_brand_ids();
-            case Elements::FEATURED_IMAGE_ID:
-                return $product->get_image_id();
-            case Elements::GALLERY_IMAGE_IDS:
-                return $product->get_gallery_image_ids();
             case Elements::DOWNLOADABLE:
                 return $product->is_downloadable();
             case Elements::VIRTUAL:
@@ -785,11 +779,6 @@ class FormSchema {
                 $value = apply_filters( 'dokan_product_editor_schema_value', '', $field_name, $product );
                 if ( '' !== $value ) {
                     return $value;
-                }
-
-                // If the field name starts with an underscore, it is a meta field.
-                if ( 0 === strpos( $field_name, '_' ) ) {
-                    return $product->get_meta( $field_name );
                 }
 
                 // If the field name does not start with an underscore, it is a prop field.

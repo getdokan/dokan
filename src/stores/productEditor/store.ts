@@ -1,6 +1,7 @@
 import { createReduxStore, register } from '@wordpress/data';
 import { reducer } from './reducer';
 import { selectors } from './selectors';
+import { resolvers } from './resolvers';
 import { actions } from './actions';
 import { ProductEditorState } from './types';
 
@@ -14,6 +15,7 @@ const store = createReduxStore<
     reducer,
     actions,
     selectors,
+    resolvers,
 } );
 
 register( store );

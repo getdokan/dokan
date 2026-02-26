@@ -1,6 +1,6 @@
 import { sanitizeHTML } from '@src/utilities';
 import { __ } from '@wordpress/i18n';
-import { DependencyCondition, FlatFormItem } from './types';
+import type { DependencyCondition, FlatFormItem } from './types';
 
 /**
  * Helper to find a field or section by ID in the flat form items array.
@@ -226,10 +226,15 @@ export const layoutBuilder = (
         return getOrder( a ) - getOrder( b );
     } );
 
+    const productType = product?.type || 'simple';
+
     const mappedLayouts = sortedLayouts.map( ( field ) => {
         if ( typeof field === 'string' ) {
             const flatField = getFlatField( field );
             if ( ! flatField ) {
+                return null;
+            }
+            if ( ! resolveVisibility( flatField, productType ) ) {
                 return null;
             }
             if ( ! resolveDependency( flatField, product ) ) {

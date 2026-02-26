@@ -7,6 +7,9 @@ import {
     SET_SUBMITTING,
     SET_ERROR,
     REMOVE_FORM,
+    SET_VARIATIONS,
+    SET_VARIATION,
+    SET_VARIATIONS_LOADING,
 } from './actions';
 
 export const reducer = (
@@ -72,6 +75,47 @@ export const reducer = (
                 submitting: remainingSubmitting,
             };
         }
+
+        case SET_VARIATIONS:
+            return {
+                ...state,
+                variations: {
+                    ...state.variations,
+                    [ action.productId ]: action.variations,
+                },
+                error: null,
+            };
+
+        case SET_VARIATION: {
+            const existing = state.variations[ action.productId ];
+            if ( ! existing ) {
+                return state;
+            }
+            const index = existing.findIndex(
+                ( v ) => v.id === action.variation.id
+            );
+            if ( index === -1 ) {
+                return state;
+            }
+            const updated = [ ...existing ];
+            updated[ index ] = action.variation;
+            return {
+                ...state,
+                variations: {
+                    ...state.variations,
+                    [ action.productId ]: updated,
+                },
+            };
+        }
+
+        case SET_VARIATIONS_LOADING:
+            return {
+                ...state,
+                variationsLoading: {
+                    ...state.variationsLoading,
+                    [ action.productId ]: action.isLoading,
+                },
+            };
 
         default:
             return state;

@@ -1,4 +1,7 @@
-import { FlatFormItem } from '../../dashboard/product-editor/types';
+import {
+    FlatFormItem,
+    VariationType,
+} from '../../dashboard/product-editor/types';
 import { ProductEditorState } from './types';
 
 export const selectors = {
@@ -12,15 +15,22 @@ export const selectors = {
         productId: number
     ): FlatFormItem[] | undefined => state.forms[ productId ]?.formItems,
 
-    isSubmitting: (
+    isSubmitting: ( state: ProductEditorState, productId: number ): boolean =>
+        !! state.submitting[ productId ],
+
+    hasForm: ( state: ProductEditorState, productId: number ): boolean =>
+        !! state.forms[ productId ],
+
+    // Variations selectors.
+    getVariations: (
         state: ProductEditorState,
         productId: number
-    ): boolean => !! state.submitting[ productId ],
+    ): VariationType[] | undefined => state.variations[ productId ],
+
+    isVariationsLoading: (
+        state: ProductEditorState,
+        productId: number
+    ): boolean => !! state.variationsLoading[ productId ],
 
     getError: ( state: ProductEditorState ): Error | null => state.error,
-
-    hasForm: (
-        state: ProductEditorState,
-        productId: number
-    ): boolean => !! state.forms[ productId ],
 };
