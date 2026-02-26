@@ -42,6 +42,7 @@ test.describe('Abuse Reports Tests @lite', () => {
         const isEnabled = await abuseReportsPage.isReportAbuseModuleEnabled();
         expect(isEnabled, 'Report Abuse module should be enabled').toBe(true);
 
+        await abuseReportsPage.waitForPageReady();
         await adminPage.close();
         await context.close();
     });
@@ -70,6 +71,7 @@ test.describe('Abuse Reports Tests @lite', () => {
         // Confirm the submission by clicking OK on the confirmation modal
         await abuseReportsPage.confirmAbuseReportSubmission();
 
+        await abuseReportsPage.waitForPageReady();
         await customerPage.close();
         await context.close();
     });
@@ -108,6 +110,55 @@ test.describe('Abuse Reports Tests @lite', () => {
         // Confirm deletion in the modal
         await abuseReportsPage.confirmDeleteReport();
 
+        await abuseReportsPage.waitForPageReady();
+        await adminPage.close();
+        await context.close();
+    });
+
+    test('Test Case 4 - Admin Configures Product Report Abuse Settings', async ({ browser }) => {
+        // Using admin session storage
+        const context = await browser.newContext({ storageState: a1 });
+        const adminPage = await context.newPage();
+        const abuseReportsPage = new AbuseReportsPage(adminPage);
+
+        // Navigate to the Dokan settings page
+        await abuseReportsPage.goToSettingsPage();
+
+        // Search for "product report abuse" in the settings search box
+        await abuseReportsPage.searchSettings(abuseReportsPage.testData.abuseReports.settingsSearchKeyword);
+
+        // Verify the "Product Report Abuse Settings" heading is visible
+        const isHeadingVisible = await abuseReportsPage.isSettingsHeadingVisible();
+        expect(isHeadingVisible, '"Product Report Abuse Settings" heading should be visible').toBe(true);
+
+        // Verify the doc link contains the correct URL
+        const docLinkHref = await abuseReportsPage.getSettingsDocLinkHref();
+        expect(docLinkHref, 'Doc link should contain the correct Dokan documentation URL').toContain(abuseReportsPage.testData.abuseReports.settingsDocUrl);
+
+        // Verify the "Reported by" section heading is visible
+        const isReportedByVisible = await abuseReportsPage.isReportedByHeadingVisible();
+        expect(isReportedByVisible, '"Reported by" heading should be visible').toBe(true);
+
+        // Enable the "Reported by" slider if it is currently off
+        await abuseReportsPage.enableReportedBySliderIfDisabled();
+
+        // Verify the "Reasons for Abuse Report" section heading is visible
+        const isReasonsVisible = await abuseReportsPage.isReasonsHeadingVisible();
+        expect(isReasonsVisible, '"Reasons for Abuse Report" heading should be visible').toBe(true);
+
+        // Type a new reason in the last reason input field
+        await abuseReportsPage.fillNewAbuseReason(abuseReportsPage.testData.abuseReports.newReasonText);
+
+        // Click the plus button to add the new reason
+        await abuseReportsPage.clickAddReasonPlusButton();
+
+        // Click the plus button again to add another empty reason row
+        await abuseReportsPage.clickAddReasonPlusButton();
+
+        // Save all settings changes
+        await abuseReportsPage.clickSaveChanges();
+
+        await abuseReportsPage.waitForPageReady();
         await adminPage.close();
         await context.close();
     });
