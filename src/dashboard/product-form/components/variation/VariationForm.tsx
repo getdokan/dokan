@@ -1,12 +1,18 @@
 import { DokanButton } from '@src/components';
 import { __ } from '@wordpress/i18n';
-import { useVariationContext } from '../../context/VariationContext';
-import { Attribute } from '../../types';
+import { useVariations } from '../../hooks/useVariations';
+import { Attribute, VariationType } from '../../types';
 import VariationCard from './VariationCard';
 
-const VariationForm = ( { attributes }: { attributes: Attribute[] } ) => {
+const VariationForm = ( {
+    productId,
+    attributes,
+}: {
+    productId: number;
+    attributes: Attribute[];
+} ) => {
     const { generateVariations, addVariation, variations } =
-        useVariationContext();
+        useVariations( productId );
     if (
         ! attributes.some( ( attr ) => attr.variation ) &&
         variations.length === 0
@@ -33,7 +39,7 @@ const VariationForm = ( { attributes }: { attributes: Attribute[] } ) => {
                 </DokanButton>
             </div>
 
-            { variations.map( ( variation, index: number ) => (
+            { variations.map( ( variation: VariationType, index: number ) => (
                 <VariationCard key={ index } variation={ variation } />
             ) ) }
         </div>

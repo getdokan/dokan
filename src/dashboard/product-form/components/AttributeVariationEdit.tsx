@@ -1,9 +1,8 @@
 import { DokanButton, Select } from '@src/components';
 import { useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { useFormContext } from '../context/FormContext';
-import { VariationProvider } from '../context/VariationContext';
-import { Attribute, VariationType } from '../types';
+import { useProductForm } from '../hooks/useProductForm';
+import { Attribute } from '../types';
 import CustomField, { getValidationError } from './CustomField';
 import AttributeCard from './variation/AttributeCard';
 import VariationForm from './variation/VariationForm';
@@ -15,7 +14,7 @@ const AttributeVariationEditor = ( {
     validity,
 }: any ) => {
     const attributes: Attribute[] = data[ field.id ] || [];
-    const { isLoading, submitHandler } = useFormContext();
+    const { isLoading, submitHandler } = useProductForm( data.id );
     const { type: productType } = data;
     const options = field.elements || [];
     const [ cardExpanded, setCardExpanded ] = useState( false );
@@ -79,10 +78,6 @@ const AttributeVariationEditor = ( {
         onChange( { [ field.id ]: newAttributes } );
     };
 
-    const onUpdateVariations = ( newVariations: VariationType[] ) => {
-        onChange( { variations: newVariations } );
-    };
-
     return (
         <CustomField field={ field } error={ getValidationError( validity ) }>
             <div className="flex flex-col gap-4">
@@ -141,14 +136,10 @@ const AttributeVariationEditor = ( {
                 </div>
 
                 { productType === 'variable' && (
-                    <VariationProvider
+                    <VariationForm
                         productId={ data.id }
-                        defaultAttributes={ attributes }
-                        variations={ data.variations || [] }
-                        onUpdateVariations={ onUpdateVariations }
-                    >
-                        <VariationForm attributes={ attributes } />
-                    </VariationProvider>
+                        attributes={ attributes }
+                    />
                 ) }
             </div>
         </CustomField>

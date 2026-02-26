@@ -1,10 +1,13 @@
 import { DokanButton, Select } from '@src/components';
 import apiFetch from '@wordpress/api-fetch';
+import { useDispatch } from '@wordpress/data';
 import { DataForm } from '@wordpress/dataviews';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { FormProvider, useFormContext } from '../../context/FormContext';
-import { useVariationContext } from '../../context/VariationContext';
+// @ts-ignore
+import productFormStore from '@dokan/stores/product-form';
+import { useProductForm } from '../../hooks/useProductForm';
+import { useVariations } from '../../hooks/useVariations';
 import useVariationLayouts from '../../hooks/useVariationLayouts';
 import { FlatFormItem, VariationType } from '../../types';
 
@@ -17,8 +20,12 @@ const VariationCardContent = ( {
 }: {
     variation: VariationType;
 } ) => {
-    const { product, formItems, fields, onChange } = useFormContext();
-    const { updateVariation, saveVariation, isLoading } = useVariationContext();
+    const { product, formItems, fields, onChange } = useProductForm(
+        variation.id
+    );
+    const { updateVariation, saveVariation, isLoading } = useVariations(
+        variation.parent_id
+    );
     const { formLayouts } = useVariationLayouts( formItems, product );
 
     return (
@@ -74,15 +81,15 @@ const VariationCardContent = ( {
 };
 
 const VariationCard = ( { variation }: VariationCardProps ) => {
-    const { removeVariation } = useVariationContext();
+    const { removeVariation } = useVariations( variation.parent_id );
+    const { initForm } = useDispatch( productFormStore );
     const [ isExpanded, setIsExpanded ] = useState( false );
-    const [ formItems, setFormItems ] = useState< FlatFormItem[] >( [] );
-    const [ vendorEarning, setVendorEarning ] = useState< number >( 0 );
+    const [ formItemsFetched, setFormItemsFetched ] = useState( false );
 
     const fetchedVariationData = async () => {
         setIsExpanded( ! isExpanded );
 
-        if ( formItems.length > 0 ) {
+        if ( formItemsFetched ) {
             return;
         }
 
@@ -93,8 +100,12 @@ const VariationCard = ( { variation }: VariationCardProps ) => {
             } >( {
                 path: `/dokan/v3/products/${ variation.id }/fields`,
             } );
-            setFormItems( response.form_items ?? [] );
-            setVendorEarning( response.vendor_earning );
+            initForm(
+                variation.id,
+                response.form_items ?? [],
+                response.vendor_earning
+            );
+            setFormItemsFetched( true );
         } catch ( error ) {
             // eslint-disable-next-line no-console
             console.error( 'Error fetching variation data:', error );
@@ -152,14 +163,8 @@ const VariationCard = ( { variation }: VariationCardProps ) => {
                     ! isExpanded && 'hidden'
                 }` }
             >
-                { formItems.length > 0 ? (
-                    <FormProvider
-                        formItems={ formItems }
-                        productId={ variation.id }
-                        vendorEarning={ vendorEarning }
-                    >
-                        <VariationCardContent variation={ variation } />
-                    </FormProvider>
+                { formItemsFetched ? (
+                    <VariationCardContent variation={ variation } />
                 ) : (
                     <div className="p-4 text-center text-gray-400">
                         { __( 'Loading...', 'dokan-lite' ) }

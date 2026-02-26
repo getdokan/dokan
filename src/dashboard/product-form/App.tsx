@@ -3,7 +3,7 @@ import { DokanButton, DokanTooltip } from '@src/components';
 import { DataForm, useFormValidity } from '@wordpress/dataviews';
 import { __ } from '@wordpress/i18n';
 import { ExternalLink } from 'lucide-react';
-import { FormProvider, useFormContext } from './context/FormContext';
+import { useInitProductForm, useProductForm } from './hooks/useProductForm';
 import useLayouts from './hooks/useLayouts';
 import { FlatFormItem } from './types';
 
@@ -19,7 +19,7 @@ const productId = Number( formManager.product_id );
 
 const FormManager = () => {
     const { product, fields, onChange, formItems, isLoading, submitHandler } =
-        useFormContext();
+        useProductForm( productId );
 
     const { formLayouts } = useLayouts( formItems, product );
 
@@ -85,15 +85,16 @@ const FormManager = () => {
 };
 
 const App = () => {
+    // Initialize the product form in the store on mount.
+    useInitProductForm(
+        productId,
+        formManager.form_items,
+        formManager.vendor_earning
+    );
+
     return (
         <div className="dokan-product-product-form dokan-layout">
-            <FormProvider
-                formItems={ formManager.form_items }
-                productId={ productId }
-                vendorEarning={ formManager.vendor_earning }
-            >
-                <FormManager />
-            </FormProvider>
+            <FormManager />
             <DokanToaster />
         </div>
     );
