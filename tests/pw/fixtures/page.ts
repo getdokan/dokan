@@ -1,5 +1,5 @@
 import { test as base } from '@playwright/test';
-import { AbuseReportsPage } from '@pages/abuseReportsPage';
+import { AbuseReportsPage } from 'tests/e2e/abuse-reports/abuseReportsPage';
 import { AdminDashboardPage } from '@pages/adminDashboardPage';
 import { AdminPage } from '@pages/adminPage';
 import { AnnouncementsPage } from '@pages/announcementsPage';
