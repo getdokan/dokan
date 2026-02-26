@@ -6,7 +6,7 @@ import { __ } from '@wordpress/i18n';
 import productEditorStore from '@dokan/stores/product-editor';
 import { getFieldConfig } from '../components/FieldRenderer';
 import { FlatFormItem } from '../types';
-import { resolveLabel } from '../utils';
+import { resolveLabel, resolveVisibility } from '../utils';
 
 /**
  * Hook that provides product editor state and actions from the Redux store.
@@ -38,6 +38,7 @@ export function useProductEditor( productId: number ) {
                 const field = {
                     ...item,
                     label: resolveLabel( item, currentProductType ),
+                    visibility: resolveVisibility( item, currentProductType ),
                 };
                 return getFieldConfig( field as any );
             } );

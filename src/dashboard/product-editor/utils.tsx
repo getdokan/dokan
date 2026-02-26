@@ -34,6 +34,22 @@ export const resolveLabel = (
 };
 
 /**
+ * Resolve the visibility for a field item based on the current product type.
+ * Falls back to the default `visibility` when no type-specific entry exists in `visibilities`.
+ *
+ * @param {FlatFormItem} item        Form item (field or section).
+ * @param {string}       productType Current product type (e.g. 'simple', 'variable').
+ *
+ * @return {boolean} Resolved visibility value.
+ */
+export const resolveVisibility = (
+    item: FlatFormItem,
+    productType: string = 'simple'
+): boolean => {
+    return item.visibilities?.[ productType ] ?? item.visibility ?? true;
+};
+
+/**
  * helper to get label and description for a field.
  *
  * @param {Array}  formItems Flat array of sections and fields.
@@ -81,39 +97,6 @@ export function fieldValueForProduct( item: FlatFormItem ): any {
     }
     return v ?? '';
 }
-
-export const validateProductEditor = (
-    formItems: FlatFormItem[],
-    values: Record< string, any >
-): Record< string, string > => {
-    const newErrors: Record< string, string > = {};
-
-    formItems.forEach( ( item ) => {
-        if ( item.type !== 'field' ) {
-            return;
-        }
-        const field = item;
-        if ( ! field.required ) {
-            return;
-        }
-        if ( field.visibility === false ) {
-            return;
-        }
-        if ( ! resolveDependency( field, values ) ) {
-            return;
-        }
-
-        const value = values[ field.id ];
-        if ( ! value || ( Array.isArray( value ) && value.length === 0 ) ) {
-            newErrors[ field.id ] = __(
-                'Please fill out this field.',
-                'dokan-lite'
-            );
-        }
-    } );
-
-    return newErrors;
-};
 
 /** True if value is considered empty (null, undefined, '', whitespace-only, or empty array). */
 function isEmptyValue( val: any ): boolean {

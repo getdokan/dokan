@@ -134,7 +134,7 @@ class FormSchema {
                 'id'             => Elements::NAME,
                 'section_id'   => Elements::SECTION_GENERAL,
                 'type'           => 'field',
-                'label'          => __( 'Product Title', 'dokan-lite' ),
+                'label'          => __( 'Title', 'dokan-lite' ),
                 'variant'        => 'text',
                 'placeholder'    => __( 'Enter product title...', 'dokan-lite' ),
                 'required'       => true,
