@@ -182,7 +182,7 @@ export const getFieldConfigFrom = ( field: FormField ) => {
     };
 
     handlers = applyFilters(
-        'dokan_product_form_variant',
+        'dokan_product_editor_variant',
         handlers,
         field
     ) as Record< string, FieldHandler >;

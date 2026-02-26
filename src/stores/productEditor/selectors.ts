@@ -1,26 +1,26 @@
-import { FlatFormItem } from '../../dashboard/product-form/types';
-import { ProductFormState } from './types';
+import { FlatFormItem } from '../../dashboard/product-editor/types';
+import { ProductEditorState } from './types';
 
 export const selectors = {
     getProduct: (
-        state: ProductFormState,
+        state: ProductEditorState,
         productId: number
     ): Record< string, any > | undefined => state.forms[ productId ]?.product,
 
     getFormItems: (
-        state: ProductFormState,
+        state: ProductEditorState,
         productId: number
     ): FlatFormItem[] | undefined => state.forms[ productId ]?.formItems,
 
     isSubmitting: (
-        state: ProductFormState,
+        state: ProductEditorState,
         productId: number
     ): boolean => !! state.submitting[ productId ],
 
-    getError: ( state: ProductFormState ): Error | null => state.error,
+    getError: ( state: ProductEditorState ): Error | null => state.error,
 
     hasForm: (
-        state: ProductFormState,
+        state: ProductEditorState,
         productId: number
     ): boolean => !! state.forms[ productId ],
 };

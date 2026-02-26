@@ -5,7 +5,7 @@ import './index.scss';
 
 domReady( () => {
     const container = document.getElementById(
-        'product-product-form-template'
+        'product-product-editor-template'
     );
     if ( container ) {
         const root = createRoot( container );

@@ -1,7 +1,7 @@
 import { DokanButton, Select } from '@src/components';
 import { useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { useProductForm } from '../hooks/useProductForm';
+import { useProductEditor } from '../hooks/useProductEditor';
 import { Attribute } from '../types';
 import CustomField, { getValidationError } from './CustomField';
 import AttributeCard from './variation/AttributeCard';
@@ -14,7 +14,7 @@ const AttributeVariationEditor = ( {
     validity,
 }: any ) => {
     const attributes: Attribute[] = data[ field.id ] || [];
-    const { isLoading, submitHandler } = useProductForm( data.id );
+    const { isLoading, submitHandler } = useProductEditor( data.id );
     const { type: productType } = data;
     const options = field.elements || [];
     const [ cardExpanded, setCardExpanded ] = useState( false );

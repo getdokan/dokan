@@ -7,7 +7,7 @@ if ( isset( $_GET['_dokan_edit_product_nonce'] ) && wp_verify_nonce( sanitize_ke
 
 if ( 'edit' === $product_action ) {
     if ( isset( $_GET['form_manager'] ) ) {
-        do_action( 'dokan_render_product_form_manager_template', $product_action );
+        do_action( 'dokan_render_product_editor_manager_template', $product_action );
         return;
     }
     do_action( 'dokan_render_product_edit_template', $product_action );

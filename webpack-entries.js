@@ -86,10 +86,10 @@ const entryPoints = {
             type: 'window',
         },
     },
-    'product-form-store': {
-        import: '/src/stores/productForm/store.ts',
+    'product-editor-store': {
+        import: '/src/stores/productEditor/store.ts',
         library: {
-            name: [ 'dokan', 'productFormStore' ],
+            name: [ 'dokan', 'productEditorStore' ],
             type: 'window',
         },
     },
@@ -100,7 +100,7 @@ const entryPoints = {
             type: 'window',
         },
     },
-    'product-form': './src/dashboard/product-form/index.tsx',
+    'product-editor': './src/dashboard/product-editor/index.tsx',
 };
 
 module.exports = entryPoints;

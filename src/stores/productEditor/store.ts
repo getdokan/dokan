@@ -2,15 +2,15 @@ import { createReduxStore, register } from '@wordpress/data';
 import { reducer } from './reducer';
 import { selectors } from './selectors';
 import { actions } from './actions';
-import { ProductFormState } from './types';
+import { ProductEditorState } from './types';
 
-export const DOKAN_PRODUCT_FORM_STORE = 'dokan/product-form';
+export const DOKAN_PRODUCT_EDITOR_STORE = 'dokan/product-editor';
 
 const store = createReduxStore<
-    ProductFormState,
+    ProductEditorState,
     typeof actions,
     typeof selectors
->( DOKAN_PRODUCT_FORM_STORE, {
+>( DOKAN_PRODUCT_EDITOR_STORE, {
     reducer,
     actions,
     selectors,

@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\Dokan\ProductForm;
+namespace WeDevs\Dokan\ProductEditor;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -32,7 +32,7 @@ class PayloadResolver {
         $out = self::resolve_linked_products( $out );
         $out = self::resolve_attributes( $out );
 
-        return apply_filters( 'dokan_product_form_schema_payload', $out );
+        return apply_filters( 'dokan_product_editor_schema_payload', $out );
     }
 
     /**

@@ -82,7 +82,7 @@ export function fieldValueForProduct( item: FlatFormItem ): any {
     return v ?? '';
 }
 
-export const validateProductForm = (
+export const validateProductEditor = (
     formItems: FlatFormItem[],
     values: Record< string, any >
 ): Record< string, string > => {

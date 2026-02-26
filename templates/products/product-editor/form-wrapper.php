@@ -1,6 +1,6 @@
 <?php
 /**
- *  Dokan Dashboard Product form manager Template
+ *  Dokan Dashboard Product editor manager Template
  *
  *  Load product related template
  *
@@ -24,11 +24,11 @@
              *  @since DOKAN_SINCE
              */
             do_action( 'dokan_dashboard_content_before' );
-            do_action( 'dokan_product_form_manager_content_before' );
+            do_action( 'dokan_product_editor_manager_content_before' );
 
         ?>
 
-        <div class="dokan-dashboard-content dokan-product-product-form-content">
+        <div class="dokan-dashboard-content dokan-product-product-editor-content">
             <?php
 
                 /**
@@ -38,22 +38,22 @@
                  *
                  *  @since DOKAN_SINCE
                  */
-                do_action( 'dokan_product_form_manager_content_inside_before' );
+                do_action( 'dokan_product_editor_manager_content_inside_before' );
             ?>
 
 
-            <article class="dokan-product-product-form-area">
+            <article class="dokan-product-product-editor-area">
                 <?php
 
                     /**
-                     *  Added dokan_product_form_manager_inside_content Hook
+                     *  Added dokan_product_editor_manager_inside_content Hook
                      *
-                     *  @hooked dokan_product_form_manager_listing_status_filter
-                     *  @hooked dokan_product_form_manager_main_content
+                     *  @hooked dokan_product_editor_manager_listing_status_filter
+                     *  @hooked dokan_product_editor_manager_main_content
                      *
                      *  @since DOKAN_SINCE
                      */
-                    do_action( 'dokan_product_form_manager_inside_content' );
+                    do_action( 'dokan_product_editor_manager_inside_content' );
                 ?>
 
             </article>
@@ -66,7 +66,7 @@
                  *
                  *  @since DOKAN_SINCE
                  */
-                do_action( 'dokan_product_form_manager_content_inside_after' );
+                do_action( 'dokan_product_editor_manager_content_inside_after' );
             ?>
 
         </div> <!-- #primary .content-area -->
@@ -80,7 +80,7 @@
              *  @since DOKAN_SINCE
              */
             do_action( 'dokan_dashboard_content_after' );
-            do_action( 'dokan_product_form_manager_content_after' );
+            do_action( 'dokan_product_editor_manager_content_after' );
 
         ?>
 

@@ -3,28 +3,28 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import { useCallback, useEffect, useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 // @ts-ignore
-import productFormStore from '@dokan/stores/product-form';
+import productEditorStore from '@dokan/stores/product-editor';
 import { getFieldConfig } from '../components/FieldRenderer';
 import { FlatFormItem } from '../types';
 import { resolveLabel } from '../utils';
 
 /**
- * Hook that provides product form state and actions from the Redux store.
+ * Hook that provides product editor state and actions from the Redux store.
  * Drop-in replacement for the old useFormContext().
  */
-export function useProductForm( productId: number ) {
+export function useProductEditor( productId: number ) {
     const toast = useToast();
 
     const { product, formItems, isLoading } = useSelect(
         ( select ) => ( {
-            product: select( productFormStore ).getProduct( productId ),
-            formItems: select( productFormStore ).getFormItems( productId ),
-            isLoading: select( productFormStore ).isSubmitting( productId ),
+            product: select( productEditorStore ).getProduct( productId ),
+            formItems: select( productEditorStore ).getFormItems( productId ),
+            isLoading: select( productEditorStore ).isSubmitting( productId ),
         } ),
         [ productId ]
     );
 
-    const { updateProduct, saveProduct } = useDispatch( productFormStore );
+    const { updateProduct, saveProduct } = useDispatch( productEditorStore );
 
     // Compute fields from formItems + product type (produces JSX, stays in hook).
     const currentProductType = product?.type || 'simple';
@@ -86,17 +86,17 @@ export function useProductForm( productId: number ) {
 }
 
 /**
- * Hook to initialize a product form in the store.
+ * Hook to initialize a product editor form in the store.
  * Call once on mount to set up the form entry.
  */
-export function useInitProductForm(
+export function useInitProductEditor(
     productId: number,
     formItems: FlatFormItem[],
     vendorEarning: number
 ) {
-    const { initForm } = useDispatch( productFormStore );
+    const { initForm } = useDispatch( productEditorStore );
     const hasForm = useSelect(
-        ( select ) => select( productFormStore ).hasForm( productId ),
+        ( select ) => select( productEditorStore ).hasForm( productId ),
         [ productId ]
     );
 

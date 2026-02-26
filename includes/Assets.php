@@ -378,10 +378,10 @@ class Assets {
                 'deps'    => [ 'wp-components' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/components.css' ),
             ],
-            'dokan-product-form-manager' => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/js/product-form.css',
+            'dokan-product-editor' => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/js/product-editor.css',
                 'deps'    => [ 'wp-components' ],
-                'version' => filemtime( DOKAN_DIR . '/assets/js/product-form.css' ),
+                'version' => filemtime( DOKAN_DIR . '/assets/js/product-editor.css' ),
             ],
         ];
 
@@ -701,14 +701,14 @@ class Assets {
                 'deps'    => $stores_asset['dependencies'],
             ];
         }
-        $product_form_asset_file = DOKAN_DIR . '/assets/js/product-form-store.asset.php';
-        if ( file_exists( $product_form_asset_file ) ) {
-            $stores_asset = require $product_form_asset_file;
+        $product_editor_asset_file = DOKAN_DIR . '/assets/js/product-editor-store.asset.php';
+        if ( file_exists( $product_editor_asset_file ) ) {
+            $stores_asset = require $product_editor_asset_file;
 
-            // Register Product stores.
-            $scripts['dokan-stores-product-form'] = [
+            // Register Product Editor stores.
+            $scripts['dokan-stores-product-editor'] = [
                 'version' => $stores_asset['version'],
-                'src'     => $asset_url . '/js/product-form-store.js',
+                'src'     => $asset_url . '/js/product-editor-store.js',
                 'deps'    => $stores_asset['dependencies'],
             ];
         }
@@ -724,13 +724,13 @@ class Assets {
             ];
         }
 
-        $product_form_manager = DOKAN_DIR . '/assets/js/product-form.asset.php';
-        if ( file_exists( $product_form_manager ) ) {
-            $form_asset = require $product_form_manager;
-            $scripts['dokan-product-form-manager'] = [
-                'version' => $form_asset['version'],
-                'src'     => $asset_url . '/js/product-form.js',
-                'deps'    => array_merge( $form_asset['dependencies'], [ 'dokan-react-components', 'dokan-stores-product-form', 'dokan-stores-product-variations' ] ),
+        $product_editor_manager = DOKAN_DIR . '/assets/js/product-editor.asset.php';
+        if ( file_exists( $product_editor_manager ) ) {
+            $editor_asset = require $product_editor_manager;
+            $scripts['dokan-product-editor'] = [
+                'version' => $editor_asset['version'],
+                'src'     => $asset_url . '/js/product-editor.js',
+                'deps'    => array_merge( $editor_asset['dependencies'], [ 'dokan-react-components', 'dokan-stores-product-editor', 'dokan-stores-product-variations' ] ),
             ];
         }
 

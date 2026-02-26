@@ -1,6 +1,6 @@
 import apiFetch from '@wordpress/api-fetch';
-import { FlatFormItem } from '../../dashboard/product-form/types';
-import { fieldValueForProduct } from '../../dashboard/product-form/utils';
+import { FlatFormItem } from '../../dashboard/product-editor/types';
+import { fieldValueForProduct } from '../../dashboard/product-editor/utils';
 
 // Action type constants.
 export const SET_FORM = 'SET_FORM';

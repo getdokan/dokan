@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\Dokan\ProductForm;
+namespace WeDevs\Dokan\ProductEditor;
 
 defined( 'ABSPATH' ) || exit;
 

@@ -1,4 +1,4 @@
-import { ProductFormState } from './types';
+import { ProductEditorState } from './types';
 import { DEFAULT_STATE } from './state';
 import {
     ActionTypes,
@@ -10,9 +10,9 @@ import {
 } from './actions';
 
 export const reducer = (
-    state: ProductFormState = DEFAULT_STATE,
+    state: ProductEditorState = DEFAULT_STATE,
     action: ActionTypes
-): ProductFormState => {
+): ProductEditorState => {
     switch ( action.type ) {
         case SET_FORM:
             return {

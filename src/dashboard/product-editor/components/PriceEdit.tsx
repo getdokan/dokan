@@ -58,7 +58,7 @@ const PriceEdit = ( { data, field, onChange, validity }: any ) => {
                 label=""
                 value={ data[ field.id ] }
                 namespace={ `field.${ field.id }` }
-                className="product-form-price-input"
+                className="product-editor-price-input"
                 input={ {
                     id: field.id,
                     placeholder: field.placeholder || '',

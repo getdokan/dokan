@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\Dokan\ProductForm;
+namespace WeDevs\Dokan\ProductEditor;
 
 use WC_Product;
 use WeDevs\Dokan\ProductCategory\Helper as ProductCategoryHelper;
@@ -611,7 +611,7 @@ class FormSchema {
             $others_fields,
         );
 
-        $items = apply_filters( 'dokan_product_form_schema', $items, $product_id );
+        $items = apply_filters( 'dokan_product_editor_schema', $items, $product_id );
 
         // Sort the items by priority (fallback to 30 when not set).
         usort(
@@ -627,7 +627,7 @@ class FormSchema {
         // validate the fields
         $this->assert_field_schema( $items );
 
-        $items = apply_filters( 'dokan_product_form_schema_response', $items, $product_id );
+        $items = apply_filters( 'dokan_product_editor_schema_response', $items, $product_id );
 
         if ( $product instanceof WC_Product ) {
             foreach ( $items as &$item ) {
@@ -782,7 +782,7 @@ class FormSchema {
                 // Get the field name from the key.
                 $field_name = sanitize_key( $key );
 
-                $value = apply_filters( 'dokan_product_form_schema_value', '', $field_name, $product );
+                $value = apply_filters( 'dokan_product_editor_schema_value', '', $field_name, $product );
                 if ( '' !== $value ) {
                     return $value;
                 }

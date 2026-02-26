@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\Dokan\ProductForm;
+namespace WeDevs\Dokan\ProductEditor;
 
 use WC_Product_Simple;
 use Exception;
@@ -9,8 +9,8 @@ class Hooks {
 
     public function __construct() {
         add_action( 'dokan_after_add_product_btn', [ $this, 'add_new_product_link' ] );
-        add_action( 'dokan_render_product_form_manager_template', [ $this, 'load_product_edit_template' ] );
-        add_action( 'dokan_product_form_manager_inside_content', [ $this, 'load_product_edit_content' ] );
+        add_action( 'dokan_render_product_editor_manager_template', [ $this, 'load_product_edit_template' ] );
+        add_action( 'dokan_product_editor_manager_inside_content', [ $this, 'load_product_edit_content' ] );
     }
 
     /**
@@ -41,7 +41,7 @@ class Hooks {
      * @return void
      */
     public function load_product_edit_template() {
-        dokan_get_template_part( 'products/product-form/form-wrapper' );
+        dokan_get_template_part( 'products/product-editor/form-wrapper' );
     }
 
     /**
@@ -93,25 +93,25 @@ class Hooks {
             return;
         }
 
-        dokan_get_template_part( 'products/product-form/form-content', '', [ 'product' => $product ] );
+        dokan_get_template_part( 'products/product-editor/form-content', '', [ 'product' => $product ] );
 
         $vendor_earning = dokan()->commission->get_earning_by_product( $product_id );
-        wp_enqueue_script( 'dokan-product-form-manager' );
-        wp_enqueue_style( 'dokan-product-form-manager' );
+        wp_enqueue_script( 'dokan-product-editor' );
+        wp_enqueue_style( 'dokan-product-editor' );
 
         // Ensure currency data exists for DokanPriceInput / Accounting utilities.
         $currency = dokan_get_container()->get( 'scripts' )->get_localized_price();
         wp_add_inline_script(
-            'dokan-product-form-manager',
+            'dokan-product-editor',
             'window.dokanFrontend = window.dokanFrontend || {}; window.dokanFrontend.currency = window.dokanFrontend.currency || ' . wp_json_encode( $currency ) . ';',
             'before'
         );
 
         wp_localize_script(
-            'dokan-product-form-manager',
+            'dokan-product-editor',
             'dokanFormManager',
             [
-                'form_items'        => dokan()->product_form->get_schema( $product_id ),
+                'form_items'        => dokan()->product_editor->get_schema( $product_id ),
                 'form_manager_nonce' => wp_create_nonce( 'form_manager' ),
                 'product_id'         => $product_id,
                 'is_new_product'     => $new_product,

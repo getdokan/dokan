@@ -5,8 +5,8 @@ import { DataForm } from '@wordpress/dataviews';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 // @ts-ignore
-import productFormStore from '@dokan/stores/product-form';
-import { useProductForm } from '../../hooks/useProductForm';
+import productEditorStore from '@dokan/stores/product-editor';
+import { useProductEditor } from '../../hooks/useProductEditor';
 import { useVariations } from '../../hooks/useVariations';
 import useVariationLayouts from '../../hooks/useVariationLayouts';
 import { FlatFormItem, VariationType } from '../../types';
@@ -20,7 +20,7 @@ const VariationCardContent = ( {
 }: {
     variation: VariationType;
 } ) => {
-    const { product, formItems, fields, onChange } = useProductForm(
+    const { product, formItems, fields, onChange } = useProductEditor(
         variation.id
     );
     const { updateVariation, saveVariation, isLoading } = useVariations(
@@ -82,7 +82,7 @@ const VariationCardContent = ( {
 
 const VariationCard = ( { variation }: VariationCardProps ) => {
     const { removeVariation } = useVariations( variation.parent_id );
-    const { initForm } = useDispatch( productFormStore );
+    const { initForm } = useDispatch( productEditorStore );
     const [ isExpanded, setIsExpanded ] = useState( false );
     const [ formItemsFetched, setFormItemsFetched ] = useState( false );
 

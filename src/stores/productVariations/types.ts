@@ -1,4 +1,4 @@
-import { VariationType } from '../../dashboard/product-form/types';
+import { VariationType } from '../../dashboard/product-editor/types';
 
 export type { VariationType };
 
