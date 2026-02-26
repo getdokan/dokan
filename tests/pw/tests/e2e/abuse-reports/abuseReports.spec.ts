@@ -162,4 +162,28 @@ test.describe('Abuse Reports Tests @lite', () => {
         await adminPage.close();
         await context.close();
     });
+
+    test('Test Case 5 - Customer Sees Custom Abuse Reason on Product Page', async ({ browser }) => {
+        // Using customer session storage
+        const context = await browser.newContext({ storageState: c1 });
+        const customerPage = await context.newPage();
+        const abuseReportsPage = new AbuseReportsPage(customerPage);
+
+        // Navigate to the product page
+        await abuseReportsPage.goToProductPage();
+
+        // Click the "Report Abuse" link to open the modal
+        await abuseReportsPage.clickReportAbuseLink();
+
+        // Click the custom reason label "Test1"
+        await abuseReportsPage.clickCustomReasonLabel('Test1');
+
+        // Verify the label text is "Test1"
+        const labelText = await abuseReportsPage.getCustomReasonLabelText('Test1');
+        expect(labelText, 'Custom abuse reason label should display "Test1"').toBe('Test1');
+
+        await abuseReportsPage.waitForPageReady();
+        await customerPage.close();
+        await context.close();
+    });
 });

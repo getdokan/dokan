@@ -54,6 +54,7 @@ export class AbuseReportsPage {
         descriptionInput: "//textarea[@name='description']",
         submitButton: "//button[@id='dokan-report-abuse-form-submit-btn']",
         confirmOkButton: "//button[normalize-space()='OK']",
+        customReasonLabel: (reason: string) => `//label[normalize-space()='${reason}']`,
     };
 
     // ============================================
@@ -262,6 +263,18 @@ export class AbuseReportsPage {
         await this.page.locator(this.abuseReports.confirmOkButton).click();
         // Wait for the modal to close
         await this.page.locator(this.abuseReports.confirmOkButton).waitFor({ state: 'hidden' });
+    }
+
+    async clickCustomReasonLabel(reason: string) {
+        const label = this.page.locator(this.abuseReports.customReasonLabel(reason));
+        await label.waitFor({ state: 'visible' });
+        await label.click();
+    }
+
+    async getCustomReasonLabelText(reason: string): Promise<string> {
+        const label = this.page.locator(this.abuseReports.customReasonLabel(reason));
+        await label.waitFor({ state: 'visible' });
+        return (await label.textContent())?.trim() ?? '';
     }
 
     // Wait/Utility Methods
