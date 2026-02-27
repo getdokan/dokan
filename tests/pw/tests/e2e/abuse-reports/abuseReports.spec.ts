@@ -186,4 +186,30 @@ test.describe('Abuse Reports Tests @lite', () => {
         await customerPage.close();
         await context.close();
     });
+
+    test('Test Case 6 - Admin Disables Reported By and Removes Custom Reason', async ({ browser }) => {
+        // Using admin session storage
+        const context = await browser.newContext({ storageState: a1 });
+        const adminPage = await context.newPage();
+        const abuseReportsPage = new AbuseReportsPage(adminPage);
+
+        // Navigate to the Dokan settings page
+        await abuseReportsPage.goToSettingsPage();
+
+        // Search for "product report abuse" in the settings search box
+        await abuseReportsPage.searchSettings(abuseReportsPage.testData.abuseReports.settingsSearchKeyword);
+
+        // Turn off the "Reported by" slider if it is currently on, otherwise skip
+        await abuseReportsPage.disableReportedBySliderIfEnabled();
+
+        // Remove the custom "Test1" reason
+        await abuseReportsPage.removeAbuseReason(abuseReportsPage.testData.abuseReports.newReasonText);
+
+        // Save all settings changes and wait for the save to complete
+        await abuseReportsPage.clickSaveChanges();
+
+        await abuseReportsPage.waitForPageReady();
+        await adminPage.close();
+        await context.close();
+    });
 });

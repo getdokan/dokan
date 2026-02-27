@@ -36,6 +36,7 @@ export class AbuseReportsPage {
         addReasonInput: "//input[@class='regular-text medium']",
         addReasonPlusButton: "span.dashicons.dashicons-plus-alt2",
         saveChangesButton: "(//input[@id='submit'])[1]",
+        removeReasonButton: (reason: string) => `//li[normalize-space()='${reason}']//span[@class='dashicons dashicons-no-alt remove-item']`,
     };
 
     // Vendor Selectors
@@ -200,6 +201,36 @@ export class AbuseReportsPage {
         }
     }
 
+    async disableReportedBySliderIfEnabled() {
+        const checkbox = this.page.locator(this.admin.reportedByToggleCheckbox);
+        const isChecked = await checkbox.isChecked();
+        if (isChecked) {
+            await this.page.locator(this.admin.reportedBySlider).click();
+            // Wait until the checkbox reflects the disabled state
+            await checkbox.waitFor({ state: 'attached' });
+            await this.page.waitForFunction(
+                (selector) => {
+                    const el = document.evaluate(selector, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue as HTMLInputElement | null;
+                    return el?.checked === false;
+                },
+                this.admin.reportedByToggleCheckbox
+            );
+        }
+    }
+
+    async removeAbuseReason(reason: string) {
+        // Remove all duplicate entries with this reason name.
+        // Each click is a pure Vue state change — no network request per removal.
+        // The list re-renders after each click, so always re-target .first().
+        const removeBtns = this.page.locator(this.admin.removeReasonButton(reason));
+        const count = await removeBtns.count();
+        for (let i = 0; i < count; i++) {
+            const btn = removeBtns.first();
+            await btn.waitFor({ state: 'visible' });
+            await btn.click();
+        }
+    }
+
     async isReasonsHeadingVisible(): Promise<boolean> {
         return await this.page.locator(this.admin.reasonsHeading).isVisible();
     }
@@ -219,9 +250,15 @@ export class AbuseReportsPage {
 
     async clickSaveChanges() {
         await Promise.all([
-            this.page.waitForLoadState('networkidle'),
+            // Wait for the WP form POST — hash fragments are never in HTTP response URLs
+            // so we match on the wp-admin path + POST method instead
+            this.page.waitForResponse(
+                res => res.url().includes('wp-admin') && res.request().method() === 'POST'
+            ),
             this.page.locator(this.admin.saveChangesButton).click(),
         ]);
+        // Wait for the redirect after the POST to fully load
+        await this.page.waitForLoadState('domcontentloaded');
     }
 
     async waitForPageReady() {
@@ -266,13 +303,13 @@ export class AbuseReportsPage {
     }
 
     async clickCustomReasonLabel(reason: string) {
-        const label = this.page.locator(this.abuseReports.customReasonLabel(reason));
+        const label = this.page.locator(this.abuseReports.customReasonLabel(reason)).first();
         await label.waitFor({ state: 'visible' });
         await label.click();
     }
 
     async getCustomReasonLabelText(reason: string): Promise<string> {
-        const label = this.page.locator(this.abuseReports.customReasonLabel(reason));
+        const label = this.page.locator(this.abuseReports.customReasonLabel(reason)).first();
         await label.waitFor({ state: 'visible' });
         return (await label.textContent())?.trim() ?? '';
     }
