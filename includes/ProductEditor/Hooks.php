@@ -112,7 +112,6 @@ class Hooks {
             'dokanFormManager',
             [
                 'form_items'        => dokan()->product_editor->get_schema( $product_id ),
-                'form_manager_nonce' => wp_create_nonce( 'form_manager' ),
                 'product_id'         => $product_id,
                 'is_new_product'     => $new_product,
                 'view_product_url'   => get_permalink( $product_id ),

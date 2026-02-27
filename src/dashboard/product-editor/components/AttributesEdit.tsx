@@ -7,12 +7,7 @@ import CustomField, { getValidationError } from './CustomField';
 import AttributeCard from './variation/AttributeCard';
 import VariationForm from './variation/VariationForm';
 
-const AttributeVariationEditor = ( {
-    data,
-    field,
-    onChange,
-    validity,
-}: any ) => {
+const AttributesEdit = ( { data, field, onChange, validity }: any ) => {
     const attributes: Attribute[] = data[ field.id ] || [];
     const { isLoading, submitHandler } = useProductEditor( data.id );
     const { type: productType } = data;
@@ -135,7 +130,7 @@ const AttributeVariationEditor = ( {
                     ) }
                 </div>
 
-                { productType === 'variable' && (
+                { productType.includes( 'variable' ) && (
                     <VariationForm
                         productId={ data.id }
                         attributes={ attributes }
@@ -145,4 +140,4 @@ const AttributeVariationEditor = ( {
         </CustomField>
     );
 };
-export default AttributeVariationEditor;
+export default AttributesEdit;

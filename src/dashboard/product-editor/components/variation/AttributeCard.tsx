@@ -219,7 +219,7 @@ const AttributeCard = ( {
                             ) }
                         </label>
 
-                        { productType === 'variable' && (
+                        { productType?.includes( 'variable' ) && (
                             <label className="inline-flex items-center">
                                 <SimpleCheckbox
                                     checked={ attr.variation }

@@ -21,6 +21,7 @@ class Elements {
     const PRODUCT_TYPE_VARIABLE = 'variable';
     const PRODUCT_TYPE_GROUPED = 'grouped';
     const PRODUCT_TYPE_EXTERNAL = 'external';
+    const PRODUCT_TYPE_VARIATION = 'variation';
     const SECTION_LINKED = 'linked';
     const ID = 'id';
     const TYPE = 'type';

@@ -71,19 +71,6 @@ export type ActionTypes =
     | SetVariationAction
     | SetVariationsLoadingAction;
 
-/**
- * Strip empty-string values before sending to the API.
- */
-const transformPayload = ( product: Record< string, any > ) => {
-    const copy = { ...product };
-    Object.keys( copy ).forEach( ( key ) => {
-        if ( copy[ key ] === '' ) {
-            delete copy[ key ];
-        }
-    } );
-    return copy;
-};
-
 export const actions = {
     // Plain action creators.
     setForm: (
@@ -154,13 +141,12 @@ export const actions = {
     } ),
 
     // Thunk actions for side effects.
-    initForm:
-        (
-            productId: number,
-            formItems: FlatFormItem[],
-            vendorEarning: number
-        ) =>
-        ( { dispatch }: { dispatch: any } ) => {
+    initForm: (
+        productId: number,
+        formItems: FlatFormItem[],
+        vendorEarning: number
+    ) => {
+        return ( { dispatch }: { dispatch: any } ) => {
             const entries = formItems
                 .filter( ( i: FlatFormItem ) => i.type === 'field' )
                 .map( ( item: FlatFormItem ) => [
@@ -181,18 +167,24 @@ export const actions = {
                     formItems
                 )
             );
-        },
+        };
+    },
 
-    saveProduct:
-        ( productId: number ) =>
-        async ( { dispatch, select }: { dispatch: any; select: any } ) => {
+    saveProduct: ( productId: number ) => {
+        return async ( {
+            dispatch,
+            select,
+        }: {
+            dispatch: any;
+            select: any;
+        } ) => {
             dispatch( actions.setSubmitting( productId, true ) );
             try {
                 const product = select.getProduct( productId );
                 await apiFetch( {
                     path: `dokan/v3/products/${ productId ? productId : '' }`,
                     method: productId ? 'PUT' : 'POST',
-                    data: transformPayload( { ...product } ),
+                    data: product,
                 } );
             } catch ( err ) {
                 dispatch( actions.setError( err as Error ) );
@@ -200,12 +192,12 @@ export const actions = {
             } finally {
                 dispatch( actions.setSubmitting( productId, false ) );
             }
-        },
+        };
+    },
 
     // Variations thunk actions.
-    fetchVariations:
-        ( productId: number ) =>
-        async ( { dispatch }: { dispatch: any } ) => {
+    fetchVariations: ( productId: number ) => {
+        return async ( { dispatch }: { dispatch: any } ) => {
             dispatch( actions.setVariationsLoading( productId, true ) );
             try {
                 const response: any = await apiFetch( {
@@ -218,11 +210,17 @@ export const actions = {
             } finally {
                 dispatch( actions.setVariationsLoading( productId, false ) );
             }
-        },
+        };
+    },
 
-    saveVariation:
-        ( variation: VariationType, data: Record< string, any > ) =>
-        async ( { dispatch }: { dispatch: any } ) => {
+    saveVariation: (
+        variation: VariationType,
+        data: Record< string, any >
+    ) => {
+        return async ( { dispatch }: { dispatch: any } ) => {
+            dispatch(
+                actions.setVariationsLoading( variation.parent_id, true )
+            );
             try {
                 const payload: Record< string, any > = { ...data };
 
@@ -244,12 +242,16 @@ export const actions = {
             } catch ( error ) {
                 dispatch( actions.setError( error as Error ) );
                 throw error;
+            } finally {
+                dispatch(
+                    actions.setVariationsLoading( variation.parent_id, false )
+                );
             }
-        },
+        };
+    },
 
-    generateVariations:
-        ( productId: number ) =>
-        async ( { dispatch }: { dispatch: any } ) => {
+    generateVariations: ( productId: number ) => {
+        return async ( { dispatch }: { dispatch: any } ) => {
             try {
                 await apiFetch( {
                     path: `/dokan/v2/products/${ productId }/variations/generate`,
@@ -261,11 +263,11 @@ export const actions = {
                 dispatch( actions.setError( error as Error ) );
                 throw error;
             }
-        },
+        };
+    },
 
-    addVariation:
-        ( productId: number ) =>
-        async ( { dispatch }: { dispatch: any } ) => {
+    addVariation: ( productId: number ) => {
+        return async ( { dispatch }: { dispatch: any } ) => {
             try {
                 await apiFetch( {
                     path: `/dokan/v2/products/${ productId }/variations`,
@@ -277,11 +279,11 @@ export const actions = {
                 dispatch( actions.setError( error as Error ) );
                 throw error;
             }
-        },
+        };
+    },
 
-    removeVariation:
-        ( variation: VariationType ) =>
-        async ( { dispatch }: { dispatch: any } ) => {
+    removeVariation: ( variation: VariationType ) => {
+        return async ( { dispatch }: { dispatch: any } ) => {
             try {
                 await apiFetch( {
                     path: `/dokan/v2/products/${ variation.parent_id }/variations/${ variation.id }`,
@@ -295,5 +297,6 @@ export const actions = {
                 dispatch( actions.setError( error as Error ) );
                 throw error;
             }
-        },
+        };
+    },
 };

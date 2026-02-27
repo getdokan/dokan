@@ -69,12 +69,11 @@ const VariationCardContent = ( {
                     variant="primary"
                     disabled={ isLoading }
                     loading={ isLoading }
+                    label={ __( 'Save Variation', 'dokan-lite' ) }
                     onClick={ async () => {
                         await saveVariation( variation, product );
                     } }
-                >
-                    { __( 'Save Variation', 'dokan-lite' ) }
-                </DokanButton>
+                />
             </div>
         </div>
     );

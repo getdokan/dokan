@@ -22,9 +22,8 @@ class PayloadResolver {
      *
      * @return array Data suitable for WC REST product create/update.
      */
-    public static function schema_to_wc_api( array $data ): array {
-        $out = self::strip_empty_values( $data );
-        $out = self::resolve_integer_fields( $out );
+    public static function resolve( array $data ): array {
+        $out = self::resolve_integer_fields( $data );
         $out = self::resolve_taxonomies( $out );
         $out = self::resolve_images( $out );
         $out = self::resolve_dimensions( $out );
@@ -35,19 +34,6 @@ class PayloadResolver {
         return apply_filters( 'dokan_product_editor_schema_payload', $out );
     }
 
-    /**
-     * Remove null and empty-string values from the payload.
-     *
-     * @since DOKAN_SINCE
-     */
-    public static function strip_empty_values( array $data ): array {
-        return array_filter(
-            $data,
-            static function ( $v ) {
-                return $v !== null && $v !== '';
-            }
-        );
-    }
 
     /**
      * Cast numeric string fields to integers for the WC REST API.
@@ -63,8 +49,14 @@ class PayloadResolver {
         ];
 
         foreach ( $int_fields as $key ) {
-            if ( array_key_exists( $key, $data ) && $data[ $key ] !== '' && $data[ $key ] !== null && is_numeric( $data[ $key ] ) ) {
+            if ( ! array_key_exists( $key, $data ) ) {
+                continue;
+            }
+
+            if ( is_numeric( $data[ $key ] ) ) {
                 $data[ $key ] = (int) $data[ $key ];
+            } elseif ( $data[ $key ] === '' || $data[ $key ] === null ) {
+                unset( $data[ $key ] );
             }
         }
 
@@ -103,13 +95,19 @@ class PayloadResolver {
         $images = [];
 
         if ( ! empty( $data[ Elements::FEATURED_IMAGE_ID ] ) ) {
-            $images[] = [ 'id' => self::extract_image_id( $data[ Elements::FEATURED_IMAGE_ID ] ) ];
+            $id = self::extract_image_id( $data[ Elements::FEATURED_IMAGE_ID ] );
+            if ( $id > 0 ) {
+                $images[] = [ 'id' => $id ];
+            }
             unset( $data[ Elements::FEATURED_IMAGE_ID ] );
         }
 
         if ( isset( $data[ Elements::GALLERY_IMAGE_IDS ] ) && is_array( $data[ Elements::GALLERY_IMAGE_IDS ] ) ) {
             foreach ( $data[ Elements::GALLERY_IMAGE_IDS ] as $img ) {
-                $images[] = [ 'id' => self::extract_image_id( $img ) ];
+                $id = self::extract_image_id( $img );
+                if ( $id > 0 ) {
+                    $images[] = [ 'id' => $id ];
+                }
             }
             unset( $data[ Elements::GALLERY_IMAGE_IDS ] );
         }
@@ -199,7 +197,7 @@ class PayloadResolver {
      */
     private static function resolve_attributes( array $data ): array {
         if ( isset( $data[ Elements::ATTRIBUTES ] ) && is_array( $data[ Elements::ATTRIBUTES ] ) ) {
-            $data[ Elements::ATTRIBUTES ] = self::transform_attributes_for_api( $data[ Elements::ATTRIBUTES ] );
+            $data[ Elements::ATTRIBUTES ] = self::transform_attributes( $data[ Elements::ATTRIBUTES ] );
         }
 
         return $data;
@@ -214,7 +212,7 @@ class PayloadResolver {
      *
      * @return array
      */
-    private static function transform_attributes_for_api( array $attributes ): array {
+    private static function transform_attributes( array $attributes ): array {
         $result = [];
 
         foreach ( $attributes as $index => $attr ) {

@@ -69,7 +69,7 @@ const SelectEdit = ( { data, field, onChange, validity }: any ) => {
     const getSelectedValue = () => {
         const currentValue = data[ field.id ];
 
-        if ( ! currentValue ) {
+        if ( currentValue === undefined || currentValue === null ) {
             return isMulti ? [] : null;
         }
 

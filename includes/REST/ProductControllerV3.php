@@ -143,7 +143,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
         }
 
         $params = $request->get_params();
-        $resolved = PayloadResolver::schema_to_wc_api( $params );
+        $resolved = PayloadResolver::resolve( $params );
         $request->set_body( wp_json_encode( $resolved ) );
         return $result;
     }

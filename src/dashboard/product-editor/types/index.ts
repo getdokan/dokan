@@ -1,6 +1,6 @@
 export interface DependencyCondition {
     key: string;
-    comparison: '==' | '!=' | 'empty' | 'not_empty' | '===' | '!==' | 'not_equal' | 'equal';
+    comparison: '==' | '!=' | 'empty' | 'not_empty' | '===' | '!==' | 'not_equal' | 'equal' | 'contains';
     value?: string | boolean | number;
 }
 

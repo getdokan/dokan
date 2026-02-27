@@ -111,14 +111,23 @@ class FormSchema {
             ],
         ];
 
-        // Hide price fields for variable products (price is set per-variation).
-        $dep_non_variable = [
+        // Per-type visibility: show for simple & variation, hide for variable (price is set per-variation).
+        $price_visibilities = apply_filters(
+            'dokan_product_editor_price_visibilities',
             [
-                'comparison' => '!=',
-                'key'        => Elements::TYPE,
-                'value'      => Elements::PRODUCT_TYPE_VARIABLE,
-            ],
-        ];
+                Elements::PRODUCT_TYPE_SIMPLE    => true,
+                Elements::PRODUCT_TYPE_VARIABLE  => false,
+                Elements::PRODUCT_TYPE_VARIATION => true,
+            ]
+        );
+
+        $schedule_deps = [
+			[
+				'comparison' => '==',
+				'key'        => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
+				'value'      => 'on',
+			],
+		];
 
         $general_fields = [
             [
@@ -161,7 +170,7 @@ class FormSchema {
             ],
             [
                 'id'             => Elements::TYPE,
-                'section_id'   => Elements::SECTION_GENERAL,
+                'section_id'     => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'Product Type', 'dokan-lite' ),
                 'variant'        => 'select',
@@ -176,7 +185,7 @@ class FormSchema {
             ],
             [
                 'id'           => Elements::ENABLED,
-                'section_id'  => Elements::SECTION_GENERAL,
+                'section_id'   => Elements::SECTION_GENERAL,
                 'type'         => 'field',
                 'label'        => __( 'Enabled', 'dokan-lite' ),
                 'variant'      => 'checkbox',
@@ -184,7 +193,7 @@ class FormSchema {
                 'visibility'   => true,
                 'dependencies' => [
                     [
-                        'comparison' => '==',
+                        'comparison' => 'contains',
                         'key'        => Elements::TYPE,
                         'value'      => 'variation',
                     ],
@@ -192,75 +201,59 @@ class FormSchema {
             ],
             [
                 'id'           => Elements::REGULAR_PRICE,
-                'section_id'  => Elements::SECTION_GENERAL,
+                'section_id'   => Elements::SECTION_GENERAL,
                 'type'         => 'field',
                 'label'        => __( 'Price', 'dokan-lite' ),
                 'variant'      => 'text',
                 'placeholder'  => '0.00',
                 'priority'     => 30,
                 'visibility'   => true,
-                'dependencies' => $dep_non_variable,
+                'visibilities' => $price_visibilities,
             ],
             [
                 'id'           => Elements::SALE_PRICE,
-                'section_id'  => Elements::SECTION_GENERAL,
+                'section_id'   => Elements::SECTION_GENERAL,
                 'type'         => 'field',
                 'label'        => __( 'Sale Price', 'dokan-lite' ),
                 'variant'      => 'text',
                 'placeholder'  => '0.00',
                 'priority'     => 30,
                 'visibility'   => true,
-                'dependencies' => $dep_non_variable,
+                'visibilities' => $price_visibilities,
             ],
             [
                 'id'             => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
-                'section_id'   => Elements::SECTION_GENERAL,
+                'section_id'     => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'Create Schedule for Discount', 'dokan-lite' ),
                 'variant'        => 'checkbox',
                 'priority'       => 30,
                 'visibility'     => true,
-                'dependencies'   => $dep_non_variable,
+                'visibilities'   => $price_visibilities,
             ],
             [
                 'id'             => Elements::DATE_ON_SALE_FROM,
-                'section_id'   => Elements::SECTION_GENERAL,
+                'section_id'     => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'From', 'dokan-lite' ),
                 'variant'        => 'datetime',
                 'placeholder'    => 'YYYY-MM-DD HH:MM',
                 'priority'       => 30,
-                'dependencies' => array_merge(
-                    $dep_non_variable,
-                    [
-                        [
-                            'comparison' => '==',
-                            'key'        => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
-                            'value'      => 'on',
-                        ],
-                    ]
-                ),
                 'visibility'     => true,
+                'visibilities'   => $price_visibilities,
+                'dependencies'   => $schedule_deps,
             ],
             [
                 'id'             => Elements::DATE_ON_SALE_TO,
-                'section_id'   => Elements::SECTION_GENERAL,
+                'section_id'     => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'To', 'dokan-lite' ),
                 'variant'        => 'datetime',
                 'placeholder'    => 'YYYY-MM-DD HH:MM',
                 'priority'       => 30,
-                'dependencies' => array_merge(
-                    $dep_non_variable,
-                    [
-                        [
-                            'comparison' => '==',
-                            'key'        => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
-                            'value'      => 'on',
-                        ],
-                    ]
-                ),
                 'visibility'     => true,
+                'visibilities'   => $price_visibilities,
+                'dependencies'   => $schedule_deps,
             ],
             [
                 'id'               => Elements::CATEGORIES,
@@ -632,7 +625,7 @@ class FormSchema {
         if ( $product instanceof WC_Product ) {
             foreach ( $items as &$item ) {
                 if ( $item['type'] === 'field' ) {
-                    $value = $this->resolve_field_value( $item['id'], $product );
+                    $value         = $this->resolve_field_value( $item['id'], $product );
                     $item['value'] = $this->format_field_value( $value, $item['variant'] ?? 'text' );
                 }
             }

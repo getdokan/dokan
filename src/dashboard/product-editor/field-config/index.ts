@@ -1,7 +1,7 @@
 import { applyFilters } from '@wordpress/hooks';
 import { FieldHandler, FormField, FieldConfig } from '../types';
 import AsyncSelectEdit from '../components/AsyncSelectEdit';
-import AttributeVariationEdit from '../components/AttributeVariationEdit';
+import AttributesEdit from '../components/AttributesEdit';
 import DateTimePickerEdit from '../components/DateTimePickerEdit';
 import ImageEdit from '../components/ImageEdit';
 import FileUploadEdit from '../components/FileUploadEdit';
@@ -65,7 +65,7 @@ const dateHandler: FieldHandler = () => ( {
  */
 const selectHandler: FieldHandler = ( field ) => {
     const config = {
-        type: 'number',
+        type: 'text',
         Edit: SelectEdit,
         multiple: false,
     };
@@ -79,7 +79,7 @@ const selectHandler: FieldHandler = ( field ) => {
 
 const asyncSelectHandler: FieldHandler = ( field ) => {
     const config = {
-        type: 'number',
+        type: 'text',
         Edit: AsyncSelectEdit,
         multiple: false,
     };
@@ -129,11 +129,11 @@ const fileHandler: FieldHandler = () => ( {
 /**
  * Handler for attributes fields.
  *
- * @return Configuration object with type 'array' and AttributeVariationEdit component.
+ * @return Configuration object with type 'array' and AttributesEdit component.
  */
 const attributeHandler: FieldHandler = () => ( {
     type: 'array',
-    Edit: AttributeVariationEdit,
+    Edit: AttributesEdit,
 } );
 
 /**

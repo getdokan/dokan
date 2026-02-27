@@ -15,11 +15,13 @@ export const selectors = {
         productId: number
     ): FlatFormItem[] | undefined => state.forms[ productId ]?.formItems,
 
-    isSubmitting: ( state: ProductEditorState, productId: number ): boolean =>
-        !! state.submitting[ productId ],
+    isSubmitting: ( state: ProductEditorState, productId: number ): boolean => {
+        return !! state.submitting[ productId ];
+    },
 
-    hasForm: ( state: ProductEditorState, productId: number ): boolean =>
-        !! state.forms[ productId ],
+    hasForm: ( state: ProductEditorState, productId: number ): boolean => {
+        return !! state.forms[ productId ];
+    },
 
     // Variations selectors.
     getVariations: (

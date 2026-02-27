@@ -2,14 +2,7 @@ import { sanitizeHTML } from '@src/utilities';
 import { __ } from '@wordpress/i18n';
 import type { DependencyCondition, FlatFormItem } from './types';
 
-/**
- * Helper to find a field or section by ID in the flat form items array.
- *
- * @param {Array}  formItems Flat array of sections and fields.
- * @param {string} fieldId  The ID of the field or section to find.
- *
- * @return {object|null} The field or section item if found, null otherwise.
- */
+/** Find a field or section by ID. */
 export const getField = (
     formItems: FlatFormItem[],
     fieldId: string
@@ -17,15 +10,7 @@ export const getField = (
     return formItems.find( ( item ) => item.id === fieldId ) ?? null;
 };
 
-/**
- * Resolve the label for a field item based on the current product type.
- * Falls back to the default `label` when no type-specific entry exists in `labels`.
- *
- * @param {FlatFormItem} item        Form item (field or section).
- * @param {string}       productType Current product type (e.g. 'simple', 'variable').
- *
- * @return {string} Resolved label string.
- */
+/** Resolve the label for a field, falling back to the default label. */
 export const resolveLabel = (
     item: FlatFormItem,
     productType: string = 'simple'
@@ -33,15 +18,7 @@ export const resolveLabel = (
     return item.labels?.[ productType ] ?? item.label;
 };
 
-/**
- * Resolve the visibility for a field item based on the current product type.
- * Falls back to the default `visibility` when no type-specific entry exists in `visibilities`.
- *
- * @param {FlatFormItem} item        Form item (field or section).
- * @param {string}       productType Current product type (e.g. 'simple', 'variable').
- *
- * @return {boolean} Resolved visibility value.
- */
+/** Resolve the visibility for a field, falling back to the default visibility. */
 export const resolveVisibility = (
     item: FlatFormItem,
     productType: string = 'simple'
@@ -49,14 +26,7 @@ export const resolveVisibility = (
     return item.visibilities?.[ productType ] ?? item.visibility ?? true;
 };
 
-/**
- * helper to get label and description for a field.
- *
- * @param {Array}  formItems Flat array of sections and fields.
- * @param {string} fieldId The ID of the field.
- *
- * @return {Object} Object containing label and description.
- */
+/** Get label and description for a field. */
 export const getFieldHeading = (
     formItems: FlatFormItem[],
     fieldId: string
@@ -78,19 +48,6 @@ export const getFieldHeading = (
 export function fieldValueForProduct( item: FlatFormItem ): any {
     if ( item.type !== 'field' ) return undefined;
     const v = item.value;
-    if (
-        item.id === 'image_id' &&
-        v != null &&
-        typeof v === 'object' &&
-        'id' in v
-    ) {
-        return v.id;
-    }
-    if ( item.id === 'gallery_image_ids' && Array.isArray( v ) ) {
-        return v.map( ( img: any ) =>
-            typeof img === 'object' && img?.id != null ? img.id : img
-        );
-    }
     const variant = item.variant;
     if ( variant === 'checkbox' ) {
         return v === 'yes' || v === 'on' || v === true || v === 1 || v === '1';
@@ -141,30 +98,31 @@ function resolveCondition(
         case 'not_empty':
             return ! isEmptyValue( depValue );
         case '==':
-        case '===':
         case 'equal':
+            return (
+                normalizeForCompare( depValue ) == normalizeForCompare( value )
+            );
+        case '===':
             return (
                 normalizeForCompare( depValue ) === normalizeForCompare( value )
             );
         case '!=':
-        case '!==':
         case 'not_equal':
+            return (
+                normalizeForCompare( depValue ) != normalizeForCompare( value )
+            );
+        case '!==':
             return (
                 normalizeForCompare( depValue ) !== normalizeForCompare( value )
             );
+        case 'contains':
+            return depValue.includes( value );
         default:
             return true;
     }
 }
 
-/**
- * Check whether a field should be active based on its product_types and dependencies.
- *
- * @param {FlatFormItem} field The field to check.
- * @param {Record<string, any>} data  Form values keyed by field id.
- *
- * @return {boolean} True if the field's dependencies are met, false otherwise.
- */
+/** Check whether a field's dependencies are met. */
 export const resolveDependency = (
     field: FlatFormItem,
     data: Record< string, any >
@@ -178,18 +136,7 @@ export const resolveDependency = (
     } );
 };
 
-/**
- * Recursive function to process layout fields.
- * Handles string references, card creation, and child processing.
- * Also filters out empty cards (cards with no visible children).
- * Uses only formItems (flat array); field config is derived from formItems.
- *
- * @param {Array}  layouts   The fields to process for the layout.
- * @param {Array}  formItems Flat array of sections and fields (type, id, order, dependencies).
- * @param {Object} product   The current product data for dependency checking.
- *
- * @return {Array} valid processed fields.
- */
+/** Recursively process layout fields, resolving visibility, dependencies, and sorting by order. */
 export const layoutBuilder = (
     layouts: any[],
     formItems: FlatFormItem[] = [],
@@ -278,14 +225,7 @@ export const layoutBuilder = (
     return mappedLayouts.filter( Boolean );
 };
 
-/**
- * Helper to append new sections to the left column.
- *
- * @param {Array} items       Layout items.
- * @param {Array} newSections New sections to append.
- *
- * @return {Array} Updated layout items.
- */
+/** Append new sections to the left column. */
 export const appendToLeftColumn = (
     items: any[],
     newSections: any[]
@@ -307,14 +247,7 @@ export const appendToLeftColumn = (
     } );
 };
 
-/**
- * Helper to collect all used field IDs from the layout.
- *
- * @param {Array} items      Layout items.
- * @param {Set}   usedFields Set to store used fields.
- *
- * @return {Set} Set of used fields.
- */
+/** Collect all used field IDs from the layout. */
 export const collectUsedFields = (
     items: any[],
     usedFields: Set< string > = new Set()
@@ -331,14 +264,7 @@ export const collectUsedFields = (
     return usedFields;
 };
 
-/**
- * Helper to get remaining fields that are not in the layout (from flat form items).
- *
- * @param {Array} formItems  Flat array of sections and fields.
- * @param {Set}   usedFields Set of used field ids.
- *
- * @return {Object} Remaining field ids by section id.
- */
+/** Get remaining fields not present in the layout, grouped by section. */
 export const getRemainingFields = (
     formItems: FlatFormItem[],
     usedFields: Set< string >
@@ -365,14 +291,7 @@ export const getRemainingFields = (
     return remainingFieldsBySection;
 };
 
-/**
- * Helper to inject remaining fields into the layout.
- *
- * @param {Array}  items                    Layout items.
- * @param {Object} remainingFieldsBySection Object containing remaining fields by section.
- *
- * @return {Array} Updated layout items.
- */
+/** Inject remaining fields into their matching sections in the layout. */
 export const injectRemainingFields = (
     items: any[],
     remainingFieldsBySection: Record< string, string[] >

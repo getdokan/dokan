@@ -82,6 +82,12 @@ const useVariationLayouts = (
                 },
                 children: [ 'date_on_sale_from', 'date_on_sale_to' ],
             },
+            '_subscription_period_interval',
+            '_subscription_period',
+            '_subscription_length',
+            '_subscription_sign_up_fee',
+            '_subscription_trial_length',
+            '_subscription_trial_period',
             {
                 id: 'allow-stock_quantity-backorders',
                 layout: {
@@ -142,10 +148,13 @@ const useVariationLayouts = (
         );
 
         // Flatten remaining custom fields directly into the layout (no card/header wrapping).
-        const remainingFields = Object.values( remainingFieldsBySection ).flat();
-        const updatedLayouts = remainingFields.length > 0
-            ? [ ...layouts, ...remainingFields ]
-            : layouts;
+        const remainingFields = Object.values(
+            remainingFieldsBySection
+        ).flat();
+        const updatedLayouts =
+            remainingFields.length > 0
+                ? [ ...layouts, ...remainingFields ]
+                : layouts;
 
         return {
             fields: layoutBuilder( updatedLayouts, formItems, product ),
