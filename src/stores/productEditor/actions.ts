@@ -195,6 +195,47 @@ export const actions = {
         };
     },
 
+    // Re-fetch a single variation's form fields and update the store.
+    fetchVariationForm: ( variationId: number ) => {
+        return async ( { dispatch }: { dispatch: any } ) => {
+            const response = await apiFetch< {
+                form_items: FlatFormItem[];
+                vendor_earning: number;
+            } >( {
+                path: `/dokan/v3/products/${ variationId }/fields`,
+            } );
+            dispatch(
+                actions.initForm(
+                    variationId,
+                    response.form_items ?? [],
+                    response.vendor_earning ?? 0
+                )
+            );
+        };
+    },
+
+    // Re-fetch form fields for all expanded variations of a product.
+    refreshExpandedForms: ( productId: number ) => {
+        return async ( {
+            dispatch,
+            select,
+        }: {
+            dispatch: any;
+            select: any;
+        } ) => {
+            const variations = select.getVariations( productId ) || [];
+            await Promise.all(
+                variations
+                    .filter( ( v: VariationType ) => select.hasForm( v.id ) )
+                    .map( ( v: VariationType ) =>
+                        dispatch( actions.fetchVariationForm( v.id ) ).catch(
+                            console.error
+                        )
+                    )
+            );
+        };
+    },
+
     // Variations thunk actions.
     fetchVariations: ( productId: number ) => {
         return async ( { dispatch }: { dispatch: any } ) => {
@@ -230,7 +271,7 @@ export const actions = {
                         .filter( ( attr ) => attr.selected_value )
                         .map( ( attr ) => ( {
                             name: attr.value,
-                            option: attr.selected_value?.value || '',
+                            option: attr.selected_value?.label || '',
                         } ) );
                 }
 
@@ -239,6 +280,11 @@ export const actions = {
                     method: 'PUT',
                     data: payload,
                 } );
+
+                // Re-fetch variation form fields to reflect updated values.
+                await dispatch(
+                    actions.fetchVariationForm( variation.id )
+                );
             } catch ( error ) {
                 dispatch( actions.setError( error as Error ) );
                 throw error;
@@ -296,6 +342,49 @@ export const actions = {
             } catch ( error ) {
                 dispatch( actions.setError( error as Error ) );
                 throw error;
+            }
+        };
+    },
+
+    bulkEditVariations: (
+        productId: number,
+        bulkAction: string,
+        data: Record< string, any > = {}
+    ) => {
+        return async ( { dispatch }: { dispatch: any } ) => {
+            dispatch( actions.setVariationsLoading( productId, true ) );
+            try {
+                const dokanGlobal = ( window as any ).dokan;
+                const formData = new FormData();
+                formData.append( 'action', 'dokan_bulk_edit_variations' );
+                formData.append(
+                    'security',
+                    dokanGlobal.bulk_edit_variations_nonce
+                );
+                formData.append( 'product_id', String( productId ) );
+                formData.append( 'bulk_action', bulkAction );
+                Object.entries( data ).forEach( ( [ key, value ] ) => {
+                    formData.append( `data[${ key }]`, String( value ) );
+                } );
+
+                const response = await fetch( dokanGlobal.ajaxurl, {
+                    method: 'POST',
+                    body: formData,
+                } );
+
+                if ( ! response.ok ) {
+                    throw new Error( 'Bulk edit failed' );
+                }
+
+                await dispatch( actions.fetchVariations( productId ) );
+
+                // Re-fetch form fields for expanded variations so they reflect the updated values.
+                await dispatch( actions.refreshExpandedForms( productId ) );
+            } catch ( error ) {
+                dispatch( actions.setError( error as Error ) );
+                throw error;
+            } finally {
+                dispatch( actions.setVariationsLoading( productId, false ) );
             }
         };
     },

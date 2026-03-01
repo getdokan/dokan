@@ -1,6 +1,5 @@
 import { DokanButton, Select } from '@src/components';
-import apiFetch from '@wordpress/api-fetch';
-import { useDispatch } from '@wordpress/data';
+import { useDispatch, useSelect } from '@wordpress/data';
 import { DataForm } from '@wordpress/dataviews';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
@@ -9,7 +8,7 @@ import productEditorStore from '@dokan/stores/product-editor';
 import { useProductEditor } from '../../hooks/useProductEditor';
 import { useVariations } from '../../hooks/useVariations';
 import useVariationLayouts from '../../hooks/useVariationLayouts';
-import { FlatFormItem, VariationType } from '../../types';
+import { VariationType } from '../../types';
 
 type VariationCardProps = {
     variation: VariationType;
@@ -32,11 +31,14 @@ const VariationCardContent = ( {
         <div className="flex flex-col gap-4">
             <div className="grid grid-cols-4 gap-4">
                 { variation.attributes.map( ( attr, idx: number ) => {
+                    const placeholder = `${ __( 'Any ', 'dokan-lite' ) }${
+                        attr.label
+                    }`;
                     return (
                         <div key={ idx }>
                             <Select
                                 options={ attr.options }
-                                placeholder={ attr.label }
+                                placeholder={ placeholder }
                                 value={ attr.selected_value }
                                 onChange={ ( value: any ) => {
                                     const newAttributes = [
@@ -81,33 +83,34 @@ const VariationCardContent = ( {
 
 const VariationCard = ( { variation }: VariationCardProps ) => {
     const { removeVariation } = useVariations( variation.parent_id );
-    const { initForm } = useDispatch( productEditorStore );
+    const { fetchVariationForm } = useDispatch( productEditorStore );
     const [ isExpanded, setIsExpanded ] = useState( false );
-    const [ formItemsFetched, setFormItemsFetched ] = useState( false );
+    const [ isLoading, setIsLoading ] = useState( false );
 
-    const fetchedVariationData = async () => {
+    const hasFormData = useSelect(
+        ( select ) => {
+            return ( select( productEditorStore ) as any ).hasForm(
+                variation.id
+            );
+        },
+        [ variation.id ]
+    );
+
+    const handleToggle = async () => {
         setIsExpanded( ! isExpanded );
 
-        if ( formItemsFetched ) {
+        if ( hasFormData ) {
             return;
         }
 
         try {
-            const response = await apiFetch< {
-                form_items: FlatFormItem[];
-                vendor_earning: number;
-            } >( {
-                path: `/dokan/v3/products/${ variation.id }/fields`,
-            } );
-            initForm(
-                variation.id,
-                response.form_items ?? [],
-                response.vendor_earning
-            );
-            setFormItemsFetched( true );
+            setIsLoading( true );
+            await fetchVariationForm( variation.id );
         } catch ( error ) {
             // eslint-disable-next-line no-console
             console.error( 'Error fetching variation data:', error );
+        } finally {
+            setIsLoading( false );
         }
     };
 
@@ -116,7 +119,7 @@ const VariationCard = ( { variation }: VariationCardProps ) => {
             <div
                 role="button"
                 className="flex justify-between items-center p-3 bg-gray-50 border-b cursor-pointer select-none"
-                onClick={ fetchedVariationData }
+                onClick={ handleToggle }
             >
                 <div className="font-semibold text-gray-700 text-sm">
                     # { variation.id }
@@ -162,7 +165,7 @@ const VariationCard = ( { variation }: VariationCardProps ) => {
                     ! isExpanded && 'hidden'
                 }` }
             >
-                { formItemsFetched ? (
+                { ! isLoading && hasFormData ? (
                     <VariationCardContent variation={ variation } />
                 ) : (
                     <div className="p-4 text-center text-gray-400">

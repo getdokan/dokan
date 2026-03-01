@@ -97,6 +97,7 @@ const useVariationLayouts = (
                 children: [ 'stock_quantity', 'backorders' ],
             },
             'low_stock_amount',
+            'shipping_class',
             'tax_class',
             'description',
             {

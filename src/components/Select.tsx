@@ -1,11 +1,11 @@
 import { SearchableSelect } from '@getdokan/dokan-ui';
-import Control from '@src/components/select/Control';
-import DropdownIndicator from '@src/components/select/DropdownIndicator';
-import MultiValue from '@src/components/select/MultiValue';
-import Option from '@src/components/select/Option';
-import SingleValue from '@src/components/select/SingleValue';
-import styles from '@src/components/select/styles';
-import ValueContainer from '@src/components/select/ValueContainer';
+import ValueContainer from "@src/components/select/ValueContainer";
+import Option from "@src/components/select/Option";
+import MultiValue from "@src/components/select/MultiValue";
+import SingleValue from "@src/components/select/SingleValue";
+import Control from "@src/components/select/Control";
+import DropdownIndicator from "@src/components/select/DropdownIndicator";
+import styles from "@src/components/select/styles";
 
 // Local utility to extract props type of a component without relying on React/WordPress types
 type PropsOf< T > = T extends ( props: infer P ) => any ? P : never;

@@ -5,7 +5,7 @@ import { __ } from '@wordpress/i18n';
 // @ts-ignore
 import productEditorStore from '@dokan/stores/product-editor';
 import { getFieldConfig } from '../components/FieldRenderer';
-import { FlatFormItem } from '../types';
+import { Attribute, DefaultAttribute, FlatFormItem } from '../types';
 import { resolveLabel, resolveVisibility } from '../utils';
 
 /**
@@ -51,6 +51,84 @@ export function useProductEditor( productId: number ) {
         [ productId, updateProduct ]
     );
 
+    // Initialize default_attributes from attributes' default values on first load.
+    const attributes: Attribute[] = product?.attributes || [];
+    const variationAttributes = useMemo(
+        () => attributes.filter( ( attr ) => attr.variation ),
+        [ attributes ]
+    );
+
+    useEffect( () => {
+        if ( product?.default_attributes !== undefined ) {
+            return;
+        }
+        if ( ! variationAttributes.length ) {
+            return;
+        }
+        const defaults = variationAttributes
+            .filter( ( attr ) => attr.default )
+            .map( ( attr ) => ( {
+                id: attr.id,
+                name: attr.name,
+                option: attr.default!,
+            } ) );
+        onChange( { default_attributes: defaults } );
+    }, [ product?.default_attributes, variationAttributes, onChange ] );
+
+    const defaultAttributes: DefaultAttribute[] =
+        product?.default_attributes || [];
+
+    const getDefaultValue = useCallback(
+        ( attr: Attribute ) => {
+            const found = defaultAttributes.find(
+                ( d ) => d.name === attr.name
+            );
+            if ( ! found || ! found.option ) {
+                return null;
+            }
+            return { label: found.option, value: found.option };
+        },
+        [ defaultAttributes ]
+    );
+
+    const handleDefaultChange = useCallback(
+        ( attr: Attribute, selectedOption: any ) => {
+            const option = selectedOption
+                ? typeof selectedOption === 'string'
+                    ? selectedOption
+                    : selectedOption.label || selectedOption.value || ''
+                : '';
+
+            let newDefaults: DefaultAttribute[];
+
+            if ( option ) {
+                const existingIndex = defaultAttributes.findIndex(
+                    ( d ) => d.name === attr.name
+                );
+                if ( existingIndex >= 0 ) {
+                    newDefaults = [ ...defaultAttributes ];
+                    newDefaults[ existingIndex ] = {
+                        id: attr.id,
+                        name: attr.name,
+                        option,
+                    };
+                } else {
+                    newDefaults = [
+                        ...defaultAttributes,
+                        { id: attr.id, name: attr.name, option },
+                    ];
+                }
+            } else {
+                newDefaults = defaultAttributes.filter(
+                    ( d ) => d.name !== attr.name
+                );
+            }
+
+            onChange( { default_attributes: newDefaults } );
+        },
+        [ defaultAttributes, onChange ]
+    );
+
     const submitHandler = useCallback(
         async ( e: any ) => {
             if ( e?.preventDefault ) {
@@ -83,6 +161,9 @@ export function useProductEditor( productId: number ) {
         onChange,
         submitHandler,
         isLoading,
+        defaultAttributes,
+        getDefaultValue,
+        handleDefaultChange,
     };
 }
 

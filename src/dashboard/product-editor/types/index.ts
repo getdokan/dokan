@@ -69,4 +69,11 @@ export interface Attribute {
     position: number;
     is_taxonomy?: boolean;
     terms?: { label: string; value: number }[];
+    default?: string;
+}
+
+export interface DefaultAttribute {
+    id: number;
+    name: string;
+    option: string;
 }

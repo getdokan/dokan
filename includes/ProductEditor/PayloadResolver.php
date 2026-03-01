@@ -23,13 +23,14 @@ class PayloadResolver {
      * @return array Data suitable for WC REST product create/update.
      */
     public static function resolve( array $data ): array {
-        $out = self::resolve_integer_fields( $data );
-        $out = self::resolve_taxonomies( $out );
-        $out = self::resolve_images( $out );
-        $out = self::resolve_dimensions( $out );
-        $out = self::resolve_shipping_class( $out );
-        $out = self::resolve_linked_products( $out );
-        $out = self::resolve_attributes( $out );
+        $resolver = new static();
+
+        $out = $resolver->resolve_integer_fields( $data );
+        $out = $resolver->resolve_taxonomies( $out );
+        $out = $resolver->resolve_images( $out );
+        $out = $resolver->resolve_dimensions( $out );
+        $out = $resolver->resolve_linked_products( $out );
+        $out = $resolver->resolve_attributes( $out );
 
         return apply_filters( 'dokan_product_editor_schema_payload', $out );
     }
@@ -40,7 +41,7 @@ class PayloadResolver {
      *
      * @since DOKAN_SINCE
      */
-    public static function resolve_integer_fields( array $data ): array {
+    public function resolve_integer_fields( array $data ): array {
         $int_fields = [
             Elements::STOCK_QUANTITY,
             Elements::LOW_STOCK_AMOUNT,
@@ -69,7 +70,7 @@ class PayloadResolver {
      *
      * @since DOKAN_SINCE
      */
-    private static function resolve_taxonomies( array $data ): array {
+    public function resolve_taxonomies( array $data ): array {
         $taxonomy_map = [
             Elements::CATEGORIES => 'categories',
             Elements::TAGS       => 'tags',
@@ -78,7 +79,7 @@ class PayloadResolver {
 
         foreach ( $taxonomy_map as $schema_key => $api_key ) {
             if ( isset( $data[ $schema_key ] ) && is_array( $data[ $schema_key ] ) ) {
-                $data[ $api_key ] = self::map_ids_to_objects( $data[ $schema_key ] );
+                $data[ $api_key ] = $this->map_ids_to_objects( $data[ $schema_key ] );
                 unset( $data[ $schema_key ] );
             }
         }
@@ -91,11 +92,11 @@ class PayloadResolver {
      *
      * @since DOKAN_SINCE
      */
-    private static function resolve_images( array $data ): array {
+    public function resolve_images( array $data ): array {
         $images = [];
 
         if ( ! empty( $data[ Elements::FEATURED_IMAGE_ID ] ) ) {
-            $id = self::extract_image_id( $data[ Elements::FEATURED_IMAGE_ID ] );
+            $id = $this->extract_image_id( $data[ Elements::FEATURED_IMAGE_ID ] );
             if ( $id > 0 ) {
                 $images[] = [ 'id' => $id ];
             }
@@ -104,7 +105,7 @@ class PayloadResolver {
 
         if ( isset( $data[ Elements::GALLERY_IMAGE_IDS ] ) && is_array( $data[ Elements::GALLERY_IMAGE_IDS ] ) ) {
             foreach ( $data[ Elements::GALLERY_IMAGE_IDS ] as $img ) {
-                $id = self::extract_image_id( $img );
+                $id = $this->extract_image_id( $img );
                 if ( $id > 0 ) {
                     $images[] = [ 'id' => $id ];
                 }
@@ -124,7 +125,7 @@ class PayloadResolver {
      *
      * @since DOKAN_SINCE
      */
-    public static function resolve_dimensions( array $data ): array {
+    public function resolve_dimensions( array $data ): array {
         $dimension_keys = [
             'length' => Elements::DIMENSIONS_LENGTH,
             'width'  => Elements::DIMENSIONS_WIDTH,
@@ -155,25 +156,11 @@ class PayloadResolver {
     }
 
     /**
-     * Map the schema shipping_class key to the WC API product_shipping_class key.
-     *
-     * @since DOKAN_SINCE
-     */
-    public static function resolve_shipping_class( array $data ): array {
-        if ( array_key_exists( Elements::SHIPPING_CLASS, $data ) ) {
-            $data['product_shipping_class'] = (string) $data[ Elements::SHIPPING_CLASS ];
-            unset( $data[ Elements::SHIPPING_CLASS ] );
-        }
-
-        return $data;
-    }
-
-    /**
      * Normalize linked product fields (upsells, cross-sells, grouped) to integer ID arrays.
      *
      * @since DOKAN_SINCE
      */
-    private static function resolve_linked_products( array $data ): array {
+    public function resolve_linked_products( array $data ): array {
         $linked_keys = [
             Elements::UPSELL_IDS,
             Elements::CROSS_SELL_IDS,
@@ -182,7 +169,7 @@ class PayloadResolver {
 
         foreach ( $linked_keys as $key ) {
             if ( isset( $data[ $key ] ) && is_array( $data[ $key ] ) ) {
-                $data[ $key ] = array_map( 'absint', array_filter( array_map( [ __CLASS__, 'extract_product_id' ], $data[ $key ] ) ) );
+                $data[ $key ] = array_map( 'absint', array_filter( array_map( [ $this, 'extract_product_id' ], $data[ $key ] ) ) );
             }
         }
         $data['crosssell_ids'] = $data[ Elements::CROSS_SELL_IDS ] ?? [];
@@ -195,9 +182,9 @@ class PayloadResolver {
      *
      * @since DOKAN_SINCE
      */
-    private static function resolve_attributes( array $data ): array {
+    public function resolve_attributes( array $data ): array {
         if ( isset( $data[ Elements::ATTRIBUTES ] ) && is_array( $data[ Elements::ATTRIBUTES ] ) ) {
-            $data[ Elements::ATTRIBUTES ] = self::transform_attributes( $data[ Elements::ATTRIBUTES ] );
+            $data[ Elements::ATTRIBUTES ] = $this->transform_attributes( $data[ Elements::ATTRIBUTES ] );
         }
 
         return $data;
@@ -212,7 +199,7 @@ class PayloadResolver {
      *
      * @return array
      */
-    private static function transform_attributes( array $attributes ): array {
+    public function transform_attributes( array $attributes ): array {
         $result = [];
 
         foreach ( $attributes as $index => $attr ) {
@@ -260,7 +247,7 @@ class PayloadResolver {
      *
      * @return array Array of objects with 'id' key.
      */
-    private static function map_ids_to_objects( array $ids ): array {
+    public function map_ids_to_objects( array $ids ): array {
         return array_map(
             static function ( $id ) {
                 return [ 'id' => (int) $id ];
@@ -278,7 +265,7 @@ class PayloadResolver {
      *
      * @return int
      */
-    public static function extract_image_id( $image ): int {
+    public function extract_image_id( $image ): int {
         if ( is_array( $image ) && isset( $image['id'] ) ) {
             return (int) $image['id'];
         }
@@ -295,7 +282,7 @@ class PayloadResolver {
      *
      * @return int
      */
-    private static function extract_product_id( $item ): int {
+    public function extract_product_id( $item ): int {
         if ( is_array( $item ) ) {
             return (int) ( $item['value'] ?? $item['id'] ?? 0 );
         }

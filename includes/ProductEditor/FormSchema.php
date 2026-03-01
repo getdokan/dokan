@@ -769,8 +769,8 @@ class FormSchema {
                 // Get the field name from the key.
                 $field_name = sanitize_key( $key );
 
-                $value = apply_filters( 'dokan_product_editor_schema_value', '', $field_name, $product );
-                if ( '' !== $value ) {
+                $value = apply_filters( 'dokan_product_editor_schema_value', null, $field_name, $product );
+                if ( null !== $value ) {
                     return $value;
                 }
 

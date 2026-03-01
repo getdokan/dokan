@@ -1,5 +1,5 @@
 import { DokanButton, Select } from '@src/components';
-import { useMemo, useState } from '@wordpress/element';
+import { useCallback, useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { useProductEditor } from '../hooks/useProductEditor';
 import { Attribute } from '../types';
@@ -9,7 +9,8 @@ import VariationForm from './variation/VariationForm';
 
 const AttributesEdit = ( { data, field, onChange, validity }: any ) => {
     const attributes: Attribute[] = data[ field.id ] || [];
-    const { isLoading, submitHandler } = useProductEditor( data.id );
+    const { isLoading, submitHandler, getDefaultValue, handleDefaultChange } =
+        useProductEditor( data.id );
     const { type: productType } = data;
     const options = field.elements || [];
     const [ cardExpanded, setCardExpanded ] = useState( false );
@@ -73,6 +74,24 @@ const AttributesEdit = ( { data, field, onChange, validity }: any ) => {
         onChange( { [ field.id ]: newAttributes } );
     };
 
+    const variationAttributes = useMemo(
+        () => attributes.filter( ( attr ) => attr.variation ),
+        [ attributes ]
+    );
+
+    const getDefaultOptions = useCallback( ( attr: Attribute ) => {
+        if ( attr.is_taxonomy && attr.terms ) {
+            return attr.terms.map( ( t ) => ( {
+                label: t.label,
+                value: t.label,
+            } ) );
+        }
+        return ( attr.options || [] ).map( ( o: any ) => ( {
+            label: String( o ),
+            value: String( o ),
+        } ) );
+    }, [] );
+
     return (
         <CustomField field={ field } error={ getValidationError( validity ) }>
             <div className="flex flex-col gap-4">
@@ -117,18 +136,45 @@ const AttributesEdit = ( { data, field, onChange, validity }: any ) => {
                     >
                         { __( 'Add New', 'dokan-lite' ) }
                     </DokanButton>
-                    { attributes.length > 0 && (
-                        <div>
-                            <DokanButton
-                                type="button"
-                                variant="secondary"
-                                onClick={ submitHandler }
-                                disabled={ isLoading }
-                                label={ __( 'Save Attributes', 'dokan-lite' ) }
-                            />
+                </div>
+
+                { productType.includes( 'variable' ) &&
+                    variationAttributes.length > 0 && (
+                        <div className="flex flex-col gap-2">
+                            <div className="text-sm font-medium text-gray-700">
+                                { __( 'Default Form Values', 'dokan-lite' ) }
+                            </div>
+                            <div className="grid grid-cols-3 gap-4">
+                                { variationAttributes.map( ( attr ) => (
+                                    <Select
+                                        key={ attr.name }
+                                        options={ getDefaultOptions( attr ) }
+                                        placeholder={ `${ __(
+                                            'No default',
+                                            'dokan-lite'
+                                        ) } ${ attr.name }\u2026` }
+                                        value={ getDefaultValue( attr ) }
+                                        onChange={ ( val: any ) =>
+                                            handleDefaultChange( attr, val )
+                                        }
+                                        isClearable
+                                    />
+                                ) ) }
+                            </div>
                         </div>
                     ) }
-                </div>
+                { attributes.length > 0 && (
+                    <div>
+                        <DokanButton
+                            type="button"
+                            variant="secondary"
+                            onClick={ submitHandler }
+                            disabled={ isLoading }
+                            loading={ isLoading }
+                            label={ __( 'Save Attributes', 'dokan-lite' ) }
+                        />
+                    </div>
+                ) }
 
                 { productType.includes( 'variable' ) && (
                     <VariationForm

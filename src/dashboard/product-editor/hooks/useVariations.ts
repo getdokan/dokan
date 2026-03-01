@@ -15,9 +15,7 @@ export function useVariations( productId: number ) {
 
     const { variations, isLoading } = useSelect(
         ( select ) => ( {
-            variations: select( productEditorStore ).getVariations(
-                productId
-            ),
+            variations: select( productEditorStore ).getVariations( productId ),
             isLoading:
                 select( productEditorStore ).isVariationsLoading( productId ),
         } ),
@@ -32,19 +30,15 @@ export function useVariations( productId: number ) {
                 await dispatch.saveVariation( variation, data );
                 toast( {
                     type: 'success',
-                    title: __(
-                        'Variation saved successfully',
-                        'dokan-lite'
-                    ),
+                    title: __( 'Variation saved successfully', 'dokan-lite' ),
                 } );
-            } catch ( error ) {
+            } catch ( error: any ) {
                 console.error( 'Error saving variation:', error );
                 toast( {
                     type: 'error',
-                    title: __(
-                        'Error saving variation',
-                        'dokan-lite'
-                    ),
+                    title:
+                        error?.message ||
+                        __( 'Error saving variation', 'dokan-lite' ),
                 } );
             }
         },
@@ -66,19 +60,15 @@ export function useVariations( productId: number ) {
             await dispatch.generateVariations( productId );
             toast( {
                 type: 'success',
-                title: __(
-                    'Variations generated successfully',
-                    'dokan-lite'
-                ),
+                title: __( 'Variations generated successfully', 'dokan-lite' ),
             } );
-        } catch ( error ) {
+        } catch ( error: any ) {
             console.error( 'Error generating variations:', error );
             toast( {
                 type: 'error',
-                title: __(
-                    'Error generating variations',
-                    'dokan-lite'
-                ),
+                title:
+                    error?.message ||
+                    __( 'Error generating variations', 'dokan-lite' ),
             } );
         }
     }, [ productId, dispatch, toast ] );
@@ -88,13 +78,16 @@ export function useVariations( productId: number ) {
             await dispatch.addVariation( productId );
             toast( {
                 type: 'success',
-                title: __(
-                    'Variation added successfully',
-                    'dokan-lite'
-                ),
+                title: __( 'Variation added successfully', 'dokan-lite' ),
             } );
-        } catch ( error ) {
+        } catch ( error: any ) {
             console.error( 'Error adding variation:', error );
+            toast( {
+                type: 'error',
+                title:
+                    error?.message ||
+                    __( 'Error adding variation', 'dokan-lite' ),
+            } );
         }
     }, [ productId, dispatch, toast ] );
 
@@ -121,16 +114,52 @@ export function useVariations( productId: number ) {
                 await dispatch.removeVariation( variation );
                 toast( {
                     type: 'success',
-                    title: __(
-                        'Variation removed successfully',
-                        'dokan-lite'
-                    ),
+                    title: __( 'Variation removed successfully', 'dokan-lite' ),
                 } );
-            } catch ( error ) {
+            } catch ( error: any ) {
                 console.error( 'Error removing variation:', error );
+                toast( {
+                    type: 'error',
+                    title:
+                        error?.message ||
+                        __( 'Error removing variation', 'dokan-lite' ),
+                } );
             }
         },
         [ dispatch, toast ]
+    );
+
+    const bulkEditVariations = useCallback(
+        async (
+            bulkAction: string,
+            data: Record< string, any > = {}
+        ) => {
+            try {
+                await dispatch.bulkEditVariations(
+                    productId,
+                    bulkAction,
+                    data
+                );
+                toast( {
+                    type: 'success',
+                    title: __(
+                        'Bulk action applied successfully',
+                        'dokan-lite'
+                    ),
+                } );
+            } catch ( error: any ) {
+                toast( {
+                    type: 'error',
+                    title:
+                        error?.message ||
+                        __(
+                            'Error applying bulk action',
+                            'dokan-lite'
+                        ),
+                } );
+            }
+        },
+        [ productId, dispatch, toast ]
     );
 
     return {
@@ -140,6 +169,7 @@ export function useVariations( productId: number ) {
         addVariation,
         updateVariation,
         removeVariation,
+        bulkEditVariations,
         isLoading,
     };
 }

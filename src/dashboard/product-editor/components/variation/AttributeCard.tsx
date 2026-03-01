@@ -1,4 +1,8 @@
-import { SimpleCheckbox, SimpleInput } from '@getdokan/dokan-ui';
+import {
+    SimpleCheckbox,
+    SimpleInput,
+    TaggableSelect,
+} from '@getdokan/dokan-ui';
 import { DokanButton, Select } from '@src/components';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
@@ -31,11 +35,19 @@ const AttributeCard = ( {
     };
 
     const attributeOptions = ( attrId: number ) => {
-        return (
-            options.find(
-                ( option: any ) => Number( option.value ) === Number( attrId )
-            )?.terms || []
-        );
+        if ( attr.is_taxonomy ) {
+            return (
+                options.find(
+                    ( option: any ) =>
+                        Number( option.value ) === Number( attrId )
+                )?.terms || []
+            );
+        }
+
+        return attr.options.map( ( optionValue: any ) => ( {
+            value: optionValue,
+            label: optionValue,
+        } ) );
     };
 
     const attributeValues = ( attrValue: Attribute ) => {
@@ -143,10 +155,10 @@ const AttributeCard = ( {
                         <label className="block text-xs font-medium text-gray-500 mb-1">
                             { __( 'Value(s)', 'dokan-lite' ) }
                         </label>
+
                         { attr.is_taxonomy ? (
                             <>
                                 <Select
-                                    // @ts-ignore
                                     isMulti
                                     value={ attributeValues( attr ) }
                                     options={ attributeOptions( attr.id ) }
@@ -176,25 +188,16 @@ const AttributeCard = ( {
                                 </div>
                             </>
                         ) : (
-                            <SimpleInput
-                                value={
-                                    Array.isArray( attr.options )
-                                        ? attr.options.join( ' | ' )
-                                        : attr.options
+                            <TaggableSelect
+                                isMulti
+                                value={ attributeOptions( attr.id ) }
+                                onChange={ ( selected ) =>
+                                    attributeChangeHandler( selected )
                                 }
-                                onChange={ ( e ) =>
-                                    handleAttributeChange(
-                                        'options',
-                                        e.target.value
-                                    )
-                                }
-                                className="w-full px-3 py-2 border rounded text-sm"
-                                input={ {
-                                    placeholder: __(
-                                        'Enter values separated by | (pipe)',
-                                        'dokan-lite'
-                                    ),
-                                } }
+                                placeholder={ __(
+                                    'Enter values',
+                                    'dokan-lite'
+                                ) }
                             />
                         ) }
                     </div>
