@@ -112,13 +112,19 @@ class FormSchema {
         ];
 
         // Per-type visibility: show for simple & variation, hide for variable (price is set per-variation).
+        $pre_type_visibilities = [
+            Elements::PRODUCT_TYPE_SIMPLE    => true,
+            Elements::PRODUCT_TYPE_VARIABLE  => false,
+            Elements::PRODUCT_TYPE_VARIATION => true,
+        ];
         $price_visibilities = apply_filters(
             'dokan_product_editor_price_visibilities',
-            [
-                Elements::PRODUCT_TYPE_SIMPLE    => true,
-                Elements::PRODUCT_TYPE_VARIABLE  => false,
-                Elements::PRODUCT_TYPE_VARIATION => true,
-            ]
+            $pre_type_visibilities,
+        );
+
+        $digital_field_visibilities = apply_filters(
+            'dokan_product_editor_digital_option_visibilities',
+            $pre_type_visibilities,
         );
 
         $schedule_deps = [
@@ -349,6 +355,7 @@ class FormSchema {
                 'tooltip'       => __( 'Downloadable products give access to a file upon purchase.', 'dokan-lite' ),
                 'priority'      => 30,
                 'visibility'    => true,
+                'visibilities'  => $digital_field_visibilities,
             ],
             [
                 'id'            => Elements::VIRTUAL,
@@ -359,6 +366,7 @@ class FormSchema {
                 'tooltip'       => __( 'Virtual products are intangible and are not shipped.', 'dokan-lite' ),
                 'priority'      => 30,
                 'visibility'    => true,
+                'visibilities'  => $digital_field_visibilities,
             ],
         ];
 
