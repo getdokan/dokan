@@ -16,7 +16,6 @@ import SelectEdit from '../components/SelectEdit';
  * @return Configuration object with type 'text' and RichTextEdit component.
  */
 const editorFieldHandler: FieldHandler = () => ( {
-    type: 'text',
     Edit: RichTextEdit,
 } );
 
@@ -36,7 +35,6 @@ const checkboxHandler: FieldHandler = () => ( {
  * @return Configuration object with type 'text' and 'radio' edit type.
  */
 const radioHandler: FieldHandler = () => ( {
-    type: 'text',
     Edit: 'radio',
 } );
 
@@ -64,28 +62,24 @@ const dateHandler: FieldHandler = () => ( {
  * Handles normal select options and special cases like product categories.
  */
 const selectHandler: FieldHandler = ( field ) => {
-    const config = {
-        type: 'text',
+    const config: FieldConfig = {
         Edit: SelectEdit,
         multiple: false,
     };
 
     if ( Array.isArray( field?.value ) ) {
-        config.type = 'array';
         config.multiple = true;
     }
     return config;
 };
 
 const asyncSelectHandler: FieldHandler = ( field ) => {
-    const config = {
-        type: 'text',
+    const config: FieldConfig = {
         Edit: AsyncSelectEdit,
         multiple: false,
     };
 
     if ( Array.isArray( field?.value ) ) {
-        config.type = 'array';
         config.multiple = true;
     }
     return config;
@@ -98,8 +92,7 @@ const asyncSelectHandler: FieldHandler = ( field ) => {
  * @return Configuration object including type and Edit component.
  */
 const multiSelectHandler: FieldHandler = () => {
-    const config: any = {
-        type: 'array',
+    const config: FieldConfig = {
         Edit: SelectEdit,
         multiple: true,
     };
@@ -112,7 +105,6 @@ const multiSelectHandler: FieldHandler = () => {
  * @return Configuration object with type 'integer' and ImageEdit component.
  */
 const imageHandler: FieldHandler = () => ( {
-    type: 'integer',
     Edit: ImageEdit,
 } );
 
@@ -122,7 +114,6 @@ const imageHandler: FieldHandler = () => ( {
  * @return Configuration object with type 'integer' and FileUploadEdit component.
  */
 const fileHandler: FieldHandler = () => ( {
-    type: 'integer',
     Edit: FileUploadEdit,
 } );
 
@@ -132,7 +123,6 @@ const fileHandler: FieldHandler = () => ( {
  * @return Configuration object with type 'array' and AttributesEdit component.
  */
 const attributeHandler: FieldHandler = () => ( {
-    type: 'array',
     Edit: AttributesEdit,
 } );
 
@@ -142,7 +132,6 @@ const attributeHandler: FieldHandler = () => ( {
  * @return Configuration object with type 'array' and GalleryImages component.
  */
 const galleryHandler: FieldHandler = () => ( {
-    type: 'array',
     Edit: GalleryImages,
 } );
 
@@ -154,12 +143,9 @@ const galleryHandler: FieldHandler = () => ( {
  * @return Configuration object with type 'text' and optionally TextWithAddon component.
  */
 const defaultHandler: FieldHandler = ( field ) => {
-    const config: FieldConfig = {
-        type: 'text',
-    };
-    if ( field?.id?.includes( 'price' ) ) {
+    const config: FieldConfig = {};
+    if ( field?.id.includes( 'price' ) ) {
         config.Edit = PriceEdit;
-        config.type = 'number';
     }
     return config;
 };

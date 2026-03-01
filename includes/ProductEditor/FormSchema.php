@@ -153,7 +153,6 @@ class FormSchema {
                 'variant'        => 'text',
                 'placeholder'    => __( 'Enter product title...', 'dokan-lite' ),
                 'required'       => true,
-                'error_message'  => __( 'Please enter a product title.', 'dokan-lite' ),
                 'priority'       => 30,
                 'visibility'     => true,
             ],
@@ -181,7 +180,6 @@ class FormSchema {
                 'label'          => __( 'Product Type', 'dokan-lite' ),
                 'variant'        => 'select',
                 'value'          => 'simple',
-                'default'        => 'simple',
                 'required'       => true,
                 'options'        => $this->get_product_types(),
                 'description'    => __( 'Choose Variable if your product has multiple attributes - like sizes, colors, quality etc', 'dokan-lite' ),
@@ -266,10 +264,9 @@ class FormSchema {
                 'section_id'       => Elements::SECTION_GENERAL,
                 'type'             => 'field',
                 'label'            => __( 'Categories', 'dokan-lite' ),
-                'variant'          => 'select',
+                'variant'          => 'multiselect',
                 'placeholder'      => __( 'Select product categories', 'dokan-lite' ),
                 'value'            => [],
-                'default'          => [],
                 'options'          => ProductCategoryHelper::get_product_categories_tree( true ),
                 'required'         => true,
                 'priority'         => 30,
@@ -280,10 +277,9 @@ class FormSchema {
                 'section_id'       => Elements::SECTION_GENERAL,
                 'type'             => 'field',
                 'label'            => __( 'Tags', 'dokan-lite' ),
-                'variant'          => 'select',
+                'variant'          => 'multiselect',
                 'placeholder'      => 'on' === $can_create_tags ? __( 'Select tags/Add tags', 'dokan-lite' ) : __( 'Select product tags', 'dokan-lite' ),
                 'value'            => [],
-                'default'          => [],
                 'options'          => self::get_product_tags(),
                 'priority'         => 30,
                 'visibility'       => true,
@@ -293,10 +289,9 @@ class FormSchema {
                 'section_id'       => Elements::SECTION_GENERAL,
                 'type'             => 'field',
                 'label'            => __( 'Brands', 'dokan-lite' ),
-                'variant'          => 'select',
+                'variant'          => 'multiselect',
                 'placeholder'      => __( 'Select product brands', 'dokan-lite' ),
                 'value'            => [],
-                'default'          => [],
                 'options'          => self::get_products_brands(),
                 'priority'         => 30,
                 'visibility'       => true,
@@ -308,7 +303,6 @@ class FormSchema {
                 'label'          => __( 'Feature Image', 'dokan-lite' ),
                 'variant'        => 'image',
                 'value'          => [],
-                'default'        => [],
                 'tooltip'        => __( 'Select product image', 'dokan-lite' ),
                 'priority'       => 30,
                 'visibility'     => true,
@@ -320,7 +314,6 @@ class FormSchema {
                 'label'          => __( 'Gallery Image', 'dokan-lite' ),
                 'variant'        => 'gallery_images',
                 'value'          => [],
-                'default'        => [],
                 'tooltip'        => __( 'Select product gallery images', 'dokan-lite' ),
                 'priority'       => 30,
                 'visibility'     => true,
@@ -437,7 +430,6 @@ class FormSchema {
                 'label'        => __( 'Stock quantity', 'dokan-lite' ),
                 'variant'      => 'number',
                 'placeholder'  => '1',
-                'default'      => 0,
                 'description'  => __( 'Stock quantity. If this is a variable product this value will be used to control stock for all variations, unless you define stock at variation level.', 'dokan-lite' ),
                 'dependencies' => [
                     [
@@ -518,7 +510,6 @@ class FormSchema {
                 'label'        => __( 'Downloadable Files', 'dokan-lite' ),
                 'variant'      => 'file',
                 'value'           => [],
-                'default'         => [],
                 'description'     => __( 'Upload files that customers can download after purchase.', 'dokan-lite' ),
                 'dependencies' => $dep_downloadable,
                 'priority'     => 30,
@@ -566,7 +557,6 @@ class FormSchema {
                 'label'        => __( 'Status', 'dokan-lite' ),
                 'variant'      => 'radio',
                 'value'        => 'draft',
-                'default'      => 'draft',
                 'required'     => true,
                 'options'      => dokan_get_available_post_status( $product_id ),
                 'priority'     => 30,
@@ -712,6 +702,9 @@ class FormSchema {
                     },
                     $value
                 );
+
+            case 'number':
+                return is_numeric( $value ) ? (float) $value : 0;
 
             default:
                 return $value;

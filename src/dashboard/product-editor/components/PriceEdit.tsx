@@ -11,7 +11,7 @@ const PriceEdit = ( { data, field, onChange, validity }: any ) => {
         Number( data.vendor_earning )
     );
 
-    const vendorEarningHandler = async ( price: string ) => {
+    const vendorEarningHandler = async ( price: number ) => {
         if ( field.id === 'regular_price' ) {
             // fetch the vendor earning
             try {
@@ -57,14 +57,14 @@ const PriceEdit = ( { data, field, onChange, validity }: any ) => {
             <DokanPriceInput
                 label=""
                 value={ data[ field.id ] }
-                namespace={ `field.${ field.id }` }
+                namespace={ `dokan-field-${ field.id }` }
                 className="product-editor-price-input"
                 input={ {
                     id: field.id,
                     placeholder: field.placeholder || '',
                 } }
                 onChange={ ( _, rawValue ) => {
-                    const value = String( rawValue );
+                    const value = Number( rawValue );
                     onChange( { [ field.id ]: value } );
                     void vendorEarningHandler( value );
                 } }

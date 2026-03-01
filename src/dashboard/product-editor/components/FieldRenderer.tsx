@@ -52,24 +52,6 @@ export const getFieldConfig = ( field: FormField ) => {
             required: field.required || false,
             // Disable built-in "Value must be one of the elements." so custom validation is used.
             elements: false,
-            custom: ( value: any ) => {
-                const isEmpty = ( v: any ) => {
-                    if ( v === null || v === undefined ) {
-                        return true;
-                    }
-                    if ( typeof v === 'string' ) {
-                        return v.trim().length === 0;
-                    }
-                    if ( Array.isArray( v ) ) {
-                        return v.length === 0;
-                    }
-                    return false;
-                };
-                if ( field.required && isEmpty( value?.[ field.id ] ) ) {
-                    return field.error_message;
-                }
-                return null;
-            },
         },
         isVisible: ( data: Record< string, any > ) => {
             if ( field.visibility === false ) {
