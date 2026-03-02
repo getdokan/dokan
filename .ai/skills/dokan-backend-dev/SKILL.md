@@ -488,6 +488,86 @@ do_action( 'dokan_new_seller_created', $vendor_id, $data );
 $value = dokan_get_option( 'key', 'dokan_option_group', 'default' );
 ```
 
+## Localization / Translation (PHP)
+
+**Text domain:** `dokan-lite` — used for ALL translatable strings in Lite.
+
+### Translation Functions
+
+| Function | Usage |
+|---|---|
+| `__( 'Text', 'dokan-lite' )` | Return translated string |
+| `_e( 'Text', 'dokan-lite' )` | Echo translated string |
+| `esc_html__( 'Text', 'dokan-lite' )` | Return translated + HTML-escaped |
+| `esc_html_e( 'Text', 'dokan-lite' )` | Echo translated + HTML-escaped |
+| `esc_attr__( 'Text', 'dokan-lite' )` | Return translated + attribute-escaped |
+| `esc_attr_e( 'Text', 'dokan-lite' )` | Echo translated + attribute-escaped |
+| `_n( 'single', 'plural', $count, 'dokan-lite' )` | Pluralization |
+| `_x( 'Text', 'context', 'dokan-lite' )` | Context-aware translation |
+| `_nx( 'single', 'plural', $count, 'context', 'dokan-lite' )` | Context-aware pluralization |
+
+### Translator Comments
+
+Always add `/* translators: */` comments before `sprintf()` with placeholders:
+
+```php
+/* translators: 1: Required PHP version 2: Running PHP version */
+__( 'Minimum PHP version required is %1$s. You are running %2$s.', 'dokan-lite' )
+```
+
+### String Formatting
+
+Use `sprintf()` for dynamic content — never concatenate translated strings:
+
+```php
+// CORRECT
+sprintf( __( 'Account Name: %s', 'dokan-lite' ), $payment['ac_name'] )
+
+// WRONG — don't concatenate
+__( 'Account Name: ', 'dokan-lite' ) . $payment['ac_name']
+```
+
+### Pluralization
+
+```php
+sprintf(
+    _n( '%d vendor approved.', '%d vendors approved.', $count, 'dokan-lite' ),
+    $count
+)
+```
+
+### Date/Time Formatting
+
+Always use locale-aware functions:
+
+```php
+// WordPress locale-aware date
+date_i18n( wc_date_format(), strtotime( $date_string ) );
+
+// Translated day names
+dokan_get_translated_days( 'monday' );
+```
+
+### Escaping in Templates
+
+In templates, always escape translated output:
+
+```php
+// In template files
+<?php esc_html_e( 'Payment Methods', 'dokan-lite' ); ?>
+<input placeholder="<?php esc_attr_e( 'Search...', 'dokan-lite' ); ?>">
+```
+
+### POT File Generation
+
+```bash
+npm run makepot    # Generates languages/dokan-lite.pot
+```
+
+### Textdomain Loading
+
+Handled in `dokan-class.php` via `load_plugin_textdomain()` on `woocommerce_loaded` hook. No manual setup needed.
+
 ## Coding Standards
 
 -   **PHPCS ruleset:** `WordPress-Extra` + `WordPress` (via `phpcs.xml.dist`)

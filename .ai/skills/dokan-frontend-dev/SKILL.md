@@ -151,6 +151,95 @@ module.exports = {
 };
 ```
 
+## Localization / Translation (JavaScript)
+
+**Library:** `@wordpress/i18n` — WordPress's official i18n package.
+
+### React / TypeScript
+
+```tsx
+import { __, _n, sprintf } from '@wordpress/i18n';
+
+// Simple translation
+const label = __( 'Save changes', 'dokan-lite' );
+
+// With sprintf for dynamic content
+const message = sprintf(
+    /* translators: %s: vendor name */
+    __( 'Welcome, %s!', 'dokan-lite' ),
+    vendorName
+);
+
+// Pluralization
+const itemLabel = sprintf(
+    _n( '%d item', '%d items', count, 'dokan-lite' ),
+    count
+);
+
+// In JSX
+<button>{ __( 'Submit', 'dokan-lite' ) }</button>
+```
+
+### Translator Comments
+
+Always add `/* translators: */` comments before `sprintf()` with placeholders — these are extracted into the POT file:
+
+```tsx
+sprintf(
+    /* translators: 1: start date 2: end date */
+    __( 'From %1$s to %2$s', 'dokan-lite' ),
+    startDate,
+    endDate
+)
+```
+
+### Vue 2.7 (Legacy)
+
+Vue components use a translation mixin from `src/utils/Mixin.js` that wraps `@wordpress/i18n`:
+
+```vue
+<template>
+    <h2>{{ __( 'Dashboard', 'dokan-lite' ) }}</h2>
+</template>
+
+<script>
+import Mixin from 'admin/utils/Mixin';
+
+export default {
+    mixins: [ Mixin ],
+};
+</script>
+```
+
+Available mixin methods: `__()`, `_x()`, `__n()`, `_nx()`, `sprintf()`.
+
+### Script Translation Registration (PHP side)
+
+When registering a new script, translations are auto-registered via `wp_set_script_translations()` in `includes/Assets.php`. For custom scripts:
+
+```php
+wp_set_script_translations( 'my-script-handle', 'dokan-lite', plugin_dir_path( DOKAN_FILE ) . 'languages' );
+```
+
+### Localized Data (PHP → JS)
+
+Server-side data is passed to JS via `wp_localize_script()`. Access via `window.dokan`:
+
+-   `window.dokan.i18n_date_format` — WordPress date format
+-   `window.dokan.i18n_time_format` — WordPress time format
+-   `window.dokan.currency` — WooCommerce currency settings (symbol, decimals, position)
+-   `window.dokan.timepicker_locale` — Localized AM/PM, hr/hrs/mins strings
+-   `window.dokan.daterange_picker_local` — Localized day/month names, labels
+
+Filter hooks for extending: `dokan_helper_localize_script`, `dokan_frontend_localize_script`, `dokan_admin_localize_script`.
+
+### Key Rules
+
+-   **Text domain:** Always use `'dokan-lite'` (not `'dokan'`)
+-   **Never concatenate** translated strings — use `sprintf()` with placeholders
+-   **Always add translator comments** for strings with placeholders
+-   **Use `_n()` for plurals** — never use ternary with `__()`
+
 ## Vue 2.7 (Legacy)
 
 Older components use Vue 2.7 with `.vue` files. New development should use React unless modifying existing Vue code. Vue entry points typically use `main.js`.
