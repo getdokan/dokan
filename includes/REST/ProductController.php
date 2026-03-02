@@ -61,9 +61,19 @@ class ProductController extends DokanRESTController {
      */
     public function __construct() {
         add_filter( "dokan_rest_{$this->post_type}_object_query", [ $this, 'add_only_downloadable_query' ], 10, 2 );
-        add_filter( 'woocommerce_rest_prepare_product_object', [ $this, 'add_min_max_price_to_variable_product'], 10, 2 );
+        add_filter( 'woocommerce_rest_prepare_product_object', [ $this, 'add_min_max_price_to_variable_product' ], 10, 2 );
     }
 
+    /**
+     * Add min_price and max_price fields to variable product REST responses.
+     *
+     * @since 4.0.0
+     *
+     * @param WP_REST_Response $response The response object.
+     * @param WC_Product       $product  The product object.
+     *
+     * @return WP_REST_Response
+     */
     public function add_min_max_price_to_variable_product( $response, $product ) {
         if ( ! is_a( $product, 'WC_Product' ) ) {
             return $response;
@@ -71,7 +81,6 @@ class ProductController extends DokanRESTController {
 
         if ( $product->is_type( 'variable' ) ) {
             $data = $response->get_data();
-
             $data['min_price'] = $product->get_variation_price( 'min', true );
             $data['max_price'] = $product->get_variation_price( 'max', true );
             $response->set_data( $data );
@@ -1775,6 +1784,18 @@ class ProductController extends DokanRESTController {
             'title'      => $this->post_type,
             'type'       => 'object',
             'properties' => [
+                'min_price' => [
+                    'description' => __( 'Minimum price for variable product.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view', 'edit' ],
+                    'readonly'    => true,
+                ],
+                'max_price' => [
+                    'description' => __( 'Maximum price for variable product.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view', 'edit' ],
+                    'readonly'    => true,
+                ],
                 'id'                    => [
                     'description' => __( 'Unique identifier for the resource.', 'dokan-lite' ),
                     'type'        => 'integer',
