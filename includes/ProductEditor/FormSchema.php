@@ -46,7 +46,7 @@ class FormSchema {
         'file',
         'datetime',
         'image',
-        'gallery',
+        'gallery_images',
         'attribute',
     ];
 
@@ -107,7 +107,7 @@ class FormSchema {
             [
                 'comparison' => '==',
                 'key'        => Elements::DOWNLOADABLE,
-                'value'      => 'on',
+                'value'      => true,
             ],
         ];
 
@@ -131,7 +131,7 @@ class FormSchema {
 			[
 				'comparison' => '==',
 				'key'        => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
-				'value'      => 'on',
+				'value'      => true,
 			],
 		];
 
@@ -312,7 +312,7 @@ class FormSchema {
                 'section_id'   => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'Gallery Image', 'dokan-lite' ),
-                'variant'        => 'gallery',
+                'variant'        => 'gallery_images',
                 'value'          => [],
                 'tooltip'        => __( 'Select product gallery images', 'dokan-lite' ),
                 'priority'       => 30,
@@ -407,7 +407,7 @@ class FormSchema {
                     [
                         'comparison' => '!=',
                         'key'        => Elements::MANAGE_STOCK,
-                        'value'      => 'on',
+                        'value'      => true,
                     ],
                 ],
                 'priority'     => 30,
@@ -435,7 +435,7 @@ class FormSchema {
                     [
                         'comparison' => '==',
                         'key'        => Elements::MANAGE_STOCK,
-                        'value'      => 'on',
+                        'value'      => true,
                     ],
                 ],
                 'priority'     => 30,
@@ -457,7 +457,7 @@ class FormSchema {
                     [
                         'comparison' => '==',
                         'key'        => Elements::MANAGE_STOCK,
-                        'value'      => 'on',
+                        'value'      => true,
                     ],
                 ],
                 'priority'     => 30,
@@ -475,7 +475,7 @@ class FormSchema {
                     [
                         'comparison' => '==',
                         'key'        => Elements::MANAGE_STOCK,
-                        'value'      => 'on',
+                        'value'      => true,
                     ],
                 ],
                 'priority'     => 30,
@@ -686,7 +686,7 @@ class FormSchema {
                     )
                 );
 
-            case 'gallery':
+            case 'gallery_images':
                 if ( ! is_array( $value ) ) {
                     return [];
                 }
@@ -729,7 +729,7 @@ class FormSchema {
                 }
                 return $name;
             case Elements::CREATE_SCHEDULE_FOR_DISCOUNT:
-                return ( ! empty( $product->get_date_on_sale_to() ) || ! empty( $product->get_date_on_sale_from() ) ) ? 'on' : 'off';
+                return ! empty( $product->get_date_on_sale_to() ) || ! empty( $product->get_date_on_sale_from() );
             case Elements::DATE_ON_SALE_FROM:
                 $from = $product->get_date_on_sale_from( 'edit' );
                 return $from ? $from->date( 'Y-m-d' ) : '';

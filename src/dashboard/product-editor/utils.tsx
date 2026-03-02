@@ -41,20 +41,6 @@ export const getFieldHeading = (
     };
 };
 
-/**
- * Build initial product state from flat form items (field items only).
- * Uses each field's value with minimal normalization (image_id, gallery, checkbox).
- */
-export function fieldValueForProduct( item: FlatFormItem ): any {
-    if ( item.type !== 'field' ) return undefined;
-    const v = item.value;
-    const variant = item.variant;
-    if ( variant === 'checkbox' ) {
-        return v === 'yes' || v === 'on' || v === true || v === 1 || v === '1';
-    }
-    return v ?? '';
-}
-
 /** True if value is considered empty (null, undefined, '', whitespace-only, or empty array). */
 function isEmptyValue( val: any ): boolean {
     if ( val === undefined || val === null ) {
@@ -69,12 +55,15 @@ function isEmptyValue( val: any ): boolean {
     return false;
 }
 
-/** Normalize checkbox-like values to boolean for comparison. */
+/** Normalize boolean-like values for comparison. */
 function normalizeForCompare( val: any ): any {
-    if ( val === 'on' || val === 'yes' || val === true || val === 1 ) {
+    if ( typeof val === 'boolean' ) {
+        return val;
+    }
+    if ( val === 1 ) {
         return true;
     }
-    if ( val === 'off' || val === 'no' || val === false ) {
+    if ( val === 0 ) {
         return false;
     }
     return val;

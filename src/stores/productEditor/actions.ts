@@ -1,6 +1,5 @@
 import apiFetch from '@wordpress/api-fetch';
 import { FlatFormItem } from '../../dashboard/product-editor/types';
-import { fieldValueForProduct } from '../../dashboard/product-editor/utils';
 import { VariationType } from './types';
 
 // Action type constants.
@@ -149,10 +148,7 @@ export const actions = {
         return ( { dispatch }: { dispatch: any } ) => {
             const entries = formItems
                 .filter( ( i: FlatFormItem ) => i.type === 'field' )
-                .map( ( item: FlatFormItem ) => [
-                    item.id,
-                    fieldValueForProduct( item ),
-                ] );
+                .map( ( item: FlatFormItem ) => [ item.id, item.value ?? '' ] );
             const defaultData = Object.fromEntries( entries );
 
             dispatch(
@@ -282,9 +278,7 @@ export const actions = {
                 } );
 
                 // Re-fetch variation form fields to reflect updated values.
-                await dispatch(
-                    actions.fetchVariationForm( variation.id )
-                );
+                await dispatch( actions.fetchVariationForm( variation.id ) );
             } catch ( error ) {
                 dispatch( actions.setError( error as Error ) );
                 throw error;
