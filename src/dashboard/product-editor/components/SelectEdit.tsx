@@ -1,5 +1,7 @@
 import { Select } from '@src/components';
+import { applyFilters } from '@wordpress/hooks';
 import { CheckSquare, Square } from 'lucide-react';
+import { useMemo } from 'react';
 import { components } from 'react-select';
 import CustomField, { getValidationError } from './CustomField';
 
@@ -53,8 +55,33 @@ const flattenOptions = ( options: Option[], level = 0 ): Option[] => {
 };
 
 const SelectEdit = ( { data, field, onChange, validity }: any ) => {
+    // Resolve dynamic options: if field has options_map and an 'options' dependency,
+    // swap options based on the current value of that dependency field.
+    const resolvedElements = useMemo( () => {
+        let elements = field.elements || [];
+
+        if ( field.options_map && field.dependencies?.length ) {
+            const optionsDep = field.dependencies.find(
+                ( dep: any ) => dep.type === 'options'
+            );
+            if ( optionsDep ) {
+                const depValue = data[ optionsDep.key ];
+                if ( depValue && field.options_map[ depValue ] ) {
+                    elements = field.options_map[ depValue ];
+                }
+            }
+        }
+
+        return applyFilters(
+            'dokan_product_editor_select_options',
+            elements,
+            field,
+            data
+        ) as Option[];
+    }, [ field, data ] );
+
     // Prepare Options
-    const options = flattenOptions( field.elements || [] );
+    const options = flattenOptions( resolvedElements );
     const currentValue = data[ field.id ];
 
     // Detect if it's a tree structure (has children) or explicitly using 'options' key

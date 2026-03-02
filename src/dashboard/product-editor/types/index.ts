@@ -2,6 +2,7 @@ export interface DependencyCondition {
     key: string;
     comparison: '==' | '!=' | 'empty' | 'not_empty' | '===' | '!==' | 'not_equal' | 'equal' | 'contains';
     value?: string | boolean | number;
+    type?: 'visibility' | 'options';
 }
 
 /**
@@ -26,6 +27,7 @@ export type FlatFormItem = {
     default?: any;
     variant?: string;
     options?: { label: string; value: string }[] | Record< string, string >;
+    options_map?: Record< string, { label: string; value: string }[] >;
     dependencies?: DependencyCondition[];
     visibility?: boolean;
     visibilities?: Record< string, boolean >;

@@ -134,9 +134,9 @@ export const resolveDependency = (
         return true;
     }
 
-    return field.dependencies.every( ( condition ) => {
-        return resolveCondition( condition, data );
-    } );
+    return field.dependencies
+        .filter( ( condition ) => condition.type !== 'options' )
+        .every( ( condition ) => resolveCondition( condition, data ) );
 };
 
 /** Recursively process layout fields, resolving visibility, dependencies, and sorting by order. */

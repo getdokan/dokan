@@ -679,7 +679,12 @@ class FormSchema {
             foreach ( $items as &$item ) {
                 if ( $item['type'] === 'field' ) {
                     $value         = $this->resolve_field_value( $item['id'], $product );
-                    $item['value'] = $this->format_field_value( $value, $item['variant'] ?? 'text' );
+                    $value         = $this->format_field_value( $value, $item['variant'] ?? 'text' );
+                    if ( empty( $value ) && isset( $item['value'] ) ) {
+                        // set default value from schema if resolved value is empty, e.g. for new products or when product meta is not set.
+                        $value = $item['value'];
+                    }
+                    $item['value'] = $value;
                 }
             }
         }

@@ -171,7 +171,8 @@ Every item in the schema array must include these **required attributes**:
 | `visibility` | `bool` | Global visibility toggle |
 | `visibilities` | `array` | Per-product-type visibility map (see [section 6](#6-dependencies--conditional-visibility)) |
 | `labels` | `array` | Per-product-type label overrides |
-| `dependencies` | `array` | Conditional visibility rules (see [section 6](#6-dependencies--conditional-visibility)) |
+| `dependencies` | `array` | Conditional rules for visibility or dynamic options (see [section 6](#6-dependencies--conditional-visibility)) |
+| `options_map` | `array` | Keyed map of option sets for dynamic `select` options. Used with a `type: 'options'` dependency (see [section 6](#6-dependencies--conditional-visibility)) |
 | `product_types` | `string[]` | Restrict field to specific product types |
 | `is_custom` | `bool` | Marks field as custom (admin-created) |
 
@@ -269,7 +270,16 @@ No React code changes are needed. New sections appear automatically.
 
 ### Dependencies (runtime)
 
-Fields can be shown/hidden based on other field values using the `dependencies` array. All conditions must be true (AND logic).
+Fields can react to other field values using the `dependencies` array. Each condition has an optional `type` that determines its purpose:
+
+| Type           | Default | Description                                      |
+|----------------|---------|--------------------------------------------------|
+| `'visibility'` | Yes     | Controls whether the field is shown or hidden    |
+| `'options'`    | No      | Drives dynamic option swapping via `options_map` |
+
+When `type` is omitted, it defaults to `'visibility'`. Visibility conditions use AND logic — all must be true for the field to appear. The `'options'` type is skipped during visibility evaluation.
+
+#### Visibility dependencies
 
 ```php
 'dependencies' => [
@@ -278,6 +288,46 @@ Fields can be shown/hidden based on other field values using the `dependencies` 
         'key'        => 'manage_stock',   // Another field's ID
         'value'      => true,
     ],
+],
+```
+
+#### Dynamic options dependencies
+
+Pair `type: 'options'` with `options_map` to swap a select field's options based on another field's value:
+
+```php
+$length_options = [
+    'day'   => [ [ 'label' => '1 day', 'value' => '1' ], ... ],
+    'week'  => [ [ 'label' => '1 week', 'value' => '1' ], ... ],
+    'month' => [ [ 'label' => '1 month', 'value' => '1' ], ... ],
+    'year'  => [ [ 'label' => '1 year', 'value' => '1' ], ... ],
+];
+
+$fields[] = [
+    'id'           => '_subscription_length',
+    'variant'      => 'select',
+    'options'      => $length_options['month'],   // Default options (fallback)
+    'options_map'  => $length_options,             // All option sets keyed by dependency value
+    'dependencies' => [
+        [
+            'key'        => '_subscription_period',
+            'comparison' => 'not_empty',
+            'type'       => 'options',             // Drives options_map lookup, not visibility
+        ],
+    ],
+];
+```
+
+When `_subscription_period` changes to `'week'`, `SelectEdit` automatically swaps the options to `$length_options['week']`.
+
+#### Combining both types
+
+A single field can have both visibility and options dependencies:
+
+```php
+'dependencies' => [
+    [ 'key' => 'product_type', 'comparison' => '==', 'value' => 'subscription' ],   // visibility
+    [ 'key' => '_subscription_period', 'comparison' => 'not_empty', 'type' => 'options' ], // dynamic options
 ],
 ```
 
@@ -621,10 +671,61 @@ class ProductEditorFields {
 
 ### JavaScript Filters (via `@wordpress/hooks`)
 
-| Hook | Arguments | Description |
-|------|-----------|-------------|
-| `dokan_product_editor_ui_variant` | `(Record<string, FieldHandler> handlers, FormField field)` | Register custom Edit components for field variants |
-| `dokan_product_editor_after_ui_field` | `(null, FormField field)` | Inject content after a field's Edit component |
+| Hook                                    | Arguments                                                          | Description                                                         |
+|-----------------------------------------|--------------------------------------------------------------------|---------------------------------------------------------------------|
+| `dokan_product_editor_ui_variant`       | `(Record<string, FieldHandler> handlers, FormField field)`         | Register custom Edit components for field variants                  |
+| `dokan_product_editor_after_ui_field`   | `(null, FormField field)`                                          | Inject content after a field's Edit component                       |
+| `dokan_product_editor_select_options`   | `(Option[] elements, FieldConfig field, Record<string, any> data)` | Dynamically filter select field options based on current form data  |
+
+#### Using `dokan_product_editor_select_options`
+
+The filter is synchronous (`applyFilters`), so async operations like REST API calls cannot run inside it directly. Instead, pre-fetch data and let the filter inject it. Two common patterns:
+
+##### Pattern 1 — Server-localized data (PHP → JS)
+
+Use `wp_localize_script` to pass options from PHP, then consume them in the JS filter:
+
+```php
+// PHP: localize data when enqueuing scripts
+add_action( 'wp_enqueue_scripts', function () {
+    wp_localize_script( 'my-plugin-editor', 'myPluginData', [
+        'warehouse_options' => [
+            'us' => [
+                [ 'label' => 'New York', 'value' => 'ny' ],
+                [ 'label' => 'Los Angeles', 'value' => 'la' ],
+            ],
+            'eu' => [
+                [ 'label' => 'Berlin', 'value' => 'ber' ],
+                [ 'label' => 'Paris', 'value' => 'par' ],
+            ],
+        ],
+    ] );
+} );
+```
+
+```js
+// JS: use the localized data in the filter
+import { addFilter } from '@wordpress/hooks';
+
+addFilter(
+    'dokan_product_editor_select_options',
+    'my-plugin/warehouse-options',
+    ( elements, field, data ) => {
+        if ( field.id !== 'warehouse_location' ) {
+            return elements;
+        }
+
+        // make rest API call or compute options based on form data
+
+        const region = data.shipping_region;
+        const regionOptions = window.myPluginData?.warehouse_options?.[ region ];
+
+        return regionOptions || elements;
+    }
+);
+```
+
+> **Note:** The original `elements` (from `options` or `options_map`) are always passed as the first argument. Return them as-is for fields you don't need to modify.
 
 ---
 
