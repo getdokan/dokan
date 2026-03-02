@@ -31,6 +31,7 @@ class PayloadResolver {
         $out = $resolver->resolve_dimensions( $out );
         $out = $resolver->resolve_linked_products( $out );
         $out = $resolver->resolve_attributes( $out );
+        $out = $resolver->resolve_additional_fields( $out );
 
         return apply_filters( 'dokan_product_editor_schema_payload', $out );
     }
@@ -161,18 +162,25 @@ class PayloadResolver {
      * @since DOKAN_SINCE
      */
     public function resolve_linked_products( array $data ): array {
-        $linked_keys = [
-            Elements::UPSELL_IDS,
-            Elements::CROSS_SELL_IDS,
-            Elements::GROUPED_PRODUCTS,
+        $linked_map = [
+            Elements::UPSELL_IDS       => 'upsell_ids',
+            Elements::CROSS_SELL_IDS   => 'crosssell_ids',
+            Elements::GROUPED_PRODUCTS => 'grouped_products',
         ];
 
-        foreach ( $linked_keys as $key ) {
-            if ( isset( $data[ $key ] ) && is_array( $data[ $key ] ) ) {
-                $data[ $key ] = array_map( 'absint', array_filter( array_map( [ $this, 'extract_product_id' ], $data[ $key ] ) ) );
+        foreach ( $linked_map as $schema_key => $api_key ) {
+            if ( ! isset( $data[ $schema_key ] ) || ! is_array( $data[ $schema_key ] ) ) {
+                continue;
+            }
+
+            $ids = array_map( [ $this, 'extract_product_id' ], $data[ $schema_key ] );
+            $ids = array_filter( $ids );
+
+            $data[ $api_key ] = array_values( $ids );
+            if ( $schema_key !== $api_key ) {
+                unset( $data[ $schema_key ] );
             }
         }
-        $data['crosssell_ids'] = $data[ Elements::CROSS_SELL_IDS ] ?? [];
 
         return $data;
     }
@@ -292,5 +300,28 @@ class PayloadResolver {
         }
 
         return (int) $item;
+    }
+
+    /**
+     * Resolve additional fields like sale schedule into their API representations.
+     *
+     * @since DOKAN_SINCE
+     */
+    public function resolve_additional_fields( array $data ): array {
+        if ( empty( $data[ Elements::CREATE_SCHEDULE_FOR_DISCOUNT ] ) ) {
+            $data[ Elements::DATE_ON_SALE_FROM ] = '';
+            $data[ Elements::DATE_ON_SALE_TO ]   = '';
+        }
+        // convert int to string fields
+        $fields = [
+            Elements::REGULAR_PRICE,
+            Elements::SALE_PRICE,
+        ];
+        foreach ( $fields as $key ) {
+            if ( isset( $data[ $key ] ) && is_numeric( $data[ $key ] ) ) {
+                $data[ $key ] = (string) $data[ $key ];
+            }
+        }
+        return $data;
     }
 }
