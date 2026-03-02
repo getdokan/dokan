@@ -28,11 +28,25 @@ class FormSchema {
         'label',
     ];
 
+    /**
+     * Supported field types.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var array
+     */
     private array $supported_types = [
         'section',
         'field',
     ];
 
+    /**
+     * Supported field variants.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var array
+     */
     private array $supported_variants = [
         'text',
         'select',
@@ -50,6 +64,15 @@ class FormSchema {
         'attribute',
     ];
 
+    /**
+     * Validate field schema and log developer notices for invalid fields.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $fields Form schema fields to validate.
+     *
+     * @return array The same fields array (unmodified).
+     */
     private function assert_field_schema( array $fields ): array {
         foreach ( $fields as $field ) {
             // Check required attributes are present.
@@ -59,21 +82,53 @@ class FormSchema {
                     continue;
                 }
                 if ( ! array_key_exists( $attr, $field ) || empty( $field[ $attr ] ) ) {
-                    error_log(
-                        sprintf( 'Missing required attribute "%s" on field: %s', esc_html( $attr ), esc_html( $field['id'] ?? 'unknown' ) )
+                    _doing_it_wrong(
+                        __METHOD__,
+                        sprintf(
+                            /* translators: 1: attribute name, 2: field id */
+                            esc_html__( 'Missing required attribute "%1$s" on field: %2$s', 'dokan-lite' ),
+                            esc_html( $attr ),
+                            esc_html( $field['id'] ?? 'unknown' )
+                        ),
+                        'DOKAN_SINCE'
                     );
                 }
             }
             if ( ! in_array( $field['type'], $this->supported_types, true ) ) {
-                error_log( sprintf( 'Invalid field type: %s and id: %s', esc_html( $field['type'] ), esc_html( $field['id'] ?? 'unknown' ) ) );
+                _doing_it_wrong(
+                    __METHOD__,
+                    sprintf(
+                        /* translators: 1: field type, 2: field id */
+                        esc_html__( 'Invalid field type: %1$s and id: %2$s', 'dokan-lite' ),
+                        esc_html( $field['type'] ),
+                        esc_html( $field['id'] ?? 'unknown' )
+                    ),
+                    'DOKAN_SINCE'
+                );
             }
             if ( isset( $field['variant'] ) && ! in_array( $field['variant'], $this->supported_variants, true ) ) {
-                error_log( sprintf( 'Invalid field variant: %s and id: %s', esc_html( $field['variant'] ), esc_html( $field['id'] ?? 'unknown' ) ) );
+                _doing_it_wrong(
+                    __METHOD__,
+                    sprintf(
+                        /* translators: 1: field variant, 2: field id */
+                        esc_html__( 'Invalid field variant: %1$s and id: %2$s', 'dokan-lite' ),
+                        esc_html( $field['variant'] ),
+                        esc_html( $field['id'] ?? 'unknown' )
+                    ),
+                    'DOKAN_SINCE'
+                );
             }
         }
         return $fields;
     }
 
+    /**
+     * Get available product types as label/value pairs.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
     public function get_product_types(): array {
         $types = [
             'simple' => __( 'Simple', 'dokan-lite' ),
@@ -739,7 +794,10 @@ class FormSchema {
             case Elements::TAGS:
                 return $product->get_tag_ids();
             case Elements::BRANDS:
-                return $product->get_brand_ids();
+                if ( method_exists( $product, 'get_brand_ids' ) ) {
+                    return $product->get_brand_ids();
+                }
+                return wp_get_post_terms( $product->get_id(), 'product_brand', [ 'fields' => 'ids' ] );
             case Elements::DOWNLOADABLE:
                 return $product->is_downloadable();
             case Elements::VIRTUAL:

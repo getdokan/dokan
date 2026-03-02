@@ -22,7 +22,6 @@ const RichTextEdit = ( { data, field, onChange, validity }: any ) => {
                     placeholder={ field.placeholder }
                     value={ data[ field.id ] }
                     onChange={ ( value: string ) => {
-                        console.log( 'editor value', value );
                         onChange( { [ field.id ]: value } );
                     } }
                 />

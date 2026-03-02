@@ -118,8 +118,15 @@ const VariationCard = ( { variation }: VariationCardProps ) => {
         <div className="border rounded bg-white shadow-sm overflow-hidden">
             <div
                 role="button"
+                tabIndex={ 0 }
                 className="flex justify-between items-center p-3 bg-gray-50 border-b cursor-pointer select-none"
                 onClick={ handleToggle }
+                onKeyDown={ ( e ) => {
+                    if ( e.key === 'Enter' || e.key === ' ' ) {
+                        e.preventDefault();
+                        handleToggle();
+                    }
+                } }
             >
                 <div className="font-semibold text-gray-700 text-sm">
                     # { variation.id }

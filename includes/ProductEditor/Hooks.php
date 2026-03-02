@@ -5,6 +5,13 @@ namespace WeDevs\Dokan\ProductEditor;
 use WC_Product_Simple;
 use Exception;
 
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Product Editor hooks for rendering and managing the product editor form.
+ *
+ * @since DOKAN_SINCE
+ */
 class Hooks {
 
     public function __construct() {
@@ -76,8 +83,17 @@ class Hooks {
             $product->set_status( 'auto-draft' );
             $product->set_name( '' );
             $product->save();
+
+            // Assign the current vendor as the product author.
+            wp_update_post(
+                [
+                    'ID'          => $product->get_id(),
+                    'post_author' => dokan_get_current_user_id(),
+                ]
+            );
+
             $new_product = true;
-            $product_id   = $product->get_id();
+            $product_id  = $product->get_id();
         }
 
         $product = wc_get_product( $product_id );
@@ -88,6 +104,19 @@ class Hooks {
                 [
 					'deleted' => false,
 					'message' => __( 'Product not found', 'dokan-lite' ),
+				]
+            );
+            return;
+        }
+
+        // Verify the current vendor owns the product.
+        if ( ! dokan_is_product_author( $product_id ) ) {
+            dokan_get_template_part(
+                'global/dokan-error',
+                '',
+                [
+					'deleted' => false,
+					'message' => __( 'You have no permission to view this product', 'dokan-lite' ),
 				]
             );
             return;

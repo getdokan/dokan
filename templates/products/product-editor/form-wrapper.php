@@ -32,7 +32,7 @@
             <?php
 
                 /**
-                 *  Added dokan_order_content_inside_before hook
+                 *  Added dokan_product_editor_manager_content_inside_before hook
                  *
                  *  @hooked show_seller_enable_message
                  *
@@ -62,7 +62,7 @@
             <?php
 
                 /**
-                 *  Added dokan_order_content_inside_after hook
+                 *  Added dokan_product_editor_manager_content_inside_after hook
                  *
                  *  @since DOKAN_SINCE
                  */

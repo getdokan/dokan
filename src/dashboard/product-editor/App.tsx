@@ -10,16 +10,30 @@ import {
 import useLayouts from './hooks/useLayouts';
 import { FlatFormItem } from './types';
 
-const formManager = ( window as any ).dokanFormManager as {
+interface FormManagerData {
     form_items: FlatFormItem[];
     is_new_product: string;
     product_id: string;
     view_product_url: string;
     vendor_earning: number;
+}
+
+const getFormManager = (): FormManagerData | null => {
+    return ( window as any ).dokanFormManager ?? null;
 };
-const productId = Number( formManager.product_id );
 
 const App = () => {
+    const formManager = getFormManager();
+
+    if ( ! formManager ) {
+        return (
+            <div className="dokan-product-product-editor dokan-layout">
+                <p>{ __( 'Product editor data is not available.', 'dokan-lite' ) }</p>
+            </div>
+        );
+    }
+
+    const productId = Number( formManager.product_id );
     const { product, fields, onChange, formItems, isLoading, submitHandler } =
         useProductEditor( productId );
 

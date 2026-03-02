@@ -43,8 +43,9 @@ const FileUploadEdit = ( { field, onChange, validity }: any ) => {
     };
 
     const updateRow = ( index: number, key: string, value: any ) => {
-        const newFiles = [ ...files ];
-        newFiles[ index ][ key ] = value;
+        const newFiles = files.map( ( file: any, i: number ) =>
+            i === index ? { ...file, [ key ]: value } : file
+        );
         setFiles( newFiles );
         onChange( {
             [ field.id ]: newFiles,

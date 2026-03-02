@@ -1,4 +1,5 @@
 import { applyFilters } from '@wordpress/hooks';
+import { __ } from '@wordpress/i18n';
 import { FormField } from '../types';
 
 /**
@@ -11,14 +12,14 @@ export const getValidationError = ( validity: any ): string | undefined => {
         return undefined;
     }
     if ( validity.custom?.type === 'invalid' ) {
-        return validity.custom.message || 'This field is invalid.';
+        return validity.custom.message || __( 'This field is invalid.', 'dokan-lite' );
     }
     if ( validity.required?.type === 'invalid' ) {
-        return validity.required.message || 'Please fill out this field.';
+        return validity.required.message || __( 'Please fill out this field.', 'dokan-lite' );
     }
     if ( validity.elements?.type === 'invalid' ) {
         return (
-            validity.elements.message || 'Value must be one of the elements.'
+            validity.elements.message || __( 'Value must be one of the elements.', 'dokan-lite' )
         );
     }
     return undefined;
@@ -42,7 +43,7 @@ const CustomField = ( {
     return (
         <div id={ fieldKey } className={ classes }>
             <div className={ `${ fieldKey }-label` }>
-                { ( label && label ) || field.label }
+                { label || field.label }
             </div>
             { children }
             {

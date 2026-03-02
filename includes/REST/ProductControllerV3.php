@@ -24,6 +24,72 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
     protected $namespace = 'dokan/v3';
 
     /**
+     * Whether the rest_pre_dispatch filter has already been registered.
+     *
+     * @since DOKAN_PRO_SINCE
+     *
+     * @var bool
+     */
+    private static $filter_registered = false;
+
+    /**
+     * Check if the current user can create a product.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public function create_item_permissions_check( $request ) {
+        return current_user_can( 'dokan_add_product' );
+    }
+
+    /**
+     * Check if the current user can update the given product.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     *
+     * @return bool|WP_Error
+     */
+    public function update_item_permissions_check( $request ) {
+        if ( ! current_user_can( 'dokan_edit_product' ) ) {
+            return false;
+        }
+
+        $product_id = $request->get_param( 'id' );
+
+        if ( $product_id && ! dokan_is_product_author( $product_id ) ) {
+            return new WP_Error( 'dokan_rest_cannot_edit', __( 'You do not have permission to edit this product.', 'dokan-lite' ), [ 'status' => 403 ] );
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if the current user can view form fields for a product.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     *
+     * @return bool|WP_Error
+     */
+    public function get_form_fields_permissions_check( $request ) {
+        if ( ! current_user_can( 'dokan_edit_product' ) ) {
+            return false;
+        }
+
+        $product_id = $request->get_param( 'id' );
+
+        if ( $product_id && ! dokan_is_product_author( $product_id ) ) {
+            return new WP_Error( 'dokan_rest_cannot_view', __( 'You do not have permission to view this product.', 'dokan-lite' ), [ 'status' => 403 ] );
+        }
+
+        return true;
+    }
+
+    /**
      * Register the routes for products.
      *
      * @since DOKAN_SINCE
@@ -31,7 +97,10 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      * @return void
      */
     public function register_routes() {
-        add_filter( 'rest_pre_dispatch', [ $this, 'resolve_product_payload_before_validation' ], 1, 3 );
+        if ( ! self::$filter_registered ) {
+            add_filter( 'rest_pre_dispatch', [ $this, 'resolve_product_payload_before_validation' ], 1, 3 );
+            self::$filter_registered = true;
+        }
 
         register_rest_route(
             $this->namespace,
@@ -40,7 +109,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
                 [
                     'methods'             => WP_REST_Server::CREATABLE,
                     'callback'            => [ $this, 'create_item' ],
-                    'permission_callback' => [ $this, 'check_permission' ],
+                    'permission_callback' => [ $this, 'create_item_permissions_check' ],
                     'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
                 ],
                 'schema' => [ $this, 'get_item_schema' ],
@@ -53,7 +122,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
                 [
                     'methods'             => WP_REST_Server::EDITABLE,
                     'callback'            => [ $this, 'update_item' ],
-                    'permission_callback' => [ $this, 'check_permission' ],
+                    'permission_callback' => [ $this, 'update_item_permissions_check' ],
                     'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
                 ],
                 'schema' => [ $this, 'get_item_schema' ],
@@ -73,14 +142,14 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
 				[
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_form_fields' ],
-					'permission_callback' => [ $this, 'check_permission' ],
+					'permission_callback' => [ $this, 'get_form_fields_permissions_check' ],
 				],
 			]
         );
     }
 
     /**
-     * Create a product item
+     * Create a product item.
      *
      * @since DOKAN_SINCE
      *
@@ -88,19 +157,24 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-
     public function create_item( $request ) {
         $product = parent::create_item( $request );
-        $params = $request->get_params();
-        // merge all the params with $_POST global variable
-        $_POST = array_merge( $_POST, $params ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
-        $product_id = is_wp_error( $product ) ? 0 : (int) $product->data['id'];
+
+        if ( is_wp_error( $product ) ) {
+            return $product;
+        }
+
+        $product_id = (int) $product->data['id'];
+        $params     = $request->get_params();
+        $this->merge_post_data( $request );
+
         do_action( 'dokan_new_product_added', $product_id, $params );
+
         return $product;
     }
 
     /**
-     * Create a product item
+     * Update a product item.
      *
      * @since DOKAN_SINCE
      *
@@ -108,14 +182,18 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      *
      * @return WP_Error|WP_REST_Response
      */
-
     public function update_item( $request ) {
         $product = parent::update_item( $request );
-        $product_id = is_wp_error( $product ) ? 0 : (int) $product->data['id'];
-        $params = $request->get_params();
-        // merge all the params with $_POST global variable
-        $_POST = array_merge( $_POST, $params ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
+        if ( is_wp_error( $product ) ) {
+            return $product;
+        }
+
+        $product_id = (int) $product->data['id'];
+        $params     = $request->get_params();
+        $this->merge_post_data( $request );
         do_action( 'dokan_product_updated', $product_id, $params );
+
         return $product;
     }
 
@@ -138,7 +216,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
             return $result;
         }
 
-        $params = $request->get_params();
+        $params   = $request->get_params();
         $resolved = PayloadResolver::resolve( $params );
         $request->set_body( wp_json_encode( $resolved ) );
         return $result;
@@ -165,5 +243,14 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
                 'vendor_earning' => dokan()->commission->get_earning_by_product( $product_id ),
             ]
         );
+    }
+
+    /**
+     * Merge request params with $_POST so that WC REST API handlers see the resolved payload as if it were sent as form data.
+     */
+    public function merge_post_data( $request ) {
+        $params = $request->get_params();
+        // merge all the params with $_POST global variable
+        $_POST = array_merge( $_POST, $params ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
     }
 }

@@ -124,7 +124,7 @@ const useVariationLayouts = (
                 children: [
                     'enable_wholesale',
                     {
-                        id: 'variation-wholesale-section',
+                        id: 'variation-wholesale-fields',
                         layout: {
                             type: 'row',
                             alignment: 'start',
@@ -160,7 +160,7 @@ const useVariationLayouts = (
         return {
             fields: layoutBuilder( updatedLayouts, formItems, product ),
         };
-    }, [ formItems, product ] );
+    }, [ formItems, product, rootLayout ] );
 
     return {
         formLayouts,

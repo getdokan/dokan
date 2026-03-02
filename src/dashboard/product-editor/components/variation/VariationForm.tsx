@@ -240,9 +240,12 @@ const VariationForm = ( {
         // Local actions — execute directly.
         if ( actionFunction ) {
             setIsLoading( true );
-            await actionFunction();
-            setSelectedAction( null );
-            setIsLoading( false );
+            try {
+                await actionFunction();
+                setSelectedAction( null );
+            } finally {
+                setIsLoading( false );
+            }
             return;
         }
 
@@ -258,9 +261,12 @@ const VariationForm = ( {
         } else {
             // Toggle actions — no input needed, execute directly.
             setIsLoading( true );
-            await bulkEditVariations( action, {} );
-            setSelectedAction( null );
-            setIsLoading( false );
+            try {
+                await bulkEditVariations( action, {} );
+                setSelectedAction( null );
+            } finally {
+                setIsLoading( false );
+            }
         }
     };
 
@@ -435,8 +441,8 @@ const VariationForm = ( {
                 />
             </div>
 
-            { variations.map( ( variation: VariationType, index: number ) => (
-                <VariationCard key={ index } variation={ variation } />
+            { variations.map( ( variation: VariationType ) => (
+                <VariationCard key={ variation.id } variation={ variation } />
             ) ) }
 
             <DokanModal

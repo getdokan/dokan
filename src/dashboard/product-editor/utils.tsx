@@ -116,7 +116,10 @@ function resolveCondition(
                 normalizeForCompare( depValue ) !== normalizeForCompare( value )
             );
         case 'contains':
-            return depValue.includes( value );
+            if ( typeof depValue === 'string' || Array.isArray( depValue ) ) {
+                return depValue.includes( value );
+            }
+            return false;
         default:
             return true;
     }

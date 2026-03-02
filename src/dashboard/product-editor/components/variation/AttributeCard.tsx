@@ -89,8 +89,15 @@ const AttributeCard = ( {
         <div className="border rounded bg-white shadow-sm overflow-hidden">
             <div
                 role="button"
+                tabIndex={ 0 }
                 className="flex justify-between items-center p-3 bg-gray-50 border-b cursor-pointer select-none"
                 onClick={ toggleAccordion }
+                onKeyDown={ ( e ) => {
+                    if ( e.key === 'Enter' || e.key === ' ' ) {
+                        e.preventDefault();
+                        toggleAccordion();
+                    }
+                } }
             >
                 <div className="font-semibold text-gray-700 text-sm">
                     { attr.name || __( 'New Attribute', 'dokan-lite' ) }
