@@ -6,7 +6,7 @@ Dokan Lite is a multi-vendor e-commerce marketplace plugin for WordPress, powere
 
 ## Available Skills
 
-The `.ai/skills/` directory contains procedural HOW-TO instructions:
+The `.claude/skills/` directory contains procedural HOW-TO instructions:
 
 - **`dokan-backend-dev`** — Backend PHP conventions: namespaces, DI container, hooks, REST controllers. **Invoke before writing any PHP code or tests.**
 - **`dokan-dev-cycle`** — Testing and linting workflows (PHPUnit, PHPCS, ESLint, Playwright)
