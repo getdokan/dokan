@@ -27,6 +27,7 @@ Review code changes against Dokan coding standards and project conventions. Cons
 -   **camelCase methods** — Must use `snake_case` for methods, variables, and hooks (WordPress convention).
 -   **Wrong namespace** — Must follow `WeDevs\Dokan\{Domain}\{Class}` pattern with matching file path.
 -   **Wrong text domain** — Must use `dokan-lite` for all translatable strings.
+-   **Missing `dokan` prefix on hooks** — All `apply_filters()` and `do_action()` hook names must start with `dokan_` (e.g., `dokan_order_created`, `dokan_vendor_updated`). Never use unprefixed or generic hook names to avoid conflicts with other plugins.
 
 **Security:**
 
