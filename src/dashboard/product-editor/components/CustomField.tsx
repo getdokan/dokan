@@ -1,3 +1,4 @@
+import { applyFilters } from '@wordpress/hooks';
 import { FormField } from '../types';
 
 /**
@@ -44,6 +45,13 @@ const CustomField = ( {
                 { ( label && label ) || field.label }
             </div>
             { children }
+            {
+                applyFilters(
+                    'dokan_product_editor_after_ui_field',
+                    null,
+                    field
+                ) as React.ReactNode
+            }
             { /* Validation message */ }
             { error && (
                 <p className="components-validated-control__indicator is-invalid">

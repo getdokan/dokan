@@ -46,7 +46,7 @@ class FormSchema {
         'file',
         'datetime',
         'image',
-        'gallery_images',
+        'gallery',
         'attribute',
     ];
 
@@ -312,7 +312,7 @@ class FormSchema {
                 'section_id'   => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'Gallery Image', 'dokan-lite' ),
-                'variant'        => 'gallery_images',
+                'variant'        => 'gallery',
                 'value'          => [],
                 'tooltip'        => __( 'Select product gallery images', 'dokan-lite' ),
                 'priority'       => 30,
@@ -686,7 +686,7 @@ class FormSchema {
                     )
                 );
 
-            case 'gallery_images':
+            case 'gallery':
                 if ( ! is_array( $value ) ) {
                     return [];
                 }

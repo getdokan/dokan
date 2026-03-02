@@ -55,6 +55,7 @@ const flattenOptions = ( options: Option[], level = 0 ): Option[] => {
 const SelectEdit = ( { data, field, onChange, validity }: any ) => {
     // Prepare Options
     const options = flattenOptions( field.elements || [] );
+    const currentValue = data[ field.id ];
 
     // Detect if it's a tree structure (has children) or explicitly using 'options' key
     const isTreeMode = options.some(
@@ -62,13 +63,11 @@ const SelectEdit = ( { data, field, onChange, validity }: any ) => {
     );
 
     // Configuration
-    const isMulti = field.multiple;
+    const isMulti = field.multiple || Array.isArray( currentValue );
     const placeholder = field.placeholder;
 
     // Value Resolution
     const getSelectedValue = () => {
-        const currentValue = data[ field.id ];
-
         if ( currentValue === undefined || currentValue === null ) {
             return isMulti ? [] : null;
         }
