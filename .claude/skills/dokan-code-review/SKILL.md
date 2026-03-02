@@ -27,6 +27,7 @@ Review code changes against Dokan coding standards and project conventions. Cons
 -   **camelCase methods** — Must use `snake_case` for methods, variables, and hooks (WordPress convention).
 -   **Wrong namespace** — Must follow `WeDevs\Dokan\{Domain}\{Class}` pattern with matching file path.
 -   **Wrong text domain** — Must use `dokan-lite` for all translatable strings.
+-   **Missing `dokan` prefix on hooks** — All `apply_filters()` and `do_action()` hook names must start with `dokan_` (e.g., `dokan_order_created`, `dokan_vendor_updated`). Never use unprefixed or generic hook names to avoid conflicts with other plugins.
 
 **Security:**
 
@@ -49,6 +50,7 @@ Review code changes against Dokan coding standards and project conventions. Cons
 -   **Inline styles instead of Tailwind** — Use Tailwind classes with `twMerge()` for conditional composition.
 -   **Direct state mutation** — Use `@wordpress/data` store actions, not direct state changes.
 -   **Missing hook exports** — New hooks in `src/hooks/` must be exported from `src/hooks/index.tsx`.
+-   **Missing `dokan` prefix on JS hooks** — All `@wordpress/hooks` hook names (`addFilter`, `applyFilters`, `addAction`, `doAction`) must start with `dokan_` (e.g., `dokan_order_list_columns`, `dokan_dashboard_init`). Never use unprefixed or generic hook names to avoid conflicts with other plugins.
 
 ### Testing
 
