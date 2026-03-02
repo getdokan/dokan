@@ -141,9 +141,9 @@ Every item in the schema array must include these **required attributes**:
 | Variant | Renders as | Notes |
 |---------|-----------|-------|
 | `text` | Text input | Default for price fields (auto-detects `PriceEdit`) |
-| `number` | Number input | Auto-managed by DataForm |
-| `checkbox` | Checkbox | Auto-managed by DataForm |
-| `radio` | Radio group | Auto-managed by DataForm |
+| `number` | Number input | Uses `type: 'integer'` DataForm field |
+| `checkbox` | Checkbox | Uses `type: 'boolean'` DataForm field |
+| `radio` | Radio group | Uses `'radio'` DataForm edit type |
 | `select` | Dropdown | Uses custom `SelectEdit` with tree support |
 | `multiselect` | Multi-select | `SelectEdit` with `multiple: true` |
 | `async_select` | Async dropdown | `AsyncSelectEdit` for product search |
@@ -151,7 +151,7 @@ Every item in the schema array must include these **required attributes**:
 | `editor` | Rich text | Uses `RichTextEdit` (WYSIWYG mode) |
 | `datetime` | Date picker | `DateTimePickerEdit` |
 | `image` | Image upload | `ImageEdit` with media library |
-| `gallery` | Image gallery | `GalleryImages` for multiple images |
+| `gallery` | Image gallery | `GalleryImages` for multiple images. PHP variant key: `gallery` |
 | `file` | File table | `FileUploadEdit` for downloadable files |
 | `attribute` | Attribute editor | `AttributesEdit` with variation support |
 
@@ -293,7 +293,7 @@ Fields can be shown/hidden based on other field values using the `dependencies` 
 | `not_empty` | Value is not empty |
 | `contains` | Array value includes the specified value |
 
-**Checkbox values:** Checkbox fields use native `true`/`false` booleans. Both dependency values and resolved field values should use booleans — not string representations like `'on'`/`'off'` or `'yes'`/`'no'`.
+**Checkbox values:** Dependency values for checkbox fields use `true`/`false` booleans (e.g., `'value' => true`). Resolved field values may be booleans (from WC getters like `is_downloadable()`) or strings like `'yes'`/`'no'` (from product meta). The frontend `normalizeForCompare()` function normalizes `'on'`/`'off'`, `'yes'`/`'no'`, `1`/`0`, and `'1'`/`'0'` to booleans before comparison, so mixed types work correctly in dependency checks.
 
 ### Per-product-type visibility
 
@@ -415,7 +415,7 @@ add_action( 'dokan_rest_insert_product_variation_object', function ( $variation,
 
 ## 9. Custom Edit Components (React)
 
-The `field-config/index.ts` maps field variants to custom React Edit components. Variants not listed here (like `text`, `checkbox`, `radio`, `number`) are handled natively by DataForm.
+The `field-config/index.ts` maps every field variant to a handler. Handlers for `checkbox`, `radio`, and `number` configure DataForm's built-in field types (`type: 'boolean'`, `Edit: 'radio'`, `type: 'integer'`). Other variants like `select`, `editor`, `image`, etc. provide custom React Edit components. The `text` variant falls through to the default handler, which auto-detects price fields.
 
 ### Adding a custom variant (JS filter)
 
@@ -546,7 +546,7 @@ class ProductEditorFields {
                 [
                     'comparison' => '==',
                     'key'        => self::ENABLE_WHOLESALE,
-                    'value'      => 'on',
+                    'value'      => true,
                 ],
             ],
         ];
