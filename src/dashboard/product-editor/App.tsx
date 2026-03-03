@@ -18,16 +18,20 @@ interface FormManagerData {
     product_id: string;
     view_product_url: string;
     vendor_earning: number;
+    ai_settings: {
+        ai_text_enable: boolean;
+        ai_image_enable: boolean;
+    };
 }
 
-const getFormManager = (): FormManagerData | null => {
-    return ( window as any ).dokanFormManager ?? null;
+const getFormEditor = (): FormManagerData | null => {
+    return ( window as any ).dokanProductEditor ?? null;
 };
 
 const App = () => {
-    const formManager = getFormManager();
+    const formEditor = getFormEditor();
 
-    if ( ! formManager ) {
+    if ( ! formEditor ) {
         return (
             <div className="dokan-product-product-editor dokan-layout">
                 <p>
@@ -40,14 +44,14 @@ const App = () => {
         );
     }
 
-    const productId = Number( formManager.product_id );
+    const productId = Number( formEditor.product_id );
     const { product, fields, onChange, formItems, isLoading, submitHandler } =
         useProductEditor( productId );
 
     const { formLayouts } = useLayouts( formItems, product );
 
-    const productUrl = formManager.view_product_url;
-    const isNewProduct = Boolean( formManager.is_new_product );
+    const productUrl = formEditor.view_product_url;
+    const isNewProduct = Boolean( formEditor.is_new_product );
 
     const { validity, isValid } = useFormValidity(
         product,
@@ -57,8 +61,8 @@ const App = () => {
     // Initialize the product editor in the store on mount.
     useInitProductEditor(
         productId,
-        formManager.form_items,
-        formManager.vendor_earning
+        formEditor.form_items,
+        formEditor.vendor_earning
     );
 
     const valueForPrompt = {
@@ -101,17 +105,20 @@ const App = () => {
                         ) }
                     </div>
                     <div className="flex gap-4">
-                        <DokanAI
-                            className='p-1'
-                            value={ valueForPrompt }
-                            onChange={ ( value ) => {
-                                onChange( {
-                                    name: value.name,
-                                    short_description: value.short_description,
-                                    description: value.description,
-                                } );
-                            } }
-                        />
+                        { formEditor.ai_settings.ai_text_enable && (
+                            <DokanAI
+                                className="p-1"
+                                value={ valueForPrompt }
+                                onChange={ ( value ) => {
+                                    onChange( {
+                                        name: value.name,
+                                        short_description:
+                                            value.short_description,
+                                        description: value.description,
+                                    } );
+                                } }
+                            />
+                        ) }
                         <DokanButton
                             type="submit"
                             variant="primary"

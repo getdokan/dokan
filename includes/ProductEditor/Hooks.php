@@ -3,7 +3,8 @@
 namespace WeDevs\Dokan\ProductEditor;
 
 use WC_Product_Simple;
-use Exception;
+use WeDevs\Dokan\Intelligence\Manager;
+use WeDevs\Dokan\Intelligence\Services\Model;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -136,15 +137,23 @@ class Hooks {
             'before'
         );
 
+        $is_enabled = dokan_get_option( 'dokan_ai_image_gen_availability', 'dokan_ai', 'off' ) === 'on';
+        $manager = dokan()->get_container()->get( Manager::class );
+        $is_image_configured = $is_enabled && $manager->is_configured( Model::SUPPORTS_IMAGE );
+
         wp_localize_script(
             'dokan-product-editor',
-            'dokanFormManager',
+            'dokanProductEditor',
             [
-                'form_items'        => dokan()->product_editor->get_schema( $product_id ),
+                'form_items'         => dokan()->product_editor->get_schema( $product_id ),
                 'product_id'         => $product_id,
                 'is_new_product'     => $new_product,
                 'view_product_url'   => get_permalink( $product_id ),
                 'vendor_earning'     => $vendor_earning,
+                'ai_settings'        => [
+                    'ai_text_enable'    => $manager->is_configured(),
+                    'ai_image_enable'   => $is_image_configured,
+                ],
             ]
         );
 
