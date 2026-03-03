@@ -3,7 +3,8 @@ import { applyFilters } from '@wordpress/hooks';
 import { decodeEntities } from '@wordpress/html-entities';
 import { __ } from '@wordpress/i18n';
 import { Info } from 'lucide-react';
-import { FormField } from '../types';
+import { useCallback, useState } from '@wordpress/element';
+import { FlatFormItem } from '../types';
 
 /**
  * Extract the first validation error message from the DataViews validity object.
@@ -36,13 +37,23 @@ const CustomField = ( {
     className = '',
 }: {
     label?: string | React.ReactNode;
-    field: FormField & { rawLabel?: string };
+    field: FlatFormItem & { rawLabel?: string };
     children: React.ReactNode;
     error?: string;
     className?: string;
 } ) => {
+    const [ touched, setTouched ] = useState( false );
+
+    const handleBlur = useCallback( () => {
+        if ( ! touched ) {
+            setTouched( true );
+        }
+    }, [ touched ] );
+
     const fieldKey = `dokan-form-field-${ field.id }`;
     const classes = `flex flex-col gap-1 ${ fieldKey } ${ className }`;
+    const showError = touched && error;
+
     return (
         <div id={ fieldKey } className={ classes }>
             <div className={ `${ fieldKey }-label flex gap-1 items-center` }>
@@ -60,7 +71,10 @@ const CustomField = ( {
                     </DokanTooltip>
                 ) }
             </div>
-            { children }
+            { /* onBlur bubbles from child inputs to mark the field as touched */ }
+            <div onBlur={ handleBlur }>
+                { children }
+            </div>
             {
                 applyFilters(
                     'dokan_product_editor_after_ui_field',
@@ -68,7 +82,7 @@ const CustomField = ( {
                     field
                 ) as React.ReactNode
             }
-            { error && (
+            { showError && (
                 <p className="components-validated-control__indicator is-invalid">
                     <svg
                         viewBox="0 0 24 24"

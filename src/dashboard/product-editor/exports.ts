@@ -24,6 +24,7 @@ export { getFieldConfig } from './components/FieldRenderer';
 export {
     getField,
     resolveLabel,
+    resolveRequired,
     resolveVisibility,
     getFieldHeading,
     fieldValueForProduct,
@@ -39,7 +40,6 @@ export {
 export type {
     DependencyCondition,
     FlatFormItem,
-    FormField,
     FieldConfig,
     FieldHandler,
     VariationType,

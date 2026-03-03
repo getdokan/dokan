@@ -6,7 +6,7 @@ import { __ } from '@wordpress/i18n';
 import productEditorStore from '@dokan/stores/product-editor';
 import { getFieldConfig } from '../components/FieldRenderer';
 import { Attribute, DefaultAttribute, FlatFormItem } from '../types';
-import { resolveLabel, resolveVisibility } from '../utils';
+import { resolveLabel, resolveRequired, resolveVisibility } from '../utils';
 import { doAction } from '@wordpress/hooks';
 
 /**
@@ -55,6 +55,7 @@ export function useProductEditor( productId: number ): ProductEditorValue {
                     ...item,
                     label: resolveLabel( item, currentProductType ),
                     visibility: resolveVisibility( item, currentProductType ),
+                    required: resolveRequired( item, currentProductType ),
                 };
                 return getFieldConfig( field as any );
             } );

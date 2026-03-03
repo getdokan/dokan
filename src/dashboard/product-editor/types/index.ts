@@ -22,6 +22,7 @@ export type FlatFormItem = {
     placeholder?: string;
     tooltip?: string;
     required?: boolean;
+    requireds?: Record< string, boolean >;
     value?: any;
     default?: any;
     variant: string;
@@ -33,16 +34,13 @@ export type FlatFormItem = {
     is_custom?: boolean;
 };
 
-/** Alias for FlatFormItem when used as a field (e.g. getFieldConfig, handlers). */
-export type FormField = FlatFormItem;
-
 export type FieldConfig = Partial< FlatFormItem > & {
     Edit?: any;
     elements?: any[];
     [ key: string ]: any;
 };
 
-export type FieldHandler = ( field?: FormField ) => FieldConfig;
+export type FieldHandler = ( field?: FlatFormItem ) => FieldConfig;
 
 export type VariationType = {
     id: number;

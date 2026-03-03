@@ -32,16 +32,18 @@ const ImagePreview = ( {
                         alt={ item.alt || 'product' }
                         className="w-full h-full object-cover"
                     />
-                    <button
-                        type="button"
-                        className="absolute top-1 right-1 bg-white rounded-full p-0.5 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:text-red-500"
-                        onClick={ ( e ) => {
-                            e.preventDefault();
-                            onRemove( index );
-                        } }
-                    >
-                        <X size={ 14 } />
-                    </button>
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-200 flex items-center justify-center">
+                        <button
+                            type="button"
+                            className="bg-white rounded-full p-1 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:text-red-500"
+                            onClick={ ( e ) => {
+                                e.preventDefault();
+                                onRemove( index );
+                            } }
+                        >
+                            <X size={ 16 } />
+                        </button>
+                    </div>
                 </div>
             ) ) }
             { children }

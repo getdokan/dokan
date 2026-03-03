@@ -26,6 +26,14 @@ export const resolveVisibility = (
     return item.visibilities?.[ productType ] ?? item.visibility ?? true;
 };
 
+/** Resolve the required state for a field, falling back to the default required. */
+export const resolveRequired = (
+    item: FlatFormItem,
+    productType: string = 'simple'
+): boolean => {
+    return item.requireds?.[ productType ] ?? item.required ?? false;
+};
+
 /** Get label and description for a field. */
 export const getFieldHeading = (
     formItems: FlatFormItem[],
@@ -117,7 +125,7 @@ function resolveCondition(
             );
         case 'contains':
             if ( typeof depValue === 'string' || Array.isArray( depValue ) ) {
-                return depValue.includes( value );
+                return depValue.includes( value as any );
             }
             return false;
         default:
