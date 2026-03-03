@@ -8,6 +8,10 @@
  * @since DOKAN_SINCE
  */
 
+// Re-export @wordpress/dataviews so external consumers share a single bundle
+// (avoids duplicate @wordpress/private-apis registration).
+export { DataForm, useFormValidity } from '@wordpress/dataviews';
+
 // Hooks
 export { useProductEditor, useInitProductEditor } from './hooks/useProductEditor';
 export { default as useLayouts } from './hooks/useLayouts';

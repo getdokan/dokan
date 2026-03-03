@@ -1,6 +1,7 @@
 import { DokanToaster } from '@getdokan/dokan-ui';
+// @ts-ignore
 import { DokanButton, DokanTooltip } from '@src/components';
-import { DataForm, useFormValidity } from '@wordpress/dataviews';
+import { DataForm, useFormValidity } from '@dokan/product-editor';
 import { __ } from '@wordpress/i18n';
 import { ExternalLink } from 'lucide-react';
 import {

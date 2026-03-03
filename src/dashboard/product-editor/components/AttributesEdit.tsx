@@ -4,8 +4,8 @@ import { __ } from '@wordpress/i18n';
 import { useProductEditor } from '../hooks/useProductEditor';
 import { Attribute } from '../types';
 import CustomField, { getValidationError } from './CustomField';
-import AttributeCard from './variation/AttributeCard';
-import VariationForm from './variation/VariationForm';
+import AttributeCard from './attributes/AttributeCard';
+import { applyFilters } from '@wordpress/hooks';
 
 const AttributesEdit = ( { data, field, onChange, validity }: any ) => {
     const attributes: Attribute[] = data[ field.id ] || [];
@@ -103,10 +103,10 @@ const AttributesEdit = ( { data, field, onChange, validity }: any ) => {
                         options={ options }
                         productType={ productType }
                         cardExpanded={ cardExpanded }
-                        onUpdate={ ( value ) =>
+                        onUpdate={ ( value: any ) =>
                             handleUpdateAttribute( index, value )
                         }
-                        onRemove={ ( e ) => {
+                        onRemove={ ( e: any ) => {
                             e.stopPropagation();
                             handleRemoveAttribute( index );
                         } }
@@ -176,12 +176,12 @@ const AttributesEdit = ( { data, field, onChange, validity }: any ) => {
                     </div>
                 ) }
 
-                { productType.includes( 'variable' ) && (
-                    <VariationForm
-                        productId={ data.id }
-                        attributes={ attributes }
-                    />
-                ) }
+                { applyFilters(
+                    'dokan_product_editor_after_attributes',
+                    null,
+                    data,
+                    attributes
+                )}
             </div>
         </CustomField>
     );

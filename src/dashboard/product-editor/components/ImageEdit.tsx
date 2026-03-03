@@ -4,12 +4,13 @@ import { __ } from '@wordpress/i18n';
 import { Upload } from 'lucide-react';
 import CustomField, { getValidationError } from './CustomField';
 import ImagePreview from './ImagePreview';
+import { applyFilters } from '@wordpress/hooks';
 
-const ImageEdit = ( { field, onChange, validity }: any ) => {
-    const [ image, setImage ] = useState( field.value );
+const ImageEdit = ( { data, field, onChange, validity }: any ) => {
+    const [ image, setImage ] = useState( data[ field.id ] );
     const onSelect = ( value: any ) => {
         onChange( {
-            [ field.id ]: value.id,
+            [ field.id ]: value,
         } );
         setImage( {
             id: value.id,
@@ -20,7 +21,7 @@ const ImageEdit = ( { field, onChange, validity }: any ) => {
 
     const onRemove = () => {
         onChange( {
-            [ field.id ]: 0,
+            [ field.id ]: null,
         } );
         setImage( null );
     };
@@ -40,6 +41,15 @@ const ImageEdit = ( { field, onChange, validity }: any ) => {
                     </DokanButton>
                 </MediaUploader>
             ) }
+            {
+                applyFilters(
+                    'dokan_product_editor_after_ui_image_id',
+                    null,
+                    data,
+                    field,
+                    onSelect
+                ) as React.ReactNode
+            }
         </CustomField>
     );
 };
