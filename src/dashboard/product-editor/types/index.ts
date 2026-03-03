@@ -12,26 +12,24 @@ export interface DependencyCondition {
  * Use as FormField when the item is a field (e.g. in getFieldConfig, handlers).
  */
 export type FlatFormItem = {
-    type: string;
     id: string;
     section_id: string | null;
+    type: string;
     label: string;
     labels?: Record< string, string >;
     description?: string | React.ReactNode;
-    order?: number;
+    priority: number;
     placeholder?: string;
     tooltip?: string;
     required?: boolean;
-    error_message?: string;
     value?: any;
     default?: any;
-    variant?: string;
+    variant: string;
     options?: { label: string; value: string }[] | Record< string, string >;
     options_map?: Record< string, { label: string; value: string }[] >;
     dependencies?: DependencyCondition[];
     visibility?: boolean;
     visibilities?: Record< string, boolean >;
-    product_types?: string[];
     is_custom?: boolean;
 };
 

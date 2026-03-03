@@ -81,7 +81,7 @@ class FormSchema {
                 if ( 'variant' === $attr && isset( $field['type'] ) && 'section' === $field['type'] ) {
                     continue;
                 }
-                if ( ! array_key_exists( $attr, $field ) || empty( $field[ $attr ] ) ) {
+                if ( ! array_key_exists( $attr, $field ) || ( $field[ $attr ] === '' || $field[ $attr ] === null ) ) {
                     _doing_it_wrong(
                         __METHOD__,
                         sprintf(
@@ -783,11 +783,10 @@ class FormSchema {
 
         switch ( $key ) {
             case Elements::NAME:
-                $name = $product->get_name();
-                if ( $name === 'AUTO-DRAFT' ) {
+                if ( $product->get_status() === 'auto-draft' ) {
                     return '';
                 }
-                return $name;
+                return $product->get_name();
             case Elements::CREATE_SCHEDULE_FOR_DISCOUNT:
                 return ! empty( $product->get_date_on_sale_to() ) || ! empty( $product->get_date_on_sale_from() );
             case Elements::DATE_ON_SALE_FROM:

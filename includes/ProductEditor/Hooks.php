@@ -77,7 +77,6 @@ class Hooks {
         }
 
         $product_id = isset( $_GET['product_id'] ) ? intval( wp_unslash( $_GET['product_id'] ) ) : 0; // phpcs:ignore
-        $new_product = false;
 
         if ( ! $product_id ) {
             $product = new WC_Product_Simple();
@@ -93,8 +92,16 @@ class Hooks {
                 ]
             );
 
-            $new_product = true;
-            $product_id  = $product->get_id();
+            // Redirect to prevent duplicate auto-drafts on refresh.
+            $redirect_url = add_query_arg(
+                [
+                    'product_id'   => $product->get_id(),
+                    'form_manager' => true,
+                ],
+                dokan_edit_product_url( $product->get_id(), true )
+            );
+            wp_safe_redirect( $redirect_url );
+            exit;
         }
 
         $product = wc_get_product( $product_id );
@@ -122,6 +129,8 @@ class Hooks {
             );
             return;
         }
+
+        $new_product = in_array( $product->get_status(), [ 'auto-draft' ], true );
 
         dokan_get_template_part( 'products/product-editor/form-content', '', [ 'product' => $product ] );
 

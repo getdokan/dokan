@@ -48,9 +48,18 @@
     .product-editor-price-input {
         background: white;
         border: 1px solid #e1e1e1;
-        border-top-left-radius: 0 !important;
-        border-bottom-left-radius: 0 !important;
-        border-left: none !important;
+
+        &.rounded-l-none {
+            border-top-left-radius: 0 !important;
+            border-bottom-left-radius: 0 !important;
+            border-left: none !important;
+        }
+
+        &.rounded-r-none {
+            border-top-right-radius: 0 !important;
+            border-bottom-right-radius: 0 !important;
+            border-right: none !important;
+        }
     }
 
     .dokan-product-image_id {
@@ -71,15 +80,14 @@
         }
     }
     .variation-form {
+        .dokan-form-field-image_id,
         .dokan-product-image_id {
-            height: 130px;
-            width: 130px;
-            max-width: 100%;
-        }
-        img {
-            height: 130px;
-            width: 130px;
-            max-width: 100%;
+            height: 180px;
+            width: 180px;
+            img {
+                height: 100%;
+                width: 100%;
+            }
         }
         .dokan-form-field-image_id-label {
             display: none;

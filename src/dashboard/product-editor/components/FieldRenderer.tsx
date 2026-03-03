@@ -1,9 +1,10 @@
 import { DokanTooltip } from '@src/components';
 import { Info } from 'lucide-react';
-import { sanitizeHTML } from '../../../utilities';
 import { getFieldConfigFrom } from '../field-config';
 import { FormField } from '../types';
 import { resolveDependency } from '../utils';
+import { __ } from '@wordpress/i18n';
+import { decodeEntities } from '@wordpress/html-entities';
 
 export const getFieldConfig = ( field: FormField ) => {
     /**
@@ -30,14 +31,12 @@ export const getFieldConfig = ( field: FormField ) => {
     };
     const mappedField = {
         ...field,
+        rawLabel: field.label,
         label: (
             <div className="flex gap-1 items-center">
-                <span
-                    className="dokan-form-field-label"
-                    dangerouslySetInnerHTML={ {
-                        __html: sanitizeHTML( field.label ),
-                    } }
-                />
+                <span className="dokan-form-field-label">
+                    { decodeEntities( field.label ) }
+                </span>
                 { field.tooltip && (
                     <DokanTooltip content={ field.tooltip }>
                         <Info size={ 16 } />
@@ -52,6 +51,24 @@ export const getFieldConfig = ( field: FormField ) => {
             required: field.required || false,
             // Disable built-in "Value must be one of the elements." so custom validation is used.
             elements: false,
+            custom: ( value: any ) => {
+                const isEmpty = ( v: any ) => {
+                    if ( v === null || v === undefined ) {
+                        return true;
+                    }
+                    if ( typeof v === 'string' ) {
+                        return v.trim().length === 0;
+                    }
+                    if ( Array.isArray( v ) ) {
+                        return v.length === 0;
+                    }
+                    return false;
+                };
+                if ( field.required && isEmpty( value?.[ field.id ] ) ) {
+                    return __( 'Please fill out this field.', 'dokan-lite' );
+                }
+                return null;
+            },
         },
         isVisible: ( data: Record< string, any > ) => {
             if ( field.visibility === false ) {
@@ -66,11 +83,7 @@ export const getFieldConfig = ( field: FormField ) => {
 
     if ( field.description ) {
         mappedField.description = (
-            <span
-                dangerouslySetInnerHTML={ {
-                    __html: sanitizeHTML( field.description as string ),
-                } }
-            />
+            <span>{ decodeEntities( field.description as string ) }</span>
         );
     }
 

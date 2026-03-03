@@ -1,5 +1,8 @@
+import { DokanTooltip } from '@src/components';
 import { applyFilters } from '@wordpress/hooks';
+import { decodeEntities } from '@wordpress/html-entities';
 import { __ } from '@wordpress/i18n';
+import { Info } from 'lucide-react';
 import { FormField } from '../types';
 
 /**
@@ -33,7 +36,7 @@ const CustomField = ( {
     className = '',
 }: {
     label?: string | React.ReactNode;
-    field: FormField;
+    field: FormField & { rawLabel?: string };
     children: React.ReactNode;
     error?: string;
     className?: string;
@@ -42,8 +45,20 @@ const CustomField = ( {
     const classes = `flex flex-col gap-1 ${ fieldKey } ${ className }`;
     return (
         <div id={ fieldKey } className={ classes }>
-            <div className={ `${ fieldKey }-label` }>
-                { label || field.label }
+            <div className={ `${ fieldKey }-label flex gap-1 items-center` }>
+                <span className="dokan-form-field-label">
+                    { label || decodeEntities( field.rawLabel ?? '' ) }
+                </span>
+                { field.required && (
+                    <span className="dokan-form-field-label">
+                        { __( '(REQUIRED)', 'dokan-lite' ) }
+                    </span>
+                ) }
+                { field.tooltip && (
+                    <DokanTooltip content={ field.tooltip }>
+                        <Info size={ 16 } />
+                    </DokanTooltip>
+                ) }
             </div>
             { children }
             {
@@ -53,7 +68,6 @@ const CustomField = ( {
                     field
                 ) as React.ReactNode
             }
-            { /* Validation message */ }
             { error && (
                 <p className="components-validated-control__indicator is-invalid">
                     <svg

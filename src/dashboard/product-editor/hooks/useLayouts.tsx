@@ -55,7 +55,9 @@ export default function useLayouts(
         };
     }, [ width ] );
 
-    const formLayouts = useMemo( () => {
+    // Build the static layout structure (sections, cards, field placement).
+    // This only depends on formItems and rootLayout — NOT on product data.
+    const layoutStructure = useMemo( () => {
         const layouts = [
             {
                 id: 'main_layout',
@@ -228,14 +230,20 @@ export default function useLayouts(
             updatedLayouts = appendToLeftColumn( updatedLayouts, newSections );
         }
 
+        return updatedLayouts;
+    }, [ rootLayout, getFieldHeading, formItems ] );
+
+    // Apply product-dependent visibility and dependency filtering.
+    // This runs on product changes but reuses the cached layout structure.
+    const formLayouts = useMemo( () => {
         return {
             fields: layoutBuilder(
-                updatedLayouts,
+                layoutStructure,
                 formItems,
                 product,
             ),
         };
-    }, [ rootLayout, getFieldHeading, formItems, product ] );
+    }, [ layoutStructure, formItems, product ] );
 
     return { formLayouts, width };
 }

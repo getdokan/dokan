@@ -107,7 +107,7 @@ const App = () => {
                     <div className="flex gap-4">
                         { formEditor.ai_settings.ai_text_enable && (
                             <DokanAI
-                                className="p-1"
+                                className="px-2"
                                 value={ valueForPrompt }
                                 onChange={ ( value ) => {
                                     onChange( {

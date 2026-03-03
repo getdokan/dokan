@@ -152,20 +152,20 @@ export const layoutBuilder = (
     const getOrder = ( item: any ) => {
         if ( typeof item === 'string' ) {
             const flat = getFlatField( item );
-            if ( flat && typeof flat.order === 'number' ) {
-                return flat.order;
+            if ( flat && typeof flat.priority === 'number' ) {
+                return flat.priority;
             }
             return 30;
         }
 
-        if ( typeof item.order === 'number' ) {
-            return item.order;
+        if ( typeof item.priority === 'number' ) {
+            return item.priority;
         }
 
         if ( item.id ) {
             const flat = formItems.find( ( i ) => i.id === item.id );
-            if ( flat && 'order' in flat && typeof flat.order === 'number' ) {
-                return flat.order;
+            if ( flat && 'order' in flat && typeof flat.priority === 'number' ) {
+                return flat.priority;
             }
         }
 
