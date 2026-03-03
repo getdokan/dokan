@@ -24,16 +24,16 @@ trait UnicodeCleaner {
 		$text = html_entity_decode( $text, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
 
 		// Remove UTF-8 BOM.
-		$text = preg_replace( '/^\xEF\xBB\xBF/', '', $text );
+		$text = preg_replace( '/^\xEF\xBB\xBF/', '', $text ) ?? '';
 
 		// Remove UTF-16 BOM.
-		$text = preg_replace( '/^(?:\xFE\xFF|\xFF\xFE)/', '', $text );
+		$text = preg_replace( '/^(?:\xFE\xFF|\xFF\xFE)/', '', $text ) ?? '';
 
 		// Replace non-breaking space with normal space.
 		$text = str_replace( "\xC2\xA0", ' ', $text );
 
 		// Remove control characters except \n and \t.
-		$text = preg_replace( '/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/u', '', $text );
+		$text = preg_replace( '/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/u', '', $text ) ?? '';
 
 		return $text;
 	}
