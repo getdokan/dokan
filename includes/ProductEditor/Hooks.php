@@ -147,5 +147,7 @@ class Hooks {
                 'vendor_earning'     => $vendor_earning,
             ]
         );
+
+        do_action( 'dokan_product_editor_script_after' );
     }
 }

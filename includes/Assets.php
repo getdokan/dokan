@@ -712,6 +712,17 @@ class Assets {
                 'deps'    => $stores_asset['dependencies'],
             ];
         }
+        $product_editor_utils_file = DOKAN_DIR . '/assets/js/product-editor-utils.asset.php';
+        if ( file_exists( $product_editor_utils_file ) ) {
+            $utils_asset = require $product_editor_utils_file;
+
+            // Register shared Product Editor hooks, field-config & layout utilities.
+            $scripts['dokan-product-editor-utils'] = [
+                'version' => $utils_asset['version'],
+                'src'     => $asset_url . '/js/product-editor-utils.js',
+                'deps'    => $utils_asset['dependencies'],
+            ];
+        }
         $product_editor_manager = DOKAN_DIR . '/assets/js/product-editor.asset.php';
         if ( file_exists( $product_editor_manager ) ) {
             $editor_asset = require $product_editor_manager;
