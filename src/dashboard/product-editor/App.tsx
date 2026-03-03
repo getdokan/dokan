@@ -9,6 +9,7 @@ import {
 } from './hooks/useProductEditor';
 import useLayouts from './hooks/useLayouts';
 import { FlatFormItem } from './types';
+import DokanAI from '../../intelligence/components/DokanAI';
 
 interface FormManagerData {
     form_items: FlatFormItem[];
@@ -28,7 +29,12 @@ const App = () => {
     if ( ! formManager ) {
         return (
             <div className="dokan-product-product-editor dokan-layout">
-                <p>{ __( 'Product editor data is not available.', 'dokan-lite' ) }</p>
+                <p>
+                    { __(
+                        'Product editor data is not available.',
+                        'dokan-lite'
+                    ) }
+                </p>
             </div>
         );
     }
@@ -53,6 +59,12 @@ const App = () => {
         formManager.form_items,
         formManager.vendor_earning
     );
+
+    const valueForPrompt = {
+        post_title: [ product.name ],
+        post_content: [ product.description ],
+        post_excerpt: [ product.short_description ],
+    };
 
     return (
         <div className="dokan-product-product-editor dokan-layout">
@@ -87,17 +99,30 @@ const App = () => {
                             </span>
                         ) }
                     </div>
-                    <DokanButton
-                        type="submit"
-                        variant="primary"
-                        loading={ isLoading }
-                        disabled={ ! isValid || isLoading }
-                        label={
-                            isNewProduct
-                                ? __( 'Save Changes', 'dokan-lite' )
-                                : __( 'Update Product', 'dokan-lite' )
-                        }
-                    />
+                    <div className="flex gap-4">
+                        <DokanAI
+                            className='p-1'
+                            value={ valueForPrompt }
+                            onChange={ ( value ) => {
+                                onChange( {
+                                    name: value.name,
+                                    short_description: value.short_description,
+                                    description: value.description,
+                                } );
+                            } }
+                        />
+                        <DokanButton
+                            type="submit"
+                            variant="primary"
+                            loading={ isLoading }
+                            disabled={ ! isValid || isLoading }
+                            label={
+                                isNewProduct
+                                    ? __( 'Save Changes', 'dokan-lite' )
+                                    : __( 'Update Product', 'dokan-lite' )
+                            }
+                        />
+                    </div>
                 </div>
                 <DataForm
                     data={ product }

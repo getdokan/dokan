@@ -7,12 +7,28 @@ import productEditorStore from '@dokan/stores/product-editor';
 import { getFieldConfig } from '../components/FieldRenderer';
 import { Attribute, DefaultAttribute, FlatFormItem } from '../types';
 import { resolveLabel, resolveVisibility } from '../utils';
+import { doAction } from '@wordpress/hooks';
 
 /**
  * Hook that provides product editor state and actions from the Redux store.
  * Drop-in replacement for the old useFormContext().
  */
-export function useProductEditor( productId: number ) {
+
+type ProductEditorValue = {
+    product: Record< string, any >;
+    fields: any[];
+    formItems: FlatFormItem[];
+    onChange: ( newData: Record< string, any > ) => void;
+    submitHandler: ( e: any ) => Promise<void>;
+    isLoading: boolean;
+    defaultAttributes: DefaultAttribute[];
+    getDefaultValue: ( attr: Attribute ) => { label: string; value: string } | null;
+    handleDefaultChange: (
+        attr: Attribute,
+        selectedOption: any
+    ) => void;
+}
+export function useProductEditor( productId: number ): ProductEditorValue {
     const toast = useToast();
 
     const { product, formItems, isLoading } = useSelect(
@@ -47,6 +63,10 @@ export function useProductEditor( productId: number ) {
     const onChange = useCallback(
         ( newData: Record< string, any > ) => {
             updateProduct( productId, newData );
+            doAction( 'dokan_product_editor_after_change', {
+                productId,
+                newData,
+            } );
         },
         [ productId, updateProduct ]
     );
