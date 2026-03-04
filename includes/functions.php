@@ -1020,6 +1020,7 @@ function dokan_edit_product_url( $product, bool $is_new_product = false ) {
             'product_id'                => $is_new_product ? 0 : $product->get_id(),
             'action'                    => 'edit',
             '_dokan_edit_product_nonce' => wp_create_nonce( 'dokan_edit_product_nonce' ),
+            'product_editor'            => true,
         ],
         dokan_get_navigation_url( 'products' )
     );

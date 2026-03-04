@@ -16,29 +16,8 @@ defined( 'ABSPATH' ) || exit;
 class Hooks {
 
     public function __construct() {
-        add_action( 'dokan_after_add_product_btn', [ $this, 'add_new_product_link' ] );
         add_action( 'dokan_render_product_editor_manager_template', [ $this, 'load_product_edit_template' ] );
         add_action( 'dokan_product_editor_manager_inside_content', [ $this, 'load_product_edit_content' ] );
-    }
-
-    /**
-     * Add new product (Form Manager) link.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return void
-     */
-    public function add_new_product_link() {
-        $add_product_url = add_query_arg(
-            [ 'form_manager' => true ],
-            dokan_edit_product_url( 0, true )
-        );
-        ?>
-        <a href="<?php echo esc_url( $add_product_url ); ?>" class="dokan-btn dokan-btn-theme">
-            <i class="fas fa-briefcase">&nbsp;</i>
-            <?php esc_html_e( 'Form Manager', 'dokan-lite' ); ?>
-        </a>
-        <?php
     }
 
     /**
@@ -96,7 +75,7 @@ class Hooks {
             $redirect_url = add_query_arg(
                 [
                     'product_id'   => $product->get_id(),
-                    'form_manager' => true,
+                    'product_editor' => true,
                 ],
                 dokan_edit_product_url( $product->get_id(), true )
             );

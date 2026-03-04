@@ -162,7 +162,7 @@ export const actions = {
                         ...defaultData,
                         id: productId,
                         vendor_earning: vendorEarning,
-                        form_manager: true,
+                        product_editor: true,
                     },
                     formItems
                 )

@@ -71,16 +71,22 @@ const App = () => {
         post_excerpt: [ product.short_description ],
     };
 
+    const handleSwitchEditor = () => {
+        // get the window.location.href and remove the query parameter `product_editor` if exists, otherwise add `?product_editor` to the url and reload the page
+        const legacyUrl = window.location.href.replace( 'product_editor', '' );
+        window.location.href = legacyUrl;
+    };
+
     return (
         <div className="dokan-product-product-editor dokan-layout">
             <form onSubmit={ submitHandler }>
                 <div className="flex justify-between mb-4">
-                    <div className="text-2xl font-semibold flex items-center gap-2">
-                        <span>
+                    <div className="flex items-center gap-2">
+                        <div className="text-2xl font-semibold">
                             { isNewProduct
                                 ? __( 'New Product', 'dokan-lite' )
                                 : __( 'Edit Product', 'dokan-lite' ) }
-                        </span>
+                        </div>
                         { ! isNewProduct && productUrl && (
                             <span className="flex gap-3">
                                 <DokanTooltip
@@ -103,6 +109,13 @@ const App = () => {
                                 </DokanTooltip>
                             </span>
                         ) }
+                        { /* add switch button */ }
+                        <DokanButton
+                            variant="secondary"
+                            onClick={ handleSwitchEditor }
+                        >
+                            { __( 'Switch to Legacy Editor', 'dokan-lite' ) }
+                        </DokanButton>
                     </div>
                     <div className="flex gap-3">
                         <DokanButton

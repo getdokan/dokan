@@ -6,7 +6,7 @@ if ( isset( $_GET['_dokan_edit_product_nonce'] ) && wp_verify_nonce( sanitize_ke
 }
 
 if ( 'edit' === $product_action ) {
-    if ( isset( $_GET['form_manager'] ) ) {
+    if ( isset( $_GET['product_editor'] ) ) {
         do_action( 'dokan_render_product_editor_manager_template', $product_action );
         return;
     }
