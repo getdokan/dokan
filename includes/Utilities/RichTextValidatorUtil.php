@@ -35,7 +35,7 @@ class RichTextValidatorUtil {
      *
      * @since DOKAN_SINCE
      *
-     * @see Inspired by WPML's approach to Unicode and BOM character handling for rich text validation.
+     * @see sitepress-multilingual-cms/vendor/wpml/wpml/src/Core/Component/WordsToTranslate/Domain/Calculator/PrepareContent/Rules/UnicodeTrait.php
      *
      * @param string $text The text containing special characters.
      *
