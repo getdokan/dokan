@@ -104,7 +104,18 @@ const App = () => {
                             </span>
                         ) }
                     </div>
-                    <div className="flex gap-4">
+                    <div className="flex gap-3">
+                        <DokanButton
+                            type="submit"
+                            variant="primary"
+                            loading={ isLoading }
+                            disabled={ ! isValid || isLoading }
+                            label={
+                                isNewProduct
+                                    ? __( 'Save Changes', 'dokan-lite' )
+                                    : __( 'Update Product', 'dokan-lite' )
+                            }
+                        />
                         { formEditor.ai_settings.ai_text_enable && (
                             <DokanAI
                                 className="px-2"
@@ -119,17 +130,6 @@ const App = () => {
                                 } }
                             />
                         ) }
-                        <DokanButton
-                            type="submit"
-                            variant="primary"
-                            loading={ isLoading }
-                            disabled={ ! isValid || isLoading }
-                            label={
-                                isNewProduct
-                                    ? __( 'Save Changes', 'dokan-lite' )
-                                    : __( 'Update Product', 'dokan-lite' )
-                            }
-                        />
                     </div>
                 </div>
                 <DataForm

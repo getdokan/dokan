@@ -69,7 +69,6 @@
         flex-direction: column;
         height: 232px;
         width: 100%;
-        max-width: 232px;
         border: 1px solid #e9e9e9;
         border-radius: 5px;
         img {
@@ -77,6 +76,9 @@
             width: 100%;
             border-radius: 5px;
             object-fit: cover;
+        }
+        &.is-custom {
+            width: 232px;
         }
     }
     .variation-form {

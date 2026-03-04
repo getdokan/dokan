@@ -386,4 +386,32 @@ export const actions = {
             }
         };
     },
+
+    reorderVariations: (
+        productId: number,
+        variations: VariationType[]
+    ) => {
+        return async ( { dispatch }: { dispatch: any } ) => {
+            // Update the store immediately for instant UI feedback.
+            dispatch( actions.setVariations( productId, variations ) );
+
+            try {
+                await apiFetch( {
+                    path: `/dokan/v2/products/${ productId }/variations/batch`,
+                    method: 'POST',
+                    data: {
+                        update: variations.map( ( v, i ) => ( {
+                            id: v.id,
+                            menu_order: i,
+                        } ) ),
+                    },
+                } );
+            } catch ( error ) {
+                dispatch( actions.setError( error as Error ) );
+                // Re-fetch to restore server state on failure.
+                await dispatch( actions.fetchVariations( productId ) );
+                throw error;
+            }
+        };
+    },
 };

@@ -93,6 +93,8 @@ const FileUploadEdit = ( { field, onChange, validity }: any ) => {
                                             'Enter name',
                                             'dokan-lite'
                                         ),
+                                        readOnly: true,
+                                        disabled: true,
                                     } }
                                 />
                             </div>
@@ -112,6 +114,8 @@ const FileUploadEdit = ( { field, onChange, validity }: any ) => {
                                             'Enter URL or select file',
                                             'dokan-lite'
                                         ),
+                                        readOnly: true,
+                                        disabled: true,
                                     } }
                                 />
                             </div>

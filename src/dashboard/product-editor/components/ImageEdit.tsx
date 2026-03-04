@@ -26,14 +26,16 @@ const ImageEdit = ( { data, field, onChange, validity }: any ) => {
         setImage( null );
     };
 
+    const className = `dokan-product-image_id ${ field.is_custom ? 'is-custom' : '' }`;
+
     return (
         <CustomField field={ field } error={ getValidationError( validity ) }>
             { image?.url ? (
-                <ImagePreview images={ image } onRemove={ onRemove } />
+                <ImagePreview itemClassName={className} images={ image } onRemove={ onRemove } />
             ) : (
                 <MediaUploader
                     onSelect={ onSelect }
-                    className={ `dokan-product-image_id` }
+                    className={ className }
                 >
                     <DokanButton variant="secondary" className="uppercase">
                         <Upload size={ 16 } />

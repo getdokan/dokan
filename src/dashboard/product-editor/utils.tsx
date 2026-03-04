@@ -157,36 +157,9 @@ export const layoutBuilder = (
         return formItems.find( ( i ) => i.type === 'field' && i.id === id );
     };
 
-    const getOrder = ( item: any ) => {
-        if ( typeof item === 'string' ) {
-            const flat = getFlatField( item );
-            if ( flat && typeof flat.priority === 'number' ) {
-                return flat.priority;
-            }
-            return 30;
-        }
-
-        if ( typeof item.priority === 'number' ) {
-            return item.priority;
-        }
-
-        if ( item.id ) {
-            const flat = formItems.find( ( i ) => i.id === item.id );
-            if ( flat && 'order' in flat && typeof flat.priority === 'number' ) {
-                return flat.priority;
-            }
-        }
-
-        return 30;
-    };
-
-    const sortedLayouts = [ ...layouts ].sort( ( a, b ) => {
-        return getOrder( a ) - getOrder( b );
-    } );
-
     const productType = product?.type || 'simple';
 
-    const mappedLayouts = sortedLayouts.map( ( field ) => {
+    const mappedLayouts = layouts.map( ( field ) => {
         if ( typeof field === 'string' ) {
             const flatField = getFlatField( field );
             if ( ! flatField ) {
