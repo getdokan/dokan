@@ -46,6 +46,7 @@ env:
     USER_PASSWORD: 01dokan01
     GMAP: ${{secrets.GMAP}}
     MAPBOX: ${{secrets.MAPBOX}}
+    LICENSE_KEY: ${{secrets.LICENSE_KEY}}
     BASE_URL: http://localhost:9999
     CI: true
     HEADLESS: true

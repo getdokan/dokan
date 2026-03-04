@@ -65,6 +65,7 @@ setup.describe('site setup', () => {
     });
 
     setup('set dokan license', { tag: ['@pro'] }, async () => {
+        setup.skip(!process.env.LICENSE_KEY, 'LICENSE_KEY env var not set – skipping license setup (fork PR or unconfigured secret)');
         await dbUtils.setOptionValue(dbData.dokan.optionName.dokanProLicense, dbData.dokan.dokanProLicense);
     });
 
