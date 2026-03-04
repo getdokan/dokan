@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Dashboard\Templates;
 
 use WeDevs\Dokan\Utilities\VendorUtil;
+use WeDevs\Dokan\Utilities\RichTextValidatorUtil;
 use WP_Error;
 
 /**
@@ -511,6 +512,22 @@ class Settings {
             }
         }
 
+        $enable_tnc = isset( $_POST['dokan_store_tnc_enable'] ) && 'on' === sanitize_text_field( wp_unslash( $_POST['dokan_store_tnc_enable'] ) );
+
+        if ( $enable_tnc ) {
+            $store_tnc = isset( $_POST['dokan_store_tnc'] ) ? wp_kses_post( wp_unslash( $_POST['dokan_store_tnc'] ) ) : '';
+
+            $store_tnc_clean = RichTextValidatorUtil::sanitize_richtext_content( $store_tnc );
+            $store_tnc_clean = trim( $store_tnc_clean );
+
+            if ( empty( $store_tnc_clean ) ) {
+                $error->add(
+                    'dokan_tnc_content',
+                    __( 'Please add Terms & Conditions content before saving the settings.', 'dokan-lite' )
+                );
+            }
+        }
+
         if ( $error->get_error_codes() ) {
             return $error;
         }
@@ -671,6 +688,19 @@ class Settings {
                 ];
             }
 
+            $store_tnc_raw = isset( $_POST['dokan_store_tnc'] ) ? wp_kses_post( wp_unslash( $_POST['dokan_store_tnc'] ) ) : '';
+
+            $store_tnc_processed = '';
+
+            if ( ! empty( $store_tnc_raw ) ) {
+                $store_tnc_clean = RichTextValidatorUtil::sanitize_richtext_content( $store_tnc_raw );
+                $store_tnc_clean = trim( $store_tnc_clean );
+
+                if ( ! empty( $store_tnc_clean ) ) {
+                    $store_tnc_processed = $store_tnc_clean;
+                }
+            }
+
             // Update store settings info.
             $dokan_settings = [
                 'store_name'               => isset( $_POST['dokan_store_name'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_store_name'] ) ) : '',
@@ -682,7 +712,7 @@ class Settings {
                 'show_email'               => isset( $_POST['setting_show_email'] ) ? sanitize_text_field( wp_unslash( $_POST['setting_show_email'] ) ) : 'no',
                 'gravatar'                 => isset( $_POST['dokan_gravatar'] ) ? absint( $_POST['dokan_gravatar'] ) : 0,
                 'enable_tnc'               => isset( $_POST['dokan_store_tnc_enable'] ) && 'on' === sanitize_text_field( wp_unslash( $_POST['dokan_store_tnc_enable'] ) ) ? 'on' : 'off',
-                'store_tnc'                => isset( $_POST['dokan_store_tnc'] ) ? wp_kses_post( wp_unslash( $_POST['dokan_store_tnc'] ) ) : '',
+                'store_tnc'                => $store_tnc_processed,
                 'dokan_store_time'         => apply_filters( 'dokan_store_time', $dokan_store_time ),
                 'dokan_store_time_enabled' => isset( $_POST['dokan_store_time_enabled'] ) && 'yes' === sanitize_text_field( wp_unslash( $_POST['dokan_store_time_enabled'] ) ) ? 'yes' : 'no',
                 'dokan_store_open_notice'  => isset( $_POST['dokan_store_open_notice'] ) ? sanitize_textarea_field( wp_unslash( $_POST['dokan_store_open_notice'] ) ) : '',
