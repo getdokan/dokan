@@ -34,8 +34,12 @@ class V_4_3_1 extends DokanUpgrader {
             'admin_order_tax'     => "ALTER TABLE `{$table_name}` ADD COLUMN `admin_order_tax` double NOT NULL DEFAULT '0' AFTER `admin_shipping_tax`",
         ];
 
-        foreach ( $columns_to_add as $alter_query ) {
-            $wpdb->query( $alter_query );
+        $existing_columns = $wpdb->get_col( "SHOW COLUMNS FROM `{$table_name}`", 0 );
+
+        foreach ( $columns_to_add as $col_name => $alter_query ) {
+            if ( ! in_array( $col_name, $existing_columns, true ) ) {
+                $wpdb->query( $alter_query );
+            }
         }
 
         // Update the order_type column comment to include new types.

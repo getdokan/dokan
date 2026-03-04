@@ -24,15 +24,28 @@ import {
     generateCSVFileName,
 } from '@woocommerce/csv-export';
 
+export interface CSVHeader {
+    key: string;
+    label: string;
+}
+
+interface CSVCell {
+    display: string;
+    value: string;
+}
+
 /**
  * Convert an array of objects into CSV-compatible row arrays,
  * based on the header keys.
  *
- * @param {Array<Object>} data    - Array of data objects.
- * @param {Array<{key: string, label: string}>} headers - Header definitions (key + label).
- * @return {Array<Array<{display: string, value: string | number}>>} Rows suitable for CSV generation.
+ * @param {Array<Record<string, unknown>>} data    - Array of data objects.
+ * @param {CSVHeader[]}                    headers - Header definitions (key + label).
+ * @return {CSVCell[][]} Rows suitable for CSV generation.
  */
-export const objectToCSVRows = ( data, headers ) => {
+export const objectToCSVRows = (
+    data: Record< string, unknown >[],
+    headers: CSVHeader[]
+): CSVCell[][] => {
     return data.map( ( item ) =>
         headers.map( ( header ) => {
             const value = item[ header.key ];
@@ -53,12 +66,17 @@ export const objectToCSVRows = ( data, headers ) => {
 /**
  * Directly download data as a CSV file in the browser.
  *
- * @param {string} filename - Base name for the CSV file (without extension).
- * @param {Array<{key: string, label: string}>} headers - Column header definitions.
- * @param {Array<Object>} data - Array of data objects to export.
- * @param {Object} [params={}] - Optional query params to include in the filename.
+ * @param {string}                    filename - Base name for the CSV file (without extension).
+ * @param {CSVHeader[]}               headers  - Column header definitions.
+ * @param {Record<string, unknown>[]} data     - Array of data objects to export.
+ * @param {Record<string, string>}    params   - Optional query params to include in the filename.
  */
-export const directDownloadCSV = ( filename, headers, data, params = {} ) => {
+export const directDownloadCSV = (
+    filename: string,
+    headers: CSVHeader[],
+    data: Record< string, unknown >[],
+    params: Record< string, string > = {}
+): void => {
     const rows = objectToCSVRows( data, headers );
 
     downloadCSVFile(
