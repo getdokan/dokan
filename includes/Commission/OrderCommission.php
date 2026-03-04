@@ -75,7 +75,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
         $vendor_net_earning   = 0;
         $vendor_discount      = 0;
 
-        $is_admin_earning_order_type = ( new OrderType() )->is_admin_order_type( $this->order );
+        $is_admin_earning_order_type = dokan_get_container()->get( OrderType::class )->is_admin_order_type( $this->order );
         foreach ( $this->order->get_items() as $item_id => $item ) {
             try {
                 $line_item_commission = dokan_get_container()->get( OrderLineItemCommission::class );
@@ -138,7 +138,8 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
 
         $this->ensure_commissions_are_calculated();
 
-        $refund_commission = new Commission();
+        $refund_commission          = new Commission();
+        $is_admin_earning_order_type = dokan_get_container()->get( OrderType::class )->is_admin_order_type( $this->order );
 
         foreach ( $refund->get_items() as $item_id => $refund_item ) {
             try {
@@ -146,12 +147,20 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
                 $order_item_commission  = $this->get_commission_for_line_item( $order_item_id );
                 $item_refund_commission = $order_item_commission->calculate_for_refund_item( $refund_item );
 
-                $refund_commission->set_admin_net_commission(
-                    $refund_commission->get_admin_net_commission() + $item_refund_commission->get_admin_net_commission()
-                );
-                $refund_commission->set_vendor_net_earning(
-                    $refund_commission->get_vendor_net_earning() + $item_refund_commission->get_vendor_net_earning()
-                );
+                if ( $is_admin_earning_order_type ) {
+                    $refund_commission->set_admin_net_earning(
+                        $refund_commission->get_admin_net_earning()
+                        + $item_refund_commission->get_admin_net_commission()
+                        + $item_refund_commission->get_vendor_net_earning()
+                    );
+                } else {
+                    $refund_commission->set_admin_net_commission(
+                        $refund_commission->get_admin_net_commission() + $item_refund_commission->get_admin_net_commission()
+                    );
+                    $refund_commission->set_vendor_net_earning(
+                        $refund_commission->get_vendor_net_earning() + $item_refund_commission->get_vendor_net_earning()
+                    );
+                }
             } catch ( \Exception $exception ) {
                 // translators: 1: Refund item ID, 2: Error message
                 dokan_log(
@@ -410,6 +419,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
         return [
             'admin_commission'     => $this->get_admin_commission(),
             'admin_net_commission' => $this->get_admin_net_commission(),
+            'admin_net_earning'    => $this->get_admin_net_earning(),
             'admin_discount'       => $this->get_admin_discount(),
             'admin_subsidy'        => $this->get_admin_subsidy(),
             'vendor_discount'      => $this->get_vendor_discount(),
@@ -493,7 +503,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      * @return float
      */
     public function get_admin_total_earning(): float {
-        return $this->get_admin_net_earning() + $this->get_admin_commission();
+        return $this->get_admin_net_earning() + $this->get_admin_commission() + $this->get_total_admin_fees();
     }
 
     /**

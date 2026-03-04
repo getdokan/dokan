@@ -273,11 +273,11 @@ class OrderType {
      *
      * @since DOKAN_SINCE
      *
-     * @param \WC_Order $order The order object to check.
+     * @param \WC_Abstract_Order $order The order object to check.
      *
      * @return bool True if the order type is relevant to admin users, false otherwise.
      */
-    public function is_admin_order_type( $order ): bool {
+    public function is_admin_order_type( \WC_Abstract_Order $order ): bool {
         $admin_earning_order_types = $this->get_admin_earning_order_types();
         $order_type                = $this->get_type( $order );
 
