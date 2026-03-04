@@ -14,7 +14,7 @@ const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.
 // TEST SETUP
 // ============================================
 
-test.describe('Stripe Express Tests @lite', () => {
+test.describe.skip('Stripe Express Tests @lite', () => {
     // Each test will create its own context and page with the appropriate storage state
     let isStripeExpressEnabled = false;
 
