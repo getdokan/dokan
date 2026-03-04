@@ -3,7 +3,7 @@
 namespace WeDevs\Dokan\Dashboard\Templates;
 
 use WeDevs\Dokan\Utilities\VendorUtil;
-use WeDevs\Dokan\Traits\UnicodeCleaner;
+use WeDevs\Dokan\Utilities\RichTextValidatorUtil;
 use WP_Error;
 
 /**
@@ -12,7 +12,6 @@ use WP_Error;
  * @author weDves
  */
 class Settings {
-    use UnicodeCleaner;
 
     public $currentuser;
     public $profile_info;
@@ -486,8 +485,7 @@ class Settings {
         if ( $enable_tnc ) {
             $store_tnc = isset( $_POST['dokan_store_tnc'] ) ? wp_kses_post( wp_unslash( $_POST['dokan_store_tnc'] ) ) : '';
 
-            $store_tnc_clean = wp_strip_all_tags( $store_tnc );
-            $store_tnc_clean = $this->unicodeReplace( $store_tnc_clean );
+            $store_tnc_clean = RichTextValidatorUtil::validate_richtext_content( $store_tnc );
             $store_tnc_clean = trim( $store_tnc_clean );
 
             if ( empty( $store_tnc_clean ) ) {
@@ -663,8 +661,7 @@ class Settings {
             $store_tnc_processed = '';
 
             if ( ! empty( $store_tnc_raw ) ) {
-                $store_tnc_clean = wp_strip_all_tags( $store_tnc_raw );
-                $store_tnc_clean = $this->unicodeReplace( $store_tnc_clean );
+                $store_tnc_clean = RichTextValidatorUtil::validate_richtext_content( $store_tnc_raw );
                 $store_tnc_clean = trim( $store_tnc_clean );
 
                 if ( ! empty( $store_tnc_clean ) ) {
