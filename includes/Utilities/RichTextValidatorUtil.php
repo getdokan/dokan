@@ -3,7 +3,7 @@
 namespace WeDevs\Dokan\Utilities;
 
 class RichTextValidatorUtil {
-    
+
     /**
      * Validate and clean rich text content.
      *
@@ -17,7 +17,7 @@ class RichTextValidatorUtil {
         $text = wp_strip_all_tags( $text );
         $text = html_entity_decode( $text, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
         $text = self::replace_richtext_chars( $text );
-        
+
         /**
          * Filter for validating and cleaning rich text content.
          *
@@ -29,7 +29,7 @@ class RichTextValidatorUtil {
          */
         return apply_filters( 'dokan_validate_richtext_content', $text );
     }
-    
+
     /**
      * Replace rich text special characters.
      *
