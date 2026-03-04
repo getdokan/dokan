@@ -86,7 +86,10 @@ class VendorOrderStatsStore extends BaseDataStore {
         $this->add_sql_clause( 'select', 'COUNT(DISTINCT dos.vendor_id)' );
         $this->add_sql_clause( 'from', $this->get_table_name_with_prefix() . ' dos' );
         $this->add_sql_clause( 'join', "JOIN {$wpdb->prefix}wc_order_stats wos ON dos.order_id = wos.order_id" );
-        $this->add_sql_clause( 'where', " AND wos.status NOT IN ( '" . implode( "','", $exclude_order_statuses ) . "' )" );
+        if ( ! empty( $exclude_order_statuses ) ) {
+            $placeholders = implode( ', ', array_fill( 0, count( $exclude_order_statuses ), '%s' ) );
+            $this->add_sql_clause( 'where', $wpdb->prepare( " AND wos.status NOT IN ( $placeholders )", ...$exclude_order_statuses ) );
+        }
 
         $this->add_sql_clause( 'where', ' AND dos.vendor_earning > 0' );
         $this->add_sql_clause( 'where', $wpdb->prepare( ' AND wos.date_created BETWEEN %s AND %s', $start_date, $end_date ) );
@@ -163,7 +166,11 @@ class VendorOrderStatsStore extends BaseDataStore {
         $this->add_sql_clause( 'join', "INNER JOIN {$wpdb->prefix}wc_order_stats wos ON dos.order_id = wos.order_id" );
 
         // Where conditions.
-        $this->add_sql_clause( 'where', " AND wos.status NOT IN ( '" . implode( "','", ReportUtil::get_exclude_order_statuses() ) . "' )" );
+        $exclude_order_statuses = ReportUtil::get_exclude_order_statuses();
+        if ( ! empty( $exclude_order_statuses ) ) {
+            $placeholders = implode( ', ', array_fill( 0, count( $exclude_order_statuses ), '%s' ) );
+            $this->add_sql_clause( 'where', $wpdb->prepare( " AND wos.status NOT IN ( $placeholders )", ...$exclude_order_statuses ) );
+        }
 
         $this->add_sql_clause( 'where', 'AND wos.total_sales > 0' );
         $this->add_sql_clause(

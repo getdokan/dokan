@@ -2,8 +2,6 @@ import { Card as DokanCard } from '@getdokan/dokan-ui';
 import { DokanTooltip as Tooltip } from '@src/components';
 import { Info, MoveUp, MoveDown } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
-import { RawHTML } from '@wordpress/element';
-
 export interface StatCardProps {
     icon: JSX.Element;
     countDirection?: 'up' | 'down' | 'neutral';
@@ -27,7 +25,7 @@ const StatCard = ( {
                 <div className="bg-[#F8F6FE] w-10 h-10 rounded flex items-center justify-center text-[#7047EB]">
                     { icon }
                 </div>
-                { count ? (
+                { count !== null && count !== 0 ? (
                     <div
                         className={ twMerge(
                             'text-sm flex',
@@ -64,7 +62,11 @@ const StatCard = ( {
                 ) }
             </div>
             <div className="text-3xl font-bold text-black -mt-1 -mb-1 w-fit break-words max-w-[275px]">
-                <RawHTML>{ String( content ) }</RawHTML>
+                { typeof content === 'string' ? (
+                    <span>{ content }</span>
+                ) : (
+                    content
+                ) }
             </div>
         </DokanCard>
     );

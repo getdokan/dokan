@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useRef } from '@wordpress/element';
+import { useEffect, useMemo, useRef } from '@wordpress/element';
 import { formatPrice } from '../utilities';
 import { applyFilters } from '@wordpress/hooks';
 
@@ -45,6 +45,12 @@ export interface D3ChartProps {
     config?: Partial< typeof CHART_CONFIG >;
 }
 
+interface ParsedChartDataPoint {
+    date: Date;
+    originalData: D3ChartDataPoint;
+    [ key: string ]: number | Date | D3ChartDataPoint;
+}
+
 const defaultMetrics: D3ChartMetric[] = [
     {
         key: 'total_sales',
@@ -69,7 +75,16 @@ const D3Chart = ( {
     config = {},
 }: D3ChartProps ) => {
     const svgRef = useRef< SVGSVGElement >( null );
-    const chartConfig = { ...CHART_CONFIG, ...config };
+    const tooltipRef = useRef< d3.Selection<
+        HTMLDivElement,
+        unknown,
+        HTMLElement,
+        any
+    > | null >( null );
+    const chartConfig = useMemo(
+        () => ( { ...CHART_CONFIG, ...config } ),
+        [ config ]
+    );
 
     useEffect( () => {
         if ( ! data || data.length === 0 || ! svgRef.current ) {
@@ -85,18 +100,18 @@ const D3Chart = ( {
         // Parse dates and prepare data for all metrics
         const parseDate = d3.timeParse( '%Y-%m-%d' );
 
-        const chartData = data
+        const chartData: ParsedChartDataPoint[] = data
             .map( ( d ) => {
-                const parsed: any = {
+                const parsed: Record< string, number | Date | null | D3ChartDataPoint > = {
                     date: parseDate( d.date ),
                     originalData: d,
                 };
                 metrics.forEach( ( metric ) => {
                     parsed[ metric.key ] = d[ metric.key ] || 0;
                 } );
-                return parsed;
+                return parsed as unknown as ParsedChartDataPoint;
             } )
-            .filter( ( d ) => d.date !== null );
+            .filter( ( d ): d is ParsedChartDataPoint => d.date !== null );
 
         if ( chartData.length === 0 ) {
             return;
@@ -198,17 +213,21 @@ const D3Chart = ( {
                 .attr( 'fill', metric.color );
         } );
 
-        // Add tooltip functionality
-        const tooltip = d3
-            .select( 'body' )
-            .append( 'div' )
-            .attr( 'class', 'tooltip' )
-            .style( 'position', 'absolute' )
-            .style( 'background', 'rgba(0, 0, 0, 0.8)' )
-            .style( 'color', 'white' )
-            .style( 'border-radius', '5px' )
-            .style( 'pointer-events', 'none' )
-            .style( 'opacity', 0 );
+        // Add tooltip functionality — reuse a single DOM node across renders
+        if ( ! tooltipRef.current ) {
+            tooltipRef.current = d3
+                .select( 'body' )
+                .append( 'div' )
+                .attr( 'class', 'dokan-d3-chart-tooltip' )
+                .style( 'position', 'absolute' )
+                .style( 'background', 'rgba(0, 0, 0, 0.8)' )
+                .style( 'color', 'white' )
+                .style( 'border-radius', '5px' )
+                .style( 'pointer-events', 'none' )
+                .style( 'opacity', 0 );
+        }
+
+        const tooltip = tooltipRef.current;
 
         // Add invisible overlay for mouse events
         svg.append( 'rect' )
@@ -287,9 +306,12 @@ const D3Chart = ( {
                     .style( 'opacity', 0 );
             } );
 
-        // Cleanup function
+        // Cleanup function — remove tooltip when component unmounts
         return () => {
-            tooltip.remove();
+            if ( tooltipRef.current ) {
+                tooltipRef.current.remove();
+                tooltipRef.current = null;
+            }
         };
     }, [ data, metrics, chartConfig ] );
 
