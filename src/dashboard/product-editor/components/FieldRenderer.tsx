@@ -5,6 +5,7 @@ import { FlatFormItem } from '../types';
 import { resolveDependency } from '../utils';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
+import { RawHTML } from '@wordpress/element';
 
 export const getFieldConfig = ( field: FlatFormItem ) => {
     /**
@@ -34,9 +35,9 @@ export const getFieldConfig = ( field: FlatFormItem ) => {
         rawLabel: field.label,
         label: (
             <div className="flex gap-1 items-center">
-                <span className="dokan-form-field-label">
+                <RawHTML className="dokan-form-field-label">
                     { decodeEntities( field.label ) }
-                </span>
+                </RawHTML>
                 { field.tooltip && (
                     <DokanTooltip content={ field.tooltip }>
                         <Info size={ 16 } />

@@ -144,7 +144,7 @@ const AttributesEdit = ( { data, field, onChange, validity }: any ) => {
                             <div className="text-sm font-medium text-gray-700">
                                 { __( 'Default Form Values', 'dokan-lite' ) }
                             </div>
-                            <div className="grid grid-cols-3 gap-4">
+                            <div className="grid md:grid-cols-3 sm:grid-cols-2 gap-4">
                                 { variationAttributes.map( ( attr ) => (
                                     <Select
                                         key={ attr.name }

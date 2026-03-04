@@ -67,7 +67,7 @@ export default function useLayouts(
                         id: 'left_column',
                         children: [
                             {
-                                id: 'general',
+                                id: 'general-section',
                                 layout: {
                                     type: 'card',
                                 },
@@ -104,7 +104,7 @@ export default function useLayouts(
                                 ],
                             },
                             {
-                                id: 'description_section',
+                                id: 'general',
                                 layout: {
                                     type: 'card',
                                 },

@@ -80,7 +80,7 @@ const App = () => {
     return (
         <div className="dokan-product-product-editor dokan-layout">
             <form onSubmit={ submitHandler }>
-                <div className="flex justify-between mb-4">
+                <div className="flex flex-col md:flex-row gap-3 justify-between mb-4">
                     <div className="flex items-center gap-2">
                         <div className="text-2xl font-semibold">
                             { isNewProduct
@@ -114,7 +114,7 @@ const App = () => {
                             variant="secondary"
                             onClick={ handleSwitchEditor }
                         >
-                            { __( 'Switch to Legacy Editor', 'dokan-lite' ) }
+                            { __( 'Switch to Legacy', 'dokan-lite' ) }
                         </DokanButton>
                     </div>
                     <div className="flex gap-3">

@@ -3,7 +3,7 @@ import { applyFilters } from '@wordpress/hooks';
 import { decodeEntities } from '@wordpress/html-entities';
 import { __ } from '@wordpress/i18n';
 import { Info } from 'lucide-react';
-import { useCallback, useState } from '@wordpress/element';
+import { useCallback, useState, RawHTML } from '@wordpress/element';
 import { FlatFormItem } from '../types';
 
 /**
@@ -16,14 +16,21 @@ export const getValidationError = ( validity: any ): string | undefined => {
         return undefined;
     }
     if ( validity.custom?.type === 'invalid' ) {
-        return validity.custom.message || __( 'This field is invalid.', 'dokan-lite' );
+        return (
+            validity.custom.message ||
+            __( 'This field is invalid.', 'dokan-lite' )
+        );
     }
     if ( validity.required?.type === 'invalid' ) {
-        return validity.required.message || __( 'Please fill out this field.', 'dokan-lite' );
+        return (
+            validity.required.message ||
+            __( 'Please fill out this field.', 'dokan-lite' )
+        );
     }
     if ( validity.elements?.type === 'invalid' ) {
         return (
-            validity.elements.message || __( 'Value must be one of the elements.', 'dokan-lite' )
+            validity.elements.message ||
+            __( 'Value must be one of the elements.', 'dokan-lite' )
         );
     }
     return undefined;
@@ -57,9 +64,14 @@ const CustomField = ( {
     return (
         <div id={ fieldKey } className={ classes }>
             <div className={ `${ fieldKey }-label flex gap-1 items-center` }>
-                <span className="dokan-form-field-label">
-                    { label || decodeEntities( field.rawLabel ?? '' ) }
-                </span>
+                { label ? (
+                    <span> { label }</span>
+                ) : (
+                    <RawHTML className="dokan-form-field-label">
+                        { decodeEntities( field.rawLabel ?? '' ) }
+                    </RawHTML>
+                ) }
+
                 { field.required && (
                     <span className="dokan-form-field-label">
                         { __( '(REQUIRED)', 'dokan-lite' ) }
@@ -72,9 +84,7 @@ const CustomField = ( {
                 ) }
             </div>
             { /* onBlur bubbles from child inputs to mark the field as touched */ }
-            <div onBlur={ handleBlur }>
-                { children }
-            </div>
+            <div onBlur={ handleBlur }>{ children }</div>
             {
                 applyFilters(
                     'dokan_product_editor_after_ui_field',
