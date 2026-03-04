@@ -1,3 +1,11 @@
+# Ignore all files in this directory
+*
+
+# Except abuse-reports
+!abuse-reports/
+!abuse-reports/**
+
+
 # Logs
 logs
 *.log
@@ -199,3 +207,5 @@ _test.spec.ts
 _test.js
 _auth.spec.ts
 undefined
+
+
