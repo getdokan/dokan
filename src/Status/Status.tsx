@@ -371,6 +371,23 @@ const Status = () => {
                                         'dokan-lite'
                                     ) }
                                 </p>
+                                 <p className="text-center" style={{ color: '#828282', fontSize: '14px', fontWeight: 400, lineHeight: '140%', marginTop: '8px' }}>                                    {__('Latest Version:', 'dokan-lite')}{' '}
+                                    <span style={{ color: '#7047EB' }}>
+                                        {__('Lite:', 'dokan-lite')}{' '}
+                                        {dokanAdminDashboardSettings?.header_info?.lite_version}
+                                    </span>
+                                    {dokanAdminDashboardSettings?.header_info?.is_pro_exists && (
+                                        <>
+                                            <span className="mx-1" style={{ color: '#7047EB' }}>|</span>
+                                            <span style={{ color: '#7047EB' }}>
+                                                {dokanAdminDashboardSettings?.header_info?.license_plan
+                                                    ? __(dokanAdminDashboardSettings.header_info.license_plan, 'dokan-lite')
+                                                    : __('Pro:', 'dokan-lite')}{' '}
+                                                {dokanAdminDashboardSettings?.header_info?.pro_version}
+                                            </span>
+                                        </>
+                                    )}
+                                </p>
                             </div>
                         ) }
                     </div>

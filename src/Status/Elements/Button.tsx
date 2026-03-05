@@ -30,7 +30,7 @@ const Button = ( { element }: { element: StatusElement } ) => {
                 onClick={ onClick }
                 disabled={ isClicked }
                 type="button"
-                className=" inline-flex items-center 
+                className="inline-flex items-center 
                             gap-[6px]
                             rounded-[5px] 
                             bg-[#7047EB] 

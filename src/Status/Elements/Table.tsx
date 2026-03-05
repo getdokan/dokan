@@ -9,7 +9,7 @@ const Table = ( { element }: { element: StatusElement } ) => {
         >
             <table className="dokan-status-table min-w-full">
                 { element.headers.length > 0 && (
-                    <thead className="bg-[#FDFDFD] border-b border-[#E9E9E9]"> 
+                    <thead className="bg-[#FDFDFD] border-b border-[#E9E9E9]">
                         <tr>
                             { element.headers.map( ( header: string ) => {
                                 return (
@@ -20,7 +20,7 @@ const Table = ( { element }: { element: StatusElement } ) => {
                                             header
                                         }
                                         scope="col"
-                                        className="!px-5 !py-[17px] text-left uppercase text-xs font-normal text-[#828282] leading-[140%] font-['Inter']"
+                                        className="!px-5 !py-[17px] text-left uppercase text-xs font-normal text-[#828282] leading-[140%]"
                                     >
                                         { header }
                                     </th>

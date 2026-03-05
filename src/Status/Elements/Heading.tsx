@@ -10,7 +10,6 @@ const Heading = ( { element }: { element: StatusElement } ) => {
         >
             <div className="md:flex md:items-start md:justify-between">
                 <div className="min-w-0 flex-1">
-                    {/* H2 Styling */}
                     <h2 
                         className="
                             text-[24px]
@@ -23,8 +22,6 @@ const Heading = ( { element }: { element: StatusElement } ) => {
                     >
                         <RawHTML>{ element.title }</RawHTML>
                     </h2>
-
-                    {/* Description Styling (element.description is assumed to be the description content) */}
                     { element.description && (
                         <p
                             className="
