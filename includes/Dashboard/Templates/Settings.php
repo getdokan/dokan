@@ -518,7 +518,6 @@ class Settings {
             $store_tnc = isset( $_POST['dokan_store_tnc'] ) ? wp_kses_post( wp_unslash( $_POST['dokan_store_tnc'] ) ) : '';
 
             $store_tnc_clean = RichTextSanitizerUtil::sanitize_richtext_content( $store_tnc );
-            $store_tnc_clean = trim( $store_tnc_clean );
 
             if ( empty( $store_tnc_clean ) ) {
                 $error->add(
@@ -694,7 +693,6 @@ class Settings {
 
             if ( ! empty( $store_tnc_raw ) ) {
                 $store_tnc_clean = RichTextSanitizerUtil::sanitize_richtext_content( $store_tnc_raw );
-                $store_tnc_clean = trim( $store_tnc_clean );
 
                 if ( ! empty( $store_tnc_clean ) ) {
                     $store_tnc_processed = $store_tnc_raw;

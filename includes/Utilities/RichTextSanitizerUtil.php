@@ -25,6 +25,7 @@ class RichTextSanitizerUtil {
         $text = wp_strip_all_tags( $text );
         $text = html_entity_decode( $text, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
         $text = self::replace_richtext_chars( $text );
+        $text = trim( $text );
 
         /**
          * Filter for sanitizing and cleaning rich text content.
