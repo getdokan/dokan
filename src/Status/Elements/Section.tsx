@@ -9,7 +9,7 @@ const Section = ( { element }: { element: StatusElement } ) => {
                     { element.title }
                 </h3>
                 { element.description && (
-                    <p className="mt-2 !text-[12px] text-gray-500">
+                    <p className="mt-2 !text-xs text-gray-500">
                         { element.description }
                     </p>
                 ) }

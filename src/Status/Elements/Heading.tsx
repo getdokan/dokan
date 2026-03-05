@@ -12,7 +12,7 @@ const Heading = ( { element }: { element: StatusElement } ) => {
                 <div className="min-w-0 flex-1">
                     <h2 
                         className="
-                            text-[24px]
+                            text-2xl
                             font-bold
                             text-[#25252D]
                             leading-[130%]
@@ -25,7 +25,7 @@ const Heading = ( { element }: { element: StatusElement } ) => {
                         <p
                             className="
                                 mt-2
-                                text-[14px]
+                                text-sm
                                 font-normal
                                 text-[#25252D]
                                 leading-[140%]

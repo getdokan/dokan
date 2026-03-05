@@ -5,11 +5,11 @@ const SubSection = ( { element }: { element: StatusElement } ) => {
     return (
         <>
             <div className="dokan-subsection-head">
-                <h4 className="text-[14px] font-semibold leading-[18.2px] text-[#25252D]">
+                <h4 className="text-sm font-semibold leading-[18.2px] text-[#25252D]">
                     { element.title }
                 </h4>
                 { element.description && (
-                    <p className="mt-4 max-w-[465px] text-[12px] text-[#828282] leading-[140%] ">
+                    <p className="mt-4 max-w-[465px] text-xs text-[#828282] leading-[140%] ">
                         { element.description }
                     </p>
                 ) }

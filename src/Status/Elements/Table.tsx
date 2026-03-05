@@ -4,7 +4,7 @@ import SettingsParser from '../SettingsParser';
 const Table = ( { element }: { element: StatusElement } ) => {
     return (
         <div
-            className="overflow-hidden rounded-[6px] border border-[#E9E9E9] bg-white"
+            className="overflow-hidden rounded-md border border-[#E9E9E9] bg-white"
             data-hook={ element.hook_key }
         >
             <table className="dokan-status-table min-w-full">

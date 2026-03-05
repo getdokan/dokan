@@ -8,7 +8,7 @@ const Link = ( { element }: { element: StatusElement } ) => {
             data-hook={ element.hook_key }
             href={ element?.url }
             title={ element?.title_text }
-            className="!text-[12px] leading-4 font-medium underline !text-[#7047EB]"
+            className="!text-xs leading-4 font-medium underline !text-[#7047EB]"
         >
             <RawHTML>{ element.title }</RawHTML>
         </a>
