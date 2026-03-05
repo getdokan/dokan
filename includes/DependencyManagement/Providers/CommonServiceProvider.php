@@ -24,6 +24,8 @@ class CommonServiceProvider extends BaseServiceProvider {
         \WeDevs\Dokan\Commission\RecalculateCommissions::class,
         \WeDevs\Dokan\Order\RefundHandler::class,
         \WeDevs\Dokan\Exceptions\Handler::class,
+        \WeDevs\Dokan\Shortcodes\FullWidthVendorLayout::class,
+        \WeDevs\Dokan\Vendor\ApiMeta::class,
 	];
 
 	/**

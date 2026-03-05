@@ -253,6 +253,7 @@ class Hooks {
             'icon'       => '<i class="fas fa-dollar-sign"></i>',
             'url'        => dokan_get_navigation_url( 'reverse-withdrawal' ),
             'pos'        => 71,
+            'icon_name'  => 'Redo2',
             'permission' => 'dokan_view_withdraw_menu',
         ];
 

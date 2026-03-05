@@ -208,6 +208,11 @@ class ProductControllerV2 extends ProductController {
             'default'           => array(),
             'sanitize_callback' => 'wp_parse_id_list',
         );
+        $params['include_variations'] = array(
+            'description' => __( 'If true matched product variations will be added to the collection', 'dokan-lite' ),
+            'type'        => 'boolean',
+            'default'     => false,
+        );
 
         return $params;
     }
@@ -314,6 +319,20 @@ class ProductControllerV2 extends ProductController {
                 'key'     => '_stock_status',
                 'value'   => sanitize_text_field( wp_unslash( $request['stock_status'] ) ),
                 'compare' => ' = ',
+            );
+        }
+
+        // Include variations but exclude parent variable products when requested.
+        if ( isset( $request['include_variations'] ) && true === wc_string_to_bool( $request['include_variations'] ) ) {
+            $args['post_type'] = [ $this->post_type, 'product_variation' ];
+
+            // Exclude parent variable products so only variations (and other non-variable products) are included.
+            // Variations are a different post type and won't be affected by this taxonomy filter.
+            $args['tax_query'][] = array(
+                'taxonomy' => 'product_type',
+                'field'    => 'slug',
+                'terms'    => array( 'variable' ),
+                'operator' => 'NOT IN',
             );
         }
 

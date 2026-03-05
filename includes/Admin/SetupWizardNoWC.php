@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Admin;
 
 use WeDevs\Dokan\Admin\SetupWizard as DokanSetupWizard;
+use WeDevs\Dokan\Assets;
 
 class SetupWizardNoWC extends DokanSetupWizard {
 
@@ -42,11 +43,12 @@ class SetupWizardNoWC extends DokanSetupWizard {
      * @return void
      */
     public function enqueue_scripts() {
-        wp_register_script( 'jquery-blockui', DOKAN_PLUGIN_ASSEST . '/vendors/jquery-blockui/jquery.blockUI.min.js', [ 'jquery' ], '2.70', true );
+        $jquery_blockui = Assets::get_wc_handler( 'jquery-blockui' );
+        wp_register_script( $jquery_blockui, DOKAN_PLUGIN_ASSEST . '/vendors/jquery-blockui/jquery.blockUI.min.js', [ 'jquery' ], '2.70', true );
 
         wp_enqueue_style( 'dokan-setup', DOKAN_PLUGIN_ASSEST . '/css/setup-no-wc-style.css', [ 'install' ], DOKAN_PLUGIN_VERSION );
 
-        wp_enqueue_script( 'wc-setup', DOKAN_PLUGIN_ASSEST . '/js/dokan-setup-no-wc.js', [ 'jquery', 'jquery-blockui' ], DOKAN_PLUGIN_VERSION, true );
+        wp_enqueue_script( 'wc-setup', DOKAN_PLUGIN_ASSEST . '/js/dokan-setup-no-wc.js', [ 'jquery', $jquery_blockui ], DOKAN_PLUGIN_VERSION, true );
         wp_localize_script(
             'wc-setup',
             'wc_setup_params',

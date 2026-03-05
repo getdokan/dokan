@@ -35,6 +35,7 @@ class Settings {
         add_filter( 'dokan_get_settings_values', [ $this, 'set_withdraw_limit_gateways' ], 20, 2 );
         add_filter( 'dokan_get_settings_values', [ $this, 'set_commission_type_if_not_set' ], 20, 2 );
         add_filter( 'dokan_settings_general_site_options', [ $this, 'add_dokan_data_clear_setting' ], 310 );
+        add_filter( 'dokan_get_settings_values', [ $this, 'set_vendor_latest_layout' ], 20, 2 );
     }
 
     /**
@@ -94,8 +95,8 @@ class Settings {
         $clickable_types = [ 'flat', 'fixed' ];
 
         if ( 'dokan_selling' === $option_name && isset( $option_values['commission_type'] ) && in_array( $option_values['commission_type'], $clickable_types, true ) ) {
-            $admin_percentage       = (float) $option_values['admin_percentage'];
-            $saved_admin_percentage = dokan_get_option( 'admin_percentage', 'dokan_selling', '' );
+            $admin_percentage       = (float) ( $option_values['admin_percentage'] ?? 0 );
+            $saved_admin_percentage = dokan_get_option( 'admin_percentage', 'dokan_selling', '0' );
 
             if ( $admin_percentage < 0 || $admin_percentage > 100 ) {
                 $option_values['admin_percentage'] = $saved_admin_percentage;
@@ -127,13 +128,13 @@ class Settings {
             $settings[ $section['id'] ] = apply_filters( 'dokan_get_settings_values', $this->sanitize_options( get_option( $section['id'], [] ), 'read' ), $section['id'] );
         }
 
-        $new_seller_enable_selling_statuses = ! empty( $settings['dokan_selling']['new_seller_enable_selling'] ) ? $settings['dokan_selling']['new_seller_enable_selling'] : 'automatically';
+        $new_seller_enable_selling_statuses = isset( $settings['dokan_selling']['new_seller_enable_selling'] ) ? $settings['dokan_selling']['new_seller_enable_selling'] : 'automatically';
 
         /**
          * This is the mapper of enabled selling admin setting option for before and after of 4.0.2
          */
-        if ( ! in_array( $new_seller_enable_selling_statuses, $settings, true ) ) {
-            $settings['dokan_selling']['new_seller_enable_selling'] = dokan_get_container()->get( AdminSettings::class )->get_new_seller_enable_selling_status( $settings['dokan_selling']['new_seller_enable_selling'] );
+        if ( ! empty( $settings['dokan_selling'] ) && ! in_array( $new_seller_enable_selling_statuses, $settings, true ) ) {
+            $settings['dokan_selling']['new_seller_enable_selling'] = dokan_get_container()->get( AdminSettings::class )->get_new_seller_enable_selling_status( $settings['dokan_selling']['new_seller_enable_selling'] ?? null );
         }
 
         wp_send_json_success( $settings );
@@ -812,11 +813,29 @@ class Settings {
                 ],
             ],
             'dokan_appearance' => [
-                'appearance_options'         => [
-                    'name'        => 'appearance_options',
+                'vendor_layout_options'      => [
+                    'name'        => 'vendor_layout_options',
                     'type'        => 'sub_section',
-                    'label'       => __( 'Store Appearance', 'dokan-lite' ),
-                    'description' => __( 'Configure your site appearances.', 'dokan-lite' ),
+                    'label'       => esc_html__( 'Vendor Dashboard Appearance', 'dokan-lite' ),
+                    'description' => esc_html__( 'Configure the appearance and style of the vendor dashboard.', 'dokan-lite' ),
+                ],
+                'vendor_layout_style'        => [
+                    'name'    => 'vendor_layout_style',
+                    'label'   => esc_html__( 'Vendor Dashboard Style', 'dokan-lite' ),
+                    'desc'    => esc_html__( 'Select the user interface for the vendor dashboard.', 'dokan-lite' ),
+                    'type'    => 'radio',
+                    'default' => 'legacy',
+                    'options' => [
+                        'latest' => esc_html__( 'New UI', 'dokan-lite' ),
+                        'legacy' => esc_html__( 'Legacy UI', 'dokan-lite' ),
+                    ],
+                ],
+                'appearance_options'         => [
+                    'name'          => 'appearance_options',
+                    'type'          => 'sub_section',
+                    'label'         => esc_html__( 'Store Appearance', 'dokan-lite' ),
+                    'description'   => esc_html__( 'Configure your site appearances.', 'dokan-lite' ),
+                    'content_class' => 'sub-section-styles',
                 ],
                 'store_map'                  => [
                     'name'    => 'store_map',
@@ -862,42 +881,6 @@ class Settings {
                             'equal' => 'mapbox',
                         ],
                     ],
-                ],
-                'recaptcha_validation_label' => [
-                    'name'                 => 'recaptcha_validation_label',
-                    'type'                 => 'social',
-                    'desc'                 => sprintf(
-                    /* translators: 1) Opening anchor tag, 2) Closing anchor tag, 3) Opening anchor tag, 4) Closing anchor tag */
-                        __( '%1$sreCAPTCHA_v3%2$s credentials required to enable invisible captcha for contact forms. %3$sGet Help%4$s', 'dokan-lite' ),
-                        '<a href="https://developers.google.com/recaptcha/docs/v3" target="_blank" rel="noopener noreferrer">',
-                        '</a>',
-                        '<a href="https://wedevs.com/docs/dokan/settings/dokan-recaptacha-v3-integration" target="_blank" rel="noopener noreferrer">',
-                        '</a>'
-                    ),
-                    'label'                => __( 'Google reCAPTCHA Validation', 'dokan-lite' ),
-                    'icon_url'             => DOKAN_PLUGIN_ASSEST . '/images/google.svg',
-                    'social_desc'          => __( 'You can successfully connect to your Google reCaptcha account from here.', 'dokan-lite' ),
-                    'enable_status'        => [
-                        'name'    => 'recaptcha_enable_status',
-                        'default' => 'on',
-                    ],
-                    'recaptcha_site_key'   => [
-                        'name'         => 'recaptcha_site_key',
-                        'type'         => 'text',
-                        'label'        => __( 'Site Key', 'dokan-lite' ),
-                        'tooltip'      => __( 'Insert Google reCAPTCHA v3 site key.', 'dokan-lite' ),
-                        'social_field' => true,
-                        'is_lite'      => true,
-                    ],
-                    'recaptcha_secret_key' => [
-                        'name'         => 'recaptcha_secret_key',
-                        'label'        => __( 'Secret Key', 'dokan-lite' ),
-                        'type'         => 'text',
-                        'tooltip'      => __( 'Insert Google reCAPTCHA v3 secret key.', 'dokan-lite' ),
-                        'social_field' => true,
-                        'is_lite'      => true,
-                    ],
-                    'is_lite'      => true,
                 ],
                 'contact_seller'             => [
                     'name'    => 'contact_seller',
@@ -1184,5 +1167,23 @@ class Settings {
         }
 
         return $value;
+    }
+
+    /**
+     * Set the default settings for vendor layout.
+     *
+     * @since 4.2.0
+     *
+     * @param mixed $option_name
+     * @param mixed $option_value
+     *
+     * @return void|mixed $option_value
+     */
+    public function set_vendor_latest_layout( $option_value, $option_name ) {
+        if ( 'dokan_appearance' === $option_name && empty( $option_value['vendor_layout_style'] ) ) {
+            $option_value['vendor_layout_style'] = 'legacy';
+        }
+
+        return $option_value;
     }
 }

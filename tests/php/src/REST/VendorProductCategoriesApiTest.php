@@ -7,7 +7,8 @@ use WP_REST_Request;
 
 /**
  * Vendor Product Categories Controller Test
- *
+ * @group rest-api
+ * @group rest-api-vendor-product-categories
  * @covers \WeDevs\Dokan\REST\VendorProductCategoriesController
  */
 class VendorProductCategoriesApiTest extends DokanTestCase {
@@ -19,6 +20,7 @@ class VendorProductCategoriesApiTest extends DokanTestCase {
      */
     protected $base = '/products/categories';
 
+    protected $categories;
     /**
      * Setup test environment
      */

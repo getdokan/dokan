@@ -1220,6 +1220,15 @@ class Vendor {
     }
 
     /**
+     * Set TikTok
+     *
+     * @param string
+     */
+    public function set_tiktok( $value ) {
+        $this->set_social_prop( 'tiktok', 'social', esc_url_raw( $value ) );
+    }
+
+    /**
      * Set show email
      *
      * @param string
@@ -1325,6 +1334,10 @@ class Vendor {
      */
     public function set_bank_swift( $value ) {
         $this->set_payment_prop( 'swift', 'bank', wc_clean( $value ) );
+    }
+
+    public function set_address( $value ) {
+        $this->set_prop( 'address', wc_clean( $value ) );
     }
 
     /**

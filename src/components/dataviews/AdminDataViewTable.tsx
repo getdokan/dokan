@@ -13,11 +13,12 @@ import './style.scss';
 import { AdminFilterProps } from '@src/components/AdminFilter';
 import { AdminTabProps } from '@src/components/AdminTab';
 import { AdminTab, AdminFilter } from '@src/components';
-import { __ } from '@wordpress/i18n';
+import { __, setLocaleData } from '@wordpress/i18n';
 import { twMerge } from 'tailwind-merge';
 import { Funnel } from 'lucide-react';
 import { Item } from '@wordpress/components/build-types/navigation/types';
 import ListEmpty from '@src/components/dataviews/ListEmpty';
+import { getTranslatedStrings } from './DataViewTable';
 
 type ItemWithId = { id: string };
 
@@ -92,7 +93,14 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
         emptyTitle,
         emptyDescription,
     } = props;
-
+    /**
+     * Disable sorting & column hiding globally
+     */
+    const normalizedFields = fields.map( ( field ) => ( {
+        enableSorting: false,
+        enableHiding: false,
+        ...field,
+    } ) );
     const defaultLayouts =
         props.defaultLayouts ||
         ( {
@@ -107,7 +115,7 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
         fields: applyFiltersToTableElements(
             namespace,
             'fields',
-            fields,
+            normalizedFields,
             props
         ),
         actions: applyFiltersToTableElements(
@@ -143,6 +151,10 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
             [ windowWidth ]
         );
     }
+
+    useEffect( () => {
+        setLocaleData( getTranslatedStrings(), 'default' );
+    }, [] );
 
     // Auto-hide filter area when there are no active filters
     useEffect( () => {
@@ -213,6 +225,11 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
             />
             <DataViews { ...filteredProps }>
                 <div className="dokan-admin-dashboard-datatable-header w-full flex items-center flex-col justify-between rounded-tr-md rounded-tl-md">
+                    { filteredProps.header && (
+                        <div className="font-semibold text-sm text-[#25252D]">
+                            { filteredProps.header }
+                        </div>
+                    ) }
                     { filteredProps.tabs &&
                         filteredProps.tabs.tabs &&
                         filteredProps.tabs.tabs.length > 0 && (

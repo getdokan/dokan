@@ -3,6 +3,7 @@ import { createHashRouter, RouterProvider } from 'react-router-dom';
 import Layout from './Layout';
 import ModulePage from '../pages/modules';
 import SetupGuide from '../pages/setup-guide';
+import AdminNotFound from '../../../layout/admin404';
 import WithdrawPage from '../pages/withdraw';
 import VendorsSingle from '../pages/vendors-single';
 import Create from '../pages/vendor-create-edit/Create';
@@ -10,6 +11,9 @@ import Edit from '../pages/vendor-create-edit/Edit';
 import NotFound from '../../../layout/404';
 import AdminDashboard from '../pages/dashboard';
 import VendorsPage from '../pages/vendors';
+import ReverseWithdrawalPage from '../pages/reverse-withdrawal';
+import ReverseWithdrawalTransactionPage from 'admin/dashboard/pages/reverse-withdrawal/ReverseWithdrawalTransaction';
+import ChangelogPage from '../pages/changelog';
 import DummyData from "admin/dashboard/pages/dummy-data";
 
 export type DokanAdminRoute = {
@@ -62,6 +66,21 @@ const getAdminRoutes = () => {
             path: '/vendors/edit/:id',
         },
         {
+            id: 'reverse-withdrawal', // Added Reverse Withdrawal route
+            element: <ReverseWithdrawalPage />,
+            path: '/reverse-withdrawal',
+        },
+        {
+            id: 'reverse-withdrawal-store',
+            element: <ReverseWithdrawalTransactionPage />,
+            path: '/reverse-withdrawal/store/:id',
+        },
+        {
+            id: 'changelog',
+            element: <ChangelogPage />,
+            path: '/changelog',
+        },
+        {
             id: 'dummy-data',
             element: <DummyData />,
             path: '/dummy-data',
@@ -77,7 +96,7 @@ const getAdminRoutes = () => {
     routes.push( {
         id: 'dokan-404',
         element: (
-            <NotFound className="h-screen" backToDashboardUrl="?page=dokan" />
+            <AdminNotFound className="h-screen" backToDashboardUrl={window.dokanAdminDashboard?.urls?.adminDashboardUrl || '/'} />
         ),
         path: '*',
     } );

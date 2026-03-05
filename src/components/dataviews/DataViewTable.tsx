@@ -10,6 +10,7 @@ import type {
 import { kebabCase, snakeCase } from '@dokan/utilities';
 import { useEffect } from '@wordpress/element';
 import { useWindowDimensions } from '@dokan/hooks';
+import { __, setLocaleData } from '@wordpress/i18n';
 import './style.scss';
 
 type ItemWithId = { id: string };
@@ -54,6 +55,11 @@ const applyFiltersToTableElements = (
     );
 };
 
+export const getTranslatedStrings = () => ( {
+    Actions: [ __( 'Actions', 'dokan-lite' ) ],
+    'No results': [ __( 'No results', 'dokan-lite' ) ],
+} );
+
 const DataViewTable = ( props: DataViewsProps< Item > ) => {
     if ( ! props.namespace ) {
         throw new Error(
@@ -71,7 +77,14 @@ const DataViewTable = ( props: DataViewsProps< Item > ) => {
         view,
         data,
     } = props;
-
+    /**
+     * Disable sorting & column hiding globally
+     */
+    const normalizedFields = fields.map( ( field ) => ( {
+        enableSorting: false,
+        enableHiding: false,
+        ...field,
+    } ) );
     const getDefaultLayouts = ( customLayout: SupportedLayouts ) => {
         const keys = Object?.keys( customLayout );
         const defaultLayout = {
@@ -106,7 +119,7 @@ const DataViewTable = ( props: DataViewsProps< Item > ) => {
         fields: applyFiltersToTableElements(
             namespace,
             'fields',
-            fields,
+            normalizedFields,
             props
         ),
         actions: applyFiltersToTableElements(
@@ -130,6 +143,10 @@ const DataViewTable = ( props: DataViewsProps< Item > ) => {
             type: windowWidth <= 768 ? 'list' : 'table',
         }), [ windowWidth ]);
     }
+
+    useEffect( () => {
+        setLocaleData( getTranslatedStrings(), 'default' );
+    }, [] );
 
     return (
         <div id={ tableNameSpace } className={ `dokan-dashboard-datatable` }

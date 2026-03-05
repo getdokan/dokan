@@ -1,0 +1,36 @@
+/* Dokan Modal Override Styles */
+.dokan-custom-modal {
+  &.components-modal__frame {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    max-width: none !important;
+    width: auto !important;
+    max-height: 80vh !important;
+    height: auto !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+    overflow: visible !important;
+  }
+
+  .components-modal__content {
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    max-height: 80vh !important;
+    height: auto !important;
+    
+    /* Hide scrollbar */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+}
+
+.components-modal__screen-overlay {
+  background-color: rgba(0, 0, 0, 0.75) !important;
+}
