@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\REST;
 
 use WC_Customer_Download;
 use WC_Data_Store;
+use WC_Product;
 use WP_Error;
 use WP_REST_Server;
 
@@ -61,14 +62,18 @@ class OrderControllerV2 extends OrderController {
                             ],
                         ],
                         'download_remaining' => [
-                            'type'        => 'integer',
-                            'description' => __( 'Download remaining.', 'dokan-lite' ),
-                            'required'    => false,
+                            'type'              => 'integer',
+                            'description'       => esc_html__( 'Download remaining.', 'dokan-lite' ),
+                            'required'          => false,
+                            'minimum'           => 0,
+                            'sanitize_callback' => 'absint',
                         ],
                         'access_expires' => [
-                            'type'        => 'string',
-                            'description' => __( 'Access expires.', 'dokan-lite' ),
-                            'required'    => false,
+                            'type'              => 'string',
+                            'description'       => esc_html__( 'Access expires. Format: YYYY-MM-DD.', 'dokan-lite' ),
+                            'required'          => false,
+                            'format'            => 'date',
+                            'sanitize_callback' => 'sanitize_text_field',
                         ],
                     ],
                 ],
@@ -103,11 +108,11 @@ class OrderControllerV2 extends OrderController {
             [
                 'args' => [
                     'id' => [
-                        'description' => __( 'Unique identifier for the order.', 'dokan-lite' ),
+                        'description' => esc_html__( 'Unique identifier for the order.', 'dokan-lite' ),
                         'type'        => 'integer',
                     ],
                     'permission_id' => [
-                        'description' => __( 'Unique identifier for the download permission.', 'dokan-lite' ),
+                        'description' => esc_html__( 'Unique identifier for the download permission.', 'dokan-lite' ),
                         'type'        => 'integer',
                     ],
                 ],
@@ -117,14 +122,18 @@ class OrderControllerV2 extends OrderController {
                     'permission_callback' => [ $this, 'get_single_order_permissions_check' ],
                     'args'                => [
                         'download_remaining' => [
-                            'type'        => 'integer',
-                            'description' => __( 'Download remaining.', 'dokan-lite' ),
-                            'required'    => false,
+                            'type'              => 'integer',
+                            'description'       => esc_html__( 'Download remaining.', 'dokan-lite' ),
+                            'required'          => false,
+                            'minimum'           => 0,
+                            'sanitize_callback' => 'absint',
                         ],
                         'access_expires' => [
-                            'type'        => 'string',
-                            'description' => __( 'Access expires date. Format: YYYY-MM-DD.', 'dokan-lite' ),
-                            'required'    => false,
+                            'type'              => 'string',
+                            'description'       => esc_html__( 'Access expires date. Format: YYYY-MM-DD.', 'dokan-lite' ),
+                            'required'          => false,
+                            'format'            => 'date',
+                            'sanitize_callback' => 'sanitize_text_field',
                         ],
                     ],
                 ],
@@ -179,16 +188,12 @@ class OrderControllerV2 extends OrderController {
             )
         );
 
-        $product_ids = array_unique( wp_list_pluck( $download_permissions, 'product_id' ) );
+        $product_ids = array_unique( array_map( 'intval', wp_list_pluck( $download_permissions, 'product_id' ) ) );
 
-        // Create a lookup map for products by ID.
+        // Batch-fetch products in a single query and create a lookup map by ID.
         $products = [];
-        foreach ( $product_ids as $product_id ) {
-            $product = wc_get_product( $product_id );
-            if ( ! $product ) {
-                continue;
-            }
-            $products[ $product_id ] = $product;
+        foreach ( wc_get_products( [ 'include' => $product_ids, 'limit' => -1 ] ) as $product ) {
+            $products[ $product->get_id() ] = $product;
         }
 
         // Filter downloads with existing products and prepare response.
@@ -243,13 +248,14 @@ class OrderControllerV2 extends OrderController {
      */
     public function prepare_data_for_response( $download, $request ) {
         $product = $download->product;
+        /** @var WC_Product $product */
         unset( $download->product );
         unset( $download->product_id );
 
         $download->product = [
             'id'        => $product->get_id(),
             'name'      => $product->get_name(),
-            'thumbnail' => wp_get_attachment_url( $product->get_image_id() ) ?? null,
+            'thumbnail' => wp_get_attachment_url( $product->get_image_id() ),
         ];
 
         return apply_filters( 'dokan_rest_prepare_order_download_response', $download, $product );
@@ -287,27 +293,25 @@ class OrderControllerV2 extends OrderController {
                     continue;
                 }
 
-                $download = new WC_Customer_Download( $inserted_id );
-				if ( $download ) {
-					if ( $remaining ) {
-						$download->set_downloads_remaining( $remaining );
-					}
-					if ( $expiry ) {
-						$download->set_access_expires( $expiry );
-					}
-					$download->save();
-				}
-
-                if ( $inserted_id ) {
-                    ++$file_counter;
-                    if ( $file->get_name() ) {
-                        $file_count = $file->get_name();
-                    } else {
-                        /* translators: numeric number of files */
-                        $file_count = sprintf( __( 'File %d', 'dokan-lite' ), $file_counter );
+                if ( null !== $remaining || null !== $expiry ) {
+                    $download = new WC_Customer_Download( $inserted_id );
+                    if ( null !== $remaining ) {
+                        $download->set_downloads_remaining( $remaining );
                     }
-                    $data[ $inserted_id ] = $file_count;
+                    if ( null !== $expiry ) {
+                        $download->set_access_expires( $expiry );
+                    }
+                    $download->save();
                 }
+
+                ++$file_counter;
+                if ( $file->get_name() ) {
+                    $file_count = $file->get_name();
+                } else {
+                    /* translators: numeric number of files */
+                    $file_count = sprintf( __( 'File %d', 'dokan-lite' ), $file_counter );
+                }
+                $data[ $inserted_id ] = $file_count;
             }
         }
 
@@ -317,7 +321,7 @@ class OrderControllerV2 extends OrderController {
     /**
      * Update a downloadable product permission for the given order.
      *
-     * @since SUSPENDED
+     * @since DOKAN_SINCE
      *
      * @param \WP_REST_Request $request Request object.
      *
@@ -331,7 +335,7 @@ class OrderControllerV2 extends OrderController {
         if ( ! $download->get_id() ) {
             return new WP_Error(
                 'dokan_rest_download_permission_not_found',
-                __( 'Download permission not found.', 'dokan-lite' ),
+                esc_html__( 'Download permission not found.', 'dokan-lite' ),
                 [ 'status' => 404 ]
             );
         }
@@ -341,7 +345,7 @@ class OrderControllerV2 extends OrderController {
         if ( $download->get_order_id() !== $order_id ) {
             return new WP_Error(
                 'dokan_rest_download_permission_invalid_order',
-                __( 'Download permission does not belong to this order.', 'dokan-lite' ),
+                esc_html__( 'Download permission does not belong to this order.', 'dokan-lite' ),
                 [ 'status' => 400 ]
             );
         }
@@ -357,18 +361,21 @@ class OrderControllerV2 extends OrderController {
             $download->set_access_expires( $access_expires );
         }
 
-        $download->save();
+        if ( null !== $download_remaining || null !== $access_expires ) {
+            $download->save();
+        }
 
-        return rest_ensure_response(
-            [
-                'permission_id'       => $download->get_id(),
-                'product_id'          => $download->get_product_id(),
-                'download_id'         => $download->get_download_id(),
-                'order_id'            => $download->get_order_id(),
-                'download_remaining'  => $download->get_downloads_remaining(),
-                'access_expires'      => $download->get_access_expires() ? $download->get_access_expires()->date( 'Y-m-d' ) : null,
-            ]
-        );
+        $expires  = $download->get_access_expires();
+        $response = [
+            'permission_id'      => $download->get_id(),
+            'product_id'         => $download->get_product_id(),
+            'download_id'        => $download->get_download_id(),
+            'order_id'           => $download->get_order_id(),
+            'download_remaining' => $download->get_downloads_remaining(),
+            'access_expires'     => $expires ? $expires->date( 'Y-m-d' ) : null,
+        ];
+
+        return rest_ensure_response( apply_filters( 'dokan_rest_prepare_order_download_update_response', $response, $download, $request ) );
     }
 
     /**
