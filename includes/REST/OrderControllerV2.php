@@ -99,6 +99,40 @@ class OrderControllerV2 extends OrderController {
 
         register_rest_route(
             $this->namespace,
+            '/' . $this->base . '/(?P<id>[\d]+)/downloads/(?P<permission_id>[\d]+)',
+            [
+                'args' => [
+                    'id' => [
+                        'description' => __( 'Unique identifier for the order.', 'dokan-lite' ),
+                        'type'        => 'integer',
+                    ],
+                    'permission_id' => [
+                        'description' => __( 'Unique identifier for the download permission.', 'dokan-lite' ),
+                        'type'        => 'integer',
+                    ],
+                ],
+                [
+                    'methods'             => WP_REST_Server::EDITABLE,
+                    'callback'            => [ $this, 'update_order_download' ],
+                    'permission_callback' => [ $this, 'get_single_order_permissions_check' ],
+                    'args'                => [
+                        'download_remaining' => [
+                            'type'        => 'integer',
+                            'description' => __( 'Download remaining.', 'dokan-lite' ),
+                            'required'    => false,
+                        ],
+                        'access_expires' => [
+                            'type'        => 'string',
+                            'description' => __( 'Access expires date. Format: YYYY-MM-DD.', 'dokan-lite' ),
+                            'required'    => false,
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        register_rest_route(
+            $this->namespace,
             '/' . $this->base . '/bulk-actions',
             [
 				[
@@ -271,6 +305,63 @@ class OrderControllerV2 extends OrderController {
         }
 
         return rest_ensure_response( $data );
+    }
+
+    /**
+     * Update a downloadable product permission for the given order.
+     *
+     * @since SUSPENDED
+     *
+     * @param \WP_REST_Request $request Request object.
+     *
+     * @return WP_Error|\WP_HTTP_Response|\WP_REST_Response
+     */
+    public function update_order_download( $request ) {
+        $permission_id = absint( $request->get_param( 'permission_id' ) );
+
+        $download = new WC_Customer_Download( $permission_id );
+
+        if ( ! $download->get_id() ) {
+            return new WP_Error(
+                'dokan_rest_download_permission_not_found',
+                __( 'Download permission not found.', 'dokan-lite' ),
+                [ 'status' => 404 ]
+            );
+        }
+
+        // Verify the permission belongs to this order.
+        $order_id = absint( $request->get_param( 'id' ) );
+        if ( $download->get_order_id() !== $order_id ) {
+            return new WP_Error(
+                'dokan_rest_download_permission_invalid_order',
+                __( 'Download permission does not belong to this order.', 'dokan-lite' ),
+                [ 'status' => 400 ]
+            );
+        }
+
+        $download_remaining = $request->get_param( 'download_remaining' );
+        $access_expires     = $request->get_param( 'access_expires' );
+
+        if ( null !== $download_remaining ) {
+            $download->set_downloads_remaining( $download_remaining );
+        }
+
+        if ( null !== $access_expires ) {
+            $download->set_access_expires( $access_expires );
+        }
+
+        $download->save();
+
+        return rest_ensure_response(
+            [
+                'permission_id'       => $download->get_id(),
+                'product_id'          => $download->get_product_id(),
+                'download_id'         => $download->get_download_id(),
+                'order_id'            => $download->get_order_id(),
+                'download_remaining'  => $download->get_downloads_remaining(),
+                'access_expires'      => $download->get_access_expires() ? $download->get_access_expires()->date( 'Y-m-d' ) : null,
+            ]
+        );
     }
 
     /**
