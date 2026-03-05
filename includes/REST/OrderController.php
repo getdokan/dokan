@@ -297,7 +297,7 @@ class OrderController extends DokanRESTController {
 
         $formatted_earning = null;
         if ( ! is_wp_error( $vendor_earning ) && ! is_null( $vendor_earning ) ) {
-            $formatted_earning = wc_format_decimal( $vendor_earning );
+            $formatted_earning = wc_format_decimal( $vendor_earning, '' );
         }
 
         return array(
@@ -319,7 +319,6 @@ class OrderController extends DokanRESTController {
             'shipping_tax'         => $data['shipping_tax'],
             'cart_tax'             => $data['cart_tax'],
             'total'                => $data['total'],
-            'earning'              => $formatted_earning,
             'total_tax'            => $data['total_tax'],
             'prices_include_tax'   => $data['prices_include_tax'],
             'customer_id'          => $data['customer_id'],
@@ -344,6 +343,7 @@ class OrderController extends DokanRESTController {
             'coupon_lines'         => $data['coupon_lines'],
             'refunds'              => $data['refunds'],
             'order_shipment'       => $data['order_shipment'],
+            'earning'              => $formatted_earning,
         );
     }
 
@@ -1747,6 +1747,12 @@ class OrderController extends DokanRESTController {
                     'type'        => 'boolean',
                     'default'     => false,
                     'context'     => array( 'edit' ),
+                ),
+                'earning'              => array(
+                    'description' => __( 'Vendor earning for the order.', 'dokan-lite' ),
+                    'type'        => array( 'string', 'null' ),
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
                 ),
             ),
         );
