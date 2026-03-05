@@ -3,7 +3,7 @@
 namespace WeDevs\Dokan\Dashboard\Templates;
 
 use WeDevs\Dokan\Utilities\VendorUtil;
-use WeDevs\Dokan\Utilities\RichTextValidatorUtil;
+use WeDevs\Dokan\Utilities\RichTextSanitizerUtil;
 use WP_Error;
 
 /**
@@ -517,7 +517,7 @@ class Settings {
         if ( $enable_tnc ) {
             $store_tnc = isset( $_POST['dokan_store_tnc'] ) ? wp_kses_post( wp_unslash( $_POST['dokan_store_tnc'] ) ) : '';
 
-            $store_tnc_clean = RichTextValidatorUtil::sanitize_richtext_content( $store_tnc );
+            $store_tnc_clean = RichTextSanitizerUtil::sanitize_richtext_content( $store_tnc );
             $store_tnc_clean = trim( $store_tnc_clean );
 
             if ( empty( $store_tnc_clean ) ) {
@@ -693,11 +693,11 @@ class Settings {
             $store_tnc_processed = '';
 
             if ( ! empty( $store_tnc_raw ) ) {
-                $store_tnc_clean = RichTextValidatorUtil::sanitize_richtext_content( $store_tnc_raw );
+                $store_tnc_clean = RichTextSanitizerUtil::sanitize_richtext_content( $store_tnc_raw );
                 $store_tnc_clean = trim( $store_tnc_clean );
 
                 if ( ! empty( $store_tnc_clean ) ) {
-                    $store_tnc_processed = $store_tnc_clean;
+                    $store_tnc_processed = $store_tnc_raw;
                 }
             }
 

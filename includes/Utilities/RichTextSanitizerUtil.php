@@ -7,7 +7,7 @@ namespace WeDevs\Dokan\Utilities;
  *
  * @since DOKAN_SINCE
  */
-class RichTextValidatorUtil {
+class RichTextSanitizerUtil {
 
     /**
      * Sanitize and clean rich text content.
