@@ -244,6 +244,13 @@ class OrderControllerV2 extends OrderController {
     public function prepare_data_for_response( $download, $request ) {
         $product = $download->product;
         unset( $download->product );
+        unset( $download->product_id );
+
+        $download->product = [
+            'id'        => $product->get_id(),
+            'name'      => $product->get_name(),
+            'thumbnail' => wp_get_attachment_url( $product->get_image_id() ) ?? null,
+        ];
 
         return apply_filters( 'dokan_rest_prepare_order_download_response', $download, $product );
     }
