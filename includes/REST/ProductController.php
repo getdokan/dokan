@@ -72,8 +72,6 @@ class ProductController extends DokanRESTController {
     }
 
     /**
-     * Add min_price and max_price fields to variable product REST responses.
-     *
      * Hooks into WooCommerce's woocommerce_rest_prepare_product_object filter intentionally
      * so that min_price and max_price are available on both /wc/v3/products and Dokan endpoints.
      *
