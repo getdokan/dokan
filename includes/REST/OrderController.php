@@ -293,6 +293,8 @@ class OrderController extends DokanRESTController {
             );
         }
 
+        $vendor_earning = dokan()->commission->get_earning_by_order( $object->get_id() );
+
         return array(
             'id'                   => $object->get_id(),
             'parent_id'            => $data['parent_id'],
@@ -312,6 +314,7 @@ class OrderController extends DokanRESTController {
             'shipping_tax'         => $data['shipping_tax'],
             'cart_tax'             => $data['cart_tax'],
             'total'                => $data['total'],
+            'earning'              => wc_format_decimal( $vendor_earning ),
             'total_tax'            => $data['total_tax'],
             'prices_include_tax'   => $data['prices_include_tax'],
             'customer_id'          => $data['customer_id'],
