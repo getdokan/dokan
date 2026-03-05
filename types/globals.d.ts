@@ -23,6 +23,7 @@ declare global {
       license_plan?: string;
       has_new_version?: boolean;
       dashboard_url?: string;
+    };
     [key: string]: any;
   } | undefined;
 
