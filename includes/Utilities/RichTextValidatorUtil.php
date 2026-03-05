@@ -2,24 +2,32 @@
 
 namespace WeDevs\Dokan\Utilities;
 
+/**
+ * Utility class for cleaning and normalizing rich text content.
+ *
+ * @since DOKAN_SINCE
+ */
 class RichTextValidatorUtil {
 
     /**
-     * Validate and clean rich text content.
+     * Sanitize and clean rich text content.
+     *
+     * Strips all HTML tags, decodes HTML entities, and removes special/invisible
+     * characters such as BOMs, zero-width spaces, and control characters.
      *
      * @since DOKAN_SINCE
      *
-     * @param string $text The text to validate and clean.
+     * @param string $text The text to sanitize and clean.
      *
-     * @return string Validated and cleaned text.
+     * @return string Sanitized and cleaned plain text.
      */
-    public static function validate_richtext_content( string $text ): string {
+    public static function sanitize_richtext_content( string $text ): string {
         $text = wp_strip_all_tags( $text );
         $text = html_entity_decode( $text, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
         $text = self::replace_richtext_chars( $text );
 
         /**
-         * Filter for validating and cleaning rich text content.
+         * Filter for sanitizing and cleaning rich text content.
          *
          * Allows external modification of the cleaned rich text content.
          *
@@ -27,7 +35,7 @@ class RichTextValidatorUtil {
          *
          * @param string $text The cleaned text.
          */
-        return apply_filters( 'dokan_validate_richtext_content', $text );
+        return apply_filters( 'dokan_sanitize_richtext_content', $text );
     }
 
     /**
@@ -43,17 +51,20 @@ class RichTextValidatorUtil {
      */
     protected static function replace_richtext_chars( string $text ): string {
         // Remove UTF-8 BOM.
-		$text = preg_replace( '/^\xEF\xBB\xBF/', '', $text ) ?? '';
+        $text = preg_replace( '/^\xEF\xBB\xBF/', '', $text ) ?? '';
 
-		// Remove UTF-16 BOM.
-		$text = preg_replace( '/^(?:\xFE\xFF|\xFF\xFE)/', '', $text ) ?? '';
+        // Remove UTF-16 BOM.
+        $text = preg_replace( '/^(?:\xFE\xFF|\xFF\xFE)/', '', $text ) ?? '';
 
-		// Replace non-breaking space with normal space.
-		$text = str_replace( "\xC2\xA0", ' ', $text );
+        // Replace non-breaking space with normal space.
+        $text = str_replace( "\xC2\xA0", ' ', $text );
 
-		// Remove control characters except \n and \t.
-		$text = preg_replace( '/[\x00-\x09\x0B\x0C\x0E-\x1F\x7F]/u', '', $text ) ?? '';
+        // Remove zero-width and invisible Unicode characters.
+        $text = preg_replace( '/[\x{200B}\x{200C}\x{200D}\x{2060}\x{FEFF}]/u', '', $text ) ?? '';
 
-		return $text;
+        // Remove control characters except \t (\x09) and \n (\x0A).
+        $text = preg_replace( '/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/u', '', $text ) ?? '';
+
+        return $text;
     }
 }

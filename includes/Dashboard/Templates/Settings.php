@@ -485,13 +485,13 @@ class Settings {
         if ( $enable_tnc ) {
             $store_tnc = isset( $_POST['dokan_store_tnc'] ) ? wp_kses_post( wp_unslash( $_POST['dokan_store_tnc'] ) ) : '';
 
-            $store_tnc_clean = RichTextValidatorUtil::validate_richtext_content( $store_tnc );
+            $store_tnc_clean = RichTextValidatorUtil::sanitize_richtext_content( $store_tnc );
             $store_tnc_clean = trim( $store_tnc_clean );
 
             if ( empty( $store_tnc_clean ) ) {
                 $error->add(
                     'dokan_tnc_content',
-                    __( 'Please add Terms & Conditions content before save the settings.', 'dokan-lite' )
+                    __( 'Please add Terms & Conditions content before saving the settings.', 'dokan-lite' )
                 );
             }
         }
@@ -661,11 +661,11 @@ class Settings {
             $store_tnc_processed = '';
 
             if ( ! empty( $store_tnc_raw ) ) {
-                $store_tnc_clean = RichTextValidatorUtil::validate_richtext_content( $store_tnc_raw );
+                $store_tnc_clean = RichTextValidatorUtil::sanitize_richtext_content( $store_tnc_raw );
                 $store_tnc_clean = trim( $store_tnc_clean );
 
                 if ( ! empty( $store_tnc_clean ) ) {
-                    $store_tnc_processed = $store_tnc_raw;
+                    $store_tnc_processed = $store_tnc_clean;
                 }
             }
 
