@@ -491,7 +491,7 @@ class Settings {
             if ( empty( $store_tnc_clean ) ) {
                 $error->add(
                     'dokan_tnc_content',
-                    __( 'Please add Terms & Conditions content before saving the settings.', 'dokan-lite' )
+                    esc_html__( 'Please add Terms & Conditions content before saving the settings.', 'dokan-lite' )
                 );
             }
         }
