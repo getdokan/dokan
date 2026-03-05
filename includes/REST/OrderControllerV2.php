@@ -161,7 +161,7 @@ class OrderControllerV2 extends OrderController {
         $downloads = [];
         foreach ( $download_permissions as $download ) {
             $product_id = intval( $download->product_id );
-            if ( isset( $products_by_id[ $product_id ] ) ) {
+            if ( isset( $products[ $product_id ] ) ) {
                 $download->product = $products[ $product_id ];
                 $downloads[] = $this->prepare_data_for_response( $download, $request );
             }
