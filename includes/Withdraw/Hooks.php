@@ -60,7 +60,13 @@ class Hooks {
      * @return array
      */
     public function localize_withdraw_scripts( $localized_args ) {
-        $localized_args['withdraw'] = [ 'paymentSettingUrl' => dokan_get_navigation_url( 'settings/payment' ) ];
+        $localized_args['withdraw'] = apply_filters(
+            'dokan_withdraw_frontend_scripts_localize_args',
+            [
+                'paymentSettingUrl'      => dokan_get_navigation_url( 'settings/payment' ),
+                'isManualWithdrawEnable' => dokan_withdraw_is_manual_request_enabled(),
+            ]
+        );
 
         return $localized_args;
     }

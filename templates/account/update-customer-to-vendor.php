@@ -50,6 +50,15 @@ $custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'stor
         </p>
 
         <?php
+
+        /**
+         * Store Address Fields
+         */
+
+        if ( 'on' === dokan_get_option( 'enabled_address_on_reg', 'dokan_general', 'off' ) ) {
+            dokan_seller_address_fields( false, true );
+        }
+
         /**
          * Hook for adding fields after vendor migration.
          *

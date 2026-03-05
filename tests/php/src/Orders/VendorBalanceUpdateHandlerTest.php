@@ -1,10 +1,14 @@
 <?php
 
-namespace WeDevs\Dokan\Test\Order;
+namespace WeDevs\Dokan\Test\Orders;
 
 use WeDevs\Dokan\Order\VendorBalanceUpdateHandler;
 use WeDevs\Dokan\Test\DokanTestCase;
 
+/**
+ * @group orders
+ * @group order-vendor-balance-update-handler
+ */
 class VendorBalanceUpdateHandlerTest extends DokanTestCase {
 
     public function test_balance_table_query() {
@@ -52,7 +56,7 @@ class VendorBalanceUpdateHandlerTest extends DokanTestCase {
         $mock_handler->shouldAllowMockingProtectedMethods();
         $mock_handler->register_hooks();
 
-        $mock_handler->shouldReceive( 'handle_order_edit' )->times( 3 );
+        $mock_handler->shouldReceive( 'handle_order_edit' )->times( 2 );
 
         // if `update_balance` got called, `$order->save()` will be called.
         $mock_handler->shouldReceive( 'update_balance' );
