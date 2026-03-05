@@ -16,7 +16,6 @@ const Heading = ( { element }: { element: StatusElement } ) => {
                             font-bold
                             text-[#25252D]
                             leading-[130%]
-                            font-['Inter']
                             sm:truncate sm:tracking-tight
                         "
                     >
@@ -30,7 +29,6 @@ const Heading = ( { element }: { element: StatusElement } ) => {
                                 font-normal
                                 text-[#25252D]
                                 leading-[140%]
-                                font-['Inter']
                                 max-w-[580px]
                             "
                         >
