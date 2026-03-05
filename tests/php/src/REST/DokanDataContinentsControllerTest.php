@@ -4,6 +4,10 @@ namespace WeDevs\Dokan\Test\REST;
 
 use WeDevs\Dokan\Test\DokanTestCase;
 
+/**
+ * @group rest-api
+ * @group rest-api-data-continents
+ */
 class DokanDataContinentsControllerTest extends DokanTestCase {
 
     /**

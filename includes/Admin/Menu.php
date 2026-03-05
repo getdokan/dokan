@@ -28,8 +28,12 @@ class Menu {
     public function add_admin_menu() {
         global $submenu;
 
+        $capability = dokana_admin_menu_capability();
+        if ( ! current_user_can( $capability ) ) {
+            return;
+        }
+
         $menu_position = dokan_admin_menu_position();
-        $capability    = dokana_admin_menu_capability();
         $withdraw      = dokan_get_withdraw_count();
         $withdraw_text = __( 'Withdraw', 'dokan-lite' );
         $slug          = 'dokan';

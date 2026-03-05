@@ -289,8 +289,8 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
         // dokan store open close scripts starts //
         var store_opencolse = $( '.store-open-close' );
         store_opencolse.hide();
-
-        $( '#dokan-store-time-enable' ).on( 'change', function() {
+        let timeFormatMoment = dokan_get_i18n_time_format_for_moment_js();
+        $('#dokan-store-time-enable').on('change', function() {
             var self = $(this);
 
             if ( self.prop( 'checked' ) ) {
@@ -318,42 +318,64 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
 
         <?php if ( ! dokan()->is_pro_exists() ) : ?>
             // Set timepicker jquery here.
+            const  mapTimepickerLocaleToMoment = (value) => {
+                if(!value) return value;
+
+                return value
+                    .replace(dokan_helper.timepicker_locale.PM, 'PM')
+                    .replace(dokan_helper.timepicker_locale.AM, 'AM')
+                    .replace(dokan_helper.timepicker_locale.pm, 'pm')
+                    .replace(dokan_helper.timepicker_locale.am, 'am');
+            };
             $( '.dokan-store-times .time .dokan-form-control' ).timepicker({
-                step          : 30,
-                lang          : dokan_helper.timepicker_locale,
-                minTime       : '12:00 am',
-                maxTime       : '11:30 pm',
-                timeFormat    : '<?php echo esc_js( wc_time_format() ); ?>',
-                scrollDefault : 'now',
+                    step          : 30,
+                    lang          : dokan_helper.timepicker_locale,
+                    minTime       : '00:00',
+                    maxTime       : '23:30',
+                    timeFormat    : dokan_helper.i18n_time_format
             });
 
             // Add validation for store time when changed.
-            $( '.dokan-store-times' ).on( 'change', '.dokan-form-group', function () {
-                const self              = $( this ),
-                    openValue           = self.find( '.opening-time' ).val(),
-                    closeValue          = self.find( '.closing-time' ).val(),
-                    formattedOpenValue  = moment( openValue, 'hh:mm a' ).format( 'HH:mm' ),
-                    formattedCloseValue = moment( closeValue, 'hh:mm a' ).format( 'HH:mm' );
+            $('.dokan-store-times').on('change', '.dokan-form-group', function() {
+                const self = $(this),
+                    openValue = self.find('.opening-time').val(),
+                    closeValue = self.find('.closing-time').val(),
+                    openInputHidden = self.find('.opening-time-hidden'),
+                    closeInputHidden = self.find('.closing-time-hidden'),
+                    formattedOpenValue = moment(mapTimepickerLocaleToMoment(openValue), timeFormatMoment).format('HH:mm'),
+                    formattedCloseValue = moment(mapTimepickerLocaleToMoment(closeValue), timeFormatMoment).format('HH:mm');
 
-                if ( formattedOpenValue > formattedCloseValue ) {
-                    self.find( 'input.dokan-form-control' ).css({ 'border-color': '#F87171', 'color': '#F87171' });
+                let openValueSelected = moment(mapTimepickerLocaleToMoment(openValue), timeFormatMoment).locale('en').format('hh:mm a');
+                let closeValueSelected = moment(mapTimepickerLocaleToMoment(closeValue), timeFormatMoment).locale('en').format('hh:mm a');
+
+                openInputHidden.val(openValueSelected);
+                closeInputHidden.val(closeValueSelected);
+                if (formattedOpenValue > formattedCloseValue) {
+                    self.find('input.dokan-form-control').css({
+                        'border-color': '#F87171',
+                        'color': '#F87171'
+                    });
                 } else {
                     self.find( 'input.dokan-form-control' ).css({ 'border-color': '#bbb', 'color': '#4e4e4e' });
                 }
             });
 
-            $( 'input[name="dokan_update_store_settings"]' ).on( 'click', function ( e ) {
-                $( '.dokan-store-times' ).each( function () {
-                    const self              = $( this ),
-                        open_or_close       = self.find( '.dokan-on-off' ).val();
+            $('input[name="dokan_update_store_settings"]').on('click', function(e) {
+                $('.dokan-store-times').each(function() {
+                    const self = $(this),
+                        openInputHidden = self.find('.opening-time-hidden'),
+                        closeInputHidden = self.find('.closing-time-hidden'),
+                        open_or_close = self.find('.dokan-on-off').val();
 
                     // check if today is open
                     if ( 'close' === open_or_close ) {
                         return;
                     }
 
-                    const openValue         = self.find( '.opening-time' ).val(),
+                    let openValue         = self.find( '.opening-time' ).val(),
                         closeValue          = self.find( '.closing-time' ).val();
+                    openValue  = mapTimepickerLocaleToMoment(openValue);
+                    closeValue = mapTimepickerLocaleToMoment(closeValue);
 
                     if ( ! openValue || ! closeValue ) {
                         self.find( 'input.dokan-form-control' ).css({ 'border-color': '#F87171', 'color': '#F87171' });
@@ -366,12 +388,20 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
                         return false;
                     }
 
-                    const formattedOpenValue  = moment( openValue, 'hh:mm a' ).format( 'HH:mm' ),
-                        formattedCloseValue = moment( closeValue, 'hh:mm a' ).format( 'HH:mm' );
+                    const formattedOpenValue  = moment( openValue, timeFormatMoment ).format( 'HH:mm' ),
+                        formattedCloseValue = moment( closeValue, timeFormatMoment ).format( 'HH:mm' );
 
-                    if ( formattedOpenValue >= formattedCloseValue ) {
-                        self.find( 'input.dokan-form-control' ).css({ 'border-color': '#F87171', 'color': '#F87171' });
-                        self.find( '.opening-time' ).focus();
+                    let openValueSelected  = moment(openValue, timeFormatMoment ).locale('en').format('hh:mm a');
+                    let closeValueSelected = moment(closeValue, timeFormatMoment ).locale('en').format('hh:mm a');
+
+                    openInputHidden.val(openValueSelected);
+                    closeInputHidden.val(closeValueSelected);
+                    if (formattedOpenValue >= formattedCloseValue) {
+                        self.find('input.dokan-form-control').css({
+                            'border-color': '#F87171',
+                            'color': '#F87171'
+                        });
+                        self.find('.opening-time').focus();
                         e.preventDefault();
                         return false;
                     }

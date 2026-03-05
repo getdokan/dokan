@@ -95,17 +95,39 @@ class RefundHandler implements Hookable {
             return $ret;
         }
 
-        // if cod is not payment method return
-        if ( 'cod' !== $order->get_payment_method() ) {
-            return $ret;
-        }
+        $order_id   = $order->get_id();
+        $new_status = $order->get_status();
+
+        $exclude_cod_option = 'on' === dokan_get_option( 'exclude_cod_payment', 'dokan_withdraw', 'off' );
 
         /**
-         * If `exclude_cod_payment` is enabled, don't include the fund in vendor's refund balance.
+         * Calculate the default logic (Is it COD and is the option ON?)
          */
-        $exclude_cod_payment = 'on' === dokan_get_option( 'exclude_cod_payment', 'dokan_withdraw', 'off' );
+        $should_exclude_cod_payment = $exclude_cod_option && 'cod' === $order->get_payment_method();
 
-        if ( $exclude_cod_payment ) {
+        /**
+         * Apply the filter so other plugins (like wePOS) can override this.
+         * Use the exact same filter name for consistency across the whole system.
+         *
+         * @since 4.2.9
+         * @param bool     $should_exclude_cod_payment Whether to exclude the payment.
+         * @param WC_Order $order                      The main WooCommerce order object.
+         * @param int      $order_id                   The ID of the main order.
+         * @param string   $new_status                 The new status of the order.
+         * @param bool     $exclude_cod_option         The value of the 'exclude COD' setting.
+         * @param WC_Order $refund_order               The specific refund order object.
+         */
+        $should_exclude_cod_payment = apply_filters(
+            'dokan_order_refund_should_exclude_from_vendor_balance',
+            $should_exclude_cod_payment,
+            $order,
+            $order_id,
+            $new_status,
+            $exclude_cod_option,
+            $refund_order,
+        );
+
+        if ( $should_exclude_cod_payment ) {
             return false;
         }
 

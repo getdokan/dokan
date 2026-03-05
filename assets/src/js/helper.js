@@ -108,6 +108,19 @@
   }
 
   /**
+   * Get time format for moment js.
+   * 
+   * @since 4.2.9
+   * 
+   * @param {string} input_format Input time format.
+   * 
+   * @return {string} Return formatted time for moment js.
+   */
+  window.dokan_get_i18n_time_format_for_moment_js = function ( input_format = dokan_get_i18n_time_format() ) {
+    return input_format.replace(/\\(.)/g, '[$1]');
+  }
+
+  /**
    * Get formatted time.
    *
    * @since 3.3.7
