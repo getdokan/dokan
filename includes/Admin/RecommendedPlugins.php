@@ -25,37 +25,37 @@ class RecommendedPlugins {
         $this->plugins = [
             [
                 'type'        => 'store_growth',
-                'title'       => __( 'StoreGrowth', 'dokan-lite' ),
-                'description' => __( 'Increase revenue with powerful sales tools for WooCommerce.', 'dokan-lite' ),
+                'title'       => fn() => __( 'StoreGrowth', 'dokan-lite' ),
+                'description' => fn() => __( 'Increase revenue with powerful sales tools for WooCommerce.', 'dokan-lite' ),
                 'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/store-growth-logo.png',
-                'img_alt'     => __( 'StoreGrowth logo', 'dokan-lite' ),
+                'img_alt'     => fn() => __( 'StoreGrowth logo', 'dokan-lite' ),
                 'slug'        => 'storegrowth-sales-booster',
                 'basename'    => 'storegrowth-sales-booster/storegrowth-sales-booster.php',
             ],
             [
                 'type'        => 'wemail',
-                'title'       => __( 'weMail', 'dokan-lite' ),
-                'description' => __( 'Simplified Email Marketing Solution for WordPress!', 'dokan-lite' ),
+                'title'       => fn() => __( 'weMail', 'dokan-lite' ),
+                'description' => fn() => __( 'Simplified Email Marketing Solution for WordPress!', 'dokan-lite' ),
                 'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/wemail-logo.png',
-                'img_alt'     => __( 'weMail logo', 'dokan-lite' ),
+                'img_alt'     => fn() => __( 'weMail logo', 'dokan-lite' ),
                 'slug'        => 'wemail',
                 'basename'    => 'wemail/wemail.php',
             ],
             [
                 'type'        => 'wc_conversion_tracking',
-                'title'       => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
-                'description' => __( 'Track conversions on your WooCommerce store like a pro!', 'dokan-lite' ),
+                'title'       => fn() => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
+                'description' => fn() => __( 'Track conversions on your WooCommerce store like a pro!', 'dokan-lite' ),
                 'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/wc-conversion-tracking-logo.png',
-                'img_alt'     => __( 'WooCommerce Conversion Tracking logo', 'dokan-lite' ),
+                'img_alt'     => fn() => __( 'WooCommerce Conversion Tracking logo', 'dokan-lite' ),
                 'slug'        => 'woocommerce-conversion-tracking',
                 'basename'    => 'woocommerce-conversion-tracking/conversion-tracking.php',
             ],
             [
                 'type'        => 'texty',
-                'title'       => __( 'Texty', 'dokan-lite' ),
-                'description' => __( 'SMS Notification for WordPress, WooCommerce, Dokan and more!', 'dokan-lite' ),
+                'title'       => fn() => __( 'Texty', 'dokan-lite' ),
+                'description' => fn() => __( 'SMS Notification for WordPress, WooCommerce, Dokan and more!', 'dokan-lite' ),
                 'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/texty-logo.png',
-                'img_alt'     => __( 'Texty logo', 'dokan-lite' ),
+                'img_alt'     => fn() => __( 'Texty logo', 'dokan-lite' ),
                 'slug'        => 'texty',
                 'basename'    => 'texty/texty.php',
             ],
@@ -70,6 +70,16 @@ class RecommendedPlugins {
      * @return array
      */
     protected function get_enlisted_plugins(): array {
+        $plugins = array_map(
+            function ( $plugin ) {
+				return array_map(
+                    function ( $value ) {
+                        return is_callable( $value ) ? $value() : $value;
+                    }, $plugin
+				);
+			}, $this->plugins
+        );
+
         /**
          * Filter the list of recommended plugins.
          *
@@ -79,7 +89,7 @@ class RecommendedPlugins {
          *
          * @return array Filtered list of recommended plugins.
          */
-        return apply_filters( 'dokan_recommended_plugins_list', $this->plugins );
+        return apply_filters( 'dokan_recommended_plugins_list', $plugins );
     }
 
     /**

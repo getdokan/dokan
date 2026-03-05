@@ -60,7 +60,7 @@ class QueryFilterTest extends ReportTestCase {
 	public function test_dokan_order_states_query_filter_hooks_are_order_stats_update() {
 		$order_id = $this->create_multi_vendor_order();
 
-		$this->run_all_pending();
+		$this->run_all_pending_queue();
 
         $mocking_methods = [
             'add_join_subquery',
@@ -97,7 +97,7 @@ class QueryFilterTest extends ReportTestCase {
         $this->set_mock_commission( $data['vendor_earning'], $data['admin_commission'] );
         $parent_id = $this->create_multi_vendor_order();
 
-		$this->run_all_pending();
+		$this->run_all_pending_queue();
 
         $filter = Mockery::mock( QueryFilter::class . '[should_filter_by_vendor_id]' );
 

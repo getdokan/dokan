@@ -325,23 +325,54 @@ class Orders {
     private function add_pagination_info( $limit, $page, $order_count ) {
         $num_of_pages = ceil( $order_count / $limit );
         $base_url     = dokan_get_navigation_url( 'orders' );
-        $page_links   = paginate_links(
-            [
-                'current'  => $page,
+
+        $add_args = array();
+
+        if ( ! empty( $_GET['customer_id'] ) ) {
+            $add_args['customer_id'] = absint( wp_unslash( $_GET['customer_id'] ) );
+        }
+
+        if ( ! empty( $_GET['order_date_start'] ) ) {
+            $add_args['order_date_start'] = sanitize_key( wp_unslash( $_GET['order_date_start'] ) );
+        }
+
+        if ( ! empty( $_GET['order_date_end'] ) ) {
+            $add_args['order_date_end'] = sanitize_key( wp_unslash( $_GET['order_date_end'] ) );
+        }
+
+        if ( ! empty( $_GET['order_status'] ) ) {
+            $add_args['order_status'] = sanitize_key( wp_unslash( $_GET['order_status'] ) );
+        }
+
+        if ( ! empty( $_GET['search'] ) ) {
+            $add_args['search'] = sanitize_text_field( wp_unslash( $_GET['search'] ) );
+        }
+
+        if ( ! empty( $_GET['limit'] ) ) {
+            $add_args['limit'] = absint( wp_unslash( $_GET['limit'] ) );
+        }
+
+        $add_args['seller_order_filter_nonce'] = ! empty( $_GET['seller_order_filter_nonce'] )
+        ? sanitize_key( wp_unslash( $_GET['seller_order_filter_nonce'] ) )
+        : wp_create_nonce( 'seller-order-filter-nonce' );
+
+        $page_links = paginate_links(
+            array(
+                'current'  => max( 1, (int) $page ),
                 'total'    => $num_of_pages,
-                'base'     => $base_url . '%_%',
-                'format'   => '?pagenum=%#%&seller_order_filter_nonce=' . wp_create_nonce( 'seller-order-filter-nonce' ),
-                'add_args' => false,
+                'base'     => trailingslashit( $base_url ) . '%_%',
+                'format'   => '?pagenum=%#%',
+                'add_args' => $add_args,
                 'type'     => 'array',
-            ]
+            )
         );
 
-        $args = [
-            'num_of_pages' => $num_of_pages,
-            'page_links'   => $page_links,
-        ];
+        $args = array(
+    		'num_of_pages' => $num_of_pages,
+    		'page_links'   => $page_links,
+    	);
 
-        return $args;
+    	return $args;
     }
 
     /**

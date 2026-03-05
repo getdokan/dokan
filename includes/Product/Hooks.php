@@ -36,7 +36,8 @@ class Hooks {
         // Add WooCommerce product brands support.
         add_action( 'dokan_new_product_added', [ $this, 'update_product_brands_by_id' ], 10, 2 );
         add_action( 'dokan_product_updated', [ $this, 'update_product_brands_by_id' ], 10, 2 );
-        add_action( 'dokan_product_edit_after_pricing_fields', [ $this, 'add_product_brand_template' ] );
+        add_action( 'dokan_product_edit_after_pricing_fields', [ $this, 'add_product_brand_template_in_edit_product' ] );
+        add_action( 'dokan_new_product_after_product_category', [ $this, 'add_product_brand_template_in_add_product' ] );
 
         // Remove product type filter if pro not exists.
         add_filter( 'dokan_product_listing_filter_args', [ $this, 'remove_product_type_filter' ] );
@@ -574,6 +575,19 @@ class Hooks {
         );
     }
 
+
+
+    /**
+     * Add product brand taxonomy template
+     *
+     * @since 4.2.6
+     *
+     * @return void
+     */
+    public function add_product_brand_template_in_add_product(): void {
+        dokan_get_template_part( 'products/product-brand', '', [ 'product_brands' => [] ] );
+    }
+
     /**
      * Add product brand taxonomy template
      *
@@ -583,7 +597,7 @@ class Hooks {
      *
      * @return void
      */
-    public function add_product_brand_template( \WP_Post $post ): void {
+    public function add_product_brand_template_in_edit_product( \WP_Post $post ): void {
         if ( ! current_user_can( 'dokan_edit_product' ) ) {
             return;
         }

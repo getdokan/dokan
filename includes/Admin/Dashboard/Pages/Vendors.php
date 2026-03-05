@@ -18,7 +18,11 @@ class Vendors extends AbstractPage {
     }
 
     public function settings(): array {
-        return [];
+        return apply_filters(
+            'dokan_admin_dashboard_vendors_settings', [
+				'new_seller_enable_selling' => dokan_get_container()->get( \WeDevs\Dokan\Utilities\AdminSettings::class )->get_new_seller_enable_selling_status(),
+			]
+        );
     }
 
     public function scripts(): array {

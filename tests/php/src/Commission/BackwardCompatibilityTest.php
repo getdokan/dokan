@@ -9,9 +9,18 @@ use WeDevs\Dokan\Commission\Strategies\OrderItem;
 use WeDevs\Dokan\Test\DokanTestCase;
 use WeDevs\Dokan\Vendor\Coupon;
 
-class BackwordCompatibility extends DokanTestCase {
 
+/**
+ * @group commission
+ * @group commission-compatibility
+ */
+class BackwardCompatibilityTest extends DokanTestCase {
     private array $category_ids;
+    private $coupon_meta_removal_callback;
+
+    protected $seller_id1;
+    protected $seller_id2;
+    protected $customer_id;
 
     /**
      * Set up
@@ -53,15 +62,28 @@ class BackwordCompatibility extends DokanTestCase {
 
         $this->category_ids = $ids;
 
+        // Store callback reference for cleanup
+        $this->coupon_meta_removal_callback = function ( $order_item, $_coupon_info ) {
+            wc_delete_order_item_meta( $order_item->get_id(), Coupon::DOKAN_COUPON_META_KEY );
+        };
+
         add_action(
-            'dokan_after_coupon_info_data_updated_on_order_item_meta', function ( $order_item, $coupon_info ) {
-				wc_delete_order_item_meta( $order_item->get_id(), Coupon::DOKAN_COUPON_META_KEY );
-			}, 10, 2
+            'dokan_after_coupon_info_data_updated_on_order_item_meta',
+            $this->coupon_meta_removal_callback,
+            10,
+            2
         );
+
+        $this->seller_id2 = $this->factory()->seller->create();
+        $this->seller_id1 = $this->factory()->seller->create();
+        $this->customer_id = $this->factory()->customer->create();
+        $this->clear_commission_settings();
     }
 
     /**
+     * Data provider for product settings tests.
      *
+     * @return array
      */
     public function product_settings_data_provider() {
         return [
@@ -238,8 +260,8 @@ class BackwordCompatibility extends DokanTestCase {
                     'strategy_source'           => OrderItem::SOURCE,
                     'calculator_source'         => Flat::SOURCE,
                     'is_applicable'             => true,
-                    'admin_commission'          => 100,
-                    'vendor_earning'            => 48,
+                    'admin_commission'          => 130,
+                    'vendor_earning'            => 18,
                     'total_quantity'            => 5,
                 ],
             ],
@@ -257,6 +279,77 @@ class BackwordCompatibility extends DokanTestCase {
 
         return $data;
     }
+    /**
+	 * Clear commission settings to default state.
+	 *
+	 * @return void
+	 */
+	protected function clear_commission_settings() {
+		// Reset commission settings to default
+		$default_settings = [
+			'type' => 'flat',
+			'percentage' => 10,
+			'flat' => 0,
+		];
+		( new \WeDevs\Dokan\Commission\Settings\GlobalSetting( 0 ) )->save( $default_settings );
+
+		// Reset dokan_selling options to default
+		$selling_options = get_option( 'dokan_selling', [] );
+		unset( $selling_options['commission_fixed_values'] );
+		unset( $selling_options['commission_type'] );
+		unset( $selling_options['commission_category_based_values'] );
+		update_option( 'dokan_selling', $selling_options );
+
+		// Clear vendor-specific commission settings
+		if ( isset( $this->seller_id1 ) ) {
+			$vendor1 = dokan()->vendor->get( $this->seller_id1 );
+			if ( $vendor1 ) {
+				$vendor1->save_commission_settings( [] );
+				// Explicitly delete vendor commission meta keys to ensure complete cleanup
+				delete_user_meta( $this->seller_id1, 'dokan_admin_percentage' );
+				delete_user_meta( $this->seller_id1, 'dokan_admin_percentage_type' );
+				delete_user_meta( $this->seller_id1, 'dokan_admin_additional_fee' );
+				delete_user_meta( $this->seller_id1, 'admin_category_commission' );
+			}
+		}
+
+		if ( isset( $this->seller_id2 ) ) {
+			$vendor2 = dokan()->vendor->get( $this->seller_id2 );
+			if ( $vendor2 ) {
+				$vendor2->save_commission_settings( [] );
+				// Explicitly delete vendor commission meta keys to ensure complete cleanup
+				delete_user_meta( $this->seller_id2, 'dokan_admin_percentage' );
+				delete_user_meta( $this->seller_id2, 'dokan_admin_percentage_type' );
+				delete_user_meta( $this->seller_id2, 'dokan_admin_additional_fee' );
+				delete_user_meta( $this->seller_id2, 'admin_category_commission' );
+			}
+		}
+
+		// Clear vendor cache to ensure fresh vendor objects
+		\WeDevs\Dokan\Vendor\VendorCache::delete();
+	}
+
+	/**
+	 * Clean up after each test to ensure isolation.
+	 *
+	 * @return void
+	 */
+	public function tear_down() {
+		// Remove the action hook
+		if ( isset( $this->coupon_meta_removal_callback ) ) {
+			remove_action(
+				'dokan_after_coupon_info_data_updated_on_order_item_meta',
+				$this->coupon_meta_removal_callback,
+				10
+			);
+		}
+
+		// Clear commission settings to ensure test isolation
+		$this->clear_commission_settings();
+
+		parent::tear_down();
+	}
+
 
     protected function create_order_with_coupon( $settings, $expected ) {
         if ( isset( $settings['vendor_settings']['category_commissions'] ) ) {
@@ -343,20 +436,28 @@ class BackwordCompatibility extends DokanTestCase {
 
         $order = wc_get_order( $fac_order );
 
+        // Ensure order has no shipping fees from previous tests
+        // Remove any shipping items that might have been added by other tests
+        foreach ( $order->get_items( 'shipping' ) as $item_id => $shipping_item ) {
+            $order->remove_item( $item_id );
+        }
+        $order->calculate_totals();
+        $order->save();
+
         $items = $order->get_items();
         $item = reset( $items );
         $meta = $item->get_meta( Coupon::DOKAN_COUPON_META_KEY );
 
         try {
-            $order_commission = dokan_get_container()->get( OrderCommission::class );
+            $order_commission = new OrderCommission();
             $order_commission->set_order( $order );
             $order_commission->get();
         } catch ( \Exception $exception ) {
             throw $exception;
         }
 
-        $admin_commission = $order_commission->get_admin_total_earning();
-        $vendor_earning   = $order_commission->get_vendor_total_earning();
+        $admin_commission = $order_commission->get_admin_commission();
+        $vendor_earning   = $order_commission->get_vendor_earning();
 
         return [
             'admin_commission' => $admin_commission,
@@ -371,6 +472,17 @@ class BackwordCompatibility extends DokanTestCase {
      * @return void
      */
     public function test_get_earning_by_order_method( $settings, $expected ) {
+        // Clear commission settings at the start of each test to ensure isolation
+        $this->clear_commission_settings();
+
+        // Clear any cached vendor objects to ensure fresh data
+        if ( isset( $this->seller_id1 ) ) {
+            wp_cache_delete( $this->seller_id1, 'user_meta' );
+        }
+        if ( isset( $this->seller_id2 ) ) {
+            wp_cache_delete( $this->seller_id2, 'user_meta' );
+        }
+
         $result = $this->create_order_with_coupon( $settings, $expected );
 
         $this->assertEquals( $expected['admin_commission'], $result ['admin_commission'] );

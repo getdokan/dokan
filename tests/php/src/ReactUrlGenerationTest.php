@@ -5,7 +5,8 @@ namespace WeDevs\Dokan\Test;
 use WeDevs\Dokan\Test\DokanTestCase;
 
 /**
- * @group coupon-discount
+ * @group core-feature
+ * @group core-feature-react-url-generation
  */
 class ReactUrlGenerationTest extends DokanTestCase {
 

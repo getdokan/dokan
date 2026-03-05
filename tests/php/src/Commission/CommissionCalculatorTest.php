@@ -8,6 +8,7 @@ use WeDevs\Dokan\Commission\Model\Setting;
 use WeDevs\Dokan\Test\DokanTestCase;
 /**
  * @group commission
+ *
  * @group commission-order
  */
 class CommissionCalculatorTest extends DokanTestCase {
