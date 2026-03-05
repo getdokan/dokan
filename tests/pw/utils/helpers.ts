@@ -247,7 +247,7 @@ export const helpers = {
 
         lineItems.forEach((item: any) => {
             item.meta_data.forEach((meta: any) => {
-                if (meta.key === 'dokan_commission_meta') {
+                if (meta.key === '_dokan_commission_meta') {
                     totalAdminCommission += Number(meta.value.admin_commission);
                     totalVendorEarning += Number(meta.value.vendor_earning);
                 }
