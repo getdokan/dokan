@@ -232,6 +232,9 @@ const Status = () => {
 
     return (
         <div className="h-full">
+            <h2 className="text-2xl leading-3 text-gray-900 font-bold mb-6">
+                { __( 'Status', 'dokan-lite' ) }
+            </h2>
             <main className="max-w-full mx-auto pb-10 lg:py-5 lg:px-0">
                 <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
                     { pages && '' !== selectedPage && pages.length > 0 && (
