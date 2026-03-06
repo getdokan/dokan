@@ -403,7 +403,7 @@ class Settings {
                     wp_send_json_error( __( 'Are you cheating?', 'dokan-lite' ) );
                 }
 
-                $ajax_validate = $this->store_validate();
+                $ajax_validate = apply_filters( 'dokan_store_form_validation_error', $this->store_validate() );
                 break;
 
             case 'payment-form':
