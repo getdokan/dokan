@@ -104,7 +104,6 @@ class Menu {
     public function dashboard_script() {
         wp_enqueue_style( 'dokan-admin-css' );
         wp_enqueue_style( 'jquery-ui' );
-        wp_enqueue_style( 'dokan-admin-panel-header' );
 
         wp_enqueue_script( 'jquery-ui-datepicker' );
         wp_enqueue_script( 'wp-color-picker' );

@@ -10,48 +10,6 @@ const {
 } = require( './webpack-dependency-mapping' );
 const DependencyExtractionWebpackPlugin = require( '@wordpress/dependency-extraction-webpack-plugin' );
 
-
-// Helper to separate dokan-ui from postcss processing
-const processCssRules = ( rules ) => {
-    const newRules = [];
-    rules.forEach( ( rule ) => {
-        if ( String( rule.test ) === '/\\.css$/' ) {
-            // 1. Rule for everything EXCEPT dokan-ui (uses postcss)
-            const cssRule = {
-                ...rule,
-                exclude: [
-                    ...( Array.isArray( rule.exclude )
-                        ? rule.exclude
-                        : [ rule.exclude ].filter( Boolean ) ),
-                    /node_modules\/@getdokan\/dokan-ui/,
-                ],
-            };
-
-            // 2. Rule specifically for dokan-ui (removes postcss)
-            const dokanUiRule = {
-                ...rule,
-                test: /\.css$/, // Ensure it matches CSS
-                include: /node_modules\/@getdokan\/dokan-ui/,
-                exclude: undefined, // Clear exclude
-            };
-
-            // Remove postcss-loader from dokanUiRule
-            if ( Array.isArray( dokanUiRule.use ) ) {
-                dokanUiRule.use = dokanUiRule.use.filter( ( loader ) => {
-                    const loaderName =
-                        typeof loader === 'string' ? loader : loader.loader;
-                    return ! loaderName.includes( 'postcss-loader' );
-                } );
-            }
-
-            newRules.push( cssRule, dokanUiRule );
-        } else {
-            newRules.push( rule );
-        }
-    } );
-    return newRules;
-};
-
 const updatedConfig = {
     mode: defaultConfig.mode,
     watchOptions: {
@@ -136,23 +94,14 @@ const updatedConfig = {
     plugins: [
         ...defaultConfig.plugins.filter(
             ( plugin ) =>
-                plugin.constructor.name !== 'DependencyExtractionWebpackPlugin' 
-                // plugin.constructor.name !== 'MiniCssExtractPlugin' &&
-                // plugin.constructor.name !== 'RtlCssPlugin'
+                plugin.constructor.name !== 'DependencyExtractionWebpackPlugin'
         ),
         new MiniCssExtractPlugin( {
             filename: ( { chunk } ) => {
                 if ( chunk.name.match( /\/modules\// ) ) {
                     return `${ chunk.name.replace( '/js/', '/css/' ) }.css`;
                 }
-                // Single Tailwind bundle: one file for all Tailwind (theme + utilities + dokan-components)
-                if ( chunk.name === 'dokan-tailwind' ) {
-                    return '../css/components.css';
-                }
-                // Component-only styles (dataviews, richtext, etc.) — Tailwind is in components.css
-                if ( chunk.name === 'components' ) {
-                    return '../css/components-bundle.css';
-                }
+
                 return '../css/[name].css';
             },
         } ),
@@ -167,7 +116,7 @@ const updatedConfig = {
     module: {
         ...defaultConfig.module,
         rules: [
-            ...processCssRules( defaultConfig.module.rules ),
+            ...defaultConfig.module.rules,
             {
                 test: /\.vue$/,
                 loader: 'vue-loader',

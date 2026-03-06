@@ -11,6 +11,7 @@ const path = require( 'path' );
 
 // Files directories.
 const targetFiles = [
+    'assets/css',
     'assets/js/admin.js',
     'assets/js/dokan-admin-product-style.js',
     'assets/js/dokan-product-category-ui.js',

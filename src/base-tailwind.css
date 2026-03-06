@@ -111,9 +111,8 @@
         --wp-components-color-accent: var(--color-primary);
         --wp-components-color-accent-darker-20: var(--color-primary-hover);
         --color-on-primary: var(--dokan-button-text-color, #ffffff);
-
+        --color-border: #e5e7eb;
     }
-
     /* Headless UI portal visibility fix */
     #headlessui-portal-root {
         display: none;
@@ -134,8 +133,6 @@
     @import "./dokan-components.css";
 
     border-color: var(--color-border);
-
-    
 
 }
 
