@@ -75,7 +75,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
         $vendor_net_earning   = 0;
         $vendor_discount      = 0;
 
-        $is_admin_earning_order_type = dokan_get_container()->get( OrderType::class )->is_admin_order_type( $this->order );
+        $is_admin_earning_order_type = ( new OrderType() )->is_admin_order_type( $this->order );
         foreach ( $this->order->get_items() as $item_id => $item ) {
             try {
                 $line_item_commission = dokan_get_container()->get( OrderLineItemCommission::class );
@@ -138,8 +138,8 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
 
         $this->ensure_commissions_are_calculated();
 
-        $refund_commission          = new Commission();
-        $is_admin_earning_order_type = dokan_get_container()->get( OrderType::class )->is_admin_order_type( $this->order );
+        $refund_commission           = new Commission();
+        $is_admin_earning_order_type = ( new OrderType() )->is_admin_order_type( $this->order );
 
         foreach ( $refund->get_items() as $item_id => $refund_item ) {
             try {
