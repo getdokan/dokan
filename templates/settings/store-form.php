@@ -200,7 +200,7 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
             </div>
         </div>
         <div class="dokan-form-group" id="dokan_tnc_text">
-            <label class="dokan-w3 dokan-control-label" for="dokan_store_tnc"><?php esc_html_e( 'TOC Details', 'dokan-lite' ); ?></label>
+            <label class="dokan-w3 dokan-control-label" for="dokan_store_tnc"><?php esc_html_e( 'TOC Details', 'dokan-lite' ); ?> <span class="required">*</span></label>
             <div class="dokan-w8 dokan-text-left">
                 <?php
                 $settings = [
