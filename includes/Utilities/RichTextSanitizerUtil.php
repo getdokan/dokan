@@ -5,7 +5,7 @@ namespace WeDevs\Dokan\Utilities;
 /**
  * Utility class for cleaning and normalizing rich text content.
  *
- * @since DOKAN_SINCE
+ * @since 4.3.1
  */
 class RichTextSanitizerUtil {
 
@@ -15,7 +15,7 @@ class RichTextSanitizerUtil {
      * Strips all HTML tags, decodes HTML entities, and removes special/invisible
      * characters such as BOMs, zero-width spaces, and control characters.
      *
-     * @since DOKAN_SINCE
+     * @since 4.3.1
      *
      * @param string $text The text to sanitize and clean.
      *
@@ -32,7 +32,7 @@ class RichTextSanitizerUtil {
          *
          * Allows external modification of the cleaned rich text content.
          *
-         * @since DOKAN_SINCE
+         * @since 4.3.1
          *
          * @param string $text The cleaned text.
          */
@@ -42,7 +42,7 @@ class RichTextSanitizerUtil {
     /**
      * Replace rich text special characters.
      *
-     * @since DOKAN_SINCE
+     * @since 4.3.1
      *
      * @see sitepress-multilingual-cms/vendor/wpml/wpml/src/Core/Component/WordsToTranslate/Domain/Calculator/PrepareContent/Rules/UnicodeTrait.php
      *

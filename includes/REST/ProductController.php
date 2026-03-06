@@ -75,7 +75,7 @@ class ProductController extends DokanRESTController {
      * Hooks into WooCommerce's woocommerce_rest_prepare_product_object filter intentionally
      * so that min_price and max_price are available on both /wc/v3/products and Dokan endpoints.
      *
-     * @since DOKAN_SINCE
+     * @since 4.3.1
      *
      * @param WP_REST_Response $response The response object.
      * @param WC_Product       $product  The product object.
