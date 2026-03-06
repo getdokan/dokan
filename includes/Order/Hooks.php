@@ -59,6 +59,27 @@ class Hooks {
         add_filter( 'woocommerce_can_reduce_order_stock', [ $this, 'prevent_stock_reduction_for_parent_order' ], 10, 2 );
 
         add_action( 'woocommerce_reduce_order_item_stock', [ $this, 'sync_parent_order_item_stock' ], 10, 3 );
+
+        // TODO: This is for backward compatibility. It renames dokan_commission_meta key to _dokan_commission_meta. Remove this after few versions.
+        add_filter( 'woocommerce_order_item_get__dokan_commission_meta', [ $this, 'get_dokan_commission_meta' ], 10, 2 );
+    }
+
+    /**
+     * Retrieve commission meta using old dokan_commission_meta.
+     *
+     * @return mixed
+     */
+    public function get_dokan_commission_meta( $value, $line_item ) {
+        if ( '' === $value ) {
+            $value = $line_item->get_meta( 'dokan_commission_meta', true );
+            if ( '' !== $value ) {
+                $line_item->delete_meta_data( 'dokan_commission_meta' );
+                $line_item->update_meta_data( '_dokan_commission_meta', $value );
+                $line_item->save();
+            }
+        }
+
+        return $value;
     }
 
     /**
@@ -123,7 +144,29 @@ class Hooks {
          */
         $exclude_cod_payment = 'on' === dokan_get_option( 'exclude_cod_payment', 'dokan_withdraw', 'off' );
 
-        if ( $exclude_cod_payment && 'cod' === $order->get_payment_method() ) {
+        $should_exclude_cod_payment = $exclude_cod_payment && 'cod' === $order->get_payment_method();
+
+        /**
+         * Filter whether the order should be excluded from vendor withdrawal balance.
+         *
+         * @since 4.2.9
+         *
+         * @param bool     $should_exclude_cod_payment Whether to exclude COD payment from balance.
+         * @param WC_Order $order                      Order object.
+         * @param int      $order_id                   Order ID.
+         * @param string   $new_status                 New order status.
+         * @param bool     $exclude_cod_payment        Whether exclude COD option is enabled.
+         */
+        $should_exclude_cod_payment = apply_filters(
+            'dokan_order_should_exclude_from_vendor_balance',
+            $should_exclude_cod_payment,
+            $order,
+            $order_id,
+            $new_status,
+            $exclude_cod_payment
+        );
+
+        if ( $should_exclude_cod_payment ) {
             return;
         }
 

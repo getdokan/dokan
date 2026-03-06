@@ -184,7 +184,7 @@ class Dashboard implements Hookable {
                     [
                         'id'       => 'get-support',
                         'title'    => esc_html__( 'Get Support', 'dokan-lite' ),
-                        'url'      => 'https://wedevs.com/account/tickets/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
+                        'url'      => 'https://dokan.co/contact/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
                         'icon'     => 'support',
                         'external' => true,
                     ],
@@ -644,11 +644,10 @@ class Dashboard implements Hookable {
             return $text;
         }
 
-        $dom_element = '<span id="dokan-admin-switching" class="dokan-layout dokan-admin-page-body"></span><br/>
-        <span id="footer-thankyou">If you like <strong>Dokan</strong> please leave us a <a href="https://wordpress.org/support/plugin/dokan-lite/reviews?rate=5#new-post" target="_blank" class="wc-rating-link" aria-label="five star" data-rated="Thanks :)">★★★★★</a> rating. A huge thanks in advance!</span>
-        ';
+        ob_start();
+        dokan_get_template_part( 'global/global-review-rating' );
 
-        return $dom_element;
+        return ob_get_clean();
     }
 
     /**
