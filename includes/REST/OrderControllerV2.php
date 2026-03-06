@@ -321,7 +321,7 @@ class OrderControllerV2 extends OrderController {
     /**
      * Update a downloadable product permission for the given order.
      *
-     * @since DOKAN_SINCE
+     * @since 4.3.1
      *
      * @param \WP_REST_Request $request Request object.
      *
