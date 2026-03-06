@@ -15,6 +15,18 @@ declare global {
     urls: any;
   } | undefined;
 
+   var dokanAdminDashboardSettings: {
+    header_info?: {
+      lite_version?: string;
+      is_pro_exists?: boolean;
+      pro_version?: string;
+      license_plan?: string;
+      has_new_version?: boolean;
+      dashboard_url?: string;
+    };
+    [key: string]: any;
+  } | undefined;
+
   // WordPress global variables
   var wp: {
     i18n: any;

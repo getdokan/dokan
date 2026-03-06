@@ -232,6 +232,9 @@ const Status = () => {
 
     return (
         <div className="h-full">
+            <h2 className="text-2xl leading-3 text-gray-900 font-bold mb-6">
+                { __( 'Status', 'dokan-lite' ) }
+            </h2>
             <main className="max-w-full mx-auto pb-10 lg:py-5 lg:px-0">
                 <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
                     { pages && '' !== selectedPage && pages.length > 0 && (
@@ -369,6 +372,24 @@ const Status = () => {
                                     { __(
                                         'Your Dokan is up-to-date.',
                                         'dokan-lite'
+                                    ) }
+                                </p>
+                                <p className="text-center text-[#828282] text-[14px] font-normal leading-[140%] mt-2">
+                                    { __( 'Latest Version:', 'dokan-lite' ) }{ ' ' }
+                                    <span className="text-[#7047EB]">
+                                        { __( 'Lite:', 'dokan-lite' ) }{ ' ' }
+                                        { dokanAdminDashboardSettings?.header_info?.lite_version }
+                                    </span>
+                                    { dokanAdminDashboardSettings?.header_info?.is_pro_exists && (
+                                        <>
+                                            <span className="mx-1 text-[#7047EB]">|</span>
+                                            <span className="text-[#7047EB]">
+                                                { dokanAdminDashboardSettings?.header_info?.license_plan
+                                                    ? __( dokanAdminDashboardSettings.header_info.license_plan, 'dokan-lite' )
+                                                    : __( 'Pro:', 'dokan-lite' ) }{ ' ' }
+                                                { dokanAdminDashboardSettings?.header_info?.pro_version }
+                                            </span>
+                                        </>
                                     ) }
                                 </p>
                             </div>
