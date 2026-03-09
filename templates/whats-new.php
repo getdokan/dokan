@@ -4,6 +4,38 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.3.1',
+        'released' => '2026-03-06',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Validate vendor Terms & Conditions settings to prevent saving unexpected or empty content.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Introduce a new filter to allow customization for handling store form validation errors.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Expose structured min and max price fields for variable products in the REST API response.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Add REST API support for managing downloadable product permissions.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Expose vendor earning field in the order REST API response to display earnings data.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Update the Dokan Admin status page with a modernized and dynamic UI layout.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.3.0',
         'released' => '2026-02-19',
         'changes'  => [
