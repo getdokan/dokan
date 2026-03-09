@@ -1,3 +1,16 @@
+### v4.3.1 ( Mar 06, 2026 ) ###
+- **update:** Validate vendor Terms & Conditions settings to prevent saving unexpected or empty content.
+- **update:** Introduce a new filter to allow customization for handling store form validation errors.
+- **update:** Expose structured min and max price fields for variable products in the REST API response.
+- **update:** Add REST API support for managing downloadable product permissions.
+- **update:** Expose vendor earning field in the order REST API response to display earnings data.
+- **update:** Update the Dokan Admin status page with a modernized and dynamic UI layout.
+
+### v4.3.0 ( Feb 19, 2026 ) ###
+- **update:** Add Cloudflare Turnstile support to the Dokan Captcha system.
+- **fix:** Ensure jQuery BlockUI and TipTip script handlers load correctly.
+- **fix:** Resolve store dropdown selection visibility issue in admin Advertisement modal.
+
 ### v4.2.10 ( Feb 10, 2026 ) ###
 - **update:** Refactor download permission handling to use Dokan’s standard template loader.
 - **fix:** Prevent misleading payment status messages in Admin Vendor Withdraw.

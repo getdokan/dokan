@@ -9,7 +9,7 @@ use WeDevs\Dokan\Contracts\Hookable;
  * Provides shared helpers such as option access and readiness caching for
  * concrete captcha providers.
  *
- * @since DOKAN_SINCE
+ * @since 4.3.0
  */
 abstract class AbstractProvider implements ProviderInterface, Hookable {
     /** Cached readiness */

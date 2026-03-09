@@ -293,6 +293,13 @@ class OrderController extends DokanRESTController {
             );
         }
 
+        $vendor_earning = dokan()->commission->get_earning_by_order( $object->get_id() );
+
+        $formatted_earning = null;
+        if ( ! is_wp_error( $vendor_earning ) && ! is_null( $vendor_earning ) ) {
+            $formatted_earning = wc_format_decimal( $vendor_earning, '' );
+        }
+
         return array(
             'id'                   => $object->get_id(),
             'parent_id'            => $data['parent_id'],
@@ -336,6 +343,7 @@ class OrderController extends DokanRESTController {
             'coupon_lines'         => $data['coupon_lines'],
             'refunds'              => $data['refunds'],
             'order_shipment'       => $data['order_shipment'],
+            'earning'              => $formatted_earning,
         );
     }
 
@@ -1739,6 +1747,12 @@ class OrderController extends DokanRESTController {
                     'type'        => 'boolean',
                     'default'     => false,
                     'context'     => array( 'edit' ),
+                ),
+                'earning'              => array(
+                    'description' => __( 'Vendor earning for the order.', 'dokan-lite' ),
+                    'type'        => array( 'string', 'null' ),
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
                 ),
             ),
         );

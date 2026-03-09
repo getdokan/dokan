@@ -9,7 +9,7 @@ use WeDevs\Dokan\Captcha\AbstractProvider;
  * Handles readiness, asset injection, field rendering, and server-side
  * verification against Cloudflare's Turnstile API.
  *
- * @since DOKAN_SINCE
+ * @since 4.3.0
  */
 class CloudflareTurnstileProvider extends AbstractProvider {
     /**
