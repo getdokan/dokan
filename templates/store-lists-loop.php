@@ -12,10 +12,17 @@
                     $store_phone              = $vendor->get_phone();
                     $store_info               = dokan_get_store_info( $seller->ID );
                     $store_address            = dokan_get_seller_short_address( $seller->ID );
+                    $store_banner_id          = $vendor->get_banner_id();
                     $store_banner_url         = $vendor->get_banner();
+                    $store_banner_alt         = $store_name;
                     $show_store_open_close    = dokan_get_option( 'store_open_close', 'dokan_appearance', 'on' );
                     $dokan_store_time_enabled = isset( $store_info['dokan_store_time_enabled'] ) ? $store_info['dokan_store_time_enabled'] : '';
                     $store_open_is_on         = ( 'on' === $show_store_open_close && 'yes' === $dokan_store_time_enabled && ! $is_store_featured ) ? 'store_open_is_on' : '';
+
+                    if ( $store_banner_id ) {
+                        $alt = trim( (string) get_post_meta( $store_banner_id, '_wp_attachment_image_alt', true ) );
+                        $store_banner_alt = $alt !== '' ? $alt : $store_name;
+                    }
                     ?>
 
                     <li class="dokan-single-seller woocommerce coloum-<?php echo esc_attr( $per_row ); ?>">
@@ -23,7 +30,8 @@
                             <div class="store-header">
                                 <div class="store-banner">
                                     <a href="<?php echo esc_url( $store_url ); ?>">
-                                        <img src="<?php echo is_array( $store_banner_url ) ? esc_attr( $store_banner_url[0] ) : esc_attr( $store_banner_url ); ?>">
+                                        <?php $banner_url = is_array( $store_banner_url ) ? $store_banner_url[0] : $store_banner_url; ?>
+                                        <img src="<?php echo esc_attr( $banner_url ); ?>" alt="<?php echo esc_attr( $store_banner_alt ); ?>">
                                     </a>
                                 </div>
                             </div>
