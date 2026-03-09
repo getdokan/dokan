@@ -4,12 +4,12 @@ import SettingsParser from '../SettingsParser';
 const Table = ( { element }: { element: StatusElement } ) => {
     return (
         <div
-            className="overflow-hidden shadow ring-1 ring-black/5 sm:rounded-lg"
+            className="overflow-hidden rounded-md border border-[#E9E9E9] bg-white"
             data-hook={ element.hook_key }
         >
-            <table className="min-w-full divide-y divide-gray-300">
+            <table className="dokan-status-table min-w-full">
                 { element.headers.length > 0 && (
-                    <thead className="bg-gray-50">
+                    <thead className="bg-[#FDFDFD] border-b border-[#E9E9E9]">
                         <tr>
                             { element.headers.map( ( header: string ) => {
                                 return (
@@ -20,7 +20,7 @@ const Table = ( { element }: { element: StatusElement } ) => {
                                             header
                                         }
                                         scope="col"
-                                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                                        className="!px-5 !py-[17px] text-left uppercase text-xs font-normal text-[#828282] leading-[140%]"
                                     >
                                         { header }
                                     </th>
@@ -29,7 +29,7 @@ const Table = ( { element }: { element: StatusElement } ) => {
                         </tr>
                     </thead>
                 ) }
-                <tbody className="divide-y divide-gray-200 bg-white">
+                <tbody className="bg-white">
                     { ( element?.children || [] ).map( ( child ) => {
                         return (
                             <SettingsParser

@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\REST;
 
 use WC_Data;
 use WC_Product;
+use WC_Product_Variable;
 use WC_Product_Variation;
 use WP_Error;
 use WP_REST_Request;
@@ -61,6 +62,37 @@ class ProductController extends DokanRESTController {
      */
     public function __construct() {
         add_filter( "dokan_rest_{$this->post_type}_object_query", [ $this, 'add_only_downloadable_query' ], 10, 2 );
+
+        // Register the WC filter only once per request, even if this controller is instantiated multiple times.
+        static $wc_filter_registered = false;
+        if ( ! $wc_filter_registered ) {
+            add_filter( 'woocommerce_rest_prepare_product_object', [ $this, 'add_min_max_price_to_variable_product' ], 10, 2 );
+            $wc_filter_registered = true;
+        }
+    }
+
+    /**
+     * Hooks into WooCommerce's woocommerce_rest_prepare_product_object filter intentionally
+     * so that min_price and max_price are available on both /wc/v3/products and Dokan endpoints.
+     *
+     * @since 4.3.1
+     *
+     * @param WP_REST_Response $response The response object.
+     * @param WC_Product       $product  The product object.
+     *
+     * @return WP_REST_Response
+     */
+    public function add_min_max_price_to_variable_product( WP_REST_Response $response, $product ): WP_REST_Response {
+        if ( ! $product instanceof WC_Product ) {
+            return $response;
+        }
+
+        $data              = $response->get_data();
+        $data['min_price'] = $product instanceof WC_Product_Variable ? $product->get_variation_price( 'min', true ) : null;
+        $data['max_price'] = $product instanceof WC_Product_Variable ? $product->get_variation_price( 'max', true ) : null;
+        $response->set_data( $data );
+
+        return $response;
     }
 
     /**
@@ -895,6 +927,9 @@ class ProductController extends DokanRESTController {
             ],
             'row_actions'           => dokan_product_get_row_action( $product->get_id(), false ),
         ];
+
+        $data['min_price'] = $product instanceof WC_Product_Variable ? $product->get_variation_price( 'min', true ) : null;
+        $data['max_price'] = $product instanceof WC_Product_Variable ? $product->get_variation_price( 'max', true ) : null;
 
         $response = rest_ensure_response( $data );
         $response->add_links( $this->prepare_links( $product, $request ) );
@@ -2355,6 +2390,18 @@ class ProductController extends DokanRESTController {
                             ],
                         ],
                     ],
+                ],
+                'min_price'             => [
+                    'description' => __( 'Minimum price for variable product, null for other product types.', 'dokan-lite' ),
+                    'type'        => [ 'string', 'null' ],
+                    'context'     => [ 'view', 'edit' ],
+                    'readonly'    => true,
+                ],
+                'max_price'             => [
+                    'description' => __( 'Maximum price for variable product, null for other product types.', 'dokan-lite' ),
+                    'type'        => [ 'string', 'null' ],
+                    'context'     => [ 'view', 'edit' ],
+                    'readonly'    => true,
                 ],
             ],
         ];
