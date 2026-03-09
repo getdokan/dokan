@@ -5,6 +5,12 @@
 !abuse-reports/
 !abuse-reports/**
 
+# Except stripe-express (path relative to tests/pw/)
+!tests/
+!tests/e2e/
+!tests/e2e/stripe-express/
+!tests/e2e/stripe-express/**
+
 
 # Logs
 logs
