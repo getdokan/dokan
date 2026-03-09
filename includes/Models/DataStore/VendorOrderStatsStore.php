@@ -82,6 +82,7 @@ class VendorOrderStatsStore extends BaseDataStore {
         // Get the order statuses to exclude from the report.
         $exclude_order_statuses = ReportUtil::get_exclude_order_statuses();
 
+        // @codingStandardsIgnoreStart
         $this->clear_all_clauses();
         $this->add_sql_clause( 'select', 'COUNT(DISTINCT dos.vendor_id)' );
         $this->add_sql_clause( 'from', $this->get_table_name_with_prefix() . ' dos' );
@@ -95,7 +96,8 @@ class VendorOrderStatsStore extends BaseDataStore {
         $this->add_sql_clause( 'where', $wpdb->prepare( ' AND wos.date_created BETWEEN %s AND %s', $start_date, $end_date ) );
 
         $query_statement = $this->get_query_statement();
-        $count           = $wpdb->get_var( $query_statement ); // phpcs:ignore
+        $count           = $wpdb->get_var( $query_statement );
+        // @codingStandardsIgnoreEnd
 
         return apply_filters(
             'dokan_admin_dashboard_active_vendors_count',
@@ -151,6 +153,7 @@ class VendorOrderStatsStore extends BaseDataStore {
     public function get_sales_chart_data( string $start_date, string $end_date, bool $group_by_day = false ): array {
         global $wpdb;
 
+        // @codingStandardsIgnoreStart
         $this->clear_all_clauses();
         if ( $group_by_day ) {
             $this->add_sql_clause( 'select', 'DATE(wos.date_created) as date,' );
@@ -190,7 +193,8 @@ class VendorOrderStatsStore extends BaseDataStore {
 
         // Build & log query
         $query_statement = $this->get_query_statement();
-        $results         = $wpdb->get_results( $query_statement, ARRAY_A ); // phpcs:ignore
+        $results         = $wpdb->get_results( $query_statement, ARRAY_A );
+        // @codingStandardsIgnoreEnd
 
         if ( $group_by_day ) {
             return array_map(
@@ -592,5 +596,4 @@ class VendorOrderStatsStore extends BaseDataStore {
 
         return $refunds;
     }
-
 }

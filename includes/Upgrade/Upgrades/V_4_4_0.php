@@ -3,15 +3,13 @@
 namespace WeDevs\Dokan\Upgrade\Upgrades;
 
 use WeDevs\Dokan\Abstracts\DokanUpgrader;
-use WeDevs\Dokan\Install\Installer;
-use WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses\V_4_3_1_RegenerateReportData;
 
 /**
  * Upgrade class for version DOKAN_SINCE.
  *
  * @since DOKAN_SINCE
  */
-class V_4_3_1 extends DokanUpgrader {
+class V_4_4_0 extends DokanUpgrader {
 
     /**
      * Alter dokan_order_stats table to add new columns and regenerate data.
@@ -47,9 +45,5 @@ class V_4_3_1 extends DokanUpgrader {
             "ALTER TABLE `{$table_name}` MODIFY COLUMN `order_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0 = Dokan Parent Order, 1 = Dokan Single Vendor Order, 2 = Dokan Suborder, 3 = Refund of Dokan Parent Order, 4 = Refund of Dokan Suborder, 5 = Refund of Dokan Single Order, 6 = Advertisement Product Order, 7 = Advertisement Refund Order, 8 = Subscription Order, 9 = Subscription Refund Order'"
         );
         // @codingStandardsIgnoreEnd
-
-        // Regenerate the order stats data.
-        $processor = new V_4_3_1_RegenerateReportData();
-        $processor->push_to_queue( [ 'regenerate' => true ] )->dispatch_process();
     }
 }
