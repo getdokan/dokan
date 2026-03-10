@@ -312,4 +312,24 @@ test.describe('Announcements Tests @pro', () => {
         await adminPage.close();
         await context.close();
     });
+
+    test('Test Case 14 - Vendor Views Announcement Detail in New Vendor Dashboard', async ({ browser }) => {
+        // Using vendor session storage
+        const context = await browser.newContext({ storageState: v1 });
+        const vendorPage = await context.newPage();
+        const announcementsPage = new AnnouncementsPage(vendorPage);
+
+        const title = 'Test Published Announcement 1';
+
+        // Navigate to the new vendor dashboard announcements and click the announcement card
+        await announcementsPage.vendorViewAnnouncementInNewDashboard(title);
+
+        // Verify the announcement detail title is visible
+        await expect(vendorPage.locator(announcementsPage.vendorNewDashboard.announcementDetailTitle(title)),
+            `Announcement detail title "${title}" should be visible`).toBeVisible();
+
+        await announcementsPage.waitForPageReady();
+        await vendorPage.close();
+        await context.close();
+    });
 });

@@ -104,6 +104,14 @@ export class AnnouncementsPage {
         },
     };
 
+    // Vendor New Dashboard Selectors
+    vendorNewDashboard = {
+        announcementsUrl: `${BASE_URL}/dashboard/new/#announcement`,
+
+        announcementCard: (title: string) => `//h3[normalize-space()='${title}']`,
+        announcementDetailTitle: (title: string) => `//h2[normalize-space()='${title}']`,
+    };
+
     // Vendor Selectors
     vendor = {
         announcementsUrl: `${BASE_URL}/dashboard/announcement`,
@@ -407,6 +415,18 @@ export class AnnouncementsPage {
         await this.page.locator(this.adminNewDashboard.addAnnouncement.content).fill(content);
         await this.page.getByRole('button', { name: 'Create Announcement' }).click();
 
+        await this.page.waitForLoadState('domcontentloaded');
+    }
+
+    // ============================================
+    // VENDOR NEW DASHBOARD METHODS
+    // ============================================
+
+    async vendorViewAnnouncementInNewDashboard(title: string) {
+        await this.page.goto(this.vendorNewDashboard.announcementsUrl);
+        await this.page.waitForLoadState('domcontentloaded');
+
+        await this.page.locator(this.vendorNewDashboard.announcementCard(title)).click();
         await this.page.waitForLoadState('domcontentloaded');
     }
 
