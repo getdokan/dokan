@@ -100,7 +100,10 @@ export class AnnouncementsPage {
             addButton: `button[name="Add Announcement"]`,
             title: `//input[@id='announcement-title']`,
             content: `//div[@class='ql-editor ql-blank']`,
+            contentParagraph: `//div[@class='ql-editor ql-blank']//p`,
+            draftRadio: `//input[@id='hs-default-radio-draft']`,
             createButton: `button[name="Create Announcement"]`,
+            createButtonSpan: `//span[normalize-space()='Create Announcement']`,
         },
     };
 
@@ -414,6 +417,21 @@ export class AnnouncementsPage {
         await this.page.locator(this.adminNewDashboard.addAnnouncement.content).click();
         await this.page.locator(this.adminNewDashboard.addAnnouncement.content).fill(content);
         await this.page.getByRole('button', { name: 'Create Announcement' }).click();
+
+        await this.page.waitForLoadState('domcontentloaded');
+    }
+
+    async createDraftAnnouncementInNewAdminDashboard(title: string, content: string) {
+        await this.page.goto(this.adminNewDashboard.announcementsUrl);
+        await this.page.waitForLoadState('domcontentloaded');
+
+        await this.page.getByRole('button', { name: 'Add Announcement' }).click();
+        await this.page.locator(this.adminNewDashboard.addAnnouncement.title).click();
+        await this.page.locator(this.adminNewDashboard.addAnnouncement.title).fill(title);
+        await this.page.locator(this.adminNewDashboard.addAnnouncement.contentParagraph).click();
+        await this.page.locator(this.adminNewDashboard.addAnnouncement.contentParagraph).fill(content);
+        await this.page.locator(this.adminNewDashboard.addAnnouncement.draftRadio).click();
+        await this.page.locator(this.adminNewDashboard.addAnnouncement.createButtonSpan).click();
 
         await this.page.waitForLoadState('domcontentloaded');
     }
