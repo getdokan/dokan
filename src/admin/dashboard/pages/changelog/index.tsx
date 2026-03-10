@@ -48,7 +48,9 @@ const ChangelogPage = () => {
             if ( pkg === 'pro' && proVersions !== null ) {
                 return;
             }
-
+            if ( dokanAdminDashboardSettings?.header_info?.has_new_version ) {
+                 dismissWhatsNewNotice( pkg );
+            }
             setLoading( true );
             try {
                 const response = await apiFetch< string >( {
@@ -74,6 +76,25 @@ const ChangelogPage = () => {
         },
         [ liteVersions, proVersions ]
     );
+    const dismissWhatsNewNotice = async (pkg: 'lite' | 'pro') => {
+        const action = pkg === 'pro' ? 'dokan-pro-whats-new-notice' : 'dokan-whats-new-notice';
+
+        try {
+            const response = await fetch(ajaxurl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    action: action,
+                    nonce: dokanAdminDashboard?.nonce || '',
+                    dokan_promotion_dismissed: 'true',
+                }),
+            });
+        } catch (error) {
+            console.error('Request failed:', error);
+        }
+    };
 
     // Load initial data
     useEffect( () => {
