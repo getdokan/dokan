@@ -1,12 +1,16 @@
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme);
+@import "@getdokan/dokan-ui/dist/dokan-ui.css";
+
 /* ============================================
    Tailwind v4 Theme Configuration
    Simplified color system with CSS variable support
-
    ============================================ */
 
 @source "../src/";
+@plugin "@tailwindcss/typography";
+@plugin "@tailwindcss/forms";
+
 @theme {
     /* ─── Sidebar background ─── */
     --color-dokan-sidebar:                                    var(--dokan-sidebar-background-color, #322067);
@@ -62,6 +66,9 @@
     --color-dokan-link:                                       var(--dokan-link-color, #7047EB);
     --color-dokan-link-hover:                                 var(--dokan-link-hover-color, var(--dokan-sidebar-background-color, #322067));
 
+    /* ─── Link borders ─── */
+    --color-dokan-link-border:                                var(--dokan-link-color, var(--dokan-button-background-color, #7047EB));
+
     /* ─── Status text ─── */
     --color-dokan-info-text:                                  var(--dokan-info-text-color, #0B76B7);
     --color-dokan-info-text-hover:                            var(--dokan-info-hover-text-color, #3ea4e1);
@@ -83,6 +90,7 @@
     --color-dokan-btn-secondary-border-hover:                 var(--dokan-button-secondary-hover-border-color, #7047EB);
     --color-dokan-btn-tertiary-border:                        var(--dokan-button-tertiary-border-color, #00000000);
     --color-dokan-btn-tertiary-border-hover:                  var(--dokan-button-tertiary-hover-border-color, var(--dokan-button-border-color, #DACEFF82));
+    --color-dokan-btn-tertiary-ring-hover:                    var(--dokan-button-tertiary-hover-border-color, var(--dokan-button-border-color, #7047EB));
 
     /* ─── Status borders ─── */
     --color-dokan-info-border:                                var(--dokan-info-border-color, #E9F9FFFF);
@@ -100,40 +108,616 @@
     --color-dokan-secondary:                                  var(--dokan-button-secondary-background-color, var(--dokan-button-text-color, #ffffff));
     --color-secondary:                                        var(--dokan-button-secondary-background-color, var(--dokan-button-text-color, #ffffff));
     --color-dokan-tertiary:                                   var(--dokan-button-tertiary-background-color, #00000000);
-     --color-tertiary:                                        var(--dokan-button-tertiary-background-color, #00000000);
+    --color-tertiary:                                         var(--dokan-button-tertiary-background-color, #00000000);
 }
 
+/* =============================================
+   CSS Custom Properties
+   All dokan color values stored here, referenced by @utility definitions.
+   ============================================= */
 
-/* Base layer styles */
 @layer base {
-    :root {
+	:root {
+    	/* ─── Other root variables ─── */
         --colors-primary-500: var(--color-primary);
         --wp-components-color-accent: var(--color-primary);
-        --wp-components-color-accent-darker-20: var(--color-primary-hover);
-        --color-on-primary: var(--dokan-button-text-color, #ffffff);
+        --wp-components-color-accent-darker-20: var(--color-dokan-btn-hover);
+        --color-on-primary: var(--color-dokan-btn-text);
         --color-border: #e5e7eb;
-    }
-    /* Headless UI portal visibility fix */
-    #headlessui-portal-root {
-        display: none;
-    }
+	}
 
-    /* Z-index for popover/modal layers */
-    div[data-radix-popper-content-wrapper],
-    div[data-headlessui-state="open"][role="dialog"] {
-        z-index: 999 !important;
-    }
+	/* Headless UI portal visibility fix */
+	#headlessui-portal-root {
+		display: none;
+	}
+
+	/* Z-index for popover/modal layers */
+	div[data-radix-popper-content-wrapper],
+	div[data-headlessui-state="open"][role="dialog"] {
+		z-index: 999 !important;
+	}
 }
+
+/* =============================================
+   Scoped Layout — Preflight + Utilities + Components
+   Replaces v3's `important: '.dokan-layout'` and
+   `tailwindcss-scoped-preflight` plugin
+   ============================================= */
 
 .dokan-layout {
     @import "tailwindcss/preflight.css" layer(base);
     @import "tailwindcss/utilities.css";
-
     /* Import custom component styles */
     @import "./dokan-components.css";
 
-    border-color: var(--color-border);
-
+    /*
+     * Base typography — replicates v3's isolateInsideOfContainer behavior.
+     * The preflight's html/body rules become .dokan-layout html (no match),
+     * so we apply them directly to the container to match v3 rendering.
+     */
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+    tab-size: 4;
+    font-family: ui-sans-serif,system-ui,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    font-feature-settings: normal;
+    font-variation-settings: normal;
+    -webkit-tap-highlight-color: transparent;
+    border-color: var(--color-border) !important;
 }
 
-@import "@getdokan/dokan-ui/dist/dokan-ui.css";
+/* =============================================
+   BACKGROUND COLOR UTILITIES (bg-dokan-*)
+   Replicate v3's backgroundColor.dokan.* config
+   ============================================= */
+
+/* Sidebar backgrounds */
+@utility bg-dokan-sidebar {
+	background-color: var(--color-dokan-sidebar) !important;
+}
+
+@utility bg-dokan-sidebar-hover {
+	background-color: var(--color-dokan-sidebar-hover) !important;
+}
+
+/* Button backgrounds */
+@utility bg-dokan-btn {
+	background-color: var(--color-dokan-btn) !important;
+}
+
+@utility bg-dokan-btn-hover {
+	background-color: var(--color-dokan-btn-hover) !important;
+}
+
+@utility bg-dokan-btn-secondary {
+	background-color: var(--color-dokan-btn-secondary) !important;
+}
+
+@utility bg-dokan-btn-secondary-hover {
+	background-color: var(--color-dokan-btn-secondary-hover) !important;
+}
+
+@utility bg-dokan-btn-tertiary {
+	background-color: var(--color-dokan-btn-tertiary) !important;
+}
+
+@utility bg-dokan-btn-tertiary-hover {
+	background-color: var(--color-dokan-btn-tertiary-hover) !important;
+}
+
+@utility bg-dokan-btn-info {
+	background-color: var(--color-dokan-btn-info) !important;
+}
+
+@utility bg-dokan-btn-info-hover {
+	background-color: var(--color-dokan-btn-info-hover) !important;
+}
+
+@utility bg-dokan-btn-success {
+	background-color: var(--color-dokan-btn-success) !important;
+}
+
+@utility bg-dokan-btn-success-hover {
+	background-color: var(--color-dokan-btn-success-hover) !important;
+}
+
+@utility bg-dokan-btn-warning {
+	background-color: var(--color-dokan-btn-warning) !important;
+}
+
+@utility bg-dokan-btn-warning-hover {
+	background-color: var(--color-dokan-btn-warning-hover) !important;
+}
+
+@utility bg-dokan-btn-danger {
+	background-color: var(--color-dokan-btn-danger) !important;
+}
+
+@utility bg-dokan-btn-danger-hover {
+	background-color: var(--color-dokan-btn-danger-hover) !important;
+}
+
+/* Status backgrounds */
+@utility bg-dokan-info {
+	background-color: var(--color-dokan-info) !important;
+}
+
+@utility bg-dokan-info-hover {
+	background-color: var(--color-dokan-info-text) !important;
+}
+
+@utility bg-dokan-success {
+	background-color: var(--color-dokan-success) !important;
+}
+
+@utility bg-dokan-success-hover {
+	background-color: var(--color-dokan-success-text) !important;
+}
+
+@utility bg-dokan-warning {
+	background-color: var(--color-dokan-warning) !important;
+}
+
+@utility bg-dokan-warning-hover {
+	background-color: var(--color-dokan-warning-text) !important;
+}
+
+@utility bg-dokan-danger {
+	background-color: var(--color-dokan-danger) !important;
+}
+
+@utility bg-dokan-danger-hover {
+	background-color: var(--color-dokan-danger-text) !important;
+}
+
+/* =============================================
+   TEXT COLOR UTILITIES (text-dokan-*)
+   Replicate v3's textColor.dokan.* config
+   ============================================= */
+
+/* Sidebar text */
+@utility text-dokan-sidebar {
+	color: var(--color-dokan-sidebar-text) !important;
+}
+
+@utility text-dokan-sidebar-hover {
+	color: var(--color-dokan-sidebar-text-hover) !important;
+}
+
+/* Button text */
+@utility text-dokan-btn {
+	color: var(--color-dokan-btn-text) !important;
+}
+
+@utility text-dokan-btn-hover {
+	color: var(--color-dokan-btn-text-hover) !important;
+}
+
+@utility text-dokan-btn-secondary {
+	color: var(--color-dokan-btn-secondary-text) !important;
+}
+
+@utility text-dokan-btn-secondary-hover {
+	color: var(--color-dokan-btn-secondary-text-hover) !important;
+}
+
+@utility text-dokan-btn-tertiary {
+	color: var(--color-dokan-btn-tertiary-text) !important;
+}
+
+@utility text-dokan-btn-tertiary-hover {
+	color: var(--color-dokan-btn-tertiary-text-hover) !important;
+}
+
+@utility text-dokan-btn-info {
+	color: var(--color-dokan-btn-info-text) !important;
+}
+
+@utility text-dokan-btn-info-hover {
+	color: var(--color-dokan-btn-info-text-hover) !important;
+}
+
+@utility text-dokan-btn-success {
+	color: var(--color-dokan-btn-success-text) !important;
+}
+
+@utility text-dokan-btn-success-hover {
+	color: var(--color-dokan-btn-success-text-hover) !important;
+}
+
+@utility text-dokan-btn-warning {
+	color: var(--color-dokan-btn-warning-text) !important;
+}
+
+@utility text-dokan-btn-warning-hover {
+	color: var(--color-dokan-btn-warning-text-hover) !important;
+}
+
+@utility text-dokan-btn-danger {
+	color: var(--color-dokan-btn-danger-text) !important;
+}
+
+@utility text-dokan-btn-danger-hover {
+	color: var(--color-dokan-btn-danger-text-hover) !important;
+}
+
+/* Link text */
+@utility text-dokan-link {
+	color: var(--color-dokan-link) !important;
+}
+
+@utility text-dokan-link-hover {
+	color: var(--color-dokan-link-hover) !important;
+}
+
+/* Status text */
+@utility text-dokan-info {
+	color: var(--color-dokan-info-text) !important;
+}
+
+@utility text-dokan-info-hover {
+	color: var(--color-dokan-info-text-hover) !important;
+}
+
+@utility text-dokan-info-secondary {
+	color: var(--color-dokan-info-text-secondary) !important;
+}
+
+@utility text-dokan-success {
+	color: var(--color-dokan-success-text) !important;
+}
+
+@utility text-dokan-success-hover {
+	color: var(--color-dokan-success-text-hover) !important;
+}
+
+@utility text-dokan-success-secondary {
+	color: var(--color-dokan-success-text-secondary) !important;
+}
+
+@utility text-dokan-warning {
+	color: var(--color-dokan-warning-text) !important;
+}
+
+@utility text-dokan-warning-hover {
+	color: var(--color-dokan-warning-text-hover) !important;
+}
+
+@utility text-dokan-warning-secondary {
+	color: var(--color-dokan-warning-text-secondary) !important;
+}
+
+@utility text-dokan-danger {
+	color: var(--color-dokan-danger-text) !important;
+}
+
+@utility text-dokan-danger-hover {
+	color: var(--color-dokan-danger-text-hover) !important;
+}
+
+@utility text-dokan-danger-secondary {
+	color: var(--color-dokan-danger-text-secondary) !important;
+}
+
+/* Link status text (used by .dokan-link-* components) */
+@utility text-dokan-link-info {
+	color: var(--color-dokan-info-text) !important;
+}
+
+@utility text-dokan-link-info-hover {
+	color: var(--color-dokan-info-text-hover) !important;
+}
+
+@utility text-dokan-link-success {
+	color: var(--color-dokan-success-text) !important;
+}
+
+@utility text-dokan-link-success-hover {
+	color: var(--color-dokan-success-text-hover) !important;
+}
+
+@utility text-dokan-link-warning {
+	color: var(--color-dokan-warning-text) !important;
+}
+
+@utility text-dokan-link-warning-hover {
+	color: var(--color-dokan-warning-text-hover) !important;
+}
+
+@utility text-dokan-link-danger {
+	color: var(--color-dokan-danger-text) !important;
+}
+
+@utility text-dokan-link-danger-hover {
+	color: var(--color-dokan-danger-text-hover) !important;
+}
+
+/* =============================================
+   BORDER COLOR UTILITIES (border-dokan-*)
+   Replicate v3's borderColor.dokan.* config
+   ============================================= */
+
+/* Button borders */
+@utility border-dokan-btn {
+	border-color: var(--color-dokan-btn-border) !important;
+}
+
+@utility border-dokan-btn-hover {
+	border-color: var(--color-dokan-btn-border-hover) !important;
+}
+
+@utility border-dokan-btn-secondary {
+	border-color: var(--color-dokan-btn-secondary-border) !important;
+}
+
+@utility border-dokan-btn-secondary-hover {
+	border-color: var(--color-dokan-btn-secondary-border-hover) !important;
+}
+
+@utility border-dokan-btn-tertiary {
+	border-color: var(--color-dokan-btn-tertiary-border) !important;
+}
+
+@utility border-dokan-btn-tertiary-hover {
+	border-color: var(--color-dokan-btn-tertiary-border-hover) !important;
+}
+
+@utility border-dokan-btn-info {
+	border-color: var(--color-dokan-btn-info) !important;
+}
+
+@utility border-dokan-btn-info-hover {
+	border-color: var(--color-dokan-btn-info-hover) !important;
+}
+
+@utility border-dokan-btn-success {
+	border-color: var(--color-dokan-btn-success) !important;
+}
+
+@utility border-dokan-btn-success-hover {
+	border-color: var(--color-dokan-btn-success-hover) !important;
+}
+
+@utility border-dokan-btn-warning {
+	border-color: var(--color-dokan-btn-warning) !important;
+}
+
+@utility border-dokan-btn-warning-hover {
+	border-color: var(--color-dokan-btn-warning-hover) !important;
+}
+
+@utility border-dokan-btn-danger {
+	border-color: var(--color-dokan-btn-danger) !important;
+}
+
+@utility border-dokan-btn-danger-hover {
+	border-color: var(--color-dokan-btn-danger-hover) !important;
+}
+
+/* Link borders */
+@utility border-dokan-link {
+	border-color: var(--color-dokan-link-border) !important;
+}
+
+@utility border-dokan-link-hover {
+	border-color: var(--color-dokan-link-hover) !important;
+}
+
+/* Status borders */
+@utility border-dokan-info {
+	border-color: var(--color-dokan-info-border) !important;
+}
+
+@utility border-dokan-info-hover {
+	border-color: var(--color-dokan-info-text) !important;
+}
+
+@utility border-dokan-success {
+	border-color: var(--color-dokan-success-border) !important;
+}
+
+@utility border-dokan-success-hover {
+	border-color: var(--color-dokan-success-text) !important;
+}
+
+@utility border-dokan-warning {
+	border-color: var(--color-dokan-warning-border) !important;
+}
+
+@utility border-dokan-warning-hover {
+	border-color: var(--color-dokan-warning-text) !important;
+}
+
+@utility border-dokan-danger {
+	border-color: var(--color-dokan-danger-border) !important;
+}
+
+@utility border-dokan-danger-hover {
+	border-color: var(--color-dokan-danger-text) !important;
+}
+
+/* =============================================
+   RING COLOR UTILITIES (ring-dokan-*)
+   Replicate v3's ringColor.dokan.* config
+   ============================================= */
+
+/* Button rings */
+@utility ring-dokan-btn {
+	--tw-ring-color: var(--color-dokan-btn-border) !important;
+}
+
+@utility ring-dokan-btn-hover {
+	--tw-ring-color: var(--color-dokan-btn-border-hover) !important;
+}
+
+@utility ring-dokan-btn-secondary {
+	--tw-ring-color: var(--color-dokan-btn-secondary-border) !important;
+}
+
+@utility ring-dokan-btn-secondary-hover {
+	--tw-ring-color: var(--color-dokan-btn-secondary-border-hover) !important;
+}
+
+@utility ring-dokan-btn-tertiary {
+	--tw-ring-color: var(--color-dokan-btn-tertiary-border) !important;
+}
+
+@utility ring-dokan-btn-tertiary-hover {
+	--tw-ring-color: var(--color-dokan-btn-tertiary-ring-hover) !important;
+}
+
+@utility ring-dokan-btn-info {
+	--tw-ring-color: var(--color-dokan-btn-info) !important;
+}
+
+@utility ring-dokan-btn-info-hover {
+	--tw-ring-color: var(--color-dokan-btn-info-hover) !important;
+}
+
+@utility ring-dokan-btn-success {
+	--tw-ring-color: var(--color-dokan-btn-success) !important;
+}
+
+@utility ring-dokan-btn-success-hover {
+	--tw-ring-color: var(--color-dokan-btn-success-hover) !important;
+}
+
+@utility ring-dokan-btn-warning {
+	--tw-ring-color: var(--color-dokan-btn-warning) !important;
+}
+
+@utility ring-dokan-btn-warning-hover {
+	--tw-ring-color: var(--color-dokan-btn-warning-hover) !important;
+}
+
+@utility ring-dokan-btn-danger {
+	--tw-ring-color: var(--color-dokan-btn-danger) !important;
+}
+
+@utility ring-dokan-btn-danger-hover {
+	--tw-ring-color: var(--color-dokan-btn-danger-hover) !important;
+}
+
+/* Link rings */
+@utility ring-dokan-link {
+	--tw-ring-color: var(--color-dokan-link-border) !important;
+}
+
+@utility ring-dokan-link-hover {
+	--tw-ring-color: var(--color-dokan-link-hover) !important;
+}
+
+/* Status rings */
+@utility ring-dokan-info {
+	--tw-ring-color: var(--color-dokan-info-border) !important;
+}
+
+@utility ring-dokan-info-hover {
+	--tw-ring-color: var(--color-dokan-info-text) !important;
+}
+
+@utility ring-dokan-success {
+	--tw-ring-color: var(--color-dokan-success-border) !important;
+}
+
+@utility ring-dokan-success-hover {
+	--tw-ring-color: var(--color-dokan-success-text) !important;
+}
+
+@utility ring-dokan-warning {
+	--tw-ring-color: var(--color-dokan-warning-border) !important;
+}
+
+@utility ring-dokan-warning-hover {
+	--tw-ring-color: var(--color-dokan-warning-text) !important;
+}
+
+@utility ring-dokan-danger {
+	--tw-ring-color: var(--color-dokan-danger-border) !important;
+}
+
+@utility ring-dokan-danger-hover {
+	--tw-ring-color: var(--color-dokan-danger-text) !important;
+}
+
+/* =============================================
+   RING OFFSET COLOR UTILITIES (ring-offset-dokan-*)
+   Replicate v3's ringOffsetColor.dokan.* config
+   ============================================= */
+
+@utility ring-offset-dokan-btn {
+	--tw-ring-offset-color: var(--color-dokan-btn-border) !important;
+}
+
+@utility ring-offset-dokan-btn-secondary {
+	--tw-ring-offset-color: var(--color-dokan-btn-secondary-border) !important;
+}
+
+@utility ring-offset-dokan-btn-tertiary {
+	--tw-ring-offset-color: var(--color-dokan-btn-tertiary-border) !important;
+}
+
+@utility ring-offset-dokan-link {
+	--tw-ring-offset-color: var(--color-dokan-link-border) !important;
+}
+
+@utility ring-offset-dokan-link-hover {
+	--tw-ring-offset-color: var(--color-dokan-link-hover) !important;
+}
+
+@utility ring-offset-dokan-info {
+	--tw-ring-offset-color: var(--color-dokan-info-border) !important;
+}
+
+@utility ring-offset-dokan-success {
+	--tw-ring-offset-color: var(--color-dokan-success-border) !important;
+}
+
+@utility ring-offset-dokan-warning {
+	--tw-ring-offset-color: var(--color-dokan-warning-border) !important;
+}
+
+@utility ring-offset-dokan-danger {
+	--tw-ring-offset-color: var(--color-dokan-danger-border) !important;
+}
+
+/* =============================================
+   OUTLINE COLOR UTILITIES (outline-dokan-*)
+   Replicate v3's outlineColor.dokan.* config
+   ============================================= */
+
+@utility outline-dokan-btn {
+	outline-color: var(--color-dokan-btn-border) !important;
+}
+
+@utility outline-dokan-btn-secondary {
+	outline-color: var(--color-dokan-btn-secondary-border) !important;
+}
+
+@utility outline-dokan-btn-tertiary {
+	outline-color: var(--color-dokan-btn-tertiary-border) !important;
+}
+
+@utility outline-dokan-link {
+	outline-color: var(--color-dokan-link-border) !important;
+}
+
+@utility outline-dokan-link-hover {
+	outline-color: var(--color-dokan-link-hover) !important;
+}
+
+@utility outline-dokan-info {
+	outline-color: var(--color-dokan-info-border) !important;
+}
+
+@utility outline-dokan-success {
+	outline-color: var(--color-dokan-success-border) !important;
+}
+
+@utility outline-dokan-warning {
+	outline-color: var(--color-dokan-warning-border) !important;
+}
+
+@utility outline-dokan-danger {
+	outline-color: var(--color-dokan-danger-border) !important;
+}
+
