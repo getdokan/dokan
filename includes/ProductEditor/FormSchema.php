@@ -182,6 +182,11 @@ class FormSchema {
             $pre_type_visibilities,
         );
 
+        $price_labels = apply_filters(
+            'dokan_product_editor_price_labels',
+            []
+        );
+
         $schedule_deps = [
 			[
 				'comparison' => '==',
@@ -263,6 +268,7 @@ class FormSchema {
                 'section_id'   => Elements::SECTION_GENERAL,
                 'type'         => 'field',
                 'label'        => __( 'Price', 'dokan-lite' ),
+                'labels'       => $price_labels,
                 'variant'      => 'text',
                 'placeholder'  => '0.00',
                 'priority'     => 30,

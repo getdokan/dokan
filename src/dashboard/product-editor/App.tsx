@@ -12,7 +12,7 @@ import useLayouts from './hooks/useLayouts';
 import { FlatFormItem } from './types';
 import DokanAI from '../../intelligence/components/DokanAI';
 
-interface FormManagerData {
+interface ProductEditorData {
     form_items: FlatFormItem[];
     is_new_product: string;
     product_id: string;
@@ -24,12 +24,9 @@ interface FormManagerData {
     };
 }
 
-const getFormEditor = (): FormManagerData | null => {
-    return ( window as any ).dokanProductEditor ?? null;
-};
-
 const App = () => {
-    const formEditor = getFormEditor();
+    // @ts-ignore
+    const formEditor = dokanProductEditor as ProductEditorData | undefined;
 
     if ( ! formEditor ) {
         return (

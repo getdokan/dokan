@@ -129,20 +129,22 @@ class Hooks {
         $manager = dokan()->get_container()->get( Manager::class );
         $is_image_configured = $is_enabled && $manager->is_configured( Model::SUPPORTS_IMAGE );
 
-        wp_localize_script(
+        $args = [
+            'form_items'         => dokan()->product_editor->get_schema( $product_id ),
+            'product_id'         => $product_id,
+            'is_new_product'     => $new_product,
+            'view_product_url'   => get_permalink( $product_id ),
+            'vendor_earning'     => $vendor_earning,
+            'ai_settings'        => [
+                'ai_text_enable'    => $manager->is_configured(),
+                'ai_image_enable'   => $is_image_configured,
+            ],
+        ];
+
+        wp_add_inline_script(
             'dokan-product-editor',
-            'dokanProductEditor',
-            [
-                'form_items'         => dokan()->product_editor->get_schema( $product_id ),
-                'product_id'         => $product_id,
-                'is_new_product'     => $new_product,
-                'view_product_url'   => get_permalink( $product_id ),
-                'vendor_earning'     => $vendor_earning,
-                'ai_settings'        => [
-                    'ai_text_enable'    => $manager->is_configured(),
-                    'ai_image_enable'   => $is_image_configured,
-                ],
-            ]
+            'const dokanProductEditor = ' . wp_json_encode( $args ) . ';',
+            'after'
         );
 
         do_action( 'dokan_product_editor_script_after' );
