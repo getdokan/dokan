@@ -42,7 +42,9 @@ li {
     list-style: none;
     padding: 0;
 }
-
+p {
+    margin: 0;
+}
 /* Headings Reset */
 h1,
 h2,

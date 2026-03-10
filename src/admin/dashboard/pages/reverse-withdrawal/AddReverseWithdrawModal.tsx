@@ -181,7 +181,7 @@ const AddReverseWithdrawModal = ( {
                     value={ vendorsData }
                     onChange={ handleVendorChange }
                     placeholder={ __( 'Search', 'dokan-lite' ) }
-                    className={ '!mt-2.5' }
+                    className={ 'mt-2.5! shadow-none' }
                 />
                 { errors.vendorId && (
                     <span className="text-red-500 text-sm mt-1 block">
@@ -195,7 +195,7 @@ const AddReverseWithdrawModal = ( {
                 <label className="text-[#25252D] font-medium text-sm">
                     { __( 'Transaction Type', 'dokan-lite' ) }
                 </label>
-                <div className="flex flex-col sm:!flex-row rounded-md overflow-hidden border border-[#7047EB] w-fit mt-2.5">
+                <div className="flex flex-col sm:flex-row rounded! overflow-hidden w-fit mt-2.5">
                     { [
                         {
                             label: __( 'Product', 'dokan-lite' ),
@@ -228,7 +228,7 @@ const AddReverseWithdrawModal = ( {
                                     ? 'primary'
                                     : 'secondary'
                             }
-                            className="w-fit min-w-32 px-5 py-2.5 flex items-center justify-center !rounded-none focus:!outline-none focus:!ring-0 focus:!ring-offset-0 focus:!ring-transparent gap-2.5"
+                            className="w-fit min-w-32 px-5 py-2.5 flex items-center justify-center rounded-none! focus:outline-none! focus:ring-0! focus:ring-offset-0! focus:ring-transparent! gap-2.5"
                         >
                             { item.icon && (
                                 <item.icon
@@ -273,7 +273,7 @@ const AddReverseWithdrawModal = ( {
                             post_status: 'publish',
                         } }
                         disabled={ ! vendorsData }
-                        className={ '!rounded-lg !mt-2.5' }
+                        className={ '!rounded-lg !mt-2.5 shadow-none' }
                         noOptionsMessage={ () =>
                             ! vendorsData
                                 ? __(
@@ -305,7 +305,7 @@ const AddReverseWithdrawModal = ( {
                         prefetch
                         endpoint="dokan/v1/orders"
                         disabled={ ! vendorsData }
-                        className={ '!rounded-lg !mt-2.5' }
+                        className={ '!rounded-lg !mt-2.5 shadow-none' }
                         extraQuery={ {
                             ...( vendorsData?.value && {
                                 seller_id: vendorsData.value,
@@ -352,7 +352,7 @@ const AddReverseWithdrawModal = ( {
                         </div>
                     </div>
                 </label>
-                <div className="flex flex-col sm:!flex-row rounded-md overflow-hidden border border-[#7047EB] w-fit">
+                <div className="flex flex-col sm:flex-row! rounded-md overflow-hidden w-fit">
                     { [
                         { label: __( 'Debit', 'dokan-lite' ), value: 'debit' },
                         {
