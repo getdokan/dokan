@@ -64,16 +64,7 @@ setup.describe('site setup', () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.activateTheme(data.installWp.themes.storefront));
     });
 
-    setup('set dokan license', { tag: ['@pro'] }, async () => {
-        await dbUtils.setOptionValue(dbData.dokan.optionName.dokanProLicense, dbData.dokan.dokanProLicense);
-    });
 
-    setup('activate all dokan modules', { tag: ['@pro'] }, async () => {
-        const [response] = await apiUtils.activateModules(dbData.dokan.modules, payloads.adminAuth);
-        if (!response.ok()) {
-            console.log('Module activation failed, but continuing...');
-        }
-    });
 
     setup('activate Woocommerce booking', { tag: ['@pro'] }, async () => {
         try {
@@ -106,6 +97,34 @@ setup.describe('site setup', () => {
             await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.woocommerceSubscriptions));
         } catch (error) {
             console.log('WooCommerce Subscriptions activation had issues, but continuing...');
+        }
+    });
+    setup('set dokan license', { tag: ['@pro'] }, async () => {
+        setup.skip(!process.env.LICENSE_KEY, 'LICENSE_KEY env var not set – skipping license setup (fork PR or unconfigured secret)');
+        try {
+            await dbUtils.setOptionValue(dbData.dokan.optionName.dokanProLicense, dbData.dokan.dokanProLicense);
+        } catch (error) {
+            console.log('License setup failed, but continuing...', error);
+        }
+    });
+
+    setup('activate all dokan modules', { tag: ['@pro'] }, async () => {
+        // 'auction' requires woocommerce-simple-auctions. Even though that plugin is activated above,
+        // it may fail silently (try-catch). Including 'auction' in the batch causes the entire request
+        // to be rejected with 400 when the plugin is absent, leaving all other modules unactivated.
+        // Activate the core batch first, then attempt 'auction' separately as a non-fatal step.
+        const coreModules = dbData.dokan.modules.filter((m: string) => m !== 'auction');
+        const [response] = await apiUtils.activateModules(coreModules, payloads.adminAuth);
+        if (!response.ok()) {
+            console.log('Core module activation failed, but continuing...');
+        }
+        try {
+            const [auctionResponse] = await apiUtils.activateModules(['auction'], payloads.adminAuth);
+            if (!auctionResponse.ok()) {
+                console.log('Auction module not available (woocommerce-simple-auctions may be missing), continuing...');
+            }
+        } catch (error) {
+            console.log('Auction module activation skipped:', error);
         }
     });
 

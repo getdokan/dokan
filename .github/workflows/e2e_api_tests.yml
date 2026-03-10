@@ -64,9 +64,13 @@ env:
     USER_PASSWORD: 01dokan01
     GMAP: ${{secrets.GMAP}}
     MAPBOX: ${{secrets.MAPBOX}}
+    LICENSE_KEY: ${{secrets.LICENSE_KEY}}
     BASE_URL: http://localhost:9999
     CI: true
     HEADLESS: true
+    # TODO: Remove this after testing
+    DOKAN_PRO: true
+    NO_SETUP: false
     FORCE_COLOR: 1
     DB_HOST_NAME: localhost
     DB_USER_NAME: root
