@@ -89,10 +89,19 @@ export class AnnouncementsPage {
     adminNewDashboard = {
         announcementsUrl: `${BASE_URL}/wp-admin/admin.php?page=dokan-dashboard#/announcement`,
 
+        // Trash / Empty Trash
         trashTab: `//div[contains(text(),'Trash')]`,
         selectAllCheckbox: `#inspector-checkbox-control-1`,
         deletePermanently: `//span[normalize-space()='Delete Permanently']`,
         confirmDelete: `//button[normalize-space()='Delete']`,
+
+        // Add Announcement Form
+        addAnnouncement: {
+            addButton: `button[name="Add Announcement"]`,
+            title: `//input[@id='announcement-title']`,
+            content: `//div[@class='ql-editor ql-blank']`,
+            createButton: `button[name="Create Announcement"]`,
+        },
     };
 
     // Vendor Selectors
@@ -383,6 +392,20 @@ export class AnnouncementsPage {
         await this.page.locator(this.adminNewDashboard.selectAllCheckbox).click();
         await this.page.locator(this.adminNewDashboard.deletePermanently).click();
         await this.page.locator(this.adminNewDashboard.confirmDelete).click();
+
+        await this.page.waitForLoadState('domcontentloaded');
+    }
+
+    async createPublishedAnnouncementInNewAdminDashboard(title: string, content: string) {
+        await this.page.goto(this.adminNewDashboard.announcementsUrl);
+        await this.page.waitForLoadState('domcontentloaded');
+
+        await this.page.getByRole('button', { name: 'Add Announcement' }).click();
+        await this.page.locator(this.adminNewDashboard.addAnnouncement.title).click();
+        await this.page.locator(this.adminNewDashboard.addAnnouncement.title).fill(title);
+        await this.page.locator(this.adminNewDashboard.addAnnouncement.content).click();
+        await this.page.locator(this.adminNewDashboard.addAnnouncement.content).fill(content);
+        await this.page.getByRole('button', { name: 'Create Announcement' }).click();
 
         await this.page.waitForLoadState('domcontentloaded');
     }

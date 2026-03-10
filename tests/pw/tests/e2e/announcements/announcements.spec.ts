@@ -295,4 +295,21 @@ test.describe('Announcements Tests @pro', () => {
         await adminPage.close();
         await context.close();
     });
+
+    test('Test Case 13 - Admin Creates Published Announcement in New Admin Dashboard', async ({ browser }) => {
+        // Using admin session storage
+        const context = await browser.newContext({ storageState: a1 });
+        const adminPage = await context.newPage();
+        const announcementsPage = new AnnouncementsPage(adminPage);
+
+        // Create a new published announcement in the new admin dashboard
+        await announcementsPage.createPublishedAnnouncementInNewAdminDashboard(
+            'Test Published Announcement 1',
+            'Test Published Description 1',
+        );
+
+        await announcementsPage.waitForPageReady();
+        await adminPage.close();
+        await context.close();
+    });
 });
