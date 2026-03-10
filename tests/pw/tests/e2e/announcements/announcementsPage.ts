@@ -85,6 +85,16 @@ export class AnnouncementsPage {
         },
     };
 
+    // Admin New Dashboard Selectors
+    adminNewDashboard = {
+        announcementsUrl: `${BASE_URL}/wp-admin/admin.php?page=dokan-dashboard#/announcement`,
+
+        trashTab: `//div[contains(text(),'Trash')]`,
+        selectAllCheckbox: `#inspector-checkbox-control-1`,
+        deletePermanently: `//span[normalize-space()='Delete Permanently']`,
+        confirmDelete: `//button[normalize-space()='Delete']`,
+    };
+
     // Vendor Selectors
     vendor = {
         announcementsUrl: `${BASE_URL}/dashboard/announcement`,
@@ -363,6 +373,18 @@ export class AnnouncementsPage {
             this.page.locator(this.admin.bulkActions.applyAction).click(),
         ]);
         await this.page.waitForLoadState('networkidle');
+    }
+
+    async emptyTrashInNewAdminDashboard() {
+        await this.page.goto(this.adminNewDashboard.announcementsUrl);
+        await this.page.waitForLoadState('domcontentloaded');
+
+        await this.page.locator(this.adminNewDashboard.trashTab).click();
+        await this.page.locator(this.adminNewDashboard.selectAllCheckbox).click();
+        await this.page.locator(this.adminNewDashboard.deletePermanently).click();
+        await this.page.locator(this.adminNewDashboard.confirmDelete).click();
+
+        await this.page.waitForLoadState('domcontentloaded');
     }
 
     // ============================================

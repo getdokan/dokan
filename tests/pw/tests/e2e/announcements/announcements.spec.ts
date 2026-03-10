@@ -281,4 +281,18 @@ test.describe('Announcements Tests @pro', () => {
         await vendorPage.close();
         await vendorContext.close();
     });
+
+    test('Test Case 12 - Admin Empties Trash in New Admin Announcement Dashboard', async ({ browser }) => {
+        // Using admin session storage
+        const context = await browser.newContext({ storageState: a1 });
+        const adminPage = await context.newPage();
+        const announcementsPage = new AnnouncementsPage(adminPage);
+
+        // Empty the trash in the new admin announcement dashboard to clean up after old dashboard test cases
+        await announcementsPage.emptyTrashInNewAdminDashboard();
+
+        await announcementsPage.waitForPageReady();
+        await adminPage.close();
+        await context.close();
+    });
 });
