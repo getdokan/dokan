@@ -144,4 +144,17 @@ class WithdrawControllerV2 extends WithdrawController {
 
         return new WP_REST_Response( __( 'Default method update successful.', 'dokan-lite' ), 200 );
     }
+    /**
+     * Get user data
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public function get_user_data( $user_id ) {
+        $vendor = parent::get_user_data( $user_id );
+        $vendor['balance'] = dokan_get_seller_balance( $user_id, false );
+
+        return $vendor;
+    }
 }
