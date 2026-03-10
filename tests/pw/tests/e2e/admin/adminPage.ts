@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
 
@@ -17,7 +17,7 @@ export class AdminPage {
     admin = {
         // URLs
         loginUrl: `${BASE_URL}/wp-admin`,
-        dokanDashboardUrl: `${BASE_URL}/wp-admin/admin.php?page=dokan#`,
+        dokanDashboardUrl: `${BASE_URL}/wp-admin/admin.php?page=dokan-dashboard`,
 
         // Login Page
         usernameInput: '#user_login',
@@ -31,7 +31,14 @@ export class AdminPage {
 
         // Dokan Dashboard
         dashboardText: "//h1[normalize-space()='Dashboard']",
-        dashboardContainer: "div[class='dokan-dashboard'] h1",
+        toDo: "//h3[normalize-space()='To-Do']",
+        analytics: "//h3[normalize-space()='Analytics']",
+        monthlyOverview: "//h3[normalize-space()='Monthly Overview']",
+        dailySalesChart: "//h3[normalize-space()='Daily Sales Chart']",
+        vendorMetrics: "//h3[normalize-space()='Vendor Metrics']",
+        allTimeMarketplaceStats: "//h3[normalize-space()='All-Time Marketplace Stats']",
+        topPerformingVendors: "//h3[normalize-space()='Top Performing Vendors']",
+        mostReviewedProducts: "//h3[normalize-space()='Most Reviewed Products']",
 
         // Admin Notices
         promoNoticeHeading: "//h3[normalize-space()='Dokan came up with a new look!']",
@@ -132,8 +139,17 @@ export class AdminPage {
 
     async adminDashboardRenderProperly() {
         await this.goToDokanDashboard();
-        await this.page.locator(this.admin.dashboardText).waitFor({ state: 'visible' });
-        await this.page.locator(this.admin.dashboardContainer).waitFor({ state: 'visible' });
+
+        // Verify each dashboard section heading is visible
+        await expect(this.page.locator(this.admin.dashboardText)).toBeVisible();
+        await expect(this.page.locator(this.admin.toDo)).toBeVisible();
+        await expect(this.page.locator(this.admin.analytics)).toBeVisible();
+        await expect(this.page.locator(this.admin.monthlyOverview)).toBeVisible();
+        await expect(this.page.locator(this.admin.dailySalesChart)).toBeVisible();
+        await expect(this.page.locator(this.admin.vendorMetrics)).toBeVisible();
+        await expect(this.page.locator(this.admin.allTimeMarketplaceStats)).toBeVisible();
+        await expect(this.page.locator(this.admin.topPerformingVendors)).toBeVisible();
+        await expect(this.page.locator(this.admin.mostReviewedProducts)).toBeVisible();
     }
 
     async mockPromoNotices() {
