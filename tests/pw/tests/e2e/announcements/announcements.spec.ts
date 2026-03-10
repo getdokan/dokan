@@ -1,0 +1,284 @@
+import { test, expect } from '@playwright/test';
+import { AnnouncementsPage } from './announcementsPage';
+import path from 'path';
+
+// ============================================
+// SESSION STORAGE VARIABLES
+// ============================================
+const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');        // Admin session storage
+const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');       // Vendor 1 session storage
+
+// ============================================
+// TEST SETUP
+// ============================================
+
+test.describe('Announcements Tests @pro', () => {
+    // ============================================
+    // TEST CASES
+    // ============================================
+
+    test('Test Case 1 - Admin Views Announcements Menu Page', async ({ browser }) => {
+        // Using admin session storage
+        const context = await browser.newContext({ storageState: a1 });
+        const adminPage = await context.newPage();
+        const announcementsPage = new AnnouncementsPage(adminPage);
+
+        // Navigate to the announcements page and verify all elements render correctly
+        await announcementsPage.adminAnnouncementsRenderProperly();
+
+        await announcementsPage.waitForPageReady();
+        await adminPage.close();
+        await context.close();
+    });
+
+    test('Test Case 2 - Admin Sends Announcement', async ({ browser }) => {
+        // Using admin session storage
+        const context = await browser.newContext({ storageState: a1 });
+        const adminPage = await context.newPage();
+        const announcementsPage = new AnnouncementsPage(adminPage);
+
+        // Generate a unique announcement title
+        const title = announcementsPage.generateTitle();
+
+        // Create and publish the announcement
+        await announcementsPage.addAnnouncement(title);
+
+        // Verify the announcement is published and visible in the list
+        const isPublished = await adminPage.locator(announcementsPage.admin.announcementStatusPublished(title)).isVisible();
+        expect(isPublished, `Announcement "${title}" should be visible with published status`).toBe(true);
+
+        await announcementsPage.waitForPageReady();
+        await adminPage.close();
+        await context.close();
+    });
+
+    test('Test Case 3 - Admin Schedules Announcement', async ({ browser }) => {
+        // Using admin session storage
+        const context = await browser.newContext({ storageState: a1 });
+        const adminPage = await context.newPage();
+        const announcementsPage = new AnnouncementsPage(adminPage);
+
+        // Generate a unique announcement title
+        const title = announcementsPage.generateTitle();
+
+        // Create and schedule the announcement
+        await announcementsPage.addScheduledAnnouncement(title);
+
+        // Verify the announcement appears with a scheduled status
+        const isScheduled = await adminPage.locator(announcementsPage.admin.announcementStatusScheduled(title)).isVisible();
+        expect(isScheduled, `Announcement "${title}" should be visible with scheduled status`).toBe(true);
+
+        await announcementsPage.waitForPageReady();
+        await adminPage.close();
+        await context.close();
+    });
+
+    test('Test Case 4 - Admin Edits Announcement', async ({ browser }) => {
+        // Using admin session storage
+        const context = await browser.newContext({ storageState: a1 });
+        const adminPage = await context.newPage();
+        const announcementsPage = new AnnouncementsPage(adminPage);
+
+        // Create a DRAFT — the Edit row action only exists for non-published items;
+        // published announcements only expose the Trash action in the Dokan SPA.
+        const originalTitle = announcementsPage.generateTitle();
+        await announcementsPage.addAnnouncementAsDraft(originalTitle);
+
+        // Edit the draft and publish it with a new title
+        const updatedTitle = `${announcementsPage.generateTitle()}_edited`;
+        await announcementsPage.editAnnouncement(originalTitle, updatedTitle);
+
+        // Verify the updated announcement is visible with published status
+        await expect(adminPage.locator(announcementsPage.admin.announcementStatusPublished(updatedTitle))).toBeVisible();
+
+        await announcementsPage.waitForPageReady();
+        await adminPage.close();
+        await context.close();
+    });
+
+    test('Test Case 5 - Admin Trashes Announcement', async ({ browser }) => {
+        // Using admin session storage
+        const context = await browser.newContext({ storageState: a1 });
+        const adminPage = await context.newPage();
+        const announcementsPage = new AnnouncementsPage(adminPage);
+
+        // Create an announcement to trash
+        const title = announcementsPage.generateTitle();
+        await announcementsPage.addAnnouncement(title);
+
+        // Move the announcement to trash
+        await announcementsPage.trashAnnouncement(title);
+
+        // Verify the announcement appears in the trash tab (positive assertion — more reliable)
+        await adminPage.locator(announcementsPage.admin.navTabs.trash).click();
+        await adminPage.waitForLoadState('networkidle');
+        await expect(adminPage.locator(announcementsPage.admin.announcementCellPublished(title)),
+            `Trashed announcement "${title}" should appear in the trash tab`).toBeVisible();
+
+        await announcementsPage.waitForPageReady();
+        await adminPage.close();
+        await context.close();
+    });
+
+    test('Test Case 6 - Admin Restores Announcement', async ({ browser }) => {
+        // Using admin session storage
+        const context = await browser.newContext({ storageState: a1 });
+        const adminPage = await context.newPage();
+        const announcementsPage = new AnnouncementsPage(adminPage);
+
+        // Create an announcement, then move it to trash
+        const title = announcementsPage.generateTitle();
+        await announcementsPage.addAnnouncement(title);
+        await announcementsPage.trashAnnouncement(title);
+
+        // Restore the announcement from trash
+        await announcementsPage.restoreAnnouncement(title);
+
+        // Verify the announcement is restored and appears in the published tab.
+        // announcementCellPublished (the <strong> title) is used instead of
+        // announcementStatusPublished because the status badge may render differently
+        // after a restore; confirming the title is present is sufficient.
+        await adminPage.locator(announcementsPage.admin.navTabs.published).click();
+        await adminPage.waitForLoadState('networkidle');
+        await expect(adminPage.locator(announcementsPage.admin.announcementCellPublished(title)),
+            `Restored announcement "${title}" should be visible in the published tab`).toBeVisible();
+
+        await announcementsPage.waitForPageReady();
+        await adminPage.close();
+        await context.close();
+    });
+
+    test('Test Case 7 - Admin Permanently Deletes Announcement', async ({ browser }) => {
+        // Using admin session storage
+        const context = await browser.newContext({ storageState: a1 });
+        const adminPage = await context.newPage();
+        const announcementsPage = new AnnouncementsPage(adminPage);
+
+        // Create an announcement, move it to trash, then permanently delete it
+        const title = announcementsPage.generateTitle();
+        await announcementsPage.addAnnouncement(title);
+        await announcementsPage.trashAnnouncement(title);
+        await announcementsPage.permanentlyDeleteAnnouncement(title);
+
+        // Verify the announcement no longer exists in the trash tab
+        await adminPage.locator(announcementsPage.admin.navTabs.trash).click();
+        await adminPage.waitForLoadState('networkidle');
+        await expect(adminPage.locator(announcementsPage.admin.announcementCellPublished(title)),
+            `Permanently deleted announcement "${title}" should no longer exist in trash`).not.toBeVisible();
+
+        await announcementsPage.waitForPageReady();
+        await adminPage.close();
+        await context.close();
+    });
+
+    test('Test Case 8 - Admin Performs Bulk Action on Announcements', async ({ browser }) => {
+        // Using admin session storage
+        const context = await browser.newContext({ storageState: a1 });
+        const adminPage = await context.newPage();
+        const announcementsPage = new AnnouncementsPage(adminPage);
+
+        // Ensure at least one announcement exists before bulk action
+        const title = announcementsPage.generateTitle();
+        await announcementsPage.addAnnouncement(title);
+
+        // Perform bulk trash on all visible announcements
+        await announcementsPage.announcementBulkAction('trash');
+
+        // Verify the announcement appears in the Trash tab (positive assertion).
+        // Waiting for disappearance from the All tab is unreliable because the
+        // waitForResponse inside announcementBulkAction may match an unrelated GET
+        // response rather than the actual bulk-DELETE response.
+        await adminPage.locator(announcementsPage.admin.navTabs.trash).click();
+        await adminPage.waitForLoadState('networkidle');
+        await expect(adminPage.locator(announcementsPage.admin.announcementCellPublished(title)),
+            `Bulk-trashed announcement "${title}" should appear in the Trash tab`).toBeVisible();
+
+        await announcementsPage.waitForPageReady();
+        await adminPage.close();
+        await context.close();
+    });
+
+    test('Test Case 9 - Vendor Views Announcements Menu Page', async ({ browser }) => {
+        // Using admin session storage to create a published announcement first
+        const adminContext = await browser.newContext({ storageState: a1 });
+        const adminPage = await adminContext.newPage();
+        const adminAnnouncementsPage = new AnnouncementsPage(adminPage);
+
+        const title = adminAnnouncementsPage.generateTitle();
+        await adminAnnouncementsPage.addAnnouncement(title);
+        await adminPage.close();
+        await adminContext.close();
+
+        // Using vendor session storage to view the announcements dashboard
+        const vendorContext = await browser.newContext({ storageState: v1 });
+        const vendorPage = await vendorContext.newPage();
+        const vendorAnnouncementsPage = new AnnouncementsPage(vendorPage);
+
+        // Navigate to vendor announcements page and verify all elements render correctly
+        await vendorAnnouncementsPage.vendorAnnouncementsRenderProperly();
+
+        await vendorAnnouncementsPage.waitForPageReady();
+        await vendorPage.close();
+        await vendorContext.close();
+    });
+
+    test('Test Case 10 - Vendor Views Announcement Details', async ({ browser }) => {
+        // Using admin session storage to create a published announcement first
+        const adminContext = await browser.newContext({ storageState: a1 });
+        const adminPage = await adminContext.newPage();
+        const adminAnnouncementsPage = new AnnouncementsPage(adminPage);
+
+        const title = adminAnnouncementsPage.generateTitle();
+        await adminAnnouncementsPage.addAnnouncement(title);
+        await adminPage.close();
+        await adminContext.close();
+
+        // Using vendor session storage to view the announcement details
+        const vendorContext = await browser.newContext({ storageState: v1 });
+        const vendorPage = await vendorContext.newPage();
+        const vendorAnnouncementsPage = new AnnouncementsPage(vendorPage);
+
+        // Click on the announcement and verify the detail page
+        await vendorAnnouncementsPage.vendorViewAnnouncement(title);
+
+        // Verify the announcement title is displayed on the detail page
+        const titleVisible = await vendorPage.locator(vendorAnnouncementsPage.vendor.announcement.title).isVisible();
+        expect(titleVisible, `Announcement detail page should display title "${title}"`).toBe(true);
+
+        // Verify back navigation link is present
+        const backLinkVisible = await vendorPage.locator(vendorAnnouncementsPage.vendor.announcement.backToAllNotice).isVisible();
+        expect(backLinkVisible, '"Back to all Notice" link should be visible on the detail page').toBe(true);
+
+        await vendorAnnouncementsPage.waitForPageReady();
+        await vendorPage.close();
+        await vendorContext.close();
+    });
+
+    test('Test Case 11 - Vendor Deletes Announcement', async ({ browser }) => {
+        // Using admin session storage to create a published announcement first
+        const adminContext = await browser.newContext({ storageState: a1 });
+        const adminPage = await adminContext.newPage();
+        const adminAnnouncementsPage = new AnnouncementsPage(adminPage);
+
+        const title = adminAnnouncementsPage.generateTitle();
+        await adminAnnouncementsPage.addAnnouncement(title);
+        await adminPage.close();
+        await adminContext.close();
+
+        // Using vendor session storage to delete the announcement from the dashboard
+        const vendorContext = await browser.newContext({ storageState: v1 });
+        const vendorPage = await vendorContext.newPage();
+        const vendorAnnouncementsPage = new AnnouncementsPage(vendorPage);
+
+        // Delete the announcement and verify it is removed from the list
+        await vendorAnnouncementsPage.vendorDeleteAnnouncement(title);
+
+        // Verify the announcement is no longer visible in the vendor dashboard
+        await expect(vendorPage.locator(vendorAnnouncementsPage.vendor.announcementLink(title)),
+            `Deleted announcement "${title}" should no longer appear in vendor dashboard`).not.toBeVisible();
+
+        await vendorAnnouncementsPage.waitForPageReady();
+        await vendorPage.close();
+        await vendorContext.close();
+    });
+});

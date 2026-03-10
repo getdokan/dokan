@@ -1,0 +1,417 @@
+import { Page, expect } from '@playwright/test';
+
+const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
+
+export class AnnouncementsPage {
+    readonly page: Page;
+
+    constructor(page: Page) {
+        this.page = page;
+    }
+
+    // ============================================
+    // SELECTORS
+    // ============================================
+
+    // Admin Selectors
+    admin = {
+        announcementsUrl: `${BASE_URL}/wp-admin/admin.php?page=dokan#/announcement`,
+
+        // Page Header
+        announcementText: '.dokan-announcement-wrapper h1',
+        addNewAnnouncement: '//button[normalize-space()="Add Announcement"]',
+
+        // Nav Tabs
+        navTabs: {
+            all: '//ul[@class="subsubsub"]//li//a[contains(text(),"All")]',
+            published: '//ul[@class="subsubsub"]//li//a[contains(text(),"Published")]',
+            pending: '//ul[@class="subsubsub"]//li//a[contains(text(),"Pending")]',
+            scheduled: '//ul[@class="subsubsub"]//li//a[contains(text(),"Scheduled")]',
+            draft: '//ul[@class="subsubsub"]//li//a[contains(text(),"Draft")]',
+            trash: '//ul[@class="subsubsub"]//li//a[contains(text(),"Trash")]',
+        },
+
+        // Bulk Actions
+        bulkActions: {
+            selectAll: 'thead .manage-column input',
+            selectAction: '.tablenav.top #bulk-action-selector-top',
+            applyAction: '.tablenav.top .button.action',
+        },
+
+        // Table
+        table: {
+            announcementTable: '.dokan-announcement-wrapper table',
+            titleColumn: 'thead th.title',
+            contentColumn: 'thead th.content',
+            sentToColumn: 'thead th.send_to',
+            statusColumn: 'thead th.status',
+            dateColumn: 'thead th.created_at',
+        },
+
+        noRowsFound: '//td[normalize-space()="No announcement found."]',
+        announcementCell: (title: string) => `//a[contains(text(),'${title}')]/../..`,
+        announcementCellPublished: (title: string) => `//strong[contains(text(),'${title}')]/../..`,
+        announcementStatusPublished: (title: string) =>
+            `//strong[contains(text(),'${title}')]/../..//td[@class="column status"]//span[@class="publish"]`,
+        announcementStatusScheduled: (title: string) =>
+            `//a[contains(text(),'${title}')]/../../..//td[@class="column status"]//span[@class="future"]`,
+        // For draft items (title renders as <a>)
+        announcementEdit: (title: string) => `//a[contains(text(),'${title}')]/../..//span[@class="edit"]`,
+        // For published items (title renders as <strong>)
+        announcementEditPublished: (title: string) => `//strong[contains(text(),'${title}')]/../..//span[@class="edit"]`,
+        announcementDelete: (title: string) => `//strong[contains(text(),'${title}')]/../..//span[@class="trash"]`,
+        announcementPermanentlyDelete: (title: string) => `//strong[contains(text(),'${title}')]/../..//span[@class="delete"]`,
+        announcementRestore: (title: string) => `//strong[contains(text(),'${title}')]/../..//span[@class="restore"]`,
+
+        // Add / Edit Announcement Form
+        addAnnouncement: {
+            title: '#titlediv input',
+            contentIframe: '#postdivrich iframe',
+            contentHtmlBody: '#tinymce',
+            sendAnnouncementTo: '#announcement_sender_type',
+            saveAsDraft: 'input.draft-btn',
+            publish: 'input.publish-btn',
+
+            schedule: {
+                addSchedule: 'span#timestamp a',
+                month: 'fieldset#timestampdiv label select',
+                day: 'input#jj',
+                year: 'input#aa',
+                hour: 'input#hh',
+                minute: 'input#mm',
+                ok: '//button[normalize-space()="Ok"]',
+                cancel: '//button[normalize-space()="Cancel"]',
+            },
+        },
+    };
+
+    // Vendor Selectors
+    vendor = {
+        announcementsUrl: `${BASE_URL}/dashboard/announcement`,
+
+        announcementDiv: '.dokan-announcement-wrapper-item',
+        announcementDate: '.dokan-annnouncement-date',
+        announcementHeading: '.dokan-announcement-heading',
+        announcementContent: '.dokan-announcement-content',
+        removeAnnouncement: '.remove_announcement',
+
+        announcementLink: (title: string) =>
+            `//div[@class="dokan-announcement-heading"]//h3[contains(text(),"${title}")]/..`,
+        deleteAnnouncement: (title: string) =>
+            `//div[@class="dokan-announcement-heading"]//h3[contains(text(),"${title}")]/../../../..//a[@class="remove_announcement"]`,
+        confirmDeleteAnnouncement: '.swal2-confirm',
+
+        // Announcement Detail Page
+        announcement: {
+            title: '.dokan-notice-single-notice-area .entry-title',
+            date: '.dokan-single-announcement-date',
+            content: '.dokan-notice-single-notice-area .entry-content',
+            backToAllNotice: '//a[normalize-space()="Back to all Notice"]',
+        },
+    };
+
+    // ============================================
+    // TEST DATA
+    // ============================================
+
+    testData = {
+        announcement: {
+            content: 'test announcement Content',
+            receiver: 'all_seller',
+        },
+        receiverTypes: {
+            allVendors: 'all_seller',
+            selectedVendors: 'selected_seller',
+            enabledVendors: 'enabled_seller',
+            disabledVendors: 'disabled_seller',
+            featuredVendors: 'featured_seller',
+        },
+    };
+
+    // ============================================
+    // HELPER METHODS
+    // ============================================
+
+    generateTitle(): string {
+        return `test announcement_${Date.now()}`;
+    }
+
+    // ============================================
+    // ADMIN METHODS
+    // ============================================
+
+    async goToAnnouncementsPage() {
+        await this.page.goto(this.admin.announcementsUrl);
+        await this.page.waitForLoadState('networkidle');
+        await this.page.locator(this.admin.announcementText).waitFor({ state: 'visible' });
+    }
+
+    async adminAnnouncementsRenderProperly() {
+        await this.goToAnnouncementsPage();
+
+        // Verify page header
+        await expect(this.page.locator(this.admin.announcementText)).toBeVisible();
+        await expect(this.page.locator(this.admin.addNewAnnouncement)).toBeVisible();
+
+        // Verify nav tabs
+        for (const tab of Object.values(this.admin.navTabs)) {
+            await expect(this.page.locator(tab)).toBeVisible();
+        }
+
+        // Verify bulk action elements
+        await expect(this.page.locator(this.admin.bulkActions.selectAll)).toBeVisible();
+        await expect(this.page.locator(this.admin.bulkActions.selectAction)).toBeVisible();
+        await expect(this.page.locator(this.admin.bulkActions.applyAction)).toBeVisible();
+
+        // Verify table columns
+        await expect(this.page.locator(this.admin.table.announcementTable)).toBeVisible();
+        await expect(this.page.locator(this.admin.table.titleColumn)).toBeVisible();
+        await expect(this.page.locator(this.admin.table.contentColumn)).toBeVisible();
+        await expect(this.page.locator(this.admin.table.sentToColumn)).toBeVisible();
+        await expect(this.page.locator(this.admin.table.statusColumn)).toBeVisible();
+        await expect(this.page.locator(this.admin.table.dateColumn)).toBeVisible();
+
+        // Navigate to add announcement form and verify fields
+        await this.page.locator(this.admin.addNewAnnouncement).click();
+        await this.page.waitForLoadState('networkidle');
+        await expect(this.page.locator(this.admin.addAnnouncement.title)).toBeVisible();
+        await expect(this.page.locator(this.admin.addAnnouncement.sendAnnouncementTo)).toBeVisible();
+        await expect(this.page.locator(this.admin.addAnnouncement.publish)).toBeVisible();
+        await this.page.goBack();
+        await this.page.waitForLoadState('networkidle');
+    }
+
+    async fillAnnouncementTitle(title: string) {
+        await this.page.locator(this.admin.addAnnouncement.title).waitFor({ state: 'visible' });
+        await this.page.locator(this.admin.addAnnouncement.title).fill(title);
+    }
+
+    async fillAnnouncementContent(content: string) {
+        const frame = this.page.frameLocator(this.admin.addAnnouncement.contentIframe);
+        await frame.locator(this.admin.addAnnouncement.contentHtmlBody).waitFor({ state: 'visible' });
+        await frame.locator(this.admin.addAnnouncement.contentHtmlBody).fill(content);
+    }
+
+    async addAnnouncement(title: string, content: string = 'test announcement Content', receiver: string = 'all_seller') {
+        await this.goToAnnouncementsPage();
+        await this.page.locator(this.admin.addNewAnnouncement).click();
+        await this.page.waitForLoadState('networkidle');
+
+        await this.fillAnnouncementTitle(title);
+        await this.fillAnnouncementContent(content);
+        await this.page.selectOption(this.admin.addAnnouncement.sendAnnouncementTo, receiver);
+
+        await Promise.all([
+            this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
+            this.page.locator(this.admin.addAnnouncement.publish).click(),
+        ]);
+        await this.page.waitForLoadState('networkidle');
+        await expect(this.page.locator(this.admin.announcementStatusPublished(title))).toBeVisible();
+    }
+
+    // Save as draft so the title renders as <a> (not <strong>) in the list,
+    // which is required for the edit row-action selectors to work.
+    // Note: clicking saveAsDraft keeps the browser on the edit form page,
+    // so we navigate back to the list explicitly afterward.
+    async addAnnouncementAsDraft(title: string, content: string = 'test announcement Content', receiver: string = 'all_seller') {
+        await this.goToAnnouncementsPage();
+        await this.page.locator(this.admin.addNewAnnouncement).click();
+        await this.page.waitForLoadState('networkidle');
+
+        await this.fillAnnouncementTitle(title);
+        await this.fillAnnouncementContent(content);
+        await this.page.selectOption(this.admin.addAnnouncement.sendAnnouncementTo, receiver);
+
+        await Promise.all([
+            this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
+            this.page.locator(this.admin.addAnnouncement.saveAsDraft).click(),
+        ]);
+        await this.page.waitForLoadState('networkidle');
+
+        // saveAsDraft stays on the edit form; navigate back to the announcement list
+        await this.goToAnnouncementsPage();
+        // Draft items appear with <a> tag (no <strong> wrapper)
+        await expect(this.page.locator(this.admin.announcementCell(title))).toBeVisible();
+    }
+
+    async addScheduledAnnouncement(title: string, content: string = 'test announcement Content', receiver: string = 'all_seller') {
+        await this.goToAnnouncementsPage();
+        await this.page.locator(this.admin.addNewAnnouncement).click();
+        await this.page.waitForLoadState('networkidle');
+
+        await this.fillAnnouncementTitle(title);
+        await this.fillAnnouncementContent(content);
+        await this.page.selectOption(this.admin.addAnnouncement.sendAnnouncementTo, receiver);
+
+        // Set schedule date to 10 days in the future
+        const futureDate = new Date();
+        futureDate.setDate(futureDate.getDate() + 10);
+
+        await this.page.locator(this.admin.addAnnouncement.schedule.addSchedule).click();
+        await this.page.selectOption(this.admin.addAnnouncement.schedule.month, { index: futureDate.getMonth() });
+        await this.page.fill(this.admin.addAnnouncement.schedule.day, String(futureDate.getDate()));
+        await this.page.fill(this.admin.addAnnouncement.schedule.year, String(futureDate.getFullYear()));
+        await this.page.fill(this.admin.addAnnouncement.schedule.hour, String(futureDate.getHours()));
+        await this.page.fill(this.admin.addAnnouncement.schedule.minute, String(futureDate.getMinutes()));
+        await this.page.locator(this.admin.addAnnouncement.schedule.ok).click();
+
+        await Promise.all([
+            this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
+            this.page.locator(this.admin.addAnnouncement.publish).click(),
+        ]);
+        await this.page.waitForLoadState('networkidle');
+        await expect(this.page.locator(this.admin.announcementStatusScheduled(title))).toBeVisible();
+    }
+
+    async editAnnouncement(originalTitle: string, newTitle: string) {
+        await this.goToAnnouncementsPage();
+        // Draft announcements render the title as <a> — the Edit row action only
+        // exists for non-published items; published items expose only Trash.
+        await expect(this.page.locator(this.admin.announcementCell(originalTitle))).toBeVisible();
+        await this.page.hover(this.admin.announcementCell(originalTitle));
+        // Row actions are CSS-hidden; wait for the edit link to appear before clicking
+        await this.page.locator(this.admin.announcementEdit(originalTitle)).waitFor({ state: 'visible' });
+
+        await Promise.all([
+            this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
+            this.page.locator(this.admin.announcementEdit(originalTitle)).click(),
+        ]);
+        await this.page.waitForLoadState('networkidle');
+
+        await this.page.locator(this.admin.addAnnouncement.title).fill(newTitle);
+
+        await Promise.all([
+            this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
+            this.page.locator(this.admin.addAnnouncement.publish).click(),
+        ]);
+        await this.page.waitForLoadState('networkidle');
+        await expect(this.page.locator(this.admin.announcementStatusPublished(newTitle))).toBeVisible();
+    }
+
+    async trashAnnouncement(title: string) {
+        await this.goToAnnouncementsPage();
+
+        await Promise.all([
+            this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
+            this.page.locator(this.admin.navTabs.published).click(),
+        ]);
+        await this.page.waitForLoadState('networkidle');
+
+        await this.page.hover(this.admin.announcementCellPublished(title));
+        // Row actions are CSS-hidden; wait for the trash link to appear before clicking
+        await this.page.locator(this.admin.announcementDelete(title)).waitFor({ state: 'visible' });
+
+        await Promise.all([
+            this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
+            this.page.locator(this.admin.announcementDelete(title)).click(),
+        ]);
+        await this.page.waitForLoadState('networkidle');
+    }
+
+    async restoreAnnouncement(title: string) {
+        await this.goToAnnouncementsPage();
+
+        await Promise.all([
+            this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
+            this.page.locator(this.admin.navTabs.trash).click(),
+        ]);
+        await this.page.waitForLoadState('networkidle');
+
+        await this.page.hover(this.admin.announcementCellPublished(title));
+        // Row actions are CSS-hidden; wait for the restore link to appear before clicking
+        await this.page.locator(this.admin.announcementRestore(title)).waitFor({ state: 'visible' });
+
+        await Promise.all([
+            this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
+            this.page.locator(this.admin.announcementRestore(title)).click(),
+        ]);
+        await this.page.waitForLoadState('networkidle');
+    }
+
+    async permanentlyDeleteAnnouncement(title: string) {
+        await this.goToAnnouncementsPage();
+
+        await Promise.all([
+            this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
+            this.page.locator(this.admin.navTabs.trash).click(),
+        ]);
+        await this.page.waitForLoadState('networkidle');
+
+        await this.page.hover(this.admin.announcementCellPublished(title));
+        // Row actions are CSS-hidden; wait for the delete link to appear before clicking
+        await this.page.locator(this.admin.announcementPermanentlyDelete(title)).waitFor({ state: 'visible' });
+
+        await Promise.all([
+            this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
+            this.page.locator(this.admin.announcementPermanentlyDelete(title)).click(),
+        ]);
+        await this.page.waitForLoadState('networkidle');
+    }
+
+    async announcementBulkAction(action: string) {
+        await this.page.goto(this.admin.announcementsUrl);
+        await this.page.waitForLoadState('networkidle');
+
+        // Ensure there is at least one row before performing bulk action
+        await expect(this.page.locator(this.admin.noRowsFound)).not.toBeVisible();
+
+        await this.page.locator(this.admin.bulkActions.selectAll).click();
+        await this.page.selectOption(this.admin.bulkActions.selectAction, action);
+
+        await Promise.all([
+            this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
+            this.page.locator(this.admin.bulkActions.applyAction).click(),
+        ]);
+        await this.page.waitForLoadState('networkidle');
+    }
+
+    // ============================================
+    // VENDOR METHODS
+    // ============================================
+
+    async goToVendorAnnouncementsPage() {
+        await this.page.goto(this.vendor.announcementsUrl);
+        await this.page.waitForLoadState('networkidle');
+    }
+
+    async vendorAnnouncementsRenderProperly() {
+        await this.goToVendorAnnouncementsPage();
+
+        await expect(this.page.locator(this.vendor.announcementDiv).first()).toBeVisible();
+        await expect(this.page.locator(this.vendor.announcementDate).first()).toBeVisible();
+        await expect(this.page.locator(this.vendor.announcementHeading).first()).toBeVisible();
+        await expect(this.page.locator(this.vendor.announcementContent).first()).toBeVisible();
+        await expect(this.page.locator(this.vendor.removeAnnouncement).first()).toBeVisible();
+    }
+
+    async vendorViewAnnouncement(title: string) {
+        await this.goToVendorAnnouncementsPage();
+
+        await this.page.locator(this.vendor.announcementLink(title)).click();
+        await this.page.waitForLoadState('networkidle');
+
+        await expect(this.page.locator(this.vendor.announcement.title)).toContainText(title);
+        await expect(this.page.locator(this.vendor.announcement.date)).toBeVisible();
+        await expect(this.page.locator(this.vendor.announcement.backToAllNotice)).toBeVisible();
+    }
+
+    async vendorDeleteAnnouncement(title: string) {
+        await this.goToVendorAnnouncementsPage();
+
+        await this.page.locator(this.vendor.deleteAnnouncement(title)).click();
+
+        await Promise.all([
+            this.page.waitForResponse(res => res.url().includes('admin-ajax.php') && res.status() === 200),
+            this.page.locator(this.vendor.confirmDeleteAnnouncement).click(),
+        ]);
+        await this.page.waitForLoadState('networkidle');
+    }
+
+    // ============================================
+    // UTILITY METHODS
+    // ============================================
+
+    async waitForPageReady() {
+        await this.page.waitForLoadState('networkidle');
+    }
+}
