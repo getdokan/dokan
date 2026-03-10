@@ -98,12 +98,16 @@ export class AnnouncementsPage {
         // Add Announcement Form
         addAnnouncement: {
             addButton: `button[name="Add Announcement"]`,
+            addButtonSpan: `//span[normalize-space()='Add Announcement']`,
             title: `//input[@id='announcement-title']`,
             content: `//div[@class='ql-editor ql-blank']`,
             contentParagraph: `//div[@class='ql-editor ql-blank']//p`,
             draftRadio: `//input[@id='hs-default-radio-draft']`,
+            scheduledRadio: `//input[@id='hs-default-radio-future']`,
+            datePickerToggle: String.raw`span.inline-flex.h-full.items-center.rounded-bl.rounded-tl.bg-\[\#EAEAEA\].px-3.text-sm.text-\[\#4F4F4F\]`,
             createButton: `button[name="Create Announcement"]`,
             createButtonSpan: `//span[normalize-space()='Create Announcement']`,
+            createButtonText: `Create Announcement`,
         },
 
         // Announcement List
@@ -436,6 +440,31 @@ export class AnnouncementsPage {
         await this.page.locator(this.adminNewDashboard.addAnnouncement.contentParagraph).fill(content);
         await this.page.locator(this.adminNewDashboard.addAnnouncement.draftRadio).click();
         await this.page.locator(this.adminNewDashboard.addAnnouncement.createButtonSpan).click();
+
+        await this.page.waitForLoadState('domcontentloaded');
+    }
+
+    async createScheduledAnnouncementInNewAdminDashboard(title: string, content: string) {
+        await this.page.goto(this.adminNewDashboard.announcementsUrl);
+        await this.page.waitForLoadState('domcontentloaded');
+
+        await this.page.locator(this.adminNewDashboard.addAnnouncement.addButtonSpan).click();
+        await this.page.locator(this.adminNewDashboard.addAnnouncement.title).click();
+        await this.page.locator(this.adminNewDashboard.addAnnouncement.title).fill(title);
+        await this.page.locator(this.adminNewDashboard.addAnnouncement.contentParagraph).click();
+        await this.page.locator(this.adminNewDashboard.addAnnouncement.contentParagraph).fill(content);
+        await this.page.locator(this.adminNewDashboard.addAnnouncement.scheduledRadio).click();
+        await this.page.locator(this.adminNewDashboard.addAnnouncement.datePickerToggle).click();
+
+        // Set a future date dynamically (current year + 5)
+        const futureYear = new Date().getFullYear() + 5;
+        await this.page.getByRole('spinbutton', { name: 'Day' }).click();
+        await this.page.getByRole('spinbutton', { name: 'Year' }).click();
+        await this.page.getByRole('spinbutton', { name: 'Year' }).press('ArrowRight');
+        await this.page.getByRole('spinbutton', { name: 'Year' }).press('ArrowRight');
+        await this.page.getByRole('spinbutton', { name: 'Year' }).fill(String(futureYear));
+
+        await this.page.getByText(this.adminNewDashboard.addAnnouncement.createButtonText).click();
 
         await this.page.waitForLoadState('domcontentloaded');
     }

@@ -363,4 +363,21 @@ test.describe('Announcements Tests @pro', () => {
         await adminPage.close();
         await context.close();
     });
+
+    test('Test Case 17 - Admin Creates Scheduled Announcement in New Admin Dashboard', async ({ browser }) => {
+        // Using admin session storage
+        const context = await browser.newContext({ storageState: a1 });
+        const adminPage = await context.newPage();
+        const announcementsPage = new AnnouncementsPage(adminPage);
+
+        // Create a scheduled announcement with a dynamically computed future date
+        await announcementsPage.createScheduledAnnouncementInNewAdminDashboard(
+            'Test Scheduled Announcement 3',
+            'Test Scheduled Description 3',
+        );
+
+        await announcementsPage.waitForPageReady();
+        await adminPage.close();
+        await context.close();
+    });
 });
