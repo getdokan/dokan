@@ -30,7 +30,7 @@ const Header = ( { onToggleSidebar }: { onToggleSidebar: () => void } ) => {
                 type="button"
                 onClick={ onToggleSidebar }
                 aria-label="Toggle sidebar menu"
-                className="p-2 rounded hover:bg-gray-100 focus:ring-0 focus:!outline-none"
+                className="p-2 rounded hover:bg-gray-100 focus:ring-0 focus:outline-none! bg-transparent"
             >
                 <LucideIcons.Menu />
             </button>
@@ -41,7 +41,7 @@ const Header = ( { onToggleSidebar }: { onToggleSidebar: () => void } ) => {
                 <a
                     target="_blank"
                     href={ window.dokan?.urls?.storeUrl || '#' }
-                    className="visit-store group skip-color-module flex items-center no-underline text-sm gap-2 font-medium text-[#25252D] focus:!outline-none py-4 px-5"
+                    className="visit-store group skip-color-module flex items-center no-underline text-sm gap-2 font-medium text-[#25252D] focus:outline-none! py-4 px-5"
                     rel="noreferrer"
                 >
                     <LucideIcons.Globe size={ 16 } className="text-[#828282]" />
@@ -53,7 +53,7 @@ const Header = ( { onToggleSidebar }: { onToggleSidebar: () => void } ) => {
                     onMouseEnter={ () => setIsMenuOpen( true ) }
                     onMouseLeave={ () => setIsMenuOpen( false ) }
                     onClick={ () => setIsMenuOpen( ! isMenuOpen ) }
-                    className="header-avatar flex items-center gap-2.5 cursor-pointer py-4 px-5"
+                    className="header-avatar flex items-center gap-2.5 cursor-pointer py-4 px-5 pr-0"
                     role="button"
                     tabIndex={ 0 }
                     ref={ setPopoverAnchor }
@@ -100,7 +100,7 @@ const Header = ( { onToggleSidebar }: { onToggleSidebar: () => void } ) => {
                                                     href={ decodeEntities(
                                                         item?.url || '#'
                                                     ) }
-                                                    className="skip-color-module no-underline group flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#828282] focus:!outline-none transition-colors duration-150"
+                                                    className="skip-color-module no-underline group flex items-center gap-2.5 px-4 py-2.5 text-sm text-[#828282] focus:outline-none! transition-colors duration-150"
                                                     onClick={ () =>
                                                         setIsMenuOpen( false )
                                                     }
