@@ -105,6 +105,10 @@ export class AnnouncementsPage {
             createButton: `button[name="Create Announcement"]`,
             createButtonSpan: `//span[normalize-space()='Create Announcement']`,
         },
+
+        // Announcement List
+        announcementTitle: (title: string) => `//div[contains(text(),'${title}')]`,
+        announcementStatusBadge: `body > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(3) > tr:nth-child(1) > td:nth-child(6) > div:nth-child(1) > span:nth-child(1)`,
     };
 
     // Vendor New Dashboard Selectors
@@ -432,6 +436,23 @@ export class AnnouncementsPage {
         await this.page.locator(this.adminNewDashboard.addAnnouncement.contentParagraph).fill(content);
         await this.page.locator(this.adminNewDashboard.addAnnouncement.draftRadio).click();
         await this.page.locator(this.adminNewDashboard.addAnnouncement.createButtonSpan).click();
+
+        await this.page.waitForLoadState('domcontentloaded');
+    }
+
+    async verifyDraftAnnouncementInNewAdminDashboard(title: string) {
+        await this.page.goto(this.adminNewDashboard.announcementsUrl);
+        await this.page.waitForLoadState('domcontentloaded');
+
+        await expect(
+            this.page.locator(this.adminNewDashboard.announcementTitle(title)),
+            `Announcement title "${title}" should be visible in the list`,
+        ).toHaveText(title);
+
+        await expect(
+            this.page.locator(this.adminNewDashboard.announcementStatusBadge),
+            `Announcement status badge should display "Draft"`,
+        ).toHaveText('Draft');
 
         await this.page.waitForLoadState('domcontentloaded');
     }

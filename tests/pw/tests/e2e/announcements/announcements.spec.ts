@@ -349,4 +349,18 @@ test.describe('Announcements Tests @pro', () => {
         await adminPage.close();
         await context.close();
     });
+
+    test('Test Case 16 - Admin Verifies Draft Announcement in New Admin Dashboard', async ({ browser }) => {
+        // Using admin session storage
+        const context = await browser.newContext({ storageState: a1 });
+        const adminPage = await context.newPage();
+        const announcementsPage = new AnnouncementsPage(adminPage);
+
+        // Verify the draft announcement title and status badge are visible
+        await announcementsPage.verifyDraftAnnouncementInNewAdminDashboard('Test Draft Announcement 2');
+
+        await announcementsPage.waitForPageReady();
+        await adminPage.close();
+        await context.close();
+    });
 });
