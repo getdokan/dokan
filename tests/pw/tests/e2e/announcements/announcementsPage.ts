@@ -498,6 +498,18 @@ export class AnnouncementsPage {
         await this.page.waitForLoadState('domcontentloaded');
     }
 
+    async verifyScheduledStatusVisibleInNewAdminDashboard() {
+        await this.page.goto(this.adminNewDashboard.announcementsUrl);
+        await this.page.waitForLoadState('domcontentloaded');
+
+        await expect(
+            this.page.getByText('Scheduled', { exact: true }),
+            'Text "Scheduled" should be visible on the page',
+        ).toBeVisible();
+
+        await this.page.waitForLoadState('domcontentloaded');
+    }
+
     // ============================================
     // VENDOR NEW DASHBOARD METHODS
     // ============================================
