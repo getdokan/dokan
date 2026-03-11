@@ -486,6 +486,18 @@ export class AnnouncementsPage {
         await this.page.waitForLoadState('domcontentloaded');
     }
 
+    async verifyDraftStatusVisibleInNewAdminDashboard() {
+        await this.page.goto(this.adminNewDashboard.announcementsUrl);
+        await this.page.waitForLoadState('domcontentloaded');
+
+        await expect(
+            this.page.getByText('Draft', { exact: true }),
+            'Text "Draft" should be visible on the page',
+        ).toBeVisible();
+
+        await this.page.waitForLoadState('domcontentloaded');
+    }
+
     // ============================================
     // VENDOR NEW DASHBOARD METHODS
     // ============================================
