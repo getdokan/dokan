@@ -113,6 +113,11 @@ export class AnnouncementsPage {
         // Announcement List
         announcementTitle: (title: string) => `//div[contains(text(),'${title}')]`,
         announcementStatusBadge: `body > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(3) > tr:nth-child(1) > td:nth-child(6) > div:nth-child(1) > span:nth-child(1)`,
+
+        // Row action button (3-dot menu) identified by the announcement title in the same row
+        rowActionButton: (title: string) => `//tr[.//div[contains(text(),'${title}')]]//button[@aria-label='Actions']`,
+        moveToTrash: `//div[@role='menuitem'][normalize-space()='Move to Trash']`,
+        confirmTrash: `//button[normalize-space()='Confirm']`,
     };
 
     // Vendor New Dashboard Selectors
@@ -415,6 +420,19 @@ export class AnnouncementsPage {
         await this.page.waitForLoadState('domcontentloaded');
     }
 
+    async emptyTrashInNewAdminDashboardAfterTests() {
+        await this.page.goto(this.adminNewDashboard.announcementsUrl);
+        await this.page.waitForLoadState('domcontentloaded');
+
+        await this.page.locator(this.adminNewDashboard.trashTab).click();
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.locator(this.adminNewDashboard.selectAllCheckbox).click();
+        await this.page.locator(this.adminNewDashboard.deletePermanently).click();
+        await this.page.locator(this.adminNewDashboard.confirmDelete).click();
+
+        await this.page.waitForLoadState('domcontentloaded');
+    }
+
     async createPublishedAnnouncementInNewAdminDashboard(title: string, content: string) {
         await this.page.goto(this.adminNewDashboard.announcementsUrl);
         await this.page.waitForLoadState('domcontentloaded');
@@ -507,6 +525,34 @@ export class AnnouncementsPage {
             'Text "Scheduled" should be visible on the page',
         ).toBeVisible();
 
+        await this.page.waitForLoadState('domcontentloaded');
+    }
+
+    async trashAnnouncementByTitle(title: string) {
+        await this.page.locator(this.adminNewDashboard.rowActionButton(title)).click();
+        await this.page.locator(this.adminNewDashboard.moveToTrash).click();
+        await this.page.locator(this.adminNewDashboard.confirmTrash).click();
+        await this.page.waitForLoadState('domcontentloaded');
+    }
+
+    async trashAndPermanentlyDeleteAnnouncementsInNewAdminDashboard() {
+        await this.page.goto(this.adminNewDashboard.announcementsUrl);
+        await this.page.waitForLoadState('domcontentloaded');
+
+        await this.trashAnnouncementByTitle('Test Draft Announcement 2');
+        await this.trashAnnouncementByTitle('Test Scheduled Announcement 3');
+        await this.trashAnnouncementByTitle('Test Published Announcement 1');
+
+        // Re-navigate to ensure SPA is in a clean state before emptying trash
+        await this.page.goto(this.adminNewDashboard.announcementsUrl);
+        await this.page.waitForLoadState('domcontentloaded');
+
+        // Go to Trash tab, select all, and permanently delete
+        await this.page.locator(this.adminNewDashboard.trashTab).click();
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.locator(this.adminNewDashboard.selectAllCheckbox).click();
+        await this.page.locator(this.adminNewDashboard.deletePermanently).click();
+        await this.page.locator(this.adminNewDashboard.confirmDelete).click();
         await this.page.waitForLoadState('domcontentloaded');
     }
 

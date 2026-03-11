@@ -408,4 +408,32 @@ test.describe('Announcements Tests @pro', () => {
         await adminPage.close();
         await context.close();
     });
+
+    test('Test Case 20 - Admin Trashes and Permanently Deletes Announcements in New Admin Dashboard', async ({ browser }) => {
+        // Using admin session storage
+        const context = await browser.newContext({ storageState: a1 });
+        const adminPage = await context.newPage();
+        const announcementsPage = new AnnouncementsPage(adminPage);
+
+        // Move draft and scheduled announcements to trash, then permanently delete all from trash
+        await announcementsPage.trashAndPermanentlyDeleteAnnouncementsInNewAdminDashboard();
+
+        await announcementsPage.waitForPageReady();
+        await adminPage.close();
+        await context.close();
+    });
+
+    test('Test Case 21 - Admin Empties Trash in New Admin Dashboard', async ({ browser }) => {
+        // Using admin session storage
+        const context = await browser.newContext({ storageState: a1 });
+        const adminPage = await context.newPage();
+        const announcementsPage = new AnnouncementsPage(adminPage);
+
+        // Navigate to announcements, open Trash tab, select all and permanently delete
+        await announcementsPage.emptyTrashInNewAdminDashboardAfterTests();
+
+        await announcementsPage.waitForPageReady();
+        await adminPage.close();
+        await context.close();
+    });
 });
