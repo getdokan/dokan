@@ -1,249 +1,170 @@
 import { useWindowDimensions } from '@src/hooks';
-import { useCallback, useMemo } from '@wordpress/element';
-import { FlatFormItem } from '../types';
+import { useMemo } from '@wordpress/element';
 import {
-    appendToLeftColumn,
+    FormItem,
+    LayoutItem,
+    LayoutConfig,
+    ResponsiveBreakpoint,
+} from '../types';
+import {
+    appendToTarget,
+    buildLayoutTree,
     collectUsedFields,
-    getFieldHeading as getFieldHeadingUtils,
+    getFieldHeading,
     getRemainingFields,
     injectRemainingFields,
     layoutBuilder,
 } from '../utils';
-import { __ } from '@wordpress/i18n';
+
+/**
+ * Resolve layout config for a flat layout item based on current viewport width.
+ * Picks the first matching responsive breakpoint (sorted ascending by maxWidth),
+ * or falls back to the item's default layout.
+ *
+ * @param {LayoutItem} item  The flat layout item.
+ * @param {number}         width Current viewport width.
+ * @return {LayoutConfig|undefined} Resolved layout config.
+ */
+function resolveResponsiveLayout(
+    item: LayoutItem,
+    width: number
+): LayoutConfig | undefined {
+    if ( item.responsive?.length && width ) {
+        // Sort breakpoints ascending so we match the smallest qualifying one.
+        const sorted = [ ...item.responsive ].sort(
+            ( a: ResponsiveBreakpoint, b: ResponsiveBreakpoint ) =>
+                a.maxWidth - b.maxWidth
+        );
+        for ( const bp of sorted ) {
+            if ( width <= bp.maxWidth ) {
+                return bp.layout;
+            }
+        }
+    }
+    return item.layout;
+}
 
 /**
  * Custom hook to manage form layouts.
- * Uses flat form items only; layout and field config are derived from formItems.
  *
- * @param {Array}  formItems Flat array of sections and fields from the server.
- * @param {Object} product  The current product data for dependency checking.
+ * Accepts a flat layout definition from PHP (via `dokan_product_editor_form_layouts` filter),
+ * builds a nested tree, resolves responsive layouts, and applies visibility/dependency logic.
+ *
+ * @param {Array}  formItems  Flat array of sections and fields from the server.
+ * @param {Object} product    The current product data for dependency checking.
+ * @param {Array}  formLayout Flat layout items from PHP with parent-child relationships.
  *
  * @return {Object} Object containing the processed form layouts.
  */
 export default function useLayouts(
-    formItems: FlatFormItem[],
-    product: Record< string, any >
+    formItems: FormItem[],
+    product: Record< string, any >,
+    formLayout: LayoutItem[] = []
 ) {
     const { width } = useWindowDimensions();
 
-    /**
-     * helper to get label and description for a field.
-     *
-     * @param {string} fieldId The ID of the field.
-     *
-     * @return {Object} Object containing label and description.
-     */
-    const getFieldHeading = useCallback(
-        ( fieldId: string ) => {
-        return getFieldHeadingUtils( formItems, fieldId );
-    }, [ formItems ] );
-
-    // Define root layout based on window width
-    const rootLayout = useMemo( () => {
-        if ( width && width > 768 ) {
-            return {
-                type: 'row',
-                alignment: 'start',
-                styles: {
-                    left_column: { flex: '1' },
-                    right_column: { flex: '0 0 20%', minWidth: '250px' },
-                },
-            };
+    // Resolve responsive layouts for items that have breakpoints.
+    const resolvedLayout = useMemo( () => {
+        if ( ! width ) {
+            return formLayout;
         }
-        return {
-            type: 'regular',
-        };
-    }, [ width ] );
+        return formLayout.map( ( item ) => {
+            if ( ! item.responsive?.length ) {
+                return item;
+            }
+            const resolved = resolveResponsiveLayout( item, width );
+            return { ...item, layout: resolved };
+        } );
+    }, [ formLayout, width ] );
 
-    // Build the static layout structure (sections, cards, field placement).
-    // This only depends on formItems and rootLayout — NOT on product data.
+    // Build the layout structure from the flat PHP layout array.
     const layoutStructure = useMemo( () => {
-        const layouts = [
-            {
-                id: 'main_layout',
-                layout: rootLayout,
-                children: [
-                    {
-                        id: 'left_column',
-                        children: [
-                            {
-                                id: 'general-section',
-                                layout: {
-                                    type: 'card',
-                                },
-                                children: [
-                                    'name',
-                                    'slug',
-                                    'type',
-                                    {
-                                        id: 'digital-options',
-                                        layout: {
-                                            type: 'regular',
-                                        },
-                                        label: __( 'Digital Product Options', 'dokan-lite' ),
-                                        children: [ 'downloadable', 'virtual' ],
-                                    },
-                                    'external_url',
-                                    'button_text',
-                                    'category_ids',
-                                    'product_tag',
-                                    'product_brand',
-                                    'regular_price',
-                                    'sale_price',
-                                    'create_schedule_for_discount',
-                                    {
-                                        id: 'product-discount-schedule',
-                                        layout: {
-                                            type: 'row',
-                                        },
-                                        children: [
-                                            'date_on_sale_from',
-                                            'date_on_sale_to',
-                                        ],
-                                    },
-                                ],
-                            },
-                            {
-                                id: 'general',
-                                layout: {
-                                    type: 'card',
-                                },
-                                children: [
-                                    'short_description',
-                                    'description',
-                                ],
-                            },
-                            {
-                                id: 'inventory',
-                                layout: {
-                                    type: 'card',
-                                    withHeader: true,
-                                },
-                                children: [
-                                    'sku',
-                                    'global_unique_id',
-                                    'manage_stock',
-                                    'stock_status',
-                                    'stock_quantity',
-                                    'low_stock_amount',
-                                    'backorders',
-                                    'sold_individually',
-                                ],
-                                ...getFieldHeading( 'inventory' ),
-                            },
-                            {
-                                id: 'shipping',
-                                layout: {
-                                    type: 'card',
-                                    withHeader: true,
-                                },
-                                children: [
-                                    '_disable_shipping',
-                                    {
-                                        id: 'shipping-dimension',
-                                        layout: {
-                                            type: 'row',
-                                        },
-                                        children: [
-                                            'weight',
-                                            'length',
-                                            'width',
-                                            'height',
-                                        ],
-                                    },
-                                    'shipping_class',
-                                    'tax_status',
-                                    'tax_class',
-                                    '_overwrite_shipping',
-                                    {
-                                        id: 'overwrite_shipping_price_qty',
-                                        layout: {
-                                            type: 'row',
-                                        },
-                                        children: [
-                                            '_additional_price',
-                                            '_additional_qty',
-                                        ],
-                                    },
-                                    '_dps_processing_time',
-                                ],
-                                ...getFieldHeading( 'shipping' ),
-                            },
-                        ],
-                    },
-                    {
-                        id: 'right_column',
-                        children: [
-                            {
-                                id: 'organize-product',
-                                layout: {
-                                    type: 'card',
-                                    isCollapsible: false,
-                                },
-                                children: [
-                                    'status',
-                                    'catalog_visibility',
-                                    'image_id',
-                                    'gallery_image_ids',
-                                    'reviews_allowed',
-                                ],
-                            },
-                            {
-                                id: 'purchase_note_section',
-                                layout: {
-                                    type: 'card',
-                                    withHeader: true,
-                                    isCollapsible: false,
-                                },
-                                children: [ 'purchase_note' ],
-                                ...getFieldHeading( 'purchase_note' ),
-                            },
-                        ],
-                    },
-                ],
-            },
-        ];
+        // Build nested tree from flat items.
+        const tree = buildLayoutTree( resolvedLayout, null );
 
-        const usedFields = collectUsedFields( layouts );
+        // Inject label/description from formItems into sections that have withHeader.
+        const withHeadings = tree.map( ( node: any ) => {
+            return injectSectionHeadings( node, formItems );
+        } );
+
+        // Handle fields added via `dokan_product_editor_schema` filter but not placed in layout.
+        const usedFields = collectUsedFields( withHeadings );
         const remainingFieldsBySection = getRemainingFields(
             formItems,
             usedFields
         );
         let updatedLayouts = injectRemainingFields(
-            layouts,
+            withHeadings,
             remainingFieldsBySection
         );
 
         const newSections = Object.keys( remainingFieldsBySection ).map(
-            ( sectionId ) => ( {
-                id: sectionId,
-                layout: {
-                    type: 'card',
-                    withHeader: true,
-                },
-                children: remainingFieldsBySection[ sectionId ],
-                ...getFieldHeading( sectionId ),
-            } )
+            ( sectionId ) => {
+                const heading = getFieldHeading( formItems, sectionId );
+                return {
+                    id: sectionId,
+                    layout: {
+                        type: 'card',
+                        withHeader: true,
+                    },
+                    children: remainingFieldsBySection[ sectionId ],
+                    ...heading,
+                };
+            }
         );
 
         if ( newSections.length > 0 ) {
-            updatedLayouts = appendToLeftColumn( updatedLayouts, newSections );
+            updatedLayouts = appendToTarget(
+                updatedLayouts,
+                newSections,
+                'primary_column'
+            );
         }
 
         return updatedLayouts;
-    }, [ rootLayout, getFieldHeading, formItems ] );
+    }, [ resolvedLayout, formItems ] );
 
     // Apply product-dependent visibility and dependency filtering.
-    // This runs on product changes but reuses the cached layout structure.
     const formLayouts = useMemo( () => {
         return {
-            fields: layoutBuilder(
-                layoutStructure,
-                formItems,
-                product,
-            ),
+            fields: layoutBuilder( layoutStructure, formItems, product ),
         };
     }, [ layoutStructure, formItems, product ] );
 
     return { formLayouts, width };
+}
+
+/**
+ * Recursively inject section headings (label/description) from formItems
+ * into layout nodes that have `withHeader: true` but no label set.
+ *
+ * @param {any}            node      Layout node to process.
+ * @param {FormItem[]} formItems Flat form items for heading lookup.
+ * @return {any} Updated layout node.
+ */
+function injectSectionHeadings( node: any, formItems: FormItem[] ): any {
+    if ( typeof node === 'string' ) {
+        return node;
+    }
+
+    const updated = { ...node };
+
+    // If the node has withHeader and no label, try to get it from formItems.
+    if ( updated.layout?.withHeader && ! updated.label ) {
+        const heading = getFieldHeading( formItems, updated.id );
+        if ( heading.label ) {
+            updated.label = heading.label;
+        }
+        if ( heading.description ) {
+            updated.description = heading.description;
+        }
+    }
+
+    if ( updated.children ) {
+        updated.children = updated.children.map( ( child: any ) => {
+            return injectSectionHeadings( child, formItems );
+        } );
+    }
+
+    return updated;
 }

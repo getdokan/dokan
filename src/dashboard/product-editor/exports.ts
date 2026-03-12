@@ -30,7 +30,8 @@ export {
     fieldValueForProduct,
     resolveDependency,
     layoutBuilder,
-    appendToLeftColumn,
+    buildLayoutTree,
+    appendToTarget,
     collectUsedFields,
     getRemainingFields,
     injectRemainingFields,
@@ -39,7 +40,10 @@ export {
 // Types
 export type {
     DependencyCondition,
-    FlatFormItem,
+    FormItem,
+    LayoutItem,
+    LayoutConfig,
+    ResponsiveBreakpoint,
     FieldConfig,
     FieldHandler,
     VariationType,

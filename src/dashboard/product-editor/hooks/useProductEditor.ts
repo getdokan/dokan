@@ -5,7 +5,7 @@ import { __ } from '@wordpress/i18n';
 // @ts-ignore
 import productEditorStore from '@dokan/stores/product-editor';
 import { getFieldConfig } from '../components/FieldRenderer';
-import { Attribute, DefaultAttribute, FlatFormItem } from '../types';
+import { Attribute, DefaultAttribute, FormItem } from '../types';
 import { resolveLabel, resolveRequired, resolveVisibility } from '../utils';
 import { doAction } from '@wordpress/hooks';
 
@@ -17,7 +17,7 @@ import { doAction } from '@wordpress/hooks';
 type ProductEditorValue = {
     product: Record< string, any >;
     fields: any[];
-    formItems: FlatFormItem[];
+    formItems: FormItem[];
     onChange: ( newData: Record< string, any > ) => void;
     submitHandler: ( e: any ) => Promise<void>;
     isLoading: boolean;
@@ -49,8 +49,8 @@ export function useProductEditor( productId: number ): ProductEditorValue {
             return [];
         }
         return formItems
-            .filter( ( i: FlatFormItem ) => i.type === 'field' )
-            .map( ( item: FlatFormItem ) => {
+            .filter( ( i: FormItem ) => i.type === 'field' )
+            .map( ( item: FormItem ) => {
                 const field = {
                     ...item,
                     label: resolveLabel( item, currentProductType ),
@@ -194,7 +194,7 @@ export function useProductEditor( productId: number ): ProductEditorValue {
  */
 export function useInitProductEditor(
     productId: number,
-    formItems: FlatFormItem[],
+    formItems: FormItem[],
     vendorEarning: number
 ) {
     const { initForm } = useDispatch( productEditorStore );

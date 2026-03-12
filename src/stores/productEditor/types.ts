@@ -1,5 +1,5 @@
 import {
-    FlatFormItem,
+    FormItem,
     VariationType,
 } from '../../dashboard/product-editor/types';
 
@@ -7,7 +7,7 @@ export type { VariationType };
 
 export interface FormEntry {
     product: Record< string, any >;
-    formItems: FlatFormItem[];
+    formItems: FormItem[];
 }
 
 export interface ProductEditorState {

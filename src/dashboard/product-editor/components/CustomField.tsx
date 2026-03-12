@@ -4,7 +4,7 @@ import { decodeEntities } from '@wordpress/html-entities';
 import { __ } from '@wordpress/i18n';
 import { Info } from 'lucide-react';
 import { useCallback, useState, RawHTML } from '@wordpress/element';
-import { FlatFormItem } from '../types';
+import { FormItem } from '../types';
 
 /**
  * Extract the first validation error message from the DataViews validity object.
@@ -44,7 +44,7 @@ const CustomField = ( {
     className = '',
 }: {
     label?: string | React.ReactNode;
-    field: FlatFormItem & { rawLabel?: string };
+    field: FormItem & { rawLabel?: string };
     children: React.ReactNode;
     error?: string;
     className?: string;

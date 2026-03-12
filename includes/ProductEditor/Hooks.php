@@ -131,6 +131,7 @@ class Hooks {
 
         $args = [
             'form_items'         => dokan()->product_editor->get_schema( $product_id ),
+            'form_layouts'       => FormSchema::get_layouts(),
             'product_id'         => $product_id,
             'is_new_product'     => $new_product,
             'view_product_url'   => get_permalink( $product_id ),
@@ -140,6 +141,8 @@ class Hooks {
                 'ai_image_enable'   => $is_image_configured,
             ],
         ];
+
+        $args = apply_filters( 'dokan_product_editor_localize_data', $args, $product_id, $product );
 
         wp_add_inline_script(
             'dokan-product-editor',
