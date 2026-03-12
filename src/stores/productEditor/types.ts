@@ -1,7 +1,7 @@
 import {
     FormItem,
     VariationType,
-} from '../../dashboard/product-editor/types';
+} from '../../product-editor/types';
 
 export type { VariationType };
 

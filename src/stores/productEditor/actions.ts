@@ -1,6 +1,6 @@
 import apiFetch from '@wordpress/api-fetch';
-import { FormItem } from '../../dashboard/product-editor/types';
-import { fieldValueForProduct } from '../../dashboard/product-editor/utils';
+import { FormItem } from '../../product-editor/types';
+import { fieldValueForProduct } from '../../product-editor/utils';
 import { VariationType } from './types';
 
 // Action type constants.
