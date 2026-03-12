@@ -23,13 +23,27 @@ test.describe('Commission Tests @lite', () => {
     // const context = await browser.newContext({ storageState: a1 });
     // const page = await context.newPage();
 
-    test('Test Case 1 - Placeholder Test', async ({ browser }) => {
-        // Using admin session storage
+    test('Test Case 1 - Admin Configures Fixed Commission Settings', async ({ browser }) => {
         const context = await browser.newContext({ storageState: a1 });
         const adminPage = await context.newPage();
         const commissionPage = new CommissionPage(adminPage);
 
-        // Add your test steps here
+        // Go to Dokan settings
+        await commissionPage.goToSettingsPage();
+
+        // Click the settings nav tab to open Selling Options
+        await commissionPage.clickSettingsNavTab();
+
+        // Set percentage: click, clear, type 10,00 in #percentage-val-id, then save
+        await commissionPage.setPercentageValue(commissionPage.testData.commission.percentageValue);
+        await commissionPage.clickSubmitButton();
+
+        // Page reloads after save — re-open Selling Options tab before interacting
+        await commissionPage.clickSettingsNavTab();
+
+        // Set fixed: click, clear, type 5,00 in fixed input, then save
+        await commissionPage.setFixedValue(commissionPage.testData.commission.fixedValue);
+        await commissionPage.clickSubmitButton();
 
         await commissionPage.waitForPageReady();
         await adminPage.close();
