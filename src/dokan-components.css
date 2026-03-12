@@ -29,6 +29,15 @@ table:not(.dataviews-view-table) td {
     box-sizing: border-box;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: inherit;
+    font-weight: inherit;
+}
 /* List Reset */
 ul,
 ol {
@@ -98,6 +107,9 @@ input[type="reset"] {
 
     &:hover:not(:disabled) {
         cursor: pointer;
+        -webkit-appearance: button;
+        background-color: transparent;
+        background-image: none;
     }
 
     &:disabled,
@@ -136,6 +148,9 @@ input[type="reset"] {
 
     &:disabled {
         @apply opacity-50;
+        background-color: var(--color-dokan-btn);
+        color: var(--color-dokan-btn-text);
+        border: 1px solid var(--color-dokan-btn-border);
     }
 }
 
@@ -147,9 +162,9 @@ input[type="reset"] {
     outline: none;
 
     &:hover:not(:disabled) {
-        background-color: var(--color-dokan-btn-secondary-hover);
-        border-color: var(--color-dokan-btn-secondary-border-hover);
-        color: var(--color-dokan-btn-secondary-text-hover);
+        background-color: var(--color-dokan-btn-secondary-hover) !important;
+        border-color: var(--color-dokan-btn-secondary-border-hover) !important;
+        color: var(--color-dokan-btn-secondary-text-hover) !important;
     }
 
     &:focus:not(:disabled),
@@ -161,9 +176,9 @@ input[type="reset"] {
 
     &:active:not(:disabled) {
         transform: scale(0.98);
-        background-color: var(--color-dokan-btn-secondary-hover);
-        border-color: var(--color-dokan-btn-secondary-border-hover);
-        color: var(--color-dokan-btn-secondary-text-hover);
+        background-color: var(--color-dokan-btn-secondary-hover) !important;
+        border-color: var(--color-dokan-btn-secondary-border-hover) !important;
+        color: var(--color-dokan-btn-secondary-text-hover) !important;
     }
 
     &:disabled {
@@ -179,9 +194,9 @@ input[type="reset"] {
     outline: none;
 
     &:hover:not(:disabled) {
-        background-color: var(--color-dokan-btn-tertiary-hover);
-        border-color: var(--color-dokan-btn-tertiary-border-hover);
-        color: var(--color-dokan-btn-tertiary-text-hover);
+        background-color: var(--color-dokan-btn-tertiary-hover) !important;
+        border-color: var(--color-dokan-btn-tertiary-border-hover) !important;
+        color: var(--color-dokan-btn-tertiary-text-hover) !important;
     }
 
     &:focus:not(:disabled),
@@ -193,9 +208,9 @@ input[type="reset"] {
 
     &:active:not(:disabled) {
         transform: scale(0.98);
-        background-color: var(--color-dokan-btn-tertiary-hover);
-        border-color: var(--color-dokan-btn-tertiary-border-hover);
-        color: var(--color-dokan-btn-tertiary-text-hover);
+        background-color: var(--color-dokan-btn-tertiary-hover) !important;
+        border-color: var(--color-dokan-btn-tertiary-border-hover) !important;
+        color: var(--color-dokan-btn-tertiary-text-hover) !important;
     }
 
     &:disabled {
@@ -212,23 +227,23 @@ input[type="reset"] {
     outline: none;
 
     &:hover:not(:disabled) {
-        background-color: var(--color-dokan-btn-info-hover);
-        border-color: var(--color-dokan-btn-info-hover);
-        color: var(--color-dokan-btn-info-text-hover);
+        background-color: var(--color-dokan-btn-info-hover) !important;
+        border-color: var(--color-dokan-btn-info-hover) !important;
+        color: var(--color-dokan-btn-info-text-hover) !important;
     }
 
     &:focus:not(:disabled),
     &:focus-visible:not(:disabled) {
         @apply ring-2 ring-offset-2;
-        --tw-ring-color: var(--color-dokan-btn-info);
+        --tw-ring-color: var(--color-dokan-btn-info) !important;
         outline: none;
     }
 
     &:active:not(:disabled) {
         transform: scale(0.98);
-        background-color: var(--color-dokan-btn-info-hover);
-        border-color: var(--color-dokan-btn-info-hover);
-        color: var(--color-dokan-btn-info-text-hover);
+        background-color: var(--color-dokan-btn-info-hover) !important;
+        border-color: var(--color-dokan-btn-info-hover) !important;
+        color: var(--color-dokan-btn-info-text-hover) !important;
     }
 
     &:disabled {
@@ -343,7 +358,7 @@ input[type="reset"] {
 
 /* ========== Link Styles ========== */
 .dokan-link {
-    @apply no-underline transition-colors duration-200;
+    @apply no-underline transition-colors duration-200 bg-transparent;
     color: var(--color-dokan-link);
 
     &:hover,

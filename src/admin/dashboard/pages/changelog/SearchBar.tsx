@@ -106,7 +106,7 @@ const SearchBar = ({
                             { searchQuery && (
                                 <button
                                     onClick={ () => setSearchQuery( '' ) }
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                    className="absolute right-3 top-[calc(50%-8px)] text-gray-400 hover:text-gray-600"
                                 >
                                     <X className="w-4 h-4" />
                                 </button>
