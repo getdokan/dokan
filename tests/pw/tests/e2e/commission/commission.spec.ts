@@ -81,5 +81,35 @@ test.describe('Commission Tests @lite', () => {
         await context.close();
     });
 
+    test('Test Case 3 - Admin Creates Product with Commission Specific Settings', async ({ browser }) => {
+        const context = await browser.newContext({ storageState: a1 });
+        const adminPage = await context.newPage();
+        const commissionPage = new CommissionPage(adminPage);
+        const data = commissionPage.testData.product;
+
+        // Go to new product page
+        await commissionPage.goToNewProductPage();
+
+        // Title: click and type
+        await commissionPage.setProductTitle(data.title);
+
+        // Open General product data
+        await commissionPage.clickGeneralProductData();
+        await commissionPage.setRegularPrice(data.regularPrice);
+        await commissionPage.setSalePrice(data.salePrice);
+
+        // Open Advanced product data
+        await commissionPage.clickAdvancedProductData();
+        await commissionPage.setAdminCommission(data.adminCommission);
+        await commissionPage.setPerProductAdminFee(data.perProductAdminFee);
+
+        // Publish and wait for DOM content load
+        await commissionPage.clickPublishButton();
+
+        await commissionPage.waitForPageReady();
+        await adminPage.close();
+        await context.close();
+    });
+
     // Add more test cases here
 });

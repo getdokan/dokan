@@ -26,6 +26,16 @@ export class CommissionPage {
         // Category Based commission inputs (long CSS paths from DOM)
         categoryBasedPercentageInput: "body > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > form:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > input:nth-child(1)",
         categoryBasedFixedInput: "body > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > form:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > input:nth-child(2)",
+        // New product (post-new.php?post_type=product)
+        newProductUrl: `${BASE_URL}/wp-admin/post-new.php?post_type=product`,
+        productTitleInput: "//input[@id='title']",
+        generalProductDataLink: "//a[@href='#general_product_data']",
+        regularPriceInput: "//div[@class='options_group pricing show_if_simple show_if_external hidden show_if_product_pack']//input[@id='_regular_price']",
+        salePriceInput: "//input[@id='_sale_price']",
+        advancedProductDataLink: "//a[@href='#advanced_product_data']",
+        adminCommissionInput: "//input[@id='admin_commission']",
+        perProductAdminFeeInput: "//input[@name='_per_product_admin_additional_fee']",
+        publishButton: "//input[@id='publish']",
     };
 
     // Vendor Selectors
@@ -63,6 +73,13 @@ export class CommissionPage {
             fixedValue: '5,00',
             categoryBasedType: 'Category Based',
             categoryBasedValue: '5',
+        },
+        product: {
+            title: 'Test Commission Specific Admin 1',
+            regularPrice: '150',
+            salePrice: '120',
+            adminCommission: '15',
+            perProductAdminFee: '15',
         }
     };
 
@@ -142,6 +159,63 @@ export class CommissionPage {
     async clickSubmitButton() {
         await this.page.waitForTimeout(500);
         await this.page.locator(this.admin.submitButton).click();
+        await this.page.waitForLoadState('domcontentloaded');
+    }
+
+    // New product (commission-specific) methods
+    async goToNewProductPage() {
+        await this.page.goto(this.admin.newProductUrl);
+        await this.page.waitForLoadState('domcontentloaded');
+    }
+
+    async setProductTitle(title: string) {
+        const input = this.page.locator(this.admin.productTitleInput);
+        await input.waitFor({ state: 'visible' });
+        await input.click();
+        await input.fill(title);
+    }
+
+    async clickGeneralProductData() {
+        await this.page.locator(this.admin.generalProductDataLink).waitFor({ state: 'visible' });
+        await this.page.locator(this.admin.generalProductDataLink).click();
+    }
+
+    async setRegularPrice(value: string) {
+        const input = this.page.locator(this.admin.regularPriceInput).first();
+        await input.waitFor({ state: 'visible' });
+        await input.click();
+        await input.fill(value);
+    }
+
+    async setSalePrice(value: string) {
+        const input = this.page.locator(this.admin.salePriceInput);
+        await input.waitFor({ state: 'visible' });
+        await input.click();
+        await input.fill(value);
+    }
+
+    async clickAdvancedProductData() {
+        await this.page.locator(this.admin.advancedProductDataLink).waitFor({ state: 'visible' });
+        await this.page.locator(this.admin.advancedProductDataLink).click();
+    }
+
+    async setAdminCommission(value: string) {
+        const input = this.page.locator(this.admin.adminCommissionInput);
+        await input.waitFor({ state: 'visible' });
+        await input.click();
+        await input.fill(value);
+    }
+
+    async setPerProductAdminFee(value: string) {
+        const input = this.page.locator(this.admin.perProductAdminFeeInput);
+        await input.waitFor({ state: 'visible' });
+        await input.click();
+        await input.fill(value);
+    }
+
+    async clickPublishButton() {
+        await this.page.locator(this.admin.publishButton).waitFor({ state: 'visible' });
+        await this.page.locator(this.admin.publishButton).click();
         await this.page.waitForLoadState('domcontentloaded');
     }
 
