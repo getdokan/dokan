@@ -173,7 +173,7 @@ class Assets {
     public function get_localized_price() {
         return [
             'precision' => wc_get_price_decimals(),
-            'symbol'    => html_entity_decode( get_woocommerce_currency_symbol() ),
+            'symbol'    => html_entity_decode( get_woocommerce_currency_symbol(), ENT_COMPAT, 'UTF-8' ),
             'decimal'   => esc_attr( wc_get_price_decimal_separator() ),
             'thousand'  => esc_attr( wc_get_price_thousand_separator() ),
             'position'  => esc_attr( get_option( 'woocommerce_currency_pos' ) ),
@@ -353,16 +353,19 @@ class Assets {
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-admin-product-style.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-admin-product-style.css' ),
             ],
-
+            'dokan-tailwind'                => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-tailwind.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-tailwind.css' ),
+            ],
             'dokan-react-frontend'   => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/frontend.css',
                 'deps'    => [ 'dokan-react-components' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/frontend.css' ),
             ],
             'dokan-react-components' => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/js/dokan-tailwind.css',
-                'deps'    => [ 'wp-components' ],
-                'version' => filemtime( DOKAN_DIR . '/assets/js/dokan-tailwind.css' ),
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/components.css',
+                'deps'    => [ 'wp-components', 'dokan-tailwind' ],
+                'version' => filemtime( DOKAN_DIR . '/assets/css/components.css' ),
             ],
         ];
 
@@ -991,7 +994,7 @@ class Assets {
      *
      * @since 2.5.3
      *
-     * @global type $wp
+     * @global $wp
      */
     public function dokan_dashboard_scripts() {
         global $wp;
