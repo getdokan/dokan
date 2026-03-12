@@ -17,7 +17,7 @@ const targetFiles = [
 ];
 
 console.log(
-    chalk.bgYellowBright.black(
+    chalk.gray.black(
         '🧹Removing files that are unnecessery for production build in dokan-lite.'
     )
 );
