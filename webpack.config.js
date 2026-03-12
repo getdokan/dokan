@@ -12,6 +12,12 @@ const DependencyExtractionWebpackPlugin = require( '@wordpress/dependency-extrac
 
 const updatedConfig = {
     mode: defaultConfig.mode,
+    cache: {
+        type: 'filesystem',
+        buildDependencies: {
+            config: [ __filename ],
+        },
+    },
     watchOptions: {
         ignored: [
             '**/node_modules/**',
