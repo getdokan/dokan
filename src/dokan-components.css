@@ -74,6 +74,12 @@ input:focus {
         outline-color: var(--color-primary);
     }
 }
+button[role="switch"] span {
+    @apply translate-x-0.5 shrink-0 transition-transform duration-200;
+}
+button[role="switch"] span[data-state="unchecked"] {
+    @apply -translate-x-2
+}
 
 /* ========== Link Styles ========== */
 a:not(.dokan-btn):not([class*="dokan-btn-"]):not(.skip-color-module) {
@@ -107,9 +113,6 @@ input[type="reset"] {
 
     &:hover:not(:disabled) {
         cursor: pointer;
-        -webkit-appearance: button;
-        background-color: transparent;
-        background-image: none;
     }
 
     &:disabled,
@@ -118,18 +121,27 @@ input[type="reset"] {
     }
 }
 
+.dokan-price-input .rounded-l-none {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+.dokan-price-input .rounded-r-none {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
 /* ========== Button Styles ========== */
 .dokan-btn {
     @apply relative px-4 py-2 rounded-md font-medium transition-all duration-200 shadow-sm cursor-pointer;
-    background-color: var(--color-dokan-btn);
-    color: var(--color-dokan-btn-text);
-    border: 1px solid var(--color-dokan-btn-border);
+    background-color: var(--color-dokan-btn) !important;
+    color: var(--color-dokan-btn-text) !important;
+    border: 1px solid var(--color-dokan-btn-border) !important;
     outline: none;
 
     &:hover:not(:disabled) {
-        background-color: var(--color-dokan-btn-hover);
-        border-color: var(--color-dokan-btn-border-hover);
-        color: var(--color-dokan-btn-text-hover);
+        background-color: var(--color-dokan-btn-hover) !important;
+        border-color: var(--color-dokan-btn-border-hover) !important;
+        color: var(--color-dokan-btn-text-hover) !important;
     }
 
     &:focus:not(:disabled),

@@ -184,7 +184,7 @@ class SetupWizard {
             wp_register_style(
                 'dokan-admin-onboard-app',
                 DOKAN_PLUGIN_ASSEST . '/js/dokan-admin-onboard.css',
-                [],
+                [ 'dokan-react-components' ],
                 $version
             );
 
