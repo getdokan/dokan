@@ -195,7 +195,7 @@ const AddReverseWithdrawModal = ( {
                 <label className="text-[#25252D] font-medium text-sm">
                     { __( 'Transaction Type', 'dokan-lite' ) }
                 </label>
-                <div className="flex flex-col sm:flex-row rounded! overflow-hidden w-fit mt-2.5">
+                <div className="flex rounded! overflow-hidden w-fit mt-2.5">
                     { [
                         {
                             label: __( 'Product', 'dokan-lite' ),
