@@ -1,6 +1,12 @@
 import { sanitizeHTML } from '@src/utilities';
 import { __ } from '@wordpress/i18n';
-import type { DependencyCondition, FormItem, LayoutItem } from './types';
+import type {
+    DependencyCondition,
+    FormItem,
+    LayoutConfig,
+    LayoutItem,
+    ResponsiveBreakpoint,
+} from './types';
 
 /** Find a field or section by ID. */
 export const getField = (
@@ -408,3 +414,59 @@ export const injectRemainingFields = (
         return newItem;
     } );
 };
+
+/**
+ * Resolve layout config for a flat layout item based on current viewport width.
+ * Picks the first matching responsive breakpoint (sorted ascending by maxWidth),
+ * or falls back to the item's default layout.
+ */
+export function resolveResponsiveLayout(
+    item: LayoutItem,
+    width: number
+): LayoutConfig | undefined {
+    if ( item.responsive?.length && width ) {
+        const sorted = [ ...item.responsive ].sort(
+            ( a: ResponsiveBreakpoint, b: ResponsiveBreakpoint ) =>
+                a.maxWidth - b.maxWidth
+        );
+        for ( const bp of sorted ) {
+            if ( width <= bp.maxWidth ) {
+                return bp.layout;
+            }
+        }
+    }
+    return item.layout;
+}
+
+/**
+ * Recursively inject section headings (label/description) from formItems
+ * into layout nodes that have `withHeader: true` but no label set.
+ */
+export function injectSectionHeadings(
+    node: any,
+    formItems: FormItem[]
+): any {
+    if ( typeof node === 'string' ) {
+        return node;
+    }
+
+    const updated = { ...node };
+
+    if ( updated.layout?.withHeader && ! updated.label ) {
+        const heading = getFieldHeading( formItems, updated.id );
+        if ( heading.label ) {
+            updated.label = heading.label;
+        }
+        if ( heading.description ) {
+            updated.description = heading.description;
+        }
+    }
+
+    if ( updated.children ) {
+        updated.children = updated.children.map( ( child: any ) => {
+            return injectSectionHeadings( child, formItems );
+        } );
+    }
+
+    return updated;
+}

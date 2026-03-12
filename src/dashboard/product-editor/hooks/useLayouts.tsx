@@ -1,11 +1,6 @@
 import { useWindowDimensions } from '@src/hooks';
 import { useMemo } from '@wordpress/element';
-import {
-    FormItem,
-    LayoutItem,
-    LayoutConfig,
-    ResponsiveBreakpoint,
-} from '../types';
+import { FormItem, LayoutItem } from '../types';
 import {
     appendToTarget,
     buildLayoutTree,
@@ -13,36 +8,10 @@ import {
     getFieldHeading,
     getRemainingFields,
     injectRemainingFields,
+    injectSectionHeadings,
     layoutBuilder,
+    resolveResponsiveLayout,
 } from '../utils';
-
-/**
- * Resolve layout config for a flat layout item based on current viewport width.
- * Picks the first matching responsive breakpoint (sorted ascending by maxWidth),
- * or falls back to the item's default layout.
- *
- * @param {LayoutItem} item  The flat layout item.
- * @param {number}         width Current viewport width.
- * @return {LayoutConfig|undefined} Resolved layout config.
- */
-function resolveResponsiveLayout(
-    item: LayoutItem,
-    width: number
-): LayoutConfig | undefined {
-    if ( item.responsive?.length && width ) {
-        // Sort breakpoints ascending so we match the smallest qualifying one.
-        const sorted = [ ...item.responsive ].sort(
-            ( a: ResponsiveBreakpoint, b: ResponsiveBreakpoint ) =>
-                a.maxWidth - b.maxWidth
-        );
-        for ( const bp of sorted ) {
-            if ( width <= bp.maxWidth ) {
-                return bp.layout;
-            }
-        }
-    }
-    return item.layout;
-}
 
 /**
  * Custom hook to manage form layouts.
@@ -132,39 +101,4 @@ export default function useLayouts(
     }, [ layoutStructure, formItems, product ] );
 
     return { formLayouts, width };
-}
-
-/**
- * Recursively inject section headings (label/description) from formItems
- * into layout nodes that have `withHeader: true` but no label set.
- *
- * @param {any}            node      Layout node to process.
- * @param {FormItem[]} formItems Flat form items for heading lookup.
- * @return {any} Updated layout node.
- */
-function injectSectionHeadings( node: any, formItems: FormItem[] ): any {
-    if ( typeof node === 'string' ) {
-        return node;
-    }
-
-    const updated = { ...node };
-
-    // If the node has withHeader and no label, try to get it from formItems.
-    if ( updated.layout?.withHeader && ! updated.label ) {
-        const heading = getFieldHeading( formItems, updated.id );
-        if ( heading.label ) {
-            updated.label = heading.label;
-        }
-        if ( heading.description ) {
-            updated.description = heading.description;
-        }
-    }
-
-    if ( updated.children ) {
-        updated.children = updated.children.map( ( child: any ) => {
-            return injectSectionHeadings( child, formItems );
-        } );
-    }
-
-    return updated;
 }

@@ -407,6 +407,86 @@ The `buildLayoutTree()` utility in `utils.tsx` converts the flat PHP array into 
 3. For items with `after`, injects the sub-tree at the correct position in the parent's `children` array
 4. Auto-appends remaining schema fields not explicitly placed in any layout
 
+### Variation Layout Customization
+
+Variation forms use a separate layout system defined in `WeDevs\DokanPro\Modules\ProductEditor\FormSchema::get_variation_layouts()`. It follows the same flat-array format as the main product layout but is passed to the frontend as `variation_form_layouts` via the `dokan_product_editor_localize_data` filter.
+
+#### Built-in variation layout structure
+
+```
+variation_image_sku (row, responsive → regular at ≤768px)
+├── image_and_digital_options (row)
+│   ├── image_id
+│   └── variable_downloadable_options
+│       └── [enabled, downloadable, virtual, manage_stock]
+└── variation_sku (regular)
+    └── [sku]
+variation_prices (row)
+└── [regular_price, sale_price]
+variation_discount_toggle
+└── [create_schedule_for_discount]
+variation_discount_schedule (row)
+└── [date_on_sale_from, date_on_sale_to]
+variation_subscription
+└── [subscription fields...]
+variation_stock_row (row)
+└── [stock_quantity, backorders]
+variation_standalone_fields
+└── [low_stock_amount, shipping_class, tax_class, description]
+variation_downloads (card, withHeader)
+├── [downloads]
+└── variation_downloads_settings (row)
+    └── [download_limit, download_expiry]
+variation_wholesale_section (with heading)
+├── [enable_wholesale]
+└── variation_wholesale_fields (row)
+    └── [wholesale_price, wholesale_quantity]
+variation_min_max_section (with heading)
+└── [min_quantity, max_quantity]
+```
+
+#### Adding fields to variation layout via filter
+
+Use the `dokan_product_editor_variation_form_layouts` filter to add new layout items:
+
+```php
+add_filter( 'dokan_product_editor_variation_form_layouts', function ( array $layouts ): array {
+    $layouts[] = [
+        'id'        => 'my_variation_section',
+        'parent_id' => null,
+        'priority'  => 85, // After downloads (80), before wholesale (90)
+        'layout'    => [
+            'type'       => 'card',
+            'withHeader' => true,
+        ],
+        'children'  => [ 'my_variation_field_1', 'my_variation_field_2' ],
+    ];
+
+    return $layouts;
+} );
+```
+
+#### Customizing children of existing variation layout items
+
+Use the `dokan_product_editor_variation_layout_children` filter:
+
+```php
+add_filter( 'dokan_product_editor_variation_layout_children', function ( array $children, array $item ): array {
+    if ( $item['id'] === 'variation_standalone_fields' ) {
+        $children[] = 'my_custom_variation_meta';
+    }
+
+    return $children;
+}, 10, 2 );
+```
+
+#### Custom fields in variations
+
+The variation layout handles remaining custom fields (not explicitly placed) in two ways:
+
+1. **Predefined section custom fields** — Custom fields assigned to built-in sections (e.g., `section_id: 'general'`, `'inventory'`) render flat at the bottom of the form, without a card wrapper.
+2. **Custom section custom fields** — Custom fields assigned to user-created sections (where the section itself has `is_custom: true`) render wrapped in a card with the section's label as the header.
+
 ---
 
 ## 7. Dependencies & Conditional Visibility
@@ -819,6 +899,8 @@ class ProductEditorFields {
 | `dokan_product_editor_schema_payload` | `(array $payload)` | Transform form data before saving to WC REST API |
 | `dokan_product_editor_form_layouts` | `(array $layout)` | Add or modify layout items (flat array with parent-child) |
 | `dokan_product_editor_form_layout_children` | `(string[] $children, array $item)` | Modify the children (field IDs) of a specific layout item |
+| `dokan_product_editor_variation_form_layouts` | `(array $layouts)` | Add or modify variation layout items (flat array with parent-child) |
+| `dokan_product_editor_variation_layout_children` | `(string[] $children, array $item)` | Modify the children (field IDs) of a specific variation layout item |
 | `dokan_product_editor_variation_payload` | `(array $payload, array $data)` | Transform variation payload before saving |
 | `dokan_product_editor_price_visibilities` | `(array $visibilities)` | Per-type visibility for price fields |
 | `dokan_product_editor_digital_option_visibilities` | `(array $visibilities)` | Per-type visibility for digital option fields |

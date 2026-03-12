@@ -35,6 +35,8 @@ export {
     collectUsedFields,
     getRemainingFields,
     injectRemainingFields,
+    resolveResponsiveLayout,
+    injectSectionHeadings,
 } from './utils';
 
 // Types
