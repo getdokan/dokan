@@ -6,6 +6,7 @@ import {
 import { DokanButton, Select } from '@src/components';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import { GripVertical } from 'lucide-react';
 import { Attribute } from '../../types';
 
 export type AttributeCardProps = {
@@ -15,6 +16,13 @@ export type AttributeCardProps = {
     options: any[];
     onUpdate: ( updatedAttribute: Attribute ) => void;
     onRemove: ( e: React.MouseEvent< HTMLSpanElement, MouseEvent > ) => void;
+    index: number;
+    isDragOver: boolean;
+    onDragStart: ( index: number ) => void;
+    onDragEnter: ( index: number ) => void;
+    onDragOver: ( e: React.DragEvent ) => void;
+    onDrop: () => void;
+    onDragEnd: () => void;
 };
 
 const AttributeCard = ( {
@@ -24,8 +32,16 @@ const AttributeCard = ( {
     onRemove,
     productType,
     cardExpanded,
+    index,
+    isDragOver,
+    onDragStart,
+    onDragEnter,
+    onDragOver,
+    onDrop,
+    onDragEnd,
 }: AttributeCardProps ) => {
     const [ isExpanded, setIsExpanded ] = useState( cardExpanded );
+    const [ isDraggable, setIsDraggable ] = useState( false );
 
     const handleAttributeChange = ( key: keyof Attribute, value: any ) => {
         onUpdate( {
@@ -86,7 +102,22 @@ const AttributeCard = ( {
     };
 
     return (
-        <div className="border rounded bg-white shadow-sm overflow-hidden">
+        <div
+            className={ `border rounded bg-white shadow-sm overflow-hidden transition-[border-color,opacity] duration-200 ${
+                isDragOver
+                    ? 'border-blue-400 border-dashed'
+                    : ''
+            }` }
+            draggable={ isDraggable }
+            onDragStart={ () => onDragStart( index ) }
+            onDragEnter={ () => onDragEnter( index ) }
+            onDragOver={ onDragOver }
+            onDrop={ onDrop }
+            onDragEnd={ () => {
+                setIsDraggable( false );
+                onDragEnd();
+            } }
+        >
             <div
                 role="button"
                 tabIndex={ 0 }
@@ -99,8 +130,21 @@ const AttributeCard = ( {
                     }
                 } }
             >
-                <div className="font-semibold text-gray-700 text-sm">
-                    { attr.name || __( 'New Attribute', 'dokan-lite' ) }
+                <div className="flex items-center gap-2">
+                    <span
+                        className="cursor-grab text-gray-400 hover:text-gray-600"
+                        onMouseDown={ ( e ) => {
+                            e.stopPropagation();
+                            setIsDraggable( true );
+                        } }
+                        onMouseUp={ () => setIsDraggable( false ) }
+                        onClick={ ( e ) => e.stopPropagation() }
+                    >
+                        <GripVertical size={ 16 } />
+                    </span>
+                    <span className="font-semibold text-gray-700 text-sm">
+                        { attr.name || __( 'New Attribute', 'dokan-lite' ) }
+                    </span>
                 </div>
                 <div className="flex items-center gap-3">
                     <span
