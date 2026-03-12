@@ -117,20 +117,12 @@ export class CommissionPage {
         //await this.page.locator("//div[@class='fee-recipients dokan-settings-field-type-sub_section']//div[@class='dokan-settings-sub-section sub-section-styles']").click();
     }
 
+
+    // TODO: will migrate to base page later.
     async clickSubmitButton() {
-        // await Promise.all([
-        //     // Wait for the WP form POST to complete before proceeding
-        //     this.page.waitForResponse(
-        //         res => res.url().includes('wp-admin') && res.request().method() === 'POST'
-        //     ),
-        
-        await this.waitForTimeout(5000);
-           await this.page.locator(this.admin.submitButton).click(),
-        // ]);
-        // Wait for the redirect after POST to fully paint
-        //await this.page.waitForLoadState('domcontentloaded');
-        // Allow at least 5s for the settings to be fully persisted
-        await this.page.waitForTimeout(5000);
+        await this.page.waitForTimeout(500);
+        await this.page.locator(this.admin.submitButton).click(),
+        await this.page.waitForLoadState('domcontentloaded');
     }
 
     // Vendor Methods
