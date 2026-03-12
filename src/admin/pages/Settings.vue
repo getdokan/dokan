@@ -90,7 +90,7 @@
                                                                 </div>
                                                             </div>
                                                             <svg
-                                                                class="w-4 h-4 text-gray-400 flex-shrink-0"
+                                                                class="w-4 h-4 text-gray-400 shrink-0"
                                                                 fill="none"
                                                                 stroke="currentColor"
                                                                 viewBox="0 0 24 24"

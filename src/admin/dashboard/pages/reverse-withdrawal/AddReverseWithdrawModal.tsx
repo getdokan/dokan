@@ -344,7 +344,7 @@ const AddReverseWithdrawModal = ( {
                             size={ 16 }
                             className="text-gray-400 cursor-help"
                         />
-                        <div className="invisible group-hover:visible absolute bottom-full left-1/2 !transform -translate-x-1/2 mb-2 w-64 p-3 bg-gray-900 text-white text-xs rounded shadow-lg z-10">
+                        <div className="invisible group-hover:visible absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-gray-900 text-white text-xs rounded shadow-lg z-10">
                             { __(
                                 'Adjust Balance by Creating a New Reverse Withdrawal Entry',
                                 'dokan-lite'
@@ -397,7 +397,7 @@ const AddReverseWithdrawModal = ( {
                             size={ 16 }
                             className="text-gray-400 cursor-help"
                         />
-                        <div className="invisible group-hover:visible absolute bottom-full left-1/2 !transform -translate-x-1/2 mb-2 w-64 p-3 bg-gray-900 text-white text-xs rounded shadow-lg z-10">
+                        <div className="invisible group-hover:visible absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-gray-900 text-white text-xs rounded shadow-lg z-10">
                             { __(
                                 'Enter the amount for the reverse withdrawal',
                                 'dokan-lite'

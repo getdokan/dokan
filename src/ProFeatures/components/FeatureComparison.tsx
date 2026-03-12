@@ -188,7 +188,7 @@ const FeatureComparison = () => {
                     whitespace-nowrap
                     scroll-snap-align-start
                     transition-all duration-200
-                    flex-shrink-0
+                    shrink-0
                     font-bold text-[15px] leading-[130%] tracking-[0%]
                     ${
                         category.key === activeCategory

@@ -269,7 +269,7 @@ const AdminNotices = ( {
                 }
                 dialogIcon={
                     <div
-                        className={ `flex items-center justify-center flex-shrink-0 w-14 h-14 bg-[#FBBF24] border border-[#FBBF24] rounded-full` }
+                        className={ `flex items-center justify-center shrink-0 w-14 h-14 bg-[#FBBF24] border border-[#FBBF24] rounded-full` }
                     >
                         <ShieldAlert color="#FFF" size={ 28 } />
                     </div>

@@ -8,7 +8,7 @@ function FeatureCard( {
     image: string;
 } ) {
     return (
-        <div className="min-w-[258px] max-w-[258px] bg-white rounded-md border flex-shrink-0 overflow-hidden flex flex-col">
+        <div className="min-w-[258px] max-w-[258px] bg-white rounded-md border shrink-0 overflow-hidden flex flex-col">
             <div className="w-full h-[140px] flex items-center justify-center">
                 <img
                     src={ image }

@@ -109,15 +109,15 @@ input[type="reset"] {
 /* ========== Button Styles ========== */
 .dokan-btn {
     @apply relative px-4 py-2 rounded-md font-medium transition-all duration-200 shadow-sm cursor-pointer;
-    background-color: var(--color-dokan-btn) !important;
-    color: var(--color-dokan-btn-text) !important;
-    border: 1px solid var(--color-dokan-btn-border) !important;
+    background-color: var(--color-dokan-btn);
+    color: var(--color-dokan-btn-text);
+    border: 1px solid var(--color-dokan-btn-border);
     outline: none;
 
     &:hover:not(:disabled) {
-        background-color: var(--color-dokan-btn-hover) !important;
-        border-color: var(--color-dokan-btn-border-hover) !important;
-        color: var(--color-dokan-btn-text-hover) !important;
+        background-color: var(--color-dokan-btn-hover);
+        border-color: var(--color-dokan-btn-border-hover);
+        color: var(--color-dokan-btn-text-hover);
     }
 
     &:focus:not(:disabled),
@@ -129,9 +129,9 @@ input[type="reset"] {
 
     &:active:not(:disabled) {
         transform: scale(0.98);
-        background-color: var(--color-dokan-btn-hover) !important;
-        border-color: var(--color-dokan-btn-border-hover) !important;
-        color: var(--color-dokan-btn-text-hover) !important;
+        background-color: var(--color-dokan-btn-hover);
+        border-color: var(--color-dokan-btn-border-hover);
+        color: var(--color-dokan-btn-text-hover);
     }
 
     &:disabled {
@@ -141,15 +141,15 @@ input[type="reset"] {
 
 .dokan-btn-secondary {
     @apply relative px-4 py-2 rounded-md font-medium transition-all duration-200 cursor-pointer;
-    background-color: var(--color-dokan-btn-secondary) !important;
-    color: var(--color-dokan-btn-secondary-text) !important;
-    border: 1px solid var(--color-dokan-btn-secondary-border) !important;
+    background-color: var(--color-dokan-btn-secondary);
+    color: var(--color-dokan-btn-secondary-text);
+    border: 1px solid var(--color-dokan-btn-secondary-border);
     outline: none;
 
     &:hover:not(:disabled) {
-        background-color: var(--color-dokan-btn-secondary-hover) !important;
-        border-color: var(--color-dokan-btn-secondary-border-hover) !important;
-        color: var(--color-dokan-btn-secondary-text-hover) !important;
+        background-color: var(--color-dokan-btn-secondary-hover);
+        border-color: var(--color-dokan-btn-secondary-border-hover);
+        color: var(--color-dokan-btn-secondary-text-hover);
     }
 
     &:focus:not(:disabled),
@@ -161,9 +161,9 @@ input[type="reset"] {
 
     &:active:not(:disabled) {
         transform: scale(0.98);
-        background-color: var(--color-dokan-btn-secondary-hover) !important;
-        border-color: var(--color-dokan-btn-secondary-border-hover) !important;
-        color: var(--color-dokan-btn-secondary-text-hover) !important;
+        background-color: var(--color-dokan-btn-secondary-hover);
+        border-color: var(--color-dokan-btn-secondary-border-hover);
+        color: var(--color-dokan-btn-secondary-text-hover);
     }
 
     &:disabled {
@@ -173,15 +173,15 @@ input[type="reset"] {
 
 .dokan-btn-tertiary {
     @apply relative px-4 py-2 rounded-md font-medium transition-all duration-200 cursor-pointer;
-    background-color: var(--color-dokan-btn-tertiary) !important;
-    color: var(--color-dokan-btn-tertiary-text) !important;
-    border: 1px solid var(--color-dokan-btn-tertiary-border) !important;
+    background-color: var(--color-dokan-btn-tertiary);
+    color: var(--color-dokan-btn-tertiary-text);
+    border: 1px solid var(--color-dokan-btn-tertiary-border);
     outline: none;
 
     &:hover:not(:disabled) {
-        background-color: var(--color-dokan-btn-tertiary-hover) !important;
-        border-color: var(--color-dokan-btn-tertiary-border-hover) !important;
-        color: var(--color-dokan-btn-tertiary-text-hover) !important;
+        background-color: var(--color-dokan-btn-tertiary-hover);
+        border-color: var(--color-dokan-btn-tertiary-border-hover);
+        color: var(--color-dokan-btn-tertiary-text-hover);
     }
 
     &:focus:not(:disabled),
@@ -193,9 +193,9 @@ input[type="reset"] {
 
     &:active:not(:disabled) {
         transform: scale(0.98);
-        background-color: var(--color-dokan-btn-tertiary-hover) !important;
-        border-color: var(--color-dokan-btn-tertiary-border-hover) !important;
-        color: var(--color-dokan-btn-tertiary-text-hover) !important;
+        background-color: var(--color-dokan-btn-tertiary-hover);
+        border-color: var(--color-dokan-btn-tertiary-border-hover);
+        color: var(--color-dokan-btn-tertiary-text-hover);
     }
 
     &:disabled {
