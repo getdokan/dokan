@@ -78,7 +78,7 @@ input:focus {
     @apply translate-x-0.5 shrink-0 transition-transform duration-200;
 }
 .dokan-dashboard-layout button[role="switch"] span[data-state="unchecked"] {
-    @apply -translate-x-2.5;
+    @apply -translate-x-2;
 }
 
 /* ========== Link Styles ========== */
