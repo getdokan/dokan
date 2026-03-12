@@ -30,8 +30,8 @@ export class CommissionPage {
         newProductUrl: `${BASE_URL}/wp-admin/post-new.php?post_type=product`,
         productTitleInput: "//input[@id='title']",
         generalProductDataLink: "//a[@href='#general_product_data']",
-        regularPriceInput: "//div[@class='options_group pricing show_if_simple show_if_external hidden show_if_product_pack']//input[@id='_regular_price']",
-        salePriceInput: "//input[@id='_sale_price']",
+        regularPriceInput: "#_regular_price",
+        salePriceInput: "#_sale_price",
         advancedProductDataLink: "//a[@href='#advanced_product_data']",
         adminCommissionInput: "//input[@id='admin_commission']",
         perProductAdminFeeInput: "//input[@name='_per_product_admin_additional_fee']",
@@ -184,14 +184,21 @@ export class CommissionPage {
         const input = this.page.locator(this.admin.regularPriceInput).first();
         await input.waitFor({ state: 'visible' });
         await input.click();
-        await input.fill(value);
+        await input.clear();
+        // pressSequentially fires keydown/keypress/input/keyup per character so WooCommerce price JS picks it up
+        await input.pressSequentially(value, { delay: 100 });
+        await input.blur();
+        await this.page.waitForTimeout(500);
     }
 
     async setSalePrice(value: string) {
-        const input = this.page.locator(this.admin.salePriceInput);
+        const input = this.page.locator(this.admin.salePriceInput).first();
         await input.waitFor({ state: 'visible' });
         await input.click();
-        await input.fill(value);
+        await input.clear();
+        await input.pressSequentially(value, { delay: 100 });
+        await input.blur();
+        await this.page.waitForTimeout(500);
     }
 
     async clickAdvancedProductData() {

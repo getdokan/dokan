@@ -33,6 +33,7 @@ test.describe('Commission Tests @lite', () => {
 
         // Click the settings nav tab to open Selling Options
         await commissionPage.clickSettingsNavTab();
+        await commissionPage.selectCommissionType(commissionPage.testData.commission.commissionType);
 
         // Set percentage: click, clear, type 10,00 in #percentage-val-id, then save
         await commissionPage.setPercentageValue(commissionPage.testData.commission.percentageValue);
