@@ -123,10 +123,12 @@ export class CommissionPage {
         //     this.page.waitForResponse(
         //         res => res.url().includes('wp-admin') && res.request().method() === 'POST'
         //     ),
-            this.page.locator(this.admin.submitButton).click(),
+        
+        await this.waitForTimeout(5000);
+           await this.page.locator(this.admin.submitButton).click(),
         // ]);
         // Wait for the redirect after POST to fully paint
-        await this.page.waitForLoadState('domcontentloaded');
+        //await this.page.waitForLoadState('domcontentloaded');
         // Allow at least 5s for the settings to be fully persisted
         await this.page.waitForTimeout(5000);
     }
