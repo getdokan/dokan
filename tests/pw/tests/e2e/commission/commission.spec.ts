@@ -50,5 +50,36 @@ test.describe('Commission Tests @lite', () => {
         await context.close();
     });
 
+    test('Test Case 2 - Admin Configures Category Based Commission Settings', async ({ browser }) => {
+        const context = await browser.newContext({ storageState: a1 });
+        const adminPage = await context.newPage();
+        const commissionPage = new CommissionPage(adminPage);
+
+        // Go to Dokan settings
+        await commissionPage.goToSettingsPage();
+
+        // Click Selling Options tab
+        await commissionPage.openSellingOptionsTab();
+
+        // Select "Category Based" from commission type dropdown
+        await commissionPage.selectCommissionType(commissionPage.testData.commission.categoryBasedType);
+        await adminPage.waitForLoadState('domcontentloaded');
+
+        // First category input: click, clear, type "5"
+        await commissionPage.setCategoryBasedPercentageValue(commissionPage.testData.commission.categoryBasedValue);
+        await commissionPage.waitForTimeout(3000);
+
+        // Second category input: click, clear, type "5"
+        await commissionPage.setCategoryBasedFixedValue(commissionPage.testData.commission.categoryBasedValue);
+        await commissionPage.waitForTimeout(3000);
+
+        // Save and wait for DOM content load
+        await commissionPage.clickSubmitButton();
+
+        await commissionPage.waitForPageReady();
+        await adminPage.close();
+        await context.close();
+    });
+
     // Add more test cases here
 });

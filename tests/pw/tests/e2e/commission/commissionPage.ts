@@ -23,6 +23,9 @@ export class CommissionPage {
         percentageInput: "#percentage-val-id",
         fixedInput: "//input[@id='fixed-val-id']",
         submitButton: "//input[@id='submit']",
+        // Category Based commission inputs (long CSS paths from DOM)
+        categoryBasedPercentageInput: "body > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > form:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > input:nth-child(1)",
+        categoryBasedFixedInput: "body > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > form:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > input:nth-child(2)",
     };
 
     // Vendor Selectors
@@ -58,6 +61,8 @@ export class CommissionPage {
             commissionType: 'Fixed',
             percentageValue: '10,00',
             fixedValue: '5,00',
+            categoryBasedType: 'Category Based',
+            categoryBasedValue: '5',
         }
     };
 
@@ -114,14 +119,29 @@ export class CommissionPage {
         await input.click();
         await input.clear();
         await input.fill(value);
-        //await this.page.locator("//div[@class='fee-recipients dokan-settings-field-type-sub_section']//div[@class='dokan-settings-sub-section sub-section-styles']").click();
     }
 
+    // Category Based: click, clear, type in first (percentage) input.
+    async setCategoryBasedPercentageValue(value: string) {
+        const input = this.page.locator(this.admin.categoryBasedPercentageInput).first();
+        await input.waitFor({ state: 'visible' });
+        await input.click();
+        await input.clear();
+        await input.fill(value);
+    }
 
-    // TODO: will migrate to base page later.
+    // Category Based: click, clear, type in second (fixed) input.
+    async setCategoryBasedFixedValue(value: string) {
+        const input = this.page.locator(this.admin.categoryBasedFixedInput).first();
+        await input.waitFor({ state: 'visible' });
+        await input.click();
+        await input.clear();
+        await input.fill(value);
+    }
+
     async clickSubmitButton() {
         await this.page.waitForTimeout(500);
-        await this.page.locator(this.admin.submitButton).click(),
+        await this.page.locator(this.admin.submitButton).click();
         await this.page.waitForLoadState('domcontentloaded');
     }
 
