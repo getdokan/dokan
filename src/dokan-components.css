@@ -74,11 +74,11 @@ input:focus {
         outline-color: var(--color-primary);
     }
 }
-button[role="switch"] span {
+.dokan-dashboard-layout button[role="switch"] span {
     @apply translate-x-0.5 shrink-0 transition-transform duration-200;
 }
-button[role="switch"] span[data-state="unchecked"] {
-    @apply -translate-x-2
+.dokan-dashboard-layout button[role="switch"] span[data-state="unchecked"] {
+    @apply -translate-x-2.5;
 }
 
 /* ========== Link Styles ========== */
