@@ -7,7 +7,7 @@ Tested up to: 6.9
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 4.3.1
+Stable tag: 4.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -352,6 +352,9 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Product Delivery Schedules
 
 == Changelog ==
+
+= v4.3.2 ( Mar 13, 2026 ) =
+- **fix:** Prevent unauthenticated access to customer information via the Store Reviews REST API endpoint.
 
 = v4.3.1 ( Mar 06, 2026 ) =
 - **update:** Validate vendor Terms & Conditions settings to prevent saving unexpected or empty content.
