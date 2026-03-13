@@ -35,7 +35,7 @@ The Dokan product editor is a React form system built on the WordPress [`@wordpr
 │                                                         │
 │  FormSchema::get_layout()                               │
 │    ├─ Defines flat layout items (parent-child tree)     │
-│    ├─ apply_filters('dokan_product_editor_form_layouts') │
+│    ├─ apply_filters('dokan_product_editor_layouts') │
 │    └─ Sorts by priority (default 30 when omitted)       │
 │                                                         │
 │  Hooks.php → wp_localize_script('dokanFormManager', {   │
@@ -260,7 +260,7 @@ add_filter( 'dokan_product_editor_schema', function ( array $fields ): array {
 
 New sections are automatically placed in the layout without React changes:
 
-1. If you also add a layout item via `dokan_product_editor_form_layouts` (see [section 6](#6-layout-customization)), the section renders in that position
+1. If you also add a layout item via `dokan_product_editor_layouts` (see [section 6](#6-layout-customization)), the section renders in that position
 2. Otherwise, `useLayouts()` auto-creates a card in the primary column using the section label/description as the header
 3. Fields with matching `section_id` are auto-injected as children
 
@@ -327,10 +327,10 @@ root_layout (row, responsive → regular at ≤768px)
 
 ### Adding a layout section via filter
 
-Use the `dokan_product_editor_form_layouts` filter to add new layout sections. Set `priority` to control where the section appears relative to other items in the same parent.
+Use the `dokan_product_editor_layouts` filter to add new layout sections. Set `priority` to control where the section appears relative to other items in the same parent.
 
 ```php
-add_filter( 'dokan_product_editor_form_layouts', function ( array $layout ): array {
+add_filter( 'dokan_product_editor_layouts', function ( array $layout ): array {
     $layout[] = [
         'id'        => 'my_custom_section',
         'parent_id' => \WeDevs\Dokan\ProductEditor\Elements::PRIMARY_COLUMN,
@@ -349,10 +349,10 @@ The `children` for this layout item are auto-populated from schema fields that h
 
 ### Customizing children of existing sections
 
-Use the `dokan_product_editor_form_layout_children` filter to add, remove, or reorder field IDs in any layout item's children array:
+Use the `dokan_product_editor_layout_children` filter to add, remove, or reorder field IDs in any layout item's children array:
 
 ```php
-add_filter( 'dokan_product_editor_form_layout_children', function ( array $children, array $item ): array {
+add_filter( 'dokan_product_editor_layout_children', function ( array $children, array $item ): array {
     // Add a custom field to the general section
     if ( $item['id'] === \WeDevs\Dokan\ProductEditor\Elements::SECTION_GENERAL ) {
         $children[] = 'my_custom_field';
@@ -447,10 +447,10 @@ variation_min_max_section (with heading)
 
 #### Adding fields to variation layout via filter
 
-Use the `dokan_product_editor_variation_form_layouts` filter to add new layout items:
+Use the `dokan_product_editor_variation_layouts` filter to add new layout items:
 
 ```php
-add_filter( 'dokan_product_editor_variation_form_layouts', function ( array $layouts ): array {
+add_filter( 'dokan_product_editor_variation_layouts', function ( array $layouts ): array {
     $layouts[] = [
         'id'        => 'my_variation_section',
         'parent_id' => null,
@@ -762,7 +762,7 @@ class ProductEditorFields {
         // 1. Add fields to the schema
         add_filter( 'dokan_product_editor_schema', [ $this, 'extend_default_fields' ] );
         // 2. Add layout section for the new fields
-        add_filter( 'dokan_product_editor_form_layouts', [ $this, 'extend_layout' ] );
+        add_filter( 'dokan_product_editor_layouts', [ $this, 'extend_layout' ] );
         // 3. Resolve field values when loading
         add_filter( 'dokan_product_editor_schema_value', [ $this, 'resolve_fields_value' ], 10, 3 );
         // 4. Transform payload when saving
@@ -783,7 +783,7 @@ class ProductEditorFields {
 
     public function __construct() {
         add_filter( 'dokan_product_editor_schema', [ $this, 'extend_default_fields' ] );
-        add_filter( 'dokan_product_editor_form_layouts', [ $this, 'extend_layout' ] );
+        add_filter( 'dokan_product_editor_layouts', [ $this, 'extend_layout' ] );
         add_filter( 'dokan_product_editor_schema_value', [ $this, 'resolve_fields_value' ], 10, 3 );
         add_filter( 'dokan_product_editor_schema_payload', [ $this, 'resolve_fields_payload' ] );
     }
@@ -897,9 +897,9 @@ class ProductEditorFields {
 | `dokan_product_editor_schema_response` | `(array $items, int $product_id)` | Modify schema after admin overrides are applied |
 | `dokan_product_editor_schema_value` | `(mixed $value, string $field_name, WC_Product $product)` | Resolve a field's value when loading a product |
 | `dokan_product_editor_schema_payload` | `(array $payload)` | Transform form data before saving to WC REST API |
-| `dokan_product_editor_form_layouts` | `(array $layout)` | Add or modify layout items (flat array with parent-child) |
-| `dokan_product_editor_form_layout_children` | `(string[] $children, array $item)` | Modify the children (field IDs) of a specific layout item |
-| `dokan_product_editor_variation_form_layouts` | `(array $layouts)` | Add or modify variation layout items (flat array with parent-child) |
+| `dokan_product_editor_layouts` | `(array $layout)` | Add or modify layout items (flat array with parent-child) |
+| `dokan_product_editor_layout_children` | `(string[] $children, array $item)` | Modify the children (field IDs) of a specific layout item |
+| `dokan_product_editor_variation_layouts` | `(array $layouts)` | Add or modify variation layout items (flat array with parent-child) |
 | `dokan_product_editor_variation_layout_children` | `(string[] $children, array $item)` | Modify the children (field IDs) of a specific variation layout item |
 | `dokan_product_editor_variation_payload` | `(array $payload, array $data)` | Transform variation payload before saving |
 | `dokan_product_editor_price_visibilities` | `(array $visibilities)` | Per-type visibility for price fields |

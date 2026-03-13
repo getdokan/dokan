@@ -151,7 +151,7 @@ class FormSchema {
      *
      * Predefined items are sorted by array position.
      * Extensions can set an optional `priority` key to control insertion order
-     * when adding items via the `dokan_product_editor_form_layouts` filter.
+     * when adding items via the `dokan_product_editor_layouts` filter.
      *
      * @since DOKAN_SINCE
      *
@@ -364,7 +364,7 @@ class FormSchema {
                 if ( ! isset( $item['children'] ) ) {
                     $item['children'] = [];
                 }
-                $item['children'] = apply_filters( 'dokan_product_editor_form_layout_children', $item['children'], $item );
+                $item['children'] = apply_filters( 'dokan_product_editor_layout_children', $item['children'], $item );
                 return $item;
             }, $layouts
         );
@@ -380,7 +380,7 @@ class FormSchema {
          *
          * @param array $layout Flat layout items.
          */
-        $layouts = apply_filters( 'dokan_product_editor_form_layouts', $layouts );
+        $layouts = apply_filters( 'dokan_product_editor_layouts', $layouts );
 
         // Sort by priority after all extensions have added their items.
         usort(

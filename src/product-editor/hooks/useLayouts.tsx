@@ -16,7 +16,7 @@ import {
 /**
  * Custom hook to manage form layouts.
  *
- * Accepts a flat layout definition from PHP (via `dokan_product_editor_form_layouts` filter),
+ * Accepts a flat layout definition from PHP (via `dokan_product_editor_layouts` filter),
  * builds a nested tree, resolves responsive layouts, and applies visibility/dependency logic.
  *
  * @param {Array}  formItems  Flat array of sections and fields from the server.
