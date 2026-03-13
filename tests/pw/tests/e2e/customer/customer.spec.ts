@@ -20,33 +20,100 @@ test.describe('Customer Tests @lite', () => {
     // ============================================
     // Note: To use a specific user session, create context with storageState
     // Example:
-    // const context = await browser.newContext({ storageState: a1 });
+    // const context = await browser.newContext({ storageState: c1 });
     // const page = await context.newPage();
 
-    test('Sample customer flow placeholder (admin context)', async ({ browser }) => {
-        const context = await browser.newContext({ storageState: a1 });
-        const page = await context.newPage();
-        const customerPage = new CustomerPage(page);
-
-        // TODO: Replace with real navigation/action calls
-        // await customerPage.goToCustomerDashboard();
-        // await customerPage.waitForPageReady();
-
-        await page.close();
-        await context.close();
+    test('customer can register', { tag: ['@lite', '@customer'] }, async ({ page }) => {
+        const customer = new CustomerPage(page);
+        await customer.registerDefaultCustomer();
     });
 
-    test('Sample customer flow placeholder (customer context)', async ({ browser }) => {
+    test('customer can login', { tag: ['@lite', '@customer'] }, async ({ page }) => {
+        const customer = new CustomerPage(page);
+        await customer.loginDefaultCustomer();
+    });
+
+    test('customer can logout', { tag: ['@lite', '@customer'] }, async ({ page }) => {
+        const customer = new CustomerPage(page);
+        await customer.loginDefaultCustomer();
+        await customer.logoutDefaultCustomer();
+    });
+
+    test('customer can become a vendor', { tag: ['@lite', '@customer'] }, async ({ page }) => {
+        const customer = new CustomerPage(page);
+        await customer.registerAndBecomeVendorDefaultCustomer();
+    });
+
+    test.skip('customer can add billing details', { tag: ['@lite', '@customer'] }, async ({ browser }) => {
         const context = await browser.newContext({ storageState: c1 });
         const page = await context.newPage();
-        const customerPage = new CustomerPage(page);
+        const customer = new CustomerPage(page);
 
-        // TODO: Replace with real navigation/action calls
-        // await customerPage.goToCustomerDashboard();
-        // await customerPage.waitForPageReady();
+        await customer.addDefaultBillingAddress();
 
         await page.close();
         await context.close();
     });
+
+    test.skip('customer can add shipping details', { tag: ['@lite', '@customer'] }, async ({ browser }) => {
+        const context = await browser.newContext({ storageState: c1 });
+        const page = await context.newPage();
+        const customer = new CustomerPage(page);
+
+        await customer.addDefaultShippingAddress();
+
+        await page.close();
+        await context.close();
+    });
+
+    test('customer can add customer details', { tag: ['@lite', '@customer'] }, async ({ browser }) => {
+        const context = await browser.newContext({ storageState: c1 });
+        const page = await context.newPage();
+        const customer = new CustomerPage(page);
+
+        await customer.addDefaultCustomerDetails();
+
+        await page.close();
+        await context.close();
+    });
+
+    // TODO: need to fix
+    test.skip('customer can add product to cart', { tag: ['@lite', '@customer'] }, async ({ browser }) => {
+        // Used guest customer to avoid conflict with other tests
+        const context = await browser.newContext();
+        const page = await context.newPage();
+        const customer = new CustomerPage(page);
+
+        await customer.addDefaultProductToCartAndAssert();
+
+        await page.close();
+        await context.close();
+    });
+
+    // TODO: need to fix
+    test.skip('customer can buy product', { tag: ['@lite', '@customer'] }, async ({ browser }) => {
+        const context = await browser.newContext({ storageState: c1 });
+        const page = await context.newPage();
+        const customer = new CustomerPage(page);
+
+        await customer.buyDefaultProduct();
+
+        await page.close();
+        await context.close();
+    });
+
+    // TODO: need to fix
+    test.skip('customer can buy multi-vendor products', { tag: ['@lite', '@customer'] }, async ({ browser }) => {
+        const context = await browser.newContext({ storageState: c1 });
+        const page = await context.newPage();
+        const customer = new CustomerPage(page);
+
+        await customer.buyDefaultMultiVendorProducts();
+
+        await page.close();
+        await context.close();
+    });
+
+    // todo: customer can download downloadable product
 });
 
