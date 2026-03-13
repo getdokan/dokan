@@ -216,21 +216,6 @@ export const layoutBuilder = (
 };
 
 /**
- * Check whether a target node exists anywhere in the layout tree.
- */
-const hasTarget = ( items: any[], target: string ): boolean => {
-    return items.some( ( item ) => {
-        if ( typeof item === 'string' ) {
-            return false;
-        }
-        if ( item.id === target ) {
-            return true;
-        }
-        return item.children ? hasTarget( item.children, target ) : false;
-    } );
-};
-
-/**
  * Append new sections to a target node by ID.
  * If the target is not found, sections are appended to the root array.
  */
@@ -239,10 +224,6 @@ export const appendToTarget = (
     newSections: any[],
     target: string
 ): any[] => {
-    if ( ! hasTarget( items, target ) ) {
-        return [ ...items, ...newSections ];
-    }
-
     return items.map( ( item ) => {
         if ( typeof item !== 'string' && item.id === target ) {
             return {
