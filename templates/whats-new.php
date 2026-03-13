@@ -4,6 +4,18 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.3.2',
+        'released' => '2026-03-13',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Prevent unauthenticated access to customer information via the Store Reviews REST API endpoint.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.3.1',
         'released' => '2026-03-06',
         'changes'  => [
