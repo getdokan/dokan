@@ -1,6 +1,6 @@
 import apiFetch from '@wordpress/api-fetch';
-import { FlatFormItem } from '../../dashboard/product-editor/types';
-import { fieldValueForProduct } from '../../dashboard/product-editor/utils';
+import { FormItem } from '../../product-editor/types';
+import { fieldValueForProduct } from '../../product-editor/utils';
 import { VariationType } from './types';
 
 // Action type constants.
@@ -18,7 +18,7 @@ interface SetFormAction {
     type: typeof SET_FORM;
     productId: number;
     product: Record< string, any >;
-    formItems: FlatFormItem[];
+    formItems: FormItem[];
 }
 
 interface UpdateProductAction {
@@ -76,7 +76,7 @@ export const actions = {
     setForm: (
         productId: number,
         product: Record< string, any >,
-        formItems: FlatFormItem[]
+        formItems: FormItem[]
     ): SetFormAction => ( {
         type: SET_FORM,
         productId,
@@ -143,13 +143,13 @@ export const actions = {
     // Thunk actions for side effects.
     initForm: (
         productId: number,
-        formItems: FlatFormItem[],
+        formItems: FormItem[],
         vendorEarning: number
     ) => {
         return ( { dispatch }: { dispatch: any } ) => {
             const entries = formItems
-                .filter( ( i: FlatFormItem ) => i.type === 'field' )
-                .map( ( item: FlatFormItem ) => [
+                .filter( ( i: FormItem ) => i.type === 'field' )
+                .map( ( item: FormItem ) => [
                     item.id,
                     fieldValueForProduct( item ),
                 ] );
@@ -199,7 +199,7 @@ export const actions = {
     fetchVariationForm: ( variationId: number ) => {
         return async ( { dispatch }: { dispatch: any } ) => {
             const response = await apiFetch< {
-                form_items: FlatFormItem[];
+                form_items: FormItem[];
                 vendor_earning: number;
             } >( {
                 path: `/dokan/v3/products/${ variationId }/fields`,

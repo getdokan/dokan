@@ -1,17 +1,17 @@
 import { DokanTooltip } from '@src/components';
 import { Info } from 'lucide-react';
 import { getFieldConfigFrom } from '../field-config';
-import { FlatFormItem } from '../types';
+import { FormItem } from '../types';
 import { resolveDependency } from '../utils';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { RawHTML } from '@wordpress/element';
 
-export const getFieldConfig = ( field: FlatFormItem ) => {
+export const getFieldConfig = ( field: FormItem ) => {
     /**
      * Helper function to normalize options into an array of label/value objects.
      */
-    const getElementsFromOptions = ( field?: FlatFormItem ) => {
+    const getElementsFromOptions = ( field?: FormItem ) => {
         const { options } = field || {};
         if ( ! options ) {
             return [];

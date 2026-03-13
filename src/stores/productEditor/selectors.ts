@@ -1,7 +1,7 @@
 import {
-    FlatFormItem,
+    FormItem,
     VariationType,
-} from '../../dashboard/product-editor/types';
+} from '../../product-editor/types';
 import { ProductEditorState } from './types';
 
 export const selectors = {
@@ -13,7 +13,7 @@ export const selectors = {
     getFormItems: (
         state: ProductEditorState,
         productId: number
-    ): FlatFormItem[] | undefined => state.forms[ productId ]?.formItems,
+    ): FormItem[] | undefined => state.forms[ productId ]?.formItems,
 
     isSubmitting: ( state: ProductEditorState, productId: number ): boolean => {
         return !! state.submitting[ productId ];

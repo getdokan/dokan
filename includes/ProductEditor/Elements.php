@@ -23,6 +23,18 @@ class Elements {
     const PRODUCT_TYPE_EXTERNAL = 'external';
     const PRODUCT_TYPE_VARIATION = 'variation';
     const SECTION_LINKED = 'linked';
+
+    // Layout IDs.
+    const ROOT_LAYOUT               = 'root_layout';
+    const PRIMARY_COLUMN            = 'primary_column';
+    const SIDEBAR_COLUMN            = 'sidebar_column';
+    const SECTION_DIGITAL_OPTIONS   = 'digital_options';
+    const SECTION_DISCOUNT_SCHEDULE = 'discount_schedule';
+    const SECTION_DESCRIPTION       = 'description_section';
+    const SECTION_SHIPPING_DIMENSIONS = 'shipping_dimensions';
+    const SECTION_SHIPPING_OVERWRITE  = 'shipping_overwrite';
+    const SECTION_PUBLISHING        = 'product_publishing';
+    const SECTION_PURCHASE_NOTE     = 'purchase_note_section';
     const ID = 'id';
     const TYPE = 'type';
     const NAME = 'name';

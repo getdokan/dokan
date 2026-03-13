@@ -94,13 +94,13 @@ const entryPoints = {
         },
     },
     'product-editor-utils': {
-        import: './src/dashboard/product-editor/exports.ts',
+        import: './src/product-editor/exports.ts',
         library: {
             name: [ 'dokan', 'productEditor' ],
             type: 'window',
         },
     },
-    'product-editor': './src/dashboard/product-editor/index.tsx',
+    'product-editor': './src/product-editor/index.tsx',
 };
 
 module.exports = entryPoints;

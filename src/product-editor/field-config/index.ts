@@ -1,5 +1,5 @@
 import { applyFilters } from '@wordpress/hooks';
-import { FieldHandler, FlatFormItem, FieldConfig } from '../types';
+import { FieldHandler, FormItem, FieldConfig } from '../types';
 import AsyncSelectEdit from '../components/AsyncSelectEdit';
 import AttributesEdit from '../components/AttributesEdit';
 import DateTimePickerEdit from '../components/DateTimePickerEdit';
@@ -150,7 +150,7 @@ const defaultHandler: FieldHandler = ( field ) => {
     return config;
 };
 
-export const getFieldConfigFrom = ( field: FlatFormItem ) => {
+export const getFieldConfigFrom = ( field: FormItem ) => {
     let handlers: Record< string, FieldHandler > = {
         textarea: editorFieldHandler,
         editor: editorFieldHandler,

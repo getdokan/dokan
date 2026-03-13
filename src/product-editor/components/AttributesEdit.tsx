@@ -1,5 +1,5 @@
 import { DokanButton, Select } from '@src/components';
-import { useCallback, useMemo, useState } from '@wordpress/element';
+import { useCallback, useMemo, useRef, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { useProductEditor } from '../hooks/useProductEditor';
 import { Attribute } from '../types';
@@ -14,6 +14,52 @@ const AttributesEdit = ( { data, field, onChange, validity }: any ) => {
     const { type: productType } = data;
     const options = field.elements || [];
     const [ cardExpanded, setCardExpanded ] = useState( false );
+
+    // Drag-and-drop reorder state.
+    const dragIndexRef = useRef< number | null >( null );
+    const [ dragOverIndex, setDragOverIndex ] = useState< number | null >( null );
+
+    const handleDragStart = useCallback( ( index: number ) => {
+        dragIndexRef.current = index;
+    }, [] );
+
+    const handleDragEnter = useCallback( ( index: number ) => {
+        setDragOverIndex( index );
+    }, [] );
+
+    const handleDragOver = useCallback( ( e: React.DragEvent ) => {
+        e.preventDefault();
+    }, [] );
+
+    const handleDrop = useCallback( () => {
+        const from = dragIndexRef.current;
+        const to = dragOverIndex;
+
+        if ( from === null || to === null || from === to ) {
+            dragIndexRef.current = null;
+            setDragOverIndex( null );
+            return;
+        }
+
+        const reordered = [ ...attributes ];
+        const [ moved ] = reordered.splice( from, 1 );
+        reordered.splice( to, 0, moved );
+
+        // Update positions and persist.
+        const updated = reordered.map( ( attr, idx ) => ( {
+            ...attr,
+            position: idx,
+        } ) );
+        onChange( { [ field.id ]: updated } );
+
+        dragIndexRef.current = null;
+        setDragOverIndex( null );
+    }, [ attributes, dragOverIndex, onChange, field.id ] );
+
+    const handleDragEnd = useCallback( () => {
+        dragIndexRef.current = null;
+        setDragOverIndex( null );
+    }, [] );
 
     // Using a separate state to manage the "Add new" selection
     const [ selectedAttrAdd, setSelectedAttrAdd ] = useState< any >( null );
@@ -110,6 +156,13 @@ const AttributesEdit = ( { data, field, onChange, validity }: any ) => {
                             e.stopPropagation();
                             handleRemoveAttribute( index );
                         } }
+                        index={ index }
+                        isDragOver={ dragOverIndex === index }
+                        onDragStart={ handleDragStart }
+                        onDragEnter={ handleDragEnter }
+                        onDragOver={ handleDragOver }
+                        onDrop={ handleDrop }
+                        onDragEnd={ handleDragEnd }
                     />
                 ) ) }
 

@@ -1,18 +1,24 @@
 import { sanitizeHTML } from '@src/utilities';
 import { __ } from '@wordpress/i18n';
-import type { DependencyCondition, FlatFormItem } from './types';
+import type {
+    DependencyCondition,
+    FormItem,
+    LayoutConfig,
+    LayoutItem,
+    ResponsiveBreakpoint,
+} from './types';
 
 /** Find a field or section by ID. */
 export const getField = (
-    formItems: FlatFormItem[],
+    formItems: FormItem[],
     fieldId: string
-): FlatFormItem | null => {
+): FormItem | null => {
     return formItems.find( ( item ) => item.id === fieldId ) ?? null;
 };
 
 /** Resolve the label for a field, falling back to the default label. */
 export const resolveLabel = (
-    item: FlatFormItem,
+    item: FormItem,
     productType: string = 'simple'
 ): string => {
     return item.labels?.[ productType ] ?? item.label;
@@ -20,7 +26,7 @@ export const resolveLabel = (
 
 /** Resolve the visibility for a field, falling back to the default visibility. */
 export const resolveVisibility = (
-    item: FlatFormItem,
+    item: FormItem,
     productType: string = 'simple'
 ): boolean => {
     return item.visibilities?.[ productType ] ?? item.visibility ?? true;
@@ -28,7 +34,7 @@ export const resolveVisibility = (
 
 /** Resolve the required state for a field, falling back to the default required. */
 export const resolveRequired = (
-    item: FlatFormItem,
+    item: FormItem,
     productType: string = 'simple'
 ): boolean => {
     return item.requireds?.[ productType ] ?? item.required ?? false;
@@ -36,7 +42,7 @@ export const resolveRequired = (
 
 /** Get label and description for a field. */
 export const getFieldHeading = (
-    formItems: FlatFormItem[],
+    formItems: FormItem[],
     fieldId: string
 ) => {
     const item = getField( formItems, fieldId );
@@ -53,7 +59,7 @@ export const getFieldHeading = (
  * Build initial product state from flat form items (field items only).
  * Uses each field's value with minimal normalization (image_id, gallery, checkbox).
  */
-export function fieldValueForProduct( item: FlatFormItem ): any {
+export function fieldValueForProduct( item: FormItem ): any {
     if ( item.type !== 'field' ) return undefined;
     const v = item.value;
     const variant = item.variant;
@@ -135,7 +141,7 @@ function resolveCondition(
 
 /** Check whether a field's dependencies are met. */
 export const resolveDependency = (
-    field: FlatFormItem,
+    field: FormItem,
     data: Record< string, any >
 ): boolean => {
     if ( ! field.dependencies?.length ) {
@@ -150,10 +156,10 @@ export const resolveDependency = (
 /** Recursively process layout fields, resolving visibility, dependencies, and sorting by order. */
 export const layoutBuilder = (
     layouts: any[],
-    formItems: FlatFormItem[] = [],
+    formItems: FormItem[] = [],
     product: Record< string, any >
 ): any[] => {
-    const getFlatField = ( id: string ): FlatFormItem | undefined => {
+    const getFlatField = ( id: string ): FormItem | undefined => {
         return formItems.find( ( i ) => i.type === 'field' && i.id === id );
     };
 
@@ -209,13 +215,36 @@ export const layoutBuilder = (
     return mappedLayouts.filter( Boolean );
 };
 
-/** Append new sections to the left column. */
-export const appendToLeftColumn = (
+/**
+ * Check whether a target node exists anywhere in the layout tree.
+ */
+const hasTarget = ( items: any[], target: string ): boolean => {
+    return items.some( ( item ) => {
+        if ( typeof item === 'string' ) {
+            return false;
+        }
+        if ( item.id === target ) {
+            return true;
+        }
+        return item.children ? hasTarget( item.children, target ) : false;
+    } );
+};
+
+/**
+ * Append new sections to a target node by ID.
+ * If the target is not found, sections are appended to the root array.
+ */
+export const appendToTarget = (
     items: any[],
-    newSections: any[]
+    newSections: any[],
+    target: string
 ): any[] => {
+    if ( ! hasTarget( items, target ) ) {
+        return [ ...items, ...newSections ];
+    }
+
     return items.map( ( item ) => {
-        if ( typeof item !== 'string' && item.id === 'left_column' ) {
+        if ( typeof item !== 'string' && item.id === target ) {
             return {
                 ...item,
                 children: [ ...( item.children || [] ), ...newSections ],
@@ -224,7 +253,11 @@ export const appendToLeftColumn = (
         if ( typeof item !== 'string' && item.children ) {
             return {
                 ...item,
-                children: appendToLeftColumn( item.children, newSections ),
+                children: appendToTarget(
+                    item.children,
+                    newSections,
+                    target
+                ),
             };
         }
         return item;
@@ -250,7 +283,7 @@ export const collectUsedFields = (
 
 /** Get remaining fields not present in the layout, grouped by section. */
 export const getRemainingFields = (
-    formItems: FlatFormItem[],
+    formItems: FormItem[],
     usedFields: Set< string >
 ): Record< string, string[] > => {
     const remainingFieldsBySection: Record< string, string[] > = {};
@@ -273,6 +306,83 @@ export const getRemainingFields = (
     } );
 
     return remainingFieldsBySection;
+};
+
+/**
+ * Build a nested layout tree from a flat array of layout items.
+ *
+ * Each flat item has an `id`, `parent_id`, and optional `children` (field IDs).
+ * Nested items with an `after` property are interleaved into the parent's
+ * children array right after the specified field ID. Items without `after`
+ * are appended at the end.
+ *
+ * @param {LayoutItem[]} flatItems Flat layout items with parent-child relationships.
+ * @param {string|null}      parentId  Parent ID to filter children for (null for root).
+ * @return {any[]} Nested layout tree.
+ */
+export const buildLayoutTree = (
+    flatItems: LayoutItem[],
+    parentId: string | null = null
+): any[] => {
+    // Find items whose parent_id matches the current parentId.
+    // PHP handles priority-based sorting; JS preserves the received order.
+    const children = flatItems.filter(
+        ( item ) => item.parent_id === parentId
+    );
+
+    return children.map( ( item ) => {
+        // Recursively build nested children (sub-layout items).
+        const nestedChildren = buildLayoutTree( flatItems, item.id );
+
+        // Start with the field IDs from `children`.
+        const fieldIds: string[] = item.children ?? [];
+        const mergedChildren: any[] = [ ...fieldIds ];
+
+        // Insert nested items: those with `after` go right after the
+        // specified field ID; the rest are appended at the end.
+        const appendItems: any[] = [];
+
+        nestedChildren.forEach( ( nested: any ) => {
+            // Find the original flat item to read `after`.
+            const flatItem = flatItems.find(
+                ( fi ) => fi.id === nested.id
+            );
+
+            if ( flatItem?.after ) {
+                const idx = mergedChildren.findIndex(
+                    ( child ) => child === flatItem.after
+                );
+                if ( idx !== -1 ) {
+                    mergedChildren.splice( idx + 1, 0, nested );
+                } else {
+                    appendItems.push( nested );
+                }
+            } else {
+                appendItems.push( nested );
+            }
+        } );
+
+        mergedChildren.push( ...appendItems );
+
+        const node: Record< string, any > = {
+            id: item.id,
+        };
+
+        if ( item.layout ) {
+            node.layout = item.layout;
+        }
+        if ( item.label ) {
+            node.label = item.label;
+        }
+        if ( item.description ) {
+            node.description = item.description;
+        }
+        if ( mergedChildren.length > 0 ) {
+            node.children = mergedChildren;
+        }
+
+        return node;
+    } );
 };
 
 /** Inject remaining fields into their matching sections in the layout. */
@@ -304,3 +414,59 @@ export const injectRemainingFields = (
         return newItem;
     } );
 };
+
+/**
+ * Resolve layout config for a flat layout item based on current viewport width.
+ * Picks the first matching responsive breakpoint (sorted ascending by maxWidth),
+ * or falls back to the item's default layout.
+ */
+export function resolveResponsiveLayout(
+    item: LayoutItem,
+    width: number
+): LayoutConfig | undefined {
+    if ( item.responsive?.length && width ) {
+        const sorted = [ ...item.responsive ].sort(
+            ( a: ResponsiveBreakpoint, b: ResponsiveBreakpoint ) =>
+                a.maxWidth - b.maxWidth
+        );
+        for ( const bp of sorted ) {
+            if ( width <= bp.maxWidth ) {
+                return bp.layout;
+            }
+        }
+    }
+    return item.layout;
+}
+
+/**
+ * Recursively inject section headings (label/description) from formItems
+ * into layout nodes that have `withHeader: true` but no label set.
+ */
+export function injectSectionHeadings(
+    node: any,
+    formItems: FormItem[]
+): any {
+    if ( typeof node === 'string' ) {
+        return node;
+    }
+
+    const updated = { ...node };
+
+    if ( updated.layout?.withHeader && ! updated.label ) {
+        const heading = getFieldHeading( formItems, updated.id );
+        if ( heading.label ) {
+            updated.label = heading.label;
+        }
+        if ( heading.description ) {
+            updated.description = heading.description;
+        }
+    }
+
+    if ( updated.children ) {
+        updated.children = updated.children.map( ( child: any ) => {
+            return injectSectionHeadings( child, formItems );
+        } );
+    }
+
+    return updated;
+}

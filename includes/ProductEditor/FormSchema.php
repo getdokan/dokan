@@ -138,12 +138,259 @@ class FormSchema {
             fn( $key, $type ) => [
                 'label' => $type,
                 'value' => $key,
-			],
+            ],
             array_keys( $product_types ),
             $product_types
-		);
+        );
 
         return $types;
+    }
+
+    /**
+     * Get the flat layout definition.
+     *
+     * Predefined items are sorted by array position.
+     * Extensions can set an optional `priority` key to control insertion order
+     * when adding items via the `dokan_product_editor_layouts` filter.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array Flat array of layout items.
+     */
+    public static function get_layouts(): array {
+        $layouts = [
+            // Root layout with responsive breakpoints.
+            [
+                'id'         => Elements::ROOT_LAYOUT,
+                'parent_id'  => null,
+                'priority'   => 10,
+                'layout'     => [
+                    'type'      => 'row',
+                    'alignment' => 'start',
+                    'styles'    => [
+                        Elements::PRIMARY_COLUMN => [ 'flex' => '1' ],
+                        Elements::SIDEBAR_COLUMN => [
+                            'flex'     => '0 0 20%',
+                            'minWidth' => '250px',
+                        ],
+                    ],
+                ],
+                'responsive' => [
+                    [
+                        'maxWidth' => 768,
+                        'layout'   => [
+                            'type' => 'regular',
+                        ],
+                    ],
+                ],
+            ],
+
+            // Two-column structure.
+            [
+                'id'        => Elements::PRIMARY_COLUMN,
+                'parent_id' => Elements::ROOT_LAYOUT,
+                'priority'  => 10,
+            ],
+            [
+                'id'        => Elements::SIDEBAR_COLUMN,
+                'parent_id' => Elements::ROOT_LAYOUT,
+                'priority'  => 20,
+            ],
+
+            // ── Primary column sections ───────────────────────────
+
+            // 1. General info section (card).
+            [
+                'id'        => Elements::SECTION_GENERAL,
+                'parent_id' => Elements::PRIMARY_COLUMN,
+                'priority'  => 10,
+                'layout'    => [ 'type' => 'card' ],
+                'children'  => [
+                    Elements::NAME,
+                    Elements::SLUG,
+                    Elements::TYPE,
+                    Elements::EXTERNAL_URL,
+                    Elements::BUTTON_TEXT,
+                    Elements::CATEGORIES,
+                    Elements::TAGS,
+                    Elements::BRANDS,
+                    Elements::REGULAR_PRICE,
+                    Elements::SALE_PRICE,
+                    Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
+                ],
+            ],
+            // Digital product options group (inside general info, after 'type').
+            [
+                'id'        => Elements::SECTION_DIGITAL_OPTIONS,
+                'parent_id' => Elements::SECTION_GENERAL,
+                'after'     => Elements::TYPE,
+                'priority'  => 10,
+                'layout'    => [ 'type' => 'regular' ],
+                'label'     => __( 'Digital Product Options', 'dokan-lite' ),
+                'children'  => [
+                    Elements::DOWNLOADABLE,
+                    Elements::VIRTUAL,
+                ],
+            ],
+            // Discount schedule row (inside general info, after 'create_schedule_for_discount').
+            [
+                'id'        => Elements::SECTION_DISCOUNT_SCHEDULE,
+                'parent_id' => Elements::SECTION_GENERAL,
+                'after'     => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
+                'priority'  => 20,
+                'layout'    => [ 'type' => 'row' ],
+                'children'  => [
+                    Elements::DATE_ON_SALE_FROM,
+                    Elements::DATE_ON_SALE_TO,
+                ],
+            ],
+
+            // 2. Description section (card).
+            [
+                'id'        => Elements::SECTION_DESCRIPTION,
+                'parent_id' => Elements::PRIMARY_COLUMN,
+                'priority'  => 20,
+                'layout'    => [ 'type' => 'card' ],
+                'children'  => [
+                    Elements::SHORT_DESCRIPTION,
+                    Elements::DESCRIPTION,
+                ],
+            ],
+
+            // 3. Inventory section (card with header).
+            [
+                'id'        => Elements::SECTION_INVENTORY,
+                'parent_id' => Elements::PRIMARY_COLUMN,
+                'layout'    => [
+                    'type'       => 'card',
+                    'withHeader' => true,
+                ],
+                'children'  => [
+                    Elements::SKU,
+                    Elements::GLOBAL_UNIQUE_ID,
+                    Elements::MANAGE_STOCK,
+                    Elements::STOCK_STATUS,
+                    Elements::STOCK_QUANTITY,
+                    Elements::LOW_STOCK_AMOUNT,
+                    Elements::BACKORDERS,
+                    Elements::SOLD_INDIVIDUALLY,
+                ],
+            ],
+
+            // 4. Shipping and Tax section (card with header).
+            [
+                'id'        => Elements::SECTION_SHIPPING,
+                'parent_id' => Elements::PRIMARY_COLUMN,
+                'priority'  => 40,
+                'layout'    => [
+                    'type'       => 'card',
+                    'withHeader' => true,
+                ],
+                'children'  => [
+                    Elements::DISABLE_SHIPPING_META,
+                    Elements::SHIPPING_CLASS,
+                    Elements::TAX_STATUS,
+                    Elements::TAX_CLASS,
+                    Elements::OVERWRITE_SHIPPING_META,
+                    Elements::ADDITIONAL_SHIPPING_PROCESSING_TIME_META,
+                ],
+            ],
+            // Shipping dimensions row (after '_disable_shipping').
+            [
+                'id'        => Elements::SECTION_SHIPPING_DIMENSIONS,
+                'parent_id' => Elements::SECTION_SHIPPING,
+                'after'     => Elements::DISABLE_SHIPPING_META,
+                'priority'  => 10,
+                'layout'    => [ 'type' => 'row' ],
+                'children'  => [
+                    Elements::WEIGHT,
+                    Elements::DIMENSIONS_LENGTH,
+                    Elements::DIMENSIONS_WIDTH,
+                    Elements::DIMENSIONS_HEIGHT,
+                ],
+            ],
+            // Overwrite shipping price/qty row (after '_overwrite_shipping').
+            [
+                'id'        => Elements::SECTION_SHIPPING_OVERWRITE,
+                'parent_id' => Elements::SECTION_SHIPPING,
+                'after'     => Elements::OVERWRITE_SHIPPING_META,
+                'priority'  => 20,
+                'layout'    => [ 'type' => 'row' ],
+                'children'  => [
+                    Elements::ADDITIONAL_SHIPPING_COST_META,
+                    Elements::ADDITIONAL_SHIPPING_QUANTITY_META,
+                ],
+            ],
+
+            // ── Sidebar column sections ───────────────────────────
+
+            // Organize product (card, not collapsible).
+            [
+                'id'        => Elements::SECTION_PUBLISHING,
+                'parent_id' => Elements::SIDEBAR_COLUMN,
+                'priority'  => 10,
+                'layout'    => [
+                    'type'          => 'card',
+                    'isCollapsible' => false,
+                ],
+                'children'  => [
+                    Elements::STATUS,
+                    Elements::CATALOG_VISIBILITY,
+                    Elements::FEATURED_IMAGE_ID,
+                    Elements::GALLERY_IMAGE_IDS,
+                    Elements::REVIEWS_ALLOWED,
+                ],
+            ],
+
+            // Purchase note section (card with header, not collapsible).
+            [
+                'id'        => Elements::SECTION_PURCHASE_NOTE,
+                'parent_id' => Elements::SIDEBAR_COLUMN,
+                'priority'  => 20,
+                'layout'    => [
+                    'type'          => 'card',
+                    'withHeader'    => true,
+                    'isCollapsible' => false,
+                ],
+                'children'  => [
+                    Elements::PURCHASE_NOTE,
+                ],
+            ],
+        ];
+
+        $layouts = array_map(
+            function ( $item ) {
+                // Ensure 'children' key exists for all items.
+                if ( ! isset( $item['children'] ) ) {
+                    $item['children'] = [];
+                }
+                $item['children'] = apply_filters( 'dokan_product_editor_layout_children', $item['children'], $item );
+                return $item;
+            }, $layouts
+        );
+
+        /**
+         * Filter the product editor form layout.
+         *
+         * Flat array of layout items with parent-child relationships.
+         * Each item has: id, parent_id, layout, priority, label, description, children, after.
+         * Sorting is by priority (default 30); items with equal priority preserve array order.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array $layout Flat layout items.
+         */
+        $layouts = apply_filters( 'dokan_product_editor_layouts', $layouts );
+
+        // Sort by priority after all extensions have added their items.
+        usort(
+            $layouts,
+            function ( $a, $b ) {
+                return ( $a['priority'] ?? 30 ) <=> ( $b['priority'] ?? 30 );
+            }
+        );
+
+        return $layouts;
     }
 
     /**
@@ -201,7 +448,6 @@ class FormSchema {
                 'section_id' => null,
                 'type'       => 'section',
                 'label'      => __( 'General', 'dokan-lite' ),
-                'priority'   => 10,
                 'required'   => true,
                 'visibility' => true,
             ],
@@ -213,7 +459,6 @@ class FormSchema {
                 'variant'        => 'text',
                 'placeholder'    => __( 'Enter product title...', 'dokan-lite' ),
                 'required'       => true,
-                'priority'       => 30,
                 'visibility'     => true,
             ],
             [
@@ -224,7 +469,6 @@ class FormSchema {
                 'variant'          => 'text',
                 'placeholder'      => __( 'Enter product slug...', 'dokan-lite' ),
                 'required'         => false,
-                'priority'         => 30,
                 'visibility'       => true,
                 'dependencies'     => [
                     [
@@ -244,7 +488,6 @@ class FormSchema {
                 'options'        => $this->get_product_types(),
                 'description'    => __( 'Choose Variable if your product has multiple attributes - like sizes, colors, quality etc', 'dokan-lite' ),
                 'tooltip'        => __( 'Choose product type.', 'dokan-lite' ),
-                'priority'       => 30,
                 'visibility'     => true,
             ],
             [
@@ -253,7 +496,6 @@ class FormSchema {
                 'type'         => 'field',
                 'label'        => __( 'Enabled', 'dokan-lite' ),
                 'variant'      => 'checkbox',
-                'priority'     => 30,
                 'visibility'   => true,
                 'dependencies' => [
                     [
@@ -271,7 +513,6 @@ class FormSchema {
                 'labels'       => $price_labels,
                 'variant'      => 'text',
                 'placeholder'  => '0.00',
-                'priority'     => 30,
                 'visibility'   => true,
                 'visibilities' => $price_visibilities,
             ],
@@ -282,7 +523,6 @@ class FormSchema {
                 'label'        => __( 'Sale Price', 'dokan-lite' ),
                 'variant'      => 'text',
                 'placeholder'  => '0.00',
-                'priority'     => 30,
                 'visibility'   => true,
                 'visibilities' => $price_visibilities,
             ],
@@ -292,7 +532,6 @@ class FormSchema {
                 'type'           => 'field',
                 'label'          => __( 'Create Schedule for Discount', 'dokan-lite' ),
                 'variant'        => 'checkbox',
-                'priority'       => 30,
                 'visibility'     => true,
                 'visibilities'   => $price_visibilities,
             ],
@@ -303,7 +542,6 @@ class FormSchema {
                 'label'          => __( 'From', 'dokan-lite' ),
                 'variant'        => 'datetime',
                 'placeholder'    => 'YYYY-MM-DD HH:MM',
-                'priority'       => 30,
                 'visibility'     => true,
                 'visibilities'   => $price_visibilities,
                 'dependencies'   => $schedule_deps,
@@ -315,7 +553,6 @@ class FormSchema {
                 'label'          => __( 'To', 'dokan-lite' ),
                 'variant'        => 'datetime',
                 'placeholder'    => 'YYYY-MM-DD HH:MM',
-                'priority'       => 30,
                 'visibility'     => true,
                 'visibilities'   => $price_visibilities,
                 'dependencies'   => $schedule_deps,
@@ -330,7 +567,6 @@ class FormSchema {
                 'value'            => [],
                 'options'          => ProductCategoryHelper::get_product_categories_tree( true ),
                 'required'         => true,
-                'priority'         => 30,
                 'visibility'       => true,
             ],
             [
@@ -342,7 +578,6 @@ class FormSchema {
                 'placeholder'      => 'on' === $can_create_tags ? __( 'Select tags/Add tags', 'dokan-lite' ) : __( 'Select product tags', 'dokan-lite' ),
                 'value'            => [],
                 'options'          => self::get_product_tags(),
-                'priority'         => 30,
                 'visibility'       => true,
             ],
             [
@@ -354,7 +589,6 @@ class FormSchema {
                 'placeholder'      => __( 'Select product brands', 'dokan-lite' ),
                 'value'            => [],
                 'options'          => self::get_products_brands(),
-                'priority'         => 30,
                 'visibility'       => true,
             ],
             [
@@ -365,7 +599,6 @@ class FormSchema {
                 'variant'        => 'image',
                 'value'          => [],
                 'tooltip'        => __( 'Select product image', 'dokan-lite' ),
-                'priority'       => 30,
                 'visibility'     => true,
             ],
             [
@@ -376,7 +609,6 @@ class FormSchema {
                 'variant'        => 'gallery',
                 'value'          => [],
                 'tooltip'        => __( 'Select product gallery images', 'dokan-lite' ),
-                'priority'       => 30,
                 'visibility'     => true,
             ],
             [
@@ -386,7 +618,6 @@ class FormSchema {
                 'label'          => __( 'Short Description', 'dokan-lite' ),
                 'variant'        => 'editor',
                 'placeholder'    => __( 'Enter product short description', 'dokan-lite' ),
-                'priority'       => 30,
                 'visibility'     => true,
             ],
             [
@@ -397,7 +628,6 @@ class FormSchema {
                 'variant'        => 'editor',
                 'placeholder'    => __( 'Enter product description', 'dokan-lite' ),
                 'required'       => true,
-                'priority'       => 30,
                 'visibility'     => true,
             ],
             [
@@ -407,7 +637,6 @@ class FormSchema {
                 'label'         => __( 'Downloadable', 'dokan-lite' ),
                 'variant'       => 'checkbox',
                 'tooltip'       => __( 'Downloadable products give access to a file upon purchase.', 'dokan-lite' ),
-                'priority'      => 30,
                 'visibility'    => true,
                 'visibilities'  => $digital_field_visibilities,
             ],
@@ -418,7 +647,6 @@ class FormSchema {
                 'label'         => __( 'Virtual', 'dokan-lite' ),
                 'variant'       => 'checkbox',
                 'tooltip'       => __( 'Virtual products are intangible and are not shipped.', 'dokan-lite' ),
-                'priority'      => 30,
                 'visibility'    => true,
                 'visibilities'  => $digital_field_visibilities,
             ],
@@ -431,7 +659,6 @@ class FormSchema {
                 'type'        => 'section',
                 'label'       => __( 'Inventory', 'dokan-lite' ),
                 'description' => __( 'Manage inventory for this product', 'dokan-lite' ),
-                'priority'    => 30,
                 'visibility'  => true,
             ],
             [
@@ -442,7 +669,6 @@ class FormSchema {
                 'variant'      => 'text',
                 'placeholder'  => __( 'Enter product SKU', 'dokan-lite' ),
                 'description'  => __( 'SKU refers to a Stock-keeping unit, a unique identifier for each distinct product and service that can be purchased.', 'dokan-lite' ),
-                'priority'     => 30,
                 'visibility'   => true,
             ],
             [
@@ -453,7 +679,6 @@ class FormSchema {
                 'variant'      => 'text',
                 'placeholder'  => __( 'Enter code', 'dokan-lite' ),
                 'tooltip'      => __( 'Enter a barcode or any other identifier unique to this product. It can help you list this product on other channels or marketplaces.', 'dokan-lite' ),
-                'priority'     => 30,
                 'visibility'   => true,
             ],
             [
@@ -471,7 +696,6 @@ class FormSchema {
                         'value'      => true,
                     ],
                 ],
-                'priority'     => 30,
                 'visibility'   => true,
             ],
             [
@@ -481,7 +705,6 @@ class FormSchema {
                 'label'        => __( 'Manage stock?', 'dokan-lite' ),
                 'variant'      => 'checkbox',
                 'tooltip'      => __( 'Manage stock level (quantity)', 'dokan-lite' ),
-                'priority'     => 30,
                 'visibility'   => true,
             ],
             [
@@ -499,7 +722,6 @@ class FormSchema {
                         'value'      => true,
                     ],
                 ],
-                'priority'     => 30,
                 'visibility'   => true,
             ],
             [
@@ -521,7 +743,6 @@ class FormSchema {
                         'value'      => true,
                     ],
                 ],
-                'priority'     => 30,
                 'visibility'   => true,
             ],
             [
@@ -539,7 +760,6 @@ class FormSchema {
                         'value'      => true,
                     ],
                 ],
-                'priority'     => 30,
                 'visibility'   => true,
             ],
             [
@@ -549,7 +769,6 @@ class FormSchema {
                 'label'        => __( 'Allow only one quantity of this product to be bought in a single order.', 'dokan-lite' ),
                 'variant'      => 'checkbox',
                 'tooltip'      => __( 'Check to let customers to purchase only 1 item in a single order. This is particularly useful for items that have limited quantity, for example art or handmade goods.', 'dokan-lite' ),
-                'priority'     => 30,
                 'visibility'   => true,
             ],
         ];
@@ -560,7 +779,6 @@ class FormSchema {
                 'type'         => 'section',
                 'label'        => __( 'Downloadable Options', 'dokan-lite' ),
                 'description'  => __( 'Configure your downloadable product settings', 'dokan-lite' ),
-                'priority'     => 30,
                 'visibility'   => true,
                 'dependencies' => $dep_downloadable,
             ],
@@ -573,7 +791,6 @@ class FormSchema {
                 'value'           => [],
                 'description'     => __( 'Upload files that customers can download after purchase.', 'dokan-lite' ),
                 'dependencies' => $dep_downloadable,
-                'priority'     => 30,
                 'visibility'   => true,
             ],
             [
@@ -585,7 +802,6 @@ class FormSchema {
                 'placeholder'  => __( 'Unlimited', 'dokan-lite' ),
                 'description'  => __( 'Leave blank for unlimited re-downloads.', 'dokan-lite' ),
                 'dependencies' => $dep_downloadable,
-                'priority'     => 30,
                 'visibility'   => true,
             ],
             [
@@ -597,7 +813,6 @@ class FormSchema {
                 'placeholder'  => __( 'Never', 'dokan-lite' ),
                 'description'  => __( 'Enter the number of days before a download link expires, or leave blank.', 'dokan-lite' ),
                 'dependencies' => $dep_downloadable,
-                'priority'     => 30,
                 'visibility'   => true,
             ],
         ];
@@ -608,7 +823,6 @@ class FormSchema {
                 'type'        => 'section',
                 'label'       => __( 'Other Options', 'dokan-lite' ),
                 'description' => __( 'Set your extra product options', 'dokan-lite' ),
-                'priority'    => 30,
                 'visibility'  => true,
             ],
             [
@@ -620,7 +834,6 @@ class FormSchema {
                 'value'        => 'draft',
                 'required'     => true,
                 'options'      => dokan_get_available_post_status( $product_id ),
-                'priority'     => 30,
                 'visibility'   => true,
             ],
             [
@@ -630,7 +843,6 @@ class FormSchema {
                 'label'        => __( 'Visibility', 'dokan-lite' ),
                 'variant'      => 'select',
                 'options'      => dokan_get_product_visibility_options(),
-                'priority'     => 30,
                 'required'     => true,
                 'visibility'   => true,
             ],
@@ -642,7 +854,6 @@ class FormSchema {
                 'variant'      => 'textarea',
                 'placeholder'     => __( 'Purchase Note', 'dokan-lite' ),
                 'description'     => __( 'Customer will get this in order email.', 'dokan-lite' ),
-                'priority'        => 30,
                 'visibility'      => true,
             ],
             [
@@ -651,7 +862,6 @@ class FormSchema {
                 'type'         => 'field',
                 'label'        => __( 'Enable product reviews', 'dokan-lite' ),
                 'variant'      => 'checkbox',
-                'priority'     => 30,
                 'visibility'   => true,
             ],
         ];

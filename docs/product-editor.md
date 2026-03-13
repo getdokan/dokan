@@ -11,13 +11,14 @@ The Dokan product editor is a React form system built on the WordPress [`@wordpr
 3. [Field Schema Reference](#3-field-schema-reference)
 4. [Adding a New Field](#4-adding-a-new-field)
 5. [Adding a New Section](#5-adding-a-new-section)
-6. [Dependencies & Conditional Visibility](#6-dependencies--conditional-visibility)
-7. [Resolving Field Values (Reading Data)](#7-resolving-field-values-reading-data)
-8. [Resolving the Payload (Saving Data)](#8-resolving-the-payload-saving-data)
-9. [Custom Edit Components (React)](#9-custom-edit-components-react)
-10. [How Dokan-Pro Connects](#10-how-dokan-pro-connects)
-11. [Hooks Reference](#11-hooks-reference)
-12. [Key Files](#12-key-files)
+6. [Layout Customization](#6-layout-customization)
+7. [Dependencies & Conditional Visibility](#7-dependencies--conditional-visibility)
+8. [Resolving Field Values (Reading Data)](#8-resolving-field-values-reading-data)
+9. [Resolving the Payload (Saving Data)](#9-resolving-the-payload-saving-data)
+10. [Custom Edit Components (React)](#10-custom-edit-components-react)
+11. [How Dokan-Pro Connects](#11-how-dokan-pro-connects)
+12. [Hooks Reference](#12-hooks-reference)
+13. [Key Files](#13-key-files)
 
 ---
 
@@ -32,9 +33,14 @@ The Dokan product editor is a React form system built on the WordPress [`@wordpr
 │    ├─ apply_filters('dokan_product_editor_schema_response') │
 │    └─ Resolves field values from WC_Product             │
 │                                                         │
+│  FormSchema::get_layout()                               │
+│    ├─ Defines flat layout items (parent-child tree)     │
+│    ├─ apply_filters('dokan_product_editor_layouts') │
+│    └─ Sorts by priority (default 30 when omitted)       │
+│                                                         │
 │  Hooks.php → wp_localize_script('dokanFormManager', {   │
-│      form_items, product_id, is_new_product,            │
-│      view_product_url, vendor_earning                   │
+│      form_items, form_layouts, product_id,               │
+│      is_new_product, view_product_url, vendor_earning   │
 │  })                                                     │
 └───────────────────────┬─────────────────────────────────┘
                         │  JSON (window.dokanFormManager)
@@ -52,8 +58,8 @@ The Dokan product editor is a React form system built on the WordPress [`@wordpr
 │                        └─ getFieldConfigFrom() (Edit    │
 │                            component per variant)       │
 │                                                         │
-│  useLayouts(formItems, product)                         │
-│    ├─ Defines card/row/regular layout tree              │
+│  useLayouts(formItems, product, formLayout)              │
+│    ├─ Builds nested tree from PHP flat layout           │
 │    ├─ Auto-injects remaining fields from schema         │
 │    └─ Responsive: 2 columns > 768px, 1 column mobile   │
 │                                                         │
@@ -167,12 +173,12 @@ Every item in the schema array must include these **required attributes**:
 | `placeholder` | `string` | Input placeholder text |
 | `tooltip` | `string` | Tooltip text (shown as info icon) |
 | `description` | `string` | Help text below the field |
-| `priority` | `int` | Sort order (default: 30) |
+| `priority` | `int` | Sort order for schema fields (default: 30 when omitted) |
 | `visibility` | `bool` | Global visibility toggle |
-| `visibilities` | `array` | Per-product-type visibility map (see [section 6](#6-dependencies--conditional-visibility)) |
+| `visibilities` | `array` | Per-product-type visibility map (see [section 7](#7-dependencies--conditional-visibility)) |
 | `labels` | `array` | Per-product-type label overrides |
-| `dependencies` | `array` | Conditional rules for visibility or dynamic options (see [section 6](#6-dependencies--conditional-visibility)) |
-| `options_map` | `array` | Keyed map of option sets for dynamic `select` options. Used with a `type: 'options'` dependency (see [section 6](#6-dependencies--conditional-visibility)) |
+| `dependencies` | `array` | Conditional rules for visibility or dynamic options (see [section 7](#7-dependencies--conditional-visibility)) |
+| `options_map` | `array` | Keyed map of option sets for dynamic `select` options. Used with a `type: 'options'` dependency (see [section 7](#7-dependencies--conditional-visibility)) |
 | `product_types` | `string[]` | Restrict field to specific product types |
 | `is_custom` | `bool` | Marks field as custom (admin-created) |
 
@@ -192,7 +198,6 @@ add_filter( 'dokan_product_editor_schema', function ( array $fields ): array {
         'variant'     => 'text',
         'placeholder' => __( 'Enter value...', 'my-plugin' ),
         'required'    => false,
-        'priority'    => 30,
         'visibility'  => true,
     ];
 
@@ -204,11 +209,11 @@ The field will be auto-placed in the "General" card layout. If it is not explici
 
 ### Value resolution
 
-If the field ID matches a WC_Product getter (e.g., `get_my_custom_field()`), the value is resolved automatically. Otherwise, it falls back to product meta. For custom storage, use the `dokan_product_editor_schema_value` filter (see [section 7](#7-resolving-field-values-reading-data)).
+If the field ID matches a WC_Product getter (e.g., `get_my_custom_field()`), the value is resolved automatically. Otherwise, it falls back to product meta. For custom storage, use the `dokan_product_editor_schema_value` filter (see [section 8](#8-resolving-field-values-reading-data)).
 
 ### Payload handling
 
-On save, the field value is sent as-is to the WC REST API using its `id` as the key. If the key needs transformation, use the `dokan_product_editor_schema_payload` filter (see [section 8](#8-resolving-the-payload-saving-data)).
+On save, the field value is sent as-is to the WC REST API using its `id` as the key. If the key needs transformation, use the `dokan_product_editor_schema_payload` filter (see [section 9](#9-resolving-the-payload-saving-data)).
 
 ---
 
@@ -224,7 +229,6 @@ add_filter( 'dokan_product_editor_schema', function ( array $fields ): array {
         'type'        => 'section',
         'label'       => __( 'My Section', 'my-plugin' ),
         'description' => __( 'Configure my custom options', 'my-plugin' ),
-        'priority'    => 30,
         'visibility'  => true,
     ];
 
@@ -235,7 +239,6 @@ add_filter( 'dokan_product_editor_schema', function ( array $fields ): array {
         'type'        => 'field',
         'label'       => __( 'Option 1', 'my-plugin' ),
         'variant'     => 'checkbox',
-        'priority'    => 30,
         'visibility'  => true,
     ];
 
@@ -246,7 +249,6 @@ add_filter( 'dokan_product_editor_schema', function ( array $fields ): array {
         'label'       => __( 'Option 2', 'my-plugin' ),
         'variant'     => 'number',
         'placeholder' => '0',
-        'priority'    => 30,
         'visibility'  => true,
     ];
 
@@ -256,17 +258,238 @@ add_filter( 'dokan_product_editor_schema', function ( array $fields ): array {
 
 ### Auto-layout
 
-The `useLayouts()` hook automatically handles new sections:
+New sections are automatically placed in the layout without React changes:
 
-1. `getRemainingFields()` finds fields/sections not explicitly placed in the layout tree
-2. If a section ID matches an existing layout node, its fields are appended there
-3. Otherwise, `appendToLeftColumn()` creates a new card in the left column with the section label and description as the header
+1. If you also add a layout item via `dokan_product_editor_layouts` (see [section 6](#6-layout-customization)), the section renders in that position
+2. Otherwise, `useLayouts()` auto-creates a card in the primary column using the section label/description as the header
+3. Fields with matching `section_id` are auto-injected as children
 
-No React code changes are needed. New sections appear automatically.
+For full control over positioning and layout type, add both a schema section and a layout item.
 
 ---
 
-## 6. Dependencies & Conditional Visibility
+## 6. Layout Customization
+
+The form layout is defined in PHP via `FormSchema::get_layout()` as a **flat array of layout items** with parent-child relationships. The JS side builds a nested tree from this flat array, enabling PHP-driven layout customization via `apply_filters`.
+
+### Layout item structure
+
+Each layout item has these properties:
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `id` | `string` | Yes | Unique identifier (use `Elements::` constants for built-in items) |
+| `parent_id` | `string\|null` | Yes | ID of the parent layout item. `null` for root |
+| `layout` | `array` | No | Layout configuration: `type`, `alignment`, `styles`, `withHeader`, `isCollapsible` |
+| `children` | `string[]` | No | Field IDs to render inside this layout item |
+| `after` | `string` | No | Insert this item after a specific field ID in the parent's children |
+| `label` | `string` | No | Section label (shown when `withHeader` is true) |
+| `description` | `string` | No | Section description |
+| `priority` | `int` | No | Sort order. Defaults to 30 when omitted. Only needed for filter-added items |
+| `responsive` | `array` | No | Responsive breakpoints that override the layout at specific widths |
+
+### Layout types
+
+| Type | Description |
+|------|-------------|
+| `card` | Card container with optional header and collapsible behavior |
+| `row` | Horizontal flex row (e.g., for grouping dimensions or date ranges) |
+| `regular` | Simple wrapper, no visual container |
+
+### Built-in layout structure
+
+```
+root_layout (row, responsive → regular at ≤768px)
+├── primary_column
+│   ├── general_section (card)
+│   │   ├── [name, slug, type, external_url, button_text, ...]
+│   │   ├── digital_options (regular, after: type)
+│   │   │   └── [downloadable, virtual]
+│   │   └── discount_schedule (row, after: create_schedule_for_discount)
+│   │       └── [date_on_sale_from, date_on_sale_to]
+│   ├── description_section (card)
+│   │   └── [short_description, description]
+│   ├── inventory (card, withHeader)
+│   │   └── [sku, global_unique_id, manage_stock, ...]
+│   ├── shipping_tax (card, withHeader)
+│   │   ├── [_disable_shipping, shipping_class, tax_status, ...]
+│   │   ├── shipping_dimensions (row, after: _disable_shipping)
+│   │   │   └── [weight, length, width, height]
+│   │   └── shipping_overwrite (row, after: _overwrite_shipping)
+│   │       └── [_additional_price, _additional_qty]
+│   └── [Pro sections injected via filter with priority]
+└── sidebar_column
+    ├── product_publishing (card, isCollapsible: false)
+    │   └── [status, catalog_visibility, featured_image_id, ...]
+    └── purchase_note_section (card, withHeader, isCollapsible: false)
+        └── [purchase_note]
+```
+
+### Adding a layout section via filter
+
+Use the `dokan_product_editor_layouts` filter to add new layout sections. Set `priority` to control where the section appears relative to other items in the same parent.
+
+```php
+add_filter( 'dokan_product_editor_layouts', function ( array $layout ): array {
+    $layout[] = [
+        'id'        => 'my_custom_section',
+        'parent_id' => \WeDevs\Dokan\ProductEditor\Elements::PRIMARY_COLUMN,
+        'priority'  => 75, // After shipping (40), before sidebar items
+        'layout'    => [
+            'type'       => 'card',
+            'withHeader' => true,
+        ],
+    ];
+
+    return $layout;
+} );
+```
+
+The `children` for this layout item are auto-populated from schema fields that have `'section_id' => 'my_custom_section'`.
+
+### Customizing children of existing sections
+
+Use the `dokan_product_editor_layout_children` filter to add, remove, or reorder field IDs in any layout item's children array:
+
+```php
+add_filter( 'dokan_product_editor_layout_children', function ( array $children, array $item ): array {
+    // Add a custom field to the general section
+    if ( $item['id'] === \WeDevs\Dokan\ProductEditor\Elements::SECTION_GENERAL ) {
+        $children[] = 'my_custom_field';
+    }
+
+    return $children;
+}, 10, 2 );
+```
+
+### Priority and sort order
+
+- **Built-in items** use explicit priority values (10, 20, 40) to define their order.
+- **Filter-added items** should set `priority` to control insertion order.
+- **Items without `priority`** default to 30 during sorting.
+- Items with equal priority preserve their array order.
+
+### Responsive breakpoints
+
+The root layout uses responsive breakpoints to switch from a two-column layout to a single column on smaller screens:
+
+```php
+'responsive' => [
+    [
+        'maxWidth' => 768,
+        'layout'   => [
+            'type' => 'regular', // Stacks columns vertically
+        ],
+    ],
+],
+```
+
+### Using the `after` property
+
+The `after` property lets you insert a nested layout item at a specific position within the parent's children. For example, the digital options group is inserted after the `type` field in the general section:
+
+```php
+[
+    'id'        => Elements::SECTION_DIGITAL_OPTIONS,
+    'parent_id' => Elements::SECTION_GENERALSECTION_GENERAL,
+    'after'     => Elements::TYPE,  // Appears right after "Product Type"
+    'layout'    => [ 'type' => 'regular' ],
+    'children'  => [ Elements::DOWNLOADABLE, Elements::VIRTUAL ],
+]
+```
+
+### How JS builds the tree
+
+The `buildLayoutTree()` utility in `utils.tsx` converts the flat PHP array into a nested tree:
+
+1. Filters items by `parent_id` to find children of each node
+2. Preserves the order from PHP (sorted by priority on the server)
+3. For items with `after`, injects the sub-tree at the correct position in the parent's `children` array
+4. Auto-appends remaining schema fields not explicitly placed in any layout
+
+### Variation Layout Customization
+
+Variation forms use a separate layout system defined in `WeDevs\DokanPro\Modules\ProductEditor\FormSchema::get_variation_layouts()`. It follows the same flat-array format as the main product layout but is passed to the frontend as `variation_form_layouts` via the `dokan_product_editor_localize_data` filter.
+
+#### Built-in variation layout structure
+
+```
+variation_image_sku (row, responsive → regular at ≤768px)
+├── image_and_digital_options (row)
+│   ├── image_id
+│   └── variable_downloadable_options
+│       └── [enabled, downloadable, virtual, manage_stock]
+└── variation_sku (regular)
+    └── [sku]
+variation_prices (row)
+└── [regular_price, sale_price]
+variation_discount_toggle
+└── [create_schedule_for_discount]
+variation_discount_schedule (row)
+└── [date_on_sale_from, date_on_sale_to]
+variation_subscription
+└── [subscription fields...]
+variation_stock_row (row)
+└── [stock_quantity, backorders]
+variation_standalone_fields
+└── [low_stock_amount, shipping_class, tax_class, description]
+variation_downloads (card, withHeader)
+├── [downloads]
+└── variation_downloads_settings (row)
+    └── [download_limit, download_expiry]
+variation_wholesale_section (with heading)
+├── [enable_wholesale]
+└── variation_wholesale_fields (row)
+    └── [wholesale_price, wholesale_quantity]
+variation_min_max_section (with heading)
+└── [min_quantity, max_quantity]
+```
+
+#### Adding fields to variation layout via filter
+
+Use the `dokan_product_editor_variation_layouts` filter to add new layout items:
+
+```php
+add_filter( 'dokan_product_editor_variation_layouts', function ( array $layouts ): array {
+    $layouts[] = [
+        'id'        => 'my_variation_section',
+        'parent_id' => null,
+        'priority'  => 85, // After downloads (80), before wholesale (90)
+        'layout'    => [
+            'type'       => 'card',
+            'withHeader' => true,
+        ],
+        'children'  => [ 'my_variation_field_1', 'my_variation_field_2' ],
+    ];
+
+    return $layouts;
+} );
+```
+
+#### Customizing children of existing variation layout items
+
+Use the `dokan_product_editor_variation_layout_children` filter:
+
+```php
+add_filter( 'dokan_product_editor_variation_layout_children', function ( array $children, array $item ): array {
+    if ( $item['id'] === 'variation_standalone_fields' ) {
+        $children[] = 'my_custom_variation_meta';
+    }
+
+    return $children;
+}, 10, 2 );
+```
+
+#### Custom fields in variations
+
+The variation layout handles remaining custom fields (not explicitly placed) in two ways:
+
+1. **Predefined section custom fields** — Custom fields assigned to built-in sections (e.g., `section_id: 'general'`, `'inventory'`) render flat at the bottom of the form, without a card wrapper.
+2. **Custom section custom fields** — Custom fields assigned to user-created sections (where the section itself has `is_custom: true`) render wrapped in a card with the section's label as the header.
+
+---
+
+## 7. Dependencies & Conditional Visibility
 
 ### Dependencies (runtime)
 
@@ -370,7 +593,7 @@ Use `labels` to change a field's label based on product type:
 
 ---
 
-## 7. Resolving Field Values (Reading Data)
+## 8. Resolving Field Values (Reading Data)
 
 When editing an existing product, `FormSchema::resolve_field_value()` populates each field with the product's current data.
 
@@ -412,7 +635,7 @@ After resolution, `format_field_value()` transforms values based on variant:
 
 ---
 
-## 8. Resolving the Payload (Saving Data)
+## 9. Resolving the Payload (Saving Data)
 
 When the form is submitted, `PayloadResolver::resolve()` transforms form data (keyed by field IDs) into the WC REST API shape before sending to `POST /wc/v3/products/:id`.
 
@@ -463,7 +686,7 @@ add_action( 'dokan_rest_insert_product_variation_object', function ( $variation,
 
 ---
 
-## 9. Custom Edit Components (React)
+## 10. Custom Edit Components (React)
 
 The `field-config/index.ts` maps every field variant to a handler. Handlers for `checkbox`, `radio`, and `number` configure DataForm's built-in field types (`type: 'boolean'`, `Edit: 'radio'`, `type: 'integer'`). Other variants like `select`, `editor`, `image`, etc. provide custom React Edit components. The `text` variant falls through to the default handler, which auto-detects price fields.
 
@@ -525,22 +748,24 @@ The `CustomField` wrapper provides consistent label rendering, description, and 
 
 ---
 
-## 10. How Dokan-Pro Connects
+## 11. How Dokan-Pro Connects
 
 Dokan-pro and its modules extend the product editor without modifying dokan-lite code, using the filter hooks described above.
 
 ### Standard pattern
 
-Every module creates a `ProductEditorFields` class that hooks into 3 filters:
+Every module creates a `ProductEditorFields` class that hooks into schema, layout, value resolution, and payload filters:
 
 ```php
 class ProductEditorFields {
     public function __construct() {
         // 1. Add fields to the schema
         add_filter( 'dokan_product_editor_schema', [ $this, 'extend_default_fields' ] );
-        // 2. Resolve field values when loading
+        // 2. Add layout section for the new fields
+        add_filter( 'dokan_product_editor_layouts', [ $this, 'extend_layout' ] );
+        // 3. Resolve field values when loading
         add_filter( 'dokan_product_editor_schema_value', [ $this, 'resolve_fields_value' ], 10, 3 );
-        // 3. Transform payload when saving
+        // 4. Transform payload when saving
         add_filter( 'dokan_product_editor_schema_payload', [ $this, 'resolve_fields_payload' ] );
     }
 }
@@ -558,6 +783,7 @@ class ProductEditorFields {
 
     public function __construct() {
         add_filter( 'dokan_product_editor_schema', [ $this, 'extend_default_fields' ] );
+        add_filter( 'dokan_product_editor_layouts', [ $this, 'extend_layout' ] );
         add_filter( 'dokan_product_editor_schema_value', [ $this, 'resolve_fields_value' ], 10, 3 );
         add_filter( 'dokan_product_editor_schema_payload', [ $this, 'resolve_fields_payload' ] );
     }
@@ -569,7 +795,6 @@ class ProductEditorFields {
             'type'        => 'section',
             'label'       => __( 'Wholesale Options', 'dokan' ),
             'description' => __( 'Set your wholesale options', 'dokan' ),
-            'priority'    => 30,
             'visibility'  => true,
         ];
 
@@ -579,7 +804,6 @@ class ProductEditorFields {
             'type'       => 'field',
             'label'      => __( 'Enable wholesale', 'dokan' ),
             'variant'    => 'checkbox',
-            'priority'   => 30,
             'visibility' => true,
         ];
 
@@ -590,7 +814,6 @@ class ProductEditorFields {
             'label'        => __( 'Wholesale Price', 'dokan' ),
             'variant'      => 'number',
             'placeholder'  => '0',
-            'priority'     => 30,
             'visibility'   => true,
             'dependencies' => [
                 [
@@ -604,7 +827,22 @@ class ProductEditorFields {
         return $fields;
     }
 
-    // --- 2. Resolve values when loading ---
+    // --- 2. Add layout section ---
+    public function extend_layout( array $layout ): array {
+        $layout[] = [
+            'id'        => self::SECTION_WHOLESALE,
+            'parent_id' => \WeDevs\Dokan\ProductEditor\Elements::PRIMARY_COLUMN,
+            'priority'  => 80,
+            'layout'    => [
+                'type'       => 'card',
+                'withHeader' => true,
+            ],
+        ];
+
+        return $layout;
+    }
+
+    // --- 3. Resolve values when loading ---
     public function resolve_fields_value( $value, $field_name, $product ) {
         if ( ! $product instanceof WC_Product ) {
             return $value;
@@ -622,7 +860,7 @@ class ProductEditorFields {
         }
     }
 
-    // --- 3. Transform payload when saving ---
+    // --- 4. Transform payload when saving ---
     public function resolve_fields_payload( array $payload ): array {
         if ( isset( $payload[ self::ENABLE_WHOLESALE ] ) ) {
             $payload['wholesale'] = [
@@ -649,7 +887,7 @@ class ProductEditorFields {
 
 ---
 
-## 11. Hooks Reference
+## 12. Hooks Reference
 
 ### PHP Filters
 
@@ -659,6 +897,10 @@ class ProductEditorFields {
 | `dokan_product_editor_schema_response` | `(array $items, int $product_id)` | Modify schema after admin overrides are applied |
 | `dokan_product_editor_schema_value` | `(mixed $value, string $field_name, WC_Product $product)` | Resolve a field's value when loading a product |
 | `dokan_product_editor_schema_payload` | `(array $payload)` | Transform form data before saving to WC REST API |
+| `dokan_product_editor_layouts` | `(array $layout)` | Add or modify layout items (flat array with parent-child) |
+| `dokan_product_editor_layout_children` | `(string[] $children, array $item)` | Modify the children (field IDs) of a specific layout item |
+| `dokan_product_editor_variation_layouts` | `(array $layouts)` | Add or modify variation layout items (flat array with parent-child) |
+| `dokan_product_editor_variation_layout_children` | `(string[] $children, array $item)` | Modify the children (field IDs) of a specific variation layout item |
 | `dokan_product_editor_variation_payload` | `(array $payload, array $data)` | Transform variation payload before saving |
 | `dokan_product_editor_price_visibilities` | `(array $visibilities)` | Per-type visibility for price fields |
 | `dokan_product_editor_digital_option_visibilities` | `(array $visibilities)` | Per-type visibility for digital option fields |
@@ -729,13 +971,13 @@ addFilter(
 
 ---
 
-## 12. Key Files
+## 13. Key Files
 
 | File | Description |
 |------|-------------|
-| `includes/ProductEditor/FormSchema.php` | Schema definition, value resolution, value formatting |
+| `includes/ProductEditor/FormSchema.php` | Schema definition, layout definition, value resolution |
 | `includes/ProductEditor/PayloadResolver.php` | Transforms form payload to WC REST API shape |
-| `includes/ProductEditor/Elements.php` | Constants for all field and section IDs |
+| `includes/ProductEditor/Elements.php` | Constants for all field, section, and layout IDs |
 | `includes/ProductEditor/Hooks.php` | Server-side bootstrapping, script enqueue, localization |
 | `src/dashboard/product-editor/App.tsx` | Main React entry — renders DataForm |
 | `src/dashboard/product-editor/types/index.ts` | TypeScript interfaces (FlatFormItem, FieldConfig, FieldHandler) |
@@ -743,5 +985,6 @@ addFilter(
 | `src/dashboard/product-editor/components/FieldRenderer.tsx` | Builds field config for DataForm (label, elements, visibility) |
 | `src/dashboard/product-editor/components/CustomField.tsx` | Shared wrapper for all Edit components |
 | `src/dashboard/product-editor/hooks/useProductEditor.ts` | Redux store integration (product state, fields, submit) |
-| `src/dashboard/product-editor/hooks/useLayouts.tsx` | Builds responsive layout tree from schema |
-| `src/dashboard/product-editor/utils.tsx` | Visibility, dependency resolution, layout utilities |
+| `src/dashboard/product-editor/hooks/useLayouts.tsx` | Builds nested layout tree from PHP flat layout |
+| `src/dashboard/product-editor/utils.tsx` | Visibility, dependency resolution, `buildLayoutTree()` |
+| `src/dashboard/product-editor/exports.ts` | Public exports: `buildLayoutTree`, `appendToTarget`, types |

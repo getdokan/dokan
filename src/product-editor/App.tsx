@@ -9,11 +9,12 @@ import {
     useProductEditor,
 } from './hooks/useProductEditor';
 import useLayouts from './hooks/useLayouts';
-import { FlatFormItem } from './types';
-import DokanAI from '../../intelligence/components/DokanAI';
+import { FormItem, LayoutItem } from './types';
+import DokanAI from '../intelligence/components/DokanAI';
 
 interface ProductEditorData {
-    form_items: FlatFormItem[];
+    form_items: FormItem[];
+    form_layouts: LayoutItem[];
     is_new_product: string;
     product_id: string;
     view_product_url: string;
@@ -45,7 +46,7 @@ const App = () => {
     const { product, fields, onChange, formItems, isLoading, submitHandler } =
         useProductEditor( productId );
 
-    const { formLayouts } = useLayouts( formItems, product );
+    const { formLayouts } = useLayouts( formItems, product, formEditor.form_layouts );
 
     const productUrl = formEditor.view_product_url;
     const isNewProduct = Boolean( formEditor.is_new_product );
