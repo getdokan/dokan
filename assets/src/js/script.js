@@ -1247,6 +1247,39 @@ window.dokan_show_delete_prompt = async function ( event, messgae ) {
 }
 
 /**
+ * Shows a confirmation prompt before proceeding with an action
+ *
+ * @param {object} event
+ * @param {string} message
+ * 
+ * @return {boolean}
+ */
+
+window.dokan_show_confirmation_prompt = async function ( event, message ) {
+    event.preventDefault();
+
+    const target = event.currentTarget || event.target;
+    const url =
+        target?.href ||
+        target?.dataset?.url ||
+        event.target?.closest( 'a' )?.href ||
+        '';
+
+    if ( ! url ) {
+        return false;
+    }
+
+    let answer = await dokan_sweetalert( message, {
+        action : 'confirm',
+        icon   : 'warning',
+    } );
+
+    if ( answer.isConfirmed ) {
+        window.location.href = url;
+    }
+};
+
+/**
  * Shows bulk action delete operation confirmation
  *
  * @param {object} event
