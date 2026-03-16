@@ -9,7 +9,7 @@ use WeDevs\Dokan\Abstracts\DokanUpgrader;
  *
  * @since DOKAN_SINCE
  */
-class V_4_4_0 extends DokanUpgrader {
+class V_5_0_0 extends DokanUpgrader {
 
     /**
      * Alter dokan_order_stats table to add new columns and regenerate data.
