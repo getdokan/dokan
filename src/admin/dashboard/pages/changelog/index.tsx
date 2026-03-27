@@ -38,6 +38,34 @@ const ChangelogPage = () => {
     const hasPro =
         dokanAdminDashboardSettings?.header_info?.is_pro_exists || false;
 
+    const dismissWhatsNewNotice = useCallback(
+        async ( pkg: 'lite' | 'pro' ) => {
+            const action =
+                pkg === 'pro'
+                    ? 'dokan-pro-whats-new-notice'
+                    : 'dokan-whats-new-notice';
+
+            try {
+                await apiFetch( {
+                    url: ajaxurl,
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams( {
+                        action,
+                        nonce: dokanAdminDashboard?.nonce || '',
+                        dokan_promotion_dismissed: 'true',
+                    } ),
+                } );
+            } catch ( error ) {
+                // eslint-disable-next-line no-console
+                console.error( 'Request failed:', error );
+            }
+        },
+        []
+    );
+
     // Fetch changelog data
     const fetchChangelog = useCallback(
         async ( pkg: 'lite' | 'pro' ) => {
@@ -49,7 +77,7 @@ const ChangelogPage = () => {
                 return;
             }
             if ( dokanAdminDashboardSettings?.header_info?.has_new_version ) {
-                 dismissWhatsNewNotice( pkg );
+                dismissWhatsNewNotice( pkg );
             }
             setLoading( true );
             try {
@@ -74,27 +102,9 @@ const ChangelogPage = () => {
                 setLoading( false );
             }
         },
-        [ liteVersions, proVersions ]
-    );
-    const dismissWhatsNewNotice = async (pkg: 'lite' | 'pro') => {
-        const action = pkg === 'pro' ? 'dokan-pro-whats-new-notice' : 'dokan-whats-new-notice';
 
-        try {
-            const response = await fetch(ajaxurl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                    action: action,
-                    nonce: dokanAdminDashboard?.nonce || '',
-                    dokan_promotion_dismissed: 'true',
-                }),
-            });
-        } catch (error) {
-            console.error('Request failed:', error);
-        }
-    };
+        [ liteVersions, proVersions, dismissWhatsNewNotice ]
+    );
 
     // Load initial data
     useEffect( () => {
