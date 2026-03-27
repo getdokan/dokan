@@ -1,3 +1,6 @@
+### v4.3.2 ( Mar 13, 2026 ) ###
+- **fix:** Prevent unauthenticated access to customer information via the Store Reviews REST API endpoint.
+
 ### v4.3.1 ( Mar 06, 2026 ) ###
 - **update:** Validate vendor Terms & Conditions settings to prevent saving unexpected or empty content.
 - **update:** Introduce a new filter to allow customization for handling store form validation errors.

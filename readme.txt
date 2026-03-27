@@ -7,7 +7,7 @@ Tested up to: 6.9
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 4.3.1
+Stable tag: 4.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,8 +15,7 @@ Transform your WooCommerce site into a multivendor marketplace with Dokan – an
 
 == Description ==
 
-= POWERFUL MULTIVENDOR MARKETPLACE PLUGIN FOR WORDPRESS – POWERED BY WOOCOMMERCE =
-
+= THE EASIEST WAY TO LAUNCH A MULTIVENDOR MARKETPLACE ON WORDPRESS — POWERED BY WOOCOMMERCE. Built by weDevs, backed by 13 years of innovation and trust =
 
 [Dokan](https://dokan.co/wordpress/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) is the ultimate frontend multivendor marketplace plugin for WordPress, powered by WooCommerce. It helps you build your own multivendor marketplace similar to Amazon, Shopify, eBay, and Magento in under 30 minutes.
 
@@ -39,7 +38,7 @@ Hear what reputed WordPress influencer and online business strategist, Darrel Wi
 
 Here is how you can build your multivendor marketplace with Dokan.
 
-[https://youtu.be/_Vv5T7qqhoE?si=RPXD4hksHedNR87W&t=1]
+[https://www.youtube.com/watch?v=_Vv5T7qqhoE&t=1s]
 
 = PLACES WHERE DOKAN HAS BEEN FEATURED =
 
@@ -352,6 +351,9 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Product Delivery Schedules
 
 == Changelog ==
+
+= v4.3.2 ( Mar 13, 2026 ) =
+- **fix:** Prevent unauthenticated access to customer information via the Store Reviews REST API endpoint.
 
 = v4.3.1 ( Mar 06, 2026 ) =
 - **update:** Validate vendor Terms & Conditions settings to prevent saving unexpected or empty content.
