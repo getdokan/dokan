@@ -24,7 +24,7 @@ class ProFeatures extends AbstractPage {
         }
 		return [
             'page_title' => __( 'Dokan Pro Features', 'dokan-lite' ),
-            'menu_title' => __( 'Pro Features', 'dokan-lite' ),
+            'menu_title' => sprintf( '<span style="color:#f18500">%s</span>', __( 'Pro Features', 'dokan-lite' ) ),
             'route'      => 'pro-features',
             'capability' => $capability,
             'position'   => 99,
