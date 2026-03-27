@@ -17,7 +17,7 @@ const Option = ( optionProps: any ) => {
                         className={
                             'inline-flex h-4 w-4 items-center justify-center rounded border ' +
                             ( isSelected
-                                ? 'bg-dokan-btn border-dokan-btn'
+                                ? 'bg-dokan-btn border-dokan-btn-border'
                                 : 'bg-white border-gray-300' ) +
                             ( isDisabled ? ' opacity-50' : '' )
                         }

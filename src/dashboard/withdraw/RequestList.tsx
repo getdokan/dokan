@@ -162,7 +162,7 @@ function RequestList( {
                                       <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
                                   ) : (
                                       <span
-                                          className={ `px-2 bg-transparent font-medium text-dokan-danger text-sm` }
+                                          className={ `px-2 bg-transparent font-medium text-dokan-danger-text text-sm` }
                                       >
                                           { __( 'Cancel', 'dokan-lite' ) }
                                       </span>
