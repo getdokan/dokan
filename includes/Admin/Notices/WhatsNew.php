@@ -39,6 +39,10 @@ class WhatsNew {
             return $notices;
         }
 
+        $is_legacy_changelog_page = get_transient( 'dokan_legacy_changelog_page' );
+        $changelog_page_slug      = $is_legacy_changelog_page ? 'dokan' : 'dokan-dashboard';
+        $changelog_url            = admin_url( 'admin.php?page=' . $changelog_page_slug ) . '#/changelog';
+
         $notices[] = [
             'type'              => 'info',
             /* translators: %s: plugin version */
@@ -54,7 +58,7 @@ class WhatsNew {
                 [
                     'type'   => 'primary',
                     'text'   => __( 'View Details', 'dokan-lite' ),
-                    'action' => esc_url( add_query_arg( array( 'page' => 'dokan#/changelog?plugin=dokan' ), admin_url( 'admin.php' ) ) ),
+                    'action' => esc_url( $changelog_url ),
                 ],
             ],
         ];
