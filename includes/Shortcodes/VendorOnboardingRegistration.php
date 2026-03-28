@@ -23,6 +23,7 @@ class VendorOnboardingRegistration extends DokanShortcode {
         wp_enqueue_script( 'dokan-form-validate' );
         wp_enqueue_script( 'dokan-vendor-registration' );
         wp_enqueue_script( 'dokan-vendor-address' );
+        wp_enqueue_script( 'wc-password-strength-meter' );
 
         $data = dokan_get_seller_registration_form_data();
 
