@@ -9,7 +9,7 @@ Migrate Dokan Pro list/table views from **old patterns** to a single `<DataViews
 
 ## Base Branch
 
-All migration work should be branched from and PR'd against: `refactor/coupons-dataviews-migration`
+All migration work should be branched from and PR'd against: `refactor/coupons-dataviews-migration` in dokan-pro repository. This branch already contains a full migration of the CouponList component, which can be used as a reference example. PR: https://github.com/getdokan/dokan-pro/pull/5507
 
 ## When to Use
 
