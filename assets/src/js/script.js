@@ -1247,36 +1247,20 @@ window.dokan_show_delete_prompt = async function ( event, messgae ) {
 }
 
 /**
- * Shows a confirmation prompt before proceeding with an action
+ * Show Confirmation Prompt
  *
- * @param {object} event
  * @param {string} message
+ * @param {object} options
  * 
  * @return {boolean}
  */
-
-window.dokan_show_confirmation_prompt = async function ( event, message ) {
-    event.preventDefault();
-
-    const target = event.currentTarget || event.target;
-    const url =
-        target?.href ||
-        target?.dataset?.url ||
-        event.target?.closest( 'a' )?.href ||
-        '';
-
-    if ( ! url ) {
-        return false;
-    }
-
-    let answer = await dokan_sweetalert( message, {
-        action : 'confirm',
-        icon   : 'warning',
+window.dokan_confirm = async function ( message, options = {} ) {
+    const answer = await dokan_sweetalert( message, {
+        action: 'confirm',
+        icon: options.icon || 'warning',
     } );
 
-    if ( answer.isConfirmed ) {
-        window.location.href = url;
-    }
+    return answer.isConfirmed;
 };
 
 /**

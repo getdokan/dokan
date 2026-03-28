@@ -166,16 +166,18 @@ if ( $user_orders ) {
 
                             $actions = apply_filters( 'woocommerce_admin_order_actions', $actions, $order );
 
-                            foreach ( $actions as $action ) {
-                                $icon    = isset( $action['icon'] ) ? $action['icon'] : '';
-                                $onclick = isset( $action['confirm_message'] )
-                                    ? ' onclick="dokan_show_confirmation_prompt( event, \'' . esc_js( $action['confirm_message'] ) . '\' );"'
-                                    : '';
+                            foreach ( $actions as $action_item ) {
+                                $icon = isset( $action_item['icon'] ) ? $action_item['icon'] : '';
                                 printf(
-                                    '<a class="dokan-btn dokan-btn-default dokan-btn-sm tips" href="%s"%s data-toggle="tooltip" data-placement="top" title="%s">%s</a> ',
-                                    esc_url( $action['url'] ),
-                                    $onclick,
-                                    esc_attr( $action['name'] ),
+                                    '<a class="dokan-btn dokan-btn-default dokan-btn-sm dokan-btn-action-confirm tips" 
+                                        href="%s" 
+                                        data-confirm-message="%s"
+                                        data-toggle="tooltip" 
+                                        data-placement="top" 
+                                        title="%s">%s</a> ',
+                                    esc_url( $action_item['url'] ),
+                                    esc_attr( $action_item['confirm_message'] ?? '' ),
+                                    esc_attr( $action_item['name'] ),
                                     wp_kses_post( $icon )
                                 );
                             }
