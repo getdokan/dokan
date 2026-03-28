@@ -144,10 +144,13 @@ class WithdrawControllerV2 extends WithdrawController {
 
         return new WP_REST_Response( __( 'Default method update successful.', 'dokan-lite' ), 200 );
     }
+
     /**
-     * Get user data
+     * Get user data.
      *
      * @since DOKAN_SINCE
+     *
+     * @param int $user_id User ID.
      *
      * @return array
      */

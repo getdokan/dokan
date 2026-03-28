@@ -463,7 +463,7 @@ const WithdrawPage = () => {
     const [ localNoteState, setLocalNoteState ] = useState( '' );
 
     const [ showInsufficientBalanceModal, setShowInsufficientBalanceModal ] = useState( false );
-    const [ insufficientVendors, setInsufficientVendors ] = useState( [] );
+    const [ insufficientVendors, setInsufficientVendors ] = useState< string[] >( [] );
 
     // Selected action for the "view" modal
     const [ selectedAction, setSelectedAction ] = useState< string | number | undefined >( undefined );
@@ -1470,10 +1470,12 @@ const WithdrawPage = () => {
                         hideCancelButton={ true }
                         confirmationTitle={ __( 'Insufficient Balance', 'dokan-lite' ) }
                         confirmationDescription={ sprintf(
-                            __(
-                                '%s do not have sufficient balance for this withdrawal request.',
-                                'dokan-lite'
-                            ),
+                                _n(
+                                    '%s does not have sufficient balance for this withdrawal request.',
+                                    '%s do not have sufficient balance for this withdrawal request.',
+                                    insufficientVendors.length,
+                                    'dokan-lite'
+                                ),
                             insufficientVendors.join( ', ' )
                         ) }
                         confirmButtonVariant="primary"
@@ -1485,7 +1487,7 @@ const WithdrawPage = () => {
                             </div>
                         }
                     />
-            ) }
+                ) }
         </div>
     );
 };
