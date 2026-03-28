@@ -1,6 +1,9 @@
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme);
+/* import other libraries' CSS here, if needed */
 @import "@getdokan/dokan-ui/dist/dokan-ui.css";
+@import "../node_modules/@wedevs/plugin-ui/dist/styles.css";
+
 
 /* ============================================
    Tailwind v4 Theme Configuration
@@ -124,6 +127,10 @@
         --wp-components-color-accent-darker-20: var(--color-dokan-btn-hover);
         --color-on-primary: var(--color-dokan-btn-text);
         --color-border: #e5e7eb;
+
+
+        /* Plugin UI */
+        --primary: var(--color-primary);
 	}
 
 	/* Headless UI portal visibility fix */
