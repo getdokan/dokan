@@ -8,7 +8,7 @@
         "jsx": "react-jsx",
 
         // Module resolution
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "baseUrl": ".",
         "paths": {
             // Webpack aliases from webpack.config.js
