@@ -230,7 +230,7 @@ class Manager {
     /**
      * Show admin notice if vendor onboarding page is not configured.
      *
-     * @since 3.7.11
+     * @since DOKAN_SINCE
      *
      * @param array $notices
      *
@@ -307,7 +307,7 @@ class Manager {
     /**
      * Check if vendor onboarding page is configured.
      *
-     * @since 3.7.11
+     * @since DOKAN_SINCE
      *
      * @return bool
      */
