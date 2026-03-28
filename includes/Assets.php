@@ -892,14 +892,14 @@ class Assets {
                     'dokan-vendor-onboarding',
                     plugin_dir_url( DOKAN_FILE ) . 'assets/css/vendor-onboarding.css',
                     [],
-                    'DOKAN_PLUGIN_VERSION'
+                    DOKAN_PLUGIN_VERSION
                 );
 
                 wp_enqueue_script(
                     'dokan-vendor-onboarding',
                     plugin_dir_url( DOKAN_FILE ) . 'assets/js/vendor-onboarding-js.js',
                     [ 'jquery' ],
-                    'DOKAN_PLUGIN_VERSION',
+                    DOKAN_PLUGIN_VERSION,
                     true
                 );
             }
