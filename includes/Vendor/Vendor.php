@@ -990,6 +990,24 @@ class Vendor {
      * @return array
      */
     public function make_active() {
+        /**
+         * Filter whether selling should be enabled for a vendor.
+         *
+         * Returning false will prevent the vendor from being activated.
+         * This is used by the verification module to block activation
+         * when the "Verified Only" setting is enabled and the vendor is not verified.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param bool $enable_selling Whether to enable selling. Default true.
+         * @param int  $vendor_id      The vendor ID.
+         */
+        $enable_selling = apply_filters( 'dokan_can_enable_selling', true, $this->get_id() );
+
+        if ( ! $enable_selling ) {
+            return $this->to_array();
+        }
+
         $this->update_meta( 'dokan_enable_selling', 'yes' );
 
         // change product status to publish
