@@ -6,17 +6,31 @@ import { SlotFillProvider } from '@wordpress/components';
 import { PluginArea } from '@wordpress/plugins';
 import { DokanToaster } from '@getdokan/dokan-ui';
 import { useLocation } from 'react-router-dom';
+import { ThemeProvider as PluginUIThemeProvider } from '@wedevs/plugin-ui';
 
 // Create a ThemeContext
-const ThemeContext = createContext( null );
+const ThemeContext = createContext< {
+    theme: string;
+    setTheme: React.Dispatch< React.SetStateAction< string > >;
+} | null >( null );
+
+const pluginUITokens = {
+    primary: 'var(--dokan-button-background-color, #7047EB)',
+    primaryForeground: 'var(--dokan-button-text-color, #ffffff)',
+    secondary:
+        'var(--dokan-button-secondary-background-color, var(--dokan-button-text-color, #ffffff))',
+    secondaryForeground: 'var(--dokan-button-secondary-text-color, #7047EB)',
+};
 
 // Create a ThemeProvider component
-const ThemeProvider = ( { children } ) => {
+const ThemeProvider = ( { children }: { children: React.ReactNode } ) => {
     const [ theme, setTheme ] = useState( 'light' ); // Example theme state
 
     return (
         <ThemeContext.Provider value={ { theme, setTheme } }>
-            { children }
+            <PluginUIThemeProvider pluginId='dokan-lite' tokens={pluginUITokens}>
+                { children }
+            </PluginUIThemeProvider>
         </ThemeContext.Provider>
     );
 };
