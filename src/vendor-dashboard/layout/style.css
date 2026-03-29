@@ -14,10 +14,10 @@
 
         li {
             a {
-                color: var(--dokan-sidebar-text-color, #daceff);
+                color: var(--dokan-sidebar-text-color, #daceff) !important;;
 
                 svg {
-                    color: var(--dokan-sidebar-text-color, #daceff);
+                    color: var(--dokan-sidebar-text-color, #daceff) !important;;
                 }
 
                 .sidebar-menu-bubble {
@@ -40,7 +40,7 @@
                     );
 
                     svg {
-                        color: var(--dokan-sidebar-hover-text-color, #ffffff);
+                        color: var(--dokan-sidebar-hover-text-color, #ffffff) !important;;
                     }
 
                     .sidebar-menu-bubble {
@@ -48,7 +48,7 @@
                         color: var(
                             --dokan-sidebar-hover-background-color,
                             #7047eb
-                        );
+                        ) !important;
                     }
                 }
             }

@@ -17,9 +17,6 @@ const ThemeContext = createContext< {
 const pluginUITokens = {
     primary: 'var(--dokan-button-background-color, #7047EB)',
     primaryForeground: 'var(--dokan-button-text-color, #ffffff)',
-    secondary:
-        'var(--dokan-button-secondary-background-color, var(--dokan-button-text-color, #ffffff))',
-    secondaryForeground: 'var(--dokan-button-secondary-text-color, #7047EB)',
 };
 
 // Create a ThemeProvider component
@@ -59,7 +56,7 @@ interface LayoutProps {
     footerComponent?: JSX.Element | React.ReactNode;
 }
 
-const handleMenuActiveStates = ( currentPath ) => {
+const handleMenuActiveStates = ( currentPath: string ) => {
     const menuRoute = currentPath.replace( /^\//, '' ); // Remove leading slash.
     const menuItem =
         document.querySelector(
