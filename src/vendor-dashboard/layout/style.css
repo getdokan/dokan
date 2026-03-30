@@ -14,10 +14,10 @@
 
         li {
             a {
-                color: var(--dokan-sidebar-text-color, #daceff) !important;;
+                color: var(--dokan-sidebar-text-color, #daceff) !important;
 
                 svg {
-                    color: var(--dokan-sidebar-text-color, #daceff) !important;;
+                    color: var(--dokan-sidebar-text-color, #daceff);
                 }
 
                 .sidebar-menu-bubble {
@@ -40,7 +40,7 @@
                     );
 
                     svg {
-                        color: var(--dokan-sidebar-hover-text-color, #ffffff) !important;;
+                        color: var(--dokan-sidebar-hover-text-color, #ffffff);
                     }
 
                     .sidebar-menu-bubble {
