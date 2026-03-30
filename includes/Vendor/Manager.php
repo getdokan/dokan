@@ -537,6 +537,10 @@ class Manager {
     public function activate( $vendor_id ) {
         $vendor = $this->get( $vendor_id );
 
+        if ( ! $vendor->get_id() ) {
+            return [];
+        }
+
         return $vendor->make_active();
     }
 
@@ -551,6 +555,10 @@ class Manager {
      */
     public function deactivate( $vendor_id ) {
         $vendor = $this->get( $vendor_id );
+
+        if ( ! $vendor->get_id() ) {
+            return [];
+        }
 
         return $vendor->make_inactive();
     }
