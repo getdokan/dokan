@@ -535,8 +535,7 @@ class Manager {
      * @return array
      */
     public function activate( $vendor_id ) {
-        $vendor     = new Vendor();
-        $vendor->id = $vendor_id;
+        $vendor = $this->get( $vendor_id );
 
         return $vendor->make_active();
     }
@@ -551,8 +550,7 @@ class Manager {
      * @return array
      */
     public function deactivate( $vendor_id ) {
-        $vendor     = new Vendor();
-        $vendor->id = $vendor_id;
+        $vendor = $this->get( $vendor_id );
 
         return $vendor->make_inactive();
     }
