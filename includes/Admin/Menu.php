@@ -69,7 +69,7 @@ class Menu {
         do_action( 'dokan_admin_menu', $capability, $menu_position );
 
         if ( current_user_can( $capability ) ) {
-            $submenu[ $slug ][] = [ __( '<span style="color:#f18500">Help</span>', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/help' ];
+            $submenu[ $slug ][] = [ esc_html__( 'Help', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/help' ];
             $submenu[ $slug ][] = [ __( 'Settings', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/settings' ];
         }
 
