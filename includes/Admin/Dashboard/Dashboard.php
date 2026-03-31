@@ -170,6 +170,14 @@ class Dashboard implements Hookable {
             'is_pro_exists'   => dokan()->is_pro_exists(),
             'dashboard_url'   => $dashboard_url,
             'has_new_version' => Helper::dokan_has_new_version(),
+            'support_button'  => apply_filters(
+                'dokan_admin_header_support_button',
+                [
+                    'label'    => esc_html__( 'Get Support', 'dokan-lite' ),
+                    'url'      => 'https://wordpress.org/support/plugin/dokan-lite/',
+                    'is_modal' => false,
+                ]
+            ),
             'help_menu_items' => apply_filters(
                 'dokan_admin_setup_guides_help_menu_items',
                 [
