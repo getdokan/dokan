@@ -127,13 +127,13 @@ function PricingSection() {
                 </div>
 
                 { /* Features List */ }
-                <div className="flex-grow space-y-3">
+                <div className="grow space-y-3">
                     { plan.features.map( ( feature, featureIndex ) => (
                         <div
                             key={ featureIndex }
                             className="flex items-start gap-2"
                         >
-                            <Check className="w-4 h-4 text-[#7047EB] mt-0.5 flex-shrink-0" />
+                            <Check className="w-4 h-4 text-[#7047EB] mt-0.5 shrink-0" />
                             <span className="text-xs text-gray-700 leading-tight">
                                 { feature }
                             </span>

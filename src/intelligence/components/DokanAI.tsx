@@ -1,11 +1,15 @@
 import Tooltip from '../../components/DokanTooltip';
-import { useEffect, useState } from '@wordpress/element';
+import {
+    DokanAlert,
+    DokanButton,
+    DokanModal,
+} from '@dokan/components';
 import { SimpleInput, TextArea } from '@getdokan/dokan-ui';
+import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { generateAiContent } from '../utils/api';
 import { updateWordPressField } from '../utils/dom';
 import ResponseHistory from './ResponseHistory';
-import { DokanAlert, DokanButton, DokanModal } from '../../components';
 import AISkeleton from './Skeleton';
 import { twMerge } from 'tailwind-merge';
 
@@ -491,7 +495,7 @@ const DokanAI = ( { className, value, onChange }: DokanAIProps ) => {
                                         ) }
                                         element={
                                             <div
-                                                className="mb-3 focus:outline-dokan-btn h-36 border rounded p-2.5 overflow-auto"
+                                                className="mb-3 focus:outline-dokan-btn-border h-36 border rounded p-2.5 overflow-auto"
                                                 contentEditable={ true }
                                                 onBlur={ ( e ) => {
                                                     inputHandler(
@@ -549,7 +553,7 @@ const DokanAI = ( { className, value, onChange }: DokanAIProps ) => {
                                         ) }
                                         element={
                                             <div
-                                                className="mb-3 h-48 focus:outline-dokan-btn border rounded p-2.5 overflow-auto"
+                                                className="mb-3 h-48 focus:outline-dokan-btn-border border rounded p-2.5 overflow-auto"
                                                 contentEditable={ true }
                                                 onBlur={ ( e ) => {
                                                     inputHandler(

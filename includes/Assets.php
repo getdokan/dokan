@@ -110,10 +110,6 @@ class Assets {
             wp_enqueue_script( 'dokan-vue-admin' );
             wp_localize_script( 'dokan-vue-vendor', 'dokanAdmin', $vue_admin_localize_script );
 
-            if ( version_compare( $wp_version, '5.3', '<' ) ) {
-                wp_enqueue_style( 'dokan-wp-version-before-5-3' );
-            }
-
             wp_enqueue_style( 'dokan-fontawesome' );
 
             // load wooCommerce select2 styles
@@ -177,7 +173,7 @@ class Assets {
     public function get_localized_price() {
         return [
             'precision' => wc_get_price_decimals(),
-            'symbol'    => html_entity_decode( get_woocommerce_currency_symbol() ),
+            'symbol'    => html_entity_decode( get_woocommerce_currency_symbol(), ENT_COMPAT, 'UTF-8' ),
             'decimal'   => esc_attr( wc_get_price_decimal_separator() ),
             'thousand'  => esc_attr( wc_get_price_thousand_separator() ),
             'position'  => esc_attr( get_option( 'woocommerce_currency_pos' ) ),
@@ -322,8 +318,8 @@ class Assets {
                 'version' => filemtime( DOKAN_DIR . '/assets/css/admin.css' ),
             ],
             'dokan-vue-vendor'              => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-vendor.css',
-                'version' => filemtime( DOKAN_DIR . '/assets/css/vue-vendor.css' ),
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-vue-vendor.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-vue-vendor.css' ),
             ],
             'dokan-vue-bootstrap'           => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-bootstrap.css',
@@ -336,17 +332,10 @@ class Assets {
             ],
             'dokan-vue-admin'               => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-admin.css',
-                'deps'    => [ 'dokan-vue-vendor', 'dokan-vue-bootstrap', 'dokan-tailwind' ],
+                'deps'    => [ 'dokan-vue-vendor', 'dokan-vue-bootstrap', 'dokan-react-components' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/vue-admin.css' ),
             ],
-            'dokan-vue-frontend'            => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-frontend.css',
-                'version' => filemtime( DOKAN_DIR . '/assets/css/vue-frontend.css' ),
-            ],
-            'dokan-wp-version-before-5-3'   => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/css/wp-version-before-5-3.css',
-                'version' => filemtime( DOKAN_DIR . '/assets/css/wp-version-before-5-3.css' ),
-            ],
+
             'dokan-global-admin-css'        => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/global-admin.css',
                 'deps'    => [ 'dokan-sf-pro-text' ],
@@ -375,7 +364,7 @@ class Assets {
             ],
             'dokan-react-components' => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/components.css',
-                'deps'    => [ 'wp-components' ],
+                'deps'    => [ 'wp-components', 'dokan-tailwind' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/components.css' ),
             ],
             'dokan-product-editor' => [
@@ -1041,7 +1030,7 @@ class Assets {
      *
      * @since 2.5.3
      *
-     * @global type $wp
+     * @global $wp
      */
     public function dokan_dashboard_scripts() {
         global $wp;

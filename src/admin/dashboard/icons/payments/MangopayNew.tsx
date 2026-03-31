@@ -2,7 +2,7 @@ import IconWrapper from './IconWrapper';
 
 function MangopayNew() {
     return (
-        <IconWrapper className="bg-[#FCB069] bg-opacity-[10%]">
+        <IconWrapper className="bg-[#FCB069]/10">
             <svg
                 width="93"
                 height="25"

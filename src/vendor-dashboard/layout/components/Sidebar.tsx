@@ -1,4 +1,8 @@
 // eslint-disable-next-line import/named
+// import { Tooltip } from '@getdokan/dokan-ui';
+import { truncate } from '@src/utilities';
+// import { Tooltip } from '@wordpress/components';
+import { DokanTooltip as Tooltip } from '@src/components';
 import {
     RawHTML,
     RefObject,
@@ -6,14 +10,12 @@ import {
     useRef,
     useState,
 } from '@wordpress/element';
+import { applyFilters } from '@wordpress/hooks';
 import { __, sprintf } from '@wordpress/i18n';
 import * as LucideIcons from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
-import { Tooltip } from '@getdokan/dokan-ui';
-import { truncate } from '@src/utilities';
-import SubmenuPopover from './SubmenuPopover';
 import CountBubble from './CountBubble';
-import { applyFilters } from '@wordpress/hooks';
+import SubmenuPopover from './SubmenuPopover';
 
 const Sidebar = ( {
     collapsed,
@@ -201,7 +203,7 @@ const Sidebar = ( {
             <aside
                 style={ { top: windowWidth > 600 ? adminBar : 0 } }
                 className={ twMerge(
-                    'dokan-frontend-sidebar text-white fixed left-0 bottom-0 z-20 flex flex-col transition-all duration-200',
+                    'dokan-frontend-sidebar bg-primary-500 text-white fixed left-0 bottom-0 z-20 flex flex-col transition-all duration-200',
                     collapsed
                         ? windowWidth <= 768
                             ? 'w-0 max-w-0'
@@ -213,8 +215,9 @@ const Sidebar = ( {
                 <a
                     href={ siteUrl || '/' }
                     className={ twMerge(
-                        'flex items-center gap-3.5 min-h-20 no-underline focus:!outline-none',
-                        collapsed ? 'px-5 justify-center' : 'px-8'
+                        'flex items-center gap-3.5 min-h-20 no-underline focus:!outline-none rounded-md hover:bg-primary-700',
+                        collapsed ? 'px-5 justify-center' : 'px-8',
+                        'hover:bg-primary-hover'
                     ) }
                 >
                     { siteIcon ? (
@@ -237,8 +240,13 @@ const Sidebar = ( {
                     ) }
 
                     { ! collapsed && (
-                        <Tooltip content={ sideBarTitle }>
-                            <span className="text-2xl font-bold text-white">
+                        <Tooltip
+                            content={
+                                sideBarTitle ||
+                                __( 'Vendor Dashboard', 'dokan-lite' )
+                            }
+                        >
+                            <span className="text-xl font-bold text-white">
                                 { truncate( sideBarTitle, 9 ) }
                             </span>
                         </Tooltip>
@@ -305,6 +313,7 @@ const Sidebar = ( {
                                         item?.menu_manager_title || item?.title,
                                         item
                                     ) as string;
+                                    const isMenuItemActive =  isParentActive || isParentActiveCollapsed ;
 
                                     return (
                                         <li
@@ -337,16 +346,16 @@ const Sidebar = ( {
                                                     }
                                                 } }
                                                 className={ twMerge(
-                                                    'group skip-color-module relative flex items-center rounded-md font-medium focus:!outline-none py-2.5',
+                                                    'group skip-color-module relative flex items-center rounded-md font-medium focus:!outline-none py-2.5 no-underline hover:bg-primary-hover data-[active=true]:bg-primary-hover',
                                                     collapsed
                                                         ? windowWidth <= 768
                                                             ? 'w-0 max-w-0'
                                                             : 'w-10 max-w-10 justify-center'
                                                         : 'text-sm px-3',
-                                                    ( isParentActive ||
-                                                        isParentActiveCollapsed ) &&
+                                                    (isMenuItemActive) &&
                                                         'active'
                                                 ) }
+                                                data-active={ isMenuItemActive ? 'true' : 'false' }
                                             >
                                                 { /* Icon: turn white when its popover is visible */ }
                                                 <span
@@ -460,13 +469,16 @@ const Sidebar = ( {
                                                                         key={
                                                                             subkey
                                                                         }
+                                                                        className={
+                                                                            'my-2'
+                                                                        }
                                                                     >
                                                                         <a
                                                                             href={
                                                                                 subitem.url
                                                                             }
                                                                             className={ twMerge(
-                                                                                'group skip-color-module flex items-center py-2.5 px-3 text-sm font-medium rounded-md focus:!outline-none',
+                                                                                'group skip-color-module no-underline flex items-center p-3 text-sm font-medium rounded-md focus:!outline-none',
                                                                                 isSubActive &&
                                                                                     'active'
                                                                             ) }
