@@ -148,7 +148,7 @@ class WithdrawControllerV2 extends WithdrawController {
     /**
      * Get user data.
      *
-     * @since DOKAN_SINCE
+     * @since 4.3.3
      *
      * @param int $user_id User ID.
      *
