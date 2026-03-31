@@ -7,7 +7,7 @@ Tested up to: 6.9
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 4.3.2
+Stable tag: 4.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -352,6 +352,13 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v4.3.3 ( Mar 31, 2026 ) =
+- **update:** Manage changelog notification dot visibility for Dokan Lite and Pro based on new version availability.
+- **update:** Add confirmation modal for order status change actions in the vendor dashboard order listing.
+- **update:** Update the Pro Features admin menu color to highlight it with the brand color.
+- **fix:** Add the missing alt attribute to the store header banner image on the store listing page.
+- **fix:** Display a warning message when admin tries to approve a vendor withdrawal request exceeding the available balance.
+
 = v4.3.2 ( Mar 13, 2026 ) =
 - **fix:** Prevent unauthenticated access to customer information via the Store Reviews REST API endpoint.
 
@@ -375,20 +382,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **fix:** Ensure store opening hours save correctly with custom date and time formats.
 - **fix:** Ensure user subscription renewals work correctly when Dokan is enabled.
 - **fix:** Ensure “Actions” and “No results” in DataViews are properly translatable.
-
-= v4.2.9 ( Jan 27, 2026 ) =
-- **update:** Replace DokanModal dependency from dokan-ui with WordPress Modal.
-- **update:** Add user feedback link across Dokan admin pages.
-- **update:** Introduce a customizable option to exclude vendor order balance.
-- **update:** Add AI text and image enhancer settings to vendor preferences.
-- **fix:** Improve default table interactions in Dokan admin.
-- **fix:** Handle vendor payment settings permission properly for Vendor staff.
-
-= v4.2.8 ( Jan 20, 2026 ) =
-- **update:** Restore vendor revenue widget for vendor dashboard.
-- **update:** Improve query arguments on admin withdraw pages to support filtering options.
-- **fix:** Preserve order filters when paginating vendor dashboard orders.
-- **fix:** Prevent Dokan menu from appearing for users without permission.
-- **fix:** Resolve PHP deprecated warnings in the withdraw controller.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

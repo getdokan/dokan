@@ -1247,6 +1247,23 @@ window.dokan_show_delete_prompt = async function ( event, messgae ) {
 }
 
 /**
+ * Show Confirmation Prompt
+ *
+ * @param {string} message
+ * @param {object} options
+ * 
+ * @return {boolean}
+ */
+window.dokan_confirm = async function ( message, options = {} ) {
+    const answer = await dokan_sweetalert( message, {
+        action: 'confirm',
+        icon: options.icon || 'warning',
+    } );
+
+    return answer.isConfirmed;
+};
+
+/**
  * Shows bulk action delete operation confirmation
  *
  * @param {object} event
