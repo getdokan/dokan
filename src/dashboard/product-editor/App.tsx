@@ -10,7 +10,7 @@ import {
 } from './hooks/useProductEditor';
 import useLayouts from './hooks/useLayouts';
 import { FormItem, LayoutItem } from './types';
-import DokanAI from '../intelligence/components/DokanAI';
+import DokanAI from '../../intelligence/components/DokanAI';
 
 interface ProductEditorData {
     form_items: FormItem[];

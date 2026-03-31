@@ -1,7 +1,7 @@
 import {
     FormItem,
     VariationType,
-} from '../../product-editor/types';
+} from '../../dashboard/product-editor/types';
 import { ProductEditorState } from './types';
 
 export const selectors = {

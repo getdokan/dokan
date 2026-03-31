@@ -93,13 +93,13 @@ const entryPoints = {
         },
     },
     'product-editor-utils': {
-        import: './src/product-editor/exports.ts',
+        import: './src/dashboard/product-editor/exports.ts',
         library: {
             name: [ 'dokan', 'productEditor' ],
             type: 'window',
         },
     },
-    'product-editor': './src/product-editor/index.tsx',
+    'product-editor': './src/dashboard/product-editor/index.tsx',
     'dokan-admin-commission-suborder-metabox':
         './src/styles/dokan-admin-commission-suborder-metabox.css',
 
