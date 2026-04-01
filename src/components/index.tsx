@@ -49,5 +49,4 @@ export { default as WpDatePicker } from './WpDatePicker';
 // Commission Components
 export * from './commission';
 
-// export the pluginUITokens for use in other components
-export { pluginUITokens } from '../layout';
+/* Tailwind + theme loaded via single bundle: components.css (dokan-tailwind handle) */

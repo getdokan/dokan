@@ -14,7 +14,7 @@ const ThemeContext = createContext< {
     setTheme: React.Dispatch< React.SetStateAction< string > >;
 } | null >( null );
 
-export const pluginUITokens = {
+const pluginUITokens = {
     primary: 'var(--dokan-button-background-color, #7047EB)',
     primaryForeground: 'var(--dokan-button-text-color, #ffffff)',
 };
