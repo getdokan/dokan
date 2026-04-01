@@ -67,7 +67,7 @@ const SearchInput = ( {
     return (
         <div className="relative">
             { /* Left icon */ }
-            <div className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+            <div className="pointer-events-none absolute left-3 top-[calc(50%-8px)] text-gray-400">
                 { leftIcon ?? <Search size={ 16 } /> }
             </div>
 
@@ -94,7 +94,7 @@ const SearchInput = ( {
                 <button
                     type="button"
                     onClick={ handleClear }
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600"
+                    className="absolute right-2 top-[calc(50%-8px)] text-gray-400 hover:text-gray-600"
                     aria-label="Clear search input"
                 >
                     <X size={ 16 } />

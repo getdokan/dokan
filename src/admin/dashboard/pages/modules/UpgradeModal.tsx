@@ -11,12 +11,12 @@ const UpgradeModal = ( {
 } ) => {
     const upgradeURL = getSettings( 'pro-modules' ).upgrade_url as string;
     const modalContent = (
-        <div className="w-full flex items-center justify-center mx-auto text-center overflow-hidden bg-upgrade-popup-money bg-[-20px_10px] md:bg-[0px_20px] bg-no-repeat relative">
-            <div className="w-full bg-upgrade-popup-saving bg-[right_-40px_bottom_-40px] md:bg-[right_0px_bottom_-10px] bg-no-repeat">
+        <div className="w-full flex items-center justify-center mx-auto text-center overflow-hidden bg-[url(/assets/images/upgrade-popup-money.png)] bg-[-20px_10px] md:bg-[0px_20px] bg-no-repeat relative">
+            <div className="w-full bg-[url(/assets/images/upgrade-popup-saving.png)] bg-[right_-40px_bottom_-40px] md:bg-[right_0px_bottom_-10px] bg-no-repeat">
                 { /* Content container */ }
                 <div className="p-2 py-8">
                     { /* Lock icon with crown */ }
-                    <div className="w-full min-h-[194px] bg-upgrade-popup-crown bg-auto bg-no-repeat bg-center"></div>
+                    <div className="w-full min-h-[194px] bg-[url(/assets/images/upgrade-popup-crown.png)] bg-auto bg-no-repeat bg-center"></div>
 
                     { /* Heading */ }
                     <h2 className="text-white text-2xl font-semibold text-center mb-4 -mt-10">
@@ -226,11 +226,6 @@ const UpgradeModal = ( {
                     </div>
                 </div>
             </div>
-
-            <span
-                className="w-6 h-6 absolute top-0 right-0 bg-close-icon bg-auto bg-top-right bg-no-repeat cursor-pointer"
-                onClick={ onClose }
-            ></span>
         </div>
     );
 
@@ -238,7 +233,7 @@ const UpgradeModal = ( {
         <DokanModal
             namespace="upgrade-to-pro"
             modalClassName="max-w-[720px] mt-10 bg-transparent"
-            modalBodyClassName="bg-violet-900 bg-upgrade-popup-pattern bg-cover bg-center bg-no-repeat rounded-lg"
+            modalBodyClassName="bg-violet-900 bg-[url(/assets/images/upgrade-popup-bg.png)] bg-cover bg-center bg-no-repeat rounded-lg"
             isOpen={ isOpen }
             onClose={ onClose }
             dialogHeader={ false }

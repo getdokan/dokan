@@ -1,7 +1,7 @@
-import { createRoot } from '@wordpress/element';
 import domReady from '@wordpress/dom-ready';
+import { createRoot } from '@wordpress/element';
 import Layout from './components/Layout';
-import './style.scss';
+import './style.css';
 
 domReady( () => {
     const rootEl = document.getElementById(

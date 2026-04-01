@@ -172,7 +172,7 @@ const AddReverseWithdrawModal = ( {
         <div className="space-y-7 px-4 py-2 sm:p-6 md:p-8 overflow-y-auto max-h-[calc(100vh-220px)] sm:max-h-[calc(90vh-200px)]">
             <div className="space-y-2.5">
                 { /* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
-                <label className="text-[#25252D] font-medium text-sm">
+                <label className="text-[#25252D] font-medium text-sm mb-2">
                     { __( 'Select Vendor', 'dokan-lite' ) }
                 </label>
                 <VendorAsyncSelect
@@ -181,6 +181,7 @@ const AddReverseWithdrawModal = ( {
                     value={ vendorsData }
                     onChange={ handleVendorChange }
                     placeholder={ __( 'Search', 'dokan-lite' ) }
+                    className={ 'mt-2.5! shadow-none' }
                 />
                 { errors.vendorId && (
                     <span className="text-red-500 text-sm mt-1 block">
@@ -194,7 +195,7 @@ const AddReverseWithdrawModal = ( {
                 <label className="text-[#25252D] font-medium text-sm">
                     { __( 'Transaction Type', 'dokan-lite' ) }
                 </label>
-                <div className="flex flex-col sm:!flex-row rounded-md overflow-hidden border border-[#7047EB] w-fit">
+                <div className="flex rounded! overflow-hidden w-fit mt-2.5">
                     { [
                         {
                             label: __( 'Product', 'dokan-lite' ),
@@ -227,7 +228,7 @@ const AddReverseWithdrawModal = ( {
                                     ? 'primary'
                                     : 'secondary'
                             }
-                            className="w-fit min-w-32 px-5 py-2.5 flex items-center justify-center !rounded-none focus:!outline-none gap-2.5"
+                            className="w-fit min-w-32 px-5 py-2.5 flex items-center justify-center rounded-none! focus:outline-none! focus:ring-0! focus:ring-offset-0! focus:ring-transparent! gap-2.5"
                         >
                             { item.icon && (
                                 <item.icon
@@ -272,7 +273,7 @@ const AddReverseWithdrawModal = ( {
                             post_status: 'publish',
                         } }
                         disabled={ ! vendorsData }
-                        className={ '!rounded-lg' }
+                        className={ '!rounded-lg !mt-2.5 shadow-none' }
                         noOptionsMessage={ () =>
                             ! vendorsData
                                 ? __(
@@ -304,7 +305,7 @@ const AddReverseWithdrawModal = ( {
                         prefetch
                         endpoint="dokan/v1/orders"
                         disabled={ ! vendorsData }
-                        className={ '!rounded-lg' }
+                        className={ '!rounded-lg !mt-2.5 shadow-none' }
                         extraQuery={ {
                             ...( vendorsData?.value && {
                                 seller_id: vendorsData.value,
@@ -343,7 +344,7 @@ const AddReverseWithdrawModal = ( {
                             size={ 16 }
                             className="text-gray-400 cursor-help"
                         />
-                        <div className="invisible group-hover:visible absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-3 bg-gray-900 text-white text-xs rounded shadow-lg z-10">
+                        <div className="invisible group-hover:visible absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-gray-900 text-white text-xs rounded shadow-lg z-10">
                             { __(
                                 'Adjust Balance by Creating a New Reverse Withdrawal Entry',
                                 'dokan-lite'
@@ -351,7 +352,7 @@ const AddReverseWithdrawModal = ( {
                         </div>
                     </div>
                 </label>
-                <div className="flex flex-col sm:!flex-row rounded-md overflow-hidden border border-[#7047EB] w-fit">
+                <div className="flex flex-col sm:flex-row! rounded-md overflow-hidden w-fit">
                     { [
                         { label: __( 'Debit', 'dokan-lite' ), value: 'debit' },
                         {
@@ -371,7 +372,7 @@ const AddReverseWithdrawModal = ( {
                                     ? 'primary'
                                     : 'secondary'
                             }
-                            className="w-fit min-w-32 px-5 py-2.5 flex items-center justify-center !rounded-none focus:!outline-none gap-2.5"
+                            className="w-fit min-w-32 px-5 py-2.5 flex items-center justify-center !rounded-none focus:!outline-none focus:!ring-0 focus:!ring-offset-0 focus:!ring-transparent gap-2.5"
                         >
                             <span
                                 className={ twMerge(
@@ -396,7 +397,7 @@ const AddReverseWithdrawModal = ( {
                             size={ 16 }
                             className="text-gray-400 cursor-help"
                         />
-                        <div className="invisible group-hover:visible absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-64 p-3 bg-gray-900 text-white text-xs rounded shadow-lg z-10">
+                        <div className="invisible group-hover:visible absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 p-3 bg-gray-900 text-white text-xs rounded shadow-lg z-10">
                             { __(
                                 'Enter the amount for the reverse withdrawal',
                                 'dokan-lite'
@@ -443,7 +444,7 @@ const AddReverseWithdrawModal = ( {
                         'Write reverse withdrawal note',
                         'dokan-lite'
                     ) }
-                    className="w-full border border-gray-300 rounded-md px-3 py-2.5 min-h-[100px] text-sm focus:!outline-none resize-none"
+                    className="w-full border border-gray-300 rounded-md px-3 py-2.5 min-h-[100px] text-sm focus:!outline-none resize-none mt-2.5"
                     value={ withdrawalNote }
                     onChange={ ( e ) => setWithdrawalNote( e.target.value ) }
                 />

@@ -110,10 +110,6 @@ class Assets {
             wp_enqueue_script( 'dokan-vue-admin' );
             wp_localize_script( 'dokan-vue-vendor', 'dokanAdmin', $vue_admin_localize_script );
 
-            if ( version_compare( $wp_version, '5.3', '<' ) ) {
-                wp_enqueue_style( 'dokan-wp-version-before-5-3' );
-            }
-
             wp_enqueue_style( 'dokan-fontawesome' );
 
             // load wooCommerce select2 styles
@@ -177,7 +173,7 @@ class Assets {
     public function get_localized_price() {
         return [
             'precision' => wc_get_price_decimals(),
-            'symbol'    => html_entity_decode( get_woocommerce_currency_symbol() ),
+            'symbol'    => html_entity_decode( get_woocommerce_currency_symbol(), ENT_COMPAT, 'UTF-8' ),
             'decimal'   => esc_attr( wc_get_price_decimal_separator() ),
             'thousand'  => esc_attr( wc_get_price_thousand_separator() ),
             'position'  => esc_attr( get_option( 'woocommerce_currency_pos' ) ),
@@ -322,8 +318,8 @@ class Assets {
                 'version' => filemtime( DOKAN_DIR . '/assets/css/admin.css' ),
             ],
             'dokan-vue-vendor'              => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-vendor.css',
-                'version' => filemtime( DOKAN_DIR . '/assets/css/vue-vendor.css' ),
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-vue-vendor.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-vue-vendor.css' ),
             ],
             'dokan-vue-bootstrap'           => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-bootstrap.css',
@@ -336,17 +332,10 @@ class Assets {
             ],
             'dokan-vue-admin'               => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-admin.css',
-                'deps'    => [ 'dokan-vue-vendor', 'dokan-vue-bootstrap', 'dokan-tailwind' ],
+                'deps'    => [ 'dokan-vue-vendor', 'dokan-vue-bootstrap', 'dokan-react-components' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/vue-admin.css' ),
             ],
-            'dokan-vue-frontend'            => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-frontend.css',
-                'version' => filemtime( DOKAN_DIR . '/assets/css/vue-frontend.css' ),
-            ],
-            'dokan-wp-version-before-5-3'   => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/css/wp-version-before-5-3.css',
-                'version' => filemtime( DOKAN_DIR . '/assets/css/wp-version-before-5-3.css' ),
-            ],
+
             'dokan-global-admin-css'        => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/global-admin.css',
                 'deps'    => [ 'dokan-sf-pro-text' ],
@@ -375,8 +364,13 @@ class Assets {
             ],
             'dokan-react-components' => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/components.css',
-                'deps'    => [ 'wp-components' ],
+                'deps'    => [ 'wp-components', 'dokan-tailwind' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/components.css' ),
+            ],
+            'dokan-product-editor' => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/js/product-editor.css',
+                'deps'    => [ 'wp-components' ],
+                'version' => filemtime( DOKAN_DIR . '/assets/js/product-editor.css' ),
             ],
         ];
 
@@ -696,6 +690,37 @@ class Assets {
                 'deps'    => $stores_asset['dependencies'],
             ];
         }
+        $product_editor_asset_file = DOKAN_DIR . '/assets/js/product-editor-store.asset.php';
+        if ( file_exists( $product_editor_asset_file ) ) {
+            $stores_asset = require $product_editor_asset_file;
+
+            // Register Product Editor stores.
+            $scripts['dokan-stores-product-editor'] = [
+                'version' => $stores_asset['version'],
+                'src'     => $asset_url . '/js/product-editor-store.js',
+                'deps'    => $stores_asset['dependencies'],
+            ];
+        }
+        $product_editor_utils_file = DOKAN_DIR . '/assets/js/product-editor-utils.asset.php';
+        if ( file_exists( $product_editor_utils_file ) ) {
+            $utils_asset = require $product_editor_utils_file;
+
+            // Register shared Product Editor hooks, field-config & layout utilities.
+            $scripts['dokan-product-editor-utils'] = [
+                'version' => $utils_asset['version'],
+                'src'     => $asset_url . '/js/product-editor-utils.js',
+                'deps'    => $utils_asset['dependencies'],
+            ];
+        }
+        $product_editor_manager = DOKAN_DIR . '/assets/js/product-editor.asset.php';
+        if ( file_exists( $product_editor_manager ) ) {
+            $editor_asset = require $product_editor_manager;
+            $scripts['dokan-product-editor'] = [
+                'version' => $editor_asset['version'],
+                'src'     => $asset_url . '/js/product-editor.js',
+                'deps'    => array_merge( $editor_asset['dependencies'], [ 'dokan-react-components', 'dokan-stores-product-editor' ] ),
+            ];
+        }
 
         return $scripts;
     }
@@ -1005,7 +1030,7 @@ class Assets {
      *
      * @since 2.5.3
      *
-     * @global type $wp
+     * @global $wp
      */
     public function dokan_dashboard_scripts() {
         global $wp;

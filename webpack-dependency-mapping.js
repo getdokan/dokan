@@ -135,8 +135,11 @@ const requestToExternal = ( request ) => {
 
     if ( dokan ) {
         const packageName = dokan[ 1 ];
-        const externalName =
-            packageName === 'hooks' ? 'reactHooks' : packageName;
+        const externalNameMap = {
+            hooks: 'reactHooks',
+            'product-editor': 'productEditor',
+        };
+        const externalName = externalNameMap[ packageName ] || packageName;
 
         return [ 'dokan', externalName ];
     }
@@ -164,8 +167,11 @@ const requestToHandle = ( request ) => {
 
     if ( dokanOthers ) {
         const packageName = dokanOthers[ 1 ];
-        const handleName =
-            packageName === 'components' ? 'react-components' : packageName;
+        const handleNameMap = {
+            components: 'react-components',
+            'product-editor': 'product-editor-utils',
+        };
+        const handleName = handleNameMap[ packageName ] || packageName;
         return `dokan-${ handleName }`;
     }
 
