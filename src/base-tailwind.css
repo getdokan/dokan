@@ -112,7 +112,7 @@
 
     /* ─── Primary color variants ─── */
     --color-primary-dark:                                     #502BBF;
-    --color-primary-hover:                                    #6037cc;
+    --color-primary-hover:                                    var(--dokan-sidebar-hover-background-color, #7047eb);
 
     /* ─── Danger color ─── */
     --color-danger:                                           #e3050c;
