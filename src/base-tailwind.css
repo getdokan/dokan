@@ -9,6 +9,11 @@
 @source "../src/";
 @source "../node_modules/@wedevs/plugin-ui/dist";
 
+/* import other libraries' CSS here, if needed */
+@import "@getdokan/dokan-ui/dist/dokan-ui.css";
+
+@source "../src/";
+
 /* Plugins */
 @plugin "@tailwindcss/typography";
 @plugin "@tailwindcss/forms";
