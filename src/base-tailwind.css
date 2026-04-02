@@ -109,6 +109,13 @@
     --color-secondary:                                        var(--dokan-button-secondary-background-color, var(--dokan-button-text-color, #ffffff));
     --color-dokan-tertiary:                                   var(--dokan-button-tertiary-background-color, #00000000);
     --color-tertiary:                                         var(--dokan-button-tertiary-background-color, #00000000);
+
+    /* ─── Primary color variants ─── */
+    --color-primary-dark:                                     #502BBF;
+    --color-primary-hover:                                    var(--dokan-sidebar-hover-background-color, #7047eb);
+
+    /* ─── Danger color ─── */
+    --color-danger:                                           #e3050c;
 }
 
 /* =============================================
@@ -119,6 +126,7 @@
 @layer base {
 	:root {
     	/* ─── Other root variables ─── */
+        --primary: var(--color-primary);
         --colors-primary-500: var(--color-primary);
         --wp-components-color-accent: var(--color-primary);
         --wp-components-color-accent-darker-20: var(--color-dokan-btn-hover);

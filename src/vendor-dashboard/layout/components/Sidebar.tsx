@@ -215,9 +215,8 @@ const Sidebar = ( {
                 <a
                     href={ siteUrl || '/' }
                     className={ twMerge(
-                        'flex items-center gap-3.5 min-h-20 no-underline focus:!outline-none rounded-md hover:bg-primary-700',
+                        'flex items-center gap-3.5 min-h-20 no-underline focus:!outline-none rounded-md',
                         collapsed ? 'px-5 justify-center' : 'px-8',
-                        'hover:bg-primary-hover'
                     ) }
                 >
                     { siteIcon ? (
@@ -405,7 +404,7 @@ const Sidebar = ( {
                                                     ( isExpanded ? (
                                                         <LucideIcons.ChevronUp
                                                             className={ twMerge(
-                                                                'ml-2 w-4 h-4 text-[#A5A5A5] group-hover:text-white transition-transform duration-200',
+                                                                'ml-2 w-4 h-4 text-white group-hover:text-white transition-transform duration-200',
                                                                 item.counts > 0
                                                                     ? 'ml-2'
                                                                     : 'ml-auto'
@@ -414,7 +413,7 @@ const Sidebar = ( {
                                                     ) : (
                                                         <LucideIcons.ChevronDown
                                                             className={ twMerge(
-                                                                'ml-2 w-4 h-4 text-[#A5A5A5] group-hover:text-white transition-transform duration-200',
+                                                                'ml-2 w-4 h-4 text-white group-hover:text-white transition-transform duration-200',
                                                                 item.counts > 0
                                                                     ? 'ml-2'
                                                                     : 'ml-auto'
