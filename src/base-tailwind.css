@@ -1,24 +1,19 @@
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme);
+
 /* import other libraries' CSS here, if needed */
 @import "@getdokan/dokan-ui/dist/dokan-ui.css";
 @import "../node_modules/@wedevs/plugin-ui/src/components/wordpress/style.css";
 
-/* Scan plugin-ui dist for Tailwind class names so Dokan's build generates
-   the needed utilities, scoped inside .dokan-layout */
-@source "../node_modules/@wedevs/plugin-ui/dist";
-
-
-/* ============================================
-   Tailwind v4 Theme Configuration
-   Simplified color system with CSS variable support
-   ============================================ */
 
 @source "../src/";
+@source "../node_modules/@wedevs/plugin-ui/dist";
+
+/* Plugins */
 @plugin "@tailwindcss/typography";
 @plugin "@tailwindcss/forms";
 
-/* ─── Dokan-specific theme tokens ─── */
+/* ─── theme tokens ─── */
 @theme {
     /* ─── Sidebar background ─── */
     --color-dokan-sidebar:                                    var(--dokan-sidebar-background-color, #322067);
@@ -124,6 +119,7 @@
    utilities (e.g. bg-primary → var(--primary)), without emitting them on :root.
    The actual --primary, --border, etc. values come from the PluginUIThemeProvider
    inline styles on .pui-root, or from the :root fallbacks below. */
+
 @theme inline {
     --color-primary: var(--primary);
     --color-primary-foreground: var(--primary-foreground);
@@ -177,20 +173,11 @@
     --color-danger:                                           #e3050c;
 }
 
-/* =============================================
-   CSS Custom Properties
-   Root-level fallback values for shadcn tokens (used outside .pui-root).
-   Inside .pui-root, the PluginUIThemeProvider overrides these via inline styles.
-   ============================================= */
-
 @layer base {
 	:root {
     	/* ─── Other root variables ─── */
         --primary: var(--color-primary);
-        --colors-primary-500: var(--color-primary);
-        --wp-components-color-accent: var(--color-primary);
-        --wp-components-color-accent-darker-20: var(--color-dokan-btn-hover);
-        --color-on-primary: var(--color-dokan-btn-text);
+        --colors-primary-500: var(--color-primary); /* for dokan-ui */
         --color-border: #e5e7eb;
 	}
 
@@ -206,14 +193,12 @@
 	}
 }
 
-/* =============================================
-   Scoped Layout — Preflight + Utilities + Components
-   Replaces v3's `important: '.dokan-layout'` and
-   `tailwindcss-scoped-preflight` plugin
-   ============================================= */
-
+/* Scoped Layout — Preflight + Utilities + Components */
 .pui-root,
 .dokan-layout {
+    --wp-components-color-accent: var(--color-primary);
+    --wp-components-color-accent-darker-20: var(--color-dokan-btn-hover);
+
     @import "tailwindcss/preflight.css" layer(base);
     @import "tailwindcss/utilities.css" important;
     /* Import custom component styles */
