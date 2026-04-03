@@ -3,6 +3,11 @@
 }
 
 .dokan-product-product-editor {
+    .react-select input,
+    .react-select select {
+        height: auto !important;
+        min-height: auto !important;
+    }
     .components-card-header,
     .components-card-body {
         padding: 20px !important;

@@ -57,7 +57,7 @@ export function useProductEditor( productId: number ): ProductEditorValue {
                     visibility: resolveVisibility( item, currentProductType ),
                     required: resolveRequired( item, currentProductType ),
                 };
-                return getFieldConfig( field as any );
+                return getFieldConfig( field );
             } );
     }, [ formItems, currentProductType ] );
 

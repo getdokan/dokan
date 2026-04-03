@@ -103,7 +103,7 @@ const AttributeCard = ( {
 
     return (
         <div
-            className={ `border rounded bg-white shadow-sm overflow-hidden transition-[border-color,opacity] duration-200 ${
+            className={ `border rounded bg-white overflow-hidden transition-[border-color,opacity] duration-200 ${
                 isDragOver
                     ? 'border-blue-400 border-dashed'
                     : ''

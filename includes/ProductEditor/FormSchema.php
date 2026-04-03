@@ -170,8 +170,8 @@ class FormSchema {
                     'styles'    => [
                         Elements::PRIMARY_COLUMN => [ 'flex' => '1' ],
                         Elements::SIDEBAR_COLUMN => [
-                            'flex'     => '0 0 20%',
-                            'minWidth' => '250px',
+                            'flex'     => '0 0 25%',
+                            'minWidth' => '280px',
                         ],
                     ],
                 ],

@@ -8,6 +8,7 @@ import FileUploadEdit from '../components/FileUploadEdit';
 import GalleryImages from '../components/GalleryImages';
 import PriceEdit from '../components/PriceEdit';
 import RichTextEdit from '../components/RichTextEdit';
+import TextAreaEdit from '../components/TextAreaEdit';
 import SelectEdit from '../components/SelectEdit';
 
 /**
@@ -15,8 +16,14 @@ import SelectEdit from '../components/SelectEdit';
  *
  * @return Configuration object with type 'text' and RichTextEdit component.
  */
+const textareaFieldHandler: FieldHandler = () => ( {
+    Edit: TextAreaEdit,
+    type: 'text',
+} );
+
 const editorFieldHandler: FieldHandler = () => ( {
     Edit: RichTextEdit,
+    type: 'text',
 } );
 
 /**
@@ -152,7 +159,7 @@ const defaultHandler: FieldHandler = ( field ) => {
 
 export const getFieldConfigFrom = ( field: FormItem ) => {
     let handlers: Record< string, FieldHandler > = {
-        textarea: editorFieldHandler,
+        textarea: textareaFieldHandler,
         editor: editorFieldHandler,
         checkbox: checkboxHandler,
         radio: radioHandler,

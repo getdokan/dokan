@@ -32,7 +32,6 @@ export const getFieldConfig = ( field: FormItem ) => {
     };
     const mappedField = {
         ...field,
-        rawLabel: field.label,
         label: (
             <div className="flex gap-1 items-center">
                 <RawHTML className="dokan-form-field-label">

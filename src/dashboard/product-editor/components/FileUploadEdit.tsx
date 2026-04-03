@@ -99,7 +99,7 @@ const FileUploadEdit = ( { field, onChange, validity }: any ) => {
                                 />
                             </div>
 
-                            <div className="min-w-0 flex-[2] basis-0">
+                            <div className="min-w-0 flex-2 basis-0">
                                 <SimpleInput
                                     value={ file.file || '' }
                                     onChange={ ( e ) =>
@@ -119,7 +119,7 @@ const FileUploadEdit = ( { field, onChange, validity }: any ) => {
                                     } }
                                 />
                             </div>
-                            <div className="flex gap-2 flex-shrink-0 items-center">
+                            <div className="flex gap-2 shrink-0 items-center">
                                 <MediaUploader
                                     onSelect={ ( val: any ) =>
                                         onSelectFile( val, index )

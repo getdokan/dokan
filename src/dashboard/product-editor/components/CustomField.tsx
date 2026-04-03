@@ -44,7 +44,7 @@ const CustomField = ( {
     className = '',
 }: {
     label?: string | React.ReactNode;
-    field: FormItem & { rawLabel?: string };
+    field: FormItem;
     children: React.ReactNode;
     error?: string;
     className?: string;
@@ -61,16 +61,24 @@ const CustomField = ( {
     const classes = `flex flex-col gap-1 ${ fieldKey } ${ className }`;
     const showError = touched && error;
 
+    const LabelRender = () => {
+        if (label) {
+            return <span>{ label }</span>;
+        }
+        if ( typeof field.label === 'string' ) {
+            return (
+                <RawHTML className="dokan-form-field-label">
+                    { decodeEntities( field.label ) }
+                </RawHTML>
+            );
+        }
+        return field.label;
+    }
+
     return (
         <div id={ fieldKey } className={ classes }>
             <div className={ `${ fieldKey }-label flex gap-1 items-center` }>
-                { label ? (
-                    <span> { label }</span>
-                ) : (
-                    <RawHTML className="dokan-form-field-label">
-                        { decodeEntities( field.rawLabel ?? '' ) }
-                    </RawHTML>
-                ) }
+                <LabelRender />
 
                 { field.required && (
                     <span className="dokan-form-field-label">
