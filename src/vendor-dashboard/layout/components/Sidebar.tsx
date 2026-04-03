@@ -89,6 +89,57 @@ const Sidebar = ( {
         clearHideTimeout();
         setActivePopover( null );
     };
+    const isUrlActive = (itemUrl: string): boolean => {
+        if (!itemUrl || !currentUrl) return false;
+
+        try {
+            // Use a dummy base for relative URLs to prevent constructor errors
+            const base = window.location.origin;
+            const current = new URL(currentUrl, base);
+            const item = new URL(itemUrl, base);
+
+            const currentPath = current.pathname.replace(/\/$/, "");
+            const itemPath = item.pathname.replace(/\/$/, "");
+
+            // QUERY SPECIFICITY (e.g., ?path=/analytics)
+            // If the menu item has a specific query param, it's a "Strict" link.
+            const itemPathQuery = item.searchParams.get('path');
+            const currentPathQuery = current.searchParams.get('path');
+
+            if (itemPathQuery) {
+                return itemPathQuery === currentPathQuery;
+            }
+
+            //  HASH SPECIFICITY
+            // If the item has a hash, we are in a React-router context.
+            if (item.hash) {
+                const cleanItemHash = item.hash.replace('#/', '#').split('?')[0];
+                const cleanCurrentHash = current.hash.replace('#/', '#').split('?')[0];
+                // Exact match for hashes ensures correct active state in hash-based routing.
+                return cleanCurrentHash === cleanItemHash;
+            }
+
+            // ROOT GUARD (The fix for your Analytics/Dashboard problem)
+            // If we are checking the base dashboard link, it should NOT match 
+            // if there is a hash or a path query active.
+            const isBaseDashboard = itemPath.endsWith('/dashboard') || itemPath.endsWith('/new');
+            if (isBaseDashboard) {
+                const hasSubRoute = current.hash || currentPathQuery || currentPath.length > itemPath.length;
+                return cleanPathCompare(currentPath, itemPath) && !hasSubRoute;
+            }
+
+            // PATH FALLBACK
+            return cleanPathCompare(currentPath, itemPath);
+
+        } catch (e) {
+            return false;
+        }
+    };
+
+    // Helper to handle trailing slashes and base path matching
+    const cleanPathCompare = (current: string, item: string) => {
+        return current === item || current.startsWith(item + '/');
+    };
 
     // Cleanup on unmounting.
     useEffect( () => {
@@ -272,7 +323,7 @@ const Sidebar = ( {
                                     const isParentActive =
                                         ! hasSub &&
                                         item?.url &&
-                                        currentUrl.startsWith( item.url );
+                                         isUrlActive( item.url );
 
                                     // Detect if any child submenu item is active
                                     let hasActiveChild = false;
@@ -281,9 +332,7 @@ const Sidebar = ( {
                                             ( sub: any ) => {
                                                 if (
                                                     sub?.url &&
-                                                    currentUrl.startsWith(
-                                                        sub.url
-                                                    )
+                                                    isUrlActive( sub.url )
                                                 ) {
                                                     hasActiveChild = true;
                                                 }
