@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 // @ts-ignore
 import productEditorStore from '@dokan/stores/product-editor';
-import { getFieldConfig } from '../components/FieldRenderer';
+import { getFieldConfig } from '../field-config';
 import { Attribute, DefaultAttribute, FormItem } from '../types';
 import { resolveLabel, resolveRequired, resolveVisibility } from '../utils';
 import { doAction } from '@wordpress/hooks';

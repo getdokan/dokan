@@ -17,8 +17,7 @@ export { useProductEditor, useInitProductEditor } from './hooks/useProductEditor
 export { default as useLayouts } from './hooks/useLayouts';
 
 // Field config
-export { getFieldConfigFrom } from './field-config';
-export { getFieldConfig } from './components/FieldRenderer';
+export { getFieldConfigFrom, getFieldConfig } from './field-config';
 
 // Utils
 export {

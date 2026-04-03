@@ -157,6 +157,8 @@ const defaultHandler: FieldHandler = ( field ) => {
     return config;
 };
 
+export { getFieldConfig } from './getFieldConfig';
+
 export const getFieldConfigFrom = ( field: FormItem ) => {
     let handlers: Record< string, FieldHandler > = {
         textarea: textareaFieldHandler,

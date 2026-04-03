@@ -1,6 +1,6 @@
 import { DokanTooltip } from '@src/components';
 import { Info } from 'lucide-react';
-import { getFieldConfigFrom } from '../field-config';
+import { getFieldConfigFrom } from './index';
 import { FormItem } from '../types';
 import { resolveDependency } from '../utils';
 import { __ } from '@wordpress/i18n';
