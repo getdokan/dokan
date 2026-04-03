@@ -1,16 +1,16 @@
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme);
+
+/* import other libraries' CSS here, if needed */
 @import "@getdokan/dokan-ui/dist/dokan-ui.css";
 
-/* ============================================
-   Tailwind v4 Theme Configuration
-   Simplified color system with CSS variable support
-   ============================================ */
-
 @source "../src/";
+
+/* Plugins */
 @plugin "@tailwindcss/typography";
 @plugin "@tailwindcss/forms";
 
+/* ─── theme tokens ─── */
 @theme {
     /* ─── Sidebar background ─── */
     --color-dokan-sidebar:                                    var(--dokan-sidebar-background-color, #322067);
@@ -118,19 +118,11 @@
     --color-danger:                                           #e3050c;
 }
 
-/* =============================================
-   CSS Custom Properties
-   All dokan color values stored here, referenced by @utility definitions.
-   ============================================= */
-
 @layer base {
 	:root {
     	/* ─── Other root variables ─── */
         --primary: var(--color-primary);
-        --colors-primary-500: var(--color-primary);
-        --wp-components-color-accent: var(--color-primary);
-        --wp-components-color-accent-darker-20: var(--color-dokan-btn-hover);
-        --color-on-primary: var(--color-dokan-btn-text);
+        --colors-primary-500: var(--color-primary); /* for dokan-ui */
         --color-border: #e5e7eb;
 	}
 
@@ -146,13 +138,11 @@
 	}
 }
 
-/* =============================================
-   Scoped Layout — Preflight + Utilities + Components
-   Replaces v3's `important: '.dokan-layout'` and
-   `tailwindcss-scoped-preflight` plugin
-   ============================================= */
-
+/* Scoped Layout — Preflight + Utilities + Components */
 .dokan-layout {
+    --wp-components-color-accent: var(--color-primary);
+    --wp-components-color-accent-darker-20: var(--color-dokan-btn-hover);
+
     @import "tailwindcss/preflight.css" layer(base);
     @import "tailwindcss/utilities.css";
     /* Import custom component styles */
