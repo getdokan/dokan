@@ -1,10 +1,12 @@
 import { useState, useCallback, useEffect } from '@wordpress/element';
+import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import type {
     ProductItem,
     ProductFilterState,
     ProductStatusCount,
+    ProductSummary,
 } from '../types';
 
 interface UseProductsReturn {
@@ -13,10 +15,15 @@ interface UseProductsReturn {
     totalItems: number;
     totalPages: number;
     statusCounts: ProductStatusCount[];
+    productsUrl: string;
+    instockCount: number;
+    outstockCount: number;
     fetchProducts: () => void;
     fetchStatusCounts: () => void;
     deleteProduct: ( productId: number ) => Promise< void >;
     deleteProducts: ( productIds: number[] ) => Promise< void >;
+    updateProductStatus: ( productId: number, status: string ) => Promise< void >;
+    updateProductsStatus: ( productIds: number[], status: string ) => Promise< void >;
 }
 
 export const useProducts = (
@@ -26,12 +33,16 @@ export const useProducts = (
     const [ isLoading, setIsLoading ] = useState( true );
     const [ totalItems, setTotalItems ] = useState( 0 );
     const [ totalPages, setTotalPages ] = useState( 0 );
+    const [ productsUrl, setProductsUrl ] = useState( '' );
+    const [ instockCount, setInstockCount ] = useState( 0 );
+    const [ outstockCount, setOutstockCount ] = useState( 0 );
     const [ statusCounts, setStatusCounts ] = useState< ProductStatusCount[] >(
         [
-            { value: 'all', label: 'All', count: 0 },
-            { value: 'publish', label: 'Published', count: 0 },
-            { value: 'draft', label: 'Draft', count: 0 },
-            { value: 'pending', label: 'Pending Review', count: 0 },
+            { value: 'all',     label: __( 'All', 'dokan-lite' ),            count: 0 },
+            { value: 'publish', label: __( 'Published', 'dokan-lite' ),      count: 0 },
+            { value: 'draft',   label: __( 'Draft', 'dokan-lite' ),          count: 0 },
+            { value: 'pending', label: __( 'Pending Review', 'dokan-lite' ), count: 0 },
+            { value: 'future',  label: __( 'Scheduled', 'dokan-lite' ),      count: 0 },
         ]
     );
 
@@ -51,6 +62,22 @@ export const useProducts = (
                 queryArgs.search = filterArgs.search;
             }
 
+            if ( filterArgs.category ) {
+                queryArgs.category = filterArgs.category;
+            }
+
+            if ( filterArgs.type ) {
+                queryArgs.type = filterArgs.type;
+            }
+
+            if ( filterArgs.year_month ) {
+                queryArgs.year_month = filterArgs.year_month;
+            }
+
+            if ( filterArgs.in_stock !== undefined ) {
+                queryArgs.in_stock = filterArgs.in_stock;
+            }
+
             const response = ( await apiFetch( {
                 path: addQueryArgs( '/dokan/v1/products', queryArgs ),
                 parse: false,
@@ -58,8 +85,7 @@ export const useProducts = (
 
             const responseData: ProductItem[] = await response.json();
             const responseTotalItems = response.headers.get( 'X-WP-Total' );
-            const responseTotalPages =
-                response.headers.get( 'X-WP-TotalPages' );
+            const responseTotalPages = response.headers.get( 'X-WP-TotalPages' );
 
             setData( responseData );
             setTotalItems( parseInt( responseTotalItems ?? '0', 10 ) );
@@ -75,36 +101,36 @@ export const useProducts = (
         filterArgs.per_page,
         filterArgs.status,
         filterArgs.search,
+        filterArgs.category,
+        filterArgs.type,
+        filterArgs.year_month,
+        filterArgs.in_stock,
     ] );
 
     const fetchStatusCounts = useCallback( async () => {
         try {
             const response = ( await apiFetch( {
                 path: '/dokan/v1/products/summary',
-            } ) ) as {
-                post_counts: Record< string, number >;
-            };
+            } ) ) as ProductSummary;
 
-            const counts = response.post_counts ?? {};
+            const counts  = response.post_counts ?? {};
             const allCount =
                 ( counts.publish ?? 0 ) +
                 ( counts.draft ?? 0 ) +
-                ( counts.pending ?? 0 );
+                ( counts.pending ?? 0 ) +
+                ( counts.future ?? 0 );
 
             setStatusCounts( [
-                { value: 'all', label: 'All', count: allCount },
-                {
-                    value: 'publish',
-                    label: 'Published',
-                    count: counts.publish ?? 0,
-                },
-                { value: 'draft', label: 'Draft', count: counts.draft ?? 0 },
-                {
-                    value: 'pending',
-                    label: 'Pending Review',
-                    count: counts.pending ?? 0,
-                },
+                { value: 'all',     label: __( 'All', 'dokan-lite' ),            count: allCount },
+                { value: 'publish', label: __( 'Published', 'dokan-lite' ),      count: counts.publish ?? 0 },
+                { value: 'draft',   label: __( 'Draft', 'dokan-lite' ),          count: counts.draft ?? 0 },
+                { value: 'pending', label: __( 'Pending Review', 'dokan-lite' ), count: counts.pending ?? 0 },
+                { value: 'future',  label: __( 'Scheduled', 'dokan-lite' ),      count: counts.future ?? 0 },
             ] );
+
+            setProductsUrl( response.products_url ?? '' );
+            setInstockCount( response.instock_count ?? 0 );
+            setOutstockCount( response.outofstock_count ?? 0 );
         } catch ( error ) {
             console.error( 'Error fetching product summary:', error );
         }
@@ -130,6 +156,32 @@ export const useProducts = (
         );
     }, [] );
 
+    const updateProductStatus = useCallback(
+        async ( productId: number, status: string ) => {
+            await apiFetch( {
+                path: `/dokan/v1/products/${ productId }`,
+                method: 'PUT',
+                data: { status },
+            } );
+        },
+        []
+    );
+
+    const updateProductsStatus = useCallback(
+        async ( productIds: number[], status: string ) => {
+            await Promise.all(
+                productIds.map( ( id ) =>
+                    apiFetch( {
+                        path: `/dokan/v1/products/${ id }`,
+                        method: 'PUT',
+                        data: { status },
+                    } )
+                )
+            );
+        },
+        []
+    );
+
     useEffect( () => {
         void fetchProducts();
     }, [ fetchProducts ] );
@@ -144,9 +196,14 @@ export const useProducts = (
         totalItems,
         totalPages,
         statusCounts,
+        productsUrl,
+        instockCount,
+        outstockCount,
         fetchProducts,
         fetchStatusCounts,
         deleteProduct,
         deleteProducts,
+        updateProductStatus,
+        updateProductsStatus,
     };
 };
