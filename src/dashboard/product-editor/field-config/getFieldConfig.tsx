@@ -3,6 +3,7 @@ import { Info } from 'lucide-react';
 import { getFieldConfigFrom } from './index';
 import { FormItem } from '../types';
 import { resolveDependency } from '../utils';
+import { isEmpty, fieldValidators } from './validations';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { RawHTML } from '@wordpress/element';
@@ -52,21 +53,15 @@ export const getFieldConfig = ( field: FormItem ) => {
             // Disable built-in "Value must be one of the elements." so custom validation is used.
             elements: false,
             custom: ( value: any ) => {
-                const isEmpty = ( v: any ) => {
-                    if ( v === null || v === undefined ) {
-                        return true;
-                    }
-                    if ( typeof v === 'string' ) {
-                        return v.trim().length === 0;
-                    }
-                    if ( Array.isArray( v ) ) {
-                        return v.length === 0;
-                    }
-                    return false;
-                };
                 if ( field.required && isEmpty( value?.[ field.id ] ) ) {
                     return __( 'Please fill out this field.', 'dokan-lite' );
                 }
+
+                const validator = fieldValidators[ field.id ];
+                if ( validator ) {
+                    return validator( field, value );
+                }
+
                 return null;
             },
         },

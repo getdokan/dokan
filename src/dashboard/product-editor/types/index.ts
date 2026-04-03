@@ -41,6 +41,8 @@ export type FieldConfig = Partial< FormItem > & {
 
 export type FieldHandler = ( field?: FormItem ) => FieldConfig;
 
+export type FieldValidator = ( field: FormItem, value: any ) => string | null;
+
 export type VariationType = {
     id: number;
     parent_id: number;
