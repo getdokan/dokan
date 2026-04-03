@@ -5,7 +5,7 @@ import PriceHtml from '../../components/PriceHtml';
 import DateTimeHtml from '../../components/DateTimeHtml';
 import { UseBalanceReturn } from './Hooks/useBalance';
 import { UseWithdrawRequestsReturn } from './Hooks/useWithdrawRequests';
-import RequestList from './RequestList';
+import PendingRequestsTable from './PendingRequestsTable';
 import { useNavigate } from 'react-router-dom';
 import { Slot, SlotFillProvider } from '@wordpress/components';
 import { PluginArea } from '@wordpress/plugins';
@@ -132,9 +132,8 @@ function PaymentDetails( {
                                         { __( 'Pending Requests', 'dokan-lite' ) }
                                     </h4>
 
-                                    <RequestList
+                                    <PendingRequestsTable
                                         withdrawRequests={ withdrawRequests }
-                                        status="pending"
                                         loading={
                                             masterLoading ||
                                             withdrawRequests.isLoading ||
