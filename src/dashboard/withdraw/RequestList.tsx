@@ -57,7 +57,7 @@ function RequestList( {
                 },
             },
         ],
-        [ withdrawHook, withdrawRequests.refresh ]
+        [ withdrawHook.updateWithdraw, withdrawRequests.refresh ]
     );
 
     const onViewChange = useCallback(

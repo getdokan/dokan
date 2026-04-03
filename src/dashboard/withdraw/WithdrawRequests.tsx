@@ -60,7 +60,10 @@ function WithdrawRequests() {
     } );
 
     const currentStatus = view.status;
-    const fields = getFieldsForStatus( currentStatus );
+    const fields = useMemo(
+        () => getFieldsForStatus( currentStatus ),
+        [ currentStatus ]
+    );
 
     const fetchSummary = useCallback( async () => {
         try {
@@ -70,8 +73,9 @@ function WithdrawRequests() {
             } ) ) as WithdrawSummary;
 
             setSummary( response );
-        } catch ( error ) {
-            // Silently fail - counts are optional
+        } catch ( err ) {
+            // Counts are non-critical, but log for debugging
+            console.error( 'Failed to fetch withdraw summary:', err );
         }
     }, [] );
 
@@ -147,8 +151,7 @@ function WithdrawRequests() {
                 label: () => __( 'Cancel', 'dokan-lite' ),
                 isDestructive: true,
                 callback: ( [ item ]: WithdrawRequest[] ) => {
-                    withdrawHook
-                        .updateWithdraw( item.id, {
+                    withdrawHook.updateWithdraw( item.id, {
                             status: 'cancelled',
                         } )
                         .then( () => {
@@ -174,7 +177,7 @@ function WithdrawRequests() {
                 },
             },
         ];
-    }, [ currentStatus, withdrawHook, fetchWithdrawRequests, fetchSummary ] );
+    }, [ currentStatus, withdrawHook.updateWithdraw, fetchWithdrawRequests, fetchSummary ] );
 
     useEffect( () => {
         void fetchWithdrawRequests();
@@ -205,6 +208,7 @@ function WithdrawRequests() {
         viewKey: 'status',
         onSelect: ( status: WithdrawStatus ) => {
             const activeFields = getFieldsForStatus( status );
+            setIsLoading( true );
             setData( [] );
             setView( ( prev ) => ( {
                 ...prev,
@@ -221,6 +225,8 @@ function WithdrawRequests() {
         totalPages,
     };
 
+    // Setting view state triggers fetchWithdrawRequests via useEffect
+    // dependency on view.perPage, view.page, and view.status.
     const onViewChange = useCallback( ( newView: typeof view ) => {
         setView( newView );
     }, [] );
@@ -247,7 +253,6 @@ function WithdrawRequests() {
                 search={ false }
                 tabs={ tabs }
             />
-
         </div>
     );
 }
