@@ -889,7 +889,7 @@ class FormSchema {
         // validate the fields
         $this->assert_field_schema( $items );
 
-        $items = apply_filters( 'dokan_product_editor_schema_response', $items, $product_id );
+        $items = apply_filters( 'dokan_product_editor_prepared_schema', $items, $product_id );
 
         if ( $product instanceof WC_Product ) {
             foreach ( $items as &$item ) {

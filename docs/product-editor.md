@@ -30,7 +30,7 @@ The Dokan product editor is a React form system built on the WordPress [`@wordpr
 │  FormSchema::get_schema($product_id)                    │
 │    ├─ Defines flat array of sections + fields           │
 │    ├─ apply_filters('dokan_product_editor_schema')      │
-│    ├─ apply_filters('dokan_product_editor_schema_response') │
+│    ├─ apply_filters('dokan_product_editor_prepared_schema') │
 │    └─ Resolves field values from WC_Product             │
 │                                                         │
 │  FormSchema::get_layout()                               │
@@ -894,7 +894,7 @@ class ProductEditorFields {
 | Hook | Arguments | Description |
 |------|-----------|-------------|
 | `dokan_product_editor_schema` | `(array $items, int $product_id)` | Add or modify schema fields and sections |
-| `dokan_product_editor_schema_response` | `(array $items, int $product_id)` | Modify schema after admin overrides are applied |
+| `dokan_product_editor_prepared_schema` | `(array $items, int $product_id)` | Modify schema after admin overrides are applied |
 | `dokan_product_editor_schema_value` | `(mixed $value, string $field_name, WC_Product $product)` | Resolve a field's value when loading a product |
 | `dokan_product_editor_schema_payload` | `(array $payload)` | Transform form data before saving to WC REST API |
 | `dokan_product_editor_layouts` | `(array $layout)` | Add or modify layout items (flat array with parent-child) |
