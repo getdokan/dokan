@@ -13,7 +13,7 @@ import {
 
 const pendingFields = [ ...baseFields, statusField ];
 
-function PendingRequestsTable( {
+function RequestList( {
     withdrawRequests,
     loading = true,
 }: {
@@ -101,4 +101,4 @@ function PendingRequestsTable( {
     );
 }
 
-export default PendingRequestsTable;
+export default RequestList;
