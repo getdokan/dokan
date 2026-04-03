@@ -71,9 +71,12 @@ button:focus,
 textarea:focus,
 input:focus {
     &:not([role="switch"], [role="combobox"]) {
-        color: var(--color-primary);
         outline-color: var(--color-primary);
     }
+}
+input[type="checkbox"]:focus,
+input[type="radio"]:focus {
+    color: var(--color-primary);
 }
 .dokan-dashboard-layout button[role="switch"] span {
     @apply translate-x-0.5 shrink-0 transition-transform duration-200;
