@@ -71,6 +71,7 @@ button:focus,
 textarea:focus,
 input:focus {
     &:not([role="switch"], [role="combobox"]) {
+        color: var(--color-primary);
         outline-color: var(--color-primary);
     }
 }
