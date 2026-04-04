@@ -1,22 +1,26 @@
 import { test, Page } from '@playwright/test';
-import { LicensePage } from '@pages/licensePage';
-import { dbUtils } from '@utils/dbUtils';
-import { data } from '@utils/testData';
-import { dbData } from '@utils/dbData';
+import { LicensePage, db, testData } from './licensePage';
+import path from 'path';
+
+// ============================================
+// SESSION STORAGE VARIABLES
+// ============================================
+const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 
 test.describe('License test', () => {
     let admin: LicensePage;
     let aPage: Page;
 
     test.beforeAll(async ({ browser }) => {
-        const adminContext = await browser.newContext(data.auth.adminAuth);
+        const adminContext = await browser.newContext({ storageState: a1 });
         aPage = await adminContext.newPage();
         admin = new LicensePage(aPage);
     });
 
     test.afterAll(async () => {
-        await dbUtils.setOptionValue(dbData.dokan.optionName.dokanProLicense, dbData.dokan.dokanProLicense);
-        await aPage.close();
+        await db.setOptionValue(testData.optionName, testData.dokanProLicense);
+        await aPage?.close();
+        await db.dispose();
     });
 
     // admin
@@ -26,22 +30,22 @@ test.describe('License test', () => {
     });
 
     test("admin can't activate license with incorrect key", { tag: ['@pro', '@admin', '@serial'] }, async () => {
-        await dbUtils.setOptionValue(dbData.dokan.optionName.dokanProLicense, '', false);
-        await admin.activateLicense(data.dokanLicense.incorrectKey, 'incorrect');
+        await db.setOptionValue(testData.optionName, '', false);
+        await admin.activateLicense(testData.dokanLicense.incorrectKey, 'incorrect');
     });
 
     test('admin can activate license', { tag: ['@pro', '@admin', '@serial'] }, async () => {
-        await dbUtils.setOptionValue(dbData.dokan.optionName.dokanProLicense, '', false);
-        await admin.activateLicense(data.dokanLicense.correctKey);
+        await db.setOptionValue(testData.optionName, '', false);
+        await admin.activateLicense(testData.dokanLicense.correctKey);
     });
 
     test('admin can refresh license', { tag: ['@pro', '@admin'] }, async () => {
-        await dbUtils.setOptionValue(dbData.dokan.optionName.dokanProLicense, dbData.dokan.dokanProLicense);
+        await db.setOptionValue(testData.optionName, testData.dokanProLicense);
         await admin.refreshLicense();
     });
 
     test('admin can deactivate license', { tag: ['@pro', '@admin', '@serial'] }, async () => {
-        await dbUtils.setOptionValue(dbData.dokan.optionName.dokanProLicense, dbData.dokan.dokanProLicense);
+        await db.setOptionValue(testData.optionName, testData.dokanProLicense);
         await admin.deactivateLicense();
     });
 });

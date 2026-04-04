@@ -1,12 +1,21 @@
-import { test, request, Page } from '@playwright/test';
-import { FollowStorePage } from '@pages/followStorePage';
-import { ApiUtils } from '@utils/apiUtils';
-import { data } from '@utils/testData';
-import { payloads } from '@utils/payloads';
-import { dbUtils } from '@utils/dbUtils';
+import { test, Page } from '@playwright/test';
+import {
+    FollowStorePage,
+    api,
+    db,
+    payloads,
+    predefinedStores,
+} from './followStorePage';
+import path from 'path';
+
+// ============================================
+// SESSION STORAGE VARIABLES
+// ============================================
+const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
+const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
+const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.json');
 
 const { CUSTOMER_ID, VENDOR_ID, VENDOR2_ID } = process.env;
-
 
 // This test suite covers the functionality of the Follow Store module in Dokan...
 // It includes tests for both customer and vendor roles, as well as admin actions to enable/disable the module.
@@ -17,29 +26,30 @@ test.describe('Follow stores modules functionality test', () => {
     let vendor: FollowStorePage;
     let customer: FollowStorePage;
     let aPage: Page, vPage: Page, cPage: Page;
-    let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
-        const adminContext = await browser.newContext(data.auth.adminAuth);
+        const adminContext = await browser.newContext({ storageState: a1 });
         aPage = await adminContext.newPage();
         admin = new FollowStorePage(aPage);
 
-        const vendorContext = await browser.newContext(data.auth.vendorAuth);
+        const vendorContext = await browser.newContext({ storageState: v1 });
         vPage = await vendorContext.newPage();
         vendor = new FollowStorePage(vPage);
 
-        const customerContext = await browser.newContext(data.auth.customerAuth);
+        const customerContext = await browser.newContext({ storageState: c1 });
         cPage = await customerContext.newPage();
         customer = new FollowStorePage(cPage);
 
-        apiUtils = new ApiUtils(await request.newContext());
+        await api.init();
     });
 
     test.afterAll(async () => {
-        await apiUtils.activateModules(payloads.moduleIds.followStore, payloads.adminAuth);
-        await vPage.close();
-        await cPage.close();
-        await apiUtils.dispose();
+        await api.activateModules(payloads.moduleIds.followStore, payloads.adminAuth);
+        await aPage?.close();
+        await vPage?.close();
+        await cPage?.close();
+        await api.dispose();
+        await db.dispose();
     });
 
     // admin
@@ -57,52 +67,52 @@ test.describe('Follow stores modules functionality test', () => {
     });
 
     test('customer can view followed vendors', { tag: ['@pro', '@customer'] }, async () => {
-        await dbUtils.followVendor(CUSTOMER_ID, VENDOR_ID);
+        await db.followVendor(CUSTOMER_ID || '', VENDOR_ID || '');
         await test.step('Customer verifies that a specific followed vendor is displayed on Following Stores page', async () => {
-            await customer.customerViewFollowedVendors(data.predefined.vendorStores.vendor1);
+            await customer.customerViewFollowedVendors(predefinedStores.vendor1);
         });
     });
 
     test('customer can follow store on store list page', { tag: ['@pro', '@customer'] }, async () => {
-        await apiUtils.unfollowStore(VENDOR_ID, payloads.customerAuth);
+        await api.unfollowStore(VENDOR_ID || '', payloads.customerAuth);
         await test.step('Customer follows a vendor directly from the Store Listing page and sees updated status', async () => {
             await customer.followUnfollowStore(
-                data.predefined.vendorStores.vendor1,
+                predefinedStores.vendor1,
                 'Following',
-                data.predefined.vendorStores.followFromStoreListing
+                predefinedStores.followFromStoreListing
             );
         });
     });
 
     test('customer can follow store on single store', { tag: ['@pro', '@customer'] }, async () => {
-        await apiUtils.unfollowStore(VENDOR2_ID, payloads.customerAuth);
+        await api.unfollowStore(VENDOR2_ID || '', payloads.customerAuth);
         await test.step('Customer follows a vendor from the Single Store page and sees updated status', async () => {
             await customer.followUnfollowStore(
-                data.predefined.vendorStores.vendor2,
+                predefinedStores.vendor2,
                 'Following',
-                data.predefined.vendorStores.followFromSingleStore
+                predefinedStores.followFromSingleStore
             );
         });
     });
 
     test('customer can unfollow store on store list page', { tag: ['@pro', '@customer'] }, async () => {
-        await apiUtils.followStore(VENDOR_ID, payloads.customerAuth);
+        await api.followStore(VENDOR_ID || '', payloads.customerAuth);
         await test.step('Customer unfollows a vendor directly from the Store Listing page and sees updated status', async () => {
             await customer.followUnfollowStore(
-                data.predefined.vendorStores.vendor1,
+                predefinedStores.vendor1,
                 'Follow',
-                data.predefined.vendorStores.followFromStoreListing
+                predefinedStores.followFromStoreListing
             );
         });
     });
 
     test('customer can unfollow store on single store', { tag: ['@pro', '@customer'] }, async () => {
-        await apiUtils.followStore(VENDOR2_ID, payloads.customerAuth);
+        await api.followStore(VENDOR2_ID || '', payloads.customerAuth);
         await test.step('Customer unfollows a vendor from the Single Store page and sees updated status', async () => {
             await customer.followUnfollowStore(
-                data.predefined.vendorStores.vendor2,
+                predefinedStores.vendor2,
                 'Follow',
-                data.predefined.vendorStores.followFromSingleStore
+                predefinedStores.followFromSingleStore
             );
         });
     });
@@ -115,7 +125,7 @@ test.describe('Follow stores modules functionality test', () => {
     });
 
     test('vendor can view followers', { tag: ['@pro', '@vendor'] }, async () => {
-        await apiUtils.followStore(VENDOR_ID, payloads.customerAuth);
+        await api.followStore(VENDOR_ID || '', payloads.customerAuth);
         await test.step('Vendor verifies that followers list is not empty', async () => {
             await vendor.vendorViewFollowers();
         });
@@ -123,7 +133,7 @@ test.describe('Follow stores modules functionality test', () => {
 
     // admin
     test('admin can disable follow store module', { tag: ['@pro', '@admin'] }, async () => {
-        await apiUtils.deactivateModules(payloads.moduleIds.followStore, payloads.adminAuth);
+        await api.deactivateModules(payloads.moduleIds.followStore, payloads.adminAuth);
         await test.step('Admin disables Follow Store module and verifies it is removed from My Account menu', async () => {
             await admin.disableFollowStoreModule();
         });
