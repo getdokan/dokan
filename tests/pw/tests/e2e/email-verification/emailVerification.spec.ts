@@ -1,28 +1,31 @@
 import { test, Page } from '@playwright/test';
-import { EmailVerificationsPage } from '@pages/emailVerificationsPage';
-import { data } from '@utils/testData';
-import { dbUtils } from '@utils/dbUtils';
-import { dbData } from '@utils/dbData';
+import { EmailVerificationsPage, db, dbOptionName, emailVerificationSettings, userData } from './emailVerificationPage';
+
+// ============================================
+// NO-AUTH GUEST CONTEXT (empty storage)
+// ============================================
+const noAuth = { storageState: { cookies: [], origins: [] } };
 
 test.describe('Email verifications test', () => {
     let guest: EmailVerificationsPage;
     let gPage: Page;
-    const user: { username: string; password: string } = { 
-        username: data.user.username() + data.user.userDetails.emailDomain, 
-        password: data.customer.password || 'testPassword123' 
+    const user: { username: string; password: string } = {
+        username: userData.username() + userData.emailDomain,
+        password: userData.password,
     };
 
     test.beforeAll(async ({ browser }) => {
-        const guestContext = await browser.newContext(data.auth.noAuth);
+        const guestContext = await browser.newContext(noAuth);
         gPage = await guestContext.newPage();
         guest = new EmailVerificationsPage(gPage);
 
-        await dbUtils.setOptionValue(dbData.dokan.optionName.emailVerification, { ...dbData.dokan.emailVerificationSettings, enabled: 'on' });
+        await db.setOptionValue(dbOptionName, { ...emailVerificationSettings, enabled: 'on' });
     });
 
     test.afterAll(async () => {
-        await dbUtils.setOptionValue(dbData.dokan.optionName.emailVerification, dbData.dokan.emailVerificationSettings);
-        await gPage.close();
+        await db.setOptionValue(dbOptionName, emailVerificationSettings);
+        await gPage?.close();
+        await db.dispose();
     });
 
     test('user can see registration notice (2-step auth) while registering as customer', { tag: ['@pro', '@guest'] }, async () => {
@@ -46,9 +49,9 @@ test.describe('Email verifications test', () => {
     });
 
     test('user can see registration notice (2-step auth) while loggingIn', { tag: ['@pro', '@guest'] }, async () => {
-        const loginUser = { 
-            username: data.user.username() + data.user.userDetails.emailDomain, 
-            password: data.customer.password || 'testPassword123' 
+        const loginUser = {
+            username: userData.username() + userData.emailDomain,
+            password: userData.password,
         };
 
         await test.step('Register user first (prerequisite)', async () => {
@@ -74,9 +77,9 @@ test.describe('Email verifications test', () => {
     });
 
     test('user registration process with field validation', { tag: ['@pro', '@guest'] }, async () => {
-        const testUser = { 
-            username: data.user.username() + data.user.userDetails.emailDomain, 
-            password: data.customer.password || 'testPassword123' 
+        const testUser = {
+            username: userData.username() + userData.emailDomain,
+            password: userData.password,
         };
 
         await test.step('Navigate to My Account page', async () => {
@@ -108,9 +111,9 @@ test.describe('Email verifications test', () => {
     });
 
     test('user login process with field validation', { tag: ['@pro', '@guest'] }, async () => {
-        const testUser = { 
-            username: data.user.username() + data.user.userDetails.emailDomain, 
-            password: data.customer.password || 'testPassword123' 
+        const testUser = {
+            username: userData.username() + userData.emailDomain,
+            password: userData.password,
         };
 
         await test.step('Register user first (prerequisite)', async () => {
@@ -139,7 +142,4 @@ test.describe('Email verifications test', () => {
             await guest.verifyLoginEmailVerificationNotice();
         });
     });
-
-    // Note: Error handling test removed as application allows registration with empty email
-    // This behavior should be investigated separately
 });
