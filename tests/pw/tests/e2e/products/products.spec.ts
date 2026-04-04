@@ -1,70 +1,73 @@
-import { test, request, Page } from '@playwright/test';
-import { ProductsPage } from '@pages/productsPage';
-import { ApiUtils } from '@utils/apiUtils';
-import { data } from '@utils/testData';
-import { payloads } from '@utils/payloads';
+import { test, Page } from '@playwright/test';
+import { ProductsPage, api, productData, predefined } from './productsPage';
+import path from 'path';
+
+// ============================================
+// SESSION STORAGE VARIABLES
+// ============================================
+const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
+const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 
 test.describe.skip('Product functionality test', () => {
     let admin: ProductsPage;
     let vendor: ProductsPage;
     let aPage: Page, vPage: Page;
-    let apiUtils: ApiUtils;
     let productName: string;
 
     test.beforeAll(async ({ browser }) => {
-        const adminContext = await browser.newContext(data.auth.adminAuth);
+        await api.init();
+
+        const adminContext = await browser.newContext({ storageState: a1 });
         aPage = await adminContext.newPage();
         admin = new ProductsPage(aPage);
 
-        const vendorContext = await browser.newContext(data.auth.vendorAuth);
+        const vendorContext = await browser.newContext({ storageState: v1 });
         vPage = await vendorContext.newPage();
         vendor = new ProductsPage(vPage);
 
-        apiUtils = new ApiUtils(await request.newContext());
-        [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
+        [, , productName] = await api.createProduct(undefined, api.vendorAuth());
     });
 
     test.afterAll(async () => {
-        // await apiUtils.deleteAllProducts(payloads.vendorAuth);
-        await aPage.close();
-        await vPage.close();
-        await apiUtils.dispose();
+        await aPage?.close();
+        await vPage?.close();
+        await api.dispose();
     });
 
     //admin
 
     test('admin can add product category', { tag: ['@lite', '@admin'] }, async () => {
-        await admin.addCategory(data.product.category.randomCategory());
+        await admin.addCategory(productData.category.randomCategory());
     });
 
     test('admin can add product attribute', { tag: ['@lite', '@admin'] }, async () => {
-        await admin.addAttribute(data.product.attribute.randomAttribute());
+        await admin.addAttribute(productData.attribute.randomAttribute());
     });
 
     test('admin can add simple product', { tag: ['@lite', '@admin'] }, async () => {
-        await admin.addSimpleProduct(data.product.simple);
+        await admin.addSimpleProduct(productData.simple);
     });
 
     test('admin can add variable product', { tag: ['@pro', '@admin'] }, async () => {
         test.slow();
-        await admin.addVariableProduct(data.product.variable);
+        await admin.addVariableProduct(productData.variable);
     });
 
     test('admin can add simple subscription product', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.addSimpleSubscription(data.product.simpleSubscription);
+        await admin.addSimpleSubscription(productData.simpleSubscription);
     });
 
     test('admin can add variable subscription product', { tag: ['@pro', '@admin'] }, async () => {
         test.slow();
-        await admin.addVariableSubscription(data.product.variableSubscription);
+        await admin.addVariableSubscription(productData.variableSubscription);
     });
 
     test('admin can add external product', { tag: ['@lite', '@admin'] }, async () => {
-        await admin.addExternalProduct(data.product.external);
+        await admin.addExternalProduct(productData.external);
     });
 
     test('admin can add vendor subscription', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.addDokanSubscription(data.product.vendorSubscription);
+        await admin.addDokanSubscription(productData.vendorSubscription);
     });
 
     // vendors
@@ -80,42 +83,42 @@ test.describe.skip('Product functionality test', () => {
     // add products
 
     test('vendor can add simple product', { tag: ['@lite', '@vendor'] }, async () => {
-        await vendor.vendorAddSimpleProduct(data.product.simple);
+        await vendor.vendorAddSimpleProduct(productData.simple);
     });
 
     test('vendor can add variable product', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.vendorAddVariableProduct(data.product.variable);
+        await vendor.vendorAddVariableProduct(productData.variable);
     });
 
     test('vendor can add simple subscription product', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.vendorAddSimpleSubscription(data.product.simpleSubscription);
+        await vendor.vendorAddSimpleSubscription(productData.simpleSubscription);
     });
 
     test('vendor can add variable subscription product', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.vendorAddVariableSubscription(data.product.variableSubscription);
+        await vendor.vendorAddVariableSubscription(productData.variableSubscription);
     });
 
     test('vendor can add external product', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.vendorAddExternalProduct(data.product.external);
+        await vendor.vendorAddExternalProduct(productData.external);
     });
 
     test('vendor can add group product', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.vendorAddGroupProduct(data.product.grouped);
+        await vendor.vendorAddGroupProduct(productData.grouped);
     });
 
     test('vendor can add downloadable product', { tag: ['@lite', '@vendor'] }, async () => {
         test.slow();
-        await vendor.vendorAddDownloadableProduct(data.product.downloadable);
+        await vendor.vendorAddDownloadableProduct(productData.downloadable);
     });
 
     test('vendor can add virtual product', { tag: ['@lite', '@vendor'] }, async () => {
-        await vendor.vendorAddVirtualProduct(data.product.virtual);
+        await vendor.vendorAddVirtualProduct(productData.simple);
     });
 
     // product page options
 
     test('vendor can search product', { tag: ['@lite', '@vendor'] }, async () => {
-        await vendor.searchProduct(data.predefined.simpleProduct.product1.name);
+        await vendor.searchProduct(predefined.simpleProduct.product1.name);
     });
 
     test('vendor can filter products by date', { tag: ['@lite', '@vendor'] }, async () => {
@@ -139,7 +142,7 @@ test.describe.skip('Product functionality test', () => {
     });
 
     test('vendor can import products', { tag: ['@pro', '@vendor'] }, async () => {
-        await apiUtils.deleteAllProducts('p0_v1', payloads.vendorAuth);
+        await api.deleteAllProducts('p0_v1', api.vendorAuth());
         await vendor.importProducts('utils/sampleData/products.csv');
     });
 
@@ -148,13 +151,13 @@ test.describe.skip('Product functionality test', () => {
     });
 
     test('vendor can duplicate product', { tag: ['@pro', '@vendor'] }, async () => {
-        const [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
-        await vendor.duplicateProduct(productName);
+        const [, , pName] = await api.createProduct(undefined, api.vendorAuth());
+        await vendor.duplicateProduct(pName);
     });
 
     test('vendor can permanently delete product', { tag: ['@lite', '@vendor'] }, async () => {
-        const [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
-        await vendor.permanentlyDeleteProduct(productName);
+        const [, , pName] = await api.createProduct(undefined, api.vendorAuth());
+        await vendor.permanentlyDeleteProduct(pName);
     });
 
     test('vendor can view product', { tag: ['@lite', '@vendor'] }, async () => {
@@ -162,7 +165,7 @@ test.describe.skip('Product functionality test', () => {
     });
 
     test.skip("vendor can't add product without required fields", { tag: ['@lite', '@vendor'] }, async () => {
-        await vendor.addProductWithoutRequiredFields(data.product.simple);
+        await vendor.addProductWithoutRequiredFields(productData.simple);
     });
 
     test("vendor can't buy own product", { tag: ['@lite', '@vendor'] }, async () => {
@@ -170,10 +173,10 @@ test.describe.skip('Product functionality test', () => {
     });
 
     test('vendor can edit product', { tag: ['@lite', '@vendor'] }, async () => {
-        await vendor.editProduct({ ...data.product.simple, editProduct: productName });
+        await vendor.editProduct({ ...productData.simple, editProduct: productName });
     });
 
     test('vendor can quick edit product', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.quickEditProduct({ ...data.product.simple, editProduct: productName });
+        await vendor.quickEditProduct({ ...productData.simple, editProduct: productName });
     });
 });
