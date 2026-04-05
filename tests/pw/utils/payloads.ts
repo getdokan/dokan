@@ -232,24 +232,7 @@ export const payloads = {
                 key: 'dokan_geo_address',
                 value: 'Dhaka, Bangladesh',
             },
-            {
-                key: '_dokan_rma_override_product',
-                value: 'yes',
-            },
-            {
-                key: '_dokan_rma_settings',
-                value: {
-                    label: 'Warranty',
-                    type: 'included_warranty',
-                    policy: 'test refund policy',
-                    reasons: ['defective'],
-                    length: 'lifetime',
-                    length_value: '',
-                    length_duration: '',
-                    addon_settings: [],
-                },
-            },
-            {
+{
                 key: '_product_addons',
                 value: [
                     {
@@ -434,24 +417,7 @@ export const payloads = {
                 key: 'dokan_geo_address',
                 value: 'New York, NY, USA',
             },
-            {
-                key: '_dokan_rma_override_product',
-                value: 'yes',
-            },
-            {
-                key: '_dokan_rma_settings',
-                value: {
-                    label: 'Warranty',
-                    type: 'included_warranty',
-                    policy: 'test refund policy',
-                    reasons: ['defective'],
-                    length: 'lifetime',
-                    length_value: '',
-                    length_duration: '',
-                    addon_settings: [],
-                },
-            },
-            // {
+// {
             //     key: '_product_addons',
             //     value: [
             //         {
@@ -565,24 +531,7 @@ export const payloads = {
                 key: 'dokan_geo_address',
                 value: 'New York, NY, USA',
             },
-            {
-                key: '_dokan_rma_override_product',
-                value: 'yes',
-            },
-            {
-                key: '_dokan_rma_settings',
-                value: {
-                    label: 'Warranty',
-                    type: 'included_warranty',
-                    policy: 'test refund policy',
-                    reasons: ['defective'],
-                    length: 'lifetime',
-                    length_value: '',
-                    length_duration: '',
-                    addon_settings: [],
-                },
-            },
-            // {
+// {
             // key: '_dokan_min_max_meta',
             // value: {
             //     min_quantity: 4,
@@ -675,24 +624,7 @@ export const payloads = {
                 key: 'dokan_geo_address',
                 value: 'New York, NY, USA',
             },
-            {
-                key: '_dokan_rma_override_product',
-                value: 'yes',
-            },
-            {
-                key: '_dokan_rma_settings',
-                value: {
-                    label: 'Warranty',
-                    type: 'included_warranty',
-                    policy: 'test refund policy',
-                    reasons: ['defective'],
-                    length: 'lifetime',
-                    length_value: '',
-                    length_duration: '',
-                    addon_settings: [],
-                },
-            },
-            // {
+// {
             // key: '_dokan_min_max_meta',
             // value: {
             //     min_quantity: 4,
@@ -771,24 +703,7 @@ export const payloads = {
                 key: 'dokan_geo_address',
                 value: 'New York, NY, USA',
             },
-            {
-                key: '_dokan_rma_override_product',
-                value: 'yes',
-            },
-            {
-                key: '_dokan_rma_settings',
-                value: {
-                    label: 'Warranty',
-                    type: 'included_warranty',
-                    policy: 'test refund policy',
-                    reasons: ['defective'],
-                    length: 'lifetime',
-                    length_value: '',
-                    length_duration: '',
-                    addon_settings: [],
-                },
-            },
-            {
+{
                 key: '_sale_price_label',
                 value: 'old-price',
             },

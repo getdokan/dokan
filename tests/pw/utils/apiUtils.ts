@@ -130,8 +130,9 @@ export class ApiUtils {
         let hasMoreItems = true;
         while (hasMoreItems) {
             const [, responseBodyChunk] = await this.get(endPoint, { params: { ...params, per_page: 100, page: page }, headers: auth });
-            if (responseBodyChunk.length === 0 || (maxPageLimit !== -1 && page >= maxPageLimit)) {
+            if (!Array.isArray(responseBodyChunk) || responseBodyChunk.length === 0 || (maxPageLimit !== -1 && page >= maxPageLimit)) {
                 hasMoreItems = false;
+                if (Array.isArray(responseBodyChunk)) responseBody = responseBody.concat(responseBodyChunk);
             } else {
                 responseBody = responseBody.concat(responseBodyChunk);
                 page++;
