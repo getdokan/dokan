@@ -2,24 +2,39 @@ import { useState, useEffect } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import type { ProductCategoryOption } from '../types';
 
-interface CategoryNode {
-    id: number;
+interface CategoryEntry {
+    term_id: number;
     name: string;
-    parent?: number;
-    children?: CategoryNode[];
+    parent_id: number;
+    children?: number[];
 }
 
-function flattenCategories( nodes: CategoryNode[] ): ProductCategoryOption[] {
+type CategoryMap = Record< string, CategoryEntry >;
+
+// Build a hierarchically ordered list of category options.
+function buildHierarchicalOptions(
+    map: CategoryMap
+): ProductCategoryOption[] {
+    const INDENT = '\u00A0\u00A0\u00A0'; // 3 non-breaking spaces per level
+
     const result: ProductCategoryOption[] = [];
 
-    const visit = ( node: CategoryNode ) => {
-        result.push( { value: node.id, label: node.name } );
-        if ( node.children ) {
-            node.children.forEach( visit );
-        }
-    };
+    function appendChildren( parentId: number, depth: number ) {
+        const children = Object.values( map )
+            .filter( ( cat ) => cat.parent_id === parentId )
+            .sort( ( a, b ) => a.name.localeCompare( b.name ) );
 
-    nodes.forEach( visit );
+        for ( const cat of children ) {
+            result.push( {
+                value: cat.term_id,
+                label: INDENT.repeat( depth ) + cat.name,
+            } );
+            appendChildren( cat.term_id, depth + 1 );
+        }
+    }
+
+    // Start from top-level categories (parent_id === 0).
+    appendChildren( 0, 0 );
 
     return result;
 }
@@ -34,14 +49,22 @@ export const useProductCategories = (): UseProductCategoriesReturn => {
     const [ isLoading, setIsLoading ] = useState( true );
 
     useEffect( () => {
-        apiFetch< CategoryNode[] >( {
+        apiFetch< CategoryMap >( {
             path: '/dokan/v1/products/multistep-categories',
         } )
             .then( ( data ) => {
-                setOptions( flattenCategories( Array.isArray( data ) ? data : [] ) );
+                if (
+                    ! data ||
+                    typeof data !== 'object' ||
+                    Array.isArray( data )
+                ) {
+                    setOptions( [] );
+                    return;
+                }
+                setOptions( buildHierarchicalOptions( data ) );
             } )
-            .catch( ( err ) => {
-                console.error( 'Error fetching product categories:', err );
+            .catch( () => {
+                // Silently handle errors; options remain empty.
             } )
             .finally( () => setIsLoading( false ) );
     }, [] );

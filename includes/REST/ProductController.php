@@ -53,7 +53,7 @@ class ProductController extends DokanRESTController {
     /**
      * Post status
      */
-    protected $post_status = [ 'publish', 'pending', 'draft', 'future' ];
+    protected $post_status = [ 'publish', 'pending', 'draft' ];
 
     /**
      * Class constructor.
@@ -560,13 +560,24 @@ class ProductController extends DokanRESTController {
             'outofstock_count' => dokan_count_stock_posts( 'product', $seller_id, 'outofstock' ),
         ];
 
+        /**
+         * Allow Pro modules to append per-request data to the product listing summary.
+         * Called after every action (delete/publish) so values stay accurate.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array $data      Summary data array.
+         * @param int   $seller_id Current vendor ID.
+         */
+        $data = (array) apply_filters( 'dokan_product_listing_summary_data', $data, $seller_id );
+
         return rest_ensure_response( $data );
     }
 
     /**
      * Get distinct year/month pairs when the current vendor has products.
      *
-     * @since DOKAN_LITE_VERSION
+     * @since DOKAN_SINCE
      *
      * @return WP_REST_Response
      */
@@ -889,7 +900,29 @@ class ProductController extends DokanRESTController {
             $args['post_type'] = $this->post_type;
         }
 
-        return $args;
+        // Exclude product types that belong to separate dashboards
+        // (e.g. auction, booking, subscription — registered by their Pro modules).
+        $exclude_types = (array) apply_filters( 'dokan_product_listing_exclude_type', [] );
+        if ( ! empty( $exclude_types ) ) {
+            $args['tax_query'][] = [ //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+                'taxonomy' => 'product_type',
+                'field'    => 'slug',
+                'terms'    => $exclude_types,
+                'operator' => 'NOT IN',
+            ];
+        }
+
+        /**
+         * Filter the WP_Query args before executing the product listing query.
+         * Allows Pro modules (e.g. product-adv, brands, subscription) to extend
+         * filtering for both v1 and v2 REST endpoints.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array           $args    WP_Query arguments.
+         * @param WP_REST_Request $request The current REST request.
+         */
+        return apply_filters( 'dokan_rest_pre_product_listing_args', $args, $request );
     }
 
     /**

@@ -7,6 +7,7 @@ import type {
     ProductFilterState,
     ProductStatusCount,
     ProductSummary,
+    SubscriptionRemaining,
 } from '../types';
 
 interface UseProductsReturn {
@@ -18,6 +19,7 @@ interface UseProductsReturn {
     productsUrl: string;
     instockCount: number;
     outstockCount: number;
+    subscriptionRemaining: SubscriptionRemaining | null;
     fetchProducts: () => void;
     fetchStatusCounts: () => void;
     deleteProduct: ( productId: number ) => Promise< void >;
@@ -36,13 +38,36 @@ export const useProducts = (
     const [ productsUrl, setProductsUrl ] = useState( '' );
     const [ instockCount, setInstockCount ] = useState( 0 );
     const [ outstockCount, setOutstockCount ] = useState( 0 );
+    const [ subscriptionRemaining, setSubscriptionRemaining ] =
+        useState< SubscriptionRemaining | null >( null );
+
     const [ statusCounts, setStatusCounts ] = useState< ProductStatusCount[] >(
         [
-            { value: 'all',     label: __( 'All', 'dokan-lite' ),            count: 0 },
-            { value: 'publish', label: __( 'Published', 'dokan-lite' ),      count: 0 },
-            { value: 'draft',   label: __( 'Draft', 'dokan-lite' ),          count: 0 },
-            { value: 'pending', label: __( 'Pending Review', 'dokan-lite' ), count: 0 },
-            { value: 'future',  label: __( 'Scheduled', 'dokan-lite' ),      count: 0 },
+            {
+                value: 'all',
+                label: __( 'All', 'dokan-lite' ),
+                count: 0,
+            },
+            {
+                value: 'publish',
+                label: __( 'Published', 'dokan-lite' ),
+                count: 0,
+            },
+            {
+                value: 'draft',
+                label: __( 'Draft', 'dokan-lite' ),
+                count: 0,
+            },
+            {
+                value: 'pending',
+                label: __( 'Pending Review', 'dokan-lite' ),
+                count: 0,
+            },
+            {
+                value: 'future',
+                label: __( 'Scheduled', 'dokan-lite' ),
+                count: 0,
+            },
         ]
     );
 
@@ -78,6 +103,14 @@ export const useProducts = (
                 queryArgs.in_stock = filterArgs.in_stock;
             }
 
+            if ( filterArgs.product_brand ) {
+                queryArgs.product_brand = filterArgs.product_brand;
+            }
+
+            if ( filterArgs.filter_by_other ) {
+                queryArgs.filter_by_other = filterArgs.filter_by_other;
+            }
+
             const response = ( await apiFetch( {
                 path: addQueryArgs( '/dokan/v1/products', queryArgs ),
                 parse: false,
@@ -105,6 +138,8 @@ export const useProducts = (
         filterArgs.type,
         filterArgs.year_month,
         filterArgs.in_stock,
+        filterArgs.product_brand,
+        filterArgs.filter_by_other,
     ] );
 
     const fetchStatusCounts = useCallback( async () => {
@@ -113,7 +148,7 @@ export const useProducts = (
                 path: '/dokan/v1/products/summary',
             } ) ) as ProductSummary;
 
-            const counts  = response.post_counts ?? {};
+            const counts = response.post_counts ?? {};
             const allCount =
                 ( counts.publish ?? 0 ) +
                 ( counts.draft ?? 0 ) +
@@ -121,16 +156,32 @@ export const useProducts = (
                 ( counts.future ?? 0 );
 
             setStatusCounts( [
-                { value: 'all',     label: __( 'All', 'dokan-lite' ),            count: allCount },
-                { value: 'publish', label: __( 'Published', 'dokan-lite' ),      count: counts.publish ?? 0 },
-                { value: 'draft',   label: __( 'Draft', 'dokan-lite' ),          count: counts.draft ?? 0 },
-                { value: 'pending', label: __( 'Pending Review', 'dokan-lite' ), count: counts.pending ?? 0 },
-                { value: 'future',  label: __( 'Scheduled', 'dokan-lite' ),      count: counts.future ?? 0 },
+                {
+                    value: 'all',
+                    label: __( 'All', 'dokan-lite' ),
+                    count: allCount,
+                },
+                {
+                    value: 'publish',
+                    label: __( 'Published', 'dokan-lite' ),
+                    count: counts.publish ?? 0,
+                },
+                {
+                    value: 'draft',
+                    label: __( 'Draft', 'dokan-lite' ),
+                    count: counts.draft ?? 0,
+                },
+                {
+                    value: 'pending',
+                    label: __( 'Pending Review', 'dokan-lite' ),
+                    count: counts.pending ?? 0,
+                },
             ] );
 
             setProductsUrl( response.products_url ?? '' );
             setInstockCount( response.instock_count ?? 0 );
             setOutstockCount( response.outofstock_count ?? 0 );
+            setSubscriptionRemaining( response.subscription_remaining ?? null );
         } catch ( error ) {
             console.error( 'Error fetching product summary:', error );
         }
@@ -199,6 +250,7 @@ export const useProducts = (
         productsUrl,
         instockCount,
         outstockCount,
+        subscriptionRemaining,
         fetchProducts,
         fetchStatusCounts,
         deleteProduct,

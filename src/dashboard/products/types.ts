@@ -53,7 +53,7 @@ export interface ProductItem {
     advertisement?: ProductAdvertisement | null;
 }
 
-export type ProductStatus = 'all' | 'publish' | 'draft' | 'pending' | 'future';
+export type ProductStatus = 'all' | 'publish' | 'draft' | 'pending';
 
 export interface ProductFilterState {
     page: number;
@@ -64,6 +64,8 @@ export interface ProductFilterState {
     type?: string;
     year_month?: string;
     in_stock?: boolean;
+    product_brand?: number | '';
+    filter_by_other?: string;
 }
 
 export interface ProductStatusCount {
@@ -72,11 +74,20 @@ export interface ProductStatusCount {
     count: number;
 }
 
+/** Fresh subscription limits returned by /dokan/v1/products/summary after each action. */
+export interface SubscriptionRemaining {
+    /** boolean true = unlimited, number = remaining slots (0 = limit reached) */
+    remaining_products: true | number;
+    can_post_product: boolean;
+}
+
 export interface ProductSummary {
     post_counts: Record< string, number >;
     products_url: string;
     instock_count: number;
     outofstock_count: number;
+    /** Present only when the subscription module is active. */
+    subscription_remaining?: SubscriptionRemaining;
 }
 
 export interface ProductMonthOption {

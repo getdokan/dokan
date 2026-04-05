@@ -17,6 +17,7 @@ class Assets {
     public function __construct() {
         add_action( 'init', [ $this, 'register_all_scripts' ], 10 );
         add_filter( 'dokan_localized_args', [ $this, 'conditional_localized_args' ] );
+        add_filter( 'dokan_react_frontend_localized_args', [ $this, 'add_product_listing_localized_args' ] );
 
         if ( is_admin() ) {
             add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ], 10 );
@@ -168,6 +169,45 @@ class Assets {
                 ],
             ]
         );
+    }
+
+    /**
+     * Add product listing data to the dokanFrontend localized object.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $args Existing localized args.
+     * @return array
+     */
+    public function add_product_listing_localized_args( array $args ): array {
+        if ( ! is_user_logged_in() ) {
+            return $args;
+        }
+
+        $user_id = dokan_get_current_user_id();
+
+        $page_id     = (int) dokan_get_option( 'dashboard', 'dokan_pages', 0 );
+        $base        = $page_id ? rtrim( get_permalink( $page_id ), '/' ) . '/' : '';
+        $new_product_url = $base ? esc_url_raw(
+            add_query_arg(
+                [
+                    'product_id'                => 0,
+                    'action'                    => 'edit',
+                    '_dokan_edit_product_nonce' => wp_create_nonce( 'dokan_edit_product_nonce' ),
+                ],
+                $base . 'products/'
+            )
+        ) : '';
+
+        $args['product_listing'] = array_merge(
+            $args['product_listing'] ?? [],
+            [
+                'can_add_product' => dokan_is_seller_enabled( $user_id ) && current_user_can( 'dokan_add_product' ),
+                'new_product_url' => $new_product_url,
+            ]
+        );
+
+        return $args;
     }
 
     public function get_localized_price() {
