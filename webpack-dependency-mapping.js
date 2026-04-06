@@ -113,24 +113,14 @@ const wooRequestToHandle = ( request ) => {
 };
 
 /**
- * WordPress packages that should be bundled rather than externalized.
- * These are packages not registered as WordPress script handles.
- */
-const bundledWpPackages = [ '@wordpress/ui' ];
-
-/**
  * Given a request string, returns the external name for the packages.
  *
  * @param  request string Request string.
  *
- * @return {string[]|null|undefined} External name for the package, null to
- *                                   force bundling, or undefined for default.
+ * @return {string[]} External name for the package.
+ *
  */
 const requestToExternal = ( request ) => {
-    if ( bundledWpPackages.includes( request ) ) {
-        return null;
-    }
-
     const dokanStores = request.match( /^@dokan\/stores\/(.+)$/ );
     const wc = request.match( /^@woocommerce\/(.+)$/ );
     const dokan = request.match( /^@dokan\/([^/]+)$/ );

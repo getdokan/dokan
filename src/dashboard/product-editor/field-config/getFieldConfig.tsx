@@ -33,7 +33,6 @@ export const getFieldConfig = ( field: FormItem ) => {
     };
     const mappedField = {
         ...field,
-        rawLabel: field.label,
         label: (
             <div className="flex gap-1 items-center">
                 <RawHTML className="dokan-form-field-label">
@@ -81,6 +80,25 @@ export const getFieldConfig = ( field: FormItem ) => {
         mappedField.description = (
             <span>{ decodeEntities( field.description as string ) }</span>
         );
+    }
+
+    const customData: Record< string, any > = {
+        ...field,
+        rawLabel: field.label,
+        multiple: 'multiple' in specificConfig,
+    };
+
+    const OriginalEdit = ( mappedField as any ).Edit;
+    if ( typeof OriginalEdit === 'function' ) {
+        return {
+            ...mappedField,
+            Edit: ( props: any ) => (
+                <OriginalEdit
+                    { ...props }
+                    field={ { ...customData, ...props.field } }
+                />
+            ),
+        };
     }
 
     return mappedField;
