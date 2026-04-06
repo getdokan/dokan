@@ -8,7 +8,7 @@ import path from 'path';
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json'); // Vendor 1 session storage
 
 // ============================================
-// TEST SETUP
+// TEST SETUP...
 // ============================================
 test.describe('Vendor Add Product Tests @lite', () => {
     test('Test Case 1 - Vendor Can Open Add New Product Page', async ({ browser }) => {

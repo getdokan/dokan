@@ -69,7 +69,8 @@ export class AddProductPage {
 
     async goToProductsPage() {
         await this.page.goto(this.vendor.productsUrl);
-        await this.page.waitForLoadState('networkidle');
+        await this.waitForPageReady()
+        //await this.page.waitForLoadState("networkidle", { timeout: 10000000 });
         await this.page.getByRole('link', { name: 'Add new product' }).waitFor({ state: 'visible' });
     }
 
@@ -131,7 +132,7 @@ export class AddProductPage {
 
     async searchProduct(productName: string) {
         await this.page.locator(this.vendor.productSearchInput).fill(productName);
-        await this.page.locator(this.vendor.searchButton).click();
+        await this.page.locator(this.vendor.searchButton).click({delay: 1000});
         await this.page.waitForLoadState('networkidle');
     }
 
