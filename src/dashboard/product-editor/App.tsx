@@ -43,13 +43,17 @@ const App = () => {
     }
 
     const productId = Number( formEditor.product_id );
+    const isNewProduct = Boolean( formEditor.is_new_product );
     const { product, fields, onChange, formItems, isLoading, submitHandler } =
-        useProductEditor( productId );
+        useProductEditor( productId, isNewProduct );
 
-    const { formLayouts } = useLayouts( formItems, product, formEditor.form_layouts );
+    const { formLayouts } = useLayouts(
+        formItems,
+        product,
+        formEditor.form_layouts
+    );
 
     const productUrl = formEditor.view_product_url;
-    const isNewProduct = Boolean( formEditor.is_new_product );
 
     const { validity, isValid } = useFormValidity(
         product,

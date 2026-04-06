@@ -28,7 +28,7 @@ type ProductEditorValue = {
         selectedOption: any
     ) => void;
 }
-export function useProductEditor( productId: number ): ProductEditorValue {
+export function useProductEditor( productId: number, isNewProduct = false ): ProductEditorValue {
     const toast = useToast();
 
     const { product, formItems, isLoading } = useSelect(
@@ -162,6 +162,11 @@ export function useProductEditor( productId: number ): ProductEditorValue {
                     type: 'success',
                     title: __( 'Product saved successfully.', 'dokan-lite' ),
                 } );
+
+                // Reload so the server-rendered data (is_new_product, status, etc.) refreshes.
+                if ( isNewProduct ) {
+                    window.location.reload();
+                }
             } catch ( err: any ) {
                 toast( {
                     type: 'error',
@@ -172,7 +177,7 @@ export function useProductEditor( productId: number ): ProductEditorValue {
                 throw err;
             }
         },
-        [ productId, saveProduct, toast ]
+        [ productId, saveProduct, toast, isNewProduct ]
     );
 
     return {

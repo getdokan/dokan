@@ -49,12 +49,26 @@ export const getFieldConfig = ( field: FormItem ) => {
         placeholder: field.placeholder,
         elements: getElementsFromOptions( field ),
         isValid: {
-            required: field.required || false,
+            // Required is handled in custom so invisible fields are skipped.
+            required: false,
             // Disable built-in "Value must be one of the elements." so custom validation is used.
             elements: false,
             custom: ( value: any ) => {
-                if ( field.required && isEmpty( value?.[ field.id ] ) ) {
+                // Skip validation for fields that are not visible.
+                const isVisible =
+                    field.visibility !== false &&
+                    resolveDependency( field, value );
+
+                if (
+                    field.required &&
+                    isVisible &&
+                    isEmpty( value?.[ field.id ] )
+                ) {
                     return __( 'Please fill out this field.', 'dokan-lite' );
+                }
+
+                if ( ! isVisible ) {
+                    return null;
                 }
 
                 const validator = fieldValidators[ field.id ];
