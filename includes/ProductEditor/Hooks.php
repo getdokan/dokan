@@ -16,8 +16,60 @@ defined( 'ABSPATH' ) || exit;
 class Hooks {
 
     public function __construct() {
+        add_action( 'template_redirect', [ $this, 'maybe_create_auto_draft' ] );
         add_action( 'dokan_render_product_editor_manager_template', [ $this, 'load_product_edit_template' ] );
         add_action( 'dokan_product_editor_manager_inside_content', [ $this, 'load_product_edit_content' ] );
+    }
+
+    /**
+     * Create an auto-draft product and redirect before any output is sent.
+     *
+     * Hooked on `template_redirect` so the redirect header can be sent
+     * before WordPress starts rendering the page.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function maybe_create_auto_draft() {
+        // Only run on the product editor page when no product_id is provided.
+        if ( ! isset( $_GET['product_editor'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+            return;
+        }
+
+        $product_id = isset( $_GET['product_id'] ) ? intval( wp_unslash( $_GET['product_id'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification
+
+        if ( $product_id ) {
+            return;
+        }
+
+        if ( ! current_user_can( 'dokan_edit_product' ) || ! dokan_is_seller_enabled( dokan_get_current_user_id() ) ) {
+            return;
+        }
+
+        $product = new WC_Product_Simple();
+        $product->set_status( 'auto-draft' );
+        $product->set_name( '' );
+        $product->save();
+
+        // Assign the current vendor as the product author.
+        wp_update_post(
+            [
+                'ID'          => $product->get_id(),
+                'post_author' => dokan_get_current_user_id(),
+            ]
+        );
+
+        // Redirect to prevent duplicate auto-drafts on refresh.
+        $redirect_url = add_query_arg(
+            [
+                'product_id'     => $product->get_id(),
+                'product_editor' => true,
+            ],
+            dokan_edit_product_url( $product->get_id(), true )
+        );
+        wp_safe_redirect( $redirect_url );
+        exit;
     }
 
     /**
@@ -56,32 +108,6 @@ class Hooks {
         }
 
         $product_id = isset( $_GET['product_id'] ) ? intval( wp_unslash( $_GET['product_id'] ) ) : 0; // phpcs:ignore
-
-        if ( ! $product_id ) {
-            $product = new WC_Product_Simple();
-            $product->set_status( 'auto-draft' );
-            $product->set_name( '' );
-            $product->save();
-
-            // Assign the current vendor as the product author.
-            wp_update_post(
-                [
-                    'ID'          => $product->get_id(),
-                    'post_author' => dokan_get_current_user_id(),
-                ]
-            );
-
-            // Redirect to prevent duplicate auto-drafts on refresh.
-            $redirect_url = add_query_arg(
-                [
-                    'product_id'   => $product->get_id(),
-                    'product_editor' => true,
-                ],
-                dokan_edit_product_url( $product->get_id(), true )
-            );
-            wp_safe_redirect( $redirect_url );
-            exit;
-        }
 
         $product = wc_get_product( $product_id );
         if ( ! $product ) {
