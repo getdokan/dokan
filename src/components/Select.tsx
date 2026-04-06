@@ -46,9 +46,21 @@ export interface SelectProps<
 function Select< Option = DefaultOption, IsMulti extends boolean = false >(
     props: SelectProps< Option, IsMulti >
 ) {
-    // Default portal target for the dropdown menu so it isn't clipped by parent containers
-    const defaultMenuPortalTarget =
-        typeof document !== 'undefined' ? document.body : undefined;
+    // Default portal target wrapped with 'dokan-layout' so Tailwind scoped styles apply
+    const defaultMenuPortalTarget = (() => {
+        if ( typeof document === 'undefined' ) {
+            return undefined;
+        }
+        const id = 'dokan-select-menu-portal';
+        let el = document.getElementById( id );
+        if ( ! el ) {
+            el = document.createElement( 'div' );
+            el.id = id;
+            el.className = 'dokan-layout';
+            document.body.appendChild( el );
+        }
+        return el;
+    })();
 
     return (
         <SearchableSelect

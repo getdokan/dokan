@@ -25,6 +25,11 @@ const OptionComponent = ( { children, ...props }: any ) => {
                 style={ { paddingLeft: `${ paddingLeft }px` } }
                 className="flex items-center gap-2"
             >
+                { isSelected ? (
+                    <CheckSquare size={ 16 } />
+                ) : (
+                    <Square size={ 16 } />
+                ) }
                 { children }
             </div>
         </components.Option>

@@ -44,7 +44,7 @@ const CustomField = ( {
     className = '',
 }: {
     label?: string | React.ReactNode;
-    field: FormItem;
+    field: FormItem & { rawLabel?: string };
     children: React.ReactNode;
     error?: string;
     className?: string;
@@ -65,10 +65,10 @@ const CustomField = ( {
         if (label) {
             return <span>{ label }</span>;
         }
-        if ( typeof field.label === 'string' ) {
+        if ( typeof field.rawLabel === 'string' ) {
             return (
                 <RawHTML className="dokan-form-field-label">
-                    { decodeEntities( field.label ) }
+                    { decodeEntities( field.rawLabel ) }
                 </RawHTML>
             );
         }
