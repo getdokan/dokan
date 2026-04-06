@@ -1,4 +1,7 @@
 import { DokanTooltip } from '@src/components';
+import {
+    __experimentalInputControlPrefixWrapper as InputControlPrefixWrapper,
+} from '@wordpress/components';
 import { Info } from 'lucide-react';
 import { getFieldConfigFrom } from './index';
 import { FormItem } from '../types';
@@ -89,6 +92,25 @@ export const getFieldConfig = ( field: FormItem ) => {
 
     const specificConfig = getFieldConfigFrom( field );
     Object.assign( mappedField, specificConfig );
+
+    // If the field defines a prefix string, use the built-in text control with a prefix addon.
+    if ( field.prefix && ! specificConfig.Edit ) {
+        const prefixValue = field.prefix;
+        const PrefixComponent = () => (
+            <InputControlPrefixWrapper>
+                <span
+                    title={ prefixValue }
+                    className="text-gray-500 whitespace-nowrap"
+                >
+                    { prefixValue }
+                </span>
+            </InputControlPrefixWrapper>
+        );
+        ( mappedField as any ).Edit = {
+            control: 'text',
+            prefix: PrefixComponent,
+        };
+    }
 
     if ( field.description ) {
         mappedField.description = (

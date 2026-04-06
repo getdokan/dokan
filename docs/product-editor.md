@@ -38,12 +38,12 @@ The Dokan product editor is a React form system built on the WordPress [`@wordpr
 │    ├─ apply_filters('dokan_product_editor_layouts') │
 │    └─ Sorts by priority (default 30 when omitted)       │
 │                                                         │
-│  Hooks.php → wp_localize_script('dokanFormManager', {   │
-│      form_items, form_layouts, product_id,               │
-│      is_new_product, view_product_url, vendor_earning   │
-│  })                                                     │
+│  Hooks.php → wp_add_inline_script('dokan-product-editor',│
+│    const dokanProductEditor = { form_items, form_layouts,│
+│    product_id, is_new_product, view_product_url,         │
+│    vendor_earning })                                     │
 └───────────────────────┬─────────────────────────────────┘
-                        │  JSON (window.dokanFormManager)
+                        │  JSON (window.dokanProductEditor)
                         ▼
                     React (Client)
 ┌─────────────────────────────────────────────────────────┐
@@ -53,8 +53,9 @@ The Dokan product editor is a React form system built on the WordPress [`@wordpr
 │    ├─ product   ← store.getProduct()                    │
 │    ├─ formItems ← store.getFormItems()                  │
 │    └─ fields    ← formItems → getFieldConfig()          │
-│                        ├─ FieldRenderer (label, type,   │
-│                        │   elements, isVisible, isValid) │
+│                        ├─ getFieldConfig() (label, type,│
+│                        │   elements, isVisible, isValid, │
+│                        │   prefix) in field-config/      │
 │                        └─ getFieldConfigFrom() (Edit    │
 │                            component per variant)       │
 │                                                         │
@@ -84,25 +85,32 @@ dokan-lite/
 │
 ├── src/dashboard/product-editor/
 │   ├── App.tsx               # Main React entry (DataForm)
+│   ├── index.tsx             # Webpack entry, mounts App
+│   ├── index.scss            # Editor-specific styles
+│   ├── exports.ts            # Public API for external consumers (@dokan/product-editor)
 │   ├── types/index.ts        # TypeScript interfaces
-│   ├── field-config/index.ts # Variant → Edit component mapping
+│   ├── field-config/
+│   │   ├── index.ts          # Variant → Edit component mapping (getFieldConfigFrom)
+│   │   ├── getFieldConfig.tsx # Field config builder (label, isValid, isVisible, prefix)
+│   │   └── validations/index.ts # Field-specific validators (isEmpty, fieldValidators)
 │   ├── components/
-│   │   ├── FieldRenderer.tsx # Field config builder
-│   │   ├── CustomField.tsx   # Wrapper for all Edit components
+│   │   ├── CustomField.tsx   # Wrapper for all Edit components (label, error, required)
 │   │   ├── PriceEdit.tsx     # Price input + vendor earning
 │   │   ├── SelectEdit.tsx    # Select/multi-select with tree
-│   │   ├── RichTextEdit.tsx  # Editor & textarea
+│   │   ├── AsyncSelectEdit.tsx # Async search select
+│   │   ├── RichTextEdit.tsx  # WYSIWYG editor
+│   │   ├── TextAreaEdit.tsx  # Plain textarea
 │   │   ├── ImageEdit.tsx     # Single image upload
+│   │   ├── ImagePreview.tsx  # Image preview helper
 │   │   ├── GalleryImages.tsx # Image gallery
 │   │   ├── FileUploadEdit.tsx# Downloadable files
 │   │   ├── DateTimePickerEdit.tsx
-│   │   ├── AsyncSelectEdit.tsx
-│   │   └── AttributesEdit.tsx
+│   │   ├── AttributesEdit.tsx
+│   │   └── attributes/       # Attribute sub-components
+│   │       └── AttributeCard.tsx
 │   ├── hooks/
 │   │   ├── useProductEditor.ts  # Redux state + submit
-│   │   ├── useLayouts.tsx       # Layout tree builder
-│   │   ├── useVariations.ts     # Variation CRUD
-│   │   └── useVariationLayouts.tsx
+│   │   └── useLayouts.tsx       # Layout tree builder
 │   └── utils.tsx             # Visibility, dependency, layout helpers
 ```
 
@@ -126,7 +134,7 @@ The editor uses the WordPress [DataForm](https://developer.wordpress.org/block-e
 
 1. PHP `FormSchema::get_schema()` produces a flat array of `{ type: 'section' | 'field', ... }` items
 2. `useProductEditor()` filters items where `type === 'field'` and passes each through `getFieldConfig()`
-3. `getFieldConfig()` (in `FieldRenderer.tsx`) normalizes options to `elements`, adds `isVisible` / `isValid`, and merges variant-specific config from `getFieldConfigFrom()`
+3. `getFieldConfig()` (in `field-config/getFieldConfig.tsx`) normalizes options to `elements`, adds `isVisible` / `isValid` / `prefix`, and merges variant-specific config from `getFieldConfigFrom()`
 4. `useLayouts()` builds the nested layout tree and auto-appends sections/fields not explicitly placed
 
 ---
@@ -170,6 +178,8 @@ Every item in the schema array must include these **required attributes**:
 | `value` | `mixed` | Initial/resolved value |
 | `default` | `mixed` | Default value for new products |
 | `required` | `bool` | Whether the field is required |
+| `requireds` | `array` | Per-product-type required overrides (e.g. `['simple' => true, 'variable' => false]`) |
+| `prefix` | `string` | Text prefix shown as a left addon on text inputs (e.g. a base URL for permalink fields). Uses DataForm's built-in `InputControlPrefixWrapper` |
 | `placeholder` | `string` | Input placeholder text |
 | `tooltip` | `string` | Tooltip text (shown as info icon) |
 | `description` | `string` | Help text below the field |
@@ -391,7 +401,7 @@ The `after` property lets you insert a nested layout item at a specific position
 ```php
 [
     'id'        => Elements::SECTION_DIGITAL_OPTIONS,
-    'parent_id' => Elements::SECTION_GENERALSECTION_GENERAL,
+    'parent_id' => Elements::SECTION_GENERAL,
     'after'     => Elements::TYPE,  // Appears right after "Product Type"
     'layout'    => [ 'type' => 'regular' ],
     'children'  => [ Elements::DOWNLOADABLE, Elements::VIRTUAL ],
@@ -688,7 +698,7 @@ add_action( 'dokan_rest_insert_product_variation_object', function ( $variation,
 
 ## 10. Custom Edit Components (React)
 
-The `field-config/index.ts` maps every field variant to a handler. Handlers for `checkbox`, `radio`, and `number` configure DataForm's built-in field types (`type: 'boolean'`, `Edit: 'radio'`, `type: 'integer'`). Other variants like `select`, `editor`, `image`, etc. provide custom React Edit components. The `text` variant falls through to the default handler, which auto-detects price fields.
+The `field-config/index.ts` maps every field variant to a handler via `getFieldConfigFrom()`. Handlers for `checkbox`, `radio`, and `number` configure DataForm's built-in field types (`type: 'boolean'`, `Edit: 'radio'`, `type: 'integer'`). Other variants like `select`, `editor`, `image`, etc. provide custom React Edit components. The `text` variant falls through to the default handler, which auto-detects price fields. Additionally, `getFieldConfig()` in `field-config/getFieldConfig.tsx` applies generic behaviors: if a field has a `prefix` string, it automatically uses DataForm's built-in `{ control: 'text', prefix }` — no custom Edit component needed.
 
 ### Adding a custom variant (JS filter)
 
@@ -978,13 +988,14 @@ addFilter(
 | `includes/ProductEditor/FormSchema.php` | Schema definition, layout definition, value resolution |
 | `includes/ProductEditor/PayloadResolver.php` | Transforms form payload to WC REST API shape |
 | `includes/ProductEditor/Elements.php` | Constants for all field, section, and layout IDs |
-| `includes/ProductEditor/Hooks.php` | Server-side bootstrapping, script enqueue, localization |
+| `includes/ProductEditor/Hooks.php` | Server-side bootstrapping, script enqueue, `wp_add_inline_script` localization |
 | `src/dashboard/product-editor/App.tsx` | Main React entry — renders DataForm |
-| `src/dashboard/product-editor/types/index.ts` | TypeScript interfaces (FlatFormItem, FieldConfig, FieldHandler) |
-| `src/dashboard/product-editor/field-config/index.ts` | Maps field variants to Edit components |
-| `src/dashboard/product-editor/components/FieldRenderer.tsx` | Builds field config for DataForm (label, elements, visibility) |
-| `src/dashboard/product-editor/components/CustomField.tsx` | Shared wrapper for all Edit components |
+| `src/dashboard/product-editor/exports.ts` | Public API for external consumers (`@dokan/product-editor`) |
+| `src/dashboard/product-editor/types/index.ts` | TypeScript interfaces (FormItem, FieldConfig, FieldHandler, LayoutItem) |
+| `src/dashboard/product-editor/field-config/index.ts` | Maps field variants to Edit components (`getFieldConfigFrom`) |
+| `src/dashboard/product-editor/field-config/getFieldConfig.tsx` | Builds field config for DataForm (label, elements, isVisible, isValid, prefix) |
+| `src/dashboard/product-editor/field-config/validations/index.ts` | Field-specific validators (`isEmpty`, `fieldValidators`) |
+| `src/dashboard/product-editor/components/CustomField.tsx` | Shared wrapper for all Edit components (label, required badge, error) |
 | `src/dashboard/product-editor/hooks/useProductEditor.ts` | Redux store integration (product state, fields, submit) |
 | `src/dashboard/product-editor/hooks/useLayouts.tsx` | Builds nested layout tree from PHP flat layout |
 | `src/dashboard/product-editor/utils.tsx` | Visibility, dependency resolution, `buildLayoutTree()` |
-| `src/dashboard/product-editor/exports.ts` | Public exports: `buildLayoutTree`, `appendToTarget`, types |

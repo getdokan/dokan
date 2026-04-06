@@ -468,6 +468,7 @@ class FormSchema {
                 'label'            => __( 'Permalink', 'dokan-lite' ),
                 'variant'          => 'text',
                 'placeholder'      => __( 'Enter product slug...', 'dokan-lite' ),
+                'prefix'           => home_url( wc_get_permalink_structure()['product_base'] ?? '/product/' ),
                 'required'         => false,
                 'visibility'       => true,
                 'dependencies'     => [

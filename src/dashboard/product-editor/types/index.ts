@@ -28,6 +28,7 @@ export type FormItem = {
     options?: { label: string; value: string }[] | Record< string, string >;
     options_map?: Record< string, { label: string; value: string }[] >;
     dependencies?: DependencyCondition[];
+    prefix?: string;
     visibility?: boolean;
     visibilities?: Record< string, boolean >;
     is_custom?: boolean;
