@@ -173,9 +173,8 @@ class Dashboard implements Hookable {
             'support_button'  => apply_filters(
                 'dokan_admin_header_support_button',
                 [
-                    'label'    => esc_html__( 'Get Support', 'dokan-lite' ),
-                    'url'      => 'https://wordpress.org/support/plugin/dokan-lite/',
-                    'is_modal' => false,
+                    'label' => esc_html__( 'Get Support', 'dokan-lite' ),
+                    'url'   => 'https://wordpress.org/support/plugin/dokan-lite/',
                 ]
             ),
             'help_menu_items' => apply_filters(
@@ -188,13 +187,6 @@ class Dashboard implements Hookable {
                         'icon'     => 'whats-new',
                         'active'   => Helper::dokan_has_new_version(),
                         'external' => false,
-                    ],
-                    [
-                        'id'       => 'get-support',
-                        'title'    => esc_html__( 'Get Support', 'dokan-lite' ),
-                        'url'      => 'https://dokan.co/contact/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
-                        'icon'     => 'support',
-                        'external' => true,
                     ],
                     [
                         'id'       => 'community',

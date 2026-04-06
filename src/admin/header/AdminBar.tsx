@@ -17,7 +17,7 @@ import {
     Box,
     Circle,
 } from 'lucide-react';
-import { applyFilters } from '@wordpress/hooks';
+import { Slot } from '@wordpress/components';
 
 // Define the mapping internally
 const lucideIconMapping = {
@@ -35,31 +35,8 @@ const lucideIconMapping = {
 
 const AdminBar = () => {
     const [ showDropdown, setShowDropdown ] = useState( false );
-    const {
-        is_pro_exists,
-        lite_version,
-        help_menu_items,
-        has_new_version,
-        support_button,
-    } = dokanAdminPanelHeaderSettings?.header_info;
-
-    const handleSupportClick = () => {
-        /**
-         * Filter the support button click handler.
-         *
-         * Pro overrides this to return `true` and open the support ticket modal.
-         * Returning `true` prevents the default redirect behavior.
-         *
-         * @param {boolean} handled Whether the click was handled by a filter.
-         */
-        const handled = applyFilters(
-            'dokan_admin_support_button_click',
-            false
-        );
-        if ( ! handled && support_button?.url ) {
-            window.open( support_button.url, '_blank', 'noopener,noreferrer' );
-        }
-    };
+    const { is_pro_exists, lite_version, help_menu_items, has_new_version } =
+        dokanAdminPanelHeaderSettings?.header_info;
 
     return (
         <div
@@ -117,18 +94,13 @@ const AdminBar = () => {
                 ) }
             </div>
 
-            { /* Get Support button */ }
-            { support_button && (
-                <button
-                    type="button"
-                    onClick={ handleSupportClick }
-                    className="flex items-center gap-2 rounded-md border border-solid border-[#7047EB] bg-white px-4 py-2 text-[13px] font-medium text-[#7047EB] transition-colors duration-200 hover:bg-[#7047EB] hover:text-white cursor-pointer whitespace-nowrap [&>svg]:transition-colors [&>svg]:duration-200 hover:[&>svg]:text-white"
-                >
-                    <Headphones size={ 16 } />
-                    { support_button.label ||
-                        __( 'Get Support', 'dokan-lite' ) }
-                </button>
-            ) }
+            { /* Get Support button slot — filled via registerPlugin */ }
+            <Slot
+                name="dokan-admin-header-before-info-section"
+                fillProps={ {
+                    header_info: dokanAdminPanelHeaderSettings?.header_info,
+                } }
+            />
 
             { /* Help button */ }
             <div
