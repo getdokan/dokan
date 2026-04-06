@@ -165,18 +165,32 @@ class Dashboard implements Hookable {
         $dashboard_url            = admin_url( 'admin.php?page=' . $dashboard_page_slug );
         $changelog_url            = admin_url( 'admin.php?page=' . $changelog_page_slug );
 
+        /**
+         * Filters the admin header support button configuration.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array $support_button {
+         *     Support button configuration.
+         *
+         *     @type string $label Button label text.
+         *     @type string $url   URL to open when clicked.
+         * }
+         */
+        $get_support_btn = apply_filters(
+            'dokan_admin_header_support_button',
+            [
+                'label' => esc_html__( 'Get Support', 'dokan-lite' ),
+                'url'   => 'https://wordpress.org/support/plugin/dokan-lite/',
+            ]
+        );
+
         $header_info = [
             'lite_version'    => DOKAN_PLUGIN_VERSION,
             'is_pro_exists'   => dokan()->is_pro_exists(),
             'dashboard_url'   => $dashboard_url,
             'has_new_version' => Helper::dokan_has_new_version(),
-            'support_button'  => apply_filters(
-                'dokan_admin_header_support_button',
-                [
-                    'label' => esc_html__( 'Get Support', 'dokan-lite' ),
-                    'url'   => 'https://wordpress.org/support/plugin/dokan-lite/',
-                ]
-            ),
+            'support_button'  => $get_support_btn,
             'help_menu_items' => apply_filters(
                 'dokan_admin_setup_guides_help_menu_items',
                 [
