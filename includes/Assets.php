@@ -799,6 +799,12 @@ class Assets {
                     'assetsUrl'    => DOKAN_PLUGIN_ASSEST,
                     'dashboardUrl' => dokan_get_navigation_url() . ( ReportUtil::is_analytics_enabled() ? '?path=%2Fanalytics%2FOverview' : '' ),
                     'storeUrl'     => dokan_get_store_url( dokan_get_current_user_id() ),
+                    'ordersUrl'        => dokan_get_navigation_url( 'orders' ),
+                    'legacyOrdersUrl'  => dokan_add_subpage_to_url( rtrim( get_permalink( (int) dokan_get_option( 'dashboard', 'dokan_pages', 0 ) ), '/' ) . '/', 'orders/' ),
+                ],
+                'nonces'          => [
+                    'viewOrder'   => wp_create_nonce( 'dokan_view_order' ),
+                    'orderExport' => wp_create_nonce( 'dokan_vendor_order_export_action' ),
                 ],
             ]
         );
