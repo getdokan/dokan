@@ -226,7 +226,7 @@ class Dashboard implements Hookable {
                     [
                         'id'       => 'import-dummy-data',
                         'title'    => __( 'Import dummy data', 'dokan-lite' ),
-                        'url'      => $legacy_dashboard_url . '#/dummy-data',
+                        'url'      => $dashboard_url . '#/dummy-data',
                         'icon'     => 'import-data',
                         'external' => false,
                     ],
