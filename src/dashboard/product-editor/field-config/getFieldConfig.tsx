@@ -53,7 +53,7 @@ export const getFieldConfig = ( field: FormItem ) => {
         elements: getElementsFromOptions( field ),
         isValid: {
             // Required is handled in custom so invisible fields are skipped.
-            required: false,
+            required: field.required || false,
             // Disable built-in "Value must be one of the elements." so custom validation is used.
             elements: false,
             custom: ( value: any ) => {

@@ -471,12 +471,6 @@ class FormSchema {
                 'prefix'           => home_url( wc_get_permalink_structure()['product_base'] ?? '/product/' ),
                 'required'         => false,
                 'visibility'       => true,
-                'dependencies'     => [
-                    [
-                        'comparison' => 'not_empty',
-                        'key'        => Elements::SLUG,
-                    ],
-                ],
             ],
             [
                 'id'             => Elements::TYPE,
