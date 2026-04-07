@@ -1,4 +1,10 @@
-import { useState, useMemo, useCallback, useRef } from '@wordpress/element';
+import {
+    useState,
+    useMemo,
+    useCallback,
+    useRef,
+    useEffect,
+} from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { useToast, SimpleInput } from '@getdokan/dokan-ui';
 import { Fill } from '@wordpress/components';
@@ -153,6 +159,7 @@ function OrderList() {
     const {
         data,
         isLoading,
+        hasError,
         totalItems,
         totalPages,
         statusCounts,
@@ -160,6 +167,15 @@ function OrderList() {
         fetchStatusCounts,
         updateOrderStatus,
     } = useOrders( filterArgs );
+
+    useEffect( () => {
+        if ( hasError ) {
+            toast( {
+                type: 'error',
+                title: __( 'Failed to load orders', 'dokan-lite' ),
+            } );
+        }
+    }, [ hasError, toast ] );
 
     // ── Fields ──────────────────────────────────────────────────
     const fields = [
@@ -415,6 +431,9 @@ function OrderList() {
                 addField( 'order_status', filterArgs.status );
                 addField( 'search', filterArgs.search );
 
+                if ( filterArgs.customer_id ) {
+                    addField( 'customer_id', String( filterArgs.customer_id ) );
+                }
                 if ( filterArgs.after ) {
                     addField( 'order_date_start', String( filterArgs.after ) );
                 }
@@ -431,12 +450,23 @@ function OrderList() {
     // ── Status update handler ───────────────────────────────────
     const handleStatusUpdate = useCallback(
         async ( items: OrderItem[], newStatus: string ) => {
-            try {
-                await Promise.all(
-                    items.map( ( item ) =>
-                        updateOrderStatus( item.id, newStatus )
-                    )
-                );
+            const results = await Promise.allSettled(
+                items.map( ( item ) => updateOrderStatus( item.id, newStatus ) )
+            );
+
+            const failed = results.filter(
+                ( r ) => r.status === 'rejected'
+            ).length;
+            const succeeded = results.length - failed;
+
+            if ( succeeded > 0 ) {
+                fetchOrders();
+                fetchStatusCounts();
+            }
+
+            setSelection( [] );
+
+            if ( failed === 0 ) {
                 toast( {
                     type: 'success',
                     title:
@@ -444,13 +474,15 @@ function OrderList() {
                             ? __( 'Order status updated', 'dokan-lite' )
                             : __( 'Orders status updated', 'dokan-lite' ),
                 } );
-                setSelection( [] );
-                fetchOrders();
-                fetchStatusCounts();
-            } catch {
+            } else if ( succeeded === 0 ) {
                 toast( {
                     type: 'error',
                     title: __( 'Failed to update order status', 'dokan-lite' ),
+                } );
+            } else {
+                toast( {
+                    type: 'warning',
+                    title: `${ succeeded } updated, ${ failed } failed`,
                 } );
             }
         },
@@ -476,8 +508,7 @@ function OrderList() {
                 id: 'mark-on-hold',
                 label: __( 'Change status to on-hold', 'dokan-lite' ),
                 supportsBulk: true,
-                isEligible: ( item: OrderItem ) =>
-                    item.status !== 'on-hold',
+                isEligible: ( item: OrderItem ) => item.status !== 'on-hold',
                 callback: ( items: OrderItem[] ) => {
                     handleStatusUpdate( items, 'wc-on-hold' );
                 },
@@ -486,8 +517,7 @@ function OrderList() {
                 id: 'mark-processing',
                 label: __( 'Change status to processing', 'dokan-lite' ),
                 supportsBulk: true,
-                isEligible: ( item: OrderItem ) =>
-                    item.status !== 'processing',
+                isEligible: ( item: OrderItem ) => item.status !== 'processing',
                 callback: ( items: OrderItem[] ) => {
                     handleStatusUpdate( items, 'wc-processing' );
                 },
@@ -496,8 +526,7 @@ function OrderList() {
                 id: 'mark-completed',
                 label: __( 'Change status to completed', 'dokan-lite' ),
                 supportsBulk: true,
-                isEligible: ( item: OrderItem ) =>
-                    item.status !== 'completed',
+                isEligible: ( item: OrderItem ) => item.status !== 'completed',
                 callback: ( items: OrderItem[] ) => {
                     handleStatusUpdate( items, 'wc-completed' );
                 },

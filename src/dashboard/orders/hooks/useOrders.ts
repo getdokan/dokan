@@ -7,6 +7,7 @@ import type { OrderItem, OrderFilterState, OrderStatusCount } from '../types';
 interface UseOrdersReturn {
     data: OrderItem[];
     isLoading: boolean;
+    hasError: boolean;
     totalItems: number;
     totalPages: number;
     statusCounts: OrderStatusCount[];
@@ -37,6 +38,7 @@ const defaultStatusCounts: OrderStatusCount[] = [
 export const useOrders = ( filterArgs: OrderFilterState ): UseOrdersReturn => {
     const [ data, setData ] = useState< OrderItem[] >( [] );
     const [ isLoading, setIsLoading ] = useState( true );
+    const [ hasError, setHasError ] = useState( false );
     const [ totalItems, setTotalItems ] = useState( 0 );
     const [ totalPages, setTotalPages ] = useState( 0 );
     const [ statusCounts, setStatusCounts ] =
@@ -44,6 +46,7 @@ export const useOrders = ( filterArgs: OrderFilterState ): UseOrdersReturn => {
 
     const fetchItems = useCallback( async () => {
         setIsLoading( true );
+        setHasError( false );
         try {
             const queryArgs: Record< string, any > = {
                 per_page: filterArgs.per_page,
@@ -86,6 +89,7 @@ export const useOrders = ( filterArgs: OrderFilterState ): UseOrdersReturn => {
             );
         } catch {
             setData( [] );
+            setHasError( true );
         } finally {
             setIsLoading( false );
         }
@@ -176,6 +180,7 @@ export const useOrders = ( filterArgs: OrderFilterState ): UseOrdersReturn => {
     return {
         data,
         isLoading,
+        hasError,
         totalItems,
         totalPages,
         statusCounts,
