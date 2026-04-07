@@ -13,6 +13,7 @@ import VendorsPage from '../pages/vendors';
 import ReverseWithdrawalPage from '../pages/reverse-withdrawal';
 import ReverseWithdrawalTransactionPage from 'admin/dashboard/pages/reverse-withdrawal/ReverseWithdrawalTransaction';
 import ChangelogPage from '../pages/changelog';
+import DummyData from '../pages/dummy-data';
 
 export type DokanAdminRoute = {
     id: string;
@@ -77,6 +78,11 @@ const getAdminRoutes = () => {
             id: 'changelog',
             element: <ChangelogPage />,
             path: '/changelog',
+        },
+        {
+            id: 'dummy-data',
+            element: <DummyData />,
+            path: '/dummy-data',
         },
     ];
 
