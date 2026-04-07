@@ -1,9 +1,8 @@
-import { Fill } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import { Fill } from '@wordpress/components';
 import { useCallback } from '@wordpress/element';
 import { registerPlugin } from '@wordpress/plugins';
 import { MessageCircleQuestionMark } from 'lucide-react';
-import { DokanButton } from '@src/components';
 
 const SLOT_NAME = 'dokan-admin-header-before-info-section';
 
@@ -37,18 +36,17 @@ const DefaultSupportButton = () => {
                 }
 
                 return (
-                    <DokanButton
-                        data-test-id="dokan-dashboard-header-support-button"
-                        variant="secondary"
+                    <button
+                        type="button"
                         onClick={ () => handleClick( supportButton.url ) }
-                        className="flex items-center gap-1 rounded-md h-10 hover:!bg-[#7047EB] hover:!text-white"
+                        className="flex items-center gap-1 rounded-md h-10 px-3 bg-white border border-solid border-[#7047EB] text-[#7047EB] hover:bg-[#7047EB] hover:text-white cursor-pointer transition-colors duration-200 whitespace-nowrap"
                     >
                         <MessageCircleQuestionMark size={ 20 } />
                         <span className="text-xs min-w-20">
                             { supportButton.label ||
                                 __( 'Get Support', 'dokan-lite' ) }
                         </span>
-                    </DokanButton>
+                    </button>
                 );
             } }
         </Fill>
