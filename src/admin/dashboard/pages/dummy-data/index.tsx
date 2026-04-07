@@ -2,44 +2,100 @@ import { Card, DokanToaster, useToast } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { parse } from 'papaparse';
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect, useRef, useState } from '@wordpress/element';
 import HeaderImage from './HeaderImage';
 import Importer from './Importer';
 import Result from './Result';
 import StatusSkeleton from './StatusSkeleton';
-import { DokanLink } from '@dokan/components';
 import { ChevronLeft } from 'lucide-react';
-import { RouterProps } from '@src/definitions/RouterProps';
-import { productsDataToRemove, vendorsDataToRemove } from './RemovableDatasObj';
+import { useNavigate } from 'react-router-dom';
+import { productsDataToRemove, vendorsDataToRemove } from './removableFields';
 
-function Index( props: RouterProps ) {
+interface RawAttribute {
+    name: string;
+    value: string[];
+    visible: string;
+    taxonomy: string;
+}
+
+interface CsvRow {
+    [ key: string ]: string;
+    type: string;
+}
+
+interface VendorRow {
+    id: string;
+    type: 'vendor';
+    first_name: string;
+    last_name: string;
+    username: string;
+    [ key: string ]: string;
+}
+
+interface ProductRow {
+    type: string;
+    name: string;
+    description: string;
+    vendor: string;
+    raw_attributes?: RawAttribute[];
+    manage_stock?: boolean;
+    [ key: string ]: unknown;
+}
+
+interface ImportResponse {
+    vendor_index: number;
+}
+
+interface StatusResponse {
+    import_status: string;
+}
+
+function Index() {
     const toast = useToast();
+    const navigate = useNavigate();
     const [ progress, setProgress ] = useState( 0 );
     const [ loading, setLoading ] = useState< boolean >( true );
-    const [ allVendors, setAllVendors ] = useState< any[] >( [] );
-    const [ allProducts, setAllProducts ] = useState< any[] >( [] );
+    const [ allVendors, setAllVendors ] = useState< VendorRow[] >( [] );
+    const [ allProducts, setAllProducts ] = useState< ProductRow[] >( [] );
     const [ done, setDone ] = useState< boolean >( false );
     const [ statusLoader, setStatusLoader ] = useState< boolean >( true );
+    const abortRef = useRef< AbortController >( new AbortController() );
 
-    const csvFileUrl = ( window as any )?.dokanAdminDashboard?.urls?.dummy_data;
+    const dokanDashboard = ( window as Record< string, unknown > )
+        ?.dokanAdminDashboard as
+        | {
+              urls?: { dummy_data?: string; adminRoot?: string };
+              nonce?: string;
+          }
+        | undefined;
+    const csvFileUrl = dokanDashboard?.urls?.dummy_data;
 
     // initial load
     useEffect( () => {
+        const controller = new AbortController();
+        abortRef.current = controller;
+
         loadImportStatus();
         loadCsvFile();
+
+        return () => {
+            controller.abort();
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [] );
 
     function loadImportStatus() {
         setStatusLoader( true );
-        apiFetch( { path: 'dokan/v1/dummy-data/status', method: 'GET' } )
-            .then( ( response: any ) => {
+        apiFetch< StatusResponse >( {
+            path: 'dokan/v1/dummy-data/status',
+            method: 'GET',
+        } )
+            .then( ( response ) => {
                 if ( response?.import_status === 'yes' ) {
                     setDone( true );
                 }
             } )
-            .catch( ( err: any ) => {
-                // Try to surface error minimally
+            .catch( ( err: Error ) => {
                 toast( {
                     type: 'error',
                     title:
@@ -70,11 +126,11 @@ function Index( props: RouterProps ) {
         apiFetch( { url, parse: false } )
             .then( ( res: Response ) => res.text() )
             .then( ( data: string ) => {
-                const results = parse( data, { header: true } );
-                const rows: any[] = ( results as any )?.data || [];
+                const results = parse< CsvRow >( data, { header: true } );
+                const rows = results?.data || [];
                 loadCsvData( rows );
             } )
-            .catch( ( err: any ) => {
+            .catch( ( err: Error ) => {
                 toast( {
                     type: 'error',
                     title:
@@ -85,25 +141,26 @@ function Index( props: RouterProps ) {
             .finally( () => setLoading( false ) );
     }
 
-    function loadCsvData( rows: any[] ) {
-        const vendors: any[] = [];
-        const products: any[] = [];
+    function loadCsvData( rows: CsvRow[] ) {
+        const vendors: VendorRow[] = [];
+        const products: ProductRow[] = [];
         rows.forEach( ( item ) => {
             if ( item?.type === 'vendor' ) {
-                vendors.push( formatVendorData( { ...item } ) );
+                vendors.push( formatVendorData( { ...item } as VendorRow ) );
             } else {
-                products.push( formatProductData( { ...item } ) );
+                products.push( formatProductData( { ...item } as ProductRow ) );
             }
         } );
         setAllVendors( vendors );
         setAllProducts( products );
     }
 
-    function requestToImport( data: any ) {
-        return apiFetch( {
+    function requestToImport( data: Record< string, unknown > ) {
+        return apiFetch< ImportResponse >( {
             path: 'dokan/v1/dummy-data/import',
             method: 'POST',
             data,
+            signal: abortRef.current?.signal,
         } );
     }
 
@@ -138,7 +195,6 @@ function Index( props: RouterProps ) {
         }
 
         const data = {
-            nonce: ( window as any )?.dokanAdminDashboard?.nonce,
             vendor_data: vendorData,
             vendor_products: getVendorProducts( vendorData.id ),
             vendor_index: vendorIndex,
@@ -147,13 +203,12 @@ function Index( props: RouterProps ) {
 
         setLoading( true );
         requestToImport( data )
-            .then( ( response: any ) => {
+            .then( ( response ) => {
                 const nextIndex = response?.vendor_index ?? vendorIndex + 1;
                 updateProgress( nextIndex );
-                // Continue chaining next
                 handleImport( nextIndex );
             } )
-            .catch( ( err: any ) => {
+            .catch( ( err: Error ) => {
                 toast( {
                     type: 'error',
                     title:
@@ -164,38 +219,42 @@ function Index( props: RouterProps ) {
             } );
     }
 
-    function formatVendorData( data: any ) {
+    function formatVendorData( data: VendorRow ) {
         vendorsDataToRemove.forEach( ( key ) => {
             // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-            delete ( data as any )[ key ];
+            delete data[ key ];
         } );
         return data;
     }
 
-    function formatProductData( data: any ) {
+    function formatProductData( data: ProductRow ) {
         data.raw_attributes = [
             {
-                name: data.attribute_1_name,
-                value: ( data.attribute_1_value || '' ).split( ',' ),
-                visible: data.attribute_1_visible,
-                taxonomy: data.attribute_1_global,
+                name: data.attribute_1_name as string,
+                value: ( ( data.attribute_1_value as string ) || '' ).split(
+                    ','
+                ),
+                visible: data.attribute_1_visible as string,
+                taxonomy: data.attribute_1_global as string,
             },
             {
-                name: data.attribute_2_name,
-                value: ( data.attribute_2_value || '' ).split( ',' ),
-                visible: data.attribute_2_visible,
-                taxonomy: data.attribute_2_global,
+                name: data.attribute_2_name as string,
+                value: ( ( data.attribute_2_value as string ) || '' ).split(
+                    ','
+                ),
+                visible: data.attribute_2_visible as string,
+                taxonomy: data.attribute_2_global as string,
             },
         ];
         data.manage_stock = Boolean( data.manage_stock );
         productsDataToRemove.forEach( ( key ) => {
             // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-            delete ( data as any )[ key ];
+            delete data[ key ];
         } );
         return data;
     }
 
-    function getVendorProducts( vendorId: any ) {
+    function getVendorProducts( vendorId: string ) {
         return allProducts.filter(
             ( item ) => String( item.vendor ) === String( vendorId )
         );
@@ -212,15 +271,21 @@ function Index( props: RouterProps ) {
         apiFetch( {
             path: 'dokan/v1/dummy-data/clear',
             method: 'DELETE',
-            data: { nonce: ( window as any )?.dokanAdminDashboard?.nonce },
         } )
             .then( () => {
                 resetToImport();
-                // reload CSV and status so user can import again
                 loadImportStatus();
                 loadCsvFile();
+
+                toast( {
+                    type: 'success',
+                    title: __(
+                        'All dummy data removed successfully',
+                        'dokan-lite'
+                    ),
+                } );
             } )
-            .catch( ( err: any ) => {
+            .catch( ( err: Error ) => {
                 toast( {
                     type: 'error',
                     title:
@@ -231,14 +296,6 @@ function Index( props: RouterProps ) {
             .finally( () => {
                 setLoading( false );
                 setIsConfirmOpen( false );
-
-                toast( {
-                    type: 'success',
-                    title: __(
-                        'All dummy data remove successfully',
-                        'dokan-lite'
-                    ),
-                } );
             } );
     }
 
@@ -251,7 +308,6 @@ function Index( props: RouterProps ) {
                     progress={ progress }
                     loading={ loading }
                     onRun={ importBtnHandler }
-                    { ...props }
                 />
             );
         }
@@ -260,24 +316,22 @@ function Index( props: RouterProps ) {
             <Result
                 onClear={ clearAllDummyData }
                 loading={ loading }
-                { ...props }
+                navigate={ navigate }
             />
         );
     };
 
     return (
         <div className="w-full md:w-[658px] m-auto">
-            <DokanLink
-                href={
-                    // @ts-ignore
-                    `${ dokanAdminDashboard.urls.adminRoot }admin.php?page=dokan-dashboard#/tools`
-                }
-                className="flex flex-row w-auto items-center gap-1 !text-[#828282] font-[400] text-[14px] hover:!underline mb-[20px]"
+            <button
+                type="button"
+                onClick={ () => navigate( '/tools' ) }
+                className="flex flex-row w-auto items-center gap-1 text-[#828282] font-[400] text-[14px] hover:underline mb-[20px] bg-transparent border-none cursor-pointer"
             >
                 <ChevronLeft size="15" />
                 <span>{ __( 'Back to Tools', 'dokan-lite' ) }</span>
-            </DokanLink>
-            <h2 className="font-bold font-[700] text-[24px] text-[#25252D] mb-[24px]">
+            </button>
+            <h2 className="font-[700] text-[24px] text-[#25252D] mb-[24px]">
                 { __( 'Dummy data', 'dokan-lite' ) }
             </h2>
             <Card className="bg-white rounded-[6px] border border-[#E9E9E9]">

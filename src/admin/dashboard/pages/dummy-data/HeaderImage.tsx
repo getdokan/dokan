@@ -1,4 +1,8 @@
-function HeaderImage( { className = '' } ) {
+interface HeaderImageProps {
+    className?: string;
+}
+
+function HeaderImage( { className = '' }: HeaderImageProps ) {
     return (
         <div className={ className }>
             <svg
