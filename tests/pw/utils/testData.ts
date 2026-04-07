@@ -1190,7 +1190,7 @@ export const data = {
                 badges: 'dashboard/seller-badge',
                 productQa: 'dashboard/product-questions-answers',
                 questionDetails: (questionId: string) => `dashboard/product-questions-answers/?question_id=${questionId}`,
-                returnRequest: 'dashboard/return-request',
+                returnRequest: 'dashboard/new/#/return-request',
                 staff: 'dashboard/staffs',
                 followers: 'dashboard/followers',
                 booking: 'dashboard/booking',
