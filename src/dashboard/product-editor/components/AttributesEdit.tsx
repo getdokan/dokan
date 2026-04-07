@@ -17,7 +17,9 @@ const AttributesEdit = ( { data, field, onChange, validity }: any ) => {
 
     // Drag-and-drop reorder state.
     const dragIndexRef = useRef< number | null >( null );
-    const [ dragOverIndex, setDragOverIndex ] = useState< number | null >( null );
+    const [ dragOverIndex, setDragOverIndex ] = useState< number | null >(
+        null
+    );
 
     const handleDragStart = useCallback( ( index: number ) => {
         dragIndexRef.current = index;
@@ -168,7 +170,7 @@ const AttributesEdit = ( { data, field, onChange, validity }: any ) => {
 
                 { /* Add New Section */ }
                 <div className="flex gap-2 items-center">
-                    <div className="flex-grow">
+                    <div className="grow">
                         <Select
                             options={ addOptions }
                             value={ selectedAttrAdd }
@@ -234,7 +236,7 @@ const AttributesEdit = ( { data, field, onChange, validity }: any ) => {
                     null,
                     data,
                     attributes
-                )}
+                ) }
             </div>
         </CustomField>
     );

@@ -2,7 +2,7 @@ import {
     FormItem,
     VariationType,
 } from '../../dashboard/product-editor/types';
-import { ProductEditorState } from './types';
+import { ProductEditorState, VariationPagination } from './types';
 
 export const selectors = {
     getProduct: (
@@ -33,6 +33,11 @@ export const selectors = {
         state: ProductEditorState,
         productId: number
     ): boolean => !! state.variationsLoading[ productId ],
+
+    getVariationsPagination: (
+        state: ProductEditorState,
+        productId: number
+    ): VariationPagination | undefined => state.variationsPagination[ productId ],
 
     getError: ( state: ProductEditorState ): Error | null => state.error,
 };

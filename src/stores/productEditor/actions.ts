@@ -1,7 +1,7 @@
 import apiFetch from '@wordpress/api-fetch';
 import { FormItem } from '../../dashboard/product-editor/types';
 import { fieldValueForProduct } from '../../dashboard/product-editor/utils';
-import { VariationType } from './types';
+import { VariationType, VariationPagination } from './types';
 
 // Action type constants.
 export const SET_FORM = 'SET_FORM';
@@ -12,6 +12,7 @@ export const REMOVE_FORM = 'REMOVE_FORM';
 export const SET_VARIATIONS = 'SET_VARIATIONS';
 export const SET_VARIATION = 'SET_VARIATION';
 export const SET_VARIATIONS_LOADING = 'SET_VARIATIONS_LOADING';
+export const SET_VARIATIONS_PAGINATION = 'SET_VARIATIONS_PAGINATION';
 
 // Action interfaces.
 interface SetFormAction {
@@ -61,6 +62,12 @@ interface SetVariationsLoadingAction {
     isLoading: boolean;
 }
 
+interface SetVariationsPaginationAction {
+    type: typeof SET_VARIATIONS_PAGINATION;
+    productId: number;
+    pagination: VariationPagination;
+}
+
 export type ActionTypes =
     | SetFormAction
     | UpdateProductAction
@@ -69,7 +76,8 @@ export type ActionTypes =
     | RemoveFormAction
     | SetVariationsAction
     | SetVariationAction
-    | SetVariationsLoadingAction;
+    | SetVariationsLoadingAction
+    | SetVariationsPaginationAction;
 
 export const actions = {
     // Plain action creators.
@@ -138,6 +146,15 @@ export const actions = {
         type: SET_VARIATIONS_LOADING,
         productId,
         isLoading,
+    } ),
+
+    setVariationsPagination: (
+        productId: number,
+        pagination: VariationPagination
+    ): SetVariationsPaginationAction => ( {
+        type: SET_VARIATIONS_PAGINATION,
+        productId,
+        pagination,
     } ),
 
     // Thunk actions for side effects.
@@ -237,14 +254,25 @@ export const actions = {
     },
 
     // Variations thunk actions.
-    fetchVariations: ( productId: number ) => {
+    fetchVariations: ( productId: number, page = 1, perPage = 10 ) => {
         return async ( { dispatch }: { dispatch: any } ) => {
             dispatch( actions.setVariationsLoading( productId, true ) );
             try {
-                const response: any = await apiFetch( {
-                    path: `/dokan/v2/products/${ productId }/variations`,
+                const response = await apiFetch< Response >( {
+                    path: `/dokan/v2/products/${ productId }/variations?per_page=${ perPage }&page=${ page }`,
+                    parse: false,
                 } );
-                dispatch( actions.setVariations( productId, response || [] ) );
+                const variations = await response.json();
+                const totalCount = parseInt( response.headers.get( 'X-WP-Total' ) || '0', 10 );
+                const totalPages = parseInt( response.headers.get( 'X-WP-TotalPages' ) || '1', 10 );
+
+                dispatch( actions.setVariations( productId, variations || [] ) );
+                dispatch( actions.setVariationsPagination( productId, {
+                    totalCount,
+                    totalPages,
+                    currentPage: page,
+                    perPage,
+                } ) );
             } catch ( error ) {
                 dispatch( actions.setError( error as Error ) );
                 throw error;

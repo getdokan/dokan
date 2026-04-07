@@ -510,6 +510,10 @@ class FormSchema {
                 'placeholder'  => '0.00',
                 'visibility'   => true,
                 'visibilities' => $price_visibilities,
+                'requireds'    => [
+                    'simple'   => true,
+                    'external' => true,
+                ],
             ],
             [
                 'id'           => Elements::SALE_PRICE,

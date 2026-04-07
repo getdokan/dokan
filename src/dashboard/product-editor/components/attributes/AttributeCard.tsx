@@ -105,7 +105,7 @@ const AttributeCard = ( {
         <div
             className={ `border rounded bg-white overflow-hidden transition-[border-color,opacity] duration-200 ${
                 isDragOver
-                    ? 'border-blue-400 border-dashed'
+                    ? 'border-primary border-dashed'
                     : ''
             }` }
             draggable={ isDraggable }

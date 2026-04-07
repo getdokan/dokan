@@ -5,5 +5,6 @@ export const DEFAULT_STATE: ProductEditorState = {
     submitting: {},
     variations: {},
     variationsLoading: {},
+    variationsPagination: {},
     error: null,
 };

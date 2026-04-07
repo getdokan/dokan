@@ -10,6 +10,7 @@ import {
     SET_VARIATIONS,
     SET_VARIATION,
     SET_VARIATIONS_LOADING,
+    SET_VARIATIONS_PAGINATION,
 } from './actions';
 
 export const reducer = (
@@ -114,6 +115,15 @@ export const reducer = (
                 variationsLoading: {
                     ...state.variationsLoading,
                     [ action.productId ]: action.isLoading,
+                },
+            };
+
+        case SET_VARIATIONS_PAGINATION:
+            return {
+                ...state,
+                variationsPagination: {
+                    ...state.variationsPagination,
+                    [ action.productId ]: action.pagination,
                 },
             };
 
