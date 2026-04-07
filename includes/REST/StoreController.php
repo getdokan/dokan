@@ -831,8 +831,7 @@ class StoreController extends WP_REST_Controller {
                 'id'         => (int) $item->ID,
                 'author'     => [
                     'id'     => $user->ID,
-                    'name'   => $user->user_login,
-                    'email'  => $user->user_email,
+                    'name'   => $user->display_name,
                     'url'    => $user->user_url,
                     'avatar' => $user_gravatar,
                 ],
@@ -851,7 +850,6 @@ class StoreController extends WP_REST_Controller {
                 'author'     => [
                     'id'     => $item->user_id,
                     'name'   => $item->comment_author,
-                    'email'  => $item->comment_author_email,
                     'url'    => $item->comment_author_url,
                     'avatar' => $comment_author_img_url,
                 ],

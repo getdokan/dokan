@@ -4,6 +4,80 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.3.3',
+        'released' => '2026-03-31',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Manage changelog notification dot visibility for Dokan Lite and Pro based on new version availability.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Add confirmation modal for order status change actions in the vendor dashboard order listing.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Update the Pro Features admin menu color to highlight it with the brand color.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Add the missing alt attribute to the store header banner image on the store listing page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Display a warning message when admin tries to approve a vendor withdrawal request exceeding the available balance.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.3.2',
+        'released' => '2026-03-13',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Prevent unauthenticated access to customer information via the Store Reviews REST API endpoint.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.3.1',
+        'released' => '2026-03-06',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Validate vendor Terms & Conditions settings to prevent saving unexpected or empty content.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Introduce a new filter to allow customization for handling store form validation errors.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Expose structured min and max price fields for variable products in the REST API response.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Add REST API support for managing downloadable product permissions.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Expose vendor earning field in the order REST API response to display earnings data.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Update the Dokan Admin status page with a modernized and dynamic UI layout.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.3.0',
         'released' => '2026-02-19',
         'changes'  => [
