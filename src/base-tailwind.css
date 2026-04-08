@@ -15,6 +15,15 @@
 @plugin "@tailwindcss/typography";
 @plugin "@tailwindcss/forms";
 
+/* Custom utility from plugin-ui — hides scrollbar while keeping scroll */
+@utility no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
 /* ─── theme tokens ─── */
 @theme {
     /* ─── Sidebar background ─── */
