@@ -47,6 +47,10 @@ declare const window: Window & {
     };
 };
 
+// Status helpers use unprefixed values (e.g. 'completed', 'processing') because
+// the REST API returns unprefixed statuses on order items. Tabs and filters use
+// wc-prefixed values (e.g. 'wc-completed') because the API expects that format
+// for filtering queries.
 const getStatusBadgeVariant = ( status: string ) => {
     switch ( status ) {
         case 'completed':
