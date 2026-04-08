@@ -21,6 +21,19 @@ import { ShoppingCart, ChevronDown, Download, Calendar } from 'lucide-react';
 import { useOrders } from './hooks/useOrders';
 import type { OrderItem, OrderFilterState } from './types';
 
+interface CustomerOption {
+    label: string;
+    value: number;
+}
+
+interface DateRangeUpdate {
+    after?: string;
+    afterText?: string;
+    before?: string;
+    beforeText?: string;
+    focusedInput?: string;
+}
+
 declare const window: Window & {
     dokan: {
         urls: {
@@ -124,14 +137,15 @@ function OrderList() {
     const exportFormRef = useRef< HTMLFormElement >( null );
 
     // Date range filter state (picker state vs applied state)
-    const [ after, setAfter ] = useState< any >( '' );
+    const [ after, setAfter ] = useState< string >( '' );
     const [ afterText, setAfterText ] = useState( '' );
-    const [ before, setBefore ] = useState< any >( '' );
+    const [ before, setBefore ] = useState< string >( '' );
     const [ beforeText, setBeforeText ] = useState( '' );
     const [ focusInput, setFocusInput ] = useState< string >( 'startDate' );
 
     // Customer filter state
-    const [ selectedCustomer, setSelectedCustomer ] = useState< any >( null );
+    const [ selectedCustomer, setSelectedCustomer ] =
+        useState< CustomerOption | null >( null );
 
     const [ filterArgs, setFilterArgs ] = useState< OrderFilterState >( {
         page: 1,
@@ -291,7 +305,7 @@ function OrderList() {
         } ) );
     };
 
-    const handleCustomerChange = ( option: any ) => {
+    const handleCustomerChange = ( option: CustomerOption | null ) => {
         setSelectedCustomer( option );
         setFilterArgs( ( prev ) => ( {
             ...prev,
@@ -327,7 +341,7 @@ function OrderList() {
                         before={ before }
                         beforeText={ beforeText }
                         focusedInput={ focusInput }
-                        onUpdate={ ( update: any ) => {
+                        onUpdate={ ( update: DateRangeUpdate ) => {
                             if ( update.after ) {
                                 setAfter( update.after );
                             }
@@ -590,7 +604,7 @@ function OrderList() {
                 }
                 emptyTitle={ __( 'No Order Yet', 'dokan-lite' ) }
                 emptyDescription={ __(
-                    'Your all orders will be listed here',
+                    'All your orders will be listed here',
                     'dokan-lite'
                 ) }
             />

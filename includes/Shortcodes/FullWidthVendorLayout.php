@@ -110,7 +110,7 @@ class FullWidthVendorLayout implements Hookable {
             wp_register_style(
                 $this->script_key,
                 DOKAN_PLUGIN_ASSEST . '/js/vendor-dashboard/layout/index.css',
-                [ 'dokan-react-components' ],
+                [ 'dokan-react-components', 'wc-components' ],
                 $version
             );
 
