@@ -17,7 +17,13 @@ export type Addon = {
     installed: boolean;
 };
 
-const ExtensionIcon = ( { src, alt }: { src: string; alt: string } ) => {
+export const ExtensionIcon = ( {
+    src,
+    alt,
+}: {
+    src: string;
+    alt: string;
+} ) => {
     const [ failed, setFailed ] = useState( false );
 
     if ( failed || ! src ) {
@@ -28,7 +34,7 @@ const ExtensionIcon = ( { src, alt }: { src: string; alt: string } ) => {
         <img
             src={ src }
             alt={ alt }
-            className="w-10 h-10 object-contain"
+            className="w-[60px] h-[60px] rounded-lg object-contain"
             onError={ () => setFailed( true ) }
         />
     );
@@ -106,7 +112,7 @@ const RecommendedAddons = ( { addons }: { addons: Addon[] } ) => {
                 { isInstalling ? (
                     <>
                         <Loader2 size={ 16 } className="animate-spin" />
-                        { __( 'Installing...', 'dokan-lite' ) }
+                        { __( 'Installing…', 'dokan-lite' ) }
                     </>
                 ) : (
                     <>
@@ -126,7 +132,10 @@ const RecommendedAddons = ( { addons }: { addons: Addon[] } ) => {
                     className="flex flex-col bg-white rounded-xl border border-gray-200 overflow-hidden transition-shadow hover:shadow-md"
                 >
                     <div className="px-5 pt-5 pb-3">
-                        <ExtensionIcon src={ addon.image } alt={ addon.title } />
+                        <ExtensionIcon
+                            src={ addon.image }
+                            alt={ addon.title }
+                        />
                     </div>
 
                     <div className="flex flex-col flex-1 px-5 pb-5">
@@ -136,9 +145,7 @@ const RecommendedAddons = ( { addons }: { addons: Addon[] } ) => {
                         <p className="text-[13px] text-gray-500 leading-relaxed mb-5 flex-1">
                             { addon.description }
                         </p>
-                        <div className="mt-auto">
-                            { renderButton( addon ) }
-                        </div>
+                        <div className="mt-auto">{ renderButton( addon ) }</div>
                     </div>
                 </div>
             ) ) }

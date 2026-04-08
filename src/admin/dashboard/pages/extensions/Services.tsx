@@ -1,9 +1,13 @@
 import { __ } from '@wordpress/i18n';
 import { ExternalLink } from 'lucide-react';
 import { DokanButton } from '@dokan/components';
-import PlaceholderIcon from './PlaceholderIcon';
+import { ExtensionIcon } from './RecommendedAddons';
+import getSettings from '../../settings/getSettings';
 
 const Services = () => {
+    const extensionsSettings = getSettings( 'extensions' ) || {};
+    const welabsImage = extensionsSettings?.extensions?.welabs_image || '';
+
     const tags = [
         __( 'WordPress', 'dokan-lite' ),
         __( 'WooCommerce', 'dokan-lite' ),
@@ -15,7 +19,7 @@ const Services = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-5">
             <div className="flex flex-col bg-white rounded-xl border border-gray-200 overflow-hidden transition-shadow hover:shadow-md">
                 <div className="px-5 pt-5 pb-3">
-                    <PlaceholderIcon />
+                    <ExtensionIcon src={ welabsImage } alt="weLabs" />
                 </div>
 
                 <div className="flex flex-col flex-1 px-5 pb-5">

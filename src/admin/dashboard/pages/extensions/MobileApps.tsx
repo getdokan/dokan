@@ -1,7 +1,6 @@
 import { __ } from '@wordpress/i18n';
-import { useState } from '@wordpress/element';
 import { DokanButton } from '@dokan/components';
-import PlaceholderIcon from './PlaceholderIcon';
+import { ExtensionIcon } from './RecommendedAddons';
 
 export type MobileApp = {
     slug: string;
@@ -11,23 +10,6 @@ export type MobileApp = {
     description: string;
     image: string;
     url: string;
-};
-
-const AppIcon = ( { src, alt }: { src: string; alt: string } ) => {
-    const [ failed, setFailed ] = useState( false );
-
-    if ( failed || ! src ) {
-        return <PlaceholderIcon size="lg" />;
-    }
-
-    return (
-        <img
-            src={ src }
-            alt={ alt }
-            className="w-14 h-14 object-contain"
-            onError={ () => setFailed( true ) }
-        />
-    );
 };
 
 const MobileApps = ( { apps }: { apps: MobileApp[] } ) => {
@@ -40,7 +22,10 @@ const MobileApps = ( { apps }: { apps: MobileApp[] } ) => {
                 >
                     { /* Header: icon + name + badge */ }
                     <div className="flex items-center gap-4 px-5 pt-5 pb-3">
-                        <AppIcon src={ app.image } alt={ app.title } />
+                        <ExtensionIcon
+                            src={ app.image }
+                            alt={ app.title }
+                        />
                         <div>
                             <h3 className="text-[15px] font-semibold text-gray-900 mb-0.5">
                                 { app.title }
