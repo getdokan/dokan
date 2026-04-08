@@ -1,13 +1,10 @@
 import { useState, useMemo, useEffect, useCallback } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
-import { __, sprintf } from '@wordpress/i18n';
 import { useToast } from '@getdokan/dokan-ui';
 import apiFetch from '@wordpress/api-fetch';
 import { applyFilters } from '@wordpress/hooks';
 import { Fill } from '@wordpress/components';
-import { Boxes, Package, ExternalLink, LayoutGrid } from 'lucide-react';
-import { Fill } from '@wordpress/components';
-import { Boxes, Package, ExternalLink, LayoutGrid } from 'lucide-react';
+import { Boxes, Package, ExternalLink, LayoutGrid, Plus } from 'lucide-react';
 // @ts-ignore
 // eslint-disable-next-line import/no-unresolved
 import { DataViews, DokanBadge, DokanModal, Select } from '@dokan/components';
@@ -53,54 +50,21 @@ const getStatusLabel = ( status: string ) => {
 const getProductTypeLabel = ( item: ProductItem ) => {
     if ( item.type === 'grouped' ) return __( 'Grouped', 'dokan-lite' );
     if ( item.type === 'external' ) return __( 'External/Affiliate', 'dokan-lite' );
-    if ( item.type === 'external' ) return __( 'External/Affiliate', 'dokan-lite' );
     if ( item.type === 'variable' ) return __( 'Variable', 'dokan-lite' );
-    if ( item.type === 'simple' ) {
-        if ( item.virtual ) return __( 'Virtual', 'dokan-lite' );
-        if ( item.downloadable ) return __( 'Downloadable', 'dokan-lite' );
-        return __( 'Simple', 'dokan-lite' );
-    }
-    // Unknown types: ucfirst the type name
-    return item.type
-        ? item.type.charAt( 0 ).toUpperCase() + item.type.slice( 1 )
-        : __( 'Simple', 'dokan-lite' );
+    return __( 'Simple', 'dokan-lite' );
 };
 
 const ProductTypeIcon = ( { item }: { item: ProductItem } ) => {
     const cls = 'w-5 h-5 text-gray-500';
-    if ( item.type === 'variable' ) return <Boxes className={ cls } />;
     if ( item.type === 'variable' ) return <Boxes className={ cls } />;
     if ( item.type === 'grouped' ) return <LayoutGrid className={ cls } />;
     if ( item.type === 'external' ) return <ExternalLink className={ cls } />;
     return <Package className={ cls } />;
 };
 
-// ── Status options for quick edit ─────────────────────────────────────────────
-const STATUS_OPTIONS = [
-    { value: 'publish', label: __( 'Published', 'dokan-lite' ) },
-    { value: 'draft', label: __( 'Draft', 'dokan-lite' ) },
-    { value: 'pending', label: __( 'Pending Review', 'dokan-lite' ) },
-];
-
 // ── Product type options ──────────────────────────────────────────────────────
 
 const PRODUCT_TYPE_OPTIONS = [
-    {
-        value: 'simple',
-        label: __( 'Simple', 'dokan-lite' ),
-    },
-    {
-        value: 'variable',
-        label: __( 'Variable', 'dokan-lite' ),
-    },
-    {
-        value: 'grouped',
-        label: __( 'Grouped', 'dokan-lite' ),
-    },
-    {
-        value: 'external',
-        label: __( 'External/Affiliate', 'dokan-lite' ),
-    },
     {
         value: 'simple',
         label: __( 'Simple', 'dokan-lite' ),
@@ -143,7 +107,6 @@ const QuickViewModal = ( {
         <DokanModal
             isOpen={ true }
             namespace="product-quick-view"
-            className="max-w-2xl w-full"
             className="max-w-2xl w-full"
             onClose={ onClose }
             onConfirm={ onClose }
@@ -302,8 +265,6 @@ function ProductList() {
     const [ selection, setSelection ] = useState< string[] >( [] );
     const [ quickViewProduct, setQuickViewProduct ] =
         useState< ProductItem | null >( null );
-    const [ quickEditProduct, setQuickEditProduct ] =
-        useState< ProductItem | null >( null );
 
     const [ filterArgs, setFilterArgs ] = useState< ProductFilterState >( {
         page: 1,
@@ -382,36 +343,6 @@ function ProductList() {
         subscriptionInfo !== undefined &&
         ( effectiveRemaining === 0 || ! effectiveCanPost );
 
-    // ── Subscription limits ───────────────────────────────────────────────────
-
-    // Static PHP data: set at page load, used as initial values before the
-    // first fetchStatusCounts() response arrives. Also holds subscription_url
-    // which never changes.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const subscriptionInfo: SubscriptionInfo | undefined = (
-        window as any
-    ).dokanFrontend?.product_listing?.subscription;
-
-    // Fresh values from /dokan/v1/products/summary (PHP authoritative calculation).
-    // Includes ALL product types (auction + normal) — same as PHP's get_published_product_count().
-    // Updated after every action because fetchStatusCounts() calls the summary endpoint.
-    // Falls back to the static PHP data until the first summary response arrives.
-    const effectiveRemaining: true | number | undefined =
-        subscriptionRemaining?.remaining_products ??
-        subscriptionInfo?.remaining_products;
-    const effectiveCanPost: boolean =
-        subscriptionRemaining?.can_post_product ??
-        subscriptionInfo?.can_post_product ??
-        true;
-
-    /**
-     * True when the vendor's subscription pack has been exhausted.
-     * Mirrors PHP: $remaining_product == 0 || ! self::can_post_product()
-     */
-    const subscriptionLimitReached =
-        subscriptionInfo !== undefined &&
-        ( effectiveRemaining === 0 || ! effectiveCanPost );
-
     // ── Fields (columns) ─────────────────────────────────────────────────────
 
     const fields = [
@@ -434,9 +365,18 @@ function ProductList() {
                         ) }
                     </div>
                     <div>
-                        <span className="font-medium text-dokan-link cursor-pointer block">
-                            { item.name }
-                        </span>
+                        { item.edit_url ? (
+                            <a
+                                href={ item.edit_url }
+                                className="font-medium text-dokan-link cursor-pointer block focus:outline-none!"
+                            >
+                                { item.name }
+                            </a>
+                        ) : (
+                            <span className="font-medium text-gray-900 block">
+                                { item.name }
+                            </span>
+                        ) }
                         { item.sku && (
                             <span className="text-xs text-gray-500 block">
                                 { __( 'SKU:', 'dokan-lite' ) } { item.sku }
@@ -457,14 +397,7 @@ function ProductList() {
                 >
                     <ProductTypeIcon item={ item } />
                 </span>
-                <span
-                    title={ getProductTypeLabel( item ) }
-                    className="inline-flex items-center"
-                >
-                    <ProductTypeIcon item={ item } />
-                </span>
             ),
-        },
         },
         {
             id: 'stock',
@@ -516,12 +449,24 @@ function ProductList() {
             id: 'price',
             label: __( 'Price', 'dokan-lite' ),
             enableSorting: false,
-            render: ( { item }: { item: ProductItem } ) =>
-                item.price ? (
-                    <PriceHtml price={ item.price } />
-                ) : (
-                    <span className="text-gray-400">{ '—' }</span>
-                ),
+            render: ( { item }: { item: ProductItem } ) => {
+                if ( ! item.price ) {
+                    return <span className="text-gray-400">{ '—' }</span>;
+                }
+                if ( item.on_sale && item.regular_price && item.sale_price ) {
+                    return (
+                        <div className="flex flex-col">
+                            <span className="line-through text-red-400">
+                                <PriceHtml price={ item.regular_price } />
+                            </span>
+                            <span className="text-green-600 font-medium">
+                                <PriceHtml price={ item.sale_price } />
+                            </span>
+                        </div>
+                    );
+                }
+                return <PriceHtml price={ item.price } />;
+            },
         },
         {
             id: 'earning',
@@ -534,22 +479,6 @@ function ProductList() {
                     <span className="text-gray-400">{ '—' }</span>
                 ),
         },
-    ];
-
-    /**
-     * Filter the product list table fields (columns).
-     * Allows Pro modules and third-party plugins to add, remove, or modify columns.
-     *
-     * @since 4.2.8
-     *
-     * @param {Array}              fields     Default field definitions.
-     * @param {ProductFilterState} filterArgs Current filter state.
-     */
-    const filteredFields = applyFilters(
-        'dokan_product_list_table_fields',
-        fields,
-        filterArgs
-    ) as typeof fields;
     ];
 
     /**
@@ -661,80 +590,9 @@ function ProductList() {
                 <a
                     key="add-product"
                     href={ config.new_product_url }
-                    className="dokan-btn dokan-btn-theme"
+                    className="dokan-btn dokan-btn-theme inline-flex items-center gap-1"
                 >
-                    { __( 'Add new product', 'dokan-lite' ) }
-                </a>
-            );
-        }
-
-        return applyFilters(
-            'dokan_product_list_header_buttons',
-            buttons,
-            config
-        ) as JSX.Element[];
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ effectiveRemaining, effectiveCanPost, subscriptionLimitReached ] );
-
-    // ── Page notices (above heading, injected by Pro modules via filter) ─────────
-
-    const pageNotices = useMemo( () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const base: ProductListingConfig =
-            ( window as any ).dokanFrontend?.product_listing ?? {};
-        // Inject the live remaining count so the subscription module's notice
-        // filter reflects the current state after publish/delete actions.
-        const config: ProductListingConfig =
-            subscriptionInfo && effectiveRemaining !== undefined
-                ? {
-                      ...base,
-                      subscription: {
-                          ...subscriptionInfo,
-                          remaining_products: effectiveRemaining,
-                          can_post_product: effectiveCanPost,
-                      },
-                  }
-                : base;
-        return applyFilters(
-            'dokan_product_list_page_notices',
-            [] as JSX.Element[],
-            config
-        ) as JSX.Element[];
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ effectiveRemaining, effectiveCanPost ] );
-
-    const headerButtons = useMemo( () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const base: ProductListingConfig =
-            ( window as any ).dokanFrontend?.product_listing ?? {};
-        // Inject the live remaining count so Pro filters receive up-to-date data.
-        const config: ProductListingConfig =
-            subscriptionInfo && effectiveRemaining !== undefined
-                ? {
-                      ...base,
-                      subscription: {
-                          ...subscriptionInfo,
-                          remaining_products: effectiveRemaining,
-                          can_post_product: effectiveCanPost,
-                      },
-                  }
-                : base;
-
-        // Mirror PHP: when subscription limit is reached, hide ALL header
-        // action buttons (matches the CSS hide on .dokan-add-product-link).
-        if ( subscriptionLimitReached ) {
-            return [] as JSX.Element[];
-        }
-
-        const buttons: JSX.Element[] = [];
-
-        if ( config.can_add_product && config.new_product_url ) {
-            buttons.push(
-                <a
-                    key="add-product"
-                    href={ config.new_product_url }
-                    className="dokan-btn dokan-btn-theme"
-                >
+                    <Plus size={ 16 } />
                     { __( 'Add new product', 'dokan-lite' ) }
                 </a>
             );
@@ -765,11 +623,6 @@ function ProductList() {
                     value: 'publish',
                     label: __( 'Published', 'dokan-lite' ),
                     count: countMap[ 'publish' ] ?? 0,
-                },
-                {
-                    value: 'pending',
-                    label: __( 'Pending Review', 'dokan-lite' ),
-                    count: countMap[ 'pending' ] ?? 0,
                 },
                 {
                     value: 'pending',
@@ -893,17 +746,6 @@ function ProductList() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
         [ filterFields, filterArgs ]
     );
-    const allFilterFields = useMemo(
-        () =>
-            applyFilters(
-                'dokan_product_list_filter_fields',
-                filterFields,
-                filterArgs,
-                setFilterArgs
-            ) as typeof filterFields,
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-        [ filterFields, filterArgs ]
-    );
 
     // ── Actions ───────────────────────────────────────────────────────────────
 
@@ -928,14 +770,6 @@ function ProductList() {
                     setQuickViewProduct( item );
                 },
             },
-            // Quick edit — editable modal (mirrors the Pro PHP inline edit form)
-            {
-                id: 'quick-edit',
-                label: () => __( 'Quick edit', 'dokan-lite' ),
-                callback: ( [ item ]: ProductItem[] ) => {
-                    setQuickEditProduct( item );
-                },
-            },
             // View in site — opens product permalink in new tab
             {
                 id: 'view-in-site',
@@ -951,14 +785,9 @@ function ProductList() {
             // Delete permanently — single or bulk
             {
                 id: 'delete',
-                label: () => __( 'Delete Permanently', 'dokan-lite' ),
+                label: __( 'Delete Permanently', 'dokan-lite' ),
                 isDestructive: true,
                 supportsBulk: true,
-                confirmTitle: __( 'Delete Product(s)', 'dokan-lite' ),
-                confirmMessage: __(
-                    'Selected product(s) will be permanently deleted. This action cannot be undone.',
-                    'dokan-lite'
-                ),
                 callback: async ( items: ProductItem[] ) => {
                     try {
                         if ( items.length === 1 ) {
@@ -985,32 +814,28 @@ function ProductList() {
                     } catch {
                         toast( {
                             type: 'error',
-                            title: __(
-                                'Failed to delete product(s).',
-                                'dokan-lite'
-                            ),
+                            title:
+                                items.length === 1
+                                    ? __(
+                                          'Failed to delete product.',
+                                          'dokan-lite'
+                                      )
+                                    : __(
+                                          'Failed to delete products.',
+                                          'dokan-lite'
+                                      ),
                         } );
-                    }
-                },
-            },
-            // Bulk: Edit — navigate to PHP products page where Pro bulk edit form is available
-            {
-                id: 'bulk-edit',
-                label: () => __( 'Edit', 'dokan-lite' ),
-                supportsBulk: true,
-                hideFromActionsDropdown: true,
-                callback: () => {
-                    if ( productsUrl ) {
-                        window.location.href = productsUrl;
                     }
                 },
             },
             // Bulk: Publish — publish all selected unpublished products
             {
                 id: 'bulk-publish',
-                label: () => __( 'Publish products', 'dokan-lite' ),
+                label: ( items: ProductItem[] ) =>
+                    items.length > 1
+                        ? __( 'Publish Products', 'dokan-lite' )
+                        : __( 'Publish Product', 'dokan-lite' ),
                 supportsBulk: true,
-                hideFromActionsDropdown: true,
                 isEligible: ( item: ProductItem ) => {
                     if ( item.status === 'publish' ) return false;
                     if (
@@ -1021,50 +846,7 @@ function ProductList() {
                     }
                     return true;
                 },
-                confirmTitle: __( 'Publish Product(s)', 'dokan-lite' ),
-                isEligible: ( item: ProductItem ) => {
-                    if ( item.status === 'publish' ) return false;
-                    if (
-                        subscriptionLimitReached &&
-                        ! [ 'publish', 'pending' ].includes( item.status )
-                    ) {
-                        return false;
-                    }
-                    return true;
-                },
-                confirmTitle: __( 'Publish Product(s)', 'dokan-lite' ),
-                confirmMessage: __(
-                    'Selected product(s) will be published.',
-                    'dokan-lite'
-                ),
                 callback: async ( items: ProductItem[] ) => {
-                    // Enforce subscription limit per-product: only publish as
-                    // many as the vendor's remaining allowance permits.
-                    let toPublish = items;
-                    let skipped = 0;
-
-                    if (
-                        subscriptionInfo &&
-                        effectiveRemaining !== undefined &&
-                        effectiveRemaining !== true
-                    ) {
-                        const remaining = effectiveRemaining as number;
-                        if ( remaining <= 0 ) {
-                            toast( {
-                                type: 'error',
-                                title: __(
-                                    'You have reached your subscription product limit.',
-                                    'dokan'
-                                ),
-                            } );
-                            return;
-                        }
-                        if ( items.length > remaining ) {
-                            toPublish = items.slice( 0, remaining );
-                            skipped = items.length - remaining;
-                        }
-                    }
-
                     // Enforce subscription limit per-product: only publish as
                     // many as the vendor's remaining allowance permits.
                     let toPublish = items;
@@ -1095,7 +877,6 @@ function ProductList() {
                     try {
                         await updateProductsStatus(
                             toPublish.map( ( i ) => i.id ),
-                            toPublish.map( ( i ) => i.id ),
                             'publish'
                         );
 
@@ -1115,34 +896,16 @@ function ProductList() {
                         } else {
                             toast( {
                                 type: 'success',
-                                title: __(
-                                    'Product(s) published successfully.',
-                                    'dokan-lite'
-                                ),
-                            } );
-                        }
-
-
-                        if ( skipped > 0 ) {
-                            toast( {
-                                type: 'warning',
-                                title: sprintf(
-                                    /* translators: 1: published count, 2: skipped count */
-                                    __(
-                                        '%1$d product(s) published. %2$d product(s) could not be published due to your subscription limit.',
-                                        'dokan'
-                                    ),
-                                    toPublish.length,
-                                    skipped
-                                ),
-                            } );
-                        } else {
-                            toast( {
-                                type: 'success',
-                                title: __(
-                                    'Product(s) published successfully.',
-                                    'dokan-lite'
-                                ),
+                                title:
+                                    toPublish.length === 1
+                                        ? __(
+                                              'Product published successfully.',
+                                              'dokan-lite'
+                                          )
+                                        : __(
+                                              'Products published successfully.',
+                                              'dokan-lite'
+                                          ),
                             } );
                         }
 
@@ -1152,10 +915,16 @@ function ProductList() {
                     } catch {
                         toast( {
                             type: 'error',
-                            title: __(
-                                'Failed to publish product(s).',
-                                'dokan-lite'
-                            ),
+                            title:
+                                items.length === 1
+                                    ? __(
+                                          'Failed to publish product.',
+                                          'dokan-lite'
+                                      )
+                                    : __(
+                                          'Failed to publish products.',
+                                          'dokan-lite'
+                                      ),
                         } );
                     }
                 },
@@ -1172,11 +941,28 @@ function ProductList() {
             subscriptionInfo,
             effectiveRemaining,
             subscriptionLimitReached,
-            toast,
-            subscriptionInfo,
-            effectiveRemaining,
-            subscriptionLimitReached,
         ]
+    );
+
+    /**
+     * Filter the product list table actions (row and bulk).
+     * Allows Pro modules and third-party plugins to add, remove, or modify actions.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param {Array}  actions Default action definitions.
+     * @param {Object} context Context with helpers (fetchProducts, fetchStatusCounts, selection, setSelection).
+     */
+    const filteredActions = useMemo(
+        () =>
+            applyFilters( 'dokan_product_list_table_actions', actions, {
+                fetchProducts,
+                fetchStatusCounts,
+                selection,
+                setSelection,
+            } ) as typeof actions,
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [ actions, selection ]
     );
 
     // ── View change ───────────────────────────────────────────────────────────
@@ -1188,6 +974,28 @@ function ProductList() {
             page: newView.page,
             per_page: newView.perPage,
             search: newView.search ?? '',
+        } ) );
+    };
+
+    // ── Filter callbacks ──────────────────────────────────────────────────────
+
+    const onFilterRemove = ( filterId: string ) => {
+        setFilterArgs( ( prev ) => ( {
+            ...prev,
+            [ filterId ]: '',
+            page: 1,
+        } ) );
+    };
+
+    const onFilterReset = () => {
+        setFilterArgs( ( prev ) => ( {
+            ...prev,
+            category: '',
+            type: '',
+            year_month: '',
+            product_brand: '',
+            filter_by_other: '',
+            page: 1,
         } ) );
     };
 
@@ -1214,29 +1022,9 @@ function ProductList() {
                 </Fill>
             ) }
 
-            { /* Inject action buttons into the page header (same row as "Products" heading) */ }
-            { headerButtons.length > 0 && (
-                <Fill name="dokan-header-actions">{ headerButtons }</Fill>
-            ) }
-
-            { /* Page notices — injected ABOVE the page heading via dokan-before-header slot.
-                   Populated by Pro modules (e.g. subscription) via the
-                   dokan_product_list_page_notices JS filter.
-                   col-span-4 makes each notice span the full width of the before-header grid. */ }
-            { pageNotices.length > 0 && (
-                <Fill name="dokan-before-header">
-                    { pageNotices.map( ( notice, i ) => (
-                        <div key={ i } className="col-span-4">
-                            { notice }
-                        </div>
-                    ) ) }
-                </Fill>
-            ) }
-
             <DataViews
                 namespace="dokan-products-data-view"
                 data={ data }
-                fields={ filteredFields }
                 fields={ filteredFields }
                 view={ view }
                 onChangeView={ onViewChange }
@@ -1246,10 +1034,11 @@ function ProductList() {
                 tabs={ tabs }
                 filter={ {
                     fields: allFilterFields,
-                    fields: allFilterFields,
+                    onFilterRemove,
+                    onReset: onFilterReset,
                 } }
                 search={ true }
-                actions={ actions }
+                actions={ filteredActions }
                 selection={ selection }
                 onChangeSelection={ ( ids: string[] ) => setSelection( ids ) }
             />
@@ -1259,6 +1048,14 @@ function ProductList() {
                 product={ quickViewProduct }
                 onClose={ () => setQuickViewProduct( null ) }
             />
+
+            { applyFilters( 'dokan_product_list_after_content', null, {
+                fetchProducts,
+                fetchStatusCounts,
+                selection,
+                setSelection,
+                data,
+            } ) as React.ReactNode }
         </>
     );
 }
