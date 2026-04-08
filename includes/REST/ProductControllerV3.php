@@ -96,6 +96,78 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
     }
 
     /**
+     * Check if the current user can delete the given product.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     *
+     * @return true|WP_Error
+     */
+    public function delete_item_permissions_check( $request ) {
+        if ( ! current_user_can( 'dokan_delete_product' ) ) {
+            return new WP_Error( 'dokan_rest_cannot_delete', __( 'You do not have permission to delete products.', 'dokan-lite' ), [ 'status' => 403 ] );
+        }
+
+        $product_id = $request->get_param( 'id' );
+
+        if ( $product_id && ! dokan_is_product_author( $product_id ) ) {
+            return new WP_Error( 'dokan_rest_cannot_delete', __( 'You do not have permission to delete this product.', 'dokan-lite' ), [ 'status' => 403 ] );
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if the current user has permission for batch operations.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     *
+     * @return true|WP_Error
+     */
+    public function batch_items_permissions_check( $request ) {
+        if ( ! current_user_can( 'dokan_edit_product' ) ) {
+            return new WP_Error( 'dokan_rest_cannot_batch', __( 'You do not have permission to batch update products.', 'dokan-lite' ), [ 'status' => 403 ] );
+        }
+
+        return true;
+    }
+
+    /**
+     * Bulk create, update and delete items.
+     *
+     * Resolves each item's payload through PayloadResolver before delegating
+     * to the parent WC_REST_Controller::batch_items().
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     *
+     * @return array|WP_Error
+     */
+    public function batch_items( $request ) {
+        $body = $request->get_json_params();
+
+        if ( empty( $body ) ) {
+            $body = $request->get_body_params();
+        }
+
+        foreach ( [ 'update', 'create' ] as $key ) {
+            if ( ! empty( $body[ $key ] ) && is_array( $body[ $key ] ) ) {
+                foreach ( $body[ $key ] as $index => $item ) {
+                    $body[ $key ][ $index ] = PayloadResolver::resolve( $item );
+                }
+            }
+        }
+
+        $request->set_body( wp_json_encode( $body ) );
+
+        return parent::batch_items( $request );
+    }
+
+    /**
      * Register the routes for products.
      *
      * @since DOKAN_SINCE
@@ -132,6 +204,19 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
                     'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
                 ],
                 'schema' => [ $this, 'get_item_schema' ],
+            ]
+        );
+
+        register_rest_route(
+            $this->namespace,
+            '/' . $this->rest_base . '/batch',
+            [
+                [
+                    'methods'             => WP_REST_Server::EDITABLE,
+                    'callback'            => [ $this, 'batch_items' ],
+                    'permission_callback' => [ $this, 'batch_items_permissions_check' ],
+                ],
+                'schema' => [ $this, 'get_public_batch_schema' ],
             ]
         );
 

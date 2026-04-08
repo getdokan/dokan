@@ -1,3 +1,4 @@
+import apiFetch from '@wordpress/api-fetch';
 import { Product } from '../../definitions/dokan-product';
 
 export const SET_ITEMS = 'SET_ITEMS';
@@ -34,6 +35,11 @@ export type ActionTypes =
     | SetErrorAction
     | SetLoadingAction;
 
+interface BatchResponse {
+    update?: Array< Record< string, any > >;
+    delete?: Array< Record< string, any > >;
+}
+
 export const actions = {
     setItems: ( items: Record< number, Product > ): SetItemsAction => ( {
         type: SET_ITEMS,
@@ -62,4 +68,67 @@ export const actions = {
         type: SET_LOADING,
         isLoading,
     } ),
+
+    batchUpdateProducts(
+        productIds: number[],
+        data: Record< string, any >
+    ) {
+        return async ( { dispatch }: { dispatch: any } ) => {
+            try {
+                const response = ( await apiFetch( {
+                    path: '/dokan/v3/products/batch',
+                    method: 'POST',
+                    data: {
+                        update: productIds.map( ( id ) => ( {
+                            id,
+                            ...data,
+                        } ) ),
+                    },
+                } ) ) as BatchResponse;
+                return response;
+            } catch ( error ) {
+                dispatch( actions.setError( error as Error ) );
+                throw error;
+            }
+        };
+    },
+
+    batchDeleteProducts( productIds: number[] ) {
+        return async ( { dispatch }: { dispatch: any } ) => {
+            try {
+                const response = ( await apiFetch( {
+                    path: '/dokan/v3/products/batch',
+                    method: 'POST',
+                    data: {
+                        delete: productIds,
+                    },
+                } ) ) as BatchResponse;
+                return response;
+            } catch ( error ) {
+                dispatch( actions.setError( error as Error ) );
+                throw error;
+            }
+        };
+    },
+
+    batchUpdateProductsStatus( productIds: number[], status: string ) {
+        return async ( { dispatch }: { dispatch: any } ) => {
+            try {
+                const response = ( await apiFetch( {
+                    path: '/dokan/v3/products/batch',
+                    method: 'POST',
+                    data: {
+                        update: productIds.map( ( id ) => ( {
+                            id,
+                            status,
+                        } ) ),
+                    },
+                } ) ) as BatchResponse;
+                return response;
+            } catch ( error ) {
+                dispatch( actions.setError( error as Error ) );
+                throw error;
+            }
+        };
+    },
 };

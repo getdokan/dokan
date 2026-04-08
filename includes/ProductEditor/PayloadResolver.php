@@ -25,7 +25,8 @@ class PayloadResolver {
     public static function resolve( array $data ): array {
         $resolver = new static();
 
-        $out = $resolver->resolve_integer_fields( $data );
+        $out = $resolver->resolve_single_select_fields( $data );
+        $out = $resolver->resolve_integer_fields( $out );
         $out = $resolver->resolve_taxonomies( $out );
         $out = $resolver->resolve_images( $out );
         $out = $resolver->resolve_dimensions( $out );
@@ -36,6 +37,44 @@ class PayloadResolver {
         return apply_filters( 'dokan_product_editor_schema_payload', $out );
     }
 
+
+    /**
+     * Unwrap single-element arrays to scalar strings for fields the WC REST API
+     * expects as plain strings (e.g. select variant fields like tax_status).
+     *
+     * The DataForm select component sends values as arrays (e.g. ['taxable']).
+     * WooCommerce product setters expect plain strings.
+     *
+     * @since DOKAN_SINCE
+     */
+    public function resolve_single_select_fields( array $data ): array {
+        $string_fields = [
+            Elements::TAX_STATUS,
+            Elements::TAX_CLASS,
+            Elements::STOCK_STATUS,
+            Elements::BACKORDERS,
+            Elements::CATALOG_VISIBILITY,
+            Elements::STATUS,
+            Elements::SHIPPING_CLASS,
+        ];
+
+        /**
+         * Filter the list of fields that should be unwrapped from single-element arrays to strings.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param string[] $string_fields List of field IDs.
+         */
+        $string_fields = apply_filters( 'dokan_product_editor_single_select_fields', $string_fields );
+
+        foreach ( $string_fields as $key ) {
+            if ( isset( $data[ $key ] ) && is_array( $data[ $key ] ) && count( $data[ $key ] ) === 1 ) {
+                $data[ $key ] = (string) reset( $data[ $key ] );
+            }
+        }
+
+        return $data;
+    }
 
     /**
      * Cast numeric string fields to integers for the WC REST API.
