@@ -156,13 +156,14 @@ class Hooks {
         $is_image_configured = $is_enabled && $manager->is_configured( Model::SUPPORTS_IMAGE );
 
         $args = [
-            'form_items'         => dokan()->product_editor->get_schema( $product_id ),
-            'form_layouts'       => FormSchema::get_layouts(),
-            'product_id'         => $product_id,
-            'is_new_product'     => $new_product,
-            'view_product_url'   => get_permalink( $product_id ),
-            'vendor_earning'     => $vendor_earning,
-            'ai_settings'        => [
+            'form_items'             => dokan()->product_editor->get_schema( $product_id ),
+            'form_layouts'           => FormSchema::get_layouts(),
+            'product_id'             => $product_id,
+            'is_new_product'         => $new_product,
+            'view_product_url'       => get_permalink( $product_id ),
+            'vendor_earning'         => $vendor_earning,
+            'can_add_new_attribute'  => dokan_get_option( 'add_new_attribute', 'dokan_selling', 'off' ) === 'on',
+            'ai_settings'            => [
                 'ai_text_enable'    => $manager->is_configured(),
                 'ai_image_enable'   => $is_image_configured,
             ],

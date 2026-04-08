@@ -19,6 +19,7 @@ interface ProductEditorData {
     product_id: string;
     view_product_url: string;
     vendor_earning: number;
+    can_add_new_attribute: boolean;
     ai_settings: {
         ai_text_enable: boolean;
         ai_image_enable: boolean;

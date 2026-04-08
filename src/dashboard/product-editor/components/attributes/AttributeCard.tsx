@@ -3,7 +3,8 @@ import {
     SimpleInput,
     TaggableSelect,
 } from '@getdokan/dokan-ui';
-import { DokanButton, Select } from '@src/components';
+import { DokanButton, DokanModal, Select } from '@src/components';
+import apiFetch from '@wordpress/api-fetch';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { GripVertical } from 'lucide-react';
@@ -42,6 +43,12 @@ const AttributeCard = ( {
 }: AttributeCardProps ) => {
     const [ isExpanded, setIsExpanded ] = useState( cardExpanded );
     const [ isDraggable, setIsDraggable ] = useState( false );
+    const [ isAddTermModalOpen, setIsAddTermModalOpen ] = useState( false );
+    const [ newTermName, setNewTermName ] = useState( '' );
+    const [ isAddingTerm, setIsAddingTerm ] = useState( false );
+
+    // @ts-ignore
+    const canAddNewAttribute = Boolean( window.dokanProductEditor?.can_add_new_attribute );
 
     const handleAttributeChange = ( key: keyof Attribute, value: any ) => {
         onUpdate( {
@@ -99,6 +106,36 @@ const AttributeCard = ( {
 
     const handleSelectNone = () => {
         attributeChangeHandler( [] );
+    };
+
+    const handleAddNewTerm = async () => {
+        if ( ! newTermName.trim() || ! attr.is_taxonomy ) {
+            return;
+        }
+
+        setIsAddingTerm( true );
+        try {
+            const response: any = await apiFetch( {
+                path: `/dokan/v1/products/attributes/${ attr.id }/terms`,
+                method: 'POST',
+                data: { name: newTermName.trim() },
+            } );
+
+            const newTerm = {
+                value: response.id,
+                label: response.name,
+            };
+
+            const currentValues = attributeValues( attr );
+            attributeChangeHandler( [ ...currentValues, newTerm ] );
+
+            setNewTermName( '' );
+            setIsAddTermModalOpen( false );
+        } catch {
+            // Term creation failed silently
+        } finally {
+            setIsAddingTerm( false );
+        }
     };
 
     return (
@@ -211,7 +248,7 @@ const AttributeCard = ( {
                             <>
                                 <Select
                                     isMulti
-                                    value={ attributeValues( attr ) }
+                                    value={ attr.terms ?? attributeValues( attr ) }
                                     options={ attributeOptions( attr.id ) }
                                     onChange={ ( selected ) =>
                                         attributeChangeHandler( selected )
@@ -236,7 +273,81 @@ const AttributeCard = ( {
                                     >
                                         { __( 'Select none', 'dokan-lite' ) }
                                     </DokanButton>
+                                    { canAddNewAttribute && (
+                                        <DokanButton
+                                            type="button"
+                                            variant="secondary"
+                                            onClick={ () =>
+                                                setIsAddTermModalOpen(
+                                                    true
+                                                )
+                                            }
+                                        >
+                                            { __(
+                                                'Add New',
+                                                'dokan-lite'
+                                            ) }
+                                        </DokanButton>
+                                    ) }
                                 </div>
+
+                                { canAddNewAttribute && (
+                                    <DokanModal
+                                        isOpen={ isAddTermModalOpen }
+                                        namespace="add-attribute-term"
+                                        dialogTitle={ __(
+                                            'Add New Term',
+                                            'dokan-lite'
+                                        ) }
+                                        onClose={ () => {
+                                            setIsAddTermModalOpen(
+                                                false
+                                            );
+                                            setNewTermName( '' );
+                                        } }
+                                        onConfirm={ handleAddNewTerm }
+                                        loading={ isAddingTerm }
+                                        confirmButtonDisabled={
+                                            ! newTermName.trim()
+                                        }
+                                        dialogContent={
+                                            <div>
+                                                { /* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
+                                                <label
+                                                    htmlFor={ `dokan-new-term-${ attr.id }` }
+                                                    className="block text-sm font-medium text-gray-700 mb-1"
+                                                >
+                                                    { __(
+                                                        'Term Name',
+                                                        'dokan-lite'
+                                                    ) }
+                                                </label>
+                                                <SimpleInput
+                                                    value={
+                                                        newTermName
+                                                    }
+                                                    onChange={ ( e ) =>
+                                                        setNewTermName(
+                                                            e.target
+                                                                .value
+                                                        )
+                                                    }
+                                                    className="w-full px-3 py-2 border rounded text-sm"
+                                                    input={ {
+                                                        id: `dokan-new-term-${ attr.id }`,
+                                                        placeholder:
+                                                            __(
+                                                                'Enter term name',
+                                                                'dokan-lite'
+                                                            ),
+                                                        autoFocus:
+                                                            true,
+                                                    } }
+                                                />
+                                            </div>
+                                        }
+                                    />
+                                ) }
                             </>
                         ) : (
                             <TaggableSelect
