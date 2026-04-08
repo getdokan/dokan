@@ -7,10 +7,6 @@ use WeDevs\Dokan\Utilities\AdminSettings;
 use WP_Error;
 use WeDevs\Dokan\Exceptions\DokanException;
 use WeDevs\Dokan\Traits\AjaxResponseError;
-use WeDevs\Dokan\Traits\SettingsRecursion;
-use WeDevs\Dokan\Admin\Settings\LegacyTransformer;
-use WeDevs\Dokan\Admin\Settings\Settings as NewAdminSettingsManager;
-use WeDevs\Dokan\Admin\Settings\SettingsMapper;
 
 /**
  * Admin Settings Class
@@ -22,7 +18,6 @@ use WeDevs\Dokan\Admin\Settings\SettingsMapper;
 class Settings {
 
     use AjaxResponseError;
-    use SettingsRecursion;
 
     /**
      * Load automatically when class initiate
@@ -129,21 +124,8 @@ class Settings {
 
         $settings = [];
 
-        // Ensure new settings are populated from legacy if currently blank
-        //$this->ensure_new_settings_populated_from_legacy();
-
-        // Build legacy-style values from the new settings storage.
-        $legacy_from_new = $this->get_legacy_values_from_new();
-
         foreach ( $this->get_settings_sections() as $key => $section ) {
-            $legacy_option_id = $section['id'];
-            $old_stored       = $this->sanitize_options( get_option( $legacy_option_id, [] ), 'read' );
-            $new_mapped       = isset( $legacy_from_new[ $legacy_option_id ] ) && is_array( $legacy_from_new[ $legacy_option_id ] ) ? $legacy_from_new[ $legacy_option_id ] : [];
-
-            // Prefer new mapped values and fall back to existing legacy options for unmapped fields.
-            $merged = array_replace_recursive( $old_stored, $new_mapped );
-
-            $settings[ $legacy_option_id ] = apply_filters( 'dokan_get_settings_values', $merged, $legacy_option_id );
+            $settings[ $section['id'] ] = apply_filters( 'dokan_get_settings_values', $this->sanitize_options( get_option( $section['id'], [] ), 'read' ), $section['id'] );
         }
 
         $new_seller_enable_selling_statuses = isset( $settings['dokan_selling']['new_seller_enable_selling'] ) ? $settings['dokan_selling']['new_seller_enable_selling'] : 'automatically';
@@ -186,60 +168,13 @@ class Settings {
             }
             $option_value = $this->sanitize_options( wp_unslash( $_POST['settingsData'] ), 'edit' ); // phpcs:ignore
             $option_value = apply_filters( 'dokan_save_settings_value', $option_value, $option_name );
-
-            // Build current legacy-style options from new storage for accurate before/after comparisons.
-            $legacy_from_new_all = $this->get_legacy_values_from_new();
-            $old_options  = isset( $legacy_from_new_all[ $option_name ] ) && is_array( $legacy_from_new_all[ $option_name ] ) ? $legacy_from_new_all[ $option_name ] : get_option( $option_name, [] );
+            $old_options  = get_option( $option_name, [] );
 
             /**
              * @since 3.5.1 added $old_options parameter
              */
             do_action( 'dokan_before_saving_settings', $option_name, $option_value, $old_options );
 
-            // Transform legacy section values to new settings storage and save
-            $transformer = new LegacyTransformer();
-            $new_data    = $transformer->transform(
-                [
-					'from' => 'old',
-					'data' => [ $option_name => $option_value ],
-				]
-            );
-
-            if ( ! empty( $new_data ) ) {
-                /** @var NewAdminSettingsManager $settings_manager */
-                $settings_manager = dokan_get_container()->get( NewAdminSettingsManager::class );
-
-                array_walk(
-                    $new_data,
-                    function ( &$fields, $page_id ) {
-                        if ( ! is_array( $fields ) ) {
-                            return;
-                        }
-
-                        $existing = get_option( 'dokan_settings_' . $page_id, [] );
-
-                        if ( ! is_array( $existing ) ) {
-                            $existing = [];
-                        }
-
-                        $fields = $this->settings_recursive_replace( $existing, $fields );
-                    }
-                );
-
-                $settings_manager->save( $new_data, false );
-
-                // Fallback: if pages are not registered/available, write directly to new storage options
-                $available_ids = [];
-                foreach ( $settings_manager->get_pages() as $p ) {
-                    $available_ids[] = $p->get_id();
-                }
-                foreach ( $new_data as $page_id => $page_values ) {
-                    if ( ! in_array( $page_id, $available_ids, true ) ) {
-                        update_option( 'dokan_settings_' . $page_id, $page_values );
-                    }
-                }
-            }
-            // Always persist the legacy option as well for backward compatibility
             update_option( $option_name, $option_value );
 
             /**
@@ -947,42 +882,6 @@ class Settings {
                         ],
                     ],
                 ],
-                'recaptcha_validation_label' => [
-                    'name'                 => 'recaptcha_validation_label',
-                    'type'                 => 'social',
-                    'desc'                 => sprintf(
-                    /* translators: 1) Opening anchor tag, 2) Closing anchor tag, 3) Opening anchor tag, 4) Closing anchor tag */
-                        __( '%1$sreCAPTCHA_v3%2$s credentials required to enable invisible captcha for contact forms. %3$sGet Help%4$s', 'dokan-lite' ),
-                        '<a href="https://developers.google.com/recaptcha/docs/v3" target="_blank" rel="noopener noreferrer">',
-                        '</a>',
-                        '<a href="https://wedevs.com/docs/dokan/settings/dokan-recaptacha-v3-integration" target="_blank" rel="noopener noreferrer">',
-                        '</a>'
-                    ),
-                    'label'                => __( 'Google reCAPTCHA Validation', 'dokan-lite' ),
-                    'icon_url'             => DOKAN_PLUGIN_ASSEST . '/images/google.svg',
-                    'social_desc'          => __( 'You can successfully connect to your Google reCaptcha account from here.', 'dokan-lite' ),
-                    'enable_status'        => [
-                        'name'    => 'recaptcha_enable_status',
-                        'default' => 'on',
-                    ],
-                    'recaptcha_site_key'   => [
-                        'name'         => 'recaptcha_site_key',
-                        'type'         => 'text',
-                        'label'        => __( 'Site Key', 'dokan-lite' ),
-                        'tooltip'      => __( 'Insert Google reCAPTCHA v3 site key.', 'dokan-lite' ),
-                        'social_field' => true,
-                        'is_lite'      => true,
-                    ],
-                    'recaptcha_secret_key' => [
-                        'name'         => 'recaptcha_secret_key',
-                        'label'        => __( 'Secret Key', 'dokan-lite' ),
-                        'type'         => 'text',
-                        'tooltip'      => __( 'Insert Google reCAPTCHA v3 secret key.', 'dokan-lite' ),
-                        'social_field' => true,
-                        'is_lite'      => true,
-                    ],
-                    'is_lite'      => true,
-                ],
                 'contact_seller'             => [
                     'name'    => 'contact_seller',
                     'label'   => __( 'Show Contact Form on Store Page', 'dokan-lite' ),
@@ -1268,113 +1167,6 @@ class Settings {
         }
 
         return $value;
-    }
-
-    /**
-     * Get values from the new settings storage across all pages.
-     *
-     * @since 4.0.0
-     *
-     * @return array
-     */
-    protected function get_new_pages_values(): array {
-        try {
-            /** @var NewAdminSettingsManager $manager */
-            $manager = dokan_get_container()->get( NewAdminSettingsManager::class );
-        } catch ( \Exception $e ) {
-            return [];
-        }
-
-        $values = [];
-        foreach ( $manager->get_pages() as $page ) {
-            try {
-                $values[ $page->get_id() ] = $page->hydrate_data()->get_value();
-            } catch ( \Exception $e ) {
-                $values[ $page->get_id() ] = [];
-            }
-        }
-
-        return $values;
-    }
-
-    /**
-     * Get legacy-style values array (section => [field=>value]) from new storage.
-     *
-     * @since 4.0.0
-     *
-     * @return array
-     */
-    protected function get_legacy_values_from_new(): array {
-        $transformer = new LegacyTransformer();
-        return $transformer->transform(
-            [
-                'from' => 'new',
-                'data' => $this->get_new_pages_values(),
-            ]
-        );
-    }
-
-    /**
-     * Ensure the new settings storage is populated from legacy options for any missing/blank mapped keys.
-     *
-     * Once populated, subsequent reads will use the new settings only.
-     *
-     * @since 4.0.0
-     */
-    protected function ensure_new_settings_populated_from_legacy(): void {
-        try {
-            /** @var NewAdminSettingsManager $manager */
-            $manager = dokan_get_container()->get( NewAdminSettingsManager::class );
-        } catch ( \Exception $e ) {
-            return;
-        }
-
-        $current_pages_values = $this->get_new_pages_values();
-        $mapper               = new SettingsMapper();
-        $to_save              = [];
-
-        foreach ( $mapper->get_map() as $old_key => $new_key ) {
-            // Skip invalid mapping entries
-            if ( empty( $old_key ) || empty( $new_key ) || false === strpos( $old_key, '.' ) ) {
-                continue;
-            }
-
-            // If a new value already exists and is not blank, do not overwrite it
-            $existing = SettingsMapper::get_value_by_path( $current_pages_values, $new_key, null );
-            if ( null !== $existing && '' !== $existing ) {
-                continue;
-            }
-
-            list( $legacy_section, $legacy_field ) = explode( '.', $old_key, 2 );
-            $legacy_values = get_option( $legacy_section, [] );
-            if ( ! is_array( $legacy_values ) ) {
-                continue;
-            }
-
-            if ( array_key_exists( $legacy_field, $legacy_values ) ) {
-                $val = $legacy_values[ $legacy_field ];
-                // Only migrate non-null and non-empty-string values
-                if ( null !== $val && '' !== $val ) {
-                    SettingsMapper::set_value_by_path( $to_save, $new_key, $val );
-                }
-            }
-        }
-
-        if ( ! empty( $to_save ) ) {
-            // Store with page wrapper for backward-compatibility so raw option reads can use `general.*` paths.
-            foreach ( $to_save as $page_id => $page_values ) {
-                // Derive storage key pattern: dokan_settings_<pageId>
-                $storage_key = 'dokan_settings_' . $page_id;
-                $existing    = get_option( $storage_key, [] );
-                if ( ! is_array( $existing ) ) {
-                    $existing = [];
-                }
-                $wrapped = [ $page_id => $page_values ];
-                // Merge so we don't drop any pre-existing values.
-                $merged = array_replace_recursive( $existing, $wrapped );
-                update_option( $storage_key, $merged );
-            }
-        }
     }
 
     /**

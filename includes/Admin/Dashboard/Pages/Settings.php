@@ -2,28 +2,12 @@
 
 namespace WeDevs\Dokan\Admin\Dashboard\Pages;
 
-use WeDevs\Dokan\Admin\Settings\Settings as AdminSettingsProvider;
-
 /**
  * The settings page class.
  *
  * @since DOKAN_SINCE
  */
 class Settings extends AbstractPage {
-
-    /**
-     * @var AdminSettingsProvider $settings_provider Admin setup guide instance.
-     */
-    protected AdminSettingsProvider $settings_provider;
-
-    /**
-     * SetupGuide constructor.
-     *
-     * @param AdminSettingsProvider $admin_setup_guide Admin setup guide instance.
-     */
-    public function __construct( AdminSettingsProvider $admin_setup_guide ) {
-        $this->settings_provider = $admin_setup_guide;
-    }
 
 	/**
 	 * @inheritDoc
@@ -50,27 +34,27 @@ class Settings extends AbstractPage {
 	 * @inheritDoc
 	 */
 	public function settings(): array {
-		return $this->settings_provider->settings();
+		return [];
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function scripts(): array {
-        return $this->settings_provider->scripts();
+        return [];
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function styles(): array {
-		return $this->settings_provider->styles();
+		return [];
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function register(): void {
-        $this->settings_provider->register();
+        // Settings are now handled by the REST API and plugin-ui frontend.
 	}
 }
