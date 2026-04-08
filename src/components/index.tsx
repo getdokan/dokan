@@ -32,6 +32,7 @@ export { default as DateTimePicker } from './DateTimePicker';
 export { default as DokanTab } from './Tab';
 export { default as NoInformation } from './NoInformation';
 export { default as AdminTab } from './AdminTab';
+export { default as PageHeading } from '../admin/dashboard/pages/settings/Elements/PageHeading';
 export { default as Popover } from './Popover';
 export { default as RichText } from './richtext/RichText';
 export { default as AsyncSelect } from './AsyncSelect';
