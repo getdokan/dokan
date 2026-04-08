@@ -4,6 +4,36 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 4.3.3',
+        'released' => '2026-03-31',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Manage changelog notification dot visibility for Dokan Lite and Pro based on new version availability.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Add confirmation modal for order status change actions in the vendor dashboard order listing.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Update the Pro Features admin menu color to highlight it with the brand color.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Add the missing alt attribute to the store header banner image on the store listing page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Display a warning message when admin tries to approve a vendor withdrawal request exceeding the available balance.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.3.2',
         'released' => '2026-03-13',
         'changes'  => [

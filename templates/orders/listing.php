@@ -138,19 +138,21 @@ if ( $user_orders ) {
                             if ( dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) === 'on' ) {
                                 if ( in_array( $order->get_status(), [ 'pending', 'on-hold' ], true ) ) {
                                     $actions['processing'] = [
-                                        'url'    => wp_nonce_url( admin_url( 'admin-ajax.php?action=dokan-mark-order-processing&order_id=' . $order->get_id() ), 'dokan-mark-order-processing' ),
-                                        'name'   => __( 'Processing', 'dokan-lite' ),
-                                        'action' => 'processing',
-                                        'icon'   => '<i class="far fa-clock">&nbsp;</i>',
+                                        'url'             => wp_nonce_url( admin_url( 'admin-ajax.php?action=dokan-mark-order-processing&order_id=' . $order->get_id() ), 'dokan-mark-order-processing' ),
+                                        'name'            => __( 'Processing', 'dokan-lite' ),
+                                        'action'          => 'processing',
+                                        'icon'            => '<i class="far fa-clock">&nbsp;</i>',
+                                        'confirm_message' => __( 'Are you sure you want to mark this order as processing?', 'dokan-lite' ),
                                     ];
                                 }
 
                                 if ( in_array( $order->get_status(), [ 'pending', 'on-hold', 'processing' ], true ) ) {
                                     $actions['complete'] = [
-                                        'url'    => wp_nonce_url( admin_url( 'admin-ajax.php?action=dokan-mark-order-complete&order_id=' . $order->get_id() ), 'dokan-mark-order-complete' ),
-                                        'name'   => __( 'Complete', 'dokan-lite' ),
-                                        'action' => 'complete',
-                                        'icon'   => '<i class="fas fa-check">&nbsp;</i>',
+                                        'url'             => wp_nonce_url( admin_url( 'admin-ajax.php?action=dokan-mark-order-complete&order_id=' . $order->get_id() ), 'dokan-mark-order-complete' ),
+                                        'name'            => __( 'Complete', 'dokan-lite' ),
+                                        'action'          => 'complete',
+                                        'icon'            => '<i class="fas fa-check">&nbsp;</i>',
+                                        'confirm_message' => __( 'Are you sure you want to mark this order as completed?', 'dokan-lite' ),
                                     ];
                                 }
                             }
@@ -164,9 +166,20 @@ if ( $user_orders ) {
 
                             $actions = apply_filters( 'woocommerce_admin_order_actions', $actions, $order );
 
-                            foreach ( $actions as $action ) { // phpcs:ignore
-                                $icon = ( isset( $action['icon'] ) ) ? $action['icon'] : '';
-                                printf( '<a class="dokan-btn dokan-btn-default dokan-btn-sm tips" href="%s" data-toggle="tooltip" data-placement="top" title="%s">%s</a> ', esc_url( $action['url'] ), esc_attr( $action['name'] ), wp_kses_post( $icon ) );
+                            foreach ( $actions as $action_item ) {
+                                $icon = isset( $action_item['icon'] ) ? $action_item['icon'] : '';
+                                printf(
+                                    '<a class="dokan-btn dokan-btn-default dokan-btn-sm dokan-btn-action-confirm tips" 
+                                        href="%s" 
+                                        data-confirm-message="%s"
+                                        data-toggle="tooltip" 
+                                        data-placement="top" 
+                                        title="%s">%s</a> ',
+                                    esc_url( $action_item['url'] ),
+                                    esc_attr( $action_item['confirm_message'] ?? '' ),
+                                    esc_attr( $action_item['name'] ),
+                                    wp_kses_post( $icon )
+                                );
                             }
 
                             do_action( 'woocommerce_admin_order_actions_end', $order );
