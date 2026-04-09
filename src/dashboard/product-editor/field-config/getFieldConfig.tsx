@@ -114,7 +114,11 @@ export const getFieldConfig = ( field: FormItem ) => {
 
     if ( field.description ) {
         mappedField.description = (
-            <span>{ decodeEntities( field.description as string ) }</span>
+            <span
+                dangerouslySetInnerHTML={ {
+                    __html: field.description as string,
+                } }
+            />
         );
     }
 

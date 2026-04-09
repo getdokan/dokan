@@ -19,6 +19,9 @@ export { default as useLayouts } from './hooks/useLayouts';
 // Field config
 export { getFieldConfigFrom, getFieldConfig } from './field-config';
 
+// Components
+export { default as CustomField, getValidationError } from './components/CustomField';
+
 // Utils
 export {
     getField,

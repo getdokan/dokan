@@ -79,6 +79,11 @@ export type ActionTypes =
     | SetVariationsLoadingAction
     | SetVariationsPaginationAction;
 
+interface BatchResponse {
+    update?: Array< Record< string, any > >;
+    delete?: Array< Record< string, any > >;
+}
+
 export const actions = {
     // Plain action creators.
     setForm: (
@@ -212,6 +217,66 @@ export const actions = {
         };
     },
 
+    batchUpdateProducts( productIds: number[], data: Record< string, any > ) {
+        return async ( { dispatch }: { dispatch: any } ) => {
+            try {
+                const response = ( await apiFetch( {
+                    path: '/dokan/v3/products/batch',
+                    method: 'POST',
+                    data: {
+                        update: productIds.map( ( id ) => ( {
+                            id,
+                            ...data,
+                        } ) ),
+                    },
+                } ) ) as BatchResponse;
+                return response;
+            } catch ( error ) {
+                dispatch( actions.setError( error as Error ) );
+                throw error;
+            }
+        };
+    },
+
+    batchDeleteProducts( productIds: number[] ) {
+        return async ( { dispatch }: { dispatch: any } ) => {
+            try {
+                const response = ( await apiFetch( {
+                    path: '/dokan/v3/products/batch',
+                    method: 'POST',
+                    data: {
+                        delete: productIds,
+                    },
+                } ) ) as BatchResponse;
+                return response;
+            } catch ( error ) {
+                dispatch( actions.setError( error as Error ) );
+                throw error;
+            }
+        };
+    },
+
+    batchUpdateProductsStatus( productIds: number[], status: string ) {
+        return async ( { dispatch }: { dispatch: any } ) => {
+            try {
+                const response = ( await apiFetch( {
+                    path: '/dokan/v3/products/batch',
+                    method: 'POST',
+                    data: {
+                        update: productIds.map( ( id ) => ( {
+                            id,
+                            status,
+                        } ) ),
+                    },
+                } ) ) as BatchResponse;
+                return response;
+            } catch ( error ) {
+                dispatch( actions.setError( error as Error ) );
+                throw error;
+            }
+        };
+    },
+
     // Re-fetch a single variation's form fields and update the store.
     fetchVariationForm: ( variationId: number ) => {
         return async ( { dispatch }: { dispatch: any } ) => {
@@ -260,19 +325,30 @@ export const actions = {
             try {
                 const response = await apiFetch< Response >( {
                     path: `/dokan/v2/products/${ productId }/variations?per_page=${ perPage }&page=${ page }`,
+                    // @ts-ignore
                     parse: false,
                 } );
                 const variations = await response.json();
-                const totalCount = parseInt( response.headers.get( 'X-WP-Total' ) || '0', 10 );
-                const totalPages = parseInt( response.headers.get( 'X-WP-TotalPages' ) || '1', 10 );
+                const totalCount = parseInt(
+                    response.headers.get( 'X-WP-Total' ) || '0',
+                    10
+                );
+                const totalPages = parseInt(
+                    response.headers.get( 'X-WP-TotalPages' ) || '1',
+                    10
+                );
 
-                dispatch( actions.setVariations( productId, variations || [] ) );
-                dispatch( actions.setVariationsPagination( productId, {
-                    totalCount,
-                    totalPages,
-                    currentPage: page,
-                    perPage,
-                } ) );
+                dispatch(
+                    actions.setVariations( productId, variations || [] )
+                );
+                dispatch(
+                    actions.setVariationsPagination( productId, {
+                        totalCount,
+                        totalPages,
+                        currentPage: page,
+                        perPage,
+                    } )
+                );
             } catch ( error ) {
                 dispatch( actions.setError( error as Error ) );
                 throw error;
@@ -415,10 +491,7 @@ export const actions = {
         };
     },
 
-    reorderVariations: (
-        productId: number,
-        variations: VariationType[]
-    ) => {
+    reorderVariations: ( productId: number, variations: VariationType[] ) => {
         return async ( { dispatch }: { dispatch: any } ) => {
             // Update the store immediately for instant UI feedback.
             dispatch( actions.setVariations( productId, variations ) );

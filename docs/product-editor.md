@@ -419,7 +419,7 @@ The `buildLayoutTree()` utility in `utils.tsx` converts the flat PHP array into 
 
 ### Variation Layout Customization
 
-Variation forms use a separate layout system defined in `WeDevs\DokanPro\Modules\ProductEditor\FormSchema::get_variation_layouts()`. It follows the same flat-array format as the main product layout but is passed to the frontend as `variation_form_layouts` via the `dokan_product_editor_localize_data` filter.
+Variation forms use a separate layout system defined in `WeDevs\DokanPro\Modules\ProductEditor\FormSchema::get_variation_layouts()`. It follows the same flat-array format as the main product layout but is passed to the frontend as `variation_form_layouts` via the `dokan_product_editor_init_fields` filter.
 
 #### Built-in variation layout structure
 

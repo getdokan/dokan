@@ -367,11 +367,6 @@ class Assets {
                 'deps'    => [ 'wp-components', 'dokan-tailwind' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/components.css' ),
             ],
-            'dokan-product-editor' => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/js/product-editor.css',
-                'deps'    => [ 'wp-components' ],
-                'version' => filemtime( DOKAN_DIR . '/assets/js/product-editor.css' ),
-            ],
         ];
 
         return $styles;
@@ -710,15 +705,6 @@ class Assets {
                 'version' => $utils_asset['version'],
                 'src'     => $asset_url . '/js/product-editor-utils.js',
                 'deps'    => $utils_asset['dependencies'],
-            ];
-        }
-        $product_editor_manager = DOKAN_DIR . '/assets/js/product-editor.asset.php';
-        if ( file_exists( $product_editor_manager ) ) {
-            $editor_asset = require $product_editor_manager;
-            $scripts['dokan-product-editor'] = [
-                'version' => $editor_asset['version'],
-                'src'     => $asset_url . '/js/product-editor.js',
-                'deps'    => array_merge( $editor_asset['dependencies'], [ 'dokan-react-components', 'dokan-stores-product-editor' ] ),
             ];
         }
 

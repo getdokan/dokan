@@ -93,6 +93,15 @@ const CustomField = ( {
             </div>
             { /* onBlur bubbles from child inputs to mark the field as touched */ }
             <div onBlur={ handleBlur }>{ children }</div>
+            { field.description && (
+                <div className="dokan-form-field-description">
+                    { typeof field.description === 'string' ? (
+                        <RawHTML>{ field.description }</RawHTML>
+                    ) : (
+                        field.description
+                    ) }
+                </div>
+            ) }
             {
                 applyFilters(
                     'dokan_product_editor_after_ui_field',

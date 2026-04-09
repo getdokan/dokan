@@ -2,7 +2,12 @@
 
 namespace WeDevs\Dokan\REST;
 
+use WC_Product;
+use WC_Product_Simple;
 use WC_REST_Products_Controller;
+use WeDevs\Dokan\Intelligence\Manager;
+use WeDevs\Dokan\Intelligence\Services\Model;
+use WeDevs\Dokan\ProductEditor\FormSchema;
 use WeDevs\Dokan\ProductEditor\PayloadResolver;
 use WeDevs\Dokan\Traits\VendorAuthorizable;
 use WP_REST_Server;
@@ -50,7 +55,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
     }
 
     /**
-     * Check if the current user can update the given product.
+     * Check if the current user can view/update the given product.
      *
      * @since DOKAN_SINCE
      *
@@ -58,7 +63,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      *
      * @return true|WP_Error
      */
-    public function update_item_permissions_check( $request ) {
+    public function check_permission( $request ) {
         if ( ! current_user_can( 'dokan_edit_product' ) ) {
             return new WP_Error( 'dokan_rest_cannot_edit', __( 'You do not have permission to edit products.', 'dokan-lite' ), [ 'status' => 403 ] );
         }
@@ -66,53 +71,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
         $product_id = $request->get_param( 'id' );
 
         if ( $product_id && ! dokan_is_product_author( $product_id ) ) {
-            return new WP_Error( 'dokan_rest_cannot_edit', __( 'You do not have permission to edit this product.', 'dokan-lite' ), [ 'status' => 403 ] );
-        }
-
-        return true;
-    }
-
-    /**
-     * Check if the current user can view form fields for a product.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param WP_REST_Request $request Full details about the request.
-     *
-     * @return true|WP_Error
-     */
-    public function get_form_fields_permissions_check( $request ) {
-        if ( ! current_user_can( 'dokan_edit_product' ) ) {
-            return new WP_Error( 'dokan_rest_cannot_view', __( 'You do not have permission to view product fields.', 'dokan-lite' ), [ 'status' => 403 ] );
-        }
-
-        $product_id = $request->get_param( 'id' );
-
-        if ( $product_id && ! dokan_is_product_author( $product_id ) ) {
-            return new WP_Error( 'dokan_rest_cannot_view', __( 'You do not have permission to view this product.', 'dokan-lite' ), [ 'status' => 403 ] );
-        }
-
-        return true;
-    }
-
-    /**
-     * Check if the current user can delete the given product.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param WP_REST_Request $request Full details about the request.
-     *
-     * @return true|WP_Error
-     */
-    public function delete_item_permissions_check( $request ) {
-        if ( ! current_user_can( 'dokan_delete_product' ) ) {
-            return new WP_Error( 'dokan_rest_cannot_delete', __( 'You do not have permission to delete products.', 'dokan-lite' ), [ 'status' => 403 ] );
-        }
-
-        $product_id = $request->get_param( 'id' );
-
-        if ( $product_id && ! dokan_is_product_author( $product_id ) ) {
-            return new WP_Error( 'dokan_rest_cannot_delete', __( 'You do not have permission to delete this product.', 'dokan-lite' ), [ 'status' => 403 ] );
+            return new WP_Error( 'dokan_rest_cannot_view', __( 'You do not have permission to view/edit this product.', 'dokan-lite' ), [ 'status' => 403 ] );
         }
 
         return true;
@@ -193,6 +152,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
                 'schema' => [ $this, 'get_item_schema' ],
             ]
         );
+
         register_rest_route(
             $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)',
@@ -200,7 +160,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
                 [
                     'methods'             => WP_REST_Server::EDITABLE,
                     'callback'            => [ $this, 'update_item' ],
-                    'permission_callback' => [ $this, 'update_item_permissions_check' ],
+                    'permission_callback' => [ $this, 'check_permission' ],
                     'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::EDITABLE ),
                 ],
                 'schema' => [ $this, 'get_item_schema' ],
@@ -222,6 +182,18 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
 
         register_rest_route(
             $this->namespace,
+            '/' . $this->rest_base . '/init/fields',
+            [
+				[
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => [ $this, 'init_form_fields' ],
+					'permission_callback' => [ $this, 'check_permission' ],
+				],
+			]
+        );
+
+        register_rest_route(
+            $this->namespace,
             '/' . $this->rest_base . '/(?P<id>[\d]+)/fields',
             [
 				'args' => [
@@ -233,7 +205,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
 				[
 					'methods'             => WP_REST_Server::READABLE,
 					'callback'            => [ $this, 'get_form_fields' ],
-					'permission_callback' => [ $this, 'get_form_fields_permissions_check' ],
+					'permission_callback' => [ $this, 'check_permission' ],
 				],
 			]
         );
@@ -329,6 +301,69 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
         return $result;
     }
 
+    public function init_form_fields( $request ) {
+
+        if ( ! current_user_can( 'dokan_edit_product' ) || ! dokan_is_seller_enabled( dokan_get_current_user_id() ) ) {
+            return new WP_Error(
+                'dokan_rest_product_init_error',
+                __( 'Invalid product ID.', 'dokan-lite' ),
+                [ 'status' => 401 ]
+            );
+        }
+
+        $product_id = $request->get_param( 'id' );
+        $product = wc_get_product( $product_id );
+
+        if ( empty( $product_id ) ) {
+            $product = new WC_Product_Simple();
+            $product->set_status( 'auto-draft' );
+            $product->set_name( '' );
+            $product->save();
+
+            // Assign the current vendor as the product author.
+            wp_update_post(
+                [
+                    'ID'          => $product->get_id(),
+                    'post_author' => dokan_get_current_user_id(),
+                ]
+            );
+            $product_id = $product->get_id();
+        }
+        // check if product exists and belongs to the current vendor
+        if ( ! dokan_is_product_author( $product_id ) ) {
+            return new WP_Error(
+                'dokan_rest_product_init_error',
+                __( 'Invalid product ID.', 'dokan-lite' ),
+                [ 'status' => 404 ]
+            );
+        }
+
+        $vendor_earning = dokan()->commission->get_earning_by_product( $product_id );
+        $fields = dokan()->product_editor->get_schema( $product_id );
+        $layouts = FormSchema::get_layouts();
+        $is_enabled = dokan_get_option( 'dokan_ai_image_gen_availability', 'dokan_ai', 'off' ) === 'on';
+        $manager = dokan()->get_container()->get( Manager::class );
+        $is_image_configured = $is_enabled && $manager->is_configured( Model::SUPPORTS_IMAGE );
+
+        $args = [
+            'form_items'             => $fields,
+            'form_layouts'           => $layouts,
+            'product_id'             => $product_id,
+            'view_product_url'       => get_permalink( $product_id ),
+            'vendor_earning'         => $vendor_earning,
+            'can_add_new_attribute'  => dokan_get_option( 'add_new_attribute', 'dokan_selling', 'off' ) === 'on',
+            'ai_settings'            => [
+                'ai_text_enable'    => $manager->is_configured(),
+                'ai_image_enable'   => $is_image_configured,
+            ],
+            'product_legacy_url'    => dokan_edit_product_url( $product_id ),
+        ];
+
+        $data = apply_filters( 'dokan_product_editor_init_fields', $args, $product_id, $product );
+
+        return rest_ensure_response( $data );
+    }
+
     /**
      * Get item fields for form manager
      *
@@ -350,15 +385,6 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
             'vendor_earning' => dokan()->commission->get_earning_by_product( $product_id ),
         ];
 
-        /**
-         * Filter the product editor form fields response.
-         *
-         * @since DOKAN_SINCE
-         *
-         * @param array      $data       Response data containing form_items and vendor_earning.
-         * @param WC_Product $product    The product object.
-         * @param WP_REST_Request $request The request object.
-         */
         $data = apply_filters( 'dokan_rest_prepare_product_editor_fields', $data, $product, $request );
 
         return rest_ensure_response( $data );

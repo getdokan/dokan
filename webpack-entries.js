@@ -99,7 +99,6 @@ const entryPoints = {
             type: 'window',
         },
     },
-    'product-editor': './src/dashboard/product-editor/index.tsx',
     'dokan-admin-commission-suborder-metabox':
         './src/styles/dokan-admin-commission-suborder-metabox.css',
 

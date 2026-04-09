@@ -203,14 +203,10 @@
 
         setCorrectProductId() {
             const productForm = $( '.dokan-product-edit-form' );
-            if ( ! productForm.length ) {
+            if ( ! productForm ) {
                 return;
             }
             const productId = $( '#dokan_product_id' ).val();
-
-            if ( typeof productId === 'undefined' ) {
-                return;
-            }
 
             if ( window.history.replaceState ) {
                 const url = new URL( document.location );

@@ -6,10 +6,6 @@ if ( isset( $_GET['_dokan_edit_product_nonce'] ) && wp_verify_nonce( sanitize_ke
 }
 
 if ( 'edit' === $product_action ) {
-    if ( isset( $_GET['product_editor'] ) ) {
-        do_action( 'dokan_render_product_editor_manager_template', $product_action );
-        return;
-    }
     do_action( 'dokan_render_product_edit_template', $product_action );
 } else {
     do_action( 'dokan_render_product_listing_template', $product_action );

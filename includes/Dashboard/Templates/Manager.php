@@ -9,7 +9,6 @@ use WeDevs\Dokan\Dashboard\Templates\Products;
 use WeDevs\Dokan\Dashboard\Templates\Settings;
 use WeDevs\Dokan\Dashboard\Templates\Withdraw;
 use WeDevs\Dokan\Dashboard\Templates\MultiStepCategories;
-use WeDevs\Dokan\ProductEditor\Hooks as ProductEditorHooks;
 use WeDevs\Dokan\Traits\ChainableContainer;
 
 class Manager {
@@ -33,6 +32,5 @@ class Manager {
         $this->container['product_category']   = new MultiStepCategories();
         $this->container['reverse_withdrawal'] = new ReverseWithdrawal();
         $this->container['new_dashboard']      = new NewDashboard();
-        $this->container['product_editor']     = new ProductEditorHooks();
     }
 }

@@ -108,8 +108,6 @@ if ( ! empty( $_GET['errors'] ) ) {
     dokan()->dashboard->templates->products->set_errors( array_map( 'sanitize_text_field', wp_unslash( $_GET['errors'] ) ) );
 }
 
-$legacy_url = dokan_edit_product_url( $post_id, false );
-
 /**
  * Action hook to fire before dokan dashboard wrap
  *
@@ -178,7 +176,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                         <?php echo esc_html( dokan_get_post_status( $post->post_status ) ); ?>
                     </span>
                     <span class="dokan-label dokan-link dokan-product-status-label">
-                        <a href="<?php echo esc_url( $legacy_url ); ?>">
+                        <a href="/dashboard/new/#products/<?php echo esc_attr( $post_id ); ?>/edit" class="dokan-btn dokan-btn-theme dokan-btn-sm">
                             <?php esc_html_e( 'Switch Product Editor', 'dokan-lite' ); ?>
                         </a>
                     </span>
