@@ -168,7 +168,7 @@
     --color-tertiary:                                         var(--dokan-button-tertiary-background-color, #00000000);
 
     /* ─── Primary color variants ─── */
-    --color-primary-dark:                                     #502BBF;
+    --color-primary-dark:                                     var(--dokan-button-hover-background-color, #502BBF);
     --color-primary-hover:                                    var(--dokan-sidebar-hover-background-color, #7047eb);
 
     /* ─── Danger color ─── */
