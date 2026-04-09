@@ -1,3 +1,10 @@
+### v4.3.3 ( Mar 31, 2026 ) ###
+- **update:** Manage changelog notification dot visibility for Dokan Lite and Pro based on new version availability.
+- **update:** Add confirmation modal for order status change actions in the vendor dashboard order listing.
+- **update:** Update the Pro Features admin menu color to highlight it with the brand color.
+- **fix:** Add the missing alt attribute to the store header banner image on the store listing page.
+- **fix:** Display a warning message when admin tries to approve a vendor withdrawal request exceeding the available balance.
+
 ### v4.3.2 ( Mar 13, 2026 ) ###
 - **fix:** Prevent unauthenticated access to customer information via the Store Reviews REST API endpoint.
 
