@@ -9,8 +9,6 @@
 @source "../src/";
 @source "../node_modules/@wedevs/plugin-ui/dist";
 
-@source "../src/";
-
 /* Plugins */
 @plugin "@tailwindcss/typography";
 @plugin "@tailwindcss/forms";
