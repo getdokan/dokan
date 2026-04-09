@@ -73,7 +73,7 @@ const Header = () => {
                         className="min-w-72 absolute top-full right-0 mt-5 z-50 bg-white rounded-md border border-gray-200 shadow-lg w-64 py-4 px-5 transition-opacity transition-transform duration-300 before:bottom-full before:left-0 before:content-[''] before:absolute before:w-full before:h-12"
                     >
                         { /* Arrow indicator */ }
-                        <div className="absolute -top-2 right-3 w-4 h-4 bg-white transform rotate-45 border-t border-l border-gray-200"></div>
+                        <div className="absolute -top-2 right-3 w-4 h-4 bg-white rotate-45 border-t border-l border-gray-200"></div>
 
                         <h3 className="text-lg font-bold mb-3">
                             { __( 'Get Help', 'dokan-lite' ) }

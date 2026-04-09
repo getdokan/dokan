@@ -1,5 +1,4 @@
-@use '../../base-tailwind';
-@config './withdraw-tailwind.config.js';
+/* Module-specific styles - Tailwind loaded via dokan-tailwind bundle */
 
 @mixin windraw-reset {
     button:focus,
