@@ -325,6 +325,24 @@ const WithdrawPage = () => {
             supportsBulk: true,
             isEligible: ( item ) => item?.status === 'pending',
             callback: ( items ) => {
+                const failedItems = items.filter( ( item ) => {
+                    const requestedAmount = parseFloat( item?.amount ) || 0;
+                    const currentBalance = parseFloat( item?.user?.balance ) || 0;
+                    
+                    return currentBalance < requestedAmount;
+                } );
+
+                if ( failedItems.length > 0 ) {
+                    // Extract the store names and save them to state
+                    const storeNames = failedItems.map( 
+                        ( item ) => item?.user?.store_name || __( 'Unknown Vendor', 'dokan-lite' ) 
+                    );
+                    
+                    setInsufficientVendors( storeNames );
+                    setShowInsufficientBalanceModal( true );
+                    return;
+                }
+
                 openModal( 'approve', items );
             },
         },
@@ -443,6 +461,9 @@ const WithdrawPage = () => {
     // Note state for add-note modal
     const [ noteState, setNoteState ] = useState( '' );
     const [ localNoteState, setLocalNoteState ] = useState( '' );
+
+    const [ showInsufficientBalanceModal, setShowInsufficientBalanceModal ] = useState( false );
+    const [ insufficientVendors, setInsufficientVendors ] = useState< string[] >( [] );
 
     // Selected action for the "view" modal
     const [ selectedAction, setSelectedAction ] = useState< string | number | undefined >( undefined );
@@ -1432,6 +1453,41 @@ const WithdrawPage = () => {
                         />
                     );
                 } )() }
+                { showInsufficientBalanceModal && (
+                    <DokanModal
+                        isOpen={ showInsufficientBalanceModal }
+                        namespace="insufficient-balance-modal"
+                        onClose={ () => {
+                            setShowInsufficientBalanceModal( false );
+                            setInsufficientVendors( [] );
+                        } }
+                        onConfirm={ () => {
+                            setShowInsufficientBalanceModal( false );
+                            setInsufficientVendors( [] );
+                        } }
+                        dialogTitle={ __( 'Insufficient Balance', 'dokan-lite' ) }
+                        confirmButtonText={ __( 'Close', 'dokan-lite' ) }
+                        hideCancelButton={ true }
+                        confirmationTitle={ __( 'Insufficient Balance', 'dokan-lite' ) }
+                        confirmationDescription={ sprintf(
+                                _n(
+                                    '%s does not have sufficient balance for this withdrawal request.',
+                                    '%s do not have sufficient balance for this withdrawal request.',
+                                    insufficientVendors.length,
+                                    'dokan-lite'
+                                ),
+                            insufficientVendors.join( ', ' )
+                        ) }
+                        confirmButtonVariant="primary"
+                        dialogIcon={
+                            <div className="flex items-center justify-center flex-shrink-0 w-14 h-14 bg-orange-50 border border-orange-50 rounded-full">
+                                <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                                </svg>
+                            </div>
+                        }
+                    />
+                ) }
         </div>
     );
 };
