@@ -22,10 +22,7 @@ const MobileApps = ( { apps }: { apps: MobileApp[] } ) => {
                 >
                     { /* Header: icon + name + badge */ }
                     <div className="flex items-center gap-4 px-5 pt-5 pb-3">
-                        <ExtensionIcon
-                            src={ app.image }
-                            alt={ app.title }
-                        />
+                        <ExtensionIcon src={ app.image } alt={ app.title } />
                         <div>
                             <h3 className="text-[15px] font-semibold text-gray-900 mb-0.5">
                                 { app.title }
