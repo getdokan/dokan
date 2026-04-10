@@ -479,6 +479,19 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
     }
 
     /**
+     * Get the total admin commission.
+     *
+     * This includes the net commission plus any additional admin fees.
+     *
+     * @since 4.0.0
+     *
+     * @return float
+     */
+    public function get_admin_commission(): float {
+        return $this->get_admin_net_commission() + $this->get_total_admin_fees();
+    }
+
+    /**
      * Get the total earning for the admin.
      *
      * @since 4.0.0
@@ -486,7 +499,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      * @return float
      */
     public function get_admin_total_earning(): float {
-        return $this->get_admin_commission() + $this->get_total_admin_fees();
+        return parent::get_admin_commission() + $this->get_total_admin_fees();
     }
 
     /**
