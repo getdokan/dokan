@@ -214,6 +214,16 @@ class ProductController extends DokanRESTController {
         );
 
         register_rest_route(
+            $this->namespace, '/' . $this->base . '/months', [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_product_months' ],
+                    'permission_callback' => [ $this, 'get_product_permissions_check' ],
+                ],
+            ]
+        );
+
+        register_rest_route(
             $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/related', [
                 'args' => [
                     'id'       => [
@@ -537,12 +547,59 @@ class ProductController extends DokanRESTController {
     public function get_product_summary( $request ) {
         $seller_id = dokan_get_current_user_id();
 
+        // Build the PHP products URL directly to bypass the react_route URL rewrite filter.
+        $dashboard_page_id = (int) dokan_get_option( 'dashboard', 'dokan_pages', 0 );
+        $products_url      = $dashboard_page_id
+            ? user_trailingslashit( get_permalink( $dashboard_page_id ) . 'products' )
+            : '';
+
         $data = [
-            'post_counts'  => dokan_count_posts( 'product', $seller_id ),
-            'products_url' => dokan_get_navigation_url( 'products' ),
+            'post_counts'      => dokan_count_posts( 'product', $seller_id ),
+            'products_url'     => $products_url,
+            'instock_count'    => dokan_count_stock_posts( 'product', $seller_id, 'instock' ),
+            'outofstock_count' => dokan_count_stock_posts( 'product', $seller_id, 'outofstock' ),
         ];
 
+        /**
+         * Allow Pro modules to append per-request data to the product listing summary.
+         * Called after every action (delete/publish) so values stay accurate.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array $data      Summary data array.
+         * @param int   $seller_id Current vendor ID.
+         */
+        $data = (array) apply_filters( 'dokan_product_listing_summary_data', $data, $seller_id );
+
         return rest_ensure_response( $data );
+    }
+
+    /**
+     * Get distinct year/month pairs when the current vendor has products.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return WP_REST_Response
+     */
+    public function get_product_months(): WP_REST_Response {
+        global $wp_locale;
+
+        $seller_id = dokan_get_current_user_id();
+        $months    = dokan_get_products_listing_months_for_vendor( $seller_id );
+
+        $items = [];
+        foreach ( $months as $row ) {
+            if ( 0 === (int) $row->year || 0 === (int) $row->month ) {
+                continue;
+            }
+            $month_padded = zeroise( (int) $row->month, 2 );
+            $items[]      = [
+                'value' => $row->year . $month_padded,
+                'label' => $wp_locale->get_month( (int) $row->month ) . ' ' . $row->year,
+            ];
+        }
+
+        return rest_ensure_response( $items );
     }
 
     /**
@@ -812,6 +869,19 @@ class ProductController extends DokanRESTController {
             );
         }
 
+        // Filter by year/month (YYYYMM format, e.g. "202501").
+        if ( ! empty( $request['year_month'] ) ) {
+            $ym    = (string) $request['year_month'];
+            $year  = (int) substr( $ym, 0, 4 );
+            $month = (int) substr( $ym, 4, 2 );
+            if ( $year > 0 && $month > 0 ) {
+                $args['date_query'][] = [
+                    'year'  => $year,
+                    'month' => $month,
+                ];
+            }
+        }
+
         // Filter by on sale products.
         if ( rest_is_boolean( $request['on_sale'] ) ) {
             $on_sale_key = wc_string_to_bool( $request['on_sale'] ) ? 'post__in' : 'post__not_in';
@@ -830,7 +900,29 @@ class ProductController extends DokanRESTController {
             $args['post_type'] = $this->post_type;
         }
 
-        return $args;
+        // Exclude product types that belong to separate dashboards
+        // (e.g. auction, booking, subscription — registered by their Pro modules).
+        $exclude_types = (array) apply_filters( 'dokan_product_listing_exclude_type', [] );
+        if ( ! empty( $exclude_types ) ) {
+            $args['tax_query'][] = [ //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+                'taxonomy' => 'product_type',
+                'field'    => 'slug',
+                'terms'    => $exclude_types,
+                'operator' => 'NOT IN',
+            ];
+        }
+
+        /**
+         * Filter the WP_Query args before executing the product listing query.
+         * Allows Pro modules (e.g. product-adv, brands, subscription) to extend
+         * filtering for both v1 and v2 REST endpoints.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array           $args    WP_Query arguments.
+         * @param WP_REST_Request $request The current REST request.
+         */
+        return apply_filters( 'dokan_rest_pre_product_listing_args', $args, $request );
     }
 
     /**
@@ -930,6 +1022,30 @@ class ProductController extends DokanRESTController {
 
         $data['min_price'] = $product instanceof WC_Product_Variable ? $product->get_variation_price( 'min', true ) : null;
         $data['max_price'] = $product instanceof WC_Product_Variable ? $product->get_variation_price( 'max', true ) : null;
+
+        $earning           = dokan()->commission->get_earning_by_product( $product );
+        $data['earning']   = is_numeric( $earning ) ? (float) $earning : null;
+        $data['page_view'] = (int) get_post_meta( $product->get_id(), 'pageview', true );
+
+        // Build the PHP edit URL directly from the dashboard page permalink to bypass
+        // the react_route URL rewrite filter on dokan_get_navigation_url.
+        $dashboard_page_id       = (int) dokan_get_option( 'dashboard', 'dokan_pages', 0 );
+        $dashboard_products_base = $dashboard_page_id
+            ? user_trailingslashit( get_permalink( $dashboard_page_id ) . 'products' )
+            : '';
+        $data['edit_url'] = $dashboard_products_base
+            ? add_query_arg(
+                [
+                    'product_id'               => $product->get_id(),
+                    'action'                   => 'edit',
+                    '_dokan_edit_product_nonce' => wp_create_nonce( 'dokan_edit_product_nonce' ),
+                ],
+                $dashboard_products_base
+            )
+            : '';
+
+        // Advertisement data — null by default; Pro module adds data via the filter below.
+        $data['advertisement'] = apply_filters( 'dokan_rest_product_advertisement_data', null, $product->get_id() );
 
         $response = rest_ensure_response( $data );
         $response->add_links( $this->prepare_links( $product, $request ) );

@@ -6,7 +6,7 @@ export {
     VIEW_LAYOUTS,
 } from '@wordpress/dataviews/wp';
 export { default as AdminDataViews } from './dataviews/AdminDataViewTable';
-export { default as DataViews } from './dataviews/DataViewTable';
+export { DataViews } from '@wedevs/plugin-ui';
 export { default as DokanModal } from './modals/DokanModal';
 export { default as SortableList } from './sortable-list';
 
