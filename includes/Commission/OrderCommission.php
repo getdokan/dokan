@@ -484,6 +484,7 @@ class OrderCommission extends AbstractCommissionCalculator implements OrderCommi
      * This includes the net commission plus any additional admin fees.
      *
      * @since 4.0.0
+     * @deprecated 5.0.0 Use Commission's get_admin_net_earning() instead.
      *
      * @return float
      */
