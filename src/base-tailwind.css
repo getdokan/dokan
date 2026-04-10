@@ -163,7 +163,6 @@
     --font-sans: var(--font-sans);
     --font-serif: var(--font-serif);
     --font-mono: var(--font-mono);
-    --color-tertiary:                                         var(--dokan-button-tertiary-background-color, #00000000);
 
     /* ─── Primary color variants ─── */
     --color-primary-dark:                                     var(--dokan-button-hover-background-color, #502BBF);
