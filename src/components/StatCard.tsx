@@ -1,7 +1,9 @@
 import { Card as DokanCard } from '@getdokan/dokan-ui';
-import { DokanTooltip as Tooltip } from '@src/components';
+import { DokanTooltip as Tooltip, ShortContent } from '@src/components';
 import { Info, MoveUp, MoveDown } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
+import { RawHTML } from '@wordpress/element';
+import { decodeEntities } from '@wordpress/html-entities';
 export interface StatCardProps {
     icon: JSX.Element;
     countDirection?: 'up' | 'down' | 'neutral';
@@ -61,12 +63,14 @@ const StatCard = ( {
                     </Tooltip>
                 ) }
             </div>
-            <div className="text-3xl font-bold text-black -mt-1 -mb-1 w-fit break-words max-w-[275px]">
-                { typeof content === 'string' ? (
-                    <span>{ content }</span>
-                ) : (
-                    content
-                ) }
+            <div className="break-words max-w-[275px]">
+                <ShortContent
+                    className={
+                        'text-3xl font-bold text-black -mt-1 -mb-1 w-fit'
+                    }
+                    content={ decodeEntities( content ) }
+                    maxLength={ 10 }
+                />
             </div>
         </DokanCard>
     );
