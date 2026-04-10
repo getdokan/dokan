@@ -196,9 +196,6 @@
 /* Scoped Layout — Preflight + Utilities + Components */
 .pui-root,
 .dokan-layout {
-    --wp-components-color-accent: var(--color-primary);
-    --wp-components-color-accent-darker-20: var(--color-dokan-btn-hover);
-
     @import "tailwindcss/preflight.css" layer(base);
     @import "tailwindcss/utilities.css" important;
     /* Import custom component styles */
