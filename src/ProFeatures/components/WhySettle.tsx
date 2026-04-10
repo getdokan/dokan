@@ -32,7 +32,7 @@ function WhySettle() {
 
     return (
         <div>
-            <h2 className="text-xl md:text-2xl font-bold mb-6 md:mb-8">
+            <h2 className="text-xl md:!text-2xl font-bold mb-6 md:mb-8">
                 { __( 'Why Settle? Get More with Dokan PRO!', 'dokan-lite' ) }
             </h2>
 
@@ -43,10 +43,10 @@ function WhySettle() {
                         <span className="w-[500px] h-[500px] left-[-32px] top-[-107px] rounded-full absolute overflow-hidden inline-block bg-white opacity-[.04]"></span>
                         <span className="w-[500px] h-[500px] left-[270px] top-[-375px] rounded-full absolute overflow-hidden inline-block bg-white opacity-[.04]"></span>
 
-                        <div className="flex flex-col md:flex-row w-full h-full overflow-hidden">
+                        <div className="flex flex-col md:!flex-row w-full h-full overflow-hidden">
                             <div className="md:w-[65%] lg:w-[45%] h-full flex justify-center flex-col">
-                                <div className="px-4 pt-4 md:pt-0 md:px-8">
-                                    <h3 className="font-bold text-white mb-2 text-xl lg:text-3xl">
+                                <div className="px-4 pt-4 md:!pt-0 md:!px-8">
+                                    <h3 className="font-bold text-white mb-2 text-xl lg:!text-3xl">
                                         { __( '42+ Modules', 'dokan-lite' ) }
                                     </h3>
                                     <div className="text-white max-w-xs text-[12px] leading-[140%] md:text-base font-normal">
@@ -76,7 +76,7 @@ function WhySettle() {
                 { features.map( ( feature, idx ) => (
                     <div key={ idx }>
                         <div className="max-w-[380px] flex items-start space-x-4">
-                            <div className="w-12 h-12 flex items-center justify-center bg-[#F7F5FF] rounded border-neutral-200 text-dokan-primary flex-shrink-0">
+                            <div className="w-12 h-12 flex items-center justify-center bg-[#F7F5FF] rounded border-neutral-200 text-dokan-primary shrink-0">
                                 <feature.icon size={ 16 } />
                             </div>
                             <div>
