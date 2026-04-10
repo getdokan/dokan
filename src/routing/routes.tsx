@@ -9,7 +9,7 @@ export default [
     {
         id: 'dokan-products',
         title: __( 'Products', 'dokan-lite' ),
-        element: <Products />,
+        element: Products,
         path: '/products',
         exact: true,
         order: 5,

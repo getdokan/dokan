@@ -2,12 +2,26 @@ import { useState, useMemo, useEffect, useCallback } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { useToast } from '@getdokan/dokan-ui';
 import apiFetch from '@wordpress/api-fetch';
-import { applyFilters } from '@wordpress/hooks';
+import {
+    addAction,
+    applyFilters,
+    doAction,
+    removeAction,
+} from '@wordpress/hooks';
 import { Fill } from '@wordpress/components';
+import { useNavigate } from 'react-router-dom';
 import { Boxes, Package, ExternalLink, LayoutGrid, Plus } from 'lucide-react';
 // @ts-ignore
 // eslint-disable-next-line import/no-unresolved
-import { DataViews, DokanBadge, DokanModal, Select } from '@dokan/components';
+import {
+    DataViews,
+    DokanBadge,
+    DokanButton,
+    DokanModal,
+    // @ts-ignore
+    // eslint-disable-next-line import/no-unresolved
+    Select,
+} from '@dokan/components';
 import PriceHtml from '../../components/PriceHtml';
 import DateTimeHtml from '../../components/DateTimeHtml';
 import { useProducts } from './hooks/useProducts';
@@ -49,7 +63,8 @@ const getStatusLabel = ( status: string ) => {
 
 const getProductTypeLabel = ( item: ProductItem ) => {
     if ( item.type === 'grouped' ) return __( 'Grouped', 'dokan-lite' );
-    if ( item.type === 'external' ) return __( 'External/Affiliate', 'dokan-lite' );
+    if ( item.type === 'external' )
+        return __( 'External/Affiliate', 'dokan-lite' );
     if ( item.type === 'variable' ) return __( 'Variable', 'dokan-lite' );
     return __( 'Simple', 'dokan-lite' );
 };
@@ -262,6 +277,7 @@ interface ProductListingConfig {
 
 function ProductList() {
     const toast = useToast();
+    const navigate = useNavigate();
     const [ selection, setSelection ] = useState< string[] >( [] );
     const [ quickViewProduct, setQuickViewProduct ] =
         useState< ProductItem | null >( null );
@@ -319,9 +335,8 @@ function ProductList() {
     // first fetchStatusCounts() response arrives. Also holds subscription_url
     // which never changes.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const subscriptionInfo: SubscriptionInfo | undefined = (
-        window as any
-    ).dokanFrontend?.product_listing?.subscription;
+    const subscriptionInfo: SubscriptionInfo | undefined = ( window as any )
+        .dokanFrontend?.product_listing?.subscription;
 
     // Fresh values from /dokan/v1/products/summary (PHP authoritative calculation).
     // Includes ALL product types (auction + normal) — same as PHP's get_published_product_count().
@@ -365,18 +380,16 @@ function ProductList() {
                         ) }
                     </div>
                     <div>
-                        { item.edit_url ? (
-                            <a
-                                href={ item.edit_url }
-                                className="font-medium text-dokan-link cursor-pointer block focus:outline-none!"
-                            >
-                                { item.name }
-                            </a>
-                        ) : (
-                            <span className="font-medium text-gray-900 block">
-                                { item.name }
-                            </span>
-                        ) }
+                        <a
+                            href={ `#` }
+                            onClick={ ( e ) => {
+                                e.preventDefault();
+                                navigate( `/products/${ item.id }/edit` );
+                            } }
+                            className="font-medium text-dokan-link cursor-pointer block focus:outline-none!"
+                        >
+                            { item.name }
+                        </a>
                         { item.sku && (
                             <span className="text-xs text-gray-500 block">
                                 { __( 'SKU:', 'dokan-lite' ) } { item.sku }
@@ -404,8 +417,6 @@ function ProductList() {
             label: __( 'Stock', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item }: { item: ProductItem } ) => {
-                // Show numeric quantity only when the product manages its own stock.
-                // Otherwise show the stock status text (matches PHP template behaviour).
                 if ( item.manage_stock && item.stock_quantity !== null ) {
                     const qty = item.stock_quantity;
                     const isLow = qty <= 10;
@@ -484,8 +495,6 @@ function ProductList() {
     /**
      * Filter the product list table fields (columns).
      * Allows Pro modules and third-party plugins to add, remove, or modify columns.
-     *
-     * @since 4.2.8
      *
      * @param {Array}              fields     Default field definitions.
      * @param {ProductFilterState} filterArgs Current filter state.
@@ -585,16 +594,15 @@ function ProductList() {
 
         const buttons: JSX.Element[] = [];
 
-        if ( config.can_add_product && config.new_product_url ) {
+        if ( config.can_add_product ) {
             buttons.push(
-                <a
+                <DokanButton
                     key="add-product"
-                    href={ config.new_product_url }
-                    className="dokan-btn dokan-btn-theme inline-flex items-center gap-1"
+                    onClick={ () => navigate( '/products/create' ) }
                 >
                     <Plus size={ 16 } />
                     { __( 'Add new product', 'dokan-lite' ) }
-                </a>
+                </DokanButton>
             );
         }
 
@@ -755,11 +763,17 @@ function ProductList() {
             {
                 id: 'edit-details',
                 label: () => __( 'Edit details', 'dokan-lite' ),
-                isEligible: ( item: ProductItem ) => !! item.edit_url,
                 callback: ( [ item ]: ProductItem[] ) => {
-                    if ( item.edit_url ) {
-                        window.location.href = item.edit_url;
-                    }
+                    navigate( `/products/${ item.id }/edit` );
+                },
+            },
+            {
+                id: 'bulk-edit',
+                label: () => __( 'Bulk Edit', 'dokan-lite' ),
+                supportsBulk: true,
+                hideFromActionsDropdown: true,
+                callback: ( items: ProductItem[] ) => {
+                    doAction( 'dokan_product_list_bulk_edit', items );
                 },
             },
             // Quick view — read-only info modal
@@ -999,6 +1013,17 @@ function ProductList() {
         } ) );
     };
 
+    useEffect( () => {
+        addAction( 'dokan_product_list_refresh', 'dokan/product-list', () => {
+            fetchProducts();
+            fetchStatusCounts();
+            setSelection( [] );
+        } );
+        return () => {
+            removeAction( 'dokan_product_list_refresh', 'dokan/product-list' );
+        };
+    }, [] );
+
     // ── Render ────────────────────────────────────────────────────────────────
 
     return (
@@ -1049,13 +1074,15 @@ function ProductList() {
                 onClose={ () => setQuickViewProduct( null ) }
             />
 
-            { applyFilters( 'dokan_product_list_after_content', null, {
-                fetchProducts,
-                fetchStatusCounts,
-                selection,
-                setSelection,
-                data,
-            } ) as React.ReactNode }
+            {
+                applyFilters( 'dokan_product_list_after_content', null, {
+                    fetchProducts,
+                    fetchStatusCounts,
+                    selection,
+                    setSelection,
+                    data,
+                } ) as React.ReactNode
+            }
         </>
     );
 }
