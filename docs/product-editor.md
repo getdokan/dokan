@@ -36,7 +36,7 @@ The Dokan product editor is a React form system built on the WordPress [`@wordpr
 │  FormSchema::get_layout()                               │
 │    ├─ Defines flat layout items (parent-child tree)     │
 │    ├─ apply_filters('dokan_product_editor_layouts') │
-│    └─ Sorts by priority (default 30 when omitted)       │
+│    └─ Sorts by priority (default 999 when omitted)       │
 │                                                         │
 │  Hooks.php → wp_add_inline_script('dokan-product-editor',│
 │    const dokanProductEditor = { form_items, form_layouts,│
@@ -183,7 +183,7 @@ Every item in the schema array must include these **required attributes**:
 | `placeholder` | `string` | Input placeholder text |
 | `tooltip` | `string` | Tooltip text (shown as info icon) |
 | `description` | `string` | Help text below the field |
-| `priority` | `int` | Sort order for schema fields (default: 30 when omitted) |
+| `priority` | `int` | Sort order for schema fields (default: 999 when omitted) |
 | `visibility` | `bool` | Global visibility toggle |
 | `visibilities` | `array` | Per-product-type visibility map (see [section 7](#7-dependencies--conditional-visibility)) |
 | `labels` | `array` | Per-product-type label overrides |
@@ -295,7 +295,7 @@ Each layout item has these properties:
 | `after` | `string` | No | Insert this item after a specific field ID in the parent's children |
 | `label` | `string` | No | Section label (shown when `withHeader` is true) |
 | `description` | `string` | No | Section description |
-| `priority` | `int` | No | Sort order. Defaults to 30 when omitted. Only needed for filter-added items |
+| `priority` | `int` | No | Sort order. Defaults to 999 when omitted. Only needed for filter-added items |
 | `responsive` | `array` | No | Responsive breakpoints that override the layout at specific widths |
 
 ### Layout types
@@ -376,7 +376,7 @@ add_filter( 'dokan_product_editor_layout_children', function ( array $children, 
 
 - **Built-in items** use explicit priority values (10, 20, 40) to define their order.
 - **Filter-added items** should set `priority` to control insertion order.
-- **Items without `priority`** default to 30 during sorting.
+- **Items without `priority`** default to 999 during sorting.
 - Items with equal priority preserve their array order.
 
 ### Responsive breakpoints

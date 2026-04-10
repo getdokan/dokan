@@ -374,7 +374,7 @@ class FormSchema {
          *
          * Flat array of layout items with parent-child relationships.
          * Each item has: id, parent_id, layout, priority, label, description, children, after.
-         * Sorting is by priority (default 30); items with equal priority preserve array order.
+         * Sorting is by priority (default 999); items with equal priority preserve array order.
          *
          * @since DOKAN_SINCE
          *
@@ -386,7 +386,7 @@ class FormSchema {
         usort(
             $layouts,
             function ( $a, $b ) {
-                return ( $a['priority'] ?? 30 ) <=> ( $b['priority'] ?? 30 );
+                return ( $a['priority'] ?? 999 ) <=> ( $b['priority'] ?? 999 );
             }
         );
 
