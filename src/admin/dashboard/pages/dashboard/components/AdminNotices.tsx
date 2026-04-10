@@ -105,7 +105,7 @@ const AdminNotices = ( {
 
                                     { notice.actions &&
                                         notice.actions.length > 0 && (
-                                            <div>
+                                            <div className='flex gap-1.5 flex-wrap mt-2.5'>
                                                 { notice.actions.map(
                                                     ( action, actionIndex ) =>
                                                         action.action &&
@@ -119,7 +119,7 @@ const AdminNotices = ( {
                                                                 } ${
                                                                     action.class ||
                                                                     ''
-                                                                } text-xs font-light leading-4 px-3 py-1.5 mr-1.5 mt-2.5 rounded-sm border border-[#7047EB] cursor-pointer transition-all duration-200 no-underline inline-block ${
+                                                                } text-xs font-light leading-4 px-3 py-1.5! flex items-center justify-center rounded-sm border border-[#7047EB] cursor-pointer transition-all duration-200 no-underline ${
                                                                     action.type ===
                                                                     'primary'
                                                                         ? 'text-white bg-[#7047EB] font-normal hover:bg-transparent hover:text-[#7047EB]'
@@ -150,7 +150,7 @@ const AdminNotices = ( {
                                                                 } ${
                                                                     action.class ||
                                                                     ''
-                                                                } text-xs font-light leading-4 px-3 py-1.5 mr-1.5 mt-2.5 rounded-sm border border-[#7047EB] cursor-pointer transition-all duration-200 no-underline inline-block ${
+                                                                } text-xs font-light leading-4 px-3 py-1.5! rounded-sm border border-[#7047EB] cursor-pointer transition-all duration-200 no-underline inline-block ${
                                                                     action.type ===
                                                                     'primary'
                                                                         ? 'text-white bg-[#7047EB] font-normal hover:bg-transparent hover:text-[#7047EB]'
@@ -269,7 +269,7 @@ const AdminNotices = ( {
                 }
                 dialogIcon={
                     <div
-                        className={ `flex items-center justify-center flex-shrink-0 w-14 h-14 bg-[#FBBF24] border border-[#FBBF24] rounded-full` }
+                        className={ `flex items-center justify-center shrink-0 w-14 h-14 bg-[#FBBF24] border border-[#FBBF24] rounded-full` }
                     >
                         <ShieldAlert color="#FFF" size={ 28 } />
                     </div>

@@ -69,7 +69,7 @@ class Menu {
         do_action( 'dokan_admin_menu', $capability, $menu_position );
 
         if ( current_user_can( $capability ) ) {
-            $submenu[ $slug ][] = [ __( '<span style="color:#f18500">Help</span>', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/help' ];
+            $submenu[ $slug ][] = [ esc_html__( 'Help', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/help' ];
             $submenu[ $slug ][] = [ __( 'Settings', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/settings' ];
         }
 
@@ -104,7 +104,6 @@ class Menu {
     public function dashboard_script() {
         wp_enqueue_style( 'dokan-admin-css' );
         wp_enqueue_style( 'jquery-ui' );
-        wp_enqueue_style( 'dokan-admin-panel-header' );
 
         wp_enqueue_script( 'jquery-ui-datepicker' );
         wp_enqueue_script( 'wp-color-picker' );
@@ -127,7 +126,7 @@ class Menu {
         $has_new_version = Helper::dokan_has_new_version();
 
         // Render the admin dashboard template.
-        echo '<div id="dokan-admin-panel-header"></div>';
+        echo '<div id="dokan-admin-panel-header" class="dokan-layout"></div>';
         echo '<div class="wrap"><div id="dokan-vue-admin"></div></div>';
     }
 }

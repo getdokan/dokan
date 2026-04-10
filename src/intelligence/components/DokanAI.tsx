@@ -1,12 +1,16 @@
-import Tooltip from '../../components/DokanTooltip';
+import {
+    DokanAlert,
+    DokanButton,
+    DokanModal,
+    DokanTooltip as Tooltip,
+} from '@dokan/components';
+import { useMutationObserver } from '@dokan/hooks';
+import { SimpleInput, TextArea } from '@getdokan/dokan-ui';
 import { useEffect, useState } from '@wordpress/element';
-import { Modal, SimpleInput, TextArea } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import { generateAiContent } from '../utils/api';
 import { updateWordPressField } from '../utils/dom';
 import ResponseHistory from './ResponseHistory';
-import { useMutationObserver } from '../../hooks';
-import { DokanAlert, DokanButton, DokanModal } from '../../components';
 import AISkeleton from './Skeleton';
 
 const initialIndex = {
@@ -490,7 +494,7 @@ const DokanAI = () => {
                                         ) }
                                         element={
                                             <div
-                                                className="mb-3 focus:outline-dokan-btn h-36 border rounded p-2.5 overflow-auto"
+                                                className="mb-3 focus:outline-dokan-btn-border h-36 border rounded p-2.5 overflow-auto"
                                                 contentEditable={ true }
                                                 onBlur={ ( e ) => {
                                                     inputHandler(
@@ -548,7 +552,7 @@ const DokanAI = () => {
                                         ) }
                                         element={
                                             <div
-                                                className="mb-3 h-48 focus:outline-dokan-btn border rounded p-2.5 overflow-auto"
+                                                className="mb-3 h-48 focus:outline-dokan-btn-border border rounded p-2.5 overflow-auto"
                                                 contentEditable={ true }
                                                 onBlur={ ( e ) => {
                                                     inputHandler(
