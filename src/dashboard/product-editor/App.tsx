@@ -223,7 +223,7 @@ const App = ( { params }: { params: { productId: string } } ) => {
                     validity={ validity }
                 />
                 <button type="submit" className="hidden">
-                    Submit
+                    { __( 'Submit', 'dokan-lite' ) }
                 </button>
             </form>
             <DokanToaster />

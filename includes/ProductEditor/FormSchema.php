@@ -265,6 +265,7 @@ class FormSchema {
                     'type'       => 'card',
                     'withHeader' => true,
                 ],
+                'priority'  => 40,
                 'children'  => [
                     Elements::SKU,
                     Elements::GLOBAL_UNIQUE_ID,
@@ -524,6 +525,19 @@ class FormSchema {
                 'placeholder'  => '0.00',
                 'visibility'   => true,
                 'visibilities' => $price_visibilities,
+                'validations'  => [
+                    [
+                        'rules'        => 'less_than',
+                        'message'      => __( 'Sale price must be less than the regular price.', 'dokan-lite' ),
+                        'params'       => [ 'field' => Elements::REGULAR_PRICE ],
+                        'dependencies' => [
+                            [
+                                'comparison' => 'not_empty',
+                                'key'        => Elements::REGULAR_PRICE,
+                            ],
+                        ],
+                    ],
+                ],
             ],
             [
                 'id'             => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
