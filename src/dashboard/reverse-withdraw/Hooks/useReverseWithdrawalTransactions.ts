@@ -30,6 +30,8 @@ export interface TransactionView {
     page: number;
     type: string;
     titleField: string;
+    fields?: string[];
+    layout?: Record< string, any >;
 }
 
 export interface UseReverseWithdrawalTransactionsReturn {
@@ -65,6 +67,14 @@ export const useReverseWithdrawalTransactions = (
         page: 1,
         type: 'table',
         titleField: 'trn_id',
+        fields: [
+            'trn_date',
+            'trn_type',
+            'note',
+            'debit',
+            'credit',
+            'balance',
+        ],
     } );
 
     const lastPayloadRef = useRef< TransactionPayload | null >( null );

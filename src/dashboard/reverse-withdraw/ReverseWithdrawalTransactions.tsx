@@ -11,7 +11,6 @@ import {
     ReverseWithdrawalTransaction,
     UseReverseWithdrawalTransactionsReturn,
 } from './Hooks/useReverseWithdrawalTransactions';
-import { isEqual } from 'lodash';
 
 function ReverseWithdrawalTransactions( {
     transactionsHook,
@@ -35,9 +34,7 @@ function ReverseWithdrawalTransactions( {
                 item: ReverseWithdrawalTransaction;
             } ) => (
                 <div>
-                    { transactionsHook.isLoading ? (
-                        <span className="block w-12 h-3 rounded bg-gray-200 animate-pulse"></span>
-                    ) : item.trn_url ? (
+                    { item.trn_url ? (
                         <a
                             href={ item.trn_url }
                             target="_blank"
@@ -61,13 +58,7 @@ function ReverseWithdrawalTransactions( {
             }: {
                 item: ReverseWithdrawalTransaction;
             } ) => (
-                <div>
-                    { transactionsHook.isLoading ? (
-                        <span className="block w-20 h-3 rounded bg-gray-200 animate-pulse"></span>
-                    ) : (
-                        item.trn_date
-                    ) }
-                </div>
+                <div>{ item.trn_date }</div>
             ),
         },
         {
@@ -79,13 +70,7 @@ function ReverseWithdrawalTransactions( {
             }: {
                 item: ReverseWithdrawalTransaction;
             } ) => (
-                <div>
-                    { transactionsHook.isLoading ? (
-                        <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
-                    ) : (
-                        item.trn_type
-                    ) }
-                </div>
+                <div>{ item.trn_type }</div>
             ),
         },
         {
@@ -97,13 +82,7 @@ function ReverseWithdrawalTransactions( {
             }: {
                 item: ReverseWithdrawalTransaction;
             } ) => (
-                <div>
-                    { transactionsHook.isLoading ? (
-                        <span className="block w-24 h-3 rounded bg-gray-200 animate-pulse"></span>
-                    ) : (
-                        item.note
-                    ) }
-                </div>
+                <div>{ item.note }</div>
             ),
         },
         {
@@ -116,9 +95,7 @@ function ReverseWithdrawalTransactions( {
                 item: ReverseWithdrawalTransaction;
             } ) => (
                 <div>
-                    { transactionsHook.isLoading ? (
-                        <span className="block w-16 h-3 rounded bg-gray-200 animate-pulse"></span>
-                    ) : item.debit === '' || item.debit === '--' ? (
+                    { item.debit === '' || item.debit === '--' ? (
                         '--'
                     ) : (
                         <PriceHtml price={ item.debit } />
@@ -136,9 +113,7 @@ function ReverseWithdrawalTransactions( {
                 item: ReverseWithdrawalTransaction;
             } ) => (
                 <div>
-                    { transactionsHook.isLoading ? (
-                        <span className="block w-16 h-3 rounded bg-gray-200 animate-pulse"></span>
-                    ) : item.credit === '' || item.credit === '--' ? (
+                    { item.credit === '' || item.credit === '--' ? (
                         '--'
                     ) : (
                         <PriceHtml price={ item.credit } />
@@ -156,17 +131,13 @@ function ReverseWithdrawalTransactions( {
                 item: ReverseWithdrawalTransaction;
             } ) => (
                 <div>
-                    { transactionsHook.isLoading ? (
-                        <span className="block w-16 h-3 rounded bg-gray-200 animate-pulse"></span>
-                    ) : (
-                        <span>
-                            { Number( item.balance ) < 0 ? '(' : '' }
-                            <PriceHtml
-                                price={ Math.abs( Number( item.balance ) ) }
-                            />
-                            { Number( item.balance ) < 0 ? ')' : '' }
-                        </span>
-                    ) }
+                    <span>
+                        { Number( item.balance ) < 0 ? '(' : '' }
+                        <PriceHtml
+                            price={ Math.abs( Number( item.balance ) ) }
+                        />
+                        { Number( item.balance ) < 0 ? ')' : '' }
+                    </span>
                 </div>
             ),
         },
@@ -297,8 +268,13 @@ function ReverseWithdrawalTransactions( {
     };
 
     const onChangeView = ( newView: typeof transactionsHook.view ) => {
-        if ( ! isEqual( newView, transactionsHook.view ) ) {
-            transactionsHook.setView( newView );
+        const paginationChanged =
+            newView.page !== transactionsHook.view.page ||
+            newView.perPage !== transactionsHook.view.perPage;
+
+        transactionsHook.setView( newView );
+
+        if ( paginationChanged ) {
             transactionsHook.fetchTransactions( {
                 ...transactionsHook.lastPayload,
                 page: newView.page,
@@ -313,14 +289,7 @@ function ReverseWithdrawalTransactions( {
                 namespace="dokan-reverse-withdrawal-transactions"
                 data={ transactionsHook.data ?? [] }
                 fields={ fields }
-                view={ {
-                    ...transactionsHook.view,
-                    fields: fields.map( ( f ) =>
-                        f.id !== transactionsHook.view.titleField
-                            ? f.id
-                            : ''
-                    ),
-                } }
+                view={ transactionsHook.view }
                 filter={ filter }
                 search={ false }
                 onChangeView={ onChangeView }
