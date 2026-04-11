@@ -6,7 +6,7 @@ import { Info } from 'lucide-react';
 import { getFieldConfigFrom } from './index';
 import { FormItem } from '../types';
 import { resolveDependency } from '../utils';
-import { isEmpty, fieldValidators } from './validations';
+import { isEmpty, runSchemaValidations } from './validations';
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { RawHTML } from '@wordpress/element';
@@ -74,9 +74,10 @@ export const getFieldConfig = ( field: FormItem ) => {
                     return null;
                 }
 
-                const validator = fieldValidators[ field.id ];
-                if ( validator ) {
-                    return validator( field, value );
+                // 1. Schema-driven validations (from PHP `validations` key).
+                const schemaError = runSchemaValidations( field, value );
+                if ( schemaError ) {
+                    return schemaError;
                 }
 
                 return null;

@@ -216,13 +216,11 @@ const AttributeCard = ( {
             </div>
 
             { isExpanded && (
-                <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4 bg-white border-t">
+                <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4 bg-white">
                     { /* Name Field - Editable only for Custom Attributes */ }
                     <div>
-                        <label className="block text-xs font-medium text-gray-500 mb-1">
-                            { __( 'Name', 'dokan-lite' ) }
-                        </label>
                         <SimpleInput
+                            label={ __( 'Name', 'dokan-lite' ) }
                             value={ attr.name }
                             onChange={ ( e ) =>
                                 handleAttributeChange( 'name', e.target.value )
@@ -312,17 +310,8 @@ const AttributeCard = ( {
                                         }
                                         dialogContent={
                                             <div>
-                                                { /* eslint-disable-next-line jsx-a11y/label-has-associated-control */ }
-                                                <label
-                                                    htmlFor={ `dokan-new-term-${ attr.id }` }
-                                                    className="block text-sm font-medium text-gray-700 mb-1"
-                                                >
-                                                    { __(
-                                                        'Term Name',
-                                                        'dokan-lite'
-                                                    ) }
-                                                </label>
                                                 <SimpleInput
+                                                    label={ __( 'Term Name', 'dokan-lite' ) }
                                                     value={
                                                         newTermName
                                                     }

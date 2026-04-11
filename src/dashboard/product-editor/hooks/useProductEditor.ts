@@ -64,7 +64,7 @@ export function useProductEditor( productId: number, isNewProduct = false ): Pro
     const onChange = useCallback(
         ( newData: Record< string, any > ) => {
             updateProduct( productId, newData );
-            doAction( 'dokan_product_editor_after_change', {
+            doAction( 'dokan_product_editor_field_changed', {
                 productId,
                 newData,
             } );
