@@ -1,7 +1,6 @@
-import { useState, useMemo, useEffect, useCallback } from '@wordpress/element';
+import { useState, useMemo, useEffect } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { useToast } from '@getdokan/dokan-ui';
-import apiFetch from '@wordpress/api-fetch';
 import {
     addAction,
     applyFilters,
@@ -771,7 +770,7 @@ function ProductList() {
                 id: 'bulk-edit',
                 label: () => __( 'Bulk Edit', 'dokan-lite' ),
                 supportsBulk: true,
-                hideFromActionsDropdown: true,
+                isEligible: () => selection.length > 0,
                 callback: ( items: ProductItem[] ) => {
                     doAction( 'dokan_product_list_bulk_edit', items );
                 },
@@ -955,6 +954,7 @@ function ProductList() {
             subscriptionInfo,
             effectiveRemaining,
             subscriptionLimitReached,
+            selection,
         ]
     );
 
