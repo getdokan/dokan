@@ -44,6 +44,10 @@ declare const window: Window & {
             viewOrder?: string;
             orderExport?: string;
         };
+        orderStatuses?: Array< {
+            value: string;
+            label: string;
+        } >;
     };
 };
 
@@ -71,17 +75,19 @@ const getStatusBadgeVariant = ( status: string ) => {
 };
 
 const getStatusLabel = ( status: string ) => {
-    const labels: Record< string, string > = {
-        pending: __( 'Pending', 'dokan-lite' ),
-        processing: __( 'Processing', 'dokan-lite' ),
-        'on-hold': __( 'On-hold', 'dokan-lite' ),
-        completed: __( 'Completed', 'dokan-lite' ),
-        cancelled: __( 'Cancelled', 'dokan-lite' ),
-        refunded: __( 'Refunded', 'dokan-lite' ),
-        failed: __( 'Failed', 'dokan-lite' ),
-        'checkout-draft': __( 'Draft', 'dokan-lite' ),
-    };
-    return labels[ status ] ?? status;
+    const statuses = window?.dokan?.orderStatuses;
+
+    if ( Array.isArray( statuses ) ) {
+        const prefixed = `wc-${ status }`;
+        const found = statuses.find(
+            ( s ) => s.value === prefixed || s.value === status
+        );
+        if ( found ) {
+            return found.label;
+        }
+    }
+
+    return status;
 };
 
 const getShipmentBadgeVariant = ( shipment: string ) => {
@@ -89,19 +95,33 @@ const getShipmentBadgeVariant = ( shipment: string ) => {
         return 'secondary';
     }
 
-    const normalized = shipment.toLowerCase().replace( /[_-]/g, '' );
+    switch ( shipment ) {
+        case 'received':
+        case 'shipped':
+            return 'success';
+        case 'partially':
+            return 'info';
+        case 'not_shipped':
+        default:
+            return 'secondary';
+    }
+};
 
-    if (
-        normalized.includes( 'delivered' ) &&
-        ! normalized.includes( 'not' ) &&
-        ! normalized.includes( 'partial' )
-    ) {
-        return 'success';
+// Maps raw shipment status keys from the REST API to the same labels
+// that the PHP function dokan_get_order_shipment_status_html() uses.
+const getShipmentLabel = ( shipment: string ) => {
+    switch ( shipment ) {
+        case 'received':
+            return __( 'Received', 'dokan-lite' );
+        case 'shipped':
+            return __( 'Delivered', 'dokan-lite' );
+        case 'partially':
+            return __( 'Partially Delivered', 'dokan-lite' );
+        case 'not_shipped':
+            return __( 'Not-Delivered', 'dokan-lite' );
+        default:
+            return shipment;
     }
-    if ( normalized.includes( 'partial' ) ) {
-        return 'warning';
-    }
-    return 'danger';
 };
 
 const getOrderDetailsUrl = ( orderId: number ) => {
@@ -135,6 +155,13 @@ const getCustomerName = ( item: OrderItem ) => {
 };
 
 function OrderList() {
+    // If the URL contains an order_id param, the PHP template renders the
+    // order detail view – do not mount the React list on top of it.
+    const urlParams = new URLSearchParams( window.location.search );
+    if ( urlParams.get( 'order_id' ) ) {
+        return null;
+    }
+
     const toast = useToast();
     const [ selection, setSelection ] = useState< string[] >( [] );
     const [ exportOpen, setExportOpen ] = useState( false );
@@ -205,7 +232,7 @@ function OrderList() {
                 <div>
                     <a
                         href={ getOrderDetailsUrl( item.id ) }
-                        className="font-medium text-blue-600 hover:text-blue-800"
+                        className="font-medium text-primary"
                         onClick={ ( e ) => {
                             e.preventDefault();
                             window.location.href = getOrderDetailsUrl(
@@ -273,7 +300,7 @@ function OrderList() {
                 return (
                     <DokanBadge
                         variant={ getShipmentBadgeVariant( shipment ) }
-                        label={ shipment }
+                        label={ getShipmentLabel( shipment ) }
                     />
                 );
             },

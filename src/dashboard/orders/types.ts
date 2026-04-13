@@ -26,15 +26,7 @@ export interface OrderItem {
     order_shipment: string;
 }
 
-export type OrderStatus =
-    | 'all'
-    | 'wc-pending'
-    | 'wc-processing'
-    | 'wc-on-hold'
-    | 'wc-completed'
-    | 'wc-cancelled'
-    | 'wc-refunded'
-    | 'wc-failed';
+export type OrderStatus = string;
 
 export interface OrderFilterState {
     page: number;

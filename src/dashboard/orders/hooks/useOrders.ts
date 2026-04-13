@@ -16,24 +16,33 @@ interface UseOrdersReturn {
     updateOrderStatus: ( orderId: number, status: string ) => Promise< void >;
 }
 
-const defaultStatusCounts: OrderStatusCount[] = [
-    { value: 'all', label: __( 'All', 'dokan-lite' ), count: 0 },
-    {
-        value: 'wc-pending',
-        label: __( 'Pending Payment', 'dokan-lite' ),
-        count: 0,
-    },
-    {
-        value: 'wc-processing',
-        label: __( 'Processing', 'dokan-lite' ),
-        count: 0,
-    },
-    { value: 'wc-on-hold', label: __( 'On-hold', 'dokan-lite' ), count: 0 },
-    { value: 'wc-completed', label: __( 'Completed', 'dokan-lite' ), count: 0 },
-    { value: 'wc-cancelled', label: __( 'Cancelled', 'dokan-lite' ), count: 0 },
-    { value: 'wc-refunded', label: __( 'Refunded', 'dokan-lite' ), count: 0 },
-    { value: 'wc-failed', label: __( 'Failed', 'dokan-lite' ), count: 0 },
-];
+interface DokanOrderStatus {
+    value: string;
+    label: string;
+}
+
+declare const window: Window & {
+    dokan?: {
+        orderStatuses?: DokanOrderStatus[];
+    };
+};
+
+const getDefaultStatusCounts = (): OrderStatusCount[] => {
+    const statuses = window?.dokan?.orderStatuses;
+
+    if ( Array.isArray( statuses ) && statuses.length > 0 ) {
+        return statuses.map( ( s ) => ( {
+            value: s.value,
+            label: s.label,
+            count: 0,
+        } ) );
+    }
+
+    // Fallback when localized data is unavailable.
+    return [
+        { value: 'all', label: __( 'All', 'dokan-lite' ), count: 0 },
+    ];
+};
 
 export const useOrders = ( filterArgs: OrderFilterState ): UseOrdersReturn => {
     const [ data, setData ] = useState< OrderItem[] >( [] );
@@ -42,7 +51,7 @@ export const useOrders = ( filterArgs: OrderFilterState ): UseOrdersReturn => {
     const [ totalItems, setTotalItems ] = useState( 0 );
     const [ totalPages, setTotalPages ] = useState( 0 );
     const [ statusCounts, setStatusCounts ] =
-        useState< OrderStatusCount[] >( defaultStatusCounts );
+        useState< OrderStatusCount[] >( () => getDefaultStatusCounts() );
 
     const fetchItems = useCallback( async () => {
         setIsLoading( true );
@@ -109,50 +118,17 @@ export const useOrders = ( filterArgs: OrderFilterState ): UseOrdersReturn => {
                 path: '/dokan/v1/orders/summary',
             } ) ) as Record< string, number >;
 
-            const allCount = response?.total ?? 0;
+            const defaults = getDefaultStatusCounts();
 
-            setStatusCounts( [
-                {
-                    value: 'all',
-                    label: __( 'All', 'dokan-lite' ),
-                    count: allCount,
-                },
-                {
-                    value: 'wc-pending',
-                    label: __( 'Pending Payment', 'dokan-lite' ),
-                    count: response?.[ 'wc-pending' ] ?? 0,
-                },
-                {
-                    value: 'wc-processing',
-                    label: __( 'Processing', 'dokan-lite' ),
-                    count: response?.[ 'wc-processing' ] ?? 0,
-                },
-                {
-                    value: 'wc-on-hold',
-                    label: __( 'On-hold', 'dokan-lite' ),
-                    count: response?.[ 'wc-on-hold' ] ?? 0,
-                },
-                {
-                    value: 'wc-completed',
-                    label: __( 'Completed', 'dokan-lite' ),
-                    count: response?.[ 'wc-completed' ] ?? 0,
-                },
-                {
-                    value: 'wc-cancelled',
-                    label: __( 'Cancelled', 'dokan-lite' ),
-                    count: response?.[ 'wc-cancelled' ] ?? 0,
-                },
-                {
-                    value: 'wc-refunded',
-                    label: __( 'Refunded', 'dokan-lite' ),
-                    count: response?.[ 'wc-refunded' ] ?? 0,
-                },
-                {
-                    value: 'wc-failed',
-                    label: __( 'Failed', 'dokan-lite' ),
-                    count: response?.[ 'wc-failed' ] ?? 0,
-                },
-            ] );
+            setStatusCounts(
+                defaults.map( ( item ) => ( {
+                    ...item,
+                    count:
+                        item.value === 'all'
+                            ? response?.total ?? 0
+                            : response?.[ item.value ] ?? 0,
+                } ) )
+            );
         } catch {
             // Silently fail - tabs will show default zero counts.
         }
