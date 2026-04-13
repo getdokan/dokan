@@ -34,3 +34,20 @@ class VendorOnboardingRegistration extends DokanShortcode {
         return apply_filters( 'dokan_vendor_reg_form', $content );
     }
 }
+    /**
+     * Redirect regular customers to My Account after login from this page.
+     * @since DOKAN
+     * @param string $redirect_to
+     * @param WP_User $user
+     * @return string
+     */
+    add_filter( 'woocommerce_login_redirect', function( $redirect_to, $user ) {
+        if ( ! empty( $_GET['redirect_to'] ) ) { // phpcs:ignore
+            $redirect_to = esc_url( wp_unslash( $_GET['redirect_to'] ) ); // phpcs:ignore
+        } 
+        elseif ( user_can( $user, 'customer' ) ) {
+            $redirect_to = wc_get_page_permalink( 'myaccount' );
+        }
+
+        return $redirect_to;
+    }, 20, 2 );
