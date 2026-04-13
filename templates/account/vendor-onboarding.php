@@ -11,7 +11,14 @@ if ( function_exists( 'wc_print_notices' ) ) {
         <!-- Login Section -->
         <div class="dokan-login-section">
             <h2><?php esc_html_e( 'Login', 'dokan-lite' ); ?></h2>
-            <?php wc_get_template( 'global/form-login.php' ); ?>
+            <?php 
+            $args = [
+                'message'  => '',
+                'redirect' => wc_get_page_permalink( 'myaccount' ), // Redirect customers here
+                'hidden'   => false,
+            ];
+            wc_get_template( 'global/form-login.php', $args ); 
+            ?>
         </div>
 
         <!-- Registration Section -->
