@@ -62,6 +62,7 @@ class FormSchema {
         'image',
         'gallery',
         'attribute',
+        'location_map',
     ];
 
     /**
