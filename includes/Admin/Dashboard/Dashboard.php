@@ -311,9 +311,6 @@ class Dashboard implements Hookable {
         return array_reduce(
             $this->get_pages(), fn( $carry, $page ) => array_merge( $carry, $page->styles() ), [
                 $this->script_key,
-                $this->header_script_key,
-                $this->setup_guide_key,
-                $this->switching_script_key,
             ]
         );
     }
@@ -445,13 +442,6 @@ class Dashboard implements Hookable {
                 true
             );
 
-            wp_register_style(
-                $this->header_script_key,
-                DOKAN_PLUGIN_ASSEST . '/js/dokan-admin-panel-header.css',
-                [],
-                $version
-            );
-
             wp_set_script_translations(
                 $this->header_script_key,
                 'dokan-lite'
@@ -494,13 +484,6 @@ class Dashboard implements Hookable {
                 true
             );
 
-            wp_register_style(
-                $this->setup_guide_key,
-                DOKAN_PLUGIN_ASSEST . '/css/setup-guide-banner.css',
-                [],
-                $version
-            );
-
             wp_set_script_translations(
                 $this->setup_guide_key,
                 'dokan-lite'
@@ -541,13 +524,6 @@ class Dashboard implements Hookable {
                 $dependencies,
                 $version,
                 true
-            );
-
-            wp_register_style(
-                $this->switching_script_key,
-                DOKAN_PLUGIN_ASSEST . '/js/dokan-admin-switching.css',
-                [],
-                $version
             );
 
             wp_set_script_translations(

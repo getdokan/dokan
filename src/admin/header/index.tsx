@@ -3,7 +3,6 @@ import { SlotFillProvider } from '@wordpress/components';
 import { PluginArea } from '@wordpress/plugins';
 import AdminBar from './AdminBar';
 import domReady from '@wordpress/dom-ready';
-import './tailwind.scss';
 
 // Register default support button fill.
 import './SupportButton';

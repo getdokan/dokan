@@ -1,5 +1,4 @@
 import domReady from '@wordpress/dom-ready';
-import './tailwind.scss';
 import { DokanAdminRoute } from '../admin/dashboard/components/Dashboard';
 import ProFeatures from './ProFeatures';
 

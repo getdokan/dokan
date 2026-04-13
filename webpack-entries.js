@@ -1,5 +1,6 @@
 const entryPoints = {
-    'dokan-tailwind': './src/tailwind.css',
+    // Single Tailwind CSS entry - all other modules use this shared bundle
+    'dokan-tailwind': './src/base-tailwind.css',
 
     frontend: './src/dashboard/index.tsx',
     'dokan-admin-dashboard': './src/admin/dashboard/index.tsx',
@@ -50,8 +51,6 @@ const entryPoints = {
     'page-views': './assets/src/js/page-views.js',
     'dokan-setup-wizard-commission':
         './assets/src/js/setup-wizard/commission/index.js',
-    // Category commission component styles.
-    'dokan-category-commission': '/src/admin/components/Commission/index.js',
     'core-store': {
         import: '/src/stores/core/store.ts',
         library: {
@@ -86,6 +85,10 @@ const entryPoints = {
             type: 'window',
         },
     },
+    'dokan-admin-commission-suborder-metabox':
+        './src/styles/dokan-admin-commission-suborder-metabox.css',
+
+    'dokan-vue-vendor': './src/styles/vue-vendor.css',
 };
 
 module.exports = entryPoints;
