@@ -767,6 +767,13 @@ function ProductList() {
                 },
             },
             {
+                id: 'quick-edit',
+                label: () => __( 'Quick Edit', 'dokan-lite' ),
+                callback: ( [ item ]: ProductItem[] ) => {
+                    doAction( 'dokan_product_list_quick_edit', item );
+                },
+            },
+            {
                 id: 'bulk-edit',
                 label: () => __( 'Bulk Edit', 'dokan-lite' ),
                 supportsBulk: true,
