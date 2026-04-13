@@ -16,7 +16,6 @@ import {
     DataViews,
     DokanBadge,
     DokanButton,
-    DokanModal,
     // @ts-ignore
     // eslint-disable-next-line import/no-unresolved
     Select,
@@ -25,7 +24,7 @@ import PriceHtml from '../../components/PriceHtml';
 import DateTimeHtml from '../../components/DateTimeHtml';
 import { useProducts } from './hooks/useProducts';
 import { useProductCategories } from './hooks/useProductCategories';
-import { useProductMonths } from './hooks/useProductMonths';
+import { QuickViewModal } from './QuickViewModal';
 import type { ProductItem, ProductStatus, ProductFilterState } from './types';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -97,165 +96,9 @@ const PRODUCT_TYPE_OPTIONS = [
     },
 ];
 
-// ── Quick View Modal (read-only) ──────────────────────────────────────────────
-
-const QuickViewModal = ( {
-    product,
-    onClose,
-}: {
-    product: ProductItem | null;
-    onClose: () => void;
-} ) => {
-    if ( ! product ) return null;
-
-    const stockDisplay = () => {
-        if ( product.manage_stock && product.stock_quantity !== null ) {
-            return product.stock_quantity;
-        }
-        return product.in_stock
-            ? __( 'In stock', 'dokan-lite' )
-            : __( 'Out of stock', 'dokan-lite' );
-    };
-
-    return (
-        <DokanModal
-            isOpen={ true }
-            namespace="product-quick-view"
-            className="max-w-2xl w-full"
-            onClose={ onClose }
-            onConfirm={ onClose }
-            confirmButtonText={ __( 'Close', 'dokan-lite' ) }
-            confirmButtonVariant="primary"
-            hideCancelButton={ true }
-            dialogHeader={
-                <div className="px-6 py-4 border-b border-gray-200 flex items-center gap-4">
-                    <div className="w-14 h-14 rounded-lg overflow-hidden bg-gray-100 shrink-0">
-                        { product.images?.[ 0 ]?.src ? (
-                            <img
-                                src={ product.images[ 0 ].src }
-                                alt={ product.images[ 0 ].alt || product.name }
-                                className="w-full h-full object-cover"
-                            />
-                        ) : (
-                            <div className="w-full h-full bg-gray-100" />
-                        ) }
-                    </div>
-                    <div className="flex-1 min-w-0 pr-6">
-                        <h2 className="text-lg font-semibold text-dokan-link truncate">
-                            { product.name }
-                        </h2>
-                        <p className="text-sm text-gray-500">
-                            { __( 'SKU:', 'dokan-lite' ) }{ ' ' }
-                            { product.sku || __( 'N/A', 'dokan-lite' ) }
-                        </p>
-                    </div>
-                </div>
-            }
-            dialogContent={
-                <div>
-                    <p className="font-semibold text-gray-900 mb-3">
-                        { __( 'Product info:', 'dokan-lite' ) }
-                    </p>
-                    <table className="w-full text-sm">
-                        <tbody className="divide-y divide-gray-100">
-                            <tr>
-                                <td className="py-2 text-gray-500">
-                                    { __( 'Type', 'dokan-lite' ) }
-                                </td>
-                                <td className="py-2 text-right text-gray-900">
-                                    { getProductTypeLabel( product ) }
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="py-2 text-gray-500">
-                                    { __( 'Stock', 'dokan-lite' ) }
-                                </td>
-                                <td className="py-2 text-right text-gray-900">
-                                    { stockDisplay() }
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="py-2 text-gray-500">
-                                    { __( 'Status', 'dokan-lite' ) }
-                                </td>
-                                <td className="py-2 text-right">
-                                    <DokanBadge
-                                        variant={ getStatusBadgeVariant(
-                                            product.status
-                                        ) }
-                                        label={ getStatusLabel(
-                                            product.status
-                                        ) }
-                                    />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="py-2 text-gray-500">
-                                    { __( 'Price', 'dokan-lite' ) }
-                                </td>
-                                <td className="py-2 text-right text-gray-900">
-                                    { product.price ? (
-                                        <PriceHtml price={ product.price } />
-                                    ) : (
-                                        '—'
-                                    ) }
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="py-2 text-gray-500">
-                                    { __( 'Earning', 'dokan-lite' ) }
-                                </td>
-                                <td className="py-2 text-right text-gray-900">
-                                    { product.earning !== null &&
-                                    product.earning !== undefined ? (
-                                        <PriceHtml
-                                            price={ String( product.earning ) }
-                                        />
-                                    ) : (
-                                        '—'
-                                    ) }
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="py-2 text-gray-500">
-                                    { __( 'Date created', 'dokan-lite' ) }
-                                </td>
-                                <td className="py-2 text-right text-gray-900">
-                                    <DateTimeHtml.Date
-                                        date={ product.date_created }
-                                    />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="py-2 text-gray-500">
-                                    { __( 'Last Modified', 'dokan-lite' ) }
-                                </td>
-                                <td className="py-2 text-right text-gray-900">
-                                    <DateTimeHtml.Date
-                                        date={ product.date_modified }
-                                    />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td className="py-2 text-gray-500">
-                                    { __( 'Page View', 'dokan-lite' ) }
-                                </td>
-                                <td className="py-2 text-right text-gray-900">
-                                    { product.page_view ?? 0 }
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            }
-        />
-    );
-};
-
 // ── Product listing localized data from PHP ───────────────────────────────────
 
 interface SubscriptionInfo {
-    /** Initial page-load values from PHP. After each action, subscriptionRemaining from the hook takes over. */
     remaining_products: true | number;
     can_post_product: boolean;
     subscription_url?: string;
@@ -268,7 +111,6 @@ interface ProductListingConfig {
     can_export?: boolean;
     import_url?: string;
     export_url?: string;
-    /** Present only when the subscription module is active */
     subscription?: SubscriptionInfo;
 }
 
@@ -317,6 +159,7 @@ function ProductList() {
         productsUrl,
         instockCount,
         outstockCount,
+        monthOptions,
         subscriptionRemaining,
         fetchProducts,
         fetchStatusCounts,
@@ -326,21 +169,10 @@ function ProductList() {
     } = useProducts( filterArgs );
 
     const { options: categoryOptions } = useProductCategories();
-    const { options: monthOptions } = useProductMonths();
 
-    // ── Subscription limits ───────────────────────────────────────────────────
-
-    // Static PHP data: set at page load, used as initial values before the
-    // first fetchStatusCounts() response arrives. Also holds subscription_url
-    // which never changes.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const subscriptionInfo: SubscriptionInfo | undefined = ( window as any )
         .dokanFrontend?.product_listing?.subscription;
 
-    // Fresh values from /dokan/v1/products/summary (PHP authoritative calculation).
-    // Includes ALL product types (auction + normal) — same as PHP's get_published_product_count().
-    // Updated after every action because fetchStatusCounts() calls the summary endpoint.
-    // Falls back to the static PHP data until the first summary response arrives.
     const effectiveRemaining: true | number | undefined =
         subscriptionRemaining?.remaining_products ??
         subscriptionInfo?.remaining_products;
@@ -349,10 +181,6 @@ function ProductList() {
         subscriptionInfo?.can_post_product ??
         true;
 
-    /**
-     * True when the vendor's subscription pack has been exhausted.
-     * Mirrors PHP: $remaining_product == 0 || ! self::can_post_product()
-     */
     const subscriptionLimitReached =
         subscriptionInfo !== undefined &&
         ( effectiveRemaining === 0 || ! effectiveCanPost );
@@ -544,11 +372,9 @@ function ProductList() {
     // ── Page notices (above heading, injected by Pro modules via filter) ─────────
 
     const pageNotices = useMemo( () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const base: ProductListingConfig =
             ( window as any ).dokanFrontend?.product_listing ?? {};
-        // Inject the live remaining count so the subscription module's notice
-        // filter reflects the current state after publish/delete actions.
+
         const config: ProductListingConfig =
             subscriptionInfo && effectiveRemaining !== undefined
                 ? {
@@ -565,14 +391,11 @@ function ProductList() {
             [] as JSX.Element[],
             config
         ) as JSX.Element[];
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ effectiveRemaining, effectiveCanPost ] );
 
     const headerButtons = useMemo( () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const base: ProductListingConfig =
             ( window as any ).dokanFrontend?.product_listing ?? {};
-        // Inject the live remaining count so Pro filters receive up-to-date data.
         const config: ProductListingConfig =
             subscriptionInfo && effectiveRemaining !== undefined
                 ? {
@@ -585,8 +408,6 @@ function ProductList() {
                   }
                 : base;
 
-        // Mirror PHP: when subscription limit is reached, hide ALL header
-        // action buttons (matches the CSS hide on .dokan-add-product-link).
         if ( subscriptionLimitReached ) {
             return [] as JSX.Element[];
         }
@@ -610,7 +431,6 @@ function ProductList() {
             buttons,
             config
         ) as JSX.Element[];
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ effectiveRemaining, effectiveCanPost, subscriptionLimitReached ] );
 
     const tabs = useMemo( () => {
@@ -750,7 +570,6 @@ function ProductList() {
                 filterArgs,
                 setFilterArgs
             ) as typeof filterFields,
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [ filterFields, filterArgs ]
     );
 
@@ -758,7 +577,6 @@ function ProductList() {
 
     const actions = useMemo(
         () => [
-            // Edit details — full PHP product edit page (same as PHP "Edit" row action)
             {
                 id: 'edit-details',
                 label: () => __( 'Edit details', 'dokan-lite' ),
@@ -767,30 +585,12 @@ function ProductList() {
                 },
             },
             {
-                id: 'quick-edit',
-                label: () => __( 'Quick Edit', 'dokan-lite' ),
-                callback: ( [ item ]: ProductItem[] ) => {
-                    doAction( 'dokan_product_list_quick_edit', item );
-                },
-            },
-            {
-                id: 'bulk-edit',
-                label: () => __( 'Bulk Edit', 'dokan-lite' ),
-                supportsBulk: true,
-                isEligible: () => selection.length > 0,
-                callback: ( items: ProductItem[] ) => {
-                    doAction( 'dokan_product_list_bulk_edit', items );
-                },
-            },
-            // Quick view — read-only info modal
-            {
                 id: 'quick-view',
                 label: () => __( 'Quick view', 'dokan-lite' ),
                 callback: ( [ item ]: ProductItem[] ) => {
                     setQuickViewProduct( item );
                 },
             },
-            // View in site — opens product permalink in new tab
             {
                 id: 'view-in-site',
                 label: () => __( 'View in site', 'dokan-lite' ),
@@ -802,7 +602,6 @@ function ProductList() {
                     }
                 },
             },
-            // Delete permanently — single or bulk
             {
                 id: 'delete',
                 label: __( 'Delete Permanently', 'dokan-lite' ),
@@ -848,7 +647,6 @@ function ProductList() {
                     }
                 },
             },
-            // Bulk: Publish — publish all selected unpublished products
             {
                 id: 'bulk-publish',
                 label: ( items: ProductItem[] ) =>
@@ -867,8 +665,6 @@ function ProductList() {
                     return true;
                 },
                 callback: async ( items: ProductItem[] ) => {
-                    // Enforce subscription limit per-product: only publish as
-                    // many as the vendor's remaining allowance permits.
                     let toPublish = items;
                     let skipped = 0;
 
@@ -982,7 +778,6 @@ function ProductList() {
                 selection,
                 setSelection,
             } ) as typeof actions,
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         [ actions, selection ]
     );
 
@@ -1035,15 +830,10 @@ function ProductList() {
 
     return (
         <>
-            { /* Inject action buttons into the page header (same row as "Products" heading) */ }
             { headerButtons.length > 0 && (
                 <Fill name="dokan-header-actions">{ headerButtons }</Fill>
             ) }
 
-            { /* Page notices — injected ABOVE the page heading via dokan-before-header slot.
-                   Populated by Pro modules (e.g. subscription) via the
-                   dokan_product_list_page_notices JS filter.
-                   col-span-4 makes each notice span the full width of the before-header grid. */ }
             { pageNotices.length > 0 && (
                 <Fill name="dokan-before-header">
                     { pageNotices.map( ( notice, i ) => (

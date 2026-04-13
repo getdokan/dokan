@@ -7,6 +7,7 @@ import type {
     ProductFilterState,
     ProductStatusCount,
     ProductSummary,
+    ProductMonthOption,
     SubscriptionRemaining,
 } from '../types';
 
@@ -19,6 +20,7 @@ interface UseProductsReturn {
     productsUrl: string;
     instockCount: number;
     outstockCount: number;
+    monthOptions: ProductMonthOption[];
     subscriptionRemaining: SubscriptionRemaining | null;
     fetchProducts: () => void;
     fetchStatusCounts: () => void;
@@ -40,6 +42,7 @@ export const useProducts = (
     const [ outstockCount, setOutstockCount ] = useState( 0 );
     const [ subscriptionRemaining, setSubscriptionRemaining ] =
         useState< SubscriptionRemaining | null >( null );
+    const [ monthOptions, setMonthOptions ] = useState< ProductMonthOption[] >( [] );
 
     const [ statusCounts, setStatusCounts ] = useState< ProductStatusCount[] >(
         [
@@ -181,6 +184,7 @@ export const useProducts = (
             setProductsUrl( response.products_url ?? '' );
             setInstockCount( response.instock_count ?? 0 );
             setOutstockCount( response.outofstock_count ?? 0 );
+            setMonthOptions( response.months ?? [] );
             setSubscriptionRemaining( response.subscription_remaining ?? null );
         } catch ( error ) {
             console.error( 'Error fetching product summary:', error );
@@ -250,6 +254,7 @@ export const useProducts = (
         productsUrl,
         instockCount,
         outstockCount,
+        monthOptions,
         subscriptionRemaining,
         fetchProducts,
         fetchStatusCounts,

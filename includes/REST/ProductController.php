@@ -214,16 +214,6 @@ class ProductController extends DokanRESTController {
         );
 
         register_rest_route(
-            $this->namespace, '/' . $this->base . '/months', [
-                [
-                    'methods'             => WP_REST_Server::READABLE,
-                    'callback'            => [ $this, 'get_product_months' ],
-                    'permission_callback' => [ $this, 'get_product_permissions_check' ],
-                ],
-            ]
-        );
-
-        register_rest_route(
             $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)/related', [
                 'args' => [
                     'id'       => [
@@ -558,6 +548,7 @@ class ProductController extends DokanRESTController {
             'products_url'     => $products_url,
             'instock_count'    => dokan_count_stock_posts( 'product', $seller_id, 'instock' ),
             'outofstock_count' => dokan_count_stock_posts( 'product', $seller_id, 'outofstock' ),
+            'months'           => $this->get_product_months_data( dokan_get_current_user_id() ),
         ];
 
         /**
@@ -575,23 +566,25 @@ class ProductController extends DokanRESTController {
     }
 
     /**
-     * Get distinct year/month pairs when the current vendor has products.
+     * Get month options for the current vendor.
      *
      * @since DOKAN_SINCE
      *
-     * @return WP_REST_Response
+     * @param int $seller_id
+     *
+     * @return array
      */
-    public function get_product_months(): WP_REST_Response {
+    public function get_product_months_data( $seller_id ) {
         global $wp_locale;
 
-        $seller_id = dokan_get_current_user_id();
-        $months    = dokan_get_products_listing_months_for_vendor( $seller_id );
+        $months = dokan_get_products_listing_months_for_vendor( $seller_id );
+        $items  = [];
 
-        $items = [];
         foreach ( $months as $row ) {
             if ( 0 === (int) $row->year || 0 === (int) $row->month ) {
                 continue;
             }
+
             $month_padded = zeroise( (int) $row->month, 2 );
             $items[]      = [
                 'value' => $row->year . $month_padded,
@@ -599,7 +592,7 @@ class ProductController extends DokanRESTController {
             ];
         }
 
-        return rest_ensure_response( $items );
+        return $items;
     }
 
     /**

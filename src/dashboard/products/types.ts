@@ -76,7 +76,6 @@ export interface ProductStatusCount {
 
 /** Fresh subscription limits returned by /dokan/v1/products/summary after each action. */
 export interface SubscriptionRemaining {
-    /** boolean true = unlimited, number = remaining slots (0 = limit reached) */
     remaining_products: true | number;
     can_post_product: boolean;
 }
@@ -86,8 +85,8 @@ export interface ProductSummary {
     products_url: string;
     instock_count: number;
     outofstock_count: number;
-    /** Present only when the subscription module is active. */
     subscription_remaining?: SubscriptionRemaining;
+    months?: ProductMonthOption[];
 }
 
 export interface ProductMonthOption {
