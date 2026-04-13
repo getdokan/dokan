@@ -3,6 +3,7 @@ import { useCustomerSearch } from '@dokan/hooks';
 import { useState } from '@wordpress/element';
 import { debounce } from '@wordpress/compose';
 import { __ } from "@wordpress/i18n";
+import { twMerge } from 'tailwind-merge';
 
 const CustomerFilter = ( props ) => {
     const customerHook = useCustomerSearch();
@@ -57,6 +58,7 @@ const CustomerFilter = ( props ) => {
     return (
         <AsyncSearchableSelect
             { ...props }
+            className={twMerge( 'shadow-none', props?.className )}
             value={ getValue() }
             defaultOptions={ searchedCustomer }
             loadOptions={ handleCustomrSearch }

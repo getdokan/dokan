@@ -159,7 +159,7 @@ const AdminFilter = ( {
                                             'Remove filter',
                                             'dokan-lite'
                                         ) }
-                                        className="absolute right-1 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-6 h-6 rounded-full bg-white text-[#828282] hover:text-[#7047EB] z-10"
+                                        className="absolute right-1 top-1/2 inline-flex items-center justify-center w-6 h-6 rounded-full bg-white text-[#828282] hover:text-[#7047EB] z-10 mt-[-12px]"
                                         onClick={ () =>
                                             handleRemoveFilter( id )
                                         }

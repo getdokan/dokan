@@ -175,7 +175,7 @@ const BasicInfoScreen = ( {
                     </div>
 
                     <div className="flex items-center gap-2 space-y-8">
-                        <div className="flex-shrink-0 mt-1.5">
+                        <div className="shrink-0 mt-1.5">
                             <SimpleCheckbox
                                 input={ {
                                     id: 'localShareDiagnostics',

@@ -50,7 +50,7 @@ class Status extends AbstractPage {
      * @return array<string> An array of style handles.
      */
     public function styles(): array {
-        return [ 'dokan-status' ];
+        return [];
     }
 
     /**
@@ -73,7 +73,5 @@ class Status extends AbstractPage {
                 'in_footer' => true,
             ]
         );
-
-        wp_register_style( 'dokan-status', DOKAN_PLUGIN_ASSEST . '/css/dokan-status.css', [], $asset_file['version'] );
     }
 }
