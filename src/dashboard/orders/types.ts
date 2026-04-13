@@ -12,6 +12,12 @@ export interface OrderBilling {
     country: string;
 }
 
+export interface OrderRefund {
+    id: number;
+    refund: string;
+    total: string;
+}
+
 export interface OrderItem {
     id: number;
     number: string;
@@ -24,6 +30,7 @@ export interface OrderItem {
     billing: OrderBilling;
     customer_id: number;
     order_shipment: string;
+    refunds?: OrderRefund[];
 }
 
 export type OrderStatus = string;

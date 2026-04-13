@@ -250,11 +250,33 @@ function OrderList() {
         },
         {
             id: 'order_total',
-            label: __( 'Order Total', 'dokan-lite' ),
+            label: __('Order Total', 'dokan-lite'),
             enableSorting: false,
-            render: ( { item }: { item: OrderItem } ) => (
-                <PriceHtml price={ item.total } />
-            ),
+            render: ({ item }: { item: OrderItem }) => {
+                const hasRefunds =
+                    Array.isArray(item.refunds) &&
+                    item.refunds.length > 0;
+
+                if (!hasRefunds) {
+                    return <PriceHtml price={item.total} />;
+                }
+
+                let net = parseFloat(item.total) || 0;
+                for (const r of item.refunds!) {
+                    net += parseFloat(r.total) || 0;
+                }
+
+                return (
+                    <div>
+                        <span style={{ textDecoration: 'line-through', opacity: 0.6 }}>
+                            <PriceHtml price={item.total} />
+                        </span>
+                        <div className="mt-0.5">
+                            <PriceHtml price={String(net)} />
+                        </div>
+                    </div>
+                );
+            },
         },
         {
             id: 'earning',
