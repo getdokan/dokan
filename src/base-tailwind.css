@@ -9,8 +9,6 @@
 @source "../src/";
 @source "../node_modules/@wedevs/plugin-ui/dist";
 
-@source "../src/";
-
 /* Plugins */
 @plugin "@tailwindcss/typography";
 @plugin "@tailwindcss/forms";
@@ -165,10 +163,9 @@
     --font-sans: var(--font-sans);
     --font-serif: var(--font-serif);
     --font-mono: var(--font-mono);
-    --color-tertiary:                                         var(--dokan-button-tertiary-background-color, #00000000);
 
     /* ─── Primary color variants ─── */
-    --color-primary-dark:                                     #502BBF;
+    --color-primary-dark:                                     var(--dokan-button-hover-background-color, #502BBF);
     --color-primary-hover:                                    var(--dokan-sidebar-hover-background-color, #7047eb);
 
     /* ─── Danger color ─── */
@@ -198,9 +195,6 @@
 /* Scoped Layout — Preflight + Utilities + Components */
 .pui-root,
 .dokan-layout {
-    --wp-components-color-accent: var(--color-primary);
-    --wp-components-color-accent-darker-20: var(--color-dokan-btn-hover);
-
     @import "tailwindcss/preflight.css" layer(base);
     @import "tailwindcss/utilities.css" important;
     /* Import custom component styles */

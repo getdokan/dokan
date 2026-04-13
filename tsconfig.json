@@ -7,6 +7,9 @@
         "checkJs": false,
         "jsx": "react-jsx",
 
+        // Deprecation options
+        "ignoreDeprecations": "6.0",
+
         // Module resolution
         "moduleResolution": "bundler",
         "baseUrl": ".",

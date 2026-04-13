@@ -1,14 +1,14 @@
 # Copyright (c) 2026 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 4.3.2\n"
+"Project-Id-Version: Dokan 4.3.3\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-03-13T09:21:21+00:00\n"
+"POT-Creation-Date: 2026-03-31T07:53:13+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -741,7 +741,8 @@ msgid "Withdraw %s"
 msgstr ""
 
 #: includes/Admin/Menu.php:72
-msgid "<span style=\"color:#f18500\">Help</span>"
+#: assets/js/vue-admin.js:2
+msgid "Help"
 msgstr ""
 
 #: includes/Admin/Menu.php:85
@@ -4363,7 +4364,7 @@ msgstr ""
 
 #: includes/functions-dashboard-navigation.php:307
 #: templates/settings/header.php:14
-#: templates/store-lists-loop.php:104
+#: templates/store-lists-loop.php:107
 #: assets/js/components.js:179
 #: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/vendor-dashboard/layout/index.js:172
@@ -5842,7 +5843,7 @@ msgstr ""
 
 #: includes/Product/functions.php:510
 #: templates/my-orders.php:101
-#: templates/orders/listing.php:160
+#: templates/orders/listing.php:162
 #: templates/sub-orders.php:99
 #: assets/js/dokan-admin-dashboard.js:179
 msgid "View"
@@ -8717,13 +8718,13 @@ msgstr ""
 
 #: includes/template-tags.php:121
 #: includes/template-tags.php:125
-#: templates/store-lists-loop.php:128
+#: templates/store-lists-loop.php:131
 msgid "&larr; Previous"
 msgstr ""
 
 #: includes/template-tags.php:137
 #: includes/template-tags.php:140
-#: templates/store-lists-loop.php:129
+#: templates/store-lists-loop.php:132
 msgid "Next &rarr;"
 msgstr ""
 
@@ -10928,11 +10929,19 @@ msgstr ""
 msgid "Shipping Status"
 msgstr ""
 
-#: templates/orders/listing.php:151
+#: templates/orders/listing.php:145
+msgid "Are you sure you want to mark this order as processing?"
+msgstr ""
+
+#: templates/orders/listing.php:152
 msgid "Complete"
 msgstr ""
 
-#: templates/orders/listing.php:203
+#: templates/orders/listing.php:155
+msgid "Are you sure you want to mark this order as completed?"
+msgstr ""
+
+#: templates/orders/listing.php:216
 #: assets/js/dokan-admin-dashboard.js:179
 msgid "No orders found"
 msgstr ""
@@ -11595,7 +11604,7 @@ msgid "There is no payment method to show."
 msgstr ""
 
 #: templates/settings/store-form.php:40
-#: templates/store-lists-loop.php:42
+#: templates/store-lists-loop.php:45
 msgid "Open"
 msgstr ""
 
@@ -11668,34 +11677,34 @@ msgstr ""
 msgid "Search Vendors"
 msgstr ""
 
-#: templates/store-lists-loop.php:35
+#: templates/store-lists-loop.php:38
 #: assets/js/dokan-admin-dashboard.js:179
 msgid "Featured"
 msgstr ""
 
-#: templates/store-lists-loop.php:42
+#: templates/store-lists-loop.php:45
 msgid "Store is Open"
 msgstr ""
 
-#: templates/store-lists-loop.php:44
+#: templates/store-lists-loop.php:47
 msgid "Store is Closed"
 msgstr ""
 
-#: templates/store-lists-loop.php:44
+#: templates/store-lists-loop.php:47
 msgid "Closed"
 msgstr ""
 
 #. translators: 1) seller rating
-#: templates/store-lists-loop.php:57
+#: templates/store-lists-loop.php:60
 msgid "Rated %s out of 5"
 msgstr ""
 
 #. translators: 1) seller rating
-#: templates/store-lists-loop.php:66
+#: templates/store-lists-loop.php:69
 msgid "%s out of 5"
 msgstr ""
 
-#: templates/store-lists-loop.php:155
+#: templates/store-lists-loop.php:158
 msgid "No vendor found!"
 msgstr ""
 
@@ -12907,6 +12916,10 @@ msgid "Approve"
 msgstr ""
 
 #: assets/js/dokan-admin-dashboard.js:179
+msgid "Unknown Vendor"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/vue-admin.js:2
 msgid "Download PayPal mass payment file"
 msgstr ""
@@ -13011,6 +13024,16 @@ msgstr ""
 #: assets/js/dokan-admin-dashboard.js:179
 msgid "Action:"
 msgid_plural "Actions:"
+msgstr[0] ""
+msgstr[1] ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "Insufficient Balance"
+msgstr ""
+
+#: assets/js/dokan-admin-dashboard.js:179
+msgid "%s does not have sufficient balance for this withdrawal request."
+msgid_plural "%s do not have sufficient balance for this withdrawal request."
 msgstr[0] ""
 msgstr[1] ""
 
@@ -14855,10 +14878,6 @@ msgstr ""
 
 #: assets/js/vue-admin.js:2
 msgid "Filter by Date"
-msgstr ""
-
-#: assets/js/vue-admin.js:2
-msgid "Help"
 msgstr ""
 
 #: assets/js/vue-admin.js:2
