@@ -781,6 +781,10 @@ class Assets {
              */
             'maximum_tags_select_length'   => apply_filters( 'dokan_product_tags_select_max_length', - 1 ),  // Filter of maximun a vendor can add tags
             'modal_header_color'           => 'var(--dokan-button-background-color, #7047EB)',
+            // Shipment feature flags (used by JS order list to match PHP template behavior)
+            'allow_shipment'                => dokan_get_option( 'enabled', 'dokan_shipping_status_setting', 'off' ),
+            'wc_shipping_enabled'           => get_option( 'woocommerce_calc_shipping' ) === 'yes',
+            'has_shipment_func'             => function_exists( 'dokan_get_order_shipment_current_status' ),
         ];
 
         $localize_script     = apply_filters( 'dokan_localized_args', $default_script );
@@ -1384,6 +1388,10 @@ class Assets {
                 'decimal_point'                     => $decimal,
                 'mon_decimal_point'                 => wc_get_price_decimal_separator(),
                 'i18n_date_format'                  => wc_date_format(),
+                // Shipment feature flags (used by React order list)
+                'allow_shipment'                    => dokan_get_option( 'enabled', 'dokan_shipping_status_setting', 'off' ),
+                'wc_shipping_enabled'               => get_option( 'woocommerce_calc_shipping' ) === 'yes',
+                'has_shipment_func'                 => function_exists( 'dokan_get_order_shipment_current_status' ),
             ]
         );
     }

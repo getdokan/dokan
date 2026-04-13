@@ -185,20 +185,20 @@ function OrderList() {
         search: '',
     } );
 
+    const allowShipment =
+        window?.dokan?.allow_shipment === 'on' &&
+        window?.dokan?.wc_shipping_enabled &&
+        Boolean( window?.dokan?.has_shipment_func );
+
     const [ view, setView ] = useState( {
         perPage: 10,
         page: 1,
         search: '',
         type: 'table' as const,
         status: 'all',
-        fields: [
-            'order',
-            'order_total',
-            'earning',
-            'status',
-            'customer',
-            'shipment',
-        ],
+        fields: allowShipment
+            ? [ 'order', 'order_total', 'earning', 'status', 'customer', 'shipment' ]
+            : [ 'order', 'order_total', 'earning', 'status', 'customer' ],
     } );
 
     const {
@@ -328,6 +328,15 @@ function OrderList() {
             },
         },
     ];
+
+    // Filter out shipment column if feature is disabled (match old template behavior)
+    const visibleFields = fields.filter( ( f ) => {
+        if ( f.id === 'shipment' ) {
+            return allowShipment;
+        }
+
+        return true;
+    } );
 
     // ── Tabs ────────────────────────────────────────────────────
     const tabs = {
@@ -629,7 +638,7 @@ function OrderList() {
             <DataViews
                 namespace="dokan-orders-data-view"
                 data={ data }
-                fields={ fields }
+                fields={ visibleFields }
                 view={ view }
                 onChangeView={ onViewChange }
                 getItemId={ ( item: OrderItem ) => String( item.id ) }
