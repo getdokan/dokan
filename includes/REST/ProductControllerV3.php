@@ -376,7 +376,9 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
     public function get_form_fields( $request ) {
         $product_id = $request->get_param( 'id' );
         $product    = wc_get_product( $product_id );
-        if ( ! $product ) {
+        $force      = $request->get_param( 'force' ) ?? false;
+
+        if ( ! $product && ! $force ) {
             return new WP_Error( 'dokan_rest_product_invalid_id', __( 'Invalid product ID.', 'dokan-lite' ), [ 'status' => 404 ] );
         }
 
