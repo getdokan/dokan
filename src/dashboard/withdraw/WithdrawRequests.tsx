@@ -129,7 +129,7 @@ function WithdrawRequests() {
             refresh: () => fetchWithdrawRequests(),
             totalItems,
             totalPages,
-            view: { perPage: 10, page: 1, search: '', type: 'table', titleField: 'amount' },
+            view: { perPage: 10, page: 1, search: '', type: 'table' },
             setView: () => {},
             setData: () => {},
             error: null,

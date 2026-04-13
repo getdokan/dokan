@@ -23,7 +23,6 @@ export interface WithdrawTableView {
     page: number;
     search: any;
     type: string;
-    titleField: string;
 }
 
 export interface UseWithdrawRequestsReturn {
@@ -50,8 +49,7 @@ export const useWithdrawRequests = (
         perPage:  10,
         page:  1,
         search: '',
-        type: 'table',
-        titleField: 'amount',
+        type: 'table'
     });
 
     const [ isLoading, setIsLoading ] = useState< boolean >( defaultLoader );
