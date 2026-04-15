@@ -160,17 +160,14 @@ const RecommendedAddons = ( { addons }: { addons: Addon[] } ) => {
     ] );
 
     const renderItem = ( item: EcosystemItem ): JSX.Element => (
-        <div
-            key={ item.title }
-            className="flex flex-col"
-        >
+        <div key={ item.title } className="flex flex-col">
             <div className="flex items-center gap-3 mb-3 text-[#7047EB]">
                 <CircleCheck size={ 20 } />
-                <h3 className="text-sm font-bold text-gray-900 m-0">
+                <h3 className="text-sm font-semibold text-[#575757]">
                     { item?.title }
                 </h3>
             </div>
-            <p className="text-xs text-gray-500 leading-relaxed m-0">
+            <p className="text-xs text-[#828282] leading-relaxed">
                 { item?.description }
             </p>
         </div>
@@ -228,7 +225,7 @@ const RecommendedAddons = ( { addons }: { addons: Addon[] } ) => {
                 <h2 className="text-2xl font-bold text-[#25252D]">
                     { __( 'Your complete business ecosystem', 'dokan-lite' ) }
                 </h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-20 p-6 bg-white rounded-md shadow">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-20 p-7 bg-white rounded-md shadow">
                     { ecosystemItems?.map( renderItem ) }
                 </div>
             </div>
