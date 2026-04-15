@@ -14,7 +14,7 @@ const ThemeContext = createContext< {
     setTheme: React.Dispatch< React.SetStateAction< string > >;
 } | null >( null );
 
-const pluginUITokens = {
+export const pluginUITokens = {
     primary: 'var(--dokan-button-background-color, #7047EB)',
     primaryForeground: 'var(--dokan-button-text-color, #ffffff)',
 };
@@ -25,7 +25,10 @@ const ThemeProvider = ( { children }: { children: React.ReactNode } ) => {
 
     return (
         <ThemeContext.Provider value={ { theme, setTheme } }>
-            <PluginUIThemeProvider pluginId='dokan-lite' tokens={pluginUITokens}>
+            <PluginUIThemeProvider
+                pluginId="dokan-lite"
+                tokens={ pluginUITokens }
+            >
                 { children }
             </PluginUIThemeProvider>
         </ThemeContext.Provider>
@@ -99,8 +102,6 @@ const handleMenuActiveStates = ( currentPath: string ) => {
 const Layout = ( {
     children,
     route,
-    title = '',
-    backUrl = '',
     headerComponent,
     footerComponent,
 }: LayoutProps ) => {
