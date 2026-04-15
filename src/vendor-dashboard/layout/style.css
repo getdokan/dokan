@@ -1,24 +1,30 @@
-@use '../../base-tailwind';
-@config './tailwind.config.js';
+/* Module-specific styles - Tailwind loaded via dokan-tailwind bundle */
+/* @referance '../../base-tailwind.css'; */
 
 .dokan-frontend-layout {
     .dokan-frontend-sidebar {
         background-color: var(--dokan-sidebar-background-color, #322067);
 
         .site-icon {
-            background-color: var(--dokan-sidebar-hover-background-color, #7047EB);
+            background-color: var(
+                --dokan-sidebar-hover-background-color,
+                #7047eb
+            );
         }
 
         li {
             a {
-                color: var(--dokan-sidebar-text-color, #DACEFF);
+                color: var(--dokan-sidebar-text-color, #daceff);
 
                 svg {
-                    color: var(--dokan-sidebar-text-color, #DACEFF);
+                    color: var(--dokan-sidebar-text-color, #daceff);
                 }
 
                 .sidebar-menu-bubble {
-                    background-color: var(--dokan-sidebar-hover-background-color, #7047EB);
+                    background-color: var(
+                        --dokan-sidebar-hover-background-color,
+                        #7047eb
+                    );
                 }
 
                 .hovered-item {
@@ -28,7 +34,10 @@
                 &:hover,
                 &.active {
                     color: var(--dokan-sidebar-hover-text-color, #ffffff);
-                    background-color: var(--dokan-sidebar-hover-background-color, #7047EB);
+                    background-color: var(
+                        --dokan-sidebar-hover-background-color,
+                        #7047eb
+                    );
 
                     svg {
                         color: var(--dokan-sidebar-hover-text-color, #ffffff);
@@ -36,7 +45,10 @@
 
                     .sidebar-menu-bubble {
                         background-color: #fff;
-                        color: var(--dokan-sidebar-hover-background-color, #7047EB);
+                        color: var(
+                            --dokan-sidebar-hover-background-color,
+                            #7047eb
+                        );
                     }
                 }
             }
@@ -48,12 +60,12 @@
             }
 
             .subscription-info {
-                color: var(--dokan-sidebar-text-color, #DACEFF);
+                color: var(--dokan-sidebar-text-color, #daceff);
             }
         }
 
         hr {
-            background-color: var(--dokan-sidebar-text-color, #DACEFF);
+            background-color: var(--dokan-sidebar-text-color, #daceff);
             opacity: 0.2;
         }
     }
@@ -61,17 +73,17 @@
     .dokan-frontend-layout-header {
         .visit-store {
             &:hover {
-                color: var(--dokan-button-secondary-text-color, #7047EB);
+                color: var(--dokan-button-secondary-text-color, #7047eb);
 
                 svg {
-                    color: var(--dokan-button-secondary-text-color, #7047EB);
+                    color: var(--dokan-button-secondary-text-color, #7047eb);
                 }
             }
         }
 
         .header-avatar {
             svg.active {
-                color: var(--dokan-button-secondary-text-color, #7047EB);
+                color: var(--dokan-button-secondary-text-color, #7047eb);
             }
         }
     }
@@ -81,11 +93,14 @@
 .sidebar-popover {
     a {
         &:hover {
-            color: var(--dokan-sidebar-hover-background-color, #7047EB);
-            background-color: var(--dokan-button-tertiary-hover-background-color, #DACEFF82);
+            color: var(--dokan-sidebar-hover-background-color, #7047eb);
+            background-color: var(
+                --dokan-button-tertiary-hover-background-color,
+                #daceff82
+            );
 
             svg {
-                color: var(--dokan-sidebar-hover-background-color, #7047EB);
+                color: var(--dokan-sidebar-hover-background-color, #7047eb);
             }
         }
     }
@@ -96,17 +111,26 @@
         a {
             &.active {
                 color: var(--dokan-sidebar-hover-text-color, #ffffff);
-                background-color: var(--dokan-sidebar-hover-background-color, #7047EB);
+                background-color: var(
+                    --dokan-sidebar-hover-background-color,
+                    #7047eb
+                );
 
                 .sidebar-submenu-bubble {
-                    color: var(--dokan-sidebar-hover-background-color, #7047EB);
-                    background-color: var(--dokan-sidebar-hover-text-color, #ffffff);
+                    color: var(--dokan-sidebar-hover-background-color, #7047eb);
+                    background-color: var(
+                        --dokan-sidebar-hover-text-color,
+                        #ffffff
+                    );
                 }
             }
 
             .sidebar-submenu-bubble {
                 color: var(--dokan-sidebar-hover-text-color, #ffffff);
-                background-color: var(--dokan-sidebar-hover-background-color, #7047EB);
+                background-color: var(
+                    --dokan-sidebar-hover-background-color,
+                    #7047eb
+                );
             }
         }
     }

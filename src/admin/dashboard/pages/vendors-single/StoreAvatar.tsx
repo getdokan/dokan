@@ -1,6 +1,6 @@
 function StoreAvatar( { gravatar } ) {
     return (
-        <div className="w-32 h-32 -mt-16 z-10 flex-shrink-0 flex items-center justify-center bg-white rounded-full border border-[#EBEBEB]">
+        <div className="w-32 h-32 -mt-16 z-10 shrink-0 flex items-center justify-center bg-white rounded-full border border-[#EBEBEB]">
             { gravatar ? (
                 <img
                     src={ gravatar }

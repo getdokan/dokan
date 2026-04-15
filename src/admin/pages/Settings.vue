@@ -12,7 +12,7 @@
                 </button>
             </div>
 
-            <div class="dokan-settings-wrap " ref='settingsWrapper'>
+            <div class="dokan-layout dokan-settings-wrap " ref='settingsWrapper'>
                 <div class='flex d-xs:flex-col lg:flex-row w-full'>
                     <div class="nav-tab-wrapper d-xs:!pb-5 d-xs:!pt-5 px-4 py-2 z-[1] lg:overflow-hidden d-xs:w-full  w-[250px] flex-1 lg:w-[340px]">
                         <div class="nab-section block">
@@ -90,7 +90,7 @@
                                                                 </div>
                                                             </div>
                                                             <svg
-                                                                class="w-4 h-4 text-gray-400 flex-shrink-0"
+                                                                class="w-4 h-4 text-gray-400 shrink-0"
                                                                 fill="none"
                                                                 stroke="currentColor"
                                                                 viewBox="0 0 24 24"

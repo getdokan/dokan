@@ -2,7 +2,7 @@ import IconWrapper from './IconWrapper';
 
 function Skrill() {
     return (
-        <IconWrapper className="bg-[#861A8A] bg-opacity-[10%]">
+        <IconWrapper className="bg-[#861A8A]/10">
             <svg
                 width="73"
                 height="17"
