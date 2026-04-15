@@ -1,9 +1,10 @@
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
-import { Check, Loader2, Download } from 'lucide-react';
+import { Check, Loader2, Download, CircleCheck } from 'lucide-react';
 import { DokanButton } from '@dokan/components';
 import PlaceholderIcon from './PlaceholderIcon';
+import { applyFilters } from '@wordpress/hooks';
 
 export type Addon = {
     slug: string;
@@ -17,12 +18,19 @@ export type Addon = {
     installed: boolean;
 };
 
+export type EcosystemItem = {
+    title: string;
+    description: string;
+};
+
 export const ExtensionIcon = ( {
     src,
     alt,
+    className = 'rounded-lg object-contain',
 }: {
     src: string;
     alt: string;
+    className?: string;
 } ) => {
     const [ failed, setFailed ] = useState( false );
 
@@ -34,7 +42,7 @@ export const ExtensionIcon = ( {
         <img
             src={ src }
             alt={ alt }
-            className="w-[60px] h-[60px] rounded-lg object-contain"
+            className={ className }
             onError={ () => setFailed( true ) }
         />
     );
@@ -124,32 +132,107 @@ const RecommendedAddons = ( { addons }: { addons: Addon[] } ) => {
         );
     };
 
-    return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-5">
-            { addons.map( ( addon ) => (
-                <div
-                    key={ addon.slug }
-                    className="flex flex-col bg-white rounded-xl border border-gray-200 overflow-hidden transition-shadow hover:shadow-md"
-                >
-                    <div className="px-5 pt-5 pb-3">
-                        <ExtensionIcon
-                            src={ addon.image }
-                            alt={ addon.title }
-                        />
-                    </div>
+    const ecosystemItems = applyFilters( 'dokan_extensions_ecosystem_items', [
+        {
+            title: __( '14 Days Money Back Guarantee', 'dokan-lite' ),
+            description: __(
+                "Get a full refund within 14 days if our plugin doesn't meet your needs—no questions asked!",
+                'dokan-lite'
+            ),
+        },
+        {
+            title: __(
+                'Help Is Just a Click Away, Day or Night!',
+                'dokan-lite'
+            ),
+            description: __(
+                'Receive expert support 24/7 to keep your business running smoothly, anytime you need help.',
+                'dokan-lite'
+            ),
+        },
+        {
+            title: __( 'Regular Releases', 'dokan-lite' ),
+            description: __(
+                'Stay ahead with frequent updates, new features, and enhancements to keep your marketplace running at its best.',
+                'dokan-lite'
+            ),
+        },
+    ] );
 
-                    <div className="flex flex-col flex-1 px-5 pb-5">
-                        <h3 className="text-[15px] font-semibold text-gray-900 mb-1">
-                            { addon.title }
-                        </h3>
-                        <p className="text-[13px] text-gray-500 leading-relaxed mb-5 flex-1">
-                            { addon.description }
-                        </p>
-                        <div className="mt-auto">{ renderButton( addon ) }</div>
-                    </div>
-                </div>
-            ) ) }
+    const renderItem = ( item: EcosystemItem ): JSX.Element => (
+        <div
+            key={ item.title }
+            className="flex flex-col"
+        >
+            <div className="flex items-center gap-3 mb-3 text-[#7047EB]">
+                <CircleCheck size={ 20 } />
+                <h3 className="text-sm font-bold text-gray-900 m-0">
+                    { item?.title }
+                </h3>
+            </div>
+            <p className="text-xs text-gray-500 leading-relaxed m-0">
+                { item?.description }
+            </p>
         </div>
+    );
+
+    return (
+        <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-5">
+                { addons.map( ( addon ) => (
+                    <div
+                        key={ addon.slug }
+                        className="flex flex-col bg-white rounded-xl border border-gray-200 overflow-hidden transition-shadow hover:shadow-md relative"
+                    >
+                        <div className="px-5 pt-5 pb-3 flex justify-between items-start">
+                            <ExtensionIcon
+                                src={ addon.image }
+                                alt={ addon.title }
+                            />
+                            { addon.button_type === 'get_plugin' ? (
+                                <span className="flex items-center gap-1 text-xs font-medium text-[#D3941E] bg-[#FFF9E9] px-2 py-0.5 rounded-full border border-[#FFE7A5]">
+                                    <img
+                                        src={ `${
+                                            ( window as any )
+                                                .dokanAdminDashboard.urls
+                                                .assetsUrl
+                                        }/images/extensions/crown.svg` }
+                                        alt="Pro"
+                                        className="w-3 h-3"
+                                    />
+                                    { __( 'Pro', 'dokan-lite' ) }
+                                </span>
+                            ) : (
+                                <span className="text-xs font-medium text-[#039855] bg-[#ECFDF3] px-2 py-0.5 rounded-full border border-[#D1FADF]">
+                                    • { __( 'Free', 'dokan-lite' ) }
+                                </span>
+                            ) }
+                        </div>
+
+                        <div className="flex flex-col flex-1 px-5 pb-5 pt-2">
+                            <h3 className="text-[15px] font-semibold text-gray-900 mb-1">
+                                { addon.title }
+                            </h3>
+                            <p className="text-[13px] text-gray-500 leading-relaxed mb-5 flex-1">
+                                { addon.description }
+                            </p>
+                            <div className="mt-auto">
+                                { renderButton( addon ) }
+                            </div>
+                        </div>
+                    </div>
+                ) ) }
+            </div>
+
+            <div className="mt-12 space-y-5">
+                <h2 className="text-2xl font-bold text-[#25252D]">
+                    { __( 'Your complete business ecosystem', 'dokan-lite' ) }
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-20 p-6 bg-white rounded-md shadow">
+                    { ecosystemItems?.map( renderItem ) }
+                </div>
+            </div>
+        </>
     );
 };
 

@@ -21,20 +21,23 @@ const MobileApps = ( { apps }: { apps: MobileApp[] } ) => {
                     className="flex flex-col bg-white rounded-xl border border-gray-200 overflow-hidden transition-shadow hover:shadow-md"
                 >
                     { /* Header: icon + name + badge */ }
-                    <div className="flex items-center gap-4 px-5 pt-5 pb-3">
-                        <ExtensionIcon src={ app.image } alt={ app.title } />
-                        <div>
-                            <h3 className="text-[15px] font-semibold text-gray-900 mb-0.5">
-                                { app.title }
-                            </h3>
-                            <span className="inline-block text-xs font-medium text-[#7047EB] bg-[#F0EBFF] px-2 py-0.5 rounded-full">
-                                { app.audience }
-                            </span>
-                        </div>
+                    <div className="flex items-center justify-between px-5 pt-5 pb-3">
+                        <ExtensionIcon
+                            src={ app.image }
+                            alt={ app.title }
+                            className="w-[53px] h-[53px] rounded-lg object-contain"
+                        />
+                        <span className="inline-flex items-center gap-1 text-xs font-medium text-[#7047EB] bg-[#F0EBFF] px-2 py-0.5 rounded-full border border-[#E0D5FF]">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#7047EB]"></span>
+                            { app.audience }
+                        </span>
                     </div>
 
                     { /* Content */ }
                     <div className="flex flex-col flex-1 px-5 pb-5">
+                        <h3 className="text-[15px] font-semibold text-gray-900 mb-1">
+                            { app.title }
+                        </h3>
                         <p className="text-[13px] font-medium text-gray-800 mb-1">
                             { app.tagline }
                         </p>
