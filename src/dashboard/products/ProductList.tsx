@@ -4,14 +4,11 @@ import { useToast } from '@getdokan/dokan-ui';
 import {
     addAction,
     applyFilters,
-    doAction,
     removeAction,
 } from '@wordpress/hooks';
 import { Fill } from '@wordpress/components';
 import { useNavigate } from 'react-router-dom';
 import { Boxes, Package, ExternalLink, LayoutGrid, Plus } from 'lucide-react';
-// @ts-ignore
-// eslint-disable-next-line import/no-unresolved
 import {
     DataViews,
     DokanBadge,
@@ -21,7 +18,6 @@ import {
     Select,
 } from '@dokan/components';
 import PriceHtml from '../../components/PriceHtml';
-import DateTimeHtml from '../../components/DateTimeHtml';
 import { useProducts } from './hooks/useProducts';
 import { useProductCategories } from './hooks/useProductCategories';
 import { QuickViewModal } from './QuickViewModal';
