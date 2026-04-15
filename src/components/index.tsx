@@ -9,6 +9,7 @@ export { default as AdminDataViews } from './dataviews/AdminDataViewTable';
 export { default as DataViews } from './dataviews/DataViewTable';
 export { default as DokanModal } from './modals/DokanModal';
 export { default as SortableList } from './sortable-list';
+export { default as ListEmpty } from './dataviews/ListEmpty';
 
 export { default as Forbidden } from './../layout/403';
 export { default as NotFound } from './../layout/404';
