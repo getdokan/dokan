@@ -30,7 +30,7 @@ const Header = ( { onToggleSidebar }: { onToggleSidebar: () => void } ) => {
                 type="button"
                 onClick={ onToggleSidebar }
                 aria-label="Toggle sidebar menu"
-                className="p-2 rounded hover:bg-gray-100 focus:ring-0 focus:outline-none! bg-transparent"
+                className="p-2 rounded hover:bg-gray-100 focus:ring-0 focus:outline-none! bg-transparent shadow-none text-gray-700"
             >
                 <LucideIcons.Menu />
             </button>
