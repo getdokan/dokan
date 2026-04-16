@@ -134,7 +134,6 @@ function PaymentDetails( {
 
                                     <RequestList
                                         withdrawRequests={ withdrawRequests }
-                                        status="pending"
                                         loading={
                                             masterLoading ||
                                             withdrawRequests.isLoading ||
