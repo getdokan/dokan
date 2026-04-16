@@ -7,7 +7,7 @@ class Extensions extends AbstractPage {
     /**
      * Get the ID of the page.
      *
-     * @since SUSPENDED
+     * @since DOKAN_SINCE
      *
      * @return string
      */
@@ -16,16 +16,26 @@ class Extensions extends AbstractPage {
     }
 
     /**
-     * @inheritDoc
+     * Get the title of the page.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $title Default title.
+     * @param string $page_title Page title.
+     *
+     * @return array
      */
     public function menu( string $capability, string $position ): array {
-        return [
-            'page_title' => esc_html__( 'Extensions', 'dokan-lite' ),
-            'menu_title' => esc_html__( 'Extensions', 'dokan-lite' ),
-            'route'      => 'extensions',
-            'capability' => $capability,
-            'position'   => 55,
-        ];
+        return apply_filters(
+            'dokan_extensions_menu',
+            [
+                'page_title' => esc_html__( 'Extensions', 'dokan-lite' ),
+                'menu_title' => esc_html__( 'Extensions', 'dokan-lite' ),
+                'route'      => 'extensions',
+                'capability' => $capability,
+                'position'   => 55,
+            ]
+        );
     }
 
     /**
@@ -40,7 +50,7 @@ class Extensions extends AbstractPage {
     /**
      * Get extension data for the frontend.
      *
-     * @since SUSPENDED
+     * @since DOKAN_SINCE
      *
      * @return array
      */
@@ -51,14 +61,13 @@ class Extensions extends AbstractPage {
             'recommended'  => $this->get_recommended_addons( $thumbnail_dir ),
             'mobile_apps'  => $this->get_mobile_apps( $thumbnail_dir ),
             'welabs'       => $this->get_welabs_data( $thumbnail_dir ),
-            'banner_icons' => $thumbnail_dir . '/banner/icons.svg',
         ];
     }
 
     /**
      * Get weLabs data for services.
      *
-     * @since SUSPENDED
+     * @since DOKAN_SINCE
      *
      * @param string $thumbnail_dir Base URL for thumbnails.
      *
@@ -70,20 +79,13 @@ class Extensions extends AbstractPage {
             'description' => esc_html__( 'weLabs is a sister concern of weDevs, specializing in customizing Dokan-related integrations and development. From bespoke feature development to complex integration work, weLabs helps you extend Dokan exactly the way your business needs.', 'dokan-lite' ),
             'image'       => $thumbnail_dir . '/services/welabs.svg',
             'url'         => 'https://welabs.dev',
-            'benefits'    => [
-                esc_html__( 'Discover payment gateway integrations that enhance your transaction experience.', 'dokan-lite' ),
-                esc_html__( 'Try our easy store locator to find nearby locations effortlessly.', 'dokan-lite' ),
-                esc_html__( 'We provide custom solutions for any complex feature to elevate your project.', 'dokan-lite' ),
-                esc_html__( 'Enjoy seamless POS integration that boosts your sales process.', 'dokan-lite' ),
-                esc_html__( "Design a checkout experience that reflects your brand's identity.", 'dokan-lite' ),
-            ],
         ];
     }
 
     /**
      * Get recommended addons list.
      *
-     * @since SUSPENDED
+     * @since DOKAN_SINCE
      *
      * @param string $thumbnail_dir Base URL for thumbnails.
      *
@@ -230,7 +232,7 @@ class Extensions extends AbstractPage {
         /**
          * Filter the recommended addons list for the extensions page.
          *
-         * @since SUSPENDED
+         * @since DOKAN_SINCE
          *
          * @param array $addons List of recommended addons.
          *
@@ -246,7 +248,7 @@ class Extensions extends AbstractPage {
      * - The standalone plugin for that addon is installed, OR
      * - Dokan Pro is installed and the module is available in the current plan.
      *
-     * @since SUSPENDED
+     * @since DOKAN_SINCE
      *
      * @param string $module_key        The module key (e.g. 'booking', 'simple-auction').
      * @param array  $installed_plugins List of installed plugins.
@@ -286,7 +288,7 @@ class Extensions extends AbstractPage {
     /**
      * Get mobile apps data.
      *
-     * @since SUSPENDED
+     * @since DOKAN_SINCE
      *
      * @param string $thumbnail_dir Base URL for thumbnails.
      *

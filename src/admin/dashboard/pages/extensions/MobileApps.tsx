@@ -3,6 +3,7 @@ import { Button } from '@wedevs/plugin-ui';
 import { ExternalLink } from 'lucide-react';
 import { ExtensionIcon } from './RecommendedAddons';
 import { twMerge } from 'tailwind-merge';
+import { DokanLink } from '@src/components';
 
 export type MobileApp = {
     slug: string;
@@ -62,17 +63,17 @@ const MobileApps = ( { apps }: { apps: MobileApp[] } ) => {
                         <p className="text-sm text-[#25252D] leading-relaxed mb-9 flex-1">
                             { app.description }
                         </p>
-                        <a
+                        <DokanLink
+                            as="a"
                             href={ app.url }
                             target="_blank"
-                            rel="noopener noreferrer"
-                            className="block no-underline mt-auto"
+                            className="w-fit"
                         >
                             <Button variant="default" className="gap-2.5 px-5">
                                 { __( 'Get App', 'dokan-lite' ) }
                                 <ExternalLink size={ 16 } />
                             </Button>
-                        </a>
+                        </DokanLink>
                     </div>
                 </div>
             ) ) }

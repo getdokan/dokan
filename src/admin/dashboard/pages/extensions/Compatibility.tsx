@@ -1,5 +1,6 @@
 import { __ } from '@wordpress/i18n';
 import { Button } from '@wedevs/plugin-ui';
+import { DokanLink } from '@src/components';
 
 const Compatibility = () => {
     const assetsUrl = ( window as any ).dokanAdminDashboard.urls.assetsUrl;
@@ -31,16 +32,16 @@ const Compatibility = () => {
                             'dokan-lite'
                         ) }
                     </p>
-                    <a
-                        href="https://dokan.co/wordpress/themes/"
+                    <DokanLink
+                        as="a"
                         target="_blank"
-                        rel="noopener noreferrer"
-                        className="no-underline inline-block w-fit"
+                        className="w-fit"
+                        href="https://dokan.co/wordpress/themes/"
                     >
                         <Button variant="default" className="px-5">
                             { __( 'Browse Themes', 'dokan-lite' ) }
                         </Button>
-                    </a>
+                    </DokanLink>
                 </div>
             </div>
 
@@ -69,16 +70,16 @@ const Compatibility = () => {
                             'dokan-lite'
                         ) }
                     </p>
-                    <a
-                        href="https://dokan.co/wordpress/compatible-plugins/"
+                    <DokanLink
+                        as="a"
                         target="_blank"
-                        rel="noopener noreferrer"
-                        className="no-underline inline-block w-fit"
+                        className="w-fit"
+                        href="https://dokan.co/wordpress/compatible-plugins/"
                     >
                         <Button variant="default" className="px-5">
                             { __( 'Browse Plugins', 'dokan-lite' ) }
                         </Button>
-                    </a>
+                    </DokanLink>
                 </div>
             </div>
         </div>

@@ -8,11 +8,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@wedevs/plugin-ui';
 
 const ExtensionsPage = () => {
     const extensionsSettings = getSettings( 'extensions' ) || {};
-    const {
-        recommended = [],
-        mobile_apps: mobileApps = [],
-        banner_icons: bannerIcons = '',
-    } = extensionsSettings?.extensions || {};
+    const { recommended = [], mobile_apps: mobileApps = [] } =
+        extensionsSettings?.extensions || {};
 
     const bannerBackground = 'linear-gradient(270deg, #F2EAFF 0%, #FFFFFF 60%)';
 
@@ -43,13 +40,13 @@ const ExtensionsPage = () => {
                             ) }
                         </p>
                     </div>
-                    { bannerIcons && (
-                        <img
-                            src={ bannerIcons }
-                            alt="Banner Icons"
-                            className="h-20 w-auto"
-                        />
-                    ) }
+                    <img
+                        src={ `${
+                            ( window as any ).dokanAdminDashboard.urls.assetsUrl
+                        }/images/extensions/banner/icons.svg` }
+                        alt="Banner Icons"
+                        className="h-20 w-auto"
+                    />
                 </div>
             </div>
 

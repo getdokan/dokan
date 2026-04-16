@@ -6,11 +6,35 @@ import { ExtensionIcon } from './RecommendedAddons';
 import getSettings from '../../settings/getSettings';
 import { Button } from '@wedevs/plugin-ui';
 import { DokanModal } from '@src/components';
+import { applyFilters } from '@wordpress/hooks';
 
 const Services = () => {
     const extensionsSettings = getSettings( 'extensions' ) || {};
     const welabsData = extensionsSettings?.extensions?.welabs || {};
     const [ isModalOpen, setIsModalOpen ] = useState( false );
+
+    const benefits = applyFilters( 'dokan_extensions_services_benefits', [
+        __(
+            'Discover payment gateway integrations that enhance your transaction experience.',
+            'dokan-lite'
+        ),
+        __(
+            'Try our easy store locator to find nearby locations effortlessly.',
+            'dokan-lite'
+        ),
+        __(
+            'We provide custom solutions for any complex feature to elevate your project.',
+            'dokan-lite'
+        ),
+        __(
+            'Enjoy seamless POS integration that boosts your sales process.',
+            'dokan-lite'
+        ),
+        __(
+            "Design a checkout experience that reflects your brand's identity.",
+            'dokan-lite'
+        ),
+    ] );
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-3.5">
@@ -65,7 +89,7 @@ const Services = () => {
                 dialogContent={
                     <>
                         <div className="space-y-3 mb-8">
-                            { welabsData?.benefits?.map(
+                            { benefits?.map(
                                 ( benefit: string, index: number ) => (
                                     <div
                                         key={ index }

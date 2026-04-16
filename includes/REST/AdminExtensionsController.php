@@ -44,29 +44,10 @@ class AdminExtensionsController extends DokanBaseAdminController {
                             'sanitize_callback' => 'sanitize_text_field',
                         ],
                     ],
-                    'permission_callback' => [ $this, 'install_plugin_permissions_check' ],
+                    'permission_callback' => [ $this, 'check_permission' ],
                 ],
             ]
         );
-    }
-
-    /**
-     * Check if the current user has permission to install plugins.
-     *
-     * @since SUSPENDED
-     *
-     * @return bool|WP_Error
-     */
-    public function install_plugin_permissions_check() {
-        if ( ! current_user_can( 'install_plugins' ) ) {
-            return new WP_Error(
-                'dokan_rest_cannot_install_plugin',
-                __( 'Sorry, you are not allowed to install plugins on this site.', 'dokan-lite' ),
-                [ 'status' => rest_authorization_required_code() ]
-            );
-        }
-
-        return true;
     }
 
     /**
@@ -120,7 +101,7 @@ class AdminExtensionsController extends DokanBaseAdminController {
             );
         }
 
-        $upgrader = new \Plugin_Upgrader( new \WP_Ajax_Upgrader_Skin() );
+        $upgrader  = new \Plugin_Upgrader( new \WP_Ajax_Upgrader_Skin() );
         $installed = $upgrader->install( $api->download_link );
 
         if ( is_wp_error( $installed ) ) {
