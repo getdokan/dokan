@@ -119,6 +119,7 @@
    utilities (e.g. bg-primary → var(--primary)), without emitting them on :root.
    The actual --primary, --border, etc. values come from the PluginUIThemeProvider
    inline styles on .pui-root, or from the :root fallbacks below. */
+
 @theme inline {
     --color-primary: var(--primary);
     --color-primary-foreground: var(--primary-foreground);
