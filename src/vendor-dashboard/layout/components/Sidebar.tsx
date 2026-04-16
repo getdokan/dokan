@@ -215,9 +215,8 @@ const Sidebar = ( {
                 <a
                     href={ siteUrl || '/' }
                     className={ twMerge(
-                        'flex items-center gap-3.5 min-h-20 no-underline focus:!outline-none rounded-md hover:bg-primary-700',
+                        'flex items-center gap-3.5 min-h-20 no-underline focus:!outline-none rounded-md',
                         collapsed ? 'px-5 justify-center' : 'px-8',
-                        'hover:bg-primary-hover'
                     ) }
                 >
                     { siteIcon ? (
