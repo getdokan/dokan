@@ -781,6 +781,10 @@ class Assets {
              */
             'maximum_tags_select_length'   => apply_filters( 'dokan_product_tags_select_max_length', - 1 ),  // Filter of maximun a vendor can add tags
             'modal_header_color'           => 'var(--dokan-button-background-color, #7047EB)',
+            // Shipment feature flags (used by JS order list to match PHP template behavior)
+            'allow_shipment'                => dokan_get_option( 'enabled', 'dokan_shipping_status_setting', 'off' ),
+            'wc_shipping_enabled'           => get_option( 'woocommerce_calc_shipping' ) === 'yes',
+            'has_shipment_func'             => function_exists( 'dokan_get_order_shipment_current_status' ),
         ];
 
         $localize_script     = apply_filters( 'dokan_localized_args', $default_script );
@@ -799,7 +803,14 @@ class Assets {
                     'assetsUrl'    => DOKAN_PLUGIN_ASSEST,
                     'dashboardUrl' => dokan_get_navigation_url() . ( ReportUtil::is_analytics_enabled() ? '?path=%2Fanalytics%2FOverview' : '' ),
                     'storeUrl'     => dokan_get_store_url( dokan_get_current_user_id() ),
+                    'ordersUrl'        => dokan_get_navigation_url( 'orders' ),
+                    'legacyOrdersUrl'  => dokan_add_subpage_to_url( rtrim( get_permalink( (int) dokan_get_option( 'dashboard', 'dokan_pages', 0 ) ), '/' ) . '/', 'orders/' ),
                 ],
+                'nonces'          => [
+                    'viewOrder'   => wp_create_nonce( 'dokan_view_order' ),
+                    'orderExport' => wp_create_nonce( 'dokan_vendor_order_export_action' ),
+                ],
+                'orderStatuses'   => $this->get_order_listing_statuses(),
             ]
         );
 
@@ -872,6 +883,27 @@ class Assets {
 
         // localized form validate script
         self::load_form_validate_script();
+
+        // Enqueue vendor onboarding assets only on the vendor onboarding/registration page.
+        if ( is_page() ) {
+            global $post;
+            if ( $post && has_shortcode( $post->post_content, 'dokan-vendor-onboarding-registration' ) ) {
+                wp_enqueue_style(
+                    'dokan-vendor-onboarding',
+                    plugin_dir_url( DOKAN_FILE ) . 'assets/css/vendor-onboarding.css',
+                    [],
+                    DOKAN_PLUGIN_VERSION
+                );
+
+                wp_enqueue_script(
+                    'dokan-vendor-onboarding',
+                    plugin_dir_url( DOKAN_FILE ) . 'assets/js/vendor-onboarding-js.js',
+                    [ 'jquery' ],
+                    DOKAN_PLUGIN_VERSION,
+                    true
+                );
+            }
+        }
 
         do_action( 'dokan_enqueue_scripts' );
     }
@@ -1377,6 +1409,10 @@ class Assets {
                 'decimal_point'                     => $decimal,
                 'mon_decimal_point'                 => wc_get_price_decimal_separator(),
                 'i18n_date_format'                  => wc_date_format(),
+                // Shipment feature flags (used by React order list)
+                'allow_shipment'                    => dokan_get_option( 'enabled', 'dokan_shipping_status_setting', 'off' ),
+                'wc_shipping_enabled'               => get_option( 'woocommerce_calc_shipping' ) === 'yes',
+                'has_shipment_func'                 => function_exists( 'dokan_get_order_shipment_current_status' ),
             ]
         );
     }
@@ -1395,5 +1431,38 @@ class Assets {
                 'reserved_slugs'   => dokan_get_reserved_url_slugs(),
             ]
         );
+    }
+
+    /**
+     * Get order listing statuses for the frontend.
+     *
+     * Reuses the same filter logic as dokan_order_listing_status_filter() so that
+     * the React-based order list respects excluded and custom statuses.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array<int, array{value: string, label: string}>
+     */
+    private function get_order_listing_statuses(): array {
+        /** This filter is documented in includes/template-tags.php */
+        $exclude_statuses  = (array) apply_filters( 'dokan_vendor_dashboard_excluded_order_statuses', [ 'wc-checkout-draft' ] );
+        $exclude_statuses  = array_flip( $exclude_statuses );
+        $wc_order_statuses = function_exists( 'wc_get_order_statuses' ) ? wc_get_order_statuses() : [];
+
+        $filtered_statuses = array_diff_key( $wc_order_statuses, $exclude_statuses );
+        $order_statuses    = array_merge( [ 'all' => __( 'All', 'dokan-lite' ) ], $filtered_statuses );
+
+        /** This filter is documented in includes/template-tags.php */
+        $order_statuses = apply_filters( 'dokan_vendor_dashboard_order_listing_statuses', $order_statuses );
+
+        $result = [];
+        foreach ( $order_statuses as $value => $label ) {
+            $result[] = [
+                'value' => $value,
+                'label' => $label,
+            ];
+        }
+
+        return $result;
     }
 }

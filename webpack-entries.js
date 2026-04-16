@@ -85,6 +85,8 @@ const entryPoints = {
             type: 'window',
         },
     },
+    'vendor-onboarding': '/assets/src/less/vendor-onboarding.less',
+    'vendor-onboarding-js': './assets/src/js/vendor-onboarding.js',
     'dokan-admin-commission-suborder-metabox':
         './src/styles/dokan-admin-commission-suborder-metabox.css',
 

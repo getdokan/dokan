@@ -2,8 +2,19 @@ import { DokanRoute } from '@src/layout';
 import { __ } from '@wordpress/i18n';
 import Withdraw from '@src/dashboard/withdraw';
 import WithdrawRequests from '@src/dashboard/withdraw/WithdrawRequests';
+import Orders from '@src/dashboard/orders';
+import ReverseWithdrawal from '@src/dashboard/reverse-withdraw';
 
 export default [
+    {
+        id: 'dokan-orders',
+        title: __( 'Orders', 'dokan-lite' ),
+        element: <Orders />,
+        path: '/orders',
+        exact: true,
+        order: 5,
+        capabilities: [ 'dokan_view_order_menu' ],
+    },
     {
         id: 'dokan-withdraw',
         title: __( 'Withdraw', 'dokan-lite' ),
@@ -21,6 +32,15 @@ export default [
         backUrl: '/withdraw',
         exact: true,
         order: 10,
+        capabilities: [ 'dokan_view_withdraw_menu' ],
+    },
+    {
+        id: 'dokan-reverse-withdrawal',
+        title: __( 'Reverse Withdrawal', 'dokan-lite' ),
+        element: <ReverseWithdrawal />,
+        path: '/reverse-withdrawal',
+        exact: true,
+        order: 11,
         capabilities: [ 'dokan_view_withdraw_menu' ],
     },
 ] as Array< DokanRoute >;

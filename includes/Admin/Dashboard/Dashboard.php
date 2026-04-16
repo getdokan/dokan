@@ -165,11 +165,32 @@ class Dashboard implements Hookable {
         $dashboard_url            = admin_url( 'admin.php?page=' . $dashboard_page_slug );
         $changelog_url            = admin_url( 'admin.php?page=' . $changelog_page_slug );
 
+        /**
+         * Filters the admin header support button configuration.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array $support_button {
+         *     Support button configuration.
+         *
+         *     @type string $label Button label text.
+         *     @type string $url   URL to open when clicked.
+         * }
+         */
+        $get_support_btn = apply_filters(
+            'dokan_admin_header_support_button',
+            [
+                'label' => esc_html__( 'Get Support', 'dokan-lite' ),
+                'url'   => 'https://wordpress.org/support/plugin/dokan-lite/',
+            ]
+        );
+
         $header_info = [
             'lite_version'    => DOKAN_PLUGIN_VERSION,
             'is_pro_exists'   => dokan()->is_pro_exists(),
             'dashboard_url'   => $dashboard_url,
             'has_new_version' => Helper::dokan_has_new_version(),
+            'support_button'  => $get_support_btn,
             'help_menu_items' => apply_filters(
                 'dokan_admin_setup_guides_help_menu_items',
                 [
@@ -180,13 +201,6 @@ class Dashboard implements Hookable {
                         'icon'     => 'whats-new',
                         'active'   => Helper::dokan_has_new_version(),
                         'external' => false,
-                    ],
-                    [
-                        'id'       => 'get-support',
-                        'title'    => esc_html__( 'Get Support', 'dokan-lite' ),
-                        'url'      => 'https://dokan.co/contact/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
-                        'icon'     => 'support',
-                        'external' => true,
                     ],
                     [
                         'id'       => 'community',
@@ -226,7 +240,7 @@ class Dashboard implements Hookable {
                     [
                         'id'       => 'import-dummy-data',
                         'title'    => __( 'Import dummy data', 'dokan-lite' ),
-                        'url'      => $legacy_dashboard_url . '#/dummy-data',
+                        'url'      => $dashboard_url . '#/dummy-data',
                         'icon'     => 'import-data',
                         'external' => false,
                     ],

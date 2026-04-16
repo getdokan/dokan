@@ -8,12 +8,12 @@ import WithdrawPage from '../pages/withdraw';
 import VendorsSingle from '../pages/vendors-single';
 import Create from '../pages/vendor-create-edit/Create';
 import Edit from '../pages/vendor-create-edit/Edit';
-import NotFound from '../../../layout/404';
 import AdminDashboard from '../pages/dashboard';
 import VendorsPage from '../pages/vendors';
 import ReverseWithdrawalPage from '../pages/reverse-withdrawal';
 import ReverseWithdrawalTransactionPage from 'admin/dashboard/pages/reverse-withdrawal/ReverseWithdrawalTransaction';
 import ChangelogPage from '../pages/changelog';
+import DummyData from '../pages/dummy-data';
 
 export type DokanAdminRoute = {
     id: string;
@@ -79,6 +79,11 @@ const getAdminRoutes = () => {
             element: <ChangelogPage />,
             path: '/changelog',
         },
+        {
+            id: 'dummy-data',
+            element: <DummyData />,
+            path: '/dummy-data',
+        },
     ];
 
     // @ts-ignore
@@ -90,7 +95,12 @@ const getAdminRoutes = () => {
     routes.push( {
         id: 'dokan-404',
         element: (
-            <AdminNotFound className="h-screen" backToDashboardUrl={window.dokanAdminDashboard?.urls?.adminDashboardUrl || '/'} />
+            <AdminNotFound
+                className="h-screen"
+                backToDashboardUrl={
+                    window.dokanAdminDashboard?.urls?.adminDashboardUrl || '/'
+                }
+            />
         ),
         path: '*',
     } );
