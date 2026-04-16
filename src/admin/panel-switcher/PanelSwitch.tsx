@@ -34,6 +34,7 @@ const PanelSwitch = () => {
             'wholesale-customer',
             'admin-store-support',
             'product-qa',
+            'request-for-quote',
         ]
     ) as string[];
 
