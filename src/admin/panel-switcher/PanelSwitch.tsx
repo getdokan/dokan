@@ -23,6 +23,8 @@ const PanelSwitch = () => {
             'changelog',
             'store-reviews',
             'verifications',
+            'tools',
+            'dummy-data',
             'product-advertising',
             'reverse-withdrawal',
             'announcement',
