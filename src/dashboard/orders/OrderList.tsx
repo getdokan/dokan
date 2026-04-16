@@ -48,6 +48,9 @@ declare const window: Window & {
             value: string;
             label: string;
         } >;
+        wc_shipping_enabled?: boolean;
+        allow_shipment?: string;
+        has_shipment_func?: boolean;
     };
 };
 
@@ -155,13 +158,6 @@ const getCustomerName = ( item: OrderItem ) => {
 };
 
 function OrderList() {
-    // If the URL contains an order_id param, the PHP template renders the
-    // order detail view – do not mount the React list on top of it.
-    const urlParams = new URLSearchParams( window.location.search );
-    if ( urlParams.get( 'order_id' ) ) {
-        return null;
-    }
-
     const toast = useToast();
     const [ selection, setSelection ] = useState< string[] >( [] );
     const [ exportOpen, setExportOpen ] = useState( false );
@@ -190,15 +186,24 @@ function OrderList() {
         window?.dokan?.wc_shipping_enabled &&
         Boolean( window?.dokan?.has_shipment_func );
 
+    const fieldsColumns = [
+        'order',
+        'order_total',
+        'earning',
+        'status',
+        'customer',
+    ];
+    if ( allowShipment ) {
+        fieldsColumns.push( 'shipment' );
+    }
+
     const [ view, setView ] = useState( {
         perPage: 10,
         page: 1,
         search: '',
         type: 'table' as const,
         status: 'all',
-        fields: allowShipment
-            ? [ 'order', 'order_total', 'earning', 'status', 'customer', 'shipment' ]
-            : [ 'order', 'order_total', 'earning', 'status', 'customer' ],
+        fields: fieldsColumns,
     } );
 
     const {
@@ -250,29 +255,33 @@ function OrderList() {
         },
         {
             id: 'order_total',
-            label: __('Order Total', 'dokan-lite'),
+            label: __( 'Order Total', 'dokan-lite' ),
             enableSorting: false,
-            render: ({ item }: { item: OrderItem }) => {
+            render: ( { item }: { item: OrderItem } ) => {
                 const hasRefunds =
-                    Array.isArray(item.refunds) &&
-                    item.refunds.length > 0;
+                    Array.isArray( item.refunds ) && item.refunds.length > 0;
 
-                if (!hasRefunds) {
-                    return <PriceHtml price={item.total} />;
+                if ( ! hasRefunds ) {
+                    return <PriceHtml price={ item.total } />;
                 }
 
-                let net = parseFloat(item.total) || 0;
-                for (const r of item.refunds!) {
-                    net += parseFloat(r.total) || 0;
+                let net = parseFloat( item.total ) || 0;
+                for ( const r of item.refunds! ) {
+                    net += parseFloat( r.total ) || 0;
                 }
 
                 return (
                     <div>
-                        <span style={{ textDecoration: 'line-through', opacity: 0.6 }}>
-                            <PriceHtml price={item.total} />
+                        <span
+                            style={ {
+                                textDecoration: 'line-through',
+                                opacity: 0.6,
+                            } }
+                        >
+                            <PriceHtml price={ item.total } />
                         </span>
                         <div className="mt-0.5">
-                            <PriceHtml price={String(net)} />
+                            <PriceHtml price={ String( net ) } />
                         </div>
                     </div>
                 );
@@ -584,27 +593,30 @@ function OrderList() {
                 id: 'mark-on-hold',
                 label: __( 'Change status to on-hold', 'dokan-lite' ),
                 supportsBulk: true,
+                isDestructive: true,
                 isEligible: ( item: OrderItem ) => item.status !== 'on-hold',
-                callback: ( items: OrderItem[] ) => {
-                    handleStatusUpdate( items, 'wc-on-hold' );
+                callback: async ( items: OrderItem[] ) => {
+                    await handleStatusUpdate( items, 'wc-on-hold' );
                 },
             },
             {
                 id: 'mark-processing',
                 label: __( 'Change status to processing', 'dokan-lite' ),
                 supportsBulk: true,
+                isDestructive: true,
                 isEligible: ( item: OrderItem ) => item.status !== 'processing',
-                callback: ( items: OrderItem[] ) => {
-                    handleStatusUpdate( items, 'wc-processing' );
+                callback: async ( items: OrderItem[] ) => {
+                    await handleStatusUpdate( items, 'wc-processing' );
                 },
             },
             {
                 id: 'mark-completed',
                 label: __( 'Change status to completed', 'dokan-lite' ),
                 supportsBulk: true,
+                isDestructive: true,
                 isEligible: ( item: OrderItem ) => item.status !== 'completed',
-                callback: ( items: OrderItem[] ) => {
-                    handleStatusUpdate( items, 'wc-completed' );
+                callback: async ( items: OrderItem[] ) => {
+                    await handleStatusUpdate( items, 'wc-completed' );
                 },
             },
         ],
@@ -621,6 +633,11 @@ function OrderList() {
             search: newView.search,
         } ) );
     };
+
+    const urlParams = new URLSearchParams( window.location.search );
+    if ( urlParams.get( 'order_id' ) ) {
+        return null;
+    }
 
     // ── Render ───────────────────────────────────────────────────
     return (
