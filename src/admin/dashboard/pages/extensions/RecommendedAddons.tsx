@@ -1,10 +1,10 @@
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
-import { Check, Loader2, Download, CircleCheck } from 'lucide-react';
-import { DokanButton } from '@dokan/components';
+import { Loader2, ExternalLink } from 'lucide-react';
 import PlaceholderIcon from './PlaceholderIcon';
 import { applyFilters } from '@wordpress/hooks';
+import { Button } from '@wedevs/plugin-ui';
 
 export type Addon = {
     slug: string;
@@ -85,13 +85,9 @@ const RecommendedAddons = ( { addons }: { addons: Addon[] } ) => {
 
         if ( isInstalled ) {
             return (
-                <button
-                    disabled
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-green-600 bg-green-50 border border-green-200 rounded-md cursor-not-allowed"
-                >
-                    <Check size={ 16 } />
+                <Button disabled variant="secondary" className="px-5">
                     { __( 'Installed', 'dokan-lite' ) }
-                </button>
+                </Button>
             );
         }
 
@@ -101,21 +97,22 @@ const RecommendedAddons = ( { addons }: { addons: Addon[] } ) => {
                     href={ addon.url }
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block no-underline"
+                    className="block no-underline w-fit"
                 >
-                    <DokanButton variant="primary" className="w-full">
-                        { __( 'Get Plugin', 'dokan-lite' ) }
-                    </DokanButton>
+                    <Button variant="default" className="gap-2.5 px-5">
+                        { __( 'Get Addon', 'dokan-lite' ) }
+                        <ExternalLink size={ 16 } />
+                    </Button>
                 </a>
             );
         }
 
         return (
-            <DokanButton
-                variant="primary"
-                className="w-full"
-                onClick={ () => handleInstall( addon ) }
+            <Button
+                className="px-5"
+                variant="default"
                 disabled={ isInstalling }
+                onClick={ () => handleInstall( addon ) }
             >
                 { isInstalling ? (
                     <>
@@ -123,12 +120,9 @@ const RecommendedAddons = ( { addons }: { addons: Addon[] } ) => {
                         { __( 'Installing…', 'dokan-lite' ) }
                     </>
                 ) : (
-                    <>
-                        <Download size={ 16 } />
-                        { __( 'Install', 'dokan-lite' ) }
-                    </>
+                    __( 'Install Free', 'dokan-lite' )
                 ) }
-            </DokanButton>
+            </Button>
         );
     };
 
@@ -161,25 +155,32 @@ const RecommendedAddons = ( { addons }: { addons: Addon[] } ) => {
 
     const renderItem = ( item: EcosystemItem ): JSX.Element => (
         <div key={ item.title } className="flex flex-col">
-            <div className="flex items-center gap-3 mb-3 text-[#7047EB]">
-                <CircleCheck size={ 20 } />
-                <h3 className="text-sm font-semibold text-[#575757]">
-                    { item?.title }
-                </h3>
+            <div className="flex items-start gap-3 text-[#7047EB]">
+                <img
+                    src={ `${
+                        ( window as any ).dokanAdminDashboard.urls.assetsUrl
+                    }/images/extensions/check.svg` }
+                    alt={ __( 'Circle Check Icon', 'dokan-lite' ) }
+                />
+                <div className="flex flex-col gap-2">
+                    <h3 className="text-sm font-semibold text-[#575757]">
+                        { item?.title }
+                    </h3>
+                    <p className="text-xs text-[#828282] leading-relaxed">
+                        { item?.description }
+                    </p>
+                </div>
             </div>
-            <p className="text-xs text-[#828282] leading-relaxed">
-                { item?.description }
-            </p>
         </div>
     );
 
     return (
         <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-3.5 mb-10">
                 { addons.map( ( addon ) => (
                     <div
                         key={ addon.slug }
-                        className="flex flex-col bg-white rounded-xl border border-gray-200 overflow-hidden transition-shadow hover:shadow-md relative"
+                        className="flex flex-col bg-white rounded-md shadow relative"
                     >
                         <div className="px-5 pt-5 pb-3 flex justify-between items-start">
                             <ExtensionIcon
@@ -187,7 +188,7 @@ const RecommendedAddons = ( { addons }: { addons: Addon[] } ) => {
                                 alt={ addon.title }
                             />
                             { addon.button_type === 'get_plugin' ? (
-                                <span className="flex items-center gap-1 text-xs font-medium text-[#D3941E] bg-[#FFF9E9] px-2 py-0.5 rounded-full border border-[#FFE7A5]">
+                                <span className="flex items-center gap-1.5 text-xs font-medium text-[#952D00] bg-[#FEFCE8] px-2 py-1 rounded-md border border-[#F6E5BA]">
                                     <img
                                         src={ `${
                                             ( window as any )
@@ -200,17 +201,18 @@ const RecommendedAddons = ( { addons }: { addons: Addon[] } ) => {
                                     { __( 'Pro', 'dokan-lite' ) }
                                 </span>
                             ) : (
-                                <span className="text-xs font-medium text-[#039855] bg-[#ECFDF3] px-2 py-0.5 rounded-full border border-[#D1FADF]">
-                                    • { __( 'Free', 'dokan-lite' ) }
+                                <span className="flex items-center gap-1.5 text-xs font-medium text-[#008236] bg-[#DCFCE7] px-2 py-1.5 rounded-md leading-none">
+                                    <span className="w-1.5 h-1.5 bg-[#02C951] block rounded-full" />
+                                    { __( 'Free', 'dokan-lite' ) }
                                 </span>
                             ) }
                         </div>
 
-                        <div className="flex flex-col flex-1 px-5 pb-5 pt-2">
-                            <h3 className="text-[15px] font-semibold text-gray-900 mb-1">
+                        <div className="flex flex-col flex-1 px-5 pb-5 pt-4">
+                            <h3 className="text-lg font-bold text-gray-900 mb-2">
                                 { addon.title }
                             </h3>
-                            <p className="text-[13px] text-gray-500 leading-relaxed mb-5 flex-1">
+                            <p className="text-sm text-[#25252D] leading-relaxed mb-9 flex-1">
                                 { addon.description }
                             </p>
                             <div className="mt-auto">
@@ -221,7 +223,7 @@ const RecommendedAddons = ( { addons }: { addons: Addon[] } ) => {
                 ) ) }
             </div>
 
-            <div className="mt-12 space-y-5">
+            <div className="space-y-5">
                 <h2 className="text-2xl font-bold text-[#25252D]">
                     { __( 'Your complete business ecosystem', 'dokan-lite' ) }
                 </h2>

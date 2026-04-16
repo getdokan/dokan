@@ -50,8 +50,33 @@ class Extensions extends AbstractPage {
         return [
             'recommended'  => $this->get_recommended_addons( $thumbnail_dir ),
             'mobile_apps'  => $this->get_mobile_apps( $thumbnail_dir ),
-            'welabs_image' => $thumbnail_dir . '/services/welabs.svg',
+            'welabs'       => $this->get_welabs_data( $thumbnail_dir ),
             'banner_icons' => $thumbnail_dir . '/banner/icons.svg',
+        ];
+    }
+
+    /**
+     * Get weLabs data for services.
+     *
+     * @since SUSPENDED
+     *
+     * @param string $thumbnail_dir Base URL for thumbnails.
+     *
+     * @return array
+     */
+    protected function get_welabs_data( string $thumbnail_dir ): array {
+        return [
+            'title'       => esc_html__( 'weLabs', 'dokan-lite' ),
+            'description' => esc_html__( 'weLabs is a sister concern of weDevs, specializing in customizing Dokan-related integrations and development. From bespoke feature development to complex integration work, weLabs helps you extend Dokan exactly the way your business needs.', 'dokan-lite' ),
+            'image'       => $thumbnail_dir . '/services/welabs.svg',
+            'url'         => 'https://welabs.dev',
+            'benefits'    => [
+                esc_html__( 'Discover payment gateway integrations that enhance your transaction experience.', 'dokan-lite' ),
+                esc_html__( 'Try our easy store locator to find nearby locations effortlessly.', 'dokan-lite' ),
+                esc_html__( 'We provide custom solutions for any complex feature to elevate your project.', 'dokan-lite' ),
+                esc_html__( 'Enjoy seamless POS integration that boosts your sales process.', 'dokan-lite' ),
+                esc_html__( "Design a checkout experience that reflects your brand's identity.", 'dokan-lite' ),
+            ],
         ];
     }
 
@@ -71,7 +96,7 @@ class Extensions extends AbstractPage {
             [
                 'slug'        => 'dokan-wpml',
                 'title'       => esc_html__( 'Dokan WPML', 'dokan-lite' ),
-                'description' => esc_html__( 'WPML integration for Dokan multivendor marketplace.', 'dokan-lite' ),
+                'description' => esc_html__( 'Expand globally with multilingual support - translate your marketplace into multiple languages and reach more customers and vendors without barriers.', 'dokan-lite' ),
                 'image'       => $thumbnail_dir . '/addons/dokan-wpml.svg',
                 'button_type' => 'install',
                 'wp_org_slug' => 'dokan-wpml',
@@ -81,7 +106,7 @@ class Extensions extends AbstractPage {
             [
                 'slug'        => 'dokan-booking',
                 'title'       => esc_html__( 'Dokan Booking Addon', 'dokan-lite' ),
-                'description' => esc_html__( 'Integrates WooCommerce Booking with Dokan.', 'dokan-lite' ),
+                'description' => esc_html__( 'Turn products into bookable services - let vendors offer appointments, rentals, and schedules to unlock new revenue streams effortlessly.', 'dokan-lite' ),
                 'image'       => $thumbnail_dir . '/addons/dokan-booking.svg',
                 'button_type' => 'get_plugin',
                 'url'         => 'https://dokan.co/wordpress/modules/woocommerce-booking-integration/',
@@ -92,7 +117,7 @@ class Extensions extends AbstractPage {
             [
                 'slug'        => 'dokan-auction',
                 'title'       => esc_html__( 'Dokan Auction Addon', 'dokan-lite' ),
-                'description' => esc_html__( 'A plugin that combined WooCommerce simple auction and Dokan plugin.', 'dokan-lite' ),
+                'description' => esc_html__( 'Create excitement with auctions - enable bidding on products to increase engagement, competition, and maximize your overall sales value.', 'dokan-lite' ),
                 'image'       => $thumbnail_dir . '/addons/dokan-auction.svg',
                 'button_type' => 'get_plugin',
                 'url'         => 'https://dokan.co/wordpress/modules/dokan-simple-auctions/',
@@ -103,7 +128,7 @@ class Extensions extends AbstractPage {
             [
                 'slug'        => 'dokan-invoice',
                 'title'       => esc_html__( 'Dokan PDF Invoice', 'dokan-lite' ),
-                'description' => esc_html__( 'PDF invoice for Dokan vendor and customer orders.', 'dokan-lite' ),
+                'description' => esc_html__( 'Generate professional PDF invoices automatically - streamline order management and give your marketplace a more trusted, polished experience.', 'dokan-lite' ),
                 'image'       => $thumbnail_dir . '/addons/dokan-invoice.svg',
                 'button_type' => 'install',
                 'wp_org_slug' => 'dokan-invoice',
@@ -113,7 +138,7 @@ class Extensions extends AbstractPage {
             [
                 'slug'        => 'wepos',
                 'title'       => esc_html__( 'wePos', 'dokan-lite' ),
-                'description' => esc_html__( 'A fast and responsive Point of Sale plugin for WooCommerce.', 'dokan-lite' ),
+                'description' => esc_html__( 'Run your physical store smarter - manage sales, inventory, and customers in real time with a powerful POS built for WooCommerce.', 'dokan-lite' ),
                 'image'       => $thumbnail_dir . '/addons/wepos.svg',
                 'button_type' => 'install',
                 'wp_org_slug' => 'wepos',
@@ -123,7 +148,7 @@ class Extensions extends AbstractPage {
             [
                 'slug'        => 'texty',
                 'title'       => esc_html__( 'Texty', 'dokan-lite' ),
-                'description' => esc_html__( 'SMS Notification for WordPress, WooCommerce, Dokan and more.', 'dokan-lite' ),
+                'description' => esc_html__( 'Stay connected with instant SMS alerts - notify vendors and customers about orders, updates, and key actions without missing a moment.', 'dokan-lite' ),
                 'image'       => $thumbnail_dir . '/addons/texty.svg',
                 'button_type' => 'install',
                 'wp_org_slug' => 'texty',
@@ -133,7 +158,7 @@ class Extensions extends AbstractPage {
             [
                 'slug'        => 'storegrowth-sales-booster',
                 'title'       => esc_html__( 'StoreGrowth', 'dokan-lite' ),
-                'description' => esc_html__( 'Increase revenue with powerful sales tools for WooCommerce.', 'dokan-lite' ),
+                'description' => esc_html__( 'Accelerate your store growth with smart tools - boost engagement, increase conversions, and turn more visitors into paying customers.', 'dokan-lite' ),
                 'image'       => $thumbnail_dir . '/addons/storegrowth.svg',
                 'button_type' => 'install',
                 'wp_org_slug' => 'storegrowth-sales-booster',
@@ -143,7 +168,7 @@ class Extensions extends AbstractPage {
             [
                 'slug'        => 'tryaura',
                 'title'       => esc_html__( 'TryAura', 'dokan-lite' ),
-                'description' => esc_html__( 'All-in-one loyalty, rewards and referral plugin for WooCommerce.', 'dokan-lite' ),
+                'description' => esc_html__( 'Deliver immersive virtual try-ons - help customers visualize products better, build confidence, and increase conversions across your store.', 'dokan-lite' ),
                 'image'       => $thumbnail_dir . '/addons/tryaura.svg',
                 'button_type' => 'install',
                 'wp_org_slug' => 'tryaura',
@@ -153,7 +178,7 @@ class Extensions extends AbstractPage {
             [
                 'slug'        => 'wp-user-frontend',
                 'title'       => esc_html__( 'WPUF', 'dokan-lite' ),
-                'description' => esc_html__( 'Frontend post submission and user registration plugin.', 'dokan-lite' ),
+                'description' => esc_html__( 'Enable frontend control for users - collect posts, registrations, and data easily without backend access, improving user experience.', 'dokan-lite' ),
                 'image'       => $thumbnail_dir . '/addons/wpuf.svg',
                 'button_type' => 'install',
                 'wp_org_slug' => 'wp-user-frontend',
@@ -163,7 +188,7 @@ class Extensions extends AbstractPage {
             [
                 'slug'        => 'wemail',
                 'title'       => esc_html__( 'weMail', 'dokan-lite' ),
-                'description' => esc_html__( 'Simplified Email Marketing Solution for WordPress.', 'dokan-lite' ),
+                'description' => esc_html__( 'Simplify email marketing with automation - engage customers, nurture leads, and drive repeat sales with powerful campaigns.', 'dokan-lite' ),
                 'image'       => $thumbnail_dir . '/addons/wemail.svg',
                 'button_type' => 'install',
                 'wp_org_slug' => 'wemail',
@@ -173,7 +198,7 @@ class Extensions extends AbstractPage {
             [
                 'slug'        => 'cartpulse',
                 'title'       => esc_html__( 'CartPulse', 'dokan-lite' ),
-                'description' => esc_html__( 'Recover abandoned carts and boost WooCommerce revenue.', 'dokan-lite' ),
+                'description' => esc_html__( 'Recover abandoned carts automatically - send timely follow-ups and bring customers back to complete their purchases and boost revenue.', 'dokan-lite' ),
                 'image'       => $thumbnail_dir . '/addons/cartpulse.svg',
                 'button_type' => 'get_plugin',
                 'url'         => 'https://cartpulse.co/',
@@ -183,7 +208,7 @@ class Extensions extends AbstractPage {
             [
                 'slug'        => 'woocommerce-conversion-tracking',
                 'title'       => esc_html__( 'Conversion Tracking for WooCommerce', 'dokan-lite' ),
-                'description' => esc_html__( 'Track conversions on your WooCommerce store like a pro.', 'dokan-lite' ),
+                'description' => esc_html__( 'Track conversions, optimize campaigns, and use clear insights to boost ROI and drive smarter growth.', 'dokan-lite' ),
                 'image'       => $thumbnail_dir . '/addons/conversion-tracking.svg',
                 'button_type' => 'install',
                 'wp_org_slug' => 'woocommerce-conversion-tracking',
@@ -193,7 +218,7 @@ class Extensions extends AbstractPage {
             [
                 'slug'        => 'dokan-migrator',
                 'title'       => esc_html__( 'Dokan Migrator', 'dokan-lite' ),
-                'description' => esc_html__( 'Migrate to Dokan from other marketplace plugins seamlessly.', 'dokan-lite' ),
+                'description' => esc_html__( 'Migrate your marketplace with ease - transfer data securely from other platforms and launch quickly without losing valuable information.', 'dokan-lite' ),
                 'image'       => $thumbnail_dir . '/addons/dokan-migrator.svg',
                 'button_type' => 'install',
                 'wp_org_slug' => 'dokan-migrator',
@@ -273,8 +298,7 @@ class Extensions extends AbstractPage {
                 'slug'        => 'dokan-customer-app',
                 'title'       => esc_html__( 'Dokan Customer App', 'dokan-lite' ),
                 'audience'    => esc_html__( 'For Customers', 'dokan-lite' ),
-                'tagline'     => esc_html__( 'Shop on the go from your favorite marketplace.', 'dokan-lite' ),
-                'description' => esc_html__( 'Let your customers browse products, place orders, and track deliveries right from their phones with the Dokan Customer App.', 'dokan-lite' ),
+                'description' => esc_html__( 'A fully-featured shopping app for your Dokan marketplace customers. Browse vendor stores, discover products, place orders, and track deliveries all from one place.', 'dokan-lite' ),
                 'image'       => $thumbnail_dir . '/apps/dokan-customer-app.svg',
                 'url'         => 'https://dokan.co/wordpress/dokan-mobile-app/',
             ],
@@ -282,17 +306,15 @@ class Extensions extends AbstractPage {
                 'slug'        => 'dokan-vendor-app',
                 'title'       => esc_html__( 'Dokan Vendor App', 'dokan-lite' ),
                 'audience'    => esc_html__( 'For Vendors', 'dokan-lite' ),
-                'tagline'     => esc_html__( 'Manage your store from anywhere.', 'dokan-lite' ),
-                'description' => esc_html__( 'Allow vendors to manage products, orders, and earnings from their mobile devices with the Dokan Vendor App.', 'dokan-lite' ),
+                'description' => esc_html__( 'Gives vendors complete control over their store on the go. Manage products, process orders, view earnings, and respond to customer queries without needing a desktop.', 'dokan-lite' ),
                 'image'       => $thumbnail_dir . '/apps/dokan-vendor-app.svg',
                 'url'         => 'https://play.google.com/store/apps/details?id=co.dokan.plugin.vendor&hl=en',
             ],
             [
                 'slug'        => 'delivery-driver-app',
                 'title'       => esc_html__( 'Delivery Driver App', 'dokan-lite' ),
-                'audience'    => esc_html__( 'For Drivers', 'dokan-lite' ),
-                'tagline'     => esc_html__( 'Streamline deliveries for your marketplace.', 'dokan-lite' ),
-                'description' => esc_html__( 'Empower delivery drivers with route info, order details, and delivery status updates via the Delivery Driver App.', 'dokan-lite' ),
+                'audience'    => esc_html__( 'For Delivery Staff', 'dokan-lite' ),
+                'description' => esc_html__( 'Built for delivery agents to accept tasks, navigate routes, update delivery status in real time, and communicate with customers and vendors seamlessly.', 'dokan-lite' ),
                 'image'       => $thumbnail_dir . '/apps/delivery-driver-app.svg',
                 'url'         => 'https://dokan.co/wordpress/delivery-driver-app/',
             ],

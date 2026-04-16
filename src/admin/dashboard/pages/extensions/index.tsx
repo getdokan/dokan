@@ -18,13 +18,13 @@ const ExtensionsPage = () => {
 
     return (
         <div className="dokan-extensions-page">
-            <div className="mb-4">
-                <h1 className="text-xl font-semibold text-gray-800 m-0">
+            <div className="mb-7">
+                <h1 className="text-2xl font-bold text-[#25252D] m-0">
                     { __( 'Extensions', 'dokan-lite' ) }
                 </h1>
             </div>
 
-            <div className="bg-white p-1.5 rounded-md mb-8">
+            <div className="bg-white p-1.5 rounded-md mb-7 shadow">
                 <div
                     className="flex items-center justify-between p-6"
                     style={ { background: bannerBackground } }
@@ -54,17 +54,29 @@ const ExtensionsPage = () => {
             </div>
 
             <Tabs defaultValue="recommended">
-                <TabsList variant="line">
-                    <TabsTrigger value="recommended">
-                        { __( 'Recommended Addons', 'dokan-lite' ) }
+                <TabsList className="bg-[#E2E2E7]! h-11! gap-2">
+                    <TabsTrigger
+                        value="recommended"
+                        className="data-active:text-[#7047EB]!"
+                    >
+                        { __( 'Picks for you', 'dokan-lite' ) }
                     </TabsTrigger>
-                    <TabsTrigger value="mobile-apps">
+                    <TabsTrigger
+                        value="mobile-apps"
+                        className="data-active:text-[#7047EB]!"
+                    >
                         { __( 'Mobile Apps', 'dokan-lite' ) }
                     </TabsTrigger>
-                    <TabsTrigger value="compatibility">
+                    <TabsTrigger
+                        value="compatibility"
+                        className="data-active:text-[#7047EB]!"
+                    >
                         { __( 'Compatibility', 'dokan-lite' ) }
                     </TabsTrigger>
-                    <TabsTrigger value="services">
+                    <TabsTrigger
+                        value="services"
+                        className="data-active:text-[#7047EB]!"
+                    >
                         { __( 'Services', 'dokan-lite' ) }
                     </TabsTrigger>
                 </TabsList>
