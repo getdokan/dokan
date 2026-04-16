@@ -44,6 +44,13 @@ export { default as DokanTab } from './Tab';
 export { default as TimePicker } from './TimePicker';
 export { default as MediaUploader } from './Upload';
 export { default as UserCard } from './UserCard';
+export { default as StatCard } from './StatCard';
+export { default as AdminHeader } from './AdminHeader';
+export {
+    default as D3Chart,
+    D3ChartConfig,
+    D3ChartDefaultMetrics,
+} from './D3Chart';
 export { default as VendorAsyncSelect } from './VendorAsyncSelect';
 export { default as VisitStore } from './VisitStore';
 export { default as WpDatePicker } from './WpDatePicker';
