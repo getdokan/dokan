@@ -7,6 +7,7 @@ import getSettings from '../../settings/getSettings';
 import { Button } from '@wedevs/plugin-ui';
 import { DokanModal } from '@src/components';
 import { applyFilters } from '@wordpress/hooks';
+import { decodeEntities } from '@wordpress/html-entities';
 
 const Services = () => {
     const extensionsSettings = getSettings( 'extensions' ) || {};
@@ -100,7 +101,7 @@ const Services = () => {
                                             className="text-[#00A63E] mt-0.5"
                                         />
                                         <p className="text-sm text-[#575757] m-0">
-                                            { benefit }
+                                            { decodeEntities( benefit ) }
                                         </p>
                                     </div>
                                 )
