@@ -5,6 +5,7 @@ import { Loader2, ExternalLink } from 'lucide-react';
 import PlaceholderIcon from './PlaceholderIcon';
 import { applyFilters } from '@wordpress/hooks';
 import { Button } from '@wedevs/plugin-ui';
+import { sortByPosition } from 'admin/dashboard/pages/dashboard/utils/sorting';
 
 export type Addon = {
     slug: string;
@@ -53,6 +54,8 @@ const RecommendedAddons = ( { addons }: { addons: Addon[] } ) => {
     const [ installedSlugs, setInstalledSlugs ] = useState< string[] >(
         addons.filter( ( a ) => a.installed ).map( ( a ) => a.slug )
     );
+
+    const filteredAddons = addons ? sortByPosition( { ...addons } ) : [];
 
     const handleInstall = async ( addon: Addon ) => {
         if ( ! addon.wp_org_slug || installingSlugs.includes( addon.slug ) ) {
@@ -177,7 +180,7 @@ const RecommendedAddons = ( { addons }: { addons: Addon[] } ) => {
     return (
         <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-3.5 mb-10">
-                { addons.map( ( addon ) => (
+                { filteredAddons.map( ( [ _, addon ] ) => (
                     <div
                         key={ addon.slug }
                         className="flex flex-col bg-white rounded-md shadow relative"

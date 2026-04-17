@@ -4,6 +4,7 @@ import { ExternalLink } from 'lucide-react';
 import { ExtensionIcon } from './RecommendedAddons';
 import { twMerge } from 'tailwind-merge';
 import { DokanLink } from '@src/components';
+import { sortByPosition } from 'admin/dashboard/pages/dashboard/utils/sorting';
 
 export type MobileApp = {
     slug: string;
@@ -15,9 +16,11 @@ export type MobileApp = {
 };
 
 const MobileApps = ( { apps }: { apps: MobileApp[] } ) => {
+    const filteredApps = apps ? sortByPosition( { ...apps } ) : [];
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-3.5 mb-10">
-            { apps.map( ( app ) => (
+            { filteredApps.map( ( [ _, app ] ) => (
                 <div
                     key={ app.slug }
                     className="flex flex-col bg-white rounded-md shadow relative"
