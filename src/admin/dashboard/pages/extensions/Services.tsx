@@ -1,7 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { ExternalLink, Check, Calendar } from 'lucide-react';
-import { DokanButton, DokanLink } from '@dokan/components';
+import { DokanLink } from '@dokan/components';
 import { ExtensionIcon } from './RecommendedAddons';
 import getSettings from '../../settings/getSettings';
 import { Button } from '@wedevs/plugin-ui';
