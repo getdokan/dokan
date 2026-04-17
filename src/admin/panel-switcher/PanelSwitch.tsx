@@ -23,6 +23,8 @@ const PanelSwitch = () => {
             'changelog',
             'store-reviews',
             'verifications',
+            'tools',
+            'dummy-data',
             'product-advertising',
             'reverse-withdrawal',
             'announcement',
@@ -32,6 +34,8 @@ const PanelSwitch = () => {
             'wholesale-customer',
             'admin-store-support',
             'product-qa',
+            'reports',
+            'request-for-quote',
         ]
     ) as string[];
 

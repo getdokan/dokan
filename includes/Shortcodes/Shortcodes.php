@@ -8,6 +8,7 @@ use WeDevs\Dokan\Shortcodes\MyOrders;
 use WeDevs\Dokan\Shortcodes\Stores;
 use WeDevs\Dokan\Shortcodes\TopRatedProduct;
 use WeDevs\Dokan\Shortcodes\VendorRegistration;
+use WeDevs\Dokan\Shortcodes\VendorOnboardingRegistration;
 
 class Shortcodes {
 
@@ -31,6 +32,7 @@ class Shortcodes {
 				'dokan-stores'               => new Stores(),
 				'dokan-vendor-registration'  => new VendorRegistration(),
 				'dokan-customer-migration'   => new CustomerMigration(),
+                'dokan-vendor-onboarding-registration'    => new VendorOnboardingRegistration(),
 			]
         );
     }
