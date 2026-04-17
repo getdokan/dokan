@@ -1,6 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { Mail, Trash, Upload, Pencil } from 'lucide-react';
-import { Card, SimpleInput, ToggleSwitch } from '@getdokan/dokan-ui';
+import { Card, SimpleInput } from '@getdokan/dokan-ui';
+import { Switch } from '@wedevs/plugin-ui';
 import { DokanButton } from '@dokan/components';
 import StoreImage from '../StoreImage';
 import DebouncedInput from '@src/components/DebouncedInput';
@@ -81,9 +82,9 @@ export const General = ( {
                             </span>
                         </div>
                         <div className="flex items-center">
-                            <ToggleSwitch
+                            <Switch
                                 checked={ vendor?.enabled }
-                                onChange={ ( value ) => {
+                                onCheckedChange={ ( value ) => {
                                     setData( 'enabled', value );
                                 } }
                             />
@@ -110,9 +111,9 @@ export const General = ( {
                             </span>
                         </div>
                         <div className="flex items-center">
-                            <ToggleSwitch
+                            <Switch
                                 checked={ vendor?.trusted }
-                                onChange={ ( value ) => {
+                                onCheckedChange={ ( value ) => {
                                     setData( 'trusted', value );
                                 } }
                             />
@@ -136,9 +137,9 @@ export const General = ( {
                             </span>
                         </div>
                         <div className="flex items-center">
-                            <ToggleSwitch
+                            <Switch
                                 checked={ vendor?.featured }
-                                onChange={ ( value ) => {
+                                onCheckedChange={ ( value ) => {
                                     setData( 'featured', value );
                                 } }
                             />
