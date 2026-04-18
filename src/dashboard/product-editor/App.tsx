@@ -10,7 +10,7 @@ import {
 import useLayouts from './hooks/useLayouts';
 import { FormItem, LayoutItem } from './types';
 import DokanAI from '../../intelligence/components/DokanAI';
-import { useCallback, useEffect, useState } from '@wordpress/element';
+import { useCallback, useEffect, useMemo, useState } from '@wordpress/element';
 import apiFetch from '@wordpress/api-fetch';
 import './index.scss';
 import { Fill } from '@wordpress/components';
@@ -60,21 +60,24 @@ const App = ( { params }: { params: { productId: string } } ) => {
         formEditor?.vendor_earning || 0
     );
 
-    const valueForPrompt = {
-        post_title: [ product.name ],
-        post_content: [ product.description ],
-        post_excerpt: [ product.short_description ],
-    };
+    const valueForPrompt = useMemo(
+        () => ( {
+            post_title: [ product.name ],
+            post_content: [ product.description ],
+            post_excerpt: [ product.short_description ],
+        } ),
+        [ product.name, product.description, product.short_description ]
+    );
 
     const productUrl = formEditor?.view_product_url;
 
-    const handleSwitchEditor = () => {
+    const handleSwitchEditor = useCallback( () => {
         // get the window.location.href and remove the query parameter `product_editor` if exists, otherwise add `?product_editor` to the url and reload the page
         const legacyUrl = formEditor?.product_legacy_url;
         if ( legacyUrl ) {
             window.location.href = legacyUrl;
         }
-    };
+    }, [ formEditor?.product_legacy_url ] );
 
     const fetchProductFields = useCallback( async () => {
         const id = Number( params.productId );
@@ -84,6 +87,7 @@ const App = ( { params }: { params: { productId: string } } ) => {
                 path: `/dokan/v3/products/init/fields?id=${ id || '' }`,
             } );
             setFormEditor( response );
+            ( window as any ).dokanProductEditor = response;
         } catch ( err: any ) {
             setError(
                 err?.message || __( 'An unknown error occurred', 'dokan-lite' )
@@ -171,11 +175,13 @@ const App = ( { params }: { params: { productId: string } } ) => {
         isNewProduct,
         isValid,
         onChange,
-        product.description,
-        product.name,
-        product.short_description,
         isInitLoading,
         error,
+        formEditor?.product_legacy_url,
+        handleSwitchEditor,
+        productUrl,
+        submitHandler,
+        valueForPrompt,
     ] );
 
     useEffect( () => {

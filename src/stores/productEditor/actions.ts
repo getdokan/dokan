@@ -208,6 +208,30 @@ export const actions = {
                     method: productId ? 'PUT' : 'POST',
                     data: product,
                 } );
+
+                if ( productId ) {
+                    const variations = select.getVariations( productId ) || [];
+                    const expandedVariations = variations.filter(
+                        ( v: VariationType ) => select.hasForm( v.id )
+                    );
+
+                    if ( expandedVariations.length > 0 ) {
+                        await Promise.all(
+                            expandedVariations.map( ( v: VariationType ) => {
+                                const variationData = select.getProduct( v.id );
+                                if ( variationData ) {
+                                    return dispatch(
+                                        actions.saveVariation(
+                                            v,
+                                            variationData
+                                        )
+                                    );
+                                }
+                                return Promise.resolve();
+                            } )
+                        );
+                    }
+                }
             } catch ( err ) {
                 dispatch( actions.setError( err as Error ) );
                 throw err;
@@ -310,9 +334,7 @@ export const actions = {
                 variations
                     .filter( ( v: VariationType ) => select.hasForm( v.id ) )
                     .map( ( v: VariationType ) =>
-                        dispatch( actions.fetchVariationForm( v.id ) ).catch(
-                            console.error
-                        )
+                        dispatch( actions.fetchVariationForm( v.id ) )
                     )
             );
         };
@@ -363,9 +385,6 @@ export const actions = {
         data: Record< string, any >
     ) => {
         return async ( { dispatch }: { dispatch: any } ) => {
-            dispatch(
-                actions.setVariationsLoading( variation.parent_id, true )
-            );
             try {
                 const payload: Record< string, any > = { ...data };
 
@@ -390,10 +409,6 @@ export const actions = {
             } catch ( error ) {
                 dispatch( actions.setError( error as Error ) );
                 throw error;
-            } finally {
-                dispatch(
-                    actions.setVariationsLoading( variation.parent_id, false )
-                );
             }
         };
     },

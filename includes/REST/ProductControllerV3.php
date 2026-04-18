@@ -359,7 +359,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
             'product_legacy_url'    => dokan_edit_product_url( $product_id ),
         ];
 
-        $data = apply_filters( 'dokan_product_editor_init_fields', $args, $product_id, $product );
+        $data = apply_filters( 'dokan_product_editor_args', $args, $product_id, $product );
 
         return rest_ensure_response( $data );
     }
