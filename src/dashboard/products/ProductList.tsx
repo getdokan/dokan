@@ -1,11 +1,7 @@
 import { useState, useMemo, useEffect } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { useToast } from '@getdokan/dokan-ui';
-import {
-    addAction,
-    applyFilters,
-    removeAction,
-} from '@wordpress/hooks';
+import { addAction, applyFilters, removeAction } from '@wordpress/hooks';
 import { Fill } from '@wordpress/components';
 import { useNavigate } from 'react-router-dom';
 import { Boxes, Package, ExternalLink, LayoutGrid, Plus } from 'lucide-react';
@@ -56,18 +52,29 @@ const getStatusLabel = ( status: string ) => {
 };
 
 const getProductTypeLabel = ( item: ProductItem ) => {
-    if ( item.type === 'grouped' ) return __( 'Grouped', 'dokan-lite' );
-    if ( item.type === 'external' )
+    if ( item.type === 'grouped' ) {
+        return __( 'Grouped', 'dokan-lite' );
+    }
+    if ( item.type === 'external' ) {
         return __( 'External/Affiliate', 'dokan-lite' );
-    if ( item.type === 'variable' ) return __( 'Variable', 'dokan-lite' );
+    }
+    if ( item.type === 'variable' ) {
+        return __( 'Variable', 'dokan-lite' );
+    }
     return __( 'Simple', 'dokan-lite' );
 };
 
 const ProductTypeIcon = ( { item }: { item: ProductItem } ) => {
     const cls = 'w-5 h-5 text-gray-500';
-    if ( item.type === 'variable' ) return <Boxes className={ cls } />;
-    if ( item.type === 'grouped' ) return <LayoutGrid className={ cls } />;
-    if ( item.type === 'external' ) return <ExternalLink className={ cls } />;
+    if ( item.type === 'variable' ) {
+        return <Boxes className={ cls } />;
+    }
+    if ( item.type === 'grouped' ) {
+        return <LayoutGrid className={ cls } />;
+    }
+    if ( item.type === 'external' ) {
+        return <ExternalLink className={ cls } />;
+    }
     return <Package className={ cls } />;
 };
 
@@ -204,11 +211,7 @@ function ProductList() {
                     </div>
                     <div>
                         <a
-                            href={ `#` }
-                            onClick={ ( e ) => {
-                                e.preventDefault();
-                                navigate( `/products/${ item.id }/edit` );
-                            } }
+                            href={ `#/products/${ item.id }/edit` }
                             className="font-medium text-dokan-link cursor-pointer block focus:outline-none!"
                         >
                             { item.name }
@@ -387,7 +390,7 @@ function ProductList() {
             [] as JSX.Element[],
             config
         ) as JSX.Element[];
-    }, [ effectiveRemaining, effectiveCanPost ] );
+    }, [ effectiveRemaining, effectiveCanPost, subscriptionInfo ] );
 
     const headerButtons = useMemo( () => {
         const base: ProductListingConfig =
@@ -427,7 +430,13 @@ function ProductList() {
             buttons,
             config
         ) as JSX.Element[];
-    }, [ effectiveRemaining, effectiveCanPost, subscriptionLimitReached ] );
+    }, [
+        effectiveRemaining,
+        effectiveCanPost,
+        subscriptionLimitReached,
+        subscriptionInfo,
+        navigate,
+    ] );
 
     const tabs = useMemo( () => {
         const countMap: Record< string, number > = {};
@@ -440,22 +449,22 @@ function ProductList() {
                 {
                     value: 'all',
                     label: __( 'All', 'dokan-lite' ),
-                    count: countMap[ 'all' ] ?? 0,
+                    count: countMap.all ?? 0,
                 },
                 {
                     value: 'publish',
                     label: __( 'Published', 'dokan-lite' ),
-                    count: countMap[ 'publish' ] ?? 0,
+                    count: countMap.publish ?? 0,
                 },
                 {
                     value: 'pending',
                     label: __( 'Pending Review', 'dokan-lite' ),
-                    count: countMap[ 'pending' ] ?? 0,
+                    count: countMap.pending ?? 0,
                 },
                 {
                     value: 'draft',
                     label: __( 'Draft', 'dokan-lite' ),
-                    count: countMap[ 'draft' ] ?? 0,
+                    count: countMap.draft ?? 0,
                 },
                 {
                     value: 'instock',
@@ -651,7 +660,9 @@ function ProductList() {
                         : __( 'Publish Product', 'dokan-lite' ),
                 supportsBulk: true,
                 isEligible: ( item: ProductItem ) => {
-                    if ( item.status === 'publish' ) return false;
+                    if ( item.status === 'publish' ) {
+                        return false;
+                    }
                     if (
                         subscriptionLimitReached &&
                         ! [ 'publish', 'pending' ].includes( item.status )
@@ -748,12 +759,11 @@ function ProductList() {
             updateProductsStatus,
             fetchProducts,
             fetchStatusCounts,
-            productsUrl,
             toast,
             subscriptionInfo,
             effectiveRemaining,
             subscriptionLimitReached,
-            selection,
+            navigate,
         ]
     );
 
@@ -774,7 +784,7 @@ function ProductList() {
                 selection,
                 setSelection,
             } ) as typeof actions,
-        [ actions, selection ]
+        [ actions, selection, fetchProducts, fetchStatusCounts, setSelection ]
     );
 
     // ── View change ───────────────────────────────────────────────────────────
@@ -820,7 +830,7 @@ function ProductList() {
         return () => {
             removeAction( 'dokan_product_list_refresh', 'dokan/product-list' );
         };
-    }, [] );
+    }, [ fetchProducts, fetchStatusCounts, setSelection ] );
 
     // ── Render ────────────────────────────────────────────────────────────────
 
