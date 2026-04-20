@@ -420,6 +420,7 @@ class FormSchema {
             Elements::PRODUCT_TYPE_SIMPLE    => true,
             Elements::PRODUCT_TYPE_VARIABLE  => false,
             Elements::PRODUCT_TYPE_VARIATION => true,
+            Elements::PRODUCT_TYPE_GROUPED   => false,
         ];
         $price_visibilities = apply_filters(
             'dokan_product_editor_price_visibilities',

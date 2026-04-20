@@ -19,16 +19,18 @@ type ProductEditorValue = {
     fields: any[];
     formItems: FormItem[];
     onChange: ( newData: Record< string, any > ) => void;
-    submitHandler: ( e: any ) => Promise<void>;
+    submitHandler: ( e: any ) => Promise< void >;
     isLoading: boolean;
     defaultAttributes: DefaultAttribute[];
-    getDefaultValue: ( attr: Attribute ) => { label: string; value: string } | null;
-    handleDefaultChange: (
-        attr: Attribute,
-        selectedOption: any
-    ) => void;
-}
-export function useProductEditor( productId: number, isNewProduct = false ): ProductEditorValue {
+    getDefaultValue: (
+        attr: Attribute
+    ) => { label: string; value: string } | null;
+    handleDefaultChange: ( attr: Attribute, selectedOption: any ) => void;
+};
+export function useProductEditor(
+    productId: number,
+    isNewProduct = false
+): ProductEditorValue {
     const toast = useToast();
 
     const { product, formItems, isLoading } = useSelect(
@@ -73,7 +75,10 @@ export function useProductEditor( productId: number, isNewProduct = false ): Pro
     );
 
     // Initialize default_attributes from attributes' default values on first load.
-    const attributes: Attribute[] = product?.attributes || [];
+    const attributes: Attribute[] = useMemo(
+        () => product?.attributes || [],
+        [ product?.attributes ]
+    );
     const variationAttributes = useMemo(
         () => attributes.filter( ( attr ) => attr.variation ),
         [ attributes ]
@@ -96,8 +101,10 @@ export function useProductEditor( productId: number, isNewProduct = false ): Pro
         onChange( { default_attributes: defaults } );
     }, [ product?.default_attributes, variationAttributes, onChange ] );
 
-    const defaultAttributes: DefaultAttribute[] =
-        product?.default_attributes || [];
+    const defaultAttributes: DefaultAttribute[] = useMemo(
+        () => product?.default_attributes || [],
+        [ product?.default_attributes ]
+    );
 
     const getDefaultValue = useCallback(
         ( attr: Attribute ) => {
@@ -114,6 +121,7 @@ export function useProductEditor( productId: number, isNewProduct = false ): Pro
 
     const handleDefaultChange = useCallback(
         ( attr: Attribute, selectedOption: any ) => {
+            // eslint-disable-next-line
             const option = selectedOption
                 ? typeof selectedOption === 'string'
                     ? selectedOption
@@ -197,6 +205,7 @@ export function useProductEditor( productId: number, isNewProduct = false ): Pro
  * Hook to initialize a product editor form in the store.
  * Call once on mount to set up the form entry.
  */
+
 export function useInitProductEditor(
     productId: number,
     formItems: FormItem[],

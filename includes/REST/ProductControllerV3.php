@@ -313,12 +313,14 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
 
         $product_id = $request->get_param( 'id' );
         $product = wc_get_product( $product_id );
+        $is_new_product = false;
 
         if ( empty( $product_id ) ) {
             $product = new WC_Product_Simple();
             $product->set_status( 'auto-draft' );
             $product->set_name( '' );
             $product->save();
+            $is_new_product = true;
 
             // Assign the current vendor as the product author.
             wp_update_post(
@@ -349,6 +351,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
             'form_items'             => $fields,
             'form_layouts'           => $layouts,
             'product_id'             => $product_id,
+            'is_new_product'         => $is_new_product,
             'view_product_url'       => get_permalink( $product_id ),
             'vendor_earning'         => $vendor_earning,
             'can_add_new_attribute'  => dokan_get_option( 'add_new_attribute', 'dokan_selling', 'off' ) === 'on',
