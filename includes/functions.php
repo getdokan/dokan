@@ -2022,24 +2022,36 @@ add_filter( 'get_avatar_url', 'dokan_get_avatar_url', 99, 3 );
  * @return string url
  */
 function dokan_get_navigation_url( $name = '', $new_url = false ) {
-    $page_id = (int) dokan_get_option( 'dashboard', 'dokan_pages', 0 );
+	static $memo = [];
 
-    if ( ! $page_id ) {
-        return '';
-    }
+	$name    = is_scalar( $name ) ? (string) $name : '';
+	$new_url = (bool) $new_url;
 
-    $url = rtrim( get_permalink( $page_id ), '/' ) . '/';
+	$key = $name . '|' . ( $new_url ? '1' : '0' );
+	if ( isset( $memo[ $key ] ) ) {
+		return $memo[ $key ];
+	}
 
-    if ( ! empty( $name ) && ! $new_url ) {
-        $url = dokan_add_subpage_to_url( $url, $name . '/' );
-    }
+	// Page id is the key expensive option read seen in hot paths.
+	$page_id = (int) dokan_get_option( 'dashboard', 'dokan_pages', 0 );
 
-    if ( $new_url ) {
-        $url = dokan_add_subpage_to_url( $url, 'new/' );
-        $url = $url . '#' . $name . '/';
-    }
+	if ( ! $page_id ) {
+		$memo[ $key ] = '';
+		return '';
+	}
 
-    return apply_filters( 'dokan_get_navigation_url', esc_url( $url ), $name, $new_url );
+	$url = rtrim( get_permalink( $page_id ), '/' ) . '/';
+
+	if ( $new_url ) {
+		$url = dokan_add_subpage_to_url( $url, 'new/' );
+		$url = $url . '#' . trim( $name, '/' ) . '/';
+	} elseif ( $name !== '' ) {
+		$url = dokan_add_subpage_to_url( $url, $name . '/' );
+	}
+
+	$memo[ $key ] = apply_filters( 'dokan_get_navigation_url', esc_url( $url ), $name, $new_url );
+
+	return $memo[ $key ];
 }
 
 /**
