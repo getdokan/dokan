@@ -105,7 +105,6 @@ class VendorNavMenuChecker {
         if ( $name === '' || $name === 'new' ) {
             return $url;
         }
-
         if ( ! is_null( $new_url ) ) {
             return $url;
         }
