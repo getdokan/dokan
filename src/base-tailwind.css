@@ -215,8 +215,8 @@
     border-color: var(--color-border) !important;
 }
 
-body:has(.pui-root) {
-    /* If .pui-root is present, hide the preflight styles on :root to prevent conflicts */
+body:has(.dokan-layout) {
+    /* If .dokan-layout is present, hide the preflight styles on :root to prevent conflicts */
     --wp-components-color-accent: var(--color-primary);
     --wp-components-color-accent-darker-20: var(--color-dokan-btn-hover);
 }
