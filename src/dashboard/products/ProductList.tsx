@@ -159,7 +159,6 @@ function ProductList() {
         totalItems,
         totalPages,
         statusCounts,
-        productsUrl,
         instockCount,
         outstockCount,
         monthOptions,

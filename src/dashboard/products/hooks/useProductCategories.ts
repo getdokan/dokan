@@ -12,9 +12,7 @@ interface CategoryEntry {
 type CategoryMap = Record< string, CategoryEntry >;
 
 // Build a hierarchically ordered list of category options.
-function buildHierarchicalOptions(
-    map: CategoryMap
-): ProductCategoryOption[] {
+function buildHierarchicalOptions( map: CategoryMap ): ProductCategoryOption[] {
     const INDENT = '\u00A0\u00A0\u00A0'; // 3 non-breaking spaces per level
 
     const result: ProductCategoryOption[] = [];
@@ -62,9 +60,6 @@ export const useProductCategories = (): UseProductCategoriesReturn => {
                     return;
                 }
                 setOptions( buildHierarchicalOptions( data ) );
-            } )
-            .catch( () => {
-                // Silently handle errors; options remain empty.
             } )
             .finally( () => setIsLoading( false ) );
     }, [] );

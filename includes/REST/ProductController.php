@@ -537,15 +537,9 @@ class ProductController extends DokanRESTController {
     public function get_product_summary( $request ) {
         $seller_id = dokan_get_current_user_id();
 
-        // Build the PHP products URL directly to bypass the react_route URL rewrite filter.
-        $dashboard_page_id = (int) dokan_get_option( 'dashboard', 'dokan_pages', 0 );
-        $products_url      = $dashboard_page_id
-            ? user_trailingslashit( get_permalink( $dashboard_page_id ) . 'products' )
-            : '';
-
         $data = [
             'post_counts'      => dokan_count_posts( 'product', $seller_id ),
-            'products_url'     => $products_url,
+            'products_url'     => dokan_get_navigation_url( 'products' ),
             'instock_count'    => dokan_count_stock_posts( 'product', $seller_id, 'instock' ),
             'outofstock_count' => dokan_count_stock_posts( 'product', $seller_id, 'outofstock' ),
             'months'           => $this->get_product_months_data( dokan_get_current_user_id() ),
@@ -1020,25 +1014,7 @@ class ProductController extends DokanRESTController {
         $data['earning']   = is_numeric( $earning ) ? (float) $earning : null;
         $data['page_view'] = (int) get_post_meta( $product->get_id(), 'pageview', true );
 
-        // Build the PHP edit URL directly from the dashboard page permalink to bypass
-        // the react_route URL rewrite filter on dokan_get_navigation_url.
-        $dashboard_page_id       = (int) dokan_get_option( 'dashboard', 'dokan_pages', 0 );
-        $dashboard_products_base = $dashboard_page_id
-            ? user_trailingslashit( get_permalink( $dashboard_page_id ) . 'products' )
-            : '';
-        $data['edit_url'] = $dashboard_products_base
-            ? add_query_arg(
-                [
-                    'product_id'               => $product->get_id(),
-                    'action'                   => 'edit',
-                    '_dokan_edit_product_nonce' => wp_create_nonce( 'dokan_edit_product_nonce' ),
-                ],
-                $dashboard_products_base
-            )
-            : '';
-
-        // Advertisement data — null by default; Pro module adds data via the filter below.
-        $data['advertisement'] = apply_filters( 'dokan_rest_product_advertisement_data', null, $product->get_id() );
+        $data = apply_filters( 'dokan_rest_product_data_prepare', $data, $product->get_id() );
 
         $response = rest_ensure_response( $data );
         $response->add_links( $this->prepare_links( $product, $request ) );

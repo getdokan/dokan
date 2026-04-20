@@ -26,8 +26,14 @@ interface UseProductsReturn {
     fetchStatusCounts: () => void;
     deleteProduct: ( productId: number ) => Promise< void >;
     deleteProducts: ( productIds: number[] ) => Promise< void >;
-    updateProductStatus: ( productId: number, status: string ) => Promise< void >;
-    updateProductsStatus: ( productIds: number[], status: string ) => Promise< void >;
+    updateProductStatus: (
+        productId: number,
+        status: string
+    ) => Promise< void >;
+    updateProductsStatus: (
+        productIds: number[],
+        status: string
+    ) => Promise< void >;
 }
 
 export const useProducts = (
@@ -42,7 +48,9 @@ export const useProducts = (
     const [ outstockCount, setOutstockCount ] = useState( 0 );
     const [ subscriptionRemaining, setSubscriptionRemaining ] =
         useState< SubscriptionRemaining | null >( null );
-    const [ monthOptions, setMonthOptions ] = useState< ProductMonthOption[] >( [] );
+    const [ monthOptions, setMonthOptions ] = useState< ProductMonthOption[] >(
+        []
+    );
 
     const [ statusCounts, setStatusCounts ] = useState< ProductStatusCount[] >(
         [
@@ -121,12 +129,14 @@ export const useProducts = (
 
             const responseData: ProductItem[] = await response.json();
             const responseTotalItems = response.headers.get( 'X-WP-Total' );
-            const responseTotalPages = response.headers.get( 'X-WP-TotalPages' );
+            const responseTotalPages =
+                response.headers.get( 'X-WP-TotalPages' );
 
             setData( responseData );
             setTotalItems( parseInt( responseTotalItems ?? '0', 10 ) );
             setTotalPages( parseInt( responseTotalPages ?? '0', 10 ) );
         } catch ( error ) {
+            // eslint-disable-next-line no-console
             console.error( 'Error fetching products:', error );
             setData( [] );
         } finally {
@@ -187,6 +197,7 @@ export const useProducts = (
             setMonthOptions( response.months ?? [] );
             setSubscriptionRemaining( response.subscription_remaining ?? null );
         } catch ( error ) {
+            // eslint-disable-next-line no-console
             console.error( 'Error fetching product summary:', error );
         }
     }, [] );
