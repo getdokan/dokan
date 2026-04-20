@@ -212,7 +212,7 @@ class Dashboard implements Hookable {
                     [
                         'id'       => 'documentation',
                         'title'    => esc_html__( 'Documentation', 'dokan-lite' ),
-                        'url'      => 'https://wedevs.com/docs/dokan/getting-started/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
+                        'url'      => 'https://dokan.co/docs/wordpress/getting-started/?utm_campaign=dokan-lite&utm_medium=wp-admin&utm_source=plugin',
                         'icon'     => 'documentation',
                         'external' => true,
                     ],
@@ -233,7 +233,7 @@ class Dashboard implements Hookable {
                     [
                         'id'       => 'feature-request',
                         'title'    => __( 'Request a Feature', 'dokan-lite' ),
-                        'url'      => 'https://wedevs.com/account/dokan-feature-requests/',
+                        'url'      => 'https://pluginfeedback.dokan.co',
                         'icon'     => 'feature-request',
                         'external' => true,
                     ],
