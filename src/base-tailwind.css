@@ -5,7 +5,6 @@
 @import "@getdokan/dokan-ui/dist/dokan-ui.css";
 @import "../node_modules/@wedevs/plugin-ui/src/components/wordpress/style.css";
 
-
 @source "../src/";
 @source "../node_modules/@wedevs/plugin-ui/dist";
 
@@ -175,8 +174,9 @@
 @layer base {
 	:root {
     	/* ─── Other root variables ─── */
-        --primary: var(--color-primary);
-        --colors-primary-500: var(--color-primary); /* for dokan-ui */
+        --primary: var(--dokan-button-background-color, #7047EB) !important;
+        --color-primary: var(--primary) !important;
+        --colors-primary-500: var(--primary) !important; /* for dokan-ui */
         --color-border: #e5e7eb;
 	}
 
@@ -213,5 +213,22 @@
     font-variation-settings: normal;
     -webkit-tap-highlight-color: transparent;
     border-color: var(--color-border) !important;
+}
+
+body:has(.dokan-layout) {
+    /* If .dokan-layout is present, hide the preflight styles on :root to prevent conflicts */
+    --wp-components-color-accent: var(--color-primary);
+    --wp-components-color-accent-darker-20: var(--color-dokan-btn-hover);
+}
+
+/* Hide scrollbar for Chrome, Safari, and Opera */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge, and Firefox */
+.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 

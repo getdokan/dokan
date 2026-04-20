@@ -58,7 +58,7 @@ if ( $user_orders ) {
                         <?php if ( current_user_can( 'dokan_view_order' ) ) { ?>
                             <?php
                             echo '<a href="'
-                                . esc_url( wp_nonce_url( add_query_arg( [ 'order_id' => $order->get_id() ], dokan_add_subpage_to_url( rtrim( get_permalink( (int) dokan_get_option( 'dashboard', 'dokan_pages', 0 ) ), '/' ) . '/', 'orders/' ) ), 'dokan_view_order' ) )
+                                . esc_url( wp_nonce_url( add_query_arg( [ 'order_id' => $order->get_id() ], dokan_get_navigation_url( 'orders' ) ), 'dokan_view_order' ) )
                                 . '"><strong>'
                                 // translators: 1) order number
                                 . sprintf( esc_html__( 'Order %s', 'dokan-lite' ), esc_attr( $order->get_order_number() ) ) . '</strong></a>';
@@ -158,7 +158,7 @@ if ( $user_orders ) {
                             }
 
                             $actions['view'] = [
-                                'url'    => wp_nonce_url( add_query_arg( [ 'order_id' => $order->get_id() ], dokan_add_subpage_to_url( rtrim( get_permalink( (int) dokan_get_option( 'dashboard', 'dokan_pages', 0 ) ), '/' ) . '/', 'orders/' ) ), 'dokan_view_order' ),
+                                'url'    => wp_nonce_url( add_query_arg( [ 'order_id' => $order->get_id() ], dokan_get_navigation_url( 'orders' ) ), 'dokan_view_order' ),
                                 'name'   => __( 'View', 'dokan-lite' ),
                                 'action' => 'view',
                                 'icon'   => '<i class="far fa-eye">&nbsp;</i>',
@@ -169,11 +169,11 @@ if ( $user_orders ) {
                             foreach ( $actions as $action_item ) {
                                 $icon = isset( $action_item['icon'] ) ? $action_item['icon'] : '';
                                 printf(
-                                    '<a class="dokan-btn dokan-btn-default dokan-btn-sm dokan-btn-action-confirm tips" 
-                                        href="%s" 
+                                    '<a class="dokan-btn dokan-btn-default dokan-btn-sm dokan-btn-action-confirm tips"
+                                        href="%s"
                                         data-confirm-message="%s"
-                                        data-toggle="tooltip" 
-                                        data-placement="top" 
+                                        data-toggle="tooltip"
+                                        data-placement="top"
                                         title="%s">%s</a> ',
                                     esc_url( $action_item['url'] ),
                                     esc_attr( $action_item['confirm_message'] ?? '' ),
