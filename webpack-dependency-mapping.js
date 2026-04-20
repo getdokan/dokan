@@ -118,8 +118,15 @@ const wooRequestToHandle = ( request ) => {
  * @param  request string Request string.
  *
  * @return {string[]} External name for the package.
+ *
  */
 const requestToExternal = ( request ) => {
+    // @wordpress/ui is not registered as a WP script handle yet.
+    // Bundle it instead of externalizing to the missing `wp.ui` global.
+    if ( request === '@wordpress/ui' ) {
+        return false;
+    }
+
     const dokanStores = request.match( /^@dokan\/stores\/(.+)$/ );
     const wc = request.match( /^@woocommerce\/(.+)$/ );
     const dokan = request.match( /^@dokan\/([^/]+)$/ );
@@ -135,8 +142,11 @@ const requestToExternal = ( request ) => {
 
     if ( dokan ) {
         const packageName = dokan[ 1 ];
-        const externalName =
-            packageName === 'hooks' ? 'reactHooks' : packageName;
+        const externalNameMap = {
+            hooks: 'reactHooks',
+            'product-editor': 'productEditor',
+        };
+        const externalName = externalNameMap[ packageName ] || packageName;
 
         return [ 'dokan', externalName ];
     }
@@ -152,6 +162,7 @@ const requestToExternal = ( request ) => {
  * @return {string} Handle name for the package.
  */
 const requestToHandle = ( request ) => {
+
     const dokan = request.match( /^@dokan\/stores\/(.+)$/ );
     const wc = request.match( /^@woocommerce\/(.+)$/ );
     const dokanOthers = request.match( /^@dokan\/([^/]+)$/ );
@@ -164,8 +175,11 @@ const requestToHandle = ( request ) => {
 
     if ( dokanOthers ) {
         const packageName = dokanOthers[ 1 ];
-        const handleName =
-            packageName === 'components' ? 'react-components' : packageName;
+        const handleNameMap = {
+            components: 'react-components',
+            'product-editor': 'product-editor-utils',
+        };
+        const handleName = handleNameMap[ packageName ] || packageName;
         return `dokan-${ handleName }`;
     }
 

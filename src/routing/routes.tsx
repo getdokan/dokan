@@ -2,6 +2,7 @@ import { DokanRoute } from '@src/layout';
 import { __ } from '@wordpress/i18n';
 import Withdraw from '@src/dashboard/withdraw';
 import WithdrawRequests from '@src/dashboard/withdraw/WithdrawRequests';
+import App from '@src/dashboard/product-editor/App';
 import Orders from '@src/dashboard/orders';
 import ReverseWithdrawal from '@src/dashboard/reverse-withdraw';
 
@@ -33,6 +34,24 @@ export default [
         exact: true,
         order: 10,
         capabilities: [ 'dokan_view_withdraw_menu' ],
+    },
+    {
+        id: 'dokan-product-editor-create',
+        title: __( 'Add New Product', 'dokan-lite' ),
+        element: App,
+        path: '/products/create',
+        exact: true,
+        order: 10,
+        capabilities: [ 'dokan_view_product_menu' ],
+    },
+    {
+        id: 'dokan-product-editor-edit',
+        title: __( 'Edit Product', 'dokan-lite' ),
+        element: App,
+        path: '/products/:productId/edit',
+        exact: true,
+        order: 10,
+        capabilities: [ 'dokan_view_product_menu' ],
     },
     {
         id: 'dokan-reverse-withdrawal',
