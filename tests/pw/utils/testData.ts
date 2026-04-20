@@ -1157,7 +1157,7 @@ export const data = {
             becomeVendor: 'my-account/account-migration',
             productDetails: (productName: string) => `product/${productName}`,
             orderDetails: (orderId: string) => `my-account/view-order/${orderId}`,
-            orderReceivedDetails: (orderId: string, orderKey: string) => `checkout/order-received/${orderId}/?key=${orderKey}`,
+            orderReceivedDetails: (orderId: string, orderKey: string) => `classic-checkout/order-received/${orderId}/?key=${orderKey}`,
             vendorDetails: (storeName: string) => `store/${storeName}`,
             storeReviews: (storeName: string) => `store/${storeName}/reviews`,
             quoteDetails: (quotId: string) => `my-account/request-a-quote/${quotId}`,
@@ -1212,6 +1212,7 @@ export const data = {
                 inbox: 'dashboard/inbox',
                 auctionProductEdit: (productId: string) => `dashboard/auction/?product_id=${productId}&action=edit`,
                 storeSupport: 'dashboard/support',
+                storeSupportNew: 'dashboard/new/#/support',
 
                 // sub menus
                 settingsStore: 'dashboard/settings/store',

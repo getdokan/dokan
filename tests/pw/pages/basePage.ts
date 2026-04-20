@@ -1518,8 +1518,9 @@ export class BasePage {
     }
 
     // assert element to be visible
-    async toBeVisible(selector: string, options?: { timeout?: number; visible?: boolean } | undefined) {
-        await expect(this.page.locator(selector)).toBeVisible(options);
+    async toBeVisible(selector: string, options?: { timeout?: number; visible?: boolean }) {
+        const locator = this.page.locator(selector);
+        await locator.waitFor({ state: 'visible', timeout: options?.timeout ?? 15000 });
     }
 
     // assert checkbox to be checked

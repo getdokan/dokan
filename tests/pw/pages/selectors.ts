@@ -890,7 +890,7 @@ export const selector = {
                     result: 'li.select2-results__option.select2-results__option--highlighted',
                 },
 
-                searchTicket: '#post-search-input',
+                searchTicket: '(//p[contains(@class, "search-box")]/input[@id="post-search-input"])[1]',
 
                 // Table
                 table: {
@@ -927,8 +927,8 @@ export const selector = {
                         summaryHeading: 'span.dokan-chat-summary',
                         summaryArrow: 'span.dokan-summary-arrow',
 
-                        ticketId: 'div.dokan-summary-info.ticket-id',
-                        vendorInfo: 'div.dokan-summary-info.dokan-vendor-info',
+                        ticketId: '(//div[contains(@class, "dokan-summary-info") and contains(@class, "ticket-id")])[1]',
+                        vendorInfo: '(//div[contains(@class, "dokan-summary-info") and contains(@class, "dokan-vendor-info")])[1]',
                         customerInfo: 'div.dokan-summary-info.dokan-customer-info',
                         messageCount: 'div.dokan-summary-info.conversation',
                         createdAt: '//div[normalize-space()="Created At:"]/..//div[@class="dokan-summary-info created-at"]',
@@ -3072,11 +3072,11 @@ export const selector = {
                     metaBoxDiv: '#dokan_commission_box',
                     commissionsHeader: '#dokan_commission_box h2.hndle', // "Commissions" header
                     table: {
-                      itemColumn: '#dokan_commission_box th:has-text("Item")',
-                      typeColumn: '#dokan_commission_box th:has-text("Type")',
-                      rateColumn: '#dokan_commission_box th:has-text("Rate")',
-                      qtyColumn: '#dokan_commission_box th:has-text("Qty")',
-                      commissionColumn: '#dokan_commission_box th:has-text("Commission")',
+                        itemColumn: '#dokan_commission_box th:has-text("Item")',
+                        typeColumn: '#dokan_commission_box th:has-text("Type")',
+                        rateColumn: '#dokan_commission_box th:has-text("Rate")',
+                        qtyColumn: '#dokan_commission_box th:has-text("Qty")',
+                        commissionColumn: '#dokan_commission_box th:has-text("Commission")',
                     },
                     orderItemsTable: '#dokan_commission_box table.dokan_order_items',
                     orderLineItems: '#dokan_commission_box tbody#order_line_items tr.item',
@@ -3084,7 +3084,7 @@ export const selector = {
                     netTotal: '#dokan_commission_box td.label:has-text("Net total:") + td + td.total',
                     vendorEarning: '#dokan_commission_box td.label:has-text("Vendor earning:") + td + td.total',
                     totalCommission: '#dokan_commission_box td.label:has-text("Total commission:") + td + td.total',
-                },                  
+                },
 
                 subOrdersMetaBox: {
                     metaBoxDiv: 'div#dokan_sub_or_related_orders',
@@ -6007,16 +6007,25 @@ export const selector = {
                 openTickets: '//ul[contains(@class,"dokan-support-topic-counts")]//a[contains(text(), "Open Tickets")]',
                 closedTickets: '//ul[contains(@class,"dokan-support-topic-counts")]//a[contains(text(), "Closed Tickets")]',
             },
-
+            newMenus: {
+                allTickets: 'role=button[name^="All"]',
+                openTickets: 'role=button[name^="Open"]',
+                closedTickets: 'role=button[name^="Closed"]',
+            },
             // Filter
             filters: {
                 filterByCustomer: '//select[@id="dokan-search-support-customers"]/..//span[@class="select2-selection__arrow"]',
+                filterByCustomerNew: '//div[normalize-space(text())="Search customer"]',
                 filterByCustomerInput: '.select2-search__field',
+                filterByCustomerInputNew: 'input#dokan-filter-by-customer',
 
                 filterByDate: {
                     dateRangeInput: 'input#support_ticket_date_filter',
+                    dateRangeInputNew: 'role=button[name="Select date range"]',
                     startDateInput: 'input#support_ticket_start_date_filter_alt',
+                    startDateInputNew: 'input#dokan-daterange-start',
                     endDateInput: 'input#support_ticket_end_date_filter_alt',
+                    endDateInputNew: 'input#dokan-daterange-end',
                 },
 
                 tickedIdOrKeyword: '#dokan-support-ticket-search-input',
@@ -7158,8 +7167,10 @@ export const selector = {
 
                 orderReference: {
                     orderReferenceSpan: 'span.order-reference',
-                    orderReferenceText: (orderId: string) => `//strong[normalize-space()="Referenced Order #${orderId}"]`,
-                    orderReferenceLink: (orderId: string) => `//strong[normalize-space()="Referenced Order #${orderId}"]/..`,
+                    orderReferenceText: (orderId: string) =>
+                        `//strong[contains(normalize-space(), "Referenced Order #${orderId}")]`,
+                    orderReferenceLink: (orderId: string) =>
+                        `//strong[contains(normalize-space(), "Referenced Order #${orderId}")]/..`,
                 },
 
                 chatBox: {
