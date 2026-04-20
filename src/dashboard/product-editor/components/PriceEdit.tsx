@@ -5,6 +5,7 @@ import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { addQueryArgs } from '@wordpress/url';
 import CustomField, { getValidationError } from './CustomField';
+import { decodeEntities } from '@wordpress/html-entities';
 
 const PriceEdit = ( { data, field, onChange, validity }: any ) => {
     const [ vendorEarning, setVendorEarning ] = useState(
@@ -38,7 +39,10 @@ const PriceEdit = ( { data, field, onChange, validity }: any ) => {
                     { vendorEarning > 0 && (
                         <span className="text-xs font-normal text-gray-500">
                             ( { __( 'Your Earn:', 'dokan-lite' ) }{ ' ' }
-                            { formatPrice( vendorEarning ) } )
+                            { decodeEntities(
+                                formatPrice( vendorEarning ) as string
+                            ) }{ ' ' }
+                            )
                         </span>
                     ) }
                 </div>
