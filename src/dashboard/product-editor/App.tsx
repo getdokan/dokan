@@ -21,6 +21,7 @@ interface ProductEditorData {
     form_items: FormItem[];
     form_layouts: LayoutItem[];
     product_id: string;
+    is_new_product: boolean;
     view_product_url: string;
     vendor_earning: number;
     can_add_new_attribute: boolean;
@@ -36,7 +37,7 @@ const App = ( { params }: { params: { productId: string } } ) => {
         null
     );
     const productId = Number( formEditor?.product_id );
-    const isNewProduct = !!! productId;
+    const isNewProduct = formEditor?.is_new_product || false;
     const [ error, setError ] = useState< string | null >( null );
     const [ isInitLoading, setInitLoading ] = useState( true );
     const { product, fields, onChange, formItems, isLoading, submitHandler } =
