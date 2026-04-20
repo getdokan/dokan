@@ -45,6 +45,7 @@ function dokan_get_dashboard_nav(): array {
             'pos'        => 30,
             'icon_name'  => 'Box',
             'permission' => 'dokan_view_product_menu',
+            'react_route' => 'products',
         ],
         'orders'    => [
             'title'       => __( 'Orders', 'dokan-lite' ),
