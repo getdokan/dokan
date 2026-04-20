@@ -79,7 +79,7 @@ class Extensions extends AbstractPage {
             'description' => esc_html__( 'weLabs is a sister concern of weDevs, specializing in customizing Dokan-related integrations and development. From bespoke feature development to complex integration work, weLabs helps you extend Dokan exactly the way your business needs.', 'dokan-lite' ),
             'image'       => $thumbnail_dir . '/services/welabs.svg',
             'url'         => 'https://welabs.dev',
-            'position'    => 1,
+            'position'    => 10,
         ];
     }
 
@@ -105,7 +105,7 @@ class Extensions extends AbstractPage {
                 'wp_org_slug' => 'dokan-wpml',
                 'basename'    => 'dokan-wpml/dokan-wpml.php',
                 'installed'   => isset( $installed_plugins['dokan-wpml/dokan-wpml.php'] ),
-                'position'    => 1,
+                'position'    => 10,
             ],
             [
                 'slug'        => 'dokan-booking',
@@ -117,7 +117,7 @@ class Extensions extends AbstractPage {
                 'basename'    => 'dokan-pro/dokan-pro.php',
                 'installed'   => $this->is_premium_addon_installed( 'booking', $installed_plugins ),
                 'standalone'  => 'dokan-wc-booking/dokan-wc-booking.php',
-                'position'    => 2,
+                'position'    => 20,
             ],
             [
                 'slug'        => 'dokan-auction',
@@ -129,7 +129,7 @@ class Extensions extends AbstractPage {
                 'basename'    => 'dokan-pro/dokan-pro.php',
                 'installed'   => $this->is_premium_addon_installed( 'auction', $installed_plugins ),
                 'standalone'  => 'dokan-simple-auction/dokan-simple-auction.php',
-                'position'    => 3,
+                'position'    => 30,
             ],
             [
                 'slug'        => 'dokan-invoice',
@@ -140,7 +140,7 @@ class Extensions extends AbstractPage {
                 'wp_org_slug' => 'dokan-invoice',
                 'basename'    => 'dokan-invoice/dokan-invoice.php',
                 'installed'   => isset( $installed_plugins['dokan-invoice/dokan-invoice.php'] ),
-                'position'    => 4,
+                'position'    => 40,
             ],
             [
                 'slug'        => 'wepos',
@@ -151,7 +151,7 @@ class Extensions extends AbstractPage {
                 'wp_org_slug' => 'wepos',
                 'basename'    => 'wepos/wepos.php',
                 'installed'   => isset( $installed_plugins['wepos/wepos.php'] ),
-                'position'    => 5,
+                'position'    => 50,
             ],
             [
                 'slug'        => 'texty',
@@ -162,7 +162,7 @@ class Extensions extends AbstractPage {
                 'wp_org_slug' => 'texty',
                 'basename'    => 'texty/texty.php',
                 'installed'   => isset( $installed_plugins['texty/texty.php'] ),
-                'position'    => 6,
+                'position'    => 60,
             ],
             [
                 'slug'        => 'storegrowth-sales-booster',
@@ -173,7 +173,7 @@ class Extensions extends AbstractPage {
                 'wp_org_slug' => 'storegrowth-sales-booster',
                 'basename'    => 'storegrowth-sales-booster/storegrowth-sales-booster.php',
                 'installed'   => isset( $installed_plugins['storegrowth-sales-booster/storegrowth-sales-booster.php'] ),
-                'position'    => 7,
+                'position'    => 70,
             ],
             [
                 'slug'        => 'tryaura',
@@ -184,7 +184,7 @@ class Extensions extends AbstractPage {
                 'wp_org_slug' => 'tryaura',
                 'basename'    => 'tryaura/tryaura.php',
                 'installed'   => isset( $installed_plugins['tryaura/tryaura.php'] ),
-                'position'    => 8,
+                'position'    => 80,
             ],
             [
                 'slug'        => 'wp-user-frontend',
@@ -195,7 +195,7 @@ class Extensions extends AbstractPage {
                 'wp_org_slug' => 'wp-user-frontend',
                 'basename'    => 'wp-user-frontend/wpuf.php',
                 'installed'   => isset( $installed_plugins['wp-user-frontend/wpuf.php'] ),
-                'position'    => 9,
+                'position'    => 90,
             ],
             [
                 'slug'        => 'wemail',
@@ -206,7 +206,7 @@ class Extensions extends AbstractPage {
                 'wp_org_slug' => 'wemail',
                 'basename'    => 'wemail/wemail.php',
                 'installed'   => isset( $installed_plugins['wemail/wemail.php'] ),
-                'position'    => 10,
+                'position'    => 100,
             ],
             [
                 'slug'        => 'cartpulse',
@@ -217,7 +217,7 @@ class Extensions extends AbstractPage {
                 'url'         => 'https://cartpulse.co/',
                 'basename'    => 'cartpulse/cartpulse.php',
                 'installed'   => isset( $installed_plugins['cartpulse/cartpulse.php'] ),
-                'position'    => 11,
+                'position'    => 110,
             ],
             [
                 'slug'        => 'woocommerce-conversion-tracking',
@@ -228,7 +228,7 @@ class Extensions extends AbstractPage {
                 'wp_org_slug' => 'woocommerce-conversion-tracking',
                 'basename'    => 'woocommerce-conversion-tracking/conversion-tracking.php',
                 'installed'   => isset( $installed_plugins['woocommerce-conversion-tracking/conversion-tracking.php'] ),
-                'position'    => 12,
+                'position'    => 120,
             ],
             [
                 'slug'        => 'dokan-migrator',
@@ -239,7 +239,7 @@ class Extensions extends AbstractPage {
                 'wp_org_slug' => 'dokan-migrator',
                 'basename'    => 'dokan-migrator/dokan-migrator.php',
                 'installed'   => isset( $installed_plugins['dokan-migrator/dokan-migrator.php'] ),
-                'position'    => 13,
+                'position'    => 130,
             ],
         ];
 
@@ -317,7 +317,7 @@ class Extensions extends AbstractPage {
                 'description' => esc_html__( 'A fully-featured shopping app for your Dokan marketplace customers. Browse vendor stores, discover products, place orders, and track deliveries all from one place.', 'dokan-lite' ),
                 'image'       => $thumbnail_dir . '/apps/dokan-customer-app.svg',
                 'url'         => 'https://dokan.co/wordpress/dokan-mobile-app/',
-                'position'    => 1,
+                'position'    => 10,
             ],
             [
                 'slug'        => 'dokan-vendor-app',
@@ -326,7 +326,7 @@ class Extensions extends AbstractPage {
                 'description' => esc_html__( 'Gives vendors complete control over their store on the go. Manage products, process orders, view earnings, and respond to customer queries without needing a desktop.', 'dokan-lite' ),
                 'image'       => $thumbnail_dir . '/apps/dokan-vendor-app.svg',
                 'url'         => 'https://play.google.com/store/apps/details?id=co.dokan.plugin.vendor&hl=en',
-                'position'    => 2,
+                'position'    => 20,
             ],
             [
                 'slug'        => 'delivery-driver-app',
@@ -335,7 +335,7 @@ class Extensions extends AbstractPage {
                 'description' => esc_html__( 'Built for delivery agents to accept tasks, navigate routes, update delivery status in real time, and communicate with customers and vendors seamlessly.', 'dokan-lite' ),
                 'image'       => $thumbnail_dir . '/apps/delivery-driver-app.svg',
                 'url'         => 'https://dokan.co/wordpress/delivery-driver-app/',
-                'position'    => 3,
+                'position'    => 30,
             ],
         ];
     }
