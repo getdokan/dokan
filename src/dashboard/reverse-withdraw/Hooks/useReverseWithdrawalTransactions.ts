@@ -66,8 +66,8 @@ export const useReverseWithdrawalTransactions = (
         perPage: 10,
         page: 1,
         type: 'table',
-        titleField: 'trn_id',
         fields: [
+            'trn_id',
             'trn_date',
             'trn_type',
             'note',
@@ -75,6 +75,17 @@ export const useReverseWithdrawalTransactions = (
             'credit',
             'balance',
         ],
+        layout: {
+            styles: {
+                trn_id: { width: '14%' },
+                trn_date: { width: '14%' },
+                trn_type: { width: '14%' },
+                note: { width: '14%' },
+                debit: { width: '14%' },
+                credit: { width: '14%' },
+                balance: { width: '14%' },
+            },
+        },
     } );
 
     const lastPayloadRef = useRef< TransactionPayload | null >( null );
