@@ -197,7 +197,7 @@ function ProductList() {
                             href={ `#/products/${ item.id }/edit` }
                             className="font-medium text-dokan-link cursor-pointer block focus:outline-none!"
                         >
-                            <ShortContent content={ item.name } maxLength={ 40 } />
+                            <ShortContent content={ item.name } maxLength={ 32 } />
                         </a>
                         { item.sku && (
                             <span className="text-xs text-gray-500 block">
