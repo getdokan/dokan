@@ -180,7 +180,7 @@ function ProductList() {
             enableSorting: false,
             isPrimary: true,
             render: ( { item }: { item: ProductItem } ) => (
-                <div className="flex items-center gap-3 min-w-[320px]">
+                <div className="flex items-center gap-3 min-w-xs">
                     <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 shrink-0">
                         { item.images?.[ 0 ]?.src ? (
                             <img
