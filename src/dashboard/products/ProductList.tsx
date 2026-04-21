@@ -9,6 +9,7 @@ import {
     DataViews,
     DokanBadge,
     DokanButton,
+    ShortContent,
     // @ts-ignore
     // eslint-disable-next-line import/no-unresolved
     Select,
@@ -136,23 +137,6 @@ function ProductList() {
         year_month: '',
     } );
 
-    const [ view, setView ] = useState( {
-        perPage: 10,
-        page: 1,
-        search: '',
-        type: 'table',
-        status: 'all',
-        fields: [
-            'name',
-            'type',
-            'stock',
-            'status',
-            'price',
-            'earning',
-            'advertise',
-        ],
-    } );
-
     const {
         data,
         isLoading,
@@ -196,7 +180,7 @@ function ProductList() {
             enableSorting: false,
             isPrimary: true,
             render: ( { item }: { item: ProductItem } ) => (
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 min-w-[320px]">
                     <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 shrink-0">
                         { item.images?.[ 0 ]?.src ? (
                             <img
@@ -213,7 +197,7 @@ function ProductList() {
                             href={ `#/products/${ item.id }/edit` }
                             className="font-medium text-dokan-link cursor-pointer block focus:outline-none!"
                         >
-                            { item.name }
+                            <ShortContent content={ item.name } maxLength={ 40 } />
                         </a>
                         { item.sku && (
                             <span className="text-xs text-gray-500 block">
@@ -316,6 +300,23 @@ function ProductList() {
                 ),
         },
     ];
+
+    const [ view, setView ] = useState( {
+        perPage: 10,
+        page: 1,
+        search: '',
+        type: 'table',
+        status: 'all',
+        titleField: 'name',
+        fields: [
+            'type',
+            'stock',
+            'status',
+            'price',
+            'earning',
+            'advertise',
+        ],
+    } );
 
     /**
      * Filter the product list table fields (columns).

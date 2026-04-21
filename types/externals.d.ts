@@ -85,6 +85,8 @@ declare module '@dokan/components' {
   export const PriceInput: any;
   export const PriceHtml: any;
   export const CustomerFilter: any;
+  export const ShortContent: any;
+  export const DokanTooltip: any;
 }
 
 declare module '@dokan/utilities' {
