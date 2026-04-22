@@ -3,7 +3,6 @@
 
 /* import other libraries' CSS here, if needed */
 @import "@getdokan/dokan-ui/dist/dokan-ui.css";
-@import "../node_modules/@wedevs/plugin-ui/src/components/wordpress/style.css";
 
 @source "../src/";
 @source "../node_modules/@wedevs/plugin-ui/dist";
@@ -213,6 +212,10 @@
     font-variation-settings: normal;
     -webkit-tap-highlight-color: transparent;
     border-color: var(--color-border) !important;
+}
+
+#dokan-vendor-dashboard-root {
+    @import "../node_modules/@wedevs/plugin-ui/src/components/wordpress/style.css";
 }
 
 body:has(.dokan-layout) {
