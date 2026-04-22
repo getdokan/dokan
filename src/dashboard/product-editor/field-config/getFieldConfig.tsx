@@ -1,7 +1,6 @@
 import { DokanTooltip } from '@src/components';
-import {
-    __experimentalInputControlPrefixWrapper as InputControlPrefixWrapper,
-} from '@wordpress/components';
+// eslint-disable-next-line
+import { __experimentalInputControlPrefixWrapper as InputControlPrefixWrapper } from '@wordpress/components';
 import { Info } from 'lucide-react';
 import { getFieldConfigFrom } from './index';
 import { FormItem } from '../types';
@@ -14,9 +13,10 @@ import { RawHTML } from '@wordpress/element';
 export const getFieldConfig = ( field: FormItem ) => {
     /**
      * Helper function to normalize options into an array of label/value objects.
+     * @param fieldItem
      */
-    const getElementsFromOptions = ( field?: FormItem ) => {
-        const { options } = field || {};
+    const getElementsFromOptions = ( fieldItem?: FormItem ) => {
+        const { options } = fieldItem || {};
         if ( ! options ) {
             return [];
         }
