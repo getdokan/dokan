@@ -360,6 +360,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
                 'ai_image_enable'   => $is_image_configured,
             ],
             'product_legacy_url'    => dokan_edit_product_url( $product_id ),
+            'products_url'           => dokan_get_navigation_url( 'products', true ),
         ];
 
         $data = apply_filters( 'dokan_product_editor_args', $args, $product_id, $product );
