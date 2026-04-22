@@ -494,8 +494,9 @@ class OrderController extends DokanRESTController {
                 $data_objects[] = $this->prepare_response_for_collection( $data );
             }
 
-            $order_counts = dokan_count_orders( $request['seller_id'] );
-            $total_orders = $order_counts->total;
+            $count_args           = $args;
+            $count_args['return'] = 'count';
+            $total_orders         = (int) dokan()->order->all( $count_args );
         }
 
         $response = rest_ensure_response( $data_objects );
