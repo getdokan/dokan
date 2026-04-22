@@ -59,7 +59,7 @@ export const useWithdrawRequests = (
                     width: '16%'
                 },
                 'method_title': {
-                    width: '16%'
+                    width: '20%'
                 },
                 'created': {
                     width: '16%'
