@@ -200,8 +200,11 @@ function ProductList() {
                             <ShortContent content={ item.name } maxLength={ 32 } />
                         </a>
                         <span className="text-xs text-gray-500 block">
-                            /* translators: %s: SKU */
-                            { __( 'SKU:', 'dokan' ) } { sprintf( __( 'SKU: %s', 'dokan' ), item.sku || '—' ) }
+                            { sprintf( 
+                                /* translators: %s: SKU */
+                                __( 'SKU: %s', 'dokan' ), 
+                                item.sku || '—' 
+                            ) }
                         </span>
                     </div>
                 </div>
