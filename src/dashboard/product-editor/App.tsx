@@ -136,7 +136,7 @@ const App = ( { params }: { params: { productId: string } } ) => {
                                 variant="secondary"
                                 onClick={ handleSwitchEditor }
                             >
-                                { __( 'Switch to Legacy', 'dokan-lite' ) }
+                                { __( 'Switch to Old', 'dokan-lite' ) }
                             </DokanButton>
                         ) }
                     </div>

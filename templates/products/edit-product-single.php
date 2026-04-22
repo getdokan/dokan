@@ -177,7 +177,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                     </span>
                     <span class="dokan-label dokan-link dokan-product-status-label">
                         <a href="/dashboard/new/#products/<?php echo esc_attr( $post_id ); ?>/edit" class="dokan-btn dokan-btn-theme dokan-btn-sm">
-                            <?php esc_html_e( 'Switch Product Editor', 'dokan-lite' ); ?>
+                            <?php esc_html_e( 'Switch to New', 'dokan-lite' ); ?>
                         </a>
                     </span>
 
