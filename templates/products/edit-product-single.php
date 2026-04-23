@@ -1,6 +1,7 @@
 <?php
 
 use WeDevs\Dokan\ProductCategory\Helper;
+use WeDevs\Dokan\Admin\Dashboard\LegacySwitcher;
 
 // phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
 global $post;
@@ -108,6 +109,8 @@ if ( ! empty( $_GET['errors'] ) ) {
     dokan()->dashboard->templates->products->set_errors( array_map( 'sanitize_text_field', wp_unslash( $_GET['errors'] ) ) );
 }
 
+$switch_url = dokan_get_container()->get( LegacySwitcher::class )->get_product_editor_switch_url( (int) $post_id );
+
 /**
  * Action hook to fire before dokan dashboard wrap
  *
@@ -176,7 +179,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                         <?php echo esc_html( dokan_get_post_status( $post->post_status ) ); ?>
                     </span>
                     <span class="dokan-label dokan-link dokan-product-status-label">
-                        <a href="/dashboard/new/#products/<?php echo esc_attr( $post_id ); ?>/edit" class="dokan-btn dokan-btn-theme dokan-btn-sm">
+                        <a href="<?php echo esc_url( $switch_url ); ?>" class="dokan-btn dokan-btn-theme dokan-btn-sm">
                             <?php esc_html_e( 'Switch to New', 'dokan-lite' ); ?>
                         </a>
                     </span>

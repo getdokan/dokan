@@ -551,7 +551,7 @@ class ProductController extends DokanRESTController {
         );
 
         $data = [
-            'post_counts'      => dokan_count_posts( 'product', $seller_id , $exclude_types ),
+            'post_counts'      => dokan_count_posts( 'product', $seller_id, $exclude_types ),
             'products_url'     => dokan_get_navigation_url( 'products' ),
             'instock_count'    => dokan_count_stock_posts( 'product', $seller_id, 'instock', $exclude_types ),
             'outofstock_count' => dokan_count_stock_posts( 'product', $seller_id, 'outofstock', $exclude_types ),
@@ -1026,6 +1026,7 @@ class ProductController extends DokanRESTController {
         $earning           = dokan()->commission->get_earning_by_product( $product );
         $data['earning']   = is_numeric( $earning ) ? (float) $earning : null;
         $data['page_view'] = (int) get_post_meta( $product->get_id(), 'pageview', true );
+        $data['edit_url']  = dokan_edit_product_url( $product->get_id() );
 
         $data = apply_filters( 'dokan_rest_product_data_prepare', $data, $product->get_id() );
 
