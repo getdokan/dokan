@@ -199,11 +199,13 @@ function ProductList() {
                         >
                             <ShortContent content={ item.name } maxLength={ 32 } />
                         </a>
-                        { item.sku && (
-                            <span className="text-xs text-gray-500 block">
-                                { __( 'SKU:', 'dokan-lite' ) } { item.sku }
-                            </span>
-                        ) }
+                        <span className="text-xs text-gray-500 block">
+                            { sprintf( 
+                                /* translators: %s: SKU */
+                                __( 'SKU: %s', 'dokan' ), 
+                                item.sku || '—' 
+                            ) }
+                        </span>
                     </div>
                 </div>
             ),

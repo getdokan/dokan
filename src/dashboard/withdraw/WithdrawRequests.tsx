@@ -30,6 +30,9 @@ interface WithdrawView {
     type: string;
     status: WithdrawStatus;
     fields: string[];
+    layout?: {
+        styles?: Record< string, { width?: string } >;
+    };
 }
 
 function WithdrawRequests() {
@@ -57,6 +60,25 @@ function WithdrawRequests() {
         type: 'table',
         status: 'pending',
         fields: getFieldsForStatus( 'pending' ).map( ( field ) => field.id ),
+        layout: {
+            styles: {
+                'amount': {
+                    width: '20%'
+                },
+                'method_title': {
+                    width: '20%'
+                },
+                'created': {
+                    width: '20%'
+                },
+                'charge': {
+                    width: '20%' 
+                },
+                'receivable': { 
+                    width: '20%' 
+                },
+            },
+        }
     } );
 
     const currentStatus = view.status;
