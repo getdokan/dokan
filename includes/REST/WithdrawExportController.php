@@ -88,7 +88,7 @@ class WithdrawExportController extends GenericController implements ExportableIn
         }
 
         if ( ! empty( $request['status'] ) ) {
-            $args['status'] = $request['status'];
+            $args['status'] = dokan()->withdraw->get_status_code( $request['status'] );
         }
 
         if ( ! empty( $request['payment_method'] ) ) {
@@ -96,11 +96,11 @@ class WithdrawExportController extends GenericController implements ExportableIn
         }
 
         if ( ! empty( $request['after'] ) ) {
-            $args['after'] = $request['after'];
+            $args['start_date'] = $request['after'];
         }
 
         if ( ! empty( $request['before'] ) ) {
-            $args['before'] = $request['before'];
+            $args['end_date'] = $request['before'];
         }
 
         // Set pagination

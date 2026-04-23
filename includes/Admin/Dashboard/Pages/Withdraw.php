@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Admin\Dashboard\Pages;
 
+use WeDevs\Dokan\REST\WithdrawExportController;
+
 class Withdraw extends AbstractPage {
 
     /**
@@ -32,7 +34,9 @@ class Withdraw extends AbstractPage {
      * @inheritDoc
      */
     public function settings(): array {
-        return [];
+        return [
+            'columns' => ( new WithdrawExportController() )->get_export_columns(),
+        ];
     }
 
     /**

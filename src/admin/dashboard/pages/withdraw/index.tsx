@@ -11,6 +11,7 @@ import {
 import { DokanTooltip as Tooltip } from '@dokan/components';
 import * as LucideIcons from 'lucide-react';
 import { dateI18n, getSettings } from '@wordpress/date';
+import { useToast } from '@getdokan/dokan-ui';
 // Import Dokan components
 import {
     AdminDataViews as DataViews,
@@ -21,7 +22,16 @@ import {
     DokanModal,
 } from '@dokan/components';
 
-import { Trash, ArrowDown, Home, Calendar, CreditCard } from 'lucide-react';
+import { Trash, ArrowDown, Home, Calendar, CreditCard, Loader2 } from 'lucide-react';
+import { directDownloadCSV } from '@src/utils/download-csv';
+
+// Define withdraw CSV headers
+const WITHDRAW_CSV_HEADERS = Object.entries(
+    dokanAdminDashboardSettings.withdraw.columns
+).map( ( [ key, value ] ) => ( {
+    key,
+    label: value,
+} ) );
 
 // Define withdraw statuses for tab filtering
 const WITHDRAW_STATUSES = [
@@ -88,6 +98,7 @@ const WithdrawPage = () => {
         approved: 0,
         cancelled: 0,
     } );
+    const [ isExporting, setIsExporting ] = useState( false );
     const [ filterArgs, setFilterArgs ] = useState( {} );
     const [ activeStatus, setActiveStatus ] = useState( 'pending' );
     const [ vendorFilter, setVendorFilter ] = useState< VendorSelect | null >(
@@ -98,6 +109,7 @@ const WithdrawPage = () => {
     const [ before, setBefore ] = useState( '' );
     const [ beforeText, setBeforeText ] = useState( '' );
     const [ focusInput, setFocusInput ] = useState( 'startDate' );
+    const toast = useToast();
 
     const [ paymentMethod, setPaymentMethod ] = useState< {
         value: string | number;
@@ -533,16 +545,9 @@ const WithdrawPage = () => {
         titleField: 'vendor',
         status: 'pending',
         layout: { density: 'comfortable' },
-        fields: [
-            'amount',
-            'status',
-            'method',
-            'charge',
-            'payable',
-            'date',
-            'details',
-            'note',
-        ],
+        fields: fields.map( ( field ) =>
+            field.id !== 'vendor' ? field.id : ''
+        ),
     } );
 
     // Handle tab selection for status filtering
@@ -572,28 +577,72 @@ const WithdrawPage = () => {
     const tabsAdditionalContents = [
         <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-[#575757] hover:bg-[#7047EB] hover:text-white"
+            disabled={ isExporting }
+            className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-[#575757] hover:bg-[#7047EB] hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={ async () => {
+                setIsExporting(true);
+
                 try {
-                    // Minimal placeholder; backend export flow may vary.
-                    // Attempt to hit export endpoint via same query params.
-                    const path = addQueryArgs( 'dokan/v2/withdraw', {
+                    const shouldEmail = data && data.length < totalItems;
+
+                    // If all data is already loaded, download directly
+                    if ( ! shouldEmail && data && data.length > 0 ) {
+                        const csvData = data.map( ( item ) => ( {
+                            ...item,
+                            user_id: item.user?.id,
+                            vendor_name: item.user?.store_name,
+                            payment_method: item.method_title,
+                            payable: item.receivable,
+                            date: item.created,
+                        } ) );
+                        directDownloadCSV( 'withdraws', WITHDRAW_CSV_HEADERS, csvData, filterArgs );
+                        return;
+                    }
+
+                    if ( shouldEmail ) {
+                        toast( {
+                            type: 'info',
+                            title: __( 'Your withdraw Report will be emailed to you.', 'dokan-lite' ),
+                        } );
+                    }
+
+                    // Otherwise, use email delivery via API
+                    const reportArgs = {
                         ...view,
                         ...filterArgs,
-                        is_export: true,
-                    } );
-                    const res = await apiFetch( { path } );
-                    if ( res && res.url ) {
-                        window.location.assign( res.url as string );
+                    };
+
+                    const exportResponse = await apiFetch({
+                        path: '/dokan/v1/reports/withdraws/export',
+                        method: 'POST',
+                        data: {
+                            report_args: reportArgs,
+                            email: shouldEmail,
+                        },
+                    });
+
+                    if ( ! exportResponse.export_id ) {
+                        throw new Error(exportResponse.data.message);
                     }
-                } catch ( e ) {
-                    // eslint-disable-next-line no-console
-                    console.error( 'Export failed or not supported yet', e );
+
+                } catch (e) {
+                    throw new Error( __('Export failed. Please try again.', 'dokan-lite') );
+                } finally {
+                    setIsExporting(false);
                 }
-            } }
+            }}
         >
-            <ArrowDown size={ 16 } />
-            { __( 'Export', 'dokan-lite' ) }
+            { isExporting ? (
+                <>
+                    <Loader2 className="animate-spin" size={16} />
+                    { __( 'Exporting...', 'dokan-lite' ) }
+                </>
+            ) : (
+                <>
+                    <ArrowDown size={16} />
+                    { __( 'Export', 'dokan-lite' ) }
+                </>
+            ) }
         </button>,
     ];
 
