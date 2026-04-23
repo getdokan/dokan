@@ -219,6 +219,7 @@
  * dashboard tables are migrated to Plugin UI DataViews and no vendor-dashboard
  * prefix compatibility is required.
  */
+.dokan-vendor-support-list-container,
 #dokan-vendor-dashboard-root {
     @import "../node_modules/@wedevs/plugin-ui/src/components/wordpress/style.css";
 }
