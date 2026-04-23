@@ -162,14 +162,17 @@ const requestToExternal = ( request ) => {
  * @return {string} Handle name for the package.
  */
 const requestToHandle = ( request ) => {
+
     const dokan = request.match( /^@dokan\/stores\/(.+)$/ );
+    const wc = request.match( /^@woocommerce\/(.+)$/ );
+    const dokanOthers = request.match( /^@dokan\/([^/]+)$/ );
+
     if ( dokan ) {
         // Convert the store name to camelCase and append 'Store'.
         const storeName = kebabCase( dokan[ 1 ] );
         return `dokan-stores-${ storeName }`;
     }
 
-    const dokanOthers = request.match( /^@dokan\/([^/]+)$/ );
     if ( dokanOthers ) {
         const packageName = dokanOthers[ 1 ];
         const handleNameMap = {
@@ -180,7 +183,6 @@ const requestToHandle = ( request ) => {
         return `dokan-${ handleName }`;
     }
 
-    const wc = request.match( /^@woocommerce\/(.+)$/ );
     if ( wc ) {
         return wooRequestToHandle( request );
     }

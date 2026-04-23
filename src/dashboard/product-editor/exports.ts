@@ -9,25 +9,18 @@
  */
 
 // Re-export @wordpress/dataviews so external consumers share a single bundle
-// (avoids duplicate @wordpress/private-apis registration). WP 6.8 compat is
-// handled by the lock-unlock shim wired in dokan-lite's webpack config.
+// (avoids duplicate @wordpress/private-apis registration).
 export { DataForm, useFormValidity } from '@wordpress/dataviews';
 
 // Hooks
-export {
-    useProductEditor,
-    useInitProductEditor,
-} from './hooks/useProductEditor';
+export { useProductEditor, useInitProductEditor } from './hooks/useProductEditor';
 export { default as useLayouts } from './hooks/useLayouts';
 
 // Field config
 export { getFieldConfigFrom, getFieldConfig } from './field-config';
 
 // Components
-export {
-    default as CustomField,
-    getValidationError,
-} from './components/CustomField';
+export { default as CustomField, getValidationError } from './components/CustomField';
 
 // Utils
 export {

@@ -1,5 +1,4 @@
 const path = require( 'path' );
-const webpack = require( 'webpack' );
 const { VueLoaderPlugin } = require( 'vue-loader' );
 const entryPoints = require( './webpack-entries' );
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
@@ -82,13 +81,6 @@ const updatedConfig = {
             reports: path.resolve(
                 __dirname + '/src/vendor-dashboard/reports'
             ),
-            // Route @wordpress/dataviews/wp (pre-bundled monolith) through the
-            // modular build so NormalModuleReplacementPlugin below can swap in
-            // the lock-unlock shim. Required for DataForm to work on WP 6.8.
-            '@wordpress/dataviews/wp$': path.resolve(
-                __dirname,
-                'node_modules/@wordpress/dataviews/build-module/index.js'
-            ),
         },
     },
 
@@ -125,14 +117,6 @@ const updatedConfig = {
             requestToExternal,
             requestToHandle,
         } ),
-        // Swap @wordpress/dataviews's internal lock-unlock module for a shim
-        // that fills in Validated* controls missing from WP 6.8's
-        // @wordpress/components. Forward-compatible with WP 6.9+, where the
-        // real controls take precedence via the Proxy in the shim.
-        new webpack.NormalModuleReplacementPlugin(
-            /@wordpress[\/\\]dataviews[\/\\]build-module[\/\\]lock-unlock\.(js|mjs)$/,
-            path.resolve( __dirname, 'src/shims/dataviews-lock-unlock.js' )
-        ),
     ],
 
     module: {
