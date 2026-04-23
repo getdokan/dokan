@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
+import { applyFilters } from '@wordpress/hooks';
 import type {
     ProductItem,
     ProductFilterState,
@@ -23,6 +24,7 @@ interface UseProductsReturn {
     monthOptions: ProductMonthOption[];
     subscriptionRemaining: SubscriptionRemaining | null;
     fetchProducts: () => void;
+    fetchStatusCounts: () => void;
     deleteProduct: ( productId: number ) => Promise< void >;
     deleteProducts: ( productIds: number[] ) => Promise< void >;
     updateProductStatus: (
@@ -34,17 +36,6 @@ interface UseProductsReturn {
         status: string
     ) => Promise< void >;
 }
-
-const parseSummaryHeader = ( raw: string | null ): ProductSummary | null => {
-    if ( ! raw ) {
-        return null;
-    }
-    try {
-        return JSON.parse( raw ) as ProductSummary;
-    } catch {
-        return null;
-    }
-};
 
 export const useProducts = (
     filterArgs: ProductFilterState
@@ -91,58 +82,6 @@ export const useProducts = (
             },
         ]
     );
-
-    const applySummary = useCallback( ( summary: ProductSummary | null ) => {
-        if ( ! summary ) {
-            return;
-        }
-
-        const counts = summary.post_counts ?? {};
-        // Backend returns `total` already summed across every dashboard status
-        // (publish/draft/pending/future + any Pro-registered status like `reject`).
-        // Fall back to summing the keys if `total` is missing for any reason.
-        const allCount =
-            typeof counts.total === 'number'
-                ? counts.total
-                : Object.entries( counts ).reduce(
-                      ( sum, [ key, value ] ) =>
-                          key === 'total' ? sum : sum + ( value ?? 0 ),
-                      0
-                  );
-
-        // Lite labels for statuses it knows about; any additional status the
-        // backend returns (e.g. Pro's `reject`) is still forwarded with its
-        // slug as the label so consumers can read its count via statusCounts.
-        const knownLabels: Record< string, string > = {
-            publish: __( 'Published', 'dokan-lite' ),
-            draft: __( 'Draft', 'dokan-lite' ),
-            pending: __( 'Pending Review', 'dokan-lite' ),
-            future: __( 'Scheduled', 'dokan-lite' ),
-        };
-
-        const perStatus = Object.entries( counts )
-            .filter( ( [ key ] ) => key !== 'total' )
-            .map( ( [ key, value ] ) => ( {
-                value: key,
-                label: knownLabels[ key ] ?? key,
-                count: value ?? 0,
-            } ) );
-
-        setStatusCounts( [
-            {
-                value: 'all',
-                label: __( 'All', 'dokan-lite' ),
-                count: allCount,
-            },
-            ...perStatus,
-        ] );
-
-        setProductsUrl( summary.products_url ?? '' );
-        setInstockCount( summary.instock_count ?? 0 );
-        setOutstockCount( summary.outofstock_count ?? 0 );
-        setMonthOptions( summary.months ?? [] );
-        setSubscriptionRemaining( summary.subscription_remaining ?? null );
-    }, [] );
 
     const fetchProducts = useCallback( async () => {
         setIsLoading( true );
@@ -198,12 +137,6 @@ export const useProducts = (
             setData( responseData );
             setTotalItems( parseInt( responseTotalItems ?? '0', 10 ) );
             setTotalPages( parseInt( responseTotalPages ?? '0', 10 ) );
-
-            applySummary(
-                parseSummaryHeader(
-                    response.headers.get( 'X-Dokan-Product-Summary' )
-                )
-            );
         } catch ( error ) {
             // eslint-disable-next-line no-console
             console.error( 'Error fetching products:', error );
@@ -222,8 +155,70 @@ export const useProducts = (
         filterArgs.in_stock,
         filterArgs.product_brand,
         filterArgs.filter_by_other,
-        applySummary,
     ] );
+
+    const fetchStatusCounts = useCallback( async () => {
+        try {
+            const response = ( await apiFetch( {
+                path: '/dokan/v1/products/summary',
+            } ) ) as ProductSummary;
+
+            const counts = response.post_counts ?? {};
+            const allCount =
+                ( counts.publish ?? 0 ) +
+                ( counts.draft ?? 0 ) +
+                ( counts.pending ?? 0 ) +
+                ( counts.future ?? 0 );
+
+            const baseCounts: ProductStatusCount[] = [
+                {
+                    value: 'all',
+                    label: __( 'All', 'dokan-lite' ),
+                    count: allCount,
+                },
+                {
+                    value: 'publish',
+                    label: __( 'Published', 'dokan-lite' ),
+                    count: counts.publish ?? 0,
+                },
+                {
+                    value: 'draft',
+                    label: __( 'Draft', 'dokan-lite' ),
+                    count: counts.draft ?? 0,
+                },
+                {
+                    value: 'pending',
+                    label: __( 'Pending Review', 'dokan-lite' ),
+                    count: counts.pending ?? 0,
+                },
+            ];
+
+            /**
+             * Filter the status counts derived from the products summary.
+             *
+             * @since DOKAN_SINCE
+             *
+             * @param {Array}  baseCounts Default status count entries.
+             * @param {Object} postCounts Raw post_counts map from the API.
+             */
+            const finalCounts = applyFilters(
+                'dokan_product_status_counts',
+                baseCounts,
+                counts
+            ) as ProductStatusCount[];
+
+            setStatusCounts( finalCounts );
+
+            setProductsUrl( response.products_url ?? '' );
+            setInstockCount( response.instock_count ?? 0 );
+            setOutstockCount( response.outofstock_count ?? 0 );
+            setMonthOptions( response.months ?? [] );
+            setSubscriptionRemaining( response.subscription_remaining ?? null );
+        } catch ( error ) {
+            // eslint-disable-next-line no-console
+            console.error( 'Error fetching product summary:', error );
+        }
+    }, [] );
 
     const deleteProduct = useCallback( async ( productId: number ) => {
         await apiFetch( {
@@ -275,6 +270,10 @@ export const useProducts = (
         void fetchProducts();
     }, [ fetchProducts ] );
 
+    useEffect( () => {
+        void fetchStatusCounts();
+    }, [ fetchStatusCounts ] );
+
     return {
         data,
         isLoading,
@@ -287,6 +286,7 @@ export const useProducts = (
         monthOptions,
         subscriptionRemaining,
         fetchProducts,
+        fetchStatusCounts,
         deleteProduct,
         deleteProducts,
         updateProductStatus,

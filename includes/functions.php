@@ -327,7 +327,7 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type, $exclude_pr
             // @codingStandardsIgnoreStart
             $results = $wpdb->get_results(
                 $wpdb->prepare(
-                    "SELECT p.post_status, COUNT( * ) AS num_posts
+                    "SELECT p.post_status, COUNT(DISTINCT p.ID) AS num_posts
                     FROM {$wpdb->prefix}posts as p INNER JOIN {$wpdb->prefix}postmeta as pm ON p.ID = pm.post_id
                     WHERE p.post_type = %s
                     AND p.post_author = %d

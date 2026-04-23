@@ -23,37 +23,71 @@ import type { ProductItem, ProductStatus, ProductFilterState } from './types';
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 const getStatusBadgeVariant = ( status: string ) => {
+    let variant: string;
     switch ( status ) {
         case 'publish':
-            return 'success';
+            variant = 'success';
+            break;
         case 'draft':
-            return 'secondary';
+            variant = 'secondary';
+            break;
         case 'pending':
-            return 'warning';
+            variant = 'warning';
+            break;
         case 'future':
-            return 'info';
-        case 'reject':
-            return 'danger';
+            variant = 'info';
+            break;
         default:
-            return 'info';
+            variant = 'info';
     }
+
+    /**
+     * Filter the badge variant used for a product status.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param {string} variant Default variant.
+     * @param {string} status  Product status slug.
+     */
+    return applyFilters(
+        'dokan_product_status_badge_variant',
+        variant,
+        status
+    ) as string;
 };
 
 const getStatusLabel = ( status: string ) => {
+    let label: string;
     switch ( status ) {
         case 'publish':
-            return __( 'Published', 'dokan-lite' );
+            label = __( 'Published', 'dokan-lite' );
+            break;
         case 'draft':
-            return __( 'Draft', 'dokan-lite' );
+            label = __( 'Draft', 'dokan-lite' );
+            break;
         case 'pending':
-            return __( 'Pending Review', 'dokan-lite' );
+            label = __( 'Pending Review', 'dokan-lite' );
+            break;
         case 'future':
-            return __( 'Scheduled', 'dokan-lite' );
-        case 'reject':
-            return __( 'Rejected', 'dokan-lite' );
+            label = __( 'Scheduled', 'dokan-lite' );
+            break;
         default:
-            return status;
+            label = status;
     }
+
+    /**
+     * Filter the human-readable label for a product status.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param {string} label  Default label.
+     * @param {string} status Product status slug.
+     */
+    return applyFilters(
+        'dokan_product_status_label',
+        label,
+        status
+    ) as string;
 };
 
 const getProductTypeLabel = ( item: ProductItem ) => {
@@ -152,6 +186,7 @@ function ProductList() {
         monthOptions,
         subscriptionRemaining,
         fetchProducts,
+        fetchStatusCounts,
         deleteProduct,
         deleteProducts,
         updateProductsStatus,
@@ -651,6 +686,7 @@ function ProductList() {
                         } );
                         setSelection( [] );
                         fetchProducts();
+                        fetchStatusCounts();
                     } catch {
                         toast( {
                             type: 'error',
@@ -750,6 +786,7 @@ function ProductList() {
 
                         setSelection( [] );
                         fetchProducts();
+                        fetchStatusCounts();
                     } catch {
                         toast( {
                             type: 'error',
@@ -773,6 +810,7 @@ function ProductList() {
             deleteProducts,
             updateProductsStatus,
             fetchProducts,
+            fetchStatusCounts,
             toast,
             subscriptionInfo,
             effectiveRemaining,
@@ -788,16 +826,17 @@ function ProductList() {
      * @since DOKAN_SINCE
      *
      * @param {Array}  actions Default action definitions.
-     * @param {Object} context Context with helpers (fetchProducts, selection, setSelection).
+     * @param {Object} context Context with helpers (fetchProducts, fetchStatusCounts, selection, setSelection).
      */
     const filteredActions = useMemo(
         () =>
             applyFilters( 'dokan_product_list_table_actions', actions, {
                 fetchProducts,
+                fetchStatusCounts,
                 selection,
                 setSelection,
             } ) as typeof actions,
-        [ actions, selection, fetchProducts, setSelection ]
+        [ actions, selection, fetchProducts, fetchStatusCounts, setSelection ]
     );
 
     // ── View change ───────────────────────────────────────────────────────────
@@ -837,12 +876,13 @@ function ProductList() {
     useEffect( () => {
         addAction( 'dokan_product_list_refresh', 'dokan/product-list', () => {
             fetchProducts();
+            fetchStatusCounts();
             setSelection( [] );
         } );
         return () => {
             removeAction( 'dokan_product_list_refresh', 'dokan/product-list' );
         };
-    }, [ fetchProducts, setSelection ] );
+    }, [ fetchProducts, fetchStatusCounts, setSelection ] );
 
     // ── Render ────────────────────────────────────────────────────────────────
 
@@ -892,6 +932,7 @@ function ProductList() {
             {
                 applyFilters( 'dokan_product_list_after_content', null, {
                     fetchProducts,
+                    fetchStatusCounts,
                     selection,
                     setSelection,
                     data,

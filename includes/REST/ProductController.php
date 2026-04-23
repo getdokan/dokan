@@ -551,10 +551,10 @@ class ProductController extends DokanRESTController {
         );
 
         $data = [
-            'post_counts'      => dokan_count_posts( 'product', $seller_id, $exclude_types ),
+            'post_counts'      => dokan_count_posts( 'product', $seller_id , $exclude_types ),
             'products_url'     => dokan_get_navigation_url( 'products' ),
-            'instock_count'    => $this->count_products_by_stock_status( $seller_id, 'instock', $exclude_types ),
-            'outofstock_count' => $this->count_products_by_stock_status( $seller_id, 'outofstock', $exclude_types ),
+            'instock_count'    => dokan_count_stock_posts( 'product', $seller_id, 'instock', $exclude_types ),
+            'outofstock_count' => dokan_count_stock_posts( 'product', $seller_id, 'outofstock', $exclude_types ),
             'months'           => $this->get_product_months_data( $seller_id ),
         ];
 
@@ -570,79 +570,6 @@ class ProductController extends DokanRESTController {
         $data = (array) apply_filters( 'dokan_product_listing_summary_data', $data, $seller_id );
 
         return rest_ensure_response( $data );
-    }
-
-    /**
-     * Format the product collection response.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param WP_REST_Response $response    Prepared response object.
-     * @param WP_REST_Request  $request     Request object.
-     * @param int              $total_items Total item count for the query.
-     *
-     * @return WP_REST_Response
-     */
-    public function format_collection_response( $response, $request, $total_items ) {
-        $response = parent::format_collection_response( $response, $request, $total_items );
-
-        // Only emit the summary header for consumers that can actually view it
-        // (the vendor dashboard list). Public endpoints like top_rated / featured
-        // share this formatter and must not leak vendor-level counts.
-        if (
-            $response instanceof WP_REST_Response
-            && $this->get_product_summary_permissions_check()
-        ) {
-            $summary = $this->get_product_summary( $request );
-            if ( $summary instanceof WP_REST_Response ) {
-                $response->header( 'X-Dokan-Product-Summary', wp_json_encode( $summary->get_data() ) );
-            }
-        }
-
-        return $response;
-    }
-
-    /**
-     * Count a vendor's products for a given stock status using WP_Query,
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param int    $seller_id     Vendor user ID.
-     * @param string $stock_status  'instock' or 'outofstock'.
-     * @param array  $exclude_types Product type slugs to exclude.
-     *
-     * @return int
-     */
-    protected function count_products_by_stock_status( $seller_id, $stock_status, array $exclude_types ) {
-        $args = [
-            'post_type'      => 'product',
-            'author'         => $seller_id,
-            'post_status'    => $this->post_status,
-            'posts_per_page' => 1,
-            'fields'         => 'ids',
-            'no_found_rows'  => false,
-            'meta_query'     => [
-                [
-                    'key'   => '_stock_status',
-                    'value' => $stock_status,
-                ],
-            ],
-        ];
-
-        if ( ! empty( $exclude_types ) ) {
-            $args['tax_query'] = [
-                [
-                    'taxonomy' => 'product_type',
-                    'field'    => 'slug',
-                    'terms'    => $exclude_types,
-                    'operator' => 'NOT IN',
-                ],
-            ];
-        }
-
-        $query = new \WP_Query( $args );
-
-        return (int) $query->found_posts;
     }
 
     /**
