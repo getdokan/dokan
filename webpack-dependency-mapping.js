@@ -121,12 +121,6 @@ const wooRequestToHandle = ( request ) => {
  *
  */
 const requestToExternal = ( request ) => {
-    // @wordpress/ui is not registered as a WP script handle yet.
-    // Bundle it instead of externalizing to the missing `wp.ui` global.
-    if ( request === '@wordpress/ui' ) {
-        return false;
-    }
-
     const dokanStores = request.match( /^@dokan\/stores\/(.+)$/ );
     const wc = request.match( /^@woocommerce\/(.+)$/ );
     const dokan = request.match( /^@dokan\/([^/]+)$/ );
