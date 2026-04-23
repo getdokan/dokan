@@ -13,6 +13,7 @@ import {
     // @ts-ignore
     // eslint-disable-next-line import/no-unresolved
     Select,
+    DokanTooltip,
 } from '@dokan/components';
 import PriceHtml from '../../components/PriceHtml';
 import { useProducts } from './hooks/useProducts';
@@ -23,33 +24,71 @@ import type { ProductItem, ProductStatus, ProductFilterState } from './types';
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 const getStatusBadgeVariant = ( status: string ) => {
+    let variant: string;
     switch ( status ) {
         case 'publish':
-            return 'success';
+            variant = 'success';
+            break;
         case 'draft':
-            return 'secondary';
+            variant = 'secondary';
+            break;
         case 'pending':
-            return 'warning';
+            variant = 'warning';
+            break;
         case 'future':
-            return 'info';
+            variant = 'info';
+            break;
         default:
-            return 'info';
+            variant = 'info';
     }
+
+    /**
+     * Filter the badge variant used for a product status.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param {string} variant Default variant.
+     * @param {string} status  Product status slug.
+     */
+    return applyFilters(
+        'dokan_product_status_badge_variant',
+        variant,
+        status
+    ) as string;
 };
 
 const getStatusLabel = ( status: string ) => {
+    let label: string;
     switch ( status ) {
         case 'publish':
-            return __( 'Published', 'dokan-lite' );
+            label = __( 'Published', 'dokan-lite' );
+            break;
         case 'draft':
-            return __( 'Draft', 'dokan-lite' );
+            label = __( 'Draft', 'dokan-lite' );
+            break;
         case 'pending':
-            return __( 'Pending Review', 'dokan-lite' );
+            label = __( 'Pending Review', 'dokan-lite' );
+            break;
         case 'future':
-            return __( 'Scheduled', 'dokan-lite' );
+            label = __( 'Scheduled', 'dokan-lite' );
+            break;
         default:
-            return status;
+            label = status;
     }
+
+    /**
+     * Filter the human-readable label for a product status.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param {string} label  Default label.
+     * @param {string} status Product status slug.
+     */
+    return applyFilters(
+        'dokan_product_status_label',
+        label,
+        status
+    ) as string;
 };
 
 const getProductTypeLabel = ( item: ProductItem ) => {
@@ -215,12 +254,11 @@ function ProductList() {
             label: __( 'Type', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item }: { item: ProductItem } ) => (
-                <span
-                    title={ getProductTypeLabel( item ) }
-                    className="inline-flex items-center"
-                >
-                    <ProductTypeIcon item={ item } />
-                </span>
+                <DokanTooltip content={ getProductTypeLabel( item ) }>
+                    <span className="inline-flex items-center">
+                        <ProductTypeIcon item={ item } />
+                    </span>
+                </DokanTooltip>
             ),
         },
         {
@@ -446,42 +484,56 @@ function ProductList() {
             countMap[ s.value ] = s.count;
         } );
 
+        const items = [
+            {
+                value: 'all',
+                label: __( 'All', 'dokan-lite' ),
+                count: countMap.all ?? 0,
+            },
+            {
+                value: 'publish',
+                label: __( 'Published', 'dokan-lite' ),
+                count: countMap.publish ?? 0,
+            },
+            {
+                value: 'pending',
+                label: __( 'Pending Review', 'dokan-lite' ),
+                count: countMap.pending ?? 0,
+            },
+            {
+                value: 'draft',
+                label: __( 'Draft', 'dokan-lite' ),
+                count: countMap.draft ?? 0,
+            },
+            {
+                value: 'instock',
+                label: __( 'In stock', 'dokan-lite' ),
+                count: instockCount,
+            },
+            {
+                value: 'outofstock',
+                label: __( 'Out of stock', 'dokan-lite' ),
+                count: outstockCount,
+            },
+        ];
+
+        /**
+         * Filter the product list table tabs.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param {Array}  items   Default tab definitions.
+         * @param {Object} context Context with statusCounts + current filterArgs.
+         */
         return {
-            items: [
-                {
-                    value: 'all',
-                    label: __( 'All', 'dokan-lite' ),
-                    count: countMap.all ?? 0,
-                },
-                {
-                    value: 'publish',
-                    label: __( 'Published', 'dokan-lite' ),
-                    count: countMap.publish ?? 0,
-                },
-                {
-                    value: 'pending',
-                    label: __( 'Pending Review', 'dokan-lite' ),
-                    count: countMap.pending ?? 0,
-                },
-                {
-                    value: 'draft',
-                    label: __( 'Draft', 'dokan-lite' ),
-                    count: countMap.draft ?? 0,
-                },
-                {
-                    value: 'instock',
-                    label: __( 'In stock', 'dokan-lite' ),
-                    count: instockCount,
-                },
-                {
-                    value: 'outofstock',
-                    label: __( 'Out of stock', 'dokan-lite' ),
-                    count: outstockCount,
-                },
-            ],
+            items: applyFilters(
+                'dokan_product_list_table_tabs',
+                items,
+                { statusCounts, filterArgs }
+            ) as typeof items,
             onSelect: onTabSelect,
         };
-    }, [ statusCounts, instockCount, outstockCount ] );
+    }, [ statusCounts, instockCount, outstockCount, filterArgs ] );
 
     // ── Filter fields ─────────────────────────────────────────────────────────
 

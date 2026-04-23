@@ -53,7 +53,14 @@ export interface ProductItem {
     advertisement?: ProductAdvertisement | null;
 }
 
-export type ProductStatus = 'all' | 'publish' | 'draft' | 'pending';
+export type ProductStatus =
+    | 'all'
+    | 'publish'
+    | 'draft'
+    | 'pending'
+    | 'future'
+    | 'reject'
+    | ( string & {} );
 
 export interface ProductFilterState {
     page: number;

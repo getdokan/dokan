@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
+import { applyFilters } from '@wordpress/hooks';
 import type {
     ProductItem,
     ProductFilterState,
@@ -88,6 +89,7 @@ export const useProducts = (
             const queryArgs: Record< string, any > = {
                 per_page: filterArgs.per_page,
                 page: filterArgs.page,
+                include_hidden_products: true,
             };
 
             if ( filterArgs.status !== 'all' ) {
@@ -168,7 +170,7 @@ export const useProducts = (
                 ( counts.pending ?? 0 ) +
                 ( counts.future ?? 0 );
 
-            setStatusCounts( [
+            const baseCounts: ProductStatusCount[] = [
                 {
                     value: 'all',
                     label: __( 'All', 'dokan-lite' ),
@@ -189,7 +191,23 @@ export const useProducts = (
                     label: __( 'Pending Review', 'dokan-lite' ),
                     count: counts.pending ?? 0,
                 },
-            ] );
+            ];
+
+            /**
+             * Filter the status counts derived from the products summary.
+             *
+             * @since DOKAN_SINCE
+             *
+             * @param {Array}  baseCounts Default status count entries.
+             * @param {Object} postCounts Raw post_counts map from the API.
+             */
+            const finalCounts = applyFilters(
+                'dokan_product_status_counts',
+                baseCounts,
+                counts
+            ) as ProductStatusCount[];
+
+            setStatusCounts( finalCounts );
 
             setProductsUrl( response.products_url ?? '' );
             setInstockCount( response.instock_count ?? 0 );

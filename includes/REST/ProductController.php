@@ -53,7 +53,7 @@ class ProductController extends DokanRESTController {
     /**
      * Post status
      */
-    protected $post_status = [ 'publish', 'pending', 'draft' ];
+    protected $post_status = [ 'publish', 'pending', 'draft', 'future' ];
 
     /**
      * Class constructor.
@@ -69,6 +69,8 @@ class ProductController extends DokanRESTController {
             add_filter( 'woocommerce_rest_prepare_product_object', [ $this, 'add_min_max_price_to_variable_product' ], 10, 2 );
             $wc_filter_registered = true;
         }
+
+        $this->post_status = dokan_get_post_status() ? array_keys( dokan_get_post_status() ) : $this->post_status;
     }
 
     /**
@@ -537,12 +539,23 @@ class ProductController extends DokanRESTController {
     public function get_product_summary( $request ) {
         $seller_id = dokan_get_current_user_id();
 
+        // Match the list's exclusion scope so tab counts can't drift from it —
+        // Pro modules add `product_pack` etc. via this filter.
+        $exclude_types = array_values(
+            array_unique(
+                array_merge(
+                    [ 'booking', 'auction' ],
+                    (array) apply_filters( 'dokan_product_listing_exclude_type', [] )
+                )
+            )
+        );
+
         $data = [
-            'post_counts'      => dokan_count_posts( 'product', $seller_id ),
+            'post_counts'      => dokan_count_posts( 'product', $seller_id , $exclude_types ),
             'products_url'     => dokan_get_navigation_url( 'products' ),
-            'instock_count'    => dokan_count_stock_posts( 'product', $seller_id, 'instock' ),
-            'outofstock_count' => dokan_count_stock_posts( 'product', $seller_id, 'outofstock' ),
-            'months'           => $this->get_product_months_data( dokan_get_current_user_id() ),
+            'instock_count'    => dokan_count_stock_posts( 'product', $seller_id, 'instock', $exclude_types ),
+            'outofstock_count' => dokan_count_stock_posts( 'product', $seller_id, 'outofstock', $exclude_types ),
+            'months'           => $this->get_product_months_data( $seller_id ),
         ];
 
         /**
