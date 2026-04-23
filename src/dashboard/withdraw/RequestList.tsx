@@ -30,6 +30,7 @@ function RequestList( {
                 isEligible: () => true,
                 label: () => __( 'Cancel', 'dokan-lite' ),
                 isDestructive: true,
+                confirmButtonLabel: __( 'Cancel Withdraw', 'dokan-lite' ),
                 callback: ( [ item ]: WithdrawRequest[] ) => {
                     withdrawHook
                         .updateWithdraw( item.id, {
