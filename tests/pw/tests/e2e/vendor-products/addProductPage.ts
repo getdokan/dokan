@@ -17,23 +17,24 @@ export class AddProductPage {
         productsUrl: `${BASE_URL}/dashboard/products/`,
         addNewProductButton: 'a',
         productFormHeading: 'h1',
-        productTitle: '//input[@id="inspector-input-control-0"]',
-        productType: "//div[@id='dokan-form-field-type']//div//div[@class='react-select__input-container css-97oud1']",
-        regularPrice: '#regular_price',
-        salePrice: '#sale_price',
-        downloadableCheckbox: ('input.components-checkbox-control__input')[0],
+        // Legacy PHP product form used by Dokan vendor dashboard.
+        productTitle: '#post_title',
+        regularPrice: '#_regular_price',
+        salePrice: '#_sale_price',
+        downloadableCheckbox: '#_downloadable',
         virtualCheckbox: '#_virtual',
-        saveProductButton:'span:has-text("Save Changes")',
-        updateSuccessMessage: 'p:has-text("Product saved successfully")',
+        saveProductButton: '#publish',
+        updateSuccessMessage: '.dokan-message',
         titleRequiredError: "span.error[for='post_title']",
         descriptionRequiredError: '.dokan-alert-danger',
         productSearchInput: '//input[@name="product_search_name"]',
         searchButton: 'button[name="product_listing_search"]',
         firstProductRowTitle: 'table.dokan-table tbody tr td[data-title="Name"] a',
-        descriptionIframe: 'iframe#post_content_ifr',
-        shortDescription: "//div[@data-placeholder='Enter product short description']",
-        longDescription: "//div[@data-placeholder='Enter product description']",
-        
+        longDescriptionIframe: 'iframe#post_content_ifr',
+        shortDescriptionIframe: 'iframe#post_excerpt_ifr',
+        longDescriptionTextarea: 'textarea#post_content',
+        shortDescriptionTextarea: 'textarea#post_excerpt',
+
         downloadableOptions: {
             addFileButton: 'button.insert-file-row',
             fileNameInput: "input[placeholder='File Name']",
@@ -69,19 +70,19 @@ export class AddProductPage {
 
     async goToProductsPage() {
         await this.page.goto(this.vendor.productsUrl);
-        await this.waitForPageReady()
-        //await this.page.waitForLoadState("networkidle", { timeout: 10000000 });
-        await this.page.getByRole('link', { name: 'Add new product' }).waitFor({ state: 'visible' });
+        await this.waitForPageReady();
+        await this.page.getByRole('link', { name: 'Add new product' }).first().waitFor({ state: 'visible' });
     }
 
     async openAddProductForm() {
-        await this.page.getByRole('link', { name: 'Add new product' }).click();
-        await this.page.waitForLoadState('networkidle');
+        await this.page.getByRole('link', { name: 'Add new product' }).first().click();
+        await this.page.waitForLoadState('domcontentloaded');
         await this.page.locator(this.vendor.productTitle).waitFor({ state: 'visible' });
     }
 
     async isAddProductHeadingVisible(): Promise<boolean> {
-        return this.page.getByText('New Product', { exact: true }).isVisible();
+        // Legacy form heading is "Add New Product".
+        return this.page.getByRole('heading', { name: 'Add New Product', exact: true }).isVisible();
     }
 
     async fillTitle(title: string) {
@@ -93,35 +94,43 @@ export class AddProductPage {
     }
 
     async fillShortDescription(short_description: string) {
-        await this.page.locator(this.vendor.shortDescription).fill(short_description);
+        // Dokan's vendor form uses WP classic TinyMCE; write directly to the underlying textarea
+        // so we don't depend on editor state or iframe readiness.
+        await this.page.locator(this.vendor.shortDescriptionTextarea).evaluate(
+            (el, value) => {
+                (el as HTMLTextAreaElement).value = value;
+                el.dispatchEvent(new Event('input', { bubbles: true }));
+                el.dispatchEvent(new Event('change', { bubbles: true }));
+            },
+            short_description,
+        );
     }
 
     async fillLongDescription(long_description: string) {
-        await this.page.locator(this.vendor.longDescription).fill(long_description);
+        await this.page.locator(this.vendor.longDescriptionTextarea).evaluate(
+            (el, value) => {
+                (el as HTMLTextAreaElement).value = value;
+                el.dispatchEvent(new Event('input', { bubbles: true }));
+                el.dispatchEvent(new Event('change', { bubbles: true }));
+            },
+            long_description,
+        );
     }
 
     async selectSimpleProductType() {
-        await this.page.locator('.react-select__input-container').first().click();
-        await this.page.getByRole('option', { name: 'Simple', exact: true }).click();
+        // Legacy form has no product-type selector: default is Simple, with Virtual/Downloadable
+        // exposed as separate checkboxes. Clearing both gives Simple.
+        const downloadable = this.page.locator(this.vendor.downloadableCheckbox);
+        const virtual = this.page.locator(this.vendor.virtualCheckbox);
+        if (await downloadable.isChecked()) await downloadable.uncheck();
+        if (await virtual.isChecked()) await virtual.uncheck();
     }
 
     async saveProduct() {
-        // await Promise.all([
-        //     this.page.waitForResponse(
-        //         (response) =>
-        //             response.url().includes('/dashboard/products/') &&
-        //             response.request().method() === 'POST'
-        //     ),
-        //     this.page.locator(this.vendor.saveProductButton).click(),
-        // ]);
-        // await Promise.all([
-        //     this.page.waitForResponse(
-        //         (response) =>
-        //             response.url().includes('/dashboard/products/') &&
-        //             response.request().method() === 'POST'
-        //     ),
-        await this.page.locator(this.vendor.saveProductButton).click()
-        
+        await Promise.all([
+            this.page.waitForLoadState('domcontentloaded'),
+            this.page.locator(this.vendor.saveProductButton).click(),
+        ]);
     }
 
     async getSuccessMessage(): Promise<string> {
@@ -143,28 +152,21 @@ export class AddProductPage {
     }
 
     async enableDownloadable() {
-        const downloadable = this.page.getByRole('checkbox', { name: 'Downloadable' })
-        await downloadable.check();
-        if (!(await downloadable.isChecked())) {
-            await downloadable.check();
-        }
+        const downloadable = this.page.locator(this.vendor.downloadableCheckbox);
+        if (!(await downloadable.isChecked())) await downloadable.check();
     }
 
     async enableVirtual() {
-        const virtual = this.page.getByRole('checkbox', { name: 'Virtual' })
-        if (!(await virtual.isChecked())) {
-            await virtual.check();
-        }
+        const virtual = this.page.locator(this.vendor.virtualCheckbox);
+        if (!(await virtual.isChecked())) await virtual.check();
     }
 
     async isDownloadableChecked(): Promise<boolean> {
-        const downloadable = this.page.getByRole('checkbox', { name: 'Downloadable' })
-        return await downloadable.isChecked();
+        return await this.page.locator(this.vendor.downloadableCheckbox).isChecked();
     }
 
     async isVirtualChecked(): Promise<boolean> {
-        const virtual = this.page.getByRole('checkbox', { name: 'Virtual' })
-        return await virtual.isChecked();
+        return await this.page.locator(this.vendor.virtualCheckbox).isChecked();
     }
 
     async fillDownloadableFields() {

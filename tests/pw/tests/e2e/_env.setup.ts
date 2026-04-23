@@ -116,6 +116,13 @@ setup.describe('setup woocommerce settings', () => {
         await dbUtils.setOptionValue('woocommerce_task_list_reminder_bar_hidden', 'yes', false);
     });
 
+    setup('dismiss dokan admin setup guide banner', { tag: ['@lite'] }, async () => {
+        // The "Complete your marketplace setup" banner renders on every admin dashboard
+        // page until setup is marked complete. Mark it complete so the banner is gone
+        // and does not affect any test.
+        await dbUtils.setOptionValue('dokan_admin_setup_guide_steps_completed', '1', false);
+    });
+
     setup('disable woocommerce variable product tour', { tag: ['@lite'] }, async () => {
         await dbUtils.setUserMeta('1', 'woocommerce_admin_variable_product_tour_shown', 'yes', false);
     });

@@ -387,7 +387,9 @@ export class CatalogModePage {
     }
 
     async click(selector: string) {
-        await this.page.locator(selector).click();
+        // Settings page has a zero-sized `.loading` overlay + sticky header that
+        // Playwright reports as intercepting pointer events. Force past the hit-test.
+        await this.page.locator(selector).click({ force: true });
     }
 
     async getElementBackgroundColor(selector: string): Promise<string> {

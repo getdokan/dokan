@@ -84,7 +84,7 @@ export class StripeExpressPage {
     }
 
     // Admin Methods
-    async adminLogin(username: string, password: string) {
+    async adminLogin(_username: string, _password: string) {
         // Add admin login logic here
     }
 
@@ -168,7 +168,7 @@ export class StripeExpressPage {
     }
 
     // Vendor Methods
-    async vendorLogin(username: string, password: string) {
+    async vendorLogin(_username: string, _password: string) {
         // Add vendor login logic here
     }
 
@@ -198,7 +198,7 @@ export class StripeExpressPage {
     }
 
     // Customer Methods
-    async customerLogin(username: string, password: string) {
+    async customerLogin(_username: string, _password: string) {
         // Add customer login logic here
     }
 
@@ -299,7 +299,7 @@ export class StripeExpressPage {
                             await this.page.waitForTimeout(3000);
                             break;
                         } catch (e) {
-                            console.log('Could not click Card option:', e.message);
+                            console.log('Could not click Card option:', (e as Error).message);
                             // Try alternative selectors for Card
                             try {
                                 await frameLocator.locator('button:has-text("Card"), div:has-text("Card")').first().click({ timeout: 3000 });
@@ -312,7 +312,7 @@ export class StripeExpressPage {
                 }
             }
         } catch (e) {
-            console.log('Error finding/clicking Card option:', e.message);
+            console.log('Error finding/clicking Card option:', (e as Error).message);
         }
         
         // Wait for card form to fully load after clicking Card
@@ -325,8 +325,7 @@ export class StripeExpressPage {
         
         const frames = this.page.frames();
         let stripeFrame = null;
-        let stripeFrameName = '';
-        let allStripeFrames: string[] = [];
+        const allStripeFrames: string[] = [];
         
         console.log('Total frames found:', frames.length);
         
@@ -350,18 +349,16 @@ export class StripeExpressPage {
             
             if (hasCardInput > 0) {
                 stripeFrame = frameLocator;
-                stripeFrameName = frameName;
                 console.log('✓ Found Stripe card form iframe:', frameName);
                 break;
             }
         }
-        
+
         // If we still haven't found it, try the last Stripe frame (card form is often the last one loaded)
         if (!stripeFrame && allStripeFrames.length > 0) {
             console.log('Card inputs not detected, trying last Stripe iframe as fallback');
-            const lastFrameName = allStripeFrames[allStripeFrames.length - 1];
+            const lastFrameName = allStripeFrames[allStripeFrames.length - 1]!;
             stripeFrame = this.page.locator(`iframe[name="${lastFrameName}"]`).contentFrame();
-            stripeFrameName = lastFrameName;
             console.log('Using last Stripe frame:', lastFrameName);
         }
         
@@ -390,7 +387,7 @@ export class StripeExpressPage {
             await cardNumberField.fill('4242 4242 4242 4242');
             console.log('Card number filled successfully');
         } catch (e) {
-            console.log('Failed with #payment-numberInput, trying name selector:', e.message);
+            console.log('Failed with #payment-numberInput, trying name selector:', (e as Error).message);
             try {
                 const cardNumberField = stripeFrame.locator('input[name="number"]').first();
                 await cardNumberField.waitFor({ state: 'visible', timeout: 5000 });
@@ -398,7 +395,7 @@ export class StripeExpressPage {
                 await cardNumberField.fill('4242 4242 4242 4242');
                 console.log('Card number filled using name selector');
             } catch (e2) {
-                console.log('Failed with name selector, trying autocomplete:', e2.message);
+                console.log('Failed with name selector, trying autocomplete:', (e2 as Error).message);
                 const cardNumberField = stripeFrame.locator('input[autocomplete="cc-number"]').first();
                 await cardNumberField.waitFor({ state: 'visible', timeout: 5000 });
                 await cardNumberField.click();
@@ -489,7 +486,7 @@ export class StripeExpressPage {
             console.log('✗ No success indicators found');
             return false;
         } catch (e) {
-            console.log('Error checking order success:', e.message);
+            console.log('Error checking order success:', (e as Error).message);
             return false;
         }
     }

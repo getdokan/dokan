@@ -1,4 +1,4 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, expect } from '@playwright/test';
 import { StripeExpressPage } from './stripeExpressPage';
 import path from 'path';
 
@@ -51,10 +51,10 @@ test.describe.skip('Stripe Express Tests @lite', () => {
         // Example: Using vendor 1 session storage
         const context = await browser.newContext({ storageState: v1 });
         const vendorPage = await context.newPage();
-        const vendorStripeExpressPage = new StripeExpressPage(vendorPage);
-        
+        new StripeExpressPage(vendorPage);
+
         // TODO: Add test steps here
-        
+
         await vendorPage.close();
         await context.close();
     });

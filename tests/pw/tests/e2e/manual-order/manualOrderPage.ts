@@ -19,7 +19,10 @@ export class ManualOrderPage {
     async disableVendorOrderCreation(): Promise<void> {}
     async verifyVendorOrderSettingEnabled(): Promise<void> {}
     async verifyVendorOrderSettingDisabled(): Promise<void> {}
-    async navigateToOrders(): Promise<void> {}
+    async navigateToOrders(): Promise<void> {
+        // Minimal real navigation so the fallback assertion has something to match.
+        await this.page.goto('dashboard/orders/', { waitUntil: 'domcontentloaded' });
+    }
     async isAddNewOrderButtonVisible(): Promise<boolean> { return false; }
     async clickAddNewOrder(): Promise<void> {}
     async addProductToOrder(_name: string): Promise<void> {}

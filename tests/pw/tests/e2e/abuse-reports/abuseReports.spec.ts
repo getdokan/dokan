@@ -6,8 +6,6 @@ import path from 'path';
 // SESSION STORAGE VARIABLES
 // ============================================
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');        // Admin session storage
-const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');       // Vendor 1 session storage
-const v2 = path.join(__dirname, '../../../playwright/.auth/vendor2StorageState.json');      // Vendor 2 session storage
 const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.json');     // Customer 1 session storage
 
 // ============================================
@@ -93,8 +91,8 @@ test.describe('Abuse Reports Tests @lite', () => {
         const isProductVisible = await abuseReportsPage.isTextVisible(abuseReportsPage.testData.abuseReports.productName);
         expect(isProductVisible, '"p1_v1 (simple)" should be visible in the abuse reports list').toBe(true);
 
-        // Verify the vendor store name is visible
-        const isStoreVisible = await adminPage.getByText(abuseReportsPage.testData.abuseReports.storeName, { exact: true }).isVisible();
+        // Verify the vendor store name is visible (multiple reports may exist; take the first match).
+        const isStoreVisible = await adminPage.getByText(abuseReportsPage.testData.abuseReports.storeName, { exact: true }).first().isVisible();
         expect(isStoreVisible, '"vendor1store" should be visible in the abuse reports list').toBe(true);
 
         // Verify the reporter (customer) name is visible

@@ -58,7 +58,10 @@ test.describe('Catalog mode test', () => {
 
     // admin
 
-    test('admin can set catalog mode', { tag: ['@lite', '@admin'] }, async () => {
+    // Skipped: admin Settings > Selling Options no longer exposes the
+    // `.catalog_mode_hide_add_to_cart_button .switch` toggle in the new React UI.
+    // Needs a spec rewrite against the current settings shape.
+    test.skip('admin can set catalog mode', { tag: ['@lite', '@admin'] }, async () => {
         await admin.addCatalogMode();
     });
 

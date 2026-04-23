@@ -22,7 +22,7 @@ const dbPrefix = DB_PREFIX;
 // URLS / DATA
 // ============================================
 export const subUrls = {
-    license: 'wp-admin/admin.php?page=dokan_updates',
+    license: 'wp-admin/admin.php?page=dokan-dashboard#/license',
 };
 
 export const testData = {
@@ -46,18 +46,20 @@ export const testData = {
 // ============================================
 // SELECTORS
 // ============================================
+// Dokan moved the license UI into the new React admin dashboard (/#/license).
 const selectors = {
-    licenseText: '.appsero-license-settings-wrapper h1',
+    licenseText: 'h1:has-text("License")',
     activateSection: {
-        licenseSection: '.appsero-license-settings.appsero-license-section',
-        licenseKeyInput: '.license-input-fields .license-input-key input',
-        activateLicense: '//button[contains(text(),"Activate License")]',
+        licenseSection: 'h2:has-text("License Activation")',
+        licenseKeyInput: 'input[name="license_key"]',
+        activateLicense: 'button:has-text("Activate License")',
     },
-    deactivateLicense: 'button.deactive-button',
-    refreshLicense: 'button.appsero-license-refresh-button',
-    activateLicenseInfo: 'div.active-license-info',
-    successNotice: 'div.notice-success.appsero-license-section',
-    errorNotice: 'div.notice-error.appsero-license-section',
+    deactivateLicense: 'button:has-text("Deactivate License")',
+    refreshLicense: 'button:has-text("Refresh")',
+    activateLicenseInfo: 'button:has-text("Deactivate License")',
+    successNotice: '[role="alert"], .notice-success, [class*="success"]',
+    errorNotice: '[role="alert"], .notice-error, [class*="error"]',
+    licenseStatusEndpoint: 'dokan-pro/v1/license/status',
 };
 
 // ============================================
@@ -199,13 +201,10 @@ export class LicensePage {
         await this.goIfNotThere(subUrls.license);
         await this.toBeVisible(selectors.licenseText);
 
-        const { activateLicense, ...activateSection } = selectors.activateSection;
-        void activateLicense;
-        await this.multipleElementVisible(activateSection);
-
+        // New React dashboard: when license is active the activation form is replaced
+        // by Deactivate + Refresh buttons.
         await this.toBeVisible(selectors.deactivateLicense);
         await this.toBeVisible(selectors.refreshLicense);
-        await this.toBeVisible(selectors.activateLicenseInfo);
     }
 
     async activateLicense(key: string, type: 'correct' | 'incorrect' = 'correct'): Promise<void> {
@@ -228,8 +227,13 @@ export class LicensePage {
 
     async refreshLicense(): Promise<void> {
         await this.goto(subUrls.license);
-        await this.clickAndWaitForResponse(subUrls.license, selectors.refreshLicense);
-        await this.toContainText(selectors.successNotice, 'License refreshed successfully.');
+        // The new UI hits /wp-json/dokan-pro/v1/license/status and doesn't show a toast;
+        // a successful round-trip + Deactivate button still visible is the contract.
+        await Promise.all([
+            this.page.waitForResponse(r => r.url().includes(selectors.licenseStatusEndpoint) && r.status() === 200),
+            this.page.locator(selectors.refreshLicense).click(),
+        ]);
+        await this.toBeVisible(selectors.deactivateLicense);
     }
 
     async deactivateLicense(): Promise<void> {

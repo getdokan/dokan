@@ -13,6 +13,7 @@ The `.claude/skills/` directory contains procedural HOW-TO instructions:
 - **`dokan-frontend-dev`** — Frontend conventions: React/TypeScript components, Vue legacy, Tailwind, Webpack, state management
 - **`dokan-code-review`** — Code review standards: critical violations to flag, PR checklist verification, severity levels
 - **`dokan-git`** — Git and GitHub operations: branching, PR templates, CI checks
+- **`dokan-qa-automation`** — Playwright E2E and REST API test conventions under `tests/pw/`: page objects, tags, ApiUtils, schemas, CI compatibility
 
 ## Build & Development Commands
 

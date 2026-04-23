@@ -38,11 +38,13 @@ async function frontendLogin(page: Page, user: { username: string; password: str
     await page.locator('#username').fill(user.username);
     await page.locator('#password').fill(user.password);
     if (storageState) await page.locator('#rememberme').check();
-    await Promise.all([
-        page.waitForLoadState('load'),
-        page.waitForResponse(r => r.url().includes('my-account') && r.status() === 302),
-        page.locator('//button[@value="Log in"]').click(),
-    ]);
+    // Don't race on the 302 — it can fire before the listener attaches and then hang the Promise.all.
+    // Click, wait for navigation to settle, and then verify via the logged-in cookie.
+    await page.locator('//button[@value="Log in"]').click();
+    await page.waitForLoadState('load');
+    await expect
+        .poll(async () => await getCurrentUser(page), { timeout: 15000 })
+        .toBe(user.username);
     if (storageState) await page.context().storageState({ path: storageState });
     const loggedIn = await getCurrentUser(page);
     expect(loggedIn).toBe(user.username);

@@ -8,7 +8,6 @@ import { isSerialized, serialize } from 'php-serialize';
 const {
     ADMIN,
     ADMIN_PASSWORD,
-    USER_PASSWORD,
     BASE_URL,
     DB_HOST_NAME,
     DB_USER_NAME,
@@ -165,7 +164,7 @@ export const colorsData = {
             dashboardSidebarActiveMenuText: '#FFFFFF',
             dashboardSidebarActiveMenuBackground: '#3498DB',
         },
-    } as Record<string, PaletteValues>,
+    } satisfies Record<'default' | 'tree' | 'custom' | 'custom2', PaletteValues>,
 
     saveSuccessMessage: 'Setting has been saved successfully.',
 };
@@ -322,7 +321,9 @@ export class ColorsPage {
     // ---- Click helpers ----
 
     async click(selector: string): Promise<void> {
-        await this.page.locator(selector).click();
+        // Settings page has a zero-sized `.loading` / sticky header that Playwright
+        // reports as intercepting pointer events. Force past the hit-test.
+        await this.page.locator(selector).click({ force: true });
     }
 
     async clickAndWaitForResponseAndLoadState(subUrl: string, selector: string, code = 200): Promise<void> {

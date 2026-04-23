@@ -653,7 +653,14 @@ const ordersSummarySchema = z.object({
 const orderDownloadSchema = z.object({
     permission_id: z.string().or(z.number()),
     download_id: z.string().or(z.number()),
-    product_id: z.string().or(z.number()),
+    product_id: z.string().or(z.number()).optional(),
+    product: z
+        .object({
+            id: z.string().or(z.number()),
+            name: z.string().optional(),
+            thumbnail: z.any().optional(),
+        })
+        .optional(),
     order_id: z.string().or(z.number()),
     order_key: z.string(),
     user_email: z.string().email(),
@@ -892,7 +899,7 @@ const settingV2Schema = z.object({
     label: z.string(),
     description: z.string(),
     parent_id: z.string().or(z.number()).optional(),
-    sub_groups: z.array(z.any()), // Adjust the type of sub_groups if you know the specific structure
+    sub_groups: z.array(z.any()).optional(), // Adjust the type of sub_groups if you know the specific structure
     _links: z.object({
         options: z.object({ href: z.string().url() }),
         collection: z.object({ href: z.string().url() }),
@@ -1164,7 +1171,7 @@ const storeReviewSchemaStoreEndpoint = z.object({
     author: z.object({
         id: z.string().or(z.number()),
         name: z.string(),
-        email: z.string().email(),
+        email: z.string().email().optional(),
         url: z.string().optional(),
         avatar: z.string().url(),
     }),

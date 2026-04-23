@@ -33,7 +33,7 @@ export default defineConfig({
     /* Run tests in files in parallel */
     // fullyParallel  : true,
     /* Fail the build on CI if you accidentally left test.only in the source code. */
-    // forbidOnly     : !!CI,
+    forbidOnly: parseBoolean(CI),
     /* The number of times to repeat each test, useful for debugging flaky tests. */
     repeatEach: parseBoolean(CI) ? 0 : 0,
     /* The maximum number of retry attempts given to failed tests.  */

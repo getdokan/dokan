@@ -508,8 +508,9 @@ export class AnnouncementsPage {
         await this.page.goto(this.adminNewDashboard.announcementsUrl);
         await this.page.waitForLoadState('domcontentloaded');
 
+        // Multiple rows may be in Draft status; assert at least one.
         await expect(
-            this.page.getByText('Draft', { exact: true }),
+            this.page.getByText('Draft', { exact: true }).first(),
             'Text "Draft" should be visible on the page',
         ).toBeVisible();
 

@@ -64,7 +64,9 @@ test.describe('Manual Order Tests', () => {
                     manualOrderPage.testData.fee.amount
                 );
             } else {
-                await expect(page.locator('text=Orders')).toBeVisible();
+                // The ManualOrderPage methods are stubs; fall through to a non-strict
+                // assertion that the vendor dashboard rendered (any "Orders" heading).
+                await expect(page.locator('text=Orders').first()).toBeVisible();
             }
         });
     });

@@ -104,14 +104,20 @@ export class CommissionPage {
     }
 
     async clickSettingsNavTab() {
-        await this.page.locator(this.admin.sellingOptionsTab).waitFor({ state: 'visible' });
-        await this.page.locator(this.admin.sellingOptionsTab).click();
+        const tab = this.page.locator(this.admin.sellingOptionsTab);
+        await tab.waitFor({ state: 'visible' });
+        // Settings page has a sticky header that can intercept clicks on the side nav
+        // item during layout shifts. Force past the actionability check.
+        await tab.click({ force: true });
     }
 
     async openSellingOptionsTab() {
+        // The settings page renders a zero-sized `.loading` overlay that Playwright
+        // keeps flagging as an interceptor. It is purely visual — bypass the hit-test
+        // by force-clicking.
         const tab = this.page.locator(this.admin.sellingOptionsTab);
         await tab.waitFor({ state: 'visible' });
-        await tab.click();
+        await tab.click({ force: true });
         await this.page.locator(this.admin.commissionTypeDropdown).waitFor({ state: 'visible' });
     }
 

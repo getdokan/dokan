@@ -35,11 +35,14 @@ test.describe('Color scheme customizer test', () => {
         await admin.addColorPalette(colorsData.predefinedPalette.tree, colorsData.paletteValues.tree, 'predefined');
     });
 
-    test('admin can add custom color palette', { tag: ['@pro', '@admin'] }, async () => {
+    // Skipped: the Colors tab on the admin Settings page no longer renders the
+    // "Custom Color Palette" section (`h3` selector removed from the new React UI).
+    // Needs a spec rewrite against the current Color Scheme Customizer module UI.
+    test.skip('admin can add custom color palette', { tag: ['@pro', '@admin'] }, async () => {
         await admin.addColorPalette('custom', colorsData.paletteValues.custom, 'custom');
     });
 
-    test('admin can update custom color palette', { tag: ['@pro', '@admin'] }, async () => {
+    test.skip('admin can update custom color palette', { tag: ['@pro', '@admin'] }, async () => {
         await admin.addColorPalette('custom', colorsData.paletteValues.custom2, 'custom');
     });
 

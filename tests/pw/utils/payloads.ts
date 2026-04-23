@@ -3614,7 +3614,7 @@ export const payloads = {
     // product review
 
     updateProductReview: {
-        status: 'approved',
+        status: 'approve',
     },
 
     // store review

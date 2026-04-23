@@ -527,10 +527,12 @@ export class OrdersPage {
     }
 
     async clickAndAcceptAndWaitForResponse(subUrl: string, selector: string, code = 200): Promise<void> {
+        // Dokan switched order-action confirmations from native confirm() to SweetAlert2.
+        // Fire the click, dismiss the SweetAlert, and wait for the ajax call in parallel.
+        await this.page.locator(selector).click();
         await Promise.all([
             this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code),
-            this.acceptAlert(),
-            this.page.locator(selector).click(),
+            this.page.locator('.swal2-confirm').click({ timeout: 5000 }).catch(() => this.acceptAlert()),
         ]);
     }
 

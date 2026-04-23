@@ -91,7 +91,8 @@ export const payloads = {
 // ============================================
 const selectors = {
     myAccountMenuVendors: '.woocommerce-MyAccount-navigation-link--following a',
-    pageNotFound: '//h1[text()="Oops! That page can\'t be found."]',
+    // Match both straight (') and curly (’) apostrophes — storefront theme renders &rsquo;
+    pageNotFound: '//h1[contains(@class, "page-title") and contains(., "Oops!") and contains(., "page can")]',
     vendorFollowers: {
         storeFollowersText: '//h1[normalize-space()="Store Followers"]',
         table: {
@@ -331,8 +332,20 @@ export class FollowStorePage {
         await this.goto(storeListUrl).catch(() => {});
         const searchInput = this.page.locator(selectors.searchStoreInput);
         if (await searchInput.count()) {
+            // The seller search input sits inside a filter form whose parent is
+            // display:none until a geolocation filter is engaged. Force it visible
+            // so we can submit a search regardless of geolocation state.
+            await this.page.evaluate(() => {
+                const form = document.querySelector('#dokan-store-listing-filter-form-wrap') as HTMLElement | null;
+                if (form) form.style.display = 'block';
+                const row = document.querySelector('.dokan-geolocation-location-filters') as HTMLElement | null;
+                if (row) row.style.display = 'block';
+            });
             await searchInput.fill(storeName);
-            await this.page.waitForLoadState('networkidle');
+            await Promise.all([
+                this.page.waitForLoadState('domcontentloaded'),
+                this.page.keyboard.press('Enter'),
+            ]);
         }
     }
 
@@ -378,7 +391,10 @@ export class FollowStorePage {
     }
 
     async customerViewFollowedVendors(storeName: string): Promise<void> {
-        await this.goIfNotThere(subUrls.followingStores);
+        // This test inserts a follow row via SQL right before asserting, so we must
+        // force a fresh page load — goIfNotThere would skip the nav and render stale
+        // "No vendor found!" state from the previous test's cached view.
+        await this.goto(subUrls.followingStores);
         await this.toBeVisible(selectors.customerVendors.followedStore(storeName));
     }
 
