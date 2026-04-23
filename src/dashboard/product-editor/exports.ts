@@ -8,9 +8,10 @@
  * @since DOKAN_SINCE
  */
 
-// Re-export @wordpress/dataviews so external consumers share a single bundle
-// (avoids duplicate @wordpress/private-apis registration).
-export { DataForm, useFormValidity } from '@wordpress/dataviews';
+// Re-export DataForm from @wedevs/plugin-ui so external consumers share a
+// single bundle. WP 6.8 compat (Validated* lock-unlock shim) lives inside
+// plugin-ui, not here.
+export { DataForm, useFormValidity } from '@wedevs/plugin-ui';
 
 // Hooks
 export { useProductEditor, useInitProductEditor } from './hooks/useProductEditor';

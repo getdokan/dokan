@@ -1,4 +1,4 @@
-import { Card } from '@getdokan/dokan-ui';
+import { Card, useToast } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 // @ts-ignore
@@ -7,7 +7,7 @@ import { DokanButton, DokanModal } from '@dokan/components';
 import PriceHtml from '../../components/PriceHtml';
 import { UseVendorDueStatusReturn } from './Hooks/useVendorDueStatus';
 import { UseAddToCartReturn } from './Hooks/useAddToCart';
-import { useToast } from '@getdokan/dokan-ui';
+import { formatPrice } from '@src/utilities';
 
 const Loader = () => (
     <Card>
@@ -72,7 +72,7 @@ function ReverseWithdrawalBalance( {
                     </Card.Title>
                 </Card.Header>
                 <Card.Body>
-                    <div className="flex flex-col md:!flex-row sm:!items-center justify-between">
+                    <div className="flex flex-col md:flex-row! sm:items-center! justify-between">
                         <div className="flex flex-col gap-2">
                             <div className="text-gray-700 flex">
                                 <span>
@@ -84,25 +84,22 @@ function ReverseWithdrawalBalance( {
                                 &nbsp;
                                 <span className="font-semibold">
                                     { data.balance < 0 ? '( ' : '' }
-                                    <PriceHtml
-                                        price={ Math.abs( data.balance ) }
-                                    />
+                                    <span className="inline-flex">
+                                        { formatPrice(
+                                            Math.abs( data.balance )
+                                        ) }
+                                    </span>
                                     { data.balance < 0 ? ' )' : '' }
                                 </span>
                             </div>
                             { data.billing_type === 'by_amount' && (
                                 <div className="text-gray-700 flex">
                                     <span>
-                                        { __(
-                                            'Threshold:',
-                                            'dokan-lite'
-                                        ) }
+                                        { __( 'Threshold:', 'dokan-lite' ) }
                                     </span>
                                     &nbsp;
                                     <span className="font-semibold">
-                                        <PriceHtml
-                                            price={ data.threshold }
-                                        />
+                                        <PriceHtml price={ data.threshold } />
                                     </span>
                                 </div>
                             ) }
@@ -149,9 +146,7 @@ function ReverseWithdrawalBalance( {
                     'Are you sure you want to pay this amount?',
                     'dokan-lite'
                 ) }
-                confirmationDescription={
-                    data.formatted_payable_amount
-                }
+                confirmationDescription={ data.formatted_payable_amount }
                 confirmButtonText={ __( 'Pay Now', 'dokan-lite' ) }
                 cancelButtonText={ __( 'Cancel', 'dokan-lite' ) }
                 loading={ addToCartHook.isLoading }
