@@ -32,6 +32,8 @@ const getStatusBadgeVariant = ( status: string ) => {
             return 'warning';
         case 'future':
             return 'info';
+        case 'reject':
+            return 'danger';
         default:
             return 'info';
     }
@@ -47,6 +49,8 @@ const getStatusLabel = ( status: string ) => {
             return __( 'Pending Review', 'dokan-lite' );
         case 'future':
             return __( 'Scheduled', 'dokan-lite' );
+        case 'reject':
+            return __( 'Rejected', 'dokan-lite' );
         default:
             return status;
     }
@@ -148,7 +152,6 @@ function ProductList() {
         monthOptions,
         subscriptionRemaining,
         fetchProducts,
-        fetchStatusCounts,
         deleteProduct,
         deleteProducts,
         updateProductsStatus,
@@ -444,42 +447,56 @@ function ProductList() {
             countMap[ s.value ] = s.count;
         } );
 
+        const items = [
+            {
+                value: 'all',
+                label: __( 'All', 'dokan-lite' ),
+                count: countMap.all ?? 0,
+            },
+            {
+                value: 'publish',
+                label: __( 'Published', 'dokan-lite' ),
+                count: countMap.publish ?? 0,
+            },
+            {
+                value: 'pending',
+                label: __( 'Pending Review', 'dokan-lite' ),
+                count: countMap.pending ?? 0,
+            },
+            {
+                value: 'draft',
+                label: __( 'Draft', 'dokan-lite' ),
+                count: countMap.draft ?? 0,
+            },
+            {
+                value: 'instock',
+                label: __( 'In stock', 'dokan-lite' ),
+                count: instockCount,
+            },
+            {
+                value: 'outofstock',
+                label: __( 'Out of stock', 'dokan-lite' ),
+                count: outstockCount,
+            },
+        ];
+
+        /**
+         * Filter the product list table tabs.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param {Array}  items   Default tab definitions.
+         * @param {Object} context Context with statusCounts + current filterArgs.
+         */
         return {
-            items: [
-                {
-                    value: 'all',
-                    label: __( 'All', 'dokan-lite' ),
-                    count: countMap.all ?? 0,
-                },
-                {
-                    value: 'publish',
-                    label: __( 'Published', 'dokan-lite' ),
-                    count: countMap.publish ?? 0,
-                },
-                {
-                    value: 'pending',
-                    label: __( 'Pending Review', 'dokan-lite' ),
-                    count: countMap.pending ?? 0,
-                },
-                {
-                    value: 'draft',
-                    label: __( 'Draft', 'dokan-lite' ),
-                    count: countMap.draft ?? 0,
-                },
-                {
-                    value: 'instock',
-                    label: __( 'In stock', 'dokan-lite' ),
-                    count: instockCount,
-                },
-                {
-                    value: 'outofstock',
-                    label: __( 'Out of stock', 'dokan-lite' ),
-                    count: outstockCount,
-                },
-            ],
+            items: applyFilters(
+                'dokan_product_list_table_tabs',
+                items,
+                { statusCounts, filterArgs }
+            ) as typeof items,
             onSelect: onTabSelect,
         };
-    }, [ statusCounts, instockCount, outstockCount ] );
+    }, [ statusCounts, instockCount, outstockCount, filterArgs ] );
 
     // ── Filter fields ─────────────────────────────────────────────────────────
 
@@ -634,7 +651,6 @@ function ProductList() {
                         } );
                         setSelection( [] );
                         fetchProducts();
-                        fetchStatusCounts();
                     } catch {
                         toast( {
                             type: 'error',
@@ -734,7 +750,6 @@ function ProductList() {
 
                         setSelection( [] );
                         fetchProducts();
-                        fetchStatusCounts();
                     } catch {
                         toast( {
                             type: 'error',
@@ -758,7 +773,6 @@ function ProductList() {
             deleteProducts,
             updateProductsStatus,
             fetchProducts,
-            fetchStatusCounts,
             toast,
             subscriptionInfo,
             effectiveRemaining,
@@ -774,17 +788,16 @@ function ProductList() {
      * @since DOKAN_SINCE
      *
      * @param {Array}  actions Default action definitions.
-     * @param {Object} context Context with helpers (fetchProducts, fetchStatusCounts, selection, setSelection).
+     * @param {Object} context Context with helpers (fetchProducts, selection, setSelection).
      */
     const filteredActions = useMemo(
         () =>
             applyFilters( 'dokan_product_list_table_actions', actions, {
                 fetchProducts,
-                fetchStatusCounts,
                 selection,
                 setSelection,
             } ) as typeof actions,
-        [ actions, selection, fetchProducts, fetchStatusCounts, setSelection ]
+        [ actions, selection, fetchProducts, setSelection ]
     );
 
     // ── View change ───────────────────────────────────────────────────────────
@@ -824,13 +837,12 @@ function ProductList() {
     useEffect( () => {
         addAction( 'dokan_product_list_refresh', 'dokan/product-list', () => {
             fetchProducts();
-            fetchStatusCounts();
             setSelection( [] );
         } );
         return () => {
             removeAction( 'dokan_product_list_refresh', 'dokan/product-list' );
         };
-    }, [ fetchProducts, fetchStatusCounts, setSelection ] );
+    }, [ fetchProducts, setSelection ] );
 
     // ── Render ────────────────────────────────────────────────────────────────
 
@@ -880,7 +892,6 @@ function ProductList() {
             {
                 applyFilters( 'dokan_product_list_after_content', null, {
                     fetchProducts,
-                    fetchStatusCounts,
                     selection,
                     setSelection,
                     data,

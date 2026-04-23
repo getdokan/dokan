@@ -53,7 +53,14 @@ export interface ProductItem {
     advertisement?: ProductAdvertisement | null;
 }
 
-export type ProductStatus = 'all' | 'publish' | 'draft' | 'pending';
+export type ProductStatus =
+    | 'all'
+    | 'publish'
+    | 'draft'
+    | 'pending'
+    | 'future'
+    | 'reject'
+    | ( string & {} );
 
 export interface ProductFilterState {
     page: number;
@@ -74,12 +81,13 @@ export interface ProductStatusCount {
     count: number;
 }
 
-/** Fresh subscription limits returned by /dokan/v1/products/summary after each action. */
+/** Fresh subscription limits carried on the /dokan/v1/products summary header. */
 export interface SubscriptionRemaining {
     remaining_products: true | number;
     can_post_product: boolean;
 }
 
+/** Summary payload delivered on the X-Dokan-Product-Summary response header of /dokan/v1/products. */
 export interface ProductSummary {
     post_counts: Record< string, number >;
     products_url: string;

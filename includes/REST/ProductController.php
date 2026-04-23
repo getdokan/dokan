@@ -53,7 +53,7 @@ class ProductController extends DokanRESTController {
     /**
      * Post status
      */
-    protected $post_status = [ 'publish', 'pending', 'draft' ];
+    protected $post_status = [ 'publish', 'pending', 'draft', 'future' ];
 
     /**
      * Class constructor.
@@ -69,6 +69,8 @@ class ProductController extends DokanRESTController {
             add_filter( 'woocommerce_rest_prepare_product_object', [ $this, 'add_min_max_price_to_variable_product' ], 10, 2 );
             $wc_filter_registered = true;
         }
+
+        $this->post_status = dokan_get_post_status() ? array_keys( dokan_get_post_status() ) : $this->post_status;
     }
 
     /**
@@ -537,12 +539,23 @@ class ProductController extends DokanRESTController {
     public function get_product_summary( $request ) {
         $seller_id = dokan_get_current_user_id();
 
+        // Match the list's exclusion scope so tab counts can't drift from it —
+        // Pro modules add `product_pack` etc. via this filter.
+        $exclude_types = array_values(
+            array_unique(
+                array_merge(
+                    [ 'booking', 'auction' ],
+                    (array) apply_filters( 'dokan_product_listing_exclude_type', [] )
+                )
+            )
+        );
+
         $data = [
-            'post_counts'      => dokan_count_posts( 'product', $seller_id ),
+            'post_counts'      => dokan_count_posts( 'product', $seller_id, $exclude_types ),
             'products_url'     => dokan_get_navigation_url( 'products' ),
-            'instock_count'    => dokan_count_stock_posts( 'product', $seller_id, 'instock' ),
-            'outofstock_count' => dokan_count_stock_posts( 'product', $seller_id, 'outofstock' ),
-            'months'           => $this->get_product_months_data( dokan_get_current_user_id() ),
+            'instock_count'    => $this->count_products_by_stock_status( $seller_id, 'instock', $exclude_types ),
+            'outofstock_count' => $this->count_products_by_stock_status( $seller_id, 'outofstock', $exclude_types ),
+            'months'           => $this->get_product_months_data( $seller_id ),
         ];
 
         /**
@@ -557,6 +570,79 @@ class ProductController extends DokanRESTController {
         $data = (array) apply_filters( 'dokan_product_listing_summary_data', $data, $seller_id );
 
         return rest_ensure_response( $data );
+    }
+
+    /**
+     * Format the product collection response.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Response $response    Prepared response object.
+     * @param WP_REST_Request  $request     Request object.
+     * @param int              $total_items Total item count for the query.
+     *
+     * @return WP_REST_Response
+     */
+    public function format_collection_response( $response, $request, $total_items ) {
+        $response = parent::format_collection_response( $response, $request, $total_items );
+
+        // Only emit the summary header for consumers that can actually view it
+        // (the vendor dashboard list). Public endpoints like top_rated / featured
+        // share this formatter and must not leak vendor-level counts.
+        if (
+            $response instanceof WP_REST_Response
+            && $this->get_product_summary_permissions_check()
+        ) {
+            $summary = $this->get_product_summary( $request );
+            if ( $summary instanceof WP_REST_Response ) {
+                $response->header( 'X-Dokan-Product-Summary', wp_json_encode( $summary->get_data() ) );
+            }
+        }
+
+        return $response;
+    }
+
+    /**
+     * Count a vendor's products for a given stock status using WP_Query,
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int    $seller_id     Vendor user ID.
+     * @param string $stock_status  'instock' or 'outofstock'.
+     * @param array  $exclude_types Product type slugs to exclude.
+     *
+     * @return int
+     */
+    protected function count_products_by_stock_status( $seller_id, $stock_status, array $exclude_types ) {
+        $args = [
+            'post_type'      => 'product',
+            'author'         => $seller_id,
+            'post_status'    => $this->post_status,
+            'posts_per_page' => 1,
+            'fields'         => 'ids',
+            'no_found_rows'  => false,
+            'meta_query'     => [
+                [
+                    'key'   => '_stock_status',
+                    'value' => $stock_status,
+                ],
+            ],
+        ];
+
+        if ( ! empty( $exclude_types ) ) {
+            $args['tax_query'] = [
+                [
+                    'taxonomy' => 'product_type',
+                    'field'    => 'slug',
+                    'terms'    => $exclude_types,
+                    'operator' => 'NOT IN',
+                ],
+            ];
+        }
+
+        $query = new \WP_Query( $args );
+
+        return (int) $query->found_posts;
     }
 
     /**
