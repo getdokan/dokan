@@ -13,6 +13,7 @@ import {
     // @ts-ignore
     // eslint-disable-next-line import/no-unresolved
     Select,
+    DokanTooltip,
 } from '@dokan/components';
 import PriceHtml from '../../components/PriceHtml';
 import { useProducts } from './hooks/useProducts';
@@ -251,12 +252,11 @@ function ProductList() {
             label: __( 'Type', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item }: { item: ProductItem } ) => (
-                <span
-                    title={ getProductTypeLabel( item ) }
-                    className="inline-flex items-center"
-                >
-                    <ProductTypeIcon item={ item } />
-                </span>
+                <DokanTooltip content={ getProductTypeLabel( item ) }>
+                    <span className="inline-flex items-center">
+                        <ProductTypeIcon item={ item } />
+                    </span>
+                </DokanTooltip>
             ),
         },
         {
