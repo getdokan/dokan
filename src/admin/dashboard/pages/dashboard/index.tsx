@@ -13,7 +13,7 @@ import { AdminHeader } from '@src/components';
 
 function Dashboard() {
     return (
-        <div>
+        <div className="dokan-admin-dashboard-layout">
             <AdminHeader />
 
             { /* Render todo section. */ }

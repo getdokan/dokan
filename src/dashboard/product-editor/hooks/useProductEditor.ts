@@ -173,7 +173,9 @@ export function useProductEditor(
 
                 // Reload so the server-rendered data (is_new_product, status, etc.) refreshes.
                 if ( isNewProduct ) {
-                    window.location.reload();
+                    window.location.href =
+                        // @ts-ignore
+                        window.dokanProductEditor.products_url;
                 }
             } catch ( err: any ) {
                 toast( {
