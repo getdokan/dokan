@@ -17,6 +17,27 @@ import { twMerge } from 'tailwind-merge';
 import CountBubble from './CountBubble';
 import SubmenuPopover from './SubmenuPopover';
 
+// Pick the submenu whose URL is the longest prefix of currentUrl so nested
+// routes (e.g. orders/new) don't also activate their parent list (orders).
+export const getActiveSubmenuKey = (
+    submenu: any,
+    url: string
+): string | null => {
+    let activeKey: string | null = null;
+    let activeLength = 0;
+    Object.entries( submenu || {} ).forEach( ( [ subkey, subitem ]: any ) => {
+        if (
+            subitem?.url &&
+            url.startsWith( subitem.url ) &&
+            subitem.url.length > activeLength
+        ) {
+            activeKey = subkey;
+            activeLength = subitem.url.length;
+        }
+    } );
+    return activeKey;
+};
+
 const Sidebar = ( {
     collapsed,
     windowWidth,
@@ -135,17 +156,9 @@ const Sidebar = ( {
 
         Object.entries( ( sidebarNav as any ) || {} ).forEach(
             ( [ key, item ]: any ) => {
-                let hasActiveChild = false;
-
-                if ( item?.submenu ) {
-                    Object.values( item.submenu ).forEach( ( sub: any ) => {
-                        if ( sub?.url && currentUrl.startsWith( sub.url ) ) {
-                            hasActiveChild = true;
-                        }
-                    } );
-                }
-
-                initial[ key ] = hasActiveChild;
+                initial[ key ] = item?.submenu
+                    ? getActiveSubmenuKey( item.submenu, currentUrl ) !== null
+                    : false;
             }
         );
 
@@ -281,22 +294,15 @@ const Sidebar = ( {
                                         item?.url &&
                                         currentUrl.startsWith( item.url );
 
-                                    // Detect if any child submenu item is active
-                                    let hasActiveChild = false;
-                                    if ( hasSub ) {
-                                        Object.values( item.submenu ).forEach(
-                                            ( sub: any ) => {
-                                                if (
-                                                    sub?.url &&
-                                                    currentUrl.startsWith(
-                                                        sub.url
-                                                    )
-                                                ) {
-                                                    hasActiveChild = true;
-                                                }
-                                            }
-                                        );
-                                    }
+                                    // Detect which child submenu item is active (longest-prefix match)
+                                    const activeSubkey = hasSub
+                                        ? getActiveSubmenuKey(
+                                              item.submenu,
+                                              currentUrl
+                                          )
+                                        : null;
+                                    const hasActiveChild =
+                                        activeSubkey !== null;
 
                                     // In collapsed state, mark parent as active when a child is active
                                     const isParentActiveCollapsed =
@@ -450,10 +456,8 @@ const Sidebar = ( {
                                                                 }
 
                                                                 const isSubActive =
-                                                                    subitem?.url &&
-                                                                    currentUrl.startsWith(
-                                                                        subitem.url
-                                                                    );
+                                                                    subkey ===
+                                                                    activeSubkey;
 
                                                                 const subMenuTitle =
                                                                     applyFilters(
