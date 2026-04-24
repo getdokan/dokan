@@ -24,4 +24,24 @@ class OpenAIGPTFiveNano extends OpenAIGPTThreeDotFiveTurbo {
     public function get_description(): string {
         return __( 'GPT-5 Nano is the smallest GPT-5 variant, built for ultra-low latency and high-volume text generation.', 'dokan-lite' );
     }
+
+    /**
+     * GPT-5 family models only accept the default temperature (1),
+     * so drop the parent's explicit `temperature` value.
+     *
+     * @see https://github.com/valentinfrlch/ha-llmvision/issues/437
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $prompt 1st prompt.
+     * @param array  $args   Arguments of the prompt.
+     *
+     * @return array
+     */
+    protected function get_payload( string $prompt, array $args = [] ): array {
+        $payload                = parent::get_payload( $prompt, $args );
+        $payload['temperature'] = 1;
+
+        return $payload;
+    }
 }

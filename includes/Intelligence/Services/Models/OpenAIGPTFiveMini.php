@@ -2,7 +2,7 @@
 
 namespace WeDevs\Dokan\Intelligence\Services\Models;
 
-class OpenAIGPTFiveMini extends OpenAIGPTThreeDotFiveTurbo {
+class OpenAIGPTFiveMini extends OpenAIGPTFiveNano {
 
     /**
      * @inheritDoc
