@@ -25,7 +25,7 @@ interface ProductEditorData {
     view_product_url: string;
     vendor_earning: number;
     can_add_new_attribute: boolean;
-    product_legacy_url: string;
+    product_switch_url: string;
     products_url: string;
     ai_settings: {
         ai_text_enable: boolean;
@@ -74,12 +74,11 @@ const App = ( { params }: { params: { productId: string } } ) => {
     const productUrl = formEditor?.view_product_url;
 
     const handleSwitchEditor = useCallback( () => {
-        // get the window.location.href and remove the query parameter `product_editor` if exists, otherwise add `?product_editor` to the url and reload the page
-        const legacyUrl = formEditor?.product_legacy_url;
-        if ( legacyUrl ) {
-            window.location.href = legacyUrl;
+        const switchUrl = formEditor?.product_switch_url;
+        if ( switchUrl ) {
+            window.location.href = switchUrl;
         }
-    }, [ formEditor?.product_legacy_url ] );
+    }, [ formEditor?.product_switch_url ] );
 
     const fetchProductFields = useCallback( async () => {
         const id = Number( params.productId );
@@ -130,10 +129,9 @@ const App = ( { params }: { params: { productId: string } } ) => {
                                 </DokanTooltip>
                             </span>
                         ) }
-                        { /* add switch button */ }
-                        { formEditor?.product_legacy_url && (
+                        { formEditor?.product_switch_url && (
                             <DokanButton
-                                href={ formEditor.product_legacy_url }
+                                href={ formEditor.product_switch_url }
                                 variant="secondary"
                                 onClick={ handleSwitchEditor }
                             >
@@ -179,7 +177,7 @@ const App = ( { params }: { params: { productId: string } } ) => {
         onChange,
         isInitLoading,
         error,
-        formEditor?.product_legacy_url,
+        formEditor?.product_switch_url,
         handleSwitchEditor,
         productUrl,
         submitHandler,

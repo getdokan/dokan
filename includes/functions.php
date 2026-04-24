@@ -1015,14 +1015,25 @@ function dokan_edit_product_url( $product, bool $is_new_product = false ) {
         $product = new WC_Product();
     }
 
-    $url = add_query_arg(
-        [
-            'product_id'                => $is_new_product ? 0 : $product->get_id(),
-            'action'                    => 'edit',
-            '_dokan_edit_product_nonce' => wp_create_nonce( 'dokan_edit_product_nonce' ),
-        ],
-        dokan_get_navigation_url( 'products' )
-    );
+    $product_id      = $is_new_product ? 0 : $product->get_id();
+    $legacy_switcher = dokan_get_container()->get( \WeDevs\Dokan\Admin\Dashboard\LegacySwitcher::class );
+
+    // Resolve the user whose editor preference should drive the URL — prefer the
+    // product author so email/admin contexts honor the vendor's choice.
+    $user_id = $product_id ? (int) get_post_field( 'post_author', $product_id ) : get_current_user_id();
+
+    if ( $legacy_switcher->is_product_editor_legacy_preferred( $user_id ) ) {
+        $url = add_query_arg(
+            [
+                'product_id'                => $product_id,
+                'action'                    => 'edit',
+                '_dokan_edit_product_nonce' => wp_create_nonce( 'dokan_edit_product_nonce' ),
+            ],
+            dokan_get_navigation_url( 'products' )
+        );
+    } else {
+        $url = $legacy_switcher->get_new_product_editor_url( $product_id );
+    }
 
     return apply_filters( 'dokan_get_edit_product_url', $url, $product );
 }

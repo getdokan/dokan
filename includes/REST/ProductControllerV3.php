@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\REST;
 use WC_Product;
 use WC_Product_Simple;
 use WC_REST_Products_Controller;
+use WeDevs\Dokan\Admin\Dashboard\LegacySwitcher;
 use WeDevs\Dokan\Intelligence\Manager;
 use WeDevs\Dokan\Intelligence\Services\Model;
 use WeDevs\Dokan\ProductEditor\FormSchema;
@@ -359,7 +360,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
                 'ai_text_enable'    => $manager->is_configured(),
                 'ai_image_enable'   => $is_image_configured,
             ],
-            'product_legacy_url'    => dokan_edit_product_url( $product_id ),
+            'product_switch_url'     => dokan_get_container()->get( LegacySwitcher::class )->get_product_editor_switch_url( (int) $product_id ),
             'products_url'           => dokan_get_navigation_url( 'products', true ),
         ];
 
