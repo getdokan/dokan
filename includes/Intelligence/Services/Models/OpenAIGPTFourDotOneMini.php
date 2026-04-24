@@ -15,13 +15,13 @@ class OpenAIGPTFourDotOneMini extends OpenAIGPTThreeDotFiveTurbo {
      * @inheritDoc
      */
     public function get_title(): string {
-        return __( 'OpenAI GPT-4.1 Mini', 'dokan-lite' );
+        return esc_html__( 'OpenAI GPT-4.1 Mini', 'dokan-lite' );
     }
 
     /**
      * @inheritDoc
      */
     public function get_description(): string {
-        return __( 'GPT-4.1 Mini is a compact GPT-4.1 variant optimized for efficient, high-quality text generation at lower cost.', 'dokan-lite' );
+        return esc_html__( 'GPT-4.1 Mini is a compact GPT-4.1 variant optimized for efficient, high-quality text generation at lower cost.', 'dokan-lite' );
     }
 }

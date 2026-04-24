@@ -15,13 +15,13 @@ class OpenAIGPTFiveMini extends OpenAIGPTFiveNano {
      * @inheritDoc
      */
     public function get_title(): string {
-        return __( 'OpenAI GPT-5 Mini', 'dokan-lite' );
+        return esc_html__( 'OpenAI GPT-5 Mini', 'dokan-lite' );
     }
 
     /**
      * @inheritDoc
      */
     public function get_description(): string {
-        return __( 'GPT-5 Mini is a lightweight variant of the GPT-5 family, balancing speed and cost for general-purpose text generation.', 'dokan-lite' );
+        return esc_html__( 'GPT-5 Mini is a lightweight variant of the GPT-5 family, balancing speed and cost for general-purpose text generation.', 'dokan-lite' );
     }
 }
