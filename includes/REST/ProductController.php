@@ -2502,6 +2502,13 @@ class ProductController extends DokanRESTController {
                     'context'     => [ 'view', 'edit' ],
                     'readonly'    => true,
                 ],
+                'edit_url'             => [
+                    'description' => __( 'Product edit URL.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'format'      => 'uri',
+                    'context'     => [ 'view', 'edit' ],
+                    'readonly'    => true,
+                ],
             ],
         ];
 
