@@ -4,10 +4,10 @@ import { useState } from '@wordpress/element';
 // @ts-ignore
 // eslint-disable-next-line import/no-unresolved
 import { DokanButton, DokanModal } from '@dokan/components';
-import PriceHtml from '../../components/PriceHtml';
 import { UseVendorDueStatusReturn } from './Hooks/useVendorDueStatus';
 import { UseAddToCartReturn } from './Hooks/useAddToCart';
-import { formatPrice } from '@src/utilities';
+import { formatPrice } from '@dokan/utilities';
+import { decodeEntities } from '@wordpress/html-entities';
 
 const Loader = () => (
     <Card>
@@ -74,51 +74,58 @@ function ReverseWithdrawalBalance( {
                 <Card.Body>
                     <div className="flex flex-col md:flex-row! sm:items-center! justify-between">
                         <div className="flex flex-col gap-2">
-                            <div className="text-gray-700 flex">
+                            <div className="text-gray-700 flex gap-1">
                                 <span>
                                     { __(
                                         'Reverse Pay Balance:',
                                         'dokan-lite'
                                     ) }
                                 </span>
-                                &nbsp;
                                 <span className="font-semibold">
                                     { data.balance < 0 ? '( ' : '' }
                                     <span className="inline-flex">
-                                        { formatPrice(
-                                            Math.abs( data.balance )
+                                        { decodeEntities(
+                                            formatPrice(
+                                                Math.abs( data.balance )
+                                            )
                                         ) }
                                     </span>
                                     { data.balance < 0 ? ' )' : '' }
                                 </span>
                             </div>
                             { data.billing_type === 'by_amount' && (
-                                <div className="text-gray-700 flex">
+                                <div className="text-gray-700 flex gap-1">
                                     <span>
                                         { __( 'Threshold:', 'dokan-lite' ) }
                                     </span>
-                                    &nbsp;
                                     <span className="font-semibold">
-                                        <PriceHtml price={ data.threshold } />
+                                        <span className="inline-flex">
+                                            { decodeEntities(
+                                                formatPrice( data.threshold )
+                                            ) }
+                                        </span>
                                     </span>
                                 </div>
                             ) }
                             { data.billing_type === 'by_month' && (
-                                <div className="text-gray-700 flex">
+                                <div className="text-gray-700 flex gap-1">
                                     <span>
                                         { __(
                                             'Payable Amount:',
                                             'dokan-lite'
                                         ) }
                                     </span>
-                                    &nbsp;
                                     <span className="font-semibold">
                                         { data.payable_amount < 0 ? '( ' : '' }
-                                        <PriceHtml
-                                            price={ Math.abs(
-                                                data.payable_amount
+                                        <span className="inline-flex">
+                                            { decodeEntities(
+                                                formatPrice(
+                                                    Math.abs(
+                                                        data.payable_amount
+                                                    )
+                                                )
                                             ) }
-                                        />
+                                        </span>
                                         { data.payable_amount < 0 ? ' )' : '' }
                                     </span>
                                 </div>

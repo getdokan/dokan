@@ -6,7 +6,8 @@ import { dateI18n, getSettings } from '@wordpress/date';
 import { DataViews, DateRangePicker } from '@dokan/components';
 import { SimpleInput } from '@getdokan/dokan-ui';
 import { Calendar } from 'lucide-react';
-import PriceHtml from '../../components/PriceHtml';
+import { formatPrice } from '@dokan/utilities';
+import { decodeEntities } from '@wordpress/html-entities';
 import {
     ReverseWithdrawalTransaction,
     UseReverseWithdrawalTransactionsReturn,
@@ -98,7 +99,9 @@ function ReverseWithdrawalTransactions( {
                     { item.debit === '' || item.debit === '--' ? (
                         '--'
                     ) : (
-                        <PriceHtml price={ item.debit } />
+                        <span className="inline-flex">
+                            { decodeEntities( formatPrice( item.debit ) ) }
+                        </span>
                     ) }
                 </div>
             ),
@@ -116,7 +119,9 @@ function ReverseWithdrawalTransactions( {
                     { item.credit === '' || item.credit === '--' ? (
                         '--'
                     ) : (
-                        <PriceHtml price={ item.credit } />
+                        <span className="inline-flex">
+                            { decodeEntities( formatPrice( item.credit ) ) }
+                        </span>
                     ) }
                 </div>
             ),
@@ -133,9 +138,13 @@ function ReverseWithdrawalTransactions( {
                 <div>
                     <span>
                         { Number( item.balance ) < 0 ? '(' : '' }
-                        <PriceHtml
-                            price={ Math.abs( Number( item.balance ) ) }
-                        />
+                        <span className="inline-flex">
+                            { decodeEntities(
+                                formatPrice(
+                                    Math.abs( Number( item.balance ) )
+                                )
+                            ) }
+                        </span>
                         { Number( item.balance ) < 0 ? ')' : '' }
                     </span>
                 </div>
@@ -310,10 +319,10 @@ function ReverseWithdrawalTransactions( {
                         <span className="font-semibold text-gray-700">
                             { __( 'Balance:', 'dokan-lite' ) }
                         </span>
-                        <span className="font-semibold">
-                            <PriceHtml
-                                price={ transactionsHook.summaryBalance }
-                            />
+                        <span className="font-semibold inline-flex">
+                            { decodeEntities(
+                                formatPrice( transactionsHook.summaryBalance )
+                            ) }
                         </span>
                     </div>
                 ) }
