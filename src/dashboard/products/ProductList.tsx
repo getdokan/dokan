@@ -233,16 +233,19 @@ function ProductList() {
                     </div>
                     <div>
                         <a
-                            href={ `#/products/${ item.id }/edit` }
+                            href={ item.edit_url }
                             className="font-medium text-dokan-link cursor-pointer block focus:outline-none!"
                         >
-                            <ShortContent content={ item.name } maxLength={ 32 } />
+                            <ShortContent
+                                content={ item.name }
+                                maxLength={ 32 }
+                            />
                         </a>
                         <span className="text-xs text-gray-500 block">
-                            { sprintf( 
+                            { sprintf(
                                 /* translators: %s: SKU */
-                                __( 'SKU: %s', 'dokan' ), 
-                                item.sku || '—' 
+                                __( 'SKU: %s', 'dokan' ),
+                                item.sku || '—'
                             ) }
                         </span>
                     </div>
@@ -348,14 +351,7 @@ function ProductList() {
         type: 'table',
         status: 'all',
         titleField: 'name',
-        fields: [
-            'type',
-            'stock',
-            'status',
-            'price',
-            'earning',
-            'advertise',
-        ],
+        fields: [ 'type', 'stock', 'status', 'price', 'earning', 'advertise' ],
     } );
 
     /**
@@ -526,11 +522,10 @@ function ProductList() {
          * @param {Object} context Context with statusCounts + current filterArgs.
          */
         return {
-            items: applyFilters(
-                'dokan_product_list_table_tabs',
-                items,
-                { statusCounts, filterArgs }
-            ) as typeof items,
+            items: applyFilters( 'dokan_product_list_table_tabs', items, {
+                statusCounts,
+                filterArgs,
+            } ) as typeof items,
             onSelect: onTabSelect,
         };
     }, [ statusCounts, instockCount, outstockCount, filterArgs ] );

@@ -74,7 +74,7 @@ $price_kses = apply_filters(
         ],
     ]
 );
-$edit_url = '/dashboard/new/#products/' . esc_attr( $post->ID ) . '/edit';
+$edit_url = dokan_edit_product_url( $post->ID );
 ?>
 <tr class="<?php echo esc_attr( $tr_class ); ?>">
     <th class="dokan-product-select check-column">
