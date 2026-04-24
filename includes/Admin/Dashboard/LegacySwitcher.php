@@ -221,6 +221,9 @@ class LegacySwitcher implements Hookable {
         }
 
         $product_id = isset( $_GET['product_id'] ) ? absint( wp_unslash( $_GET['product_id'] ) ) : 0;
+        if ( ! $product_id ) {
+            return;
+        }
 
         $use_legacy_after_toggle = ! $this->is_product_editor_legacy_preferred( $user_id );
         $transient_key           = $this->get_product_editor_transient_key( $user_id );
