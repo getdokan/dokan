@@ -127,7 +127,7 @@ export const getFieldConfig = ( field: FormItem ) => {
     const customData: Record< string, any > = {
         ...field,
         rawLabel: field.label,
-        multiple: 'multiple' in specificConfig,
+        multiple: specificConfig.multiple || false,
     };
 
     const OriginalEdit = ( mappedField as any ).Edit;

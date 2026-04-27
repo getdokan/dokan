@@ -550,6 +550,7 @@ class FormSchema {
                 'variant'        => 'checkbox',
                 'visibility'     => true,
                 'visibilities'   => $price_visibilities,
+                'show_in_admin' => false,
             ],
             [
                 'id'             => Elements::DATE_ON_SALE_FROM,
