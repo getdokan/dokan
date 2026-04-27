@@ -8,12 +8,11 @@
         height: auto !important;
         min-height: auto !important;
     }
-    .components-card-header,
-    .components-card-body {
-        padding: 20px !important;
-    }
-    .dataforms-layouts-card__field-header {
-        border-bottom: 1px solid #ddd !important;
+    .dataforms-layouts-card__field {
+        > div:first-child {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd !important;
+        }
     }
     legend.components-base-control__label {
         display: flex !important;
