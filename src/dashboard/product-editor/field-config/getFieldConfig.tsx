@@ -36,6 +36,7 @@ export const getFieldConfig = ( field: FormItem ) => {
     };
     const mappedField = {
         ...field,
+        readOnly: field.disabled || false,
         label: (
             <div className="flex gap-1 items-center">
                 <RawHTML className="dokan-form-field-label">
@@ -121,6 +122,34 @@ export const getFieldConfig = ( field: FormItem ) => {
                 } }
             />
         );
+    }
+
+    // For disabled checkbox fields, render a non-interactive checkbox visual
+    // inline with the label so the user sees the actual checkbox state instead
+    // of the framework's "True"/"False" text from the readOnly render path.
+    if ( field.disabled && field.variant === 'checkbox' ) {
+        const rawLabel = field.label;
+        ( mappedField as any ).render = ( { item }: any ) => {
+            const checked = !! ( item?.[ field.id ] ?? field.value );
+            return (
+                <div className="flex items-center gap-2 cursor-not-allowed text-sm">
+                    <input
+                        type="checkbox"
+                        checked={ checked }
+                        disabled
+                        readOnly
+                        aria-label={
+                            typeof rawLabel === 'string' ? rawLabel : ''
+                        }
+                    />
+                    <RawHTML>{ decodeEntities( rawLabel ) }</RawHTML>
+                </div>
+            );
+        };
+        // Suppress the framework's VisualLabel above the render to avoid
+        // duplicating the message text. An empty fragment is truthy so the
+        // framework doesn't fall back to `field.id`, but renders to nothing.
+        ( mappedField as any ).label = <></>;
     }
 
     const customData: Record< string, any > = {

@@ -82,6 +82,7 @@ export type FormItem = {
     prefix?: string;
     visibility?: boolean;
     visibilities?: Record< string, boolean >;
+    disabled?: boolean;
     is_custom?: boolean;
 };
 

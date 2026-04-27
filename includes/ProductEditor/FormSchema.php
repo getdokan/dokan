@@ -495,6 +495,7 @@ class FormSchema {
                 'label'        => __( 'Enabled', 'dokan-lite' ),
                 'variant'      => 'checkbox',
                 'visibility'   => true,
+                'show_in_admin' => false,
                 'dependencies' => [
                     [
                         'comparison' => 'contains',
