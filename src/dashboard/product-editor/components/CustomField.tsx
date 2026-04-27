@@ -10,6 +10,7 @@ import { FormItem } from '../types';
  * Extract the first validation error message from the DataViews validity object.
  * The validity prop is per-field and shaped like:
  *   { required?: { type, message? }, elements?: { type, message? }, custom?: { type, message? } }
+ * @param validity
  */
 export const getValidationError = ( validity: any ): string | undefined => {
     if ( ! validity ) {
@@ -62,7 +63,7 @@ const CustomField = ( {
     const showError = touched && error;
 
     const LabelRender = () => {
-        if (label) {
+        if ( label ) {
             return <span>{ label }</span>;
         }
         if ( typeof field.rawLabel === 'string' ) {
@@ -73,7 +74,7 @@ const CustomField = ( {
             );
         }
         return field.label;
-    }
+    };
 
     return (
         <div id={ fieldKey } className={ classes }>
