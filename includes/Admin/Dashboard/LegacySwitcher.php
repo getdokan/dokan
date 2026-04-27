@@ -176,25 +176,6 @@ class LegacySwitcher implements Hookable {
     }
 
     /**
-     * Build a nonce-protected product editor switch URL for a given product.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param int $product_id
-     *
-     * @return string
-     */
-    public function get_product_editor_switch_url( int $product_id ): string {
-        return add_query_arg(
-            [
-                'dokan_action' => self::PRODUCT_EDITOR_SWITCH_ACTION,
-                'product_id'   => $product_id,
-            ],
-            dokan_get_navigation_url( 'products' )
-        );
-    }
-
-    /**
      * Whether the given user prefers the legacy product editor.
      *
      * Defaults to `false` — the new (React) product editor.
