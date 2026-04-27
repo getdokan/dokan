@@ -838,6 +838,17 @@ class Settings {
                         'legacy' => esc_html__( 'Legacy UI', 'dokan-lite' ),
                     ],
                 ],
+                'vendor_product_editor'        => [
+                    'name'    => 'vendor_product_editor',
+                    'label'   => esc_html__( 'Vendor Product Editor', 'dokan-lite' ),
+                    'desc'    => esc_html__( 'Select the user interface for the vendor product editor.', 'dokan-lite' ),
+                    'type'    => 'radio',
+                    'default' => 'legacy',
+                    'options' => [
+                        'latest' => esc_html__( 'New UI', 'dokan-lite' ),
+                        'legacy' => esc_html__( 'Legacy UI', 'dokan-lite' ),
+                    ],
+                ],
                 'appearance_options'         => [
                     'name'          => 'appearance_options',
                     'type'          => 'sub_section',

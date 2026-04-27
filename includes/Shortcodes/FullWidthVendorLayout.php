@@ -48,8 +48,9 @@ class FullWidthVendorLayout implements Hookable {
             return;
         }
 
-        $appearance                        = get_option( 'dokan_appearance', [] );
-        $appearance['vendor_layout_style'] = 'latest';
+        $appearance                          = get_option( 'dokan_appearance', [] );
+        $appearance['vendor_layout_style']   = 'latest';
+        $appearance['vendor_product_editor'] = 'latest';
 
         update_option( 'dokan_appearance', $appearance );
     }
