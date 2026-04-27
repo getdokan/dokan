@@ -9,7 +9,7 @@
         min-height: auto !important;
     }
     .dataforms-layouts-card__field {
-        > div {
+        > div:first-child {
             margin-bottom: 20px;
             border-bottom: 1px solid #ddd !important;
         }
