@@ -29,11 +29,16 @@ const editorFieldHandler: FieldHandler = () => ( {
 /**
  * Handler for checkbox fields.
  *
+ * `render` is overridden to return `null` so readOnly/disabled checkboxes
+ * don't fall back to the dataviews boolean default-render, which prints the
+ * literal "True"/"False" text next to the field label.
+ *
  * @return Configuration object with type 'boolean' and 'checkbox' edit type.
  */
 const checkboxHandler: FieldHandler = () => ( {
     type: 'boolean',
     Edit: 'checkbox',
+    render: () => null,
 } );
 
 /**
@@ -67,6 +72,7 @@ const dateHandler: FieldHandler = () => ( {
 /**
  * Handler for select/dropdown fields.
  * Handles normal select options and special cases like product categories.
+ * @param field
  */
 const selectHandler: FieldHandler = ( field ) => {
     const config: FieldConfig = {
