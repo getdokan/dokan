@@ -28,6 +28,7 @@ class ProFeatures extends AbstractPage {
             'route'      => 'pro-features',
             'capability' => $capability,
             'position'   => 99,
+            'hidden'     => true, // Rendered manually in Menu::add_admin_menu() so it sits directly under "Help".
         ];
 	}
 

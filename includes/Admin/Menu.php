@@ -70,7 +70,22 @@ class Menu {
 
         if ( current_user_can( $capability ) ) {
             $submenu[ $slug ][] = [ esc_html__( 'Help', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/help' ];
+
+            // Include the Dokan Pro Features menu item if Dokan Pro is not installed. Include it from here for handling the menu order perfectly.
+            if ( ! dokan()->is_pro_exists() ) {
+                $submenu[ $slug ][] = [
+                    sprintf(
+                        /* translators: %s: The pro features menu text. */
+                        '<span class="dokan-pro-features-menu-text">%s</span>',
+                        esc_html__( 'Pro Features', 'dokan-lite' )
+                    ),
+                    $capability,
+                    'admin.php?page=dokan-dashboard#/pro-features',
+                ];
+            }
+
             $submenu[ $slug ][] = [ __( 'Settings', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/settings' ];
+            $submenu[ $slug ][] = [ esc_html__( 'Extensions', 'dokan-lite' ), $capability, 'admin.php?page=dokan-dashboard#/extensions' ];
         }
 
         // Add a chat with us link if Dokan Pro is not installed.
