@@ -25,7 +25,6 @@ interface ProductEditorData {
     view_product_url: string;
     vendor_earning: number;
     can_add_new_attribute: boolean;
-    product_switch_url: string;
     products_url: string;
     ai_settings: {
         ai_text_enable: boolean;
@@ -72,13 +71,6 @@ const App = ( { params }: { params: { productId: string } } ) => {
     );
 
     const productUrl = formEditor?.view_product_url;
-
-    const handleSwitchEditor = useCallback( () => {
-        const switchUrl = formEditor?.product_switch_url;
-        if ( switchUrl ) {
-            window.location.href = switchUrl;
-        }
-    }, [ formEditor?.product_switch_url ] );
 
     const fetchProductFields = useCallback( async () => {
         const id = Number( params.productId );
@@ -129,15 +121,6 @@ const App = ( { params }: { params: { productId: string } } ) => {
                                 </DokanTooltip>
                             </span>
                         ) }
-                        { formEditor?.product_switch_url && (
-                            <DokanButton
-                                href={ formEditor.product_switch_url }
-                                variant="secondary"
-                                onClick={ handleSwitchEditor }
-                            >
-                                { __( 'Switch to Old', 'dokan-lite' ) }
-                            </DokanButton>
-                        ) }
                     </div>
                 </Fill>
                 <Fill name="dokan-header-actions">
@@ -177,8 +160,6 @@ const App = ( { params }: { params: { productId: string } } ) => {
         onChange,
         isInitLoading,
         error,
-        formEditor?.product_switch_url,
-        handleSwitchEditor,
         productUrl,
         submitHandler,
         valueForPrompt,

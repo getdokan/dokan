@@ -14,28 +14,6 @@ use WeDevs\Dokan\Contracts\Hookable;
 class LegacySwitcher implements Hookable {
 
     /**
-     * Transient key prefix used to persist the vendor's product editor preference.
-     * The actual key is suffixed with the user id (see `get_product_editor_transient_key`).
-     *
-     * @since DOKAN_SINCE
-     */
-    public const PRODUCT_EDITOR_USE_LEGACY_TRANSIENT_KEY = 'dokan_product_editor_use_legacy';
-
-    /**
-     * Nonce action used for product editor switch URLs.
-     *
-     * @since DOKAN_SINCE
-     */
-    public const PRODUCT_EDITOR_NONCE_ACTION = 'dokan_switch_product_editor';
-
-    /**
-     * Query arg that carries the nonce on product editor switch URLs.
-     *
-     * @since DOKAN_SINCE
-     */
-    public const PRODUCT_EDITOR_NONCE_QUERY_ARG = 'dokan_product_editor_switching_nonce';
-
-    /**
      * Value of `dokan_action` that triggers the product editor switch.
      *
      * @since DOKAN_SINCE
@@ -61,7 +39,6 @@ class LegacySwitcher implements Hookable {
     public function register_hooks(): void {
         add_action( 'admin_menu', [ $this, 'handle_dokan_admin_submenu' ], 20 );
         add_action( 'admin_init', [ $this, 'handle_dashboard_redirect' ] );
-        add_action( 'template_redirect', [ $this, 'handle_product_editor_switch' ] );
     }
 
     /**
@@ -199,50 +176,6 @@ class LegacySwitcher implements Hookable {
     }
 
     /**
-     * Handle the vendor product editor switch request: toggle the per-vendor
-     * preference and redirect to the opposite editor for the requested product.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return void
-     */
-    public function handle_product_editor_switch(): void {
-        if ( ! isset( $_GET['dokan_action'] ) || self::PRODUCT_EDITOR_SWITCH_ACTION !== sanitize_key( wp_unslash( $_GET['dokan_action'] ) ) ) {
-            return;
-        }
-
-        if ( ! isset( $_GET[ self::PRODUCT_EDITOR_NONCE_QUERY_ARG ] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_GET[ self::PRODUCT_EDITOR_NONCE_QUERY_ARG ] ) ), self::PRODUCT_EDITOR_NONCE_ACTION ) ) {
-            return;
-        }
-
-        $user_id = get_current_user_id();
-        if ( ! $user_id ) {
-            return;
-        }
-
-        $product_id = isset( $_GET['product_id'] ) ? absint( wp_unslash( $_GET['product_id'] ) ) : 0;
-        if ( ! $product_id ) {
-            return;
-        }
-
-        $use_legacy_after_toggle = ! $this->is_product_editor_legacy_preferred( $user_id );
-        $transient_key           = $this->get_product_editor_transient_key( $user_id );
-
-        if ( $use_legacy_after_toggle ) {
-            set_transient( $transient_key, '1', $this->transient_expiration );
-        } else {
-            delete_transient( $transient_key );
-        }
-
-        $redirect_url = $use_legacy_after_toggle
-            ? $this->get_legacy_product_editor_url( $product_id )
-            : $this->get_new_product_editor_url( $product_id );
-
-        wp_safe_redirect( $redirect_url );
-        exit;
-    }
-
-    /**
      * Build a nonce-protected product editor switch URL for a given product.
      *
      * @since DOKAN_SINCE
@@ -254,9 +187,8 @@ class LegacySwitcher implements Hookable {
     public function get_product_editor_switch_url( int $product_id ): string {
         return add_query_arg(
             [
-                'dokan_action'                       => self::PRODUCT_EDITOR_SWITCH_ACTION,
-                self::PRODUCT_EDITOR_NONCE_QUERY_ARG => wp_create_nonce( self::PRODUCT_EDITOR_NONCE_ACTION ),
-                'product_id'                         => $product_id,
+                'dokan_action' => self::PRODUCT_EDITOR_SWITCH_ACTION,
+                'product_id'   => $product_id,
             ],
             dokan_get_navigation_url( 'products' )
         );
@@ -265,8 +197,7 @@ class LegacySwitcher implements Hookable {
     /**
      * Whether the given user prefers the legacy product editor.
      *
-     * Defaults to `false` — the new (React) product editor — when no
-     * per-user preference transient has been stored.
+     * Defaults to `false` — the new (React) product editor.
      *
      * @since DOKAN_SINCE
      *
@@ -284,21 +215,12 @@ class LegacySwitcher implements Hookable {
             return false;
         }
 
-        // Missing transient → prefer the new editor.
-        return (bool) get_transient( $this->get_product_editor_transient_key( $user_id ) );
-    }
+        $appearance = get_option( 'dokan_appearance', [] );
+        if ( isset( $appearance['vendor_product_editor'] ) && 'latest' === $appearance['vendor_product_editor'] ) {
+            return false;
+        }
 
-    /**
-     * Build the per-user transient key that stores the product editor preference.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param int $user_id
-     *
-     * @return string
-     */
-    protected function get_product_editor_transient_key( int $user_id ): string {
-        return self::PRODUCT_EDITOR_USE_LEGACY_TRANSIENT_KEY . '_' . $user_id;
+        return true;
     }
 
     /**
