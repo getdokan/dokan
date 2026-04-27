@@ -150,6 +150,7 @@ interface SubscriptionInfo {
 interface ProductListingConfig {
     can_add_product?: boolean;
     new_product_url?: string;
+    is_legacy_editor_preferred?: boolean;
     can_import?: boolean;
     can_export?: boolean;
     import_url?: string;
@@ -450,10 +451,19 @@ function ProductList() {
         const buttons: JSX.Element[] = [];
 
         if ( config.can_add_product ) {
+            const useLegacy =
+                config.is_legacy_editor_preferred && !! config.new_product_url;
             buttons.push(
                 <DokanButton
                     key="add-product"
-                    onClick={ () => navigate( '/products/create' ) }
+                    onClick={ () => {
+                        if ( useLegacy ) {
+                            window.location.href =
+                                config.new_product_url as string;
+                            return;
+                        }
+                        navigate( '/products/create' );
+                    } }
                 >
                     <Plus size={ 16 } />
                     { __( 'Add new product', 'dokan-lite' ) }

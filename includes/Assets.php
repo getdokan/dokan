@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan;
 
 use Automattic\WooCommerce\Internal\Admin\WCAdminAssets;
+use WeDevs\Dokan\Admin\Dashboard\LegacySwitcher;
 use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
 use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
@@ -186,24 +187,12 @@ class Assets {
 
         $user_id = dokan_get_current_user_id();
 
-        $page_id     = (int) dokan_get_option( 'dashboard', 'dokan_pages', 0 );
-        $base        = $page_id ? rtrim( get_permalink( $page_id ), '/' ) . '/' : '';
-        $new_product_url = $base ? esc_url_raw(
-            add_query_arg(
-                [
-                    'product_id'                => 0,
-                    'action'                    => 'edit',
-                    '_dokan_edit_product_nonce' => wp_create_nonce( 'dokan_edit_product_nonce' ),
-                ],
-                $base . 'products/'
-            )
-        ) : '';
-
         $args['product_listing'] = array_merge(
             $args['product_listing'] ?? [],
             [
-                'can_add_product' => dokan_is_seller_enabled( $user_id ) && current_user_can( 'dokan_add_product' ),
-                'new_product_url' => $new_product_url,
+                'can_add_product'            => dokan_is_seller_enabled( $user_id ) && current_user_can( 'dokan_add_product' ),
+                'new_product_url'            => dokan_edit_product_url( 0, true ),
+                'is_legacy_editor_preferred' => dokan_get_container()->get( LegacySwitcher::class )->is_product_editor_legacy_preferred( $user_id ),
             ]
         );
 
