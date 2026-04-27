@@ -36,6 +36,7 @@ export const getFieldConfig = ( field: FormItem ) => {
     };
     const mappedField = {
         ...field,
+        readOnly: field.disabled || false,
         label: (
             <div className="flex gap-1 items-center">
                 <RawHTML className="dokan-form-field-label">
