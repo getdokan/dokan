@@ -34,6 +34,7 @@ class Extensions extends AbstractPage {
                 'route'      => 'extensions',
                 'capability' => $capability,
                 'position'   => 55,
+                'hidden'     => true, // Rendered via Menu::append_dashboard_page_submenu() so it sits directly under "Settings".
             ]
         );
     }
