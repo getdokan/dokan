@@ -14,6 +14,13 @@ use WeDevs\Dokan\Contracts\Hookable;
 class LegacySwitcher implements Hookable {
 
     /**
+     * Value of `dokan_action` that triggers the product editor switch.
+     *
+     * @since 5.0.0
+     */
+    public const PRODUCT_EDITOR_SWITCH_ACTION = 'switch_product_editor';
+
+    /**
      * Default transient expiration time in seconds (15 days)
      *
      * @since 4.1.3
@@ -166,5 +173,69 @@ class LegacySwitcher implements Hookable {
         $legacy_key = sanitize_key( wp_unslash( $admin_url_map[ $key ] ?? $key ) );
 
         return 'dokan_legacy_' . $legacy_key . '_page';
+    }
+
+    /**
+     * Whether the given user prefers the legacy product editor.
+     *
+     * Defaults to `false` — the new (React) product editor.
+     *
+     * @since 5.0.0
+     *
+     * @param int $user_id Optional. Defaults to current user.
+     *
+     * @return bool
+     */
+    public function is_product_editor_legacy_preferred( int $user_id = 0 ): bool {
+        if ( ! $user_id ) {
+            $user_id = get_current_user_id();
+        }
+
+        // Anonymous context (cron, emails without a current user) → prefer the new editor.
+        if ( ! $user_id ) {
+            return false;
+        }
+
+        $appearance = get_option( 'dokan_appearance', [] );
+        if ( isset( $appearance['vendor_product_editor'] ) && 'latest' === $appearance['vendor_product_editor'] ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Build the new (React) product editor URL.
+     *
+     * @since 5.0.0
+     *
+     * @param int $product_id
+     *
+     * @return string
+     */
+    public function get_new_product_editor_url( int $product_id ): string {
+        // `dokan_get_navigation_url( 'products', true )` already ends with `#products/`.
+        $base   = dokan_get_navigation_url( 'products', true );
+        $suffix = $product_id ? $product_id . '/edit' : 'create';
+
+        return $base . $suffix;
+    }
+
+    /**
+     * Build the legacy product editor URL, falling back to the
+     * create-new-product URL when no product id is supplied.
+     *
+     * @since 5.0.0
+     *
+     * @param int $product_id
+     *
+     * @return string
+     */
+    protected function get_legacy_product_editor_url( int $product_id ): string {
+        if ( ! $product_id ) {
+            return (string) dokan_get_new_product_url();
+        }
+
+        return (string) dokan_edit_product_url( $product_id );
     }
 }

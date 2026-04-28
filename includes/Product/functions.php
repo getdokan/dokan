@@ -484,7 +484,7 @@ function dokan_product_get_row_action( $post, $format_html = true ) {
     if ( current_user_can( 'dokan_edit_product' ) ) {
         $row_action['edit'] = [
             'title' => __( 'Edit', 'dokan-lite' ),
-            'url'   => dokan_edit_product_url( $product_id ),
+            'url'   => $edit_url = '/dashboard/new/#products/' . $product_id . '/edit',
             'class' => 'edit',
         ];
     }

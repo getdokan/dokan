@@ -14,7 +14,7 @@
 
         li {
             a {
-                color: var(--dokan-sidebar-text-color, #daceff);
+                color: var(--dokan-sidebar-text-color, #daceff) !important;
 
                 svg {
                     color: var(--dokan-sidebar-text-color, #daceff);
@@ -48,7 +48,7 @@
                         color: var(
                             --dokan-sidebar-hover-background-color,
                             #7047eb
-                        );
+                        ) !important;
                     }
                 }
             }

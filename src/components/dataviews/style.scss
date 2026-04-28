@@ -1,5 +1,3 @@
-@import "@wordpress/dataviews/build-style/style.css";
-
 .dokan-layout {
     .dokan-dashboard-datatable {
         .dataviews-wrapper {
@@ -36,6 +34,10 @@
         }
     }
     .dokan-admin-dashboard-datatable {
+        // TODO: Temporary dokan-admin-dashboard-datatable-prefixed DataViews styles for admin compatibility.
+        // Remove this scoped import once both legacy dashboard tables are migrated
+        // to Plugin UI DataViews and prefix compatibility is no longer needed.
+        @import "@wordpress/dataviews/build-style/style.css";
         .dataviews-wrapper {
             height: auto;
             border-radius: 10px;

@@ -811,6 +811,14 @@ class Settings {
                     'tooltip'     => __( 'Select a page to display the Terms and Conditions of your store for Vendors.', 'dokan-lite' ),
                     'placeholder' => __( 'Select page', 'dokan-lite' ),
                 ],
+                'vendor_onboarding' => [
+                    'name' => 'vendor_onboarding',
+                    'label' => __( 'Vendor Onboarding', 'dokan-lite' ),
+                    'desc' => __( 'Select a page for vendor onboarding and login', 'dokan-lite' ),
+                    'type' => 'select',
+                    'placeholder' => __( 'Select page', 'dokan-lite' ),
+                    'options' => $pages_array,
+                ],
             ],
             'dokan_appearance' => [
                 'vendor_layout_options'      => [
@@ -823,6 +831,17 @@ class Settings {
                     'name'    => 'vendor_layout_style',
                     'label'   => esc_html__( 'Vendor Dashboard Style', 'dokan-lite' ),
                     'desc'    => esc_html__( 'Select the user interface for the vendor dashboard.', 'dokan-lite' ),
+                    'type'    => 'radio',
+                    'default' => 'legacy',
+                    'options' => [
+                        'latest' => esc_html__( 'New UI', 'dokan-lite' ),
+                        'legacy' => esc_html__( 'Legacy UI', 'dokan-lite' ),
+                    ],
+                ],
+                'vendor_product_editor'        => [
+                    'name'    => 'vendor_product_editor',
+                    'label'   => esc_html__( 'Vendor Product Editor', 'dokan-lite' ),
+                    'desc'    => esc_html__( 'Select the user interface for the vendor product editor.', 'dokan-lite' ),
                     'type'    => 'radio',
                     'default' => 'legacy',
                     'options' => [

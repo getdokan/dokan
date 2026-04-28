@@ -14,7 +14,7 @@ if ( isset( $_GET['order_id'] ) ) { // phpcs:ignore
     $order_id = absint( $_GET['order_id'] ); // phpcs:ignore
     ?>
     <div class="dokan-clearfix dokan-w12 dokan-form-group">
-        <a href="<?php echo esc_url( dokan_get_navigation_url( 'orders' ) ); ?>" class="dokan-btn dokan-left">
+        <a href="<?php echo esc_url( dokan_get_navigation_url( 'orders', true ) ); ?>" class="dokan-btn dokan-left">
             <?php esc_html_e( '&larr; Orders', 'dokan-lite' ); ?>
         </a>
 

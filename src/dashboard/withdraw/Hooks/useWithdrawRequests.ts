@@ -23,7 +23,9 @@ export interface WithdrawTableView {
     page: number;
     search: any;
     type: string;
-    titleField: string;
+    layout?: {
+        styles?: Record< string, { width?: string } >;
+    };
 }
 
 export interface UseWithdrawRequestsReturn {
@@ -51,7 +53,28 @@ export const useWithdrawRequests = (
         page:  1,
         search: '',
         type: 'table',
-        titleField: 'amount',
+        layout: {
+            styles: {
+                'amount': {
+                    width: '16%'
+                },
+                'method_title': {
+                    width: '20%'
+                },
+                'created': {
+                    width: '16%'
+                },
+                'charge': {
+                    width: '16%' 
+                },
+                'receivable': { 
+                    width: '16%' 
+                },
+                'status': {
+                    width: '16%'
+                },
+            },
+        }
     });
 
     const [ isLoading, setIsLoading ] = useState< boolean >( defaultLoader );

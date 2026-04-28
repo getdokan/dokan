@@ -85,14 +85,6 @@ $custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'stor
 
 <p class="form-row form-group user-role vendor-customer-registration">
 
-    <label class="radio">
-        <input type="radio" name="role" value="customer"<?php checked( $role, 'customer' ); ?> class="dokan-role-customer">
-        <?php esc_html_e( 'I am a customer', 'dokan-lite' ); ?>
-    </label>
-    <br/>
-    <label class="radio">
-        <input type="radio" name="role" value="seller"<?php checked( $role, 'seller' ); ?>  class="dokan-role-seller">
-        <?php esc_html_e( 'I am a vendor', 'dokan-lite' ); ?>
-    </label>
+    <input type="hidden" name="role" value="customer">
     <?php do_action( 'dokan_registration_form_role', $role ); ?>
 </p>

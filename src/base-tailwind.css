@@ -5,6 +5,7 @@
 @import "@getdokan/dokan-ui/dist/dokan-ui.css";
 
 @source "../src/";
+@source "../node_modules/@wedevs/plugin-ui/dist";
 
 /* Plugins */
 @plugin "@tailwindcss/typography";
@@ -109,9 +110,60 @@
     --color-secondary:                                        var(--dokan-button-secondary-background-color, var(--dokan-button-text-color, #ffffff));
     --color-dokan-tertiary:                                   var(--dokan-button-tertiary-background-color, #00000000);
     --color-tertiary:                                         var(--dokan-button-tertiary-background-color, #00000000);
+}
+
+/* ─── Plugin-UI / shadcn token → Tailwind variable mapping ───
+   @theme inline tells Tailwind to use these var() references when generating
+   utilities (e.g. bg-primary → var(--primary)), without emitting them on :root.
+   The actual --primary, --border, etc. values come from the PluginUIThemeProvider
+   inline styles on .pui-root, or from the :root fallbacks below. */
+
+@theme inline {
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-background: var(--background, #ffffff);
+    --color-foreground: var(--foreground, #000000);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+    --color-success: var(--success);
+    --color-success-foreground: var(--success-foreground);
+    --color-warning: var(--warning);
+    --color-warning-foreground: var(--warning-foreground);
+    --color-info: var(--info);
+    --color-info-foreground: var(--info-foreground);
+    --color-border: var(--border, #e5e7eb);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-tertiary: var(--dokan-button-tertiary-background-color, #00000000);
+    --font-sans: var(--font-sans);
+    --font-serif: var(--font-serif);
+    --font-mono: var(--font-mono);
 
     /* ─── Primary color variants ─── */
-    --color-primary-dark:                                     #502BBF;
+    --color-primary-dark:                                     var(--dokan-button-hover-background-color, #502BBF);
     --color-primary-hover:                                    var(--dokan-sidebar-hover-background-color, #7047eb);
 
     /* ─── Danger color ─── */
@@ -121,8 +173,9 @@
 @layer base {
 	:root {
     	/* ─── Other root variables ─── */
-        --primary: var(--color-primary);
-        --colors-primary-500: var(--color-primary); /* for dokan-ui */
+        --primary: var(--dokan-button-background-color, #7047EB) !important;
+        --color-primary: var(--primary) !important;
+        --colors-primary-500: var(--primary) !important; /* for dokan-ui */
         --color-border: #e5e7eb;
 	}
 
@@ -139,12 +192,10 @@
 }
 
 /* Scoped Layout — Preflight + Utilities + Components */
+.pui-root,
 .dokan-layout {
-    --wp-components-color-accent: var(--color-primary);
-    --wp-components-color-accent-darker-20: var(--color-dokan-btn-hover);
-
     @import "tailwindcss/preflight.css" layer(base);
-    @import "tailwindcss/utilities.css";
+    @import "tailwindcss/utilities.css" important;
     /* Import custom component styles */
     @import "./dokan-components.css";
 
@@ -161,5 +212,33 @@
     font-variation-settings: normal;
     -webkit-tap-highlight-color: transparent;
     border-color: var(--color-border) !important;
+}
+/*
+ * TODO: Temporary scope for Plugin UI WordPress styles.
+ * Remove this #dokan-vendor-dashboard-root wrapper after both legacy vendor
+ * dashboard tables are migrated to Plugin UI DataViews and no vendor-dashboard
+ * prefix compatibility is required.
+ */
+ #dokan-vendor-dashboard-root,
+.dokan-admin-dashboard-layout,
+.dokan-vendor-support-list-container {
+    @import "../node_modules/@wedevs/plugin-ui/src/components/wordpress/style.css";
+}
+
+body:has(.dokan-layout) {
+    /* If .dokan-layout is present, hide the preflight styles on :root to prevent conflicts */
+    --wp-components-color-accent: var(--color-primary);
+    --wp-components-color-accent-darker-20: var(--color-dokan-btn-hover);
+}
+
+/* Hide scrollbar for Chrome, Safari, and Opera */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge, and Firefox */
+.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 

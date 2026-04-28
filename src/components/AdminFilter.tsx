@@ -209,7 +209,7 @@ const AdminFilter = ( {
                         { availableFilters.map( ( f ) => (
                             <button
                                 key={ f.id }
-                                className="w-full flex items-center gap-3 px-4 py-2 text-sm text-[#828282] hover:bg-[#EFEAFF] hover:text-[#7047EB] transition-all duration-200 border-none bg-transparent group"
+                                className="w-full flex items-center gap-3 px-4 py-2 text-sm text-[#828282] hover:bg-[#EFEAFF] hover:text-[#7047EB] transition-all duration-200 border-none bg-transparent group !outline-transparent"
                                 onClick={ () => handleAddFilter( f.id ) }
                             >
                                 { f.label }

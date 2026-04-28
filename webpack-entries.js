@@ -85,6 +85,22 @@ const entryPoints = {
             type: 'window',
         },
     },
+    'product-editor-store': {
+        import: '/src/stores/productEditor/store.ts',
+        library: {
+            name: [ 'dokan', 'productEditorStore' ],
+            type: 'window',
+        },
+    },
+    'product-editor-utils': {
+        import: './src/dashboard/product-editor/exports.ts',
+        library: {
+            name: [ 'dokan', 'productEditor' ],
+            type: 'window',
+        },
+    },
+    'vendor-onboarding': '/assets/src/less/vendor-onboarding.less',
+    'vendor-onboarding-js': './assets/src/js/vendor-onboarding.js',
     'dokan-admin-commission-suborder-metabox':
         './src/styles/dokan-admin-commission-suborder-metabox.css',
 

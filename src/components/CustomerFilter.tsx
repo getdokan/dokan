@@ -34,7 +34,8 @@ const CustomerFilter = ( props ) => {
     const handleCustomrSearch = debounce(
         async ( inputValue: string, callback ) => {
             try {
-                if ( ! inputValue ) {
+                if ( ! inputValue || inputValue.length < 3 ) {
+                    callback( [] );
                     return;
                 }
                 const searchResults =
@@ -62,7 +63,11 @@ const CustomerFilter = ( props ) => {
             value={ getValue() }
             defaultOptions={ searchedCustomer }
             loadOptions={ handleCustomrSearch }
-            noOptionsMessage={ () => __( 'No options', 'dokan-lite' ) }
+            noOptionsMessage={ ( { inputValue } ) =>
+                ! inputValue || inputValue.length < 3
+                    ? __( 'Please type 3 or more characters', 'dokan-lite' )
+                    : __( 'No options', 'dokan-lite' )
+            }
         />
     );
 };
