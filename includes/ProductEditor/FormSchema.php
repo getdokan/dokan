@@ -489,14 +489,14 @@ class FormSchema {
                 'visibility'     => true,
             ],
             [
-                'id'           => Elements::ENABLED,
-                'section_id'   => Elements::SECTION_GENERAL,
-                'type'         => 'field',
-                'label'        => __( 'Enabled', 'dokan-lite' ),
-                'variant'      => 'checkbox',
-                'visibility'   => true,
+                'id'            => Elements::ENABLED,
+                'section_id'    => Elements::SECTION_GENERAL,
+                'type'          => 'field',
+                'label'         => __( 'Enabled', 'dokan-lite' ),
+                'variant'       => 'checkbox',
+                'visibility'    => true,
                 'show_in_admin' => false,
-                'dependencies' => [
+                'dependencies'  => [
                     [
                         'comparison' => 'contains',
                         'key'        => Elements::TYPE,
@@ -543,13 +543,14 @@ class FormSchema {
                 ],
             ],
             [
-                'id'             => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
-                'section_id'     => Elements::SECTION_GENERAL,
-                'type'           => 'field',
-                'label'          => __( 'Create Schedule for Discount', 'dokan-lite' ),
-                'variant'        => 'checkbox',
-                'visibility'     => true,
-                'visibilities'   => $price_visibilities,
+                'id'            => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
+                'section_id'    => Elements::SECTION_GENERAL,
+                'type'          => 'field',
+                'label'         => __( 'Create Schedule for Discount', 'dokan-lite' ),
+                'variant'       => 'checkbox',
+                'visibility'    => true,
+                'visibilities'  => $price_visibilities,
+                'show_in_admin' => false,
             ],
             [
                 'id'             => Elements::DATE_ON_SALE_FROM,
