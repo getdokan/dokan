@@ -242,10 +242,9 @@ class Manager {
             return $notices;
         }
 
-        $settings_url = add_query_arg(
-            [ 'page' => 'dokan#/tools' ],
-            admin_url( 'admin.php' )
-        );
+        $is_legacy_tools_page = get_transient( 'dokan_legacy_tools_page' );
+        $tools_page_slug      = $is_legacy_tools_page ? 'dokan' : 'dokan-dashboard';
+        $settings_url         = admin_url( 'admin.php?page=' . $tools_page_slug ) . '#/tools';
 
         $dokan_pages = get_option( 'dokan_pages', [] );
         $page_id = isset( $dokan_pages['vendor_onboarding'] ) ? $dokan_pages['vendor_onboarding'] : 0;
