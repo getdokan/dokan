@@ -1,9 +1,10 @@
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState, useMemo, useCallback } from '@wordpress/element';
-import { useToast } from '@getdokan/dokan-ui';
+import { useToast, SimpleInput } from '@getdokan/dokan-ui';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
-import { DataViews } from '@dokan/components';
+import { DataViews, DateRangePicker } from '@dokan/components';
+import { Calendar } from 'lucide-react';
 import { useWithdraw } from './Hooks/useWithdraw';
 import RequestWithdrawBtn from './RequestWithdrawBtn';
 import { useWithdrawSettings } from './Hooks/useWithdrawSettings';
@@ -21,6 +22,14 @@ interface WithdrawSummary {
     pending: number;
     approved: number;
     cancelled: number;
+}
+
+interface DateRangeUpdate {
+    after?: string;
+    afterText?: string;
+    before?: string;
+    beforeText?: string;
+    focusedInput?: string;
 }
 
 interface WithdrawView {
@@ -52,6 +61,16 @@ function WithdrawRequests() {
         approved: 0,
         cancelled: 0,
     } );
+
+    const [ after, setAfter ] = useState< string >( '' );
+    const [ afterText, setAfterText ] = useState( '' );
+    const [ before, setBefore ] = useState< string >( '' );
+    const [ beforeText, setBeforeText ] = useState( '' );
+    const [ focusInput, setFocusInput ] = useState< string >( 'startDate' );
+    const [ appliedDateRange, setAppliedDateRange ] = useState< {
+        start_date: string;
+        end_date: string;
+    } >( { start_date: '', end_date: '' } );
 
     const [ view, setView ] = useState< WithdrawView >( {
         perPage: 10,
@@ -108,12 +127,17 @@ function WithdrawRequests() {
 
         setIsLoading( true );
         try {
-            const queryArgs = {
+            const queryArgs: Record< string, string | number > = {
                 per_page: view.perPage,
                 page: view.page,
                 status: view.status,
                 user_id: currentUser.id,
             };
+
+            if ( appliedDateRange.start_date && appliedDateRange.end_date ) {
+                queryArgs.start_date = appliedDateRange.start_date;
+                queryArgs.end_date = appliedDateRange.end_date;
+            }
 
             const response = ( await apiFetch( {
                 path: addQueryArgs( '/dokan/v1/withdraw', queryArgs ),
@@ -139,7 +163,14 @@ function WithdrawRequests() {
         } finally {
             setIsLoading( false );
         }
-    }, [ view.perPage, view.page, view.status, currentUser?.id ] );
+    }, [
+        view.perPage,
+        view.page,
+        view.status,
+        currentUser?.id,
+        appliedDateRange.start_date,
+        appliedDateRange.end_date,
+    ] );
 
     // Stub withdraw requests object for RequestWithdrawBtn compatibility
     // TODO: Refactor RequestWithdrawBtn to accept a simpler interface
@@ -210,6 +241,106 @@ function WithdrawRequests() {
         void fetchSummary();
     }, [ fetchSummary ] );
 
+    const clearDateRange = useCallback( () => {
+        setAfter( '' );
+        setAfterText( '' );
+        setBefore( '' );
+        setBeforeText( '' );
+        setFocusInput( 'startDate' );
+        setAppliedDateRange( { start_date: '', end_date: '' } );
+        setView( ( prev ) => ( { ...prev, page: 1 } ) );
+    }, [] );
+
+    const filter = useMemo(
+        () => ( {
+            fields: [
+                {
+                    id: 'date-range',
+                    label: __( 'Date Range', 'dokan-lite' ),
+                    field: (
+                        <DateRangePicker
+                            key="date-range-select"
+                            after={ after }
+                            afterText={ afterText }
+                            before={ before }
+                            beforeText={ beforeText }
+                            focusedInput={ focusInput }
+                            onUpdate={ ( update: DateRangeUpdate ) => {
+                                if ( update.after ) {
+                                    setAfter( update.after );
+                                }
+                                if ( update.afterText ) {
+                                    setAfterText( update.afterText );
+                                }
+                                if ( update.before ) {
+                                    setBefore( update.before );
+                                }
+                                if ( update.beforeText ) {
+                                    setBeforeText( update.beforeText );
+                                }
+                                if ( update.focusedInput ) {
+                                    setFocusInput( update.focusedInput );
+                                    if (
+                                        update.focusedInput === 'endDate' &&
+                                        after
+                                    ) {
+                                        setBefore( '' );
+                                        setBeforeText( '' );
+                                    }
+                                }
+                            } }
+                            shortDateFormat="MM/DD/YYYY"
+                            isInvalidDate={ () => false }
+                            onClear={ clearDateRange }
+                            onOk={ () => {
+                                setAppliedDateRange( {
+                                    start_date: after,
+                                    end_date: before,
+                                } );
+                                setView( ( prev ) => ( {
+                                    ...prev,
+                                    page: 1,
+                                } ) );
+                            } }
+                        >
+                            <SimpleInput
+                                addOnLeft={ <Calendar size="16" /> }
+                                className="border rounded px-3 py-1.5 w-full bg-white"
+                                onChange={ () => {} }
+                                input={ {
+                                    type: 'text',
+                                    value:
+                                        ! after || ! before
+                                            ? ''
+                                            : `${ afterText } - ${ beforeText }`,
+                                    placeholder: __(
+                                        'Enter Date',
+                                        'dokan-lite'
+                                    ),
+                                    readOnly: true,
+                                } }
+                            />
+                        </DateRangePicker>
+                    ),
+                },
+            ],
+            onReset: clearDateRange,
+            onFilterRemove: ( filterId: string ) => {
+                if ( filterId === 'date-range' ) {
+                    clearDateRange();
+                }
+            },
+        } ),
+        [
+            after,
+            afterText,
+            before,
+            beforeText,
+            focusInput,
+            clearDateRange,
+        ]
+    );
+
     const tabs = {
         items: [
             {
@@ -275,6 +406,7 @@ function WithdrawRequests() {
                 isLoading={ isLoading }
                 search={ false }
                 tabs={ tabs }
+                filter={ filter }
             />
         </div>
     );

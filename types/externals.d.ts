@@ -84,6 +84,8 @@ declare module '@dokan/components' {
   export const Tab: any;
   export const PriceInput: any;
   export const PriceHtml: any;
+  export const DateTimeHtml: any;
+  export const DateRangePicker: any;
   export const CustomerFilter: any;
   export const ShortContent: any;
   export const DokanTooltip: any;
