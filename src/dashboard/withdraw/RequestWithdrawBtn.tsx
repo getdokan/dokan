@@ -160,10 +160,22 @@ function RequestWithdrawBtn( {
     }, [ error ] );
 
     useEffect( () => {
-        if ( settings?.data?.payment_methods.length > 0 ) {
-            setWithdrawMethod( settings?.data?.payment_methods[ 0 ].value );
+        if ( ! isOpen ) {
+            return;
         }
-    }, [ settings ] );
+
+        const methods = settings?.data?.payment_methods ?? [];
+        const savedDefault = settings?.data?.withdraw_method ?? '';
+        const defaultIsAvailable = methods.some(
+            ( method: { value: string } ) => method.value === savedDefault
+        );
+
+        if ( savedDefault && defaultIsAvailable ) {
+            setWithdrawMethod( savedDefault );
+        } else if ( methods.length > 0 ) {
+            setWithdrawMethod( methods[ 0 ].value );
+        }
+    }, [ isOpen, settings ] );
 
     const withdrawRequestFormContent = hasPaymentMethods ? (
         <>
