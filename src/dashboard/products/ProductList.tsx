@@ -644,8 +644,11 @@ function ProductList() {
             {
                 id: 'edit-details',
                 label: () => __( 'Edit details', 'dokan-lite' ),
+                isEligible: ( item: ProductItem ) => !! item.edit_url,
                 callback: ( [ item ]: ProductItem[] ) => {
-                    navigate( `/products/${ item.id }/edit` );
+                    if ( item.edit_url ) {
+                        window.location.href = item.edit_url;
+                    }
                 },
             },
             {
