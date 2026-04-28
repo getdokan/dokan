@@ -489,14 +489,14 @@ class FormSchema {
                 'visibility'     => true,
             ],
             [
-                'id'           => Elements::ENABLED,
-                'section_id'   => Elements::SECTION_GENERAL,
-                'type'         => 'field',
-                'label'        => __( 'Enabled', 'dokan-lite' ),
-                'variant'      => 'checkbox',
-                'visibility'   => true,
+                'id'            => Elements::ENABLED,
+                'section_id'    => Elements::SECTION_GENERAL,
+                'type'          => 'field',
+                'label'         => __( 'Enabled', 'dokan-lite' ),
+                'variant'       => 'checkbox',
+                'visibility'    => true,
                 'show_in_admin' => false,
-                'dependencies' => [
+                'dependencies'  => [
                     [
                         'comparison' => 'contains',
                         'key'        => Elements::TYPE,
