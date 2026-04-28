@@ -562,7 +562,7 @@ class ProductController extends DokanRESTController {
          * Allow Pro modules to append per-request data to the product listing summary.
          * Called after every action (delete/publish) so values stay accurate.
          *
-         * @since DOKAN_SINCE
+         * @since 5.0.0
          *
          * @param array $data      Summary data array.
          * @param int   $seller_id Current vendor ID.
@@ -575,7 +575,7 @@ class ProductController extends DokanRESTController {
     /**
      * Get month options for the current vendor.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param int $seller_id
      *
@@ -917,7 +917,7 @@ class ProductController extends DokanRESTController {
          * Allows Pro modules (e.g. product-adv, brands, subscription) to extend
          * filtering for both v1 and v2 REST endpoints.
          *
-         * @since DOKAN_SINCE
+         * @since 5.0.0
          *
          * @param array           $args    WP_Query arguments.
          * @param WP_REST_Request $request The current REST request.

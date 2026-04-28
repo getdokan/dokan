@@ -7,7 +7,7 @@ class Extensions extends AbstractPage {
     /**
      * Get the ID of the page.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @return string
      */
@@ -18,7 +18,7 @@ class Extensions extends AbstractPage {
     /**
      * Get the title of the page.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param string $title Default title.
      * @param string $page_title Page title.
@@ -51,7 +51,7 @@ class Extensions extends AbstractPage {
     /**
      * Get extension data for the frontend.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @return array
      */
@@ -68,7 +68,7 @@ class Extensions extends AbstractPage {
     /**
      * Get weLabs data for services.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param string $thumbnail_dir Base URL for thumbnails.
      *
@@ -87,7 +87,7 @@ class Extensions extends AbstractPage {
     /**
      * Get recommended addons list.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param string $thumbnail_dir Base URL for thumbnails.
      *
@@ -247,7 +247,7 @@ class Extensions extends AbstractPage {
         /**
          * Filter the recommended addons list for the extensions page.
          *
-         * @since DOKAN_SINCE
+         * @since 5.0.0
          *
          * @param array $addons List of recommended addons.
          *
@@ -263,7 +263,7 @@ class Extensions extends AbstractPage {
      * - The standalone plugin for that addon is installed, OR
      * - Dokan Pro is installed and the module is available in the current plan.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param string $module_key        The module key (e.g. 'booking', 'simple-auction').
      * @param array  $installed_plugins List of installed plugins.
@@ -275,7 +275,7 @@ class Extensions extends AbstractPage {
         /**
          * Filter the standalone plugins for premium addons.
          *
-         * @since DOKAN_SINCE
+         * @since 5.0.0
          *
          * @param array $standalone_plugins List of standalone plugins for premium addons.
          */
@@ -303,7 +303,7 @@ class Extensions extends AbstractPage {
     /**
      * Get mobile apps data.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param string $thumbnail_dir Base URL for thumbnails.
      *

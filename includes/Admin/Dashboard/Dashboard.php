@@ -168,7 +168,7 @@ class Dashboard implements Hookable {
         /**
          * Filters the admin header support button configuration.
          *
-         * @since DOKAN_SINCE
+         * @since 5.0.0
          *
          * @param array $support_button {
          *     Support button configuration.

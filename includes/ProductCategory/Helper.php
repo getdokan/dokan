@@ -407,7 +407,7 @@ class Helper {
     /**
 	 * Get all ancestors of chosen categories.
 	 *
-	 * @since DOKAN_SINCE
+	 * @since 5.0.0
 	 *
 	 * @param \WC_Product|int $product
 	 * @param array $chosen_categories

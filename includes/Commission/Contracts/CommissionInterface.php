@@ -43,7 +43,7 @@ interface CommissionInterface
     /**
      * Get the admin's net earning from admin-type orders.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @return float
      */

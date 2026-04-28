@@ -175,7 +175,7 @@ class Assets {
     /**
      * Add product listing data to the dokanFrontend localized object.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param array $args Existing localized args.
      * @return array
@@ -1490,7 +1490,7 @@ class Assets {
      * Reuses the same filter logic as dokan_order_listing_status_filter() so that
      * the React-based order list respects excluded and custom statuses.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @return array<int, array{value: string, label: string}>
      */

@@ -45,7 +45,7 @@ const getStatusBadgeVariant = ( status: string ) => {
     /**
      * Filter the badge variant used for a product status.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param {string} variant Default variant.
      * @param {string} status  Product status slug.
@@ -79,7 +79,7 @@ const getStatusLabel = ( status: string ) => {
     /**
      * Filter the human-readable label for a product status.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param {string} label  Default label.
      * @param {string} status Product status slug.
@@ -526,7 +526,7 @@ function ProductList() {
         /**
          * Filter the product list table tabs.
          *
-         * @since DOKAN_SINCE
+         * @since 5.0.0
          *
          * @param {Array}  items   Default tab definitions.
          * @param {Object} context Context with statusCounts + current filterArgs.
@@ -833,7 +833,7 @@ function ProductList() {
      * Filter the product list table actions (row and bulk).
      * Allows Pro modules and third-party plugins to add, remove, or modify actions.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param {Array}  actions Default action definitions.
      * @param {Object} context Context with helpers (fetchProducts, fetchStatusCounts, selection, setSelection).

@@ -7,7 +7,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Product Form Elements
  *
- * @since DOKAN_SINCE
+ * @since 5.0.0
  */
 class Elements {
     // Section ids.
