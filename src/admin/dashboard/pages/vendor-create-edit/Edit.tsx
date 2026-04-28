@@ -252,7 +252,7 @@ function Edit( props ) {
                 cancelButtonText={ __( 'Stay', 'dokan-lite' ) }
                 dialogIcon={
                     <div
-                        className={ `flex items-center justify-center flex-shrink-0 w-14 h-14 bg-primary-50 text-dokan-primary rounded-full` }
+                        className={ `flex items-center justify-center shrink-0 w-14 h-14 bg-primary-50 text-dokan-primary rounded-full` }
                     >
                         <Hand />
                     </div>

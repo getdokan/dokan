@@ -2,7 +2,7 @@
     <div>
         <div
             v-if="isOpen"
-            class="fixed inset-0 bg-black bg-opacity-50 z-[999999]"
+            class="fixed inset-0 bg-black/50 z-[999999]"
             @click="$emit('close')"
         ></div>
 

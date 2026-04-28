@@ -74,6 +74,7 @@ $price_kses = apply_filters(
         ],
     ]
 );
+$edit_url = dokan_edit_product_url( $post->ID );
 ?>
 <tr class="<?php echo esc_attr( $tr_class ); ?>">
     <th class="dokan-product-select check-column">
@@ -82,7 +83,7 @@ $price_kses = apply_filters(
     </th>
     <td data-title="<?php esc_attr_e( 'Image', 'dokan-lite' ); ?>" class="column-thumb">
         <?php if ( current_user_can( 'dokan_edit_product' ) ) { ?>
-            <a href="<?php echo esc_url( dokan_edit_product_url( $post->ID ) ); ?>"><?php echo wp_kses( $product->get_image( 'thumbnail' ), $img_kses ); ?></a>
+            <a href="<?php echo $edit_url; ?>"><?php echo wp_kses( $product->get_image( 'thumbnail' ), $img_kses ); ?></a>
         <?php } else { ?>
             <?php echo wp_kses( $product->get_image( 'thumbnail' ), $img_kses ); ?>
         <?php } ?>
@@ -100,7 +101,7 @@ $price_kses = apply_filters(
     <td data-title="<?php esc_attr_e( 'Name', 'dokan-lite' ); ?>" class="column-primary">
         <?php if ( current_user_can( 'dokan_edit_product' ) ) { ?>
             <strong>
-                <a href="<?php echo esc_url( dokan_edit_product_url( $post->ID ) ); ?>">
+                <a href="<?php echo $edit_url; ?>">
                     <?php echo esc_html( $product->get_title() ); ?>
                 </a>
             </strong>

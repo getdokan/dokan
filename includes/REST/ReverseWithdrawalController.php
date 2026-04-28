@@ -498,7 +498,13 @@ class ReverseWithdrawalController extends WP_REST_Controller {
      * @return WP_REST_Response
      */
     public function prepare_transaction_for_response( $item, $request, &$current_balance ) {
-        $data = Helper::get_formated_transaction_data( $item, $current_balance );
+        $context = current_user_can( dokana_admin_menu_capability() ) ? 'admin' : 'seller';
+        $data = Helper::get_formated_transaction_data( $item, $current_balance, $context );
+
+        // Decode HTML entities in URL (wp_nonce_url encodes & as &amp; which breaks in JSON/React context).
+        if ( ! empty( $data['trn_url'] ) ) {
+            $data['trn_url'] = html_entity_decode( $data['trn_url'], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401 );
+        }
 
         $response = rest_ensure_response( $data );
         $response->add_links( $this->prepare_links( $item, $request ) ); // todo: fix the links

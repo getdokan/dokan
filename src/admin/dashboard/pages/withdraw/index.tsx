@@ -1101,7 +1101,7 @@ const WithdrawPage = () => {
                     }
                     confirmButtonVariant="primary"
                     dialogIcon={
-                        <div className="flex items-center justify-center flex-shrink-0 w-14 h-14 bg-green-50 border border-green-50 rounded-full">
+                        <div className="flex items-center justify-center shrink-0 w-14 h-14 bg-green-50 border border-green-50 rounded-full">
                             <svg
                                 className="w-6 h-6 text-green-600"
                                 fill="none"
@@ -1157,7 +1157,7 @@ const WithdrawPage = () => {
                     }
                     confirmButtonVariant="primary"
                     dialogIcon={
-                        <div className="flex items-center justify-center flex-shrink-0 w-14 h-14 bg-orange-50 border border-orange-50 rounded-full">
+                        <div className="flex items-center justify-center shrink-0 w-14 h-14 bg-orange-50 border border-orange-50 rounded-full">
                             <svg
                                 className="w-6 h-6 text-orange-600"
                                 fill="none"
@@ -1207,7 +1207,7 @@ const WithdrawPage = () => {
                     }
                     confirmButtonVariant="primary"
                     dialogIcon={
-                        <div className="flex items-center justify-center flex-shrink-0 w-14 h-14 bg-red-50 border border-red-50 rounded-full">
+                        <div className="flex items-center justify-center shrink-0 w-14 h-14 bg-red-50 border border-red-50 rounded-full">
                             <Trash size={ 24 } className="text-red-600" />
                         </div>
                     }
