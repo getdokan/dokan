@@ -80,7 +80,7 @@ class Menu {
              * @since 5.0.0
              *
              * @param string $capability    Capability required to view the menu.
-             * @param int    $menu_position Dokan top-level menu position.
+             * @param string $menu_position Dokan top-level menu position.
              */
             do_action( 'dokan_admin_menu_after_help', $capability, $menu_position );
 
@@ -98,7 +98,7 @@ class Menu {
              * @since 5.0.0
              *
              * @param string $capability    Capability required to view the menu.
-             * @param int    $menu_position Dokan top-level menu position.
+             * @param string $menu_position Dokan top-level menu position.
              */
             do_action( 'dokan_admin_menu_after_settings', $capability, $menu_position );
 
@@ -137,15 +137,15 @@ class Menu {
      * @param string $page_class    Fully-qualified Pageable service class name.
      * @param string $parent_slug   Parent menu slug (the Dokan top-level menu).
      * @param string $capability    Capability required to view the menu.
-     * @param int    $menu_position Dokan top-level menu position.
+     * @param string $menu_position Dokan top-level menu position.
      *
      * @return void
      */
-    protected function append_dashboard_page_submenu( string $page_class, string $parent_slug, string $capability, int $menu_position ): void {
+    protected function append_dashboard_page_submenu( string $page_class, string $parent_slug, string $capability, string $menu_position ): void {
         global $submenu;
 
         $page = dokan_get_container()->get( $page_class );
-        $args = $page->menu( $capability, (string) $menu_position );
+        $args = $page->menu( $capability, $menu_position );
 
         if ( empty( $args ) ) {
             return;
