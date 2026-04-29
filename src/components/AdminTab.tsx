@@ -32,7 +32,7 @@ const defaultTabClassName =
     'border-0 border-b border-solid mr-5 space-x-8 whitespace-nowrap px-1 py-8 text-sm font-medium cursor-pointer hover:bg-transparent focus:outline-none text-[#575757] border-gray-200 hover:text-gray-600 hover:border-gray-300';
 
 const defaultActiveClass =
-    '!text-dokan-primary !border-dokan-btn !border-b-2 dokan-active-tab';
+    'text-dokan-primary border-dokan-btn-border border-b-2 dokan-active-tab';
 
 const variantConfig =
     'dokan-tab-panel overflow-auto text-gray-500 hover:text-gray-700 [&:not(:last-child)]:*:border-b-0 *:first:border-gray-200 *:first:*:border-transparent *:[&:not(:last-child)]:*:!border-b-2 focus:*:[&:not(:last-child)]:*:outline-transparent [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar-track]:bg-secondary-50 [&::-webkit-scrollbar-thumb]:bg-secondary-500 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb:hover]:bg-secondary-600';

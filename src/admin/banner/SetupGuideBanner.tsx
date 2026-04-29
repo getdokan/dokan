@@ -1,4 +1,3 @@
-import './tailwind.scss';
 import { createRoot } from '@wordpress/element';
 import domReady from '@wordpress/dom-ready';
 import AdminSetupBanner from './AdminSetupBanner';

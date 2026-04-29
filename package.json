@@ -1,6 +1,6 @@
 {
   "name": "dokan",
-  "version": "4.3.3",
+  "version": "5.0.0",
   "description": "A WordPress marketplace plugin",
   "author": "Dokan Inc.",
   "license": "GPL",
@@ -74,6 +74,7 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@getdokan/dokan-ui": "github:getdokan/dokan-ui#dokan-plugin",
     "@headlessui/react": "^2.2.0",
+    "@wedevs/plugin-ui": "github:getdokan/plugin-ui",
     "@woocommerce/date": "^4.3.0",
     "@wordpress/api-fetch": "^7.32.0",
     "@wordpress/base-styles": "^6.8.0",

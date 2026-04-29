@@ -2,6 +2,7 @@ import { Popover } from '@wordpress/components';
 import { twMerge } from 'tailwind-merge';
 // eslint-disable-next-line import/named
 import { RefObject, useEffect, useState } from '@wordpress/element';
+import { getActiveSubmenuKey } from './Sidebar';
 
 const SubmenuPopover = ( {
     submenu,
@@ -17,6 +18,7 @@ const SubmenuPopover = ( {
     onClose: () => void;
 } ) => {
     const currentUrl = window.location?.href || '';
+    const activeSubkey = getActiveSubmenuKey( submenu, currentUrl );
     const [ entered, setEntered ] = useState( false );
 
     // Trigger enter animation on mount
@@ -50,9 +52,7 @@ const SubmenuPopover = ( {
                 <ul className="flex flex-col">
                     { Object.entries( submenu || {} ).map(
                         ( [ subkey, subitem ]: any ) => {
-                            const isSubActive =
-                                subitem?.url &&
-                                currentUrl.startsWith( subitem.url );
+                            const isSubActive = subkey === activeSubkey;
 
                             return (
                                 <li key={ subkey }>

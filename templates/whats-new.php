@@ -4,6 +4,114 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.0.0',
+        'released' => '2026-04-28',
+        'changes'  => [
+            'New Feature' => [
+                [
+                    'title'       => 'Added a dedicated vendor onboarding page with a separate registration flow.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Introduced the new Product Form Manager for the vendor dashboard.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added a "Get Support" button to the admin dashboard header.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added a new Extensions page for Dokan in the admin panel.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Converted the admin Products list to React with Plugin UI.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Converted the vendor dashboard Orders list to React with Plugin UI.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Migrated the vendor dashboard Reverse Withdraw page to React with Plugin UI.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Migrated the admin Withdraw Requests page to Plugin UI with tabs.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added @wedevs/plugin-ui dependency and integrate the DataViews component as the unified table system.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Migrated Dokan UI to Tailwind CSS v4 with a consolidated shared component bundle.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Rebuilt the admin Tools / Dummy Data section in React.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added legacy compatibility support for the RFQ (Request for Quote) admin panel.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated the Vendor Announcement panel UX.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added additional tax fields and new order types to the Dokan order stats table.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added OpenAI model options to the latest ones for AI Assist settings.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added a legacy switcher to the Product Form for backward compatibility.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Used ShortContent for product name display and widen the Products column.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Resolved Product Form compatibility issues with WordPress v6.8.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Resolved Plugin UI style conflicts between v10 and v14.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Corrected filter border clipping and the WithdrawView layout type.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Improved UI styles and navigation URL handling across new dashboard pages.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Corrected the balance display on the Reverse Withdraw page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Corrected the back-link URL on the order details page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed the active state of vendor sidebar submenu items.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.3.3',
         'released' => '2026-03-31',
         'changes'  => [

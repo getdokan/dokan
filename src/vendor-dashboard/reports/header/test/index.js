@@ -128,4 +128,13 @@ describe( 'getPageTitle', () => {
 		];
 		expect( getPageTitle( sections ) ).toBe( 'Payments' );
 	} );
+
+	test( "should return the leaf title when 2nd item is 'Reports' (Dokan reports use sidebar nav, not tabs)", () => {
+		const sections = [
+			[ '/', 'Dashboard' ],
+			[ '/analytics/revenue', 'Reports' ],
+			'Stock',
+		];
+		expect( getPageTitle( sections ) ).toBe( 'Stock' );
+	} );
 } );

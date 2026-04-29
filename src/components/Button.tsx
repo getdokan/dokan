@@ -9,7 +9,8 @@ export type ButtonVariant =
     | 'info'
     | 'success'
     | 'warning'
-    | 'danger';
+    | 'danger'
+    | 'ghost';
 
 export interface DokanButtonProps extends Partial< ButtonProps > {
     variant?: ButtonVariant;
@@ -44,6 +45,10 @@ const variantConfig = {
     danger: {
         color: 'red',
         className: 'dokan-btn-danger',
+    },
+    ghost: {
+        color: 'gray',
+        className: 'dokan-btn-ghost',
     },
 } as const;
 

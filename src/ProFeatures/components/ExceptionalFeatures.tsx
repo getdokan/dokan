@@ -69,7 +69,7 @@ function ExceptionalFeatures() {
                 { exceptional.map( ( item, idx ) => (
                     <div key={ idx }>
                         <div className="max-w-[380px] flex items-start space-x-4">
-                            <div className="w-12 h-12 flex items-center justify-center bg-[#F7F5FF] text-dokan-primary rounded border border-neutral-200 flex-shrink-0">
+                            <div className="w-12 h-12 flex items-center justify-center bg-[#F7F5FF] text-dokan-primary rounded border border-neutral-200 shrink-0">
                                 <item.icon size={ 16 } />
                             </div>
                             <div>

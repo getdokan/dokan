@@ -1,13 +1,17 @@
 import Tooltip from '../../components/DokanTooltip';
+import {
+    DokanAlert,
+    DokanButton,
+    DokanModal,
+} from '@dokan/components';
+import { SimpleInput, TextArea } from '@getdokan/dokan-ui';
 import { useEffect, useState } from '@wordpress/element';
-import { Modal, SimpleInput, TextArea } from '@getdokan/dokan-ui';
 import { __ } from '@wordpress/i18n';
 import { generateAiContent } from '../utils/api';
 import { updateWordPressField } from '../utils/dom';
 import ResponseHistory from './ResponseHistory';
-import { useMutationObserver } from '../../hooks';
-import { DokanAlert, DokanButton, DokanModal } from '../../components';
 import AISkeleton from './Skeleton';
+import { twMerge } from 'tailwind-merge';
 
 const initialIndex = {
     post_title: 0,
@@ -15,12 +19,18 @@ const initialIndex = {
     post_content: 0,
 };
 const initialContent = {
-    post_title: [],
-    post_excerpt: [],
-    post_content: [],
+    post_title: [] as string[],
+    post_excerpt: [] as string[],
+    post_content: [] as string[],
 };
 
-const DokanAI = () => {
+type DokanAIProps = {
+    className?: string;
+    value?: typeof initialContent;
+    onChange?: ( value: any ) => void;
+};
+
+const DokanAI = ( { className, value, onChange }: DokanAIProps ) => {
     const [ isOpen, setIsOpen ] = useState( false );
     const [ refineLoading, setRefineLoading ] = useState( {
         post_title: false,
@@ -56,6 +66,18 @@ const DokanAI = () => {
         event.stopPropagation();
         setIsOpen( true );
 
+        if ( value ) {
+            setResponseHistory( value );
+            const hasContent =
+                value.post_title.length > 0 ||
+                value.post_content.length > 0 ||
+                value.post_excerpt.length > 0;
+            setIsEditMode( hasContent );
+            setPrompt( value.post_title?.[ 0 ] || '' );
+            resetIndex();
+            return;
+        }
+
         // if values exists
         const title = document.querySelector(
             '#post_title'
@@ -78,10 +100,10 @@ const DokanAI = () => {
             setPrompt( title.value );
         }
 
-        if ( postExcerpt.innerHTML && excerptValue.value ) {
+        if ( postExcerpt?.innerHTML && excerptValue.value ) {
             previousData.post_excerpt = [ postExcerpt.innerHTML ];
         }
-        if ( postContent.innerHTML && contentValue.value ) {
+        if ( postContent?.innerHTML && contentValue.value ) {
             previousData.post_content = [ postContent.innerHTML ];
         }
         setResponseHistory( previousData );
@@ -127,7 +149,7 @@ const DokanAI = () => {
                 );
             }
             resetIndex();
-        } catch ( err ) {
+        } catch ( err: any ) {
             setError( err.message );
         } finally {
             setIsLoading( false );
@@ -140,11 +162,11 @@ const DokanAI = () => {
         setIsRefining( false );
     };
 
-    const skeletonLoading = ( field: string ) => {
+    const skeletonLoading = ( field: keyof typeof refineLoading ) => {
         return refineLoading[ field ] || isRefining;
     };
 
-    const refineContent = async ( field: string ) => {
+    const refineContent = async ( field: keyof typeof responseHistory ) => {
         setError( '' );
         let refineField = responseHistory[ field ][ historyIndex[ field ] ];
         if ( ! refineField?.trim() ) {
@@ -152,7 +174,7 @@ const DokanAI = () => {
                 post_excerpt: 'generate short description',
                 post_content: 'generate long description',
             };
-            refineField = promptContent[ field ];
+            refineField = promptContent[ field as keyof typeof promptContent ] || '';
         }
 
         if ( field !== 'post_title' ) {
@@ -191,7 +213,7 @@ const DokanAI = () => {
                     [ field ]: 0,
                 };
             } );
-        } catch ( err ) {
+        } catch ( err: any ) {
             setError( err.message );
         } finally {
             setIsLoading( false );
@@ -204,7 +226,7 @@ const DokanAI = () => {
         }
     };
 
-    const inputHandler = ( value: any, field: string ) => {
+    const inputHandler = ( value: any, field: keyof typeof responseHistory ) => {
         setResponseHistory( ( prevState ) => {
             return {
                 ...prevState,
@@ -220,7 +242,7 @@ const DokanAI = () => {
         } );
     };
 
-    const prevHandler = ( field: string ) => {
+    const prevHandler = ( field: keyof typeof responseHistory ) => {
         if ( historyIndex[ field ] === 0 ) {
             return;
         }
@@ -232,7 +254,7 @@ const DokanAI = () => {
         } );
     };
 
-    const nextHandler = ( field: string ) => {
+    const nextHandler = ( field: keyof typeof responseHistory ) => {
         if ( historyIndex[ field ] < responseHistory[ field ].length - 1 ) {
             setHistoryIndex( ( prevState ) => {
                 return {
@@ -243,7 +265,7 @@ const DokanAI = () => {
         }
     };
 
-    const getHistoryLabel = ( field: string ) => {
+    const getHistoryLabel = ( field: keyof typeof responseHistory ) => {
         const totalHistory = responseHistory[ field ].length;
         if ( totalHistory === 0 ) {
             return '';
@@ -251,11 +273,23 @@ const DokanAI = () => {
         return `${ historyIndex[ field ] + 1 }/${ totalHistory }`;
     };
 
-    const getInputValue = ( field: string ) => {
+    const getInputValue = ( field: keyof typeof responseHistory ) => {
         return responseHistory[ field ][ historyIndex[ field ] ];
     };
 
     const insertHandler = ( force = false ) => {
+        const currentTitle = responseHistory.post_title[ historyIndex.post_title ];
+        const currentExcerpt = responseHistory.post_excerpt[ historyIndex.post_excerpt ];
+        const currentContent = responseHistory.post_content[ historyIndex.post_content ];
+        if ( onChange ) {
+            onChange( {
+                name: currentTitle,
+                short_description: currentExcerpt,
+                description: currentContent,
+            } );
+            onClose();
+            return;
+        }
         const existingTitle = document.getElementById(
             'post_title'
         ) as HTMLInputElement;
@@ -271,48 +305,19 @@ const DokanAI = () => {
         }
 
         updateWordPressField(
-            responseHistory.post_title[ historyIndex.post_title ],
+            currentTitle,
             'post_title'
         );
         updateWordPressField(
-            responseHistory.post_excerpt[ historyIndex.post_excerpt ],
+            currentExcerpt,
             'post_excerpt'
         );
         updateWordPressField(
-            responseHistory.post_content[ historyIndex.post_content ],
+            currentContent,
             'post_content'
         );
         onClose();
     };
-
-    useMutationObserver(
-        document.body,
-        ( mutations ) => {
-            if ( ! isOpen ) {
-                return;
-            }
-
-            for ( const mutation of mutations ) {
-                if ( mutation.type !== 'childList' ) {
-                    continue;
-                }
-                // @ts-ignore
-                for ( const node of mutation.addedNodes ) {
-                    if ( node.id === 'headlessui-portal-root' ) {
-                        node.classList.add( 'dokan-layout' );
-                        node.style.display = 'block';
-                    }
-
-                    if (
-                        node.hasAttribute( 'data-radix-popper-content-wrapper' )
-                    ) {
-                        node.classList.add( 'dokan-layout' );
-                    }
-                }
-            }
-        },
-        { childList: true }
-    );
 
     useEffect( () => {
         const hasContent =
@@ -331,7 +336,7 @@ const DokanAI = () => {
         <>
             <button
                 type="button"
-                className="dokan-btn p-0 !min-h-[max-content]"
+                className={twMerge('dokan-btn p-0 !min-h-[max-content]', className)}
                 onClick={ handleLabelClick }
             >
                 <Tooltip content={ __( 'AI Assistant', 'dokan-lite' ) }>
@@ -490,7 +495,7 @@ const DokanAI = () => {
                                         ) }
                                         element={
                                             <div
-                                                className="mb-3 focus:outline-dokan-btn h-36 border rounded p-2.5 overflow-auto"
+                                                className="mb-3 focus:outline-dokan-btn-border h-36 border rounded p-2.5 overflow-auto"
                                                 contentEditable={ true }
                                                 onBlur={ ( e ) => {
                                                     inputHandler(
@@ -548,7 +553,7 @@ const DokanAI = () => {
                                         ) }
                                         element={
                                             <div
-                                                className="mb-3 h-48 focus:outline-dokan-btn border rounded p-2.5 overflow-auto"
+                                                className="mb-3 h-48 focus:outline-dokan-btn-border border rounded p-2.5 overflow-auto"
                                                 contentEditable={ true }
                                                 onBlur={ ( e ) => {
                                                     inputHandler(

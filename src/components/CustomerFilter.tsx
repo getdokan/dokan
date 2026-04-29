@@ -3,6 +3,7 @@ import { useCustomerSearch } from '@dokan/hooks';
 import { useState } from '@wordpress/element';
 import { debounce } from '@wordpress/compose';
 import { __ } from "@wordpress/i18n";
+import { twMerge } from 'tailwind-merge';
 
 const CustomerFilter = ( props ) => {
     const customerHook = useCustomerSearch();
@@ -33,7 +34,8 @@ const CustomerFilter = ( props ) => {
     const handleCustomrSearch = debounce(
         async ( inputValue: string, callback ) => {
             try {
-                if ( ! inputValue ) {
+                if ( ! inputValue || inputValue.length < 3 ) {
+                    callback( [] );
                     return;
                 }
                 const searchResults =
@@ -57,10 +59,15 @@ const CustomerFilter = ( props ) => {
     return (
         <AsyncSearchableSelect
             { ...props }
+            className={twMerge( 'shadow-none', props?.className )}
             value={ getValue() }
             defaultOptions={ searchedCustomer }
             loadOptions={ handleCustomrSearch }
-            noOptionsMessage={ () => __( 'No options', 'dokan-lite' ) }
+            noOptionsMessage={ ( { inputValue } ) =>
+                ! inputValue || inputValue.length < 3
+                    ? __( 'Please type 3 or more characters', 'dokan-lite' )
+                    : __( 'No options', 'dokan-lite' )
+            }
         />
     );
 };

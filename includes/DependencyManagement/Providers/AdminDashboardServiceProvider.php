@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\DependencyManagement\Providers;
 
 use WeDevs\Dokan\Admin\Dashboard\Dashboard;
 use WeDevs\Dokan\Admin\Dashboard\LegacySwitcher;
+use WeDevs\Dokan\Admin\Dashboard\Pages\Extensions;
 use WeDevs\Dokan\Admin\Dashboard\Pages\Modules;
 use WeDevs\Dokan\Admin\Dashboard\Pages\ProFeatures;
 use WeDevs\Dokan\Admin\Dashboard\Pages\SetupGuide;
@@ -41,6 +42,7 @@ class AdminDashboardServiceProvider extends BaseServiceProvider {
         Withdraw::class,
         Vendors::class,
         ReverseWithdrawal::class, // Added ReverseWithdrawal page service
+        Extensions::class,
 	];
 
     /**

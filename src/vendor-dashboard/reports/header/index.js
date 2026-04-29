@@ -29,7 +29,7 @@ export const PAGE_TITLE_FILTER =
 
 export const getPageTitle = ( sections ) => {
     let pageTitle;
-    const pagesWithTabs = [ 'Settings', 'Reports', 'Status' ];
+    const pagesWithTabs = [ 'Settings', 'Status' ];
 
     if (
         sections.length > 2 &&
