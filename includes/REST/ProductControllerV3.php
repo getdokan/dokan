@@ -22,7 +22,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
     /**
      * Endpoint namespace
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @var string
      */
@@ -31,7 +31,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
     /**
      * Whether the rest_pre_dispatch filter has already been registered.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @var bool
      */
@@ -40,7 +40,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
     /**
      * Check if the current user can create a product.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param WP_REST_Request $request Full details about the request.
      *
@@ -57,7 +57,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
     /**
      * Check if the current user can view/update the given product.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param WP_REST_Request $request Full details about the request.
      *
@@ -80,7 +80,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
     /**
      * Check if the current user has permission for batch operations.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param WP_REST_Request $request Full details about the request.
      *
@@ -100,7 +100,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      * Resolves each item's payload through PayloadResolver before delegating
      * to the parent WC_REST_Controller::batch_items().
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param WP_REST_Request $request Full details about the request.
      *
@@ -129,7 +129,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
     /**
      * Register the routes for products.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @return void
      */
@@ -214,7 +214,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
     /**
      * Create a product item.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param WP_REST_Request $request Full details about the request.
      *
@@ -239,7 +239,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
     /**
      * Update a product item.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param WP_REST_Request $request Full details about the request.
      *
@@ -266,7 +266,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      * (e.g. dokan_new_product_added, dokan_product_updated consumers)
      * that read from $_POST continue to work.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param array $params Resolved request parameters.
      *
@@ -372,7 +372,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      *
      * @param WP_REST_Request $request Request data.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @return WP_REST_Response|WP_Error
      */

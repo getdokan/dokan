@@ -10,14 +10,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Product form schema, data resolution, and product form support.
  *
- * @since DOKAN_SINCE
+ * @since 5.0.0
  */
 class FormSchema {
 
     /**
      * Required field attributes
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @var array $required_fields
      */
@@ -31,7 +31,7 @@ class FormSchema {
     /**
      * Supported field types.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @var array
      */
@@ -43,7 +43,7 @@ class FormSchema {
     /**
      * Supported field variants.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @var array
      */
@@ -68,7 +68,7 @@ class FormSchema {
     /**
      * Validate field schema and log developer notices for invalid fields.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param array $fields Form schema fields to validate.
      *
@@ -91,7 +91,7 @@ class FormSchema {
                             esc_html( $attr ),
                             esc_html( $field['id'] ?? 'unknown' )
                         ),
-                        'DOKAN_SINCE'
+                        '5.0.0'
                     );
                 }
             }
@@ -104,7 +104,7 @@ class FormSchema {
                         esc_html( $field['type'] ),
                         esc_html( $field['id'] ?? 'unknown' )
                     ),
-                    'DOKAN_SINCE'
+                    '5.0.0'
                 );
             }
             if ( isset( $field['variant'] ) && ! in_array( $field['variant'], $this->supported_variants, true ) ) {
@@ -116,7 +116,7 @@ class FormSchema {
                         esc_html( $field['variant'] ),
                         esc_html( $field['id'] ?? 'unknown' )
                     ),
-                    'DOKAN_SINCE'
+                    '5.0.0'
                 );
             }
         }
@@ -126,7 +126,7 @@ class FormSchema {
     /**
      * Get available product types as label/value pairs.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @return array
      */
@@ -154,7 +154,7 @@ class FormSchema {
      * Extensions can set an optional `priority` key to control insertion order
      * when adding items via the `dokan_product_editor_layouts` filter.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @return array Flat array of layout items.
      */
@@ -378,7 +378,7 @@ class FormSchema {
          * Each item has: id, parent_id, layout, priority, label, description, children, after.
          * Sorting is by priority (default 999); items with equal priority preserve array order.
          *
-         * @since DOKAN_SINCE
+         * @since 5.0.0
          *
          * @param array $layout Flat layout items.
          */
@@ -398,7 +398,7 @@ class FormSchema {
     /**
      * Get flat form schema (sections and fields). Resolves field values when $product_id is provided.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      * @param int $product_id Optional. Product ID to resolve values from.
      * @return array Form schema items (sections and fields).
      */
@@ -489,14 +489,14 @@ class FormSchema {
                 'visibility'     => true,
             ],
             [
-                'id'           => Elements::ENABLED,
-                'section_id'   => Elements::SECTION_GENERAL,
-                'type'         => 'field',
-                'label'        => __( 'Enabled', 'dokan-lite' ),
-                'variant'      => 'checkbox',
-                'visibility'   => true,
+                'id'            => Elements::ENABLED,
+                'section_id'    => Elements::SECTION_GENERAL,
+                'type'          => 'field',
+                'label'         => __( 'Enabled', 'dokan-lite' ),
+                'variant'       => 'checkbox',
+                'visibility'    => true,
                 'show_in_admin' => false,
-                'dependencies' => [
+                'dependencies'  => [
                     [
                         'comparison' => 'contains',
                         'key'        => Elements::TYPE,
@@ -543,13 +543,14 @@ class FormSchema {
                 ],
             ],
             [
-                'id'             => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
-                'section_id'     => Elements::SECTION_GENERAL,
-                'type'           => 'field',
-                'label'          => __( 'Create Schedule for Discount', 'dokan-lite' ),
-                'variant'        => 'checkbox',
-                'visibility'     => true,
-                'visibilities'   => $price_visibilities,
+                'id'            => Elements::CREATE_SCHEDULE_FOR_DISCOUNT,
+                'section_id'    => Elements::SECTION_GENERAL,
+                'type'          => 'field',
+                'label'         => __( 'Create Schedule for Discount', 'dokan-lite' ),
+                'variant'       => 'checkbox',
+                'visibility'    => true,
+                'visibilities'  => $price_visibilities,
+                'show_in_admin' => false,
             ],
             [
                 'id'             => Elements::DATE_ON_SALE_FROM,
@@ -930,7 +931,7 @@ class FormSchema {
      * Resolve_field_value() returns raw values (int, array of ints, etc.).
      * This method transforms them to the structured shape the React frontend expects.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param mixed  $value   Raw resolved value.
      * @param string $variant Field variant type.
@@ -1091,7 +1092,7 @@ class FormSchema {
     /**
      * Get product tags for form options.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @return array
      */
@@ -1121,7 +1122,7 @@ class FormSchema {
     /**
      * Get product brands recursively for form options.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param int $parent_id Parent term ID (0 for top-level).
      *

@@ -196,7 +196,7 @@ export const useProducts = (
             /**
              * Filter the status counts derived from the products summary.
              *
-             * @since DOKAN_SINCE
+             * @since 5.0.0
              *
              * @param {Array}  baseCounts Default status count entries.
              * @param {Object} postCounts Raw post_counts map from the API.

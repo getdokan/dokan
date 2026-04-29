@@ -263,7 +263,7 @@ class VendorOrderStatsStore extends BaseDataStore {
     /**
      * Get report logs or earnings data from the dokan_order_stats table.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param array $args Query arguments.
      *
@@ -316,7 +316,7 @@ class VendorOrderStatsStore extends BaseDataStore {
     /**
      * Get the total count of report logs or earnings from the dokan_order_stats table.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param array $args Query arguments.
      *
@@ -349,7 +349,7 @@ class VendorOrderStatsStore extends BaseDataStore {
     /**
      * Get the report summary from the dokan_order_stats table.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @return array Summary totals.
      */
@@ -390,7 +390,7 @@ class VendorOrderStatsStore extends BaseDataStore {
     /**
      * Apply common filters for report logs or earnings queries.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param array $args Query arguments.
      *
@@ -407,7 +407,7 @@ class VendorOrderStatsStore extends BaseDataStore {
     /**
      * Apply order type filter for report logs or earnings queries.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param array $args Query arguments.
      *
@@ -457,7 +457,7 @@ class VendorOrderStatsStore extends BaseDataStore {
     /**
      * Apply vendor filter for report logs or earnings queries.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param array $args Query arguments.
      *
@@ -484,7 +484,7 @@ class VendorOrderStatsStore extends BaseDataStore {
     /**
      * Apply order filter for report logs or earnings queries.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param array $args Query arguments.
      *
@@ -507,7 +507,7 @@ class VendorOrderStatsStore extends BaseDataStore {
     /**
      * Apply order status filter for report logs or earnings queries.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param array $args Query arguments.
      *
@@ -529,7 +529,7 @@ class VendorOrderStatsStore extends BaseDataStore {
     /**
      * Apply date filter for report logs or earnings queries.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param array $args Query arguments.
      *
@@ -562,7 +562,7 @@ class VendorOrderStatsStore extends BaseDataStore {
     /**
      * Get refund data for the given order IDs.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param array $order_ids Array of order IDs.
      *

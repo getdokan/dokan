@@ -5,16 +5,16 @@ namespace WeDevs\Dokan\Upgrade\Upgrades;
 use WeDevs\Dokan\Abstracts\DokanUpgrader;
 
 /**
- * Upgrade class for version DOKAN_SINCE.
+ * Upgrade class for version 5.0.0.
  *
- * @since DOKAN_SINCE
+ * @since 5.0.0
  */
 class V_5_0_0 extends DokanUpgrader {
 
     /**
      * Alter dokan_order_stats table to add new columns and regenerate data.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @return void
      */
@@ -50,7 +50,7 @@ class V_5_0_0 extends DokanUpgrader {
     /**
      * Create Vendor Onboarding page if it doesn't exist.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @return void
      */

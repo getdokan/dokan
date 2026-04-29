@@ -48,7 +48,7 @@ class OrderType {
     /**
      * Determines the type of the given order based on its relation to Dokan suborders and refunds.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param \WC_Abstract_Order $order The order object to classify.
      *
@@ -104,7 +104,7 @@ class OrderType {
      * This method applies a filter hook that allows external modules (like advertisement
      * or subscription modules) to determine the order type from their own context.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param \WC_Abstract_Order $order The order object to check.
      *
@@ -126,7 +126,7 @@ class OrderType {
          * This filter allows modules like Product Advertisement or Vendor Subscription
          * to return their specific order type when they detect their order.
          *
-         * @since DOKAN_SINCE
+         * @since 5.0.0
          *
          * @param int|null  $order_type     The order type constant, or null if not a special order.
          * @param \WC_Order $order_to_check The order object to check (parent order for refunds).
@@ -256,7 +256,7 @@ class OrderType {
     /**
      * Gets the list of order types relevant to admin earnings.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @return array
      */
@@ -275,7 +275,7 @@ class OrderType {
     /**
      * Determines if the given order is of a type relevant to admin users.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param \WC_Abstract_Order $order The order object to check.
      *
