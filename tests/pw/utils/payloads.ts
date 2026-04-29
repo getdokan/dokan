@@ -4952,6 +4952,13 @@ export const payloads = {
         status: 'publish',
     },
 
+    // vendor onboarding registration shortcode (Dokan 5.0.0+)
+    vendorOnboardingShortcode: {
+        title: 'Vendor-onboarding',
+        content: '[dokan-vendor-onboarding-registration]',
+        status: 'publish',
+    },
+
     // best selling product shortcode
     bestSellingProductShortcode: {
         title: 'Best-selling-product',

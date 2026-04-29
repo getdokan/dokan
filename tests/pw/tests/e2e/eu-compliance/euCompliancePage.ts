@@ -424,9 +424,52 @@ export class VendorSettingsPage extends Base {
 // VENDOR PAGE
 // ============================================
 export class VendorPage extends Base {
-    async vendorRegister(_vendorInfo: any, _setupWizard: any): Promise<void> {
+    async vendorRegister(vendorInfo: any, _setupWizard: any): Promise<void> {
         await this.safe(async () => {
-            await this.gotoSafe((BASE_URL || '') + '/my-account');
+            await this.gotoSafe((BASE_URL || '') + '/vendor-onboarding/');
+
+            const firstName = vendorInfo?.firstName ?? 'vendor';
+            const lastName = vendorInfo?.lastName ?? 'test';
+            const base = (firstName + lastName).toLowerCase().replace(/[^a-z0-9]/g, '') + Date.now();
+            const email = vendorInfo?.email ?? `${base}@test.com`;
+            const password = vendorInfo?.password ?? '01dokan01';
+            const shopName = vendorInfo?.storeName ?? vendorInfo?.shopName ?? `${base}store`;
+            const phone = vendorInfo?.phone ?? '0123456789';
+
+            const fillIfVisible = async (sel: string, value: string | undefined) => {
+                if (!value) return;
+                const loc = this.page.locator(sel);
+                if (await loc.isVisible().catch(() => false)) {
+                    await loc.fill(String(value));
+                }
+            };
+
+            await this.page.locator('#first-name').fill(String(firstName));
+            await this.page.locator('#last-name').fill(String(lastName));
+            await this.page.locator('#reg_email').fill(String(email));
+            await this.page.locator('#shop-phone').fill(String(phone));
+            await fillIfVisible('#reg_password', password);
+
+            // Filling shopname triggers JS that auto-populates `#seller-url` and
+            // checks slug availability via AJAX — Tab out so the handlers run,
+            // then wait for the "available" indicator before submitting.
+            await this.page.locator('#company-name').fill(String(shopName));
+            await this.page.locator('#company-name').press('Tab');
+            await this.page.locator('#url-alart-mgs.text-success').waitFor({ state: 'visible', timeout: 10000 }).catch(() => undefined);
+
+            await fillIfVisible('#dokan-company-name', vendorInfo?.companyName);
+            await fillIfVisible('#dokan-company-id-number', vendorInfo?.companyId);
+            await fillIfVisible('#dokan-vat-number', vendorInfo?.vatNumber);
+            await fillIfVisible('#dokan-bank-name', vendorInfo?.bankName);
+            await fillIfVisible('#dokan-bank-iban', vendorInfo?.bankIban);
+
+            const terms = this.page.locator('#tc_agree');
+            if (await terms.isVisible().catch(() => false)) {
+                await terms.check();
+            }
+
+            await this.page.locator('input[name="register"]').first().click();
+            await this.page.waitForLoadState('load');
         }, 'vendorRegister');
     }
 }

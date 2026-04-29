@@ -1161,6 +1161,7 @@ export const data = {
         frontend: {
             // customer
             myAccount: 'my-account',
+            vendorOnboarding: 'vendor-onboarding',
             myOrders: 'my-orders',
             requestForQuote: 'request-quote',
             requestedQuote: 'my-account/request-a-quote',
@@ -2738,6 +2739,7 @@ export const data = {
         dashboard: '[dokan-dashboard]',
         dokanSubscriptionPacks: '[dps_product_pack]',
         vendorRegistration: '[dokan-vendor-registration]',
+        vendorOnboardingRegistration: '[dokan-vendor-onboarding-registration]',
         bestSellingProduct: '[dokan-best-selling-product]',
         topRatedProduct: '[dokan-top-rated-product]',
         customerMigration: '[dokan-customer-migration]',

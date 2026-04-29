@@ -10,6 +10,7 @@ export const payloads = {
     dashboardShortcode: {} as any,
     dokanSubscriptionPackShortcode: {} as any,
     vendorRegistrationShortcode: {} as any,
+    vendorOnboardingShortcode: {} as any,
     bestSellingProductShortcode: {} as any,
     topRatedProductShortcode: {} as any,
     customerMigrationShortcode: {} as any,
@@ -47,6 +48,7 @@ export class ShortcodePage {
     async viewDashboard(_l: string): Promise<void> {}
     async viewDokanSubscriptionPacks(_l: string): Promise<void> {}
     async viewVendorRegistrationForm(_l: string): Promise<void> {}
+    async viewVendorOnboardingForm(_l: string): Promise<void> {}
     async viewProducts(_l: string): Promise<void> {}
     async viewMigrationForm(_l: string): Promise<void> {}
     async viewGeolocationFilterForm(_l: string): Promise<void> {}

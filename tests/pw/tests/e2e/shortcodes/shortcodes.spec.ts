@@ -56,6 +56,13 @@ test.describe('Shortcodes test', () => {
         await apiUtils.deletePage(pageId, payloads.adminAuth);
     });
 
+    test.skip('guest user can view vendor onboarding form (shortcode)', { tag: ['@lite', '@admin'] }, async ({ page }) => {
+        const guest = new ShortcodePage(page);
+        const [responseBody, pageId] = await apiUtils.createPage(payloads.vendorOnboardingShortcode, payloads.adminAuth);
+        await guest.viewVendorOnboardingForm(responseBody.link);
+        await apiUtils.deletePage(pageId, payloads.adminAuth);
+    });
+
     test('customer can view best selling products (shortcode)', { tag: ['@lite', '@admin'] }, async () => {
         const [responseBody, pageId] = await apiUtils.createPage(payloads.bestSellingProductShortcode, payloads.adminAuth);
         await customer.viewProducts(responseBody.link);

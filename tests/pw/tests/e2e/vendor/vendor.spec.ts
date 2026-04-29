@@ -16,7 +16,7 @@ test.describe('Vendor functionality test', () => {
 
     test.afterAll(async () => { await vPage?.close(); });
 
-    test.skip('vendor can register', { tag: ['@lite', '@vendor'] }, async ({ page }) => {
+    test('vendor can register', { tag: ['@lite', '@vendor'] }, async ({ page }) => {
         const v = new VendorPage(page);
         await v.vendorRegister(data.vendor.vendorInfo, { ...data.vendorSetupWizard, choice: false });
     });

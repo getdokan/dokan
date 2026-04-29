@@ -1,5 +1,7 @@
 import { Page } from '@playwright/test';
 
+const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
+
 export const data = {
     vendor: { vendorInfo: {} as any },
     vendorSetupWizard: {} as any,
@@ -42,7 +44,59 @@ export class ApiUtils {
 
 export class VendorPage {
     constructor(readonly page: Page) {}
-    async vendorRegister(_i: any, _w: any): Promise<void> {}
+
+    /**
+     * Register a vendor through `/vendor-onboarding/` (Dokan 5.0.0+) and
+     * pick a subscription pack via the inline `#dokan-subscription-pack`
+     * select rendered on the same page.
+     */
+    async vendorRegister(vendorInfo: any, _setupWizard: any): Promise<void> {
+        const resolve = <T,>(v: T | (() => T)): T => (typeof v === 'function' ? (v as () => T)() : v);
+
+        const firstName = String(resolve(vendorInfo?.firstName) ?? 'vendor');
+        const lastName = String(resolve(vendorInfo?.lastName) ?? 'test');
+        const base = (firstName + lastName).toLowerCase().replace(/[^a-z0-9]/g, '') + Date.now();
+        const email = String(resolve(vendorInfo?.email) ?? `${base}@test.com`);
+        const password = String(vendorInfo?.password ?? '01dokan01');
+        const shopName = String(resolve(vendorInfo?.shopName) ?? `${base}store`);
+        const phone = String(vendorInfo?.phone ?? '0123456789');
+
+        await this.page.goto(`${BASE_URL}/vendor-onboarding/`, { waitUntil: 'domcontentloaded' });
+
+        await this.page.locator('#first-name').fill(firstName);
+        await this.page.locator('#last-name').fill(lastName);
+        await this.page.locator('#reg_email').fill(email);
+        await this.page.locator('#shop-phone').fill(phone);
+
+        const passwordField = this.page.locator('#reg_password');
+        if (await passwordField.isVisible().catch(() => false)) {
+            await passwordField.fill(password);
+        }
+
+        // Tab out of #company-name so the JS auto-populates #seller-url and
+        // the AJAX availability check runs — submit stays disabled until the
+        // slug indicator flips to text-success.
+        await this.page.locator('#company-name').fill(shopName);
+        await this.page.locator('#company-name').press('Tab');
+        await this.page.locator('#url-alart-mgs.text-success').waitFor({ state: 'visible', timeout: 10000 }).catch(() => undefined);
+
+        if (vendorInfo?.vendorSubscriptionPack) {
+            const pack = this.page.locator('#dokan-subscription-pack');
+            if (await pack.isVisible().catch(() => false)) {
+                await pack.selectOption({ label: String(vendorInfo.vendorSubscriptionPack) }).catch(async () => {
+                    await pack.selectOption(String(vendorInfo.vendorSubscriptionPack));
+                });
+            }
+        }
+
+        const terms = this.page.locator('#tc_agree');
+        if (await terms.isVisible().catch(() => false)) {
+            await terms.check();
+        }
+
+        await this.page.locator('input[name="register"]').first().click();
+        await this.page.waitForLoadState('load');
+    }
 }
 
 export class VendorSubscriptionsPage {
