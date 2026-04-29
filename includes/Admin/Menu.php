@@ -77,7 +77,7 @@ class Menu {
              * Fires after the Dokan "Help" submenu item is added, before "Settings".
              * Hook here to insert items between Help and Settings.
              *
-             * @since DOKAN_SINCE
+             * @since 5.0.0
              *
              * @param string $capability    Capability required to view the menu.
              * @param int    $menu_position Dokan top-level menu position.
@@ -95,7 +95,7 @@ class Menu {
              * Fires after the Dokan "Settings" submenu item is added.
              * Hook here to insert items between Settings and Chat with us.
              *
-             * @since DOKAN_SINCE
+             * @since 5.0.0
              *
              * @param string $capability    Capability required to view the menu.
              * @param int    $menu_position Dokan top-level menu position.
@@ -132,7 +132,7 @@ class Menu {
      * via 'hidden' => true so their position relative to the static Help/Settings entries
      * can be controlled here.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param string $page_class    Fully-qualified Pageable service class name.
      * @param string $parent_slug   Parent menu slug (the Dokan top-level menu).

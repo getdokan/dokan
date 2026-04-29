@@ -5,7 +5,7 @@
  * and types so that external consumers (e.g. Dokan Pro) can import them
  * via `@dokan/product-editor`.
  *
- * @since DOKAN_SINCE
+ * @since 5.0.0
  */
 
 // Re-export DataForm from @wedevs/plugin-ui so external consumers share a

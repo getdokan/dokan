@@ -31,7 +31,7 @@ class OpenAIGPTFiveNano extends OpenAIGPTThreeDotFiveTurbo {
      *
      * @see https://github.com/valentinfrlch/ha-llmvision/issues/437
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param string $prompt 1st prompt.
      * @param array  $args   Arguments of the prompt.

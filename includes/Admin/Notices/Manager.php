@@ -230,7 +230,7 @@ class Manager {
     /**
      * Show admin notice if vendor onboarding page is not configured.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param array $notices
      *
@@ -242,10 +242,9 @@ class Manager {
             return $notices;
         }
 
-        $settings_url = add_query_arg(
-            [ 'page' => 'dokan#/tools' ],
-            admin_url( 'admin.php' )
-        );
+        $is_legacy_tools_page = get_transient( 'dokan_legacy_tools_page' );
+        $tools_page_slug      = $is_legacy_tools_page ? 'dokan' : 'dokan-dashboard';
+        $settings_url         = admin_url( 'admin.php?page=' . $tools_page_slug ) . '#/tools';
 
         $dokan_pages = get_option( 'dokan_pages', [] );
         $page_id = isset( $dokan_pages['vendor_onboarding'] ) ? $dokan_pages['vendor_onboarding'] : 0;
@@ -307,7 +306,7 @@ class Manager {
     /**
      * Check if vendor onboarding page is configured.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @return bool
      */

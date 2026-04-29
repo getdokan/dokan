@@ -16,7 +16,7 @@ class LegacySwitcher implements Hookable {
     /**
      * Value of `dokan_action` that triggers the product editor switch.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      */
     public const PRODUCT_EDITOR_SWITCH_ACTION = 'switch_product_editor';
 
@@ -180,7 +180,7 @@ class LegacySwitcher implements Hookable {
      *
      * Defaults to `false` — the new (React) product editor.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param int $user_id Optional. Defaults to current user.
      *
@@ -207,7 +207,7 @@ class LegacySwitcher implements Hookable {
     /**
      * Build the new (React) product editor URL.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param int $product_id
      *
@@ -225,7 +225,7 @@ class LegacySwitcher implements Hookable {
      * Build the legacy product editor URL, falling back to the
      * create-new-product URL when no product id is supplied.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param int $product_id
      *

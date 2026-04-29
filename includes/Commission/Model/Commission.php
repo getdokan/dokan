@@ -71,7 +71,7 @@ class Commission implements CommissionInterface {
     /**
      * Set the admin's net earning.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param float $admin_net_earning The net earning amount for the admin.
      *
@@ -86,7 +86,7 @@ class Commission implements CommissionInterface {
     /**
      * Get the admin's net earning.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @return float The net earning amount for the admin.
      */

@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) || exit;
  * Resolves product form payload (schema field ids) to WooCommerce REST API shape.
  * Allows the frontend to send data keyed by form field id; server resolves to API keys.
  *
- * @since DOKAN_SINCE
+ * @since 5.0.0
  */
 class PayloadResolver {
 
@@ -16,7 +16,7 @@ class PayloadResolver {
      * Transform request body from schema field ids to WC REST product API shape.
      * When schema keys are present they are mapped and removed; existing API keys are kept.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param array $data Request body (e.g. from get_json_params()).
      *
@@ -45,7 +45,7 @@ class PayloadResolver {
      * The DataForm select component sends values as arrays (e.g. ['taxable']).
      * WooCommerce product setters expect plain strings.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      */
     public function resolve_single_select_fields( array $data ): array {
         $string_fields = [
@@ -61,7 +61,7 @@ class PayloadResolver {
         /**
          * Filter the list of fields that should be unwrapped from single-element arrays to strings.
          *
-         * @since DOKAN_SINCE
+         * @since 5.0.0
          *
          * @param string[] $string_fields List of field IDs.
          */
@@ -79,7 +79,7 @@ class PayloadResolver {
     /**
      * Cast numeric string fields to integers for the WC REST API.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      */
     public function resolve_integer_fields( array $data ): array {
         $int_fields = [
@@ -108,7 +108,7 @@ class PayloadResolver {
      * Transform taxonomy fields (categories, tags, brands) from flat ID arrays
      * to the WC REST API format: [ { id: int }, ... ].
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      */
     public function resolve_taxonomies( array $data ): array {
         $taxonomy_map = [
@@ -130,7 +130,7 @@ class PayloadResolver {
     /**
      * Transform featured image and gallery image IDs into the WC REST images array.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      */
     public function resolve_images( array $data ): array {
         $images = [];
@@ -163,7 +163,7 @@ class PayloadResolver {
     /**
      * Combine individual dimension fields into a nested dimensions object.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      */
     public function resolve_dimensions( array $data ): array {
         $dimension_keys = [
@@ -198,7 +198,7 @@ class PayloadResolver {
     /**
      * Normalize linked product fields (upsells, cross-sells, grouped) to integer ID arrays.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      */
     public function resolve_linked_products( array $data ): array {
         $linked_map = [
@@ -227,7 +227,7 @@ class PayloadResolver {
     /**
      * Transform attributes to the WC REST API shape.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      */
     public function resolve_attributes( array $data ): array {
         if ( isset( $data[ Elements::ATTRIBUTES ] ) && is_array( $data[ Elements::ATTRIBUTES ] ) ) {
@@ -240,7 +240,7 @@ class PayloadResolver {
     /**
      * Transform attributes array to WC REST product schema (options as string array).
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param array $attributes List of attribute objects.
      *
@@ -288,7 +288,7 @@ class PayloadResolver {
     /**
      * Convert an array of IDs to WC REST taxonomy format: [ { id: int }, ... ].
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param array $ids Flat array of term IDs.
      *
@@ -306,7 +306,7 @@ class PayloadResolver {
     /**
      * Extract an image ID from either a plain integer or an array with 'id' key.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param array|int|string $image Image data.
      *
@@ -323,7 +323,7 @@ class PayloadResolver {
     /**
      * Extract a product ID from mixed input formats (plain int, array with value/id key, object).
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      *
      * @param array|object|int|string $item Product reference.
      *
@@ -344,7 +344,7 @@ class PayloadResolver {
     /**
      * Resolve additional fields like sale schedule into their API representations.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.0
      */
     public function resolve_additional_fields( array $data ): array {
         if ( empty( $data[ Elements::CREATE_SCHEDULE_FOR_DISCOUNT ] ) ) {

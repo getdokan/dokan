@@ -31,7 +31,9 @@ const AdminHeader = ( {
 
     return (
         <>
-            <h1 className="wp-heading-inline">{ title }</h1>
+            <h1 className="wp-heading-inline text-2xl leading-3 text-gray-900 font-bold mb-6">
+                { title }
+            </h1>
             <hr className="wp-header-end" />
 
             { resolvedScopes?.map( ( noticeConfig ) => (
