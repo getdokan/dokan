@@ -47,9 +47,8 @@ const fmtPct = value => (value === null || value === undefined ? '—' : `${num(
 const verdictBadge = result => {
     if (!result) return '⚪️ No data';
     if (result.failed > 0) return '🔴 Failed';
-    // Flaky tests pass on retry, so the suite did not fail. Show the number
-    // of flaky retries inline rather than downgrading the overall status.
-    if (result.flaky > 0) return `🟢 Passed · ⚠️ ${num(result.flaky)} flaky`;
+    // Flaky tests pass on retry, so the suite did not fail. The Flaky
+    // column already shows the count; keep the Status column clean.
     return '🟢 Passed';
 };
 
