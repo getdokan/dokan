@@ -55,7 +55,19 @@ const mergeReports = (reportPaths: string[]): TestReport => {
 
         mergedReport.all_suite_durations.push(report.suite_duration);
 
-        // Append and de-duplicate test arrays
+        // Sum the per-shard counts directly. The previous implementation
+        // derived totals from `[...new Set(tests)].length`, which collapsed
+        // unrelated tests that happened to share a `test.title` (many specs
+        // re-use generic titles like `Test Case 1`, `Test Case 2`, ...) and
+        // reported ~70 e2e tests instead of ~1133.
+        mergedReport.total_tests += report.total_tests || 0;
+        mergedReport.passed += report.passed || 0;
+        mergedReport.failed += report.failed || 0;
+        mergedReport.flaky += report.flaky || 0;
+        mergedReport.skipped += report.skipped || 0;
+
+        // Keep the title arrays for reference / drilldown. Don't dedupe —
+        // duplicate titles across files are real distinct tests.
         mergedReport.tests.push(...report.tests);
         mergedReport.passed_tests.push(...report.passed_tests);
         mergedReport.failed_tests.push(...report.failed_tests);
@@ -63,18 +75,12 @@ const mergeReports = (reportPaths: string[]): TestReport => {
         mergedReport.skipped_tests.push(...report.skipped_tests);
     });
 
-    // Remove duplicates and sort arrays
-    mergedReport.tests = [...new Set(mergedReport.tests)].sort();
-    mergedReport.passed_tests = [...new Set(mergedReport.passed_tests)].sort();
-    mergedReport.failed_tests = [...new Set(mergedReport.failed_tests)].sort();
-    mergedReport.flaky_tests = [...new Set(mergedReport.flaky_tests)].sort();
-    mergedReport.skipped_tests = [...new Set(mergedReport.skipped_tests)].sort();
+    mergedReport.tests.sort();
+    mergedReport.passed_tests.sort();
+    mergedReport.failed_tests.sort();
+    mergedReport.flaky_tests.sort();
+    mergedReport.skipped_tests.sort();
 
-    mergedReport.total_tests = mergedReport.tests.length;
-    mergedReport.passed = mergedReport.passed_tests.length;
-    mergedReport.failed = mergedReport.failed_tests.length;
-    mergedReport.flaky = mergedReport.flaky_tests.length;
-    mergedReport.skipped = mergedReport.skipped_tests.length;
     mergedReport.suite_duration = Math.max(...mergedReport.all_suite_durations);
 
     // Format the suite duration
