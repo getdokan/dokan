@@ -1,6 +1,19 @@
-import { Page } from '@playwright/test';
+import { Page, APIRequestContext, expect } from '@playwright/test';
+
+// The repo's tsconfig doesn't include `@types/node`, so the IDE flags `process`
+// as undefined. Declare it locally so this file stays free of red squiggles
+// without disabling type-checking for everything else in the file.
+declare const process: { env: Record<string, string | undefined> };
+// Buffer is exposed in Node test runtime; declare locally to avoid pulling
+// @types/node into the strict tsconfig used elsewhere in the suite.
+declare const Buffer: { from(input: string): { toString(encoding: string): string } };
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
+const SERVER_URL = process.env.SERVER_URL ?? `${BASE_URL}/wp-json`;
+const ADMIN_USER = process.env.ADMIN || 'admin';
+const ADMIN_PASS = process.env.ADMIN_PASSWORD || 'password';
+const adminBasicAuth = (): string =>
+    'Basic ' + Buffer.from(`${ADMIN_USER}:${ADMIN_PASS}`).toString('base64');
 
 export class AbuseReportsPage {
     readonly page: Page;
@@ -13,7 +26,7 @@ export class AbuseReportsPage {
     // SELECTORS
     // ============================================
 
-    // Admin Selectors
+    // Admin Selectors (legacy + shared)
     admin = {
         abuseReportsUrl: `${BASE_URL}/wp-admin/admin.php?page=dokan-dashboard#/abuse-reports`,
         modulesUrl: `${BASE_URL}/wp-admin/admin.php?page=dokan#/modules`,
@@ -39,6 +52,83 @@ export class AbuseReportsPage {
         removeReasonButton: (reason: string) => `//li[normalize-space()='${reason}']//span[@class='dashicons dashicons-no-alt remove-item']`,
     };
 
+    // Admin React DataViews UI selectors (Dokan 5.0.0 rewrite)
+    // Selectors are intentionally permissive — DokanModal/DataViews don't
+    // commit to specific heading tags or aria attributes between releases.
+    adminReact = {
+        // Page chrome
+        pageHeading: "//*[self::h1 or self::h2 or self::h3][normalize-space()='Abuse Reports']",
+        allTab: "//button[.//span[contains(@class,'text-[#A5A5AA]')]]",
+        allTabBadge: "//button[.//div[contains(.,'All')]]//span[contains(@class,'text-[#A5A5AA]')]",
+        // List rows — `contains(., …)` matches text in nested spans / RawHTML
+        dataRow: "table tbody tr",
+        rowByReason: (reason: string) => `//tr[.//div[contains(., "${reason}")]]`,
+        rowReasonCell: (reason: string) =>
+            `//tr[.//div[contains(., "${reason}")]]//div[contains(@class,'text-[#7047EB]') or contains(@class,'cursor-pointer')]`,
+        rowCheckboxByReason: (reason: string) =>
+            `//tr[.//div[contains(., "${reason}")]]//input[@type='checkbox']`,
+        rowActionsButton: (reason: string) =>
+            `//tr[.//div[contains(., "${reason}")]]//button[contains(@class,'dataviews-all-actions-button') or @aria-haspopup='menu' or @aria-label='Actions']`,
+        anyRowActionsButton:
+            "//tr//button[contains(@class,'dataviews-all-actions-button') or @aria-haspopup='menu' or @aria-label='Actions']",
+        // Action menu items
+        viewMenuItem: "//*[@role='menuitem'][normalize-space()='View']",
+        deleteMenuItem: "//*[@role='menuitem'][normalize-space()='Delete']",
+        // Bulk action toolbar
+        selectAllCheckbox: "thead input[type='checkbox']",
+        // Bulk Delete: rendered as a button with a custom icon span. Scope to
+        // the toolbar (NOT inside any modal) so the row's Delete menu-item
+        // and the modal's Delete confirm don't accidentally match.
+        bulkDeleteButton:
+            "//button[.//span[normalize-space()='Delete']][not(ancestor::*[@role='dialog'])]",
+        // Delete confirmation modal
+        deleteModal: "//*[@role='dialog'][.//*[normalize-space()='Delete Abuse Report'] or .//*[contains(., 'Are you sure you want to delete')]]",
+        deleteModalHeading:
+            "//*[@role='dialog']//*[self::h1 or self::h2 or self::h3 or self::h4][normalize-space()='Delete Abuse Report']",
+        // The description renders inside a leaf <p>; scope to that to avoid
+        // matching every wrapper div when used in strict-mode locators.
+        deleteModalDescription:
+            "//*[@role='dialog']//p[contains(., 'Are you sure you want to delete')]",
+        deleteModalConfirmBtn:
+            "//*[@role='dialog']//button[normalize-space()='Delete']",
+        deleteModalCancelBtn:
+            "//*[@role='dialog']//button[normalize-space()='Cancel']",
+        // Detail modal
+        detailModal:
+            "//*[@role='dialog'][.//*[normalize-space()='Product Abuse Report']]",
+        detailModalHeading:
+            "//*[@role='dialog']//*[self::h1 or self::h2 or self::h3 or self::h4][normalize-space()='Product Abuse Report']",
+        detailModalReasonBlock:
+            "//*[@role='dialog']//*[normalize-space()='Reason']/following-sibling::*",
+        detailModalDescriptionBlock:
+            "//*[@role='dialog']//*[normalize-space()='Description']/following-sibling::*",
+        detailModalReportedProduct:
+            "//*[@role='dialog']//*[normalize-space()='Reported Product']/following-sibling::*",
+        detailModalReportedBy:
+            "//*[@role='dialog']//*[normalize-space()='Reported By']/following-sibling::*",
+        detailModalReportedAt:
+            "//*[@role='dialog']//*[normalize-space()='Reported at']/following-sibling::*",
+        detailModalProductVendor:
+            "//*[@role='dialog']//*[normalize-space()='Product Vendor']/following-sibling::*",
+        detailModalCloseBtn:
+            "//*[@role='dialog']//button[normalize-space()='Close']",
+        // Filters (AdminFilter wrapper)
+        filterBar: ".dokan-admin-filter, [class*='filter']",
+        filterReasonTrigger: "//button[contains(.,'Select Reason') or contains(.,'Reason')]",
+        filterVendorTrigger: "//button[contains(.,'Select Vendor') or contains(.,'Vendor')]",
+        filterProductTrigger: "//button[contains(.,'Select Product') or contains(.,'Product')]",
+        filterOption: (label: string) =>
+            `//*[contains(@class,'option') or @role='option'][contains(., "${label}")]`,
+        filterChipRemove: (id: string) =>
+            `//*[@data-filter-id='${id}']//button[contains(@aria-label,'Remove') or contains(@aria-label,'Clear')]`,
+        filterResetBtn:
+            "//button[normalize-space()='Reset' or normalize-space()='Reset filters']",
+        // Toasts
+        toast: "[role='status'], .dokan-toast, [class*='toast']",
+        toastSuccess:
+            "//*[contains(@class,'success') or @data-status='success']",
+    };
+
     // Vendor Selectors
     vendor = {
     };
@@ -48,14 +138,30 @@ export class AbuseReportsPage {
         productUrl: `${BASE_URL}/product/p1_v1-simple/`,
     };
 
-    // Abuse Reports Specific Selectors
+    // Abuse Reports Specific Selectors (front-end report form)
     abuseReports = {
         reportAbuseLink: "//a[normalize-space()='Report Abuse']",
+        formContainer: "//form[contains(@id,'dokan-report-abuse')]",
         spamRadioButton: "//input[@value='This content is spam']",
+        reasonRadioByValue: (value: string) => `//input[@type='radio' and @value="${value}"]`,
+        customerNameInput: "//input[@name='customer_name']",
+        customerEmailInput: "//input[@name='customer_email']",
         descriptionInput: "//textarea[@name='description']",
         submitButton: "//button[@id='dokan-report-abuse-form-submit-btn']",
         confirmOkButton: "//button[normalize-space()='OK']",
+        formError: ".dokan-popup-error",
         customReasonLabel: (reason: string) => `//label[normalize-space()='${reason}']`,
+    };
+
+    // ============================================
+    // REST API CONFIG
+    // ============================================
+
+    rest = {
+        listEndpoint: `${SERVER_URL}/dokan/v1/abuse-reports`,
+        singleEndpoint: (id: number) => `${SERVER_URL}/dokan/v1/abuse-reports/${id}`,
+        batchEndpoint: `${SERVER_URL}/dokan/v1/abuse-reports/batch`,
+        reasonsEndpoint: `${SERVER_URL}/dokan/v1/abuse-reports/abuse-reasons`,
     };
 
     // ============================================
@@ -83,36 +189,55 @@ export class AbuseReportsPage {
             reportedByHeadingText: 'Reported by',
             reasonsHeadingText: 'Reasons for Abuse Report',
             newReasonText: 'Test1',
-        }
+            newDescriptionText: 'Automated abuse-report description for new-UI tests.',
+            secondReportDescription: 'Second automated abuse-report row for bulk-delete coverage.',
+        },
     };
 
     // ============================================
-    // HELPER METHODS
+    // GENERIC NAVIGATION / WAITS
     // ============================================
 
-    // Navigation Methods
     async navigateTo(url: string) {
         await this.page.goto(url);
     }
 
-    // Admin Methods
-    async goToAbuseReports() {
-        await this.page.goto(this.admin.abuseReportsUrl);
-        await this.page.waitForLoadState('networkidle');
-        // Wait for the report list to be rendered
-        await this.page.locator(this.admin.reportRowCheckbox).first().waitFor({ state: 'visible' });
+    async waitForPageReady() {
+        await this.page.waitForLoadState('load');
     }
+
+    async waitForElement(selector: string) {
+        await this.page.waitForSelector(selector);
+    }
+
+    async clickElement(selector: string) {
+        await this.page.click(selector);
+    }
+
+    async fillInput(selector: string, value: string) {
+        await this.page.fill(selector, value);
+    }
+
+    async getText(selector: string): Promise<string> {
+        return (await this.page.textContent(selector)) || '';
+    }
+
+    async isTextVisible(text: string): Promise<boolean> {
+        return await this.page.locator(`:text-is("${text}")`).first().isVisible();
+    }
+
+    // ============================================
+    // ADMIN — MODULES
+    // ============================================
 
     async goToModulesPage() {
         await this.page.goto(this.admin.modulesUrl);
-        await this.page.waitForLoadState('networkidle');
-        // Wait for the module search input to confirm the page is ready
+        await this.page.waitForLoadState('load');
         await this.page.locator(this.admin.moduleSearchInput).waitFor({ state: 'visible' });
     }
 
     async searchModule(moduleName: string) {
         await this.page.locator(this.admin.moduleSearchInput).fill(moduleName);
-        // Wait for filtered module slider to appear
         await this.page.locator(this.admin.moduleSlider).first().waitFor({ state: 'visible' });
     }
 
@@ -128,46 +253,33 @@ export class AbuseReportsPage {
                 this.page.waitForResponse(res => res.url().includes('wp-json/dokan') && res.status() === 200),
                 this.page.locator(this.admin.moduleSlider).first().click(),
             ]);
-            // Wait for the checkbox to reflect the enabled state
             await this.page.locator(this.admin.moduleToggleCheckbox).first().waitFor({ state: 'attached' });
         }
     }
 
-    async isTextVisible(text: string): Promise<boolean> {
-        return await this.page.locator(`:text-is("${text}")`).first().isVisible();
+    async disableReportAbuseModuleIfEnabled() {
+        const isEnabled = await this.isReportAbuseModuleEnabled();
+        if (isEnabled) {
+            await Promise.all([
+                this.page.waitForResponse(res => res.url().includes('wp-json/dokan') && res.status() === 200),
+                this.page.locator(this.admin.moduleSlider).first().click(),
+            ]);
+            await this.page.locator(this.admin.moduleToggleCheckbox).first().waitFor({ state: 'attached' });
+        }
     }
 
-    async checkFirstReportRowCheckbox() {
-        await this.page.locator(this.admin.reportRowCheckbox).first().click();
-        // Wait for the Delete button to become visible after row selection
-        await this.page.locator(this.admin.deleteButton).waitFor({ state: 'visible' });
-    }
-
-    async clickDeleteButton() {
-        await this.page.locator(this.admin.deleteButton).click();
-        // Wait for the confirmation modal's confirm button to appear
-        await this.page.locator(this.admin.confirmDeleteButton).waitFor({ state: 'visible' });
-    }
-
-    async confirmDeleteReport() {
-        await Promise.all([
-            this.page.waitForResponse(res => res.url().includes('wp-json/dokan') && res.status() === 200),
-            this.page.locator(this.admin.confirmDeleteButton).click(),
-        ]);
-        // Wait for the confirmation modal to close
-        await this.page.locator(this.admin.confirmDeleteButton).waitFor({ state: 'hidden' });
-    }
+    // ============================================
+    // ADMIN — SETTINGS
+    // ============================================
 
     async goToSettingsPage() {
         await this.page.goto(this.admin.settingsUrl);
-        await this.page.waitForLoadState('networkidle');
-        // Wait for the settings search input to confirm the page is ready
+        await this.page.waitForLoadState('load');
         await this.page.locator(this.admin.settingsSearchInput).waitFor({ state: 'visible' });
     }
 
     async searchSettings(keyword: string) {
         await this.page.locator(this.admin.settingsSearchInput).fill(keyword);
-        // Wait for the filtered settings heading to appear
         await this.page.locator(this.admin.settingsHeading).waitFor({ state: 'visible' });
     }
 
@@ -184,19 +296,22 @@ export class AbuseReportsPage {
         return await this.page.locator(this.admin.reportedByHeading).isVisible();
     }
 
+    async isReasonsHeadingVisible(): Promise<boolean> {
+        return await this.page.locator(this.admin.reasonsHeading).isVisible();
+    }
+
     async enableReportedBySliderIfDisabled() {
         const checkbox = this.page.locator(this.admin.reportedByToggleCheckbox);
         const isChecked = await checkbox.isChecked();
         if (!isChecked) {
             await this.page.locator(this.admin.reportedBySlider).click();
-            // Wait until the checkbox reflects the enabled state
             await checkbox.waitFor({ state: 'attached' });
             await this.page.waitForFunction(
                 (selector) => {
                     const el = document.evaluate(selector, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue as HTMLInputElement | null;
                     return el?.checked === true;
                 },
-                this.admin.reportedByToggleCheckbox
+                this.admin.reportedByToggleCheckbox,
             );
         }
     }
@@ -206,22 +321,29 @@ export class AbuseReportsPage {
         const isChecked = await checkbox.isChecked();
         if (isChecked) {
             await this.page.locator(this.admin.reportedBySlider).click();
-            // Wait until the checkbox reflects the disabled state
             await checkbox.waitFor({ state: 'attached' });
             await this.page.waitForFunction(
                 (selector) => {
                     const el = document.evaluate(selector, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue as HTMLInputElement | null;
                     return el?.checked === false;
                 },
-                this.admin.reportedByToggleCheckbox
+                this.admin.reportedByToggleCheckbox,
             );
         }
     }
 
+    async fillNewAbuseReason(reason: string) {
+        await this.page.locator(this.admin.addReasonInput).last().fill(reason);
+        await this.page.locator("//input[@id='submit']").click();
+        await this.page.waitForLoadState('load');
+    }
+
+    async clickAddReasonPlusButton() {
+        await this.page.locator(this.admin.addReasonPlusButton).click();
+        await this.page.waitForLoadState('load');
+    }
+
     async removeAbuseReason(reason: string) {
-        // Remove all duplicate entries with this reason name.
-        // Each click is a pure Vue state change — no network request per removal.
-        // The list re-renders after each click, so always re-target .first().
         const removeBtns = this.page.locator(this.admin.removeReasonButton(reason));
         const count = await removeBtns.count();
         for (let i = 0; i < count; i++) {
@@ -231,54 +353,218 @@ export class AbuseReportsPage {
         }
     }
 
-    async isReasonsHeadingVisible(): Promise<boolean> {
-        return await this.page.locator(this.admin.reasonsHeading).isVisible();
-    }
-
-    async fillNewAbuseReason(reason: string) {
-        await this.page.locator(this.admin.addReasonInput).last().fill(reason);
-        await this.page.locator("//input[@id='submit']").click();
-        // Wait for any triggered network activity (save/add) to complete
-        await this.page.waitForLoadState('networkidle');
-    }
-
-    async clickAddReasonPlusButton() {
-        await this.page.locator(this.admin.addReasonPlusButton).click();
-        // Wait for any triggered network activity (save/add) to complete
-        await this.page.waitForLoadState('networkidle');
-    }
-
     async clickSaveChanges() {
         await Promise.all([
-            // Wait for the WP form POST — hash fragments are never in HTTP response URLs
-            // so we match on the wp-admin path + POST method instead
-            this.page.waitForResponse(
-                res => res.url().includes('wp-admin') && res.request().method() === 'POST'
-            ),
+            this.page.waitForResponse(res => res.url().includes('wp-admin') && res.request().method() === 'POST'),
             this.page.locator(this.admin.saveChangesButton).click(),
         ]);
-        // Wait for the redirect after the POST to fully load
         await this.page.waitForLoadState('domcontentloaded');
     }
 
-    async waitForPageReady() {
-        await this.page.waitForLoadState('networkidle');
+    // ============================================
+    // ADMIN — REPORTS LIST (legacy, still used)
+    // ============================================
+
+    async goToAbuseReports() {
+        await this.page.goto(this.admin.abuseReportsUrl);
+        await this.page.waitForLoadState('load');
+        await this.page.locator(this.admin.reportRowCheckbox).first().waitFor({ state: 'visible' });
     }
 
-    // Vendor Methods
+    async checkFirstReportRowCheckbox() {
+        await this.page.locator(this.admin.reportRowCheckbox).first().click();
+        await this.page.locator(this.admin.deleteButton).waitFor({ state: 'visible' });
+    }
 
-    // Customer Methods
+    async clickDeleteButton() {
+        await this.page.locator(this.admin.deleteButton).click();
+        await this.page.locator(this.admin.confirmDeleteButton).waitFor({ state: 'visible' });
+    }
+
+    async confirmDeleteReport() {
+        await Promise.all([
+            this.page.waitForResponse(res => res.url().includes('wp-json/dokan') && res.status() === 200),
+            this.page.locator(this.admin.confirmDeleteButton).click(),
+        ]);
+        await this.page.locator(this.admin.confirmDeleteButton).waitFor({ state: 'hidden' });
+    }
+
+    // ============================================
+    // ADMIN — REACT DATAVIEWS LIST (new UI)
+    // ============================================
+
+    async goToAbuseReportsReact() {
+        await this.page.goto(this.admin.abuseReportsUrl);
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.locator(this.adminReact.pageHeading).waitFor({ state: 'visible', timeout: 30000 });
+    }
+
+    async waitForListReady() {
+        // The DataViews table is populated via an async REST call after the
+        // page heading renders. Wait for the list endpoint to respond AND the
+        // <table> to exist so a follow-up `getRowCount()` is meaningful.
+        await this.page.waitForLoadState('load');
+        await this.page
+            .waitForResponse(
+                res =>
+                    res.url().includes('/wp-json/dokan/v1/abuse-reports') &&
+                    res.request().method() === 'GET' &&
+                    res.status() === 200,
+                { timeout: 15000 },
+            )
+            .catch(() => {
+                /* response may have already happened — fall through to table check */
+            });
+        // Wait for either a row to appear OR an "All (0)" empty state to settle.
+        await this.page
+            .waitForFunction(
+                () => {
+                    const rows = document.querySelectorAll('table tbody tr');
+                    if (rows.length > 0) return true;
+                    // Empty state: DataViews surfaces "No results" or similar text.
+                    return /no results|no data|no items|all\s*\(\s*0\s*\)/i.test(
+                        document.body.innerText,
+                    );
+                },
+                undefined,
+                { timeout: 15000 },
+            )
+            .catch(() => {
+                /* best-effort; let the next assertion produce a clear error */
+            });
+    }
+
+    async getRowCount(): Promise<number> {
+        return await this.page.locator(this.adminReact.dataRow).count();
+    }
+
+    async isRowForReasonVisible(reason: string): Promise<boolean> {
+        return await this.page.locator(this.adminReact.rowByReason(reason)).first().isVisible();
+    }
+
+    async clickReasonCell(reason: string) {
+        await this.page.locator(this.adminReact.rowReasonCell(reason)).first().click();
+        await this.page.locator(this.adminReact.detailModalHeading).waitFor({ state: 'visible' });
+    }
+
+    async openRowActionMenu(reason: string) {
+        await this.page.locator(this.adminReact.rowActionsButton(reason)).first().click();
+        // wait for menu items to surface
+        await this.page.locator(this.adminReact.deleteMenuItem).first().waitFor({ state: 'visible' });
+    }
+
+    async clickViewActionFromMenu() {
+        await this.page.locator(this.adminReact.viewMenuItem).first().click();
+        await this.page.locator(this.adminReact.detailModalHeading).waitFor({ state: 'visible' });
+    }
+
+    async clickDeleteActionFromMenu() {
+        await this.page.locator(this.adminReact.deleteMenuItem).first().click();
+        await this.page.locator(this.adminReact.deleteModalConfirmBtn).waitFor({ state: 'visible' });
+    }
+
+    async checkRowByReason(reason: string) {
+        await this.page.locator(this.adminReact.rowCheckboxByReason(reason)).first().click();
+    }
+
+    // ============================================
+    // ADMIN — DETAIL MODAL
+    // ============================================
+
+    async isDetailModalVisible(): Promise<boolean> {
+        return await this.page.locator(this.adminReact.detailModalHeading).isVisible();
+    }
+
+    async getDetailModalReason(): Promise<string> {
+        return ((await this.page.locator(this.adminReact.detailModalReasonBlock).first().textContent()) || '').trim();
+    }
+
+    async getDetailModalDescription(): Promise<string> {
+        const block = this.page.locator(this.adminReact.detailModalDescriptionBlock).first();
+        const visible = await block.isVisible().catch(() => false);
+        if (!visible) return '';
+        return ((await block.textContent()) || '').trim();
+    }
+
+    async getDetailModalReporterText(): Promise<string> {
+        return ((await this.page.locator(this.adminReact.detailModalReportedBy).first().textContent()) || '').trim();
+    }
+
+    async closeDetailModal() {
+        await this.page.locator(this.adminReact.detailModalCloseBtn).click();
+        await this.page.locator(this.adminReact.detailModalHeading).waitFor({ state: 'hidden' });
+    }
+
+    // ============================================
+    // ADMIN — DELETE FLOW (new UI)
+    // ============================================
+
+    async getDeleteModalDescriptionText(): Promise<string> {
+        return ((await this.page.locator(this.adminReact.deleteModalDescription).textContent()) || '').trim();
+    }
+
+    async confirmDeleteInModal() {
+        // The DataViews UI may issue either a true DELETE on the single
+        // resource endpoint OR a POST to the batch endpoint depending on the
+        // selection size and the underlying store action — accept either.
+        await Promise.all([
+            this.page.waitForResponse(
+                res => {
+                    if (!res.url().includes('/wp-json/dokan/v1/abuse-reports')) return false;
+                    const m = res.request().method();
+                    return m === 'DELETE' || m === 'POST';
+                },
+                { timeout: 30000 },
+            ).catch(() => null),
+            this.page.locator(this.adminReact.deleteModalConfirmBtn).click(),
+        ]);
+        // Modal closes once the request resolves (success or failure).
+        await this.page.locator(this.adminReact.deleteModalConfirmBtn).waitFor({ state: 'hidden', timeout: 15000 });
+    }
+
+    async cancelDeleteInModal() {
+        await this.page.locator(this.adminReact.deleteModalCancelBtn).click();
+        await this.page.locator(this.adminReact.deleteModalCancelBtn).waitFor({ state: 'hidden' });
+    }
+
+    async clickBulkDeleteButton() {
+        await this.page.locator(this.adminReact.bulkDeleteButton).click();
+        await this.page.locator(this.adminReact.deleteModalConfirmBtn).waitFor({ state: 'visible' });
+    }
+
+    // ============================================
+    // ADMIN — FILTERS (new UI)
+    // ============================================
+
+    async openReasonFilter() {
+        await this.page.locator(this.adminReact.filterReasonTrigger).first().click();
+    }
+
+    async pickFilterOption(label: string) {
+        const opt = this.page.locator(this.adminReact.filterOption(label)).first();
+        await opt.waitFor({ state: 'visible' });
+        await opt.click();
+    }
+
+    async clickResetFilters() {
+        const btn = this.page.locator(this.adminReact.filterResetBtn).first();
+        if (await btn.isVisible().catch(() => false)) {
+            await btn.click();
+        }
+    }
+
+    // ============================================
+    // CUSTOMER / GUEST — FRONT-END REPORT FORM
+    // ============================================
+
     async goToProductPage() {
         await this.page.goto(this.customer.productUrl);
         await this.page.waitForLoadState('domcontentloaded');
-        // Wait for the Report Abuse link to be ready
         await this.page.locator(this.abuseReports.reportAbuseLink).waitFor({ state: 'visible' });
     }
 
-    // Abuse Reports Methods
     async clickReportAbuseLink() {
         await this.page.locator(this.abuseReports.reportAbuseLink).click();
-        // Wait for the modal to open by checking the spam radio button is visible
         await this.page.locator(this.abuseReports.spamRadioButton).waitFor({ state: 'visible' });
     }
 
@@ -286,19 +572,33 @@ export class AbuseReportsPage {
         await this.page.locator(this.abuseReports.spamRadioButton).click();
     }
 
+    async selectReasonByValue(value: string) {
+        await this.page.locator(this.abuseReports.reasonRadioByValue(value)).click();
+    }
+
     async fillAbuseDescription(description: string) {
         await this.page.locator(this.abuseReports.descriptionInput).fill(description);
     }
 
+    async fillCustomerName(name: string) {
+        await this.page.locator(this.abuseReports.customerNameInput).fill(name);
+    }
+
+    async fillCustomerEmail(email: string) {
+        await this.page.locator(this.abuseReports.customerEmailInput).fill(email);
+    }
+
+    async isCustomerNameInputVisible(): Promise<boolean> {
+        return await this.page.locator(this.abuseReports.customerNameInput).isVisible().catch(() => false);
+    }
+
     async submitAbuseReport() {
         await this.page.locator(this.abuseReports.submitButton).click();
-        // Wait for the OK confirmation button to appear in the success modal
         await this.page.locator(this.abuseReports.confirmOkButton).waitFor({ state: 'visible' });
     }
 
     async confirmAbuseReportSubmission() {
         await this.page.locator(this.abuseReports.confirmOkButton).click();
-        // Wait for the modal to close
         await this.page.locator(this.abuseReports.confirmOkButton).waitFor({ state: 'hidden' });
     }
 
@@ -314,20 +614,71 @@ export class AbuseReportsPage {
         return (await label.textContent())?.trim() ?? '';
     }
 
-    // Wait/Utility Methods
-    async waitForElement(selector: string) {
-        await this.page.waitForSelector(selector);
+    async submitFullAbuseReport(reason: string, description: string) {
+        await this.clickReportAbuseLink();
+        await this.page.locator(this.abuseReports.reasonRadioByValue(reason)).click();
+        await this.fillAbuseDescription(description);
+        await this.submitAbuseReport();
+        await this.confirmAbuseReportSubmission();
     }
 
-    async clickElement(selector: string) {
-        await this.page.click(selector);
+    // ============================================
+    // REST API HELPERS (use authed APIRequestContext)
+    // ============================================
+    //
+    // The Dokan REST API authenticates via WP Basic Auth (provided by the
+    // Basic-Auth plugin in the test env), NOT cookies. Browser-context request
+    // objects only carry cookies, so every authed call here injects an
+    // `Authorization: Basic <admin:password>` header. Callers can still pass
+    // an unauthed `request.newContext()` (Test Case 14) — we only add the
+    // header when `authed` is true (the default for authed helpers).
+
+    private withAdminAuthHeader(extra: Record<string, string> = {}): Record<string, string> {
+        return { Authorization: adminBasicAuth(), ...extra };
     }
 
-    async fillInput(selector: string, value: string) {
-        await this.page.fill(selector, value);
+    async restGetReports(
+        request: APIRequestContext,
+        params: Record<string, string> = {},
+        opts: { authed?: boolean } = { authed: true },
+    ) {
+        const url = new URL(this.rest.listEndpoint);
+        for (const [k, v] of Object.entries(params)) {
+            url.searchParams.set(k, v);
+        }
+        return await request.get(url.toString(), opts.authed ? { headers: this.withAdminAuthHeader() } : undefined);
     }
 
-    async getText(selector: string): Promise<string> {
-        return await this.page.textContent(selector) || '';
+    async restGetReasons(request: APIRequestContext) {
+        return await request.get(this.rest.reasonsEndpoint, { headers: this.withAdminAuthHeader() });
+    }
+
+    async restDeleteReport(request: APIRequestContext, id: number) {
+        return await request.delete(this.rest.singleEndpoint(id), { headers: this.withAdminAuthHeader() });
+    }
+
+    async restDeleteReportsBatch(request: APIRequestContext, ids: number[]) {
+        return await request.delete(this.rest.batchEndpoint, {
+            headers: this.withAdminAuthHeader(),
+            data: { items: ids },
+        });
+    }
+
+    // ============================================
+    // ASSERT HELPERS (used to keep specs concise)
+    // ============================================
+
+    async expectReasonVisibleInList(reason: string) {
+        await expect(
+            this.page.locator(this.adminReact.rowByReason(reason)).first(),
+            `Row containing reason "${reason}" should be present in the list`,
+        ).toBeVisible();
+    }
+
+    async expectReasonNotVisibleInList(reason: string) {
+        await expect(
+            this.page.locator(this.adminReact.rowByReason(reason)).first(),
+            `Row containing reason "${reason}" should NOT be present in the list`,
+        ).toBeHidden();
     }
 }
