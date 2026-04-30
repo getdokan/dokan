@@ -357,6 +357,11 @@ test.describe('Abuse Reports Tests @pro', () => {
         await abuseReportsPage.goToAbuseReportsReact();
         await abuseReportsPage.waitForListReady();
 
+        // The seed reports from TC5/TC6 must be visible before we read the
+        // count, otherwise we capture a 0 baseline mid-render and then assert
+        // "after === before" against the post-render count, which differs.
+        await adminPage.locator(abuseReportsPage.adminReact.dataRow).first().waitFor({ state: 'visible', timeout: 20000 });
+
         // Capture row count before opening delete
         const before = await abuseReportsPage.getRowCount();
 
@@ -379,6 +384,11 @@ test.describe('Abuse Reports Tests @pro', () => {
 
         await abuseReportsPage.goToAbuseReportsReact();
         await abuseReportsPage.waitForListReady();
+
+        // The seed reports from TC5/TC6 must be visible before we read the
+        // baseline. Without this, the count could read 0 mid-render and
+        // toBeLessThan(beforeCount) compares against the wrong baseline.
+        await adminPage.locator(abuseReportsPage.adminReact.dataRow).first().waitFor({ state: 'visible', timeout: 20000 });
 
         const beforeCount = await abuseReportsPage.getRowCount();
 
@@ -406,6 +416,10 @@ test.describe('Abuse Reports Tests @pro', () => {
 
         await abuseReportsPage.goToAbuseReportsReact();
         await abuseReportsPage.waitForListReady();
+
+        // Wait for the list to actually render rows before reading the
+        // baseline (see TC10/TC11 comments for context).
+        await adminPage.locator(abuseReportsPage.adminReact.dataRow).first().waitFor({ state: 'visible', timeout: 20000 });
 
         const beforeCount = await abuseReportsPage.getRowCount();
 

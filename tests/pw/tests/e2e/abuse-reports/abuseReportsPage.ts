@@ -401,8 +401,12 @@ export class AbuseReportsPage {
 
     async waitForListReady() {
         // The DataViews table is populated via an async REST call after the
-        // page heading renders. Wait for the list endpoint to respond AND the
-        // <table> to exist so a follow-up `getRowCount()` is meaningful.
+        // page heading renders. There are TWO async stages:
+        //   1. The /abuse-reports GET response lands.
+        //   2. React re-renders the table from that response.
+        // Tests previously read row counts between (1) and (2), seeing 0 rows
+        // even when the DB had data. We now poll for a stable signal — rows
+        // present OR an explicit empty-state node — before returning.
         await this.page.waitForLoadState('load');
         await this.page
             .waitForResponse(
@@ -410,28 +414,31 @@ export class AbuseReportsPage {
                     res.url().includes('/wp-json/dokan/v1/abuse-reports') &&
                     res.request().method() === 'GET' &&
                     res.status() === 200,
-                { timeout: 15000 },
+                { timeout: 20000 },
             )
             .catch(() => {
-                /* response may have already happened — fall through to table check */
+                /* response may have already happened — fall through to DOM poll */
             });
-        // Wait for either a row to appear OR an "All (0)" empty state to settle.
-        await this.page
-            .waitForFunction(
-                () => {
-                    const rows = document.querySelectorAll('table tbody tr');
-                    if (rows.length > 0) return true;
-                    // Empty state: DataViews surfaces "No results" or similar text.
-                    return /no results|no data|no items|all\s*\(\s*0\s*\)/i.test(
-                        document.body.innerText,
-                    );
-                },
-                undefined,
-                { timeout: 15000 },
-            )
-            .catch(() => {
-                /* best-effort; let the next assertion produce a clear error */
-            });
+
+        // Poll up to ~10s for either rows OR an explicit empty-state marker.
+        // Don't accept generic body-text matching here — partial-render states
+        // produced false positives on CI.
+        const start = Date.now();
+        while (Date.now() - start < 10000) {
+            const rowCount = await this.page.locator(this.adminReact.dataRow).count();
+            if (rowCount > 0) return;
+            // DataViews renders an explicit empty banner when there are no
+            // rows. We probe for a few known shapes — keep narrow.
+            const emptyBanner = await this.page
+                .locator(
+                    "text=/^\\s*(no\\s+(results|reports|items|data)|nothing\\s+to\\s+show)\\s*$/i",
+                )
+                .count();
+            if (emptyBanner > 0) return;
+            await this.page.waitForTimeout(250);
+        }
+        // If we fall through here neither rows nor an empty banner ever
+        // appeared — let the caller's next assertion produce a clear error.
     }
 
     async getRowCount(): Promise<number> {
