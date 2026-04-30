@@ -1,4 +1,5 @@
 import { Page, expect } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
 
@@ -129,10 +130,12 @@ export class VendorPage {
 
     constructor(page: Page) {
         this.page = page;
+        void closeAnnouncementModal(page);
     }
 
     private async goto(subPath: string) {
         await this.page.goto(`${BASE_URL}/${subPath}`, { waitUntil: 'domcontentloaded' });
+        await closeAnnouncementModal(this.page);
     }
 
     private async fillIfVisible(selector: string, value: string | undefined): Promise<void> {

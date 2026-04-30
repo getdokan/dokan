@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     dokanSetupWizard: {} as any,
@@ -22,7 +23,7 @@ export class ApiUtils {
 }
 
 export class ToolsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async adminToolsRenderProperly(): Promise<void> {}
     async dokanPageInstallation(): Promise<void> {}
     async regenerateOrderCommission(): Promise<void> {}

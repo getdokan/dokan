@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     plugin: {
@@ -19,7 +20,7 @@ export class ApiUtils {
 }
 
 export class PluginPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async activatePlugin(_name: string): Promise<void> {}
     async deactivateDokanPlugin(_name: string, _withReason: boolean): Promise<void> {}
     async deletePlugin(_name: string): Promise<void> {}

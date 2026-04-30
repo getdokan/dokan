@@ -557,3 +557,61 @@ export const helpers = {
 };
 
 export const parseBoolean = helpers.parseBoolean;
+
+/**
+ * Close Dokan Pro's vendor announcement modal whenever it appears.
+ *
+ * Added in 5.0.0 — the modal is rendered on every vendor dashboard page until
+ * the latest unread announcement is dismissed, and blocks test interactions.
+ *
+ * Calling this once per page registers a Playwright `addLocatorHandler` that
+ * auto-dismisses the modal anytime it later blocks an action — covering not
+ * just the page after an immediate `goto`, but also navigations triggered
+ * mid-test (e.g., row clicks, redirects). Re-calling on the same page is a
+ * cheap no-op thanks to the per-page install flag.
+ *
+ * The modal lives under `.vendor-announcement-modal` (set via DokanModal's
+ * `modalClassName` prop in `dokan-pro/src/features/announcement/components/AnnouncementModal.tsx`).
+ * The close affordance is the WP `<Modal>` close button: `button[aria-label="Close"]`.
+ */
+export async function closeAnnouncementModal(page: Page): Promise<void> {
+    const installed = '__dokanAnnouncementModalHandlerInstalled' as const;
+    const pageWithFlag = page as Page & { [installed]?: boolean };
+
+    if (!pageWithFlag[installed]) {
+        pageWithFlag[installed] = true;
+
+        const modal = page.locator('.vendor-announcement-modal');
+        // Fire-and-forget: addLocatorHandler resolves immediately after registration.
+        await page.addLocatorHandler(
+            modal,
+            async () => {
+                const closeBtn = modal.locator('button[aria-label="Close"]').first();
+                if (await closeBtn.isVisible().catch(() => false)) {
+                    await closeBtn.click({ timeout: 2000 }).catch(() => undefined);
+                } else {
+                    await page.keyboard.press('Escape').catch(() => undefined);
+                }
+            },
+            { noWaitAfter: true },
+        ).catch(() => undefined);
+    }
+
+    // Best-effort immediate dismiss for the case where the modal is already
+    // open and the next action wouldn't naturally trigger the locator handler.
+    try {
+        const modal = page.locator('.vendor-announcement-modal').first();
+        const visible = await modal.isVisible({ timeout: 500 }).catch(() => false);
+        if (!visible) return;
+
+        const closeBtn = modal.locator('button[aria-label="Close"]').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click().catch(() => undefined);
+        } else {
+            await page.keyboard.press('Escape').catch(() => undefined);
+        }
+        await modal.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => undefined);
+    } catch {
+        // Silent — keep the test moving even if the selector shape changes.
+    }
+}

@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     predefined: { vendorStores: { vendor1: '' } },
@@ -27,7 +28,7 @@ export class ApiUtils {
 }
 
 export class StoreAppearancePage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async viewStoreMapOnStoreSidebar(_s: 'enable' | 'disable', _v: string): Promise<void> {}
     async viewMapAPISource(_a: 'Google Maps' | 'Mapbox', _v: string): Promise<void> {}
     async viewGoogleRecaptcha(_s: 'enable' | 'disable', _v: string): Promise<void> {}

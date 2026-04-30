@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     sellerBadge: {
@@ -27,7 +28,7 @@ export class ApiUtils {
 }
 
 export class SellerBadgesPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async enableSellerBadgeModule(): Promise<void> {}
     async disableSellerBadgeModule(): Promise<void> {}
     async adminSellerBadgeRenderProperly(): Promise<void> {}

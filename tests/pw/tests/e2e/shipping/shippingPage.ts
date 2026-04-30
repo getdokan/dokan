@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     shipping: {
@@ -25,7 +26,7 @@ export class ApiUtils {
 }
 
 export class ShippingPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async enableShipping(): Promise<void> {}
     async addShippingZone(_z: any): Promise<void> {}
     async deleteShippingZone(_n: string): Promise<void> {}

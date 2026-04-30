@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     vendor: {
@@ -32,7 +33,7 @@ export class ApiUtils {
 }
 
 export class VendorSettingsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async vendorStoreSettingsRenderProperly(): Promise<void> {}
     async vendorShipStationSettingsRenderProperly(): Promise<void> {}
     async vendorSocialProfileSettingsRenderProperly(): Promise<void> {}

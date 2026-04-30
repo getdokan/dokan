@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     customer: { username: '', customerInfo: { shipping: {} as any } },
@@ -22,7 +23,7 @@ export class ApiUtils {
 }
 
 export class VendorProductSubscriptionPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async enableProductSubscriptionModule(): Promise<void> {}
     async disableProductSubscriptionModule(): Promise<void> {}
     async vendorUserSubscriptionsRenderProperly(): Promise<void> {}

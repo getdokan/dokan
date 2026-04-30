@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     image: { avatar: '' },
@@ -37,7 +38,7 @@ export class ApiUtils {
 }
 
 export class VendorVerificationsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async enableVendorVerificationModule(): Promise<void> {}
     async disableVendorVerificationModule(): Promise<void> {}
     async changeVerifiedIcon(_i: string, _s: string): Promise<void> {}

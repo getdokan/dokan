@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const payloads = {
     moduleIds: { printful: 'printful' },
@@ -13,7 +14,7 @@ export class ApiUtils {
 }
 
 export class PrintfulPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async enablePrintfulModule(): Promise<void> {}
     async disablePrintfulModule(): Promise<void> {}
     async vendorPrintfulSettingsRenderProperly(): Promise<void> {}

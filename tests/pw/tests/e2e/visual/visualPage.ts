@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     subUrls: {
@@ -33,7 +34,7 @@ export const selector = {
 };
 
 export class VisualPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async dokanMenu(_u: string): Promise<void> {}
     async dokanSettingsMenu(_s: string): Promise<void> {}
     async addReverseWithdrawal(): Promise<void> {}

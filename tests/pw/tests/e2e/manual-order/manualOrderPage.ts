@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export class ManualOrderPage {
     readonly page: Page;
@@ -11,6 +12,7 @@ export class ManualOrderPage {
 
     constructor(page: Page) {
         this.page = page;
+        void closeAnnouncementModal(page);
     }
 
     async enableOrderCreationForVendor(_name: string): Promise<void> {}

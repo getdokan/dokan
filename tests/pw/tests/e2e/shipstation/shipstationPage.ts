@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const payloads = {
     moduleIds: { shipStation: 'shipstation' },
@@ -15,7 +16,7 @@ export class ApiUtils {
 }
 
 export class ShipStationPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async enableShipStationModule(): Promise<void> {}
     async disableShipStationModule(): Promise<void> {}
     async generateShipStationCredentials(): Promise<void> {}

@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     productAdvertisement: {
@@ -30,7 +31,7 @@ export class ApiUtils {
 }
 
 export class ProductAdvertisingPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async enableProductAdvertisingModule(): Promise<void> {}
     async disableProductAdvertisingModule(): Promise<void> {}
     async adminProductAdvertisingRenderProperly(): Promise<void> {}
@@ -42,15 +43,15 @@ export class ProductAdvertisingPage {
 }
 
 export class VendorPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async buyProductAdvertising(_n: string, _t: string, _b?: any): Promise<string> { return ''; }
     async assertProductAdvertisementIsBought(_n: string, _t: string, _b?: any): Promise<void> {}
 }
 
 export class AuctionsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
 }
 
 export class BookingPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
 }

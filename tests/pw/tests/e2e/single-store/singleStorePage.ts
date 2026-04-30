@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     predefined: { vendorStores: { vendor1: '' }, simpleProduct: { product1: { name: '' } } },
@@ -7,7 +8,7 @@ export const data = {
 };
 
 export class SingleStorePage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async singleStoreRenderProperly(_v: string): Promise<void> {}
     async storeOpenCloseTime(_v: string): Promise<void> {}
     async singleStoreSearchProduct(_v: string, _p: string): Promise<void> {}

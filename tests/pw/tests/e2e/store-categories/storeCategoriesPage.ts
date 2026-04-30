@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     storeCategory: () => ({ name: '' } as any),
@@ -25,7 +26,7 @@ export class ApiUtils {
 }
 
 export class StoreCategoriesPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async adminStoreCategoryRenderProperly(): Promise<void> {}
     async addStoreCategory(_c: any): Promise<void> {}
     async searchStoreCategory(_n: string): Promise<void> {}

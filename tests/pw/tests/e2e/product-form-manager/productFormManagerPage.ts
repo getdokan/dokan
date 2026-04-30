@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     dokanSettings: {
@@ -31,7 +32,7 @@ export class ApiUtils {
 }
 
 export class ProductFormManager {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async enableProductFormManagerModule(): Promise<void> {}
     async disableProductFormManagerModule(): Promise<void> {}
     async addCustomBlock(_b: any, _update?: boolean): Promise<string> { return ''; }

@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     predefined: { simpleProduct: { product1: { name: '' } } },
@@ -17,7 +18,7 @@ export class ApiUtils {
 }
 
 export class SingleProductPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async singleProductRenderProperly(_n: string): Promise<void> {}
     async viewHighlightedVendorInfo(_n: string): Promise<void> {}
     async productVendorInfo(_n: string): Promise<void> {}

@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     predefined: { vendorStores: { vendor1: '' } },
@@ -17,7 +18,7 @@ export class ApiUtils {
 }
 
 export class ReportsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async adminReportsRenderProperly(): Promise<void> {}
     async adminAllLogsRenderProperly(): Promise<void> {}
     async searchAllLogs(_o: string): Promise<void> {}
@@ -26,7 +27,7 @@ export class ReportsPage {
 }
 
 export class VendorReportsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async vendorReportsRenderProperly(): Promise<void> {}
     async exportStatement(): Promise<void> {}
 }

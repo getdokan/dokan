@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     predefined: { vendorStores: { vendor1: '' }, simpleProduct: { product1: { name: '' } } },
@@ -38,7 +39,7 @@ export class ApiUtils {
 }
 
 export class SettingPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async vendorStoreUrlSetting(_v: string, _p: string): Promise<void> {}
     async vendorSetupWizardLogoAndMessageSetting(_l: string, _m: string): Promise<void> {}
     async disableVendorSetupWizardSetting(): Promise<void> {}

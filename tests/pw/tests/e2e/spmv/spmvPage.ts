@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     predefined: {
@@ -41,7 +42,7 @@ export class ApiUtils {
 }
 
 export class SpmvPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async enableSpmvModule(): Promise<void> {}
     async disableSpmvModule(): Promise<void> {}
     async assignSpmvProduct(_id: string, _v: string): Promise<void> {}

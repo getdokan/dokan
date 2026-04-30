@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export class ApiUtils {
     constructor(_ctx: any) {}
@@ -6,7 +7,7 @@ export class ApiUtils {
 }
 
 export class VendorReportsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async vendorReportsRenderProperly(): Promise<void> {}
     async navigateToAnalyticsPage(_p: string): Promise<void> {}
     async testDateRangeFilter(_p: string): Promise<void> {}

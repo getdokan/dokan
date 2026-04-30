@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     staff: () => ({ firstName: '', lastName: '' }),
@@ -22,7 +23,7 @@ export class ApiUtils {
 }
 
 export class VendorStaffPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async enableVendorStaffModule(): Promise<void> {}
     async disableVendorStaffModule(): Promise<void> {}
     async vendorStaffRenderProperly(): Promise<void> {}

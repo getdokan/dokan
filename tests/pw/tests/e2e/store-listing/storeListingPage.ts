@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     predefined: { vendorStores: { vendor1: '' } },
@@ -6,7 +7,7 @@ export const data = {
 };
 
 export class StoreListingPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async storeListRenderProperly(): Promise<void> {}
     async sortStores(_s: string): Promise<void> {}
     async storeViewLayout(_l: string): Promise<void> {}

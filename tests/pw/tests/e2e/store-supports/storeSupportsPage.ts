@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export type responseBody = { order_key: string };
 
@@ -33,7 +34,7 @@ export class ApiUtils {
 }
 
 export class StoreSupportsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async enableStoreSupportModule(_v: string): Promise<void> {}
     async disableStoreSupportModule(_v: string): Promise<void> {}
     async adminStoreSupportRenderProperly(): Promise<void> {}

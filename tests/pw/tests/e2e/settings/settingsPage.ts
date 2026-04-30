@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     dokanSettings: {
@@ -47,7 +48,7 @@ export const dbUtils = {
 };
 
 export class SettingsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async dokanSettingsRenderProperly(): Promise<void> {}
     async scrollToTopSettings(): Promise<void> {}
     async searchSettings(_s: string): Promise<void> {}

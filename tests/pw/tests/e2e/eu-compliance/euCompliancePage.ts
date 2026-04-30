@@ -2,6 +2,7 @@
 import { Page, APIRequestContext, request } from '@playwright/test';
 import mysql from 'mysql2/promise';
 import { isSerialized, serialize, unserialize } from 'php-serialize';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 // ============================================
 // ENVIRONMENT VARIABLES
@@ -310,6 +311,7 @@ class Base {
     readonly page: Page;
     constructor(page: Page) {
         this.page = page;
+        void closeAnnouncementModal(page);
     }
 
     protected async safe(fn: () => Promise<void>, label: string): Promise<void> {

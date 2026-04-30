@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     product: {
@@ -71,7 +72,7 @@ export class ApiUtils {
 }
 
 export class ProductsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async addProductTitle(_id: string, _t: string): Promise<void> {}
     async addProductPermalink(_id: string, _p: string): Promise<void> {}
     async addPrice(_id: string, _p: any): Promise<void> {}

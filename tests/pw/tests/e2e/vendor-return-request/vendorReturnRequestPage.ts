@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     predefined: { simpleProduct: { product1: { name: '' } } },
@@ -18,19 +19,19 @@ export class ApiUtils {
 }
 
 export class CustomerPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async addProductToCartFromSingleProductPage(_n: string): Promise<void> {}
     async goToCheckout(): Promise<void> {}
     async paymentOrder(): Promise<string> { return ''; }
 }
 
 export class OrdersPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async updateOrderStatusOnTable(_id: string, _s: string): Promise<void> {}
 }
 
 export class VendorReturnRequestPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async enableRmaModule(): Promise<void> {}
     async disableRmaModule(): Promise<void> {}
     async vendorReturnRequestRenderProperly(): Promise<void> {}

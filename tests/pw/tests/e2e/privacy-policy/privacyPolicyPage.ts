@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     predefined: { vendorStores: { vendor1: 'vendor1' } },
@@ -21,7 +22,7 @@ export class ApiUtils {
 }
 
 export class PrivacyPolicyPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async contactVendor(_store: string, _data: any): Promise<void> {}
     async goToPrivacyPolicy(_store: string): Promise<void> {}
     async disablePrivacyPolicy(_store: string): Promise<void> {}

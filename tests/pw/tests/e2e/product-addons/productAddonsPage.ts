@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     vendor: { addon: () => ({}) as any },
@@ -38,7 +39,7 @@ export class ApiUtils {
 }
 
 export class ProductAddonsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async enableProductAddonModule(): Promise<void> {}
     async disableProductAddonModule(): Promise<void> {}
     async vendorProductAddonsSettingsRenderProperly(): Promise<void> {}
@@ -51,7 +52,7 @@ export class ProductAddonsPage {
 }
 
 export class ProductsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async addProductAddon(_n: string, _a: any): Promise<void> {}
     async importAddon(_n: string, _s: string, _an: string): Promise<void> {}
     async exportAddon(_n: string, _s: string): Promise<void> {}

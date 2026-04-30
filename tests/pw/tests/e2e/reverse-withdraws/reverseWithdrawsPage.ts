@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     order: { orderStatus: { processing: 'processing', completed: 'completed' } },
@@ -38,7 +39,7 @@ export class ApiUtils {
 }
 
 export class ReverseWithdrawsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async adminReverseWithdrawRenderProperly(): Promise<void> {}
     async filterReverseWithdraws(_s: string): Promise<void> {}
     async clearFilterReverseWithdraws(_s: string): Promise<void> {}

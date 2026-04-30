@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const testData = {
     optionName: { liveChat: 'dokan_live_chat' },
@@ -35,7 +36,7 @@ export const helpers = {
 };
 
 export class LiveChatPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async enableLiveChatModule(): Promise<void> {}
     async disableLiveChatModule(): Promise<void> {}
     async viewLiveChatButtonOnStore(_name: string, _hidden?: boolean): Promise<void> {}

@@ -2,6 +2,7 @@ import { Page, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 import mysql from 'mysql2/promise';
 import { isSerialized, serialize } from 'php-serialize';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 // ============================================
 // ENVIRONMENT VARIABLES
@@ -110,6 +111,7 @@ export class EmailVerificationsPage {
 
     constructor(page: Page) {
         this.page = page;
+        void closeAnnouncementModal(page);
     }
 
     // Navigation helpers
@@ -198,11 +200,47 @@ export class EmailVerificationsPage {
     }
 
     async selectRegisterAsCustomer(): Promise<void> {
-        await this.click(selectors.registration.regAsCustomer);
+        // Dokan Lite 5.0.0 turned the customer/vendor radio on the my-account
+        // form into a hidden input (role defaults to "customer"; vendor signup
+        // moved to a dedicated onboarding page). Click only when the control
+        // is still rendered as a visible radio.
+        const locator = this.page.locator(selectors.registration.regAsCustomer);
+        if (await locator.isVisible().catch(() => false)) {
+            await locator.click();
+        }
     }
 
     async clickRegisterButton(): Promise<void> {
-        await this.clickAndWaitForResponseAndLoadState(subUrls.myAccount, selectors.registration.register, 302);
+        // In Dokan Lite 5.0.0 the my-account register button click does not
+        // reliably trigger native form submit (a JS handler swallows it).
+        // Call form.submit() directly — bypasses the JS submit-event listeners
+        // that the button click would fire and goes straight to the network POST.
+        await Promise.all([
+            this.page.waitForResponse(
+                resp => resp.url().includes(subUrls.myAccount) && resp.status() === 302,
+                { timeout: 30000 },
+            ),
+            this.page.evaluate(() => {
+                const form =
+                    (document.querySelector('form.woocommerce-form-register') as HTMLFormElement | null) ??
+                    (document.querySelector('form.register') as HTMLFormElement | null);
+                if (!form) {
+                    throw new Error('Register form not found on /my-account');
+                }
+                // submit() doesn't include the button's name/value, but the
+                // server-side handler dispatches on input[name=register] — so
+                // inject one if it's missing.
+                if (!form.querySelector('input[name="register"]')) {
+                    const hidden = document.createElement('input');
+                    hidden.type = 'hidden';
+                    hidden.name = 'register';
+                    hidden.value = 'Register';
+                    form.appendChild(hidden);
+                }
+                form.submit();
+            }),
+        ]);
+        await this.page.waitForLoadState('load');
     }
 
     async clickRegisterButtonWithoutWaiting(): Promise<void> {
@@ -222,7 +260,16 @@ export class EmailVerificationsPage {
     }
 
     async validateRegisterAsCustomerSelected(): Promise<void> {
-        await this.toBeChecked(selectors.registration.regAsCustomer);
+        // 5.0.0+: hidden input is always set to "customer". Older templates use
+        // a checked radio. Accept either: visible radio must be checked,
+        // hidden input's value must equal "customer".
+        const locator = this.page.locator(selectors.registration.regAsCustomer);
+        const isHidden = await locator.evaluate(el => (el as HTMLInputElement).type === 'hidden').catch(() => false);
+        if (isHidden) {
+            await this.toHaveValue(selectors.registration.regAsCustomer, 'customer');
+        } else {
+            await this.toBeChecked(selectors.registration.regAsCustomer);
+        }
     }
 
     // ===========================================

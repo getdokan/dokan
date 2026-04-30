@@ -1,4 +1,5 @@
 import { Page, expect } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 const { BASE_URL } = process.env;
 
@@ -61,6 +62,7 @@ export class HelpPage {
 
     constructor(page: Page) {
         this.page = page;
+        void closeAnnouncementModal(page);
     }
 
     private createUrl(subPath: string): string {

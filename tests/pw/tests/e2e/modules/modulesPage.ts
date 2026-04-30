@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const testData = {
     moduleStats: {},
@@ -19,7 +20,7 @@ export const api = {
 };
 
 export class ModulesPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async adminModulesRenderProperly(_stats: any): Promise<void> {}
     async searchModule(_name: string): Promise<void> {}
     async filterModules(_cat: string): Promise<void> {}

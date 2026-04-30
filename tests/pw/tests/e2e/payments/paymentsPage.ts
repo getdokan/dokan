@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const testData = {
     payment: {
@@ -41,7 +42,7 @@ export const helpers = {
 };
 
 export class PaymentsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async setCurrency(_c: string): Promise<void> {}
     async setupBasicPaymentMethods(_p: any): Promise<void> {}
     async enableMangoPayModule(): Promise<void> {}

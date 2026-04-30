@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
 
@@ -71,6 +72,7 @@ export class AddProductPage {
     async goToProductsPage() {
         await this.page.goto(this.vendor.productsUrl);
         await this.waitForPageReady();
+        await closeAnnouncementModal(this.page);
         await this.page.getByRole('link', { name: 'Add new product' }).first().waitFor({ state: 'visible' });
     }
 

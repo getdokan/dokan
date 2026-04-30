@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const payloads = {
     moduleIds: { sellerVacation: 'seller_vacation' },
@@ -13,7 +14,7 @@ export class ApiUtils {
 }
 
 export class SellerVacationPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async enableSellerVacationModule(): Promise<void> {}
     async disableSellerVacationModule(): Promise<void> {}
 }

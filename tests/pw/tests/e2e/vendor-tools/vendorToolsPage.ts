@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const payloads = {
     moduleIds: { vendorImportExport: 'vendor-import-export' },
@@ -15,7 +16,7 @@ export class ApiUtils {
 }
 
 export class VendorToolsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async enableProductImporterExporterModule(): Promise<void> {}
     async disableProductImporterExporterModule(): Promise<void> {}
     async vendorToolsRenderProperly(): Promise<void> {}

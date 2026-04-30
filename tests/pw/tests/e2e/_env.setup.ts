@@ -131,6 +131,23 @@ setup.describe('setup woocommerce settings', () => {
         await dbUtils.updateOptionValue('theme_mods_storefront', { storefront_sticky_add_to_cart: false });
     });
 
+    setup('dismiss vendor announcement modal', { tag: ['@pro'] }, async () => {
+        // Dokan Pro 5.0.0+ pops a "Latest unread announcement" modal on every
+        // vendor dashboard page. The modal opens when `latestUnread.id !==
+        // lastDismissedId` — strict inequality, so a sentinel meta won't work.
+        // Mark every announcement row as 'read' for our test vendors so
+        // `latestUnread` query returns null and the modal never renders.
+        // Table: wp_dokan_announcement (id, user_id, status='unread'|'read'|'trash')
+        const dbPrefix = process.env.DB_PREFIX || 'wp';
+        const ids = [process.env.VENDOR_ID, process.env.VENDOR2_ID].filter(Boolean) as string[];
+        for (const userId of ids) {
+            await dbUtils.dbQuery(
+                `UPDATE ${dbPrefix}_dokan_announcement SET status = 'read' WHERE user_id = ? AND status = 'unread'`,
+                [userId]
+            );
+        }
+    });
+
     setup('disable simple-auction ajax bid check', { tag: ['@pro'] }, async () => {
         const [, , status] = await apiUtils.getSinglePlugin('woocommerce-simple-auctions/woocommerce-simple-auctions', payloads.adminAuth);
         if (status === 'active') await dbUtils.setOptionValue('simple_auctions_live_check', 'no', false);

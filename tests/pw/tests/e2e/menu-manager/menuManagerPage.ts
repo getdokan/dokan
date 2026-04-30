@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const testData = {
     optionName: { menuManager: 'dokan_menu_manager' },
@@ -23,7 +24,7 @@ export const api = {
 };
 
 export class MenuManagerPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async updateMenuStatus(_m: string, _s: string, _k: string, _v: MenuManagerPage): Promise<void> {}
     async renameMenu(_m: string, _n: string, _v: MenuManagerPage): Promise<void> {}
     async cantRenameMenuBeyondLimit(_m: string, _n: string): Promise<void> {}

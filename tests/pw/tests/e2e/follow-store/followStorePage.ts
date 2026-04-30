@@ -1,5 +1,6 @@
 import { Page, expect, request, APIRequestContext } from '@playwright/test';
 import mysql from 'mysql2/promise';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 // ============================================
 // ENVIRONMENT VARIABLES
@@ -250,6 +251,7 @@ export class FollowStorePage {
 
     constructor(page: Page) {
         this.page = page;
+        void closeAnnouncementModal(page);
     }
 
     // Navigation helpers

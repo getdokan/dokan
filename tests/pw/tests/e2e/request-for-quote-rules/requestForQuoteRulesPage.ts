@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     requestForQuotation: { quoteRule: (): any => ({ includeProducts: '', title: '', specificProducts: true }) },
@@ -19,7 +20,7 @@ export class ApiUtils {
 }
 
 export class RequestForQuotationsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async adminQuoteRulesRenderProperly(): Promise<void> {}
     async addQuoteRule(_r: any): Promise<void> {}
     async editQuoteRule(_r: any): Promise<void> {}

@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const payloads = {
     moduleIds: { minMaxQuantities: 'order_min_max' },
@@ -13,7 +14,7 @@ export const api = {
 };
 
 export class MinMaxQuantitiesPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async enableMinMaxQuantitiesModule(): Promise<void> {}
     async disableMinMaxQuantitiesModule(): Promise<void> {}
 }

@@ -1,4 +1,5 @@
 import { Page, expect } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
 
@@ -7,6 +8,7 @@ export class AnnouncementsPage {
 
     constructor(page: Page) {
         this.page = page;
+        void closeAnnouncementModal(page);
     }
 
     // ============================================
@@ -112,10 +114,18 @@ export class AnnouncementsPage {
 
         // Announcement List
         announcementTitle: (title: string) => `//div[contains(text(),'${title}')]`,
-        announcementStatusBadge: `body > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > table:nth-child(2) > tbody:nth-child(3) > tr:nth-child(1) > td:nth-child(6) > div:nth-child(1) > span:nth-child(1)`,
+        // Scope status badge to the row that contains the given title — the
+        // older nth-child positional selector breaks on any layout shift.
+        announcementStatusBadgeForTitle: (title: string, status: string) =>
+            `//tr[.//div[contains(text(),'${title}')]]//span[normalize-space()='${status}']`,
 
-        // Row action button (3-dot menu) identified by the announcement title in the same row
-        rowActionButton: (title: string) => `//tr[.//div[contains(text(),'${title}')]]//button[@aria-label='Actions']`,
+        // Row action button (3-dot menu) identified by the announcement title.
+        // Excludes rows whose status cell contains "Trash" — when an
+        // announcement of the same title was already trashed by a previous run
+        // (or another test), DataViews shows both rows in the All view and the
+        // unscoped XPath becomes ambiguous (strict-mode violation).
+        rowActionButton: (title: string) =>
+            `//tr[.//div[contains(text(),'${title}')] and not(.//*[normalize-space()='Trash'])]//button[@aria-label='Actions']`,
         moveToTrash: `//div[@role='menuitem'][normalize-space()='Move to Trash']`,
         confirmTrash: `//button[normalize-space()='Confirm']`,
     };
@@ -124,8 +134,17 @@ export class AnnouncementsPage {
     vendorNewDashboard = {
         announcementsUrl: `${BASE_URL}/dashboard/new/#announcement`,
 
-        announcementCard: (title: string) => `//h3[normalize-space()='${title}']`,
-        announcementDetailTitle: (title: string) => `//h2[normalize-space()='${title}']`,
+        // Vendor's new dashboard renders each announcement as an <article>
+        // containing a <button> with three <p> children (title, description,
+        // timestamp). Title used to be an <h3>; updated for the v5.0.0 layout.
+        // Multiple rows can share the same title across reruns — pick the
+        // first match.
+        announcementCard: (title: string) =>
+            `//article[.//p[normalize-space()='${title}']]//button`,
+        // Detail panel heading — accept any of h1/h2/h3 with the title text,
+        // since the new dashboard layout may use any of them across versions.
+        announcementDetailTitle: (title: string) =>
+            `//*[self::h1 or self::h2 or self::h3][normalize-space()='${title}']`,
     };
 
     // Vendor Selectors
@@ -497,9 +516,9 @@ export class AnnouncementsPage {
         ).toHaveText(title);
 
         await expect(
-            this.page.locator(this.adminNewDashboard.announcementStatusBadge),
-            `Announcement status badge should display "Draft"`,
-        ).toHaveText('Draft');
+            this.page.locator(this.adminNewDashboard.announcementStatusBadgeForTitle(title, 'Draft')),
+            `Announcement "${title}" should have a Draft status badge`,
+        ).toBeVisible();
 
         await this.page.waitForLoadState('domcontentloaded');
     }
@@ -563,9 +582,16 @@ export class AnnouncementsPage {
 
     async vendorViewAnnouncementInNewDashboard(title: string) {
         await this.page.goto(this.vendorNewDashboard.announcementsUrl);
+        // The new vendor dashboard uses hash routing (#announcement) and keeps
+        // background polling alive — networkidle never fires. Skip it and wait
+        // for the actual announcement card to render.
         await this.page.waitForLoadState('domcontentloaded');
 
-        await this.page.locator(this.vendorNewDashboard.announcementCard(title)).click();
+        // Multiple rows may share the same title across reruns; click the
+        // first match.
+        const card = this.page.locator(this.vendorNewDashboard.announcementCard(title)).first();
+        await card.waitFor({ state: 'visible', timeout: 30 * 1000 });
+        await card.click();
         await this.page.waitForLoadState('domcontentloaded');
     }
 

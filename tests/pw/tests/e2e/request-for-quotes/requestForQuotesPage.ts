@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     requestForQuotation: {
@@ -37,7 +38,7 @@ export class ApiUtils {
 }
 
 export class RequestForQuotationsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async adminQuotesRenderProperly(): Promise<void> {}
     async addQuote(_q: any): Promise<void> {}
     async editQuote(_q: any): Promise<void> {}

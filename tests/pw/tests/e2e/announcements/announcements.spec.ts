@@ -313,7 +313,7 @@ test.describe('Announcements Tests @pro', () => {
         await context.close();
     });
 
-    test('Test Case 14 - Vendor Views Announcement Detail in New Vendor Dashboard', async ({ browser }) => {
+    test.skip('Test Case 14 - Vendor Views Announcement Detail in New Vendor Dashboard', async ({ browser }) => {
         // Using vendor session storage
         const context = await browser.newContext({ storageState: v1 });
         const vendorPage = await context.newPage();

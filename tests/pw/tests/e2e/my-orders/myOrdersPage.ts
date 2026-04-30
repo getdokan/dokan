@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const testData = {
     orderStatus: { completed: 'completed', pending: 'pending' },
@@ -19,7 +20,7 @@ export const api = {
 };
 
 export class MyOrdersPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async myOrdersRenderProperly(): Promise<void> {}
     async viewOrderDetails(_id: string): Promise<void> {}
     async viewOrderNote(_id: string, _note: string): Promise<void> {}

@@ -1,6 +1,7 @@
 import { Page, expect, request, APIRequestContext } from '@playwright/test';
 import mysql from 'mysql2/promise';
 import { serialize, unserialize } from 'php-serialize';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 // ============================================
 // ENVIRONMENT VARIABLES
@@ -267,6 +268,7 @@ export class GeolocationPage {
 
     constructor(page: Page) {
         this.page = page;
+        void closeAnnouncementModal(page);
     }
 
     // Navigation helpers

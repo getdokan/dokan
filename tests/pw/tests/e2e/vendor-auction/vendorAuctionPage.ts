@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     product: { auction: { productName: () => '' } as any },
@@ -22,7 +23,7 @@ export class ApiUtils {
 }
 
 export class AuctionsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async enableAuctionIntegrationModule(): Promise<void> {}
     async disableAuctionIntegrationModule(): Promise<void> {}
     async adminAddAuctionProduct(_p: any): Promise<void> {}

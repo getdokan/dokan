@@ -1,6 +1,7 @@
 import { Page, expect, APIRequestContext } from '@playwright/test';
 import mysql from 'mysql2/promise';
 import { isSerialized, serialize, unserialize } from 'php-serialize';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
 const SERVER_URL = process.env.SERVER_URL ?? `${BASE_URL}/wp-json`;
@@ -435,6 +436,7 @@ export class OrdersPage {
 
     private async gotoUrl(fullUrl: string, waitUntil: 'load' | 'domcontentloaded' | 'networkidle' = 'domcontentloaded'): Promise<void> {
         await this.page.goto(fullUrl, { waitUntil });
+        await closeAnnouncementModal(this.page);
     }
 
     private async goIfNotThere(subPath: string, waitUntil: 'load' | 'domcontentloaded' | 'networkidle' = 'domcontentloaded'): Promise<void> {

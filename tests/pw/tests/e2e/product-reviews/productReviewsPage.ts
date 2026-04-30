@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const payloads = {
     vendorAuth: {} as Record<string, string>,
@@ -12,7 +13,7 @@ export class ApiUtils {
 }
 
 export class ProductReviewsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async vendorProductReviewsRenderProperly(): Promise<void> {}
     async viewProductReview(_m: string): Promise<void> {}
     async updateProductReview(_a: string, _m: string): Promise<void> {}

@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     order: { orderStatus: { processing: 'processing', completed: 'completed' } },
@@ -21,7 +22,7 @@ export class ApiUtils {
 }
 
 export class RefundsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async adminRefundRequestsRenderProperly(): Promise<void> {}
     async searchRefundRequests(_q: string): Promise<void> {}
     async updateRefundRequests(_id: string, _a: string): Promise<void> {}

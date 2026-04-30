@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     predefined: { vendorStores: { vendor1: '' } },
@@ -26,7 +27,7 @@ export class ApiUtils {
 }
 
 export class WithdrawsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async adminWithdrawsRenderProperly(): Promise<void> {}
     async filterWithdraws(_v: string, _t: string): Promise<void> {}
     async exportWithdraws(): Promise<void> {}

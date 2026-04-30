@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     pageTitle: '',
@@ -43,7 +44,7 @@ export class ApiUtils {
 }
 
 export class ShortcodePage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async createPageWithShortcode(_t: string, _s: string): Promise<void> {}
     async viewDashboard(_l: string): Promise<void> {}
     async viewDokanSubscriptionPacks(_l: string): Promise<void> {}

@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const payloads = {
     moduleIds: { vendorAnalytics: 'vendor_analytics' },
@@ -13,7 +14,7 @@ export class ApiUtils {
 }
 
 export class VendorAnalyticsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async enableVendorAnalyticsModule(): Promise<void> {}
     async disableVendorAnalyticsModule(): Promise<void> {}
     async vendorAnalyticsRenderProperly(): Promise<void> {}

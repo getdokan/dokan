@@ -351,14 +351,44 @@ export class CustomerPage {
 
         await this.page.locator(selectors.registration.regEmail).fill(email);
         await this.page.locator(selectors.registration.regPassword).fill(password);
-        await this.page.locator(selectors.registration.regAsCustomer).click();
+        // Dokan Lite 5.0.0 removed the visible customer/vendor radios from the
+        // my-account form (role is now a hidden input, vendor signup moved to a
+        // dedicated onboarding page). Click only when the role control is still
+        // a visible radio — older templates and Pro's registration page still
+        // render it that way.
+        const regAsCustomer = this.page.locator(selectors.registration.regAsCustomer);
+        if (await regAsCustomer.isVisible().catch(() => false)) {
+            await regAsCustomer.click();
+        }
 
-        // Wait for the post-registration 302 redirect to complete before reading cookies
+        // Submit the registration form. In Dokan Lite 5.0.0 the my-account
+        // register button click does not reliably trigger native form submit
+        // (a JS handler swallows the click), so we call form.submit()
+        // directly. submit() bypasses the JS submit-event listeners that the
+        // button click would fire — it goes straight to the network POST.
         await Promise.all([
-            this.page.waitForURL(/\/my-account\/?/, { waitUntil: 'commit', timeout: 15000 }),
-            this.page.locator(selectors.registration.register).click(),
+            this.page.waitForNavigation({ url: /\/my-account\/?/, waitUntil: 'load', timeout: 30000 }),
+            this.page.evaluate(() => {
+                const form =
+                    (document.querySelector('form.woocommerce-form-register') as HTMLFormElement | null) ??
+                    (document.querySelector('form.register') as HTMLFormElement | null);
+                if (!form) {
+                    throw new Error('Register form not found on /my-account');
+                }
+                // The form has a button[name=register] that the server reads
+                // to dispatch the registration handler. submit() doesn't include
+                // a button's name/value — inject a hidden field so wp_signon /
+                // WC_Form_Handler::process_registration() still triggers.
+                if (!form.querySelector('input[name="register"]')) {
+                    const hidden = document.createElement('input');
+                    hidden.type = 'hidden';
+                    hidden.name = 'register';
+                    hidden.value = 'Register';
+                    form.appendChild(hidden);
+                }
+                form.submit();
+            }),
         ]);
-        await this.page.waitForLoadState('networkidle');
 
         // Wait for the logout link — confirms we are on the logged-in my-account page
         await this.page.locator(selectors.frontend.customerLogout).waitFor({ state: 'visible', timeout: 15000 });

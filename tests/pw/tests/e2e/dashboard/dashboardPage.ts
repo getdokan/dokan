@@ -1,4 +1,5 @@
 import { Page, expect } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 // ============================================
 // ENVIRONMENT VARIABLES
@@ -351,6 +352,7 @@ export class AdminDashboardPage extends BasePage {
 export class VendorDashboardPage extends BasePage {
     constructor(page: Page) {
         super(page);
+        void closeAnnouncementModal(page);
     }
 
     async vendorDashboardRenderProperly(link?: string) {

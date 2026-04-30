@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
 
@@ -43,7 +44,7 @@ export class ApiUtils {
 }
 
 export class VendorPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
 
     /**
      * Register a vendor through `/vendor-onboarding/` (Dokan 5.0.0+) and
@@ -100,7 +101,7 @@ export class VendorPage {
 }
 
 export class VendorSubscriptionsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async enableVendorSubscriptionModule(): Promise<void> {}
     async disableVendorSubscriptionModule(): Promise<void> {}
     async subscriptionsRenderProperly(): Promise<void> {}

@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     predefined: { vendorStores: { vendor1: '' } },
@@ -23,7 +24,7 @@ export class ApiUtils {
 }
 
 export class StoreReviewsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async enableStoreReviewsModule(_v: string): Promise<void> {}
     async disableStoreReviewsModule(_v: string): Promise<void> {}
     async adminStoreReviewsRenderProperly(): Promise<void> {}

@@ -1,4 +1,5 @@
 import { Page } from '@playwright/test';
+import { closeAnnouncementModal } from '@utils/helpers';
 
 export const data = {
     customer: { customerInfo: {} as any, username: '' },
@@ -37,7 +38,7 @@ export class ApiUtils {
 }
 
 export class CustomerPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async customerRegister(_i: any): Promise<void> {}
     async addProductToCart(_n: string, _t: string, _b?: boolean, _q?: string): Promise<void> {}
     async goToCart(): Promise<void> {}
@@ -46,12 +47,12 @@ export class CustomerPage {
 }
 
 export class ProductsPage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async addProductWholesaleOptions(_n: string, _o: any): Promise<void> {}
 }
 
 export class WholesalePage {
-    constructor(readonly page: Page) {}
+    constructor(readonly page: Page) { void closeAnnouncementModal(page); }
     async enableWholesaleModule(): Promise<void> {}
     async disableWholesaleModule(): Promise<void> {}
     async adminWholesaleCustomersRenderProperly(): Promise<void> {}
