@@ -25,7 +25,12 @@ const readFile = filePath => (filePath && fs.existsSync(filePath) ? JSON.parse(f
 
 const getCoverage = filePath => {
     const report = readFile(filePath);
-    return report && typeof report.coverage !== 'undefined' ? Number(report.coverage) : null;
+    if (!report || typeof report.coverage === 'undefined') return null;
+    // The coverage report stores the value as a string with a "%" suffix
+    // (e.g. "74.22%"). Strip it so we can render it consistently.
+    const raw = String(report.coverage).replace('%', '').trim();
+    const n = Number(raw);
+    return Number.isFinite(n) ? n : null;
 };
 
 const num = (value, fallback = 0) => {
@@ -42,7 +47,9 @@ const fmtPct = value => (value === null || value === undefined ? '—' : `${num(
 const verdictBadge = result => {
     if (!result) return '⚪️ No data';
     if (result.failed > 0) return '🔴 Failed';
-    if (result.flaky > 0) return '🟡 Flaky';
+    // Flaky tests pass on retry, so the suite did not fail. Show the number
+    // of flaky retries inline rather than downgrading the overall status.
+    if (result.flaky > 0) return `🟢 Passed · ⚠️ ${num(result.flaky)} flaky`;
     return '🟢 Passed';
 };
 
@@ -112,11 +119,12 @@ const buildOverallBanner = (core, results) => {
         { total: 0, passed: 0, failed: 0, flaky: 0, skipped: 0 },
     );
 
-    const status = totals.failed > 0 ? '🔴 **Failed**' : totals.flaky > 0 ? '🟡 **Flaky**' : '🟢 **Passed**';
+    const status = totals.failed > 0 ? '🔴 **Failed**' : '🟢 **Passed**';
+    const flakyNote = totals.flaky > 0 && totals.failed === 0 ? ` &nbsp;·&nbsp; ⚠️ ${totals.flaky} flaky (passed on retry)` : '';
     const ran = totals.passed + totals.failed + totals.flaky;
     const rate = ran === 0 ? '—' : `${((totals.passed / ran) * 100).toFixed(1)}%`;
 
-    core.summary.addRaw(`> ${status} &nbsp;·&nbsp; **${totals.passed.toLocaleString()} / ${totals.total.toLocaleString()}** tests passed &nbsp;·&nbsp; pass rate **${rate}**`).addEOL().addEOL();
+    core.summary.addRaw(`> ${status} &nbsp;·&nbsp; **${totals.passed.toLocaleString()} / ${totals.total.toLocaleString()}** tests passed &nbsp;·&nbsp; pass rate **${rate}**${flakyNote}`).addEOL().addEOL();
 };
 
 const buildSuiteTable = (core, rows) => {
