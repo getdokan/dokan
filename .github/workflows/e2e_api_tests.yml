@@ -269,12 +269,36 @@ jobs:
               run: |
                   npm run test:e2e -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
 
+            # Snapshot the e2e summary before coverage runs — both projects use
+            # the same playwright.config.ts and write summaryReporter output to
+            # the same results.json, so the coverage teardown otherwise
+            # overwrites the actual e2e shard summary with its own (1-test)
+            # report and the merge step under-counts e2e by ~1000 tests.
+            - name: Preserve e2e summary before coverage
+              if: always() && steps.e2e-test.outcome != 'cancelled'
+              working-directory: tests/pw
+              run: |
+                  if [ -f playwright-report/e2e/summary-report/results.json ]; then
+                      cp playwright-report/e2e/summary-report/results.json \
+                         playwright-report/e2e/summary-report/results.e2e.bak.json
+                  fi
+
             # Run e2e coverage
             - name: 🧪 Run e2e coverage
               if: always() && (steps.e2e-test.outcome == 'success' || steps.e2e-test.outcome == 'failure')
               working-directory: tests/pw
               run: |
                   npm run test:e2e:coverage
+
+            # Restore the real e2e summary so artifact upload + merge use it.
+            - name: Restore e2e summary after coverage
+              if: always() && steps.e2e-test.outcome != 'cancelled'
+              working-directory: tests/pw
+              run: |
+                  if [ -f playwright-report/e2e/summary-report/results.e2e.bak.json ]; then
+                      mv playwright-report/e2e/summary-report/results.e2e.bak.json \
+                         playwright-report/e2e/summary-report/results.json
+                  fi
 
             # # Prepare test summary
             # - name: Prepare test summary
