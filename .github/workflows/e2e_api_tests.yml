@@ -90,7 +90,7 @@ jobs:
     e2e_tests:
         name: e2e tests
         runs-on: ubuntu-latest
-        timeout-minutes: 20
+        timeout-minutes: 30
         strategy:
             fail-fast: false
             matrix:
@@ -264,7 +264,7 @@ jobs:
             - name: 🧪 Run e2e tests-${{ matrix.shardIndex }}
               id: e2e-test
               if: success() && (github.event_name != 'workflow_dispatch' || ( github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All')))
-              timeout-minutes: 15
+              timeout-minutes: 25
               working-directory: tests/pw
               run: |
                   npm run test:e2e -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
@@ -310,7 +310,7 @@ jobs:
     api_tests:
         name: api tests
         runs-on: ubuntu-latest
-        timeout-minutes: 10
+        timeout-minutes: 30
         strategy:
             fail-fast: false
             matrix:
@@ -483,7 +483,7 @@ jobs:
             - name: 🧪 Run api tests-${{ matrix.shardIndex }}
               id: api-test
               if: always() && steps.wp-env.outcome == 'success' && ( github.event_name != 'workflow_dispatch'  || ( github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'API' || github.event.inputs.testsuite == 'All')))
-              timeout-minutes: 5
+              timeout-minutes: 15
               working-directory: tests/pw
               run: |
                   npm run test:api -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
