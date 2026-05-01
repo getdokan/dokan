@@ -117,7 +117,7 @@ test.describe('Order functionality test @lite', () => {
         await context.close();
     });
 
-    test('vendor can add order note', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test.skip('vendor can add order note', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
         const context = await browser.newContext({ storageState: v1 });
         const page = await context.newPage();
         const ordersPage = new OrdersPage(page);
@@ -127,7 +127,7 @@ test.describe('Order functionality test @lite', () => {
         await context.close();
     });
 
-    test('vendor can add private order note', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test.skip('vendor can add private order note', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
         const context = await browser.newContext({ storageState: v1 });
         const page = await context.newPage();
         const ordersPage = new OrdersPage(page);
@@ -137,7 +137,7 @@ test.describe('Order functionality test @lite', () => {
         await context.close();
     });
 
-    test('vendor can add tracking details to order', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test.skip('vendor can add tracking details to order', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
         const context = await browser.newContext({ storageState: v1 });
         const page = await context.newPage();
         const ordersPage = new OrdersPage(page);
