@@ -90,12 +90,12 @@ jobs:
     e2e_tests:
         name: e2e tests
         runs-on: ubuntu-latest
-        timeout-minutes: 30
+        timeout-minutes: 40
         strategy:
             fail-fast: false
             matrix:
-                shardIndex: [1, 2, 3]
-                shardTotal: [3]
+                shardIndex: [1, 2, 3, 4]
+                shardTotal: [4]
 
         steps:
             # Checkout testing repo (folder is repo name e.g. "dokan"; we need "dokan-lite" for wp-env)
@@ -221,6 +221,21 @@ jobs:
                       woocommerce-simple-auctions \
                       dokan-pro
 
+            # Enable the Dokan 5.0.0+ React UI (vendor dashboard + product editor).
+            # The React tests under tests/e2e/**/new*.spec.ts and the merged
+            # "NEW REACT UI TEST CASES" sections require this. Without it, the
+            # legacy templates render and the React route mounts assert false.
+            - name: Enable Dokan New React UI (vendor dashboard + product editor)
+              working-directory: tests/pw
+              run: |
+                  npm run wp-env run tests-cli wp eval '
+                      $appearance = get_option("dokan_appearance", []);
+                      $appearance["vendor_layout_style"]   = "latest";
+                      $appearance["vendor_product_editor"] = "latest";
+                      update_option("dokan_appearance", $appearance);
+                      echo "Dokan appearance set to latest UI" . PHP_EOL;
+                  '
+
             # Get Playwright version
             - name: Get installed Playwright version
               id: playwright-version
@@ -264,7 +279,7 @@ jobs:
             - name: 🧪 Run e2e tests-${{ matrix.shardIndex }}
               id: e2e-test
               if: success() && (github.event_name != 'workflow_dispatch' || ( github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All')))
-              timeout-minutes: 25
+              timeout-minutes: 35
               working-directory: tests/pw
               run: |
                   npm run test:e2e -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
@@ -464,6 +479,21 @@ jobs:
                       woocommerce-product-addons \
                       woocommerce-simple-auctions \
                       dokan-pro
+
+            # Enable the Dokan 5.0.0+ React UI (vendor dashboard + product editor).
+            # The React tests under tests/e2e/**/new*.spec.ts and the merged
+            # "NEW REACT UI TEST CASES" sections require this. Without it, the
+            # legacy templates render and the React route mounts assert false.
+            - name: Enable Dokan New React UI (vendor dashboard + product editor)
+              working-directory: tests/pw
+              run: |
+                  npm run wp-env run tests-cli wp eval '
+                      $appearance = get_option("dokan_appearance", []);
+                      $appearance["vendor_layout_style"]   = "latest";
+                      $appearance["vendor_product_editor"] = "latest";
+                      update_option("dokan_appearance", $appearance);
+                      echo "Dokan appearance set to latest UI" . PHP_EOL;
+                  '
 
             # Get Playwright version
             - name: Get installed Playwright version

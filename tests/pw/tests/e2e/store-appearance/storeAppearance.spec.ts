@@ -1,6 +1,9 @@
-import { test, Page } from '@playwright/test';
+import { Page, expect, test } from '@playwright/test';
 import { StoreAppearancePage, ApiUtils, dbUtils, data, dbData, payloads } from './storeAppearancePage';
 import path from 'path';
+
+const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
+const BASE = process.env.BASE_URL || 'http://localhost:9999';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const { VENDOR_ID } = process.env;
@@ -90,3 +93,39 @@ test.describe('Store Appearance test', () => {
         });
     });
 });
+
+// ============================================
+// NEW REACT UI TEST CASES (Dokan 5.0.0+)
+// ============================================
+// Added during the 5.0.0 React rewrite. These tests target the new React
+// surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
+// the legacy tests above for parity coverage during rollout.
+
+test.describe('Vendor Store Appearance (React) Tests @lite', () => {
+    test('Test Case 1 - Store settings page renders', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: v1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/dashboard/settings/store/`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(2000);
+        const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
+        expect(fatal).toBe(false);
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 2 - Store name field is visible', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: v1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/dashboard/settings/store/`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(3000);
+        // Vendor settings should expose store name input
+        const nameInput = page.locator('input[name="dokan_store_name"], input[name="store_name"], input[id*="store_name"]');
+        const visible = await nameInput.first().isVisible({ timeout: 5000 }).catch(() => false);
+        expect(visible).toBe(true);
+        await page.close();
+        await ctx.close();
+    });
+});
+

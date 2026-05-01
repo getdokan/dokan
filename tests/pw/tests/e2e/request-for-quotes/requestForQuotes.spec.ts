@@ -1,6 +1,8 @@
-import { test, Page } from '@playwright/test';
+import { Page, expect, test } from '@playwright/test';
 import { RequestForQuotationsPage, ApiUtils, data, dbUtils, payloads } from './requestForQuotesPage';
 import path from 'path';
+
+const BASE = process.env.BASE_URL || 'http://localhost:9999';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
@@ -148,3 +150,50 @@ test.describe('Request for quotation test customer', () => {
         await guest.customerQuoteProduct({ ...data.requestForQuotation.customerQuoteProduct, productName: productName }, data.requestForQuotation.guest());
     });
 });
+
+// ============================================
+// NEW REACT UI TEST CASES (Dokan 5.0.0+)
+// ============================================
+// Added during the 5.0.0 React rewrite. These tests target the new React
+// surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
+// the legacy tests above for parity coverage during rollout.
+
+test.describe('Request For Quotes (React) Tests @pro', () => {
+    test('Test Case 1 - Vendor RFQ list page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: v1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/dashboard/requested-quotes/`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(2000);
+        const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
+        expect(fatal).toBe(false);
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 2 - Admin RFQ page renders', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: a1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/wp-admin/admin.php?page=request_for_quote`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(2000);
+        const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);
+        expect(fatal).toBe(false);
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 3 - Vendor RFQ page renders content', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: v1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/dashboard/requested-quotes/`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(3000);
+        // Page may show a heading-only screen with "you haven't received any quotes" copy.
+        const bodyText = await page.locator('body').innerText();
+        expect(bodyText.trim().length, 'RFQ page should render some content').toBeGreaterThan(50);
+        await page.close();
+        await ctx.close();
+    });
+});
+

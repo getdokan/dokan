@@ -20,7 +20,7 @@ test.describe('Commission Tests @lite', () => {
     // const context = await browser.newContext({ storageState: a1 });
     // const page = await context.newPage();
 
-    test.skip('Test Case 1 - Admin Configures Fixed Commission Settings', async ({ browser }) => {
+    test.skip('Test Case 1 - Admin Configures Fixed Commission Settings', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
         // Skipped: commission UI structure on the admin Settings > Selling Options tab
         // has been restructured; the dokan_selling[commission_type] <select> no longer
         // exists in the current build. Needs a spec rewrite against the new UI.
@@ -51,7 +51,7 @@ test.describe('Commission Tests @lite', () => {
         await context.close();
     });
 
-    test.skip('Test Case 2 - Admin Configures Category Based Commission Settings', async ({ browser }) => {
+    test.skip('Test Case 2 - Admin Configures Category Based Commission Settings', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
         // Skipped: same UI restructure as TC1. Needs spec rewrite.
         const context = await browser.newContext({ storageState: a1 });
         const adminPage = await context.newPage();
@@ -83,7 +83,7 @@ test.describe('Commission Tests @lite', () => {
         await context.close();
     });
 
-    test('Test Case 3 - Admin Creates Product with Commission Specific Settings', async ({ browser }) => {
+    test('Test Case 3 - Admin Creates Product with Commission Specific Settings', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
         const context = await browser.newContext({ storageState: a1 });
         const adminPage = await context.newPage();
         const commissionPage = new CommissionPage(adminPage);

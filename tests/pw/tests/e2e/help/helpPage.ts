@@ -1,7 +1,30 @@
 import { Page, expect } from '@playwright/test';
-import { closeAnnouncementModal } from '@utils/helpers';
 
 const { BASE_URL } = process.env;
+
+// closeAnnouncementModal is inlined per CONVENTIONS.md §4 to keep this folder
+// self-contained.
+async function closeAnnouncementModal(page: Page): Promise<void> {
+    const installed = '__dokanAnnouncementModalHandlerInstalled' as const;
+    const pwf = page as Page & { [installed]?: boolean };
+    if (!pwf[installed]) {
+        pwf[installed] = true;
+        const modal = page.locator('.vendor-announcement-modal');
+        await page.addLocatorHandler(modal, async () => {
+            const btn = modal.locator('button[aria-label="Close"]').first();
+            if (await btn.isVisible().catch(() => false)) await btn.click({ timeout: 2000 }).catch(() => undefined);
+            else await page.keyboard.press('Escape').catch(() => undefined);
+        }, { noWaitAfter: true }).catch(() => undefined);
+    }
+    try {
+        const modal = page.locator('.vendor-announcement-modal').first();
+        if (!(await modal.isVisible({ timeout: 500 }).catch(() => false))) return;
+        const btn = modal.locator('button[aria-label="Close"]').first();
+        if (await btn.isVisible().catch(() => false)) await btn.click().catch(() => undefined);
+        else await page.keyboard.press('Escape').catch(() => undefined);
+        await modal.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => undefined);
+    } catch { /* selector shape may change */ }
+}
 
 // ============================================
 // URLS
@@ -79,7 +102,7 @@ export class HelpPage {
         return currentURL === this.createUrl(subPath);
     }
 
-    private async goIfNotThere(subPath: string, waitUntil: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' = 'domcontentloaded'): Promise<void> {
+    private async goIfNotThere(subPath: string, waitUntil: 'load' | 'domcontentloaded' | 'load' | 'commit' = 'domcontentloaded'): Promise<void> {
         if (!this.isCurrentUrl(subPath)) {
             const url = this.createUrl(subPath);
             await expect(async () => {
@@ -109,7 +132,7 @@ export class HelpPage {
     // ===========================================
 
     async adminHelpRenderProperly(): Promise<void> {
-        await this.goIfNotThere(subUrls.help, 'networkidle');
+        await this.goIfNotThere(subUrls.help, 'load');
         await this.toBeVisible(selectors.help.helpText);
         await this.multipleElementVisible(selectors.help.basics);
         await this.multipleElementVisible(selectors.help.paymentAndShipping);

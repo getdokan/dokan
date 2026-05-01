@@ -1,5 +1,7 @@
 import { Page, expect } from '@playwright/test';
 
+declare const process: { env: Record<string, string | undefined> };
+
 const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
 
 export class AdminPage {
@@ -111,13 +113,13 @@ export class AdminPage {
     // Admin Methods
     async adminLogin(username: string, password: string) {
         await this.page.goto(this.admin.loginUrl);
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
         const isLoginForm = await this.page.locator(this.admin.usernameInput).isVisible();
         if (isLoginForm) {
             await this.page.locator(this.admin.usernameInput).fill(username);
             await this.page.locator(this.admin.passwordInput).fill(password);
             await this.page.locator(this.admin.loginButton).click();
-            await this.page.waitForLoadState('networkidle');
+            await this.page.waitForLoadState('load');
         }
     }
 
@@ -129,12 +131,12 @@ export class AdminPage {
         }, this.admin.userMenu);
         await this.page.locator(this.admin.logoutLink).waitFor({ state: 'visible' });
         await this.page.locator(this.admin.logoutLink).click();
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
     }
 
     async goToDokanDashboard() {
         await this.page.goto(this.admin.dokanDashboardUrl);
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
     }
 
     async adminDashboardRenderProperly() {
@@ -177,7 +179,7 @@ export class AdminPage {
     }
 
     async waitForPageReady() {
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
     }
 
     // Wait/Utility Methods

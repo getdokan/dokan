@@ -444,7 +444,7 @@ export class CatalogModePage {
     }
 
     async waitForPageReady() {
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
     }
 
     // ============================================

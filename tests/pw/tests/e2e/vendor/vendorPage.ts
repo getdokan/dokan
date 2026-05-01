@@ -1,7 +1,41 @@
 import { Page, expect } from '@playwright/test';
-import { closeAnnouncementModal } from '@utils/helpers';
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
+
+// ============================================
+// VENDOR ANNOUNCEMENT MODAL DISMISSER (inlined per CONVENTIONS.md §4)
+// ============================================
+async function closeAnnouncementModal(page: Page): Promise<void> {
+    const installed = '__dokanAnnouncementModalHandlerInstalled' as const;
+    const pwf = page as Page & { [installed]?: boolean };
+    if (!pwf[installed]) {
+        pwf[installed] = true;
+        const modal = page.locator('.vendor-announcement-modal');
+        await page.addLocatorHandler(
+            modal,
+            async () => {
+                const closeBtn = modal.locator('button[aria-label="Close"]').first();
+                if (await closeBtn.isVisible().catch(() => false)) {
+                    await closeBtn.click({ timeout: 2000 }).catch(() => undefined);
+                } else {
+                    await page.keyboard.press('Escape').catch(() => undefined);
+                }
+            },
+            { noWaitAfter: true },
+        ).catch(() => undefined);
+    }
+    try {
+        const modal = page.locator('.vendor-announcement-modal').first();
+        if (!(await modal.isVisible({ timeout: 500 }).catch(() => false))) return;
+        const closeBtn = modal.locator('button[aria-label="Close"]').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click().catch(() => undefined);
+        } else {
+            await page.keyboard.press('Escape').catch(() => undefined);
+        }
+        await modal.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => undefined);
+    } catch { /* selector shape may change; keep moving */ }
+}
 
 // ============================================
 // SUB-URLS

@@ -1,6 +1,8 @@
-import { test, Page } from '@playwright/test';
+import { Page, expect, test } from '@playwright/test';
 import { PrintfulPage, ApiUtils, payloads } from './printfulPage';
 import path from 'path';
+
+const BASE = process.env.BASE_URL || 'http://localhost:9999';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
@@ -51,3 +53,37 @@ test.describe.skip('Printful module functionality test', () => {
         await admin.disablePrintfulModule();
     });
 });
+
+// ============================================
+// NEW REACT UI TEST CASES (Dokan 5.0.0+)
+// ============================================
+// Added during the 5.0.0 React rewrite. These tests target the new React
+// surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
+// the legacy tests above for parity coverage during rollout.
+
+test.describe('Printful (React) Tests @pro', () => {
+    test('Test Case 1 - Vendor printful page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: v1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/dashboard/printful/`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(2000);
+        const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
+        expect(fatal).toBe(false);
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 2 - Printful page renders content', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: v1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/dashboard/printful/`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(3000);
+        const bodyText = await page.locator('body').innerText();
+        expect(bodyText.trim().length).toBeGreaterThan(50);
+        await page.close();
+        await ctx.close();
+    });
+});
+

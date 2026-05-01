@@ -1,6 +1,8 @@
-import { test, Page } from '@playwright/test';
+import { Page, expect, test } from '@playwright/test';
 import { StoreSupportsPage, ApiUtils, data, payloads, responseBody } from './storeSupportsPage';
 import path from 'path';
+
+const BASE = process.env.BASE_URL || 'http://localhost:9999';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
@@ -160,3 +162,64 @@ test.describe('Store Support test (vendor)', () => {
         await admin.disableStoreSupportModule(data.predefined.vendorStores.vendor1);
     });
 });
+
+// ============================================
+// NEW REACT UI TEST CASES (Dokan 5.0.0+)
+// ============================================
+// Added during the 5.0.0 React rewrite. These tests target the new React
+// surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
+// the legacy tests above for parity coverage during rollout.
+
+test.describe('Store Supports (React) Tests @pro', () => {
+    test('Test Case 1 - Vendor support page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: v1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/dashboard/support/`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(2000);
+        const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
+        expect(fatal).toBe(false);
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 2 - Vendor support shows tickets table or empty state', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: v1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/dashboard/support/`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(3000);
+        const tableVisible = await page.locator('table, [role="table"]').first().isVisible({ timeout: 3000 }).catch(() => false);
+        const emptyVisible = await page.locator("text=/no tickets|no support|nothing/i").first().isVisible({ timeout: 1000 }).catch(() => false);
+        expect(tableVisible || emptyVisible).toBe(true);
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 3 - Admin support page renders', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: a1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/wp-admin/edit.php?post_type=dokan_store_support`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(2000);
+        const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);
+        expect(fatal).toBe(false);
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 4 - Vendor support page survives reload', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: v1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/dashboard/support/`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(2000);
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await page.waitForTimeout(2000);
+        const fatal = await page.locator("text=/Fatal error|Parse error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
+        expect(fatal).toBe(false);
+        await page.close();
+        await ctx.close();
+    });
+});
+

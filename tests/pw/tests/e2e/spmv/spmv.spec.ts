@@ -1,6 +1,8 @@
-import { test, Page } from '@playwright/test';
+import { Page, expect, test } from '@playwright/test';
 import { SpmvPage, ApiUtils, data, payloads, dbUtils, dbData } from './spmvPage';
 import path from 'path';
+
+const BASE = process.env.BASE_URL || 'http://localhost:9999';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
@@ -82,3 +84,37 @@ test.describe('Vendor SPMV test', () => {
         await admin.disableSpmvModule();
     });
 });
+
+// ============================================
+// NEW REACT UI TEST CASES (Dokan 5.0.0+)
+// ============================================
+// Added during the 5.0.0 React rewrite. These tests target the new React
+// surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
+// the legacy tests above for parity coverage during rollout.
+
+test.describe('SPMV (React) Tests @pro', () => {
+    test('Test Case 1 - Admin SPMV page renders', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: a1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan#/spmv`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(2000);
+        const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);
+        expect(fatal).toBe(false);
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 2 - SPMV page renders content', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: a1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan#/spmv`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(3000);
+        const bodyText = await page.locator('body').innerText();
+        expect(bodyText.trim().length).toBeGreaterThan(50);
+        await page.close();
+        await ctx.close();
+    });
+});
+

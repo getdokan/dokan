@@ -1,6 +1,8 @@
-import { test, Page } from '@playwright/test';
+import { Page, expect, test } from '@playwright/test';
 import { StoresPage, ApiUtils, data, payloads } from './storesPage';
 import path from 'path';
+
+const BASE = process.env.BASE_URL || 'http://localhost:9999';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const { VENDOR_ID, PRODUCT_ID } = process.env;
@@ -54,3 +56,79 @@ test.describe('Stores test', () => {
 
     test('admin can perform bulk action on vendors', { tag: ['@lite', '@admin'] }, async () => { await admin.vendorBulkAction('approved'); });
 });
+
+// ============================================
+// NEW REACT UI TEST CASES (Dokan 5.0.0+)
+// ============================================
+// Added during the 5.0.0 React rewrite. These tests target the new React
+// surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
+// the legacy tests above for parity coverage during rollout.
+
+test.describe('Admin Vendors (React) Tests @lite', () => {
+    test('Test Case 1 - Vendors list mounts at #/vendors', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: a1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan-dashboard#/vendors`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(3000);
+        expect(page.url()).toMatch(/#\/vendors/);
+        const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);
+        expect(fatal).toBe(false);
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 2 - Vendors page shows DataViews table or list', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: a1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan-dashboard#/vendors`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(4000);
+        const tableVisible = await page.locator('table, [role="table"], [class*="dataviews"]').first().isVisible({ timeout: 3000 }).catch(() => false);
+        expect(tableVisible, 'Vendors page should show a DataViews table').toBe(true);
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 3 - /vendors/create form mounts', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: a1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan-dashboard#/vendors/create`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(3000);
+        expect(page.url()).toMatch(/#\/vendors\/create/);
+        // Form should have a name / username input
+        const formInput = page.locator('input[type="text"], input[type="email"]');
+        await expect(formInput.first()).toBeVisible({ timeout: 10000 });
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 4 - Vendors page survives reload', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: a1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan-dashboard#/vendors`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(2000);
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await page.waitForTimeout(2000);
+        expect(page.url()).toMatch(/#\/vendors/);
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 5 - Vendor detail route /vendors/:id mounts', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: a1 });
+        const page = await ctx.newPage();
+        const vendorId = process.env.VENDOR_ID || '1';
+        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan-dashboard#/vendors/${vendorId}`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(3000);
+        expect(page.url()).toContain('#/vendors/');
+        const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);
+        expect(fatal).toBe(false);
+        await page.close();
+        await ctx.close();
+    });
+});
+

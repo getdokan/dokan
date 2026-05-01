@@ -2,11 +2,36 @@ import { Page, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 import mysql from 'mysql2/promise';
 import { isSerialized, serialize } from 'php-serialize';
-import { closeAnnouncementModal } from '@utils/helpers';
 
 // ============================================
 // ENVIRONMENT VARIABLES
 // ============================================
+
+// closeAnnouncementModal is inlined per CONVENTIONS.md §4 to keep this folder
+// self-contained.
+async function closeAnnouncementModal(page: import('@playwright/test').Page): Promise<void> {
+    const installed = '__dokanAnnouncementModalHandlerInstalled' as const;
+    type WithFlag = import('@playwright/test').Page & { [installed]?: boolean };
+    const pwf = page as WithFlag;
+    if (!pwf[installed]) {
+        pwf[installed] = true;
+        const modal = page.locator('.vendor-announcement-modal');
+        await page.addLocatorHandler(modal, async () => {
+            const btn = modal.locator('button[aria-label="Close"]').first();
+            if (await btn.isVisible().catch(() => false)) await btn.click({ timeout: 2000 }).catch(() => undefined);
+            else await page.keyboard.press('Escape').catch(() => undefined);
+        }, { noWaitAfter: true }).catch(() => undefined);
+    }
+    try {
+        const modal = page.locator('.vendor-announcement-modal').first();
+        if (!(await modal.isVisible({ timeout: 500 }).catch(() => false))) return;
+        const btn = modal.locator('button[aria-label="Close"]').first();
+        if (await btn.isVisible().catch(() => false)) await btn.click().catch(() => undefined);
+        else await page.keyboard.press('Escape').catch(() => undefined);
+        await modal.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => undefined);
+    } catch { /* selector shape may change */ }
+}
+
 const { BASE_URL, USER_PASSWORD, DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = process.env;
 const dbPrefix = DB_PREFIX;
 

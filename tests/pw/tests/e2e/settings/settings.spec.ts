@@ -1,6 +1,8 @@
-import { test, Page } from '@playwright/test';
+import { Page, expect, test } from '@playwright/test';
 import { SettingsPage, dbData, dbUtils, data } from './settingsPage';
 import path from 'path';
+
+const BASE = process.env.BASE_URL || 'http://localhost:9999';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 
@@ -64,3 +66,52 @@ test.describe('Settings test', () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.vendorSubscription, dbData.dokan.vendorSubscriptionSettings);
     });
 });
+
+// ============================================
+// NEW REACT UI TEST CASES (Dokan 5.0.0+)
+// ============================================
+// Added during the 5.0.0 React rewrite. These tests target the new React
+// surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
+// the legacy tests above for parity coverage during rollout.
+
+test.describe('Admin Settings (React) Tests @lite', () => {
+    test('Test Case 1 - Settings page mounts', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: a1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan#/settings`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(3000);
+        const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);
+        expect(fatal).toBe(false);
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 2 - Settings page shows section headings', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: a1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan#/settings`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(4000);
+        // Settings page renders various section headings (General, Selling, Withdraw etc.)
+        const headings = page.locator("h1, h2, h3").filter({ hasText: /general|settings|selling|withdraw|appearance/i });
+        await expect(headings.first()).toBeVisible({ timeout: 10000 });
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 3 - Settings page survives reload', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: a1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan#/settings`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(2000);
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await page.waitForTimeout(2000);
+        const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);
+        expect(fatal).toBe(false);
+        await page.close();
+        await ctx.close();
+    });
+});
+

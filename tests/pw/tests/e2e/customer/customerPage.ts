@@ -282,7 +282,7 @@ export class CustomerPage {
 
     private async goto(subPath: string) {
         const url = `${BASE_URL}/${subPath}`;
-        await this.page.goto(url, { waitUntil: 'networkidle' });
+        await this.page.goto(url, { waitUntil: 'load' });
     }
 
     private async getCurrentUser(): Promise<string | undefined> {
@@ -299,7 +299,7 @@ export class CustomerPage {
         const logoutVisible = await this.page.locator(selectors.frontend.customerLogout).isVisible().catch(() => false);
         if (logoutVisible) {
             await Promise.all([
-                this.page.waitForLoadState('networkidle'),
+                this.page.waitForLoadState('load'),
                 this.page.locator(selectors.frontend.customerLogout).click(),
             ]);
         }
@@ -320,7 +320,7 @@ export class CustomerPage {
         await this.page.locator(selectors.frontend.username).fill(testData.customer.username);
         await this.page.locator(selectors.frontend.userPassword).fill(testData.customer.password);
         await Promise.all([
-            this.page.waitForLoadState('networkidle'),
+            this.page.waitForLoadState('load'),
             this.page.locator(selectors.frontend.logIn).click(),
         ]);
         const loggedInUser = await this.getCurrentUser();
@@ -415,7 +415,7 @@ export class CustomerPage {
 
         await this.goto(subUrls.myAccount);
         await Promise.all([
-            this.page.waitForLoadState('networkidle'),
+            this.page.waitForLoadState('load'),
             this.page.locator(selectors.dashboard.becomeVendor).click(),
         ]);
 
@@ -437,7 +437,7 @@ export class CustomerPage {
         }
 
         await Promise.all([
-            this.page.waitForLoadState('networkidle'),
+            this.page.waitForLoadState('load'),
             this.page.locator(selectors.dashboard.becomeAVendor).click(),
         ]);
     }
@@ -473,7 +473,7 @@ export class CustomerPage {
         await this.page.locator(selectors.address.billing.email).fill(billing.email);
 
         await Promise.all([
-            this.page.waitForLoadState('networkidle'),
+            this.page.waitForLoadState('load'),
             this.page.locator(selectors.address.billing.saveAddress).click(),
         ]);
 
@@ -505,7 +505,7 @@ export class CustomerPage {
         await this.page.locator(selectors.address.shipping.zipCode).fill(shipping.zipCode);
 
         await Promise.all([
-            this.page.waitForLoadState('networkidle'),
+            this.page.waitForLoadState('load'),
             this.page.locator(selectors.address.shipping.saveAddress).click(),
         ]);
 
@@ -526,7 +526,7 @@ export class CustomerPage {
         await this.page.locator(selectors.accountDetails.email).fill(customer.username + info.emailDomain);
 
         await Promise.all([
-            this.page.waitForLoadState('networkidle'),
+            this.page.waitForLoadState('load'),
             this.page.locator(selectors.accountDetails.saveChanges).click(),
         ]);
 
@@ -542,7 +542,7 @@ export class CustomerPage {
         await this.goto(subUrls.shop);
         await this.page.locator(selectors.shop.searchProductLite).fill(productName);
         await this.page.keyboard.press('Enter');
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
 
         // On single product page, add to cart
         await this.page.locator(selectors.singleProduct.addToCart).click();
@@ -550,7 +550,7 @@ export class CustomerPage {
 
         // View cart and assert item is present
         await Promise.all([
-            this.page.waitForLoadState('networkidle'),
+            this.page.waitForLoadState('load'),
             this.page.locator(selectors.singleProduct.viewCart).click(),
         ]);
 
@@ -597,7 +597,7 @@ export class CustomerPage {
         await this.goto(subUrls.shop);
         await this.page.locator(selectors.shop.searchProductLite).fill(productName);
         await this.page.keyboard.press('Enter');
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
 
         await this.page.locator(selectors.singleProduct.addToCart).click();
         await expect(this.page.locator(selectors.singleProduct.productAddedSuccessMessage(productName))).toBeVisible();
@@ -614,7 +614,7 @@ export class CustomerPage {
             const removeVisible = await this.page.locator(selectors.cart.removeFirstItem).isVisible().catch(() => false);
             if (!removeVisible) break;
             await Promise.all([
-                this.page.waitForLoadState('networkidle'),
+                this.page.waitForLoadState('load'),
                 this.page.locator(selectors.cart.removeFirstItem).click(),
             ]);
         }
@@ -623,7 +623,7 @@ export class CustomerPage {
     private async goToCheckoutFromCart(): Promise<void> {
         await this.goto(subUrls.cart);
         await Promise.all([
-            this.page.waitForLoadState('networkidle'),
+            this.page.waitForLoadState('load'),
             this.page.locator(selectors.cart.proceedToCheckout).click(),
         ]);
     }
@@ -656,7 +656,7 @@ export class CustomerPage {
 
         await this.page.locator(selectors.checkout.placeOrder).scrollIntoViewIfNeeded();
         await Promise.all([
-            this.page.waitForLoadState('networkidle'),
+            this.page.waitForLoadState('load'),
             this.page.locator(selectors.checkout.placeOrder).click(),
         ]);
 

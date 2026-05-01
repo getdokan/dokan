@@ -1,7 +1,54 @@
 import { Page, expect } from '@playwright/test';
-import { closeAnnouncementModal } from '@utils/helpers';
+
+declare const process: { env: Record<string, string | undefined> };
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
+
+/**
+ * Close Dokan Pro's vendor announcement modal whenever it appears.
+ *
+ * Inlined from utils/helpers.ts so this folder remains self-contained per
+ * tests/pw/CONVENTIONS.md §4. The modal is rendered on every vendor
+ * dashboard page in 5.0.0+ until the latest unread announcement is
+ * dismissed, and blocks test interactions. Calling once per page installs
+ * a `page.addLocatorHandler` that auto-dismisses thereafter.
+ */
+async function closeAnnouncementModal(page: Page): Promise<void> {
+    const installed = '__dokanAnnouncementModalHandlerInstalled' as const;
+    const pageWithFlag = page as Page & { [installed]?: boolean };
+
+    if (!pageWithFlag[installed]) {
+        pageWithFlag[installed] = true;
+        const modal = page.locator('.vendor-announcement-modal');
+        await page.addLocatorHandler(
+            modal,
+            async () => {
+                const closeBtn = modal.locator('button[aria-label="Close"]').first();
+                if (await closeBtn.isVisible().catch(() => false)) {
+                    await closeBtn.click({ timeout: 2000 }).catch(() => undefined);
+                } else {
+                    await page.keyboard.press('Escape').catch(() => undefined);
+                }
+            },
+            { noWaitAfter: true },
+        ).catch(() => undefined);
+    }
+
+    try {
+        const modal = page.locator('.vendor-announcement-modal').first();
+        const visible = await modal.isVisible({ timeout: 500 }).catch(() => false);
+        if (!visible) return;
+        const closeBtn = modal.locator('button[aria-label="Close"]').first();
+        if (await closeBtn.isVisible().catch(() => false)) {
+            await closeBtn.click().catch(() => undefined);
+        } else {
+            await page.keyboard.press('Escape').catch(() => undefined);
+        }
+        await modal.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => undefined);
+    } catch {
+        // Silent — keep the test moving even if the selector shape changes.
+    }
+}
 
 export class AnnouncementsPage {
     readonly page: Page;
@@ -204,7 +251,7 @@ export class AnnouncementsPage {
 
     async goToAnnouncementsPage() {
         await this.page.goto(this.admin.announcementsUrl);
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
         await this.page.locator(this.admin.announcementText).waitFor({ state: 'visible' });
     }
 
@@ -235,12 +282,12 @@ export class AnnouncementsPage {
 
         // Navigate to add announcement form and verify fields
         await this.page.locator(this.admin.addNewAnnouncement).click();
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
         await expect(this.page.locator(this.admin.addAnnouncement.title)).toBeVisible();
         await expect(this.page.locator(this.admin.addAnnouncement.sendAnnouncementTo)).toBeVisible();
         await expect(this.page.locator(this.admin.addAnnouncement.publish)).toBeVisible();
         await this.page.goBack();
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
     }
 
     async fillAnnouncementTitle(title: string) {
@@ -257,7 +304,7 @@ export class AnnouncementsPage {
     async addAnnouncement(title: string, content: string = 'test announcement Content', receiver: string = 'all_seller') {
         await this.goToAnnouncementsPage();
         await this.page.locator(this.admin.addNewAnnouncement).click();
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
 
         await this.fillAnnouncementTitle(title);
         await this.fillAnnouncementContent(content);
@@ -267,7 +314,7 @@ export class AnnouncementsPage {
             this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
             this.page.locator(this.admin.addAnnouncement.publish).click(),
         ]);
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
         await expect(this.page.locator(this.admin.announcementStatusPublished(title))).toBeVisible();
     }
 
@@ -278,7 +325,7 @@ export class AnnouncementsPage {
     async addAnnouncementAsDraft(title: string, content: string = 'test announcement Content', receiver: string = 'all_seller') {
         await this.goToAnnouncementsPage();
         await this.page.locator(this.admin.addNewAnnouncement).click();
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
 
         await this.fillAnnouncementTitle(title);
         await this.fillAnnouncementContent(content);
@@ -288,7 +335,7 @@ export class AnnouncementsPage {
             this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
             this.page.locator(this.admin.addAnnouncement.saveAsDraft).click(),
         ]);
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
 
         // saveAsDraft stays on the edit form; navigate back to the announcement list
         await this.goToAnnouncementsPage();
@@ -299,7 +346,7 @@ export class AnnouncementsPage {
     async addScheduledAnnouncement(title: string, content: string = 'test announcement Content', receiver: string = 'all_seller') {
         await this.goToAnnouncementsPage();
         await this.page.locator(this.admin.addNewAnnouncement).click();
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
 
         await this.fillAnnouncementTitle(title);
         await this.fillAnnouncementContent(content);
@@ -321,7 +368,7 @@ export class AnnouncementsPage {
             this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
             this.page.locator(this.admin.addAnnouncement.publish).click(),
         ]);
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
         await expect(this.page.locator(this.admin.announcementStatusScheduled(title))).toBeVisible();
     }
 
@@ -338,7 +385,7 @@ export class AnnouncementsPage {
             this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
             this.page.locator(this.admin.announcementEdit(originalTitle)).click(),
         ]);
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
 
         await this.page.locator(this.admin.addAnnouncement.title).fill(newTitle);
 
@@ -346,7 +393,7 @@ export class AnnouncementsPage {
             this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
             this.page.locator(this.admin.addAnnouncement.publish).click(),
         ]);
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
         await expect(this.page.locator(this.admin.announcementStatusPublished(newTitle))).toBeVisible();
     }
 
@@ -357,7 +404,7 @@ export class AnnouncementsPage {
             this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
             this.page.locator(this.admin.navTabs.published).click(),
         ]);
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
 
         await this.page.hover(this.admin.announcementCellPublished(title));
         // Row actions are CSS-hidden; wait for the trash link to appear before clicking
@@ -367,7 +414,7 @@ export class AnnouncementsPage {
             this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
             this.page.locator(this.admin.announcementDelete(title)).click(),
         ]);
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
     }
 
     async restoreAnnouncement(title: string) {
@@ -377,7 +424,7 @@ export class AnnouncementsPage {
             this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
             this.page.locator(this.admin.navTabs.trash).click(),
         ]);
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
 
         await this.page.hover(this.admin.announcementCellPublished(title));
         // Row actions are CSS-hidden; wait for the restore link to appear before clicking
@@ -387,7 +434,7 @@ export class AnnouncementsPage {
             this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
             this.page.locator(this.admin.announcementRestore(title)).click(),
         ]);
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
     }
 
     async permanentlyDeleteAnnouncement(title: string) {
@@ -397,7 +444,7 @@ export class AnnouncementsPage {
             this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
             this.page.locator(this.admin.navTabs.trash).click(),
         ]);
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
 
         await this.page.hover(this.admin.announcementCellPublished(title));
         // Row actions are CSS-hidden; wait for the delete link to appear before clicking
@@ -407,12 +454,12 @@ export class AnnouncementsPage {
             this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
             this.page.locator(this.admin.announcementPermanentlyDelete(title)).click(),
         ]);
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
     }
 
     async announcementBulkAction(action: string) {
         await this.page.goto(this.admin.announcementsUrl);
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
 
         // Ensure there is at least one row before performing bulk action
         await expect(this.page.locator(this.admin.noRowsFound)).not.toBeVisible();
@@ -424,7 +471,7 @@ export class AnnouncementsPage {
             this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
             this.page.locator(this.admin.bulkActions.applyAction).click(),
         ]);
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
     }
 
     async emptyTrashInNewAdminDashboard() {
@@ -601,7 +648,7 @@ export class AnnouncementsPage {
 
     async goToVendorAnnouncementsPage() {
         await this.page.goto(this.vendor.announcementsUrl);
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
     }
 
     async vendorAnnouncementsRenderProperly() {
@@ -618,7 +665,7 @@ export class AnnouncementsPage {
         await this.goToVendorAnnouncementsPage();
 
         await this.page.locator(this.vendor.announcementLink(title)).click();
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
 
         await expect(this.page.locator(this.vendor.announcement.title)).toContainText(title);
         await expect(this.page.locator(this.vendor.announcement.date)).toBeVisible();
@@ -634,7 +681,7 @@ export class AnnouncementsPage {
             this.page.waitForResponse(res => res.url().includes('admin-ajax.php') && res.status() === 200),
             this.page.locator(this.vendor.confirmDeleteAnnouncement).click(),
         ]);
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
     }
 
     // ============================================
@@ -642,6 +689,6 @@ export class AnnouncementsPage {
     // ============================================
 
     async waitForPageReady() {
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
     }
 }

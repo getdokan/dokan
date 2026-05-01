@@ -1,6 +1,8 @@
-import { test, Page } from '@playwright/test';
+import { Page, expect, test } from '@playwright/test';
 import { ProductReviewsPage, ApiUtils, payloads } from './productReviewsPage';
 import path from 'path';
+
+const BASE = process.env.BASE_URL || 'http://localhost:9999';
 
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 
@@ -62,3 +64,71 @@ test.describe.skip('Product Reviews test', () => {
         await vendor.productReviewsBulkActions('hold');
     });
 });
+
+// ============================================
+// NEW REACT UI TEST CASES (Dokan 5.0.0+)
+// ============================================
+// Added during the 5.0.0 React rewrite. These tests target the new React
+// surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
+// the legacy tests above for parity coverage during rollout.
+
+test.describe('Vendor Reviews (React) Tests @pro', () => {
+    test('Test Case 1 - Reviews page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: v1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/dashboard/reviews/`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(2000);
+
+        const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
+        expect(fatal, 'Reviews page should not show a PHP fatal').toBe(false);
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 2 - Reviews DataViews table or empty state renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: v1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/dashboard/reviews/`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(3000);
+
+        const tableVisible = await page.locator('table, [role="table"]').first().isVisible({ timeout: 3000 }).catch(() => false);
+        const emptyVisible = await page.locator("text=/no reviews|nothing to show|empty/i").first().isVisible({ timeout: 1000 }).catch(() => false);
+        expect(tableVisible || emptyVisible, 'Reviews list should show a table or empty state').toBe(true);
+
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 3 - Reviews page has heading', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: v1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/dashboard/reviews/`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(2000);
+
+        await expect(
+            page.locator("h1, h2, h3").filter({ hasText: /reviews?/i }).first(),
+            'Reviews heading should be visible',
+        ).toBeVisible({ timeout: 10000 });
+
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 4 - Page survives reload', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: v1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/dashboard/reviews/`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(2000);
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await page.waitForTimeout(2000);
+        const fatal = await page.locator("text=/Fatal error|Parse error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
+        expect(fatal).toBe(false);
+        await page.close();
+        await ctx.close();
+    });
+});
+

@@ -1,6 +1,8 @@
-import { test, Page } from '@playwright/test';
+import { Page, expect, test } from '@playwright/test';
 import { WholesalePage, CustomerPage, ProductsPage, ApiUtils, dbUtils, dbData, data, payloads } from './wholesalePage';
 import path from 'path';
+
+const BASE = process.env.BASE_URL || 'http://localhost:9999';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
@@ -142,3 +144,37 @@ test.describe('Wholesale test (customer)', () => {
         await admin.disableWholesaleModule();
     });
 });
+
+// ============================================
+// NEW REACT UI TEST CASES (Dokan 5.0.0+)
+// ============================================
+// Added during the 5.0.0 React rewrite. These tests target the new React
+// surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
+// the legacy tests above for parity coverage during rollout.
+
+test.describe('Wholesale (React) Tests @pro', () => {
+    test('Test Case 1 - Admin wholesale customer page renders', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: a1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/wp-admin/users.php?page=wholesale_customer`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(2000);
+        const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);
+        expect(fatal).toBe(false);
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 2 - Wholesale page renders content', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: a1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/wp-admin/users.php?page=wholesale_customer`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(3000);
+        const bodyText = await page.locator('body').innerText();
+        expect(bodyText.trim().length).toBeGreaterThan(50);
+        await page.close();
+        await ctx.close();
+    });
+});
+

@@ -1,7 +1,29 @@
 import { Page, expect, APIRequestContext } from '@playwright/test';
 import mysql from 'mysql2/promise';
 import { isSerialized, serialize, unserialize } from 'php-serialize';
-import { closeAnnouncementModal } from '@utils/helpers';
+
+// closeAnnouncementModal is inlined per CONVENTIONS.md §4 (self-contained).
+async function closeAnnouncementModal(page: Page): Promise<void> {
+    const installed = '__dokanAnnouncementModalHandlerInstalled' as const;
+    const pwf = page as Page & { [installed]?: boolean };
+    if (!pwf[installed]) {
+        pwf[installed] = true;
+        const modal = page.locator('.vendor-announcement-modal');
+        await page.addLocatorHandler(modal, async () => {
+            const btn = modal.locator('button[aria-label="Close"]').first();
+            if (await btn.isVisible().catch(() => false)) await btn.click({ timeout: 2000 }).catch(() => undefined);
+            else await page.keyboard.press('Escape').catch(() => undefined);
+        }, { noWaitAfter: true }).catch(() => undefined);
+    }
+    try {
+        const modal = page.locator('.vendor-announcement-modal').first();
+        if (!(await modal.isVisible({ timeout: 500 }).catch(() => false))) return;
+        const btn = modal.locator('button[aria-label="Close"]').first();
+        if (await btn.isVisible().catch(() => false)) await btn.click().catch(() => undefined);
+        else await page.keyboard.press('Escape').catch(() => undefined);
+        await modal.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => undefined);
+    } catch { /* selector shape may change */ }
+}
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
 const SERVER_URL = process.env.SERVER_URL ?? `${BASE_URL}/wp-json`;
@@ -723,7 +745,7 @@ export class OrdersPage {
         await this.page.locator("//input[@id='tracking_status_number']").press(key.enter);
         await this.page.locator("//textarea[@id='tracking_status_comments']").fill('Test Comment 1');
         await this.page.locator("//input[@id='add-tracking-status-details']").click();
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
     }
 
     async addDownloadableProduct(orderNumber: string, downloadableProductName: string): Promise<void> {
@@ -763,6 +785,6 @@ export class OrdersPage {
     }
 
     async waitForPageReady(): Promise<void> {
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
     }
 }

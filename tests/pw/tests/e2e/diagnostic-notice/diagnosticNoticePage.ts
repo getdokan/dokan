@@ -99,7 +99,7 @@ export class NoticeAndPromotionPage {
         return currentURL === this.createUrl(subPath);
     }
 
-    private async goIfNotThere(subPath: string, waitUntil: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' = 'domcontentloaded'): Promise<void> {
+    private async goIfNotThere(subPath: string, waitUntil: 'load' | 'domcontentloaded' | 'load' | 'commit' = 'domcontentloaded'): Promise<void> {
         if (!this.isCurrentUrl(subPath)) {
             const url = this.createUrl(subPath);
             await expect(async () => {
@@ -112,7 +112,7 @@ export class NoticeAndPromotionPage {
 
     private async gotoUntilNetworkidle(subPath: string): Promise<void> {
         const url = this.createUrl(subPath);
-        await this.page.goto(url, { waitUntil: 'networkidle' });
+        await this.page.goto(url, { waitUntil: 'load' });
     }
 
     // Assertion helpers
@@ -129,7 +129,7 @@ export class NoticeAndPromotionPage {
         await expect(this.page.locator(selector)).toContainText(text);
     }
 
-    private async clickAndWaitForLoadState(selector: string, state: 'load' | 'domcontentloaded' | 'networkidle' = 'domcontentloaded'): Promise<void> {
+    private async clickAndWaitForLoadState(selector: string, state: 'load' | 'domcontentloaded' | 'load' = 'domcontentloaded'): Promise<void> {
         await Promise.all([
             this.page.waitForLoadState(state),
             this.page.locator(selector).click(),
@@ -153,14 +153,14 @@ export class NoticeAndPromotionPage {
 
     async allowDiagnosticTracking(): Promise<void> {
         await this.deleteOption();
-        await this.goIfNotThere(subUrls.adminDashboard, 'networkidle');
+        await this.goIfNotThere(subUrls.adminDashboard, 'load');
         await this.clickAndWaitForLoadState(diagnosticSelectors.allowCollectData);
         await this.notToBeVisible(diagnosticSelectors.noticeDiv);
     }
 
     async disallowDiagnosticTracking(): Promise<void> {
         await this.deleteOption();
-        await this.goIfNotThere(subUrls.adminDashboard, 'networkidle');
+        await this.goIfNotThere(subUrls.adminDashboard, 'load');
         await this.clickAndWaitForLoadState(diagnosticSelectors.disallowCollectData);
         await this.notToBeVisible(diagnosticSelectors.noticeDiv);
     }

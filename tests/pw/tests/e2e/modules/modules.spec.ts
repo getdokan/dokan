@@ -1,6 +1,8 @@
-import { test, Page } from '@playwright/test';
+import { Page, expect, test } from '@playwright/test';
 import { ModulesPage, api, payloads, testData } from './modulesPage';
 import path from 'path';
+
+const BASE = process.env.BASE_URL || 'http://localhost:9999';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 
@@ -49,3 +51,52 @@ test.describe('Modules test', () => {
         await admin.moduleViewLayout(testData.layout.list);
     });
 });
+
+// ============================================
+// NEW REACT UI TEST CASES (Dokan 5.0.0+)
+// ============================================
+// Added during the 5.0.0 React rewrite. These tests target the new React
+// surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
+// the legacy tests above for parity coverage during rollout.
+
+test.describe('Admin Modules (React) Tests @lite', () => {
+    test('Test Case 1 - Modules page mounts at #/pro-modules', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: a1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan-dashboard#/pro-modules`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(3000);
+        expect(page.url()).toMatch(/#\/pro-modules/);
+        const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);
+        expect(fatal).toBe(false);
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 2 - Modules page shows modules grid / cards', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: a1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan-dashboard#/pro-modules`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(4000);
+        // The modules page renders a grid of module cards (or similar).
+        const cards = await page.locator('[class*="module"], [class*="card"], article').count();
+        expect(cards, 'Modules page should render at least one module card').toBeGreaterThan(0);
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 3 - Modules page survives reload', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: a1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan-dashboard#/pro-modules`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(2000);
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await page.waitForTimeout(2000);
+        expect(page.url()).toMatch(/#\/pro-modules/);
+        await page.close();
+        await ctx.close();
+    });
+});
+

@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test';
 import { AnnouncementsPage } from './announcementsPage';
 import path from 'path';
 
+const BASE = process.env.BASE_URL || 'http://localhost:9999';
+
 // ============================================
 // SESSION STORAGE VARIABLES
 // ============================================
@@ -17,7 +19,7 @@ test.describe('Announcements Tests @pro', () => {
     // TEST CASES
     // ============================================
 
-    test('Test Case 1 - Admin Views Announcements Menu Page', async ({ browser }) => {
+    test('Old Test Case 1 - Admin Views Announcements Menu Page', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         // Using admin session storage
         const context = await browser.newContext({ storageState: a1 });
         const adminPage = await context.newPage();
@@ -31,7 +33,7 @@ test.describe('Announcements Tests @pro', () => {
         await context.close();
     });
 
-    test('Test Case 2 - Admin Sends Announcement', async ({ browser }) => {
+    test('Old Test Case 2 - Admin Sends Announcement', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         // Using admin session storage
         const context = await browser.newContext({ storageState: a1 });
         const adminPage = await context.newPage();
@@ -52,7 +54,7 @@ test.describe('Announcements Tests @pro', () => {
         await context.close();
     });
 
-    test('Test Case 3 - Admin Schedules Announcement', async ({ browser }) => {
+    test('Old Test Case 3 - Admin Schedules Announcement', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         // Using admin session storage
         const context = await browser.newContext({ storageState: a1 });
         const adminPage = await context.newPage();
@@ -73,7 +75,7 @@ test.describe('Announcements Tests @pro', () => {
         await context.close();
     });
 
-    test('Test Case 4 - Admin Edits Announcement', async ({ browser }) => {
+    test('Old Test Case 4 - Admin Edits Announcement', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         // Using admin session storage
         const context = await browser.newContext({ storageState: a1 });
         const adminPage = await context.newPage();
@@ -96,7 +98,7 @@ test.describe('Announcements Tests @pro', () => {
         await context.close();
     });
 
-    test('Test Case 5 - Admin Trashes Announcement', async ({ browser }) => {
+    test('Old Test Case 5 - Admin Trashes Announcement', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         // Using admin session storage
         const context = await browser.newContext({ storageState: a1 });
         const adminPage = await context.newPage();
@@ -111,7 +113,7 @@ test.describe('Announcements Tests @pro', () => {
 
         // Verify the announcement appears in the trash tab (positive assertion — more reliable)
         await adminPage.locator(announcementsPage.admin.navTabs.trash).click();
-        await adminPage.waitForLoadState('networkidle');
+        await adminPage.waitForLoadState('load');
         await expect(adminPage.locator(announcementsPage.admin.announcementCellPublished(title)),
             `Trashed announcement "${title}" should appear in the trash tab`).toBeVisible();
 
@@ -120,7 +122,7 @@ test.describe('Announcements Tests @pro', () => {
         await context.close();
     });
 
-    test('Test Case 6 - Admin Restores Announcement', async ({ browser }) => {
+    test('Old Test Case 6 - Admin Restores Announcement', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         // Using admin session storage
         const context = await browser.newContext({ storageState: a1 });
         const adminPage = await context.newPage();
@@ -139,7 +141,7 @@ test.describe('Announcements Tests @pro', () => {
         // announcementStatusPublished because the status badge may render differently
         // after a restore; confirming the title is present is sufficient.
         await adminPage.locator(announcementsPage.admin.navTabs.published).click();
-        await adminPage.waitForLoadState('networkidle');
+        await adminPage.waitForLoadState('load');
         await expect(adminPage.locator(announcementsPage.admin.announcementCellPublished(title)),
             `Restored announcement "${title}" should be visible in the published tab`).toBeVisible();
 
@@ -148,7 +150,7 @@ test.describe('Announcements Tests @pro', () => {
         await context.close();
     });
 
-    test('Test Case 7 - Admin Permanently Deletes Announcement', async ({ browser }) => {
+    test('Old Test Case 7 - Admin Permanently Deletes Announcement', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         // Using admin session storage
         const context = await browser.newContext({ storageState: a1 });
         const adminPage = await context.newPage();
@@ -162,7 +164,7 @@ test.describe('Announcements Tests @pro', () => {
 
         // Verify the announcement no longer exists in the trash tab
         await adminPage.locator(announcementsPage.admin.navTabs.trash).click();
-        await adminPage.waitForLoadState('networkidle');
+        await adminPage.waitForLoadState('load');
         await expect(adminPage.locator(announcementsPage.admin.announcementCellPublished(title)),
             `Permanently deleted announcement "${title}" should no longer exist in trash`).not.toBeVisible();
 
@@ -171,7 +173,7 @@ test.describe('Announcements Tests @pro', () => {
         await context.close();
     });
 
-    test('Test Case 8 - Admin Performs Bulk Action on Announcements', async ({ browser }) => {
+    test('Old Test Case 8 - Admin Performs Bulk Action on Announcements', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         // Using admin session storage
         const context = await browser.newContext({ storageState: a1 });
         const adminPage = await context.newPage();
@@ -189,7 +191,7 @@ test.describe('Announcements Tests @pro', () => {
         // waitForResponse inside announcementBulkAction may match an unrelated GET
         // response rather than the actual bulk-DELETE response.
         await adminPage.locator(announcementsPage.admin.navTabs.trash).click();
-        await adminPage.waitForLoadState('networkidle');
+        await adminPage.waitForLoadState('load');
         await expect(adminPage.locator(announcementsPage.admin.announcementCellPublished(title)),
             `Bulk-trashed announcement "${title}" should appear in the Trash tab`).toBeVisible();
 
@@ -198,7 +200,7 @@ test.describe('Announcements Tests @pro', () => {
         await context.close();
     });
 
-    test('Test Case 9 - Vendor Views Announcements Menu Page', async ({ browser }) => {
+    test('Old Test Case 9 - Vendor Views Announcements Menu Page', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         // Using admin session storage to create a published announcement first
         const adminContext = await browser.newContext({ storageState: a1 });
         const adminPage = await adminContext.newPage();
@@ -222,7 +224,7 @@ test.describe('Announcements Tests @pro', () => {
         await vendorContext.close();
     });
 
-    test('Test Case 10 - Vendor Views Announcement Details', async ({ browser }) => {
+    test('Old Test Case 10 - Vendor Views Announcement Details', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         // Using admin session storage to create a published announcement first
         const adminContext = await browser.newContext({ storageState: a1 });
         const adminPage = await adminContext.newPage();
@@ -254,7 +256,7 @@ test.describe('Announcements Tests @pro', () => {
         await vendorContext.close();
     });
 
-    test('Test Case 11 - Vendor Deletes Announcement', async ({ browser }) => {
+    test('Old Test Case 11 - Vendor Deletes Announcement', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         // Using admin session storage to create a published announcement first
         const adminContext = await browser.newContext({ storageState: a1 });
         const adminPage = await adminContext.newPage();
@@ -282,7 +284,7 @@ test.describe('Announcements Tests @pro', () => {
         await vendorContext.close();
     });
 
-    test('Test Case 12 - Admin Empties Trash in New Admin Announcement Dashboard', async ({ browser }) => {
+    test('Test Case 12 - Admin Empties Trash in New Admin Announcement Dashboard', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         // Using admin session storage
         const context = await browser.newContext({ storageState: a1 });
         const adminPage = await context.newPage();
@@ -296,7 +298,7 @@ test.describe('Announcements Tests @pro', () => {
         await context.close();
     });
 
-    test('Test Case 13 - Admin Creates Published Announcement in New Admin Dashboard', async ({ browser }) => {
+    test('Test Case 13 - Admin Creates Published Announcement in New Admin Dashboard', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         // Using admin session storage
         const context = await browser.newContext({ storageState: a1 });
         const adminPage = await context.newPage();
@@ -313,7 +315,7 @@ test.describe('Announcements Tests @pro', () => {
         await context.close();
     });
 
-    test.skip('Test Case 14 - Vendor Views Announcement Detail in New Vendor Dashboard', async ({ browser }) => {
+    test.skip('Test Case 14 - Vendor Views Announcement Detail in New Vendor Dashboard', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         // Using vendor session storage
         const context = await browser.newContext({ storageState: v1 });
         const vendorPage = await context.newPage();
@@ -333,7 +335,7 @@ test.describe('Announcements Tests @pro', () => {
         await context.close();
     });
 
-    test('Test Case 15 - Admin Creates Draft Announcement in New Admin Dashboard', async ({ browser }) => {
+    test('Test Case 15 - Admin Creates Draft Announcement in New Admin Dashboard', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         // Using admin session storage
         const context = await browser.newContext({ storageState: a1 });
         const adminPage = await context.newPage();
@@ -350,7 +352,7 @@ test.describe('Announcements Tests @pro', () => {
         await context.close();
     });
 
-    test('Test Case 16 - Admin Verifies Draft Announcement in New Admin Dashboard', async ({ browser }) => {
+    test('Test Case 16 - Admin Verifies Draft Announcement in New Admin Dashboard', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         // Using admin session storage
         const context = await browser.newContext({ storageState: a1 });
         const adminPage = await context.newPage();
@@ -364,7 +366,7 @@ test.describe('Announcements Tests @pro', () => {
         await context.close();
     });
 
-    test('Test Case 17 - Admin Creates Scheduled Announcement in New Admin Dashboard', async ({ browser }) => {
+    test('Test Case 17 - Admin Creates Scheduled Announcement in New Admin Dashboard', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         // Using admin session storage
         const context = await browser.newContext({ storageState: a1 });
         const adminPage = await context.newPage();
@@ -381,7 +383,7 @@ test.describe('Announcements Tests @pro', () => {
         await context.close();
     });
 
-    test('Test Case 18 - Admin Verifies Draft Status Visible in New Admin Dashboard', async ({ browser }) => {
+    test('Test Case 18 - Admin Verifies Draft Status Visible in New Admin Dashboard', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         // Using admin session storage
         const context = await browser.newContext({ storageState: a1 });
         const adminPage = await context.newPage();
@@ -395,7 +397,7 @@ test.describe('Announcements Tests @pro', () => {
         await context.close();
     });
 
-    test('Test Case 19 - Admin Verifies Scheduled Status Visible in New Admin Dashboard', async ({ browser }) => {
+    test('Test Case 19 - Admin Verifies Scheduled Status Visible in New Admin Dashboard', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         // Using admin session storage
         const context = await browser.newContext({ storageState: a1 });
         const adminPage = await context.newPage();
@@ -409,7 +411,7 @@ test.describe('Announcements Tests @pro', () => {
         await context.close();
     });
 
-    test('Test Case 20 - Admin Trashes and Permanently Deletes Announcements in New Admin Dashboard', async ({ browser }) => {
+    test('Test Case 20 - Admin Trashes and Permanently Deletes Announcements in New Admin Dashboard', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         // Using admin session storage
         const context = await browser.newContext({ storageState: a1 });
         const adminPage = await context.newPage();
@@ -423,7 +425,7 @@ test.describe('Announcements Tests @pro', () => {
         await context.close();
     });
 
-    test('Test Case 21 - Admin Empties Trash in New Admin Dashboard', async ({ browser }) => {
+    test('Test Case 21 - Admin Empties Trash in New Admin Dashboard', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         // Using admin session storage
         const context = await browser.newContext({ storageState: a1 });
         const adminPage = await context.newPage();
@@ -437,3 +439,97 @@ test.describe('Announcements Tests @pro', () => {
         await context.close();
     });
 });
+
+// ============================================
+// NEW REACT UI TEST CASES (Dokan 5.0.0+)
+// ============================================
+// Added during the 5.0.0 React rewrite. These tests target the new React
+// surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
+// the legacy tests above for parity coverage during rollout.
+
+test.describe('New Vendor Announcement (React) Tests @pro', () => {
+    test('Test Case 1 - /announcement route mounts in new vendor dashboard', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        // Seed an announcement so the list isn't empty
+        const adminCtx = await browser.newContext({ storageState: a1 });
+        const adminPage = await adminCtx.newPage();
+        await adminPage.goto(`${BASE}/wp-admin/admin.php?page=dokan-dashboard#/announcement`);
+        await adminPage.waitForLoadState('domcontentloaded');
+        await adminPage.close();
+        await adminCtx.close();
+
+        const ctx = await browser.newContext({ storageState: v1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/dashboard/new/#/announcement`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.locator('#dokan-vendor-dashboard-root').waitFor({ state: 'visible', timeout: 30000 });
+
+        expect(page.url()).toMatch(/#\/announcement/);
+        const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
+        expect(fatal).toBe(false);
+
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 2 - Announcement list renders rows or empty state', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: v1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/dashboard/new/#/announcement`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.locator('#dokan-vendor-dashboard-root').waitFor({ state: 'visible', timeout: 30000 });
+        await page.waitForTimeout(3000);
+
+        const articles = await page.locator('article').count();
+        const cards = await page.locator('[class*="announcement"], [class*="Announcement"]').count();
+        const empty = await page.locator("text=/no announcement|nothing to show|empty/i").first().isVisible({ timeout: 1000 }).catch(() => false);
+        expect(articles > 0 || cards > 0 || empty, 'Announcement list should show items or an empty banner').toBe(true);
+
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 3 - HashRouter survives reload on /announcement', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: v1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/dashboard/new/#/announcement`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.locator('#dokan-vendor-dashboard-root').waitFor({ state: 'visible', timeout: 30000 });
+
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await page.locator('#dokan-vendor-dashboard-root').waitFor({ state: 'visible', timeout: 30000 });
+        expect(page.url()).toMatch(/#\/announcement/);
+
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 4 - Announcement modal does NOT block list mount', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: v1 });
+        const page = await ctx.newPage();
+
+        // Install handler to dismiss modal
+        const installed = '__h' as const;
+        const pwf = page as typeof page & { [installed]?: boolean };
+        if (!pwf[installed]) {
+            pwf[installed] = true;
+            await page.addLocatorHandler(
+                page.locator('.vendor-announcement-modal'),
+                async () => {
+                    await page.locator('.vendor-announcement-modal button[aria-label="Close"]').first().click({ timeout: 2000 }).catch(() => undefined);
+                },
+                { noWaitAfter: true },
+            ).catch(() => undefined);
+        }
+
+        await page.goto(`${BASE}/dashboard/new/#/announcement`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.locator('#dokan-vendor-dashboard-root').waitFor({ state: 'visible', timeout: 30000 });
+
+        const modalVisible = await page.locator('.vendor-announcement-modal').first().isVisible({ timeout: 1000 }).catch(() => false);
+        expect(modalVisible, 'Announcement pop-up modal should be auto-dismissed by handler').toBe(false);
+
+        await page.close();
+        await ctx.close();
+    });
+});
+

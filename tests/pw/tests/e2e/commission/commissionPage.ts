@@ -95,7 +95,7 @@ export class CommissionPage {
     // Admin Methods
     async goToCommissionsPage() {
         await this.page.goto(this.admin.commissionsUrl);
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
     }
 
     async goToSettingsPage() {
@@ -247,7 +247,7 @@ export class CommissionPage {
     }
 
     async waitForPageReady() {
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
     }
 
     async waitForElement(selector: string) {

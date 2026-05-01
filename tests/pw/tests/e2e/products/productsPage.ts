@@ -827,7 +827,7 @@ export class ProductsPage {
     }
 
     async gotoUntilNetworkidle(subPath: string): Promise<void> {
-        await this.goto(subPath, { waitUntil: 'networkidle' });
+        await this.goto(subPath, { waitUntil: 'load' });
     }
 
     // ---- Click helpers ----
@@ -863,7 +863,7 @@ export class ProductsPage {
 
     async clickAndWaitForResponseAndLoadStateUntilNetworkIdle(subUrl: string, selector: string, code = 200): Promise<any> {
         const [, response] = await Promise.all([
-            this.page.waitForLoadState('networkidle'),
+            this.page.waitForLoadState('load'),
             this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code),
             this.page.locator(selector).click(),
         ]);
@@ -1171,7 +1171,7 @@ export class ProductsPage {
     async adminSearchProduct(productName: string): Promise<void> {
         await this.gotoUntilNetworkidle(subUrls.backend.wc.products);
         await this.clearAndType(productsAdmin.search.searchInput, productName);
-        await this.clickAndWaitForLoadState(productsAdmin.search.searchButton, 'networkidle');
+        await this.clickAndWaitForLoadState(productsAdmin.search.searchButton, 'load');
         await this.toBeVisible(productsAdmin.productRow(productName));
     }
 
@@ -1221,7 +1221,7 @@ export class ProductsPage {
     async publishProduct(): Promise<void> {
         await this.click(productsAdmin.product.publish);
         await this.page.waitForLoadState('load');
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
         try {
             await this.toBeVisible(productsAdmin.product.productPublishSuccessMessage);
         } catch {
@@ -1399,7 +1399,7 @@ export class ProductsPage {
 
     async vendorAddNewProductRenderProperly(): Promise<void> {
         await this.goToAddNewProduct();
-        await this.page.waitForLoadState('networkidle');
+        await this.page.waitForLoadState('load');
         await this.page.waitForLoadState('load');
         await this.toBeVisible(productsVendor.title);
         if (DOKAN_PRO) await this.toBeVisible(productsVendor.productType);

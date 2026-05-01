@@ -1,6 +1,9 @@
-import { test, Page } from '@playwright/test';
+import { Page, expect, test } from '@playwright/test';
 import { ReverseWithdrawsPage, ApiUtils, data, dbData, dbUtils, helpers, payloads } from './reverseWithdrawsPage';
 import path from 'path';
+
+const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
+const BASE = process.env.BASE_URL || 'http://localhost:9999';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 
@@ -71,3 +74,64 @@ test.describe('Reverse withdraw test', () => {
         await apiUtils.updateOrderStatus(orderId, data.order.orderStatus.completed, payloads.adminAuth);
     });
 });
+
+// ============================================
+// NEW REACT UI TEST CASES (Dokan 5.0.0+)
+// ============================================
+// Added during the 5.0.0 React rewrite. These tests target the new React
+// surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
+// the legacy tests above for parity coverage during rollout.
+
+test.describe('Reverse Withdrawal (React) Tests @pro', () => {
+    test('Test Case 1 - Admin /reverse-withdrawal route mounts', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: a1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan-dashboard#/reverse-withdrawal`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(3000);
+        expect(page.url()).toMatch(/#\/reverse-withdrawal/);
+        const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);
+        expect(fatal).toBe(false);
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 2 - Admin reverse-withdrawal shows transactions or empty state', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: a1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan-dashboard#/reverse-withdrawal`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(4000);
+        const tableVisible = await page.locator('table, [role="table"]').first().isVisible({ timeout: 3000 }).catch(() => false);
+        const emptyVisible = await page.locator("text=/no transactions|no items|nothing to show/i").first().isVisible({ timeout: 1000 }).catch(() => false);
+        expect(tableVisible || emptyVisible).toBe(true);
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 3 - Vendor /reverse-withdrawal route mounts in new dashboard', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: v1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/dashboard/new/#/reverse-withdrawal`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.locator('#dokan-vendor-dashboard-root').waitFor({ state: 'visible', timeout: 30000 });
+        expect(page.url()).toMatch(/#\/reverse-withdrawal/);
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 4 - Vendor reverse-withdrawal page shows balance widget', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        const ctx = await browser.newContext({ storageState: v1 });
+        const page = await ctx.newPage();
+        await page.goto(`${BASE}/dashboard/new/#/reverse-withdrawal`);
+        await page.waitForLoadState('domcontentloaded');
+        await page.locator('#dokan-vendor-dashboard-root').waitFor({ state: 'visible', timeout: 30000 });
+        await page.waitForTimeout(3000);
+        // ReverseWithdrawalBalance.tsx renders a balance section
+        const balanceMarkers = page.locator("text=/balance|threshold|reverse|earnings/i");
+        await expect(balanceMarkers.first()).toBeVisible({ timeout: 10000 });
+        await page.close();
+        await ctx.close();
+    });
+});
+

@@ -26,7 +26,7 @@ test.describe.skip('Stripe Express Tests @lite', () => {
     // const context = await browser.newContext({ storageState: a1 });
     // const page = await context.newPage();
 
-    test.skip('Test Case 1 - Verify Stripe Express is Enabled', async ({ browser }) => {
+    test.skip('Test Case 1 - Verify Stripe Express is Enabled', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         // Using admin session storage
         const context = await browser.newContext({ storageState: a1 });
         const adminPage = await context.newPage();
@@ -45,7 +45,7 @@ test.describe.skip('Stripe Express Tests @lite', () => {
         await context.close();
     });
 
-    test('Test Case 2 - Placeholder', async ({ browser }) => {
+    test('Test Case 2 - Placeholder', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         test.skip(!isStripeExpressEnabled, 'Stripe Express is not enabled - skipping test');
         
         // Example: Using vendor 1 session storage
@@ -59,7 +59,7 @@ test.describe.skip('Stripe Express Tests @lite', () => {
         await context.close();
     });
 
-    test('Test Case 3 - Enable Stripe Express Module and Disable Stripe Connect Module', async ({ browser }) => {
+    test('Test Case 3 - Enable Stripe Express Module and Disable Stripe Connect Module', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         test.skip(!isStripeExpressEnabled, 'Stripe Express is not enabled - skipping test');
         
         // Using admin session storage
@@ -97,7 +97,7 @@ test.describe.skip('Stripe Express Tests @lite', () => {
         await context.close();
     });
 
-    test('Test Case 4 - Verify Visit Express Dashboard Button is Visible for Vendor 1', async ({ browser }) => {
+    test('Test Case 4 - Verify Visit Express Dashboard Button is Visible for Vendor 1', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         test.skip(!isStripeExpressEnabled, 'Stripe Express is not enabled - skipping test');
         
         // Using vendor 1 session storage
@@ -120,7 +120,7 @@ test.describe.skip('Stripe Express Tests @lite', () => {
         await context.close();
     });
 
-    test('Test Case 5 - Verify Visit Express Dashboard Button is Visible for Vendor 2', async ({ browser }) => {
+    test('Test Case 5 - Verify Visit Express Dashboard Button is Visible for Vendor 2', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         test.skip(!isStripeExpressEnabled, 'Stripe Express is not enabled - skipping test');
         
         // Using vendor 2 session storage
@@ -143,7 +143,7 @@ test.describe.skip('Stripe Express Tests @lite', () => {
         await context.close();
     });
 
-    test('Test Case 6 - Place Order with Stripe Express Payment', async ({ browser }) => {
+    test('Test Case 6 - Place Order with Stripe Express Payment', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
         test.skip(!isStripeExpressEnabled, 'Stripe Express is not enabled - skipping test');
         test.setTimeout(120000); // Increase timeout to 120 seconds for this test
         
