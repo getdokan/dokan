@@ -1,558 +1,401 @@
-# Dokan E2E & API Test Automation
+# Dokan E2E & API Test Suite
 
-Comprehensive end-to-end and API testing suite for Dokan Multivendor Marketplace using Playwright and TypeScript.
+End-to-end and API automation for Dokan Lite + Pro, built on Playwright and
+TypeScript. The suite covers approximately 1,300 e2e tests and 400 API tests
+across the WordPress admin, the Dokan 5.0.0+ React vendor dashboard, the
+admin React shell, and all Pro module surfaces.
 
----
-
-## Table of Contents
+## Contents
 
 - [Overview](#overview)
 - [Prerequisites](#prerequisites)
-- [Quick Start](#quick-start)
-- [Configuration](#step-3-configure-environment)
-- [Quick Command Reference](#quick-command-reference)
-- [Running Tests](#running-tests)
-- [Test Organization](#test-organization)
+- [Installation](#installation)
+- [Running the Suite](#running-the-suite)
+- [Test Selection and Filters](#test-selection-and-filters)
+- [Environment Variables](#environment-variables)
 - [Docker Environment](#docker-environment)
-- [CI/CD Integration](#cicd-integration)
+- [Authoring Tests](#authoring-tests)
+- [Continuous Integration](#continuous-integration)
+- [Reports and Artifacts](#reports-and-artifacts)
 - [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
-- [Resources](#resources)
-
----
+- [Project Layout](#project-layout)
 
 ## Overview
 
-This test suite provides comprehensive test coverage for Dokan Lite and Dokan Pro, including vendor workflows, admin management, product operations, orders, and REST API endpoints.
+The suite is organised by feature folder under `tests/e2e/`. Each folder is
+self-contained: it owns its spec files, its page object, and its test data,
+and does not import from a shared utility tree. This isolation lets a folder
+be worked on, shipped, or split out without touching unrelated areas of the
+suite.
+
+API coverage lives under `tests/api/` and runs against the same WordPress
+container.
+
+Conventions for tagging, test isolation, modal handling, REST authentication,
+and DataViews list stability are documented in [`CONVENTIONS.md`](CONVENTIONS.md).
+The history and rationale of the 5.0.0 React refactor are in
+[`REFACTOR_PLAN.md`](REFACTOR_PLAN.md).
 
 ## Prerequisites
 
-- **Node.js** 16+ ([NVM](https://github.com/nvm-sh/nvm) recommended)
-- **Docker Desktop** (must be running)
-- **Composer** (for PHP dependencies)
-- **Git**
+| Requirement     | Version           | Notes                                              |
+|-----------------|-------------------|----------------------------------------------------|
+| Node.js         | 18 LTS or higher  | `node -v`                                          |
+| Docker Desktop  | Current stable    | Required by `wp-env`                               |
+| Git             | Any modern        | Repository checkout                                |
+| Disk            | ~3 GB free        | wp-env containers + Playwright Chromium binary     |
 
----
+All other dependencies (Playwright, wp-env, premium WooCommerce plugins,
+Dokan Pro) are installed or mounted automatically.
 
-## Quick Start
-
-### Step 1: Install Plugin Dependencies
-
-```bash
-# Navigate to plugin root
-cd wp-content/plugins/dokan-lite
-
-# Install PHP dependencies
-composer install && composer dump-autoload --optimize
-
-# Install JavaScript dependencies
-npm install
-
-# Build plugin assets (REQUIRED!)
-npm run build
-```
-
-> ⚠️ **Important:** The `npm run build` step is **required** - it generates CSS/JS files needed for the plugin to work.
-
----
-
-### Step 2: Install Test Suite Dependencies
+## Installation
 
 ```bash
-# Navigate to test directory
 cd tests/pw
 
-# Install test dependencies
+# Install Node dependencies and the Chromium browser binary
 npm install
+npm run install:chromium
 
-# Install Playwright browsers
-npx playwright install chromium
-```
+# Copy the environment template; edit credentials if your setup differs
+cp .env.example .env
 
----
-
-### Step 3: Configure Environment
-
-Create a `.env` file in `tests/pw/` directory:
-
-```env
-# Admin Configuration (REQUIRED)
-ADMIN=your_admin_username
-ADMIN_PASSWORD=your_secure_password
-ADMIN_EMAIL=admin@example.com
-
-# Dokan Configuration
-DOKAN_PRO=true
-LICENSE_KEY=your_dokan_pro_license_key
-
-# Playwright Configuration (REQUIRED)
-BASE_URL=http://localhost:9999
-CI=true
-HEADLESS=false
-
-# Database Configuration (Docker defaults - DO NOT CHANGE)
-DB_HOST_NAME=localhost
-DB_USER_NAME=root
-DB_USER_PASSWORD=password
-DATABASE=tests-wordpress
-DB_PORT=9998
-DB_PREFIX=wp
-
-# REST API (CRITICAL - DO NOT CHANGE)
-SERVER_URL=http://localhost:9999/?rest_route=
-```
-
-> ⚠️ **Security:** Never commit your `.env` file - it's already in `.gitignore`.
-
----
-
-### Development Environment Requirements
-
-On your local development setup (where the test code resides), ensure that **all required plugins are installed and active**:
-
-- Dokan  
-- Dokan Pro  
-- WooCommerce Bookings  
-- WooCommerce Product Add-Ons  
-- WooCommerce Simple Auction  
-- WooCommerce Subscriptions  
-
-> **Important:**  
-> The test server references the local site’s plugin directory. Missing plugins in your development environment may cause tests to fail or behave inconsistently.
-
----
-
-### Step 4: Start Docker Environment
-
-### Option A: Step by Step
-
-```bash
-# 1. Make sure Docker Desktop is running!
-
-# 2. Start WordPress Docker environment
-npm run start:env
-
-# 3. Run complete setup (activates plugins, creates test data)
-npm run docker:setup
-```
-
-### Option B: All-in-One (Recommended)
-
-```bash
-# Does all 3 steps above automatically
+# Start wp-env (Docker), provision the admin user, and run all setup specs
 npm run docker:full
 ```
 
----
+The `docker:full` target performs three steps in order:
 
-### Step 5: Verify Setup
+1. **`wp-env start`** — boots the WordPress container on port `9999` and
+   MySQL on port `9998`.
+2. **`create:admin`** — provisions the administrator account using the
+   credentials in `.env`.
+3. **`docker:setup`** — runs `_site.setup.ts`, `_auth.setup.ts`, and
+   `_env.setup.ts`, which seed vendors, customers, products, payment
+   methods, and write the storage-state JSON files used by every test.
 
-```bash
-# Check if plugins are activated
-npm run check:plugins
-
-# Check if users are created
-npm run check:users
-
-# Check active Dokan modules
-npm run check:modules
-```
-
-**Expected output from `check:plugins`:**
-- ✅ dokan-lite (active)
-- ✅ dokan-pro (active)
-- ✅ woocommerce (active)
-- ✅ master/Basic Auth (active)
-
----
-
-## Quick Command Reference
-
-| Task | Command |
-|------|---------|
-| **Plugin Setup** | `cd wp-content/plugins/dokan-lite` → `composer install` → `npm install` → `npm run build` |
-| **Test Setup** | `cd tests/pw` → `npm install` → `npx playwright install chromium` |
-| **Start Docker** | `npm run start:env` |
-| **Create Admin** | `npm run create:admin` |
-| **Full Setup** | `npm run docker:full` |
-| **Run E2E Tests** | `npm run test:e2e` |
-| **Run API Tests** | `npm run test:api` |
-| **Stop Docker** | `npm run stop:env` |
-| **Reset Environment** | `npm run reset:env` |
-
----
-
-## Next Steps
-
-- **Run Tests:** `npm run test:e2e` or `npm run test:api`
-- **View Documentation:** See [Running Tests](#running-tests) and [Test Organization](#test-organization)
-- **Debug Tests:** `npm run test:debug` or `npm run test:ui`
-
----
-
-## Important Notes
-
-1. ⚠️ **Build assets first:** Always run `npm run build` in plugin root before starting Docker
-2. ⚠️ **Docker must be running:** Start Docker Desktop before `npm run start:env`
-3. ⚠️ **Plugin order matters:** Dokan Lite must activate before Dokan Pro
-4. ⚠️ **Create admin separately:** Run `create:admin` after `start:env` (or use `docker:full`)
-
----
-
-## Running Tests
-
-### E2E Tests
+To rebuild the environment from scratch:
 
 ```bash
-# Run all E2E tests
-npm run test:e2e
-
-# Run with visible browser
-npm run test:headed
-
-# Run in UI mode
-npm run test:ui
-
-# Debug specific test
-npm run test:debug
-
-# Run specific test by name
-npx playwright test -g "should create product"
+npm run reset:env       # destroys the wp-env stack, then restarts it
+npm run docker:setup    # re-seeds the database
 ```
 
-### API Tests
+> `reset:env` deletes the database. The seed step must be re-run before
+> any test will pass.
+
+## Running the Suite
+
+| Goal                                | Command                                                                                  |
+|-------------------------------------|------------------------------------------------------------------------------------------|
+| Full suite (e2e + api + setup)      | `npm test`                                                                               |
+| E2E only                            | `npm run test:e2e`                                                                       |
+| API only                            | `npm run test:api`                                                                       |
+| Single folder                       | `NO_SETUP=true npx playwright test --project=e2e_tests tests/e2e/orders`                 |
+| Single file                         | `NO_SETUP=true npx playwright test --project=e2e_tests tests/e2e/orders/orders.spec.ts`  |
+| Single test by name                 | append `-g "<test name>"`                                                                |
+| Headed (visible browser)            | `npm run test:headed`                                                                    |
+| Playwright UI mode                  | `npm run test:ui`                                                                        |
+| Inspector / step-through            | `npm run test:debug`                                                                     |
+| Open last HTML report               | `npm run test:report`                                                                    |
+
+Setting `NO_SETUP=true` skips the `_site.setup.ts`, `_auth.setup.ts`, and
+`_env.setup.ts` projects. After the initial `docker:full`, all subsequent
+runs should use `NO_SETUP=true` — the setup projects re-seed the database
+and add several minutes to each run.
+
+## Test Selection and Filters
+
+Every test carries a Lite/Pro gate plus a role tag. Filters use Playwright's
+`-g` (grep) flag.
+
+| Tag             | Meaning                                                |
+|-----------------|--------------------------------------------------------|
+| `@lite`         | Runs in both Lite-only and Lite + Pro environments     |
+| `@liteOnly`     | Runs only when Pro is not installed                    |
+| `@pro`          | Requires Dokan Pro                                     |
+| `@admin`        | Drives the WordPress administrator role                |
+| `@vendor`       | `seller` role                                          |
+| `@customer`     | Logged-in customer                                     |
+| `@guest`        | Unauthenticated                                        |
+| `@exploratory`  | Smoke-level coverage with relaxed assertions           |
+| `@serial`       | Excluded by `grepInvert`; must be run in isolation     |
+
+Examples:
 
 ```bash
-# Run all API tests
-npm run test:api
+# All admin tests
+NO_SETUP=true npx playwright test --project=e2e_tests -g "@admin"
 
-# Run specific API test
-npx playwright test tests/api/products.spec.ts
+# Pro-only tests
+NO_SETUP=true npx playwright test --project=e2e_tests -g "@pro"
+
+# Vendor tests in a specific folder
+NO_SETUP=true npx playwright test --project=e2e_tests tests/e2e/abuse-reports -g "@vendor"
 ```
 
-### Test Filtering
+## Environment Variables
 
-#### By Tags
+| Variable      | Default                       | Purpose                                                  |
+|---------------|-------------------------------|----------------------------------------------------------|
+| `NO_SETUP`    | unset                         | Skip the setup projects (recommended for iteration)      |
+| `HEADLESS`    | `true`                        | Set `false` to run with a visible browser                |
+| `SLOWMO`      | unset                         | Slow each Playwright action by N milliseconds            |
+| `DOKAN_PRO`   | auto-detected                 | Toggle Pro-only test gating                              |
+| `BASE_URL`    | `http://localhost:9999`       | Override the WordPress base URL                          |
+| `ADMIN`       | `admin`                       | Administrator username                                   |
+| `ADMIN_PASSWORD` | `password`                  | Administrator password                                   |
 
-```bash
-# Dokan Lite tests only
-npx playwright test --grep '@lite'
-
-# Dokan Pro tests only
-npx playwright test --grep '@pro'
-
-# Admin-specific tests
-npx playwright test --grep '@admin'
-
-# Vendor-specific tests
-npx playwright test --grep '@vendor'
-```
-
-#### Parallel Execution
-
-```bash
-# Run with 4 workers
-npx playwright test --workers=4
-
-# Run serially
-npx playwright test --workers=1
-
-# Run failed tests only
-npx playwright test --last-failed
-```
-
----
-
-## Test Organization
-
-### Project Structure
-
-```
-tests/pw/
-├── tests/
-│   ├── e2e/                    # E2E test specifications
-│   │   ├── _auth.setup.ts      # Authentication setup
-│   │   ├── _env.setup.ts       # Environment setup
-│   │   ├── _site.setup.ts      # Site configuration
-│   │   └── *.spec.ts           # Test files
-│   └── api/                    # API test specifications
-├── pages/                      # Page Object Models
-├── utils/                      # Utility functions
-├── fixtures/                   # Test fixtures
-├── playwright-report/          # Test reports
-├── test-results/              # Test artifacts
-├── playwright.config.ts       # E2E configuration
-├── api.config.ts              # API configuration
-└── package.json               # Dependencies & scripts
-```
-
-### Page Object Model
-
-Tests use the Page Object Model pattern:
-
-```typescript
-// Example: Using page objects
-test('Admin can create product', async ({ page }) => {
-  const admin = new AdminPage(page);
-  const products = new ProductsPage(page);
-  
-  await admin.login();
-  await products.createSimpleProduct({
-    name: 'Test Product',
-    price: '10.00'
-  });
-  
-  await expect(page.locator('.success')).toBeVisible();
-});
-```
-
----
+Any of these may be set in `.env` instead of on the command line.
 
 ## Docker Environment
 
-### Docker Commands
+The suite uses [`wp-env`](https://www.npmjs.com/package/@wordpress/env) with
+a project-local override (`.wp-env.override.json`) that mounts:
 
-| Command | Description |
-|---------|-------------|
-| `npm run start:env` | Start Docker containers + create admin |
-| `npm run stop:env` | Stop Docker containers |
-| `npm run restart:env` | Restart Docker |
-| `npm run reset:env` | Destroy and recreate environment |
-| `npm run docker:setup` | Complete setup (plugins + data) |
-| `npm run docker:full` | All-in-one (start + admin + setup) |
+- `dokan-lite` (this plugin)
+- `dokan-pro` (sibling clone — required for `@pro` tests)
+- WooCommerce premium plugins (Bookings, Subscriptions, Product Add-ons,
+  Simple Auctions) from `dokan-pro/tests/plugins/`
 
-### Verification Commands
+### Container Layout
 
-| Command | Description |
-|---------|-------------|
-| `npm run check:users` | List WordPress users |
-| `npm run check:plugins` | List active plugins |
-| `npm run check:pages` | List WordPress pages |
-| `npm run check:modules` | List active Dokan modules |
+| Service             | Port | Purpose                                          |
+|---------------------|------|--------------------------------------------------|
+| `tests-wordpress`   | 9999 | WordPress (admin)                                |
+| `tests-mysql`       | 9998 | MySQL                                            |
+| `tests-cli`         | n/a  | wp-cli helper, invoked via `npm run wp-env`      |
 
-### Access Points
+The same Compose file also creates `wordpress` / `mysql` / `cli` services on
+ports `8889` and `8888`. Those belong to wp-env's "dev" environment and are
+not used by the suite.
 
-| Service | URL | Credentials |
-|---------|-----|-------------|
-| WordPress Site | http://localhost:9999 | - |
-| WP Admin | http://localhost:9999/wp-admin | Your `.env` `ADMIN` credentials (or `admin` / `password` fallback) |
-| Dokan Dashboard | http://localhost:9999/dashboard | Vendor credentials |
+### Common wp-cli Operations
 
----
+```bash
+npm run wp-env run tests-cli wp option get dokan_appearance --format=json
+npm run wp-env run tests-cli wp user list
+npm run wp-env run tests-cli wp plugin list --status=active
 
-## CI/CD Integration
-
-### GitHub Actions Example
-
-```yaml
-name: E2E Tests
-
-on: [push, pull_request]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      
-      - name: Install dependencies
-        run: |
-          cd wp-content/plugins/dokan-lite/tests/pw
-          npm ci
-      
-      - name: Install Playwright
-        run: npx playwright install --with-deps chromium
-      
-      - name: Start Docker environment
-        run: |
-          cd wp-content/plugins/dokan-lite/tests/pw
-          npm run start:env
-          npm run docker:setup
-      
-      - name: Run tests
-        run: npm run test:e2e
-        env:
-          CI: true
-      
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v3
-        with:
-          name: playwright-report
-          path: playwright-report/
+# Convenience wrappers
+npm run check:users
+npm run check:plugins
+npm run check:modules
 ```
 
----
+### Shell Access
+
+```bash
+docker exec -it $(docker ps --format '{{.Names}}' | grep tests-wordpress) bash
+```
+
+### Required Settings for the React UI
+
+The Dokan 5.0.0+ React vendor dashboard and product editor are gated behind
+two options. Without them, the legacy templates render and React-targeting
+tests fail at mount.
+
+```
+dokan_appearance.vendor_layout_style   = "latest"
+dokan_appearance.vendor_product_editor = "latest"
+```
+
+CI flips these via `wp eval` after `wp-env` starts. Locally, run the same
+command once after `docker:full`:
+
+```bash
+npm run wp-env run tests-cli wp eval '
+    $a = get_option("dokan_appearance", []);
+    $a["vendor_layout_style"]   = "latest";
+    $a["vendor_product_editor"] = "latest";
+    update_option("dokan_appearance", $a);
+'
+```
+
+## Authoring Tests
+
+Read [`CONVENTIONS.md`](CONVENTIONS.md) before adding new specs. Key rules:
+
+- One feature per folder. Folder name should match the URL or menu label,
+  not the internal plugin module name.
+- Each folder contains `<feature>.spec.ts` and `<feature>Page.ts`. The page
+  object must be self-contained — no imports from `@utils/`. Inline any
+  helpers it needs.
+- Every test declares a Lite/Pro gate and a role tag.
+- When a feature is rewritten in React (Dokan 5.0.0+), preserve the legacy
+  tests under an `Old Test Case N - …` prefix and add the new React tests
+  in a clearly marked section at the bottom of the same spec file:
+
+  ```ts
+  // ============================================
+  // NEW REACT UI TEST CASES (Dokan 5.0.0+)
+  // ============================================
+  ```
+
+- Avoid `'networkidle'` waits; the project's ESLint configuration rejects
+  them. Prefer `'load'` plus an explicit `waitForResponse` against the
+  endpoint relevant to the action under test.
+- REST tests use `request.newContext()` with HTTP Basic authentication. A
+  browser context constructed from a `storageState` will drop the
+  `Authorization` header on cross-origin REST calls. Reference
+  implementation: `tests/e2e/abuse-reports/abuseReportsPage.ts`.
+- DataViews row counts read zero between the REST GET response and the
+  React re-render. Wait for the first row to be visible before reading a
+  baseline:
+
+  ```ts
+  await page.locator('table tbody tr').first().waitFor({ state: 'visible', timeout: 20000 });
+  const before = await page.locator('table tbody tr').count();
+  ```
+
+## Continuous Integration
+
+The pipeline is defined in
+[`.github/workflows/e2e_api_tests.yml`](../../.github/workflows/e2e_api_tests.yml)
+and runs on pull requests and on pushes to default branches.
+
+| Job                  | Description                                                |
+|----------------------|------------------------------------------------------------|
+| `e2e tests (N, 6)`   | Six parallel shards, 40 minute timeout each                |
+| `api tests (1, 1)`   | Single shard, 40 minute timeout                            |
+| `merge-reports`      | Aggregates per-shard JSON output into a unified summary    |
+
+Sharding is alphabetical by file name. If a shard exceeds the others
+significantly, increase `shardTotal` in the workflow matrix or split the
+heaviest spec file into two.
+
+Operational commands:
+
+```bash
+gh run list --branch <branch>
+gh run watch <RUN_ID>
+gh run view <RUN_ID> --log-failed     # log of failing tests only
+gh run rerun <RUN_ID> --failed        # rerun only the failed jobs
+```
+
+## Reports and Artifacts
+
+Per-run output is written to `playwright-report/` and
+`playwright/e2e/test-artifacts/`.
+
+```bash
+npm run test:report   # opens the HTML report from the last local run
+```
+
+CI uploads each shard's artifact (screenshots, traces, error context) to
+the GitHub Actions run. Traces can be opened locally with:
+
+```bash
+npx playwright show-trace path/to/trace.zip
+```
 
 ## Troubleshooting
 
-### `start:env` Fails
+### `wp-env` fails to start
 
-**Check:**
-1. ✅ Docker Desktop is running
-2. ✅ Composer dependencies installed (`vendor/` directory exists)
-3. ✅ npm dependencies installed (`node_modules/` exists)
-4. ✅ Assets are built (`assets/css/style.css` exists)
+```
+Error: getaddrinfo ENOTFOUND ...
+```
 
-**Fix:**
+Docker is not running. Start Docker Desktop and retry `npm run start:env`.
+
+### Tests pass locally but fail on CI
+
+Common causes, in order of frequency:
+
+1. **The React UI options are not set.** Verify `dokan_appearance.vendor_layout_style`
+   and `vendor_product_editor` are both `"latest"`.
+2. **Implicit test ordering.** A test depends on state created by an earlier
+   test in the same describe. Either move the dependency into `beforeEach`
+   via REST seeding, or split the test into its own file.
+3. **Vendor announcement modal.** Every vendor `/dashboard` navigation in
+   Pro 5.0.0 raises a modal. The page-object constructor registers an
+   auto-dismisser via `page.addLocatorHandler`. Vendor flows that bypass
+   the page object will be blocked by the modal.
+
+### `Cannot find module 'dotenv/config'` when invoking `npx playwright`
+
+Playwright was resolved from a parent `node_modules`. Use the local binary
+via `npm run test:e2e -- tests/e2e/<folder>` or
+`node_modules/.bin/playwright test`.
+
+### `Project(s) 'e2e_tests' not found`
+
+The current working directory is not `tests/pw/`. Either `cd tests/pw` or
+pass `--config=tests/pw/playwright.config.ts`.
+
+### `Authorization` header dropped on REST requests
+
+The request was issued against `browser.newContext({ storageState }).request`.
+Cookies in the storage state cause Playwright to strip the `Authorization`
+header. Use `request.newContext()` with explicit Basic authentication. See
+`tests/e2e/abuse-reports/abuseReportsPage.ts` for the working pattern.
+
+### Row count reads zero, then reads N a moment later
+
+The count was read before React rendered the rows. Wait for the first row
+to be visible before recording a baseline:
+
+```ts
+await page.locator('table tbody tr').first().waitFor({ state: 'visible', timeout: 20000 });
+const before = await page.locator('table tbody tr').count();
+```
+
+### A test passes in isolation but fails in the full suite
+
+The most common cause is state pollution from an earlier test. Confirm by
+running the failing test alone:
+
 ```bash
-# Rebuild everything
-cd wp-content/plugins/dokan-lite
-composer install
-npm install
-npm run build
+NO_SETUP=true npx playwright test --project=e2e_tests <path> -g "<test name>"
 ```
 
-### Plugins Don't Activate
+If the test passes in isolation, decouple its setup from earlier tests or
+move it to its own file.
 
-**Check:**
-```bash
-npm run check:plugins
+### Chromium binary missing or version mismatch
+
+```
+Error: browserType.launch: Executable doesn't exist at ...
 ```
 
-**Fix:**
-```bash
-# Run setup again
-npm run docker:setup
+Run `npm run install:chromium`. Playwright pins a browser version per
+package version; after pulling a `package.json` change, the browser must be
+re-installed.
+
+## Project Layout
+
+```
+tests/pw/
+├── README.md                # This document
+├── CONVENTIONS.md           # Authoring rules every spec follows
+├── REFACTOR_PLAN.md         # History of the 5.0.0 React refactor
+├── .env.example             # Template; copy to .env
+├── .wp-env.override.json    # Local Docker environment definition
+├── playwright.config.ts     # E2E + setup project configuration
+├── api.config.ts            # API project configuration
+├── package.json
+├── tests/
+│   ├── e2e/<feature>/       # One folder per feature; see CONVENTIONS.md
+│   ├── api/                 # REST API tests
+│   ├── _localSite.setup.ts
+│   ├── _site.setup.ts
+│   ├── _auth.setup.ts
+│   ├── _env.setup.ts
+│   ├── _coverage.teardown.ts
+│   └── global-teardown.ts
+├── playwright/.auth/        # Storage-state JSON, generated by _auth.setup.ts
+└── utils/                   # Shared helpers (legacy; new folders should not import from here)
 ```
 
-### Docker Warning About Dokan Pro
+## Quick Reference
 
-If you see:
-```
-✖ Error while running docker compose command.
-Warning: Failed to activate plugin. Dokan Pro requires Dokan Lite
-```
-
-**This is NOT critical!** Docker still starts. Run:
-```bash
-npm run docker:setup
-```
-
-### Docker Fails to Start
-
-**Solutions:**
-```bash
-# Ensure Docker Desktop is running
-docker ps
-
-# Clear Docker cache
-docker system prune -a
-rm -rf ~/.wp-env
-
-# Restart environment
-npm run start:env
-```
-
-### Admin User Not Created
-
-**Check:**
-```bash
-npm run check:users
-```
-
-**Fix:**
-```bash
-npm run create:admin
-```
-
-### REST API Errors (404/405)
-
-**Verify configuration:**
-```bash
-cat .env | grep SERVER_URL
-# Should be: SERVER_URL=http://localhost:9999/?rest_route=
-```
-
-### Tests Timeout
-
-**Solutions:**
-```bash
-# Reset environment
-npm run reset:env
-npm run docker:setup
-
-# Increase timeout in playwright.config.ts
-timeout: 60000  // 60 seconds
-```
-
----
-
-## Contributing
-
-### Writing Tests
-
-#### Test Structure
-
-```typescript
-import { test, expect } from '@playwright/test';
-import { ProductsPage } from '@pages/productsPage';
-
-test.describe('Products @lite @vendor', () => {
-  test('should create simple product', async ({ page }) => {
-    // Arrange
-    const products = new ProductsPage(page);
-    const productData = {
-      name: 'Test Product',
-      price: '10.00'
-    };
-    
-    // Act
-    await products.createProduct(productData);
-    
-    // Assert
-    await expect(page.locator('.success-message')).toBeVisible();
-  });
-});
-```
-
-#### Best Practices
-
-1. **Use appropriate tags**: `@lite`, `@pro`, `@admin`, `@vendor`, `@customer`
-2. **Follow Page Object Model**: Keep selectors in page objects
-3. **Write independent tests**: No shared state between tests
-4. **Use meaningful names**: Describe what the test does
-5. **Add proper assertions**: Verify expected outcomes
-
-### Pull Request Guidelines
-
-1. **Branch naming**: `feature/test-name` or `fix/issue-name`
-2. **Commit messages**: Clear, descriptive messages
-3. **Test coverage**: Add tests for new features
-4. **Documentation**: Update README if needed
-5. **Linting**: Ensure all linters pass
-
----
-
-## License
-
-This project is licensed under the GPL-2.0+ License. See the [LICENSE](../../LICENSE.txt) file for details.
-
----
-
-## Resources
-
-### Documentation
-
-- [Playwright Documentation](https://playwright.dev/)
-- [Dokan Documentation](https://dokan.co/docs/)
-
-### Support
-
-- **Issues**: [GitHub Issues](https://github.com/getdokan/dokan/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/getdokan/dokan/discussions)
-- **Documentation**: [Dokan Docs](https://dokan.co/docs/)
-
----
-
-<div align="center">
-
-[Website](https://dokan.co) • [Documentation](https://dokan.co/docs/) • [GitHub](https://github.com/getdokan/dokan)
-
-</div>
+| Action                  | Command                                                                                  |
+|-------------------------|------------------------------------------------------------------------------------------|
+| First-time setup        | `npm install && cp .env.example .env && npm run docker:full`                             |
+| Daily iteration         | `NO_SETUP=true npm run test:e2e -- tests/e2e/<folder>`                                   |
+| Debug a failing test    | `NO_SETUP=true npm run test:debug -- tests/e2e/<folder>/<file>.spec.ts -g "<name>"`      |
+| Open last report        | `npm run test:report`                                                                    |
+| Rebuild the environment | `npm run reset:env && npm run docker:setup`                                              |
+| Type-check              | `npm run type:check`                                                                     |
+| Lint                    | `npm run lint`                                                                           |
