@@ -94,8 +94,8 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                shardIndex: [1, 2, 3, 4]
-                shardTotal: [4]
+                shardIndex: [1, 2, 3, 4, 5, 6]
+                shardTotal: [6]
 
         steps:
             # Checkout testing repo (folder is repo name e.g. "dokan"; we need "dokan-lite" for wp-env)
