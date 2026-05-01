@@ -14,7 +14,6 @@ admin React shell, and all Pro module surfaces.
 - [Test Selection and Filters](#test-selection-and-filters)
 - [Environment Variables](#environment-variables)
 - [Docker Environment](#docker-environment)
-- [Authoring Tests](#authoring-tests)
 - [Continuous Integration](#continuous-integration)
 - [Reports and Artifacts](#reports-and-artifacts)
 - [Troubleshooting](#troubleshooting)
@@ -211,42 +210,6 @@ npm run wp-env run tests-cli wp eval '
     update_option("dokan_appearance", $a);
 '
 ```
-
-## Authoring Tests
-
-Read [`CONVENTIONS.md`](CONVENTIONS.md) before adding new specs. Key rules:
-
-- One feature per folder. Folder name should match the URL or menu label,
-  not the internal plugin module name.
-- Each folder contains `<feature>.spec.ts` and `<feature>Page.ts`. The page
-  object must be self-contained — no imports from `@utils/`. Inline any
-  helpers it needs.
-- Every test declares a Lite/Pro gate and a role tag.
-- When a feature is rewritten in React (Dokan 5.0.0+), preserve the legacy
-  tests under an `Old Test Case N - …` prefix and add the new React tests
-  in a clearly marked section at the bottom of the same spec file:
-
-  ```ts
-  // ============================================
-  // NEW REACT UI TEST CASES (Dokan 5.0.0+)
-  // ============================================
-  ```
-
-- Avoid `'networkidle'` waits; the project's ESLint configuration rejects
-  them. Prefer `'load'` plus an explicit `waitForResponse` against the
-  endpoint relevant to the action under test.
-- REST tests use `request.newContext()` with HTTP Basic authentication. A
-  browser context constructed from a `storageState` will drop the
-  `Authorization` header on cross-origin REST calls. Reference
-  implementation: `tests/e2e/abuse-reports/abuseReportsPage.ts`.
-- DataViews row counts read zero between the REST GET response and the
-  React re-render. Wait for the first row to be visible before reading a
-  baseline:
-
-  ```ts
-  await page.locator('table tbody tr').first().waitFor({ state: 'visible', timeout: 20000 });
-  const before = await page.locator('table tbody tr').count();
-  ```
 
 ## Continuous Integration
 
