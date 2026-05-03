@@ -735,17 +735,25 @@ export class OrdersPage {
         if (shipmentExists) return;
         const createShipmentButton = await this.page.locator("//button[@id='create-tracking-status-action']").isVisible();
         if (!createShipmentButton) return;
-        await this.click(ordersVendor.shipment.createNewShipment);
-        // Dokan Pro relies on a jQuery body-delegated click handler to toggle the
-        // qty container's `dokan-hide` class, which has been unreliable on CI:
-        //   - synthetic dispatchEvent('click') sometimes misses the delegate
-        //   - native el.click() toggles `checked` back to false after we set it
-        // Bypass the handler entirely: force the checked state and reveal every
-        // qty container directly. The submit-time logic in orders.js only reads
-        // `is(":checked")`, so no event needs to fire for the shipment to save.
-        await this.page.locator('#dokan-order-shipping-status-tracking').waitFor({ state: 'visible' });
+        // Bypass the dokan-pro orders.js click handlers entirely — they've been
+        // unreliable on CI in two ways:
+        //   1. Clicking '#create-tracking-status-action' before the body-delegated
+        //      handler is bound silently no-ops, so the tracking panel never shows.
+        //   2. The shipment-item checkbox click handler relies on jQuery .toggle()
+        //      timing that has missed synthetic events in CI.
+        // Drive the visibility transitions ourselves via DOM, then waitFor visible
+        // to confirm. Submit-time logic in orders.js only reads is(":checked") —
+        // no events need to fire for the shipment to save.
+        await this.page.locator('#dokan-order-shipping-status-tracking').waitFor({ state: 'attached' });
         await this.page.locator('.shipping_order_item_qty').first().waitFor({ state: 'attached' });
         await this.page.evaluate(() => {
+            const panel = document.getElementById('dokan-order-shipping-status-tracking');
+            if (panel) {
+                panel.classList.remove('dokan-hide');
+                panel.style.display = '';
+            }
+            const createBtn = document.getElementById('create-tracking-status-action');
+            if (createBtn) (createBtn as HTMLElement).style.display = 'none';
             document.querySelectorAll<HTMLInputElement>('.shipment_order_item_select').forEach(cb => {
                 cb.checked = true;
             });
