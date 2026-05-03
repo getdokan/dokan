@@ -44,7 +44,49 @@ const {
     TEST_MERCHANT_ID_PAYPAL_MARKETPLACE,
     TEST_CLIENT_ID_PAYPAL_MARKETPLACE,
     TEST_CLIENT_SECRET_PAYPAL_MARKETPLACE,
-} = process.env;
+} = process.env as unknown as {
+    ADMIN: string;
+    ADMIN_PASSWORD: string;
+    VENDOR: string;
+    VENDOR2: string;
+    CUSTOMER: string;
+    CUSTOMER2: string;
+    USER_PASSWORD: string;
+    SITE_PATH: string;
+    BASE_URL: string;
+    SITE_LANGUAGE: string;
+    SITE_TITLE: string;
+    ADMIN_EMAIL: string;
+    DB_HOST_NAME: string;
+    DATABASE: string;
+    DB_USER_NAME: string;
+    DB_USER_PASSWORD: string;
+    DB_PREFIX: string;
+    GMAP: string;
+    MAPBOX: string;
+    LICENSE_KEY: string;
+    CATEGORY_ID: string;
+    VONAGE_API_KEY: string;
+    VONAGE_API_SECRET: string;
+    FB_APP_ID: string;
+    FB_APP_SECRET: string;
+    TALKJS_APP_ID: string;
+    TALKJS_APP_SECRET: string;
+    PRINTFUL_APP_ID: string;
+    PRINTFUL_APP_SECRET: string;
+    TEST_PUBLISH_KEY_STRIPE: string;
+    TEST_SECRET_KEY_STRIPE: string;
+    CLIENT_ID_STRIPE: string;
+    SANDBOX_CLIENT_ID_MANGOPAY: string;
+    SANDBOX_API_KEY_MANGOPAY: string;
+    TEST_KEY_ID_RAZORPAY: string;
+    TEST_KEY_SECRET_RAZORPAY: string;
+    TEST_PUBLISH_KEY_STRIPE_EXPRESS: string;
+    TEST_SECRET_KEY_STRIPE_EXPRESS: string;
+    TEST_MERCHANT_ID_PAYPAL_MARKETPLACE: string;
+    TEST_CLIENT_ID_PAYPAL_MARKETPLACE: string;
+    TEST_CLIENT_SECRET_PAYPAL_MARKETPLACE: string;
+};
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 
@@ -509,7 +551,7 @@ export const data = {
         },
 
         productInfo: {
-            title: `${faker.commerce.productName()}_${faker.string.nanoid(5)}`,
+            title: `${faker.commerce.productAdjective()} ${faker.commerce.product()}`,
 
             permalink: `_${faker.string.nanoid(10)}`,
 
@@ -533,8 +575,8 @@ export const data = {
             },
 
             description: {
-                shortDescription: 'test short description',
-                description: 'test long description',
+                shortDescription: faker.lorem.lines(1),
+                description: faker.lorem.lines(1),
             },
 
             downloadableOptions: {
@@ -1048,6 +1090,7 @@ export const data = {
                 setupWizardSelling: 'wp-admin/admin.php?page=dokan-setup&step=selling',
                 setupWizardCommission: 'wp-admin/admin.php?page=dokan-setup&step=commission',
                 setupWizardWithdraw: 'wp-admin/admin.php?page=dokan-setup&step=withdraw',
+                dokanNew: 'wp-admin/admin.php?page=dokan-dashboard',
                 dokan: 'wp-admin/admin.php?page=dokan#',
 
                 // only lite
@@ -1118,6 +1161,7 @@ export const data = {
         frontend: {
             // customer
             myAccount: 'my-account',
+            vendorOnboarding: 'vendor-onboarding',
             myOrders: 'my-orders',
             requestForQuote: 'request-quote',
             requestedQuote: 'my-account/request-a-quote',
@@ -1155,7 +1199,7 @@ export const data = {
             bookedDayBlocks: '?wc-ajax=wc_bookings_find_booked_day_blocks',
             editAccountCustomer: 'my-account/edit-account',
             becomeVendor: 'my-account/account-migration',
-            productDetails: (productName: string) => `product/${productName}`,
+            productDetails: (productName: string) => `shop/uncategorized/${productName}`,
             orderDetails: (orderId: string) => `my-account/view-order/${orderId}`,
             orderReceivedDetails: (orderId: string, orderKey: string) => `checkout/order-received/${orderId}/?key=${orderKey}`,
             vendorDetails: (storeName: string) => `store/${storeName}`,
@@ -1172,6 +1216,7 @@ export const data = {
             vDashboard: {
                 setupWizard: '?page=dokan-seller-setup',
                 dashboard: 'dashboard',
+                newDashboard: 'dashboard/?path=%2Fanalytics%2FOverview',
                 products: 'dashboard/products',
                 productEdit: (productId: string, nonce: string) => `dashboard/products/?product_id=${productId}&action=edit&_dokan_edit_product_nonce=${nonce}`,
                 spmv: 'dashboard/products-search',
@@ -1181,6 +1226,7 @@ export const data = {
                 quoteDetails: (quotId: string) => `dashboard/requested-quotes/${quotId}`,
                 coupons: 'dashboard/coupons',
                 reports: 'dashboard/reports',
+                reports_new: 'dashboard/reports/?path=%2Fanalytics%2Fproducts',
                 statement: 'dashboard/reports/?chart=sales_statement',
                 deliveryTime: 'dashboard/delivery-time-dashboard',
                 reviews: 'dashboard/reviews',
@@ -2062,16 +2108,16 @@ export const data = {
     modules: {
         noModuleMessage: 'No modules found.',
         moduleStats: {
-            totalModules: 40,
+            totalModules: 42,
             modulesVideoLink: 19,
             productManagement: 15,
             integration: 6,
             uiUx: 2,
             shipping: 3,
-            storeManagement: 10,
-            payment: 6,
+            storeManagement: 11,
+            payment: 7,
             orderManagement: 2,
-            vendorManagement: 1,
+            vendorManagement: 2,
         },
 
         modules: [
@@ -2693,6 +2739,7 @@ export const data = {
         dashboard: '[dokan-dashboard]',
         dokanSubscriptionPacks: '[dps_product_pack]',
         vendorRegistration: '[dokan-vendor-registration]',
+        vendorOnboardingRegistration: '[dokan-vendor-onboarding-registration]',
         bestSellingProduct: '[dokan-best-selling-product]',
         topRatedProduct: '[dokan-top-rated-product]',
         customerMigration: '[dokan-customer-migration]',
@@ -2865,7 +2912,7 @@ export const data = {
 
         // plugins
         plugins: {
-            basicAuth: 'Basic-Auth',
+            basicAuth: 'master',
             woocommerce: 'woocommerce',
             dokan: 'dokan',
             dokanLite: 'dokan-lite',
@@ -2894,6 +2941,7 @@ export const data = {
             activatePlugin: (plugin: string) => `wp plugin activate ${plugin}`,
             activateTheme: (theme: string) => `wp theme activate ${theme}`,
             rewritePermalink: `wp rewrite structure /%postname%/`,
+            flushRewrite: `wp rewrite flush --hard`,
         },
         makePath: (path: string) => `mkdir -p ${path}`,
         deleteFolder: (path: string) => `rm -rf ${path}`,

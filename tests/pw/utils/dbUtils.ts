@@ -57,7 +57,7 @@ export const dbUtils = {
     },
 
     // set user meta
-    async setUserMeta(userId: string, metaKey: string, metaValue: object | string, serializeData?: boolean): Promise<any> {
+    async setUserMeta(userId: string, metaKey: string, metaValue: object | string | null, serializeData?: boolean): Promise<any> {
         try {
             // Validate required parameters
             if (userId === undefined || userId === null) {
@@ -68,7 +68,7 @@ export const dbUtils = {
             }
             // Sanitize metaValue: replace undefined with null
             metaValue = metaValue === undefined ? null : metaValue;
-            metaValue = serializeData && !isSerialized(metaValue as string) ? serialize(metaValue) : metaValue;
+            metaValue = serializeData && metaValue !== null && !isSerialized(metaValue as string) ? serialize(metaValue) : metaValue;
             const metaExists = await dbUtils.dbQuery(`SELECT COUNT(*) AS count
                                                       FROM ${dbPrefix}_usermeta
                                                       WHERE user_id = ?

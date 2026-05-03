@@ -232,24 +232,7 @@ export const payloads = {
                 key: 'dokan_geo_address',
                 value: 'Dhaka, Bangladesh',
             },
-            {
-                key: '_dokan_rma_override_product',
-                value: 'yes',
-            },
-            {
-                key: '_dokan_rma_settings',
-                value: {
-                    label: 'Warranty',
-                    type: 'included_warranty',
-                    policy: 'test refund policy',
-                    reasons: ['defective'],
-                    length: 'lifetime',
-                    length_value: '',
-                    length_duration: '',
-                    addon_settings: [],
-                },
-            },
-            {
+{
                 key: '_product_addons',
                 value: [
                     {
@@ -434,24 +417,7 @@ export const payloads = {
                 key: 'dokan_geo_address',
                 value: 'New York, NY, USA',
             },
-            {
-                key: '_dokan_rma_override_product',
-                value: 'yes',
-            },
-            {
-                key: '_dokan_rma_settings',
-                value: {
-                    label: 'Warranty',
-                    type: 'included_warranty',
-                    policy: 'test refund policy',
-                    reasons: ['defective'],
-                    length: 'lifetime',
-                    length_value: '',
-                    length_duration: '',
-                    addon_settings: [],
-                },
-            },
-            // {
+// {
             //     key: '_product_addons',
             //     value: [
             //         {
@@ -565,24 +531,7 @@ export const payloads = {
                 key: 'dokan_geo_address',
                 value: 'New York, NY, USA',
             },
-            {
-                key: '_dokan_rma_override_product',
-                value: 'yes',
-            },
-            {
-                key: '_dokan_rma_settings',
-                value: {
-                    label: 'Warranty',
-                    type: 'included_warranty',
-                    policy: 'test refund policy',
-                    reasons: ['defective'],
-                    length: 'lifetime',
-                    length_value: '',
-                    length_duration: '',
-                    addon_settings: [],
-                },
-            },
-            // {
+// {
             // key: '_dokan_min_max_meta',
             // value: {
             //     min_quantity: 4,
@@ -675,24 +624,7 @@ export const payloads = {
                 key: 'dokan_geo_address',
                 value: 'New York, NY, USA',
             },
-            {
-                key: '_dokan_rma_override_product',
-                value: 'yes',
-            },
-            {
-                key: '_dokan_rma_settings',
-                value: {
-                    label: 'Warranty',
-                    type: 'included_warranty',
-                    policy: 'test refund policy',
-                    reasons: ['defective'],
-                    length: 'lifetime',
-                    length_value: '',
-                    length_duration: '',
-                    addon_settings: [],
-                },
-            },
-            // {
+// {
             // key: '_dokan_min_max_meta',
             // value: {
             //     min_quantity: 4,
@@ -771,24 +703,7 @@ export const payloads = {
                 key: 'dokan_geo_address',
                 value: 'New York, NY, USA',
             },
-            {
-                key: '_dokan_rma_override_product',
-                value: 'yes',
-            },
-            {
-                key: '_dokan_rma_settings',
-                value: {
-                    label: 'Warranty',
-                    type: 'included_warranty',
-                    policy: 'test refund policy',
-                    reasons: ['defective'],
-                    length: 'lifetime',
-                    length_value: '',
-                    length_duration: '',
-                    addon_settings: [],
-                },
-            },
-            {
+{
                 key: '_sale_price_label',
                 value: 'old-price',
             },
@@ -2251,7 +2166,7 @@ export const payloads = {
         // title        : 'dokan',
         // description  : 'Just another WordPress site',
         // url          : 'http://dokan.test',
-        email: 'shashwata@wedevs.com',
+        email: 'shohan@wedevs.com',
         timezone: 'Asia/Dhaka',
         date_format: 'F j, Y',
         time_format: 'g:i a',
@@ -3634,14 +3549,15 @@ export const payloads = {
         liveChat: 'live_chat',
         liveSearch: 'live_search',
         mangopay: 'mangopay',
-        moip: 'moip',
+        paystack: "paystack",
+        vendorSupport: 'vendor_support',
         minMaxQuantities: 'order_min_max',
         paypalMarketplace: 'paypal_marketplace',
         printful: 'printful',
         productAddon: 'product_addon',
         productAdvertising: 'product_advertising',
         productEnquiry: 'product_enquiry',
-        productFormManager: 'product_form_customization',
+        //productFormManager: 'product_form_customization',
         productSubscription: 'vsp',
         productQa: 'product_qa',
         rankMath: 'rank_math',
@@ -3698,7 +3614,7 @@ export const payloads = {
     // product review
 
     updateProductReview: {
-        status: 'approved',
+        status: 'approve',
     },
 
     // store review
@@ -5033,6 +4949,13 @@ export const payloads = {
     vendorRegistrationShortcode: {
         title: 'Vendor-registration',
         content: '[dokan-vendor-registration]',
+        status: 'publish',
+    },
+
+    // vendor onboarding registration shortcode (Dokan 5.0.0+)
+    vendorOnboardingShortcode: {
+        title: 'Vendor-onboarding',
+        content: '[dokan-vendor-onboarding-registration]',
         status: 'publish',
     },
 

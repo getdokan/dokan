@@ -130,8 +130,9 @@ export class ApiUtils {
         let hasMoreItems = true;
         while (hasMoreItems) {
             const [, responseBodyChunk] = await this.get(endPoint, { params: { ...params, per_page: 100, page: page }, headers: auth });
-            if (responseBodyChunk.length === 0 || (maxPageLimit !== -1 && page >= maxPageLimit)) {
+            if (!Array.isArray(responseBodyChunk) || responseBodyChunk.length === 0 || (maxPageLimit !== -1 && page >= maxPageLimit)) {
                 hasMoreItems = false;
+                if (Array.isArray(responseBodyChunk)) responseBody = responseBody.concat(responseBodyChunk);
             } else {
                 responseBody = responseBody.concat(responseBodyChunk);
                 page++;
@@ -227,20 +228,36 @@ export class ApiUtils {
         return sellerId;
     }
 
+    // get seller id by username
+    async getSellerIdByUsername(username: string, auth?: auth): Promise<string> {
+        const allSellers = await this.getAllUsersByRoles('seller', auth);
+        const sellerId = allSellers.find((o: { username: string }) => o?.username?.toLowerCase() === username.toLowerCase())?.id;
+        return sellerId;
+    }
+
     // create store
     async createStore(payload: any, auth?: auth, addUserAddress: boolean = false): Promise<[responseBody, string, string, string]> {
         const [response, responseBody] = await this.post(endPoints.createStore, { data: payload, headers: auth }, false);
         let sellerId: string;
         let storeName: string;
         if (responseBody.code) {
-            expect(response.status()).toBe(500);
+            // Handle error cases (status can be 400 or 500)
+            expect(response.ok()).toBeFalsy();
 
             // get store id if already exists
             sellerId = await this.getSellerId(payload.store_name, auth);
+            
+            // If not found by store name, try to find by username (for cases where user exists but store might not)
+            if (!sellerId && payload.user_login) {
+                sellerId = await this.getSellerIdByUsername(payload.user_login, auth);
+            }
+            
             storeName = payload.store_name;
 
-            // update store if already exists
-            await this.updateStore(sellerId, payload, auth);
+            // update store if already exists and sellerId is found
+            if (sellerId) {
+                await this.updateStore(sellerId, payload, auth);
+            }
         } else {
             expect(response.ok()).toBeTruthy();
             sellerId = String(responseBody?.id);
@@ -248,7 +265,7 @@ export class ApiUtils {
         }
 
         // add vendor user address
-        if (addUserAddress) {
+        if (addUserAddress && sellerId) {
             await this.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth);
         }
 

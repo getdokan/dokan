@@ -163,6 +163,8 @@ Temporary Items
 .apdisk
 
 # custom files
+# Track package-lock.json in tests/pw (override parent ignore)
+!package-lock.json
 
 #vscode
 .idea/
@@ -177,6 +179,11 @@ playwright-report/
 blob-report/
 playwright/.cache/
 visual.spec.ts-snapshots/
+
+# wp-env override is generated at runtime by the CI workflow
+# (cp .wp-env.ci.json|.wp-env.json -> .wp-env.override.json) and
+# its plugin paths only resolve under that workflow's checkout layout.
+.wp-env.override.json
 
 # vscode
 .vscode/
