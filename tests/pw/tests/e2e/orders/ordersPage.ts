@@ -736,8 +736,16 @@ export class OrdersPage {
         const createShipmentButton = await this.page.locator("//button[@id='create-tracking-status-action']").isVisible();
         if (!createShipmentButton) return;
         await this.click(ordersVendor.shipment.createNewShipment);
-        await this.page.locator('.shipment_order_item_select').click();
-        await this.page.locator('.shipping_order_item_qty').fill('1');
+        // Dokan Pro hides the shipment-item checkbox via CSS and binds the qty-reveal
+        // handler to `click` (not `change`) — so check()/force-click via setChecked
+        // would leave the qty input hidden. dispatchEvent('click') fires a real
+        // bubbling click that the body-delegated handler in orders.js picks up.
+        const itemCheckbox = this.page.locator('.shipment_order_item_select').first();
+        await itemCheckbox.waitFor({ state: 'attached' });
+        await itemCheckbox.dispatchEvent('click');
+        const qtyInput = this.page.locator('.shipping_order_item_qty').first();
+        await qtyInput.waitFor({ state: 'visible' });
+        await qtyInput.fill('1');
         await this.page.locator('#shipment-status').selectOption({ label: 'Delivered' });
         await this.page.locator('#shipping_status_provider').selectOption({ label: 'DHL' });
         await this.page.locator(ordersVendor.shipment.dateShipped).fill(currentDate);
