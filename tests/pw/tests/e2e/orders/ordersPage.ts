@@ -736,23 +736,23 @@ export class OrdersPage {
         const createShipmentButton = await this.page.locator("//button[@id='create-tracking-status-action']").isVisible();
         if (!createShipmentButton) return;
         await this.click(ordersVendor.shipment.createNewShipment);
-        // Dokan Pro hides the shipment-item checkbox via CSS and toggles the qty
-        // container's `dokan-hide` class via a jQuery body-delegated click handler.
-        // dispatchEvent('click') has been unreliable on CI (synthetic event sometimes
-        // misses the delegated handler), so do it ourselves: native el.click() fires
-        // a real bubbling MouseEvent the listener catches, AND we strip dokan-hide
-        // from the matching qty container directly as a fallback.
-        const itemCheckbox = this.page.locator('.shipment_order_item_select').first();
-        await itemCheckbox.waitFor({ state: 'attached' });
-        await itemCheckbox.evaluate((el: HTMLInputElement) => {
-            el.checked = true;
-            el.click();
-            const itemId = el.getAttribute('data-order_item_id');
-            if (itemId) {
-                document
-                    .querySelectorAll(`.shipping_order_item_qty_${itemId}`)
-                    .forEach((c) => (c as HTMLElement).classList.remove('dokan-hide'));
-            }
+        // Dokan Pro relies on a jQuery body-delegated click handler to toggle the
+        // qty container's `dokan-hide` class, which has been unreliable on CI:
+        //   - synthetic dispatchEvent('click') sometimes misses the delegate
+        //   - native el.click() toggles `checked` back to false after we set it
+        // Bypass the handler entirely: force the checked state and reveal every
+        // qty container directly. The submit-time logic in orders.js only reads
+        // `is(":checked")`, so no event needs to fire for the shipment to save.
+        await this.page.locator('#dokan-order-shipping-status-tracking').waitFor({ state: 'visible' });
+        await this.page.locator('.shipping_order_item_qty').first().waitFor({ state: 'attached' });
+        await this.page.evaluate(() => {
+            document.querySelectorAll<HTMLInputElement>('.shipment_order_item_select').forEach(cb => {
+                cb.checked = true;
+            });
+            document.querySelectorAll<HTMLElement>('.shipping-tracking').forEach(c => {
+                c.classList.remove('dokan-hide');
+                c.style.display = '';
+            });
         });
         const qtyInput = this.page.locator('.shipping_order_item_qty').first();
         await qtyInput.waitFor({ state: 'visible' });
