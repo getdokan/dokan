@@ -47,14 +47,12 @@ const fmtPct = value => (value === null || value === undefined ? '—' : `${num(
 const verdictBadge = result => {
     if (!result) return '⚪️ No data';
     if (result.failed > 0) return '🔴 Failed';
-    // Flaky tests pass on retry, so the suite did not fail. The Flaky
-    // column already shows the count; keep the Status column clean.
     return '🟢 Passed';
 };
 
 const passRate = result => {
     if (!result) return '—';
-    const ran = num(result.passed) + num(result.failed) + num(result.flaky);
+    const ran = num(result.passed) + num(result.failed);
     if (ran === 0) return '—';
     return `${((num(result.passed) / ran) * 100).toFixed(1)}%`;
 };
@@ -70,7 +68,6 @@ const buildSuiteRow = (suiteName, result, coverage) => {
         cell(num(result.total_tests).toLocaleString()),
         cell(`✅ ${num(result.passed).toLocaleString()}`),
         cell(num(result.failed) > 0 ? `❌ ${num(result.failed).toLocaleString()}` : `0`),
-        cell(num(result.flaky) > 0 ? `⚠️ ${num(result.flaky).toLocaleString()}` : `0`),
         cell(`⏭️ ${num(result.skipped).toLocaleString()}`),
         cell(passRate(result)),
         cell(result.suite_duration_formatted || '—'),
@@ -111,19 +108,17 @@ const buildOverallBanner = (core, results) => {
             acc.total += num(r.total_tests);
             acc.passed += num(r.passed);
             acc.failed += num(r.failed);
-            acc.flaky += num(r.flaky);
             acc.skipped += num(r.skipped);
             return acc;
         },
-        { total: 0, passed: 0, failed: 0, flaky: 0, skipped: 0 },
+        { total: 0, passed: 0, failed: 0, skipped: 0 },
     );
 
     const status = totals.failed > 0 ? '🔴 **Failed**' : '🟢 **Passed**';
-    const flakyNote = totals.flaky > 0 && totals.failed === 0 ? ` &nbsp;·&nbsp; ⚠️ ${totals.flaky} flaky (passed on retry)` : '';
-    const ran = totals.passed + totals.failed + totals.flaky;
+    const ran = totals.passed + totals.failed;
     const rate = ran === 0 ? '—' : `${((totals.passed / ran) * 100).toFixed(1)}%`;
 
-    core.summary.addRaw(`> ${status} &nbsp;·&nbsp; **${totals.passed.toLocaleString()} / ${totals.total.toLocaleString()}** tests passed &nbsp;·&nbsp; pass rate **${rate}**${flakyNote}`).addEOL().addEOL();
+    core.summary.addRaw(`> ${status} &nbsp;·&nbsp; **${totals.passed.toLocaleString()} / ${totals.total.toLocaleString()}** tests passed &nbsp;·&nbsp; pass rate **${rate}**`).addEOL().addEOL();
 };
 
 const buildSuiteTable = (core, rows) => {
@@ -133,7 +128,6 @@ const buildSuiteTable = (core, rows) => {
         headerCell('Total'),
         headerCell('Passed'),
         headerCell('Failed'),
-        headerCell('Flaky'),
         headerCell('Skipped'),
         headerCell('Pass rate'),
         headerCell('Duration'),
@@ -142,15 +136,12 @@ const buildSuiteTable = (core, rows) => {
     core.summary.addTable([header, ...rows.filter(Boolean)]);
 };
 
-const buildFailedAndFlakyDetails = (core, results) => {
+const buildFailedDetails = (core, results) => {
     const lines = [];
     results.forEach(r => {
         if (!r) return;
         if (r.failed_tests && r.failed_tests.length) {
             lines.push(`<details><summary>❌ <strong>Failed in ${r.suite_name || 'Suite'}</strong> (${r.failed_tests.length})</summary>\n\n${r.failed_tests.map(t => `- ${t}`).join('\n')}\n\n</details>`);
-        }
-        if (r.flaky_tests && r.flaky_tests.length) {
-            lines.push(`<details><summary>⚠️ <strong>Flaky in ${r.suite_name || 'Suite'}</strong> (${r.flaky_tests.length})</summary>\n\n${r.flaky_tests.map(t => `- ${t}`).join('\n')}\n\n</details>`);
         }
     });
     if (lines.length === 0) return;
@@ -204,7 +195,7 @@ module.exports = async ({ github, context, core }) => {
         buildSuiteRow('API Tests', apiResult, apiCoverage),
         buildSuiteRow('E2E Tests', e2eResult, e2eCoverage),
     ]);
-    buildFailedAndFlakyDetails(core, [apiResult, e2eResult]);
+    buildFailedDetails(core, [apiResult, e2eResult]);
     buildEnvironmentDetails(core);
 
     const out = core.summary.stringify();

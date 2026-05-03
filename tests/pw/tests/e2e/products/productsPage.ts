@@ -1712,6 +1712,8 @@ export class ProductsPage {
     // view product
     async viewProduct(productName: string): Promise<void> {
         await this.searchProduct(productName);
+        // Reveal CSS-hidden row actions permanently so hover-state races can't lose them mid-click.
+        await this.removeAttribute(productsVendor.rowActions(productName), 'class');
         await this.hover(productsVendor.productCell(productName));
         await this.clickAndWaitForLoadState(productsVendor.view(productName));
         await expect(this.page).toHaveURL(subUrls.frontend.productDetails(slugify(productName)) + '/');
@@ -1729,6 +1731,7 @@ export class ProductsPage {
     // duplicate product
     async duplicateProduct(productName: string): Promise<void> {
         await this.searchProduct(productName);
+        await this.removeAttribute(productsVendor.rowActions(productName), 'class');
         await this.hover(productsVendor.productCell(productName));
         await this.clickAndAcceptAndWaitForResponseAndLoadState(subUrls.frontend.vDashboard.products, productsVendor.duplicate(productName));
         await this.toContainText(productsVendor.dokanSuccessMessage, 'Product successfully duplicated');
@@ -1737,6 +1740,7 @@ export class ProductsPage {
     // permanently delete product
     async permanentlyDeleteProduct(productName: string): Promise<void> {
         await this.searchProduct(productName);
+        await this.removeAttribute(productsVendor.rowActions(productName), 'class');
         await this.hover(productsVendor.productCell(productName));
         await this.click(productsVendor.permanentlyDelete(productName));
         await this.clickAndWaitForLoadState(productsVendor.confirmAction);

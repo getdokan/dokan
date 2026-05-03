@@ -376,16 +376,19 @@ export class AnnouncementsPage {
         await this.goToAnnouncementsPage();
         // Draft announcements render the title as <a> — the Edit row action only
         // exists for non-published items; published items expose only Trash.
-        await expect(this.page.locator(this.admin.announcementCell(originalTitle))).toBeVisible();
-        await this.page.hover(this.admin.announcementCell(originalTitle));
-        // Row actions are CSS-hidden; wait for the edit link to appear before clicking
-        await this.page.locator(this.admin.announcementEdit(originalTitle)).waitFor({ state: 'visible' });
+        const row = this.page.locator(this.admin.announcementCell(originalTitle));
+        const editLink = this.page.locator(this.admin.announcementEdit(originalTitle));
+        await expect(row).toBeVisible();
 
-        await Promise.all([
-            this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
-            this.page.locator(this.admin.announcementEdit(originalTitle)).click(),
-        ]);
-        await this.page.waitForLoadState('load');
+        // Row actions are revealed on row hover. After list re-renders, hover state
+        // can be lost — re-hover and re-check until the edit link is actually
+        // clickable, then click in the same retry to avoid a re-render race.
+        await expect(async () => {
+            await row.hover();
+            await expect(editLink).toBeVisible({ timeout: 2000 });
+            await editLink.click();
+            await expect(this.page.locator(this.admin.addAnnouncement.title)).toBeVisible({ timeout: 5000 });
+        }).toPass({ timeout: 20000 });
 
         await this.page.locator(this.admin.addAnnouncement.title).fill(newTitle);
 
@@ -397,6 +400,23 @@ export class AnnouncementsPage {
         await expect(this.page.locator(this.admin.announcementStatusPublished(newTitle))).toBeVisible();
     }
 
+    private async hoverAndClickRowAction(rowSelector: string, actionSelector: string): Promise<void> {
+        const row = this.page.locator(rowSelector);
+        const action = this.page.locator(actionSelector);
+        await expect(row).toBeVisible();
+        // Row actions are CSS-revealed on row hover; if the list re-renders the
+        // hover state is lost. Re-hover and re-click in one retry block.
+        await expect(async () => {
+            await row.hover();
+            await expect(action).toBeVisible({ timeout: 2000 });
+            await Promise.all([
+                this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
+                action.click(),
+            ]);
+        }).toPass({ timeout: 20000 });
+        await this.page.waitForLoadState('load');
+    }
+
     async trashAnnouncement(title: string) {
         await this.goToAnnouncementsPage();
 
@@ -406,15 +426,10 @@ export class AnnouncementsPage {
         ]);
         await this.page.waitForLoadState('load');
 
-        await this.page.hover(this.admin.announcementCellPublished(title));
-        // Row actions are CSS-hidden; wait for the trash link to appear before clicking
-        await this.page.locator(this.admin.announcementDelete(title)).waitFor({ state: 'visible' });
-
-        await Promise.all([
-            this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
-            this.page.locator(this.admin.announcementDelete(title)).click(),
-        ]);
-        await this.page.waitForLoadState('load');
+        await this.hoverAndClickRowAction(
+            this.admin.announcementCellPublished(title),
+            this.admin.announcementDelete(title),
+        );
     }
 
     async restoreAnnouncement(title: string) {
@@ -426,15 +441,10 @@ export class AnnouncementsPage {
         ]);
         await this.page.waitForLoadState('load');
 
-        await this.page.hover(this.admin.announcementCellPublished(title));
-        // Row actions are CSS-hidden; wait for the restore link to appear before clicking
-        await this.page.locator(this.admin.announcementRestore(title)).waitFor({ state: 'visible' });
-
-        await Promise.all([
-            this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
-            this.page.locator(this.admin.announcementRestore(title)).click(),
-        ]);
-        await this.page.waitForLoadState('load');
+        await this.hoverAndClickRowAction(
+            this.admin.announcementCellPublished(title),
+            this.admin.announcementRestore(title),
+        );
     }
 
     async permanentlyDeleteAnnouncement(title: string) {
@@ -446,15 +456,10 @@ export class AnnouncementsPage {
         ]);
         await this.page.waitForLoadState('load');
 
-        await this.page.hover(this.admin.announcementCellPublished(title));
-        // Row actions are CSS-hidden; wait for the delete link to appear before clicking
-        await this.page.locator(this.admin.announcementPermanentlyDelete(title)).waitFor({ state: 'visible' });
-
-        await Promise.all([
-            this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
-            this.page.locator(this.admin.announcementPermanentlyDelete(title)).click(),
-        ]);
-        await this.page.waitForLoadState('load');
+        await this.hoverAndClickRowAction(
+            this.admin.announcementCellPublished(title),
+            this.admin.announcementPermanentlyDelete(title),
+        );
     }
 
     async announcementBulkAction(action: string) {
