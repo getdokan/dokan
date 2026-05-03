@@ -736,13 +736,24 @@ export class OrdersPage {
         const createShipmentButton = await this.page.locator("//button[@id='create-tracking-status-action']").isVisible();
         if (!createShipmentButton) return;
         await this.click(ordersVendor.shipment.createNewShipment);
-        // Dokan Pro hides the shipment-item checkbox via CSS and binds the qty-reveal
-        // handler to `click` (not `change`) — so check()/force-click via setChecked
-        // would leave the qty input hidden. dispatchEvent('click') fires a real
-        // bubbling click that the body-delegated handler in orders.js picks up.
+        // Dokan Pro hides the shipment-item checkbox via CSS and toggles the qty
+        // container's `dokan-hide` class via a jQuery body-delegated click handler.
+        // dispatchEvent('click') has been unreliable on CI (synthetic event sometimes
+        // misses the delegated handler), so do it ourselves: native el.click() fires
+        // a real bubbling MouseEvent the listener catches, AND we strip dokan-hide
+        // from the matching qty container directly as a fallback.
         const itemCheckbox = this.page.locator('.shipment_order_item_select').first();
         await itemCheckbox.waitFor({ state: 'attached' });
-        await itemCheckbox.dispatchEvent('click');
+        await itemCheckbox.evaluate((el: HTMLInputElement) => {
+            el.checked = true;
+            el.click();
+            const itemId = el.getAttribute('data-order_item_id');
+            if (itemId) {
+                document
+                    .querySelectorAll(`.shipping_order_item_qty_${itemId}`)
+                    .forEach((c) => (c as HTMLElement).classList.remove('dokan-hide'));
+            }
+        });
         const qtyInput = this.page.locator('.shipping_order_item_qty').first();
         await qtyInput.waitFor({ state: 'visible' });
         await qtyInput.fill('1');
