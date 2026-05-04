@@ -12,32 +12,18 @@ not need a local PHP, MySQL, or WordPress installation.
 
 ## Table of Contents
 
-1. [Who This Document Is For](#who-this-document-is-for)
-2. [Prerequisites](#prerequisites)
-3. [Quick Start](#quick-start)
-4. [Step-by-Step Local Setup with Docker](#step-by-step-local-setup-with-docker)
-5. [Required Plugins](#required-plugins)
-6. [`.env` Reference](#env-reference)
-7. [Running Tests](#running-tests)
-8. [Tags and Filters](#tags-and-filters)
-9. [Debug Logs and Reports](#debug-logs-and-reports)
-10. [Continuous Integration](#continuous-integration)
-11. [Project Layout](#project-layout)
-12. [Troubleshooting](#troubleshooting)
-13. [Authoring New Tests](#authoring-new-tests)
-
----
-
-## Who This Document Is For
-
-You should be able to follow this guide and run the suite **even if you have
-never used Playwright before**. The only background assumed:
-
-- Comfort with a terminal and `git`.
-- Docker Desktop installed and running.
-- Node.js 18 or newer.
-
-If a section assumes prior knowledge it is called out explicitly.
+1. [Prerequisites](#prerequisites)
+2. [Quick Start](#quick-start)
+3. [Step-by-Step Local Setup with Docker](#step-by-step-local-setup-with-docker)
+4. [Required Plugins](#required-plugins)
+5. [`.env` Reference](#env-reference)
+6. [Running Tests](#running-tests)
+7. [Tags and Filters](#tags-and-filters)
+8. [Debug Logs and Reports](#debug-logs-and-reports)
+9. [Continuous Integration](#continuous-integration)
+10. [Project Layout](#project-layout)
+11. [Troubleshooting](#troubleshooting)
+12. [Authoring New Tests](#authoring-new-tests)
 
 ---
 
@@ -74,8 +60,8 @@ After it finishes, run the tests:
 npm run test:e2e              # ~12 minutes on a typical laptop
 ```
 
-If anything in those steps is unclear, follow the
-[step-by-step guide](#step-by-step-local-setup-with-docker) below.
+For a fully annotated walkthrough see
+[Step-by-Step Local Setup with Docker](#step-by-step-local-setup-with-docker).
 
 ---
 
@@ -89,7 +75,7 @@ If anything in those steps is unclear, follow the
 | Node.js 18+      | `brew install node` or nvm           | nvm / official installer                |
 | Git              | bundled with Xcode CLT               | <https://git-scm.com/downloads>         |
 
-Open **Docker Desktop** and wait until the whale icon stops animating before
+Start Docker Desktop and confirm `docker info` returns successfully before
 continuing.
 
 ### 2. Clone the required repositories
@@ -190,8 +176,8 @@ npm run test:e2e        # all e2e tests (~12 minutes)
 npm run test:api        # REST API tests (~3 minutes)
 ```
 
-`test:e2e` automatically passes `NO_SETUP=true`, so it skips the setup
-projects and just runs the test files.
+`test:e2e` automatically sets `NO_SETUP=true`, so it skips the setup
+projects and runs only the test files.
 
 ### 9. Open the report
 
@@ -289,10 +275,10 @@ Copy `.env.example` to `.env` and edit. Variables fall into four groups.
 | `CI`               | `true`                                     | Activates retries (2x) and CI-friendly timeouts         |
 | `NO_SETUP`         | `false` for first-time setup, `true` after | Skips `_site.setup.ts` / `_auth.setup.ts` / `_env.setup.ts` |
 
-> **First-time tip:** keep `NO_SETUP=false` until `docker:full` completes
-> successfully once. After that, set it to `true` so subsequent runs do not
-> re-seed the database. The `npm run test:e2e` script already passes
-> `NO_SETUP=true` for you.
+> Keep `NO_SETUP=false` until `docker:full` has completed successfully
+> once. After the initial seed, set it to `true` so subsequent runs do not
+> re-seed the database. The `npm run test:e2e` script sets `NO_SETUP=true`
+> automatically.
 
 ### Database (do not change)
 
