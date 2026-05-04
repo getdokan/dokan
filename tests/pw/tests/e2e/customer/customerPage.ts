@@ -218,14 +218,14 @@ const selectors = {
     checkout: {
         billing: {
             email: '#email',
-            country: '#billing-country input',
+            country: '#billing-country',
             firstName: '#billing-first_name',
             lastName: '#billing-last_name',
             address: '#billing-address_1',
             address2toggle: 'button.wc-block-components-address-form__address_2-toggle',
             address2: '#billing-address_2',
             city: '#billing-city',
-            stateInput: '#billing-state input',
+            state: '#billing-state',
             zipCode: '#billing-postcode',
             phone: '#billing-phone',
         },
@@ -242,11 +242,14 @@ const selectors = {
             zipCode: '#shipping-postcode',
             phone: '#shipping-phone',
         },
+        useShippingAsBilling: '.wc-block-checkout__use-address-for-billing input[type="checkbox"]',
         directBankTransfer: '.payment_method_bacs label, label[for="radio-control-wc-payment-method-options-bacs"]',
         placeOrder: '#place_order, button.wc-block-components-checkout-place-order-button',
     },
     shop: {
         searchProductLite: '(//input[@class="search-field"])[1]',
+        productLink: (productName: string) =>
+            `//ul[contains(@class,"products")]//li[contains(@class,"product")]//h2[normalize-space()="${productName}"]/ancestor::a[contains(@class,"woocommerce-LoopProduct-link")]`,
     },
     singleProduct: {
         quantity: 'div.quantity input.qty',
@@ -544,7 +547,11 @@ export class CustomerPage {
         await this.page.keyboard.press('Enter');
         await this.page.waitForLoadState('load');
 
-        // On single product page, add to cart
+        // Open the product's single page from the listing, then add to cart
+        await Promise.all([
+            this.page.waitForLoadState('load'),
+            this.page.locator(selectors.shop.productLink(productName)).first().click(),
+        ]);
         await this.page.locator(selectors.singleProduct.addToCart).click();
         await expect(this.page.locator(selectors.singleProduct.productAddedSuccessMessage(productName))).toBeVisible();
 
@@ -599,6 +606,10 @@ export class CustomerPage {
         await this.page.keyboard.press('Enter');
         await this.page.waitForLoadState('load');
 
+        await Promise.all([
+            this.page.waitForLoadState('load'),
+            this.page.locator(selectors.shop.productLink(productName)).first().click(),
+        ]);
         await this.page.locator(selectors.singleProduct.addToCart).click();
         await expect(this.page.locator(selectors.singleProduct.productAddedSuccessMessage(productName))).toBeVisible();
     }
@@ -629,9 +640,13 @@ export class CustomerPage {
     }
 
     private async fillCheckoutBilling(billing: typeof testData.customer.customerInfo.billing): Promise<void> {
+        const useShippingAsBilling = this.page.locator(selectors.checkout.useShippingAsBilling);
+        if (await useShippingAsBilling.isChecked().catch(() => false)) {
+            return;
+        }
+
         await this.page.locator(selectors.checkout.billing.email).fill(billing.email);
-        await this.page.locator(selectors.checkout.billing.country).fill(billing.country);
-        await this.page.keyboard.press('Enter');
+        await this.page.locator(selectors.checkout.billing.country).selectOption({ label: billing.country });
         await this.page.locator(selectors.checkout.billing.firstName).fill(billing.firstName);
         await this.page.locator(selectors.checkout.billing.lastName).fill(billing.lastName);
         await this.page.locator(selectors.checkout.billing.address).fill(billing.street1);
@@ -645,8 +660,7 @@ export class CustomerPage {
         }
         await this.page.locator(selectors.checkout.billing.address2).fill(billing.street2);
         await this.page.locator(selectors.checkout.billing.city).fill(billing.city);
-        await this.page.locator(selectors.checkout.billing.stateInput).fill(billing.state);
-        await this.page.keyboard.press('Enter');
+        await this.page.locator(selectors.checkout.billing.state).selectOption({ label: billing.state });
         await this.page.locator(selectors.checkout.billing.zipCode).fill(billing.zipCode);
         await this.page.locator(selectors.checkout.billing.phone).fill(billing.phone);
     }
