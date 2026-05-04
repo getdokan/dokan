@@ -12,18 +12,189 @@ not need a local PHP, MySQL, or WordPress installation.
 
 ## Table of Contents
 
-1. [Prerequisites](#prerequisites)
-2. [Quick Start](#quick-start)
-3. [Step-by-Step Local Setup with Docker](#step-by-step-local-setup-with-docker)
-4. [Required Plugins](#required-plugins)
-5. [`.env` Reference](#env-reference)
-6. [Running Tests](#running-tests)
-7. [Tags and Filters](#tags-and-filters)
-8. [Debug Logs and Reports](#debug-logs-and-reports)
-9. [Continuous Integration](#continuous-integration)
-10. [Project Layout](#project-layout)
-11. [Troubleshooting](#troubleshooting)
-12. [Authoring New Tests](#authoring-new-tests)
+1. [About This Suite](#about-this-suite)
+2. [How It Works](#how-it-works)
+3. [Prerequisites](#prerequisites)
+4. [Quick Start](#quick-start)
+5. [Step-by-Step Local Setup with Docker](#step-by-step-local-setup-with-docker)
+6. [Required Plugins](#required-plugins)
+7. [`.env` Reference](#env-reference)
+8. [Running Tests](#running-tests)
+9. [Tags and Filters](#tags-and-filters)
+10. [Debug Logs and Reports](#debug-logs-and-reports)
+11. [Continuous Integration](#continuous-integration)
+12. [Project Layout](#project-layout)
+13. [Troubleshooting](#troubleshooting)
+14. [Authoring New Tests](#authoring-new-tests)
+
+---
+
+## About This Suite
+
+This suite is the official quality gate for Dokan Lite and Dokan Pro. It
+exercises the marketplace end-to-end against a real WordPress installation,
+real WooCommerce, real Dokan Lite, real Dokan Pro, and the four premium
+WooCommerce extensions Dokan integrates with (Bookings, Subscriptions,
+Product Add-ons, Simple Auctions).
+
+### Coverage
+
+| Surface                                | Approximate Tests | Project       |
+|----------------------------------------|-------------------|---------------|
+| Vendor dashboard (React, Dokan 5.0.0+) | 480               | `e2e_tests`   |
+| Admin React shell                      | 220               | `e2e_tests`   |
+| Pro module front-end and admin flows   | 540               | `e2e_tests`   |
+| Lite-only WordPress admin and storefront | 60              | `e2e_tests`   |
+| REST API (`/dokan/v1`, `/dokan/v2`, `/dokan/v3`) | 400     | `api_tests`   |
+
+### Design Principles
+
+- **Black-box.** Tests drive the product through its public surfaces — the
+  WordPress admin, the storefront, the vendor dashboard, and the public
+  REST API. Internal PHP classes are never imported or mocked.
+- **Real environment.** Every test runs against a live WordPress, MySQL,
+  WooCommerce, and Dokan stack inside Docker. There are no in-memory stubs
+  or fakes.
+- **Deterministic seeding.** All required state — vendors, customers,
+  products, payment methods, modules — is created by setup projects before
+  the test phase begins. Tests never depend on data created by an earlier
+  test in the same run.
+- **Folder-isolated.** Each feature lives in its own folder under
+  `tests/e2e/<feature>/` with its own spec file, page object, and test
+  data. Folders do not import from one another, so a folder can be removed,
+  rewritten, or extracted without breaking unrelated areas.
+- **Lite/Pro gated.** Every test carries a `@lite`, `@liteOnly`, or `@pro`
+  tag. The runner uses these tags to skip Pro tests when Dokan Pro is not
+  present (for example, on fork pull requests in CI).
+
+### What This Suite Is Not
+
+- Not a unit test runner. PHP unit tests live elsewhere and are run by
+  PHPUnit, not Playwright.
+- Not a load test. Performance and concurrency are out of scope.
+- Not a visual regression suite for default styling. A small number of
+  `@visual` snapshot tests exist but are excluded from the standard run.
+
+---
+
+## How It Works
+
+### Test Environment
+
+The suite uses [`@wordpress/env`](https://www.npmjs.com/package/@wordpress/env)
+to provision Docker containers:
+
+| Service             | Port  | Purpose                                          |
+|---------------------|-------|--------------------------------------------------|
+| `tests-wordpress`   | 9999  | WordPress (admin and storefront)                 |
+| `tests-mysql`       | 9998  | MySQL                                            |
+| `tests-cli`         | n/a   | wp-cli helper, invoked via `npm run wp-env`      |
+
+`wp-env` mounts the `dokan-lite` checkout into `wp-content/plugins/` inside
+the container. The local override at
+`tests/pw/.wp-env.override.json` adds Dokan Pro and the premium WooCommerce
+plugins from sibling clones on the host. CI generates its own override at
+runtime from `.wp-env.ci.json` or `.wp-env.json`, depending on whether the
+job has access to the Pro repository (Pro tests are skipped on fork PRs).
+
+### Test Lifecycle
+
+Playwright projects run in this order on a full bootstrap (`docker:full`):
+
+1. **`site_setup`** (`tests/e2e/_site.setup.ts`) — configures
+   `wp-config.php` debug constants, sets the permalink structure, activates
+   plugins (Basic Auth, WooCommerce, Dokan Lite, Dokan Pro), activates the
+   Storefront theme, applies the Dokan Pro license, and activates every
+   Dokan module via the REST `/admin/modules/activate` endpoint.
+2. **`auth_setup`** (`tests/e2e/_auth.setup.ts`) — logs into the admin,
+   each seeded vendor, and each seeded customer; captures their cookies
+   and writes them to JSON files under `playwright/.auth/`. Tests reuse
+   these files via `browser.newContext({ storageState })`, eliminating the
+   per-test login cost.
+3. **`e2e_setup`** (`tests/e2e/_env.setup.ts`) — seeds vendors, customers,
+   products, payment methods, store categories, abuse reasons, and any
+   other shared fixtures. Generated IDs are written back into `.env` so
+   subsequent runs (with `NO_SETUP=true`) can reference them without
+   re-creating.
+4. **`e2e_tests`** — the actual test phase. Reads storage state and
+   fixture IDs; never depends on the setup projects running on the same
+   invocation.
+
+API tests follow the same pattern but run under `api.config.ts` with the
+projects `api_setup` and `api_tests`.
+
+### Per-Run Hooks
+
+`global-setup.ts` runs before any project starts. It truncates
+`wp-data/debug.log` so that file reflects only the current run's events.
+The log is bind-mounted from the host into the container at
+`/var/www/html/wp-data/debug.log`, so contributors can `tail -f` it from
+the host while a test is executing.
+
+### Test Authoring Pattern
+
+A typical feature folder looks like this:
+
+```
+tests/e2e/abuse-reports/
+├── abuseReports.spec.ts        # the test cases
+├── abuseReportsPage.ts         # page object + REST client
+└── abuseReportsTestData.ts     # selectors, fixtures, generators
+```
+
+Specs are thin: each `test()` instantiates the page object, invokes a
+high-level method, and asserts on the resulting UI or REST response. The
+page object owns selectors, navigation, REST seeding, and any retry
+logic. Tests do not call `page.locator(...)` against raw selectors.
+
+### Authentication
+
+The suite authenticates browser sessions via storage-state JSON files
+written by `_auth.setup.ts`:
+
+| File                                   | Role           |
+|----------------------------------------|----------------|
+| `playwright/.auth/adminStorageState.json`   | WordPress administrator |
+| `playwright/.auth/vendorStorageState.json`  | Primary vendor (`vendor1`) |
+| `playwright/.auth/vendor2StorageState.json` | Secondary vendor (`vendor2`) |
+| `playwright/.auth/customerStorageState.json`  | Primary customer (`customer1`) |
+| `playwright/.auth/customer2StorageState.json` | Secondary customer (`customer2`) |
+| `playwright/.auth/guestStorageState.json`     | Unauthenticated baseline |
+
+REST requests use HTTP Basic Authentication via the Basic Auth plugin
+(activated in `site_setup`). The `payloads.adminAuth` helper packages the
+admin credentials from `.env` for `request.newContext()` calls.
+
+### Modal Handling
+
+Dokan Pro 5.0.0 displays an announcement modal on every vendor `/dashboard`
+load. Each vendor-facing page object registers an auto-dismiss handler in
+its constructor via `page.addLocatorHandler`. Tests that bypass the page
+object hit the modal and time out — this is the single most common cause
+of flakes for new contributors.
+
+### Tag-Driven Filtering
+
+Every test carries at least two tags: a Lite/Pro gate and a role tag.
+Playwright's `grep` and `grepInvert` are configured in
+`playwright.config.ts` to honour these:
+
+```ts
+grep:       [/@lite/, /@liteOnly/, /@pro/],
+grepInvert: parseBoolean(DOKAN_PRO) ? [/@liteOnly/, /@serial/] : [/@pro/, /@serial/],
+```
+
+When `DOKAN_PRO=true` (Pro present), `@liteOnly` and `@serial` are
+excluded. When `DOKAN_PRO=false` or unset, `@pro` and `@serial` are
+excluded. This is what lets the suite run cleanly on fork pull requests
+without the Pro repository.
+
+### CI Sharding
+
+CI splits `e2e_tests` across six parallel shards, alphabetically by spec
+file name. Each shard has a 40-minute timeout. After all shards complete,
+a `merge-reports` job aggregates per-shard JSON output into a unified HTML
+report uploaded as a workflow artifact.
 
 ---
 
