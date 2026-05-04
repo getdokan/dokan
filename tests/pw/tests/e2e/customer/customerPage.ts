@@ -169,19 +169,11 @@ const selectors = {
             vatOrTaxNumber: '#billing_dokan_vat_number',
             nameOfBank: '#billing_dokan_bank_name',
             bankIban: '#billing_dokan_bank_iban',
-            country: '//select[@id="billing_country"]/..//span[@class="select2-selection__arrow"]',
-            countryInput: '.select2-search.select2-search--dropdown .select2-search__field',
-            countryValue: (country: string) =>
-                `//li[contains(@class,"select2-results__option") and normalize-space(text())="${country}"]`,
-            selectedCountry: '//span[@id="select2-billing_country-container"]',
+            countrySelect: '#billing_country',
             streetAddress: '#billing_address_1',
             streetAddress2: '#billing_address_2',
             city: '#billing_city',
-            state: '//select[@id="billing_state"]/..//span[@class="select2-selection__arrow"]',
-            stateInput: '.select2-search.select2-search--dropdown .select2-search__field',
-            stateValue: (state: string) =>
-                `//li[contains(@class,"select2-results__option")and normalize-space(text())="${state}"]`,
-            selectedState: '//span[@id="select2-billing_state-container"]',
+            stateSelect: '#billing_state',
             zipCode: '#billing_postcode',
             phone: '#billing_phone',
             email: '#billing_email',
@@ -190,19 +182,11 @@ const selectors = {
         shipping: {
             firstName: '#shipping_first_name',
             lastName: '#shipping_last_name',
-            country: '//select[@id="shipping_country"]/..//span[@class="select2-selection__arrow"]',
-            countryInput: '.select2-search.select2-search--dropdown .select2-search__field',
-            countryValue: (country: string) =>
-                `//li[contains(@class,"select2-results__option") and normalize-space(text())="${country}"]`,
-            selectedCountry: '//span[@id="select2-shipping_country-container"]',
+            countrySelect: '#shipping_country',
             streetAddress: '#shipping_address_1',
             streetAddress2: '#shipping_address_2',
             city: '#shipping_city',
-            state: '//select[@id="shipping_state"]/..//span[@class="select2-selection__arrow"]',
-            stateInput: '.select2-search.select2-search--dropdown .select2-search__field',
-            stateValue: (state: string) =>
-                `//li[contains(@class,"select2-results__option")and normalize-space(text())="${state}"]`,
-            selectedState: '//span[@id="select2-shipping_state-container"]',
+            stateSelect: '#shipping_state',
             zipCode: '#shipping_postcode',
             saveAddress: '//button[@name="save_address"]',
         },
@@ -456,19 +440,19 @@ export class CustomerPage {
         await this.page.locator(selectors.address.billing.nameOfBank).fill(billing.bankName);
         await this.page.locator(selectors.address.billing.bankIban).fill(billing.bankIban);
 
-        // Country
-        await this.page.locator(selectors.address.billing.country).click();
-        await this.page.locator(selectors.address.billing.countryInput).fill(billing.country);
-        await this.page.locator(selectors.address.billing.countryValue(billing.country)).click();
+        // Country: select natively; select2 mirrors the change. Avoids the
+        // dropdown-open race that select2's UI flow exposes in headless mode.
+        await this.page.locator(selectors.address.billing.countrySelect).selectOption({ label: billing.country });
 
         await this.page.locator(selectors.address.billing.streetAddress).fill(billing.street1);
         await this.page.locator(selectors.address.billing.streetAddress2).fill(billing.street2);
         await this.page.locator(selectors.address.billing.city).fill(billing.city);
 
-        // State
-        await this.page.locator(selectors.address.billing.state).click();
-        await this.page.locator(selectors.address.billing.stateInput).fill(billing.state);
-        await this.page.locator(selectors.address.billing.stateValue(billing.state)).click();
+        // State: WooCommerce repopulates state options via AJAX after country
+        // changes, so wait for the target option to attach before selecting.
+        const billingStateOption = this.page.locator(`${selectors.address.billing.stateSelect} option`, { hasText: billing.state });
+        await billingStateOption.waitFor({ state: 'attached', timeout: 15000 });
+        await this.page.locator(selectors.address.billing.stateSelect).selectOption({ label: billing.state });
 
         await this.page.locator(selectors.address.billing.zipCode).fill(billing.zipCode);
         await this.page.locator(selectors.address.billing.phone).fill(billing.phone);
@@ -492,17 +476,15 @@ export class CustomerPage {
         await this.page.locator(selectors.address.shipping.firstName).fill(shipping.firstName);
         await this.page.locator(selectors.address.shipping.lastName).fill(shipping.lastName);
 
-        await this.page.locator(selectors.address.shipping.country).click();
-        await this.page.locator(selectors.address.shipping.countryInput).fill(shipping.country);
-        await this.page.locator(selectors.address.shipping.countryValue(shipping.country)).click();
+        await this.page.locator(selectors.address.shipping.countrySelect).selectOption({ label: shipping.country });
 
         await this.page.locator(selectors.address.shipping.streetAddress).fill(shipping.street1);
         await this.page.locator(selectors.address.shipping.streetAddress2).fill(shipping.street2);
         await this.page.locator(selectors.address.shipping.city).fill(shipping.city);
 
-        await this.page.locator(selectors.address.shipping.state).click();
-        await this.page.locator(selectors.address.shipping.stateInput).fill(shipping.state);
-        await this.page.locator(selectors.address.shipping.stateValue(shipping.state)).click();
+        const shippingStateOption = this.page.locator(`${selectors.address.shipping.stateSelect} option`, { hasText: shipping.state });
+        await shippingStateOption.waitFor({ state: 'attached', timeout: 15000 });
+        await this.page.locator(selectors.address.shipping.stateSelect).selectOption({ label: shipping.state });
 
         await this.page.locator(selectors.address.shipping.zipCode).fill(shipping.zipCode);
 
