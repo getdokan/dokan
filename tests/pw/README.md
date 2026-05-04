@@ -157,8 +157,13 @@ npm run docker:full
 This single command does three things, in order:
 
 1. **`npm run start:env`** — starts the wp-env containers (WordPress on
-   `http://localhost:9999`, MySQL on `9998`).
-2. **`npm run create:admin`** — provisions the admin user from `.env`.
+   `http://localhost:9999`, MySQL on `9998`). wp-env automatically creates
+   a default admin (`admin` / `password`).
+2. **`npm run create:admin`** — applies the `ADMIN`, `ADMIN_PASSWORD`, and
+   `ADMIN_EMAIL` values from `.env` to the WordPress admin account. If you
+   leave the defaults, this step is a no-op (the wp-env-created `admin`
+   already matches). If you customise the admin credentials in `.env`, this
+   is what propagates them into WordPress.
 3. **`npm run docker:setup`** — runs `_site.setup.ts`, `_auth.setup.ts`, and
    `_env.setup.ts`. These activate plugins, configure Dokan, create vendors
    and customers, seed products and payment methods, and write storage-state
