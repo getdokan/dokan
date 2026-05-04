@@ -180,6 +180,10 @@ blob-report/
 playwright/.cache/
 visual.spec.ts-snapshots/
 
+# wp-env runtime artifacts surfaced via the wp-data mapping
+wp-data/debug.log
+wp-data/*.log
+
 # vscode
 .vscode/
 

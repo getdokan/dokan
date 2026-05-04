@@ -2888,10 +2888,13 @@ export const data = {
         },
 
         // debugInfo
+        // WP_DEBUG_LOG is set to a path inside the wp-data mapping so the log
+        // surfaces on the host at tests/pw/wp-data/debug.log (the wp-env mapping
+        // "wp-data": "./wp-data" mounts that directory into /var/www/html/wp-data).
         debugInfo: {
             WP_DEBUG: true,
             SCRIPT_DEBUG: true,
-            WP_DEBUG_LOG: true,
+            WP_DEBUG_LOG: '/var/www/html/wp-data/debug.log',
             WP_DEBUG_DISPLAY: true,
         },
 
@@ -2934,7 +2937,10 @@ export const data = {
             createDb: `wp db create`,
             cleanDb: `wp db clean --yes`,
             setConfig: (key: string, value: string) => `wp config set ${key} ${value} --add`,
-            setDebugConfig: (key: string, value: boolean) => `wp config set ${key} ${value} --add --raw`,
+            setDebugConfig: (key: string, value: boolean | string) =>
+                typeof value === 'string'
+                    ? `wp config set ${key} '${value}' --add`
+                    : `wp config set ${key} ${value} --add --raw`,
             installWp: (core: any) => `wp core install --locale="${core.language}" --url="${core.url}" --title="${core.title}" --admin_user="${core.admin}" --admin_password="${core.password}" --admin_email="${core.email}"`,
             installTheme: (theme: string) => `wp theme install ${theme} --activate`,
             installPlugin: (plugin: string) => `wp plugin install ${plugin} --activate --force`,
