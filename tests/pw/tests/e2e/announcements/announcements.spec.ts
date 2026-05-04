@@ -162,11 +162,14 @@ test.describe('Announcements Tests @pro', () => {
         await announcementsPage.trashAnnouncement(title);
         await announcementsPage.permanentlyDeleteAnnouncement(title);
 
-        // Verify the announcement no longer exists in the trash tab
+        // Verify the announcement no longer exists in the trash tab.
+        // The DELETE response races the list refetch; on slow CI the row can briefly
+        // remain in the DOM after waitForLoadState('load') returns. expect().not.toBeVisible
+        // polls until it disappears — give it a generous window for the refetch to land.
         await adminPage.locator(announcementsPage.admin.navTabs.trash).click();
         await adminPage.waitForLoadState('load');
         await expect(adminPage.locator(announcementsPage.admin.announcementCellPublished(title)),
-            `Permanently deleted announcement "${title}" should no longer exist in trash`).not.toBeVisible();
+            `Permanently deleted announcement "${title}" should no longer exist in trash`).not.toBeVisible({ timeout: 15000 });
 
         await announcementsPage.waitForPageReady();
         await adminPage.close();

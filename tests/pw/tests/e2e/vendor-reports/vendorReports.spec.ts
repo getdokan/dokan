@@ -101,7 +101,13 @@ test.describe('Vendor Reports (React) Tests @pro', () => {
         const page = await ctx.newPage();
         await page.goto(`${BASE}/dashboard/reports/`);
         await page.waitForLoadState('domcontentloaded');
-        await page.reload({ waitUntil: 'domcontentloaded' });
+        // /dashboard/reports/ may client-side redirect to the new dashboard shortly after
+        // DOMContentLoaded; that redirect aborts an in-flight reload with net::ERR_ABORTED.
+        // Tolerate the abort and wait for whatever URL the page settles on.
+        await page.reload({ waitUntil: 'domcontentloaded' }).catch((err: Error) => {
+            if (!/ERR_ABORTED|frame was detached/i.test(err.message)) throw err;
+        });
+        await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         const fatal = await page.locator("text=/Fatal error|Parse error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
         expect(fatal).toBe(false);
