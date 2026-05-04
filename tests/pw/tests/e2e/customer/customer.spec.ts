@@ -102,9 +102,7 @@ test.describe('Customer Tests @lite', () => {
         const context = await browser.newContext({ storageState: c1 });
         const page = await context.newPage();
         const customer = new CustomerPage(page);
-
         await customer.buyDefaultMultiVendorProducts();
-
         await page.close();
         await context.close();
     });
