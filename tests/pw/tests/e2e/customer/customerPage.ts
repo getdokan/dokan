@@ -210,8 +210,7 @@ const selectors = {
     cart: {
         cartItem: (productName: string) =>
             `//tr[@class='wc-block-cart-items__row']//a[@class= 'wc-block-components-product-name' and contains(text(),'${productName}')]`,
-        proceedToCheckout:
-            '//div[@class="wc-block-cart__submit-container"]//a[contains(@href,"/checkout/") and contains(@class,"wc-block-cart__submit-button")]',
+        proceedToCheckout: 'a.wc-block-cart__submit-button[href*="/checkout"]',
         removeFirstItem: '(//button[@class="wc-block-cart-item__remove-link"])[1]',
         cartEmptyMessage: '.wp-block-woocommerce-empty-cart-block .wc-block-cart__empty-cart__title',
     },
@@ -633,10 +632,16 @@ export class CustomerPage {
 
     private async goToCheckoutFromCart(): Promise<void> {
         await this.goto(subUrls.cart);
-        await Promise.all([
-            this.page.waitForLoadState('load'),
-            this.page.locator(selectors.cart.proceedToCheckout).click(),
-        ]);
+        // Cart block hydrates async (totals/shipping calls). Wait for it to settle
+        // before interacting, otherwise the button may detach mid-click or be
+        // covered by the placeholder overlay.
+        await this.page.waitForLoadState('networkidle');
+        const button = this.page.locator(selectors.cart.proceedToCheckout).first();
+        await button.waitFor({ state: 'visible', timeout: 30000 });
+        await button.scrollIntoViewIfNeeded();
+        await button.click();
+        await this.page.waitForURL(/\/checkout\/?/, { timeout: 30000 });
+        await this.page.waitForLoadState('domcontentloaded');
     }
 
     private async fillCheckoutBilling(billing: typeof testData.customer.customerInfo.billing): Promise<void> {
