@@ -46,7 +46,7 @@ export default defineConfig({
        passes; the summary reporter rolls retry-passes into the pass count. */
     retries: parseBoolean(CI) ? 2 : 0,
     /* Opt out of parallel tests on CI. */
-    workers: parseBoolean(CI) ? 3 : 4,
+    workers: parseBoolean(CI) ? 2 : 4,
     /* Whether to report slow test files. Pass null to disable this feature. */
     reportSlowTests: { max: 2, threshold: 25 },
     /* Configure reporters */
