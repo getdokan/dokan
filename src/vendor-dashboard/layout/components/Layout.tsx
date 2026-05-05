@@ -39,14 +39,14 @@ const Layout = () => {
 
                 <main
                     className={ twMerge(
-                        'flex-1 border-l border-gray-200 bg-white transition-all duration-200',
+                        'flex-1 border-s border-gray-200 bg-white transition-all duration-200',
                         collapsed
                             ? windowWidth > 768
-                                ? 'ml-16'
-                                : 'ml-0'
+                                ? 'ms-16'
+                                : 'ms-0'
                             : windowWidth > 768
-                            ? 'ml-60'
-                            : 'ml-0'
+                            ? 'ms-60'
+                            : 'ms-0'
                     ) }
                 >
                     <Header

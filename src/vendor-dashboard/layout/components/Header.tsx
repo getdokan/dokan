@@ -47,13 +47,13 @@ const Header = ( { onToggleSidebar }: { onToggleSidebar: () => void } ) => {
                     <LucideIcons.Globe size={ 16 } className="text-[#828282]" />
                     { __( 'Visit Store', 'dokan-lite' ) }
                 </a>
-                <div className="border border-[#E9E9E9] border-r-0 h-8"></div>
+                <div className="border border-[#E9E9E9] border-e-0 h-8"></div>
                 <div
                     // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
                     onMouseEnter={ () => setIsMenuOpen( true ) }
                     onMouseLeave={ () => setIsMenuOpen( false ) }
                     onClick={ () => setIsMenuOpen( ! isMenuOpen ) }
-                    className="header-avatar flex items-center gap-2.5 cursor-pointer py-4 px-5 pr-0"
+                    className="header-avatar flex items-center gap-2.5 cursor-pointer py-4 px-5 pe-0"
                     role="button"
                     tabIndex={ 0 }
                     ref={ setPopoverAnchor }
