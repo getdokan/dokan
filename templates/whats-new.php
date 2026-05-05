@@ -4,6 +4,24 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.0.1',
+        'released' => '2026-05-05',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Added an admin-controllable vendor registration option on the My Account page.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Properly decode HTML entities in admin settings labels.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.0.0',
         'released' => '2026-04-28',
         'changes'  => [

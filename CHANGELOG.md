@@ -1,3 +1,8 @@
+### v5.0.1 ( May 05, 2026 ) ###
+
+- **update:** Added an admin-controllable vendor registration option on the My Account page.
+- **fix:** Properly decode HTML entities in admin settings labels.
+
 ### v5.0.0 ( Apr 28, 2026 ) ###
 
 - **new:** Added a dedicated vendor onboarding page with a separate registration flow.
