@@ -37,17 +37,27 @@ const TAB_BUTTON = (label: 'All' | 'Unread' | 'Read') =>
 
 // Type into the debounced search input. fill() bypasses DebouncedInput's
 // onChange handler — see @dokan/components DebouncedInput. Use real key
-// events (select-all → delete → pressSequentially) so the input event is
-// React-noticed and the 500ms debounce ultimately fires. Pass `''` to clear.
+// events so React notices and the 500ms debounce ultimately fires. Pass
+// `''` to clear. Notes on the clear path:
+//   - Ctrl/Meta+A silently no-ops on Linux headless CI.
+//   - press('End') no-ops on this DebouncedInput too (cursor stays where
+//     click landed — verified mid-text), so Backspace×N would only delete
+//     the left half.
+//   - setSelectionRange(0, length) deterministically selects all text;
+//     a single real Backspace key event then deletes the selection and is
+//     observed by the DebouncedInput onChange handler.
 async function typeSearch(page: Page, text: string): Promise<void> {
     const input = page.locator(SEARCH_INPUT);
     await input.click();
-    // Select-all + delete is a real keystroke (input event fires with "")
-    // whereas .fill('') does not propagate through DebouncedInput.
-    await input.press('ControlOrMeta+A');
-    await input.press('Delete');
+    const current = await input.inputValue();
+    if (current.length > 0) {
+        await input.evaluate((el: HTMLInputElement) => {
+            el.focus();
+            el.setSelectionRange(0, el.value.length);
+        });
+        await input.press('Backspace');
+    }
     if (text) await input.pressSequentially(text, { delay: 60 });
-    // 500ms debounce + small slack for the request to dispatch.
     await page.waitForTimeout(900);
 }
 
