@@ -354,6 +354,7 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 = v5.0.1 ( May 05, 2026 ) =
 - **update:** Added an admin-controllable vendor registration option on the My Account page.
+- **update:** Added RTL support for the new vendor dashboard UI.
 - **fix:** Properly decode HTML entities in admin settings labels.
 
 = v5.0.0 ( Apr 28, 2026 ) =

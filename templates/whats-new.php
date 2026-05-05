@@ -12,6 +12,10 @@ $changelog = [
                     'title'       => 'Added an admin-controllable vendor registration option on the My Account page.',
                     'description' => '',
                 ],
+                [
+                    'title'       => 'Added RTL support for the new vendor dashboard UI.',
+                    'description' => '',
+                ],
             ],
             'Fix' => [
                 [
