@@ -64,9 +64,11 @@ export class NewProductListPage {
         // markers ("Product info" header, "SKU:" label, or a Type/Stock/Status row).
         quickViewModal: "//*[@role='dialog'][.//*[contains(., 'Product info') or contains(., 'SKU:') or contains(., 'Type') and contains(., 'Stock')]]",
         quickViewClose: "//*[@role='dialog']//button[@aria-label='Close' or normalize-space()='Close']",
-        // Delete confirmation modal
-        deleteConfirmBtn: "//*[@role='dialog']//button[normalize-space()='Delete' or normalize-space()='Delete Permanently' or contains(., 'Confirm')]",
-        deleteCancelBtn: "//*[@role='dialog']//button[normalize-space()='Cancel']",
+        // Delete confirmation modal — DataViews uses Base UI which renders
+        // a destructive action confirmation as role="alertdialog" (not "dialog").
+        deleteConfirmBtn: "//*[@role='alertdialog' or @role='dialog']//button[normalize-space()='Delete' or normalize-space()='Delete Permanently' or contains(., 'Confirm')]",
+        deleteCancelBtn: "//*[@role='alertdialog' or @role='dialog']//button[normalize-space()='Cancel']",
+        deleteDialog: "[role='alertdialog'], [role='dialog']",
         // Bulk action toolbar
         rowCheckbox: "tbody tr input[type='checkbox']",
         bulkActionToolbar: "[class*='bulk'], [data-section='bulk-actions']",

@@ -380,11 +380,22 @@ test.describe('New Vendor Product List (React) Tests @lite', () => {
         await list.openRowActionMenuByIndex(0);
         await list.clickActionMenuItem('Delete Permanently');
 
+        // DataViews opens its built-in confirmation modal (Base UI alertdialog).
+        // While the modal is open it also temporarily filters the in-place
+        // table to just the targeted row, so we cannot assert on row count
+        // until after a re-fetch (see ProductList.tsx delete action — it
+        // surfaces via a DataViews RenderModal, not a separate component).
         const cancelBtn = page.locator(list.selectors.deleteCancelBtn).first();
-        const cancelVisible = await cancelBtn.isVisible({ timeout: 3000 }).catch(() => false);
-        if (cancelVisible) {
-            await list.cancelDelete();
-        }
+        await cancelBtn.waitFor({ state: 'visible', timeout: 10000 });
+        await list.cancelDelete();
+        await page.locator(list.selectors.deleteDialog).first().waitFor({ state: 'hidden', timeout: 10000 }).catch(() => undefined);
+
+        // Re-fetch the list. page.goto to the same hash URL is a no-op in
+        // HashRouter (SPA state persists, including the modal's "filter to
+        // targeted row" UX), so reload to force the React shell to remount
+        // and re-fetch.
+        await page.reload({ waitUntil: 'domcontentloaded' });
+        await list.waitForReactReady();
 
         const after = await list.getRowCount();
         expect(after, 'Row count should not change when delete is cancelled').toBe(before);
