@@ -849,6 +849,13 @@ class Settings {
                         'legacy' => esc_html__( 'Legacy UI', 'dokan-lite' ),
                     ],
                 ],
+                'show_register_as_vendor'      => [
+                    'name'    => 'show_register_as_vendor',
+                    'label'   => esc_html__( 'Show "Register as a Vendor" in Sign Up Page', 'dokan-lite' ),
+                    'desc'    => esc_html__( 'Adds the "I am a customer / I am a vendor" role toggle to the WooCommerce My Account sign-up form.', 'dokan-lite' ),
+                    'type'    => 'switcher',
+                    'default' => 'on',
+                ],
                 'appearance_options'         => [
                     'name'          => 'appearance_options',
                     'type'          => 'sub_section',
