@@ -128,6 +128,17 @@ setup.describe('site setup', () => {
             console.log('Dokan Invoice activation had issues, but continuing...', error);
         }
     });
+
+    // Enable WC PDF Invoice & Packing Slip documents. Both are disabled by
+    // default until the admin saves their settings page once, which means
+    // dokan-invoice's REST hook bails (`$document->is_enabled()` is false)
+    // and `actions.invoice.url` never gets injected. Seed the option here so
+    // dokan-invoice tests can rely on the URL being present.
+    setup('enable WC PDF invoice + packing-slip documents', { tag: ['@pro'] }, async () => {
+        await helpers.exeCommandWpcli(
+            `wp eval 'update_option("wpo_wcpdf_documents_settings_invoice", ["enabled" => "1", "attach_to_email_ids" => []]); update_option("wpo_wcpdf_documents_settings_packing-slip", ["enabled" => "1"]);'`,
+        );
+    });
     setup('set dokan license', { tag: ['@pro'] }, async () => {
         setup.skip(!process.env.LICENSE_KEY, 'LICENSE_KEY env var not set – skipping license setup (fork PR or unconfigured secret)');
         try {
