@@ -1,14 +1,14 @@
 # Copyright (c) 2026 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 5.0.0\n"
+"Project-Id-Version: Dokan 5.0.1\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-04-28T10:20:13+00:00\n"
+"POT-Creation-Date: 2026-05-05T11:43:11+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -1078,12 +1078,12 @@ msgid "Vendor Info on Product Page"
 msgstr ""
 
 #: includes/Admin/OnboardingSetup/Steps/AppearanceStep.php:127
-#: includes/Admin/Settings.php:969
+#: includes/Admin/Settings.php:976
 msgid "Email Address"
 msgstr ""
 
 #: includes/Admin/OnboardingSetup/Steps/AppearanceStep.php:135
-#: includes/Admin/Settings.php:970
+#: includes/Admin/Settings.php:977
 #: includes/Admin/UserProfile.php:218
 #: templates/account/update-customer-to-vendor.php:48
 #: templates/account/vendor-registration.php:45
@@ -1094,7 +1094,7 @@ msgid "Phone Number"
 msgstr ""
 
 #: includes/Admin/OnboardingSetup/Steps/AppearanceStep.php:143
-#: includes/Admin/Settings.php:971
+#: includes/Admin/Settings.php:978
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:249
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:250
 msgid "Store Address"
@@ -1488,7 +1488,7 @@ msgid "You have no permission to get settings value"
 msgstr ""
 
 #: includes/Admin/Settings.php:153
-#: includes/Admin/Settings.php:1064
+#: includes/Admin/Settings.php:1071
 msgid "You are not authorized to perform this action."
 msgstr ""
 
@@ -1585,7 +1585,7 @@ msgid "You can configure your store appearance settings, configure map API, Goog
 msgstr ""
 
 #: includes/Admin/Settings.php:390
-#: includes/Admin/Settings.php:1000
+#: includes/Admin/Settings.php:1007
 msgid "Privacy Policy"
 msgstr ""
 
@@ -1905,7 +1905,7 @@ msgstr ""
 #: includes/Admin/Settings.php:802
 #: includes/Admin/Settings.php:812
 #: includes/Admin/Settings.php:819
-#: includes/Admin/Settings.php:995
+#: includes/Admin/Settings.php:1002
 msgid "Select page"
 msgstr ""
 
@@ -1983,179 +1983,187 @@ msgstr ""
 msgid "Select the user interface for the vendor product editor."
 msgstr ""
 
+#: includes/Admin/Settings.php:854
+msgid "Show \"Register as a Vendor\" in Sign Up Page"
+msgstr ""
+
 #: includes/Admin/Settings.php:855
-msgid "Store Appearance"
-msgstr ""
-
-#: includes/Admin/Settings.php:856
-msgid "Configure your site appearances."
-msgstr ""
-
-#: includes/Admin/Settings.php:861
-msgid "Show map on Store Page"
+msgid "Adds the \"I am a customer / I am a vendor\" role toggle to the WooCommerce My Account sign-up form."
 msgstr ""
 
 #: includes/Admin/Settings.php:862
-msgid "Enable map of the store location in the store sidebar"
+msgid "Store Appearance"
+msgstr ""
+
+#: includes/Admin/Settings.php:863
+msgid "Configure your site appearances."
 msgstr ""
 
 #: includes/Admin/Settings.php:868
+msgid "Show map on Store Page"
+msgstr ""
+
+#: includes/Admin/Settings.php:869
+msgid "Enable map of the store location in the store sidebar"
+msgstr ""
+
+#: includes/Admin/Settings.php:875
 #: templates/admin-setup-wizard/step-store.php:55
 msgid "Map API Source"
 msgstr ""
 
-#: includes/Admin/Settings.php:869
+#: includes/Admin/Settings.php:876
 msgid "Which map API source you want to use in your site?"
 msgstr ""
 
-#: includes/Admin/Settings.php:874
+#: includes/Admin/Settings.php:881
 #: includes/Admin/SetupWizard.php:506
 msgid "Google Maps"
 msgstr ""
 
-#: includes/Admin/Settings.php:875
+#: includes/Admin/Settings.php:882
 #: includes/Admin/SetupWizard.php:507
 msgid "Mapbox"
 msgstr ""
 
-#: includes/Admin/Settings.php:880
+#: includes/Admin/Settings.php:887
 #: templates/admin-setup-wizard/step-store.php:68
 msgid "Google Map API Key"
 msgstr ""
 
-#: includes/Admin/Settings.php:881
+#: includes/Admin/Settings.php:888
 msgid "<a href=\"https://developers.google.com/maps/documentation/javascript/\" target=\"_blank\" rel=\"noopener noreferrer\">API Key</a> is needed to display map on store page"
 msgstr ""
 
-#: includes/Admin/Settings.php:884
+#: includes/Admin/Settings.php:891
 msgid "Insert Google API Key (with hyperlink) to display store map."
 msgstr ""
 
-#: includes/Admin/Settings.php:893
+#: includes/Admin/Settings.php:900
 #: templates/admin-setup-wizard/step-store.php:84
 msgid "Mapbox Access Token"
 msgstr ""
 
-#: includes/Admin/Settings.php:894
+#: includes/Admin/Settings.php:901
 msgid "<a href=\"https://docs.mapbox.com/help/how-mapbox-works/access-tokens/\" target=\"_blank\" rel=\"noopener noreferrer\">Access Token</a> is needed to display map on store page"
 msgstr ""
 
-#: includes/Admin/Settings.php:897
+#: includes/Admin/Settings.php:904
 msgid "Insert Mapbox Access Token (with hyperlink) to display store map."
 msgstr ""
 
-#: includes/Admin/Settings.php:906
+#: includes/Admin/Settings.php:913
 msgid "Show Contact Form on Store Page"
 msgstr ""
 
-#: includes/Admin/Settings.php:907
+#: includes/Admin/Settings.php:914
 msgid "Display a vendor contact form in the store sidebar"
 msgstr ""
 
-#: includes/Admin/Settings.php:914
+#: includes/Admin/Settings.php:921
 msgid "Select a store header for your store."
 msgstr ""
 
-#: includes/Admin/Settings.php:915
+#: includes/Admin/Settings.php:922
 msgid "Store Header Template"
 msgstr ""
 
-#: includes/Admin/Settings.php:926
+#: includes/Admin/Settings.php:933
 msgid "Default Store Banner"
 msgstr ""
 
-#: includes/Admin/Settings.php:936
+#: includes/Admin/Settings.php:943
 msgid "Default Store Profile Picture"
 msgstr ""
 
-#: includes/Admin/Settings.php:946
+#: includes/Admin/Settings.php:953
 msgid "Store Opening Closing Time Widget"
 msgstr ""
 
-#: includes/Admin/Settings.php:947
+#: includes/Admin/Settings.php:954
 msgid "Enable store opening & closing time widget in the store sidebar"
 msgstr ""
 
-#: includes/Admin/Settings.php:953
+#: includes/Admin/Settings.php:960
 msgid "Enable Store Sidebar From Theme"
 msgstr ""
 
-#: includes/Admin/Settings.php:954
+#: includes/Admin/Settings.php:961
 msgid "Enable showing store sidebar from your theme."
 msgstr ""
 
-#: includes/Admin/Settings.php:960
+#: includes/Admin/Settings.php:967
 msgid "Hide Vendor Info"
 msgstr ""
 
-#: includes/Admin/Settings.php:961
+#: includes/Admin/Settings.php:968
 msgid "Hide vendor contact info from single store page."
 msgstr ""
 
-#: includes/Admin/Settings.php:976
+#: includes/Admin/Settings.php:983
 msgid "Disable Dokan FontAwesome"
 msgstr ""
 
-#: includes/Admin/Settings.php:977
+#: includes/Admin/Settings.php:984
 msgid "If disabled then dokan fontawesome library won't be loaded in frontend"
 msgstr ""
 
-#: includes/Admin/Settings.php:985
+#: includes/Admin/Settings.php:992
 msgid "Enable Privacy Policy"
 msgstr ""
 
-#: includes/Admin/Settings.php:987
+#: includes/Admin/Settings.php:994
 msgid "Enable privacy policy for vendor store contact form"
 msgstr ""
 
-#: includes/Admin/Settings.php:992
+#: includes/Admin/Settings.php:999
 msgid "Privacy Page"
 msgstr ""
 
-#: includes/Admin/Settings.php:994
+#: includes/Admin/Settings.php:1001
 msgid "Select a page to show your privacy policy"
 msgstr ""
 
-#: includes/Admin/Settings.php:1002
+#: includes/Admin/Settings.php:1009
 #: includes/functions.php:3305
 msgid "Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]"
 msgstr ""
 
-#: includes/Admin/Settings.php:1003
+#: includes/Admin/Settings.php:1010
 msgid "Customize the Privacy Policy text that will be displayed on your store."
 msgstr ""
 
-#: includes/Admin/Settings.php:1075
+#: includes/Admin/Settings.php:1082
 msgid "Both section and field params are required."
 msgstr ""
 
-#: includes/Admin/Settings.php:1084
+#: includes/Admin/Settings.php:1091
 msgid "No filter found to refresh the setting options"
 msgstr ""
 
-#: includes/Admin/Settings.php:1116
+#: includes/Admin/Settings.php:1123
 msgid "Minimum Withdraw Limit can't be negative value."
 msgstr ""
 
-#: includes/Admin/Settings.php:1127
+#: includes/Admin/Settings.php:1134
 #: includes/ReverseWithdrawal/Admin/Settings.php:223
 msgid "Validation error"
 msgstr ""
 
-#: includes/Admin/Settings.php:1145
+#: includes/Admin/Settings.php:1152
 msgid "Data Clear"
 msgstr ""
 
-#: includes/Admin/Settings.php:1146
+#: includes/Admin/Settings.php:1153
 msgid "Delete all data and tables related to Dokan and Dokan Pro plugin while deleting the Dokan plugin."
 msgstr ""
 
-#: includes/Admin/Settings.php:1149
+#: includes/Admin/Settings.php:1156
 msgid "Check this to remove Dokan related data and table from the database upon deleting the plugin. When you delete the Dokan lite version, it will also delete all the data related to Dokan Pro as well. This won't happen when the plugins are deactivated.."
 msgstr ""
 
 #. translators: %s: the reserved slug
-#: includes/Admin/Settings.php:1181
+#: includes/Admin/Settings.php:1188
 #: includes/REST/AdminOnboardingController.php:181
 #: assets/js/dokan-admin-onboard.js:172
 #: assets/js/vue-admin.js:2
@@ -11266,6 +11274,14 @@ msgstr ""
 
 #: templates/global/product-tab.php:38
 msgid "Address:"
+msgstr ""
+
+#: templates/global/seller-registration-form.php:90
+msgid "I am a customer"
+msgstr ""
+
+#: templates/global/seller-registration-form.php:95
+msgid "I am a vendor"
 msgstr ""
 
 #: templates/global/seller-warning.php:11

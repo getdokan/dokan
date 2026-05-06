@@ -99,6 +99,46 @@ setup.describe('site setup', () => {
             console.log('WooCommerce Subscriptions activation had issues, but continuing...');
         }
     });
+
+    setup('activate Woocommerce PDF invoices & packing slips', { tag: ['@pro'] }, async () => {
+        try {
+            await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.woocommercePdfInvoices));
+        } catch (error) {
+            console.log('WooCommerce PDF Invoices activation had issues, but continuing...', error);
+        }
+    });
+
+    // Workaround for a fresh-install bug in dokan-invoice <= 1.2.8: its
+    // __construct() reads `wpo_wcpdf_version` to choose which WC PDF class
+    // to look up. On a fresh install that option isn't written until WC PDF
+    // first runs admin_init, so dokan-invoice picks the legacy class
+    // `WooCommerce_PDF_Invoices`, fails class_exists() in
+    // localization_setup_and_is_dependency_available(), and silently
+    // self-deactivates via dependency_notice() (dokan-invoice.php:155) on
+    // the next admin page load. Seeding the option here makes the
+    // new-class branch (`WPO_WCPDF`) win on the very first load.
+    setup('seed wpo_wcpdf_version (workaround for dokan-invoice <=1.2.8)', { tag: ['@pro'] }, async () => {
+        await helpers.exeCommandWpcli('wp option update wpo_wcpdf_version 5.11.0 --autoload=yes');
+    });
+
+    setup('activate Dokan Invoice', { tag: ['@pro'] }, async () => {
+        try {
+            await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.dokanInvoice));
+        } catch (error) {
+            console.log('Dokan Invoice activation had issues, but continuing...', error);
+        }
+    });
+
+    // Enable WC PDF Invoice & Packing Slip documents. Both are disabled by
+    // default until the admin saves their settings page once, which means
+    // dokan-invoice's REST hook bails (`$document->is_enabled()` is false)
+    // and `actions.invoice.url` never gets injected. Seed the option here so
+    // dokan-invoice tests can rely on the URL being present.
+    setup('enable WC PDF invoice + packing-slip documents', { tag: ['@pro'] }, async () => {
+        await helpers.exeCommandWpcli(
+            `wp eval 'update_option("wpo_wcpdf_documents_settings_invoice", ["enabled" => "1", "attach_to_email_ids" => []]); update_option("wpo_wcpdf_documents_settings_packing-slip", ["enabled" => "1"]);'`,
+        );
+    });
     setup('set dokan license', { tag: ['@pro'] }, async () => {
         setup.skip(!process.env.LICENSE_KEY, 'LICENSE_KEY env var not set – skipping license setup (fork PR or unconfigured secret)');
         try {

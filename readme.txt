@@ -7,7 +7,7 @@ Tested up to: 6.9
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 5.0.0
+Stable tag: 5.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -352,6 +352,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v5.0.1 ( May 05, 2026 ) =
+- **update:** Added an admin-controllable vendor registration option on the My Account page.
+- **update:** Added RTL support for the new vendor dashboard UI.
+- **fix:** Properly decode HTML entities in admin settings labels.
+
 = v5.0.0 ( Apr 28, 2026 ) =
 - **new:** Added a dedicated vendor onboarding page with a separate registration flow.
 - **new:** Introduced the new Product Form Manager for the vendor dashboard.
@@ -395,18 +400,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **update:** Add REST API support for managing downloadable product permissions.
 - **update:** Expose vendor earning field in the order REST API response to display earnings data.
 - **update:** Update the Dokan Admin status page with a modernized and dynamic UI layout.
-
-= v4.3.0 ( Feb 19, 2026 ) =
-- **update:** Add Cloudflare Turnstile support to the Dokan Captcha system.
-- **fix:** Ensure jQuery BlockUI and TipTip script handlers load correctly.
-- **fix:** Resolve store dropdown selection visibility issue in admin Advertisement modal.
-
-= v4.2.10 ( Feb 10, 2026 ) =
-- **update:** Refactor download permission handling to use Dokan’s standard template loader.
-- **fix:** Prevent misleading payment status messages in Admin Vendor Withdraw.
-- **fix:** Improve payment connection messages in Admin Vendor Withdraw.
-- **fix:** Ensure store opening hours save correctly with custom date and time formats.
-- **fix:** Ensure user subscription renewals work correctly when Dokan is enabled.
-- **fix:** Ensure “Actions” and “No results” in DataViews are properly translatable.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

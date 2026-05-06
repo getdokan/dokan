@@ -26,7 +26,9 @@
                 "wp-content/plugins/woocommerce-bookings": "../../../woocommerce-bookings",
                 "wp-content/plugins/woocommerce-product-addons": "../../../woocommerce-product-addons",
                 "wp-content/plugins/woocommerce-simple-auctions": "../../../woocommerce-simple-auctions",
-                "wp-content/plugins/woocommerce-subscriptions": "../../../woocommerce-subscriptions"
+                "wp-content/plugins/woocommerce-subscriptions": "../../../woocommerce-subscriptions",
+                "wp-content/plugins/woocommerce-pdf-invoices-packing-slips": "../../../woocommerce-pdf-invoices-packing-slips",
+                "wp-content/plugins/dokan-invoice": "../../../dokan-invoice"
             }
         }
     }

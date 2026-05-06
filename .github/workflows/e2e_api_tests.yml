@@ -118,6 +118,16 @@ jobs:
                   path: dokan-pro
                   token: ${{ secrets.DOKAN_PRO_TOKEN }}
 
+            # Checkout Dokan Invoice from develop branch (public repo, no token required).
+            # Mapped via .wp-env.ci.json and activated alongside dokan-pro.
+            - name: Checkout Dokan Invoice
+              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+              uses: actions/checkout@v4
+              with:
+                  repository: getdokan/dokan-invoice
+                  ref: develop
+                  path: dokan-invoice
+
             # Use desired version of NodeJS
             - name: Use desired version of NodeJS
               uses: actions/setup-node@v4
@@ -219,7 +229,9 @@ jobs:
                       woocommerce-subscriptions \
                       woocommerce-product-addons \
                       woocommerce-simple-auctions \
-                      dokan-pro
+                      woocommerce-pdf-invoices-packing-slips \
+                      dokan-pro \
+                      dokan-invoice
 
             # Enable the Dokan 5.0.0+ React UI (vendor dashboard + product editor).
             # The React tests under tests/e2e/**/new*.spec.ts and the merged
@@ -377,6 +389,16 @@ jobs:
                   path: dokan-pro
                   token: ${{ secrets.DOKAN_PRO_TOKEN }}
 
+            # Checkout Dokan Invoice from develop branch (public repo, no token required).
+            # Mapped via .wp-env.ci.json and activated alongside dokan-pro.
+            - name: Checkout Dokan Invoice
+              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+              uses: actions/checkout@v4
+              with:
+                  repository: getdokan/dokan-invoice
+                  ref: develop
+                  path: dokan-invoice
+
             # Use desired version of NodeJS
             - name: Use desired version of NodeJS
               uses: actions/setup-node@v4
@@ -478,7 +500,9 @@ jobs:
                       woocommerce-subscriptions \
                       woocommerce-product-addons \
                       woocommerce-simple-auctions \
-                      dokan-pro
+                      woocommerce-pdf-invoices-packing-slips \
+                      dokan-pro \
+                      dokan-invoice
 
             # Enable the Dokan 5.0.0+ React UI (vendor dashboard + product editor).
             # The React tests under tests/e2e/**/new*.spec.ts and the merged
