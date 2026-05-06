@@ -543,41 +543,156 @@ test.describe('Dokan Invoice Tests @pro', () => {
     });
 
     // ============================================
-    // VENDOR DASHBOARD GAP
+    // NEW VENDOR DASHBOARD — /dashboard/new/#orders
     //
-    // dokan-invoice 1.2.8 hooks `dokan_orders_data_view_dataviews_actions`
-    // from JS, but dokan-lite's OrderList.tsx does not call applyFilters()
-    // for it. This test pins the gap: it walks the new vendor dashboard,
-    // confirms the dokan-invoice JS bundle is loaded (so the filter is
-    // registered), and confirms the row-action menu contains NO View
-    // Invoice / View Packing Slip entries today. When dokan-lite ships
-    // the hook point this test starts failing → re-enable HP-vendor-*.
+    // Dokan 5.0.0+ ships a React DataViews-based vendor dashboard at
+    // /dashboard/new/. dokan-invoice 1.2.8 registers a JS filter
+    // (`dokan_orders_data_view_dataviews_actions`) that adds View Invoice
+    // and View Packing Slip menu items to each order row's action
+    // dropdown. Clicking either calls `window.open(url, '_blank')` with
+    // the WC PDF generate endpoint URL.
     // ============================================
 
-    test('TC-vendor-gap - new dashboard does NOT yet render dokan-invoice actions (regression sentinel)', { tag: ['@pro', '@vendor', '@invoice', '@new-ui'] }, async ({ browser }) => {
-        const ctx = await browser.newContext({
-            storageState: path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json'),
+    test.describe('New vendor dashboard — /dashboard/new/#orders', () => {
+        test('NewDash-1 - dashboard renders an orders DataView with rows', { tag: ['@pro', '@vendor', '@invoice', '@new-ui'] }, async ({ browser }) => {
+            const ctx = await browser.newContext({
+                storageState: path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json'),
+            });
+            const page = await ctx.newPage();
+            const inv = new DokanInvoicePage(page);
+            await inv.seedVendor1Order('processing');
+            await page.goto(inv.vendor.ordersUrl, { waitUntil: 'load' });
+            await page.waitForSelector(inv.vendor.dataRow, { timeout: 15000 });
+            const rowCount = await page.locator(inv.vendor.dataRow).count();
+            expect(rowCount, 'vendor dashboard should render at least one order row').toBeGreaterThan(0);
+            await inv.dispose();
+            await ctx.close();
         });
-        const page = await ctx.newPage();
-        const inv = new DokanInvoicePage(page);
 
-        await inv.seedVendor1Order('processing');
-        await page.goto(inv.vendor.ordersUrl, { waitUntil: 'load' });
+        test('NewDash-2 - row action menu contains "View Invoice" AND "View Packing Slip"', { tag: ['@pro', '@vendor', '@invoice', '@new-ui'] }, async ({ browser }) => {
+            const ctx = await browser.newContext({
+                storageState: path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json'),
+            });
+            const page = await ctx.newPage();
+            const inv = new DokanInvoicePage(page);
+            await inv.seedVendor1Order('processing');
+            await page.goto(inv.vendor.ordersUrl, { waitUntil: 'load' });
+            await page.waitForSelector(inv.vendor.dataRow, { timeout: 15000 });
 
-        // dokan-invoice's dokan-orders.js should be loaded on this page.
-        const scriptLoaded = await page.evaluate(() =>
-            Array.from(document.querySelectorAll<HTMLScriptElement>('script[src]'))
-                .some(s => s.src.includes('dokan-invoice') && s.src.includes('dokan-orders')),
-        );
-        expect(scriptLoaded, 'dokan-invoice/assets/js/dokan-orders.js should be enqueued on vendor dashboard').toBeTruthy();
+            await page.locator(inv.vendor.rowActionsTrigger).first().click();
+            await expect(page.getByRole('menuitem', inv.vendor.viewInvoiceMenuItem)).toBeVisible();
+            await expect(page.getByRole('menuitem', inv.vendor.viewPackingSlipMenuItem)).toBeVisible();
 
-        // The row-actions menu should NOT yet include "View Invoice".
-        // Open the first row's actions if available; if no row, the test
-        // still proves the gap (menu items definitionally cannot exist).
-        const hasViewInvoice = await page.getByRole('menuitem', { name: /View Invoice/i }).first().isVisible().catch(() => false);
-        expect(hasViewInvoice, 'expected current gap: dokan-lite OrderList.tsx does not applyFilters() yet — flip this assertion when it does').toBeFalsy();
+            await inv.dispose();
+            await ctx.close();
+        });
 
-        await inv.dispose();
-        await ctx.close();
+        test('NewDash-3 - clicking "View Invoice" calls window.open with the WC PDF URL', { tag: ['@pro', '@vendor', '@invoice', '@new-ui'] }, async ({ browser }) => {
+            // dokan-invoice's JS hook calls `window.open(doc.url, '_blank',
+            // 'noopener,noreferrer')`. Override window.open before the
+            // click so we can inspect the URL synchronously without the
+            // popup-URL race.
+            const ctx = await browser.newContext({
+                storageState: path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json'),
+            });
+            const page = await ctx.newPage();
+            const inv = new DokanInvoicePage(page);
+            await inv.seedVendor1Order('processing');
+            await page.goto(inv.vendor.ordersUrl, { waitUntil: 'load' });
+            await page.waitForSelector(inv.vendor.dataRow, { timeout: 15000 });
+
+            await page.evaluate(() => {
+                (window as unknown as { __capturedUrls: string[] }).__capturedUrls = [];
+                const orig = window.open.bind(window);
+                window.open = function (url, target, features) {
+                    (window as unknown as { __capturedUrls: string[] }).__capturedUrls.push(String(url));
+                    return orig(url, target, features);
+                } as typeof window.open;
+            });
+
+            await page.locator(inv.vendor.rowActionsTrigger).first().click();
+            await page.getByRole('menuitem', inv.vendor.viewInvoiceMenuItem).click();
+            await page.waitForTimeout(500);
+
+            const captured: string[] = await page.evaluate(() => (window as unknown as { __capturedUrls: string[] }).__capturedUrls);
+            expect(captured.length, 'window.open should have been called once').toBeGreaterThan(0);
+            const url = captured[0];
+            expect(url).toMatch(/action=generate_wpo_wcpdf/);
+            expect(url).toMatch(/document_type=invoice/);
+            expect(url).toMatch(/order_ids=\d+/);
+
+            await inv.dispose();
+            await ctx.close();
+        });
+
+        test('NewDash-4 - clicking "View Packing Slip" calls window.open with the packing-slip URL', { tag: ['@pro', '@vendor', '@invoice', '@new-ui'] }, async ({ browser }) => {
+            const ctx = await browser.newContext({
+                storageState: path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json'),
+            });
+            const page = await ctx.newPage();
+            const inv = new DokanInvoicePage(page);
+            await inv.seedVendor1Order('processing');
+            await page.goto(inv.vendor.ordersUrl, { waitUntil: 'load' });
+            await page.waitForSelector(inv.vendor.dataRow, { timeout: 15000 });
+
+            await page.evaluate(() => {
+                (window as unknown as { __capturedUrls: string[] }).__capturedUrls = [];
+                const orig = window.open.bind(window);
+                window.open = function (url, target, features) {
+                    (window as unknown as { __capturedUrls: string[] }).__capturedUrls.push(String(url));
+                    return orig(url, target, features);
+                } as typeof window.open;
+            });
+
+            await page.locator(inv.vendor.rowActionsTrigger).first().click();
+            await page.getByRole('menuitem', inv.vendor.viewPackingSlipMenuItem).click();
+            await page.waitForTimeout(500);
+
+            const captured: string[] = await page.evaluate(() => (window as unknown as { __capturedUrls: string[] }).__capturedUrls);
+            expect(captured.length, 'window.open should have been called once').toBeGreaterThan(0);
+            expect(captured[0]).toMatch(/document_type=packing-slip/);
+
+            await inv.dispose();
+            await ctx.close();
+        });
+
+        test('NewDash-5 - the URL window.open is given actually serves a real PDF', { tag: ['@pro', '@vendor', '@invoice', '@new-ui'] }, async ({ browser }) => {
+            // The URL was minted by the same vendor session that's now
+            // fetching it, so the access_key (WP nonce) validates.
+            const ctx = await browser.newContext({
+                storageState: path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json'),
+            });
+            const page = await ctx.newPage();
+            const inv = new DokanInvoicePage(page);
+            await inv.seedVendor1Order('processing');
+            await page.goto(inv.vendor.ordersUrl, { waitUntil: 'load' });
+            await page.waitForSelector(inv.vendor.dataRow, { timeout: 15000 });
+
+            await page.evaluate(() => {
+                (window as unknown as { __capturedUrls: string[] }).__capturedUrls = [];
+                const orig = window.open.bind(window);
+                window.open = function (url, target, features) {
+                    (window as unknown as { __capturedUrls: string[] }).__capturedUrls.push(String(url));
+                    return orig(url, target, features);
+                } as typeof window.open;
+            });
+
+            await page.locator(inv.vendor.rowActionsTrigger).first().click();
+            await page.getByRole('menuitem', inv.vendor.viewInvoiceMenuItem).click();
+            await page.waitForTimeout(500);
+
+            const url: string = (await page.evaluate(() => (window as unknown as { __capturedUrls: string[] }).__capturedUrls))[0];
+            expect(url).toBeTruthy();
+
+            const res = await page.request.get(url);
+            const ct = (res.headers()['content-type'] ?? '').toLowerCase();
+            const buf = await res.body();
+            const isPdf = ct.includes('pdf') || buf.subarray(0, 5).toString('binary') === '%PDF-';
+            expect(isPdf, `vendor must receive a real PDF (status=${res.status()} ct=${ct})`).toBeTruthy();
+            expect(buf.length).toBeGreaterThan(1000);
+
+            await inv.dispose();
+            await ctx.close();
+        });
     });
 });

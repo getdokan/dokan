@@ -66,9 +66,13 @@ export class DokanInvoicePage {
     };
 
     vendor = {
-        // New React vendor dashboard — present for symmetry, but the JS
-        // filter dokan-invoice ships isn't applied by OrderList.tsx yet.
-        ordersUrl: `${BASE_URL}/dashboard/orders`,
+        // New React vendor dashboard (Dokan 5.0.0+). Hash-routed SPA.
+        ordersUrl: `${BASE_URL}/dashboard/new/#orders`,
+        // DataViews row + per-row actions menu.
+        dataRow: 'table tbody tr',
+        rowActionsTrigger: 'table tbody tr td:last-child button',
+        viewInvoiceMenuItem: { name: /View Invoice/i },
+        viewPackingSlipMenuItem: { name: /View Packing Slip/i },
     };
 
     // ============================================
