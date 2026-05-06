@@ -41,7 +41,7 @@ test.describe('Customer Tests @lite', () => {
         await customer.registerAndBecomeVendorDefaultCustomer();
     });
 
-    test.skip('customer can add billing details', { tag: ['@lite', '@customer'] }, async ({ browser }) => {
+    test('customer can add billing details', { tag: ['@lite', '@customer'] }, async ({ browser }) => {
         const context = await browser.newContext({ storageState: c1 });
         const page = await context.newPage();
         const customer = new CustomerPage(page);
@@ -52,7 +52,7 @@ test.describe('Customer Tests @lite', () => {
         await context.close();
     });
 
-    test.skip('customer can add shipping details', { tag: ['@lite', '@customer'] }, async ({ browser }) => {
+    test('customer can add shipping details', { tag: ['@lite', '@customer'] }, async ({ browser }) => {
         const context = await browser.newContext({ storageState: c1 });
         const page = await context.newPage();
         const customer = new CustomerPage(page);
@@ -75,7 +75,7 @@ test.describe('Customer Tests @lite', () => {
     });
 
     // TODO: need to fix
-    test.skip('customer can add product to cart', { tag: ['@lite', '@customer'] }, async ({ browser }) => {
+    test('customer can add product to cart', { tag: ['@lite', '@customer'] }, async ({ browser }) => {
         // Used guest customer to avoid conflict with other tests
         const context = await browser.newContext();
         const page = await context.newPage();
@@ -87,8 +87,7 @@ test.describe('Customer Tests @lite', () => {
         await context.close();
     });
 
-    // TODO: need to fix
-    test.skip('customer can buy product', { tag: ['@lite', '@customer'] }, async ({ browser }) => {
+    test('customer can buy product', { tag: ['@lite', '@customer'] }, async ({ browser }) => {
         const context = await browser.newContext({ storageState: c1 });
         const page = await context.newPage();
         const customer = new CustomerPage(page);
@@ -99,14 +98,11 @@ test.describe('Customer Tests @lite', () => {
         await context.close();
     });
 
-    // TODO: need to fix
-    test.skip('customer can buy multi-vendor products', { tag: ['@lite', '@customer'] }, async ({ browser }) => {
+    test('customer can buy multi-vendor products', { tag: ['@lite', '@customer'] }, async ({ browser }) => {
         const context = await browser.newContext({ storageState: c1 });
         const page = await context.newPage();
         const customer = new CustomerPage(page);
-
         await customer.buyDefaultMultiVendorProducts();
-
         await page.close();
         await context.close();
     });

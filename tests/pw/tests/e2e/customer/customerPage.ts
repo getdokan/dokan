@@ -169,19 +169,11 @@ const selectors = {
             vatOrTaxNumber: '#billing_dokan_vat_number',
             nameOfBank: '#billing_dokan_bank_name',
             bankIban: '#billing_dokan_bank_iban',
-            country: '//select[@id="billing_country"]/..//span[@class="select2-selection__arrow"]',
-            countryInput: '.select2-search.select2-search--dropdown .select2-search__field',
-            countryValue: (country: string) =>
-                `//li[contains(@class,"select2-results__option") and normalize-space(text())="${country}"]`,
-            selectedCountry: '//span[@id="select2-billing_country-container"]',
+            countrySelect: '#billing_country',
             streetAddress: '#billing_address_1',
             streetAddress2: '#billing_address_2',
             city: '#billing_city',
-            state: '//select[@id="billing_state"]/..//span[@class="select2-selection__arrow"]',
-            stateInput: '.select2-search.select2-search--dropdown .select2-search__field',
-            stateValue: (state: string) =>
-                `//li[contains(@class,"select2-results__option")and normalize-space(text())="${state}"]`,
-            selectedState: '//span[@id="select2-billing_state-container"]',
+            stateSelect: '#billing_state',
             zipCode: '#billing_postcode',
             phone: '#billing_phone',
             email: '#billing_email',
@@ -190,19 +182,11 @@ const selectors = {
         shipping: {
             firstName: '#shipping_first_name',
             lastName: '#shipping_last_name',
-            country: '//select[@id="shipping_country"]/..//span[@class="select2-selection__arrow"]',
-            countryInput: '.select2-search.select2-search--dropdown .select2-search__field',
-            countryValue: (country: string) =>
-                `//li[contains(@class,"select2-results__option") and normalize-space(text())="${country}"]`,
-            selectedCountry: '//span[@id="select2-shipping_country-container"]',
+            countrySelect: '#shipping_country',
             streetAddress: '#shipping_address_1',
             streetAddress2: '#shipping_address_2',
             city: '#shipping_city',
-            state: '//select[@id="shipping_state"]/..//span[@class="select2-selection__arrow"]',
-            stateInput: '.select2-search.select2-search--dropdown .select2-search__field',
-            stateValue: (state: string) =>
-                `//li[contains(@class,"select2-results__option")and normalize-space(text())="${state}"]`,
-            selectedState: '//span[@id="select2-shipping_state-container"]',
+            stateSelect: '#shipping_state',
             zipCode: '#shipping_postcode',
             saveAddress: '//button[@name="save_address"]',
         },
@@ -210,22 +194,21 @@ const selectors = {
     cart: {
         cartItem: (productName: string) =>
             `//tr[@class='wc-block-cart-items__row']//a[@class= 'wc-block-components-product-name' and contains(text(),'${productName}')]`,
-        proceedToCheckout:
-            '//div[@class="wc-block-cart__submit-container"]//a[contains(@href,"/checkout/") and contains(@class,"wc-block-cart__submit-button")]',
+        proceedToCheckout: 'a.wc-block-cart__submit-button[href*="/checkout"]',
         removeFirstItem: '(//button[@class="wc-block-cart-item__remove-link"])[1]',
         cartEmptyMessage: '.wp-block-woocommerce-empty-cart-block .wc-block-cart__empty-cart__title',
     },
     checkout: {
         billing: {
             email: '#email',
-            country: '#billing-country input',
+            country: '#billing-country',
             firstName: '#billing-first_name',
             lastName: '#billing-last_name',
             address: '#billing-address_1',
             address2toggle: 'button.wc-block-components-address-form__address_2-toggle',
             address2: '#billing-address_2',
             city: '#billing-city',
-            stateInput: '#billing-state input',
+            state: '#billing-state',
             zipCode: '#billing-postcode',
             phone: '#billing-phone',
         },
@@ -242,11 +225,14 @@ const selectors = {
             zipCode: '#shipping-postcode',
             phone: '#shipping-phone',
         },
+        useShippingAsBilling: '.wc-block-checkout__use-address-for-billing input[type="checkbox"]',
         directBankTransfer: '.payment_method_bacs label, label[for="radio-control-wc-payment-method-options-bacs"]',
         placeOrder: '#place_order, button.wc-block-components-checkout-place-order-button',
     },
     shop: {
         searchProductLite: '(//input[@class="search-field"])[1]',
+        productLink: (productName: string) =>
+            `//ul[contains(@class,"products")]//li[contains(@class,"product")]//h2[normalize-space()="${productName}"]/ancestor::a[contains(@class,"woocommerce-LoopProduct-link")]`,
     },
     singleProduct: {
         quantity: 'div.quantity input.qty',
@@ -454,19 +440,19 @@ export class CustomerPage {
         await this.page.locator(selectors.address.billing.nameOfBank).fill(billing.bankName);
         await this.page.locator(selectors.address.billing.bankIban).fill(billing.bankIban);
 
-        // Country
-        await this.page.locator(selectors.address.billing.country).click();
-        await this.page.locator(selectors.address.billing.countryInput).fill(billing.country);
-        await this.page.locator(selectors.address.billing.countryValue(billing.country)).click();
+        // Country: select natively; select2 mirrors the change. Avoids the
+        // dropdown-open race that select2's UI flow exposes in headless mode.
+        await this.page.locator(selectors.address.billing.countrySelect).selectOption({ label: billing.country });
 
         await this.page.locator(selectors.address.billing.streetAddress).fill(billing.street1);
         await this.page.locator(selectors.address.billing.streetAddress2).fill(billing.street2);
         await this.page.locator(selectors.address.billing.city).fill(billing.city);
 
-        // State
-        await this.page.locator(selectors.address.billing.state).click();
-        await this.page.locator(selectors.address.billing.stateInput).fill(billing.state);
-        await this.page.locator(selectors.address.billing.stateValue(billing.state)).click();
+        // State: WooCommerce repopulates state options via AJAX after country
+        // changes, so wait for the target option to attach before selecting.
+        const billingStateOption = this.page.locator(`${selectors.address.billing.stateSelect} option`, { hasText: billing.state });
+        await billingStateOption.waitFor({ state: 'attached', timeout: 15000 });
+        await this.page.locator(selectors.address.billing.stateSelect).selectOption({ label: billing.state });
 
         await this.page.locator(selectors.address.billing.zipCode).fill(billing.zipCode);
         await this.page.locator(selectors.address.billing.phone).fill(billing.phone);
@@ -490,17 +476,15 @@ export class CustomerPage {
         await this.page.locator(selectors.address.shipping.firstName).fill(shipping.firstName);
         await this.page.locator(selectors.address.shipping.lastName).fill(shipping.lastName);
 
-        await this.page.locator(selectors.address.shipping.country).click();
-        await this.page.locator(selectors.address.shipping.countryInput).fill(shipping.country);
-        await this.page.locator(selectors.address.shipping.countryValue(shipping.country)).click();
+        await this.page.locator(selectors.address.shipping.countrySelect).selectOption({ label: shipping.country });
 
         await this.page.locator(selectors.address.shipping.streetAddress).fill(shipping.street1);
         await this.page.locator(selectors.address.shipping.streetAddress2).fill(shipping.street2);
         await this.page.locator(selectors.address.shipping.city).fill(shipping.city);
 
-        await this.page.locator(selectors.address.shipping.state).click();
-        await this.page.locator(selectors.address.shipping.stateInput).fill(shipping.state);
-        await this.page.locator(selectors.address.shipping.stateValue(shipping.state)).click();
+        const shippingStateOption = this.page.locator(`${selectors.address.shipping.stateSelect} option`, { hasText: shipping.state });
+        await shippingStateOption.waitFor({ state: 'attached', timeout: 15000 });
+        await this.page.locator(selectors.address.shipping.stateSelect).selectOption({ label: shipping.state });
 
         await this.page.locator(selectors.address.shipping.zipCode).fill(shipping.zipCode);
 
@@ -544,7 +528,11 @@ export class CustomerPage {
         await this.page.keyboard.press('Enter');
         await this.page.waitForLoadState('load');
 
-        // On single product page, add to cart
+        // Open the product's single page from the listing, then add to cart
+        await Promise.all([
+            this.page.waitForLoadState('load'),
+            this.page.locator(selectors.shop.productLink(productName)).first().click(),
+        ]);
         await this.page.locator(selectors.singleProduct.addToCart).click();
         await expect(this.page.locator(selectors.singleProduct.productAddedSuccessMessage(productName))).toBeVisible();
 
@@ -599,6 +587,10 @@ export class CustomerPage {
         await this.page.keyboard.press('Enter');
         await this.page.waitForLoadState('load');
 
+        await Promise.all([
+            this.page.waitForLoadState('load'),
+            this.page.locator(selectors.shop.productLink(productName)).first().click(),
+        ]);
         await this.page.locator(selectors.singleProduct.addToCart).click();
         await expect(this.page.locator(selectors.singleProduct.productAddedSuccessMessage(productName))).toBeVisible();
     }
@@ -622,16 +614,26 @@ export class CustomerPage {
 
     private async goToCheckoutFromCart(): Promise<void> {
         await this.goto(subUrls.cart);
-        await Promise.all([
-            this.page.waitForLoadState('load'),
-            this.page.locator(selectors.cart.proceedToCheckout).click(),
-        ]);
+        // Cart block hydrates async (totals/shipping calls). Wait for it to settle
+        // before interacting, otherwise the button may detach mid-click or be
+        // covered by the placeholder overlay.
+        await this.page.waitForLoadState('networkidle');
+        const button = this.page.locator(selectors.cart.proceedToCheckout).first();
+        await button.waitFor({ state: 'visible', timeout: 30000 });
+        await button.scrollIntoViewIfNeeded();
+        await button.click();
+        await this.page.waitForURL(/\/checkout\/?/, { timeout: 30000 });
+        await this.page.waitForLoadState('domcontentloaded');
     }
 
     private async fillCheckoutBilling(billing: typeof testData.customer.customerInfo.billing): Promise<void> {
+        const useShippingAsBilling = this.page.locator(selectors.checkout.useShippingAsBilling);
+        if (await useShippingAsBilling.isChecked().catch(() => false)) {
+            return;
+        }
+
         await this.page.locator(selectors.checkout.billing.email).fill(billing.email);
-        await this.page.locator(selectors.checkout.billing.country).fill(billing.country);
-        await this.page.keyboard.press('Enter');
+        await this.page.locator(selectors.checkout.billing.country).selectOption({ label: billing.country });
         await this.page.locator(selectors.checkout.billing.firstName).fill(billing.firstName);
         await this.page.locator(selectors.checkout.billing.lastName).fill(billing.lastName);
         await this.page.locator(selectors.checkout.billing.address).fill(billing.street1);
@@ -645,8 +647,7 @@ export class CustomerPage {
         }
         await this.page.locator(selectors.checkout.billing.address2).fill(billing.street2);
         await this.page.locator(selectors.checkout.billing.city).fill(billing.city);
-        await this.page.locator(selectors.checkout.billing.stateInput).fill(billing.state);
-        await this.page.keyboard.press('Enter');
+        await this.page.locator(selectors.checkout.billing.state).selectOption({ label: billing.state });
         await this.page.locator(selectors.checkout.billing.zipCode).fill(billing.zipCode);
         await this.page.locator(selectors.checkout.billing.phone).fill(billing.phone);
     }
