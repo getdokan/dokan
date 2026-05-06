@@ -1,24 +1,30 @@
-import { Page, APIRequestContext, APIResponse, expect, request } from '@playwright/test';
+import { Page, APIRequestContext, Download, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
-import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 
 declare const process: { env: Record<string, string | undefined> };
 declare const Buffer: {
-    from(input: string | Uint8Array, encoding?: string): { toString(encoding: string): string; subarray(start: number, end?: number): { toString(encoding: string): string } };
+    from(input: string | Uint8Array, encoding?: string): { toString(encoding: string): string };
 };
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
-const SERVER_URL = process.env.SERVER_URL ?? `${BASE_URL}/wp-json`;
 
 /**
- * Page object for Dokan Invoice (PDF Invoices for Dokan multi-vendor) E2E
- * coverage. Centralises selectors, REST endpoints, and helpers so the spec
- * file stays focused on assertions per CONVENTIONS.md §4.
+ * Page object for the Dokan Invoice add-on UI surfaces.
  *
- * Order/product creation goes through ApiUtils + payloads so vendor
- * association (product author = vendor) lines up with how the rest of the
- * suite seeds data.
+ * dokan-invoice + WC PDF render two visible surfaces in the current
+ * dokan-lite/dokan-pro release:
+ *
+ *   1. Customer → My Account → Orders: an "Invoice" / "Packing slip" link
+ *      per row, hooked via dokan_my_account_my_sub_orders_actions.
+ *   2. Admin → wp-admin order detail: a "Create PDF" button group in the
+ *      WC PDF metabox / sidebar (a.button.invoice, a.button.packing-slip).
+ *
+ * The new (Dokan 5.0.0+) React vendor dashboard has *no* visible surface
+ * yet — dokan-invoice 1.2.8 registers the JS filter
+ * `dokan_orders_data_view_dataviews_actions` but dokan-lite's
+ * OrderList.tsx does not call applyFilters() for it. Test #vendor-gap
+ * documents that explicitly so a future dokan-lite change picks it up.
  */
 export class DokanInvoicePage {
     readonly page: Page;
@@ -33,41 +39,36 @@ export class DokanInvoicePage {
     // SELECTORS
     // ============================================
 
-    admin = {
-        pluginsUrl: `${BASE_URL}/wp-admin/plugins.php`,
-        wcOrdersUrl: `${BASE_URL}/wp-admin/admin.php?page=wc-orders`,
-        loginUrl: `${BASE_URL}/wp-login.php`,
-        dokanInvoiceRow: "tr[data-slug='dokan-invoice']",
-        dokanInvoiceActiveRow: "tr.active[data-slug='dokan-invoice']",
-        dokanInvoiceInactiveRow: "tr.inactive[data-slug='dokan-invoice']",
-        wcPdfSettingsUrl: `${BASE_URL}/wp-admin/admin.php?page=wpo_wcpdf_options_page`,
-    };
-
-    // Vendor (new React vendor dashboard) selectors — Dokan 5.0.0+
-    // Tests below are gated `test.skip` until dokan-lite's OrderList.tsx
-    // calls `applyFilters('dokan_orders_data_view_dataviews_actions', …)`.
-    vendor = {
-        ordersUrl: `${BASE_URL}/dashboard/orders`,
-        rowActionsButton: "//tr//button[@aria-haspopup='menu' or @aria-label='Actions']",
-        viewInvoiceMenuItem: "//*[@role='menuitem'][normalize-space()='View Invoice']",
-        viewPackingSlipMenuItem: "//*[@role='menuitem'][normalize-space()='View Packing Slip']",
-    };
-
     customer = {
         myAccountOrdersUrl: `${BASE_URL}/my-account/orders/`,
-        invoiceLink: "//a[contains(@class,'wpo_wcpdf') and contains(., 'Invoice')]",
-        packingSlipLink: "//a[contains(@class,'wpo_wcpdf') and contains(., 'Packing Slip')]",
+        myAccountViewOrderUrl: (orderId: string | number) => `${BASE_URL}/my-account/view-order/${orderId}/`,
+        // Per-row action button injected by WC PDF + dokan-invoice on the
+        // My Account → Orders table. Class names come from WC PDF; the
+        // text "Invoice" / "Packing slip" is locale-dependent.
+        invoiceButton: 'a.button.invoice',
+        packingSlipButton: 'a.button.packing-slip',
+        invoiceButtonForOrder: (orderId: string | number) =>
+            `a.button.invoice[aria-label*="${orderId}"]`,
     };
 
-    // ============================================
-    // REST API CONFIG
-    // ============================================
+    admin = {
+        loginUrl: `${BASE_URL}/wp-login.php`,
+        pluginsUrl: `${BASE_URL}/wp-admin/plugins.php`,
+        wcOrdersListUrl: `${BASE_URL}/wp-admin/admin.php?page=wc-orders`,
+        wcOrderEditUrl: (orderId: string | number) =>
+            `${BASE_URL}/wp-admin/admin.php?page=wc-orders&action=edit&id=${orderId}`,
+        wcPdfSettingsUrl: `${BASE_URL}/wp-admin/admin.php?page=wpo_wcpdf_options_page`,
+        // WC PDF buttons in the order edit sidebar metabox.
+        invoiceButton: 'a.button.invoice',
+        packingSlipButton: 'a.button.packing-slip',
+        // Plugin row used by the activation regression test.
+        dokanInvoiceRow: "tr[data-slug='dokan-invoice']",
+    };
 
-    rest = {
-        getOrder: (orderId: string | number, version: 'v1' | 'v2' = 'v1') =>
-            `${SERVER_URL}/dokan/${version}/orders/${orderId}`,
-        getAllOrders: (version: 'v1' | 'v2' = 'v1') =>
-            `${SERVER_URL}/dokan/${version}/orders`,
+    vendor = {
+        // New React vendor dashboard — present for symmetry, but the JS
+        // filter dokan-invoice ships isn't applied by OrderList.tsx yet.
+        ordersUrl: `${BASE_URL}/dashboard/orders`,
     };
 
     // ============================================
@@ -75,35 +76,36 @@ export class DokanInvoicePage {
     // ============================================
 
     testData = {
-        admin: { authHeader: payloads.adminAuth },
+        admin: {
+            user: process.env.ADMIN || 'admin',
+            pass: process.env.ADMIN_PASSWORD || 'password',
+            authHeader: payloads.adminAuth,
+        },
         vendor1: { authHeader: payloads.vendorAuth },
         vendor2: { authHeader: payloads.vendor2Auth },
         customer: { authHeader: payloads.customerAuth },
-        admin_user: process.env.ADMIN || 'admin',
-        admin_pass: process.env.ADMIN_PASSWORD || 'password',
+        // Vendor1's seeded store name — comes from auth_setup. Used to
+        // assert vendor info in WC PDF's HTML preview output.
+        vendor1StoreName: 'vendor1store',
     };
 
     // ============================================
-    // GENERIC NAVIGATION / WAITS
+    // GENERIC NAVIGATION
     // ============================================
 
     async navigateTo(url: string) {
-        await this.page.goto(url);
-    }
-
-    async waitForPageReady() {
-        await this.page.waitForLoadState('load');
+        await this.page.goto(url, { waitUntil: 'load' });
     }
 
     async loginAsAdmin() {
         await this.page.goto(this.admin.loginUrl);
-        await this.page.fill('#user_login', this.testData.admin_user);
-        await this.page.fill('#user_pass', this.testData.admin_pass);
+        await this.page.fill('#user_login', this.testData.admin.user);
+        await this.page.fill('#user_pass', this.testData.admin.pass);
         await Promise.all([this.page.waitForLoadState('load'), this.page.click('#wp-submit')]);
     }
 
     // ============================================
-    // REST HELPERS
+    // REST HELPERS — only for seeding orders before driving the UI
     // ============================================
 
     private async getApi(): Promise<APIRequestContext> {
@@ -128,95 +130,60 @@ export class DokanInvoicePage {
     }
 
     /**
-     * Create a vendor1-owned order. Reuses the seeded vendor1 product
-     * (PRODUCT_ID env var, populated by _env.setup.ts). That product is
-     * authored by vendor1, so the resulting order is recognised as
-     * vendor1's by Dokan and reachable via /dokan/v1/orders for vendor1.
+     * Seed an order owned by vendor1 (post_author = vendor1 → Dokan
+     * recognises vendor1 as the seller) for customer1, in a given status.
      */
-    async createVendor1Order(): Promise<string> {
+    async seedVendor1Order(status: 'processing' | 'completed' | 'pending' | 'cancelled' = 'processing'): Promise<string> {
         const apiUtils = await this.getApiUtils();
         const productId = process.env.PRODUCT_ID;
         if (!productId) throw new Error('PRODUCT_ID env var not set — run docker:setup first');
         const [, , orderId] = await apiUtils.createOrder(productId, payloads.createOrder, payloads.vendorAuth);
-        return orderId;
-    }
-
-    /**
-     * Create a vendor1-owned order and force it to a specific status (e.g.
-     * `wc-processing`, `wc-completed`, `wc-cancelled`).
-     */
-    async createVendor1OrderWithStatus(status: string): Promise<string> {
-        const orderId = await this.createVendor1Order();
-        if (status && status !== 'processing' && status !== 'pending') {
-            await this.updateOrderStatus(orderId, status);
+        if (status !== 'processing' && status !== 'pending') {
+            const api = await this.getApi();
+            const res = await api.put(`${process.env.SERVER_URL ?? `${BASE_URL}/wp-json`}/wc/v3/orders/${orderId}`, {
+                data: { status },
+                headers: payloads.adminAuth,
+            });
+            expect(res.ok(), `seedVendor1Order(${status}) → ${res.status()}`).toBeTruthy();
         }
         return orderId;
     }
 
-    async updateOrderStatus(orderId: string, status: string): Promise<void> {
-        // Use the WC core orders endpoint (not Dokan's) for the status flip:
-        // the Dokan endpoint requires the requester to BE the vendor of the
-        // order, and going through it as admin sometimes returns 200 but
-        // doesn't actually flip the status / wipes line items.
-        const api = await this.getApi();
-        const res = await api.put(`${SERVER_URL}/wc/v3/orders/${orderId}`, {
-            data: { status },
-            headers: payloads.adminAuth,
-        });
-        expect(res.ok(), `updateOrderStatus(${orderId}, ${status}) ${res.status()}`).toBeTruthy();
-    }
+    // ============================================
+    // UI ACTIONS
+    // ============================================
 
-    async getDokanOrder(
-        orderId: string | number,
-        authHeader: typeof payloads.adminAuth,
-        version: 'v1' | 'v2' = 'v1',
-    ): Promise<{ response: APIResponse; body: any }> {
-        const api = await this.getApi();
-        const response = await api.get(this.rest.getOrder(orderId, version), { headers: authHeader });
-        const body = response.ok() ? await response.json() : null;
-        return { response, body };
-    }
-
-    async fetchPdfUrlAsGuest(url: string): Promise<APIResponse> {
-        const api = await this.getApi();
-        return await api.get(url, { headers: {} });
-    }
-
-    async fetchPdfUrlAs(url: string, authHeader: typeof payloads.adminAuth): Promise<APIResponse> {
-        const api = await this.getApi();
-        return await api.get(url, { headers: authHeader });
+    /**
+     * Click an invoice/packing-slip download button and capture the
+     * resulting browser download. Returns the Download handle so callers
+     * can save the file or inspect the suggested filename.
+     */
+    async clickAndCaptureDownload(selector: string, label = selector): Promise<Download> {
+        const downloadPromise = this.page.waitForEvent('download', { timeout: 15000 });
+        await this.page.locator(selector).first().click();
+        const download = await downloadPromise;
+        expect(download, `${label} did not produce a download`).toBeTruthy();
+        return download;
     }
 
     /**
-     * Assert that an APIResponse looks like a real WC PDF generation:
-     *   - 2xx HTTP status
-     *   - Content-Type indicates PDF (application/pdf or download disposition)
-     *   - Body starts with the PDF magic bytes "%PDF-"
-     * Returns the body bytes for callers that want to introspect further.
+     * Read the payload of a WC PDF download and assert it's a real PDF.
+     * Returns the bytes for downstream introspection (e.g. text extraction).
      */
-    async assertIsPdfResponse(res: APIResponse, label: string): Promise<Buffer> {
-        expect(res.status(), `${label}: HTTP status`).toBeLessThan(400);
-        const ct = (res.headers()['content-type'] ?? '').toLowerCase();
-        const cd = (res.headers()['content-disposition'] ?? '').toLowerCase();
-        const isPdfHeader = ct.includes('pdf') || cd.includes('pdf');
-        const buf = await res.body();
+    async readDownloadAsPdf(download: Download, label: string): Promise<Buffer> {
+        const stream = await download.createReadStream();
+        if (!stream) throw new Error(`${label}: download stream was null`);
+        const chunks: Buffer[] = [];
+        await new Promise<void>((resolve, reject) => {
+            stream.on('data', (c: Buffer) => chunks.push(c));
+            stream.on('end', () => resolve());
+            stream.on('error', reject);
+        });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const buf = (Buffer as any).concat(chunks) as Buffer;
         const magic = buf.subarray(0, 5).toString('binary');
-        const isPdfMagic = magic === '%PDF-';
-        expect(isPdfHeader || isPdfMagic, `${label}: response should be a PDF (content-type=${ct} cd=${cd} magic=${magic})`).toBeTruthy();
+        expect(magic, `${label}: response is not a PDF (magic="${magic}")`).toBe('%PDF-');
         return buf;
     }
 
-    /**
-     * Pull the actions.invoice.url and actions.packing-slip.url from a Dokan
-     * order REST response. Throws assertion if the URL shape is wrong.
-     */
-    extractInvoiceUrls(body: any, orderId: string | number): { invoice: string; packingSlip: string | null } {
-        const invoice: string = body?.actions?.invoice?.url ?? '';
-        const packingSlip: string = body?.actions?.['packing-slip']?.url ?? '';
-        expect(invoice, 'actions.invoice.url should be injected').toBeTruthy();
-        expect(invoice).toMatch(/action=generate_wpo_wcpdf/);
-        expect(invoice).toMatch(/document_type=invoice/);
-        expect(invoice).toMatch(new RegExp(`order_ids=${orderId}\\b`));
-        return { invoice, packingSlip: packingSlip || null };
-    }
 }
