@@ -104,7 +104,7 @@ setup.describe('site setup', () => {
         try {
             await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.woocommercePdfInvoices));
         } catch (error) {
-            console.log('WooCommerce PDF Invoices activation had issues, but continuing...');
+            console.log('WooCommerce PDF Invoices activation had issues, but continuing...', error);
         }
     });
 
@@ -112,7 +112,7 @@ setup.describe('site setup', () => {
         try {
             await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.dokanInvoice));
         } catch (error) {
-            console.log('Dokan Invoice activation had issues, but continuing...');
+            console.log('Dokan Invoice activation had issues, but continuing...', error);
         }
     });
     setup('set dokan license', { tag: ['@pro'] }, async () => {
