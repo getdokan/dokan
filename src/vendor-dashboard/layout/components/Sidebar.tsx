@@ -216,7 +216,7 @@ const Sidebar = ( {
             <aside
                 style={ { top: windowWidth > 600 ? adminBar : 0 } }
                 className={ twMerge(
-                    'dokan-frontend-sidebar bg-primary-500 text-white fixed left-0 bottom-0 z-20 flex flex-col transition-all duration-200',
+                    'dokan-frontend-sidebar bg-primary-500 text-white fixed start-0 bottom-0 z-20 flex flex-col transition-all duration-200',
                     collapsed
                         ? windowWidth <= 768
                             ? 'w-0 max-w-0'
@@ -393,7 +393,7 @@ const Sidebar = ( {
                                                     ) }
                                                 </span>
                                                 { ! collapsed && (
-                                                    <span className="ml-2">
+                                                    <span className="ms-2">
                                                         { menuTitle }
                                                     </span>
                                                 ) }
@@ -410,19 +410,19 @@ const Sidebar = ( {
                                                     ( isExpanded ? (
                                                         <LucideIcons.ChevronUp
                                                             className={ twMerge(
-                                                                'ml-2 w-4 h-4 text-white group-hover:text-white transition-transform duration-200',
+                                                                'ms-2 w-4 h-4 text-white group-hover:text-white transition-transform duration-200',
                                                                 item.counts > 0
-                                                                    ? 'ml-2'
-                                                                    : 'ml-auto'
+                                                                    ? 'ms-2'
+                                                                    : 'ms-auto'
                                                             ) }
                                                         />
                                                     ) : (
                                                         <LucideIcons.ChevronDown
                                                             className={ twMerge(
-                                                                'ml-2 w-4 h-4 text-white group-hover:text-white transition-transform duration-200',
+                                                                'ms-2 w-4 h-4 text-white group-hover:text-white transition-transform duration-200',
                                                                 item.counts > 0
-                                                                    ? 'ml-2'
-                                                                    : 'ml-auto'
+                                                                    ? 'ms-2'
+                                                                    : 'ms-auto'
                                                             ) }
                                                         />
                                                     ) ) }
@@ -487,7 +487,7 @@ const Sidebar = ( {
                                                                             ) }
                                                                         >
                                                                             <LucideIcons.Settings className="w-5 h-5 !text-transparent" />
-                                                                            <span className="ml-2">
+                                                                            <span className="ms-2">
                                                                                 {
                                                                                     subMenuTitle
                                                                                 }
