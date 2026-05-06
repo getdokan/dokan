@@ -1,6 +1,7 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import path from 'path';
 import { DokanInvoicePage } from './dokanInvoicePage';
+import { payloads } from '@utils/payloads';
 
 // ============================================
 // SESSION STORAGE VARIABLES
@@ -47,7 +48,13 @@ test.describe('Dokan Invoice Tests @pro', () => {
             await ctx.close();
         });
 
-        test('HP-customer-2 - clicking Invoice triggers a real PDF download', { tag: ['@pro', '@customer', '@invoice'] }, async ({ browser }) => {
+        test('HP-customer-2 - Invoice button URL returns a real PDF for the customer', { tag: ['@pro', '@customer', '@invoice'] }, async ({ browser }) => {
+            // The customer URL is rendered inline (no
+            // Content-Disposition: attachment with `&my-account=true`),
+            // so a click won't trigger Playwright's download event. The
+            // meaningful UI assertion is that the URL the customer
+            // *would* navigate to actually serves a real PDF when fetched
+            // from the same authenticated session.
             const ctx = await browser.newContext({ storageState: c1 });
             const page = await ctx.newPage();
             const inv = new DokanInvoicePage(page);
@@ -55,14 +62,15 @@ test.describe('Dokan Invoice Tests @pro', () => {
             await inv.seedVendor1Order('processing');
             await page.goto(inv.customer.myAccountOrdersUrl);
 
-            // Click whatever Invoice button is on the page; what matters is
-            // that the click → download flow completes with a real PDF.
-            const download = await inv.clickAndCaptureDownload(
-                inv.customer.invoiceButton,
-                'customer invoice button',
-            );
-            const buf = await inv.readDownloadAsPdf(download, 'customer invoice download');
-            expect(buf.length, 'PDF body should not be empty').toBeGreaterThan(1000);
+            const href = await page.locator(inv.customer.invoiceButton).first().getAttribute('href');
+            expect(href, 'Invoice button must have an href').toBeTruthy();
+
+            const res = await page.request.get(href!);
+            const ct = (res.headers()['content-type'] ?? '').toLowerCase();
+            const buf = await res.body();
+            const isPdf = ct.includes('pdf') || buf.subarray(0, 5).toString('binary') === '%PDF-';
+            expect(isPdf, `customer must receive a real PDF (status=${res.status()} ct=${ct})`).toBeTruthy();
+            expect(buf.length).toBeGreaterThan(1000);
 
             await inv.dispose();
             await ctx.close();
@@ -159,6 +167,61 @@ test.describe('Dokan Invoice Tests @pro', () => {
     });
 
     // ============================================
+    // HAPPY PATH — vendor downloads invoice for their own order
+    //
+    // The new React vendor dashboard does NOT yet render "View Invoice"
+    // (see TC-vendor-gap). The vendor side that DOES work today is the
+    // permission grant in `wpo_wcpdf_check_privs` plus the URL injection
+    // into `/dokan/v1/orders/<id>` via `dokan_rest_prepare_shop_order_object`.
+    // These tests drive the vendor's browser session against those.
+    // ============================================
+
+    test.describe('Happy path — vendor side (REST + browser-session URL)', () => {
+        test('HP-vendor-1 - vendor /dashboard/orders renders WITHOUT a 5xx', { tag: ['@pro', '@vendor', '@invoice'] }, async ({ browser }) => {
+            // Smoke: vendor1 can reach their orders dashboard. Pins the
+            // baseline so TC-vendor-gap's "filter not wired" assertion is
+            // distinct from a broken page.
+            const ctx = await browser.newContext({
+                storageState: path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json'),
+            });
+            const page = await ctx.newPage();
+            const inv = new DokanInvoicePage(page);
+
+            const res = await page.goto(inv.vendor.ordersUrl, { waitUntil: 'load' });
+            expect(res?.status() ?? 0, 'vendor orders dashboard should not 5xx').toBeLessThan(500);
+            await ctx.close();
+        });
+
+        test('HP-vendor-2 - vendor REST exposes actions.invoice.url for their own order', { tag: ['@pro', '@vendor', '@invoice'] }, async ({ browser }) => {
+            // Use a fresh API context with vendor1 Basic-Auth — same path
+            // the vendor dashboard's React app uses internally. (Driving
+            // it through `page.request` with a logged-in storage state
+            // mixes cookies + Authorization header, which trips the auth
+            // pipeline; the API path is what matters here.)
+            const ctx = await browser.newContext({
+                storageState: path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json'),
+            });
+            const page = await ctx.newPage();
+            const inv = new DokanInvoicePage(page);
+
+            const orderId = await inv.seedVendor1Order('processing');
+            const apiCtx = await request.newContext();
+            const res = await apiCtx.get(
+                `${process.env.SERVER_URL ?? 'http://localhost:9999/wp-json'}/dokan/v1/orders/${orderId}`,
+                { headers: inv.testData.vendor1.authHeader },
+            );
+            expect(res.ok(), `vendor1 GET order ${orderId} → ${res.status()}`).toBeTruthy();
+            const body = await res.json();
+            expect(body?.actions?.invoice?.url, 'vendor must see actions.invoice.url for their own order').toBeTruthy();
+            await apiCtx.dispose();
+
+            await inv.dispose();
+            await ctx.close();
+        });
+
+    });
+
+    // ============================================
     // EDGE — security / cross-customer
     // ============================================
 
@@ -186,6 +249,30 @@ test.describe('Dokan Invoice Tests @pro', () => {
             const isPdf = ct.includes('pdf') || buf.subarray(0, 5).toString('binary') === '%PDF-';
             expect(isPdf, `customer2 must not receive the PDF (status=${res.status()} ct=${ct})`).toBeFalsy();
             await cust2.close();
+        });
+
+        test('EC-vendor-cannot-access-other-vendor-order', { tag: ['@pro', '@vendor', '@invoice'] }, async ({ browser }) => {
+            // Vendor1 owns the order. Vendor2 tries to read it via Dokan's
+            // order REST — Dokan rejects with 401/403/404 because Vendor2
+            // is not the seller of that order. (Direct WC PDF URL access
+            // is similarly blocked by `wpo_wcpdf_dokan_privs`.)
+            const adminCtx = await browser.newContext({ storageState: a1 });
+            const adminPage = await adminCtx.newPage();
+            const adminInv = new DokanInvoicePage(adminPage);
+            const orderId = await adminInv.seedVendor1Order('processing');
+            await adminInv.dispose();
+            await adminCtx.close();
+
+            const v2Ctx = await browser.newContext({
+                storageState: path.join(__dirname, '../../../playwright/.auth/vendor2StorageState.json'),
+            });
+            const v2Page = await v2Ctx.newPage();
+            const res = await v2Page.request.get(
+                `${process.env.SERVER_URL ?? 'http://localhost:9999/wp-json'}/dokan/v1/orders/${orderId}`,
+                { headers: payloads.vendor2Auth },
+            );
+            expect([401, 403, 404]).toContain(res.status());
+            await v2Ctx.close();
         });
 
         test('EC-guest-cannot-access-invoice', { tag: ['@pro', '@guest', '@invoice'] }, async ({ browser }) => {
