@@ -633,7 +633,7 @@ export class CustomerPage {
         }
 
         await this.page.locator(selectors.checkout.billing.email).fill(billing.email);
-        await this.page.locator(selectors.checkout.billing.country).selectOption({ label: billing.country });
+        await this.selectCheckoutComboboxOption(selectors.checkout.billing.country, billing.country);
         await this.page.locator(selectors.checkout.billing.firstName).fill(billing.firstName);
         await this.page.locator(selectors.checkout.billing.lastName).fill(billing.lastName);
         await this.page.locator(selectors.checkout.billing.address).fill(billing.street1);
@@ -647,9 +647,51 @@ export class CustomerPage {
         }
         await this.page.locator(selectors.checkout.billing.address2).fill(billing.street2);
         await this.page.locator(selectors.checkout.billing.city).fill(billing.city);
-        await this.page.locator(selectors.checkout.billing.state).selectOption({ label: billing.state });
+        await this.selectCheckoutComboboxOption(selectors.checkout.billing.state, billing.state);
         await this.page.locator(selectors.checkout.billing.zipCode).fill(billing.zipCode);
         await this.page.locator(selectors.checkout.billing.phone).fill(billing.phone);
+    }
+
+    // WC Blocks Checkout renders country/state as a combobox: a visible
+    // <input role="combobox"> drives the UI while the <select id={...}>
+    // exists only as a hidden a11y fallback, so selectOption() fails its
+    // visibility check. Drive the visible input and pick from the listbox.
+    private async selectCheckoutComboboxOption(selectSelector: string, label: string): Promise<void> {
+        const select = this.page.locator(selectSelector).first();
+
+        const tagName = await select.evaluate((el: Element) => el.tagName.toLowerCase()).catch(() => '');
+        const directlyVisible = tagName === 'select' && (await select.isVisible().catch(() => false));
+        if (directlyVisible) {
+            await select.selectOption({ label });
+            return;
+        }
+
+        // Find the matching combobox input. WC Blocks IDs the input as
+        // `${selectId}-input`; older markups put a sibling input inside the
+        // same form-row. Fall back to the first visible input near the select.
+        const id = selectSelector.replace(/^#/, '');
+        const input = this.page
+            .locator(
+                [
+                    `#${id}-input`,
+                    `input[aria-controls="${id}-listbox"]`,
+                    `input[aria-owns="${id}-listbox"]`,
+                ].join(', '),
+            )
+            .first();
+
+        if (await input.isVisible().catch(() => false)) {
+            await input.click();
+            await input.fill(label);
+            await this.page
+                .getByRole('option', { name: label, exact: true })
+                .first()
+                .click();
+            return;
+        }
+
+        // Last resort: bypass actionability checks on the hidden select.
+        await select.selectOption({ label }, { force: true });
     }
 
     private async selectBankTransferAndPlaceOrder(expectSubOrders = false): Promise<void> {
