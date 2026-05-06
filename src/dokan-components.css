@@ -79,10 +79,10 @@ input[type="radio"]:focus {
     color: var(--color-primary);
 }
 .dokan-dashboard-layout button[role="switch"] span {
-    @apply translate-x-0.5 shrink-0 transition-transform duration-200;
+    @apply translate-x-0.5 shrink-0 transition-transform duration-200 rtl:-translate-x-0.5;
 }
 .dokan-dashboard-layout button[role="switch"] span[data-state="unchecked"] {
-    @apply -translate-x-2;
+    @apply -translate-x-2 rtl:translate-x-2;
 }
 
 /* ========== Link Styles ========== */
