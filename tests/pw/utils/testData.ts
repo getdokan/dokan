@@ -159,7 +159,7 @@ export const data = {
 
     plugin: {
         pluginsLite: ['basic-auth', 'dokan', 'woocommerce'],
-        plugins: ['basic-auth', 'dokan', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-addons', 'woocommerce-simple-auctions', 'woocommerce-subscriptions'],
+        plugins: ['basic-auth', 'dokan', 'dokan-pro', 'dokan-invoice', 'woocommerce', 'woocommerce-bookings', 'woocommerce-pdf-invoices-packing-slips', 'woocommerce-product-addons', 'woocommerce-simple-auctions', 'woocommerce-subscriptions'],
         dokanPro: ['dokan-pro'],
         activeClass: 'active',
         pluginName: {
@@ -170,8 +170,10 @@ export const data = {
             basicAuth: 'Basic-Auth-master/basic-auth',
             dokanLite: 'dokan-lite/dokan',
             dokanPro: 'dokan-pro/dokan-pro',
+            dokanInvoice: 'dokan-invoice/dokan-invoice',
             woocommerce: 'woocommerce/woocommerce',
             woocommerceBookings: 'woocommerce-bookings/woocommerce-bookings',
+            woocommercePdfInvoices: 'woocommerce-pdf-invoices-packing-slips/woocommerce-pdf-invoices-packing-slips',
             woocommerceProductAddons: 'woocommerce-product-addons/woocommerce-product-addons',
             woocommerceSimpleAuctions: 'woocommerce-simple-auctions/woocommerce-simple-auctions',
             woocommerceSubscriptions: 'woocommerce-subscriptions/woocommerce-subscriptions',
@@ -2920,10 +2922,12 @@ export const data = {
             dokan: 'dokan',
             dokanLite: 'dokan-lite',
             dokanPro: 'dokan-pro',
+            dokanInvoice: 'dokan-invoice',
             woocommerceBookings: 'woocommerce-bookings',
             woocommerceSubscriptions: 'woocommerce-subscriptions',
             woocommerceProductAddons: 'woocommerce-product-addons',
             woocommerceSimpleAuctions: 'woocommerce-simple-auctions',
+            woocommercePdfInvoices: 'woocommerce-pdf-invoices-packing-slips',
         },
     },
 
@@ -2955,6 +2959,7 @@ export const data = {
         cloneBasicAuth: (path: string) => `cd ${path} && git clone https://github.com/WP-API/Basic-Auth.git`,
         cloneDokanLite: (path: string) => `cd ${path} && git clone -b develop https://github.com/getdokan/dokan.git`,
         cloneDokanPro: (path: string) => `cd ${path} && git clone -b test_utils https://github.com/getdokan/dokan-pro.git`,
+        cloneDokanInvoice: (path: string) => `cd ${path} && git clone -b develop https://github.com/getdokan/dokan-invoice.git`,
         checkoutToDevelop: (path: string) => `cd ${path} && git checkout develop`,
         buildPlugin: (path: string) => `cd ${path} && composer i --no-dev && composer du -o && npm i && npm run build`,
     },

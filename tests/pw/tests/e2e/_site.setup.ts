@@ -99,6 +99,22 @@ setup.describe('site setup', () => {
             console.log('WooCommerce Subscriptions activation had issues, but continuing...');
         }
     });
+
+    setup('activate Woocommerce PDF invoices & packing slips', { tag: ['@pro'] }, async () => {
+        try {
+            await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.woocommercePdfInvoices));
+        } catch (error) {
+            console.log('WooCommerce PDF Invoices activation had issues, but continuing...');
+        }
+    });
+
+    setup('activate Dokan Invoice', { tag: ['@pro'] }, async () => {
+        try {
+            await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.dokanInvoice));
+        } catch (error) {
+            console.log('Dokan Invoice activation had issues, but continuing...');
+        }
+    });
     setup('set dokan license', { tag: ['@pro'] }, async () => {
         setup.skip(!process.env.LICENSE_KEY, 'LICENSE_KEY env var not set – skipping license setup (fork PR or unconfigured secret)');
         try {
