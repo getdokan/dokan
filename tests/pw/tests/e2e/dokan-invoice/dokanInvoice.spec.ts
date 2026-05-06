@@ -222,6 +222,225 @@ test.describe('Dokan Invoice Tests @pro', () => {
     });
 
     // ============================================
+    // REGRESSION — rendered document body
+    //
+    // Asserts the HTML preview output of WC PDF (same content as the
+    // generated PDF, sans rasterisation) contains the expected order /
+    // vendor / billing data. Catches regressions in:
+    //   - dokan-invoice's `wpo_wcpdf_shop_name` filter (vendor store name)
+    //   - dokan-invoice's `wpo_wcpdf_shop_address` filter (vendor address)
+    //   - WC PDF's own rendering pipeline (order id, customer billing)
+    // ============================================
+
+    test.describe('Regression — rendered document body', () => {
+        test('Body-1 - HTML preview contains the order id', { tag: ['@pro', '@admin', '@invoice'] }, async ({ browser }) => {
+            const ctx = await browser.newContext({ storageState: a1 });
+            const page = await ctx.newPage();
+            const inv = new DokanInvoicePage(page);
+            const orderId = await inv.seedVendor1Order('processing');
+            const html = await inv.fetchHtmlPreviewFromAdminPage(page, orderId);
+            expect(html).toContain(String(orderId));
+            await inv.dispose();
+            await ctx.close();
+        });
+
+        test('Body-2 - HTML preview shop block carries vendor1 store name AND city (proves shop_name + shop_address filters)', { tag: ['@pro', '@admin', '@invoice'] }, async ({ browser }) => {
+            const ctx = await browser.newContext({ storageState: a1 });
+            const page = await ctx.newPage();
+            const inv = new DokanInvoicePage(page);
+            const orderId = await inv.seedVendor1Order('processing');
+            const html = await inv.fetchHtmlPreviewFromAdminPage(page, orderId);
+            // Vendor's seeded store name (from auth_setup) — proves
+            // `wpo_wcpdf_shop_name` filter ran.
+            expect(html, 'HTML must contain vendor1 store name').toMatch(
+                new RegExp(inv.testData.vendor1StoreName, 'i'),
+            );
+            // Vendor's seeded address city — proves
+            // `wpo_wcpdf_shop_address` filter ran (the default WC site
+            // address would not contain "New York" with our seed).
+            expect(html, 'HTML must contain vendor1 city (proves shop_address rewrite)').toContain('New York');
+            await inv.dispose();
+            await ctx.close();
+        });
+
+        test('Body-3 - HTML preview contains customer1 billing details', { tag: ['@pro', '@admin', '@invoice'] }, async ({ browser }) => {
+            const ctx = await browser.newContext({ storageState: a1 });
+            const page = await ctx.newPage();
+            const inv = new DokanInvoicePage(page);
+            const orderId = await inv.seedVendor1Order('processing');
+            const html = await inv.fetchHtmlPreviewFromAdminPage(page, orderId);
+            // Billing block content (from payloads.createOrder) — catches
+            // regressions in WC PDF's billing rendering.
+            expect(html).toContain('abc street');     // address line 1
+            expect(html).toContain('10003');          // postcode
+            expect(html.toLowerCase()).toContain('customer1'); // first name
+            await inv.dispose();
+            await ctx.close();
+        });
+    });
+
+    // ============================================
+    // REGRESSION — REST shape
+    //
+    // dokan-invoice's `dokan_rest_prepare_shop_order_object` hook injects
+    // `actions.invoice.url` and `actions.packing-slip.url` into Dokan's
+    // order REST response. These tests pin the URL shape (right order,
+    // right document type, no XSS-unsafe entities) so any regression in
+    // the hook is caught.
+    // ============================================
+
+    test.describe('Regression — REST shape', () => {
+        test('REST-1 - actions.invoice.url is well-formed and matches order', { tag: ['@pro', '@admin', '@invoice'] }, async ({ browser }) => {
+            const ctx = await browser.newContext({ storageState: a1 });
+            const page = await ctx.newPage();
+            const inv = new DokanInvoicePage(page);
+            const orderId = await inv.seedVendor1Order('processing');
+
+            const apiCtx = await request.newContext();
+            const res = await apiCtx.get(
+                `${process.env.SERVER_URL ?? 'http://localhost:9999/wp-json'}/dokan/v1/orders/${orderId}`,
+                { headers: payloads.adminAuth },
+            );
+            expect(res.ok()).toBeTruthy();
+            const body = await res.json();
+            const url: string = body?.actions?.invoice?.url ?? '';
+            expect(url).toMatch(/action=generate_wpo_wcpdf/);
+            expect(url).toMatch(/document_type=invoice/);
+            expect(url).toMatch(new RegExp(`order_ids=${orderId}\\b`));
+            // esc_url_raw + wp_specialchars_decode should leave no raw
+            // entities or script-like fragments in the URL.
+            expect(url).not.toMatch(/<script/i);
+            expect(url).not.toMatch(/javascript:/i);
+            expect(url).not.toMatch(/&amp;/);
+            await apiCtx.dispose();
+            await inv.dispose();
+            await ctx.close();
+        });
+
+        test('REST-2 - actions.packing-slip.url present when document is enabled', { tag: ['@pro', '@admin', '@invoice'] }, async ({ browser }) => {
+            const ctx = await browser.newContext({ storageState: a1 });
+            const page = await ctx.newPage();
+            const inv = new DokanInvoicePage(page);
+            const orderId = await inv.seedVendor1Order('processing');
+
+            const apiCtx = await request.newContext();
+            const res = await apiCtx.get(
+                `${process.env.SERVER_URL ?? 'http://localhost:9999/wp-json'}/dokan/v1/orders/${orderId}`,
+                { headers: payloads.adminAuth },
+            );
+            const body = await res.json();
+            const slip = body?.actions?.['packing-slip'];
+            // Setup enables the packing-slip document; if it ever
+            // regresses to disabled-by-default, the assertion fails.
+            expect(slip?.url, 'packing-slip URL should be injected when WC PDF document is enabled').toMatch(
+                /document_type=packing-slip/,
+            );
+            expect(slip.url).toMatch(new RegExp(`order_ids=${orderId}\\b`));
+            await apiCtx.dispose();
+            await inv.dispose();
+            await ctx.close();
+        });
+    });
+
+    // ============================================
+    // REGRESSION — order status / lifecycle
+    // ============================================
+
+    test.describe('Regression — order lifecycle', () => {
+        test('Lifecycle-1 - customer URL works for a completed order', { tag: ['@pro', '@customer', '@invoice'] }, async ({ browser }) => {
+            const ctx = await browser.newContext({ storageState: c1 });
+            const page = await ctx.newPage();
+            const inv = new DokanInvoicePage(page);
+            await inv.seedVendor1Order('completed');
+            await page.goto(inv.customer.myAccountOrdersUrl);
+            const href = await page.locator(inv.customer.invoiceButton).first().getAttribute('href');
+            expect(href).toBeTruthy();
+            const res = await page.request.get(href!);
+            const ct = (res.headers()['content-type'] ?? '').toLowerCase();
+            const buf = await res.body();
+            expect(ct.includes('pdf') || buf.subarray(0, 5).toString('binary') === '%PDF-').toBeTruthy();
+            await inv.dispose();
+            await ctx.close();
+        });
+
+        test('Lifecycle-2 - URL stays valid across processing → completed transition', { tag: ['@pro', '@admin', '@invoice'] }, async ({ browser }) => {
+            const ctx = await browser.newContext({ storageState: a1 });
+            const page = await ctx.newPage();
+            const inv = new DokanInvoicePage(page);
+
+            const orderId = await inv.seedVendor1Order('processing');
+            await page.goto(inv.admin.wcOrderEditUrl(orderId));
+            const urlProcessing = await page.locator(inv.admin.invoiceButton).first().getAttribute('href');
+            expect(urlProcessing).toBeTruthy();
+
+            // Flip to completed via WC REST.
+            const apiCtx = await request.newContext();
+            const upd = await apiCtx.put(
+                `${process.env.SERVER_URL ?? 'http://localhost:9999/wp-json'}/wc/v3/orders/${orderId}`,
+                { data: { status: 'completed' }, headers: payloads.adminAuth },
+            );
+            expect(upd.ok()).toBeTruthy();
+            await apiCtx.dispose();
+
+            // Reload and pull the URL again — it should still serve PDF.
+            await page.goto(inv.admin.wcOrderEditUrl(orderId));
+            const urlCompleted = await page.locator(inv.admin.invoiceButton).first().getAttribute('href');
+            expect(urlCompleted).toBeTruthy();
+
+            const download = await inv.clickAndCaptureDownload(inv.admin.invoiceButton, `lifecycle invoice (order ${orderId})`);
+            const buf = await inv.readDownloadAsPdf(download, `lifecycle invoice (order ${orderId})`);
+            expect(buf.length).toBeGreaterThan(1000);
+
+            await inv.dispose();
+            await ctx.close();
+        });
+    });
+
+    // ============================================
+    // REGRESSION — asset enqueue
+    //
+    // dokan-invoice's enqueue_scripts() registers a CSS bundle on every
+    // front-end page and a JS bundle (`dokan-orders.js`). These tests
+    // catch regressions where the assets stop loading entirely (which
+    // would silently break the My Account button styling and the new
+    // dashboard JS filter registration).
+    // ============================================
+
+    test.describe('Regression — asset enqueue', () => {
+        test('Asset-1 - dokan-invoice CSS bundle is enqueued on customer My Account', { tag: ['@pro', '@customer', '@invoice'] }, async ({ browser }) => {
+            const ctx = await browser.newContext({ storageState: c1 });
+            const page = await ctx.newPage();
+            const inv = new DokanInvoicePage(page);
+            await inv.seedVendor1Order('processing');
+            await page.goto(inv.customer.myAccountOrdersUrl);
+            // Stylesheet handle is `dokan-invoice-styles`. WordPress
+            // emits it as <link id="dokan-invoice-styles-css" …>.
+            const cssLoaded = await page.evaluate(() =>
+                Boolean(document.querySelector('link[id="dokan-invoice-styles-css"]'))
+                || Array.from(document.querySelectorAll<HTMLLinkElement>('link[rel="stylesheet"]'))
+                    .some(l => l.href.includes('/dokan-invoice/assets/css/style.css')),
+            );
+            expect(cssLoaded, 'dokan-invoice/assets/css/style.css should be enqueued').toBeTruthy();
+            await inv.dispose();
+            await ctx.close();
+        });
+
+        test('Asset-2 - dokan-invoice JS bundle is enqueued on customer pages', { tag: ['@pro', '@customer', '@invoice'] }, async ({ browser }) => {
+            const ctx = await browser.newContext({ storageState: c1 });
+            const page = await ctx.newPage();
+            const inv = new DokanInvoicePage(page);
+            await page.goto(inv.customer.myAccountOrdersUrl);
+            const jsLoaded = await page.evaluate(() =>
+                Array.from(document.querySelectorAll<HTMLScriptElement>('script[src]'))
+                    .some(s => s.src.includes('/dokan-invoice/assets/js/dokan-orders.js')),
+            );
+            expect(jsLoaded, 'dokan-invoice/assets/js/dokan-orders.js should be enqueued').toBeTruthy();
+            await inv.dispose();
+            await ctx.close();
+        });
+    });
+
+    // ============================================
     // EDGE — security / cross-customer
     // ============================================
 

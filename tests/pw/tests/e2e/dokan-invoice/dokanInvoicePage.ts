@@ -167,6 +167,23 @@ export class DokanInvoicePage {
     }
 
     /**
+     * Fetch the WC PDF document for an order in HTML preview mode using
+     * the supplied authenticated `Page` (so the URL's WP nonce validates
+     * against the same session). Returns the rendered HTML so callers can
+     * assert vendor name / address / billing details / order id appear in
+     * the document body.
+     */
+    async fetchHtmlPreviewFromAdminPage(page: Page, orderId: string | number): Promise<string> {
+        await page.goto(this.admin.wcOrderEditUrl(orderId), { waitUntil: 'load' });
+        const pdfUrl = await page.locator(this.admin.invoiceButton).first().getAttribute('href');
+        expect(pdfUrl, 'admin order edit page should expose an invoice URL').toBeTruthy();
+        const htmlUrl = `${pdfUrl}&output=html`;
+        const res = await page.request.get(htmlUrl);
+        expect(res.ok(), `HTML preview status=${res.status()}`).toBeTruthy();
+        return await res.text();
+    }
+
+    /**
      * Read the payload of a WC PDF download and assert it's a real PDF.
      * Returns the bytes for downstream introspection (e.g. text extraction).
      */
