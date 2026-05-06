@@ -136,12 +136,22 @@ export class DokanInvoicePage {
     /**
      * Seed an order owned by vendor1 (post_author = vendor1 → Dokan
      * recognises vendor1 as the seller) for customer1, in a given status.
+     *
+     * IMPORTANT: `payloads.createOrder.customer_id` is captured at
+     * module-load time from `process.env.CUSTOMER_ID`. On a fresh CI run
+     * that env var isn't set yet when payloads.ts is first imported
+     * (auth_setup writes it later), so the static payload's customer_id
+     * is 0 → guest order → never appears in customer1's My Account →
+     * Orders list. We re-read the env var at runtime and override
+     * `customer_id` so the order is correctly attributed to customer1.
      */
     async seedVendor1Order(status: 'processing' | 'completed' | 'pending' | 'cancelled' = 'processing'): Promise<string> {
         const apiUtils = await this.getApiUtils();
         const productId = process.env.PRODUCT_ID;
         if (!productId) throw new Error('PRODUCT_ID env var not set — run docker:setup first');
-        const [, , orderId] = await apiUtils.createOrder(productId, payloads.createOrder, payloads.vendorAuth);
+        const customerId = Number(process.env.CUSTOMER_ID ?? 0);
+        const orderPayload = { ...payloads.createOrder, customer_id: customerId };
+        const [, , orderId] = await apiUtils.createOrder(productId, orderPayload, payloads.vendorAuth);
         if (status !== 'processing' && status !== 'pending') {
             const api = await this.getApi();
             const res = await api.put(`${process.env.SERVER_URL ?? `${BASE_URL}/wp-json`}/wc/v3/orders/${orderId}`, {
