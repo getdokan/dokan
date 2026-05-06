@@ -13,7 +13,7 @@
             "config": {
                 "WP_DEBUG": "true",
                 "SCRIPT_DEBUG": "false",
-                "WP_DEBUG_LOG": "true",
+                "WP_DEBUG_LOG": "/var/www/html/wp-data/debug.log",
                 "WP_DEBUG_DISPLAY": "false",
                 "WP_MEMORY_LIMIT": "1024M",
                 "WP_MAX_MEMORY_LIMIT": "1024M"
