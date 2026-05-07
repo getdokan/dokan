@@ -277,6 +277,23 @@ test.describe('New Vendor Announcement Dashboard (React) @pro', () => {
         const bogus = `__no_match__${Date.now()}`;
         await typeSearch(page, bogus);
 
+        // Synchronize against the bogus debounced fetch landing before we
+        // install the empty-search listener. typeSearch's 900ms timeout is
+        // not a guarantee — on a slow CI runner the bogus fetch can still
+        // be in flight when the clear fires, and React's DebouncedInput
+        // coalesces the two state changes so no empty-search request goes
+        // out. The listener then times out at 15s with `req === null`
+        // (observed flake on shard 1, run #4170).
+        await page
+            .waitForRequest(
+                (req) => {
+                    if (!req.url().includes('/dokan/v1/announcement')) return false;
+                    return new URL(req.url()).searchParams.get('search') === bogus;
+                },
+                { timeout: 5_000 },
+            )
+            .catch(() => null);
+
         // Wait for a fetch whose `search` param is absent or empty — the signal
         // that the clear-handler dispatched a no-filter request.
         const reqPromise = page
