@@ -134,9 +134,19 @@ setup.describe('site setup', () => {
     // dokan-invoice's REST hook bails (`$document->is_enabled()` is false)
     // and `actions.invoice.url` never gets injected. Seed the option here so
     // dokan-invoice tests can rely on the URL being present.
+    //
+    // `my_account_buttons => always` forces the My Account → Orders row
+    // button to render regardless of whether the document has already been
+    // generated. The default `available` mode only renders once the
+    // document has been minted (visited or attached to an email), and
+    // `attach_to_email_ids => []` disables the email auto-generation. In
+    // CI on a fresh install no prior order has a generated invoice doc, so
+    // HP-customer-1 / HP-customer-2 see zero buttons and fail. Locally we
+    // never noticed because customer1 has accumulated orders from prior
+    // runs whose invoices were minted via earlier admin tests.
     setup('enable WC PDF invoice + packing-slip documents', { tag: ['@pro'] }, async () => {
         await helpers.exeCommandWpcli(
-            `wp eval 'update_option("wpo_wcpdf_documents_settings_invoice", ["enabled" => "1", "attach_to_email_ids" => []]); update_option("wpo_wcpdf_documents_settings_packing-slip", ["enabled" => "1"]);'`,
+            `wp eval 'update_option("wpo_wcpdf_documents_settings_invoice", ["enabled" => "1", "attach_to_email_ids" => [], "my_account_buttons" => "always"]); update_option("wpo_wcpdf_documents_settings_packing-slip", ["enabled" => "1", "my_account_buttons" => "always"]);'`,
         );
     });
     setup('set dokan license', { tag: ['@pro'] }, async () => {
