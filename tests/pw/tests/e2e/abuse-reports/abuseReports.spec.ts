@@ -450,6 +450,14 @@ test.describe('Abuse Reports Tests @pro', () => {
         await context.close();
     });
 
+    // REST validation cases 13–17 are read-only / rejection-path requests
+    // that each open and dispose their own APIRequestContext. They share no
+    // state with each other, so they can run concurrently across workers
+    // even though the parent describe is serial. Saves a few seconds on
+    // shard 1 and is the lowest-risk beachhead for parallel-mode adoption.
+    test.describe('REST validation (parallel)', () => {
+        test.describe.configure({ mode: 'parallel' });
+
     test('Test Case 13 - REST: Admin Can List Reports With Totals Header', { tag: ['@pro', '@admin'] }, async ({}) => {
         // REST tests use a fresh APIRequestContext rather than a browser
         // context. A browser context built from `storageState` drops the
@@ -537,6 +545,7 @@ test.describe('Abuse Reports Tests @pro', () => {
 
         await ctx.dispose();
     });
+    }); // end REST validation parallel block
 
     test('Test Case 18 - Admin Disables Setting A and Removes Custom Reason (cleanup)', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const context = await browser.newContext({ storageState: a1 });
@@ -690,6 +699,13 @@ test.describe('Abuse Reports Tests @pro', () => {
     // ----------------------------------------------------------------
     // REST schema / pagination / filter coverage (no row state needed)
     // ----------------------------------------------------------------
+
+    // REST edge-case cluster (TC 23–33). Same shape as the TC 13–17 block:
+    // each test owns its own request context, only reads or hits rejection
+    // paths, never mutates server state, never reads a row another test in
+    // this group seeded. Safe to parallelise.
+    test.describe('REST edge cases (parallel)', () => {
+        test.describe.configure({ mode: 'parallel' });
 
     test('Test Case 23 - REST: Negative page Is Rejected', { tag: ['@pro', '@admin'] }, async ({}) => {
         const ctx = await request.newContext();
@@ -859,4 +875,5 @@ test.describe('Abuse Reports Tests @pro', () => {
 
         await ctx.dispose();
     });
+    }); // end REST edge cases parallel block
 });
