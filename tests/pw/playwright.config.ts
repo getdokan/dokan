@@ -57,6 +57,7 @@ export default defineConfig({
               ['blob', { open: 'outputDir', outputDir: 'playwright-report/e2e/blob-report' }],
               ['list', { printSteps: true }],
               ['./utils/summaryReporter.ts', { outputFile: 'playwright-report/e2e/summary-report/results.json' }],
+              ['./utils/specDurationReporter.ts', { outputFile: 'playwright-report/e2e/spec-durations.json' }],
           ]
         : [
               //   ['blob', { open: 'outputDir', outputDir: 'playwright-report/e2e/blob-report' }],

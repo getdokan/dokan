@@ -87,30 +87,62 @@ env:
     E2E_COVERAGE: ./tests/pw/playwright-report/e2e/coverage-report/coverage.json
 
 jobs:
-    e2e_tests:
-        name: e2e tests
+    # Build dokan-lite and dokan-pro once. Two parallel jobs (build_lite, build_pro)
+    # so the slower of the two (~6 min) gates downstream jobs instead of ~12 min serial.
+    # Each consumer job downloads the tar artifacts and skips its own build steps.
+    build_lite:
+        name: build dokan-lite
         runs-on: ubuntu-latest
-        timeout-minutes: 40
-        strategy:
-            fail-fast: false
-            matrix:
-                shardIndex: [1, 2, 3, 4, 5, 6]
-                shardTotal: [6]
-
+        timeout-minutes: 15
         steps:
-            # Checkout testing repo (folder is repo name e.g. "dokan"; we need "dokan-lite" for wp-env)
             - name: Checkout testing repo
-              id: clone-dokan-lite
               uses: actions/checkout@v4
 
-            # Expose repo as dokan-lite so wp-env activates "dokan-lite" (dokan-pro expects that slug)
-            - name: Prepare dokan-lite folder
-              run: |
-                  ln -s . dokan-lite
+            - name: Use desired version of NodeJS
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
 
-            # Checkout Dokan Pro from develop branch (same-repo only; skip on fork PRs where secrets are unavailable)
+            - name: Composer install and build (Dokan-lite)
+              run: |
+                  composer i || composer update
+                  composer i --no-dev -o || composer update --no-dev -o
+
+            - name: Npm install and build (Dokan-lite)
+              run: |
+                  npm ci --prefer-offline --no-audit --no-fund || npm i
+                  npm run build
+
+            # Tar the runtime tree (excludes node_modules, .git, dev-only output).
+            # tar preserves perms + symlinks unlike upload-artifact's zip path.
+            - name: Tar dokan-lite build output
+              run: |
+                  tar --exclude=./.git \
+                      --exclude=./node_modules \
+                      --exclude=./tests/pw/node_modules \
+                      --exclude=./tests/pw/playwright \
+                      --exclude=./tests/pw/playwright-report \
+                      --exclude=./tests/pw/wp-data \
+                      --exclude=./tests/pw/test-results \
+                      -czf /tmp/dokan-lite-build.tar.gz .
+
+            - name: Upload dokan-lite build artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: dokan-lite-build
+                  path: /tmp/dokan-lite-build.tar.gz
+                  retention-days: 1
+                  compression-level: 0
+
+    build_pro:
+        name: build dokan-pro
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+        # Only run when secrets are available (i.e. not a fork PR). Same gate as today.
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        steps:
             - name: Checkout Dokan Pro
-              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
               uses: actions/checkout@v4
               with:
                   repository: getdokan/dokan-pro
@@ -118,47 +150,29 @@ jobs:
                   path: dokan-pro
                   token: ${{ secrets.DOKAN_PRO_TOKEN }}
 
-            # Checkout Dokan Invoice from develop branch (public repo, no token required).
-            # Mapped via .wp-env.ci.json and activated alongside dokan-pro.
             - name: Checkout Dokan Invoice
-              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
               uses: actions/checkout@v4
               with:
                   repository: getdokan/dokan-invoice
                   ref: develop
                   path: dokan-invoice
 
-            # Use desired version of NodeJS
             - name: Use desired version of NodeJS
               uses: actions/setup-node@v4
               with:
                   node-version: 20
                   cache: npm
+                  cache-dependency-path: dokan-pro/package-lock.json
 
-            # Composer install and build (Dokan-lite)
-            - name: Composer install and build (Dokan-lite)
-              run: |
-                  composer i || composer update
-                  composer i --no-dev -o || composer update --no-dev -o
-
-            # Npm install and build (Dokan-lite)
-            - name: Npm install and build (Dokan-lite)
-              run: |
-                  npm ci || npm i
-                  npm run build
-
-            # Build Dokan Pro (after clone; required before wp-env so plugin is ready)
             - name: Build Dokan Pro
-              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+              working-directory: dokan-pro
               run: |
-                  cd dokan-pro
                   composer i --no-dev -o
-                  npm ci || npm i
+                  npm ci --prefer-offline --no-audit --no-fund || npm i
                   npm run build
 
             # Fetch only tests/plugins from test_utils branch (premium plugins not in default branch)
             - name: Fetch WooCommerce premium plugins from test_utils
-              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
               working-directory: dokan-pro
               run: |
                   git fetch origin test_utils
@@ -166,7 +180,6 @@ jobs:
 
             # Extract any zipped premium plugins collected from test_utils
             - name: Collect WooCommerce premium plugins
-              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
               run: |
                   PLUGINS_DIR="dokan-pro/tests/plugins"
                   for zip in "$PLUGINS_DIR"/*.zip; do
@@ -180,33 +193,92 @@ jobs:
                   echo "Available premium plugins:"
                   ls -la "$PLUGINS_DIR"
 
-            # Install test dependencies
+            - name: Tar dokan-pro + dokan-invoice
+              run: |
+                  tar --exclude='dokan-pro/.git' \
+                      --exclude='dokan-pro/node_modules' \
+                      --exclude='dokan-invoice/.git' \
+                      -czf /tmp/dokan-pro-build.tar.gz dokan-pro dokan-invoice
+
+            - name: Upload dokan-pro build artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: dokan-pro-build
+                  path: /tmp/dokan-pro-build.tar.gz
+                  retention-days: 1
+                  compression-level: 0
+
+    e2e_tests:
+        name: e2e tests
+        runs-on: ubuntu-latest
+        timeout-minutes: 30
+        # Wait for both build jobs. build_pro is conditional (fork PRs) and may not run;
+        # `always() && build_lite succeeded` covers the fork-PR path too.
+        needs: [build_lite, build_pro]
+        if: always() && needs.build_lite.result == 'success' && (needs.build_pro.result == 'success' || needs.build_pro.result == 'skipped')
+        strategy:
+            fail-fast: false
+            matrix:
+                shardIndex: [1, 2, 3, 4, 5, 6]
+                shardTotal: [6]
+
+        steps:
+            - name: Download dokan-lite build artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: dokan-lite-build
+                  path: /tmp/
+
+            - name: Extract dokan-lite build
+              id: clone-dokan-lite
+              run: |
+                  tar -xzf /tmp/dokan-lite-build.tar.gz
+                  rm /tmp/dokan-lite-build.tar.gz
+                  ln -s . dokan-lite
+
+            - name: Download dokan-pro build artifact
+              if: needs.build_pro.result == 'success'
+              uses: actions/download-artifact@v4
+              with:
+                  name: dokan-pro-build
+                  path: /tmp/
+
+            - name: Extract dokan-pro build
+              if: needs.build_pro.result == 'success'
+              run: |
+                  tar -xzf /tmp/dokan-pro-build.tar.gz
+                  rm /tmp/dokan-pro-build.tar.gz
+
+            - name: Use desired version of NodeJS
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
+                  cache-dependency-path: tests/pw/package-lock.json
+
             - name: Install test dependencies
               working-directory: tests/pw
               run: |
-                  npm ci || npm i
+                  npm ci --prefer-offline --no-audit --no-fund || npm i
 
-            # Create wp debuglog file
             - name: Create wp debuglog file
               id: debug-log
               working-directory: tests/pw
               run: |
                   mkdir -p wp-data && touch wp-data/debug.log
 
-            # wp-env installs/activates plugins in array order: Basic-Auth → WooCommerce → dokan-lite → dokan-pro
-            # Use CI config (../../dokan-pro) when dokan-pro present; lite-only when not (e.g. fork PR)
+            # Use CI config (../../dokan-pro) when dokan-pro present; lite-only when not (fork PR)
             - name: Prepare wp-env config
               working-directory: tests/pw
               run: |
                   if [ -d "../../dokan-pro" ]; then
-                    echo "Dokan Pro present, using .wp-env.ci.json (../../dokan-pro)"
+                    echo "Dokan Pro present, using .wp-env.ci.json"
                     cp .wp-env.ci.json .wp-env.override.json
                   else
                     echo "Dokan Pro not present, using lite-only wp-env config"
                     cp .wp-env.json .wp-env.override.json
                   fi
 
-            # Start wordpress environment
             - name: Start WordPress Env
               id: wp-env
               uses: nick-fields/retry@v3
@@ -218,10 +290,8 @@ jobs:
                       cd tests/pw
                       npm run start:env
 
-            # Activate WooCommerce premium plugins and Dokan Pro inside the wp-env container
-            # These plugins are mapped via .wp-env.ci.json but must be explicitly activated via WP-CLI
             - name: Activate WooCommerce premium plugins
-              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+              if: needs.build_pro.result == 'success'
               working-directory: tests/pw
               run: |
                   npm run wp-env run tests-cli wp plugin activate \
@@ -233,10 +303,6 @@ jobs:
                       dokan-pro \
                       dokan-invoice
 
-            # Enable the Dokan 5.0.0+ React UI (vendor dashboard + product editor).
-            # The React tests under tests/e2e/**/new*.spec.ts and the merged
-            # "NEW REACT UI TEST CASES" sections require this. Without it, the
-            # legacy templates render and the React route mounts assert false.
             - name: Enable Dokan New React UI (vendor dashboard + product editor)
               working-directory: tests/pw
               run: |
@@ -248,14 +314,12 @@ jobs:
                       echo "Dokan appearance set to latest UI" . PHP_EOL;
                   '
 
-            # Get Playwright version
             - name: Get installed Playwright version
               id: playwright-version
               working-directory: tests/pw
               run: |
                   echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> "$GITHUB_ENV"
 
-            # Cache browser binaries, cache key is based on Playwright version and OS
             - name: Cache playwright binaries
               id: playwright-cache
               uses: actions/cache@v4
@@ -266,7 +330,6 @@ jobs:
                   restore-keys: |
                       ${{ runner.os }}-playwright-
 
-            # Install browser binaries & OS dependencies if cache missed
             - name: Install Playwright browser binaries & OS dependencies
               id: pw-install
               if: steps.playwright-cache.outputs.cache-hit != 'true'
@@ -274,27 +337,32 @@ jobs:
               run: |
                   npx playwright install --with-deps chromium
 
-            # # Install only the OS dependencies if cache hit
-            # - name: Install Playwright OS dependencies
-            #   if: steps.playwright-cache.outputs.cache-hit == 'true'
-            #   working-directory: tests/pw
-            #   run: |
-            #     npm run pw:chrome-deps-only
-
-
-            # Run docker setup..
             - name: Run docker setup
               working-directory: tests/pw
               run: npm run docker:setup
 
-            # Run E2E tests
+            # Resolve the spec list for this shard from the committed duration baseline.
+            # Falls back to alphabetical sharding if the baseline is missing.
+            - name: Resolve balanced shard spec list
+              id: shard-specs
+              working-directory: tests/pw
+              run: |
+                  node ./utils/getShardSpecs.js ${{ matrix.shardIndex }} ${{ matrix.shardTotal }} > /tmp/shard-specs.txt
+                  echo "spec count: $(wc -l < /tmp/shard-specs.txt)"
+
             - name: 🧪 Run e2e tests-${{ matrix.shardIndex }}
               id: e2e-test
               if: success() && (github.event_name != 'workflow_dispatch' || ( github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All')))
-              timeout-minutes: 35
+              timeout-minutes: 20
               working-directory: tests/pw
               run: |
-                  npm run test:e2e -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+                  # Pass the resolved spec list as positional args (xargs -d to preserve newlines)
+                  if [ -s /tmp/shard-specs.txt ]; then
+                      xargs -a /tmp/shard-specs.txt -d '\n' npm run test:e2e --
+                  else
+                      # No baseline — fall back to Playwright's built-in alphabetical sharding
+                      npm run test:e2e -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+                  fi
 
             # Snapshot the e2e summary before coverage runs — both projects use
             # the same playwright.config.ts and write summaryReporter output to
@@ -310,14 +378,12 @@ jobs:
                          playwright-report/e2e/summary-report/results.e2e.bak.json
                   fi
 
-            # Run e2e coverage
             - name: 🧪 Run e2e coverage
               if: always() && (steps.e2e-test.outcome == 'success' || steps.e2e-test.outcome == 'failure')
               working-directory: tests/pw
               run: |
                   npm run test:e2e:coverage
 
-            # Restore the real e2e summary so artifact upload + merge use it.
             - name: Restore e2e summary after coverage
               if: always() && steps.e2e-test.outcome != 'cancelled'
               working-directory: tests/pw
@@ -327,25 +393,12 @@ jobs:
                          playwright-report/e2e/summary-report/results.json
                   fi
 
-            # # Prepare test summary
-            # - name: Prepare test summary
-            #   id: prepare-test-summary
-            #   uses: actions/github-script@v7
-            #   if: always() && steps.clone-dokan-lite.outcome == 'success'
-            #   with:
-            #       result-encoding: string
-            #       script: |
-            #           const script = require("./tests/pw/utils/gitTestSummary.ts")
-            #           return await script({github, context, core})
-
-            # Backup Database
             - name: Backup Database
               if: always() && steps.wp-env.outcome == 'success'
               working-directory: tests/pw
               run: |
                   npm run wp-env run tests-cli wp db export wp-data/db.sql
 
-            # Upload artifacts
             - name: Archive test artifacts (screenshots, HTML snapshots, Reports)
               if: always() && steps.debug-log.outcome == 'success'
               uses: actions/upload-artifact@v4
@@ -361,7 +414,9 @@ jobs:
     api_tests:
         name: api tests
         runs-on: ubuntu-latest
-        timeout-minutes: 30
+        timeout-minutes: 25
+        needs: [build_lite, build_pro]
+        if: always() && needs.build_lite.result == 'success' && (needs.build_pro.result == 'success' || needs.build_pro.result == 'skipped')
         strategy:
             fail-fast: false
             matrix:
@@ -369,115 +424,61 @@ jobs:
                 shardTotal: [1]
 
         steps:
-            # Checkout testing repo (folder is repo name e.g. "dokan"; we need "dokan-lite" for wp-env)
-            - name: Checkout testing repo
-              id: clone-dokan-lite
-              uses: actions/checkout@v4
+            - name: Download dokan-lite build artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: dokan-lite-build
+                  path: /tmp/
 
-            # Expose repo as dokan-lite so wp-env activates "dokan-lite" (dokan-pro expects that slug)
-            - name: Prepare dokan-lite folder
+            - name: Extract dokan-lite build
+              id: clone-dokan-lite
               run: |
+                  tar -xzf /tmp/dokan-lite-build.tar.gz
+                  rm /tmp/dokan-lite-build.tar.gz
                   ln -s . dokan-lite
 
-            # Checkout Dokan Pro from develop branch (same-repo only; skip on fork PRs where secrets are unavailable)
-            - name: Checkout Dokan Pro
-              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-              uses: actions/checkout@v4
+            - name: Download dokan-pro build artifact
+              if: needs.build_pro.result == 'success'
+              uses: actions/download-artifact@v4
               with:
-                  repository: getdokan/dokan-pro
-                  ref: develop
-                  path: dokan-pro
-                  token: ${{ secrets.DOKAN_PRO_TOKEN }}
+                  name: dokan-pro-build
+                  path: /tmp/
 
-            # Checkout Dokan Invoice from develop branch (public repo, no token required).
-            # Mapped via .wp-env.ci.json and activated alongside dokan-pro.
-            - name: Checkout Dokan Invoice
-              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-              uses: actions/checkout@v4
-              with:
-                  repository: getdokan/dokan-invoice
-                  ref: develop
-                  path: dokan-invoice
+            - name: Extract dokan-pro build
+              if: needs.build_pro.result == 'success'
+              run: |
+                  tar -xzf /tmp/dokan-pro-build.tar.gz
+                  rm /tmp/dokan-pro-build.tar.gz
 
-            # Use desired version of NodeJS
             - name: Use desired version of NodeJS
               uses: actions/setup-node@v4
               with:
                   node-version: 20
                   cache: npm
+                  cache-dependency-path: tests/pw/package-lock.json
 
-            # Composer install and build (Dokan-lite)
-            - name: Composer install and build (Dokan-lite)
-              run: |
-                  composer i || composer update
-                  composer i --no-dev -o || composer update --no-dev -o
-
-            # Npm install and build (Dokan-lite)
-            - name: Npm install and build (Dokan-lite)
-              run: |
-                  npm ci || npm i
-                  npm run build
-
-            # Build Dokan Pro (after clone; required before wp-env so plugin is ready)
-            - name: Build Dokan Pro
-              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-              run: |
-                  cd dokan-pro
-                  composer i --no-dev -o
-                  npm ci || npm i
-                  npm run build
-
-            # Fetch only tests/plugins from test_utils branch (premium plugins not in default branch)
-            - name: Fetch WooCommerce premium plugins from test_utils
-              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-              working-directory: dokan-pro
-              run: |
-                  git fetch origin test_utils
-                  git checkout origin/test_utils -- tests/plugins
-
-            # Extract any zipped premium plugins collected from test_utils
-            - name: Collect WooCommerce premium plugins
-              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-              run: |
-                  PLUGINS_DIR="dokan-pro/tests/plugins"
-                  for zip in "$PLUGINS_DIR"/*.zip; do
-                      [ -f "$zip" ] || continue
-                      plugin_dir="${zip%.zip}"
-                      if [ ! -d "$plugin_dir" ]; then
-                          echo "Extracting: $zip"
-                          unzip -q "$zip" -d "$PLUGINS_DIR"
-                      fi
-                  done
-                  echo "Available premium plugins:"
-                  ls -la "$PLUGINS_DIR"
-
-            # Install test dependencies
             - name: Install test dependencies
               working-directory: tests/pw
               run: |
-                  npm ci || npm i
+                  npm ci --prefer-offline --no-audit --no-fund || npm i
 
-            # Create wp debuglog file
             - name: Create wp debuglog file
               id: debug-log
               working-directory: tests/pw
               run: |
                   mkdir -p wp-data && touch wp-data/debug.log
 
-            # wp-env installs/activates plugins in array order: Basic-Auth → WooCommerce → dokan-lite → dokan-pro
-            # Use CI config (../../dokan-pro) when dokan-pro present; lite-only when not (e.g. fork PR)
             - name: Prepare wp-env config
               working-directory: tests/pw
               run: |
                   if [ -d "../../dokan-pro" ]; then
-                    echo "Dokan Pro present, using .wp-env.ci.json (../../dokan-pro)"
+                    echo "Dokan Pro present, using .wp-env.ci.json"
                     cp .wp-env.ci.json .wp-env.override.json
                   else
                     echo "Dokan Pro not present, using lite-only wp-env config"
                     cp .wp-env.json .wp-env.override.json
                   fi
 
-            # Start wordpress environment
             - name: Start WordPress Env
               id: wp-env
               uses: nick-fields/retry@v3
@@ -489,10 +490,8 @@ jobs:
                       cd tests/pw
                       npm run start:env
 
-            # Activate WooCommerce premium plugins and Dokan Pro inside the wp-env container
-            # These plugins are mapped via .wp-env.ci.json but must be explicitly activated via WP-CLI
             - name: Activate WooCommerce premium plugins
-              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+              if: needs.build_pro.result == 'success'
               working-directory: tests/pw
               run: |
                   npm run wp-env run tests-cli wp plugin activate \
@@ -504,10 +503,6 @@ jobs:
                       dokan-pro \
                       dokan-invoice
 
-            # Enable the Dokan 5.0.0+ React UI (vendor dashboard + product editor).
-            # The React tests under tests/e2e/**/new*.spec.ts and the merged
-            # "NEW REACT UI TEST CASES" sections require this. Without it, the
-            # legacy templates render and the React route mounts assert false.
             - name: Enable Dokan New React UI (vendor dashboard + product editor)
               working-directory: tests/pw
               run: |
@@ -519,14 +514,12 @@ jobs:
                       echo "Dokan appearance set to latest UI" . PHP_EOL;
                   '
 
-            # Get Playwright version
             - name: Get installed Playwright version
               id: playwright-version
               working-directory: tests/pw
               run: |
                   echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> "$GITHUB_ENV"
 
-            # Cache browser binaries, cache key is based on Playwright version and OS
             - name: Cache playwright binaries
               id: playwright-cache
               uses: actions/cache@v4
@@ -537,7 +530,6 @@ jobs:
                   restore-keys: |
                       ${{ runner.os }}-playwright-
 
-            # Install browser binaries & OS dependencies if cache missed
             - name: Install Playwright browser binaries & OS dependencies
               id: pw-install
               if: steps.playwright-cache.outputs.cache-hit != 'true'
@@ -545,19 +537,10 @@ jobs:
               run: |
                   npx playwright install --with-deps chromium
 
-            # # Install only the OS dependencies if cache hit
-            # - name: Install Playwright OS dependencies
-            #   if: steps.playwright-cache.outputs.cache-hit == 'true'
-            #   working-directory: tests/pw
-            #   run: |
-            #     npm run pw:chrome-deps-only
-
-            # Run docker setup..
             - name: Run docker setup
               working-directory: tests/pw
               run: npm run docker:setup
 
-            # Run API tests
             - name: 🧪 Run api tests-${{ matrix.shardIndex }}
               id: api-test
               if: always() && steps.wp-env.outcome == 'success' && ( github.event_name != 'workflow_dispatch'  || ( github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'API' || github.event.inputs.testsuite == 'All')))
@@ -566,30 +549,16 @@ jobs:
               run: |
                   npm run test:api -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
 
-            # # Prepare test summary
-            # - name: Prepare test summary
-            #   id: prepare-test-summary
-            #   if: always() && steps.clone-dokan-lite.outcome == 'success'
-            #   uses: actions/github-script@v7
-            #   with:
-            #       result-encoding: string
-            #       script: |
-            #           const script = require("./tests/pw/utils/gitTestSummary.ts")
-            #           return await script({github, context, core})
-
-            # Backup Database
             - name: Backup Database
               if: always() && steps.wp-env.outcome == 'success'
               working-directory: tests/pw
               run: |
                   npm run wp-env run tests-cli wp db export wp-data/db.sql
 
-            # Upload artifacts
             - name: Archive test artifacts (screenshots, HTML snapshots, Reports)
               if: always() && steps.debug-log.outcome == 'success'
               uses: actions/upload-artifact@v4
               with:
-                #   name: test-artifact-api-${{ matrix.shardIndex }}
                   name: test-artifact-api
                   path: |
                       tests/pw/wp-data
@@ -614,17 +583,14 @@ jobs:
             E2E_COVERAGE: ./tests/pw/all-reports/merged-coverage.json
 
         steps:
-            # Checkout testing repo (folder is repo name e.g. "dokan"; we need "dokan-lite" for wp-env)
             - name: Checkout testing repo
               id: clone-dokan-lite
               uses: actions/checkout@v4
 
-            # Expose repo as dokan-lite so wp-env activates "dokan-lite" (dokan-pro expects that slug)
             - name: Prepare dokan-lite folder
               run: |
                   ln -s . dokan-lite
 
-            # Checkout Dokan Pro from develop branch (same-repo only; skip on fork PRs where secrets are unavailable)
             - name: Checkout Dokan Pro
               if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
               uses: actions/checkout@v4
@@ -634,20 +600,18 @@ jobs:
                   path: dokan-pro
                   token: ${{ secrets.DOKAN_PRO_TOKEN }}
 
-            # Use desired version of NodeJS
             - name: Use desired version of NodeJS
               uses: actions/setup-node@v4
               with:
                   node-version: 20
                   cache: npm
+                  cache-dependency-path: tests/pw/package-lock.json
 
-            # Install test dependencies
             - name: Install test dependencies
               working-directory: tests/pw
               run: |
-                  npm ci || npm i
+                  npm ci --prefer-offline --no-audit --no-fund || npm i
 
-            # Download all test artifacts from GitHub Actions
             - name: Download all test artifacts from GitHub Actions
               id: download-test-artifacts
               uses: actions/download-artifact@v4
@@ -655,15 +619,12 @@ jobs:
                   path: tests/pw/all-reports
                   pattern: test-artifact-*
 
-            # Move all blob report folder contents into a single folder
             - name: Move all blob report folder contents into a single folder
               working-directory: tests/pw/all-reports
               run: |
                   mkdir -p all-blob-reports
                   find . -type f -path "*/blob-report/*" -exec mv {} all-blob-reports/ \;
-              #   ls all-blob-reports
 
-            # Generate HTML Report
             - name: Generate HTML Report
               id: generate-html-report
               working-directory: tests/pw
@@ -671,13 +632,11 @@ jobs:
                   npx playwright merge-reports --reporter html ./all-reports/all-blob-reports
                   mv playwright-report ./all-reports/html-report
 
-            # Clean all extracted blob reports (except ZIPs)
             - name: Clean all extracted blob reports (except ZIPs)
               working-directory: tests/pw
               run: |
                   find all-reports/all-blob-reports -mindepth 1 ! -name "*.zip" -exec rm -rf {} +
 
-            # Generate merged summary report
             - name: Generate merged summary report
               id: merge-summary-report
               if: steps.download-test-artifacts.outcome == 'success'
@@ -685,7 +644,6 @@ jobs:
               run: |
                   REPORT_TYPE=e2e npx ts-node ./utils/mergeSummaryReport.ts
 
-            # Generate merged coverage report
             - name: Generate merged coverage report
               id: merge-coverage-report
               if: steps.download-test-artifacts.outcome == 'success'
@@ -693,7 +651,28 @@ jobs:
               run: |
                   REPORT_TYPE=e2e npx ts-node ./utils/mergeCoverageSummary.ts
 
-            # Prepare test summary
+            # Aggregate per-shard spec-durations.json files into a single
+            # baseline. Uploaded as artifact so maintainers can periodically
+            # commit it to tests/pw/utils/shard-durations.json to keep
+            # balanced sharding accurate as the suite evolves.
+            - name: Aggregate spec-duration baseline
+              id: aggregate-baseline
+              if: always() && steps.download-test-artifacts.outcome == 'success'
+              working-directory: tests/pw
+              run: |
+                  node ./utils/aggregateSpecDurations.js \
+                      ./all-reports \
+                      ./all-reports/shard-durations.json || true
+
+            - name: Upload spec-duration baseline
+              if: always() && steps.aggregate-baseline.outcome == 'success'
+              uses: actions/upload-artifact@v4
+              with:
+                  name: shard-durations-baseline
+                  path: tests/pw/all-reports/shard-durations.json
+                  if-no-files-found: ignore
+                  retention-days: 14
+
             - name: Prepare test summary
               id: prepare-test-summary
               if: always() && steps.merge-summary-report.outcome == 'success'
@@ -704,28 +683,6 @@ jobs:
                       const script = require("./tests/pw/utils/gitTestSummary.ts")
                       return await script({github, context, core})
 
-            # # Find PR comment
-            # - name: Find PR comment by github-actions[bot]
-            #   id: find-comment
-            #   if: github.event_name == 'pull_request'
-            #   uses: peter-evans/find-comment@v3
-            #   with:
-            #       issue-number: ${{ github.event.pull_request.number }}
-            #       comment-author: 'github-actions[bot]'
-            #       body-includes: Tests Summary
-
-            # # Post test summary as PR comment
-            # - name: Create or update PR comment
-            #   if: github.event_name == 'pull_request'
-            #   uses: peter-evans/create-or-update-comment@v4
-            #   with:
-            #       comment-id: ${{ steps.find-comment.outputs.comment-id }}
-            #       issue-number: ${{ github.event.pull_request.number }}
-            #       body: ${{ steps.prepare-test-summary.outputs.result }}
-            #       reactions: hooray
-            #       edit-mode: replace
-
-            # Upload final test artifact
             - name: Upload final test artifact
               if: always() && steps.download-test-artifacts.outcome == 'success'
               uses: actions/upload-artifact@v4
