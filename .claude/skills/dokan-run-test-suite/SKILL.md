@@ -76,7 +76,63 @@ npm run test:e2e -- tests/e2e/<area>/<spec>.spec.ts
 
 If `wp-env start` reports a port conflict, stop the existing instance with `npm run wp-env stop` and retry. If it reports `Cannot connect to the Docker daemon` despite a successful pre-flight, the daemon was terminated mid-run — re-execute the pre-flight block.
 
-### 3. Test execution
+### 3. Verify required plugins
+
+The suite assumes the following plugins are installed and active inside the wp-env site. The fast path skips activation; the default `reset:env` flow requires it.
+
+| Required plugin | Source |
+| --- | --- |
+| `woocommerce` | Public — mapped via `.wp-env.json`. |
+| `dokan-lite` | The plugin under test (this repository). |
+| `dokan-pro` | Private — mapped via `.wp-env.ci.json` / `.wp-env.override.json`. |
+| `dokan-invoice` | Private — mapped via `.wp-env.ci.json`. |
+| `woocommerce-bookings` | Premium — bundled under `dokan-pro/tests/plugins/`. |
+| `woocommerce-subscriptions` | Premium — bundled under `dokan-pro/tests/plugins/`. |
+| `woocommerce-product-addons` | Premium — bundled under `dokan-pro/tests/plugins/`. |
+| `woocommerce-simple-auctions` | Premium — bundled under `dokan-pro/tests/plugins/`. |
+| `woocommerce-pdf-invoices-packing-slips` | Premium — bundled under `dokan-pro/tests/plugins/`. |
+
+After `reset:env` completes, verify and activate:
+
+```bash
+# Inventory: which required plugins are present (active or inactive)?
+npm run wp-env run tests-cli wp plugin list \
+    --field=name --format=csv
+
+# Activate the full set. wp-cli reports any plugin it cannot find.
+npm run wp-env run tests-cli wp plugin activate \
+    woocommerce \
+    dokan-lite \
+    dokan-pro \
+    dokan-invoice \
+    woocommerce-bookings \
+    woocommerce-subscriptions \
+    woocommerce-product-addons \
+    woocommerce-simple-auctions \
+    woocommerce-pdf-invoices-packing-slips
+```
+
+If `wp plugin activate` reports `The 'X' plugin could not be found`, the plugin source is missing from disk. Do **not** attempt to install it automatically — premium plugins are licence-restricted and Pro/Invoice are private repositories. Surface a clear instruction to the user instead, for example:
+
+> The `woocommerce-subscriptions` plugin is not installed in the wp-env site. It must be present at `wp-content/plugins/woocommerce-subscriptions/` (or mapped through `.wp-env.override.json`) before this suite can run. Obtain it from the team's premium-plugin store, place it under `wp-content/plugins/`, then re-run `npm run reset:env`.
+
+For `dokan-pro` and `dokan-invoice`, point the user at the matching repositories under the `getdokan/` GitHub organisation. For premium WooCommerce plugins, point them at the team's licensed copies.
+
+### 4. Enable the React UI
+
+The React tests under `tests/e2e/**/new*.spec.ts` and the merged "NEW REACT UI TEST CASES" sections require the Dokan 5.0.0+ React vendor dashboard and product editor. CI sets this automatically; locally, run it once after `reset:env`:
+
+```bash
+npm run wp-env run tests-cli wp eval '
+    $appearance = get_option("dokan_appearance", []);
+    $appearance["vendor_layout_style"]   = "latest";
+    $appearance["vendor_product_editor"] = "latest";
+    update_option("dokan_appearance", $appearance);
+    echo "Dokan appearance set to latest UI" . PHP_EOL;
+'
+```
+
+### 5. Test execution
 
 ```bash
 # Full E2E suite (long-running, single-process)
@@ -100,7 +156,7 @@ npm run test:ui
 npm run test:api
 ```
 
-### 4. Tag conventions
+### 6. Tag conventions
 
 | Tag | Meaning |
 | --- | --- |
@@ -111,7 +167,7 @@ npm run test:api
 
 `playwright.config.ts` already applies `grep` and `grepInvert` based on the `DOKAN_PRO` environment variable. Avoid layering manual filters on top unless explicitly requested.
 
-### 5. Inspecting local results
+### 7. Inspecting local results
 
 - HTML report: `npx playwright show-report`
 - Summary JSON: `tests/pw/playwright-report/e2e/summary-report/results.json`
