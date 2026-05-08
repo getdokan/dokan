@@ -265,3 +265,106 @@ fs.writeFileSync(OUTPUT_FILE, html);
 console.log(`quality report → ${OUTPUT_FILE}`);
 console.log(`  ${totals.total} tests | ${totals.passed} passed | ${totals.failed} failed | ${totals.skipped} skipped`);
 console.log(`  pass rate ${totals.passRate}% | duration ${formatDuration(totals.durationMs)} | coverage ${totalCoveragePct ?? '—'}%`);
+
+// ----------------------------------------------------------------------------
+// Markdown variant for $GITHUB_STEP_SUMMARY (GitHub strips <style>/CSS, so the
+// inline-styled HTML can't render there — this companion uses tables, emoji,
+// Unicode progress bars, and a Mermaid pie chart that GH does render natively).
+
+const SUMMARY_FILE = process.env.SUMMARY_FILE;
+if (SUMMARY_FILE) {
+    const RUN_URL = process.env.GITHUB_SERVER_URL && process.env.GITHUB_REPOSITORY && runId !== '—'
+        ? `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${runId}`
+        : null;
+
+    const fmtNum = n => Number.isFinite(Number(n)) ? Number(n).toLocaleString('en-US') : '—';
+    const bar = (pct, width = 24) => {
+        if (!Number.isFinite(pct)) return '`' + '░'.repeat(width) + '`';
+        const filled = Math.round((Math.max(0, Math.min(100, pct)) / 100) * width);
+        return '`' + '█'.repeat(filled) + '░'.repeat(width - filled) + '`';
+    };
+
+    const statusEmoji = overallFailed ? '🔴' : '🟢';
+    const statusHeading = overallFailed ? 'Tests failed' : 'All tests passed';
+    const statusDesc = overallFailed
+        ? `${totals.failed} failure${totals.failed === 1 ? '' : 's'} across the suite`
+        : 'Build is green and ready for review';
+
+    const apiBadge = !api ? '⚪️ No data' : api.failed > 0 ? '🔴 Failed' : '🟢 Passed';
+    const e2eBadge = !e2e ? '⚪️ No data' : e2e.failed > 0 ? '🔴 Failed' : '🟢 Passed';
+
+    const apiCovStr = apiCov.pct === null ? '—' : `${apiCov.pct.toFixed(2)}%`;
+    const e2eCovStr = e2eCov.pct === null ? '—' : `${e2eCov.pct.toFixed(2)}%`;
+    const totalCovStr = totalCoveragePct === null ? '—' : `${totalCoveragePct.toFixed(2)}%`;
+
+    const suiteRow = (s, badge, covStr) => s
+        ? `| ${badge} | ${fmtNum(s.total)} | **${fmtNum(s.passed)}** | ${s.failed > 0 ? '**' + fmtNum(s.failed) + '**' : fmtNum(s.failed)} | ${fmtNum(s.skipped)} | ${formatDuration(s.durationMs)} | ${covStr} | ${bar(s.passRate, 16)} ${s.passRate.toFixed(1)}% |`
+        : `| ${badge} | — | — | — | — | — | ${covStr} | ${bar(NaN, 16)} — |`;
+
+    const artifactRows = (() => {
+        if (!ARTIFACTS_DIR || !fs.existsSync(ARTIFACTS_DIR)) return '_No artifacts available._';
+        const ignore = new Set(['all-blob-reports', 'html-report']);
+        const entries = fs.readdirSync(ARTIFACTS_DIR)
+            .map(name => ({ name, full: path.join(ARTIFACTS_DIR, name) }))
+            .filter(e => fs.statSync(e.full).isDirectory() && !ignore.has(e.name))
+            .sort((a, b) => a.name.localeCompare(b.name));
+        if (!entries.length) return '_No artifacts available._';
+        return [
+            '| Artifact | Size |',
+            '| --- | ---: |',
+            ...entries.map(e => `| 📁 \`${e.name}\` | ${formatBytes(dirSize(e.full))} |`),
+        ].join('\n');
+    })();
+
+    const lines = [];
+    lines.push('# 🛡 Dokan QA Quality Report');
+    lines.push('');
+    lines.push(`> ### ${statusEmoji} ${statusHeading}`);
+    lines.push(`> _${statusDesc}_ · **Pass rate: ${totals.passRate.toFixed(1)}%**`);
+    lines.push('');
+    lines.push('| Branch | PR | Commit | Date | Duration |');
+    lines.push('| --- | --- | --- | --- | --- |');
+    lines.push(`| \`${branch}\` | ${prNumber === '—' ? '—' : '#' + prNumber} | \`${sha}\` | ${today} | ${formatDuration(totals.durationMs)} |`);
+    lines.push('');
+    lines.push('## 📊 Key Metrics');
+    lines.push('');
+    lines.push('| Total | ✅ Passed | ❌ Failed | ⚪️ Skipped | ⏱ Duration | 📈 Coverage |');
+    lines.push('| ---: | ---: | ---: | ---: | ---: | ---: |');
+    lines.push(`| **${fmtNum(totals.total)}** | **${fmtNum(totals.passed)}** | ${totals.failed > 0 ? '**' + fmtNum(totals.failed) + '**' : fmtNum(totals.failed)} | ${fmtNum(totals.skipped)} | ${formatDuration(totals.durationMs)} | ${totalCovStr} |`);
+    lines.push('');
+
+    // Mermaid pie chart of overall outcomes
+    if (totals.total > 0) {
+        lines.push('```mermaid');
+        lines.push('pie showData');
+        lines.push('  title Test Outcomes');
+        lines.push(`  "Passed" : ${totals.passed}`);
+        if (totals.failed > 0) lines.push(`  "Failed" : ${totals.failed}`);
+        if (totals.skipped > 0) lines.push(`  "Skipped" : ${totals.skipped}`);
+        lines.push('```');
+        lines.push('');
+    }
+
+    lines.push('## 🧪 Test Suites');
+    lines.push('');
+    lines.push('| Suite | Total | Passed | Failed | Skipped | Duration | Coverage | Pass Rate |');
+    lines.push('| --- | ---: | ---: | ---: | ---: | --- | ---: | --- |');
+    lines.push(suiteRow(api, `🔌 **API Tests** · ${apiBadge}`, apiCovStr));
+    lines.push(suiteRow(e2e, `🖥 **E2E Tests** · ${e2eBadge}`, e2eCovStr));
+    lines.push('');
+
+    lines.push('## 📦 Build Artifacts');
+    lines.push('');
+    lines.push(artifactRows);
+    lines.push('');
+
+    lines.push('---');
+    lines.push('');
+    const runLink = RUN_URL ? `[\`${runId}\`](${RUN_URL})` : `\`${runId}\``;
+    lines.push(`<sub>🛡 Prepared by **Dokan QA Team** · Run ${runLink} · _Full styled HTML report available in the **quality-report** artifact._</sub>`);
+    lines.push('');
+
+    fs.mkdirSync(path.dirname(SUMMARY_FILE), { recursive: true });
+    fs.writeFileSync(SUMMARY_FILE, lines.join('\n'));
+    console.log(`markdown summary → ${SUMMARY_FILE}`);
+}

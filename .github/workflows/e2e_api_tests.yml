@@ -711,10 +711,11 @@ jobs:
                       const script = require("./tests/pw/utils/gitTestSummary.ts")
                       return await script({github, context, core})
 
-            # Render the branded HTML quality report from the merged summary +
-            # coverage data. Lands in all-reports/ so the existing
-            # final-test-artifact picks it up; also uploaded standalone for
-            # easy discovery, and linked from the GitHub job summary.
+            # Render the branded HTML quality report (full design, downloadable
+            # as artifact) plus a markdown variant for the GitHub job summary.
+            # GitHub strips <style>/CSS from step summaries, so the HTML can't
+            # render inline — the markdown uses tables, emoji, Unicode bars,
+            # and a Mermaid pie chart that GH does render natively.
             - name: Generate Quality Report
               id: quality-report
               if: always() && steps.download-test-artifacts.outcome == 'success'
@@ -722,6 +723,7 @@ jobs:
               env:
                   ARTIFACTS_DIR: ./all-reports
                   OUTPUT_FILE: ./all-reports/quality-report.html
+                  SUMMARY_FILE: ./all-reports/quality-report.md
               run: |
                   node ./utils/generateQualityReport.js
 
@@ -734,18 +736,12 @@ jobs:
                   if-no-files-found: ignore
                   retention-days: 30
 
-            - name: Add Quality Report link to job summary
+            - name: Append Quality Report to job summary
               if: always() && steps.quality-report.outcome == 'success'
               run: |
-                  RUN_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
-                  {
-                      echo "## Dokan QA Quality Report"
-                      echo ""
-                      echo "A branded HTML report has been generated for this run."
-                      echo ""
-                      echo "- Download from the **quality-report** artifact on the [run page](${RUN_URL})"
-                      echo "- Or grab it from **final-test-artifact → quality-report.html**"
-                  } >> "$GITHUB_STEP_SUMMARY"
+                  if [ -f tests/pw/all-reports/quality-report.md ]; then
+                      cat tests/pw/all-reports/quality-report.md >> "$GITHUB_STEP_SUMMARY"
+                  fi
 
             - name: Upload final test artifact
               if: always() && steps.download-test-artifacts.outcome == 'success'
