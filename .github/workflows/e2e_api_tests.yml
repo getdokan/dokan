@@ -142,6 +142,18 @@ jobs:
         # Only run when secrets are available (i.e. not a fork PR). Same gate as today.
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         steps:
+            # Pro's webpack.config.js calls getDokanLitePath() which resolves
+            # ../dokan-lite from inside the pro folder. Replicate the original
+            # job layout: lite source at the runner root + a self-symlink so
+            # ../dokan-lite from dokan-pro/ resolves back to lite. We only need
+            # the source tree (no build), so this adds ~5s to the pro build job.
+            - name: Checkout dokan-lite source (for pro webpack path resolution)
+              uses: actions/checkout@v4
+
+            - name: Prepare dokan-lite folder
+              run: |
+                  ln -s . dokan-lite
+
             - name: Checkout Dokan Pro
               uses: actions/checkout@v4
               with:
@@ -619,10 +631,15 @@ jobs:
                   path: tests/pw/all-reports
                   pattern: test-artifact-*
 
+            # download-artifact silently does nothing when no artifacts match
+            # (e.g. all upstream test jobs were skipped after a build failure),
+            # so the all-reports dir may not exist yet. Pre-create it so the
+            # subsequent move/merge steps don't crash on a missing cwd.
             - name: Move all blob report folder contents into a single folder
-              working-directory: tests/pw/all-reports
+              if: always() && steps.download-test-artifacts.outcome == 'success'
               run: |
-                  mkdir -p all-blob-reports
+                  mkdir -p tests/pw/all-reports/all-blob-reports
+                  cd tests/pw/all-reports
                   find . -type f -path "*/blob-report/*" -exec mv {} all-blob-reports/ \;
 
             - name: Generate HTML Report
