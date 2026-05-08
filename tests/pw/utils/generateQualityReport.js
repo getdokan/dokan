@@ -345,8 +345,9 @@ if (SUMMARY_FILE) {
         ].join('\n');
     })();
 
-    // Mermaid pie chart with brand colors.
-    const mermaidTheme = `%%{init: {"theme":"base","themeVariables":{"pie1":"#${C.green}","pie2":"#${C.amber}","pie3":"#${C.red}","pieTitleTextColor":"#${C.purplePrimary}","pieSectionTextColor":"#ffffff","pieSectionTextSize":"14px","pieOuterStrokeWidth":"0px","pieStrokeColor":"#ffffff","pieStrokeWidth":"2px","fontFamily":"-apple-system, BlinkMacSystemFont, sans-serif"}}}%%`;
+    // Mermaid pie chart with brand colors. Pie shows Passed vs Failed (skipped
+    // tests are excluded by tag/grep upstream — they aren't a quality signal).
+    const mermaidTheme = `%%{init: {"theme":"base","themeVariables":{"pie1":"#${C.green}","pie2":"#${C.red}","pieTitleTextColor":"#${C.purplePrimary}","pieSectionTextColor":"#ffffff","pieSectionTextSize":"14px","pieOuterStrokeWidth":"0px","pieStrokeColor":"#ffffff","pieStrokeWidth":"2px","fontFamily":"-apple-system, BlinkMacSystemFont, sans-serif"}}}%%`;
 
     const lines = [];
 
@@ -381,14 +382,13 @@ if (SUMMARY_FILE) {
     lines.push('');
 
     // --- Outcomes pie chart ---------------------------------------------
-    if (totals.total > 0) {
+    if (totals.ran > 0) {
         lines.push('```mermaid');
         lines.push(mermaidTheme);
         lines.push('pie showData');
-        lines.push('  title Test Outcomes');
+        lines.push('  title Passed vs Failed');
         lines.push(`  "Passed" : ${totals.passed}`);
-        if (totals.skipped > 0) lines.push(`  "Skipped" : ${totals.skipped}`);
-        if (totals.failed > 0)  lines.push(`  "Failed"  : ${totals.failed}`);
+        lines.push(`  "Failed" : ${totals.failed}`);
         lines.push('```');
         lines.push('');
     }
