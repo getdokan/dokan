@@ -68,13 +68,6 @@ test.describe('Follow stores modules functionality test', () => {
         });
     });
 
-    test('customer can view followed vendors', { tag: ['@pro', '@customer'] }, async () => {
-        await db.followVendor(CUSTOMER_ID || '', VENDOR_ID || '');
-        await test.step('Customer verifies that a specific followed vendor is displayed on Following Stores page', async () => {
-            await customer.customerViewFollowedVendors(predefinedStores.vendor1);
-        });
-    });
-
     test('customer can follow store on store list page', { tag: ['@pro', '@customer'] }, async () => {
         await api.unfollowStore(VENDOR_ID || '', payloads.customerAuth);
         await test.step('Customer follows a vendor directly from the Store Listing page and sees updated status', async () => {
@@ -94,6 +87,13 @@ test.describe('Follow stores modules functionality test', () => {
                 'Following',
                 predefinedStores.followFromSingleStore
             );
+        });
+    });
+
+    test('customer can view followed vendors', { tag: ['@pro', '@customer'] }, async () => {
+        await db.followVendor(CUSTOMER_ID || '', VENDOR_ID || '');
+        await test.step('Customer verifies that a specific followed vendor is displayed on Following Stores page', async () => {
+            await customer.customerViewFollowedVendors(predefinedStores.vendor1);
         });
     });
 
