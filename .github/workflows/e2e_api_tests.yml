@@ -143,10 +143,12 @@ jobs:
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
         steps:
             # Pro's webpack.config.js calls getDokanLitePath() which resolves
-            # ../dokan-lite from inside the pro folder. Replicate the original
-            # job layout: lite source at the runner root + a self-symlink so
-            # ../dokan-lite from dokan-pro/ resolves back to lite. We only need
-            # the source tree (no build), so this adds ~5s to the pro build job.
+            # ../dokan-lite from inside the pro folder, and also requires
+            # lite-root files like webpack-dependency-mapping.js that pull in
+            # lodash from lite's node_modules. So lite needs both source AND
+            # node_modules in this job — but NOT a full build (we never use
+            # lite's assets/). Replicate the layout: lite at runner root with
+            # a self-symlink, pro as sibling.
             - name: Checkout dokan-lite source (for pro webpack path resolution)
               uses: actions/checkout@v4
 
@@ -174,7 +176,16 @@ jobs:
               with:
                   node-version: 20
                   cache: npm
-                  cache-dependency-path: dokan-pro/package-lock.json
+                  cache-dependency-path: |
+                      package-lock.json
+                      dokan-pro/package-lock.json
+
+            # Install lite's node_modules so dokan-pro/webpack.config.js can
+            # require lite-root JS helpers (webpack-dependency-mapping.js etc).
+            # Skip `npm run build` — we don't ship lite's assets from this job.
+            - name: Install dokan-lite npm deps (no build)
+              run: |
+                  npm ci --prefer-offline --no-audit --no-fund || npm i
 
             - name: Build Dokan Pro
               working-directory: dokan-pro
