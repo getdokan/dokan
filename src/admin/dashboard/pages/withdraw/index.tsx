@@ -18,6 +18,7 @@ import {
     DateRangePicker,
     AsyncSelect,
     DokanModal,
+    getActionLabel,
 } from '@dokan/components';
 
 import {
@@ -282,7 +283,7 @@ const WithdrawPage = () => {
     const actions = [
         {
             id: 'view',
-            label: __( 'View', 'dokan-lite' ),
+            label: () => getActionLabel( <Eye size={ 16 } className="!fill-none" />, __( 'View', 'dokan-lite' ) ),
             icon: <Eye size={ 16 } className="!fill-none" />,
             isPrimary: false,
             callback: ( items ) => {
@@ -291,7 +292,7 @@ const WithdrawPage = () => {
         },
         {
             id: 'approved',
-            label: __( 'Approve', 'dokan-lite' ),
+            label: () => getActionLabel( <Check size={ 16 } className="!fill-none" />, __( 'Approve', 'dokan-lite' ) ),
             icon: <Check size={ 16 } className="!fill-none" />,
             isPrimary: false,
             supportsBulk: true,
@@ -321,7 +322,7 @@ const WithdrawPage = () => {
         },
         {
             id: 'cancelled',
-            label: __( 'Cancel', 'dokan-lite' ),
+            label: () => getActionLabel( <XCircle size={ 16 } className="!fill-none" />, __( 'Cancel', 'dokan-lite' ) ),
             icon: <XCircle size={ 16 } className="!fill-none" />,
             isPrimary: false,
             supportsBulk: true,
@@ -332,7 +333,7 @@ const WithdrawPage = () => {
         },
         {
             id: 'add-note',
-            label: __( 'Add Note', 'dokan-lite' ),
+            label: () => getActionLabel( <MessageSquare size={ 16 } className="!fill-none" />, __( 'Add Note', 'dokan-lite' ) ),
             icon: <MessageSquare size={ 16 } className="!fill-none" />,
             isPrimary: false,
             isEligible: ( item ) => item?.status !== 'approved',
@@ -342,7 +343,7 @@ const WithdrawPage = () => {
         },
         {
             id: 'delete',
-            label: __( 'Delete', 'dokan-lite' ),
+            label: () => getActionLabel( <Trash size={ 16 } className="!fill-none" />, __( 'Delete', 'dokan-lite' ) ),
             icon: <Trash size={ 16 } className="!fill-none" />,
             supportsBulk: true,
             isEligible: ( item ) => item?.status !== 'approved',
@@ -352,7 +353,7 @@ const WithdrawPage = () => {
         },
         {
             id: 'paypal',
-            label: __( 'Download PayPal mass payment file', 'dokan-lite' ),
+            label: () => getActionLabel( <Download size={ 16 } className="!fill-none" />, __( 'Download PayPal mass payment file', 'dokan-lite' ) ),
             icon: <Download size={ 16 } className="!fill-none" />,
             isPrimary: false,
             supportsBulk: true,
