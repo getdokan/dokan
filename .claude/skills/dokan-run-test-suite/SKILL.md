@@ -78,45 +78,75 @@ If `wp-env start` reports a port conflict, stop the existing instance with `npm 
 
 ### 3. Verify required plugins
 
-The suite assumes the following plugins are installed and active inside the wp-env site. The fast path skips activation; the default `reset:env` flow requires it.
+The suite requires the following plugins to be installed and active in the wp-env site. The full list is canonical — every entry is referenced by one or more specs.
 
-| Required plugin | Source |
-| --- | --- |
-| `woocommerce` | Public — mapped via `.wp-env.json`. |
-| `dokan-lite` | The plugin under test (this repository). |
-| `dokan-pro` | Private — mapped via `.wp-env.ci.json` / `.wp-env.override.json`. |
-| `dokan-invoice` | Private — mapped via `.wp-env.ci.json`. |
-| `woocommerce-bookings` | Premium — bundled under `dokan-pro/tests/plugins/`. |
-| `woocommerce-subscriptions` | Premium — bundled under `dokan-pro/tests/plugins/`. |
-| `woocommerce-product-addons` | Premium — bundled under `dokan-pro/tests/plugins/`. |
-| `woocommerce-simple-auctions` | Premium — bundled under `dokan-pro/tests/plugins/`. |
-| `woocommerce-pdf-invoices-packing-slips` | Premium — bundled under `dokan-pro/tests/plugins/`. |
+| Plugin | Source | Acquisition |
+| --- | --- | --- |
+| `dokan-lite` | This repository. | Already on disk. |
+| `dokan-pro` | `getdokan/dokan-pro` (private). | Clone alongside `dokan-lite`, on the matching branch. |
+| `dokan-invoice` | `getdokan/dokan-invoice` (public). | Clone alongside `dokan-lite`. |
+| `woocommerce` | WordPress.org. | Installed automatically by wp-env (declared in `.wp-env.json`). |
+| `woocommerce-bookings` | Premium (WooCommerce.com licence). | Provided by the team. |
+| `woocommerce-subscriptions` | Premium (WooCommerce.com licence). | Provided by the team. |
+| `woocommerce-product-addons` | Premium (WooCommerce.com licence). | Provided by the team. |
+| `woocommerce-simple-auctions` | Premium. | Provided by the team. |
+| `woocommerce-pdf-invoices-packing-slips` | Premium. | Provided by the team. |
 
-After `reset:env` completes, verify and activate:
+The expected on-disk layout (siblings of `dokan-lite` under `wp-content/plugins/`):
 
-```bash
-# Inventory: which required plugins are present (active or inactive)?
-npm run wp-env run tests-cli wp plugin list \
-    --field=name --format=csv
-
-# Activate the full set. wp-cli reports any plugin it cannot find.
-npm run wp-env run tests-cli wp plugin activate \
-    woocommerce \
-    dokan-lite \
-    dokan-pro \
-    dokan-invoice \
-    woocommerce-bookings \
-    woocommerce-subscriptions \
-    woocommerce-product-addons \
-    woocommerce-simple-auctions \
-    woocommerce-pdf-invoices-packing-slips
+```
+wp-content/plugins/
+├── dokan-lite/
+├── dokan-pro/
+├── dokan-invoice/
+├── woocommerce/
+├── woocommerce-bookings/
+├── woocommerce-pdf-invoices-packing-slips/
+├── woocommerce-product-addons/
+├── woocommerce-simple-auctions/
+└── woocommerce-subscriptions/
 ```
 
-If `wp plugin activate` reports `The 'X' plugin could not be found`, the plugin source is missing from disk. Do **not** attempt to install it automatically — premium plugins are licence-restricted and Pro/Invoice are private repositories. Surface a clear instruction to the user instead, for example:
+The active wp-env mapping (`tests/pw/.wp-env.ci.json` or `.wp-env.json` selected by the *Prepare wp-env config* logic) determines where wp-env looks for each plugin source. If a developer keeps the premium WooCommerce plugins as siblings rather than under `dokan-pro/tests/plugins/`, a custom `.wp-env.override.json` is required.
 
-> The `woocommerce-subscriptions` plugin is not installed in the wp-env site. It must be present at `wp-content/plugins/woocommerce-subscriptions/` (or mapped through `.wp-env.override.json`) before this suite can run. Obtain it from the team's premium-plugin store, place it under `wp-content/plugins/`, then re-run `npm run reset:env`.
+**Verification is a hard gate.** Test execution must not begin until every plugin in the canonical list is both installed and active. After `reset:env` completes, run the verification block below. If any plugin is missing or inactive, halt the procedure, report the gap to the user with concrete remediation steps, and wait for their confirmation that the issue is resolved before continuing.
 
-For `dokan-pro` and `dokan-invoice`, point the user at the matching repositories under the `getdokan/` GitHub organisation. For premium WooCommerce plugins, point them at the team's licensed copies.
+```bash
+# Single-shot check: list installed plugins and their status as JSON.
+npm run wp-env run tests-cli wp plugin list \
+    --fields=name,status --format=json
+```
+
+Compare the output against the required set:
+
+```
+dokan-lite, dokan-pro, dokan-invoice, woocommerce,
+woocommerce-bookings, woocommerce-pdf-invoices-packing-slips,
+woocommerce-product-addons, woocommerce-simple-auctions,
+woocommerce-subscriptions
+```
+
+For each required plugin, classify the result:
+
+| Observed state | Action |
+| --- | --- |
+| Active. | Pass. |
+| Installed but inactive. | Activate it: `npm run wp-env run tests-cli wp plugin activate <name>`. |
+| Not present at all. | **Stop.** Add the plugin to the missing-plugins list (see below). Do not auto-install. |
+
+If at least one plugin is missing, do **not** activate the rest, do **not** continue to test execution, and do **not** speculate about workarounds. Surface a single consolidated message to the user listing every missing plugin with its acquisition path. Template:
+
+> The local wp-env site is missing the following plugins required by the test suite. Install each at `wp-content/plugins/<name>/` (or update `.wp-env.override.json` to point at the location you keep them in), then re-run `npm run reset:env` and re-request the suite run.
+>
+> - **`dokan-pro`** — clone from `getdokan/dokan-pro` (private repository).
+> - **`woocommerce-subscriptions`** — premium plugin, obtain from the team's WooCommerce.com licence.
+> - …
+>
+> I have not started the test run.
+
+After the user confirms the missing plugins are in place and `reset:env` has been re-run, repeat the verification block before proceeding. Do not continue from a remembered state — the wp-env site is rebuilt by the reset, so all plugins must be re-checked.
+
+If verification passes, activate any installed-but-inactive entries individually, then proceed to step 4.
 
 ### 4. Enable the React UI
 
