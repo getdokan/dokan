@@ -4,7 +4,7 @@ import { RawHTML, useEffect, useState, useCallback } from '@wordpress/element';
 import { dateI18n, getSettings } from '@wordpress/date';
 import apiFetch from '@wordpress/api-fetch';
 import { formatPrice } from '@dokan/utilities';
-import { DokanButton, AdminDataViews as DataViews } from '@dokan/components';
+import { DokanButton, DataViews } from '@dokan/components';
 import {
     House,
     Calendar,
@@ -100,18 +100,10 @@ const ReverseWithdrawalPage = ( props ) => {
         ),
     } );
 
-    // Create tabs for "List of Data" header
-    const tabs = [
+    const tabItems = [
         {
-            name: 'list',
-            icon: () => {
-                return (
-                    <div className="flex items-center gap-1.5 px-2 text-black text-sm font-semibold">
-                        { __( 'List of Data', 'dokan-lite' ) }
-                    </div>
-                );
-            },
-            title: __( 'List of Data', 'dokan-lite' ),
+            value: 'list',
+            label: __( 'List of Data', 'dokan-lite' ),
         },
     ];
 
@@ -387,36 +379,38 @@ const ReverseWithdrawalPage = ( props ) => {
                 } ) }
             </div>
 
-            <DataViews
-                data={ data }
-                namespace="reverse-withdrawal-data-view"
-                defaultLayouts={ {
-                    table: { density: 'comfortable' },
-                    list: {},
-                } }
-                fields={ fields }
-                getItemId={ ( item ) => item.vendor_id }
-                onChangeView={ setView }
-                paginationInfo={ {
-                    totalItems,
-                    totalPages: Math.ceil( totalItems / view.perPage ),
-                } }
-                view={ view }
-                isLoading={ isLoading }
-                emptyIcon={ <ArrowRightLeft size={ 52 } /> }
-                emptyTitle={ __( 'No transaction found', 'dokan-lite' ) }
-                tabs={ {
-                    tabs,
-                    onSelect: () => {},
-                    initialTabName: 'list',
-                } }
-                filter={ {
-                    fields: filterFields,
-                    onFilterRemove: ( filterId ) =>
-                        clearSingleFilter( filterId ),
-                    onReset: () => clearFilter(),
-                } }
-            />
+            <div className="dokan-admin-dashboard-datatable">
+                <DataViews
+                    data={ data }
+                    namespace="reverse-withdrawal-data-view"
+                    defaultLayouts={ {
+                        table: { density: 'comfortable' },
+                        list: {},
+                    } }
+                    fields={ fields }
+                    getItemId={ ( item ) => item.vendor_id }
+                    onChangeView={ setView }
+                    paginationInfo={ {
+                        totalItems,
+                        totalPages: Math.ceil( totalItems / view.perPage ),
+                    } }
+                    view={ view }
+                    isLoading={ isLoading }
+                    emptyIcon={ <ArrowRightLeft size={ 52 } /> }
+                    emptyTitle={ __( 'No transaction found', 'dokan-lite' ) }
+                    tabs={ {
+                        items: tabItems,
+                        onSelect: () => {},
+                        defaultValue: 'list',
+                    } }
+                    filter={ {
+                        fields: filterFields,
+                        onFilterRemove: ( filterId ) =>
+                            clearSingleFilter( filterId ),
+                        onReset: () => clearFilter(),
+                    } }
+                />
+            </div>
 
             { showAddModal && (
                 <AddReverseWithdrawModal
