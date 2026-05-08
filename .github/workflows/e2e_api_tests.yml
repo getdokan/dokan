@@ -714,18 +714,21 @@ jobs:
             # Render the branded HTML quality report (full design, downloadable
             # as artifact) plus a markdown variant for the GitHub job summary.
             # GitHub strips <style>/CSS from step summaries, so the HTML can't
-            # render inline — the markdown uses tables, emoji, Unicode bars,
-            # and a Mermaid pie chart that GH does render natively.
+            # render inline — the markdown uses shields.io badges, themed
+            # Mermaid charts, and HTML tables that GH does render natively.
+            #
+            # NOTE: no `working-directory` here — the job-level env block sets
+            # API_TEST_RESULT etc. as repo-root-relative paths, so the script
+            # must run from the repo root for those to resolve.
             - name: Generate Quality Report
               id: quality-report
               if: always() && steps.download-test-artifacts.outcome == 'success'
-              working-directory: tests/pw
               env:
-                  ARTIFACTS_DIR: ./all-reports
-                  OUTPUT_FILE: ./all-reports/quality-report.html
-                  SUMMARY_FILE: ./all-reports/quality-report.md
+                  ARTIFACTS_DIR: ./tests/pw/all-reports
+                  OUTPUT_FILE: ./tests/pw/all-reports/quality-report.html
+                  SUMMARY_FILE: ./tests/pw/all-reports/quality-report.md
               run: |
-                  node ./utils/generateQualityReport.js
+                  node ./tests/pw/utils/generateQualityReport.js
 
             - name: Upload Quality Report
               if: always() && steps.quality-report.outcome == 'success'

@@ -267,9 +267,11 @@ console.log(`  ${totals.total} tests | ${totals.passed} passed | ${totals.failed
 console.log(`  pass rate ${totals.passRate}% | duration ${formatDuration(totals.durationMs)} | coverage ${totalCoveragePct ?? '—'}%`);
 
 // ----------------------------------------------------------------------------
-// Markdown variant for $GITHUB_STEP_SUMMARY (GitHub strips <style>/CSS, so the
-// inline-styled HTML can't render there — this companion uses tables, emoji,
-// Unicode progress bars, and a Mermaid pie chart that GH does render natively).
+// Markdown + HTML variant for $GITHUB_STEP_SUMMARY. GitHub strips <style>/CSS,
+// so we can't ship the full HTML design inline. We approximate brand fidelity
+// using shields.io badges (which give us the purple/teal palette through
+// hosted images), <table> for layout, and a themed Mermaid pie chart. All of
+// these render natively in step summaries without inline CSS.
 
 const SUMMARY_FILE = process.env.SUMMARY_FILE;
 if (SUMMARY_FILE) {
@@ -277,31 +279,58 @@ if (SUMMARY_FILE) {
         ? `${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}/actions/runs/${runId}`
         : null;
 
-    const fmtNum = n => Number.isFinite(Number(n)) ? Number(n).toLocaleString('en-US') : '—';
-    const bar = (pct, width = 24) => {
-        if (!Number.isFinite(pct)) return '`' + '░'.repeat(width) + '`';
-        const filled = Math.round((Math.max(0, Math.min(100, pct)) / 100) * width);
-        return '`' + '█'.repeat(filled) + '░'.repeat(width - filled) + '`';
+    // Brand palette (matches quality-report-template.html)
+    const C = {
+        purplePrimary: '534AB7',
+        purpleLight:   '7F77DD',
+        teal:          '0F6E56',
+        green:         '639922',
+        red:           'E24B4A',
+        amber:         'BA7517',
+        gray:          '888780',
+        ink:           '1a1a1a',
     };
 
-    const statusEmoji = overallFailed ? '🔴' : '🟢';
-    const statusHeading = overallFailed ? 'Tests failed' : 'All tests passed';
-    const statusDesc = overallFailed
-        ? `${totals.failed} failure${totals.failed === 1 ? '' : 's'} across the suite`
-        : 'Build is green and ready for review';
+    const fmtNum = n => Number.isFinite(Number(n)) ? Number(n).toLocaleString('en-US') : '—';
 
-    const apiBadge = !api ? '⚪️ No data' : api.failed > 0 ? '🔴 Failed' : '🟢 Passed';
-    const e2eBadge = !e2e ? '⚪️ No data' : e2e.failed > 0 ? '🔴 Failed' : '🟢 Passed';
+    // shields.io URL builder. Plain badges only — labelColor + color give us
+    // the two-tone look the design uses for metric tiles.
+    const shieldUrl = (label, message, color, opts = {}) => {
+        const enc = s => encodeURIComponent(String(s).replace(/-/g, '--').replace(/_/g, '__'));
+        const params = new URLSearchParams({ style: opts.style || 'for-the-badge' });
+        if (opts.labelColor) params.set('labelColor', opts.labelColor);
+        if (opts.logo)       params.set('logo', opts.logo);
+        if (opts.logoColor)  params.set('logoColor', opts.logoColor);
+        return `https://img.shields.io/badge/${enc(label)}-${enc(message)}-${color}?${params.toString()}`;
+    };
+    const badge = (label, message, color, opts = {}, alt) =>
+        `<img alt="${escape(alt || `${label}: ${message}`)}" src="${shieldUrl(label, message, color, opts)}">`;
+
+    const statusBadge = overallFailed
+        ? badge('✕  Tests failed', `${totals.failed} failure${totals.failed === 1 ? '' : 's'} · ${totals.passRate.toFixed(1)}% pass rate`, C.red, { labelColor: C.purplePrimary })
+        : badge('✓  All tests passed', `Build is green · ${totals.passRate.toFixed(1)}% pass rate`, C.teal, { labelColor: C.purplePrimary });
+
+    const suiteStatusBadge = (s) => {
+        if (!s)            return badge('No data', '—', C.gray);
+        if (s.failed > 0)  return badge('Failed', `${s.failed} failure${s.failed === 1 ? '' : 's'}`, C.red);
+        return badge('Passed', `${s.passRate.toFixed(1)}% pass rate`, C.green);
+    };
+
+    const passRateBadge = (pct) => badge(
+        'Pass rate',
+        `${pct.toFixed(1)}%`,
+        pct >= 99 ? C.green : pct >= 90 ? C.amber : C.red,
+        { style: 'flat-square' },
+    );
 
     const apiCovStr = apiCov.pct === null ? '—' : `${apiCov.pct.toFixed(2)}%`;
     const e2eCovStr = e2eCov.pct === null ? '—' : `${e2eCov.pct.toFixed(2)}%`;
     const totalCovStr = totalCoveragePct === null ? '—' : `${totalCoveragePct.toFixed(2)}%`;
 
-    const suiteRow = (s, badge, covStr) => s
-        ? `| ${badge} | ${fmtNum(s.total)} | **${fmtNum(s.passed)}** | ${s.failed > 0 ? '**' + fmtNum(s.failed) + '**' : fmtNum(s.failed)} | ${fmtNum(s.skipped)} | ${formatDuration(s.durationMs)} | ${covStr} | ${bar(s.passRate, 16)} ${s.passRate.toFixed(1)}% |`
-        : `| ${badge} | — | — | — | — | — | ${covStr} | ${bar(NaN, 16)} — |`;
+    // Metrics tile (renders as a labelColor=purple / value=brand-color shield).
+    const metricTile = (label, value, color) => `      <td align="center" valign="middle">${badge(label, value, color, { labelColor: C.purplePrimary })}</td>`;
 
-    const artifactRows = (() => {
+    const artifactsTable = (() => {
         if (!ARTIFACTS_DIR || !fs.existsSync(ARTIFACTS_DIR)) return '_No artifacts available._';
         const ignore = new Set(['all-blob-reports', 'html-report']);
         const entries = fs.readdirSync(ARTIFACTS_DIR)
@@ -311,57 +340,113 @@ if (SUMMARY_FILE) {
         if (!entries.length) return '_No artifacts available._';
         return [
             '| Artifact | Size |',
-            '| --- | ---: |',
-            ...entries.map(e => `| 📁 \`${e.name}\` | ${formatBytes(dirSize(e.full))} |`),
+            '| :--- | ---: |',
+            ...entries.map(e => `| 📦 \`${e.name}\` | ${formatBytes(dirSize(e.full))} |`),
         ].join('\n');
     })();
 
+    // Mermaid pie chart with brand colors.
+    const mermaidTheme = `%%{init: {"theme":"base","themeVariables":{"pie1":"#${C.green}","pie2":"#${C.amber}","pie3":"#${C.red}","pieTitleTextColor":"#${C.purplePrimary}","pieSectionTextColor":"#ffffff","pieSectionTextSize":"14px","pieOuterStrokeWidth":"0px","pieStrokeColor":"#ffffff","pieStrokeWidth":"2px","fontFamily":"-apple-system, BlinkMacSystemFont, sans-serif"}}}%%`;
+
     const lines = [];
-    lines.push('# 🛡 Dokan QA Quality Report');
+
+    // --- Header ---------------------------------------------------------
+    lines.push(`<h1>🛡 Dokan QA — Quality Report</h1>`);
     lines.push('');
-    lines.push(`> ### ${statusEmoji} ${statusHeading}`);
-    lines.push(`> _${statusDesc}_ · **Pass rate: ${totals.passRate.toFixed(1)}%**`);
-    lines.push('');
-    lines.push('| Branch | PR | Commit | Date | Duration |');
-    lines.push('| --- | --- | --- | --- | --- |');
-    lines.push(`| \`${branch}\` | ${prNumber === '—' ? '—' : '#' + prNumber} | \`${sha}\` | ${today} | ${formatDuration(totals.durationMs)} |`);
-    lines.push('');
-    lines.push('## 📊 Key Metrics');
-    lines.push('');
-    lines.push('| Total | ✅ Passed | ❌ Failed | ⚪️ Skipped | ⏱ Duration | 📈 Coverage |');
-    lines.push('| ---: | ---: | ---: | ---: | ---: | ---: |');
-    lines.push(`| **${fmtNum(totals.total)}** | **${fmtNum(totals.passed)}** | ${totals.failed > 0 ? '**' + fmtNum(totals.failed) + '**' : fmtNum(totals.failed)} | ${fmtNum(totals.skipped)} | ${formatDuration(totals.durationMs)} | ${totalCovStr} |`);
+    lines.push('<p>');
+    lines.push('  ' + badge('Branch', branch, C.purpleLight, { labelColor: C.purplePrimary, logo: 'git', logoColor: 'white' }));
+    if (prNumber !== '—') lines.push('  ' + badge('PR', `#${prNumber}`, C.purpleLight, { labelColor: C.purplePrimary, logo: 'github', logoColor: 'white' }));
+    lines.push('  ' + badge('Commit', sha, C.purpleLight, { labelColor: C.purplePrimary, logo: 'git', logoColor: 'white' }));
+    lines.push('  ' + badge('Date', today, C.purpleLight, { labelColor: C.purplePrimary, logo: 'calendar', logoColor: 'white' }));
+    lines.push('  ' + badge('Duration', formatDuration(totals.durationMs), C.purpleLight, { labelColor: C.purplePrimary, logo: 'clock', logoColor: 'white' }));
+    lines.push('</p>');
     lines.push('');
 
-    // Mermaid pie chart of overall outcomes
+    // --- Status banner --------------------------------------------------
+    lines.push(`<p>${statusBadge}</p>`);
+    lines.push('');
+
+    // --- Key Metrics ----------------------------------------------------
+    lines.push('<h2>📊 Key Metrics</h2>');
+    lines.push('<table>');
+    lines.push('  <tr>');
+    lines.push(metricTile('Total tests', fmtNum(totals.total), C.ink));
+    lines.push(metricTile('Passed', fmtNum(totals.passed), C.green));
+    lines.push(metricTile('Failed', fmtNum(totals.failed), totals.failed > 0 ? C.red : C.green));
+    lines.push(metricTile('Skipped', fmtNum(totals.skipped), C.amber));
+    lines.push(metricTile('Duration', formatDuration(totals.durationMs).replace(/ /g, '_'), C.purpleLight));
+    lines.push(metricTile('Coverage', totalCovStr, C.purpleLight));
+    lines.push('  </tr>');
+    lines.push('</table>');
+    lines.push('');
+
+    // --- Outcomes pie chart ---------------------------------------------
     if (totals.total > 0) {
         lines.push('```mermaid');
+        lines.push(mermaidTheme);
         lines.push('pie showData');
         lines.push('  title Test Outcomes');
         lines.push(`  "Passed" : ${totals.passed}`);
-        if (totals.failed > 0) lines.push(`  "Failed" : ${totals.failed}`);
         if (totals.skipped > 0) lines.push(`  "Skipped" : ${totals.skipped}`);
+        if (totals.failed > 0)  lines.push(`  "Failed"  : ${totals.failed}`);
         lines.push('```');
         lines.push('');
     }
 
-    lines.push('## 🧪 Test Suites');
-    lines.push('');
-    lines.push('| Suite | Total | Passed | Failed | Skipped | Duration | Coverage | Pass Rate |');
-    lines.push('| --- | ---: | ---: | ---: | ---: | --- | ---: | --- |');
-    lines.push(suiteRow(api, `🔌 **API Tests** · ${apiBadge}`, apiCovStr));
-    lines.push(suiteRow(e2e, `🖥 **E2E Tests** · ${e2eBadge}`, e2eCovStr));
+    // --- Test Suites ----------------------------------------------------
+    lines.push('<h2>🧪 Test Suites</h2>');
+    lines.push('<table>');
+    lines.push('  <thead>');
+    lines.push('    <tr>');
+    lines.push('      <th align="left">Suite</th>');
+    lines.push('      <th align="right">Total</th>');
+    lines.push('      <th align="right">Passed</th>');
+    lines.push('      <th align="right">Failed</th>');
+    lines.push('      <th align="right">Skipped</th>');
+    lines.push('      <th align="left">Duration</th>');
+    lines.push('      <th align="right">Coverage</th>');
+    lines.push('      <th align="left">Pass rate</th>');
+    lines.push('    </tr>');
+    lines.push('  </thead>');
+    lines.push('  <tbody>');
+    const suiteTr = (label, s, covStr) => {
+        const tag = s && s.failed > 0 ? 'failed' : 'ok';
+        const passedCell = s ? `<strong>${fmtNum(s.passed)}</strong>` : '—';
+        const failedCell = s ? (s.failed > 0 ? `<strong style="color:#${C.red}">${fmtNum(s.failed)}</strong>` : '0') : '—';
+        const passRateCell = s ? `<img alt="${s.passRate.toFixed(1)}%" src="${shieldUrl('', `${s.passRate.toFixed(1)}%`, s.failed > 0 ? C.red : s.passRate >= 99 ? C.green : C.amber, { style: 'flat-square' })}">` : '—';
+        return `    <tr>
+      <td>${label} ${suiteStatusBadge(s)}</td>
+      <td align="right">${s ? fmtNum(s.total) : '—'}</td>
+      <td align="right">${passedCell}</td>
+      <td align="right">${failedCell}</td>
+      <td align="right">${s ? fmtNum(s.skipped) : '—'}</td>
+      <td>${s ? formatDuration(s.durationMs) : '—'}</td>
+      <td align="right">${covStr}</td>
+      <td>${passRateCell}</td>
+    </tr>`;
+    };
+    lines.push(suiteTr('🔌 <strong>API Tests</strong>', api, apiCovStr));
+    lines.push(suiteTr('🖥 <strong>E2E Tests</strong>', e2e, e2eCovStr));
+    lines.push('  </tbody>');
+    lines.push('</table>');
     lines.push('');
 
-    lines.push('## 📦 Build Artifacts');
+    // --- Artifacts ------------------------------------------------------
+    lines.push('<h2>📦 Build Artifacts</h2>');
     lines.push('');
-    lines.push(artifactRows);
+    lines.push(artifactsTable);
     lines.push('');
 
+    // --- Footer ---------------------------------------------------------
     lines.push('---');
     lines.push('');
-    const runLink = RUN_URL ? `[\`${runId}\`](${RUN_URL})` : `\`${runId}\``;
-    lines.push(`<sub>🛡 Prepared by **Dokan QA Team** · Run ${runLink} · _Full styled HTML report available in the **quality-report** artifact._</sub>`);
+    const teamBadge = badge('Prepared by', 'Dokan QA Team', C.purplePrimary, { labelColor: C.gray, logo: 'shield', logoColor: 'white' });
+    const runBadge = RUN_URL
+        ? `<a href="${RUN_URL}">${badge('Run', runId, C.purpleLight, { labelColor: C.purplePrimary })}</a>`
+        : badge('Run', runId, C.purpleLight, { labelColor: C.purplePrimary });
+    lines.push(`<p>${teamBadge}  ${runBadge}</p>`);
+    lines.push('');
+    lines.push('<sub>The full styled HTML report (purple-gradient header, metric cards, progress bars) is available as the <strong>quality-report</strong> artifact on this run. GitHub strips CSS from job summaries, so the inline view above uses brand-coloured shield badges instead.</sub>');
     lines.push('');
 
     fs.mkdirSync(path.dirname(SUMMARY_FILE), { recursive: true });
