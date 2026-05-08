@@ -1,219 +1,228 @@
 ---
 name: dokan-run-test-suite
-description: Run the Dokan Playwright test suite (E2E + API). Trigger when the user says "run the suite", "run e2e tests", "kick off the tests", "trigger CI", "run playwright", "execute the QA suite", or asks to launch / re-run / debug the automated test runs. Covers both local execution (wp-env + npx playwright) and GitHub Actions runs.
+description: Execute the Dokan Playwright test suite (E2E + API), locally or via GitHub Actions. Invoke when the user asks to run, kick off, trigger, re-run, debug, or inspect the automated test runs. Phrases such as "run the suite", "run e2e tests", "trigger CI", "execute the QA suite", or "check the failed run" should activate this skill.
 ---
 
 # Run the Dokan Test Suite
 
-Use this skill when a teammate asks Claude to run the Playwright suite — locally, against CI, or both. The suite lives at `tests/pw/` (Lite-side), runs ~1,400 tests across 6 e2e shards + 1 api shard in CI, and takes ~14–18 min wall clock with the parallel-build workflow.
+Procedural reference for executing the Playwright suite at `tests/pw/`. The suite covers ~1,400 tests across six E2E shards and one API shard. In CI, total wall-clock is approximately 14–18 minutes with the parallel-build workflow; locally, a full run takes 30 minutes or more on a single machine.
 
-## Decision: local or CI?
+## Selecting an execution target
 
-Ask once if it isn't clear from the request:
+| Target | Use when | Approximate cost |
+| --- | --- | --- |
+| **Local** | Iterating on a single spec, reproducing a failure, no PR open yet | 1–10 min for a spec, 30+ min for the full suite |
+| **GitHub Actions** | Validating a PR, pre-merge check, scheduled or developer-dispatched runs | 14–18 min wall clock |
 
-- **Local** — fast iteration on a few specs, debugging a single failure, no PR yet. ~3–10 min for a single spec, ~35+ min for the whole suite. Needs Docker.
-- **CI** — full coverage across all shards, official report, before merge. ~14–18 min wall clock. Uses GitHub Actions runners.
+When a pull request is open, prefer the GitHub Actions path. When the user is mid-development, prefer local execution.
 
-When in doubt: if there's an open PR, prefer CI. If they're mid-coding, prefer local.
+---
 
-## Local run
+## Local execution
 
-All commands run from `tests/pw/`.
+All commands assume `tests/pw/` as the working directory unless noted otherwise.
 
-### Pre-flight: make sure Docker is running
+### 1. Docker pre-flight
 
-`wp-env` is a Docker wrapper, so the daemon must be up before `npm run start:env`. Always check, and auto-start if needed — don't ask first; the developer's already on their own machine and it's a one-line action. Tell them what you're doing while it happens.
+`wp-env` requires a running Docker daemon. Verify it is reachable before invoking any wp-env commands. If the daemon is not reachable, start Docker Desktop without prompting the user — this is a routine, low-risk action — and surface a single status message while waiting.
 
-**macOS** (the team's platform):
+**macOS** (the team's primary platform):
 
 ```bash
-# Check daemon
 if ! docker info >/dev/null 2>&1; then
-    echo "Docker daemon not reachable, opening Docker Desktop..."
+    echo "Docker daemon not reachable; opening Docker Desktop..."
     open -a Docker
-    # Wait up to 90s for the daemon to come up
     for i in $(seq 1 45); do
-        if docker info >/dev/null 2>&1; then
-            echo "Docker is ready"
-            break
-        fi
+        docker info >/dev/null 2>&1 && { echo "Docker is ready."; break; }
         sleep 2
     done
-    docker info >/dev/null 2>&1 || { echo "Docker still not ready after 90s — bail out"; exit 1; }
+    docker info >/dev/null 2>&1 || { echo "Docker did not start within 90s. Aborting."; exit 1; }
 fi
 ```
 
-**Linux** fallback (rarely the team's case):
+**Linux**:
 
 ```bash
 docker info >/dev/null 2>&1 || sudo systemctl start docker
 ```
 
-If `open -a Docker` fails because Docker Desktop isn't installed, surface that and stop — don't try to install it.
+If `open -a Docker` fails because Docker Desktop is not installed, surface that and stop. Do not attempt to install it.
 
-### Setup (default flow)
+### 2. Environment setup
 
-Default to a clean reset — guarantees no stale DB / plugin / option leftovers from a previous run.
-
-```bash
-cd tests/pw
-npm ci                              # install playwright deps (skip if up to date)
-npm run reset:env                   # wp-env destroy → start (lite + pro + premium plugins)
-npm run docker:setup                # site_setup + auth_setup + e2e_setup projects (seeds test data)
-```
-
-`reset:env` takes ~3–5 min on a cold cache, ~1–2 min when wp-env images are already pulled. Always use this when:
-- The user says "fresh run" / "clean run" / "from scratch"
-- Tests passed in CI but failed locally (likely stale state)
-- `.wp-env.json` / `.wp-env.override.json` / a plugin version changed
-- Previous run was interrupted (Ctrl-C, crash, etc.)
-
-### Fast path (only when re-running tests in the same session)
-
-If the env is already up and the user just wants to re-run tests after editing a spec, **skip the env reset** — it's wasteful. Go straight to:
+Default to a clean reset to guarantee a known baseline:
 
 ```bash
 cd tests/pw
-npm run docker:setup     # re-seed test data (still cheap, ~30s)
-npm run test:e2e -- ...  # or specific spec
+npm ci                  # install Playwright dependencies
+npm run reset:env       # wp-env destroy → start (lite + pro + premium plugins)
+npm run docker:setup    # seed site_setup / auth_setup / e2e_setup data
 ```
 
-If `wp-env start` errors with port-in-use, run `npm run wp-env stop` first. If it errors with "Cannot connect to the Docker daemon" despite the pre-flight, the daemon was killed mid-flight — re-run the pre-flight block.
+`reset:env` takes 3–5 minutes on a cold cache and 1–2 minutes when wp-env images are already pulled. Use it whenever any of the following apply:
 
-### Run options
+- The user requests a fresh, clean, or from-scratch run.
+- Tests pass in CI but fail locally (often indicates stale state).
+- `.wp-env.json`, `.wp-env.override.json`, or a plugin version has changed.
+- The previous run was interrupted by a crash or `Ctrl-C`.
+
+**Fast path — repeat runs in the same session.** If the environment is already up and the user is iterating on a spec, skip the reset and re-seed only:
 
 ```bash
-# Whole e2e suite (slow — ~30+ min single-runner)
+cd tests/pw
+npm run docker:setup
+npm run test:e2e -- tests/e2e/<area>/<spec>.spec.ts
+```
+
+If `wp-env start` reports a port conflict, stop the existing instance with `npm run wp-env stop` and retry. If it reports `Cannot connect to the Docker daemon` despite a successful pre-flight, the daemon was terminated mid-run — re-execute the pre-flight block.
+
+### 3. Test execution
+
+```bash
+# Full E2E suite (long-running, single-process)
 npm run test:e2e
 
-# Single spec
+# Single specification
 npx playwright test tests/e2e/abuse-reports/abuseReports.spec.ts
 
 # Filter by tag
-npx playwright test --grep @lite           # lite-only
-npx playwright test --grep @pro            # pro-only
-npx playwright test --grep @serial         # must-run-sequentially
+npx playwright test --grep @lite       # Lite-compatible tests
+npx playwright test --grep @pro        # Pro-only tests
+npx playwright test --grep @serial     # tests requiring sequential execution
 
-# Headed (see the browser)
+# Browser-visible run
 npm run test:headed
 
-# UI mode (interactive)
+# Interactive UI runner
 npm run test:ui
 
-# API tests only
+# API suite only
 npm run test:api
 ```
 
-### Tags reference
+### 4. Tag conventions
 
-- `@lite` — works against Lite alone
-- `@liteOnly` — must NOT run when Pro is active
-- `@pro` — needs Dokan Pro
-- `@serial` — file must run sequentially (no parallel workers)
+| Tag | Meaning |
+| --- | --- |
+| `@lite` | Compatible with Dokan Lite alone. |
+| `@liteOnly` | Must not run when Dokan Pro is active. |
+| `@pro` | Requires Dokan Pro. |
+| `@serial` | File must execute sequentially (no parallel workers). |
 
-The default `playwright.config.ts` already sets `grep` and `grepInvert` based on `DOKAN_PRO`. Don't fight that with manual filters unless the user asks.
+`playwright.config.ts` already applies `grep` and `grepInvert` based on the `DOKAN_PRO` environment variable. Avoid layering manual filters on top unless explicitly requested.
 
-### Reading local results
+### 5. Inspecting local results
 
-- HTML report: `npx playwright show-report` (after a non-CI run).
-- Summary JSON: `tests/pw/playwright-report/e2e/summary-report/results.json`.
-- Failures: traces are at `tests/pw/playwright/e2e/test-artifacts/*/trace.zip` — open with `npx playwright show-trace <file>`.
+- HTML report: `npx playwright show-report`
+- Summary JSON: `tests/pw/playwright-report/e2e/summary-report/results.json`
+- Failure traces: `tests/pw/playwright/e2e/test-artifacts/<test-id>/trace.zip` — open with `npx playwright show-trace <trace.zip>`
 
-## CI run
+---
 
-The workflow is `.github/workflows/e2e_api_tests.yml`. It auto-triggers on:
-- pull_request to `develop`
-- push to `develop`
-- daily 02:00 UTC schedule
-- manual dispatch (`workflow_dispatch`)
+## GitHub Actions execution
 
-### How the run is shaped (so you can explain it to the user)
+Workflow: `.github/workflows/e2e_api_tests.yml`. Triggers on pull requests targeting `develop`, pushes to `develop`, the daily 02:00 UTC schedule, and manual `workflow_dispatch`.
+
+### Workflow architecture
 
 ```
 build_lite ──┐
-             ├──► e2e_tests (matrix 1..6, balanced by tests/pw/utils/shard-durations.json)
-build_pro ───┤    api_tests (1 shard)
-             └──► merge-reports → quality-report.html + step-summary
+             ├──► e2e_tests (matrix shards 1–6, balanced from
+             │                tests/pw/utils/shard-durations.json)
+build_pro ───┤    api_tests (single shard)
+             └──► merge-reports ──► quality-report.html + step summary
 ```
 
-Both build jobs run in parallel (~6–7 min, slowest gates the rest). Each consumer downloads `dokan-lite-build` + `dokan-pro-build` tar artifacts and skips its own build steps. Sharding is duration-weighted from the committed baseline, so all 6 e2e shards finish in ~5 min of test time.
+`build_lite` and `build_pro` execute in parallel. The slower of the two — typically 6–7 minutes — gates the consumer jobs. Each consumer downloads the `dokan-lite-build` and `dokan-pro-build` tar artifacts and bypasses its own build steps. E2E sharding is duration-weighted from the committed baseline, so all six shards complete in roughly five minutes of test time.
 
-### Triggering a CI run from Claude
+### Triggering a run
 
 ```bash
-# Manual dispatch on a branch (uses gh CLI)
+# Manual dispatch on a branch
 gh workflow run e2e_api_tests.yml --ref <branch>
 
-# Manual dispatch limited to E2E or API only
+# Restrict to one suite
 gh workflow run e2e_api_tests.yml --ref <branch> -f testsuite=E2E
 gh workflow run e2e_api_tests.yml --ref <branch> -f testsuite=API
 
-# Watch the latest run
+# Watch the most recent run
 gh run watch
 ```
 
-If the user just pushed commits to a PR branch, the workflow already started — don't re-dispatch unless they ask. Use `gh run list --branch <branch> --limit 5` to confirm.
+If the user has just pushed commits to a PR branch, the workflow has already started. Confirm with `gh run list --branch <branch> --limit 5` before dispatching a duplicate.
 
-### Reading CI results
+### Inspecting CI results
 
-- **Job summary** (run page): the `merge-reports` step renders the **Dokan QA Quality Report** inline — branded shields.io badges, key metrics, Mermaid pie of Passed vs Failed, per-suite stats, artifact list. This is the first thing to point users at.
-- **Full HTML report**: download the `quality-report` artifact (30-day retention) for the full purple-gradient styled view.
-- **Per-shard artifacts**: `test-artifact-e2e-{1..6}` and `test-artifact-api` contain wp-data, traces, and per-shard `summary-report/results.json`.
-- **Spec-duration baseline**: the `shard-durations-baseline` artifact (14-day retention) is what to download and commit to `tests/pw/utils/shard-durations.json` to keep balanced sharding accurate over time.
+- **Job summary (run page).** The `merge-reports` job renders the **Dokan QA Quality Report** inline, with brand-coloured shields, key metrics, a Mermaid pie chart, per-suite statistics, and an artifact list. This is the recommended starting point.
+- **Full HTML report.** Download the `quality-report` artifact (30-day retention) for the fully styled view with the purple-gradient header and metric cards.
+- **Per-shard artifacts.** `test-artifact-e2e-{1..6}` and `test-artifact-api` contain wp-data snapshots, traces, and shard-level `summary-report/results.json`.
+- **Spec-duration baseline.** The `shard-durations-baseline` artifact (14-day retention) is the source for refreshing `tests/pw/utils/shard-durations.json`.
 
-### Inspecting a specific run
+### Investigating a specific run
 
 ```bash
-gh run view <run-id>                                    # status + per-step timing
-gh run view <run-id> --log-failed                       # tail logs for failed steps only
-gh run download <run-id> -n quality-report -D ./out     # grab the QA report
-gh run download <run-id> -n test-artifact-e2e-1 -D ./out  # grab a shard's artifacts
+gh run view <run-id>                                      # status and per-step timing
+gh run view <run-id> --log-failed                         # logs for failed steps only
+gh run download <run-id> -n quality-report -D ./out       # full QA report
+gh run download <run-id> -n test-artifact-e2e-1 -D ./out  # individual shard
 ```
 
-## Refreshing the duration baseline
+---
 
-When the suite changes substantially, balanced sharding drifts. To refresh:
+## Maintenance: refreshing the duration baseline
 
-1. Wait for a green run on `develop`.
-2. `gh run download <run-id> -n shard-durations-baseline -D /tmp/`.
+Sharding accuracy degrades as the suite evolves. Refresh `tests/pw/utils/shard-durations.json` periodically:
+
+1. Confirm the most recent `develop` run is green.
+2. `gh run download <run-id> -n shard-durations-baseline -D /tmp/`
 3. Replace `tests/pw/utils/shard-durations.json` with the downloaded file.
-4. Commit on a branch + open a PR (`chore(ci): refresh shard duration baseline`).
+4. Open a pull request titled `chore(ci): refresh shard duration baseline`.
 
-The `getShardSpecs.js` splitter falls back to the global mean for any spec that's new since the baseline, so you don't need to refresh it on every PR — every few weeks or when you notice imbalance.
+The `getShardSpecs.js` splitter assigns the global mean to specs introduced after the last baseline refresh, so per-PR refresh is unnecessary. A monthly refresh, or one prompted by visible imbalance in shard timings, is sufficient.
 
-## Common failures and how to triage
+---
 
-- **`Dokan or Dokan Lite not found` in build_pro**: pro's webpack expects lite as a sibling. The build_pro job already checks out lite source + `npm ci`s it; if this regresses, look at `tests/pw/utils/dokan-path.js` paths in dokan-pro.
-- **`Cannot find module 'lodash'`**: lite's `node_modules` wasn't installed in build_pro. Re-check the "Install dokan-lite npm deps" step.
-- **`mkdir: working directory tests/pw/all-reports`** in merge-reports: all upstream test jobs were skipped (likely because build_pro failed). Fix the build first — the merge-reports failure is a downstream symptom.
-- **wp-env start times out**: usually port 9999/9998 already in use. `docker ps` to confirm, then `npm run wp-env stop`.
-- **Vendor /dashboard tests block on a modal**: there's a Dokan Pro 5.0.0 announcement modal; the `closeAnnouncementModal` helper in `tests/pw/utils/helpers.ts` auto-dismisses via `page.addLocatorHandler`. If a new spec hits it, call that helper at the top.
-- **Tests pass locally but fail on CI**: check that the React UI option was enabled (`dokan_appearance.vendor_layout_style = "latest"`). The "Enable Dokan New React UI" workflow step does this in CI; locally you may need to run it manually or via `npm run wp-env run tests-cli wp eval ...`.
+## Troubleshooting
 
-## What NOT to do
+| Symptom | Likely cause | Resolution |
+| --- | --- | --- |
+| `Dokan or Dokan Lite not found` during build_pro. | Pro's webpack expects Lite at `../dokan-lite`. | The build_pro job already checks out Lite source and runs `npm ci`. If this regresses, inspect path resolution in `dokan-pro/src/utils/dokan-path.js`. |
+| `Cannot find module 'lodash'` during build_pro. | Lite's `node_modules` was not installed in the Pro build job. | Verify the "Install dokan-lite npm deps" step ran successfully. |
+| `merge-reports` fails with a missing working directory. | All upstream test jobs were skipped, typically because build_pro failed. | Resolve the upstream build failure; the merge-reports failure is a downstream symptom. |
+| `wp-env start` times out. | Ports 9999 or 9998 are in use. | `docker ps` to identify the process; then `npm run wp-env stop` and retry. |
+| Vendor `/dashboard` tests block on a modal. | Dokan Pro 5.0.0 announcement modal appears on first load. | Use the `closeAnnouncementModal` helper in `tests/pw/utils/helpers.ts` (auto-dismisses via `page.addLocatorHandler`). |
+| Tests pass locally but fail in CI. | The Dokan React UI option may not be enabled. | Set `dokan_appearance.vendor_layout_style = "latest"` and `vendor_product_editor = "latest"`. The CI workflow does this automatically. |
 
-- **Don't** push directly to `develop` to trigger a run. Use `gh workflow run` or open a PR.
-- **Don't** edit per-shard `--shard=N/M` flags by hand — the splitter computes the spec list from the baseline.
-- **Don't** add `--no-verify`, skip retries, or set `maxFailures` to bypass real failures. Investigate the trace.
-- **Don't** rerun a flaky shard repeatedly hoping it passes. If a test flakes ≥2× on retries, file a follow-up to fix the spec, not the runner.
+---
 
-## Quick reference: things you'll often need
+## Operational guidelines
 
-| Need | Command |
+- Trigger CI runs through `gh workflow run` or by opening a pull request. Do not push directly to `develop` to provoke a run.
+- Do not modify per-shard `--shard=N/M` flags by hand. The splitter computes the spec list from the duration baseline.
+- Do not bypass real failures with `--no-verify`, suppressed retries, or adjusted `maxFailures`. Investigate the captured trace.
+- If a test flakes on two or more retries, file a follow-up to stabilise the spec rather than re-running the shard.
+
+---
+
+## Quick reference
+
+| Task | Command |
 | --- | --- |
-| Last 5 runs on a branch | `gh run list --branch <branch> --limit 5` |
-| Tail failures | `gh run view <id> --log-failed` |
-| Re-run a single failed job | `gh run rerun <id> --failed` |
+| Recent runs on a branch | `gh run list --branch <branch> --limit 5` |
+| Tail failed step logs | `gh run view <id> --log-failed` |
+| Re-run only failed jobs | `gh run rerun <id> --failed` |
 | Download QA report | `gh run download <id> -n quality-report` |
 | Cancel a stuck run | `gh run cancel <id>` |
-| Enable React UI in wp-env | `npm run wp-env run tests-cli wp option set dokan_appearance ...` |
 | Stop wp-env | `npm run wp-env stop` |
+| Reset wp-env | `npm run reset:env` |
+
+---
 
 ## Reporting back
 
-When the user asks Claude to "run the suite", the deliverable is:
+After execution, report:
 
-1. Confirm what was run (local vs CI, shard subset, tag filters).
-2. Top-line result (passed / failed / pass rate / duration).
-3. Link to: PR run page (CI) or local HTML report path.
-4. If anything failed: the spec name + first error line + the trace path. Do **not** speculate on cause — surface evidence and ask.
+1. **Target.** Local or GitHub Actions; tag filters or specs scoped to.
+2. **Result summary.** Total / passed / failed / skipped counts, pass rate, wall-clock duration.
+3. **Report location.** Local HTML report path, or run page URL plus the `quality-report` artifact link.
+4. **On failure.** Failing spec name, first error line, and trace location. Surface evidence; do not speculate on root cause.
