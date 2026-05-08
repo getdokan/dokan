@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { Page, Locator } from '@playwright/test';
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
 
@@ -15,42 +15,30 @@ export class CommissionPage {
 
     // Admin Selectors
     admin = {
-        commissionsUrl: `${BASE_URL}/wp-admin/admin.php?page=dokan-dashboard#/commissions`,
         settingsUrl: `${BASE_URL}/wp-admin/admin.php?page=dokan#/settings`,
-        settingsNavTab: "div[class='nav-tab nav-tab-active'] div[class='nav-description']",
-        sellingOptionsTab: "//div[normalize-space()='Selling Options']",
+        // Sidebar nav tab is a `<div class="nav-tab">` whose `.nav-title` holds the
+        // section name. Targeting the inner `.nav-title` (rather than xpath text
+        // match) avoids matching the page heading which uses the same string.
+        sellingOptionsNavTitle: 'div.nav-tab div.nav-title',
         commissionTypeDropdown: "select[id='dokan_selling[commission_type]']",
-        percentageInput: "#percentage-val-id",
-        fixedInput: "//input[@id='fixed-val-id']",
-        submitButton: "//input[@id='submit']",
-        // Category Based commission inputs (long CSS paths from DOM)
-        categoryBasedPercentageInput: "body > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > form:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > input:nth-child(1)",
-        categoryBasedFixedInput: "body > div:nth-child(3) > div:nth-child(2) > div:nth-child(2) > div:nth-child(1) > div:nth-child(5) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1) > div:nth-child(9) > div:nth-child(1) > div:nth-child(2) > div:nth-child(2) > form:nth-child(1) > div:nth-child(3) > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > div:nth-child(3) > input:nth-child(2)",
+        percentageInput: '#percentage-val-id',
+        fixedInput: '#fixed-val-id',
+        // Category-based inputs share IDs across rows (one row per category +
+        // a default row). The first visible pair is the default-commission row.
+        categoryBasedPercentageInput: '#percentage_commission',
+        categoryBasedFixedInput: '#fixed_commission',
+        submitButton: "input[type='submit'][name='submit']",
+
         // New product (post-new.php?post_type=product)
         newProductUrl: `${BASE_URL}/wp-admin/post-new.php?post_type=product`,
-        productTitleInput: "//input[@id='title']",
-        generalProductDataLink: "//a[@href='#general_product_data']",
-        regularPriceInput: "#_regular_price",
-        salePriceInput: "#_sale_price",
-        advancedProductDataLink: "//a[@href='#advanced_product_data']",
-        adminCommissionInput: "//input[@id='admin_commission']",
-        perProductAdminFeeInput: "//input[@name='_per_product_admin_additional_fee']",
-        publishButton: "//input[@id='publish']",
-    };
-
-    // Vendor Selectors
-    vendor = {
-        // Add vendor selectors here
-    };
-
-    // Customer Selectors
-    customer = {
-        // Add customer selectors here
-    };
-
-    // Commission Specific Selectors
-    commission = {
-        // Add commission-specific selectors here
+        productTitleInput: '#title',
+        generalProductDataLink: "a[href='#general_product_data']",
+        regularPriceInput: '#_regular_price',
+        salePriceInput: '#_sale_price',
+        advancedProductDataLink: "a[href='#advanced_product_data']",
+        adminCommissionInput: '#admin_commission',
+        perProductAdminFeeInput: "input[name='_per_product_admin_additional_fee']",
+        publishButton: '#publish',
     };
 
     // ============================================
@@ -58,20 +46,11 @@ export class CommissionPage {
     // ============================================
 
     testData = {
-        admin: {
-            // Add admin test data here
-        },
-        vendor: {
-            // Add vendor test data here
-        },
-        customer: {
-            // Add customer test data here
-        },
         commission: {
-            commissionType: 'Fixed',
+            commissionType: 'fixed',           // <option value="fixed">Fixed</option>
+            categoryBasedType: 'category_based', // <option value="category_based">Category Based</option>
             percentageValue: '10,00',
             fixedValue: '5,00',
-            categoryBasedType: 'Category Based',
             categoryBasedValue: '5',
         },
         product: {
@@ -80,136 +59,118 @@ export class CommissionPage {
             salePrice: '120',
             adminCommission: '15',
             perProductAdminFee: '15',
-        }
+        },
     };
 
     // ============================================
-    // HELPER METHODS
+    // HELPERS
     // ============================================
 
-    // Navigation Methods
-    async navigateTo(url: string) {
-        await this.page.goto(url);
-    }
-
-    // Admin Methods
-    async goToCommissionsPage() {
-        await this.page.goto(this.admin.commissionsUrl);
-        await this.page.waitForLoadState('load');
+    private sellingOptionsTab(): Locator {
+        return this.page.locator(this.admin.sellingOptionsNavTitle, { hasText: /^\s*Selling Options\s*$/ });
     }
 
     async goToSettingsPage() {
         await this.page.goto(this.admin.settingsUrl);
         await this.page.waitForLoadState('domcontentloaded');
-    }
-
-    async clickSettingsNavTab() {
-        const tab = this.page.locator(this.admin.sellingOptionsTab);
-        await tab.waitFor({ state: 'visible' });
-        // Settings page has a sticky header that can intercept clicks on the side nav
-        // item during layout shifts. Force past the actionability check.
-        await tab.click({ force: true });
+        // Vue settings shell needs a moment to mount the nav.
+        await this.sellingOptionsTab().waitFor({ state: 'visible', timeout: 20000 });
     }
 
     async openSellingOptionsTab() {
-        // The settings page renders a zero-sized `.loading` overlay that Playwright
-        // keeps flagging as an interceptor. It is purely visual — bypass the hit-test
-        // by force-clicking.
-        const tab = this.page.locator(this.admin.sellingOptionsTab);
-        await tab.waitFor({ state: 'visible' });
+        const tab = this.sellingOptionsTab();
+        await tab.scrollIntoViewIfNeeded();
+        // Settings page has a sticky header / overlays that occasionally
+        // intercept the click — force past the actionability check.
         await tab.click({ force: true });
-        await this.page.locator(this.admin.commissionTypeDropdown).waitFor({ state: 'visible' });
+        await this.page.locator(this.admin.commissionTypeDropdown).waitFor({ state: 'visible', timeout: 20000 });
     }
 
-    async selectCommissionType(type: string) {
-        await this.page.selectOption(this.admin.commissionTypeDropdown, type);
+    async selectCommissionType(value: string) {
+        await this.page.selectOption(this.admin.commissionTypeDropdown, value);
+        // Switching commission type swaps the form fields — give the DOM a beat.
+        await this.page.waitForTimeout(800);
     }
 
-    // Click, clear, then type in percentage input (#percentage-val-id).
     async setPercentageValue(value: string) {
         const input = this.page.locator(this.admin.percentageInput).first();
         await input.waitFor({ state: 'visible' });
         await input.click();
-        await input.clear();
+        await input.fill('');
         await input.fill(value);
-        //await this.page.locator("//div[@class='fee-recipients dokan-settings-field-type-sub_section']//div[@class='dokan-settings-sub-section sub-section-styles']").click();
     }
 
-    // Click, clear, then type in fixed input.
     async setFixedValue(value: string) {
         const input = this.page.locator(this.admin.fixedInput).first();
         await input.waitFor({ state: 'visible' });
         await input.click();
-        await input.clear();
+        await input.fill('');
         await input.fill(value);
     }
 
-    // Category Based: click, clear, type in first (percentage) input.
     async setCategoryBasedPercentageValue(value: string) {
         const input = this.page.locator(this.admin.categoryBasedPercentageInput).first();
         await input.waitFor({ state: 'visible' });
         await input.click();
-        await input.clear();
+        await input.fill('');
         await input.fill(value);
     }
 
-    // Category Based: click, clear, type in second (fixed) input.
     async setCategoryBasedFixedValue(value: string) {
         const input = this.page.locator(this.admin.categoryBasedFixedInput).first();
         await input.waitFor({ state: 'visible' });
         await input.click();
-        await input.clear();
+        await input.fill('');
         await input.fill(value);
     }
 
     async clickSubmitButton() {
-        await this.page.waitForTimeout(500);
-        await this.page.locator(this.admin.submitButton).click();
+        await this.page.locator(this.admin.submitButton).first().click();
         await this.page.waitForLoadState('domcontentloaded');
     }
 
-    // New product (commission-specific) methods
+    // ---- New product (commission-specific) ----
     async goToNewProductPage() {
         await this.page.goto(this.admin.newProductUrl);
         await this.page.waitForLoadState('domcontentloaded');
+        await this.page.locator(this.admin.productTitleInput).waitFor({ state: 'visible', timeout: 20000 });
     }
 
     async setProductTitle(title: string) {
         const input = this.page.locator(this.admin.productTitleInput);
-        await input.waitFor({ state: 'visible' });
         await input.click();
         await input.fill(title);
     }
 
     async clickGeneralProductData() {
-        await this.page.locator(this.admin.generalProductDataLink).waitFor({ state: 'visible' });
-        await this.page.locator(this.admin.generalProductDataLink).click();
+        const link = this.page.locator(this.admin.generalProductDataLink);
+        await link.waitFor({ state: 'visible' });
+        await link.click();
     }
 
     async setRegularPrice(value: string) {
         const input = this.page.locator(this.admin.regularPriceInput).first();
         await input.waitFor({ state: 'visible' });
         await input.click();
-        await input.clear();
-        // pressSequentially fires keydown/keypress/input/keyup per character so WooCommerce price JS picks it up
-        await input.pressSequentially(value, { delay: 100 });
+        await input.fill('');
+        // pressSequentially fires keydown/keypress/input/keyup per character so WC price JS picks it up
+        await input.pressSequentially(value, { delay: 80 });
         await input.blur();
-        await this.page.waitForTimeout(500);
     }
 
     async setSalePrice(value: string) {
         const input = this.page.locator(this.admin.salePriceInput).first();
         await input.waitFor({ state: 'visible' });
         await input.click();
-        await input.clear();
-        await input.pressSequentially(value, { delay: 100 });
+        await input.fill('');
+        await input.pressSequentially(value, { delay: 80 });
         await input.blur();
-        await this.page.waitForTimeout(500);
     }
 
     async clickAdvancedProductData() {
-        await this.page.locator(this.admin.advancedProductDataLink).waitFor({ state: 'visible' });
-        await this.page.locator(this.admin.advancedProductDataLink).click();
+        const link = this.page.locator(this.admin.advancedProductDataLink);
+        await link.waitFor({ state: 'visible' });
+        await link.click();
     }
 
     async setAdminCommission(value: string) {
@@ -227,46 +188,17 @@ export class CommissionPage {
     }
 
     async clickPublishButton() {
-        await this.page.locator(this.admin.publishButton).waitFor({ state: 'visible' });
-        await this.page.locator(this.admin.publishButton).click();
+        const btn = this.page.locator(this.admin.publishButton);
+        await btn.waitFor({ state: 'visible' });
+        await btn.click();
         await this.page.waitForLoadState('domcontentloaded');
-    }
-
-    // Vendor Methods
-    // Add vendor methods here
-
-    // Customer Methods
-    // Add customer methods here
-
-    // Commission Methods
-    // Add commission-specific methods here
-
-    // Wait/Utility Methods
-    async waitForTimeout(ms: number) {
-        await this.page.waitForTimeout(ms);
     }
 
     async waitForPageReady() {
         await this.page.waitForLoadState('load');
     }
 
-    async waitForElement(selector: string) {
-        await this.page.waitForSelector(selector);
-    }
-
-    async clickElement(selector: string) {
-        await this.page.click(selector);
-    }
-
-    async fillInput(selector: string, value: string) {
-        await this.page.fill(selector, value);
-    }
-
-    async getText(selector: string): Promise<string> {
-        return await this.page.textContent(selector) || '';
-    }
-
-    async isTextVisible(text: string): Promise<boolean> {
-        return await this.page.locator(`:text-is("${text}")`).first().isVisible();
+    async waitForTimeout(ms: number) {
+        await this.page.waitForTimeout(ms);
     }
 }
