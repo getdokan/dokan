@@ -25,7 +25,10 @@ const Layout = ( {
                 pluginId="dokan-admin-dashboard"
                 tokens={ pluginUITokens }
             >
-                { children }
+                { /* Plugin UI WordPress styles are scoped to .dokan-admin-dashboard-layout (see base-tailwind.css). */ }
+                <div className="dokan-admin-dashboard-layout">
+                    { children }
+                </div>
                 <PluginArea scope={ 'dokan-admin-dashboard-' + route.id } />
             </ThemeProvider>
             <DokanToaster />
