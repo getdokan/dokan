@@ -59,6 +59,12 @@
                 tr th:last-child {
                     padding-right: 20px;
                 }
+
+                tbody tr td {
+                    min-height: 65px;
+                    padding-top: 14px;
+                    padding-bottom: 14px;
+                }
             }
             .components-button.is-compact.has-icon:not(.has-text) {
                 width: auto;
@@ -87,6 +93,44 @@
                         line-height: 1;
                     }
                 }
+            }
+        }
+
+        // Plugin UI wrapper rendered by the new DataViews component.
+        // Restores admin-table polish (row height, bulk-bar borders, pagination padding)
+        // that the legacy AdminDataViews wrapper used to provide.
+        .pui-root-dataviews {
+            .dataviews-bulk-actions-footer__action-buttons {
+                gap: 10px;
+
+                .components-button.is-compact:not(:last-child) {
+                    border: 1px solid #e9e9e9;
+                    border-radius: 6px;
+                    line-height: 1;
+                    padding: 6px 10px;
+                }
+            }
+
+            .components-flex.components-h-stack.dataviews-pagination {
+                width: 100%;
+                justify-content: space-between;
+                padding: 15px 20px;
+            }
+
+            // Data rows: keep visual rhythm at 65px even for single-line rows.
+            table.dataviews-view-table tbody tr td {
+                min-height: 65px;
+                padding-top: 14px;
+                padding-bottom: 14px;
+            }
+
+            // Skeleton rows (rendered while isLoading): match the data row rhythm.
+            > div table tbody tr td.h-12 {
+                height: 65px;
+            }
+            > div table tbody tr td {
+                height: 65px;
+                min-height: 65px;
             }
         }
     }
