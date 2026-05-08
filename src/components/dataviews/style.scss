@@ -97,9 +97,23 @@
         }
 
         // Plugin UI wrapper rendered by the new DataViews component.
-        // Restores admin-table polish (row height, bulk-bar borders, pagination padding)
-        // that the legacy AdminDataViews wrapper used to provide.
+        // Restores admin-table polish (single white card containing tabs +
+        // filters + table + pagination) that the legacy AdminDataViews
+        // wrapper used to provide.
         .pui-root-dataviews {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 1px 3px 0px #0000001a;
+            overflow: hidden;
+
+            // Inner table wrapper: drop the duplicate card styling now that
+            // the outer wrapper carries the rounded corners + shadow.
+            .dataviews-wrapper {
+                box-shadow: none;
+                border-radius: 0;
+                background-color: transparent;
+            }
+
             .dataviews-bulk-actions-footer__action-buttons {
                 gap: 10px;
 
