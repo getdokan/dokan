@@ -7,6 +7,7 @@ import {
     DateTimeHtml,
     DokanButton,
     SearchInput,
+    getActionLabel,
 } from '@dokan/components';
 import DokanModal from '../../../components/modals/DokanModal';
 import { Vendor } from '../../../definitions/dokan-vendor';
@@ -549,7 +550,11 @@ const VendorsPage = ( props ) => {
                             [
                                 {
                                     id: 'edit',
-                                    label: __( 'Edit', 'dokan-lite' ),
+                                    label: () =>
+                                        getActionLabel(
+                                            <Pencil size={ 16 } className="!fill-none" />,
+                                            __( 'Edit', 'dokan-lite' )
+                                        ),
                                     icon: (
                                         <Pencil
                                             size={ 16 }
@@ -570,7 +575,11 @@ const VendorsPage = ( props ) => {
                                 },
                                 {
                                     id: 'see-products',
-                                    label: __( 'See Products', 'dokan-lite' ),
+                                    label: () =>
+                                        getActionLabel(
+                                            <Box size={ 16 } className="!fill-none" />,
+                                            __( 'See Products', 'dokan-lite' )
+                                        ),
                                     icon: (
                                         <Box
                                             size={ 16 }
@@ -591,7 +600,11 @@ const VendorsPage = ( props ) => {
                                 },
                                 {
                                     id: 'see-orders',
-                                    label: __( 'See Orders', 'dokan-lite' ),
+                                    label: () =>
+                                        getActionLabel(
+                                            <ShoppingBag size={ 16 } className="!fill-none" />,
+                                            __( 'See Orders', 'dokan-lite' )
+                                        ),
                                     icon: (
                                         <ShoppingBag
                                             size={ 16 }
@@ -613,7 +626,11 @@ const VendorsPage = ( props ) => {
                                 },
                                 {
                                     id: 'switch-to',
-                                    label: __( 'Switch to', 'dokan-lite' ),
+                                    label: () =>
+                                        getActionLabel(
+                                            <ArrowLeftRight size={ 16 } className="!fill-none" />,
+                                            __( 'Switch to', 'dokan-lite' )
+                                        ),
                                     icon: (
                                         <ArrowLeftRight
                                             size={ 16 }
@@ -636,10 +653,11 @@ const VendorsPage = ( props ) => {
                                 },
                                 {
                                     id: 'approve-vendor',
-                                    label: __(
-                                        'Approve Vendors',
-                                        'dokan-lite'
-                                    ),
+                                    label: () =>
+                                        getActionLabel(
+                                            <Check size={ 16 } className="!fill-none" />,
+                                            __( 'Approve Vendors', 'dokan-lite' )
+                                        ),
                                     icon: (
                                         <Check
                                             size={ 16 }
@@ -656,10 +674,11 @@ const VendorsPage = ( props ) => {
                                 },
                                 {
                                     id: 'disable-selling',
-                                    label: __(
-                                        'Disable Selling',
-                                        'dokan-lite'
-                                    ),
+                                    label: () =>
+                                        getActionLabel(
+                                            <Ban size={ 16 } className="!fill-none" />,
+                                            __( 'Disable Selling', 'dokan-lite' )
+                                        ),
                                     icon: (
                                         <Ban
                                             size={ 16 }
