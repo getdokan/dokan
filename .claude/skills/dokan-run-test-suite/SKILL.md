@@ -51,16 +51,34 @@ docker info >/dev/null 2>&1 || sudo systemctl start docker
 
 If `open -a Docker` fails because Docker Desktop isn't installed, surface that and stop — don't try to install it.
 
-### One-time setup (only if env isn't running)
+### Setup (default flow)
+
+Default to a clean reset — guarantees no stale DB / plugin / option leftovers from a previous run.
 
 ```bash
 cd tests/pw
-npm ci                              # install playwright deps
-npm run start:env                   # start wp-env (lite + pro + premium plugins)
-npm run docker:setup                # site_setup + auth_setup + e2e_setup projects
+npm ci                              # install playwright deps (skip if up to date)
+npm run reset:env                   # wp-env destroy → start (lite + pro + premium plugins)
+npm run docker:setup                # site_setup + auth_setup + e2e_setup projects (seeds test data)
 ```
 
-If `npm run start:env` errors with port-in-use, run `npm run wp-env stop` first. If it errors with "Cannot connect to the Docker daemon" despite the pre-flight, the daemon was killed mid-flight — re-run the pre-flight block.
+`reset:env` takes ~3–5 min on a cold cache, ~1–2 min when wp-env images are already pulled. Always use this when:
+- The user says "fresh run" / "clean run" / "from scratch"
+- Tests passed in CI but failed locally (likely stale state)
+- `.wp-env.json` / `.wp-env.override.json` / a plugin version changed
+- Previous run was interrupted (Ctrl-C, crash, etc.)
+
+### Fast path (only when re-running tests in the same session)
+
+If the env is already up and the user just wants to re-run tests after editing a spec, **skip the env reset** — it's wasteful. Go straight to:
+
+```bash
+cd tests/pw
+npm run docker:setup     # re-seed test data (still cheap, ~30s)
+npm run test:e2e -- ...  # or specific spec
+```
+
+If `wp-env start` errors with port-in-use, run `npm run wp-env stop` first. If it errors with "Cannot connect to the Docker daemon" despite the pre-flight, the daemon was killed mid-flight — re-run the pre-flight block.
 
 ### Run options
 
