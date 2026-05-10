@@ -48,7 +48,29 @@ docker info >/dev/null 2>&1 || sudo systemctl start docker
 
 If `open -a Docker` fails because Docker Desktop is not installed, surface that and stop. Do not attempt to install it.
 
-### 2. Environment setup
+### 2. `.env` pre-flight
+
+The Playwright tests read configuration from `tests/pw/.env` (loaded via `dotenv`). Without it the helpers fall back to `cd undefined && wp ...`, which breaks `site_setup` immediately. Pro runs additionally need `LICENSE_KEY` (license tests) and `GMAP` (geolocation tests, 12 specs under `tests/e2e/geolocation/`).
+
+**Hard gate.** Before invoking `reset:env` or any test command, inspect `.env` and resolve every missing key by asking the user. Do not silently scaffold an empty `.env` and discover the failure mid-run.
+
+| State | Action |
+| --- | --- |
+| `.env` does not exist | Ask the user for `LICENSE_KEY` (when Pro) and `GMAP` in one bundled `AskUserQuestion`, then write `.env` from `.env.example` with `CI=true`, `DOKAN_PRO` per user intent, and the supplied keys. |
+| `.env` exists, `DOKAN_PRO=true`, `LICENSE_KEY=` empty | Stop and ask for the key. License-related Pro tests will fail without it. |
+| `.env` exists, `GMAP=` empty | Warn the user that all 12 `tests/e2e/geolocation/*` specs will fail. Ask whether to paste a Google Maps API key now or accept the failures. |
+| `.env` exists, all required keys populated | Pass. |
+
+When several keys are missing, bundle them into a single prompt — do not ask sequentially. Example:
+
+```bash
+# Inspect existing .env without printing secret values
+grep -E '^(LICENSE_KEY|GMAP|DOKAN_PRO)=' tests/pw/.env
+```
+
+After writing or amending `.env`, re-read it to confirm the keys are populated before continuing to step 3.
+
+### 3. Environment setup
 
 Default to a clean reset to guarantee a known baseline:
 
@@ -76,7 +98,7 @@ npm run test:e2e -- tests/e2e/<area>/<spec>.spec.ts
 
 If `wp-env start` reports a port conflict, stop the existing instance with `npm run wp-env stop` and retry. If it reports `Cannot connect to the Docker daemon` despite a successful pre-flight, the daemon was terminated mid-run — re-execute the pre-flight block.
 
-### 3. Verify required plugins
+### 4. Verify required plugins
 
 The suite requires the following plugins to be installed and active in the wp-env site. The full list is canonical — every entry is referenced by one or more specs.
 
@@ -146,9 +168,9 @@ If at least one plugin is missing, do **not** activate the rest, do **not** cont
 
 After the user confirms the missing plugins are in place and `reset:env` has been re-run, repeat the verification block before proceeding. Do not continue from a remembered state — the wp-env site is rebuilt by the reset, so all plugins must be re-checked.
 
-If verification passes, activate any installed-but-inactive entries individually, then proceed to step 4.
+If verification passes, activate any installed-but-inactive entries individually, then proceed to step 5.
 
-### 4. Enable the React UI
+### 5. Enable the React UI
 
 The React tests under `tests/e2e/**/new*.spec.ts` and the merged "NEW REACT UI TEST CASES" sections require the Dokan 5.0.0+ React vendor dashboard and product editor. CI sets this automatically; locally, run it once after `reset:env`:
 
@@ -162,7 +184,7 @@ npm run wp-env run tests-cli wp eval '
 '
 ```
 
-### 5. Test execution
+### 6. Test execution
 
 ```bash
 # Full E2E suite (long-running, single-process)
@@ -186,7 +208,7 @@ npm run test:ui
 npm run test:api
 ```
 
-### 6. Tag conventions
+### 7. Tag conventions
 
 | Tag | Meaning |
 | --- | --- |
@@ -197,7 +219,7 @@ npm run test:api
 
 `playwright.config.ts` already applies `grep` and `grepInvert` based on the `DOKAN_PRO` environment variable. Avoid layering manual filters on top unless explicitly requested.
 
-### 7. Inspecting local results
+### 8. Inspecting local results
 
 - HTML report: `npx playwright show-report`
 - Summary JSON: `tests/pw/playwright-report/e2e/summary-report/results.json`
@@ -278,6 +300,9 @@ The `getShardSpecs.js` splitter assigns the global mean to specs introduced afte
 | `wp-env start` times out. | Ports 9999 or 9998 are in use. | `docker ps` to identify the process; then `npm run wp-env stop` and retry. |
 | Vendor `/dashboard` tests block on a modal. | Dokan Pro 5.0.0 announcement modal appears on first load. | Use the `closeAnnouncementModal` helper in `tests/pw/utils/helpers.ts` (auto-dismisses via `page.addLocatorHandler`). |
 | Tests pass locally but fail in CI. | The Dokan React UI option may not be enabled. | Set `dokan_appearance.vendor_layout_style = "latest"` and `vendor_product_editor = "latest"`. The CI workflow does this automatically. |
+| `site_setup` fails with `cd undefined && wp ...`. | `tests/pw/.env` does not exist. The helpers route wp-cli through `SITE_PATH` when `CI` is unset. | Run the `.env` pre-flight (step 2). Create `.env` from `.env.example`, set `CI=true`, ask the user for `LICENSE_KEY` / `GMAP`. |
+| All ~12 `tests/e2e/geolocation/*` specs fail with `locator('input.dokan-range-slider')` or `.dokan-map-container` timeouts. | `GMAP=` empty in `.env`, so the Google Maps widget never loads. | Ask the user for a Google Maps API key, set `GMAP=<key>` in `.env`, re-run only `geolocation.spec.ts`. |
+| License-related Pro tests fail with "invalid license" or never reach the dashboard. | `LICENSE_KEY=` empty in `.env`. | Ask the user for the Dokan Pro licence key, set `LICENSE_KEY=<key>` in `.env`, re-run the affected spec(s). |
 
 ---
 
