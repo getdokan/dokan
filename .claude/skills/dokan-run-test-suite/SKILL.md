@@ -56,10 +56,12 @@ The Playwright tests read configuration from `tests/pw/.env` (loaded via `dotenv
 
 | State | Action |
 | --- | --- |
-| `.env` does not exist | Ask the user for `LICENSE_KEY` (when Pro) and `GMAP` in one bundled `AskUserQuestion`, then write `.env` from `.env.example` with `CI=true`, `DOKAN_PRO` per user intent, and the supplied keys. |
+| `.env` does not exist | Ask the user for `LICENSE_KEY` (when Pro) and `GMAP` in one bundled `AskUserQuestion`. Frame both as **imperative for a clean suite run** — `LICENSE_KEY` because Pro license tests depend on it, `GMAP` because the 12 `tests/e2e/geolocation/*` specs will fail without it. Then write `.env` from `.env.example` with `CI=true`, `DOKAN_PRO` per user intent, and the supplied keys. |
 | `.env` exists, `DOKAN_PRO=true`, `LICENSE_KEY=` empty | Stop and ask for the key. License-related Pro tests will fail without it. |
-| `.env` exists, `GMAP=` empty | Warn the user that all 12 `tests/e2e/geolocation/*` specs will fail. Ask whether to paste a Google Maps API key now or accept the failures. |
+| `.env` exists, `GMAP=` empty | Tell the user explicitly: *all 12 `tests/e2e/geolocation/*` specs will fail without `GMAP`*. State that pasting a Google Maps API key is **imperative** for a clean suite run. Then ask whether to paste a key now or proceed and accept the geolocation failures. Do not start the run until they answer. |
 | `.env` exists, all required keys populated | Pass. |
+
+When the user declines to provide `GMAP`, do not silently swallow it — restate the consequence in your next message ("proceeding without `GMAP`; the 12 `tests/e2e/geolocation/*` specs will fail") so the user has one final chance to redirect before the long-running suite starts.
 
 When several keys are missing, bundle them into a single prompt — do not ask sequentially. Example:
 
