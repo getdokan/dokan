@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, Page } from '@utils/test';
 import { MenuManagerPage, api, db, payloads, testData } from './menuManagerPage';
 import path from 'path';
 

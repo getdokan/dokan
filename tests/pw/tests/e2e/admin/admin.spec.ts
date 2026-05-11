@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '@utils/test';
 import { AdminPage } from './adminPage';
 import path from 'path';
 

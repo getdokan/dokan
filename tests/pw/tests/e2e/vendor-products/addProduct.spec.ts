@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '@utils/test';
 import { AddProductPage } from './addProductPage';
 import path from 'path';
 import { NewProductListPage } from './newProductListPage';

@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, Page } from '@utils/test';
 import { ProductsPage, api, productData, predefined } from './productsPage';
 import path from 'path';
 

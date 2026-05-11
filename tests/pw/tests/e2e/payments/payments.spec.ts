@@ -1,4 +1,4 @@
-import { Page, expect, test } from '@playwright/test';
+import { Page, expect, test } from '@utils/test';
 import { PaymentsPage, api, db, helpers, payloads, testData } from './paymentsPage';
 import path from 'path';
 

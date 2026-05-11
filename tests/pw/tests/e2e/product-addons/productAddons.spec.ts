@@ -1,4 +1,4 @@
-import { Page, expect, test } from '@playwright/test';
+import { Page, expect, test } from '@utils/test';
 import { ProductAddonsPage, ProductsPage, ApiUtils, data, payloads, dbUtils, responseBody } from './productAddonsPage';
 import { serialize } from 'php-serialize';
 import path from 'path';

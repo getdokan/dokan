@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, Page } from '@utils/test';
 import { ProductsPage, ApiUtils, data, dbData, dbUtils, payloads, responseBody } from './productsDetailsPage';
 import { serialize } from 'php-serialize';
 import path from 'path';

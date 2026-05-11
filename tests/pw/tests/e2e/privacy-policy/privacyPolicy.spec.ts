@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, Page } from '@utils/test';
 import { PrivacyPolicyPage, ApiUtils, data, dbData, dbUtils } from './privacyPolicyPage';
 import path from 'path';
 
