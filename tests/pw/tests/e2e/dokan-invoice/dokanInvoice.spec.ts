@@ -1,4 +1,4 @@
-import { test, expect, request } from '@playwright/test';
+import { test, expect, request } from '@utils/test';
 import path from 'path';
 import { DokanInvoicePage } from './dokanInvoicePage';
 import { payloads } from '@utils/payloads';

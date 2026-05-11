@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, Page } from '@utils/test';
 import { ProductFormManager, ApiUtils, data, dbData, dbUtils, payloads } from './productFormManagerPage';
 import path from 'path';
 

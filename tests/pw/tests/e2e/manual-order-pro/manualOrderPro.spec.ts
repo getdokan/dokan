@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '@utils/test';
 import path from 'path';
 
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');

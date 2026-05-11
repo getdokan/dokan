@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, Page } from '@utils/test';
 import { GeolocationPage, api, db, payloads, testData } from './geolocationPage';
 import path from 'path';
 

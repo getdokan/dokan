@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test } from '@utils/test';
 import { CommissionPage } from './commissionPage';
 import path from 'path';
 

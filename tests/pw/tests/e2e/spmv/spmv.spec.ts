@@ -1,4 +1,4 @@
-import { Page, expect, test } from '@playwright/test';
+import { Page, expect, test } from '@utils/test';
 import { SpmvPage, ApiUtils, data, payloads, dbUtils, dbData } from './spmvPage';
 import path from 'path';
 

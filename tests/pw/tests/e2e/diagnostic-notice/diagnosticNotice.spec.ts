@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, Page } from '@utils/test';
 import { NoticeAndPromotionPage, db, diagnosticNoticeData } from './diagnosticNoticePage';
 import path from 'path';
 

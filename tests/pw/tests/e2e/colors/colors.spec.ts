@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, Page } from '@utils/test';
 import { ColorsPage, api, db, colorsData, defaultColorsSettings, colorsOptionName, moduleId } from './colorsPage';
 import path from 'path';
 

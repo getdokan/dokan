@@ -1,4 +1,4 @@
-import { Page, test } from '@playwright/test';
+import { Page, test } from '@utils/test';
 import { VendorSettingsPage, ApiUtils, dbData, dbUtils, data, payloads } from './vendorSettingsPage';
 import path from 'path';
 
