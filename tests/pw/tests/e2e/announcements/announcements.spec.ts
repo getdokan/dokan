@@ -2,7 +2,7 @@ import { test, expect } from '@utils/test';
 import { AnnouncementsPage } from './announcementsPage';
 import path from 'path';
 
-const BASE = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 // ============================================
 // SESSION STORAGE VARIABLES
@@ -455,14 +455,14 @@ test.describe('New Vendor Announcement (React) Tests @pro', () => {
         // Seed an announcement so the list isn't empty
         const adminCtx = await browser.newContext({ storageState: a1 });
         const adminPage = await adminCtx.newPage();
-        await adminPage.goto(`${BASE}/wp-admin/admin.php?page=dokan-dashboard#/announcement`);
+        await adminPage.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/announcement`));
         await adminPage.waitForLoadState('domcontentloaded');
         await adminPage.close();
         await adminCtx.close();
 
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/dashboard/new/#/announcement`);
+        await page.goto(toPath(`dashboard/new/#/announcement`));
         await page.waitForLoadState('domcontentloaded');
         await page.locator('#dokan-vendor-dashboard-root').waitFor({ state: 'visible', timeout: 30000 });
 
@@ -477,7 +477,7 @@ test.describe('New Vendor Announcement (React) Tests @pro', () => {
     test('Test Case 2 - Announcement list renders rows or empty state', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/dashboard/new/#/announcement`);
+        await page.goto(toPath(`dashboard/new/#/announcement`));
         await page.waitForLoadState('domcontentloaded');
         await page.locator('#dokan-vendor-dashboard-root').waitFor({ state: 'visible', timeout: 30000 });
         await page.waitForTimeout(3000);
@@ -494,7 +494,7 @@ test.describe('New Vendor Announcement (React) Tests @pro', () => {
     test('Test Case 3 - HashRouter survives reload on /announcement', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/dashboard/new/#/announcement`);
+        await page.goto(toPath(`dashboard/new/#/announcement`));
         await page.waitForLoadState('domcontentloaded');
         await page.locator('#dokan-vendor-dashboard-root').waitFor({ state: 'visible', timeout: 30000 });
 
@@ -524,7 +524,7 @@ test.describe('New Vendor Announcement (React) Tests @pro', () => {
             ).catch(() => undefined);
         }
 
-        await page.goto(`${BASE}/dashboard/new/#/announcement`);
+        await page.goto(toPath(`dashboard/new/#/announcement`));
         await page.waitForLoadState('domcontentloaded');
         await page.locator('#dokan-vendor-dashboard-root').waitFor({ state: 'visible', timeout: 30000 });
 

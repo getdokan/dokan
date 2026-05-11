@@ -2,7 +2,7 @@ import { Page, expect, test } from '@utils/test';
 import { SingleStorePage, data } from './singleStorePage';
 import path from 'path';
 
-const BASE = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.json');
 
@@ -37,7 +37,7 @@ test.describe('Single Store Front-end (React-aware) Tests @lite', () => {
     test('Test Case 1 - Single store page renders for guest', { tag: ['@lite', '@guest'] }, async ({ browser }) => {
         const ctx = await browser.newContext();
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/store/vendor1/`);
+        await page.goto(toPath(`store/vendor1/`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
@@ -49,7 +49,7 @@ test.describe('Single Store Front-end (React-aware) Tests @lite', () => {
     test('Test Case 2 - Single store page renders content', { tag: ['@lite', '@guest'] }, async ({ browser }) => {
         const ctx = await browser.newContext();
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/store/vendor1/`);
+        await page.goto(toPath(`store/vendor1/`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(3000);
         const bodyText = await page.locator('body').innerText();
@@ -62,7 +62,7 @@ test.describe('Single Store Front-end (React-aware) Tests @lite', () => {
         const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.json');
         const ctx = await browser.newContext({ storageState: c1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/store/vendor1/`);
+        await page.goto(toPath(`store/vendor1/`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         const fatal = await page.locator("text=/Fatal error|Parse error/i").first().isVisible({ timeout: 1000 }).catch(() => false);

@@ -8,8 +8,7 @@ declare const process: { env: Record<string, string | undefined> };
 // @types/node into the strict tsconfig used elsewhere in the suite.
 declare const Buffer: { from(input: string): { toString(encoding: string): string } };
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
-const SERVER_URL = process.env.SERVER_URL ?? `${BASE_URL}/wp-json`;
+import { toPath, SERVER_URL } from '@utils/helpers';
 const ADMIN_USER = process.env.ADMIN || 'admin';
 const ADMIN_PASS = process.env.ADMIN_PASSWORD || 'password';
 const adminBasicAuth = (): string =>
@@ -28,9 +27,9 @@ export class AbuseReportsPage {
 
     // Admin Selectors (legacy + shared)
     admin = {
-        abuseReportsUrl: `${BASE_URL}/wp-admin/admin.php?page=dokan-dashboard#/abuse-reports`,
-        modulesUrl: `${BASE_URL}/wp-admin/admin.php?page=dokan#/modules`,
-        settingsUrl: `${BASE_URL}/wp-admin/admin.php?page=dokan#/settings`,
+        abuseReportsUrl: toPath(`wp-admin/admin.php?page=dokan-dashboard#/abuse-reports`),
+        modulesUrl: toPath(`wp-admin/admin.php?page=dokan#/modules`),
+        settingsUrl: toPath(`wp-admin/admin.php?page=dokan#/settings`),
         moduleSearchInput: "//div[@class='search-box']//input[@placeholder='Search...']",
         moduleSlider: "//span[@class='slider round']",
         moduleToggleCheckbox: "//span[@class='slider round']/preceding-sibling::input[@type='checkbox']",
@@ -135,7 +134,7 @@ export class AbuseReportsPage {
 
     // Customer Selectors
     customer = {
-        productUrl: `${BASE_URL}/product/p1_v1-simple/`,
+        productUrl: toPath(`product/p1_v1-simple/`),
     };
 
     // Abuse Reports Specific Selectors (front-end report form)

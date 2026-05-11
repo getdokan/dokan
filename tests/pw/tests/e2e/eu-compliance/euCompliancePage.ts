@@ -2,6 +2,7 @@
 import { Page, APIRequestContext, request } from '@playwright/test';
 import mysql from 'mysql2/promise';
 import { isSerialized, serialize, unserialize } from 'php-serialize';
+import { toPath, SERVER_URL } from '@utils/helpers';
 
 // ============================================
 // ENVIRONMENT VARIABLES
@@ -33,8 +34,6 @@ async function closeAnnouncementModal(page: import('@playwright/test').Page): Pr
 }
 
 const {
-    BASE_URL,
-    SERVER_URL: SERVER_URL_ENV,
     DB_HOST_NAME,
     DB_USER_NAME,
     DB_USER_PASSWORD,
@@ -46,8 +45,6 @@ const {
     VENDOR,
     CUSTOMER,
 } = process.env;
-
-const SERVER_URL = SERVER_URL_ENV || (BASE_URL ? BASE_URL + '/wp-json' : '/wp-json');
 const dbPrefix = DB_PREFIX || 'wp';
 
 // ============================================
@@ -366,49 +363,49 @@ class Base {
 export class EuCompliancePage extends Base {
     async enableEuComplianceFieldsModule(): Promise<void> {
         await this.safe(async () => {
-            await this.gotoSafe((BASE_URL || '') + '/wp-admin/admin.php?page=dokan#/settings');
+            await this.gotoSafe(toPath('wp-admin/admin.php?page=dokan#/settings'));
         }, 'enableEuComplianceFieldsModule');
     }
 
     async disableEuComplianceFieldsModule(): Promise<void> {
         await this.safe(async () => {
-            await this.gotoSafe((BASE_URL || '') + '/wp-admin/admin.php?page=dokan#/settings');
+            await this.gotoSafe(toPath('wp-admin/admin.php?page=dokan#/settings'));
         }, 'disableEuComplianceFieldsModule');
     }
 
     async setDokanEuComplianceSettings(_option: string): Promise<void> {
         await this.safe(async () => {
-            await this.gotoSafe((BASE_URL || '') + '/wp-admin/admin.php?page=dokan#/settings');
+            await this.gotoSafe(toPath('wp-admin/admin.php?page=dokan#/settings'));
         }, 'setDokanEuComplianceSettings');
     }
 
     async addUserEuCompliance(_userId: string | number, _euData: any): Promise<void> {
         await this.safe(async () => {
-            await this.gotoSafe((BASE_URL || '') + `/wp-admin/user-edit.php?user_id=${_userId}`);
+            await this.gotoSafe(toPath(`wp-admin/user-edit.php?user_id=${_userId}`));
         }, 'addUserEuCompliance');
     }
 
     async hideEuComplianceVendor(_storeName: string): Promise<void> {
         await this.safe(async () => {
-            await this.gotoSafe((BASE_URL || '') + '/store/' + slugify(_storeName));
+            await this.gotoSafe(toPath(`store/${slugify(_storeName)}`));
         }, 'hideEuComplianceVendor');
     }
 
     async customerAddEuComplianceData(_euData: any): Promise<void> {
         await this.safe(async () => {
-            await this.gotoSafe((BASE_URL || '') + '/my-account/edit-address/billing');
+            await this.gotoSafe(toPath('my-account/edit-address/billing'));
         }, 'customerAddEuComplianceData');
     }
 
     async viewVendorEuComplianceData(_storeName: string): Promise<void> {
         await this.safe(async () => {
-            await this.gotoSafe((BASE_URL || '') + '/store/' + slugify(_storeName));
+            await this.gotoSafe(toPath(`store/${slugify(_storeName)}`));
         }, 'viewVendorEuComplianceData');
     }
 
     async viewProductEuComplianceData(_productName: string): Promise<void> {
         await this.safe(async () => {
-            await this.gotoSafe((BASE_URL || '') + '/product/' + slugify(_productName));
+            await this.gotoSafe(toPath(`product/${slugify(_productName)}`));
         }, 'viewProductEuComplianceData');
     }
 }
@@ -419,19 +416,19 @@ export class EuCompliancePage extends Base {
 export class StoresPage extends Base {
     async searchVendor(_storeName: string): Promise<void> {
         await this.safe(async () => {
-            await this.gotoSafe((BASE_URL || '') + '/wp-admin/admin.php?page=dokan#/vendors');
+            await this.gotoSafe(toPath('wp-admin/admin.php?page=dokan#/vendors'));
         }, 'searchVendor');
     }
 
     async addVendor(_vendorInfo: any): Promise<void> {
         await this.safe(async () => {
-            await this.gotoSafe((BASE_URL || '') + '/wp-admin/admin.php?page=dokan#/vendors');
+            await this.gotoSafe(toPath('wp-admin/admin.php?page=dokan#/vendors'));
         }, 'addVendor');
     }
 
     async editVendor(_vendorId: string | undefined, _vendor: any): Promise<void> {
         await this.safe(async () => {
-            await this.gotoSafe((BASE_URL || '') + '/wp-admin/admin.php?page=dokan#/vendors');
+            await this.gotoSafe(toPath('wp-admin/admin.php?page=dokan#/vendors'));
         }, 'editVendor');
     }
 }
@@ -442,7 +439,7 @@ export class StoresPage extends Base {
 export class VendorSettingsPage extends Base {
     async setStoreSettings(_vendorInfo: any, _section: string): Promise<void> {
         await this.safe(async () => {
-            await this.gotoSafe((BASE_URL || '') + '/dashboard/settings/store');
+            await this.gotoSafe(toPath('dashboard/settings/store'));
         }, 'setStoreSettings');
     }
 }
@@ -453,7 +450,7 @@ export class VendorSettingsPage extends Base {
 export class VendorPage extends Base {
     async vendorRegister(vendorInfo: any, _setupWizard: any): Promise<void> {
         await this.safe(async () => {
-            await this.gotoSafe((BASE_URL || '') + '/vendor-onboarding/');
+            await this.gotoSafe(toPath('vendor-onboarding/'));
 
             const firstName = vendorInfo?.firstName ?? 'vendor';
             const lastName = vendorInfo?.lastName ?? 'test';
@@ -518,13 +515,13 @@ export class ProductsPage extends Base {
 export class CustomerPage extends Base {
     async customerRegister(_customerInfo: any): Promise<void> {
         await this.safe(async () => {
-            await this.gotoSafe((BASE_URL || '') + '/my-account');
+            await this.gotoSafe(toPath('my-account'));
         }, 'customerRegister');
     }
 
     async customerBecomeVendor(_customerInfo: any): Promise<void> {
         await this.safe(async () => {
-            await this.gotoSafe((BASE_URL || '') + '/dashboard');
+            await this.gotoSafe(toPath('dashboard'));
         }, 'customerBecomeVendor');
     }
 }

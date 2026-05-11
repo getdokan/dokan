@@ -4,6 +4,12 @@ import { Browser, BrowserContextOptions, Page } from '@playwright/test';
 
 const { CI, SITE_PATH } = process.env;
 
+export const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
+
+export const toPath = (subPath: string = ''): string => BASE_URL + '/' + subPath.replace(/^\//, '');
+
+export const SERVER_URL = process.env.SERVER_URL || toPath('wp-json');
+
 export const helpers = {
     // replace '_' to space & capitalize first letter of string
     replaceAndCapitalize: (str: string) =>

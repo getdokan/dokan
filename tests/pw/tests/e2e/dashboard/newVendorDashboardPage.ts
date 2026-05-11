@@ -1,8 +1,7 @@
 import { Page, expect } from '@playwright/test';
 
-declare const process: { env: Record<string, string | undefined> };
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 /**
  * Page object for the new vendor React dashboard (Dokan 5.0.0+).
@@ -95,7 +94,7 @@ export class NewVendorDashboardPage {
     // ANALYTICS SHELL (legacy /dashboard wrap)
     // --------------------------------------------------------------------
     private analyticsRouteUrl(path: string): string {
-        return `${BASE_URL}/dashboard/?path=${encodeURIComponent(path)}`;
+        return toPath(`dashboard/?path=${encodeURIComponent(path)}`);
     }
 
     async gotoAnalyticsRoute(routeKey: keyof NewVendorDashboardPage['analytics']) {
@@ -138,11 +137,11 @@ export class NewVendorDashboardPage {
     // --------------------------------------------------------------------
     private newDashboardUrl(hashRoute = ''): string {
         const trimmed = hashRoute.startsWith('/') ? hashRoute : `/${hashRoute}`;
-        return `${BASE_URL}/dashboard/new/#${trimmed}`;
+        return toPath(`dashboard/new/#${trimmed}`);
     }
 
     async gotoNewDashboardRoot(): Promise<void> {
-        await this.page.goto(`${BASE_URL}/dashboard/new/`);
+        await this.page.goto(toPath(`dashboard/new/`));
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForNewDashboardReady();
     }

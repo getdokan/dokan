@@ -1,6 +1,6 @@
 import { test, expect } from '@utils/test';
 
-const BASE = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 // Frontend Vendor Badges (React) — front-end React surface in Dokan 5.0.0+. Mount URL: /store/vendor1/
 
@@ -8,7 +8,7 @@ test.describe('Frontend Vendor Badges (React) Tests @pro', () => {
     test('Test Case 1 - Page renders without fatal', { tag: ['@pro', '@guest'] }, async ({ browser }) => {
         const ctx = await browser.newContext();
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/store/vendor1/`);
+        await page.goto(toPath(`store/vendor1/`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(3000);
         const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
@@ -20,7 +20,7 @@ test.describe('Frontend Vendor Badges (React) Tests @pro', () => {
     test('Test Case 2 - Page renders content', { tag: ['@pro', '@guest'] }, async ({ browser }) => {
         const ctx = await browser.newContext();
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/store/vendor1/`);
+        await page.goto(toPath(`store/vendor1/`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(4000);
         const bodyText = await page.locator('body').innerText();

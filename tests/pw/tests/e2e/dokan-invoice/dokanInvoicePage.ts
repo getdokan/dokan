@@ -7,7 +7,7 @@ declare const Buffer: {
     from(input: string | Uint8Array, encoding?: string): { toString(encoding: string): string };
 };
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath, SERVER_URL } from '@utils/helpers';
 
 /**
  * Page object for the Dokan Invoice add-on UI surfaces.
@@ -40,8 +40,8 @@ export class DokanInvoicePage {
     // ============================================
 
     customer = {
-        myAccountOrdersUrl: `${BASE_URL}/my-account/orders/`,
-        myAccountViewOrderUrl: (orderId: string | number) => `${BASE_URL}/my-account/view-order/${orderId}/`,
+        myAccountOrdersUrl: toPath(`my-account/orders/`),
+        myAccountViewOrderUrl: (orderId: string | number) => toPath(`my-account/view-order/${orderId}/`),
         // Per-row action button injected by WC PDF + dokan-invoice on the
         // My Account → Orders table. Class names come from WC PDF; the
         // text "Invoice" / "Packing slip" is locale-dependent.
@@ -52,12 +52,12 @@ export class DokanInvoicePage {
     };
 
     admin = {
-        loginUrl: `${BASE_URL}/wp-login.php`,
-        pluginsUrl: `${BASE_URL}/wp-admin/plugins.php`,
-        wcOrdersListUrl: `${BASE_URL}/wp-admin/admin.php?page=wc-orders`,
+        loginUrl: toPath(`wp-login.php`),
+        pluginsUrl: toPath(`wp-admin/plugins.php`),
+        wcOrdersListUrl: toPath(`wp-admin/admin.php?page=wc-orders`),
         wcOrderEditUrl: (orderId: string | number) =>
-            `${BASE_URL}/wp-admin/admin.php?page=wc-orders&action=edit&id=${orderId}`,
-        wcPdfSettingsUrl: `${BASE_URL}/wp-admin/admin.php?page=wpo_wcpdf_options_page`,
+            toPath(`wp-admin/admin.php?page=wc-orders&action=edit&id=${orderId}`),
+        wcPdfSettingsUrl: toPath(`wp-admin/admin.php?page=wpo_wcpdf_options_page`),
         // WC PDF buttons in the order edit sidebar metabox.
         invoiceButton: 'a.button.invoice',
         packingSlipButton: 'a.button.packing-slip',
@@ -67,7 +67,7 @@ export class DokanInvoicePage {
 
     vendor = {
         // New React vendor dashboard (Dokan 5.0.0+). Hash-routed SPA.
-        ordersUrl: `${BASE_URL}/dashboard/new/#orders`,
+        ordersUrl: toPath(`dashboard/new/#orders`),
         // DataViews row + per-row actions menu.
         dataRow: 'table tbody tr',
         rowActionsTrigger: 'table tbody tr td:last-child button',
@@ -154,7 +154,7 @@ export class DokanInvoicePage {
         const [, , orderId] = await apiUtils.createOrder(productId, orderPayload, payloads.vendorAuth);
         if (status !== 'processing' && status !== 'pending') {
             const api = await this.getApi();
-            const res = await api.put(`${process.env.SERVER_URL ?? `${BASE_URL}/wp-json`}/wc/v3/orders/${orderId}`, {
+            const res = await api.put(`${SERVER_URL}/wc/v3/orders/${orderId}`, {
                 data: { status },
                 headers: payloads.adminAuth,
             });

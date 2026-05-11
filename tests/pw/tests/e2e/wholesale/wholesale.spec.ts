@@ -2,7 +2,7 @@ import { Page, expect, test } from '@utils/test';
 import { WholesalePage, CustomerPage, ProductsPage, ApiUtils, dbUtils, dbData, data, payloads } from './wholesalePage';
 import path from 'path';
 
-const BASE = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
@@ -156,7 +156,7 @@ test.describe('Wholesale (React) Tests @pro', () => {
     test('Test Case 1 - Admin wholesale customer page renders', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/wp-admin/users.php?page=wholesale_customer`);
+        await page.goto(toPath(`wp-admin/users.php?page=wholesale_customer`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);
@@ -168,7 +168,7 @@ test.describe('Wholesale (React) Tests @pro', () => {
     test('Test Case 2 - Wholesale page renders content', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/wp-admin/users.php?page=wholesale_customer`);
+        await page.goto(toPath(`wp-admin/users.php?page=wholesale_customer`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(3000);
         const bodyText = await page.locator('body').innerText();

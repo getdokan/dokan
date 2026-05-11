@@ -2,7 +2,7 @@ import { Page, expect, test } from '@utils/test';
 import { ProductReviewsPage, ApiUtils, payloads } from './productReviewsPage';
 import path from 'path';
 
-const BASE = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 
@@ -76,7 +76,7 @@ test.describe('Vendor Reviews (React) Tests @pro', () => {
     test('Test Case 1 - Reviews page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/dashboard/reviews/`);
+        await page.goto(toPath(`dashboard/reviews/`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
 
@@ -89,7 +89,7 @@ test.describe('Vendor Reviews (React) Tests @pro', () => {
     test('Test Case 2 - Reviews DataViews table or empty state renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/dashboard/reviews/`);
+        await page.goto(toPath(`dashboard/reviews/`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(3000);
 
@@ -104,7 +104,7 @@ test.describe('Vendor Reviews (React) Tests @pro', () => {
     test('Test Case 3 - Reviews page has heading', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/dashboard/reviews/`);
+        await page.goto(toPath(`dashboard/reviews/`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
 
@@ -120,7 +120,7 @@ test.describe('Vendor Reviews (React) Tests @pro', () => {
     test('Test Case 4 - Page survives reload', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/dashboard/reviews/`);
+        await page.goto(toPath(`dashboard/reviews/`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         await page.reload({ waitUntil: 'domcontentloaded' });

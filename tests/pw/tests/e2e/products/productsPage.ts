@@ -1,5 +1,6 @@
 import { Page, expect, request, APIRequestContext } from '@playwright/test';
 import { faker } from '@faker-js/faker';
+import { toPath, SERVER_URL } from '@utils/helpers';
 
 // ============================================
 // ENVIRONMENT VARIABLES
@@ -9,12 +10,8 @@ const {
     ADMIN_PASSWORD,
     VENDOR,
     USER_PASSWORD,
-    BASE_URL,
-    SERVER_URL: _SERVER_URL,
     DOKAN_PRO,
 } = process.env;
-
-const SERVER_URL = _SERVER_URL || BASE_URL + '/wp-json';
 
 // ============================================
 // HELPER FUNCTIONS
@@ -798,7 +795,7 @@ export class ProductsPage {
     }
 
     private createUrl(subPath: string): string {
-        return BASE_URL + '/' + subPath;
+        return toPath(subPath);
     }
 
     getBaseUrl(): string {

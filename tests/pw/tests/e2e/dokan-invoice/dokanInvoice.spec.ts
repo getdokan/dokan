@@ -2,6 +2,7 @@ import { test, expect, request } from '@utils/test';
 import path from 'path';
 import { DokanInvoicePage } from './dokanInvoicePage';
 import { payloads } from '@utils/payloads';
+import { SERVER_URL } from '@utils/helpers';
 
 // ============================================
 // SESSION STORAGE VARIABLES
@@ -207,7 +208,7 @@ test.describe('Dokan Invoice Tests @pro', () => {
             const orderId = await inv.seedVendor1Order('processing');
             const apiCtx = await request.newContext();
             const res = await apiCtx.get(
-                `${process.env.SERVER_URL ?? 'http://localhost:9999/wp-json'}/dokan/v1/orders/${orderId}`,
+                `${SERVER_URL}/dokan/v1/orders/${orderId}`,
                 { headers: inv.testData.vendor1.authHeader },
             );
             expect(res.ok(), `vendor1 GET order ${orderId} → ${res.status()}`).toBeTruthy();
@@ -298,7 +299,7 @@ test.describe('Dokan Invoice Tests @pro', () => {
 
             const apiCtx = await request.newContext();
             const res = await apiCtx.get(
-                `${process.env.SERVER_URL ?? 'http://localhost:9999/wp-json'}/dokan/v1/orders/${orderId}`,
+                `${SERVER_URL}/dokan/v1/orders/${orderId}`,
                 { headers: payloads.adminAuth },
             );
             expect(res.ok()).toBeTruthy();
@@ -325,7 +326,7 @@ test.describe('Dokan Invoice Tests @pro', () => {
 
             const apiCtx = await request.newContext();
             const res = await apiCtx.get(
-                `${process.env.SERVER_URL ?? 'http://localhost:9999/wp-json'}/dokan/v1/orders/${orderId}`,
+                `${SERVER_URL}/dokan/v1/orders/${orderId}`,
                 { headers: payloads.adminAuth },
             );
             const body = await res.json();
@@ -376,7 +377,7 @@ test.describe('Dokan Invoice Tests @pro', () => {
             // Flip to completed via WC REST.
             const apiCtx = await request.newContext();
             const upd = await apiCtx.put(
-                `${process.env.SERVER_URL ?? 'http://localhost:9999/wp-json'}/wc/v3/orders/${orderId}`,
+                `${SERVER_URL}/wc/v3/orders/${orderId}`,
                 { data: { status: 'completed' }, headers: payloads.adminAuth },
             );
             expect(upd.ok()).toBeTruthy();
@@ -487,7 +488,7 @@ test.describe('Dokan Invoice Tests @pro', () => {
             });
             const v2Page = await v2Ctx.newPage();
             const res = await v2Page.request.get(
-                `${process.env.SERVER_URL ?? 'http://localhost:9999/wp-json'}/dokan/v1/orders/${orderId}`,
+                `${SERVER_URL}/dokan/v1/orders/${orderId}`,
                 { headers: payloads.vendor2Auth },
             );
             expect([401, 403, 404]).toContain(res.status());

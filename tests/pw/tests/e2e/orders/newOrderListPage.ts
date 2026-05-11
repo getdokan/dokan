@@ -1,8 +1,7 @@
 import { Page } from '@playwright/test';
 
-declare const process: { env: Record<string, string | undefined> };
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 /**
  * Page object for the new vendor React order list (Dokan 5.0.0+) at
@@ -36,7 +35,7 @@ export class NewOrderListPage {
         }, { noWaitAfter: true }).catch(() => undefined);
     }
 
-    readonly url = `${BASE_URL}/dashboard/new/#/orders`;
+    readonly url = toPath(`dashboard/new/#/orders`);
 
     selectors = {
         reactRoot: '#dokan-vendor-dashboard-root',

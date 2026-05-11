@@ -1,6 +1,7 @@
 import { Page, expect, request, APIRequestContext } from '@playwright/test';
 import mysql from 'mysql2/promise';
 import { isSerialized, serialize } from 'php-serialize';
+import { toPath, SERVER_URL } from '@utils/helpers';
 
 // ============================================
 // ENVIRONMENT VARIABLES
@@ -8,7 +9,6 @@ import { isSerialized, serialize } from 'php-serialize';
 const {
     ADMIN,
     ADMIN_PASSWORD,
-    BASE_URL,
     DB_HOST_NAME,
     DB_USER_NAME,
     DB_USER_PASSWORD,
@@ -17,7 +17,6 @@ const {
     DB_PREFIX,
 } = process.env;
 
-const SERVER_URL = process.env.SERVER_URL || BASE_URL + '/wp-json';
 const dbPrefix = DB_PREFIX;
 
 // ============================================
@@ -295,12 +294,12 @@ export class ColorsPage {
     private isCurrentUrl(subPath: string): boolean {
         const url = new URL(this.page.url());
         const currentURL = url.href.replace(/[/]$/, '');
-        return currentURL === BASE_URL + '/' + subPath;
+        return currentURL === toPath(subPath);
     }
 
     async goIfNotThere(subPath: string, waitUntil: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' = 'domcontentloaded', force = false): Promise<void> {
         if (!this.isCurrentUrl(subPath)) {
-            const url = BASE_URL + '/' + subPath;
+            const url = toPath(subPath);
             await this.toPass(async () => {
                 await this.page.goto(url, { waitUntil });
                 expect(this.page.url()).toMatch(subPath);
@@ -310,7 +309,7 @@ export class ColorsPage {
     }
 
     async goto(subPath: string, options?: { waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' }, force = false): Promise<void> {
-        await this.page.goto(BASE_URL + '/' + subPath, options);
+        await this.page.goto(toPath(subPath), options);
         if (force) await this.page.reload();
     }
 

@@ -2,7 +2,7 @@ import { Page, expect, test } from '@utils/test';
 import { ShipStationPage, ApiUtils, payloads } from './shipstationPage';
 import path from 'path';
 
-const BASE = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
@@ -59,7 +59,7 @@ test.describe('Shipstation (React) Tests @pro', () => {
     test('Test Case 1 - Vendor shipstation settings page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/dashboard/settings/shipstation/`);
+        await page.goto(toPath(`dashboard/settings/shipstation/`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
@@ -71,7 +71,7 @@ test.describe('Shipstation (React) Tests @pro', () => {
     test('Test Case 2 - Admin chrome loads', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan#/settings`);
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan#/settings`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);

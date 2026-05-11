@@ -1,6 +1,7 @@
 import { Page, expect, request, APIRequestContext } from '@playwright/test';
 import mysql from 'mysql2/promise';
 import { serialize, unserialize } from 'php-serialize';
+import { toPath, SERVER_URL } from '@utils/helpers';
 
 // ============================================
 // ENVIRONMENT VARIABLES
@@ -32,8 +33,6 @@ async function closeAnnouncementModal(page: import('@playwright/test').Page): Pr
 }
 
 const {
-    BASE_URL,
-    SERVER_URL: SERVER_URL_ENV,
     ADMIN,
     ADMIN_PASSWORD,
     DB_HOST_NAME,
@@ -43,8 +42,6 @@ const {
     DB_PORT,
     DB_PREFIX,
 } = process.env;
-
-const SERVER_URL = SERVER_URL_ENV || BASE_URL + '/wp-json';
 const dbPrefix = DB_PREFIX;
 
 // ============================================
@@ -299,7 +296,7 @@ export class GeolocationPage {
     // Navigation helpers
 
     private createUrl(subPath: string): string {
-        return BASE_URL + '/' + subPath;
+        return toPath(subPath);
     }
 
     private async goto(subPath: string): Promise<void> {

@@ -2,7 +2,7 @@ import { Page, expect } from '@playwright/test';
 
 declare const process: { env: Record<string, string | undefined> };
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 export class AdminPage {
     readonly page: Page;
@@ -18,8 +18,8 @@ export class AdminPage {
     // Admin Selectors
     admin = {
         // URLs
-        loginUrl: `${BASE_URL}/wp-admin`,
-        dokanDashboardUrl: `${BASE_URL}/wp-admin/admin.php?page=dokan-dashboard`,
+        loginUrl: toPath(`wp-admin`),
+        dokanDashboardUrl: toPath(`wp-admin/admin.php?page=dokan-dashboard`),
 
         // Login Page
         usernameInput: '#user_login',

@@ -3,7 +3,7 @@ import path from 'path';
 
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
-const BASE = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 // DokanAI / Intelligence — `dokan-lite/src/intelligence/` and
 // `dokan-pro/src/react/vendor-dashboard/intelligence/`. Embedded inside
@@ -13,7 +13,7 @@ test.describe('DokanAI / Intelligence (React) Tests @pro', () => {
     test('Test Case 1 - Vendor product editor loads (AI mounts via Fill slot)', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/dashboard/new/#/products/create`);
+        await page.goto(toPath(`dashboard/new/#/products/create`));
         await page.waitForLoadState('domcontentloaded');
         await page.locator('#dokan-vendor-dashboard-root').waitFor({ state: 'visible', timeout: 30000 });
         await page.waitForTimeout(3000);
@@ -27,7 +27,7 @@ test.describe('DokanAI / Intelligence (React) Tests @pro', () => {
     test('Test Case 2 - Admin AI settings page renders', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan#/settings`);
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan#/settings`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(3000);
         const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);

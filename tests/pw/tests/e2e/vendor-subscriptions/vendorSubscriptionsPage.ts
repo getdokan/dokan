@@ -1,7 +1,7 @@
 import { Page } from '@playwright/test';
 import { closeAnnouncementModal } from '@utils/helpers';
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 export const data = {
     vendor: { vendorInfo: {} as any },
@@ -62,7 +62,7 @@ export class VendorPage {
         const shopName = String(resolve(vendorInfo?.shopName) ?? `${base}store`);
         const phone = String(vendorInfo?.phone ?? '0123456789');
 
-        await this.page.goto(`${BASE_URL}/vendor-onboarding/`, { waitUntil: 'domcontentloaded' });
+        await this.page.goto(toPath(`vendor-onboarding/`), { waitUntil: 'domcontentloaded' });
 
         await this.page.locator('#first-name').fill(firstName);
         await this.page.locator('#last-name').fill(lastName);

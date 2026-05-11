@@ -2,7 +2,7 @@ import { Page, expect, test } from '@utils/test';
 import { LicensePage, db, testData } from './licensePage';
 import path from 'path';
 
-const BASE = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 // ============================================
 // SESSION STORAGE VARIABLES
@@ -63,7 +63,7 @@ test.describe('Admin License Manager (React) Tests @pro', () => {
     test('Test Case 1 - License manager page renders', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan-license`);
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan-license`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);
@@ -75,7 +75,7 @@ test.describe('Admin License Manager (React) Tests @pro', () => {
     test('Test Case 2 - License page renders content', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan-license`);
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan-license`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(3000);
         const bodyText = await page.locator('body').innerText();

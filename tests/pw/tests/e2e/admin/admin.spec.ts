@@ -2,14 +2,14 @@ import { test, expect } from '@utils/test';
 import { AdminPage } from './adminPage';
 import path from 'path';
 
-const BASE = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 const fatalLocator = "text=/Fatal error|Parse error|There has been a critical error/i";
 const adminReactRoot = '#dokan-vendor-dashboard, #dokan-admin-dashboard, [class*="dokan-admin"], #wpwrap';
 async function openAdminRoute(browser: import('@playwright/test').Browser, hash: string) {
     const a1Path = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
     const ctx = await browser.newContext({ storageState: a1Path });
     const page = await ctx.newPage();
-    await page.goto(`${BASE}/wp-admin/admin.php?page=dokan-dashboard#${hash.startsWith('/') ? hash : '/' + hash}`);
+    await page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#${hash.startsWith('/') ? hash : '/' + hash}`));
     await page.waitForLoadState('domcontentloaded');
     return { ctx, page };
 }

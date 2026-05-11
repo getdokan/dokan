@@ -3,7 +3,7 @@ import { StoreAppearancePage, ApiUtils, dbUtils, data, dbData, payloads } from '
 import path from 'path';
 
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
-const BASE = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const { VENDOR_ID } = process.env;
@@ -105,7 +105,7 @@ test.describe('Vendor Store Appearance (React) Tests @lite', () => {
     test('Test Case 1 - Store settings page renders', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/dashboard/settings/store/`);
+        await page.goto(toPath(`dashboard/settings/store/`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
@@ -117,7 +117,7 @@ test.describe('Vendor Store Appearance (React) Tests @lite', () => {
     test('Test Case 2 - Store name field is visible', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/dashboard/settings/store/`);
+        await page.goto(toPath(`dashboard/settings/store/`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(3000);
         // Vendor settings should expose store name input

@@ -1,7 +1,7 @@
 import { Page, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 // ============================================
 // LOCAL TEST DATA (extracted from testData.ts/.env)
@@ -267,7 +267,7 @@ export class CustomerPage {
     }
 
     private async goto(subPath: string) {
-        const url = `${BASE_URL}/${subPath}`;
+        const url = toPath(`${subPath}`);
         await this.page.goto(url, { waitUntil: 'load' });
     }
 

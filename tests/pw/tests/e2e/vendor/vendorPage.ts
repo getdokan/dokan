@@ -1,6 +1,6 @@
 import { Page, expect } from '@playwright/test';
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 // ============================================
 // VENDOR ANNOUNCEMENT MODAL DISMISSER (inlined per CONVENTIONS.md §4)
@@ -130,7 +130,7 @@ export class LoginPage {
     }
 
     private async goto(subPath: string) {
-        await this.page.goto(`${BASE_URL}/${subPath}`, { waitUntil: 'domcontentloaded' });
+        await this.page.goto(toPath(`${subPath}`), { waitUntil: 'domcontentloaded' });
     }
 
     async login(user: { username: string; password: string }): Promise<void> {
@@ -148,7 +148,7 @@ export class LoginPage {
     }
 
     async logout(): Promise<void> {
-        await this.page.goto(`${BASE_URL}/${subUrls.myAccount}`, { waitUntil: 'domcontentloaded' });
+        await this.page.goto(toPath(`${subUrls.myAccount}`), { waitUntil: 'domcontentloaded' });
         const visible = await this.page.locator(selectors.login.customerLogout).isVisible().catch(() => false);
         if (!visible) return;
         await this.page.locator(selectors.login.customerLogout).click();
@@ -168,7 +168,7 @@ export class VendorPage {
     }
 
     private async goto(subPath: string) {
-        await this.page.goto(`${BASE_URL}/${subPath}`, { waitUntil: 'domcontentloaded' });
+        await this.page.goto(toPath(`${subPath}`), { waitUntil: 'domcontentloaded' });
         await closeAnnouncementModal(this.page);
     }
 

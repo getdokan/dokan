@@ -2,7 +2,7 @@ import { Page, expect, test } from '@utils/test';
 import { StoreCategoriesPage, ApiUtils, data, payloads, dbUtils, dbData } from './storeCategoriesPage';
 import path from 'path';
 
-const BASE = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
@@ -68,7 +68,7 @@ test.describe('Store Categories (React) Tests @pro', () => {
     test('Test Case 1 - Admin store categories page renders', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/wp-admin/edit-tags.php?taxonomy=store_categories`);
+        await page.goto(toPath(`wp-admin/edit-tags.php?taxonomy=store_categories`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);
@@ -80,7 +80,7 @@ test.describe('Store Categories (React) Tests @pro', () => {
     test('Test Case 2 - Store categories page does not crash', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/wp-admin/edit-tags.php?taxonomy=store_categories`);
+        await page.goto(toPath(`wp-admin/edit-tags.php?taxonomy=store_categories`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(3000);
         // The taxonomy may redirect to dashboard if module is off — that's fine,
