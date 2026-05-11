@@ -56,9 +56,10 @@ The Playwright tests read configuration from `tests/pw/.env` (loaded via `dotenv
 
 | State | Action |
 | --- | --- |
-| `.env` does not exist | Ask the user for `LICENSE_KEY` (when Pro) and `GMAP` in one bundled `AskUserQuestion`. Frame both as **imperative for a clean suite run** — `LICENSE_KEY` because Pro license tests depend on it, `GMAP` because the 12 `tests/e2e/geolocation/*` specs will fail without it. Then write `.env` from `.env.example` with `CI=true`, `DOKAN_PRO` per user intent, and the supplied keys. |
+| `.env` does not exist | Ask the user for `LICENSE_KEY` (when Pro), `GMAP`, and `USER_PASSWORD` in one bundled `AskUserQuestion`. Frame all three as **imperative for a clean suite run** — `LICENSE_KEY` for Pro license tests, `GMAP` for the 12 `tests/e2e/geolocation/*` specs, `USER_PASSWORD` because every login-bound spec (vendor / customer / admin flows) authenticates with it. Then write `.env` from `.env.example` with `CI=true`, `DOKAN_PRO` per user intent, and the supplied keys. |
 | `.env` exists, `DOKAN_PRO=true`, `LICENSE_KEY=` empty | Stop and ask for the key. License-related Pro tests will fail without it. |
 | `.env` exists, `GMAP=` empty | Tell the user explicitly: *all 12 `tests/e2e/geolocation/*` specs will fail without `GMAP`*. State that pasting a Google Maps API key is **imperative** for a clean suite run. Then ask whether to paste a key now or proceed and accept the geolocation failures. Do not start the run until they answer. |
+| `.env` exists, `USER_PASSWORD=` empty, equal to the `.env.example` placeholder `your_test_password`, or contains no digit | Stop and ask for a password. **Validation:** the value must contain at least one numeric character (`[0-9]`); e.g. `01dokan01` is valid, `dokan` is not. If the user submits a password without a digit, reject it in the same turn, restate the rule, and re-ask before writing `.env`. |
 | `.env` exists, all required keys populated | Pass. |
 
 When the user declines to provide `GMAP`, do not silently swallow it — restate the consequence in your next message ("proceeding without `GMAP`; the 12 `tests/e2e/geolocation/*` specs will fail") so the user has one final chance to redirect before the long-running suite starts.
@@ -305,6 +306,7 @@ The `getShardSpecs.js` splitter assigns the global mean to specs introduced afte
 | `site_setup` fails with `cd undefined && wp ...`. | `tests/pw/.env` does not exist. The helpers route wp-cli through `SITE_PATH` when `CI` is unset. | Run the `.env` pre-flight (step 2). Create `.env` from `.env.example`, set `CI=true`, ask the user for `LICENSE_KEY` / `GMAP`. |
 | All ~12 `tests/e2e/geolocation/*` specs fail with `locator('input.dokan-range-slider')` or `.dokan-map-container` timeouts. | `GMAP=` empty in `.env`, so the Google Maps widget never loads. | Ask the user for a Google Maps API key, set `GMAP=<key>` in `.env`, re-run only `geolocation.spec.ts`. |
 | License-related Pro tests fail with "invalid license" or never reach the dashboard. | `LICENSE_KEY=` empty in `.env`. | Ask the user for the Dokan Pro licence key, set `LICENSE_KEY=<key>` in `.env`, re-run the affected spec(s). |
+| Login / auth specs fail at the my-account form with bad-credentials errors. | `USER_PASSWORD=` empty, still the `.env.example` placeholder, or contains no digit. | Run the `.env` pre-flight (step 2). Ask the user for a password containing at least one digit (e.g. `01dokan01`) and set `USER_PASSWORD=<value>` in `.env`. |
 
 ---
 
