@@ -1,6 +1,7 @@
 import { Page, expect, test } from '@playwright/test';
 import { WithdrawsPage, ApiUtils, data, payloads } from './withdrawsPage';
 import path from 'path';
+import { toPath } from '@utils/helpers';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
@@ -105,7 +106,7 @@ test.describe('New Vendor Withdraw (React) Tests @lite', () => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
 
-        await page.goto(`${process.env.BASE_URL || 'http://localhost:9999'}/dashboard/new/#/withdraw`);
+        await page.goto(toPath(`dashboard/new/#/withdraw`));
         await page.waitForLoadState('domcontentloaded');
         await page.locator('#dokan-vendor-dashboard-root').waitFor({ state: 'visible', timeout: 30000 });
 
@@ -122,7 +123,7 @@ test.describe('New Vendor Withdraw (React) Tests @lite', () => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
 
-        await page.goto(`${process.env.BASE_URL || 'http://localhost:9999'}/dashboard/new/#/withdraw-requests`);
+        await page.goto(toPath(`dashboard/new/#/withdraw-requests`));
         await page.waitForLoadState('domcontentloaded');
         await page.locator('#dokan-vendor-dashboard-root').waitFor({ state: 'visible', timeout: 30000 });
 
@@ -138,7 +139,7 @@ test.describe('New Vendor Withdraw (React) Tests @lite', () => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
 
-        await page.goto(`${process.env.BASE_URL || 'http://localhost:9999'}/dashboard/new/#/withdraw`);
+        await page.goto(toPath(`dashboard/new/#/withdraw`));
         await page.waitForLoadState('domcontentloaded');
         await page.locator('#dokan-vendor-dashboard-root').waitFor({ state: 'visible', timeout: 30000 });
         await page.waitForTimeout(3000);
@@ -156,7 +157,7 @@ test.describe('New Vendor Withdraw (React) Tests @lite', () => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
 
-        await page.goto(`${process.env.BASE_URL || 'http://localhost:9999'}/dashboard/new/#/withdraw`);
+        await page.goto(toPath(`dashboard/new/#/withdraw`));
         await page.waitForLoadState('domcontentloaded');
         await page.locator('#dokan-vendor-dashboard-root').waitFor({ state: 'visible', timeout: 30000 });
 
@@ -173,7 +174,7 @@ test.describe('New Vendor Withdraw (React) Tests @lite', () => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
 
-        await page.goto(`${process.env.BASE_URL || 'http://localhost:9999'}/dashboard/new/#/reverse-withdrawal`);
+        await page.goto(toPath(`dashboard/new/#/reverse-withdrawal`));
         await page.waitForLoadState('domcontentloaded');
         await page.locator('#dokan-vendor-dashboard-root').waitFor({ state: 'visible', timeout: 30000 });
 

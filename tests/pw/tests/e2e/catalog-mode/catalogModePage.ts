@@ -3,8 +3,8 @@ import { faker } from '@faker-js/faker';
 import mysql from 'mysql2/promise';
 import { isSerialized, serialize, unserialize } from 'php-serialize';
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
-const SERVER_URL = process.env.SERVER_URL ? process.env.SERVER_URL : BASE_URL + '/wp-json';
+import { toPath } from '@utils/helpers';
+const SERVER_URL = process.env.SERVER_URL ? process.env.SERVER_URL : toPath('wp-json');
 const { DOKAN_PRO, ADMIN, ADMIN_PASSWORD, USER_PASSWORD, DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = process.env;
 
 // ============================================
@@ -324,7 +324,7 @@ export class CatalogModePage {
     // ============================================
 
     admin = {
-        settingsUrl: `${BASE_URL}/wp-admin/admin.php?page=dokan#/settings`,
+        settingsUrl: toPath(`wp-admin/admin.php?page=dokan#/settings`),
         sellingOptionsMenu: '//div[@class="nav-title" and contains(text(),"Selling Options")]',
         removeAddToCartButton: '.catalog_mode_hide_add_to_cart_button .switch',
         hideProductPrice: '.catalog_mode_hide_product_price .switch',
@@ -332,7 +332,7 @@ export class CatalogModePage {
     };
 
     vendor = {
-        settingsStoreUrl: `${BASE_URL}/dashboard/settings/store`,
+        settingsStoreUrl: toPath(`dashboard/settings/store`),
         catalogModeHideProductPrice: 'input#catalog_mode_hide_product_price',
     };
 
@@ -379,7 +379,7 @@ export class CatalogModePage {
     // ============================================
 
     async goIfNotThere(subPath: string) {
-        const url = `${BASE_URL}/${subPath}`;
+        const url = toPath(`${subPath}`);
         const currentUrl = this.page.url().replace(/[/]$/, '');
         if (currentUrl !== url) {
             await this.page.goto(url, { waitUntil: 'domcontentloaded' });

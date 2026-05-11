@@ -2,7 +2,7 @@ import { Page, expect, test } from '@playwright/test';
 import { SettingsPage, dbData, dbUtils, data } from './settingsPage';
 import path from 'path';
 
-const BASE = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 
@@ -78,7 +78,7 @@ test.describe('Admin Settings (React) Tests @lite', () => {
     test('Test Case 1 - Settings page mounts', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan#/settings`);
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan#/settings`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(3000);
         const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);
@@ -90,7 +90,7 @@ test.describe('Admin Settings (React) Tests @lite', () => {
     test('Test Case 2 - Settings page shows section headings', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan#/settings`);
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan#/settings`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(4000);
         // Settings page renders various section headings (General, Selling, Withdraw etc.)
@@ -103,7 +103,7 @@ test.describe('Admin Settings (React) Tests @lite', () => {
     test('Test Case 3 - Settings page survives reload', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan#/settings`);
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan#/settings`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         await page.reload({ waitUntil: 'domcontentloaded' });

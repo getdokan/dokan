@@ -2,7 +2,7 @@ import { Page, expect, test } from '@playwright/test';
 import { MinMaxQuantitiesPage, api, payloads } from './minMaxQuantitiesPage';
 import path from 'path';
 
-const BASE = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 
@@ -44,7 +44,7 @@ test.describe('Min/Max Quantities (React) Tests @pro', () => {
     test('Test Case 1 - Admin settings page renders without fatal', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan#/settings`);
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan#/settings`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);

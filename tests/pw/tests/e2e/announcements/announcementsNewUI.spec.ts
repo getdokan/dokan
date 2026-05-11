@@ -16,15 +16,15 @@ import path from 'path';
 // state, customer access.
 // =====================================================================
 
-const BASE = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.json');
 
-const ADMIN_NEW_URL = `${BASE}/wp-admin/admin.php?page=dokan-dashboard#/announcement`;
-const VENDOR_NEW_URL = `${BASE}/dashboard/new/#/announcement`;
-const VENDOR_LEGACY_URL = `${BASE}/dashboard/announcement`;
+const ADMIN_NEW_URL = toPath(`wp-admin/admin.php?page=dokan-dashboard#/announcement`);
+const VENDOR_NEW_URL = toPath(`dashboard/new/#/announcement`);
+const VENDOR_LEGACY_URL = toPath(`dashboard/announcement`);
 const VENDOR_DASHBOARD_ROOT = '#dokan-vendor-dashboard-root';
 const FATAL_RX = /Fatal error|Parse error|There has been a critical error/i;
 

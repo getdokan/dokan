@@ -2,6 +2,7 @@ import { test, expect, Page } from '@playwright/test';
 import { AdminDashboardPage, VendorDashboardPage } from './dashboardPage';
 import path from 'path';
 import { NewVendorDashboardPage } from './newVendorDashboardPage';
+import { toPath } from '@utils/helpers';
 
 const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.json');
 
@@ -63,7 +64,7 @@ test.describe('Dashboard test', () => {
 
         // The new dashboard mounts at `/dashboard/?path=<encoded>`.
         // Default route is Analytics → Overview.
-        await page.goto(`${process.env.BASE_URL || 'http://localhost:9999'}/dashboard/?path=%2Fanalytics%2FOverview`);
+        await page.goto(toPath(`dashboard/?path=%2Fanalytics%2FOverview`));
         await page.waitForLoadState('domcontentloaded');
 
         // Smoke: expect the React root to mount. We don't assert specific
@@ -83,7 +84,7 @@ test.describe('Dashboard test', () => {
 
         // Direct deep link with an unknown path should not 500; the React
         // shell should still mount (typically falling back to Overview).
-        await page.goto(`${process.env.BASE_URL || 'http://localhost:9999'}/dashboard/?path=%2Fanalytics%2FUnknownRoute`);
+        await page.goto(toPath(`dashboard/?path=%2Fanalytics%2FUnknownRoute`));
         await page.waitForLoadState('domcontentloaded');
 
         // Page chrome should still mount under any of the supported shells.
@@ -369,7 +370,7 @@ test.describe('New Vendor Dashboard (React) Tests @pro', () => {
         const page = await ctx.newPage();
         const dash = new NewVendorDashboardPage(page);
 
-        await page.goto(`${process.env.BASE_URL || 'http://localhost:9999'}/dashboard/new/`);
+        await page.goto(toPath(`dashboard/new/`));
         await page.waitForLoadState('domcontentloaded');
 
         // Customer must NOT see the React vendor dashboard root.

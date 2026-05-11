@@ -2,7 +2,7 @@ import { Page, expect, test } from '@playwright/test';
 import { SellerBadgesPage, ApiUtils, data, payloads } from './sellerBadgesPage';
 import path from 'path';
 
-const BASE = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
@@ -85,7 +85,7 @@ test.describe('Seller Badges (React) Tests @pro', () => {
     test('Test Case 1 - Vendor badges page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/dashboard/seller-badge/`);
+        await page.goto(toPath(`dashboard/seller-badge/`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
@@ -97,7 +97,7 @@ test.describe('Seller Badges (React) Tests @pro', () => {
     test('Test Case 2 - Admin badges page renders', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/wp-admin/admin.php?page=seller_badge`);
+        await page.goto(toPath(`wp-admin/admin.php?page=seller_badge`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);
@@ -109,7 +109,7 @@ test.describe('Seller Badges (React) Tests @pro', () => {
     test('Test Case 3 - Vendor page survives reload', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/dashboard/seller-badge/`);
+        await page.goto(toPath(`dashboard/seller-badge/`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         await page.reload({ waitUntil: 'domcontentloaded' });

@@ -2,6 +2,7 @@ import { Page, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 import mysql from 'mysql2/promise';
 import { isSerialized, serialize } from 'php-serialize';
+import { toPath } from '@utils/helpers';
 
 // ============================================
 // ENVIRONMENT VARIABLES
@@ -32,7 +33,7 @@ async function closeAnnouncementModal(page: import('@playwright/test').Page): Pr
     } catch { /* selector shape may change */ }
 }
 
-const { BASE_URL, USER_PASSWORD, DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = process.env;
+const { USER_PASSWORD, DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = process.env;
 const dbPrefix = DB_PREFIX;
 
 // ============================================
@@ -142,7 +143,7 @@ export class EmailVerificationsPage {
     // Navigation helpers
 
     private createUrl(subPath: string): string {
-        return BASE_URL + '/' + subPath;
+        return toPath(subPath);
     }
 
     private getCurrentUrl(): string {

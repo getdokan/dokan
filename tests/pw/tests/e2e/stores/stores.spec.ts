@@ -2,7 +2,7 @@ import { Page, expect, test } from '@playwright/test';
 import { StoresPage, ApiUtils, data, payloads } from './storesPage';
 import path from 'path';
 
-const BASE = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const { VENDOR_ID, PRODUCT_ID } = process.env;
@@ -68,7 +68,7 @@ test.describe('Admin Vendors (React) Tests @lite', () => {
     test('Test Case 1 - Vendors list mounts at #/vendors', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan-dashboard#/vendors`);
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/vendors`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(3000);
         expect(page.url()).toMatch(/#\/vendors/);
@@ -81,7 +81,7 @@ test.describe('Admin Vendors (React) Tests @lite', () => {
     test('Test Case 2 - Vendors page shows DataViews table or list', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan-dashboard#/vendors`);
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/vendors`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(4000);
         const tableVisible = await page.locator('table, [role="table"], [class*="dataviews"]').first().isVisible({ timeout: 3000 }).catch(() => false);
@@ -93,7 +93,7 @@ test.describe('Admin Vendors (React) Tests @lite', () => {
     test('Test Case 3 - /vendors/create form mounts', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan-dashboard#/vendors/create`);
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/vendors/create`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(3000);
         expect(page.url()).toMatch(/#\/vendors\/create/);
@@ -107,7 +107,7 @@ test.describe('Admin Vendors (React) Tests @lite', () => {
     test('Test Case 4 - Vendors page survives reload', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan-dashboard#/vendors`);
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/vendors`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         await page.reload({ waitUntil: 'domcontentloaded' });
@@ -121,7 +121,7 @@ test.describe('Admin Vendors (React) Tests @lite', () => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
         const vendorId = process.env.VENDOR_ID || '1';
-        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan-dashboard#/vendors/${vendorId}`);
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/vendors/${vendorId}`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(3000);
         expect(page.url()).toContain('#/vendors/');

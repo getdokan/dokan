@@ -1,12 +1,12 @@
 import { Page, expect } from '@playwright/test';
 import mysql from 'mysql2/promise';
 import { serialize, unserialize } from 'php-serialize';
+import { toPath } from '@utils/helpers';
 
 // ============================================
 // ENVIRONMENT VARIABLES
 // ============================================
 const {
-    BASE_URL,
     LICENSE_KEY,
     DB_HOST_NAME,
     DB_USER_NAME,
@@ -131,7 +131,7 @@ export class LicensePage {
     }
 
     private createUrl(subPath: string): string {
-        return BASE_URL + '/' + subPath;
+        return toPath(subPath);
     }
 
     private getCurrentUrl(): string {

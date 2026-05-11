@@ -1,6 +1,6 @@
 import { Page } from '@playwright/test';
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 export class StripeExpressPage {
     readonly page: Page;
@@ -15,9 +15,9 @@ export class StripeExpressPage {
 
     // Admin Selectors
     admin = {
-        stripeExpressSettingsUrl: `${BASE_URL}/wp-admin/admin.php?page=wc-settings&tab=checkout&section=dokan_stripe_express&from=WCADMIN_PAYMENT_SETTINGS`,
+        stripeExpressSettingsUrl: toPath(`wp-admin/admin.php?page=wc-settings&tab=checkout&section=dokan_stripe_express&from=WCADMIN_PAYMENT_SETTINGS`),
         stripeExpressEnabledCheckbox: '#woocommerce_dokan_stripe_express_enabled',
-        modulesUrl: `${BASE_URL}/wp-admin/admin.php?page=dokan#/modules`,
+        modulesUrl: toPath(`wp-admin/admin.php?page=dokan#/modules`),
         searchBox: "div[class='search-box'] input",
         clearSearchButton: "div[class='search-box'] svg",
         moduleSlider: '.slider.round',
@@ -29,18 +29,18 @@ export class StripeExpressPage {
     // Vendor Selectors
     vendor = {
         vendor1: {
-            stripeExpressOnboardingUrl: `${BASE_URL}/dashboard/settings/payment-manage-dokan_stripe_express/?action=stripe_express_onboarding&seller_id=3&_wpnonce=b3f06f28bd`,
+            stripeExpressOnboardingUrl: toPath(`dashboard/settings/payment-manage-dokan_stripe_express/?action=stripe_express_onboarding&seller_id=3&_wpnonce=b3f06f28bd`),
         },
         vendor2: {
-            stripeExpressOnboardingUrl: `${BASE_URL}/dashboard/settings/payment-manage-dokan_stripe_express/?action=stripe_express_onboarding&seller_id=5&_wpnonce=e96cdf408f`,
+            stripeExpressOnboardingUrl: toPath(`dashboard/settings/payment-manage-dokan_stripe_express/?action=stripe_express_onboarding&seller_id=5&_wpnonce=e96cdf408f`),
         },
         visitExpressDashboardButton: '#dokan-stripe-express-dashboard-login'
     };
 
     // Customer Selectors
     customer = {
-        shopUrl: `${BASE_URL}/shop/`,
-        checkoutUrl: `${BASE_URL}/checkout/`,
+        shopUrl: toPath(`shop/`),
+        checkoutUrl: toPath(`checkout/`),
         addToCartProduct1: "//a[@aria-label='Add to cart: \"p1_v1 (simple)\"']",
         addToCartProduct2: "a[aria-label='Add to cart: \"p1_v2 (simple)\"']",
         addToCartButtons: "a.add_to_cart_button, button.add_to_cart_button",

@@ -4,9 +4,9 @@ import { dbUtils } from '@utils/dbUtils';
 import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
-import { helpers } from '@utils/helpers';
+import { helpers, BASE_URL, toPath } from '@utils/helpers';
 
-const { CI, BASE_URL } = process.env;
+const { CI } = process.env;
 
 setup.describe('site setup', () => {
     let apiUtils: ApiUtils;
@@ -33,7 +33,7 @@ setup.describe('site setup', () => {
         setup.skip(!CI, 'skip on local');
         const headers = await apiUtils.getSiteHeaders(BASE_URL);
         if (headers.link) {
-            const serverUrl = headers.link.includes('rest_route') ? BASE_URL + '/?rest_route=' : BASE_URL + '/wp-json';
+            const serverUrl = headers.link.includes('rest_route') ? toPath('?rest_route=') : toPath('wp-json');
             helpers.createEnvVar('SERVER_URL', serverUrl);
         } else {
             console.log("Headers link doesn't exists");

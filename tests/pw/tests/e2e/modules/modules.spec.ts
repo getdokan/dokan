@@ -2,7 +2,7 @@ import { Page, expect, test } from '@playwright/test';
 import { ModulesPage, api, payloads, testData } from './modulesPage';
 import path from 'path';
 
-const BASE = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 
@@ -63,7 +63,7 @@ test.describe('Admin Modules (React) Tests @lite', () => {
     test('Test Case 1 - Modules page mounts at #/pro-modules', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan-dashboard#/pro-modules`);
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/pro-modules`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(3000);
         expect(page.url()).toMatch(/#\/pro-modules/);
@@ -76,7 +76,7 @@ test.describe('Admin Modules (React) Tests @lite', () => {
     test('Test Case 2 - Modules page shows modules grid / cards', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan-dashboard#/pro-modules`);
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/pro-modules`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(4000);
         // The modules page renders a grid of module cards (or similar).
@@ -89,7 +89,7 @@ test.describe('Admin Modules (React) Tests @lite', () => {
     test('Test Case 3 - Modules page survives reload', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan-dashboard#/pro-modules`);
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/pro-modules`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         await page.reload({ waitUntil: 'domcontentloaded' });

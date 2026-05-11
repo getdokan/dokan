@@ -1,8 +1,7 @@
 import { Page } from '@playwright/test';
 
-declare const process: { env: Record<string, string | undefined> };
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 /**
  * Page object for the new vendor React product list (Dokan 5.0.0+) at
@@ -36,8 +35,8 @@ export class NewProductListPage {
 
     // The new vendor dashboard mounts at /dashboard/new/. The React app
     // uses HashRouter, so feature routes hang off the URL fragment.
-    readonly url = `${BASE_URL}/dashboard/new/#/products`;
-    readonly addProductUrl = `${BASE_URL}/dashboard/new/#/products/create`;
+    readonly url = toPath(`dashboard/new/#/products`);
+    readonly addProductUrl = toPath(`dashboard/new/#/products/create`);
 
     selectors = {
         // The React shell mounts on this root id (see new-dashboard.php).

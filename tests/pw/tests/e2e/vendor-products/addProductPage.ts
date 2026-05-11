@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { Page } from '@playwright/test';
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 // ============================================
 // VENDOR ANNOUNCEMENT MODAL DISMISSER (inlined per CONVENTIONS.md §4)
@@ -49,7 +49,7 @@ export class AddProductPage {
     // SELECTORS
     // ============================================
     vendor = {
-        productsUrl: `${BASE_URL}/dashboard/products/`,
+        productsUrl: toPath(`dashboard/products/`),
         addNewProductButton: 'a',
         productFormHeading: 'h1',
         // Legacy PHP product form used by Dokan vendor dashboard.

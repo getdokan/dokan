@@ -2,7 +2,7 @@ import { Page, expect, test } from '@playwright/test';
 import { VendorShippingPage, data } from './vendorShippingPage';
 import path from 'path';
 
-const BASE = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 
@@ -46,7 +46,7 @@ test.describe('Vendor Shipping (React) Tests @pro', () => {
     test('Test Case 1 - Vendor shipping settings page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/dashboard/settings/shipping`);
+        await page.goto(toPath(`dashboard/settings/shipping`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
 
@@ -59,7 +59,7 @@ test.describe('Vendor Shipping (React) Tests @pro', () => {
     test('Test Case 2 - Shipping zone list mounts (React or legacy)', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/dashboard/settings/shipping`);
+        await page.goto(toPath(`dashboard/settings/shipping`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(3000);
 
@@ -79,7 +79,7 @@ test.describe('Vendor Shipping (React) Tests @pro', () => {
     test('Test Case 3 - Vendor can navigate to shipping policy section', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/dashboard/settings/shipping`);
+        await page.goto(toPath(`dashboard/settings/shipping`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(3000);
 
@@ -95,7 +95,7 @@ test.describe('Vendor Shipping (React) Tests @pro', () => {
     test('Test Case 4 - Page survives reload', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/dashboard/settings/shipping`);
+        await page.goto(toPath(`dashboard/settings/shipping`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         await page.reload({ waitUntil: 'domcontentloaded' });

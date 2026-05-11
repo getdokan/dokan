@@ -1,11 +1,10 @@
 import { test } from '@playwright/test';
 import { VendorBookingPage } from './productsDetailsBookingsPage';
 import path from 'path';
+import { toPath } from '@utils/helpers';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
-
-const { BASE_URL } = process.env;
 
 let wasPluginActivatedOriginally = false;
 
@@ -13,7 +12,7 @@ test.beforeAll(async ({ browser }) => {
     const adminContext = await browser.newContext({ storageState: a1 });
     const page = await adminContext.newPage();
 
-    await page.goto(`${BASE_URL}/wp-admin/plugins.php`);
+    await page.goto(toPath(`wp-admin/plugins.php`));
     await page.getByRole('searchbox', { name: 'Search installed plugins' }).click();
     await page.getByRole('searchbox', { name: 'Search installed plugins' }).fill('bookings');
     await page.getByText('WooCommerce Bookings', { exact: true }).click();
@@ -36,7 +35,7 @@ test.afterAll(async ({ browser }) => {
     const adminContext = await browser.newContext({ storageState: a1 });
     const page = await adminContext.newPage();
 
-    await page.goto(`${BASE_URL}/wp-admin/plugins.php`);
+    await page.goto(toPath(`wp-admin/plugins.php`));
     await page.getByRole('searchbox', { name: 'Search installed plugins' }).click();
     await page.getByRole('searchbox', { name: 'Search installed plugins' }).fill('bookings');
     await page.getByRole('searchbox', { name: 'Search installed plugins' }).press('Enter');

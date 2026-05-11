@@ -2,7 +2,7 @@ import { Page, expect, test } from '@playwright/test';
 import { RefundsPage, ApiUtils, data, dbUtils, payloads } from './refundsPage';
 import path from 'path';
 
-const BASE = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
@@ -74,7 +74,7 @@ test.describe('Admin Refunds (React) Tests @pro', () => {
     test('Test Case 1 - Refunds page renders', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan#/refund`);
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan#/refund`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);
@@ -86,7 +86,7 @@ test.describe('Admin Refunds (React) Tests @pro', () => {
     test('Test Case 2 - Refunds page renders content', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan#/refund`);
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan#/refund`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(3000);
         const bodyText = await page.locator('body').innerText();

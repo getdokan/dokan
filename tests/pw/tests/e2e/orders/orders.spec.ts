@@ -2,6 +2,7 @@ import { request, expect, test } from '@playwright/test';
 import { OrdersPage } from './ordersPage';
 import path from 'path';
 import { NewOrderListPage } from './newOrderListPage';
+import { toPath } from '@utils/helpers';
 
 // ============================================
 // SESSION STORAGE VARIABLES
@@ -196,7 +197,7 @@ test.describe('Order functionality test @lite', () => {
         const context = await browser.newContext({ storageState: v1 });
         const page = await context.newPage();
 
-        await page.goto(`${process.env.BASE_URL || 'http://localhost:9999'}/dashboard/orders/`);
+        await page.goto(toPath(`dashboard/orders/`));
         await page.waitForLoadState('domcontentloaded');
 
         // Either the React DataViews UI or the legacy WC orders table.

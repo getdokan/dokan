@@ -2,7 +2,7 @@ import { Page, expect, test } from '@playwright/test';
 import { StoreListingPage, data } from './storeListingPage';
 import path from 'path';
 
-const BASE = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.json');
 
@@ -42,7 +42,7 @@ test.describe('Store Listing Front-end (React-aware) Tests @lite', () => {
     test('Test Case 1 - Store listing page renders for guest', { tag: ['@lite', '@guest'] }, async ({ browser }) => {
         const ctx = await browser.newContext();
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/store-listing/`);
+        await page.goto(toPath(`store-listing/`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
@@ -54,7 +54,7 @@ test.describe('Store Listing Front-end (React-aware) Tests @lite', () => {
     test('Test Case 2 - Store listing page renders content', { tag: ['@lite', '@guest'] }, async ({ browser }) => {
         const ctx = await browser.newContext();
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/store-listing/`);
+        await page.goto(toPath(`store-listing/`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(3000);
         const bodyText = await page.locator('body').innerText();

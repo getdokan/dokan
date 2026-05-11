@@ -1,6 +1,5 @@
 import { Page, expect } from '@playwright/test';
-
-const { BASE_URL } = process.env;
+import { toPath } from '@utils/helpers';
 
 // closeAnnouncementModal is inlined per CONVENTIONS.md §4 to keep this folder
 // self-contained.
@@ -89,7 +88,7 @@ export class HelpPage {
     }
 
     private createUrl(subPath: string): string {
-        return BASE_URL + '/' + subPath;
+        return toPath(subPath);
     }
 
     private getCurrentUrl(): string {

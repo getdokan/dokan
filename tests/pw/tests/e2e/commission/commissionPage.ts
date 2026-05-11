@@ -1,6 +1,6 @@
 import { Page, Locator } from '@playwright/test';
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 export class CommissionPage {
     readonly page: Page;
@@ -15,7 +15,7 @@ export class CommissionPage {
 
     // Admin Selectors
     admin = {
-        settingsUrl: `${BASE_URL}/wp-admin/admin.php?page=dokan#/settings`,
+        settingsUrl: toPath(`wp-admin/admin.php?page=dokan#/settings`),
         // Sidebar nav tab is a `<div class="nav-tab">` whose `.nav-title` holds the
         // section name. Targeting the inner `.nav-title` (rather than xpath text
         // match) avoids matching the page heading which uses the same string.
@@ -30,7 +30,7 @@ export class CommissionPage {
         submitButton: "input[type='submit'][name='submit']",
 
         // New product (post-new.php?post_type=product)
-        newProductUrl: `${BASE_URL}/wp-admin/post-new.php?post_type=product`,
+        newProductUrl: toPath(`wp-admin/post-new.php?post_type=product`),
         productTitleInput: '#title',
         generalProductDataLink: "a[href='#general_product_data']",
         regularPriceInput: '#_regular_price',

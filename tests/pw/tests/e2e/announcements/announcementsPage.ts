@@ -1,8 +1,7 @@
 import { Page, expect } from '@playwright/test';
 
-declare const process: { env: Record<string, string | undefined> };
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 /**
  * Close Dokan Pro's vendor announcement modal whenever it appears.
@@ -64,7 +63,7 @@ export class AnnouncementsPage {
 
     // Admin Selectors
     admin = {
-        announcementsUrl: `${BASE_URL}/wp-admin/admin.php?page=dokan#/announcement`,
+        announcementsUrl: toPath(`wp-admin/admin.php?page=dokan#/announcement`),
 
         // Page Header
         announcementText: '.dokan-announcement-wrapper h1',
@@ -136,7 +135,7 @@ export class AnnouncementsPage {
 
     // Admin New Dashboard Selectors
     adminNewDashboard = {
-        announcementsUrl: `${BASE_URL}/wp-admin/admin.php?page=dokan-dashboard#/announcement`,
+        announcementsUrl: toPath(`wp-admin/admin.php?page=dokan-dashboard#/announcement`),
 
         // Trash / Empty Trash
         trashTab: `//div[contains(text(),'Trash')]`,
@@ -179,7 +178,7 @@ export class AnnouncementsPage {
 
     // Vendor New Dashboard Selectors
     vendorNewDashboard = {
-        announcementsUrl: `${BASE_URL}/dashboard/new/#announcement`,
+        announcementsUrl: toPath(`dashboard/new/#announcement`),
 
         // Vendor's new dashboard renders each announcement as an <article>
         // containing a <button> with three <p> children (title, description,
@@ -196,7 +195,7 @@ export class AnnouncementsPage {
 
     // Vendor Selectors
     vendor = {
-        announcementsUrl: `${BASE_URL}/dashboard/announcement`,
+        announcementsUrl: toPath(`dashboard/announcement`),
 
         announcementDiv: '.dokan-announcement-wrapper-item',
         announcementDate: '.dokan-annnouncement-date',

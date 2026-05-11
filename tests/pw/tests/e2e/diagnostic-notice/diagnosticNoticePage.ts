@@ -1,10 +1,11 @@
 import { Page, expect } from '@playwright/test';
 import mysql from 'mysql2/promise';
+import { toPath } from '@utils/helpers';
 
 // ============================================
 // ENVIRONMENT VARIABLES
 // ============================================
-const { BASE_URL, DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = process.env;
+const { DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = process.env;
 const dbPrefix = DB_PREFIX;
 
 // ============================================
@@ -86,7 +87,7 @@ export class NoticeAndPromotionPage {
     // Navigation helpers
 
     private createUrl(subPath: string): string {
-        return BASE_URL + '/' + subPath;
+        return toPath(subPath);
     }
 
     private getCurrentUrl(): string {

@@ -25,8 +25,8 @@ async function closeAnnouncementModal(page: Page): Promise<void> {
     } catch { /* selector shape may change */ }
 }
 
-const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
-const SERVER_URL = process.env.SERVER_URL ?? `${BASE_URL}/wp-json`;
+import { toPath } from '@utils/helpers';
+const SERVER_URL = process.env.SERVER_URL ?? toPath(`wp-json`);
 const DOKAN_PRO = process.env.DOKAN_PRO;
 
 const { VENDOR, ADMIN, ADMIN_PASSWORD, USER_PASSWORD, CUSTOMER_ID, PRODUCT_ID, DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = process.env;
@@ -443,7 +443,7 @@ export class OrdersPage {
     // ============================================
 
     private createUrl(subPath: string): string {
-        return BASE_URL + '/' + subPath.replace(/^\//, '');
+        return toPath(subPath);
     }
 
     private getCurrentUrl(): string {

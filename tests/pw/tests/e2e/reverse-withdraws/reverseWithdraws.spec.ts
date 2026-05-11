@@ -3,7 +3,7 @@ import { ReverseWithdrawsPage, ApiUtils, data, dbData, dbUtils, helpers, payload
 import path from 'path';
 
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
-const BASE = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 
@@ -86,7 +86,7 @@ test.describe('Reverse Withdrawal (React) Tests @pro', () => {
     test('Test Case 1 - Admin /reverse-withdrawal route mounts', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan-dashboard#/reverse-withdrawal`);
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/reverse-withdrawal`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(3000);
         expect(page.url()).toMatch(/#\/reverse-withdrawal/);
@@ -99,7 +99,7 @@ test.describe('Reverse Withdrawal (React) Tests @pro', () => {
     test('Test Case 2 - Admin reverse-withdrawal shows transactions or empty state', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/wp-admin/admin.php?page=dokan-dashboard#/reverse-withdrawal`);
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/reverse-withdrawal`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(4000);
         const tableVisible = await page.locator('table, [role="table"]').first().isVisible({ timeout: 3000 }).catch(() => false);
@@ -112,7 +112,7 @@ test.describe('Reverse Withdrawal (React) Tests @pro', () => {
     test('Test Case 3 - Vendor /reverse-withdrawal route mounts in new dashboard', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/dashboard/new/#/reverse-withdrawal`);
+        await page.goto(toPath(`dashboard/new/#/reverse-withdrawal`));
         await page.waitForLoadState('domcontentloaded');
         await page.locator('#dokan-vendor-dashboard-root').waitFor({ state: 'visible', timeout: 30000 });
         expect(page.url()).toMatch(/#\/reverse-withdrawal/);
@@ -123,7 +123,7 @@ test.describe('Reverse Withdrawal (React) Tests @pro', () => {
     test('Test Case 4 - Vendor reverse-withdrawal page shows balance widget', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/dashboard/new/#/reverse-withdrawal`);
+        await page.goto(toPath(`dashboard/new/#/reverse-withdrawal`));
         await page.waitForLoadState('domcontentloaded');
         await page.locator('#dokan-vendor-dashboard-root').waitFor({ state: 'visible', timeout: 30000 });
         await page.waitForTimeout(3000);

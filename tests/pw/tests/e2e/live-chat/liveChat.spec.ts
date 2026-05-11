@@ -2,7 +2,7 @@ import { Page, expect, test } from '@playwright/test';
 import { LiveChatPage, api, db, helpers, payloads, testData } from './liveChatPage';
 import path from 'path';
 
-const BASE = process.env.BASE_URL || 'http://localhost:9999';
+import { toPath } from '@utils/helpers';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
@@ -108,7 +108,7 @@ test.describe('Live Chat (React) Tests @pro', () => {
     test('Test Case 1 - Vendor inbox page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/dashboard/inbox/`);
+        await page.goto(toPath(`dashboard/inbox/`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
@@ -120,7 +120,7 @@ test.describe('Live Chat (React) Tests @pro', () => {
     test('Test Case 2 - Inbox page renders content', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(`${BASE}/dashboard/inbox/`);
+        await page.goto(toPath(`dashboard/inbox/`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(3000);
         const bodyText = await page.locator('body').innerText();

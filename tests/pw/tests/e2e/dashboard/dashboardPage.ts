@@ -1,9 +1,10 @@
 import { Page, expect } from '@playwright/test';
+import { toPath } from '@utils/helpers';
 
 // ============================================
 // ENVIRONMENT VARIABLES
 // ============================================
-const { BASE_URL, DOKAN_PRO } = process.env;
+const { DOKAN_PRO } = process.env;
 
 // ============================================
 // VENDOR ANNOUNCEMENT MODAL DISMISSER (inlined per CONVENTIONS.md §4)
@@ -191,7 +192,7 @@ class BasePage {
     }
 
     createUrl(subPath: string): string {
-        return BASE_URL + '/' + subPath;
+        return toPath(subPath);
     }
 
     isCurrentUrl(subPath: string): boolean {

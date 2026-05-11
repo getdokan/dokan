@@ -1,5 +1,6 @@
 import { Page, expect, request, APIRequestContext } from '@playwright/test';
 import mysql from 'mysql2/promise';
+import { toPath } from '@utils/helpers';
 
 // ============================================
 // ENVIRONMENT VARIABLES
@@ -31,7 +32,6 @@ async function closeAnnouncementModal(page: import('@playwright/test').Page): Pr
 }
 
 const {
-    BASE_URL,
     SERVER_URL: SERVER_URL_ENV,
     ADMIN,
     ADMIN_PASSWORD,
@@ -47,7 +47,7 @@ const {
     DB_PREFIX,
 } = process.env;
 
-const SERVER_URL = SERVER_URL_ENV || BASE_URL + '/wp-json';
+const SERVER_URL = SERVER_URL_ENV || toPath('wp-json');
 const dbPrefix = DB_PREFIX;
 
 // ============================================
@@ -282,7 +282,7 @@ export class FollowStorePage {
     // Navigation helpers
 
     private createUrl(subPath: string): string {
-        return BASE_URL + '/' + subPath;
+        return toPath(subPath);
     }
 
     private getCurrentUrl(): string {
