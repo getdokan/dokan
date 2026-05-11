@@ -1,7 +1,7 @@
 import { Page, expect, request, APIRequestContext } from '@playwright/test';
 import mysql from 'mysql2/promise';
 import { isSerialized, serialize } from 'php-serialize';
-import { toPath } from '@utils/helpers';
+import { toPath, SERVER_URL } from '@utils/helpers';
 
 // ============================================
 // ENVIRONMENT VARIABLES
@@ -17,7 +17,6 @@ const {
     DB_PREFIX,
 } = process.env;
 
-const SERVER_URL = process.env.SERVER_URL || toPath('wp-json');
 const dbPrefix = DB_PREFIX;
 
 // ============================================

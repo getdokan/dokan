@@ -8,8 +8,7 @@ declare const process: { env: Record<string, string | undefined> };
 // @types/node into the strict tsconfig used elsewhere in the suite.
 declare const Buffer: { from(input: string): { toString(encoding: string): string } };
 
-import { toPath } from '@utils/helpers';
-const SERVER_URL = process.env.SERVER_URL ?? toPath(`wp-json`);
+import { toPath, SERVER_URL } from '@utils/helpers';
 const ADMIN_USER = process.env.ADMIN || 'admin';
 const ADMIN_PASS = process.env.ADMIN_PASSWORD || 'password';
 const adminBasicAuth = (): string =>

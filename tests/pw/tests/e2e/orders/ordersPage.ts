@@ -25,8 +25,7 @@ async function closeAnnouncementModal(page: Page): Promise<void> {
     } catch { /* selector shape may change */ }
 }
 
-import { toPath } from '@utils/helpers';
-const SERVER_URL = process.env.SERVER_URL ?? toPath(`wp-json`);
+import { toPath, SERVER_URL } from '@utils/helpers';
 const DOKAN_PRO = process.env.DOKAN_PRO;
 
 const { VENDOR, ADMIN, ADMIN_PASSWORD, USER_PASSWORD, CUSTOMER_ID, PRODUCT_ID, DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = process.env;

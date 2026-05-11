@@ -1,6 +1,6 @@
 import { Page, expect, request, APIRequestContext } from '@playwright/test';
 import { faker } from '@faker-js/faker';
-import { toPath } from '@utils/helpers';
+import { toPath, SERVER_URL } from '@utils/helpers';
 
 // ============================================
 // ENVIRONMENT VARIABLES
@@ -10,11 +10,8 @@ const {
     ADMIN_PASSWORD,
     VENDOR,
     USER_PASSWORD,
-    SERVER_URL: _SERVER_URL,
     DOKAN_PRO,
 } = process.env;
-
-const SERVER_URL = _SERVER_URL || toPath('wp-json');
 
 // ============================================
 // HELPER FUNCTIONS

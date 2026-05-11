@@ -7,7 +7,7 @@ declare const Buffer: {
     from(input: string | Uint8Array, encoding?: string): { toString(encoding: string): string };
 };
 
-import { toPath } from '@utils/helpers';
+import { toPath, SERVER_URL } from '@utils/helpers';
 
 /**
  * Page object for the Dokan Invoice add-on UI surfaces.
@@ -154,7 +154,7 @@ export class DokanInvoicePage {
         const [, , orderId] = await apiUtils.createOrder(productId, orderPayload, payloads.vendorAuth);
         if (status !== 'processing' && status !== 'pending') {
             const api = await this.getApi();
-            const res = await api.put(`${process.env.SERVER_URL ?? toPath(`wp-json`)}/wc/v3/orders/${orderId}`, {
+            const res = await api.put(`${SERVER_URL}/wc/v3/orders/${orderId}`, {
                 data: { status },
                 headers: payloads.adminAuth,
             });

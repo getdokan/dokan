@@ -2,7 +2,7 @@
 import { Page, APIRequestContext, request } from '@playwright/test';
 import mysql from 'mysql2/promise';
 import { isSerialized, serialize, unserialize } from 'php-serialize';
-import { toPath } from '@utils/helpers';
+import { toPath, SERVER_URL } from '@utils/helpers';
 
 // ============================================
 // ENVIRONMENT VARIABLES
@@ -34,7 +34,6 @@ async function closeAnnouncementModal(page: import('@playwright/test').Page): Pr
 }
 
 const {
-    SERVER_URL: SERVER_URL_ENV,
     DB_HOST_NAME,
     DB_USER_NAME,
     DB_USER_PASSWORD,
@@ -46,8 +45,6 @@ const {
     VENDOR,
     CUSTOMER,
 } = process.env;
-
-const SERVER_URL = SERVER_URL_ENV || toPath('wp-json');
 const dbPrefix = DB_PREFIX || 'wp';
 
 // ============================================

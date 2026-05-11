@@ -3,8 +3,7 @@ import { faker } from '@faker-js/faker';
 import mysql from 'mysql2/promise';
 import { isSerialized, serialize, unserialize } from 'php-serialize';
 
-import { toPath } from '@utils/helpers';
-const SERVER_URL = process.env.SERVER_URL ? process.env.SERVER_URL : toPath('wp-json');
+import { toPath, SERVER_URL } from '@utils/helpers';
 const { DOKAN_PRO, ADMIN, ADMIN_PASSWORD, USER_PASSWORD, DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = process.env;
 
 // ============================================
