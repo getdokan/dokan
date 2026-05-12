@@ -43,7 +43,7 @@ export default defineConfig({
     /* Whether to report slow test files. Pass null to disable this feature. */
     reportSlowTests: { max: 2, threshold: 10 },
     /* Configure reporters */
-    reporter: CI
+    reporter: parseBoolean(CI)
         ? [
               //   ['github'],
               ['html', { open: 'never', outputFolder: 'playwright-report/api/html-report' }],

@@ -404,12 +404,25 @@ export const helpers = {
         this.writeFile(filePath, updatedData);
     },
 
-    // create env
+    // create or update an env variable in process.env and persist to .env (no duplicates)
     createEnvVar(key: string, value: string) {
         console.log(`${key}=${value}`);
-        const content = '\n' + `${key}=${value}`;
         process.env[key] = value;
-        this.appendFile('.env', content); // for local testing
+        const envPath = '.env';
+        if (!fs.existsSync(envPath)) {
+            this.writeFile(envPath, `${key}=${value}\n`);
+            return;
+        }
+        const existing = this.readFile(envPath);
+        const line = `${key}=${value}`;
+        const re = new RegExp(`^${key}=.*$`, 'gm');
+        let updated: string;
+        if (re.test(existing)) {
+            updated = existing.replace(re, line);
+        } else {
+            updated = existing.endsWith('\n') ? existing + line + '\n' : existing + '\n' + line + '\n';
+        }
+        this.writeFile(envPath, updated);
     },
 
     // append content to .env file

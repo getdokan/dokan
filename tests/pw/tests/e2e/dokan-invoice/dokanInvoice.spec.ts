@@ -682,8 +682,10 @@ test.describe('Dokan Invoice Tests @pro', () => {
             await page.getByRole('menuitem', inv.vendor.viewInvoiceMenuItem).click();
             await page.waitForTimeout(500);
 
-            const url: string = (await page.evaluate(() => (window as unknown as { __capturedUrls: string[] }).__capturedUrls))[0];
+            const capturedUrls = await page.evaluate(() => (window as unknown as { __capturedUrls: string[] }).__capturedUrls);
+            const url = capturedUrls?.[0];
             expect(url).toBeTruthy();
+            if (!url) return;
 
             const res = await page.request.get(url);
             const ct = (res.headers()['content-type'] ?? '').toLowerCase();

@@ -179,13 +179,6 @@ export class LicensePage {
         }
     }
 
-    private async multipleElementVisible(sels: Record<string, any>): Promise<void> {
-        for (const key in sels) {
-            const v = sels[key];
-            if (typeof v === 'string') await this.toBeVisible(v);
-        }
-    }
-
     private async clickAndWaitForResponse(subUrl: string, selector: string, code = 200): Promise<void> {
         await Promise.all([
             this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code),

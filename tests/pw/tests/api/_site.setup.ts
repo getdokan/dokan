@@ -4,9 +4,10 @@ import { dbUtils } from '@utils/dbUtils';
 import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
-import { helpers, BASE_URL, toPath } from '@utils/helpers';
+import { helpers, BASE_URL, toPath, parseBoolean } from '@utils/helpers';
 
 const { CI } = process.env;
+const isCi = parseBoolean(CI);
 
 setup.describe('site setup', () => {
     let apiUtils: ApiUtils;
@@ -30,7 +31,7 @@ setup.describe('site setup', () => {
     });
 
     setup('get server url', { tag: ['@lite'] }, async () => {
-        setup.skip(!CI, 'skip on local');
+        setup.skip(!isCi, 'skip on local');
         const headers = await apiUtils.getSiteHeaders(BASE_URL);
         if (headers.link) {
             const serverUrl = headers.link.includes('rest_route') ? toPath('?rest_route=') : toPath('wp-json');
@@ -56,7 +57,7 @@ setup.describe('site setup', () => {
 
     setup('activate Dokan Pro', { tag: ['@pro'] }, async () => {
         // remove dokan pro plugin requirements (dokan-lite)
-        if (!CI) await helpers.exeCommand(data.commands.removeLiteRequired);
+        if (!isCi) await helpers.exeCommand(data.commands.removeLiteRequired);
 
         const [response] = await apiUtils.updatePlugin(data.plugin.pluginList.dokanPro, { status: 'active' }, payloads.adminAuth);
         expect(response.ok()).toBeTruthy();

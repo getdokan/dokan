@@ -3,9 +3,10 @@ import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 import { dbUtils } from '@utils/dbUtils';
-import { helpers } from '@utils/helpers';
+import { helpers, parseBoolean } from '@utils/helpers';
 
 const { DOKAN_PRO } = process.env;
+const isPro = parseBoolean(DOKAN_PRO);
 
 // ============================================================================
 // Inlined admin login helper (previously in pages/loginPage.ts)
@@ -68,7 +69,7 @@ setup.describe('add users', () => {
         // add open-close time
         await apiUtils.updateStore(sellerId, { ...payloads.storeResetFields, ...payloads.storeOpenClose }, payloads.adminAuth);
         // add review
-        if (DOKAN_PRO) {
+        if (isPro) {
             await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.adminAuth);
         }
         // add map location
@@ -87,7 +88,7 @@ setup.describe('add users', () => {
         // add open-close time
         await apiUtils.updateStore(sellerId, { ...payloads.storeResetFields, ...payloads.storeOpenClose }, payloads.adminAuth);
         // add review
-        if (DOKAN_PRO) {
+        if (isPro) {
             await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.adminAuth);
         }
         // add map location

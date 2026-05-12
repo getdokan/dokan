@@ -3,9 +3,10 @@ import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 import { dbUtils } from '@utils/dbUtils';
-import { helpers } from '@utils/helpers';
+import { helpers, parseBoolean } from '@utils/helpers';
 
 const { DOKAN_PRO } = process.env;
+const isPro = parseBoolean(DOKAN_PRO);
 
 // ============================================================================
 // Inlined login + nonce helpers (previously in pages/loginPage.ts + pages/productsPage.ts)
@@ -124,7 +125,7 @@ setup.describe('add & authenticate users', () => {
         if (sellerId) {
             await apiUtils.updateStore(sellerId, { ...payloads.storeResetFields, ...payloads.storeOpenClose }, payloads.adminAuth);
 
-            if (DOKAN_PRO) {
+            if (isPro) {
                 await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.adminAuth);
             }
             await dbUtils.addStoreMapLocation(sellerId);
@@ -143,7 +144,7 @@ setup.describe('add & authenticate users', () => {
 
         if (sellerId) {
             await apiUtils.updateStore(sellerId, { ...payloads.storeResetFields, ...payloads.storeOpenClose }, payloads.adminAuth);
-            if (DOKAN_PRO) {
+            if (isPro) {
                 await apiUtils.createStoreReview(sellerId, { ...payloads.createStoreReview, rating: 5 }, payloads.adminAuth);
             }
             await dbUtils.addStoreMapLocation(sellerId);

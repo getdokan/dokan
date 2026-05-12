@@ -96,7 +96,9 @@ export class ApiUtils {
         try {
             if (assert) expect(response.ok()).toBeTruthy();
 
-            const responseBody = response.status() !== 204 && (await response.json()); // 204 is for No Content
+            // 204 No Content has no JSON body; return an empty object so consumers can safely
+            // destructure / toMatchSchema without seeing a literal `false`.
+            const responseBody = response.status() === 204 ? {} : await response.json();
 
             // console log responseBody if response code is not between 200-299
             if (String(response.status())[0] != '2') console.log('ResponseBody: ', responseBody);
@@ -107,8 +109,7 @@ export class ApiUtils {
             console.log('Status Code: ', response.status());
             console.log('Response text: ', await response.text());
             console.log('Error: ', err.message);
-            // console.log('header:', response.headers());
-            // console.log('header:', response.headersArray());
+            throw err;
         }
     }
 

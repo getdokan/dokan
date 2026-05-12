@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import mysql from 'mysql2/promise';
 import { isSerialized, serialize, unserialize } from 'php-serialize';
 import { helpers } from '@utils/helpers';
