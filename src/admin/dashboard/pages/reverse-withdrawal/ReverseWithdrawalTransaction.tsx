@@ -9,7 +9,7 @@ import {
 import { dateI18n, getSettings } from '@wordpress/date';
 import apiFetch from '@wordpress/api-fetch';
 import { formatPrice } from '@dokan/utilities';
-import { AdminDataViews as DataViews, DokanButton } from '@dokan/components';
+import { DataViews, DokanButton } from '@dokan/components';
 import DateRangePicker from '@src/components/DateRangePicker';
 import {
     ArrowLeft,
@@ -147,20 +147,10 @@ const ReverseWithdrawalTransactionPage = ( { params, navigate } ) => {
         fields: fields.map( ( f ) => f.id ),
     } );
 
-    const tabs = [
+    const tabItems = [
         {
-            name: 'list',
-            icon: () => {
-                return (
-                    <div className="flex items-center gap-1.5 px-2 text-black text-sm font-semibold">
-                        { __(
-                            'List of Transactions',
-                            'dokan-lite'
-                        ) }
-                    </div>
-                );
-            },
-            title: __( 'List of Transactions', 'dokan-lite' ),
+            value: 'list',
+            label: __( 'List of Transactions', 'dokan-lite' ),
         },
     ];
 
@@ -402,7 +392,6 @@ const ReverseWithdrawalTransactionPage = ( { params, navigate } ) => {
     return (
         <div
             id="reverse-withdrawal-transactions"
-            className="rounded-md shadow-sm pt-3"
         >
             { header }
 
@@ -432,36 +421,38 @@ const ReverseWithdrawalTransactionPage = ( { params, navigate } ) => {
                 } ) }
             </div>
 
-            <DataViews
-                data={ data }
-                fields={ fields }
-                namespace="reverse-withdrawal-transactions"
-                defaultLayouts={ {
-                    table: { density: 'comfortable' },
-                    list: {},
-                } }
-                getItemId={ ( item ) => item.id }
-                view={ view }
-                onChangeView={ setView }
-                isLoading={ isLoading }
-                emptyIcon={ <ArrowRightLeft size={ 52 } /> }
-                emptyTitle={ __( 'No transaction found', 'dokan-lite' ) }
-                paginationInfo={ {
-                    totalItems,
-                    totalPages: Math.ceil( totalItems / view.perPage ),
-                } }
-                tabs={ {
-                    tabs,
-                    onSelect: () => {},
-                    initialTabName: 'list',
-                } }
-                filter={ {
-                    fields: filterFields,
-                    onFilterRemove: ( filterId ) =>
-                        clearSingleFilter( filterId ),
-                    onReset: () => clearFilter(),
-                } }
-            />
+            <div className="dokan-admin-dashboard-datatable">
+                <DataViews
+                    data={ data }
+                    fields={ fields }
+                    namespace="reverse-withdrawal-transactions"
+                    defaultLayouts={ {
+                        table: { density: 'comfortable' },
+                        list: {},
+                    } }
+                    getItemId={ ( item ) => item.id }
+                    view={ view }
+                    onChangeView={ setView }
+                    isLoading={ isLoading }
+                    emptyIcon={ <ArrowRightLeft size={ 52 } /> }
+                    emptyTitle={ __( 'No transaction found', 'dokan-lite' ) }
+                    paginationInfo={ {
+                        totalItems,
+                        totalPages: Math.ceil( totalItems / view.perPage ),
+                    } }
+                    tabs={ {
+                        items: tabItems,
+                        onSelect: () => {},
+                        defaultValue: 'list',
+                    } }
+                    filter={ {
+                        fields: filterFields,
+                        onFilterRemove: ( filterId ) =>
+                            clearSingleFilter( filterId ),
+                        onReset: () => clearFilter(),
+                    } }
+                />
+            </div>
         </div>
     );
 };

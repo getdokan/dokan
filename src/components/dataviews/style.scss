@@ -146,6 +146,17 @@
                 height: 65px;
                 min-height: 65px;
             }
+
+            // When the DataViews has only a single tab, it acts as a section
+            // title (e.g. Reverse Withdrawal's "List of Data"). Neutralise the
+            // active-tab accent so the label reads as plain heading text.
+            [data-slot="tabs-list"] [data-slot="tabs-trigger"]:only-child {
+                color: #25252d !important;
+                font-weight: 700 !important;
+                font-size: 16px !important;
+                border-bottom-color: transparent !important;
+                cursor: default !important;
+            }
         }
     }
 }
