@@ -392,7 +392,6 @@ const ReverseWithdrawalTransactionPage = ( { params, navigate } ) => {
     return (
         <div
             id="reverse-withdrawal-transactions"
-            className="rounded-md shadow-sm pt-3"
         >
             { header }
 

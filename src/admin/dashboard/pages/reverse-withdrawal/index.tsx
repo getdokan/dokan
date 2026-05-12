@@ -100,6 +100,13 @@ const ReverseWithdrawalPage = ( props ) => {
         ),
     } );
 
+    const tabItems = [
+        {
+            value: 'list',
+            label: __( 'List of Data', 'dokan-lite' ),
+        },
+    ];
+
     const fetchData = useCallback( async () => {
         setData( [] );
         setTotalItems( 0 );
@@ -331,7 +338,7 @@ const ReverseWithdrawalPage = ( props ) => {
     ];
 
     return (
-        <div className="rounded-md shadow-sm pt-3">
+        <div>
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold text-gray-900">
                     { __( 'Reverse Withdrawal', 'dokan-lite' ) }
@@ -391,6 +398,11 @@ const ReverseWithdrawalPage = ( props ) => {
                     isLoading={ isLoading }
                     emptyIcon={ <ArrowRightLeft size={ 52 } /> }
                     emptyTitle={ __( 'No transaction found', 'dokan-lite' ) }
+                    tabs={ {
+                        items: tabItems,
+                        onSelect: () => {},
+                        defaultValue: 'list',
+                    } }
                     filter={ {
                         fields: filterFields,
                         onFilterRemove: ( filterId ) =>
