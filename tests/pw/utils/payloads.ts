@@ -4,7 +4,21 @@ import { dbData } from '@utils/dbData';
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 
-const { ADMIN, VENDOR, VENDOR2, CUSTOMER, CUSTOMER2, ADMIN_PASSWORD, USER_PASSWORD, CUSTOMER_ID, VENDOR_ID, VENDOR2_ID, PRODUCT_ID, PRODUCT_ID_V2, TAG_ID, ATTRIBUTE_ID, CATEGORY_ID } = process.env;
+const { ADMIN, VENDOR, VENDOR2, CUSTOMER, CUSTOMER2, ADMIN_PASSWORD, USER_PASSWORD, CUSTOMER_ID, VENDOR_ID, VENDOR2_ID, PRODUCT_ID, PRODUCT_ID_V2, TAG_ID, ATTRIBUTE_ID } = process.env;
+
+// CATEGORY_ID is seeded by `_env.setup.ts` ("add categories") and persisted
+// to .env via helpers.createEnvVar. payloads.ts is imported before that
+// setup runs, so destructuring CATEGORY_ID once at module load would
+// capture the pre-seed value (often missing on a fresh CI run). Read it
+// lazily at factory invocation, and fall back to `[{}]` when no real id
+// is available yet — that preserves the legacy admin-auth setup path
+// (which doesn't enforce the category requirement) while still attaching
+// a valid id whenever the seed has run (vendor-auth path needs the id
+// to avoid the v1/products "Category must be required" 404).
+const categoriesPayload = () => {
+    const id = Number(process.env.CATEGORY_ID);
+    return Number.isFinite(id) && id > 0 ? [{ id }] : [{}];
+};
 
 export const payloads = {
     // wp
@@ -119,7 +133,7 @@ export const payloads = {
         name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple)`,
         type: 'simple',
         status: 'publish',
-        categories: [{ id: Number(CATEGORY_ID) }],
+        categories: categoriesPayload(),
         description: '<p>test description</p>',
     }),
 
@@ -391,7 +405,7 @@ export const payloads = {
         // date_on_sale_from: helpers.currentDateTime,
         // date_on_sale_to: helpers.addDays(helpers.currentDateTime, 10),
         status: 'publish',
-        categories: [{ id: Number(CATEGORY_ID) }],
+        categories: categoriesPayload(),
         tags: [{}],
         featured: true,
         description: '<p>test description</p>',
@@ -506,7 +520,7 @@ export const payloads = {
         date_on_sale_from: helpers.currentDateTime,
         date_on_sale_to: helpers.addDays(helpers.currentDateTime, 10),
         status: 'publish',
-        categories: [{ id: Number(CATEGORY_ID) }],
+        categories: categoriesPayload(),
         featured: true,
         description: '<p>test description</p>',
         short_description: '<p>test short description</p>',
@@ -599,7 +613,7 @@ export const payloads = {
         // regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
 
         status: 'publish',
-        categories: [{ id: Number(CATEGORY_ID) }],
+        categories: categoriesPayload(),
         featured: true,
         description: '<p>test description</p>',
         short_description: '<p>test short description</p>',
@@ -678,7 +692,7 @@ export const payloads = {
         type: 'simple',
         regular_price: '100',
         status: 'publish',
-        categories: [{ id: Number(CATEGORY_ID) }],
+        categories: categoriesPayload(),
         featured: true,
         description: '<p>test description</p>',
         short_description: '<p>test short description</p>',
@@ -761,7 +775,7 @@ export const payloads = {
         regular_price: faker.finance.amount({ min: 100, max: 110, dec: faker.helpers.arrayElement([0, 2]) }),
         // regular_price: '100',
         status: 'publish',
-        categories: [{ id: Number(CATEGORY_ID) }],
+        categories: categoriesPayload(),
         featured: true,
         description: '<p>test description</p>',
         short_description: '<p>test short description</p>',
@@ -782,7 +796,7 @@ export const payloads = {
         type: 'variable',
         regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
         status: 'publish',
-        categories: [{ id: Number(CATEGORY_ID) }],
+        categories: categoriesPayload(),
         // attributes: [
         // 	{
         // 		'id'       : 28,
@@ -825,7 +839,7 @@ export const payloads = {
         downloads: [],
         download_limit: 100,
         download_expiry: 365,
-        categories: [{ id: Number(CATEGORY_ID) }],
+        categories: categoriesPayload(),
     }),
 
     createSimpleSubscriptionProduct: () => ({
@@ -837,7 +851,7 @@ export const payloads = {
         short_description: '<p>test short description</p>\n',
         price: '100',
         regular_price: '100',
-        categories: [{ id: Number(CATEGORY_ID) }],
+        categories: categoriesPayload(),
         meta_data: [
             {
                 key: '_subscription_price',
@@ -884,7 +898,7 @@ export const payloads = {
         featured: true,
         description: '<p>test description</p>',
         short_description: '<p>test short description</p>',
-        categories: [{ id: Number(CATEGORY_ID) }],
+        categories: categoriesPayload(),
         duration_type: 'customer',
         duration_unit: 'day',
         duration: 1,
@@ -1160,7 +1174,7 @@ export const payloads = {
         purchasable: true,
         // virtual: false,
         // downloadable: false,
-        categories: [{ id: Number(CATEGORY_ID) }],
+        categories: categoriesPayload(),
         tags: [{}],
         meta_data: [
             {
@@ -1568,7 +1582,7 @@ export const payloads = {
         catalog_visibility: 'hidden',
         description: '<p>This is Dokan reverse withdrawal payment product, do not delete.</p>\n',
         regular_price: '0',
-        categories: [{ id: Number(CATEGORY_ID) }],
+        categories: categoriesPayload(),
         virtual: true,
         tax_status: 'none',
         sold_individually: true,
@@ -1586,7 +1600,7 @@ export const payloads = {
         catalog_visibility: 'hidden',
         description: '<p>This is Dokan advertisement payment product, do not delete.</p>\n',
         regular_price: '0',
-        categories: [{ id: Number(CATEGORY_ID) }],
+        categories: categoriesPayload(),
         virtual: true,
         tax_status: 'taxable',
         sold_individually: true,
@@ -4015,7 +4029,7 @@ export const payloads = {
         company_id_number: '123456789',
         bank_name: 'bank name',
         bank_iban: 'bank iban',
-        categories: [{ id: Number(CATEGORY_ID) }],
+        categories: categoriesPayload(),
         admin_commission: '',
         admin_additional_fee: '0.00',
         admin_commission_type: 'flat',
