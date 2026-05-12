@@ -882,8 +882,18 @@ class Assets {
             ]
         );
 
-        // load only in dokan dashboard and product edit page
-        if ( ( dokan_is_seller_dashboard() || ( get_query_var( 'edit' ) && is_singular( 'product' ) ) ) || apply_filters( 'dokan_forced_load_scripts', false ) ) {
+        // Skip the legacy dashboard asset bundle (jQuery UI, Select2, Flot, etc.) when the
+        // new React SPA replaces the page it would target. The SPA bundle declares no
+        // dependency on these scripts, so loading them just inflates the dashboard payload.
+        // Each branch is gated on its own appearance flag because the dashboard layout and
+        // the product editor toggle independently.
+        $is_new_vendor_layout  = 'latest' === dokan_get_option( 'vendor_layout_style', 'dokan_appearance', 'legacy' );
+        $is_new_product_editor = 'latest' === dokan_get_option( 'vendor_product_editor', 'dokan_appearance', 'legacy' );
+
+        $load_for_dashboard = dokan_is_seller_dashboard() && ! $is_new_vendor_layout;
+        $load_for_edit      = ( get_query_var( 'edit' ) && is_singular( 'product' ) ) && ! $is_new_product_editor;
+
+        if ( $load_for_dashboard || $load_for_edit || apply_filters( 'dokan_forced_load_scripts', false ) ) {
             $this->dokan_dashboard_scripts();
         }
 
@@ -894,12 +904,21 @@ class Assets {
         }
 
         // store and my account page
+        // The seller dashboard endpoint is registered as a WC My Account endpoint, so
+        // is_account_page() matches on SPA dashboard URLs too. Skip this block in that
+        // case — the SPA does not use Select2, jQuery UI, the legacy tooltip, or the
+        // legacy form-validate script.
+        $skip_for_spa_dashboard = $is_new_vendor_layout && dokan_is_seller_dashboard();
+
         if (
-            dokan_is_store_page()
-            || dokan_is_store_review_page()
-            || is_account_page()
-            || is_product()
-            || dokan_is_store_listing()
+            ! $skip_for_spa_dashboard
+            && (
+                dokan_is_store_page()
+                || dokan_is_store_review_page()
+                || is_account_page()
+                || is_product()
+                || dokan_is_store_listing()
+            )
         ) {
             if ( DOKAN_LOAD_STYLE ) {
                 wp_enqueue_style( 'dokan-select2-css' );
