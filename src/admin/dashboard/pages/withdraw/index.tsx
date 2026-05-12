@@ -9,19 +9,30 @@ import {
     SimpleInput,
 } from '@getdokan/dokan-ui';
 import { DokanTooltip as Tooltip } from '@dokan/components';
-import * as LucideIcons from 'lucide-react';
 import { dateI18n, getSettings } from '@wordpress/date';
 // Import Dokan components
 import {
-    AdminDataViews as DataViews,
+    DataViews,
     DateTimeHtml,
     VendorAsyncSelect,
     DateRangePicker,
     AsyncSelect,
     DokanModal,
+    getActionLabel,
 } from '@dokan/components';
 
-import { Trash, ArrowDown, Home, Calendar, CreditCard } from 'lucide-react';
+import {
+    Trash,
+    ArrowDown,
+    Home,
+    Calendar,
+    CreditCard,
+    Eye,
+    Check,
+    XCircle,
+    MessageSquare,
+    Download,
+} from 'lucide-react';
 
 // Define withdraw statuses for tab filtering
 const WITHDRAW_STATUSES = [
@@ -269,38 +280,11 @@ const WithdrawPage = () => {
         );
     };
 
-    const getActionLabel = ( iconName, label ) => {
-        if ( ! ( iconName && label ) ) {
-            return <></>;
-        }
-
-        const Icon = LucideIcons[ iconName ];
-        return (
-            <div className="dokan-layout">
-                <span className="inline-flex items-center gap-2.5">
-                    <Icon size={ 16 } className="!fill-none" />
-                    { label }
-                </span>
-            </div>
-        );
-    };
-
-    // Define actions for table rows
     const actions = [
         {
             id: 'view',
-            label: () => getActionLabel( 'Eye', __( 'View', 'dokan-lite' ) ),
-            icon: () => {
-                return (
-                    <span
-                        className={
-                            'px-3 py-2 inline-flex items-center rounded-md text-sm font-medium border border-[#E9E9E9]'
-                        }
-                    >
-                        { __( 'View', 'dokan-lite' ) }
-                    </span>
-                );
-            },
+            label: () => getActionLabel( <Eye size={ 16 } className="!fill-none" />, __( 'View', 'dokan-lite' ) ),
+            icon: <Eye size={ 16 } className="!fill-none" />,
             isPrimary: false,
             callback: ( items ) => {
                 openModal( 'view', items );
@@ -308,19 +292,8 @@ const WithdrawPage = () => {
         },
         {
             id: 'approved',
-            label: () =>
-                getActionLabel( 'Check', __( 'Approve', 'dokan-lite' ) ),
-            icon: () => {
-                return (
-                    <span
-                        className={
-                            'px-2 py-1.5 inline-flex items-center rounded-md border border-[#E9E9E9]'
-                        }
-                    >
-                        { __( 'Approve', 'dokan-lite' ) }
-                    </span>
-                );
-            },
+            label: () => getActionLabel( <Check size={ 16 } className="!fill-none" />, __( 'Approve', 'dokan-lite' ) ),
+            icon: <Check size={ 16 } className="!fill-none" />,
             isPrimary: false,
             supportsBulk: true,
             isEligible: ( item ) => item?.status === 'pending',
@@ -328,16 +301,17 @@ const WithdrawPage = () => {
                 const failedItems = items.filter( ( item ) => {
                     const requestedAmount = parseFloat( item?.amount ) || 0;
                     const currentBalance = parseFloat( item?.user?.balance ) || 0;
-                    
+
                     return currentBalance < requestedAmount;
                 } );
 
                 if ( failedItems.length > 0 ) {
-                    // Extract the store names and save them to state
-                    const storeNames = failedItems.map( 
-                        ( item ) => item?.user?.store_name || __( 'Unknown Vendor', 'dokan-lite' ) 
+                    const storeNames = failedItems.map(
+                        ( item ) =>
+                            item?.user?.store_name ||
+                            __( 'Unknown Vendor', 'dokan-lite' )
                     );
-                    
+
                     setInsufficientVendors( storeNames );
                     setShowInsufficientBalanceModal( true );
                     return;
@@ -348,19 +322,8 @@ const WithdrawPage = () => {
         },
         {
             id: 'cancelled',
-            label: () =>
-                getActionLabel( 'XCircle', __( 'Cancel', 'dokan-lite' ) ),
-            icon: () => {
-                return (
-                    <span
-                        className={
-                            'px-2 py-1.5 inline-flex items-center rounded-md border border-[#E9E9E9]'
-                        }
-                    >
-                        { __( 'Cancel', 'dokan-lite' ) }
-                    </span>
-                );
-            },
+            label: () => getActionLabel( <XCircle size={ 16 } className="!fill-none" />, __( 'Cancel', 'dokan-lite' ) ),
+            icon: <XCircle size={ 16 } className="!fill-none" />,
             isPrimary: false,
             supportsBulk: true,
             isEligible: ( item ) => item?.status === 'pending',
@@ -370,22 +333,8 @@ const WithdrawPage = () => {
         },
         {
             id: 'add-note',
-            label: () =>
-                getActionLabel(
-                    'MessageSquare',
-                    __( 'Add Note', 'dokan-lite' )
-                ),
-            icon: () => {
-                return (
-                    <span
-                        className={
-                            'px-2 py-1.5 inline-flex items-center rounded-md border border-[#E9E9E9]'
-                        }
-                    >
-                        { __( 'Add Note', 'dokan-lite' ) }
-                    </span>
-                );
-            },
+            label: () => getActionLabel( <MessageSquare size={ 16 } className="!fill-none" />, __( 'Add Note', 'dokan-lite' ) ),
+            icon: <MessageSquare size={ 16 } className="!fill-none" />,
             isPrimary: false,
             isEligible: ( item ) => item?.status !== 'approved',
             callback: ( items ) => {
@@ -394,19 +343,8 @@ const WithdrawPage = () => {
         },
         {
             id: 'delete',
-            label: () =>
-                getActionLabel( 'Trash', __( 'Delete', 'dokan-lite' ) ),
-            icon: () => {
-                return (
-                    <span
-                        className={
-                            'px-2 py-1.5 inline-flex items-center rounded-md border border-[#E9E9E9]'
-                        }
-                    >
-                        { __( 'Delete', 'dokan-lite' ) }
-                    </span>
-                );
-            },
+            label: () => getActionLabel( <Trash size={ 16 } className="!fill-none" />, __( 'Delete', 'dokan-lite' ) ),
+            icon: <Trash size={ 16 } className="!fill-none" />,
             supportsBulk: true,
             isEligible: ( item ) => item?.status !== 'approved',
             callback: ( items ) => {
@@ -415,25 +353,8 @@ const WithdrawPage = () => {
         },
         {
             id: 'paypal',
-            label: () =>
-                getActionLabel(
-                    'Download',
-                    __( 'Download PayPal mass payment file', 'dokan-lite' )
-                ),
-            icon: () => {
-                return (
-                    <span
-                        className={
-                            'px-2 py-1.5 inline-flex items-center rounded-md border border-[#E9E9E9]'
-                        }
-                    >
-                        { __(
-                            'Download PayPal mass payment file',
-                            'dokan-lite'
-                        ) }
-                    </span>
-                );
-            },
+            label: () => getActionLabel( <Download size={ 16 } className="!fill-none" />, __( 'Download PayPal mass payment file', 'dokan-lite' ) ),
+            icon: <Download size={ 16 } className="!fill-none" />,
             isPrimary: false,
             supportsBulk: true,
             isEligible: ( item ) => 'paypal' === item?.method,
@@ -555,18 +476,10 @@ const WithdrawPage = () => {
         } ) );
     };
 
-    // Create tabs with status counts
-    const tabs = WITHDRAW_STATUSES.map( ( status ) => ( {
-        name: status.value,
-        icon: (
-            <div className="flex items-center gap-1.5 px-2">
-                { status.label }
-                <span className="text-xs font-light text-[#A5A5AA]">
-                    ({ statusCounts[ status.value ] })
-                </span>
-            </div>
-        ),
-        title: status.label,
+    const tabItems = WITHDRAW_STATUSES.map( ( status ) => ( {
+        value: status.value,
+        label: status.label,
+        count: statusCounts[ status.value as keyof typeof statusCounts ],
     } ) );
 
     const tabsAdditionalContents = [
@@ -1039,35 +952,40 @@ const WithdrawPage = () => {
             </h2>
 
             { /* Data Table */ }
-            <DataViews
-                data={ data }
-                namespace="withdraw-admin-data-view"
-                defaultLayouts={ defaultLayouts }
-                fields={ fields }
-                getItemId={ ( item ) => item.id }
-                onChangeView={ setView }
-                paginationInfo={ {
-                    totalItems,
-                    totalPages: Math.ceil( totalItems / view.perPage ),
-                } }
-                view={ view }
-                selection={ selection }
-                onChangeSelection={ setSelection }
-                actions={ actions }
-                isLoading={ isLoading }
-                tabs={ {
-                    tabs,
-                    onSelect: handleTabSelect,
-                    initialTabName: activeStatus,
-                    additionalComponents: tabsAdditionalContents,
-                } }
-                filter={ {
-                    fields: filterFields,
-                    onFilterRemove: ( filterId ) =>
-                        clearSingleFilter( filterId ),
-                    onReset: () => clearFilter(),
-                } }
-            />
+            <div className="dokan-admin-dashboard-datatable">
+                <DataViews
+                    data={ data }
+                    namespace="withdraw-admin-data-view"
+                    defaultLayouts={ defaultLayouts }
+                    fields={ fields }
+                    getItemId={ ( item ) => item.id }
+                    onChangeView={ setView }
+                    paginationInfo={ {
+                        totalItems,
+                        totalPages: Math.ceil( totalItems / view.perPage ),
+                    } }
+                    view={ view }
+                    selection={ selection }
+                    onChangeSelection={ setSelection }
+                    actions={ actions }
+                    isLoading={ isLoading }
+                    tabs={ {
+                        items: tabItems,
+                        onSelect: ( name ) => {
+                            setSelection( [] );
+                            handleTabSelect( name );
+                        },
+                        defaultValue: activeStatus,
+                        headerContent: tabsAdditionalContents,
+                    } }
+                    filter={ {
+                        fields: filterFields,
+                        onFilterRemove: ( filterId ) =>
+                            clearSingleFilter( filterId ),
+                        onReset: () => clearFilter(),
+                    } }
+                />
+            </div>
 
             { /* DokanModal for approve, cancel, delete actions */ }
             { modalState.isOpen && modalState.type === 'approve' && (
