@@ -6,6 +6,38 @@ import { auth, user_api, taxRate, coupon_api, marketPlaceCoupon, reqOptions, hea
 
 const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
+/**
+ * Extract the trailing JSON value (object or array) from a response body
+ * that has unwanted prefix content. Returns undefined if no parseable JSON
+ * is found.
+ *
+ * Used by getResponseBody to tolerate WP_DEBUG_DISPLAY=true environments
+ * where PHP notices / warnings / WPDB errors are HTML-prepended to the
+ * REST JSON response.
+ */
+function extractTrailingJson(text: string): any {
+    if (!text) return undefined;
+    // Find candidate starting positions for an object or array, in order of
+    // appearance. Try parsing from each — first parse that consumes the
+    // remainder of the string (or to a balanced close) wins.
+    const starts: number[] = [];
+    for (let i = 0; i < text.length; i++) {
+        const c = text[i];
+        if (c === '{' || c === '[') starts.push(i);
+    }
+    // Try starts in REVERSE so we prefer later (trailing) JSON over any
+    // embedded HTML curly noise. Cap attempts to avoid pathological inputs.
+    for (let i = starts.length - 1; i >= 0 && i >= starts.length - 20; i--) {
+        const candidate = text.slice(starts[i]).trim();
+        try {
+            return JSON.parse(candidate);
+        } catch {
+            // try the next earlier `{` / `[`
+        }
+    }
+    return undefined;
+}
+
 export class ApiUtils {
     readonly request: APIRequestContext;
 
@@ -98,12 +130,29 @@ export class ApiUtils {
 
             // 204 No Content has no JSON body; return an empty object so consumers can safely
             // destructure / toMatchSchema without seeing a literal `false`.
-            const responseBody = response.status() === 204 ? {} : await response.json();
+            if (response.status() === 204) return {};
+
+            // Read raw text first. WordPress / WooCommerce can prepend PHP
+            // notice / warning / DB-error HTML to a REST response body when
+            // WP_DEBUG_DISPLAY is on (it is in wp-env test envs). The plugin
+            // may still have written valid JSON afterward — try the strict
+            // parse first, then fall back to extracting the trailing JSON
+            // value so a non-fatal warning doesn't fail the whole test.
+            const text = await response.text();
+            let body: any;
+            try {
+                body = JSON.parse(text);
+            } catch (parseErr) {
+                const extracted = extractTrailingJson(text);
+                if (extracted === undefined) throw parseErr;
+                console.warn(`[apiUtils] Response body had pre-JSON noise (likely PHP notice); extracted trailing JSON. Endpoint: ${response.url()}`);
+                body = extracted;
+            }
 
             // console log responseBody if response code is not between 200-299
-            if (String(response.status())[0] != '2') console.log('ResponseBody: ', responseBody);
+            if (String(response.status())[0] != '2') console.log('ResponseBody: ', body);
 
-            return responseBody;
+            return body;
         } catch (err: any) {
             console.log('End-point: ', response.url());
             console.log('Status Code: ', response.status());

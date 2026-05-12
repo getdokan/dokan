@@ -361,14 +361,35 @@ export class GeolocationPage {
     }
 
     async disableGeolocationModule(): Promise<void> {
+        // Admin React settings page reads modules via REST on mount, so the
+        // Geolocation entry disappears as soon as the API deactivation lands.
         await this.goto(subUrls.dokanSettings);
         await this.notToBeVisible(selectors.adminSettingsMenuGeolocation);
 
-        await this.goto(subUrls.shop);
-        await this.notToBeVisible(selectors.cShop.locationMap);
+        // Storefront pages are PHP-rendered. After module deactivation a
+        // fresh navigation should not include the map, but on slow / contended
+        // CI runners the first request can still observe stale option-cache
+        // state. Re-navigate (bounded) until the map is gone — this keeps the
+        // real functional check (map must disappear) while tolerating
+        // environmental propagation lag.
+        await this.assertSelectorGoneAfterReload(subUrls.shop, selectors.cShop.locationMap);
+        await this.assertSelectorGoneAfterReload(subUrls.storeListing, selectors.cStoreList.locationMap);
+    }
 
-        await this.goto(subUrls.storeListing);
-        await this.notToBeVisible(selectors.cStoreList.locationMap);
+    private async assertSelectorGoneAfterReload(url: string, selector: string): Promise<void> {
+        await expect
+            .poll(
+                async () => {
+                    await this.page.goto(this.createUrl(url), { waitUntil: 'load' });
+                    return this.page.locator(selector).count();
+                },
+                {
+                    intervals: [500, 1000, 2000, 3000, 5000],
+                    timeout: 20000,
+                    message: `${selector} still rendered at ${url} after module deactivation`,
+                },
+            )
+            .toBe(0);
     }
 
     async viewMapPosition(position: 'top' | 'left' | 'right'): Promise<void> {

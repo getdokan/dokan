@@ -314,10 +314,6 @@ export class FollowStorePage {
         await expect(this.page.locator(selector)).toBeVisible();
     }
 
-    private async notToBeVisible(selector: string): Promise<void> {
-        await expect(this.page.locator(selector)).toBeHidden();
-    }
-
     private async toContainText(selector: string, text: string): Promise<void> {
         await expect(this.page.locator(selector)).toContainText(text);
     }
@@ -383,11 +379,46 @@ export class FollowStorePage {
     }
 
     async disableFollowStoreModule(): Promise<void> {
-        await this.goto(subUrls.myAccount);
-        await this.notToBeVisible(selectors.myAccountMenuVendors);
+        // /my-account nav is server-rendered. The "Following Stores" link
+        // disappears once the module hook is unregistered. The first request
+        // after API deactivation can still observe the link if option-cache
+        // hasn't propagated, so re-navigate (bounded) until it's gone.
+        await this.assertSelectorGoneAfterReload(subUrls.myAccount, selectors.myAccountMenuVendors);
 
-        await this.goto(subUrls.followingStores);
-        await this.toBeVisible(selectors.pageNotFound);
+        // /following-stores should no longer be a registered Dokan endpoint
+        // after module deactivation — the storefront falls back to the WP
+        // 404 template. Use deterministic one-shot checks (HTTP status,
+        // page title, URL) rather than retry-based content assertions on
+        // <body>: the `.vendor-announcement-modal` locator handler that this
+        // page object registers will fire on auto-retry and keep
+        // intercepting, causing the assertion to time out without ever
+        // resolving even though the 404 is rendered correctly.
+        const response = await this.page.goto(this.createUrl(subUrls.followingStores), { waitUntil: 'load' });
+        expect(response?.status()).toBe(404);
+        // followingStores path is 'my-account/following' — confirm we stayed
+        // there (i.e., didn't redirect to a valid Dokan page).
+        expect(this.page.url()).toContain(subUrls.followingStores);
+        // page.title() is a one-shot fetch — no auto-retry, so it doesn't
+        // re-enter the locator handler loop. Storefront-theme 404 page sets
+        // <title>Page not found ...</title>.
+        const title = await this.page.title();
+        expect(title).toMatch(/Page not found/i);
+    }
+
+    private async assertSelectorGoneAfterReload(url: string, selector: string): Promise<void> {
+        await expect
+            .poll(
+                async () => {
+                    await this.page.goto(this.createUrl(url), { waitUntil: 'load' });
+                    return this.page.locator(selector).count();
+                },
+                {
+                    intervals: [500, 1000, 2000, 3000, 5000],
+                    timeout: 20000,
+                    message: `${selector} still rendered at ${url} after module deactivation`,
+                },
+            )
+            .toBe(0);
     }
 
     async vendorFollowersRenderProperly(): Promise<void> {

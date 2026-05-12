@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 
 import { toPath } from '@utils/helpers';
 
@@ -80,10 +80,27 @@ export class CommissionPage {
     async openSellingOptionsTab() {
         const tab = this.sellingOptionsTab();
         await tab.scrollIntoViewIfNeeded();
-        // Settings page has a sticky header / overlays that occasionally
-        // intercept the click — force past the actionability check.
-        await tab.click({ force: true });
-        await this.page.locator(this.admin.commissionTypeDropdown).waitFor({ state: 'visible', timeout: 20000 });
+
+        // The clickable `.nav-title` is nested inside a `.nav-tab` container;
+        // the active-state class lands on the OUTER container.
+        const tabContainer = this.page
+            .locator('div.nav-tab')
+            .filter({ has: this.page.locator('div.nav-title', { hasText: /^\s*Selling Options\s*$/ }) });
+
+        // Do NOT force the click. If the tab fails actionability, the Vue
+        // settings shell hasn't fully mounted and a forced click would fire on
+        // inert markup — the click event dispatches but Vue's handler doesn't
+        // react, leaving the commission form unrendered and the dropdown wait
+        // timing out. Retry click + render-check together so a transiently-
+        // inert tab doesn't poison the run.
+        await expect(async () => {
+            await tab.click();
+            // Proof that the click registered AND Vue rendered the panel:
+            // the outer `.nav-tab` gains `.nav-tab-active` and the commission
+            // form mounts.
+            await expect(tabContainer).toHaveClass(/\bnav-tab-active\b/, { timeout: 2000 });
+            await this.page.locator(this.admin.commissionTypeDropdown).waitFor({ state: 'visible', timeout: 5000 });
+        }).toPass({ timeout: 20000 });
     }
 
     async selectCommissionType(value: string) {

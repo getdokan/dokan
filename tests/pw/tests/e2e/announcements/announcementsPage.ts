@@ -252,6 +252,21 @@ export class AnnouncementsPage {
         await this.page.goto(this.admin.announcementsUrl);
         await this.page.waitForLoadState('load');
         await this.page.locator(this.admin.announcementText).waitFor({ state: 'visible' });
+        // Page header renders before the React/Vue list fetches data. Wait
+        // for either a populated list table or the empty-state — assertions
+        // that scan for a specific row otherwise race the data fetch.
+        await this.page.waitForFunction(
+            () => {
+                const table = document.querySelector('table.wp-list-table');
+                if (!table) return false;
+                const tbody = table.querySelector('tbody');
+                if (!tbody) return false;
+                // Either rows are populated, or the "no items" notice is shown.
+                return tbody.querySelectorAll('tr').length > 0 || !!tbody.querySelector('.no-items');
+            },
+            null,
+            { timeout: 15000 },
+        );
     }
 
     async adminAnnouncementsRenderProperly() {
@@ -338,7 +353,15 @@ export class AnnouncementsPage {
 
         // saveAsDraft stays on the edit form; navigate back to the announcement list
         await this.goToAnnouncementsPage();
-        // Draft items appear with <a> tag (no <strong> wrapper)
+        // Default tab is "All" which is paginated; a freshly-created draft
+        // can land beyond page 1 depending on existing-data ordering. Switch
+        // to the Draft tab so the new draft is guaranteed on page 1.
+        await Promise.all([
+            this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200).catch(() => null),
+            this.page.locator(this.admin.navTabs.draft).click(),
+        ]);
+        // Draft items render as <a> wrapped in <strong>; announcementCell
+        // walks up from the inner <a> to the <td>.
         await expect(this.page.locator(this.admin.announcementCell(title))).toBeVisible();
     }
 
@@ -373,8 +396,17 @@ export class AnnouncementsPage {
 
     async editAnnouncement(originalTitle: string, newTitle: string) {
         await this.goToAnnouncementsPage();
-        // Draft announcements render the title as <a> — the Edit row action only
-        // exists for non-published items; published items expose only Trash.
+        // The default "All" tab is paginated; a freshly-created draft can fall
+        // onto page 2+ depending on sort order, and the announcementCell XPath
+        // only scans page 1. Switch to the Draft tab so the just-created draft
+        // is guaranteed to be on the first (and only) page of results.
+        await Promise.all([
+            this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200).catch(() => null),
+            this.page.locator(this.admin.navTabs.draft).click(),
+        ]);
+        // Draft announcements render the title as <a> wrapped in <strong>;
+        // the announcementCell XPath finds the inner <a> and walks up to the
+        // <td>. Published items expose only Trash (no inner <a>).
         const row = this.page.locator(this.admin.announcementCell(originalTitle));
         const editLink = this.page.locator(this.admin.announcementEdit(originalTitle));
         await expect(row).toBeVisible();
