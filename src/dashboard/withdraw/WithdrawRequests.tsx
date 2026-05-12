@@ -1,8 +1,9 @@
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { useEffect, useState, useMemo, useCallback } from '@wordpress/element';
 import { useToast, SimpleInput } from '@getdokan/dokan-ui';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
+import { dateI18n, getSettings } from '@wordpress/date';
 import { DataViews, DateRangePicker } from '@dokan/components';
 import { Calendar } from 'lucide-react';
 import { useWithdraw } from './Hooks/useWithdraw';
@@ -251,6 +252,19 @@ function WithdrawRequests() {
         setView( ( prev ) => ( { ...prev, page: 1 } ) );
     }, [] );
 
+    const displayDateRange = useCallback(
+        ( startDate: string, endDate: string ) => {
+            const format = getSettings().formats.date;
+            return sprintf(
+                // translators: 1: start date, 2: end date.
+                __( '%1$s - %2$s', 'dokan-lite' ),
+                dateI18n( format, startDate ),
+                dateI18n( format, endDate )
+            );
+        },
+        []
+    );
+
     const filter = useMemo(
         () => ( {
             fields: [
@@ -266,23 +280,23 @@ function WithdrawRequests() {
                             beforeText={ beforeText }
                             focusedInput={ focusInput }
                             onUpdate={ ( update: DateRangeUpdate ) => {
-                                if ( update.after ) {
+                                if ( update.after !== undefined ) {
                                     setAfter( update.after );
                                 }
-                                if ( update.afterText ) {
+                                if ( update.afterText !== undefined ) {
                                     setAfterText( update.afterText );
                                 }
-                                if ( update.before ) {
+                                if ( update.before !== undefined ) {
                                     setBefore( update.before );
                                 }
-                                if ( update.beforeText ) {
+                                if ( update.beforeText !== undefined ) {
                                     setBeforeText( update.beforeText );
                                 }
                                 if ( update.focusedInput ) {
                                     setFocusInput( update.focusedInput );
                                     if (
                                         update.focusedInput === 'endDate' &&
-                                        after
+                                        ( update.after || after )
                                     ) {
                                         setBefore( '' );
                                         setBeforeText( '' );
@@ -293,6 +307,9 @@ function WithdrawRequests() {
                             isInvalidDate={ () => false }
                             onClear={ clearDateRange }
                             onOk={ () => {
+                                if ( ! after || ! before ) {
+                                    return;
+                                }
                                 setAppliedDateRange( {
                                     start_date: after,
                                     end_date: before,
@@ -312,7 +329,7 @@ function WithdrawRequests() {
                                     value:
                                         ! after || ! before
                                             ? ''
-                                            : `${ afterText } - ${ beforeText }`,
+                                            : displayDateRange( after, before ),
                                     placeholder: __(
                                         'Enter Date',
                                         'dokan-lite'
@@ -338,6 +355,7 @@ function WithdrawRequests() {
             beforeText,
             focusInput,
             clearDateRange,
+            displayDateRange,
         ]
     );
 
