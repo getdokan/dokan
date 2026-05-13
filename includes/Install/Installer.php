@@ -247,6 +247,12 @@ class Installer {
                 'page_id'    => 'my_orders',
                 'content'    => '[dokan-my-orders]',
             ],
+            [
+                'post_title' => __( 'Vendor Onboarding', 'dokan-lite' ),
+                'slug' => 'vendor-onboarding',
+                'page_id' => 'vendor_onboarding',
+                'content' => '[dokan-vendor-onboarding-registration]',
+            ],
         ];
 
         $dokan_page_settings = [];
@@ -546,15 +552,20 @@ class Installer {
         $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokan_order_stats` (
                 `order_id` bigint UNSIGNED NOT NULL,
                 `vendor_id` bigint UNSIGNED NOT NULL DEFAULT '0',
-                `order_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0 = Dokan Parent Order, 1 = Dokan Single Vendor Order, 2 = Dokan Suborder, 3 = Refund of Dokan Parent Order, 4 = Refund of Dokan Suborder, 5 =  Refund of Dokan Single Order',
+                `order_type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0 = Dokan Parent Order, 1 = Dokan Single Vendor Order, 2 = Dokan Suborder, 3 = Refund of Dokan Parent Order, 4 = Refund of Dokan Suborder, 5 = Refund of Dokan Single Order, 6 = Advertisement Product Order, 7 = Advertisement Refund Order, 8 = Vendor Subscription Order, 9 = Vendor Subscription Refund Order',
                 `vendor_earning` double NOT NULL DEFAULT '0',
                 `vendor_gateway_fee` double NOT NULL DEFAULT '0',
                 `vendor_shipping_fee` double NOT NULL DEFAULT '0',
                 `vendor_discount` double NOT NULL DEFAULT '0',
+                `vendor_shipping_tax` double NOT NULL DEFAULT '0',
+                `vendor_order_tax` double NOT NULL DEFAULT '0',
+                `admin_earning` double NOT NULL DEFAULT '0',
                 `admin_commission` double NOT NULL DEFAULT '0',
                 `admin_gateway_fee` double NOT NULL DEFAULT '0',
                 `admin_shipping_fee` double NOT NULL DEFAULT '0',
                 `admin_discount` double NOT NULL DEFAULT '0',
+                `admin_shipping_tax` double NOT NULL DEFAULT '0',
+                `admin_order_tax` double NOT NULL DEFAULT '0',
                 `admin_subsidy` double NOT NULL DEFAULT '0',
                 PRIMARY KEY (order_id),
                 KEY vendor_id (vendor_id),

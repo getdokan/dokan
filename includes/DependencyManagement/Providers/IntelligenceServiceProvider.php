@@ -10,6 +10,11 @@ use WeDevs\Dokan\Intelligence\Services\Models\GeminiTwoDotFiveFlash;
 use WeDevs\Dokan\Intelligence\Services\Models\GeminiTwoDotFiveFlashLite;
 use WeDevs\Dokan\Intelligence\Services\Models\GeminiTwoDotFivePro;
 use WeDevs\Dokan\Intelligence\Services\Models\OpenAIChatGPTFourO;
+use WeDevs\Dokan\Intelligence\Services\Models\OpenAIGPTFiveDotFourMini;
+use WeDevs\Dokan\Intelligence\Services\Models\OpenAIGPTFiveDotFourNano;
+use WeDevs\Dokan\Intelligence\Services\Models\OpenAIGPTFiveMini;
+use WeDevs\Dokan\Intelligence\Services\Models\OpenAIGPTFiveNano;
+use WeDevs\Dokan\Intelligence\Services\Models\OpenAIGPTFourDotOneMini;
 use WeDevs\Dokan\Intelligence\Services\Models\OpenAIGPTFourO;
 use WeDevs\Dokan\Intelligence\Services\Models\OpenAIGPTFourOMini;
 use WeDevs\Dokan\Intelligence\Services\Models\OpenAIGPTThreeDotFiveTurbo;
@@ -31,6 +36,11 @@ class IntelligenceServiceProvider extends BaseServiceProvider {
         GeminiTwoDotFiveFlash::class,
         GeminiTwoDotFivePro::class,
         GeminiTwoDotFiveFlashLite::class,
+        OpenAIGPTFiveDotFourMini::class,
+        OpenAIGPTFiveMini::class,
+        OpenAIGPTFiveDotFourNano::class,
+        OpenAIGPTFourDotOneMini::class,
+        OpenAIGPTFiveNano::class,
         OpenAIGPTThreeDotFiveTurbo::class,
         OpenAIGPTFourOMini::class,
         OpenAIGPTFourO::class,

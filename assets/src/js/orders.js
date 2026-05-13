@@ -114,6 +114,23 @@ jQuery(function($) {
         return false;
     });
 
+    $( '.dokan-btn-action-confirm' ).on( 'click', async function ( e ) {
+        e.preventDefault();
+
+        const message = $( this ).data( 'confirm-message' );
+
+        if ( ! message ) {
+            window.location.href = $( this ).attr( 'href' );
+            return;
+        }
+
+        const answer = await window.dokan_confirm( message );
+
+        if ( answer ) {
+            window.location.href = $( this ).attr( 'href' );
+        }
+    } );
+
     $('.order_download_permissions').on('click', 'button.revoke_access', async function(e){
         e.preventDefault();
         const answer = await dokan_sweetalert( dokan.i18n_download_permission, {

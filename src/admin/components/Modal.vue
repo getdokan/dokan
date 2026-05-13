@@ -12,7 +12,7 @@
                             <span class="screen-reader-text">{{ __( 'Close modal panel', 'dokan-lite' ) }}</span>
                         </button>
                     </header>
-                    <div class="modal-body">
+                    <div class="dokan-layout modal-body">
                         <slot name="body"></slot>
                     </div>
                     <footer class="modal-footer" v-if="footer">

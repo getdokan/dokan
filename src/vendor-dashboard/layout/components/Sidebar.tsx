@@ -1,4 +1,8 @@
 // eslint-disable-next-line import/named
+// import { Tooltip } from '@getdokan/dokan-ui';
+import { truncate } from '@src/utilities';
+// import { Tooltip } from '@wordpress/components';
+import { DokanTooltip as Tooltip } from '@src/components';
 import {
     RawHTML,
     RefObject,
@@ -6,14 +10,33 @@ import {
     useRef,
     useState,
 } from '@wordpress/element';
+import { applyFilters } from '@wordpress/hooks';
 import { __, sprintf } from '@wordpress/i18n';
 import * as LucideIcons from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
-import { Tooltip } from '@getdokan/dokan-ui';
-import { truncate } from '@src/utilities';
-import SubmenuPopover from './SubmenuPopover';
 import CountBubble from './CountBubble';
-import { applyFilters } from '@wordpress/hooks';
+import SubmenuPopover from './SubmenuPopover';
+
+// Pick the submenu whose URL is the longest prefix of currentUrl so nested
+// routes (e.g. orders/new) don't also activate their parent list (orders).
+export const getActiveSubmenuKey = (
+    submenu: any,
+    url: string
+): string | null => {
+    let activeKey: string | null = null;
+    let activeLength = 0;
+    Object.entries( submenu || {} ).forEach( ( [ subkey, subitem ]: any ) => {
+        if (
+            subitem?.url &&
+            url.startsWith( subitem.url ) &&
+            subitem.url.length > activeLength
+        ) {
+            activeKey = subkey;
+            activeLength = subitem.url.length;
+        }
+    } );
+    return activeKey;
+};
 
 const Sidebar = ( {
     collapsed,
@@ -133,17 +156,9 @@ const Sidebar = ( {
 
         Object.entries( ( sidebarNav as any ) || {} ).forEach(
             ( [ key, item ]: any ) => {
-                let hasActiveChild = false;
-
-                if ( item?.submenu ) {
-                    Object.values( item.submenu ).forEach( ( sub: any ) => {
-                        if ( sub?.url && currentUrl.startsWith( sub.url ) ) {
-                            hasActiveChild = true;
-                        }
-                    } );
-                }
-
-                initial[ key ] = hasActiveChild;
+                initial[ key ] = item?.submenu
+                    ? getActiveSubmenuKey( item.submenu, currentUrl ) !== null
+                    : false;
             }
         );
 
@@ -201,7 +216,7 @@ const Sidebar = ( {
             <aside
                 style={ { top: windowWidth > 600 ? adminBar : 0 } }
                 className={ twMerge(
-                    'dokan-frontend-sidebar text-white fixed left-0 bottom-0 z-20 flex flex-col transition-all duration-200',
+                    'dokan-frontend-sidebar bg-primary-500 text-white fixed start-0 bottom-0 z-20 flex flex-col transition-all duration-200',
                     collapsed
                         ? windowWidth <= 768
                             ? 'w-0 max-w-0'
@@ -213,8 +228,8 @@ const Sidebar = ( {
                 <a
                     href={ siteUrl || '/' }
                     className={ twMerge(
-                        'flex items-center gap-3.5 min-h-20 no-underline focus:!outline-none',
-                        collapsed ? 'px-5 justify-center' : 'px-8'
+                        'flex items-center gap-3.5 min-h-20 no-underline focus:!outline-none rounded-md',
+                        collapsed ? 'px-5 justify-center' : 'px-8',
                     ) }
                 >
                     { siteIcon ? (
@@ -237,8 +252,13 @@ const Sidebar = ( {
                     ) }
 
                     { ! collapsed && (
-                        <Tooltip content={ sideBarTitle }>
-                            <span className="text-2xl font-bold text-white">
+                        <Tooltip
+                            content={
+                                sideBarTitle ||
+                                __( 'Vendor Dashboard', 'dokan-lite' )
+                            }
+                        >
+                            <span className="text-xl font-bold text-white">
                                 { truncate( sideBarTitle, 9 ) }
                             </span>
                         </Tooltip>
@@ -274,22 +294,15 @@ const Sidebar = ( {
                                         item?.url &&
                                         currentUrl.startsWith( item.url );
 
-                                    // Detect if any child submenu item is active
-                                    let hasActiveChild = false;
-                                    if ( hasSub ) {
-                                        Object.values( item.submenu ).forEach(
-                                            ( sub: any ) => {
-                                                if (
-                                                    sub?.url &&
-                                                    currentUrl.startsWith(
-                                                        sub.url
-                                                    )
-                                                ) {
-                                                    hasActiveChild = true;
-                                                }
-                                            }
-                                        );
-                                    }
+                                    // Detect which child submenu item is active (longest-prefix match)
+                                    const activeSubkey = hasSub
+                                        ? getActiveSubmenuKey(
+                                              item.submenu,
+                                              currentUrl
+                                          )
+                                        : null;
+                                    const hasActiveChild =
+                                        activeSubkey !== null;
 
                                     // In collapsed state, mark parent as active when a child is active
                                     const isParentActiveCollapsed =
@@ -305,6 +318,7 @@ const Sidebar = ( {
                                         item?.menu_manager_title || item?.title,
                                         item
                                     ) as string;
+                                    const isMenuItemActive =  isParentActive || isParentActiveCollapsed ;
 
                                     return (
                                         <li
@@ -337,16 +351,16 @@ const Sidebar = ( {
                                                     }
                                                 } }
                                                 className={ twMerge(
-                                                    'group skip-color-module relative flex items-center rounded-md font-medium focus:!outline-none py-2.5',
+                                                    'group skip-color-module relative flex items-center rounded-md font-medium focus:!outline-none py-2.5 no-underline hover:bg-primary-hover data-[active=true]:bg-primary-hover',
                                                     collapsed
                                                         ? windowWidth <= 768
                                                             ? 'w-0 max-w-0'
                                                             : 'w-10 max-w-10 justify-center'
                                                         : 'text-sm px-3',
-                                                    ( isParentActive ||
-                                                        isParentActiveCollapsed ) &&
+                                                    (isMenuItemActive) &&
                                                         'active'
                                                 ) }
+                                                data-active={ isMenuItemActive ? 'true' : 'false' }
                                             >
                                                 { /* Icon: turn white when its popover is visible */ }
                                                 <span
@@ -379,7 +393,7 @@ const Sidebar = ( {
                                                     ) }
                                                 </span>
                                                 { ! collapsed && (
-                                                    <span className="ml-2">
+                                                    <span className="ms-2">
                                                         { menuTitle }
                                                     </span>
                                                 ) }
@@ -396,19 +410,19 @@ const Sidebar = ( {
                                                     ( isExpanded ? (
                                                         <LucideIcons.ChevronUp
                                                             className={ twMerge(
-                                                                'ml-2 w-4 h-4 text-[#A5A5A5] group-hover:text-white transition-transform duration-200',
+                                                                'ms-2 w-4 h-4 text-white group-hover:text-white transition-transform duration-200',
                                                                 item.counts > 0
-                                                                    ? 'ml-2'
-                                                                    : 'ml-auto'
+                                                                    ? 'ms-2'
+                                                                    : 'ms-auto'
                                                             ) }
                                                         />
                                                     ) : (
                                                         <LucideIcons.ChevronDown
                                                             className={ twMerge(
-                                                                'ml-2 w-4 h-4 text-[#A5A5A5] group-hover:text-white transition-transform duration-200',
+                                                                'ms-2 w-4 h-4 text-white group-hover:text-white transition-transform duration-200',
                                                                 item.counts > 0
-                                                                    ? 'ml-2'
-                                                                    : 'ml-auto'
+                                                                    ? 'ms-2'
+                                                                    : 'ms-auto'
                                                             ) }
                                                         />
                                                     ) ) }
@@ -442,10 +456,8 @@ const Sidebar = ( {
                                                                 }
 
                                                                 const isSubActive =
-                                                                    subitem?.url &&
-                                                                    currentUrl.startsWith(
-                                                                        subitem.url
-                                                                    );
+                                                                    subkey ===
+                                                                    activeSubkey;
 
                                                                 const subMenuTitle =
                                                                     applyFilters(
@@ -460,19 +472,22 @@ const Sidebar = ( {
                                                                         key={
                                                                             subkey
                                                                         }
+                                                                        className={
+                                                                            'my-2'
+                                                                        }
                                                                     >
                                                                         <a
                                                                             href={
                                                                                 subitem.url
                                                                             }
                                                                             className={ twMerge(
-                                                                                'group skip-color-module flex items-center py-2.5 px-3 text-sm font-medium rounded-md focus:!outline-none',
+                                                                                'group skip-color-module no-underline flex items-center p-3 text-sm font-medium rounded-md focus:!outline-none',
                                                                                 isSubActive &&
                                                                                     'active'
                                                                             ) }
                                                                         >
                                                                             <LucideIcons.Settings className="w-5 h-5 !text-transparent" />
-                                                                            <span className="ml-2">
+                                                                            <span className="ms-2">
                                                                                 {
                                                                                     subMenuTitle
                                                                                 }

@@ -85,7 +85,7 @@ const VersionRow = ( {
     return (
         <div className="flex gap-20 mb-10">
             { /* Left Column - Version Info (Sticky) */ }
-            <div className="w-48 flex-shrink-0">
+            <div className="w-48 shrink-0">
                 <div className="sticky top-4">
                     <div className="flex items-center gap-1.5 mb-1">
                         <h3 className="text-lg font-semibold text-gray-900">

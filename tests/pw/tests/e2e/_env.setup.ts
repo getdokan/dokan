@@ -4,9 +4,10 @@ import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 import { data } from '@utils/testData';
-import { helpers } from '@utils/helpers';
+import { helpers, parseBoolean } from '@utils/helpers';
 
 const { DOKAN_PRO } = process.env;
+const isPro = parseBoolean(DOKAN_PRO);
 
 setup.describe('setup woocommerce settings', () => {
     setup.use({ extraHTTPHeaders: payloads.adminAuth });
@@ -52,7 +53,7 @@ setup.describe('setup woocommerce settings', () => {
         await apiUtils.updateShippingZoneMethod(zoneId, methodId, payloads.addShippingMethodFlatRateCost);
         await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFreeShipping);
 
-        if (DOKAN_PRO) {
+        if (isPro) {
             await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanTableRateShipping);
             await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanDistanceRateShipping);
             await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanVendorShipping);
@@ -116,12 +117,36 @@ setup.describe('setup woocommerce settings', () => {
         await dbUtils.setOptionValue('woocommerce_task_list_reminder_bar_hidden', 'yes', false);
     });
 
+    setup('dismiss dokan admin setup guide banner', { tag: ['@lite'] }, async () => {
+        // The "Complete your marketplace setup" banner renders on every admin dashboard
+        // page until setup is marked complete. Mark it complete so the banner is gone
+        // and does not affect any test.
+        await dbUtils.setOptionValue('dokan_admin_setup_guide_steps_completed', '1', false);
+    });
+
     setup('disable woocommerce variable product tour', { tag: ['@lite'] }, async () => {
         await dbUtils.setUserMeta('1', 'woocommerce_admin_variable_product_tour_shown', 'yes', false);
     });
 
     setup('disable storefront sticky add to cart', { tag: ['@lite'] }, async () => {
         await dbUtils.updateOptionValue('theme_mods_storefront', { storefront_sticky_add_to_cart: false });
+    });
+
+    setup('dismiss vendor announcement modal', { tag: ['@pro'] }, async () => {
+        // Dokan Pro 5.0.0+ pops a "Latest unread announcement" modal on every
+        // vendor dashboard page. The modal opens when `latestUnread.id !==
+        // lastDismissedId` — strict inequality, so a sentinel meta won't work.
+        // Mark every announcement row as 'read' for our test vendors so
+        // `latestUnread` query returns null and the modal never renders.
+        // Table: wp_dokan_announcement (id, user_id, status='unread'|'read'|'trash')
+        const dbPrefix = process.env.DB_PREFIX || 'wp';
+        const ids = [process.env.VENDOR_ID, process.env.VENDOR2_ID].filter(Boolean) as string[];
+        for (const userId of ids) {
+            await dbUtils.dbQuery(
+                `UPDATE ${dbPrefix}_dokan_announcement SET status = 'read' WHERE user_id = ? AND status = 'unread'`,
+                [userId]
+            );
+        }
     });
 
     setup('disable simple-auction ajax bid check', { tag: ['@pro'] }, async () => {

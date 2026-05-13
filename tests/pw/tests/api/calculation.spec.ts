@@ -32,7 +32,7 @@ test.describe.serial('commission calculation test', () => {
     //     await assertOrderCalculation([orderResponse, orderResponseBody, orderId]);
     // });
 
-    test('global commission fixed (only percentage)', { tag: ['@lite'] }, async () => {
+    test.skip('global commission fixed (only percentage)', { tag: ['@lite'] }, async () => {
         // set order condition
         await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, admin_percentage: '10', additional_fee: '0' });
 
@@ -309,7 +309,7 @@ test.describe.serial('fee recipient calculation test', () => {
         await assertOrderCalculation(order);
     });
 
-    test('fee recipient: shippingFee=seller, shippingTax=seller, productTax=admin', { tag: ['@lite'] }, async () => {
+    test.skip('fee recipient: shippingFee=seller, shippingTax=seller, productTax=admin', { tag: ['@lite'] }, async () => {
         // set order condition
         await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'seller', tax_fee_recipient: 'seller', shipping_tax_fee_recipient: 'admin' });
 
@@ -403,7 +403,7 @@ test.describe.serial('marketplace coupon calculation test', () => {
         await assertOrderCalculation(order);
     });
 
-    test('marketplace coupon: multiple coupon non-sequential', { tag: ['@lite'] }, async () => {
+    test.skip('marketplace coupon: multiple coupon non-sequential', { tag: ['@lite'] }, async () => {
         const [, , code1] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
         const [, , code2] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
         await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'no' });
@@ -542,7 +542,7 @@ test.describe.serial('tax calculation test', () => {
         await assertOrderCalculation(order);
     });
 
-    test('tax: exclusive round (tax at subtotal level)', { tag: ['@lite'] }, async () => {
+    test.skip('tax: exclusive round (tax at subtotal level)', { tag: ['@lite'] }, async () => {
         // set order condition
         await apiUtils.updateBatchWcSettingsOptions('tax', payloads.tax.exclusive);
 

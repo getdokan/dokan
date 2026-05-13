@@ -1,7 +1,6 @@
-import './tailwind.scss';
-import DokanAI from './components/DokanAI';
-import { createRoot } from '@wordpress/element';
 import domReady from '@wordpress/dom-ready';
+import { createRoot } from '@wordpress/element';
+import DokanAI from './components/DokanAI';
 
 domReady( () => {
     const container = document.getElementById( 'ai-prompt-app' );

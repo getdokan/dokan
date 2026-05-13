@@ -1,3 +1,43 @@
+### v5.0.1 ( May 05, 2026 ) ###
+
+- **update:** Added an admin-controllable vendor registration option on the My Account page.
+- **update:** Added RTL support for the new vendor dashboard UI.
+- **fix:** Properly decode HTML entities in admin settings labels.
+
+### v5.0.0 ( Apr 28, 2026 ) ###
+
+- **new:** Added a dedicated vendor onboarding page with a separate registration flow.
+- **new:** Introduced the new Product Form Manager for the vendor dashboard.
+- **new:** Added a "Get Support" button to the admin dashboard header.
+- **new:** Added a new Extensions page for Dokan in the admin panel.
+- **new:** Converted the admin Products list to React with Plugin UI.
+- **new:** Converted the vendor dashboard Orders list to React with Plugin UI.
+- **new:** Migrated the vendor dashboard Reverse Withdraw page to React with Plugin UI.
+- **new:** Migrated the admin Withdraw Requests page to Plugin UI with tabs.
+- **new:** Added `@wedevs/plugin-ui` dependency and integrate the DataViews component as the unified table system.
+- **update:** Migrated Dokan UI to Tailwind CSS v4 with a consolidated shared component bundle.
+- **update:** Rebuilt the admin Tools / Dummy Data section in React.
+- **update:** Added legacy compatibility support for the RFQ (Request for Quote) admin panel.
+- **update:** Updated the Vendor Announcement panel UX.
+- **update:** Added additional tax fields and new order types to the Dokan order stats table.
+- **update:** Added OpenAI model options to the latest ones for AI Assist settings.
+- **update:** Added a legacy switcher to the Product Form for backward compatibility.
+- **update:** Used ShortContent for product name display and widen the Products column.
+- **fix:** Resolved Product Form compatibility issues with WordPress v6.8.
+- **fix:** Resolved Plugin UI style conflicts between v10 and v14.
+- **fix:** Corrected filter border clipping and the WithdrawView layout type.
+- **fix:** Improved UI styles and navigation URL handling across new dashboard pages.
+- **fix:** Corrected the balance display on the Reverse Withdraw page.
+- **fix:** Corrected the back-link URL on the order details page.
+- **fix:** Fixed the active state of vendor sidebar submenu items.
+
+### v4.3.3 ( Mar 31, 2026 ) ###
+- **update:** Manage changelog notification dot visibility for Dokan Lite and Pro based on new version availability.
+- **update:** Add confirmation modal for order status change actions in the vendor dashboard order listing.
+- **update:** Update the Pro Features admin menu color to highlight it with the brand color.
+- **fix:** Add the missing alt attribute to the store header banner image on the store listing page.
+- **fix:** Display a warning message when admin tries to approve a vendor withdrawal request exceeding the available balance.
+
 ### v4.3.2 ( Mar 13, 2026 ) ###
 - **fix:** Prevent unauthenticated access to customer information via the Store Reviews REST API endpoint.
 
