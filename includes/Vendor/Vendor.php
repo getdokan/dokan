@@ -993,9 +993,15 @@ class Vendor {
         /**
          * Filter whether selling should be enabled for a vendor.
          *
-         * Returning false will prevent the vendor from being activated.
-         * This is used by the verification module to block activation
-         * when the "Verified Only" setting is enabled and the vendor is not verified.
+         * Allows extensions (verification, KYC, compliance, etc.) to short-circuit
+         * vendor activation. Returning false prevents the `dokan_enable_selling`
+         * meta update, the `dokan_vendor_enabled` action, and the product status
+         * revert background job from running.
+         *
+         * Note: callers of `make_active()` cannot distinguish a blocked activation
+         * from a successful one via the return value; consumers that need to react
+         * to a block should hook into this filter or check `dokan_is_seller_enabled()`
+         * after the call.
          *
          * @since DOKAN_SINCE
          *

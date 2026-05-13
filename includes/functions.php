@@ -1419,7 +1419,12 @@ function dokan_admin_user_register( $user_id ) {
     $role = reset( $user->roles );
 
     if ( $role === 'seller' ) {
-        $enabled = 'automatically' === dokan_get_container()->get( \WeDevs\Dokan\Utilities\AdminSettings::class )->get_new_seller_enable_selling_status();
+        $enabled         = 'automatically' === dokan_get_container()->get( \WeDevs\Dokan\Utilities\AdminSettings::class )->get_new_seller_enable_selling_status();
+        $current_enabled = dokan_is_seller_enabled( $user_id );
+
+        if ( $enabled === $current_enabled ) {
+            return;
+        }
 
         if ( $enabled ) {
             dokan()->vendor->activate( $user_id );
