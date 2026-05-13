@@ -1005,6 +1005,13 @@ class Vendor {
         $enable_selling = apply_filters( 'dokan_can_enable_selling', true, $this->get_id() );
 
         if ( ! $enable_selling ) {
+            dokan_log(
+                sprintf(
+                    'Vendor activation blocked for vendor #%d by dokan_can_enable_selling filter.',
+                    $this->get_id()
+                )
+            );
+
             return $this->to_array();
         }
 
@@ -1019,7 +1026,7 @@ class Vendor {
     }
 
     /**
-     * Make vendor active
+     * Make vendor inactive
      *
      * @since 2.8.0
      *

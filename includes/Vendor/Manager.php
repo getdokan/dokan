@@ -532,13 +532,13 @@ class Manager {
      *
      * @param int $vendor_id
      *
-     * @return array
+     * @return array|\WP_Error
      */
     public function activate( $vendor_id ) {
         $vendor = $this->get( $vendor_id );
 
         if ( ! $vendor->get_id() ) {
-            return [];
+            return new \WP_Error( 'invalid_vendor', __( 'Invalid vendor ID.', 'dokan-lite' ), [ 'vendor_id' => $vendor_id ] );
         }
 
         return $vendor->make_active();
@@ -551,13 +551,13 @@ class Manager {
      *
      * @param int $vendor_id
      *
-     * @return array
+     * @return array|\WP_Error
      */
     public function deactivate( $vendor_id ) {
         $vendor = $this->get( $vendor_id );
 
         if ( ! $vendor->get_id() ) {
-            return [];
+            return new \WP_Error( 'invalid_vendor', __( 'Invalid vendor ID.', 'dokan-lite' ), [ 'vendor_id' => $vendor_id ] );
         }
 
         return $vendor->make_inactive();
