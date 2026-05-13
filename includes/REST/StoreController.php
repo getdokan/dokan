@@ -729,10 +729,20 @@ class StoreController extends WP_REST_Controller {
         $is_authorized = $this->can_access_vendor_store( $store->get_id() );
 
         if ( $is_authorized ) {
-            $data['admin_category_commission'] = $store->get_commission_settings()->get_category_commissions();
-            $data['admin_commission'] = $store->get_commission_settings()->get_percentage();
-            $data['admin_additional_fee'] = $store->get_commission_settings()->get_flat();
-            $data['admin_commission_type'] = $store->get_commission_settings()->get_type();
+            $dashboard    = dokan_get_container()->get( 'dashboard' );
+            $methods_data = $dashboard->templates->settings->get_seller_payment_methods( $store->get_id() ) ?? [];
+
+            $data['admin_category_commission']    = $store->get_commission_settings()->get_category_commissions();
+            $data['admin_commission']             = $store->get_commission_settings()->get_percentage();
+            $data['admin_additional_fee']         = $store->get_commission_settings()->get_flat();
+            $data['admin_commission_type']        = $store->get_commission_settings()->get_type();
+            $data['bank_payment_required_fields'] = dokan_bank_payment_required_fields();
+            $data['active_payment_methods']       = $methods_data['active_methods'] ?? [];
+            $data['connected_methods']            = $methods_data['connected_methods'] ?? [];
+            $data['disconnected_methods']         = $methods_data['disconnected_methods'] ?? [];
+            $data['withdraw_options']             = dokan_withdraw_get_methods();
+            $data['fields_placeholders']          = dokan_bank_payment_fields_placeholders();
+            $data['chargeable_methods']           = dokan_withdraw_get_chargeable_methods();
         }
 
         $restricted_fields = $this->get_restricted_fields_for_view( $store, $request );
@@ -821,8 +831,7 @@ class StoreController extends WP_REST_Controller {
                 'id'         => (int) $item->ID,
                 'author'     => [
                     'id'     => $user->ID,
-                    'name'   => $user->user_login,
-                    'email'  => $user->user_email,
+                    'name'   => $user->display_name,
                     'url'    => $user->user_url,
                     'avatar' => $user_gravatar,
                 ],
@@ -841,7 +850,6 @@ class StoreController extends WP_REST_Controller {
                 'author'     => [
                     'id'     => $item->user_id,
                     'name'   => $item->comment_author,
-                    'email'  => $item->comment_author_email,
                     'url'    => $item->comment_author_url,
                     'avatar' => $comment_author_img_url,
                 ],

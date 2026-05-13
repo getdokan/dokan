@@ -1,0 +1,641 @@
+/* ============================================
+   Dokan Custom Component Styles
+   Scoped within .dokan-layout
+   ============================================ */
+
+/* Global Border Color */
+
+*,
+*::before,
+*::after {
+    border-color: var(--color-border);
+}
+
+/* ========== Resets ========== */
+
+/* Table Reset */
+table:not(.dataviews-view-table),
+table:not(.dataviews-view-table) th,
+table:not(.dataviews-view-table) td {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-spacing: 0;
+    border-collapse: collapse;
+    font-size: inherit;
+    font-weight: inherit;
+    text-align: inherit;
+    vertical-align: inherit;
+    box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: inherit;
+    font-weight: inherit;
+}
+/* List Reset */
+ul,
+ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    margin: 0;
+    list-style: none;
+    padding: 0;
+}
+p {
+    margin: 0;
+}
+/* Headings Reset */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    padding: 0;
+    margin: 0;
+}
+
+/* ========== Focus States ========== */
+a:focus,
+button:focus,
+textarea:focus,
+input:focus {
+    &:not([role="switch"], [role="combobox"]) {
+        outline-color: var(--color-primary);
+    }
+}
+input[type="checkbox"]:focus,
+input[type="radio"]:focus {
+    color: var(--color-primary);
+}
+.dokan-dashboard-layout button[role="switch"] span {
+    @apply translate-x-0.5 shrink-0 transition-transform duration-200;
+}
+.dokan-dashboard-layout button[role="switch"] span[data-state="unchecked"] {
+    @apply -translate-x-2;
+}
+
+/* ========== Link Styles ========== */
+a:not(.dokan-btn):not([class*="dokan-btn-"]):not(.skip-color-module) {
+    color: var(--color-primary);
+    transition: color 0.2s;
+
+    &:hover,
+    &:focus {
+        color: var(--color-primary-dark);
+    }
+}
+
+/* ========== Form Elements ========== */
+input[type="checkbox"]::before {
+    content: "" !important;
+}
+
+textarea:focus,
+input[type="text"]:focus,
+input[type="number"]:focus {
+    outline-offset: 0;
+}
+
+/* ========== Global Button Cursor Styles ========== */
+button,
+[role="button"],
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+        cursor: pointer;
+    }
+
+    &:disabled,
+    &[aria-disabled="true"] {
+        cursor: not-allowed;
+    }
+}
+
+.dokan-price-input .rounded-l-none {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+.dokan-price-input .rounded-r-none {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+/* ========== Button Styles ========== */
+.dokan-btn {
+    @apply relative px-4 py-2 rounded-md font-medium transition-all duration-200 shadow-sm cursor-pointer;
+    background-color: var(--color-dokan-btn) !important;
+    color: var(--color-dokan-btn-text) !important;
+    border: 1px solid var(--color-dokan-btn-border) !important;
+    outline: none;
+
+    &:hover:not(:disabled) {
+        background-color: var(--color-dokan-btn-hover) !important;
+        border-color: var(--color-dokan-btn-border-hover) !important;
+        color: var(--color-dokan-btn-text-hover) !important;
+    }
+
+    &:focus:not(:disabled),
+    &:focus-visible:not(:disabled) {
+        @apply ring-2 ring-offset-2;
+        --tw-ring-color: var(--color-dokan-btn-border);
+        outline: none;
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.98);
+        background-color: var(--color-dokan-btn-hover);
+        border-color: var(--color-dokan-btn-border-hover);
+        color: var(--color-dokan-btn-text-hover);
+    }
+
+    &:disabled {
+        @apply opacity-50;
+        background-color: var(--color-dokan-btn);
+        color: var(--color-dokan-btn-text);
+        border: 1px solid var(--color-dokan-btn-border);
+    }
+}
+
+.dokan-btn-secondary {
+    @apply relative px-4 py-2 rounded-md font-medium transition-all duration-200 cursor-pointer;
+    background-color: var(--color-dokan-btn-secondary) !important;
+    color: var(--color-dokan-btn-secondary-text) !important;
+    border: 1px solid var(--color-dokan-btn-secondary-border) !important;
+    outline: none;
+
+    &:hover:not(:disabled) {
+        background-color: var(--color-dokan-btn-secondary-hover) !important;
+        border-color: var(--color-dokan-btn-secondary-border-hover) !important;
+        color: var(--color-dokan-btn-secondary-text-hover) !important;
+    }
+
+    &:focus:not(:disabled),
+    &:focus-visible:not(:disabled) {
+        @apply ring-2 ring-offset-2;
+        --tw-ring-color: var(--color-dokan-btn-secondary-border);
+        outline: none;
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.98);
+        background-color: var(--color-dokan-btn-secondary-hover) !important;
+        border-color: var(--color-dokan-btn-secondary-border-hover) !important;
+        color: var(--color-dokan-btn-secondary-text-hover) !important;
+    }
+
+    &:disabled {
+        @apply opacity-50;
+    }
+}
+
+.dokan-btn-tertiary {
+    @apply relative px-4 py-2 rounded-md font-medium transition-all duration-200 cursor-pointer;
+    background-color: var(--color-dokan-btn-tertiary) !important;
+    color: var(--color-dokan-btn-tertiary-text) !important;
+    border: 1px solid var(--color-dokan-btn-tertiary-border) !important;
+    outline: none;
+
+    &:hover:not(:disabled) {
+        background-color: var(--color-dokan-btn-tertiary-hover) !important;
+        border-color: var(--color-dokan-btn-tertiary-border-hover) !important;
+        color: var(--color-dokan-btn-tertiary-text-hover) !important;
+    }
+
+    &:focus:not(:disabled),
+    &:focus-visible:not(:disabled) {
+        @apply ring-2 ring-offset-2;
+        --tw-ring-color: var(--color-dokan-btn-tertiary-border-hover);
+        outline: none;
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.98);
+        background-color: var(--color-dokan-btn-tertiary-hover) !important;
+        border-color: var(--color-dokan-btn-tertiary-border-hover) !important;
+        color: var(--color-dokan-btn-tertiary-text-hover) !important;
+    }
+
+    &:disabled {
+        @apply opacity-50;
+    }
+}
+
+/* Semantic Button Variants */
+.dokan-btn-info {
+    @apply relative px-4 py-2 rounded-md font-medium transition-all duration-200 shadow-sm cursor-pointer;
+    background-color: var(--color-dokan-btn-info);
+    color: var(--color-dokan-btn-info-text);
+    border: 1px solid var(--color-dokan-btn-info);
+    outline: none;
+
+    &:hover:not(:disabled) {
+        background-color: var(--color-dokan-btn-info-hover) !important;
+        border-color: var(--color-dokan-btn-info-hover) !important;
+        color: var(--color-dokan-btn-info-text-hover) !important;
+    }
+
+    &:focus:not(:disabled),
+    &:focus-visible:not(:disabled) {
+        @apply ring-2 ring-offset-2;
+        --tw-ring-color: var(--color-dokan-btn-info) !important;
+        outline: none;
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.98);
+        background-color: var(--color-dokan-btn-info-hover) !important;
+        border-color: var(--color-dokan-btn-info-hover) !important;
+        color: var(--color-dokan-btn-info-text-hover) !important;
+    }
+
+    &:disabled {
+        @apply opacity-50;
+    }
+}
+
+.dokan-btn-success {
+    @apply relative px-4 py-2 rounded-md font-medium transition-all duration-200 shadow-sm cursor-pointer;
+    background-color: var(--color-dokan-btn-success);
+    color: var(--color-dokan-btn-success-text);
+    border: 1px solid var(--color-dokan-btn-success);
+    outline: none;
+
+    &:hover:not(:disabled) {
+        background-color: var(--color-dokan-btn-success-hover);
+        border-color: var(--color-dokan-btn-success-hover);
+        color: var(--color-dokan-btn-success-text-hover);
+    }
+
+    &:focus:not(:disabled),
+    &:focus-visible:not(:disabled) {
+        @apply ring-2 ring-offset-2;
+        --tw-ring-color: var(--color-dokan-btn-success);
+        outline: none;
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.98);
+        background-color: var(--color-dokan-btn-success-hover);
+        border-color: var(--color-dokan-btn-success-hover);
+        color: var(--color-dokan-btn-success-text-hover);
+    }
+
+    &:disabled {
+        @apply opacity-50;
+    }
+}
+
+.dokan-btn-warning {
+    @apply relative px-4 py-2 rounded-md font-medium transition-all duration-200 shadow-sm cursor-pointer;
+    background-color: var(--color-dokan-btn-warning);
+    color: var(--color-dokan-btn-warning-text);
+    border: 1px solid var(--color-dokan-btn-warning);
+    outline: none;
+
+    &:hover:not(:disabled) {
+        background-color: var(--color-dokan-btn-warning-hover);
+        border-color: var(--color-dokan-btn-warning-hover);
+        color: var(--color-dokan-btn-warning-text-hover);
+    }
+
+    &:focus:not(:disabled),
+    &:focus-visible:not(:disabled) {
+        @apply ring-2 ring-offset-2;
+        --tw-ring-color: var(--color-dokan-btn-warning);
+        outline: none;
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.98);
+        background-color: var(--color-dokan-btn-warning-hover);
+        border-color: var(--color-dokan-btn-warning-hover);
+        color: var(--color-dokan-btn-warning-text-hover);
+    }
+
+    &:disabled {
+        @apply opacity-50;
+    }
+}
+
+.dokan-btn-danger {
+    @apply relative px-4 py-2 rounded-md font-medium transition-all duration-200 shadow-sm cursor-pointer;
+    background-color: var(--color-dokan-btn-danger);
+    color: var(--color-dokan-btn-danger-text);
+    border: 1px solid var(--color-dokan-btn-danger);
+    outline: none;
+
+    &:hover:not(:disabled) {
+        background-color: var(--color-dokan-btn-danger-hover);
+        border-color: var(--color-dokan-btn-danger-hover);
+        color: var(--color-dokan-btn-danger-text-hover);
+    }
+
+    &:focus:not(:disabled),
+    &:focus-visible:not(:disabled) {
+        @apply ring-2 ring-offset-2;
+        --tw-ring-color: var(--color-dokan-btn-danger);
+        outline: none;
+    }
+
+    &:active:not(:disabled) {
+        transform: scale(0.98);
+        background-color: var(--color-dokan-btn-danger-hover);
+        border-color: var(--color-dokan-btn-danger-hover);
+        color: var(--color-dokan-btn-danger-text-hover);
+    }
+
+    &:disabled {
+        @apply opacity-50;
+    }
+}
+
+/* Button Sizes */
+.dokan-btn-sm {
+    @apply px-2 py-1 text-sm;
+}
+
+.dokan-btn-lg {
+    @apply px-6 py-3 text-lg;
+}
+
+/* ========== Link Styles ========== */
+.dokan-link {
+    @apply no-underline transition-colors duration-200 bg-transparent;
+    color: var(--color-dokan-link);
+
+    &:hover,
+    &:focus {
+        color: var(--color-dokan-link-hover);
+    }
+}
+
+.dokan-link-info {
+    color: var(--color-dokan-info-text);
+    &:hover, &:focus {
+        color: var(--color-dokan-info-text-hover);
+    }
+}
+
+.dokan-link-success {
+    color: var(--color-dokan-success-text);
+    &:hover, &:focus {
+        color: var(--color-dokan-success-text-hover);
+    }
+}
+
+.dokan-link-warning {
+    color: var(--color-dokan-warning-text);
+    &:hover, &:focus {
+        color: var(--color-dokan-warning-text-hover);
+    }
+}
+
+.dokan-link-danger {
+    color: var(--color-dokan-danger-text);
+    &:hover, &:focus {
+        color: var(--color-dokan-danger-text-hover);
+    }
+}
+
+/* ========== Badge Styles ========== */
+.dokan-badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
+}
+
+.dokan-badge-primary {
+    background-color: var(--color-dokan-btn-secondary-hover) !important;
+    color: var(--color-dokan-btn) !important;
+}
+
+.dokan-badge-info {
+    background-color: var(--color-dokan-info);
+    color: var(--color-dokan-info-text);
+}
+
+.dokan-badge-success {
+    background-color: var(--color-dokan-success);
+    color: var(--color-dokan-success-text);
+}
+
+.dokan-badge-warning {
+    background-color: var(--color-dokan-warning);
+    color: var(--color-dokan-warning-text);
+}
+
+.dokan-badge-danger {
+    background-color: var(--color-dokan-danger);
+    color: var(--color-dokan-danger-text);
+}
+
+/* ========== Alert Styles ========== */
+.dokan-alert {
+    @apply p-4 rounded-lg border;
+}
+
+.dokan-alert-info {
+    background-color: var(--color-dokan-info);
+    border-color: var(--color-dokan-info-border);
+    color: var(--color-dokan-info-text);
+}
+
+.dokan-alert-success {
+    background-color: var(--color-dokan-success);
+    border-color: var(--color-dokan-success-border);
+    color: var(--color-dokan-success-text);
+}
+
+.dokan-alert-warning {
+    background-color: var(--color-dokan-warning);
+    border-color: var(--color-dokan-warning-border);
+    color: var(--color-dokan-warning-text);
+}
+
+.dokan-alert-danger {
+    background-color: var(--color-dokan-danger);
+    border-color: var(--color-dokan-danger-border);
+    color: var(--color-dokan-danger-text);
+}
+
+/* ========== Form Components ========== */
+.react-select input:focus {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.dokan-react-search-input {
+    border-radius: 0 !important;
+    background: white !important;
+    box-shadow: none !important;
+}
+
+.dokan-react-search-input ~ span,
+span:has(+ .dokan-react-search-input) {
+    background: white !important;
+}
+
+/* ========== Date Picker ========== */
+.dokan-date-range-picker {
+    .woocommerce-calendar {
+        @apply bg-white border-none;
+
+        .DayPicker_transitionContainer,
+        .CalendarMonth,
+        .CalendarMonthGrid,
+        .DayPicker__horizontal {
+            @apply bg-white;
+        }
+    }
+
+    .woocommerce-calendar__react-dates {
+        .CalendarDay__selected,
+        .CalendarDay__selected_span {
+            background: var(--color-primary) !important;
+            border: 1px solid #ccc;
+
+            &:hover {
+                background: var(--color-primary-hover) !important;
+                border: 1px solid #f0f0f0;
+            }
+        }
+
+        .CalendarDay__hovered_span {
+            background: var(--color-primary-hover) !important;
+            border: 1px solid #f0f0f0;
+            color: #fff;
+        }
+    }
+}
+
+/* ========== Time Picker ========== */
+.dokan-react-time-picker {
+    .components-base-control__field:has(.components-toggle-group-control) {
+        border: 1px solid var(--color-primary) !important;
+        border-radius: 2px;
+
+        &:focus-within {
+            border-color: var(--color-primary) !important;
+        }
+    }
+
+    .components-toggle-group-control {
+        border: none;
+
+        .components-toggle-group-control-option-base[aria-checked="false"] {
+            color: var(--wp-components-color-foreground, #1e1e1e);
+        }
+
+        &::before {
+            left: 0.75px;
+            background-color: var(--color-primary) !important;
+        }
+
+        &:focus-within {
+            border: none;
+            box-shadow: none;
+        }
+    }
+
+    .components-datetime__time-field {
+        border-radius: 2px;
+        border: 1px solid var(--color-primary) !important;
+
+        .components-datetime__time-separator,
+        .components-input-control__backdrop {
+            border: none !important;
+        }
+
+        .components-input-control__input:focus
+            ~ .components-input-control__backdrop {
+            box-shadow: none !important;
+        }
+
+        &:focus-within {
+            border-color: var(--color-primary) !important;
+        }
+    }
+
+    .delivery-field-error {
+        .components-base-control__field:has(.components-toggle-group-control),
+        .components-datetime__time-field {
+            border-color: var(--color-danger) !important;
+        }
+    }
+}
+
+/* ========== Select Addon ========== */
+.dokan-select-addon .react-select__control span {
+    margin: 0 !important;
+    background-color: #eaeaea;
+    padding: 12px;
+    border-radius: 5px 0 0 5px;
+}
+
+/* ========== Global Styles (outside .dokan-layout) ========== */
+
+/* Headless UI Checked State */
+button[data-headlessui-state="checked"] {
+    &:hover,
+    &:focus {
+        background-color: var(--color-primary) !important;
+    }
+}
+
+/* Utility class for primary background */
+.bg-primary-500 {
+    background-color: var(--color-primary);
+
+    &:focus {
+        outline-color: var(--color-primary);
+    }
+}
+
+.dokan-dashboard-header.dokan-ai-prompt {
+    margin: 0 0 10px 0;
+    border-bottom: 1px solid #ededed;
+    padding: 0 0 10px 0;
+    line-height: 1.25;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #ededed;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 25px !important;
+}
+.dokan-dashboard-header.dokan-ai-prompt h1 {
+    margin: 0 !important;
+    padding: 0 !important;
+    border-bottom: none !important;
+    width: 100%;
+    font-size: x-large;
+}
+
+dokan-dashboard-header.dokan-ai-prompt #ai-prompt-app {
+    align-self: flex-end;
+    padding-bottom: 10px;
+}
+
+/*** Start Menu Manager Style Fixing ***/
+/* Fixes the outline issue on Menu Manager tabs when focused */
+.tabs a:focus {
+    outline: none !important;
+}
+
+/* Fixes the spacing issue between tabs and content in Menu Manager */
+.tabs-details {
+    margin-top: 1rem !important;
+}
+/*** End of Menu Manager Style Fixing ***/

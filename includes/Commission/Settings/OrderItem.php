@@ -44,7 +44,7 @@ class OrderItem implements InterfaceSetting {
             $commission_type       = $this->order_item->get_meta( '_dokan_commission_type', true ) ?? '';
             $commission_source     = $this->order_item->get_meta( '_dokan_commission_source', true ) ?? '';
             $additional_flat       = $this->order_item->get_meta( '_dokan_additional_fee', true ) ?? '';
-            $commission_meta       = $this->order_item->get_meta( 'dokan_commission_meta', true );
+            $commission_meta       = $this->order_item->get_meta( '_dokan_commission_meta', true );
 
             // if dokan_commission_meta is exists the we don't need to map the flat amount because after 3.14.0 this maping is not needed.
             if ( $commission_type === Flat::SOURCE && ! is_array( $commission_meta ) ) {
@@ -89,7 +89,7 @@ class OrderItem implements InterfaceSetting {
         $this->order_item->update_meta_data( '_dokan_commission_rate', $settings->get_percentage() );
         $this->order_item->update_meta_data( '_dokan_commission_type', $settings->get_type() );
         $this->order_item->update_meta_data( '_dokan_additional_fee', $settings->get_flat() );
-        $this->order_item->update_meta_data( 'dokan_commission_meta', $settings->get_meta_data() );
+        $this->order_item->update_meta_data( '_dokan_commission_meta', $settings->get_meta_data() );
 
         $this->order_item->save_meta_data();
         $this->order_item->save();

@@ -15,6 +15,8 @@ import VendorsPage from '../pages/vendors';
 import ReverseWithdrawalPage from '../pages/reverse-withdrawal';
 import ReverseWithdrawalTransactionPage from 'admin/dashboard/pages/reverse-withdrawal/ReverseWithdrawalTransaction';
 import ChangelogPage from '../pages/changelog';
+import ExtensionsPage from '../pages/extensions';
+import DummyData from '../pages/dummy-data';
 
 export type DokanAdminRoute = {
     id: string;
@@ -81,9 +83,19 @@ const getAdminRoutes = () => {
             path: '/settings',
         },
         {
+            id: 'extensions',
+            element: <ExtensionsPage />,
+            path: '/extensions',
+        },
+        {
             id: 'changelog',
             element: <ChangelogPage />,
             path: '/changelog',
+        },
+        {
+            id: 'dummy-data',
+            element: <DummyData />,
+            path: '/dummy-data',
         },
     ];
 
@@ -96,7 +108,12 @@ const getAdminRoutes = () => {
     routes.push( {
         id: 'dokan-404',
         element: (
-            <AdminNotFound className="h-screen" backToDashboardUrl={window.dokanAdminDashboard?.urls?.adminDashboardUrl || '/'} />
+            <AdminNotFound
+                className="h-screen"
+                backToDashboardUrl={
+                    window.dokanAdminDashboard?.urls?.adminDashboardUrl || '/'
+                }
+            />
         ),
         path: '*',
     } );

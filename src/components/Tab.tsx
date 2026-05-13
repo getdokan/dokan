@@ -30,7 +30,7 @@ const defaultTabClassName =
     'border-0 border-b border-solid mr-5 -mb-px space-x-8 whitespace-nowrap border-b-2 px-1 py-4 text-sm font-medium cursor-pointer hover:bg-transparent focus:outline-none text-gray-500 border-gray-200 hover:text-gray-600 hover:border-gray-300';
 
 const defaultActiveClass =
-    '!text-dokan-primary !border-dokan-btn !border-b-2 dokan-active-tab';
+    'text-dokan-primary border-dokan-btn-border border-b-2 dokan-active-tab';
 
 const variantConfig = {
     primary: {

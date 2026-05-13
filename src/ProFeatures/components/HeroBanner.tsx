@@ -55,7 +55,7 @@ function HeroBanner() {
                                 </button>
                             </a>
                             <span className="text-white/80 font-medium text-base">
-                                { __( 'with 20% off', 'dokan-lite' ) }
+                                { __( 'with 10% off', 'dokan-lite' ) }
                             </span>
                         </div>
                     </div>

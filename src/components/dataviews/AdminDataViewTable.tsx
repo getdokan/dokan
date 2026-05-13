@@ -13,11 +13,12 @@ import './style.scss';
 import { AdminFilterProps } from '@src/components/AdminFilter';
 import { AdminTabProps } from '@src/components/AdminTab';
 import { AdminTab, AdminFilter } from '@src/components';
-import { __ } from '@wordpress/i18n';
+import { __, setLocaleData } from '@wordpress/i18n';
 import { twMerge } from 'tailwind-merge';
 import { Funnel } from 'lucide-react';
 import { Item } from '@wordpress/components/build-types/navigation/types';
 import ListEmpty from '@src/components/dataviews/ListEmpty';
+import { getTranslatedStrings } from './DataViewTable';
 
 type ItemWithId = { id: string };
 
@@ -151,6 +152,10 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
         );
     }
 
+    useEffect( () => {
+        setLocaleData( getTranslatedStrings(), 'default' );
+    }, [] );
+
     // Auto-hide filter area when there are no active filters
     useEffect( () => {
         if ( ! hasActiveFilters ) {
@@ -244,7 +249,7 @@ const AdminDataViewTable = ( props: DataViewsProps< Item > ) => {
                         filteredProps.filter.fields.length > 0 && (
                             <div
                                 className={ `dokan-admin-dashboard-filters transition-all border-t flex w-full justify-between border-gray-200 p-4 bg-white ${
-                                    showFilters ? '' : '!hidden'
+                                    showFilters ? '' : 'hidden'
                                 }` }
                             >
                                 <AdminFilter

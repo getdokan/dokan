@@ -4,7 +4,7 @@ import { RawHTML } from '@wordpress/element';
 const Paragraph = ( { element }: { element: StatusElement } ) => {
     return (
         <p
-            className="max-w-2xl text-sm text-gray-600"
+            className="text-xs text-gray-500 max-w-[465px]"
             data-hook={ element.hook_key }
         >
             <RawHTML>{ element.title }</RawHTML>

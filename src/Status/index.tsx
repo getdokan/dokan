@@ -1,6 +1,5 @@
 import domReady from '@wordpress/dom-ready';
 import Status from './Status';
-import './status.scss';
 import { DokanAdminRoute } from '../admin/dashboard/components/Dashboard';
 
 domReady( () => {

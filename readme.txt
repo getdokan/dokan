@@ -2,12 +2,12 @@
 Contributors: tareq1988, dokaninc, wedevs, nizamuddinbabu
 Donate Link: https://dokan.co/wordpress/pricing/
 Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivendor, multivendor marketplace
-Requires at least: 6.7
+Requires at least: 6.8
 Tested up to: 6.9
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 4.2.9
+Stable tag: 5.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,8 +15,7 @@ Transform your WooCommerce site into a multivendor marketplace with Dokan – an
 
 == Description ==
 
-= POWERFUL MULTIVENDOR MARKETPLACE PLUGIN FOR WORDPRESS – POWERED BY WOOCOMMERCE =
-
+= THE EASIEST WAY TO LAUNCH A MULTIVENDOR MARKETPLACE ON WORDPRESS — POWERED BY WOOCOMMERCE. Built by weDevs, backed by 13 years of innovation and trust =
 
 [Dokan](https://dokan.co/wordpress/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) is the ultimate frontend multivendor marketplace plugin for WordPress, powered by WooCommerce. It helps you build your own multivendor marketplace similar to Amazon, Shopify, eBay, and Magento in under 30 minutes.
 
@@ -39,7 +38,7 @@ Hear what reputed WordPress influencer and online business strategist, Darrel Wi
 
 Here is how you can build your multivendor marketplace with Dokan.
 
-[https://youtu.be/_Vv5T7qqhoE?si=RPXD4hksHedNR87W&t=1]
+[youtube https://www.youtube.com/watch?v=_Vv5T7qqhoE&t=1s]
 
 = PLACES WHERE DOKAN HAS BEEN FEATURED =
 
@@ -353,33 +352,53 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
-= v4.2.9 ( Jan 27, 2026 ) =
-- **update:** Replace DokanModal dependency from dokan-ui with WordPress Modal.
-- **update:** Add user feedback link across Dokan admin pages.
-- **update:** Introduce a customizable option to exclude vendor order balance.
-- **update:** Add AI text and image enhancer settings to vendor preferences.
-- **fix:** Improve default table interactions in Dokan admin.
-- **fix:** Handle vendor payment settings permission properly for Vendor staff.
+= v5.0.1 ( May 05, 2026 ) =
+- **update:** Added an admin-controllable vendor registration option on the My Account page.
+- **update:** Added RTL support for the new vendor dashboard UI.
+- **fix:** Properly decode HTML entities in admin settings labels.
 
-= v4.2.8 ( Jan 20, 2026 ) =
-- **update:** Restore vendor revenue widget for vendor dashboard.
-- **update:** Improve query arguments on admin withdraw pages to support filtering options.
-- **fix:** Preserve order filters when paginating vendor dashboard orders.
-- **fix:** Prevent Dokan menu from appearing for users without permission.
-- **fix:** Resolve PHP deprecated warnings in the withdraw controller.
+= v5.0.0 ( Apr 28, 2026 ) =
+- **new:** Added a dedicated vendor onboarding page with a separate registration flow.
+- **new:** Introduced the new Product Form Manager for the vendor dashboard.
+- **new:** Added a "Get Support" button to the admin dashboard header.
+- **new:** Added a new Extensions page for Dokan in the admin panel.
+- **new:** Converted the admin Products list to React with Plugin UI.
+- **new:** Converted the vendor dashboard Orders list to React with Plugin UI.
+- **new:** Migrated the vendor dashboard Reverse Withdraw page to React with Plugin UI.
+- **new:** Migrated the admin Withdraw Requests page to Plugin UI with tabs.
+- **new:** Added `@wedevs/plugin-ui` dependency and integrate the DataViews component as the unified table system.
+- **update:** Migrated Dokan UI to Tailwind CSS v4 with a consolidated shared component bundle.
+- **update:** Rebuilt the admin Tools / Dummy Data section in React.
+- **update:** Added legacy compatibility support for the RFQ (Request for Quote) admin panel.
+- **update:** Updated the Vendor Announcement panel UX.
+- **update:** Added additional tax fields and new order types to the Dokan order stats table.
+- **update:** Added OpenAI model options to the latest ones for AI Assist settings.
+- **update:** Added a legacy switcher to the Product Form for backward compatibility.
+- **update:** Used ShortContent for product name display and widen the Products column.
+- **fix:** Resolved Product Form compatibility issues with WordPress v6.8.
+- **fix:** Resolved Plugin UI style conflicts between v10 and v14.
+- **fix:** Corrected filter border clipping and the WithdrawView layout type.
+- **fix:** Improved UI styles and navigation URL handling across new dashboard pages.
+- **fix:** Corrected the balance display on the Reverse Withdraw page.
+- **fix:** Corrected the back-link URL on the order details page.
+- **fix:** Fixed the active state of vendor sidebar submenu items.
 
-= v4.2.7 ( Jan 14, 2026 ) =
-- **fix:** Allow Dokan stock restoration on WC Block Checkout.
+= v4.3.3 ( Mar 31, 2026 ) =
+- **update:** Manage changelog notification dot visibility for Dokan Lite and Pro based on new version availability.
+- **update:** Add confirmation modal for order status change actions in the vendor dashboard order listing.
+- **update:** Update the Pro Features admin menu color to highlight it with the brand color.
+- **fix:** Add the missing alt attribute to the store header banner image on the store listing page.
+- **fix:** Display a warning message when admin tries to approve a vendor withdrawal request exceeding the available balance.
 
-= v4.2.6 ( Jan 13, 2026 ) =
-- **update:** Add brand fields in Vendor Product Creation Popup.
-- **update:** Add address fields on customer account migration form.
-- **update:** Add product tags creation separator (,) for vendor dashboard.
-- **fix:** Vendor list page redirection after creating a new vendor.
+= v4.3.2 ( Mar 13, 2026 ) =
+- **fix:** Prevent unauthenticated access to customer information via the Store Reviews REST API endpoint.
 
-= v4.2.5 ( Jan 05, 2026 ) =
-- **fix:** Add translation support to store performance report labels.
-- **fix:** Social profile URL's not accessible for staff users.
-- **fix:** Prevented unauthorized changes to administrator accounts.
+= v4.3.1 ( Mar 06, 2026 ) =
+- **update:** Validate vendor Terms & Conditions settings to prevent saving unexpected or empty content.
+- **update:** Introduce a new filter to allow customization for handling store form validation errors.
+- **update:** Expose structured min and max price fields for variable products in the REST API response.
+- **update:** Add REST API support for managing downloadable product permissions.
+- **update:** Expose vendor earning field in the order REST API response to display earnings data.
+- **update:** Update the Dokan Admin status page with a modernized and dynamic UI layout.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

@@ -1,0 +1,163 @@
+/* Module-specific styles - Tailwind loaded via dokan-tailwind bundle */
+/* @referance '../../base-tailwind.css'; */
+
+.dokan-frontend-layout {
+    .dokan-frontend-sidebar {
+        background-color: var(--dokan-sidebar-background-color, #322067);
+
+        .site-icon {
+            background-color: var(
+                --dokan-sidebar-hover-background-color,
+                #7047eb
+            );
+        }
+
+        li {
+            a {
+                color: var(--dokan-sidebar-text-color, #daceff) !important;
+
+                svg {
+                    color: var(--dokan-sidebar-text-color, #daceff);
+                }
+
+                .sidebar-menu-bubble {
+                    background-color: var(
+                        --dokan-sidebar-hover-background-color,
+                        #7047eb
+                    );
+                }
+
+                .hovered-item {
+                    color: var(--dokan-sidebar-hover-text-color, #ffffff);
+                }
+
+                &:hover,
+                &.active {
+                    color: var(--dokan-sidebar-hover-text-color, #ffffff);
+                    background-color: var(
+                        --dokan-sidebar-hover-background-color,
+                        #7047eb
+                    );
+
+                    svg {
+                        color: var(--dokan-sidebar-hover-text-color, #ffffff);
+                    }
+
+                    .sidebar-menu-bubble {
+                        background-color: #fff;
+                        color: var(
+                            --dokan-sidebar-hover-background-color,
+                            #7047eb
+                        ) !important;
+                    }
+                }
+            }
+        }
+
+        .sidebar-footer {
+            .store-name {
+                color: var(--dokan-sidebar-hover-text-color, #ffffff);
+            }
+
+            .subscription-info {
+                color: var(--dokan-sidebar-text-color, #daceff);
+            }
+        }
+
+        hr {
+            background-color: var(--dokan-sidebar-text-color, #daceff);
+            opacity: 0.2;
+        }
+    }
+
+    .dokan-frontend-layout-header {
+        .visit-store {
+            &:hover {
+                color: var(--dokan-button-secondary-text-color, #7047eb);
+
+                svg {
+                    color: var(--dokan-button-secondary-text-color, #7047eb);
+                }
+            }
+        }
+
+        .header-avatar {
+            svg.active {
+                color: var(--dokan-button-secondary-text-color, #7047eb);
+            }
+        }
+    }
+}
+
+.header-popover,
+.sidebar-popover {
+    a {
+        &:hover {
+            color: var(--dokan-sidebar-hover-background-color, #7047eb);
+            background-color: var(
+                --dokan-button-tertiary-hover-background-color,
+                #daceff82
+            );
+
+            svg {
+                color: var(--dokan-sidebar-hover-background-color, #7047eb);
+            }
+        }
+    }
+}
+
+.dokan-submenu-popover {
+    li {
+        a {
+            &.active {
+                color: var(--dokan-sidebar-hover-text-color, #ffffff);
+                background-color: var(
+                    --dokan-sidebar-hover-background-color,
+                    #7047eb
+                );
+
+                .sidebar-submenu-bubble {
+                    color: var(--dokan-sidebar-hover-background-color, #7047eb);
+                    background-color: var(
+                        --dokan-sidebar-hover-text-color,
+                        #ffffff
+                    );
+                }
+            }
+
+            .sidebar-submenu-bubble {
+                color: var(--dokan-sidebar-hover-text-color, #ffffff);
+                background-color: var(
+                    --dokan-sidebar-hover-background-color,
+                    #7047eb
+                );
+            }
+        }
+    }
+}
+
+/* Hide scrollbar in the vendor sidebar but keep it scrollable */
+.dokan-vendor-sidebar-scroll {
+    scrollbar-width: none; /* hides scrollbar while allowing scroll */
+    -ms-overflow-style: none;
+}
+
+/* WebKit-based browsers */
+.dokan-vendor-sidebar-scroll::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+/* Apply styles for xstore theme specific conflicts. */
+.wp-theme-xstore {
+    .dokan-frontend-layout {
+        .dokan-frontend-sidebar {
+            > div {
+                &:last-child,
+                &:first-child {
+                    flex: 0;
+                }
+            }
+        }
+    }
+}

@@ -4,7 +4,7 @@ const styles = {
         borderRadius: '0.40rem',
         minHeight: '2.5rem',
         boxShadow: 'none',
-        marginTop: -1,
+        marginTop: 0,
         outline: 'none',
         ':focus': { outline: 'none' },
         ':focus-within': { outline: 'none' },
@@ -34,13 +34,13 @@ const styles = {
     } ),
     menuPortal: ( base: any ) => ( {
         ...base,
-        zIndex: 9999,
+        zIndex: 999999,
         wordBreak: 'break-all',
         minWidth: '18.75rem',
     } ),
     menu: ( base: any ) => ( {
         ...base,
-        zIndex: 9999,
+        zIndex: 999999,
         wordBreak: 'break-all',
     } ),
     menuList: ( base: any ) => ( {

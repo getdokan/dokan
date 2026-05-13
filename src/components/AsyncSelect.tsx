@@ -1,14 +1,14 @@
 import { AsyncSearchableSelect } from '@getdokan/dokan-ui';
-import ValueContainer from "@src/components/select/ValueContainer";
-import Option from "@src/components/select/Option";
-import MultiValue from "@src/components/select/MultiValue";
-import SingleValue from "@src/components/select/SingleValue";
-import Control from "@src/components/select/Control";
-import DropdownIndicator from "@src/components/select/DropdownIndicator";
-import styles from "@src/components/select/styles";
-import { twMerge } from "tailwind-merge";
+import ValueContainer from '@src/components/select/ValueContainer';
+import Option from '@src/components/select/Option';
+import MultiValue from '@src/components/select/MultiValue';
+import SingleValue from '@src/components/select/SingleValue';
+import Control from '@src/components/select/Control';
+import DropdownIndicator from '@src/components/select/DropdownIndicator';
+import styles from '@src/components/select/styles';
+import { twMerge } from 'tailwind-merge';
 
-// Local utility to extract props type of a component without relying on React/WordPress types
+// Local utility to extract a props type of component without relying on React/WordPress types.
 type PropsOf< T > = T extends ( props: infer P ) => any ? P : never;
 
 export type DefaultOption = {
@@ -44,9 +44,21 @@ export interface BaseSelectProps< Option = DefaultOption >
 function AsyncSelect< Option = DefaultOption >(
     props: BaseSelectProps< Option >
 ) {
-    // Default portal target for the dropdown menu so it isn't clipped by parent containers
-    const defaultMenuPortalTarget =
-        typeof document !== 'undefined' ? document.body : undefined;
+    // Default portal target wrapped with 'dokan-layout' so Tailwind scoped styles apply
+    const defaultMenuPortalTarget = (() => {
+        if ( typeof document === 'undefined' ) {
+            return undefined;
+        }
+        const id = 'dokan-select-menu-portal';
+        let el = document.getElementById( id );
+        if ( ! el ) {
+            el = document.createElement( 'div' );
+            el.id = id;
+            el.className = 'dokan-layout';
+            document.body.appendChild( el );
+        }
+        return el;
+    })();
 
     return (
         <AsyncSearchableSelect

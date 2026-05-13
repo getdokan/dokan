@@ -162,7 +162,7 @@ const DokanModal = ( props: DokanModalProps ) => {
                     { dialogContent || (
                         <div className="flex items-start gap-4">
                             { dialogIcon || (
-                                <div className="flex items-center justify-center flex-shrink-0 w-12 h-12 bg-red-50 rounded-full">
+                                <div className="flex items-center justify-center shrink-0 w-12 h-12 bg-red-50 rounded-full">
                                     <DialogIcon />
                                 </div>
                             ) }

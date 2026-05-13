@@ -293,6 +293,13 @@ class OrderController extends DokanRESTController {
             );
         }
 
+        $vendor_earning = dokan()->commission->get_earning_by_order( $object->get_id() );
+
+        $formatted_earning = null;
+        if ( ! is_wp_error( $vendor_earning ) && ! is_null( $vendor_earning ) ) {
+            $formatted_earning = wc_format_decimal( $vendor_earning, '' );
+        }
+
         return array(
             'id'                   => $object->get_id(),
             'parent_id'            => $data['parent_id'],
@@ -336,6 +343,7 @@ class OrderController extends DokanRESTController {
             'coupon_lines'         => $data['coupon_lines'],
             'refunds'              => $data['refunds'],
             'order_shipment'       => $data['order_shipment'],
+            'earning'              => $formatted_earning,
         );
     }
 
@@ -486,8 +494,9 @@ class OrderController extends DokanRESTController {
                 $data_objects[] = $this->prepare_response_for_collection( $data );
             }
 
-            $order_counts = dokan_count_orders( $request['seller_id'] );
-            $total_orders = $order_counts->total;
+            $count_args           = $args;
+            $count_args['return'] = 'count';
+            $total_orders         = (int) dokan()->order->all( $count_args );
         }
 
         $response = rest_ensure_response( $data_objects );
@@ -1739,6 +1748,12 @@ class OrderController extends DokanRESTController {
                     'type'        => 'boolean',
                     'default'     => false,
                     'context'     => array( 'edit' ),
+                ),
+                'earning'              => array(
+                    'description' => __( 'Vendor earning for the order.', 'dokan-lite' ),
+                    'type'        => array( 'string', 'null' ),
+                    'context'     => array( 'view' ),
+                    'readonly'    => true,
                 ),
             ),
         );

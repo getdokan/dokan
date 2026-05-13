@@ -40,7 +40,7 @@ const AdminNotFound = ( {
 
                     <div className="flex flex-col items-center justify-center text-center gap-[22px] ">
                         { /* Icon */ }
-                        <div className="flex items-center justify-center rounded-full bg-[#EFEAFF] w-[127px] h-[127px]  flex-shrink-0">
+                        <div className="flex items-center justify-center rounded-full bg-[#EFEAFF] w-[127px] h-[127px]  shrink-0">
                             <FileQuestion className="text-[#7047EB] w-[52px] h-[52px]" />
                         </div>
                         { /* 404 + text */ }

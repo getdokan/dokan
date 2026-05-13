@@ -48,8 +48,9 @@ class FullWidthVendorLayout implements Hookable {
             return;
         }
 
-        $appearance                        = get_option( 'dokan_appearance', [] );
-        $appearance['vendor_layout_style'] = 'latest';
+        $appearance                          = get_option( 'dokan_appearance', [] );
+        $appearance['vendor_layout_style']   = 'latest';
+        $appearance['vendor_product_editor'] = 'latest';
 
         update_option( 'dokan_appearance', $appearance );
     }
@@ -110,7 +111,7 @@ class FullWidthVendorLayout implements Hookable {
             wp_register_style(
                 $this->script_key,
                 DOKAN_PLUGIN_ASSEST . '/js/vendor-dashboard/layout/index.css',
-                [ 'dokan-tailwind' ],
+                [ 'dokan-react-components' ],
                 $version
             );
 

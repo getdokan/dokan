@@ -147,8 +147,8 @@ const FeatureComparison = () => {
 
     return (
         <div>
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-0 mb-8">
-                <h2 className="text-xl md:text-2xl font-bold">
+            <div className="flex flex-col md:!flex-row justify-between items-start md:items-center gap-4 md:gap-0 mb-8">
+                <h2 className="text-xl md:!text-2xl font-bold">
                     { __( 'Dokan Lite vs Dokan Pro', 'dokan-lite' ) }
                 </h2>
                 <a
@@ -162,9 +162,9 @@ const FeatureComparison = () => {
             </div>
 
             <div className="relative">
-                <div className="flex flex-col md:flex-row rounded overflow-hidden">
+                <div className="flex flex-col md:!flex-row rounded overflow-hidden">
                     { /* Categories Section with Touch Sliding */ }
-                    <div className="w-full md:w-[300px_!important]">
+                    <div className="w-full md:w-[300px]">
                         <div
                             ref={ categoriesRef }
                             className="flex flex-row md:!flex-col md:block overflow-x-auto whitespace-nowrap scrollbar-hide touch-pan-x mb-8 md:mb-0 scroll-snap-x scroll-snap-mandatory"
@@ -181,14 +181,14 @@ const FeatureComparison = () => {
                     items-center
                     justify-center md:justify-start
                     px-4 md:px-6
-                    py-2 md:py-[1.75rem]
+                    py-2 md:!py-[1.75rem]
                     mr-2 md:mr-0
                     md:mb-[1rem]
                     rounded-lg
                     whitespace-nowrap
                     scroll-snap-align-start
                     transition-all duration-200
-                    flex-shrink-0
+                    shrink-0
                     font-bold text-[15px] leading-[130%] tracking-[0%]
                     ${
                         category.key === activeCategory
@@ -208,7 +208,7 @@ const FeatureComparison = () => {
                         <div className="min-w-full">
                             { /* Header */ }
                             <div className="flex flex-row">
-                                <div className="pl-0 md:pl-[2.5rem] px-4 py-3 pt-0 text-gray-900 w-[70%] text-start font-bold text-[15px] leading-[130%] tracking-[0%]">
+                                <div className="pl-0 md:!pl-[2.5rem] px-4 py-3 pt-0 text-gray-900 w-[70%] text-start font-bold text-[15px] leading-[130%] tracking-[0%]">
                                     <div className="w-20">
                                         { __( 'Features', 'dokan-lite' ) }
                                     </div>
@@ -229,7 +229,7 @@ const FeatureComparison = () => {
                                     key={ index }
                                     className="flex flex-row justify-between"
                                 >
-                                    <div className="pl-0 md:pl-[2.5rem] px-4 py-3 text-gray-700 w-[70%] text-[12px] font-medium leading-4 tracking-[0%] md:text-[16px] md:font-normal md:leading-[140%]">
+                                    <div className="pl-0 md:!pl-[2.5rem] px-4 py-3 text-gray-700 w-[70%] text-[12px] font-medium leading-4 tracking-[0%] md:!text-[16px] md:!font-normal md:!leading-[140%]">
                                         { feature }
                                     </div>
                                     <div className="flex justify-end items-center w-[30%] gap-2">
@@ -247,7 +247,7 @@ const FeatureComparison = () => {
                                                 }` }
                                             >
                                                 <CircleCheck
-                                                    className="text-dokan-primary"
+                                                    className="text-primary"
                                                     size={ 16 }
                                                     strokeWidth="3"
                                                 />
@@ -286,7 +286,7 @@ const FeatureComparison = () => {
                                                 }` }
                                             >
                                                 <CircleCheck
-                                                    className="text-dokan-primary"
+                                                    className="text-primary"
                                                     size={ 16 }
                                                     strokeWidth="3"
                                                 />

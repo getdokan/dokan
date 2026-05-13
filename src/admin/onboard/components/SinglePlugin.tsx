@@ -20,7 +20,7 @@ const SinglePlugin = ( {
             }` }
             onClick={ () => toggleAddon( addon.id ) }
         >
-            <div className="flex-shrink-0 w-10 h-10 bg-indigo-100 text-indigo-600 rounded flex items-center justify-center">
+            <div className="shrink-0 w-10 h-10 bg-indigo-100 text-indigo-600 rounded flex items-center justify-center">
                 <img
                     src={ addon.icon }
                     alt={ addon.title }

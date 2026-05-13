@@ -358,7 +358,7 @@ function DokanMarketplaceUI() {
                     { data.map( ( item, index ) => (
                         <div
                             key={ `${ activeTab }-${ index }` }
-                            className="flex-shrink-0 w-full md:!w-auto" // Changed from snap-start shrink-0
+                            className="shrink-0 w-full md:!w-auto" // Changed from snap-start shrink-0
                         >
                             { activeTab === 'Marketplace' ? (
                                 <MarketplaceCard item={ item } />

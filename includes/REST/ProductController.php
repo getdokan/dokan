@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\REST;
 
 use WC_Data;
 use WC_Product;
+use WC_Product_Variable;
 use WC_Product_Variation;
 use WP_Error;
 use WP_REST_Request;
@@ -52,7 +53,7 @@ class ProductController extends DokanRESTController {
     /**
      * Post status
      */
-    protected $post_status = [ 'publish', 'pending', 'draft' ];
+    protected $post_status = [ 'publish', 'pending', 'draft', 'future' ];
 
     /**
      * Class constructor.
@@ -61,6 +62,39 @@ class ProductController extends DokanRESTController {
      */
     public function __construct() {
         add_filter( "dokan_rest_{$this->post_type}_object_query", [ $this, 'add_only_downloadable_query' ], 10, 2 );
+
+        // Register the WC filter only once per request, even if this controller is instantiated multiple times.
+        static $wc_filter_registered = false;
+        if ( ! $wc_filter_registered ) {
+            add_filter( 'woocommerce_rest_prepare_product_object', [ $this, 'add_min_max_price_to_variable_product' ], 10, 2 );
+            $wc_filter_registered = true;
+        }
+
+        $this->post_status = dokan_get_post_status() ? array_keys( dokan_get_post_status() ) : $this->post_status;
+    }
+
+    /**
+     * Hooks into WooCommerce's woocommerce_rest_prepare_product_object filter intentionally
+     * so that min_price and max_price are available on both /wc/v3/products and Dokan endpoints.
+     *
+     * @since 4.3.1
+     *
+     * @param WP_REST_Response $response The response object.
+     * @param WC_Product       $product  The product object.
+     *
+     * @return WP_REST_Response
+     */
+    public function add_min_max_price_to_variable_product( WP_REST_Response $response, $product ): WP_REST_Response {
+        if ( ! $product instanceof WC_Product ) {
+            return $response;
+        }
+
+        $data              = $response->get_data();
+        $data['min_price'] = $product instanceof WC_Product_Variable ? $product->get_variation_price( 'min', true ) : null;
+        $data['max_price'] = $product instanceof WC_Product_Variable ? $product->get_variation_price( 'max', true ) : null;
+        $response->set_data( $data );
+
+        return $response;
     }
 
     /**
@@ -505,12 +539,67 @@ class ProductController extends DokanRESTController {
     public function get_product_summary( $request ) {
         $seller_id = dokan_get_current_user_id();
 
+        // Match the list's exclusion scope so tab counts can't drift from it —
+        // Pro modules add `product_pack` etc. via this filter.
+        $exclude_types = array_values(
+            array_unique(
+                array_merge(
+                    [ 'booking', 'auction' ],
+                    (array) apply_filters( 'dokan_product_listing_exclude_type', [] )
+                )
+            )
+        );
+
         $data = [
-            'post_counts'  => dokan_count_posts( 'product', $seller_id ),
-            'products_url' => dokan_get_navigation_url( 'products' ),
+            'post_counts'      => dokan_count_posts( 'product', $seller_id, $exclude_types ),
+            'products_url'     => dokan_get_navigation_url( 'products' ),
+            'instock_count'    => dokan_count_stock_posts( 'product', $seller_id, 'instock', $exclude_types ),
+            'outofstock_count' => dokan_count_stock_posts( 'product', $seller_id, 'outofstock', $exclude_types ),
+            'months'           => $this->get_product_months_data( $seller_id ),
         ];
 
+        /**
+         * Allow Pro modules to append per-request data to the product listing summary.
+         * Called after every action (delete/publish) so values stay accurate.
+         *
+         * @since 5.0.0
+         *
+         * @param array $data      Summary data array.
+         * @param int   $seller_id Current vendor ID.
+         */
+        $data = (array) apply_filters( 'dokan_product_listing_summary_data', $data, $seller_id );
+
         return rest_ensure_response( $data );
+    }
+
+    /**
+     * Get month options for the current vendor.
+     *
+     * @since 5.0.0
+     *
+     * @param int $seller_id
+     *
+     * @return array
+     */
+    public function get_product_months_data( $seller_id ) {
+        global $wp_locale;
+
+        $months = dokan_get_products_listing_months_for_vendor( $seller_id );
+        $items  = [];
+
+        foreach ( $months as $row ) {
+            if ( 0 === (int) $row->year || 0 === (int) $row->month ) {
+                continue;
+            }
+
+            $month_padded = zeroise( (int) $row->month, 2 );
+            $items[]      = [
+                'value' => $row->year . $month_padded,
+                'label' => $wp_locale->get_month( (int) $row->month ) . ' ' . $row->year,
+            ];
+        }
+
+        return $items;
     }
 
     /**
@@ -780,6 +869,19 @@ class ProductController extends DokanRESTController {
             );
         }
 
+        // Filter by year/month (YYYYMM format, e.g. "202501").
+        if ( ! empty( $request['year_month'] ) ) {
+            $ym    = (string) $request['year_month'];
+            $year  = (int) substr( $ym, 0, 4 );
+            $month = (int) substr( $ym, 4, 2 );
+            if ( $year > 0 && $month > 0 ) {
+                $args['date_query'][] = [
+                    'year'  => $year,
+                    'month' => $month,
+                ];
+            }
+        }
+
         // Filter by on sale products.
         if ( rest_is_boolean( $request['on_sale'] ) ) {
             $on_sale_key = wc_string_to_bool( $request['on_sale'] ) ? 'post__in' : 'post__not_in';
@@ -798,7 +900,29 @@ class ProductController extends DokanRESTController {
             $args['post_type'] = $this->post_type;
         }
 
-        return $args;
+        // Exclude product types that belong to separate dashboards
+        // (e.g. auction, booking, subscription — registered by their Pro modules).
+        $exclude_types = (array) apply_filters( 'dokan_product_listing_exclude_type', [] );
+        if ( ! empty( $exclude_types ) ) {
+            $args['tax_query'][] = [ //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+                'taxonomy' => 'product_type',
+                'field'    => 'slug',
+                'terms'    => $exclude_types,
+                'operator' => 'NOT IN',
+            ];
+        }
+
+        /**
+         * Filter the WP_Query args before executing the product listing query.
+         * Allows Pro modules (e.g. product-adv, brands, subscription) to extend
+         * filtering for both v1 and v2 REST endpoints.
+         *
+         * @since 5.0.0
+         *
+         * @param array           $args    WP_Query arguments.
+         * @param WP_REST_Request $request The current REST request.
+         */
+        return apply_filters( 'dokan_rest_pre_product_listing_args', $args, $request );
     }
 
     /**
@@ -895,6 +1019,16 @@ class ProductController extends DokanRESTController {
             ],
             'row_actions'           => dokan_product_get_row_action( $product->get_id(), false ),
         ];
+
+        $data['min_price'] = $product instanceof WC_Product_Variable ? $product->get_variation_price( 'min', true ) : null;
+        $data['max_price'] = $product instanceof WC_Product_Variable ? $product->get_variation_price( 'max', true ) : null;
+
+        $earning           = dokan()->commission->get_earning_by_product( $product );
+        $data['earning']   = is_numeric( $earning ) ? (float) $earning : null;
+        $data['page_view'] = (int) get_post_meta( $product->get_id(), 'pageview', true );
+        $data['edit_url']  = dokan_edit_product_url( $product->get_id() );
+
+        $data = apply_filters( 'dokan_rest_product_data_prepare', $data, $product->get_id() );
 
         $response = rest_ensure_response( $data );
         $response->add_links( $this->prepare_links( $product, $request ) );
@@ -2355,6 +2489,25 @@ class ProductController extends DokanRESTController {
                             ],
                         ],
                     ],
+                ],
+                'min_price'             => [
+                    'description' => __( 'Minimum price for variable product, null for other product types.', 'dokan-lite' ),
+                    'type'        => [ 'string', 'null' ],
+                    'context'     => [ 'view', 'edit' ],
+                    'readonly'    => true,
+                ],
+                'max_price'             => [
+                    'description' => __( 'Maximum price for variable product, null for other product types.', 'dokan-lite' ),
+                    'type'        => [ 'string', 'null' ],
+                    'context'     => [ 'view', 'edit' ],
+                    'readonly'    => true,
+                ],
+                'edit_url'             => [
+                    'description' => __( 'Product edit URL.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'format'      => 'uri',
+                    'context'     => [ 'view', 'edit' ],
+                    'readonly'    => true,
                 ],
             ],
         ];

@@ -24,15 +24,27 @@ const Button = ( { element }: { element: StatusElement } ) => {
         } );
     };
     return (
-        <button
-            data-hook={ element.hook_key }
-            onClick={ onClick }
-            disabled={ isClicked }
-            type="button"
-            className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        >
-            <RawHTML>{ element.title }</RawHTML>
-        </button>
+        <div className="status-button-wrapper">
+            <button
+                data-hook={ element.hook_key }
+                onClick={ onClick }
+                disabled={ isClicked }
+                type="button"
+                className="inline-flex items-center
+                            gap-1.5
+                            rounded-[5px]
+                            bg-[#7047EB]
+                            px-4 py-1.5
+                            text-sm
+                            font-medium
+                            leading-5
+                            text-white
+                            hover:bg-[#633dd4]
+                            focus-visible:outline-none"
+            >
+                <RawHTML>{ element.title }</RawHTML>
+            </button>
+        </div>
     );
 };
 export default Button;

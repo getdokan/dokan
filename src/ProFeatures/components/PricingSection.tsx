@@ -12,12 +12,12 @@ function PricingSection() {
             name: 'Starter',
             annualPrice: '$149',
             lifetimePrice: '$745',
-            lifetimePriceDiscount: '$594.51',
+            lifetimePriceDiscount: '$707.75',
             features: [
-                __( 'Essential Features', 'dokna-lite' ),
-                __( '3 Premium Modules', 'dokna-lite' ),
-                __( '1 Site License', 'dokna-lite' ),
-                __( 'Ticket Based Support', 'dokna-lite' ),
+                __( 'Essential Features', 'dokan-lite' ),
+                __( '3 Premium Modules', 'dokan-lite' ),
+                __( '1 Site License', 'dokan-lite' ),
+                __( 'Ticket Based Support', 'dokan-lite' ),
             ],
             isPopular: false,
         },
@@ -25,7 +25,7 @@ function PricingSection() {
             name: 'Professional',
             annualPrice: '$249',
             lifetimePrice: '$1245',
-            lifetimePriceDiscount: '$986.04',
+            lifetimePriceDiscount: '$1,120.50',
             features: [
                 __( 'Everything in Starter', 'dokan-lite' ),
                 __( '23 Premium Modules', 'dokan-lite' ),
@@ -38,7 +38,7 @@ function PricingSection() {
             name: 'Business',
             annualPrice: '$499',
             lifetimePrice: '$2495',
-            lifetimePriceDiscount: '$1,993.50',
+            lifetimePriceDiscount: '$2,120.75',
             features: [
                 __( 'Everything in Professional', 'dokan-lite' ),
                 __( '39 Premium Modules', 'dokan-lite' ),
@@ -51,7 +51,7 @@ function PricingSection() {
             name: 'Enterprise',
             annualPrice: '$999',
             lifetimePrice: '$4995',
-            lifetimePriceDiscount: '$3,956.04',
+            lifetimePriceDiscount: '$3,996.00',
             features: [
                 __( 'Everything in Business', 'dokan-lite' ),
                 __( '39 Premium Modules', 'dokan-lite' ),
@@ -127,13 +127,13 @@ function PricingSection() {
                 </div>
 
                 { /* Features List */ }
-                <div className="flex-grow space-y-3">
+                <div className="grow space-y-3">
                     { plan.features.map( ( feature, featureIndex ) => (
                         <div
                             key={ featureIndex }
                             className="flex items-start gap-2"
                         >
-                            <Check className="w-4 h-4 text-[#7047EB] mt-0.5 flex-shrink-0" />
+                            <Check className="w-4 h-4 text-[#7047EB] mt-0.5 shrink-0" />
                             <span className="text-xs text-gray-700 leading-tight">
                                 { feature }
                             </span>
@@ -157,12 +157,12 @@ function PricingSection() {
                     </h2>
                     <p className="text-gray-600 mb-6 font-normal text-[16px] leading-[140%] tracking-[0%] text-center">
                         { __(
-                            'Get 20% instant off in all packages with coupon code',
+                            'Get 10% instant off in all packages with coupon code',
                             'dokan-lite'
                         ) }
                         &nbsp;
                         <span className="font-semibold text-[16px] leading-[140%] tracking-[0%] text-center">
-                            LITEUPGRADE20
+                            LITEUPGRADE10
                         </span>
                     </p>
 
@@ -226,7 +226,7 @@ function PricingSection() {
                                                 }` }
                                             >
                                                 { __(
-                                                    'Save More 20%',
+                                                    'Save More 10%',
                                                     'dokan-lite'
                                                 ) }
                                             </span>
@@ -268,7 +268,7 @@ function PricingSection() {
                                             }` }
                                         >
                                             { __(
-                                                'Save More 20%',
+                                                'Save More 10%',
                                                 'dokan-lite'
                                             ) }
                                         </span>

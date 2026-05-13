@@ -4,6 +4,7 @@ npm-debug.log
 .DS_Store
 includes/.DS_Store
 .idea
+.vscode
 /includes/.DS_Store
 plugin-deploy.sh
 secret.json
@@ -12,12 +13,14 @@ package-lock.json
 config.json
 /lib/packages/
 /lib/classes/
+.env
 
 # Composer
 /vendor/
 phpcs-report.txt
 /phpcs.xml
 .phpunit.result.cache
+test-results/
 
 #unwanted webpack files
 /assets/js/
@@ -25,3 +28,4 @@ phpcs-report.txt
 !/assets/css/vue-vendor.css
 !/assets/css/vue-frontend.css
 !/assets/css/wp-version-before-5-3.css
+.vscode

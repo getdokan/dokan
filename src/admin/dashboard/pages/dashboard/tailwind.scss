@@ -1,5 +1,4 @@
-@use '../../../../base-tailwind';
-@config './tailwind.config.js';
+/* Module-specific styles - Tailwind loaded via dokan-tailwind bundle */
 
 // Hide the notice list.
 #dokan__notice-list {
