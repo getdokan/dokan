@@ -1,28 +1,37 @@
-import { useState, useRef } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { DokanFieldLabel } from '../../../../../../components/fields';
-import { SimpleCheckboxGroup } from '@getdokan/dokan-ui';
-import settingsStore from '../../../../../../stores/adminSettings';
-import { dispatch } from '@wordpress/data';
-import { isEqual } from 'lodash';
+import {
+    LabeledCheckbox,
+    useSettings,
+    type SettingsElement,
+} from '@wedevs/plugin-ui';
 
-interface VendorPreviewImageProps {
+type VendorInfoValue = {
+    store_email?: boolean;
+    store_phone?: boolean;
+    store_address?: boolean;
+};
+
+const DEFAULT_VALUE: VendorInfoValue = {
+    store_email: true,
+    store_phone: true,
+    store_address: true,
+};
+
+type PreviewProps = {
     showEmail: boolean;
     showPhone: boolean;
     showAddress: boolean;
-}
+};
 
-const VendorPreviewImage: React.FC< VendorPreviewImageProps > = ( {
+const VendorPreviewImage = ( {
     showEmail,
     showPhone,
     showAddress,
-} ) => {
+}: PreviewProps ) => {
     return (
         <div className="bg-[#efeaff] rounded p-2 w-[156px] h-[11rem] flex flex-col relative overflow-hidden">
-            { /* Store Icon and Name - Centered at top */ }
             <div className="flex flex-col items-center mb-4 mt-1">
                 <div className="w-8 h-8 bg-[#7047eb] rounded-full flex items-center justify-center mb-2 relative">
-                    { /* Store icon */ }
                     <svg
                         className="w-[14px] h-[14px] text-white"
                         fill="currentColor"
@@ -32,16 +41,10 @@ const VendorPreviewImage: React.FC< VendorPreviewImageProps > = ( {
                     </svg>
                 </div>
                 <span className="text-xs font-bold text-black opacity-85 leading-[1.3] text-center">
-                    {
-                        __(
-                            'Store Name',
-                            'dokan-lite'
-                        ) /* Placeholder for store name */
-                    }
+                    { __( 'Store Name', 'dokan-lite' ) }
                 </span>
             </div>
 
-            { /* Contact Information */ }
             <div className="space-y-[11px] mb-2 px-[18px] flex-1">
                 { showEmail && (
                     <div className="flex items-center gap-[18px]">
@@ -107,99 +110,89 @@ const VendorPreviewImage: React.FC< VendorPreviewImageProps > = ( {
     );
 };
 
-export default function DokanVendorInfoPreview( { element } ) {
-    const [ checkboxValues, setCheckboxValues ] = useState(
-        element?.value ||
-            element?.default || {
-                store_email: true,
-                store_phone: true,
-                store_address: true,
-            }
-    );
-    const isInitialMount = useRef( true );
+type Props = {
+    element: SettingsElement;
+};
 
-    const onValueChange = ( updatedElement ) => {
-        // Dispatch the updated value to the settings store
-        dispatch( settingsStore ).updateSettingsValue( updatedElement );
-    };
+export default function DokanVendorInfoPreview( { element }: Props ) {
+    const { updateValue } = useSettings();
 
-    const handleCheckboxChange = ( selectedValues ) => {
-        // Skip the initial onChange call that happens on mount
-        if ( isInitialMount.current ) {
-            isInitialMount.current = false;
+    const value: VendorInfoValue =
+        ( element.value as VendorInfoValue ) ||
+        ( element.default as VendorInfoValue ) ||
+        DEFAULT_VALUE;
+
+    const handleToggle = (
+        key: keyof VendorInfoValue,
+        checked: boolean
+    ): void => {
+        if ( ! element.dependency_key ) {
             return;
         }
-
-        // Convert array of selected values to object format
-        const newValues = {
-            store_email: selectedValues.includes( 'store_email' ),
-            store_phone: selectedValues.includes( 'store_phone' ),
-            store_address: selectedValues.includes( 'store_address' ),
-        };
-
-        if ( isEqual( newValues, checkboxValues ) ) {
-            return;
-        }
-
-        setCheckboxValues( newValues );
-        onValueChange( { ...element, value: newValues } );
+        updateValue( element.dependency_key, {
+            ...value,
+            [ key ]: checked,
+        } );
     };
 
-    const checkboxOptions = [
-        {
-            value: 'store_email',
-            label: __( 'Email Address', 'dokan-lite' ),
-        },
-        {
-            value: 'store_phone',
-            label: __( 'Phone Number', 'dokan-lite' ),
-        },
-        {
-            value: 'store_address',
-            label: __( 'Store Address', 'dokan-lite' ),
-        },
-    ];
-
-    if ( ! element.display ) {
-        return null;
-    }
-
-    // Convert current values to array format for SimpleCheckboxGroup
-    const selectedValues = Object.keys( checkboxValues ).filter(
-        ( key ) => checkboxValues[ key ]
-    );
+    const showEmail = Boolean( value.store_email );
+    const showPhone = Boolean( value.store_phone );
+    const showAddress = Boolean( value.store_address );
 
     return (
-        <div className="bg-white  p-5">
+        <div className="bg-white p-5">
             <div className="flex items-start justify-between">
                 <div className="flex-1 max-w-lg">
-                    { /* Field Header */ }
-                    <div className="flex items-center space-x-3 mb-1">
-                        <DokanFieldLabel
-                            title={ element.title }
-                            titleFontWeight="bold"
-                            helperText={ element.description }
-                            tooltip={ element?.help_text }
-                        />
-                    </div>
+                    { ( element.label || element.title ) && (
+                        <div className="text-sm font-semibold text-foreground">
+                            { element.label || element.title }
+                        </div>
+                    ) }
+                    { element.description && (
+                        <div className="text-xs text-muted-foreground leading-relaxed mt-1">
+                            { element.description }
+                        </div>
+                    ) }
 
-                    { /* Checkboxes using SimpleCheckboxGroup */ }
-                    <div className="mt-4">
-                        <SimpleCheckboxGroup
-                            options={ checkboxOptions }
-                            value={ selectedValues }
-                            onChange={ handleCheckboxChange }
-                            defaultValue={ selectedValues }
+                    <div className="mt-4 flex flex-col gap-3">
+                        <LabeledCheckbox
+                            label={ __( 'Email Address', 'dokan-lite' ) }
+                            checked={ showEmail }
+                            onCheckedChange={ ( checked ) =>
+                                handleToggle(
+                                    'store_email',
+                                    Boolean( checked )
+                                )
+                            }
+                        />
+                        <LabeledCheckbox
+                            label={ __( 'Phone Number', 'dokan-lite' ) }
+                            checked={ showPhone }
+                            onCheckedChange={ ( checked ) =>
+                                handleToggle(
+                                    'store_phone',
+                                    Boolean( checked )
+                                )
+                            }
+                        />
+                        <LabeledCheckbox
+                            label={ __( 'Store Address', 'dokan-lite' ) }
+                            checked={ showAddress }
+                            onCheckedChange={ ( checked ) =>
+                                handleToggle(
+                                    'store_address',
+                                    Boolean( checked )
+                                )
+                            }
                         />
                     </div>
                 </div>
 
-                { /* Preview Image */ }
                 <div className="ml-8">
                     <VendorPreviewImage
-                        showEmail={ checkboxValues.store_email || false }
-                        showPhone={ checkboxValues.store_phone || false }
-                        showAddress={ checkboxValues.store_address || false }
+                        showEmail={ showEmail }
+                        showPhone={ showPhone }
+                        showAddress={ showAddress }
                     />
                 </div>
             </div>
