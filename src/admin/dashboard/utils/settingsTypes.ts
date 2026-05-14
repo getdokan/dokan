@@ -71,16 +71,3 @@ export interface SettingsElement {
     disabled?: boolean;
     doc_link?: string;
 }
-
-export type SettingsState = {
-    settings: SettingsElement[];
-    originalSettings: SettingsElement[];
-    dependencies: SettingsElementDependency[];
-    validations: SettingsElementValidation[];
-    loading: boolean;
-    saving: boolean;
-    needSaving: boolean;
-    hasValidationErrors: boolean;
-    searchText: string;
-    changedElements: Record< string, SettingsElement >;
-};

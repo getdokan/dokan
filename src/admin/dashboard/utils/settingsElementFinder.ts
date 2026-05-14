@@ -1,4 +1,4 @@
-import { SettingsElement } from '../../../stores/adminSettings/types';
+import { SettingsElement } from './settingsTypes';
 
 const settingsElementFinder = (
     settings: SettingsElement[],
