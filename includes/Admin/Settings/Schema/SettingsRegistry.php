@@ -25,13 +25,6 @@ class SettingsRegistry {
     private ?array $cache = null;
 
     /**
-     * Cached option values per storage key to avoid repeated get_option calls.
-     *
-     * @var array<string, array>
-     */
-    private array $options_cache = [];
-
-    /**
      * Get the fully processed settings schema.
      *
      * Returns the flat array with all values populated, defaults filled,
@@ -74,18 +67,21 @@ class SettingsRegistry {
     /**
      * Clear the cached schema.
      *
+     * Retained for backward compatibility — callers (e.g. AdminSettingsController)
+     * invoke this after a save. WordPress's get_option() caches within a request,
+     * so no separate options cache is needed here.
+     *
      * @since DOKAN_SINCE
      */
     public function clear_cache(): void {
-        $this->cache         = null;
-        $this->options_cache = [];
+        $this->cache = null;
     }
 
     /**
      * Auto-generate hook_key and dependency_key for elements that don't have them.
      *
-     * hook_key format: `dokan_settings_{page}_{subpage}_{section}_{field}_children`
-     * dependency_key format: `{subpage}.{section}.{field}` (relative to page)
+     * Hook_key format: `dokan_settings_{page}_{subpage}_{section}_{field}_children`
+     * Dependency_key for fields: equals the field's id (flat storage, keyed by id).
      *
      * @since DOKAN_SINCE
      *
@@ -157,9 +153,9 @@ class SettingsRegistry {
                 $element['hook_key'] = 'dokan_settings_' . implode( '_', $path ) . '_children';
             }
 
-            // dependency_key: path without the page prefix (relative to page).
-            if ( empty( $element['dependency_key'] ) && count( $path ) > 1 ) {
-                $element['dependency_key'] = implode( '.', array_slice( $path, 1 ) );
+            // dependency_key: equals the field's id (storage is flat, keyed by id).
+            if ( empty( $element['dependency_key'] ) && 'field' === ( $element['type'] ?? '' ) && ! empty( $element['id'] ) ) {
+                $element['dependency_key'] = $element['id'];
             }
         }
         unset( $element );
@@ -287,166 +283,39 @@ class SettingsRegistry {
     }
 
     /**
-     * Populate field values from wp_options storage.
+     * Populate field values from the single dokan_settings wp_option.
      *
-     * For each field element, determines the storage key (from the parent page's storage_key)
-     * and reads the stored value using the dependency_key path. Falls back to the field's
-     * default value if no stored value exists.
+     * Reads `dokan_settings` once and looks up each field's value by its id.
+     * Falls back to the field's `default` when the id is absent from storage.
      *
      * @since DOKAN_SINCE
      *
      * @param array $elements Flat array of schema elements.
      *
-     * @return array Elements with field 'value' populated.
+     * @return array Elements with field `value` populated.
      */
     private function populate_values( array $elements ): array {
-        // Build page lookup: page_id => storage_key.
-        $page_storage_keys = [];
-        foreach ( $elements as $element ) {
-            if ( 'page' === ( $element['type'] ?? '' ) && ! empty( $element['storage_key'] ) ) {
-                $page_storage_keys[ $element['id'] ] = $element['storage_key'];
-            }
+        $stored = get_option( 'dokan_settings', [] );
+        if ( ! is_array( $stored ) ) {
+            $stored = [];
         }
-
-        // Build element lookup for parent chain walking.
-        $lookup = [];
-        foreach ( $elements as $element ) {
-            if ( isset( $element['id'], $element['type'] ) ) {
-                $lookup[ $element['type'] . ':' . $element['id'] ] = $element;
-            }
-        }
-
-        $parent_pointer_types = [
-            'page_id'        => 'page',
-            'subpage_id'     => 'subpage',
-            'tab_id'         => 'tab',
-            'section_id'     => 'section',
-            'subsection_id'  => 'subsection',
-            'field_group_id' => 'fieldgroup',
-        ];
 
         foreach ( $elements as &$element ) {
             if ( 'field' !== ( $element['type'] ?? '' ) ) {
                 continue;
             }
-
-            // Already has a value set (e.g., by the schema itself).
             if ( array_key_exists( 'value', $element ) ) {
                 continue;
             }
-
-            // Find the page this field belongs to by walking up the parent chain.
-            $page_id = $this->find_page_id( $element, $lookup, $parent_pointer_types );
-
-            if ( ! $page_id || ! isset( $page_storage_keys[ $page_id ] ) ) {
-                $element['value'] = $element['default'] ?? '';
+            $id = $element['id'] ?? '';
+            if ( '' === $id ) {
                 continue;
             }
-
-            $storage_key = $page_storage_keys[ $page_id ];
-            $stored_data = $this->get_stored_option( $storage_key );
-
-            // Use dependency_key to navigate the nested stored data.
-            $dep_key = $element['dependency_key'] ?? '';
-
-            if ( ! empty( $dep_key ) && is_array( $stored_data ) ) {
-                $value = $this->get_nested_value( $stored_data, $dep_key );
-
-                if ( null !== $value ) {
-                    $element['value'] = $value;
-                } else {
-                    $element['value'] = $element['default'] ?? '';
-                }
-            } else {
-                $element['value'] = $element['default'] ?? '';
-            }
+            $element['value'] = $stored[ $id ] ?? ( $element['default'] ?? '' );
         }
         unset( $element );
 
         return $elements;
-    }
-
-    /**
-     * Find the page ID that an element belongs to by walking up the parent chain.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array $element              The element to find the page for.
-     * @param array $lookup               Element lookup (type:id => element).
-     * @param array $parent_pointer_types Pointer key => parent type map.
-     *
-     * @return string|null The page ID or null if not found.
-     */
-    private function find_page_id( array $element, array $lookup, array $parent_pointer_types ): ?string {
-        $current = $element;
-
-        for ( $i = 0; $i < 10; $i++ ) {
-            foreach ( $parent_pointer_types as $pointer_key => $parent_type ) {
-                if ( empty( $current[ $pointer_key ] ) ) {
-                    continue;
-                }
-
-                $parent_id  = $current[ $pointer_key ];
-                $parent_key = $parent_type . ':' . $parent_id;
-
-                // Reached a page.
-                if ( 'page' === $parent_type ) {
-                    return $parent_id;
-                }
-
-                // Continue walking up.
-                if ( isset( $lookup[ $parent_key ] ) ) {
-                    $current = $lookup[ $parent_key ];
-                    break;
-                }
-
-                return null;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Get a stored option value with caching.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param string $storage_key The wp_options key.
-     *
-     * @return array The stored option data.
-     */
-    private function get_stored_option( string $storage_key ): array {
-        if ( ! isset( $this->options_cache[ $storage_key ] ) ) {
-            $data = get_option( $storage_key, [] );
-            $this->options_cache[ $storage_key ] = is_array( $data ) ? $data : [];
-        }
-
-        return $this->options_cache[ $storage_key ];
-    }
-
-    /**
-     * Get a nested value from an array using dot-notation path.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array  $data The nested array.
-     * @param string $path Dot-separated path (e.g., "marketplace.marketplace_settings.vendor_store_url").
-     *
-     * @return mixed|null The value or null if not found.
-     */
-    private function get_nested_value( array $data, string $path ) {
-        $keys    = explode( '.', $path );
-        $current = $data;
-
-        foreach ( $keys as $key ) {
-            if ( ! is_array( $current ) || ! array_key_exists( $key, $current ) ) {
-                return null;
-            }
-            $current = $current[ $key ];
-        }
-
-        return $current;
     }
 
     /**

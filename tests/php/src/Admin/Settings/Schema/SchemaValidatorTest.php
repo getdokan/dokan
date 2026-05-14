@@ -277,6 +277,78 @@ class SchemaValidatorTest extends DokanTestCase {
     }
 
     // =========================================================================
+    // Globally-unique field-id checks (error, not warning)
+    // =========================================================================
+
+    /**
+     * Build a canonical two-page schema (page → subpage → section → field) with one field per page.
+     *
+     * The structure matches the chain that real Dokan schemas use, so the
+     * helper exercises check_reachability and check_parent_requirements
+     * cleanly — any spurious validator error becomes visible in tests
+     * rather than silently passing through filter-based assertions.
+     *
+     * @param string $field_id_general     The id for the general page's field.
+     * @param string $field_id_transaction The id for the transaction page's field.
+     *
+     * @return array
+     */
+    private function build_two_page_schema( string $field_id_general, string $field_id_transaction ): array {
+        return [
+            [ 'id' => 'general', 'type' => 'page', 'title' => 'General' ],
+            [ 'id' => 'transaction', 'type' => 'page', 'title' => 'Transaction' ],
+            [ 'id' => 'general_sub', 'type' => 'subpage', 'page_id' => 'general' ],
+            [ 'id' => 'transaction_sub', 'type' => 'subpage', 'page_id' => 'transaction' ],
+            [ 'id' => 'general_section', 'type' => 'section', 'subpage_id' => 'general_sub' ],
+            [ 'id' => 'txn_section', 'type' => 'section', 'subpage_id' => 'transaction_sub' ],
+            [ 'id' => $field_id_general, 'type' => 'field', 'variant' => 'text', 'section_id' => 'general_section' ],
+            [ 'id' => $field_id_transaction, 'type' => 'field', 'variant' => 'text', 'section_id' => 'txn_section' ],
+        ];
+    }
+
+    public function test_unique_field_ids_passes_when_all_ids_distinct(): void {
+        $result = $this->validator->validate( $this->build_two_page_schema( 'foo', 'bar' ) );
+
+        // Sanity: schema should be fully valid, not just free of duplicate-field-id errors.
+        $this->assertEmpty( $result['errors'], 'Helper schema must validate cleanly: ' . implode( '; ', $result['errors'] ) );
+
+        $duplicate_errors = array_filter(
+            $result['errors'],
+            fn( $msg ) => str_contains( $msg, 'Duplicate field id' )
+        );
+
+        $this->assertEmpty( $duplicate_errors, 'No duplicate-field-id errors expected when all ids are unique.' );
+    }
+
+    public function test_unique_field_ids_fails_on_cross_page_collision(): void {
+        $result = $this->validator->validate( $this->build_two_page_schema( 'shared_id', 'shared_id' ) );
+
+        $duplicate_errors = array_filter(
+            $result['errors'],
+            fn( $msg ) => str_contains( $msg, 'Duplicate field id' ) && str_contains( $msg, 'shared_id' )
+        );
+
+        $this->assertNotEmpty( $duplicate_errors, 'Expected a duplicate-field-id error when the same id appears under two pages.' );
+    }
+
+    public function test_unique_field_ids_ignores_non_field_elements(): void {
+        // A `fieldgroup` and a `field` can share an id (existing schema pattern: google_map_api_key).
+        $result = $this->validator->validate( [
+            [ 'id' => 'general', 'type' => 'page', 'title' => 'General' ],
+            [ 'id' => 'general_section', 'type' => 'section', 'page_id' => 'general', 'title' => 'General Section' ],
+            [ 'id' => 'my_group', 'type' => 'fieldgroup', 'section_id' => 'general_section' ],
+            [ 'id' => 'my_group', 'type' => 'field', 'variant' => 'text', 'field_group_id' => 'my_group', 'title' => 'My Field' ],
+        ] );
+
+        $duplicate_errors = array_filter(
+            $result['errors'],
+            fn( $msg ) => str_contains( $msg, 'Duplicate field id' )
+        );
+
+        $this->assertEmpty( $duplicate_errors, 'A field and a fieldgroup sharing an id must not trigger the field-id-uniqueness rule.' );
+    }
+
+    // =========================================================================
     // Variant checks
     // =========================================================================
 

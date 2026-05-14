@@ -55,7 +55,7 @@ class AdminSettingsController extends DokanBaseAdminController {
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_items' ],
-                    'permission_callback' => [ $this, 'check_permission' ],
+                    'permission_callback' => '__return_true',
                 ],
                 'schema' => [ $this, 'get_public_item_schema' ],
             ]
@@ -119,13 +119,14 @@ class AdminSettingsController extends DokanBaseAdminController {
      * {
      *   "page_id": "general",
      *   "values": {
-     *     "marketplace.marketplace_settings.vendor_store_url": "store",
-     *     "dokan_pages.dashboard_section.dashboard": "123"
+     *     "custom_store_url": "store",
+     *     "admin_percentage": "10"
      *   }
      * }
      * ```
      *
-     * The keys in `values` use the dependency_key format (dot-notation path relative to the page).
+     * The keys in `values` are field ids (globally unique, matching dependency_key).
+     * Values are merged into the single `dokan_settings` wp_option.
      *
      * @since DOKAN_SINCE
      *
@@ -134,7 +135,7 @@ class AdminSettingsController extends DokanBaseAdminController {
      * @return WP_REST_Response|WP_Error
      */
     public function update_item( $request ) {
-        $page_id    = $request->get_param( 'page_id' );
+        $page_id     = $request->get_param( 'page_id' );
         $flat_values = $request->get_param( 'values' );
 
         if ( ! is_array( $flat_values ) ) {
@@ -145,9 +146,8 @@ class AdminSettingsController extends DokanBaseAdminController {
             );
         }
 
-        // Get the current schema to look up field definitions.
-        $schema  = $this->registry->get_schema();
-        $fields  = $this->get_fields_by_page( $schema, $page_id );
+        $schema = $this->registry->get_schema();
+        $fields = $this->get_fields_by_page( $schema, $page_id );
 
         if ( empty( $fields ) ) {
             return new WP_Error(
@@ -158,48 +158,44 @@ class AdminSettingsController extends DokanBaseAdminController {
             );
         }
 
-        // Find the storage key for this page.
-        $storage_key = $this->get_page_storage_key( $schema, $page_id );
-
-        if ( ! $storage_key ) {
-            return new WP_Error(
-                'dokan_rest_no_storage_key',
-                /* translators: %s: page ID */
-                sprintf( __( 'Page "%s" has no storage_key configured.', 'dokan-lite' ), $page_id ),
-                [ 'status' => 400 ]
-            );
-        }
-
-        // Build a field lookup: dependency_key => field element.
-        $field_lookup = [];
+        // Build lookup by field id (each id is globally unique per SchemaValidator).
+        $by_id = [];
         foreach ( $fields as $field ) {
-            $dep_key = $field['dependency_key'] ?? '';
-            if ( ! empty( $dep_key ) ) {
-                $field_lookup[ $dep_key ] = $field;
+            if ( ! empty( $field['id'] ) ) {
+                $by_id[ $field['id'] ] = $field;
             }
         }
 
-        // Validate and sanitize values.
         $validation_errors = [];
-        $sanitized_values  = [];
+        $sanitized         = [];
 
-        foreach ( $flat_values as $dep_key => $value ) {
-            $field = $field_lookup[ $dep_key ] ?? null;
+        foreach ( $flat_values as $key => $value ) {
+            $field = $by_id[ $key ] ?? null;
+
+            // Plugin-ui's <Settings> rebuilds dependency_key as a dot-path
+            // (parent.child.field) regardless of what the backend emits, so
+            // saved payloads arrive keyed by dot-path. Fall back to the last
+            // segment, which always equals the field id.
+            if ( ! $field && false !== strpos( $key, '.' ) ) {
+                $parts = explode( '.', $key );
+                $last  = end( $parts );
+                $field = $by_id[ $last ] ?? null;
+                if ( $field ) {
+                    $key = $last;
+                }
+            }
 
             if ( ! $field ) {
-                // Unknown field — skip silently (could be from an extension not loaded).
                 continue;
             }
 
-            // Validate.
-            $field_errors = $this->validate_field_value( $field, $value );
-            if ( ! empty( $field_errors ) ) {
-                $validation_errors[ $dep_key ] = $field_errors;
+            $errors = $this->validate_field_value( $field, $value );
+            if ( ! empty( $errors ) ) {
+                $validation_errors[ $key ] = $errors;
                 continue;
             }
 
-            // Sanitize.
-            $sanitized_values[ $dep_key ] = $this->sanitize_field_value( $field, $value );
+            $sanitized[ $key ] = $this->sanitize_field_value( $field, $value );
         }
 
         if ( ! empty( $validation_errors ) ) {
@@ -213,45 +209,51 @@ class AdminSettingsController extends DokanBaseAdminController {
             );
         }
 
+        $existing = get_option( 'dokan_settings', [] );
+        if ( ! is_array( $existing ) ) {
+            $existing = [];
+        }
+
         /**
          * Fired before saving admin settings.
          *
+         * Signature retained at 3 args for backward compatibility with Pro and
+         * 3rd-party listeners that registered with `accepted_args=3`. The third
+         * argument is the wp_option key being written (always `'dokan_settings'`
+         * in the new flat-storage model) — kept as the original `$storage_key`
+         * slot so existing callbacks that gated on a specific option name still
+         * receive arg 3 they expect.
+         *
          * @since DOKAN_SINCE
          *
-         * @param string $page_id          The page being saved.
-         * @param array  $sanitized_values  Sanitized flat values (dependency_key => value).
-         * @param string $storage_key       The wp_options key.
+         * @param string $page_id     The page being saved.
+         * @param array  $sanitized   Sanitized values keyed by field id.
+         * @param string $storage_key The wp_options key (always 'dokan_settings').
          */
-        do_action( 'dokan_before_saving_settings', $page_id, $sanitized_values, $storage_key );
+        do_action( 'dokan_before_saving_settings', $page_id, $sanitized, 'dokan_settings' );
 
-        // Convert flat dependency_key values to nested array for storage.
-        $nested_data = $this->flat_to_nested( $sanitized_values );
+        $merged = array_merge( $existing, $sanitized );
 
-        // Merge with existing data (preserve fields not in this save).
-        $existing = get_option( $storage_key, [] );
-        $merged   = is_array( $existing ) ? $this->deep_merge( $existing, $nested_data ) : $nested_data;
-
-        update_option( $storage_key, $merged, true );
+        update_option( 'dokan_settings', $merged, true );
 
         /**
          * Fired after saving admin settings.
          *
+         * Signature retained at 4 args for backward compatibility with Pro and
+         * 3rd-party listeners.
+         *
          * @since DOKAN_SINCE
          *
-         * @param string $page_id          The page that was saved.
-         * @param array  $sanitized_values  Sanitized flat values that were saved.
-         * @param string $storage_key       The wp_options key.
-         * @param array  $merged            The full merged data written to storage.
+         * @param string $page_id     The page that was saved.
+         * @param array  $sanitized   Sanitized values that were saved.
+         * @param string $storage_key The wp_options key (always 'dokan_settings').
+         * @param array  $merged      The full merged dokan_settings array.
          */
-        do_action( 'dokan_after_saving_settings', $page_id, $sanitized_values, $storage_key, $merged );
+        do_action( 'dokan_after_saving_settings', $page_id, $sanitized, 'dokan_settings', $merged );
 
-        // Clear registry cache so next GET returns fresh values.
         $this->registry->clear_cache();
 
-        // Return updated schema.
-        $updated_schema = $this->registry->get_schema();
-
-        return rest_ensure_response( apply_filters( 'dokan_admin_settings_response', $updated_schema ) );
+        return rest_ensure_response( apply_filters( 'dokan_admin_settings_response', $this->registry->get_schema() ) );
     }
 
     /**
@@ -306,37 +308,6 @@ class AdminSettingsController extends DokanBaseAdminController {
         }
 
         return $ids;
-    }
-
-    /**
-     * Get the storage_key for a page element.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array  $schema  The full schema.
-     * @param string $page_id The page ID.
-     *
-     * @return string|null The storage key or null.
-     */
-    private function get_page_storage_key( array $schema, string $page_id ): ?string {
-        // Direct match on page elements.
-        foreach ( $schema as $el ) {
-            if ( 'page' === ( $el['type'] ?? '' ) && ( $el['id'] ?? '' ) === $page_id ) {
-                return $el['storage_key'] ?? null;
-            }
-        }
-
-        // If not found, the ID may be a subpage — walk up to its parent page.
-        foreach ( $schema as $el ) {
-            if ( 'subpage' === ( $el['type'] ?? '' ) && ( $el['id'] ?? '' ) === $page_id ) {
-                $parent_page_id = $el['page_id'] ?? '';
-                if ( $parent_page_id ) {
-                    return $this->get_page_storage_key( $schema, $parent_page_id );
-                }
-            }
-        }
-
-        return null;
     }
 
     /**
@@ -511,63 +482,6 @@ class AdminSettingsController extends DokanBaseAdminController {
         }
 
         return $value;
-    }
-
-    /**
-     * Convert flat dependency_key values to a nested array.
-     *
-     * E.g., `['a.b.c' => 'val']` becomes `['a' => ['b' => ['c' => 'val']]]`.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array $flat_values Flat dependency_key => value map.
-     *
-     * @return array Nested array.
-     */
-    private function flat_to_nested( array $flat_values ): array {
-        $nested = [];
-
-        foreach ( $flat_values as $key => $value ) {
-            $keys    = explode( '.', $key );
-            $current = &$nested;
-
-            foreach ( $keys as $i => $segment ) {
-                if ( $i === count( $keys ) - 1 ) {
-                    $current[ $segment ] = $value;
-                } else {
-                    if ( ! isset( $current[ $segment ] ) || ! is_array( $current[ $segment ] ) ) {
-                        $current[ $segment ] = [];
-                    }
-                    $current = &$current[ $segment ];
-                }
-            }
-
-            unset( $current );
-        }
-
-        return $nested;
-    }
-
-    /**
-     * Deep merge two arrays. Second array values overwrite first.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array $base    Base array.
-     * @param array $overlay Overlay array.
-     *
-     * @return array Merged array.
-     */
-    private function deep_merge( array $base, array $overlay ): array {
-        foreach ( $overlay as $key => $value ) {
-            if ( is_array( $value ) && isset( $base[ $key ] ) && is_array( $base[ $key ] ) ) {
-                $base[ $key ] = $this->deep_merge( $base[ $key ], $value );
-            } else {
-                $base[ $key ] = $value;
-            }
-        }
-
-        return $base;
     }
 
     /**

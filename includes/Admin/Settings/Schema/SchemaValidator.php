@@ -254,6 +254,7 @@ class SchemaValidator {
         $this->check_reachability( $elements );
         $this->check_duplicate_ids( $elements );
         $this->check_variants( $elements );
+        $this->check_unique_field_ids( $elements );
 
         $result = [
             'errors'   => $this->errors,
@@ -702,6 +703,47 @@ class SchemaValidator {
                     $element['variant']
                 );
             }
+        }
+    }
+
+    /**
+     * Check that every field-type element has a globally unique id.
+     *
+     * Unlike `check_duplicate_ids()` (which scopes uniqueness to a field's parent
+     * and produces warnings), this rule enforces uniqueness across the ENTIRE
+     * merged schema and produces ERRORS. Required because settings are stored
+     * in a single `dokan_settings` option keyed by field id — a duplicate id
+     * means one field's value would silently overwrite another's.
+     *
+     * Non-field elements (page, subpage, section, etc.) are exempt: they have
+     * no storage slot, so an id collision between a fieldgroup and a field is
+     * harmless (and used intentionally in the schema, e.g., `google_map_api_key`).
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $elements Flat array of schema elements.
+     */
+    private function check_unique_field_ids( array $elements ): void {
+        $seen = [];
+
+        foreach ( $elements as $element ) {
+            if ( 'field' !== ( $element['type'] ?? '' ) ) {
+                continue;
+            }
+            $id = $element['id'] ?? '';
+            if ( '' === $id ) {
+                continue;
+            }
+
+            if ( isset( $seen[ $id ] ) ) {
+                $this->errors[] = sprintf(
+                    'Duplicate field id "%s" — every field must declare a globally unique id (required by single-option storage).',
+                    $id
+                );
+                continue;
+            }
+
+            $seen[ $id ] = true;
         }
     }
 

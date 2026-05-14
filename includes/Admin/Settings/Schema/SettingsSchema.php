@@ -85,7 +85,6 @@ class SettingsSchema {
                 'title'       => esc_html__( 'General', 'dokan-lite' ),
                 'description' => esc_html__( 'Configure the general settings for your marketplace.', 'dokan-lite' ),
                 'priority'    => 100,
-                'storage_key' => 'dokan_settings_general',
             ],
 
             // === SubPage: Marketplace ===
@@ -220,8 +219,14 @@ class SettingsSchema {
                 'description' => esc_html__( 'Which map API source you want to use in your site?', 'dokan-lite' ),
                 'default'     => 'google_maps',
                 'options'     => [
-                    [ 'title' => esc_html__( 'Google Maps', 'dokan-lite' ), 'value' => 'google_maps' ],
-                    [ 'title' => esc_html__( 'Mapbox', 'dokan-lite' ), 'value' => 'mapbox' ],
+                    [
+						'title' => esc_html__( 'Google Maps', 'dokan-lite' ),
+						'value' => 'google_maps',
+					],
+                    [
+						'title' => esc_html__( 'Mapbox', 'dokan-lite' ),
+						'value' => 'mapbox',
+					],
                 ],
             ],
             [
@@ -229,8 +234,22 @@ class SettingsSchema {
                 'type'         => 'fieldgroup',
                 'section_id'   => 'map_api_configuration',
                 'dependencies' => [
-                    [ 'key' => 'location.map_api_configuration.map_api_source', 'value' => 'google_maps', 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '==' ],
-                    [ 'key' => 'location.map_api_configuration.map_api_source', 'value' => 'mapbox', 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '==' ],
+                    [
+						'key' => 'location.map_api_configuration.map_api_source',
+						'value' => 'google_maps',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'show',
+						'comparison' => '==',
+					],
+                    [
+						'key' => 'location.map_api_configuration.map_api_source',
+						'value' => 'mapbox',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'hide',
+						'comparison' => '==',
+					],
                 ],
             ],
             [
@@ -258,8 +277,22 @@ class SettingsSchema {
                 'type'         => 'fieldgroup',
                 'section_id'   => 'map_api_configuration',
                 'dependencies' => [
-                    [ 'key' => 'location.map_api_configuration.map_api_source', 'value' => 'mapbox', 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '==' ],
-                    [ 'key' => 'location.map_api_configuration.map_api_source', 'value' => 'google_maps', 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '==' ],
+                    [
+						'key' => 'location.map_api_configuration.map_api_source',
+						'value' => 'mapbox',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'show',
+						'comparison' => '==',
+					],
+                    [
+						'key' => 'location.map_api_configuration.map_api_source',
+						'value' => 'google_maps',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'hide',
+						'comparison' => '==',
+					],
                 ],
             ],
             [
@@ -301,7 +334,6 @@ class SettingsSchema {
                 'description' => esc_html__( 'Configure transaction-related settings including commissions and fees.', 'dokan-lite' ),
                 'icon'        => 'ArrowRightLeft',
                 'priority'    => 600,
-                'storage_key' => 'dokan_settings_transaction',
             ],
 
             // === SubPage: Fees ===
@@ -328,8 +360,16 @@ class SettingsSchema {
                 'description' => esc_html__( 'Who will be receiving the shipping fees? Note that, tax fees for corresponding shipping method will not be included with shipping fees.', 'dokan-lite' ),
                 'default'     => 'seller',
                 'options'     => [
-                    [ 'title' => esc_html__( 'Vendor', 'dokan-lite' ), 'value' => 'seller', 'icon' => 'Users' ],
-                    [ 'title' => esc_html__( 'Admin', 'dokan-lite' ), 'value' => 'admin', 'icon' => 'User' ],
+                    [
+						'title' => esc_html__( 'Vendor', 'dokan-lite' ),
+						'value' => 'seller',
+						'icon' => 'Users',
+					],
+                    [
+						'title' => esc_html__( 'Admin', 'dokan-lite' ),
+						'value' => 'admin',
+						'icon' => 'User',
+					],
                 ],
             ],
             [
@@ -341,8 +381,16 @@ class SettingsSchema {
                 'description' => esc_html__( 'Who will be receiving the tax fees for products? Note that, shipping tax fees will not be included with product tax.', 'dokan-lite' ),
                 'default'     => 'seller',
                 'options'     => [
-                    [ 'title' => esc_html__( 'Vendor', 'dokan-lite' ), 'value' => 'seller', 'icon' => 'Users' ],
-                    [ 'title' => esc_html__( 'Admin', 'dokan-lite' ), 'value' => 'admin', 'icon' => 'User' ],
+                    [
+						'title' => esc_html__( 'Vendor', 'dokan-lite' ),
+						'value' => 'seller',
+						'icon' => 'Users',
+					],
+                    [
+						'title' => esc_html__( 'Admin', 'dokan-lite' ),
+						'value' => 'admin',
+						'icon' => 'User',
+					],
                 ],
             ],
             [
@@ -354,8 +402,16 @@ class SettingsSchema {
                 'description' => esc_html__( 'Who will be receiving the tax fees for shipping?', 'dokan-lite' ),
                 'default'     => 'seller',
                 'options'     => [
-                    [ 'title' => esc_html__( 'Vendor', 'dokan-lite' ), 'value' => 'seller', 'icon' => 'Users' ],
-                    [ 'title' => esc_html__( 'Admin', 'dokan-lite' ), 'value' => 'admin', 'icon' => 'User' ],
+                    [
+						'title' => esc_html__( 'Vendor', 'dokan-lite' ),
+						'value' => 'seller',
+						'icon' => 'Users',
+					],
+                    [
+						'title' => esc_html__( 'Admin', 'dokan-lite' ),
+						'value' => 'admin',
+						'icon' => 'User',
+					],
                 ],
             ],
 
@@ -383,8 +439,16 @@ class SettingsSchema {
                 'description' => esc_html__( 'Select a commission type for your marketplace', 'dokan-lite' ),
                 'default'     => $default_settings['commission_type'],
                 'options'     => [
-                    [ 'title' => esc_html__( 'Fixed', 'dokan-lite' ), 'value' => 'fixed', 'icon' => 'Percent' ],
-                    [ 'title' => esc_html__( 'Category Based', 'dokan-lite' ), 'value' => 'category_based', 'icon' => 'Box' ],
+                    [
+						'title' => esc_html__( 'Fixed', 'dokan-lite' ),
+						'value' => 'fixed',
+						'icon' => 'Percent',
+					],
+                    [
+						'title' => esc_html__( 'Category Based', 'dokan-lite' ),
+						'value' => 'category_based',
+						'icon' => 'Box',
+					],
                 ],
             ],
             [
@@ -397,8 +461,22 @@ class SettingsSchema {
                 'admin_percentage' => $default_settings['admin_percentage'],
                 'additional_fee'   => $default_settings['additional_fee'],
                 'dependencies'     => [
-                    [ 'key' => 'commission.commission.commission_type', 'value' => 'fixed', 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '!==' ],
-                    [ 'key' => 'commission.commission.commission_type', 'value' => 'fixed', 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '===' ],
+                    [
+						'key' => 'commission.commission.commission_type',
+						'value' => 'fixed',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'hide',
+						'comparison' => '!==',
+					],
+                    [
+						'key' => 'commission.commission.commission_type',
+						'value' => 'fixed',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'show',
+						'comparison' => '===',
+					],
                 ],
                 'validations'      => [
                     [ 'not_empty' => esc_html__( 'Both percentage and fixed fee is required.', 'dokan-lite' ) ],
@@ -413,11 +491,31 @@ class SettingsSchema {
                 'description'   => esc_html__( "Important: 'All Categories' commission serves as your marketplace's default rate and cannot be empty. If 0 is given in value, then the marketplace will deduct no commission from vendors", 'dokan-lite' ),
                 'tooltip'       => esc_html__( "When enabled, changing a parent category's commission rate will automatically update all its subcategories. Disable this option to maintain independent commission rates for subcategories", 'dokan-lite' ),
                 'default'       => 'on',
-                'enable_state'  => [ 'label' => esc_html__( 'Enabled', 'dokan-lite' ), 'value' => 'on' ],
-                'disable_state' => [ 'label' => esc_html__( 'Disabled', 'dokan-lite' ), 'value' => 'off' ],
+                'enable_state'  => [
+					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state' => [
+					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+					'value' => 'off',
+				],
                 'dependencies'  => [
-                    [ 'key' => 'commission.commission.commission_type', 'value' => 'category_based', 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '!==' ],
-                    [ 'key' => 'commission.commission.commission_type', 'value' => 'category_based', 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '===' ],
+                    [
+						'key' => 'commission.commission.commission_type',
+						'value' => 'category_based',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'hide',
+						'comparison' => '!==',
+					],
+                    [
+						'key' => 'commission.commission.commission_type',
+						'value' => 'category_based',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'show',
+						'comparison' => '===',
+					],
                 ],
             ],
             [
@@ -428,10 +526,38 @@ class SettingsSchema {
                 'title'        => esc_html__( 'Admin Commission', 'dokan-lite' ),
                 'description'  => esc_html__( 'Amount you will get from each sale', 'dokan-lite' ),
                 'dependencies' => [
-                    [ 'key' => 'commission.commission.commission_type', 'value' => 'category_based', 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '!==' ],
-                    [ 'key' => 'commission.commission.commission_type', 'value' => 'category_based', 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '===' ],
-                    [ 'key' => 'commission.commission.reset_sub_category_when_edit_all_category', 'value' => 'on', 'to_self' => true, 'attribute' => 'custom', 'effect' => 'custom', 'comparison' => '===' ],
-                    [ 'key' => 'commission.commission.reset_sub_category_when_edit_all_category', 'value' => 'off', 'to_self' => true, 'attribute' => 'custom', 'effect' => 'custom', 'comparison' => '===' ],
+                    [
+						'key' => 'commission.commission.commission_type',
+						'value' => 'category_based',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'hide',
+						'comparison' => '!==',
+					],
+                    [
+						'key' => 'commission.commission.commission_type',
+						'value' => 'category_based',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'show',
+						'comparison' => '===',
+					],
+                    [
+						'key' => 'commission.commission.reset_sub_category_when_edit_all_category',
+						'value' => 'on',
+						'to_self' => true,
+						'attribute' => 'custom',
+						'effect' => 'custom',
+						'comparison' => '===',
+					],
+                    [
+						'key' => 'commission.commission.reset_sub_category_when_edit_all_category',
+						'value' => 'off',
+						'to_self' => true,
+						'attribute' => 'custom',
+						'effect' => 'custom',
+						'comparison' => '===',
+					],
                 ],
                 'validations'  => [
                     [ 'not_empty' => esc_html__( 'Both percentage and fixed fee is required.', 'dokan-lite' ) ],
@@ -471,8 +597,14 @@ class SettingsSchema {
                 'description'    => esc_html__( 'Enable PayPal as a withdrawal method for vendors.', 'dokan-lite' ),
                 'default'        => 'on',
                 'image_url'      => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/transaction/paypal.svg',
-                'enable_state'   => [ 'label' => esc_html__( 'Enabled', 'dokan-lite' ), 'value' => 'on' ],
-                'disable_state'  => [ 'label' => esc_html__( 'Disabled', 'dokan-lite' ), 'value' => 'off' ],
+                'enable_state'   => [
+					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state'  => [
+					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+					'value' => 'off',
+				],
             ],
             [
                 'id'               => 'paypal_withdraw_charges',
@@ -484,8 +616,22 @@ class SettingsSchema {
                 'admin_percentage' => '0.00',
                 'additional_fee'   => '0.00',
                 'dependencies'     => [
-                    [ 'key' => 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal.paypal_withdraw', 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '===' ],
-                    [ 'key' => 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal.paypal_withdraw', 'value' => 'off', 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '===' ],
+                    [
+						'key' => 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal.paypal_withdraw',
+						'value' => 'on',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'show',
+						'comparison' => '===',
+					],
+                    [
+						'key' => 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal.paypal_withdraw',
+						'value' => 'off',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'hide',
+						'comparison' => '===',
+					],
                 ],
                 'validations'      => [
                     [ 'not_empty' => esc_html__( 'Both percentage and fixed fee is required.', 'dokan-lite' ) ],
@@ -506,8 +652,14 @@ class SettingsSchema {
                 'description'    => esc_html__( 'Enable Bank Transfer as a withdrawal method for vendors.', 'dokan-lite' ),
                 'default'        => 'off',
                 'image_url'      => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/transaction/bank-transfer.svg',
-                'enable_state'   => [ 'label' => esc_html__( 'Enabled', 'dokan-lite' ), 'value' => 'on' ],
-                'disable_state'  => [ 'label' => esc_html__( 'Disabled', 'dokan-lite' ), 'value' => 'off' ],
+                'enable_state'   => [
+					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state'  => [
+					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+					'value' => 'off',
+				],
             ],
             [
                 'id'               => 'bank_transfer_withdraw_charges',
@@ -519,8 +671,22 @@ class SettingsSchema {
                 'admin_percentage' => '0.00',
                 'additional_fee'   => '0.00',
                 'dependencies'     => [
-                    [ 'key' => 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_bank.bank_transfer_withdraw', 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '===' ],
-                    [ 'key' => 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_bank.bank_transfer_withdraw', 'value' => 'off', 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '===' ],
+                    [
+						'key' => 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_bank.bank_transfer_withdraw',
+						'value' => 'on',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'show',
+						'comparison' => '===',
+					],
+                    [
+						'key' => 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_bank.bank_transfer_withdraw',
+						'value' => 'off',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'hide',
+						'comparison' => '===',
+					],
                 ],
                 'validations'      => [
                     [ 'not_empty' => esc_html__( 'Both percentage and fixed fee is required.', 'dokan-lite' ) ],
@@ -560,8 +726,14 @@ class SettingsSchema {
                 'description' => esc_html__( 'If an order is paid with Cash on Delivery (COD), then exclude that payment from vendor balance.', 'dokan-lite' ),
                 'default'     => 'include',
                 'options'     => [
-                    [ 'title' => esc_html__( 'Include', 'dokan-lite' ), 'value' => 'include' ],
-                    [ 'title' => esc_html__( 'Exclude', 'dokan-lite' ), 'value' => 'exclude' ],
+                    [
+						'title' => esc_html__( 'Include', 'dokan-lite' ),
+						'value' => 'include',
+					],
+                    [
+						'title' => esc_html__( 'Exclude', 'dokan-lite' ),
+						'value' => 'exclude',
+					],
                 ],
             ],
 
@@ -588,8 +760,14 @@ class SettingsSchema {
                 'title'         => esc_html__( 'Activate Reverse Withdrawal (Cash On Delivery)', 'dokan-lite' ),
                 'description'   => esc_html__( 'Enable this option to activate automatic balance deducting from vendors.', 'dokan-lite' ),
                 'default'       => 'off',
-                'enable_state'  => [ 'label' => esc_html__( 'Enabled', 'dokan-lite' ), 'value' => 'on' ],
-                'disable_state' => [ 'label' => esc_html__( 'Disabled', 'dokan-lite' ), 'value' => 'off' ],
+                'enable_state'  => [
+					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state' => [
+					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+					'value' => 'off',
+				],
             ],
             [
                 'id'          => 'billing_type',
@@ -600,8 +778,16 @@ class SettingsSchema {
                 'description' => esc_html__( 'Select how vendors will be billed for their reverse balance amounts.', 'dokan-lite' ),
                 'default'     => 'by_amount',
                 'options'     => [
-                    [ 'title' => esc_html__( 'By Amount Limit', 'dokan-lite' ), 'value' => 'by_amount', 'icon' => 'DollarSign' ],
-                    [ 'title' => esc_html__( 'Monthly', 'dokan-lite' ), 'value' => 'by_month', 'icon' => 'Calendar' ],
+                    [
+						'title' => esc_html__( 'By Amount Limit', 'dokan-lite' ),
+						'value' => 'by_amount',
+						'icon' => 'DollarSign',
+					],
+                    [
+						'title' => esc_html__( 'Monthly', 'dokan-lite' ),
+						'value' => 'by_month',
+						'icon' => 'Calendar',
+					],
                 ],
             ],
             [
@@ -621,8 +807,22 @@ class SettingsSchema {
                 'min_value'    => 0,
                 'step'         => 0.5,
                 'dependencies' => [
-                    [ 'key' => 'reverse_withdrawal.reverse_withdrawal_section.billing_type', 'value' => 'by_amount', 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '===' ],
-                    [ 'key' => 'reverse_withdrawal.reverse_withdrawal_section.billing_type', 'value' => 'by_month', 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '===' ],
+                    [
+						'key' => 'reverse_withdrawal.reverse_withdrawal_section.billing_type',
+						'value' => 'by_amount',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'show',
+						'comparison' => '===',
+					],
+                    [
+						'key' => 'reverse_withdrawal.reverse_withdrawal_section.billing_type',
+						'value' => 'by_month',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'hide',
+						'comparison' => '===',
+					],
                 ],
             ],
             [
@@ -638,8 +838,22 @@ class SettingsSchema {
                 'min_value'    => 1,
                 'max_value'    => 28,
                 'dependencies' => [
-                    [ 'key' => 'reverse_withdrawal.reverse_withdrawal_section.billing_type', 'value' => 'by_month', 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '===' ],
-                    [ 'key' => 'reverse_withdrawal.reverse_withdrawal_section.billing_type', 'value' => 'by_amount', 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '===' ],
+                    [
+						'key' => 'reverse_withdrawal.reverse_withdrawal_section.billing_type',
+						'value' => 'by_month',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'show',
+						'comparison' => '===',
+					],
+                    [
+						'key' => 'reverse_withdrawal.reverse_withdrawal_section.billing_type',
+						'value' => 'by_amount',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'hide',
+						'comparison' => '===',
+					],
                 ],
             ],
             [
@@ -666,9 +880,18 @@ class SettingsSchema {
                 'description' => esc_html__( 'Choose actions to take when the grace period expires and payment remains outstanding.', 'dokan-lite' ),
                 'default'     => [ 'enable_catalog_mode' ],
                 'options'     => [
-                    [ 'title' => esc_html__( 'Disable Add to Cart Button', 'dokan-lite' ), 'value' => 'enable_catalog_mode' ],
-                    [ 'title' => esc_html__( 'Hide Withdraw Menu', 'dokan-lite' ), 'value' => 'hide_withdraw_menu' ],
-                    [ 'title' => esc_html__( 'Make Vendor Status Inactive', 'dokan-lite' ), 'value' => 'status_inactive' ],
+                    [
+						'title' => esc_html__( 'Disable Add to Cart Button', 'dokan-lite' ),
+						'value' => 'enable_catalog_mode',
+					],
+                    [
+						'title' => esc_html__( 'Hide Withdraw Menu', 'dokan-lite' ),
+						'value' => 'hide_withdraw_menu',
+					],
+                    [
+						'title' => esc_html__( 'Make Vendor Status Inactive', 'dokan-lite' ),
+						'value' => 'status_inactive',
+					],
                 ],
             ],
             [
@@ -679,8 +902,14 @@ class SettingsSchema {
                 'title'         => esc_html__( 'Display Notice During Grace Period', 'dokan-lite' ),
                 'description'   => esc_html__( 'Show a payment reminder notification on the vendor dashboard during the grace period.', 'dokan-lite' ),
                 'default'       => 'on',
-                'enable_state'  => [ 'label' => esc_html__( 'Enabled', 'dokan-lite' ), 'value' => 'on' ],
-                'disable_state' => [ 'label' => esc_html__( 'Disabled', 'dokan-lite' ), 'value' => 'off' ],
+                'enable_state'  => [
+					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state' => [
+					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+					'value' => 'off',
+				],
             ],
         ];
     }
@@ -699,7 +928,6 @@ class SettingsSchema {
                 'description' => esc_html__( 'Configure vendor-related settings and capabilities.', 'dokan-lite' ),
                 'icon'        => 'Users',
                 'priority'    => 400,
-                'storage_key' => 'dokan_settings_vendor',
             ],
 
             // === SubPage: Vendor Onboarding ===
@@ -731,8 +959,14 @@ class SettingsSchema {
                 'description'   => esc_html__( 'Add Address Fields on the Vendor Registration form.', 'dokan-lite' ),
                 'tooltip'       => esc_html__( 'Add Address Fields on the Vendor Registration form.', 'dokan-lite' ),
                 'default'       => 'on',
-                'enable_state'  => [ 'label' => esc_html__( 'Enabled', 'dokan-lite' ), 'value' => 'on' ],
-                'disable_state' => [ 'label' => esc_html__( 'Disabled', 'dokan-lite' ), 'value' => 'off' ],
+                'enable_state'  => [
+					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state' => [
+					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+					'value' => 'off',
+				],
             ],
 
             // === SubPage: Vendor Capabilities ===
@@ -758,8 +992,14 @@ class SettingsSchema {
                 'description'   => esc_html__( 'Add new product in single page view.', 'dokan-lite' ),
                 'tooltip'       => esc_html__( 'If disabled, instead of a single add product page it will open a pop up window or vendor will redirect to product page when adding new product.', 'dokan-lite' ),
                 'default'       => 'off',
-                'enable_state'  => [ 'label' => esc_html__( 'Enabled', 'dokan-lite' ), 'value' => 'on' ],
-                'disable_state' => [ 'label' => esc_html__( 'Disabled', 'dokan-lite' ), 'value' => 'off' ],
+                'enable_state'  => [
+					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state' => [
+					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+					'value' => 'off',
+				],
             ],
             [
                 'id'            => 'product_popup',
@@ -770,11 +1010,31 @@ class SettingsSchema {
                 'description'   => esc_html__( 'Add new product in popup view.', 'dokan-lite' ),
                 'tooltip'       => esc_html__( 'If disabled, instead of a pop up window vendor will redirect to product page when adding new product.', 'dokan-lite' ),
                 'default'       => 'on',
-                'enable_state'  => [ 'label' => esc_html__( 'Enabled', 'dokan-lite' ), 'value' => 'on' ],
-                'disable_state' => [ 'label' => esc_html__( 'Disabled', 'dokan-lite' ), 'value' => 'off' ],
+                'enable_state'  => [
+					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state' => [
+					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+					'value' => 'off',
+				],
                 'dependencies'  => [
-                    [ 'key' => 'vendor_capabilities.vendor_capabilities.one_page_creation', 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '!==' ],
-                    [ 'key' => 'vendor_capabilities.vendor_capabilities.one_page_creation', 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '===' ],
+                    [
+						'key' => 'vendor_capabilities.vendor_capabilities.one_page_creation',
+						'value' => 'on',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'show',
+						'comparison' => '!==',
+					],
+                    [
+						'key' => 'vendor_capabilities.vendor_capabilities.one_page_creation',
+						'value' => 'on',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'hide',
+						'comparison' => '===',
+					],
                 ],
             ],
             [
@@ -786,8 +1046,14 @@ class SettingsSchema {
                 'description'   => esc_html__( 'Allow vendor to update order status.', 'dokan-lite' ),
                 'tooltip'       => esc_html__( 'Checking this will enable sellers to change the order status. If unchecked, only admin can change the order status.', 'dokan-lite' ),
                 'default'       => 'on',
-                'enable_state'  => [ 'label' => esc_html__( 'Enabled', 'dokan-lite' ), 'value' => 'on' ],
-                'disable_state' => [ 'label' => esc_html__( 'Disabled', 'dokan-lite' ), 'value' => 'off' ],
+                'enable_state'  => [
+					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state' => [
+					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+					'value' => 'off',
+				],
             ],
             [
                 'id'            => 'select_any_category',
@@ -797,8 +1063,14 @@ class SettingsSchema {
                 'title'         => esc_html__( 'Select any category', 'dokan-lite' ),
                 'description'   => esc_html__( 'Allow vendors to select any category while creating/editing products.', 'dokan-lite' ),
                 'default'       => 'off',
-                'enable_state'  => [ 'label' => esc_html__( 'Enabled', 'dokan-lite' ), 'value' => 'on' ],
-                'disable_state' => [ 'label' => esc_html__( 'Disabled', 'dokan-lite' ), 'value' => 'off' ],
+                'enable_state'  => [
+					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state' => [
+					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+					'value' => 'off',
+				],
             ],
         ];
     }
@@ -817,7 +1089,6 @@ class SettingsSchema {
                 'description' => esc_html__( 'Configure dashboard menu settings, visibility, and customization options.', 'dokan-lite' ),
                 'icon'        => 'PanelsRightBottom',
                 'priority'    => 700,
-                'storage_key' => 'dokan_settings_appearance',
             ],
             [
                 'id'          => 'store',
@@ -871,8 +1142,14 @@ class SettingsSchema {
                 ),
                 'default'        => 'off',
                 'image_url'      => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/social-onboarding/google.svg',
-                'enable_state'   => [ 'label' => esc_html__( 'Enable', 'dokan-lite' ), 'value' => 'on' ],
-                'disable_state'  => [ 'label' => esc_html__( 'Disable', 'dokan-lite' ), 'value' => 'off' ],
+                'enable_state'   => [
+					'label' => esc_html__( 'Enable', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state'  => [
+					'label' => esc_html__( 'Disable', 'dokan-lite' ),
+					'value' => 'off',
+				],
             ],
             [
                 'id'             => 'recaptcha_info',
@@ -886,8 +1163,22 @@ class SettingsSchema {
                     'https://www.google.com/recaptcha/admin/create'
                 ),
                 'dependencies'   => [
-                    [ 'key' => 'store.google_recaptcha.google_recaptcha_settings.recaptcha', 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '===' ],
-                    [ 'key' => 'store.google_recaptcha.google_recaptcha_settings.recaptcha', 'value' => 'off', 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '===' ],
+                    [
+						'key' => 'store.google_recaptcha.google_recaptcha_settings.recaptcha',
+						'value' => 'on',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'show',
+						'comparison' => '===',
+					],
+                    [
+						'key' => 'store.google_recaptcha.google_recaptcha_settings.recaptcha',
+						'value' => 'off',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'hide',
+						'comparison' => '===',
+					],
                 ],
             ],
             [
@@ -899,8 +1190,22 @@ class SettingsSchema {
                 'placeholder'    => esc_html__( 'Site Key', 'dokan-lite' ),
                 'tooltip'        => esc_html__( 'Insert Google reCAPTCHA v3 site key.', 'dokan-lite' ),
                 'dependencies'   => [
-                    [ 'key' => 'store.google_recaptcha.google_recaptcha_settings.recaptcha', 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '===' ],
-                    [ 'key' => 'store.google_recaptcha.google_recaptcha_settings.recaptcha', 'value' => 'off', 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '===' ],
+                    [
+						'key' => 'store.google_recaptcha.google_recaptcha_settings.recaptcha',
+						'value' => 'on',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'show',
+						'comparison' => '===',
+					],
+                    [
+						'key' => 'store.google_recaptcha.google_recaptcha_settings.recaptcha',
+						'value' => 'off',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'hide',
+						'comparison' => '===',
+					],
                 ],
             ],
             [
@@ -912,8 +1217,22 @@ class SettingsSchema {
                 'placeholder'    => esc_html__( 'Secret Key', 'dokan-lite' ),
                 'tooltip'        => esc_html__( 'Insert Google reCAPTCHA v3 secret key.', 'dokan-lite' ),
                 'dependencies'   => [
-                    [ 'key' => 'store.google_recaptcha.google_recaptcha_settings.recaptcha', 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '===' ],
-                    [ 'key' => 'store.google_recaptcha.google_recaptcha_settings.recaptcha', 'value' => 'off', 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '===' ],
+                    [
+						'key' => 'store.google_recaptcha.google_recaptcha_settings.recaptcha',
+						'value' => 'on',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'show',
+						'comparison' => '===',
+					],
+                    [
+						'key' => 'store.google_recaptcha.google_recaptcha_settings.recaptcha',
+						'value' => 'off',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'hide',
+						'comparison' => '===',
+					],
                 ],
             ],
 
@@ -931,8 +1250,14 @@ class SettingsSchema {
                 'title'         => esc_html__( 'Show Contact Form on Store Page', 'dokan-lite' ),
                 'description'   => esc_html__( 'Display a vendor contact form in the store sidebar', 'dokan-lite' ),
                 'default'       => 'on',
-                'enable_state'  => [ 'label' => esc_html__( 'Enable', 'dokan-lite' ), 'value' => 'on' ],
-                'disable_state' => [ 'label' => esc_html__( 'Disable', 'dokan-lite' ), 'value' => 'off' ],
+                'enable_state'  => [
+					'label' => esc_html__( 'Enable', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state' => [
+					'label' => esc_html__( 'Disable', 'dokan-lite' ),
+					'value' => 'off',
+				],
             ],
 
             // Banner Dimension
@@ -949,7 +1274,10 @@ class SettingsSchema {
                 'title'         => esc_html__( 'Store Banner Dimension', 'dokan-lite' ),
                 'first_prefix'  => esc_html__( 'Width', 'dokan-lite' ),
                 'second_prefix' => esc_html__( 'Height', 'dokan-lite' ),
-                'default'       => [ 'first' => 625, 'second' => 300 ],
+                'default'       => [
+					'first' => 625,
+					'second' => 300,
+				],
             ],
 
             // Store Template
@@ -968,10 +1296,26 @@ class SettingsSchema {
                 'customize_variant' => 'template',
                 'default'           => 'default',
                 'options'           => [
-                    [ 'title' => esc_html__( 'Template 1', 'dokan-lite' ), 'value' => 'default', 'image' => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/store/store-page-template-one.svg' ],
-                    [ 'title' => esc_html__( 'Template 2', 'dokan-lite' ), 'value' => 'layout1', 'image' => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/store/store-page-template-two.svg' ],
-                    [ 'title' => esc_html__( 'Template 3', 'dokan-lite' ), 'value' => 'layout2', 'image' => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/store/store-page-template-three.svg' ],
-                    [ 'title' => esc_html__( 'Template 4', 'dokan-lite' ), 'value' => 'layout3', 'image' => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/store/store-page-template-four.svg' ],
+                    [
+						'title' => esc_html__( 'Template 1', 'dokan-lite' ),
+						'value' => 'default',
+						'image' => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/store/store-page-template-one.svg',
+					],
+                    [
+						'title' => esc_html__( 'Template 2', 'dokan-lite' ),
+						'value' => 'layout1',
+						'image' => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/store/store-page-template-two.svg',
+					],
+                    [
+						'title' => esc_html__( 'Template 3', 'dokan-lite' ),
+						'value' => 'layout2',
+						'image' => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/store/store-page-template-three.svg',
+					],
+                    [
+						'title' => esc_html__( 'Template 4', 'dokan-lite' ),
+						'value' => 'layout3',
+						'image' => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/store/store-page-template-four.svg',
+					],
                 ],
             ],
 
@@ -989,8 +1333,14 @@ class SettingsSchema {
                 'title'         => esc_html__( 'Store Opening Closing Time Widget', 'dokan-lite' ),
                 'description'   => esc_html__( 'Enable store opening & closing time widget in the store sidebar', 'dokan-lite' ),
                 'default'       => 'on',
-                'enable_state'  => [ 'label' => esc_html__( 'Enable', 'dokan-lite' ), 'value' => 'on' ],
-                'disable_state' => [ 'label' => esc_html__( 'Disable', 'dokan-lite' ), 'value' => 'off' ],
+                'enable_state'  => [
+					'label' => esc_html__( 'Enable', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state' => [
+					'label' => esc_html__( 'Disable', 'dokan-lite' ),
+					'value' => 'off',
+				],
             ],
 
             // Store Sidebar
@@ -1007,8 +1357,14 @@ class SettingsSchema {
                 'title'         => esc_html__( 'Store Sidebar From Theme', 'dokan-lite' ),
                 'description'   => esc_html__( "Apply main theme's sidebar styling to vendor stores for a consistent look", 'dokan-lite' ),
                 'default'       => 'off',
-                'enable_state'  => [ 'label' => esc_html__( 'Enable', 'dokan-lite' ), 'value' => 'on' ],
-                'disable_state' => [ 'label' => esc_html__( 'Disable', 'dokan-lite' ), 'value' => 'off' ],
+                'enable_state'  => [
+					'label' => esc_html__( 'Enable', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state' => [
+					'label' => esc_html__( 'Disable', 'dokan-lite' ),
+					'value' => 'off',
+				],
             ],
 
             // Vendor Info Visibility
@@ -1040,8 +1396,14 @@ class SettingsSchema {
                 'title'         => esc_html__( 'Dokan font-awesome Functionality', 'dokan-lite' ),
                 'description'   => esc_html__( "If disabled then Dokan font-awesome library won't be loaded in frontend.", 'dokan-lite' ),
                 'default'       => 'off',
-                'enable_state'  => [ 'label' => esc_html__( 'Enable', 'dokan-lite' ), 'value' => 'on' ],
-                'disable_state' => [ 'label' => esc_html__( 'Disable', 'dokan-lite' ), 'value' => 'off' ],
+                'enable_state'  => [
+					'label' => esc_html__( 'Enable', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state' => [
+					'label' => esc_html__( 'Disable', 'dokan-lite' ),
+					'value' => 'off',
+				],
             ],
 
             // Single Product Preview
@@ -1094,8 +1456,14 @@ class SettingsSchema {
                 'section_id'    => 'privacy_settings',
                 'title'         => esc_html__( 'Privacy Policy', 'dokan-lite' ),
                 'default'       => 'on',
-                'enable_state'  => [ 'label' => esc_html__( 'Enabled', 'dokan-lite' ), 'value' => 'on' ],
-                'disable_state' => [ 'label' => esc_html__( 'Disabled', 'dokan-lite' ), 'value' => 'off' ],
+                'enable_state'  => [
+					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state' => [
+					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+					'value' => 'off',
+				],
             ],
             [
                 'id'         => 'privacy_policy_page',
@@ -1130,8 +1498,14 @@ class SettingsSchema {
                 'title'         => esc_html__( 'Admin Area Access', 'dokan-lite' ),
                 'description'   => esc_html__( 'Prevent vendors from accessing the WordPress admin dashboard.', 'dokan-lite' ),
                 'default'       => 'on',
-                'enable_state'  => [ 'label' => esc_html__( 'Enabled', 'dokan-lite' ), 'value' => 'on' ],
-                'disable_state' => [ 'label' => esc_html__( 'Disabled', 'dokan-lite' ), 'value' => 'off' ],
+                'enable_state'  => [
+					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state' => [
+					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+					'value' => 'off',
+				],
             ],
             [
                 'id'         => 'data_clear_section',
@@ -1148,8 +1522,14 @@ class SettingsSchema {
                 'default'         => 'off',
                 'switcher_type'   => 'error',
                 'should_confirm'  => true,
-                'enable_state'    => [ 'label' => esc_html__( 'Clear Data', 'dokan-lite' ), 'value' => 'on' ],
-                'disable_state'   => [ 'label' => esc_html__( 'Disabled', 'dokan-lite' ), 'value' => 'off' ],
+                'enable_state'    => [
+					'label' => esc_html__( 'Clear Data', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state'   => [
+					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+					'value' => 'off',
+				],
                 'confirm_modal'   => [
                     'title'             => esc_html__( 'Are you sure to delete all data?', 'dokan-lite' ),
                     'confirmationTitle' => esc_html__( 'Are you sure to delete all data?', 'dokan-lite' ),
@@ -1180,7 +1560,6 @@ class SettingsSchema {
                 'description' => esc_html__( 'Configure AI-powered features to enhance your marketplace experience.', 'dokan-lite' ),
                 'icon'        => 'Sparkles',
                 'priority'    => 300,
-                'storage_key' => 'dokan_settings_ai_assist',
             ],
             [
                 'id'          => 'product_generation',
@@ -1204,8 +1583,14 @@ class SettingsSchema {
                 'title'         => esc_html__( 'Product Info Generate', 'dokan-lite' ),
                 'description'   => esc_html__( 'Let vendors generate product info by AI.', 'dokan-lite' ),
                 'default'       => 'off',
-                'enable_state'  => [ 'label' => esc_html__( 'Enabled', 'dokan-lite' ), 'value' => 'on' ],
-                'disable_state' => [ 'label' => esc_html__( 'Disabled', 'dokan-lite' ), 'value' => 'off' ],
+                'enable_state'  => [
+					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state' => [
+					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+					'value' => 'off',
+				],
             ],
             [
                 'id'           => 'product_info_engine',
@@ -1217,8 +1602,22 @@ class SettingsSchema {
                 'default'      => 'openai',
                 'options'      => [], // Populated dynamically from registered AI providers
                 'dependencies' => [
-                    [ 'key' => 'product_generation.product_image_section.product_info_generate', 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '===' ],
-                    [ 'key' => 'product_generation.product_image_section.product_info_generate', 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '!==' ],
+                    [
+						'key' => 'product_generation.product_image_section.product_info_generate',
+						'value' => 'on',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'show',
+						'comparison' => '===',
+					],
+                    [
+						'key' => 'product_generation.product_image_section.product_info_generate',
+						'value' => 'off',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'hide',
+						'comparison' => '!==',
+					],
                 ],
             ],
             // Note: Per-provider FieldGroups ({provider}_api_info_group) with api_info, api_notice,
@@ -1234,7 +1633,10 @@ class SettingsSchema {
                 // Add provider options to engine select
                 $options = [];
                 foreach ( $text_providers as $provider_id => $provider ) {
-                    $options[] = [ 'title' => $provider->get_title(), 'value' => $provider_id ];
+                    $options[] = [
+						'title' => $provider->get_title(),
+						'value' => $provider_id,
+					];
                 }
                 // Update the engine select options
                 foreach ( $elements as &$el ) {
@@ -1255,8 +1657,22 @@ class SettingsSchema {
                         'type'         => 'fieldgroup',
                         'section_id'   => 'product_image_section',
                         'dependencies' => [
-                            [ 'key' => $dep_engine, 'value' => $provider_id, 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '===' ],
-                            [ 'key' => $dep_engine, 'value' => $provider_id, 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '!==' ],
+                            [
+								'key' => $dep_engine,
+								'value' => $provider_id,
+								'to_self' => true,
+								'attribute' => 'display',
+								'effect' => 'show',
+								'comparison' => '===',
+							],
+                            [
+								'key' => $dep_engine,
+								'value' => $provider_id,
+								'to_self' => true,
+								'attribute' => 'display',
+								'effect' => 'hide',
+								'comparison' => '!==',
+							],
                         ],
                     ];
                     $elements[] = [
@@ -1271,8 +1687,22 @@ class SettingsSchema {
                         ),
                         'image_url'      => $provider->get_image_url(),
                         'dependencies'   => [
-                            [ 'key' => $dep_generate, 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '===' ],
-                            [ 'key' => $dep_generate, 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '!==' ],
+                            [
+								'key' => $dep_generate,
+								'value' => 'on',
+								'to_self' => true,
+								'attribute' => 'display',
+								'effect' => 'show',
+								'comparison' => '===',
+							],
+                            [
+								'key' => $dep_generate,
+								'value' => 'on',
+								'to_self' => true,
+								'attribute' => 'display',
+								'effect' => 'hide',
+								'comparison' => '!==',
+							],
                         ],
                     ];
                     $elements[] = [
@@ -1292,8 +1722,22 @@ class SettingsSchema {
                         ),
                         'link_url'       => $provider->get_api_key_url(),
                         'dependencies'   => [
-                            [ 'key' => $dep_generate, 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '===' ],
-                            [ 'key' => $dep_generate, 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '!==' ],
+                            [
+								'key' => $dep_generate,
+								'value' => 'on',
+								'to_self' => true,
+								'attribute' => 'display',
+								'effect' => 'show',
+								'comparison' => '===',
+							],
+                            [
+								'key' => $dep_generate,
+								'value' => 'on',
+								'to_self' => true,
+								'attribute' => 'display',
+								'effect' => 'hide',
+								'comparison' => '!==',
+							],
                         ],
                     ];
                     $elements[] = [
@@ -1308,8 +1752,22 @@ class SettingsSchema {
                             $provider->get_title()
                         ),
                         'dependencies'   => [
-                            [ 'key' => $dep_generate, 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '===' ],
-                            [ 'key' => $dep_generate, 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '!==' ],
+                            [
+								'key' => $dep_generate,
+								'value' => 'on',
+								'to_self' => true,
+								'attribute' => 'display',
+								'effect' => 'show',
+								'comparison' => '===',
+							],
+                            [
+								'key' => $dep_generate,
+								'value' => 'on',
+								'to_self' => true,
+								'attribute' => 'display',
+								'effect' => 'hide',
+								'comparison' => '!==',
+							],
                         ],
                     ];
 
@@ -1317,7 +1775,10 @@ class SettingsSchema {
                     $model_options = [];
                     $models = $provider->get_models_by_type( \WeDevs\Dokan\Intelligence\Services\Model::SUPPORTS_TEXT );
                     foreach ( $models as $model_id => $model ) {
-                        $model_options[] = [ 'title' => $model->get_title(), 'value' => $model_id ];
+                        $model_options[] = [
+							'title' => $model->get_title(),
+							'value' => $model_id,
+						];
                     }
 
                     $elements[] = [
@@ -1330,8 +1791,22 @@ class SettingsSchema {
                         'default'        => $provider->get_default_model_id(),
                         'options'        => $model_options,
                         'dependencies'   => [
-                            [ 'key' => $dep_generate, 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '===' ],
-                            [ 'key' => $dep_generate, 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '!==' ],
+                            [
+								'key' => $dep_generate,
+								'value' => 'on',
+								'to_self' => true,
+								'attribute' => 'display',
+								'effect' => 'show',
+								'comparison' => '===',
+							],
+                            [
+								'key' => $dep_generate,
+								'value' => 'on',
+								'to_self' => true,
+								'attribute' => 'display',
+								'effect' => 'hide',
+								'comparison' => '!==',
+							],
                         ],
                     ];
                 }
