@@ -11,7 +11,6 @@ export { default as DokanModal } from './modals/DokanModal';
 export { default as SortableList } from './sortable-list';
 export { default as ListEmpty } from './dataviews/ListEmpty';
 
-export * from './fields';
 export { default as Forbidden } from './../layout/403';
 export { default as NotFound } from './../layout/404';
 export { default as InternalError } from './../layout/500';
