@@ -142,7 +142,7 @@ class Manager {
      *
      * @param WC_Data $data
      * @param  \WP_REST_Request $request
-     * @param  Boolean $creating
+     * @param  bool $creating
      *
      * @return void
      */
@@ -188,11 +188,6 @@ class Manager {
      * @return array Modified controller map
      */
     public function register_export_controllers( array $controller_map ): array {
-//        // Ensure the WithdrawExportController class is loaded for background processing
-//        if ( ! class_exists( '\WeDevs\Dokan\REST\WithdrawExportController' ) ) {
-//            require_once DOKAN_DIR . '/includes/REST/WithdrawExportController.php';
-//        }
-
         $controller_map['withdraws'] = '\WeDevs\Dokan\REST\WithdrawExportController';
 
         return $controller_map;
@@ -236,6 +231,7 @@ class Manager {
                 DOKAN_DIR . '/includes/REST/StoreController.php'                   => '\WeDevs\Dokan\REST\StoreController',
                 DOKAN_DIR . '/includes/REST/ProductController.php'                 => '\WeDevs\Dokan\REST\ProductController',
                 DOKAN_DIR . '/includes/REST/ProductControllerV2.php'               => '\WeDevs\Dokan\REST\ProductControllerV2',
+                DOKAN_DIR . '/includes/REST/ProductControllerV3.php'               => '\WeDevs\Dokan\REST\ProductControllerV3',
                 DOKAN_DIR . '/includes/REST/ProductAttributeController.php'        => '\WeDevs\Dokan\REST\ProductAttributeController',
                 DOKAN_DIR . '/includes/REST/ProductAttributeTermsController.php'   => '\WeDevs\Dokan\REST\ProductAttributeTermsController',
                 DOKAN_DIR . '/includes/REST/OrderController.php'                   => '\WeDevs\Dokan\REST\OrderController',
@@ -257,8 +253,9 @@ class Manager {
                 DOKAN_DIR . '/includes/REST/AdminOnboardingController.php'         => '\WeDevs\Dokan\REST\AdminOnboardingController',
                 DOKAN_DIR . '/includes/REST/VendorProductCategoriesController.php' => '\WeDevs\Dokan\REST\VendorProductCategoriesController',
                 DOKAN_DIR . '/includes/REST/AdminDashboardStatsController.php'     => '\WeDevs\Dokan\REST\AdminDashboardStatsController',
-                DOKAN_DIR . '/includes/REST/WithdrawExportController.php'        => '\WeDevs\Dokan\REST\WithdrawExportController',
-                DOKAN_DIR . '/includes/REST/ExportController.php'                => '\WeDevs\Dokan\REST\ExportController',
+                DOKAN_DIR . '/includes/REST/WithdrawExportController.php'          => '\WeDevs\Dokan\REST\WithdrawExportController',
+                DOKAN_DIR . '/includes/REST/ExportController.php'                  => '\WeDevs\Dokan\REST\ExportController',
+                DOKAN_DIR . '/includes/REST/AdminExtensionsController.php'         => '\WeDevs\Dokan\REST\AdminExtensionsController',
             )
         );
     }

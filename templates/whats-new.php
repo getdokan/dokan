@@ -4,6 +4,166 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.0.1',
+        'released' => '2026-05-05',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Added an admin-controllable vendor registration option on the My Account page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added RTL support for the new vendor dashboard UI.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Properly decode HTML entities in admin settings labels.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.0.0',
+        'released' => '2026-04-28',
+        'changes'  => [
+            'New Feature' => [
+                [
+                    'title'       => 'Added a dedicated vendor onboarding page with a separate registration flow.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Introduced the new Product Form Manager for the vendor dashboard.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added a "Get Support" button to the admin dashboard header.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added a new Extensions page for Dokan in the admin panel.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Converted the admin Products list to React with Plugin UI.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Converted the vendor dashboard Orders list to React with Plugin UI.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Migrated the vendor dashboard Reverse Withdraw page to React with Plugin UI.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Migrated the admin Withdraw Requests page to Plugin UI with tabs.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added @wedevs/plugin-ui dependency and integrate the DataViews component as the unified table system.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Migrated Dokan UI to Tailwind CSS v4 with a consolidated shared component bundle.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Rebuilt the admin Tools / Dummy Data section in React.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added legacy compatibility support for the RFQ (Request for Quote) admin panel.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated the Vendor Announcement panel UX.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added additional tax fields and new order types to the Dokan order stats table.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added OpenAI model options to the latest ones for AI Assist settings.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added a legacy switcher to the Product Form for backward compatibility.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Used ShortContent for product name display and widen the Products column.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Resolved Product Form compatibility issues with WordPress v6.8.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Resolved Plugin UI style conflicts between v10 and v14.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Corrected filter border clipping and the WithdrawView layout type.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Improved UI styles and navigation URL handling across new dashboard pages.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Corrected the balance display on the Reverse Withdraw page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Corrected the back-link URL on the order details page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed the active state of vendor sidebar submenu items.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 4.3.3',
+        'released' => '2026-03-31',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Manage changelog notification dot visibility for Dokan Lite and Pro based on new version availability.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Add confirmation modal for order status change actions in the vendor dashboard order listing.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Update the Pro Features admin menu color to highlight it with the brand color.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Add the missing alt attribute to the store header banner image on the store listing page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Display a warning message when admin tries to approve a vendor withdrawal request exceeding the available balance.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 4.3.2',
         'released' => '2026-03-13',
         'changes'  => [

@@ -327,7 +327,7 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type, $exclude_pr
             // @codingStandardsIgnoreStart
             $results = $wpdb->get_results(
                 $wpdb->prepare(
-                    "SELECT p.post_status, COUNT( * ) AS num_posts
+                    "SELECT p.post_status, COUNT(DISTINCT p.ID) AS num_posts
                     FROM {$wpdb->prefix}posts as p INNER JOIN {$wpdb->prefix}postmeta as pm ON p.ID = pm.post_id
                     WHERE p.post_type = %s
                     AND p.post_author = %d
@@ -723,7 +723,7 @@ function dokan_post_input_box( $post_id, $meta_key, $attr = [], $type = 'text' )
 function dokan_get_post_status( $status = '' ) {
     $statuses = apply_filters(
         'dokan_get_post_status', [
-            'publish' => __( 'Online', 'dokan-lite' ),
+            'publish' => __( 'Publish', 'dokan-lite' ),
             'draft'   => __( 'Draft', 'dokan-lite' ),
             'pending' => __( 'Pending Review', 'dokan-lite' ),
             'future'  => __( 'Scheduled', 'dokan-lite' ),
@@ -1015,14 +1015,25 @@ function dokan_edit_product_url( $product, bool $is_new_product = false ) {
         $product = new WC_Product();
     }
 
-    $url = add_query_arg(
-        [
-            'product_id'                => $is_new_product ? 0 : $product->get_id(),
-            'action'                    => 'edit',
-            '_dokan_edit_product_nonce' => wp_create_nonce( 'dokan_edit_product_nonce' ),
-        ],
-        dokan_get_navigation_url( 'products' )
-    );
+    $product_id      = $is_new_product ? 0 : $product->get_id();
+    $legacy_switcher = dokan_get_container()->get( \WeDevs\Dokan\Admin\Dashboard\LegacySwitcher::class );
+
+    // Resolve the user whose editor preference should drive the URL — prefer the
+    // product author so email/admin contexts honor the vendor's choice.
+    $user_id = $product_id ? (int) get_post_field( 'post_author', $product_id ) : get_current_user_id();
+
+    if ( $legacy_switcher->is_product_editor_legacy_preferred( $user_id ) ) {
+        $url = add_query_arg(
+            [
+                'product_id'                => $product_id,
+                'action'                    => 'edit',
+                '_dokan_edit_product_nonce' => wp_create_nonce( 'dokan_edit_product_nonce' ),
+            ],
+            dokan_get_navigation_url( 'products' )
+        );
+    } else {
+        $url = $legacy_switcher->get_new_product_editor_url( $product_id );
+    }
 
     return apply_filters( 'dokan_get_edit_product_url', $url, $product );
 }

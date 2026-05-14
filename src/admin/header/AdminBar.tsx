@@ -17,6 +17,7 @@ import {
     Box,
     Circle,
 } from 'lucide-react';
+import { Slot } from '@wordpress/components';
 
 // Define the mapping internally
 const lucideIconMapping = {
@@ -92,6 +93,14 @@ const AdminBar = () => {
                     </a>
                 ) }
             </div>
+
+            { /* Get Support button slot — filled via registerPlugin */ }
+            <Slot
+                name="dokan-admin-header-before-info-section"
+                fillProps={ {
+                    header_info: dokanAdminPanelHeaderSettings?.header_info,
+                } }
+            />
 
             { /* Help button */ }
             <div

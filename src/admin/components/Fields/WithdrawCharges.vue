@@ -174,7 +174,7 @@ export default {
 
         .wm-methods-box {
             border-bottom: 1px solid #f3f4f6;
-            padding: 0 30px;
+            padding: 10px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;

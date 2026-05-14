@@ -159,7 +159,7 @@ const AdminFilter = ( {
                                             'Remove filter',
                                             'dokan-lite'
                                         ) }
-                                        className="absolute right-1 top-1/2 -translate-y-1/2 inline-flex items-center justify-center w-6 h-6 rounded-full bg-white text-[#828282] hover:text-[#7047EB] z-10"
+                                        className="absolute right-1 top-1/2 inline-flex items-center justify-center w-6 h-6 rounded-full bg-white text-[#828282] hover:text-[#7047EB] z-10 mt-[-12px]"
                                         onClick={ () =>
                                             handleRemoveFilter( id )
                                         }
@@ -209,7 +209,7 @@ const AdminFilter = ( {
                         { availableFilters.map( ( f ) => (
                             <button
                                 key={ f.id }
-                                className="w-full flex items-center gap-3 px-4 py-2 text-sm text-[#828282] hover:bg-[#EFEAFF] hover:text-[#7047EB] transition-all duration-200 border-none bg-transparent group"
+                                className="w-full flex items-center gap-3 px-4 py-2 text-sm text-[#828282] hover:bg-[#EFEAFF] hover:text-[#7047EB] transition-all duration-200 border-none bg-transparent group !outline-transparent"
                                 onClick={ () => handleAddFilter( f.id ) }
                             >
                                 { f.label }

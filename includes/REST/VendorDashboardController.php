@@ -387,41 +387,41 @@ class VendorDashboardController extends \WP_REST_Controller {
         $is_text_configured = $manager->is_configured();
         $is_image_configured = $is_enabled && $manager->is_configured( Model::SUPPORTS_IMAGE );
 
-        return rest_ensure_response(
-            [
-                'site_title'            => get_bloginfo( 'name' ),
-                'tagline'               => get_bloginfo( 'description' ),
-                'site_icon'             => $favicon,
-                'currency'              => get_woocommerce_currency(),
-                'currency_options'      => $currency_options,
-                'currency_position'     => get_option( 'woocommerce_currency_pos' ),
-                'currency_symbol'       => get_woocommerce_currency_symbol(),
-                'decimal_separator'     => wc_get_price_decimal_separator(),
-                'thousand_separator'    => wc_get_price_thousand_separator(),
-                'decimal_point'         => wc_get_price_decimals(),
-                'tax_calculation'       => get_option( 'woocommerce_calc_taxes' ),
-                'tax_display_cart'      => get_option( 'woocommerce_tax_display_cart' ),
-                'tax_round_at_subtotal' => get_option( 'woocommerce_tax_round_at_subtotal' ),
-                'coupon_enabled'        => get_option( 'woocommerce_enable_coupons' ),
-                'coupon_compound'       => get_option( 'woocommerce_calc_discounts_sequentially' ),
-                'weight_unit'           => get_option( 'woocommerce_weight_unit' ),
-                'dimension_unit'        => get_option( 'woocommerce_dimension_unit' ),
-                'product_reviews'       => get_option( 'woocommerce_enable_reviews' ),
-                'product_ratings'       => get_option( 'woocommerce_enable_review_rating' ),
-                'stock_management'      => get_option( 'woocommerce_manage_stock' ),
-                'timezone'              => wp_timezone_string(),
-                'date_format'           => get_option( 'date_format' ),
-                'time_format'           => get_option( 'time_format' ),
-                'language'              => get_locale(),
-                'week_start_on'         => get_option( 'start_of_week' ),
-                'store_color'           => dokan_get_option( 'store_color_pallete', 'dokan_colors', [] ),
-                'timezone_utc'          => $timezone_utc,
-                'ai_settings'           => [
-                    'ai_text_enable'    => $is_text_configured,
-                    'ai_image_enable'   => $is_image_configured,
-                ],
-            ]
-        );
+        $preferences = [
+            'site_title'            => get_bloginfo( 'name' ),
+            'tagline'               => get_bloginfo( 'description' ),
+            'site_icon'             => $favicon,
+            'currency'              => get_woocommerce_currency(),
+            'currency_options'      => $currency_options,
+            'currency_position'     => get_option( 'woocommerce_currency_pos' ),
+            'currency_symbol'       => get_woocommerce_currency_symbol(),
+            'decimal_separator'     => wc_get_price_decimal_separator(),
+            'thousand_separator'    => wc_get_price_thousand_separator(),
+            'decimal_point'         => wc_get_price_decimals(),
+            'tax_calculation'       => get_option( 'woocommerce_calc_taxes' ),
+            'tax_display_cart'      => get_option( 'woocommerce_tax_display_cart' ),
+            'tax_round_at_subtotal' => get_option( 'woocommerce_tax_round_at_subtotal' ),
+            'coupon_enabled'        => get_option( 'woocommerce_enable_coupons' ),
+            'coupon_compound'       => get_option( 'woocommerce_calc_discounts_sequentially' ),
+            'weight_unit'           => get_option( 'woocommerce_weight_unit' ),
+            'dimension_unit'        => get_option( 'woocommerce_dimension_unit' ),
+            'product_reviews'       => get_option( 'woocommerce_enable_reviews' ),
+            'product_ratings'       => get_option( 'woocommerce_enable_review_rating' ),
+            'stock_management'      => get_option( 'woocommerce_manage_stock' ),
+            'timezone'              => wp_timezone_string(),
+            'date_format'           => get_option( 'date_format' ),
+            'time_format'           => get_option( 'time_format' ),
+            'language'              => get_locale(),
+            'week_start_on'         => get_option( 'start_of_week' ),
+            'store_color'           => dokan_get_option( 'store_color_pallete', 'dokan_colors', [] ),
+            'timezone_utc'          => $timezone_utc,
+            'ai_settings'           => [
+                'ai_text_enable'    => $is_text_configured,
+                'ai_image_enable'   => $is_image_configured,
+            ],
+        ];
+
+        return rest_ensure_response( apply_filters( 'dokan_vendor_dashboard_preferences', $preferences ) );
     }
 
     /**

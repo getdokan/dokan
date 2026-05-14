@@ -109,6 +109,22 @@ test.describe('setup dokan test site', () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.installPlugin(pluginPath));
     });
 
+    test('install plugin (woocommerce pdf invoices & packing slips)', { tag: ['@pro'] }, async () => {
+        const pluginPath = `${SITE_PATH}/wp-content/plugins/dokan-pro/tests/plugins/woocommerce-pdf-invoices-packing-slips.zip`;
+        await helpers.exeCommandWpcli(data.commands.wpcli.installPlugin(pluginPath));
+    });
+
+    test('install plugin (dokan-invoice)', { tag: ['@pro'] }, async () => {
+        test.slow();
+        await helpers.exeCommand(data.commands.deleteFolder(`${SITE_PATH}/wp-content/plugins/dokan-invoice`));
+
+        console.log('Start: Cloning dokan invoice');
+        await helpers.exeCommand(data.commands.cloneDokanInvoice(`${SITE_PATH}/wp-content/plugins`));
+        console.log('Success: Cloning dokan invoice done');
+
+        await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.dokanInvoice));
+    });
+
     test('checkout dokan pro to develop branch', { tag: ['@pro'] }, async () => {
         await helpers.exeCommandWpcli(data.commands.checkoutToDevelop(`${SITE_PATH}/wp-content/plugins/dokan-pro`));
     });

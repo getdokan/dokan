@@ -38,7 +38,7 @@ const Heading = ( { element }: { element: StatusElement } ) => {
                 </div>
                 
                 {/* Child elements (buttons/links) on the right */}
-                <div className="mt-4 flex md:ml-4 md:mt-0 md:flex-shrink-0">
+                <div className="mt-4 flex md:ml-4 md:mt-0 md:shrink-0">
                     { ( element?.children || [] ).map( ( child ) => {
                         return (
                             <SettingsParser

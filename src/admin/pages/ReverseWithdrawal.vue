@@ -7,14 +7,14 @@
         <AdminNotice />
         <hr class="wp-header-end">
 
-        <div class="dokan-reverse-withdrawal-fact-card mt-[-20px]">
+        <div class="dokan-layout dokan-reverse-withdrawal-fact-card mt-[-20px]">
             <CardFunFact :count="counts.credit" icon="fas fa-comments-dollar" is_currency :title="__('Total Collected', 'dokan-lite')" />
             <CardFunFact :count="counts.balance" icon="fas fa-coins" is_currency :title="__('Remaining Balance', 'dokan-lite')" />
             <CardFunFact :count="counts.total_transactions" icon="fas fa-info"  :title="__( 'Total Transactions', 'dokan-lite' )" />
             <CardFunFact :count="counts.total_vendors" icon="fas fa-users" :title="__( 'Total Vendors', 'dokan-lite' )" />
         </div>
 
-        <div id="dokan_reverse_withdrawal_list_table">
+        <div id="dokan_reverse_withdrawal_list_table" style="margin-top: 1.2rem !important">
             <list-table
                 :columns="columns"
                 :loading="loading"
@@ -49,7 +49,7 @@
                 </template>
 
                 <template slot="filters">
-                    <div class="dokan-reverse-withdrawal-filters">
+                    <div class="dokan-layout dokan-reverse-withdrawal-filters">
                         <span class="form-group">
                     <multiselect
                         @search-change="fetchStoreLists"

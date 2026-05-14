@@ -1,0 +1,185 @@
+.dokan-order-metabox-items .inside {
+    margin: 0;
+    padding: 0;
+    background: #fefefe;
+}
+.dokan-order-metabox-items .wc-order-data-row {
+    border-bottom: 1px solid #dfdfdf;
+    padding: 1.5em 2em;
+    background: #f8f8f8;
+    line-height: 2em;
+    text-align: right;
+}
+.dokan-order-metabox-items .wc-order-data-row::after,
+.dokan-order-metabox-items .wc-order-data-row::before {
+    content: " ";
+    display: table;
+}
+.dokan-order-metabox-items .wc-order-data-row::after {
+    clear: both;
+}
+.dokan-order-metabox-items .wc-order-data-row p {
+    margin: 0;
+    line-height: 2em;
+}
+.dokan-order-metabox-items .wc-order-totals {
+    float: right;
+    width: 50%;
+    margin: 0;
+    padding: 0;
+    text-align: right;
+}
+.dokan-order-metabox-items .wc-order-totals .amount {
+    font-weight: 700;
+}
+.dokan-order-metabox-items .wc-order-totals .label {
+    vertical-align: top;
+}
+.dokan-order-metabox-items .wc-order-totals .total {
+    font-size: 1em !important;
+    width: 10em;
+    margin: 0 0 0 0.5em;
+    box-sizing: border-box;
+}
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items thead th {
+    text-align: left;
+    padding: 1em;
+    font-weight: 400;
+    color: #999;
+    background: #f8f8f8;
+    -webkit-touch-callout: none;
+    user-select: none;
+}
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items tbody th,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td {
+    padding: 1.5em 1em 1em;
+    text-align: left;
+    line-height: 1.5em;
+    vertical-align: top;
+    border-bottom: 1px solid #f8f8f8;
+}
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td.thumb {
+    text-align: left;
+    width: 38px;
+    padding-bottom: 1.5em;
+}
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td.thumb .wc-order-item-thumbnail {
+    width: 38px;
+    height: 38px;
+    border: 2px solid #e8e8e8;
+    background: #f8f8f8;
+    color: #ccc;
+    position: relative;
+    font-size: 21px;
+    display: block;
+    text-align: center;
+}
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td.thumb .wc-order-item-thumbnail:empty::before {
+    font-family: Dashicons;
+    speak: never;
+    font-weight: 400;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+    text-indent: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    content: "\f128";
+    width: 38px;
+    line-height: 38px;
+    display: block;
+}
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td.thumb .wc-order-item-thumbnail img {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items small.refunded {
+    display: block;
+    color: #a00;
+    white-space: nowrap;
+    margin-top: 0.5em;
+}
+
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items small.refunded::before {
+    font-family: Dashicons;
+    speak: never;
+    font-weight: 400;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+    text-indent: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    content: "\f171";
+    position: relative;
+    top: auto;
+    left: auto;
+    margin: -1px 4px 0 0;
+    vertical-align: middle;
+    line-height: 1em;
+}
+
+small.dokan-commission-metabox-refunded-recipient {
+    display: block;
+    color: #a00;
+    white-space: nowrap;
+    font-size: smaller;
+    padding: 0;
+    margin: 0
+}
+
+small.dokan-commission-metabox-refunded-recipient::before {
+    font-family: Dashicons;
+    speak: never;
+    font-weight: 400;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+    text-indent: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    content: "\f171";
+    position: relative;
+    top: auto;
+    left: auto;
+    margin: -1px 4px 0 0;
+    vertical-align: middle;
+    line-height: 1em;
+}
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td.name .wc-order-item-sku,
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items td.name .wc-order-item-variation {
+    display: block;
+    margin-top: 0.5em;
+    font-size: 0.92em !important;
+    color: #888;
+}
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity {
+    text-align: right;
+}
+.dokan-order-metabox-items .dokan_order_items_wrapper table.dokan_order_items .quantity label {
+    white-space: nowrap;
+    color: #999;
+    font-size: 0.833em;
+}

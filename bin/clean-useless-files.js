@@ -11,33 +11,13 @@ const path = require( 'path' );
 
 // Files directories.
 const targetFiles = [
-    'assets/js/admin.js',
-    'assets/js/dokan-admin-product-style.js',
-    'assets/js/dokan-product-category-ui.js',
-    'assets/js/global-admin.js',
-    'assets/js/plugin.js',
-    'assets/js/reverse-withdrawal-style.js',
-    'assets/js/rtl.js',
-    'assets/js/setup.js',
-    'assets/js/setup-no-wc-style.js',
-    'assets/js/style.js',
-    'assets/js/dokan-tailwind.js',
-
-    'assets/js/dokan-promo-notice.js.LICENSE.txt',
-    'assets/js/vue-admin.js.LICENSE.txt',
-    'assets/js/vue-bootstrap.js.LICENSE.txt',
-    'assets/js/vue-frontend.js.LICENSE.txt',
-    'assets/js/vue-vendor.js.LICENSE.txt',
-
-    'assets/css/style.css.map',
-    'assets/css/vue-admin.css.map',
-    'assets/css/vue-bootstrap.css.map',
-    'assets/css/vue-frontend.css.map',
-    'assets/css/vue-vendor.css.map',
+    // Unnecessary JS files generated from CSS/LESS-only webpack entries
+    'assets/js',
+    'assets/css',
 ];
 
 console.log(
-    chalk.bgYellowBright.black(
+    chalk.gray.black(
         '🧹Removing files that are unnecessery for production build in dokan-lite.'
     )
 );

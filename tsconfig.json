@@ -4,12 +4,14 @@
         "lib": ["ESNext", "DOM"],
         "target": "ESNext",
         "module": "ESNext",
-        "allowJs": true,
         "checkJs": false,
         "jsx": "react-jsx",
 
+        // Deprecation options
+        "ignoreDeprecations": "6.0",
+
         // Module resolution
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "baseUrl": ".",
         "paths": {
             // Webpack aliases from webpack.config.js
@@ -43,10 +45,7 @@
         "declaration": false,
         "sourceMap": true,
         "removeComments": true,
-        "skipLibCheck": true,
-
-        // Extensions
-        "extensions": [".js", ".jsx", ".ts", ".tsx", ".json"]
+        "skipLibCheck": true
     },
     "include": [
         "src/**/*",

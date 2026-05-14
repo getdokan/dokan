@@ -2,6 +2,8 @@ import { Popover } from '@wordpress/components';
 import { twMerge } from 'tailwind-merge';
 // eslint-disable-next-line import/named
 import { RefObject, useEffect, useState } from '@wordpress/element';
+import { isRTL } from '@wordpress/i18n';
+import { getActiveSubmenuKey } from './Sidebar';
 
 const SubmenuPopover = ( {
     submenu,
@@ -17,6 +19,7 @@ const SubmenuPopover = ( {
     onClose: () => void;
 } ) => {
     const currentUrl = window.location?.href || '';
+    const activeSubkey = getActiveSubmenuKey( submenu, currentUrl );
     const [ entered, setEntered ] = useState( false );
 
     // Trigger enter animation on mount
@@ -32,7 +35,7 @@ const SubmenuPopover = ( {
             shift={ true }
             resize={ false }
             onClose={ onClose }
-            placement="right-start"
+            placement={ isRTL() ? 'left-start' : 'right-start' }
             onFocusOutside={ onClose }
             anchor={ anchorRef.current }
             className="dokan-submenu-popover dokan-layout"
@@ -50,9 +53,7 @@ const SubmenuPopover = ( {
                 <ul className="flex flex-col">
                     { Object.entries( submenu || {} ).map(
                         ( [ subkey, subitem ]: any ) => {
-                            const isSubActive =
-                                subitem?.url &&
-                                currentUrl.startsWith( subitem.url );
+                            const isSubActive = subkey === activeSubkey;
 
                             return (
                                 <li key={ subkey }>
@@ -63,11 +64,11 @@ const SubmenuPopover = ( {
                                             isSubActive && 'active'
                                         ) }
                                     >
-                                        <span className="ml-1">
+                                        <span className="ms-1">
                                             { subitem.title }
                                         </span>
                                         { subitem.counts > 0 && (
-                                            <span className="ml-auto inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 py-0.5 text-[10px] font-semibold leading-none rounded-md text-white sidebar-submenu-bubble">
+                                            <span className="ms-auto inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 py-0.5 text-[10px] font-semibold leading-none rounded-md text-white sidebar-submenu-bubble">
                                                 { subitem.counts }
                                             </span>
                                         ) }

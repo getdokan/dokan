@@ -51,6 +51,7 @@ class Manager {
         add_filter( 'dokan_admin_notices', [ $this, 'show_admin_logo_update_notice' ] );
         add_action( 'wp_ajax_dismiss_dokan_admin_logo_update_notice', [ $this, 'dismiss_dokan_admin_logo_update_notice' ] );
         add_filter( 'dokan_admin_notices', [ $this, 'show_admin_plugin_update_notice' ] );
+        add_filter( 'dokan_admin_notices', [ $this, 'show_vendor_onboarding_page_notice' ] );
     }
 
     /**
@@ -224,5 +225,113 @@ class Manager {
         }
 
         return $notices;
+    }
+
+    /**
+     * Show admin notice if vendor onboarding page is not configured.
+     *
+     * @since 5.0.0
+     *
+     * @param array $notices
+     *
+     * @return array
+     */
+    public function show_vendor_onboarding_page_notice( $notices ) {
+        // Check if vendor onboarding page is configured
+        if ( $this->is_vendor_onboarding_page_configured() ) {
+            return $notices;
+        }
+
+        $is_legacy_tools_page = get_transient( 'dokan_legacy_tools_page' );
+        $tools_page_slug      = $is_legacy_tools_page ? 'dokan' : 'dokan-dashboard';
+        $settings_url         = admin_url( 'admin.php?page=' . $tools_page_slug ) . '#/tools';
+
+        $dokan_pages = get_option( 'dokan_pages', [] );
+        $page_id = isset( $dokan_pages['vendor_onboarding'] ) ? $dokan_pages['vendor_onboarding'] : 0;
+
+        // Check if page was configured but is now deleted or unpublished
+        if ( $page_id && (int) $page_id > 0 ) {
+            $page = get_post( $page_id );
+
+            if ( ! $page ) {
+                // Page doesn't exist
+                $notice_title = esc_html__( 'Vendor Onboarding page not found!', 'dokan-lite' );
+                $notice_description = sprintf(
+                    /* translators: %s: Settings link */
+                    esc_html__( 'The configured Vendor Onboarding page has been deleted. Please set a new page in %s', 'dokan-lite' ),
+                    sprintf(
+                        '<a href="%s">%s</a>',
+                        esc_url( $settings_url ),
+                        esc_html__( 'Dokan → Tools → Page Installation', 'dokan-lite' )
+                    )
+                );
+            } else {
+                // Page exists but is not published
+                $notice_title = esc_html__( 'Vendor Onboarding page is not published!', 'dokan-lite' );
+                $notice_description = sprintf(
+                    /* translators: %s: Settings link */
+                    esc_html__( 'The configured Vendor Onboarding page is not published. Please publish it or configure a new page in %s', 'dokan-lite' ),
+                    sprintf(
+                        '<a href="%s">%s</a>',
+                        esc_url( $settings_url ),
+                        esc_html__( 'Dokan → Tools → Page Installation', 'dokan-lite' )
+                    )
+                );
+            }
+        } else {
+            // Page not configured at all
+            $notice_title = esc_html__( 'Vendor Onboarding feature is almost ready!', 'dokan-lite' );
+            $notice_description = sprintf(
+                /* translators: %s: Settings link */
+                esc_html__( 'Dokan Vendor Onboarding requires a dedicated page to be configured. Please set it in %s', 'dokan-lite' ),
+                sprintf(
+                    '<a href="%s">%s</a>',
+                    esc_url( $settings_url ),
+                    esc_html__( 'Dokan → Tools → Page Installation', 'dokan-lite' )
+                )
+            );
+        }
+
+        $notices[] = [
+            'type'        => 'warning',
+            'title'       => $notice_title,
+            'description' => $notice_description,
+            'priority'    => 5,
+            'scope'       => 'global',
+        ];
+
+        return $notices;
+    }
+
+    /**
+     * Check if vendor onboarding page is configured.
+     *
+     * @since 5.0.0
+     *
+     * @return bool
+     */
+    private function is_vendor_onboarding_page_configured() {
+        $dokan_pages = get_option( 'dokan_pages', [] );
+
+        // Check if vendor_onboarding key exists and has a valid page ID
+        if ( ! isset( $dokan_pages['vendor_onboarding'] ) || empty( $dokan_pages['vendor_onboarding'] ) ) {
+            return false;
+        }
+
+        $page_id = $dokan_pages['vendor_onboarding'];
+
+        // Verify the page ID is not zero or empty
+        if ( ! $page_id || 0 === (int) $page_id ) {
+            return false;
+        }
+
+        // Verify the page actually exists and is published
+        $page = get_post( $page_id );
+
+        if ( ! $page || 'publish' !== $page->post_status ) {
+            return false;
+        }
+
+        return true;
     }
 }

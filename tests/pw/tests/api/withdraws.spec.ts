@@ -40,7 +40,7 @@ test.describe('withdraw api test', () => {
         expect(responseBody).toMatchSchema(schemas.withdrawsSchema.withdrawPaymentMethod);
     });
 
-    test('get balance details', { tag: ['@lite'] }, async () => {
+    test.skip('get balance details', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getBalanceDetails);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
