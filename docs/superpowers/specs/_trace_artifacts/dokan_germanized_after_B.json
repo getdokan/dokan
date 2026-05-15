@@ -1,0 +1,43 @@
+{
+    "db": {
+        "vendor_fields": {
+            "dokan_company_name": "dokan_company_name",
+            "dokan_company_id_number": "dokan_company_id_number",
+            "dokan_vat_number": "dokan_vat_number",
+            "dokan_bank_name": "dokan_bank_name",
+            "dokan_bank_iban": "dokan_bank_iban"
+        },
+        "vendor_registration": "on",
+        "customer_fields": {
+            "billing_dokan_company_id_number": "billing_dokan_company_id_number",
+            "billing_dokan_vat_number": "billing_dokan_vat_number",
+            "billing_dokan_bank_name": "billing_dokan_bank_name",
+            "billing_dokan_bank_iban": "billing_dokan_bank_iban"
+        },
+        "enabled_germanized": "on",
+        "override_invoice_number": "on",
+        "dashboard_menu_manager": []
+    },
+    "response": {
+        "vendor_fields": {
+            "dokan_company_name": "dokan_company_name",
+            "dokan_company_id_number": "dokan_company_id_number",
+            "dokan_vat_number": "dokan_vat_number",
+            "dokan_bank_name": "dokan_bank_name",
+            "dokan_bank_iban": "dokan_bank_iban"
+        },
+        "vendor_registration": "on",
+        "customer_fields": {
+            "billing_dokan_company_id_number": "billing_dokan_company_id_number",
+            "billing_dokan_vat_number": "billing_dokan_vat_number",
+            "billing_dokan_bank_name": "billing_dokan_bank_name",
+            "billing_dokan_bank_iban": "billing_dokan_bank_iban"
+        },
+        "enabled_germanized": "on",
+        "override_invoice_number": "on",
+        "dashboard_menu_manager": []
+    },
+    "action_log": [
+        "dokan_germanized"
+    ]
+}
