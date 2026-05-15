@@ -1,0 +1,60 @@
+{
+  "B1_off_page0_empty": {
+    "payload": {
+      "action": "dokan_save_settings",
+      "section": "dokan_privacy",
+      "settingsData": {
+        "enable_privacy": "off",
+        "privacy_page": "0",
+        "privacy_policy": ""
+      }
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "settings": {
+          "name": "dokan_privacy",
+          "value": {
+            "enable_privacy": "off",
+            "privacy_page": "0",
+            "privacy_policy": "",
+            "dashboard_menu_manager": []
+          }
+        },
+        "message": "Setting has been saved successfully."
+      }
+    }
+  },
+  "B2_page999999_html_with_script": {
+    "payload": {
+      "action": "dokan_save_settings",
+      "section": "dokan_privacy",
+      "settingsData": {
+        "enable_privacy": "on",
+        "privacy_page": "999999",
+        "privacy_policy": "<p>hello <script>alert(1)</script><strong>world</strong></p>"
+      }
+    },
+    "response": {
+      "success": true,
+      "data": {
+        "settings": {
+          "name": "dokan_privacy",
+          "value": {
+            "enable_privacy": "on",
+            "privacy_page": "999999",
+            "privacy_policy": "<p>hello <script>alert(1)</script><strong>world</strong></p>",
+            "dashboard_menu_manager": []
+          }
+        },
+        "message": "Setting has been saved successfully."
+      }
+    }
+  },
+  "empty_option_default_test": {
+    "step": "wp option delete dokan_privacy; then GET",
+    "get_response_slice": [],
+    "get_slice_type": "array (PHP empty array, JSON [])",
+    "verdict": "No schema-level defaults injected on read. Slice is empty array, NOT object with defaults. UI must fall back to React-side defaults or the schema 'default' values are inert at read time."
+  }
+}

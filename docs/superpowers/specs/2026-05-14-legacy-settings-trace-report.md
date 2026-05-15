@@ -342,6 +342,32 @@ The whole field set is finally wrapped by `apply_filters( 'dokan_reverse_withdra
 - **`refresh_after_save` field:** `map_api_source` has this flag — UI re-fetches all settings after save (client-side concern, no server effect).
 - **Round-trip count:** 16 fields declared (excluding 2 `sub_section`), 16 traced, 16 round-tripped after restore Save A.
 
+### `dokan_privacy` — Privacy Policy
+
+**wp_option name:** `dokan_privacy`
+**Initial GET slice (pre-trace):** `[]` — option did not exist in DB on the test instance; `get_option('dokan_privacy', [])` returns empty array and no schema defaults are injected on read.
+**Hooks observed:**
+- `dokan_save_settings_value` priority 99 → Pro MenuManager leak (writes `dashboard_menu_manager: []`; not Privacy-specific)
+- No Privacy-specific `dokan_get_settings_values` or `dokan_save_settings_value` filter found in Lite. (`includes/Privacy.php` only handles WP personal-data export/erase, not settings.)
+- Read-only consumers: `dokan_get_privacy_policy_text()` and `dokan_privacy_policy_text()` in `includes/functions.php` (lines 3282–3320); `dokan_add_privacy_policy()` in `includes/wc-template.php:377` hooked to `dokan_contact_form`.
+
+| Field | UI control | Type | Default | Sentinel sent | Payload path | Response path | wp_option path | Extra options touched | Round-trips? | Notes |
+| ----- | ---------- | ---- | ------- | ------------- | ------------ | ------------- | -------------- | --------------------- | ------------ | ----- |
+| `enable_privacy` | Switcher | `on`/`off` | `on` (schema) — but NOT injected on empty option read | `on` | `settingsData[enable_privacy]` | `data.settings.value.enable_privacy` | `dokan_privacy.enable_privacy` | none | yes | `dokan_privacy_policy_text()` short-circuits and returns early when not `'on'`. |
+| `privacy_page` | Select (`<select>` of published pages) | int-as-string | unset (no schema `default`) | `709` | `settingsData[privacy_page]` | `data.settings.value.privacy_page` | `dokan_privacy.privacy_page` | none | yes (`"709"`) | Consumed by `functions.php:3282` to build privacy-policy permalink; `dokan_privacy_policy_text()` ALSO returns early when this is falsy — so `0` effectively disables the feature even with `enable_privacy=on`. |
+| `privacy_policy` | wpeditor (TinyMCE) | string (HTML) | `Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]` (schema) | `__T_pp_lorem` | `settingsData[privacy_policy]` | `data.settings.value.privacy_policy` | `dokan_privacy.privacy_policy` | none | yes | `[dokan_privacy_policy]` token gets replaced at render time (`functions.php:3286`). |
+
+**Filter / boundary findings:**
+- **Empty-option default:** `wp option delete dokan_privacy` + GET → slice is `[]` (empty PHP array). Schema `default` values are NOT injected on read by the legacy AJAX endpoint. The runtime fallback only happens at the `dokan_get_option('privacy_policy', 'dokan_privacy', <default>)` call site in `functions.php:3305` (third arg is the default), and only for `privacy_policy`. `enable_privacy` defaults to `'on'` in the *schema* but at read time it returns empty/null, so `'on' === dokan_get_option('enable_privacy', 'dokan_privacy')` evaluates false → **feature is off by default on a fresh install until the admin clicks Save once.**
+- **Save mode:** **OVERWRITE** (no merge filter). Confirmed by tracking key set across A → B1 → B2 → restore: every save writes exactly the submitted keys plus the `dashboard_menu_manager` leak. No prior keys persist.
+- **wpeditor empty:** sending `privacy_policy=''` accepted and stored as empty string `""`. No `wp_kses_post` server-side sanitization on this field (proven by next bullet).
+- **wpeditor with `<script>`:** sending `<p>hello <script>alert(1)</script><strong>world</strong></p>` round-trips **verbatim including the `<script>` tag**. No `wp_kses_post`/`wp_kses` filter in the legacy save path for this field. **Security concern** — output is rendered via `wpautop()` in `dokan_privacy_policy_text()` (line 3315) without escaping. Mitigating factor: the field is admin-only (`manage_woocommerce` cap required to write), and the output is rendered on store contact forms, so XSS scope is admin-injected. Still worth flagging — the new plugin-ui implementation should sanitize via `wp_kses_post` on save.
+- **`wpautop` behavior on read:** The AJAX response does NOT apply `wpautop`; raw stored HTML is returned. `wpautop` is only applied at frontend render (`dokan_privacy_policy_text()`).
+- **Page id 0:** `privacy_page='0'` accepted, stored as string `"0"`. No `get_post()` existence check. Behavioral effect: `dokan_privacy_policy_text()` returns early so the feature silently disables — no error to the admin.
+- **Page id 999999 (non-existent):** accepted, stored as string `"999999"`. `dokan_get_privacy_policy_text()` then calls `get_permalink(999999)` which returns `false` and produces a broken `<a href="">` link. No validation; the new page should reject non-page-post-type ids or fall back gracefully.
+- **Round-trip count:** 3 fields declared, 3 traced, 3 round-tripped after restore Save A.
+- **Rewrite rules / cron / other side effects:** none. Only `dokan_general` flushes rewrites; Privacy tab has zero scheduled actions or cache invalidation.
+
 ## Side-effect / hook checklist
 
 _Filled in Task N+1 (final pass)._
