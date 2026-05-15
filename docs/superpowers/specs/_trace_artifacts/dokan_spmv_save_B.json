@@ -1,0 +1,38 @@
+{
+  "_note": "Save B — negative + boundary: omitted available_vendor_list_title (overwrite-drop test), empty sell_item_btn, unknown enums for select fields, unknown extra key. Nonce redacted.",
+  "request": {
+    "url": "https://core-dokan.test/wp-admin/admin-ajax.php",
+    "method": "POST",
+    "contentType": "application/x-www-form-urlencoded; charset=UTF-8",
+    "payload": {
+      "action": "dokan_save_settings",
+      "nonce": "<REDACTED>",
+      "section": "dokan_spmv",
+      "settingsData[enable_pricing]": "off",
+      "settingsData[sell_item_btn]": "",
+      "settingsData[available_vendor_list_position]": "__unknown_enum_val__",
+      "settingsData[show_order]": "__unknown_show_order__",
+      "settingsData[__unknown_extra__]": "__T_Extra_B1"
+    }
+  },
+  "response": {
+    "status": 200,
+    "body": {
+      "success": true,
+      "data": {
+        "settings": {
+          "name": "dokan_spmv",
+          "value": {
+            "enable_pricing": "off",
+            "sell_item_btn": "",
+            "available_vendor_list_position": "__unknown_enum_val__",
+            "show_order": "__unknown_show_order__",
+            "__unknown_extra__": "__T_Extra_B1",
+            "dashboard_menu_manager": []
+          }
+        },
+        "message": "Setting has been saved successfully."
+      }
+    }
+  }
+}

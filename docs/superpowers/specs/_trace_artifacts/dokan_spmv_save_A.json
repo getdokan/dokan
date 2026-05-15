@@ -1,0 +1,40 @@
+{
+  "_note": "Save A — sentinel positive. POST admin-ajax via fetch (urlencoded). Nonce redacted.",
+  "request": {
+    "url": "https://core-dokan.test/wp-admin/admin-ajax.php",
+    "method": "POST",
+    "contentType": "application/x-www-form-urlencoded; charset=UTF-8",
+    "payload": {
+      "action": "dokan_save_settings",
+      "nonce": "<REDACTED>",
+      "section": "dokan_spmv",
+      "settingsData[enable_pricing]": "on",
+      "settingsData[sell_item_btn]": "__T_Sell_A1",
+      "settingsData[available_vendor_list_title]": "__T_Title_A1",
+      "settingsData[available_vendor_list_position]": "inside_tabs",
+      "settingsData[show_order]": "min_price",
+      "settingsData[some_random_field]": "__T_Random_A1"
+    }
+  },
+  "response": {
+    "status": 200,
+    "body": {
+      "success": true,
+      "data": {
+        "settings": {
+          "name": "dokan_spmv",
+          "value": {
+            "enable_pricing": "on",
+            "sell_item_btn": "__T_Sell_A1",
+            "available_vendor_list_title": "__T_Title_A1",
+            "available_vendor_list_position": "inside_tabs",
+            "show_order": "min_price",
+            "some_random_field": "__T_Random_A1",
+            "dashboard_menu_manager": []
+          }
+        },
+        "message": "Setting has been saved successfully."
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "_note": "Round-trip via dokan_get_setting_values AJAX after restoring Save A state. 5/5 writable fields round-trip cleanly. Unknown extra (some_random_field) also persists — confirms no schema filter on read either.",
+  "request": {
+    "url": "https://core-dokan.test/wp-admin/admin-ajax.php",
+    "method": "POST",
+    "payload": {"action": "dokan_get_setting_values", "nonce": "<REDACTED>"}
+  },
+  "response_data_dokan_spmv": {
+    "enable_pricing": "on",
+    "sell_item_btn": "__T_Sell_A1",
+    "available_vendor_list_title": "__T_Title_A1",
+    "available_vendor_list_position": "inside_tabs",
+    "show_order": "min_price",
+    "some_random_field": "__T_Random_A1",
+    "dashboard_menu_manager": []
+  }
+}
