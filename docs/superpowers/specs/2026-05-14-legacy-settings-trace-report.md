@@ -633,6 +633,45 @@ All booleans round-trip as `""` (false) / `"1"` (true) due to legacy jQuery-styl
 - **DB state after task:** `dokan_store_support_setting` restored to Save A state (`enabled_for_customer_order=on`, `store_support_product_page=inside_tab`, `support_button_label=__T_Btn_A1`, plus unknown extras `__unknown_extra__=__T_Unknown_A1`, `some_random_field=__T_Random_A1`, leak `dashboard_menu_manager=[]`). To restore production defaults, user can run `wp option delete dokan_store_support_setting` (every read site has a fallback).
 - **Round-trip count:** 3/3 writable fields traced, 3/3 round-trip after restore Save A — captured in `_trace_artifacts/dokan_store_support_setting_reload.json`. Unknown extras (`__unknown_extra__`, `some_random_field`) also round-trip (no schema filter on read).
 
+### `dokan_vendor_analytics` — Store Stats (Pro)
+
+**wp_option name:** `dokan_vendor_analytics`
+
+**Initial GET slice (pre-trace):** `[]` — option did not exist in DB on the test instance; `get_option('dokan_vendor_analytics', [])` returns `[]`; no schema defaults injected on read. Also, the related side option `dokan_vendor_analytics_google_api_data` was **absent** on this test instance, so the legacy form rendered ONLY the unauthenticated `authenticate_user` HTML link (no writable fields visible in the UI). The trace nonetheless probes the post-auth fields (`profile`, `add_tracking_code`) directly via the AJAX endpoint, since the save endpoint does not gate which keys it accepts.
+
+**Source path:**
+- Module bootstrap: `dokan-pro/modules/vendor-analytics/module.php` (instantiates `AdminSettings`).
+- Legacy section + fields: `dokan-pro/modules/vendor-analytics/includes/AdminSettings.php`
+  - `dokan_settings_sections` p10 → `add_settings_section` registers `dokan_vendor_analytics` (title, icon_url, description, document_link, settings_title, settings_description).
+  - `dokan_settings_fields` p10 → `add_settings_fields` reads `dokan_vendor_analytics_google_api_data` then branches:
+    - **Unauthenticated** (`access_token` AND `refresh_token` both empty): one HTML field `authenticate_user` rendering the Google sign-in link (`dokan_vendor_analytics_get_auth_url()`).
+    - **Authenticated**: two writable fields — `profile` (select, no schema default; options sourced from `dokan_vendor_analytics_api_get_profiles()` or cached `$api_data['profiles']`) and `add_tracking_code` (switcher, schema default `'off'`).
+- Token capture endpoint: `WC API hook woocommerce_api_dokan_vendor_analytics` → `save_token()` writes `dokan_vendor_analytics_google_api_data` (NOT `dokan_vendor_analytics`). Disconnect endpoint: `woocommerce_api_disconnect-google-analytics-profile` → `delete_option('dokan_vendor_analytics_google_api_data')`.
+- Refresh-select handler: `dokan_settings_refresh_option_dokan_vendor_analytics_profile` filter → `refresh_admin_settings_option_profile()` (re-fetches profiles from Google API on demand).
+- **No** save-side filters/hooks from the Vendor Analytics module itself for `dokan_vendor_analytics` — no `dokan_after_saving_settings` listener, no validation/sanitization beyond generic `Settings::sanitize_options`, no cron/rewrite/transient invalidation on settings save (the `wp_head` tracking-code injector reads the option live on every page load).
+- Read sites:
+  - `dokan_get_option('profile', 'dokan_vendor_analytics', null)` — `Reports.php:107` (used to authorize the Reporting API call).
+  - `dokan_get_option('profile', 'dokan_vendor_analytics', '')` — `AdminSettings.php:197` (tracking-code injector).
+  - `dokan_get_option('add_tracking_code', 'dokan_vendor_analytics', 'off')` — `AdminSettings.php:191` (tracking-code injector gate).
+  - All readers pass per-key fallbacks; schema defaults never injected on read.
+
+**Per-field rows:**
+
+| Field key | UI control | Type | Default | Save A → B sentinels | Form-encoded request key | Response key | DB key | Validation observed | Round-trip OK | Notes / boundary |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `profile` | Refresh-select (Google Analytics profile picker; only rendered when authenticated) | string (web property id, e.g. `ga:123456789`) | none (read-site fallback `null` at `Reports.php:107`, `''` at `AdminSettings.php:197`) | `'__T_Profile_A1'` (Save A); `''` empty string (Save B, boundary) | `settingsData[profile]` | `data.settings.value.profile` | `dokan_vendor_analytics.profile` | none on save (any string accepted verbatim) | yes | The legacy `select` is `grouped` with options sourced from Google API. On save, the AJAX endpoint accepts ANY string, including made-up sentinels and the empty string. The `wp_head` injector at `AdminSettings.php:199-207` defensively short-circuits when the value is empty/non-string or when `profiles_map[$profile]` lookup fails. New plugin-ui must lock saves to the API-supplied option list. |
+| `add_tracking_code` | Switcher (on/off) | string `'on'\|'off'` | `'off'` (schema default + read-site fallback at `AdminSettings.php:191`) | `'on'` (Save A); `'off'` (Save B) | `settingsData[add_tracking_code]` | `data.settings.value.add_tracking_code` | `dokan_vendor_analytics.add_tracking_code` | none | yes | Read site checks strict `'on' === $add_tracking_code` (line 193). Any other value behaves as off. No allow-list on save. |
+
+**Boundary / filter findings:**
+- **Empty-option default:** `wp option delete dokan_vendor_analytics` + `get_option('dokan_vendor_analytics', [])` → `[]`. Captured to `_trace_artifacts/dokan_vendor_analytics_empty_default.json`. **Schema defaults never injected on read** — every read site supplies its own per-key fallback. A fresh install behaves identically to a saved-defaults install: tracking-code injector falls back to `'off'`, so no tag is emitted until both `add_tracking_code='on'` AND a valid `profile` are set.
+- **Save mode:** **OVERWRITE, unfiltered.** Save B confirmed: payload omitted unknown extras (`__unknown_extra__`, `some_random_field`) and the DB no longer contains those keys. Save A confirmed unknown extras persist verbatim. No schema filter on save. Same bug class as Tasks 8 (`dokan_ai`), 9 (`dokan_menu_manager`), 10 (`dokan_geolocation`), 11 (`dokan_live_search_setting`), 12 (`dokan_report_abuse`), 13 (`dokan_spmv`), 14 (`dokan_store_support_setting`).
+- **Unauthenticated rendering vs save:** The legacy UI hides `profile`/`add_tracking_code` entirely until OAuth completes (token landed in `dokan_vendor_analytics_google_api_data`). But the AJAX save endpoint does NOT enforce that gate — a forged POST can set `profile`/`add_tracking_code` on `dokan_vendor_analytics` regardless of auth state. Confirmed in this trace: no `dokan_vendor_analytics_google_api_data` row existed pre/post-trace, yet Save A/B both succeeded and persisted the writable fields. New plugin-ui should mirror this (don't add gating that the legacy save lacked) OR explicitly tighten — flag for product decision.
+- **Cross-tab leak:** `dashboard_menu_manager: []` present in DB after every save — root cause documented in Task 9. This tab inherits the leak unchanged.
+- **Real-key redaction:** **N/A** for THIS option (`dokan_vendor_analytics`) — only opaque GA profile id format (`ga:NNN…`) and `'on'/'off'`. No GA4 measurement id (`G-…`), no UA id (`UA-…`), no GTM id, no OAuth tokens stored in `dokan_vendor_analytics` itself. Tokens / `tracking_id` / web_properties_id live in the **side option** `dokan_vendor_analytics_google_api_data`, which this tab does not touch via the AJAX settings endpoint. Sentinel `__T_Profile_A1` is a synthetic non-real string. No backup file needed; no sed-redaction required. Grep of artifacts post-trace: `grep -E 'G-[A-Z0-9]+|UA-[0-9-]+|GTM-[A-Z0-9]+' _trace_artifacts/dokan_vendor_analytics_*.json` → empty.
+- **Rewrite rules / cron / other side effects:** none on settings save. Save path runs `update_option` only. No `dokan_after_saving_settings` listener for this option. (The module DOES flush rewrite rules on module-activation and on `woocommerce_flush_rewrite_rules`, but neither path fires on settings save.) `dokan_settings_refresh_option_dokan_vendor_analytics_profile` is a READ-side filter for the refresh-select control and never fires during a save.
+- **DB state after task:** `dokan_vendor_analytics` restored to Save A state (`profile=__T_Profile_A1`, `add_tracking_code=on`, plus unknown extras `__unknown_extra__=__T_Unknown_A1`, `some_random_field=__T_Random_A1`, leak `dashboard_menu_manager=[]`). To restore the pre-trace empty-default state, run `wp option delete dokan_vendor_analytics` (every read site has a fallback). `dokan_vendor_analytics_google_api_data` was absent before and remains absent after the trace.
+- **Round-trip count:** 2/2 writable fields traced, 2/2 round-trip after restore Save A — captured in `_trace_artifacts/dokan_vendor_analytics_reload.json`. Unknown extras (`__unknown_extra__`, `some_random_field`) also round-trip (no schema filter on read).
+
 ## Side-effect / hook checklist
 
 _Filled in Task N+1 (final pass)._
