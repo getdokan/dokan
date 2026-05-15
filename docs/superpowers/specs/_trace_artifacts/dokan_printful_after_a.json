@@ -1,0 +1,18 @@
+{
+    "printful_enable": "on",
+    "printful_app_name": "DokanPrintfulApp",
+    "printful_app_url": "https:\/\/core-dokan.test\/printful-app-url",
+    "printful_redirection_domains": "core-dokan.test",
+    "printful_client_id": "__T_FAKE_KEY_PRINTFUL_001_CLIENT",
+    "printful_secret_key": "__T_FAKE_KEY_PRINTFUL_001",
+    "size_guide_popup_title": "__t_popup_title_001",
+    "size_guide_popup_text_color": "#112233",
+    "size_guide_popup_background_color": "#445566",
+    "size_guide_tab_background_color": "#778899",
+    "size_guide_active_tab_background_color": "#aabbcc",
+    "size_guide_button_text": "__t_btn_text_001",
+    "size_guide_button_text_color": "#ddeeff",
+    "size_guide_measurement_unit": "centimeter",
+    "unknown_printful_field": "__T_FAKE_UNKNOWN_001",
+    "dashboard_menu_manager": []
+}

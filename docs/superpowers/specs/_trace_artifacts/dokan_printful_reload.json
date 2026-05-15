@@ -1,0 +1,18 @@
+{
+  "dashboard_menu_manager": [],
+  "printful_app_name": "",
+  "printful_app_url": "",
+  "printful_client_id": "",
+  "printful_enable": "off",
+  "printful_redirection_domains": "",
+  "printful_secret_key": "[BLOCKED: Sensitive key]",
+  "size_guide_active_tab_background_color": "#7047eb",
+  "size_guide_button_text": "<script>alert(1)</script>",
+  "size_guide_button_text_color": "#ffffff",
+  "size_guide_measurement_unit": "furlongs",
+  "size_guide_popup_background_color": "#ffffff",
+  "size_guide_popup_text_color": "notacolor",
+  "size_guide_popup_title": "",
+  "size_guide_tab_background_color": "#ffffff",
+  "unknown_printful_field": "__T_FAKE_UNKNOWN_001"
+}

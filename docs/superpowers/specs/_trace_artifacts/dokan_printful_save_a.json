@@ -1,0 +1,56 @@
+{
+  "request": {
+    "url": "/wp-admin/admin-ajax.php",
+    "method": "POST",
+    "form": {
+      "action": "dokan_save_settings",
+      "nonce": "<dokan nonce>",
+      "section": "dokan_printful",
+      "settingsData[printful_enable]": "on",
+      "settingsData[printful_app_name]": "DokanPrintfulApp",
+      "settingsData[printful_app_url]": "https://core-dokan.test/printful-app-url",
+      "settingsData[printful_redirection_domains]": "core-dokan.test",
+      "settingsData[printful_client_id]": "__T_FAKE_KEY_PRINTFUL_001_CLIENT",
+      "settingsData[printful_secret_key]": "__T_FAKE_KEY_PRINTFUL_001",
+      "settingsData[size_guide_popup_title]": "__t_popup_title_001",
+      "settingsData[size_guide_popup_text_color]": "#112233",
+      "settingsData[size_guide_popup_background_color]": "#445566",
+      "settingsData[size_guide_tab_background_color]": "#778899",
+      "settingsData[size_guide_active_tab_background_color]": "#aabbcc",
+      "settingsData[size_guide_button_text]": "__t_btn_text_001",
+      "settingsData[size_guide_button_text_color]": "#ddeeff",
+      "settingsData[size_guide_measurement_unit]": "centimeter",
+      "settingsData[unknown_printful_field]": "__T_FAKE_UNKNOWN_001"
+    }
+  },
+  "response": {
+    "status": 200,
+    "body": {
+      "success": true,
+      "data": {
+        "message": "Setting has been saved successfully.",
+        "settings": {
+          "name": "dokan_printful",
+          "value": {
+            "dashboard_menu_manager": [],
+            "printful_app_name": "DokanPrintfulApp",
+            "printful_app_url": "https://core-dokan.test/printful-app-url",
+            "printful_client_id": "__T_FAKE_KEY_PRINTFUL_001_CLIENT",
+            "printful_enable": "on",
+            "printful_redirection_domains": "core-dokan.test",
+            "printful_secret_key": "[BLOCKED: Sensitive key]",
+            "size_guide_active_tab_background_color": "#aabbcc",
+            "size_guide_button_text": "__t_btn_text_001",
+            "size_guide_button_text_color": "#ddeeff",
+            "size_guide_measurement_unit": "centimeter",
+            "size_guide_popup_background_color": "#445566",
+            "size_guide_popup_text_color": "#112233",
+            "size_guide_popup_title": "__t_popup_title_001",
+            "size_guide_tab_background_color": "#778899",
+            "unknown_printful_field": "__T_FAKE_UNKNOWN_001"
+          }
+        }
+      }
+    }
+  }
+}
