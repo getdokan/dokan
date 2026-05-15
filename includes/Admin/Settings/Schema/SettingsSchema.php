@@ -115,6 +115,7 @@ class SettingsSchema {
                 ),
                 'placeholder'     => esc_html__( 'Store', 'dokan-lite' ),
                 'default'         => 'store',
+                'legacy_key'      => 'dokan_general.custom_store_url',
                 'validations'     => [
                     [ 'not_in' => dokan_get_reserved_url_slugs() ],
                 ],
