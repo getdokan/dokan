@@ -1,0 +1,40 @@
+{
+  "_note": "Save A — sentinel positive. POST admin-ajax via fetch (urlencoded). Nonce redacted.",
+  "request": {
+    "url": "https://core-dokan.test/wp-admin/admin-ajax.php",
+    "method": "POST",
+    "contentType": "application/x-www-form-urlencoded; charset=UTF-8",
+    "payload": {
+      "action": "dokan_save_settings",
+      "nonce": "<REDACTED>",
+      "section": "dokan_report_abuse",
+      "settingsData[reported_by_logged_in_users_only]": "on",
+      "settingsData[abuse_reasons][0][id]": "__T_reason_A1",
+      "settingsData[abuse_reasons][0][value]": "__T_Sentinel reason A1",
+      "settingsData[abuse_reasons][1][id]": "other",
+      "settingsData[abuse_reasons][1][value]": "__T_Other A1",
+      "settingsData[some_random_field]": "__T_Random_A1"
+    }
+  },
+  "response": {
+    "status": 200,
+    "body": {
+      "success": true,
+      "data": {
+        "settings": {
+          "name": "dokan_report_abuse",
+          "value": {
+            "reported_by_logged_in_users_only": "on",
+            "abuse_reasons": [
+              { "id": "__T_reason_A1", "value": "__T_Sentinel reason A1" },
+              { "id": "other", "value": "__T_Other A1" }
+            ],
+            "some_random_field": "__T_Random_A1",
+            "dashboard_menu_manager": []
+          }
+        },
+        "message": "Setting has been saved successfully."
+      }
+    }
+  }
+}
