@@ -1,0 +1,39 @@
+{
+  "section": "dokan_verification",
+  "method": "POST application/x-www-form-urlencoded",
+  "action": "dokan_save_settings",
+  "settingsData": {
+    "verified_icon": "user_check_solid",
+    "social_login": "on",
+    "facebook_enabled": "on",
+    "facebook_app_id": "__T_FAKE_KEY_FB_APP_ID_001",
+    "facebook_app_secret": "__T_FAKE_KEY_FB_APP_SECRET_001",
+    "facebook_redirect_url": "https://example.test/cb/fb",
+    "x_enabled": "on",
+    "x_api_key": "__T_FAKE_KEY_X_API_001",
+    "x_api_secret": "__T_FAKE_KEY_X_SECRET_001",
+    "x_redirect_url": "https://example.test/cb/x",
+    "google_enabled": "on",
+    "google_client_id": "__T_FAKE_KEY_G_CLIENT_001",
+    "google_client_secret": "__T_FAKE_KEY_G_SECRET_001",
+    "google_redirect_url": "https://example.test/cb/g",
+    "google_key_content": "__T_FAKE_KEY_G_CONTENT_001",
+    "linkedin_enabled": "on",
+    "linkedin_client_id": "__T_FAKE_KEY_LI_CLIENT_001",
+    "linkedin_client_secret": "__T_FAKE_KEY_LI_SECRET_001",
+    "linkedin_redirect_url": "https://example.test/cb/li",
+    "linked_key_content": "__T_FAKE_KEY_LI_CONTENT_001",
+    "apple_enabled": "on",
+    "apple_redirect_url": "https://example.test/cb/apple",
+    "apple_service_id": "__T_FAKE_KEY_APPLE_SVC_001",
+    "apple_team_id": "__T_FAKE_KEY_APPLE_TEAM_001",
+    "apple_key_id": "__T_FAKE_KEY_APPLE_KEYID_001",
+    "apple_key_content": "__T_FAKE_KEY_APPLE_KEY_001",
+    "social_verification_required": "on",
+    "minimum_social_connections": "3",
+    "verification_methods_list": [
+      { "id": "photo_id", "label": "Photo ID", "required": "on" },
+      { "id": "address", "label": "Address Proof", "required": "off" }
+    ]
+  }
+}
