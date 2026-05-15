@@ -1367,6 +1367,101 @@ The `Settings::sanitize_options` loop at `dokan-lite/includes/Admin/Settings.php
   - **P2 — `enabled` is a bare key name colliding with master-gates on Tasks 16, 21, 22, and now 23.** Four Pro tabs use the same bare key name in their respective storage rows. Any future single-storage-row consolidation will collide. Recommend prefixing on consolidation.
   - **P2 — Pro MenuManager `dashboard_menu_manager: []` leak persists.** Recurring.
 
+### `dokan_quote_settings` — Quote Settings (Pro)
+
+**wp_option name:** `dokan_quote_settings`
+
+**Initial GET slice (pre-trace):** `/tmp/dokan_initial_get.json → .data.dokan_quote_settings` returned `[]` (empty array). `wp option get dokan_quote_settings` confirmed `Could not get 'dokan_quote_settings' option` — option row **absent on disk**. Unlike Task 23 (`dokan_shipping_status_setting`), **no self-seeder writes defaults on first read**; the schema-declared defaults (`enable_out_of_stock='on'`, `enable_ajax_add_to_quote='on'`, others `'off'`/`0`) live only in the schema and are supplied per-read by `dokan_get_option`'s third-argument default. Captured `_trace_artifacts/dokan_quote_settings_empty_default.json` (`db: []`, `response: []`). Pattern matches Tasks 12/16/18/21/22 ("empty option → empty response, defaults schema-only").
+
+**Source path:**
+- Legacy schema: `dokan-pro/modules/request-for-quotation/includes/Admin/Settings.php:35-118`. Class `\WeDevs\DokanPro\Modules\RequestForQuotation\Admin\Settings`, registered when the `request-for-quotation` Pro module is loaded. Adds section `dokan_quote_settings` via `dokan_settings_sections` filter at `:22` (priority 11), declares fields via `dokan_settings_fields` at `:23` (priority 11). **6 persisted fields:** `enable_out_of_stock` (switcher, default `'on'`), `enable_ajax_add_to_quote` (switcher, default `'on'`), `redirect_to_quote_page` (switcher, default `'off'`), `decrease_offered_price` (number, default `0`), `enable_convert_to_order` (switcher, default `'off'`), `enable_quote_converter_display` (switcher, default `'off'`). Plus 2 display-only `sub_section` fields (`dokan_quote_settings`, `quote_attributes_settings`) that are not persisted. **None of the 6 fields declares a `sanitize_callback` or `response_sanitize_callback`.**
+- **Current-branch schema (plugin-ui flat array):** `dokan-pro/includes/Admin/Settings/Schema/ProSettingsSchema.php` — **grep returned no `quote` or `dokan_quote_settings` reference.** **`ProSettingsSchema` does NOT declare this tab.** Quote settings have not been migrated to the new flat-array storage on this branch.
+- **Read sites (Pro-only, all reading `dokan_quote_settings`):** all 6 are in `dokan-pro/modules/request-for-quotation/includes/SettingsHelper.php`:
+  - `:15` → `dokan_get_option('enable_out_of_stock', 'dokan_quote_settings', 'on')`.
+  - `:26` → `dokan_get_option('enable_ajax_add_to_quote', 'dokan_quote_settings', 'on')`.
+  - `:37` → `dokan_get_option('redirect_to_quote_page', 'dokan_quote_settings', 'off')`.
+  - `:48` → `dokan_get_option('decrease_offered_price', 'dokan_quote_settings', 0)` — wrapped in `(float) ( -1 * abs( (float) ... ) )` so the persisted value is normalized to a non-positive float at READ time (negation and absolute value applied on read, not on save).
+  - `:59` → `dokan_get_option('enable_convert_to_order', 'dokan_quote_settings', 'off')`.
+  - `:70` → `dokan_get_option('enable_quote_converter_display', 'dokan_quote_settings', 'off')`.
+  - **Total read sites: 6 (Pro-only), all 6 schema keys covered, 100% same-name alignment vs the legacy schema. No Lite read sites — no cross-plugin coupling.**
+- **Save handler:** `dokan-lite/includes/Admin/Settings.php save_settings_value()`. AJAX action `dokan_save_settings`, nonce `dokan_admin`. OVERWRITE via `update_option('dokan_quote_settings', $value)`. `sanitize_options($value, 'edit')` runs but **none of the 6 fields declares a `sanitize_callback`** — pass-through.
+- **AJAX session note:** Chrome session unauthenticated (carried from Task 22/23). **Fell back to `wp eval-file` driving `Settings::sanitize_options` (reflection on the private method) + `dokan_save_settings_value`/`dokan_get_settings_values` filter chains + `update_option`/`get_option` directly** — the same identical pipeline `Settings::save_settings_value()` and `Settings::get_settings_value()` run server-side. Round-trip semantics identical; only HTTP transport differs. Script: `/tmp/trace_quote_settings.php` (XDEBUG_MODE=off).
+- **Filters/actions touching this option:**
+  - `dokan_save_settings_value` p10 — Pro MenuManager appends `dashboard_menu_manager: []` (Task 12 pattern).
+  - **No `dokan_get_settings_values` filter on this option.** Read response is byte-identical to DB row.
+  - **No `pre_update_option_dokan_quote_settings` / `update_option_dokan_quote_settings` listeners** found in Pro or Lite (grepped).
+  - **No `dokan_after_save_settings` listener** specific to `dokan_quote_settings` (grepped the module — module's `Hooks.php`/`Ajax.php` listen on cart/order/checkout actions, not settings).
+- **Side effects on save:** **None observed.** No transient flush, no rewrite-rules touch, no `wp_posts`/`user_meta` mutation, no module-side action triggered on settings save.
+
+**Per-field rows:**
+
+| Field key | UI control (legacy → new) | Type | Default | Save A → B sentinels | Form-encoded request key | Response key | DB key | Validation observed | Round-trip OK | Notes / boundary |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `enable_out_of_stock` | `switcher` → (not in new schema) | string `'on'`/`'off'` | `'on'` (schema) | `'on'` (A); `'off'` (B) | `settingsData[enable_out_of_stock]` | resp same | `dokan_quote_settings.enable_out_of_stock` | none (no `sanitize_callback`) | yes | Read site at `SettingsHelper.php:15`. |
+| `enable_ajax_add_to_quote` | `switcher` → (not in new schema) | string `'on'`/`'off'` | `'on'` (schema) | `'on'` (A); `'off'` (B) | `settingsData[enable_ajax_add_to_quote]` | resp same | `dokan_quote_settings.enable_ajax_add_to_quote` | none | yes | Read site at `SettingsHelper.php:26`. |
+| `redirect_to_quote_page` | `switcher` → (not in new schema) | string `'on'`/`'off'` | `'off'` (schema) | `'on'` (A); `'off'` (B) | `settingsData[redirect_to_quote_page]` | resp same | `dokan_quote_settings.redirect_to_quote_page` | none | yes | Read site at `SettingsHelper.php:37`. |
+| `decrease_offered_price` | `number` → (not in new schema) | string (numeric) | `0` (schema) | `'25'` (A); `'0'` (B) | `settingsData[decrease_offered_price]` | resp byte-identical (`'25'` as string) | `dokan_quote_settings.decrease_offered_price` | **none on save** — `'-10'` probe persisted verbatim. **Read-side normalization at `SettingsHelper.php:48`:** wraps in `(float) ( -1 * abs( (float) $value ) )`, so the runtime-consumed value is always `<= 0`. **Save side accepts negative/positive/zero indistinguishably; semantics live in the read site only.** | yes | This is the **first numeric field traced with read-time-only normalization** — save persists `'25'` literally; consumer reads `-25.0`. |
+| `enable_convert_to_order` | `switcher` → (not in new schema) | string `'on'`/`'off'` | `'off'` (schema) | `'on'` (A); `'off'` (B) | `settingsData[enable_convert_to_order]` | resp same | `dokan_quote_settings.enable_convert_to_order` | none | yes | Read site at `SettingsHelper.php:59`. |
+| `enable_quote_converter_display` | `switcher` → (not in new schema) | string `'on'`/`'off'` | `'off'` (schema) | `'on'` (A); `'off'` (B) | `settingsData[enable_quote_converter_display]` | resp same | `dokan_quote_settings.enable_quote_converter_display` | none | yes | Read site at `SettingsHelper.php:70`. |
+| `dashboard_menu_manager` | n/a (Pro MenuManager leak) | array | `[]` | `[]` (server-injected via `dokan_save_settings_value` p10) | (not sent by client) | resp same | `dokan_quote_settings.dashboard_menu_manager` | n/a | yes | Generic Pro MenuManager leak (Task 12 pattern). Confirmed in Save A and Save B responses. |
+| (probe) `unknown_quote_field` | n/a | string | n/a | `'__T_FAKE_UNKNOWN_QUOTE_A'` (A); (omitted in B) | `settingsData[unknown_quote_field]` | resp same (A) | DB (A only) | none | yes (A); dropped via OVERWRITE in B | Recurring unknown-key persistence (Tasks 16, 21, 22, 23 pattern). |
+| (probe) `probe_xss` | n/a | string | n/a | `'<script>alert(2)</script>'` (A) | `settingsData[probe_xss]` | resp byte-identical | DB byte-identical (A only) | **none — tag NOT stripped** | yes | Confirms `sanitize_options` is a NO-OP for any slug without a registered callback. |
+| (probe) `probe_html` | n/a | string | n/a | `'<b>bold</b>'` (A) | `settingsData[probe_html]` | resp byte-identical | DB byte-identical (A only) | none — `<b>` preserved | yes | |
+| (probe) `probe_newlines` | n/a | string | n/a | `"line1\nline2\rline3"` (17 bytes) (A) | `settingsData[probe_newlines]` | resp byte-identical (17 bytes) | DB byte-identical (A only) | **none — `\n` and `\r` preserved verbatim** | yes | |
+| (probe) `probe_url` | n/a | string | n/a | `'javascript:alert(1)'` (A) | `settingsData[probe_url]` | resp byte-identical | DB byte-identical (A only) | **none — `javascript:` scheme persisted** | yes | |
+| (probe) `probe_long` | n/a | string | n/a | 5000 chars of `'B'` (A) | `settingsData[probe_long]` | resp full 5000 chars | DB full 5000 chars (A only) | none — no length cap | yes | |
+| (probe) `probe_serialized` | n/a | string | n/a | `'a:1:{s:3:"foo";s:3:"bar";}'` (A) | `settingsData[probe_serialized]` | resp byte-identical | DB byte-identical (A only) | none | yes | Stored as string literal, not auto-deserialized. |
+| (probe) `probe_sensitive_auth_token` | n/a | string | n/a | `'AUTHTOKEN_SHOULD_NOT_MASK'` (A) | `settingsData[probe_sensitive_auth_token]` | resp byte-identical (UNMASKED) | DB byte-identical (A only) | none | yes | **Sensitive-key wrapper NOT observed** on this tab. |
+| (probe) `probe_sensitive_secret_key` | n/a | string | n/a | `'SECRETKEY_SHOULD_NOT_MASK'` (A) | `settingsData[probe_sensitive_secret_key]` | resp byte-identical | DB byte-identical (A only) | none | yes | Same — no wrapper. (No credential-bearing fields on this tab anyway.) |
+| (probe) `probe_unicode` | n/a | string | n/a | `'emoji-test-ok'` (A) | `settingsData[probe_unicode]` | resp byte-identical | DB byte-identical (A only) | none | yes | ASCII probe. |
+| (probe) `probe_whitespace` | n/a | string | n/a | `'   '` (A) | `settingsData[probe_whitespace]` | resp byte-identical | DB byte-identical (A only) | **none — whitespace-only persisted** (no trim) | yes | |
+| (probe) `probe_negative_number` | n/a | string | n/a | `'-10'` (A) | `settingsData[probe_negative_number]` | resp byte-identical | DB byte-identical (A only) | **none — negative string persisted** | yes | Confirms save-side accepts arbitrary strings even at numeric-looking keys. |
+
+**Boundary / filter findings:**
+- **Status:** trace complete, round-trip PASS.
+- **Field count:** 0 keys in initial DB (option absent) → **19 keys after Save A** (6 known + 12 probes + 1 MenuManager leak) → **7 keys after Save B** (6 known + 1 MenuManager leak; OVERWRITE drops all 12 probes + unknown key). OVERWRITE confirmed.
+- **Save mode:** **OVERWRITE, fully unfiltered.** Response byte-identical to DB (no `dokan_get_settings_values` listener for this option).
+- **Auth approach:** **`wp eval-file` fallback** (Chrome session unauthenticated, continuing from Tasks 22/23). Drives `Settings::sanitize_options` via reflection + the same filter chains used by the AJAX path. Same code path semantics as AJAX; only HTTP transport differs.
+- **Filter findings:**
+  - `dokan_save_settings_value` p10 — Pro MenuManager appends `dashboard_menu_manager: []`. Unchanged from Task 12 onward.
+  - No `dokan_get_settings_values` transform on this option.
+  - `sanitize_options` is a **NO-OP** for every quote field (no callbacks registered) — consistent with Tasks 22/23.
+  - **No `dokan_after_save_settings` module listener** for this tab. No side effects on save.
+  - **First numeric field traced where validation lives at read time, not save time:** `SettingsHelper.php:48` wraps with `(float) ( -1 * abs(...) )`, so save accepts anything but reads always return `<= 0`. Distinct from Tasks 1-23 where validation (when present) lived in `sanitize_callback`.
+- **Empty-option default:** `[]` on read. **No self-seeder** writes defaults on first read (distinct from Task 23). Schema defaults supplied only by `dokan_get_option`'s third-argument default at each read site.
+- **Pro MenuManager leak:** present in both saves.
+- **Unknown-key persistence:** `unknown_quote_field` + 11 boundary probes persisted in Save A, all dropped in Save B (OVERWRITE).
+- **Sensitive-key wrapper observed?** **No.** Probes round-tripped UNMASKED. No production credential fields exist on this tab.
+- **Schema↔read-site key skew audit:**
+  - **Legacy schema (6 persisted fields) vs 6 read sites:** matched **6/6 (100% alignment)** on key names — every read site reads at the same name the schema declares (within storage `dokan_quote_settings`). Matches Task 22 (social_api) and Task 23 (shipping_status) on the legacy side. **All read sites in a single helper class (`SettingsHelper`)** — tightest read-site cohesion seen so far across the 24 traced tabs.
+  - **Current-branch plugin-ui schema vs legacy:** **N/A — `ProSettingsSchema` does not declare a `dokan_quote_settings` (or "quote") tab.** No migration target exists on this branch. **This is the first Pro tab traced that has NO new-schema counterpart at all.** Likely deliberate (module-owned tabs may follow a different migration plan, since the module's `Admin\Settings` class registers via the legacy `dokan_settings_sections`/`dokan_settings_fields` filters and the new plugin-ui flat-array doesn't currently honor those module-side filters).
+  - **DB-only keys (declared by neither schema):** `dashboard_menu_manager` (Pro MenuManager leak — recurring).
+- **Cross-tab collision audit:**
+  - **No DB collision** with any prior tab — `dokan_quote_settings` is a distinct `wp_options` row.
+  - **No bare `enabled` key on this tab** (unlike Tasks 16, 21, 22, 23). Field names are all prefixed (`enable_out_of_stock`, `enable_ajax_add_to_quote`, etc.) — **best-named tab seen so far for future flat-array consolidation.** If everything ever merges to one storage row, these 6 keys would not collide with any of the master-gate `enabled` keys from prior tabs.
+  - **No cross-plugin read coupling:** Lite does not read this option. All 6 reads originate in the Pro module that owns the schema.
+- **Does new `ProSettingsSchema` declare this tab?** **No.** Page does not exist in `ProSettingsSchema.php`. **Y/N: N. Shape: n/a — no migration target on this branch.** First Pro tab traced (of 24) with no new-schema counterpart.
+- **Sensitive-key wrapper observed?** **No.** No credential fields on this tab.
+- **Round-trip:** `_trace_artifacts/dokan_quote_settings_reload.json` byte-identical to `_trace_artifacts/dokan_quote_settings_after_B.json` `.db` slice (PHP `==` confirmed by trace script: `ROUND_TRIP=PASS`).
+- **DB state restored:** `delete_option('dokan_quote_settings')` executed by the trace script at the end (`FINAL_STATE=ABSENT`). No self-seeder will re-create it (distinct from Task 23).
+
+**Surprises:**
+- **NEW: First Pro tab traced with NO new-schema counterpart.** `ProSettingsSchema` does not declare a "quote" page or `dokan_quote_settings` storage key. Every Pro tab in Tasks 1-23 had at minimum a relocated counterpart; this one has none. **Implication:** module-owned (`modules/*`) tabs may be on a deferred migration path, or the plan is for module tabs to keep using the legacy `dokan_settings_sections`/`dokan_settings_fields` filter pipeline indefinitely even after the rest of the schema flips to flat-array. **Action needed:** confirm migration plan for the 22+ module-owned tabs.
+- **NEW: First field with read-time-only normalization.** `decrease_offered_price` is stored as user-entered string (e.g. `'25'`), but every read at `SettingsHelper.php:48` returns `(float) ( -1 * abs( (float) ... ) ) = -25.0`. Save handler doesn't know this transform exists. **Risk:** if anyone migrates this field via a one-shot `update_option` that bypasses the read helper, downstream code that expects negative floats will get positive ones. The normalization belongs in a `sanitize_callback` (save-time) or as an explicit `response_sanitize_callback` (read-time visible in API), not buried in a helper.
+- **NEW: Tightest read-site cohesion of any traced tab.** All 6 read sites live in a single 70-line helper class (`SettingsHelper.php`). Refactor target: trivial. If this tab is migrated, a single file edit covers every read site.
+- **NOT new:** sanitize_options no-op, MenuManager leak, unknown-key persistence, OVERWRITE save, plaintext storage, no `pre_update_option_*`/`update_option_*` listeners — all consistent with Tasks 12-23.
+
+**API-key/token state in DB after task:** None — all sentinels prefixed `__T_FAKE_*` / `probe_*`. Final state: option deleted (`FINAL_STATE=ABSENT`). No self-seeder, so it stays absent until the admin saves the quote tab again.
+
+**Commit SHA:** `eca1641b8` (self-referential — amended once for SHA backfill).
+
+**Concerns:**
+- **P0 — No new-schema counterpart.** `dokan_quote_settings` is not in `ProSettingsSchema.php`. **The new plugin-ui settings page cannot render this tab.** If the legacy page is removed/disabled before module tabs are migrated, admins lose access to 6 active feature toggles (out-of-stock quotes, ajax add-to-quote, redirect, decrease-offered-price percent, convert-to-order, converter-display). **Mitigation options:** (a) keep the legacy `Settings` page mounted alongside the new flat-array page until all module tabs migrate, (b) extend the new schema to honor `dokan_settings_sections`/`dokan_settings_fields` filters as a fallback for unmigrated tabs, (c) migrate this and the other 21+ module tabs into `ProSettingsSchema` before flipping. **This concern likely applies to most module-owned tabs** (request-for-quotation, vendor-staff, table-rate-shipping, distance-rate-shipping, vendor-subscription, etc.) — recommend a separate audit pass that confirms which `modules/*` tabs are in `ProSettingsSchema` and which are not.
+- **P1 — Read-time normalization for `decrease_offered_price`.** The `(float) ( -1 * abs(...) )` wrapper at the read site is invisible to anything reading the raw DB row (REST APIs, migration scripts, debug tools). Move into either (a) a save-time `sanitize_callback` so the DB stores the normalized form, or (b) a `response_sanitize_callback` so the AJAX response and any future REST endpoint return the normalized form. **As written, save-stored value and runtime-consumed value differ — silent corruption surface for any migrator that round-trips through DB.**
+- **P1 — Unknown-key persistence + no per-field sanitization.** Recurring (Tasks 16, 21, 22, 23). `<script>` tags, `javascript:` URLs, 5000-char strings, whitespace-only values, negative-number strings at numeric fields — all persist verbatim. No new finding, but worth re-flagging given the lack of any `sanitize_callback` across the entire tab.
+- **P2 — Pro MenuManager `dashboard_menu_manager: []` leak persists.** Recurring.
+- **P2 — Module activation coupling.** All 6 fields exist only if the `request-for-quotation` Pro module is active. If a site has the option row populated (from prior module activation) and the module is later disabled, the option row remains as orphan data. No GC. (Same pattern likely true for every module-owned tab — not specific to this one but first explicit observation.)
+
 ## Side-effect / hook checklist
 
 _Filled in Task N+1 (final pass)._
