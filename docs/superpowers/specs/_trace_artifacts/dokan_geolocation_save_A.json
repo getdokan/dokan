@@ -1,0 +1,51 @@
+{
+  "tab": "dokan_geolocation",
+  "scenario": "Save A — positive sentinels (urlencoded body)",
+  "payload_shape": {
+    "action": "dokan_save_settings",
+    "section": "dokan_geolocation",
+    "settingsData[show_locations_map]": "right",
+    "settingsData[show_location_map_pages]": "store_listing",
+    "settingsData[show_filters_before_locations_map]": "off",
+    "settingsData[show_product_location_in_wc_tab]": "off",
+    "settingsData[distance_unit]": "miles",
+    "settingsData[distance_min]": "5",
+    "settingsData[distance_max]": "4242",
+    "settingsData[map_zoom]": "12",
+    "settingsData[location][latitude]": "12.34",
+    "settingsData[location][longitude]": "56.78",
+    "settingsData[location][address]": "__T_Default_Addr_001",
+    "settingsData[location][zoom]": "7"
+  },
+  "response": {
+    "success": true,
+    "data": {
+      "message": "Setting has been saved successfully.",
+      "settings": {
+        "name": "dokan_geolocation",
+        "value": {
+          "dashboard_menu_manager": [],
+          "distance_max": "4242",
+          "distance_min": "5",
+          "distance_unit": "miles",
+          "location": {
+            "address": "__T_Default_Addr_001",
+            "latitude": "12.34",
+            "longitude": "56.78",
+            "zoom": "7"
+          },
+          "map_zoom": "12",
+          "show_filters_before_locations_map": "off",
+          "show_location_map_pages": "store_listing",
+          "show_locations_map": "right",
+          "show_product_location_in_wc_tab": "off"
+        }
+      }
+    }
+  },
+  "notes": [
+    "Initial GET slice was [] (option did not exist).",
+    "Cross-tab leak: dashboard_menu_manager:[] injected by Pro MenuManager DataSource filter (unconditional line 45). Same as Tasks 1-9.",
+    "Body MUST be urlencoded (application/x-www-form-urlencoded) for PHP to parse settingsData[location][latitude] into a nested array. multipart/form-data with the same name strings yields literal-key leakage (e.g. 'location[latitude' as a top-level string key). The legacy Vue UI uses jQuery $.ajax which defaults to urlencoded, so production saves work."
+  ]
+}

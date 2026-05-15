@@ -1,0 +1,4 @@
+{
+  "method": "wp option delete dokan_geolocation; AJAX dokan_get_setting_values",
+  "data.dokan_geolocation": []
+}
