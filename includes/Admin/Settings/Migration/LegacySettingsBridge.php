@@ -48,6 +48,30 @@ class LegacySettingsBridge {
     }
 
     /**
+     * Transform a sanitized legacy AJAX payload into the new-flat slice.
+     *
+     * Used by the legacy save handler to mirror writes into `dokan_settings`.
+     * Caller is responsible for the merge + `update_option` — the bridge does
+     * not write.
+     *
+     * @param string               $option_name    Legacy wp_option name (e.g., `dokan_appearance`).
+     * @param array<string,mixed>  $legacy_payload Sanitized submission for that option.
+     *
+     * @return array<string,mixed> New-flat slice ready to merge into `dokan_settings`.
+     */
+    public function transform_legacy_payload_to_new( string $option_name, array $legacy_payload ): array {
+        $this->build_map();
+        $pairs = $this->by_option[ $option_name ] ?? [];
+        $slice = [];
+        foreach ( $pairs as $new_key => $old_field ) {
+            if ( array_key_exists( $old_field, $legacy_payload ) ) {
+                $slice[ $new_key ] = $legacy_payload[ $old_field ];
+            }
+        }
+        return $slice;
+    }
+
+    /**
      * Build (and cache) the mapping, defaults index, and reverse-by-option index.
      *
      * @return array<string,array{option:string,field:string}>

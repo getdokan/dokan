@@ -88,4 +88,53 @@ class LegacySettingsBridgeTest extends DokanTestCase {
 
         $this->assertSame( [ 'good' ], array_keys( $map ) );
     }
+
+    public function test_transform_legacy_payload_to_new_returns_mapped_slice(): void {
+        $fixture = [
+            [ 'id' => 'banner_width', 'type' => 'field', 'legacy_key' => 'dokan_appearance.store_banner_width', 'default' => 400 ],
+            [ 'id' => 'unrelated',    'type' => 'field', 'legacy_key' => 'dokan_general.unrelated_field',       'default' => '' ],
+        ];
+        $cb = static function () use ( $fixture ) { return $fixture; };
+        add_filter( 'dokan_get_admin_settings_schema', $cb );
+
+        $bridge = new LegacySettingsBridge();
+        $slice  = $bridge->transform_legacy_payload_to_new(
+            'dokan_appearance',
+            [ 'store_banner_width' => 800, 'untracked' => 'ignored' ]
+        );
+
+        remove_filter( 'dokan_get_admin_settings_schema', $cb );
+
+        $this->assertSame( [ 'banner_width' => 800 ], $slice );
+    }
+
+    public function test_transform_preserves_explicit_null_and_false(): void {
+        $fixture = [
+            [ 'id' => 'enable_x', 'type' => 'field', 'legacy_key' => 'dokan_general.enable_x', 'default' => false ],
+            [ 'id' => 'note_x',   'type' => 'field', 'legacy_key' => 'dokan_general.note_x',   'default' => '' ],
+        ];
+        $cb = static function () use ( $fixture ) { return $fixture; };
+        add_filter( 'dokan_get_admin_settings_schema', $cb );
+
+        $bridge = new LegacySettingsBridge();
+        $slice  = $bridge->transform_legacy_payload_to_new(
+            'dokan_general',
+            [ 'enable_x' => false, 'note_x' => null ]
+        );
+
+        remove_filter( 'dokan_get_admin_settings_schema', $cb );
+
+        $this->assertSame( [ 'enable_x' => false, 'note_x' => null ], $slice );
+    }
+
+    public function test_transform_returns_empty_for_unmapped_option(): void {
+        add_filter( 'dokan_get_admin_settings_schema', '__return_empty_array' );
+
+        $bridge = new LegacySettingsBridge();
+        $slice  = $bridge->transform_legacy_payload_to_new( 'dokan_unknown', [ 'x' => 1 ] );
+
+        remove_filter( 'dokan_get_admin_settings_schema', '__return_empty_array' );
+
+        $this->assertSame( [], $slice );
+    }
 }
