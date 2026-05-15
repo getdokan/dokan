@@ -2172,12 +2172,277 @@ The `Settings::sanitize_options` loop at `dokan-lite/includes/Admin/Settings.php
 
 ## Side-effect / hook checklist
 
-_Filled in Task N+1 (final pass)._
+Compiled from per-tab traces. Each row: behavior class · tabs where observed · summary · verdict.
+
+### Default injection on read
+| Behavior | Tabs | Summary | Verdict |
+| --- | --- | --- | --- |
+| Schema defaults NOT injected by AJAX read pipeline | 27/30 tabs (all except `dokan_general`, `dokan_selling`, `dokan_shipping_status_setting`) | `wp option delete <name>` + GET returns `[]`. Schema `default` values never reach the client — every read site supplies its own per-key fallback via `dokan_get_option(<key>, <opt>, <default>)`. | Document — new page MUST decide whether to inject defaults at GET or rely on read-site fallbacks. |
+| Empty-option pre-population via `dokan_get_settings_values` | `dokan_withdraw` (paypal-default + all-methods expansion), `dokan_appearance` (`vendor_layout_style='legacy'`), `dokan_selling` (`commission_type='fixed'` when empty), `dokan_general` (no defaults but no skew) | Filter listeners synthesize values on read regardless of DB state. | Preserve — read pipeline must keep these filters or move logic into save-time normalization. |
+| Self-seeding on first read | `dokan_shipping_status_setting` (`ShippingStatus::add_default_shipping_status` writes defaults via `update_option` on empty read) | First-read side effect persists defaults; `wp_options` row is created without an admin action. | Preserve OR replace with explicit installer step — silent installer behavior. |
+| Module-activation seeding | `dokan_report_abuse` (8 reasons via `dokan_activated_module_report_abuse`), `dokan_product_subscription` (auto-creates page + writes `subscription_pack`), `dokan_pages` (Installer seeds page ids at activation), `dokan_product_advertisement` (creates base product via post-save listener) | Defaults live in module activation hooks rather than schema. | Document — defaults are NOT reproducible from schema alone; the new page must coexist with these activation paths. |
+
+### Save-time validation (clamp, reject, fail-closed)
+| Behavior | Tabs | Summary | Verdict |
+| --- | --- | --- | --- |
+| Fail-closed validator (rejects save with `wp_send_json_error`, DB unchanged) | `dokan_general` (`sanitize_custom_store_url` throws `DokanException` on reserved slugs), `dokan_withdraw` (`withdraw_limit < 0`; custom-method blank validation), `dokan_reverse_withdrawal` (`Settings::validate_admin_settings` — billing day, sum boundary, due_period, threshold, failed_actions non-empty), `dokan_product_advertisement` (`total_available_slot != 0`, `expire_after_days != 0`, `cost >= 0`), `dokan_delivery_time` (7-check `validate_admin_delivery_settings` — labels, time-slot range, opening<closing, etc.) | 5 tabs have real server-side validators. All return HTTP 400 with `errors[]` payload; persistence is atomic. | **Preserve** — these are the only fields with real server-enforced contracts; new page must keep validator wiring intact. |
+| Silent clamp on save | `dokan_selling.admin_percentage` (`validate_fixed_price_values` replaces out-of-range with previously-saved value when `commission_type ∈ {flat,fixed}`) | Filter replaces value but does NOT reject — admin sees no error feedback. **Brittle:** uses `dokan_get_option(..., default)` which returns `''` not `'0'` when previous was empty. | Preserve behavior or upgrade to fail-closed with explicit error message. |
+| Generic `sanitize_text_field` (only top-level scalars) | All 30 tabs via `Settings::sanitize_options` | Single pass over top-level scalars; does NOT recurse into nested arrays; does NOT enforce option-lists; does NOT type-coerce numerics. | Document gap — recursion + enum enforcement must be added in the new page. |
+| Newline collapse on textarea | `dokan_email_verification`, `dokan_privacy`, `dokan_live_chat.wa_pre_filled_message` (and any textarea) | `sanitize_text_field` flattens `\r`/`\n` to spaces. Production `registration_notice`/`login_notice` cannot hold multi-line text. | Fix — use `sanitize_textarea_field` for textarea variants. |
+| Type coercion via post-save self-seeder | `dokan_delivery_time` (`generate_admin_delivery_time_settings` re-`update_option`s with `intval()`-coerced numerics + normalized time strings) | `dokan_after_saving_settings` mutates the row a second time after the primary save. 4 numeric fields converge string → int on every save. | Preserve coercion logic in new schema's field-level validation or replicate via second-pass writer. |
+| Option-list / enum / range NOT enforced | All 30 tabs unless explicitly listed above | `'NOT_IN_OPTION_LIST'`, `'maybe'`, `-5` for `min=1`, `100` for `max=18`, etc. all persist verbatim. | Fix — new page must enforce schema option lists and range bounds server-side. |
+| HTML / script tag NOT stripped on save | `dokan_privacy.privacy_policy` (wpeditor — no `wp_kses_post`), `dokan_rma.rma_policy` (wpeditor), `dokan_rma.rma_reasons[].value`, `dokan_colors` (nested hex strings emitted into `<style>`), `dokan_verification.*_app_secret`, `dokan_verification_sms_gateways.account_sid`, `dokan_product_subscription.cancelling_email_subject` | `<script>alert(1)</script>` round-trips byte-identical. Stored-XSS risk depends on render-site escaping. | Fix — apply `wp_kses_post` / `sanitize_hex_color` per field variant. |
+| URL scheme NOT validated | `dokan_verification.facebook_redirect_url` (`javascript:` persisted), media id fields in `dokan_appearance` (`'0'`, `'999999'` accepted) | No `esc_url_raw` / `wp_http_validate_url` / `get_post()` existence check. | Fix — apply URL sanitizers per field variant. |
+
+### Filter mutations on save (write-side)
+| Behavior | Tabs | Summary | Verdict |
+| --- | --- | --- | --- |
+| `dokan_save_settings_value` p99 — `dashboard_menu_manager` leak | All 30 tabs | Pro MenuManager's `DataSource::save_admin_settings` unconditionally writes `dashboard_menu_manager` into every saved option due to ungated assignment at `DataSource.php:45`. Persists to DB on most tabs; response-only on `dokan_product_advertisement` (Task 29). | **Fix at source** (gate the line with `if ( Constants::DOKAN_MENU_MANAGER === $option_name )`) OR ignore on read in the new page. |
+| `dokan_save_settings_value` p10 (Selling clamp) | `dokan_selling` (`validate_fixed_price_values`) | Replaces `admin_percentage` with previously-saved value (silent clamp). | Preserve or upgrade. |
+| `dokan_before_saving_settings` (fail-closed validators) | `dokan_reverse_withdrawal`, `dokan_product_advertisement`, `dokan_delivery_time`, plus TableRate `clear_notice_cache` listener fires globally | Hook fires for every tab. Listeners short-circuit save by `wp_send_json_error`. **Signature fragility:** TableRate's listener requires 3 args; firing with 2 fatals. | Preserve — keep 3-arg signature contract documented. |
+
+### Filter mutations on read (read-side / Response ≠ DB)
+| Behavior | Tabs | Summary | Verdict |
+| --- | --- | --- | --- |
+| `dokan_get_settings_values` chain runs on BOTH GET endpoint AND post-save response | All tabs | Save response is built by re-running the read pipeline on the just-saved value — so any read-time mutation also affects the immediate response. | Preserve — new page response must run the same filter chain. |
+| Legacy value mapper (mode names) | `dokan_selling.new_seller_enable_selling` (`'on'→'automatically'`, `'off'→'manually'`) — applied ONLY on dedicated GET endpoint, NOT in post-save response builder | Save response shows raw value; next page-load GET shows mapped value. Two different "current" values for one DB row. | Normalize on write — drop the mapper after one-shot DB migration. |
+| Empty-value default injection | `dokan_selling.commission_type` (empty → `'fixed'` on read), `dokan_appearance.vendor_layout_style` (empty → `'legacy'` on read) | DB retains empty string; UI/consumers see synthesized default. | Normalize on write OR keep filter. |
+| `wp_parse_args` expansion | `dokan_withdraw.withdraw_methods` (re-injects all 7 known methods with `''` for unselected on every read; strips unknown method ids like legacy `stripe`) | DB stores only selected keys; response expands. | Preserve — UI relies on the expanded shape. |
+| Legacy palette-name remap | `dokan_colors.store_color_pallete.value` (`'default'→'majestic orange'`, `'purple plus'→'purple pulse'`) | DB carries legacy name forever; response carries mapped name. **Permanent DB↔response divergence.** | Add upgrader OR move into save-time filter to normalize DB. |
+| Response sanitize callback (currency formatting) | `dokan_selling.additional_fee` (`wc_format_localized_price` on response), `dokan_withdraw.withdraw_limit` | Response can return a localized string (e.g. `"4,242.00"`) different from DB scalar. | Preserve format contract. |
+| Read-time numeric transform (call-site only) | `dokan_quote_settings.decrease_offered_price` (helper returns `-1 * abs(float)`, save stores user-entered positive) | Save value ≠ consumed value; transform lives in helper, NOT in `dokan_get_settings_values`. | Move into save-time normalization. |
+
+### Side effects on save (rewrite flush, cron/Action Scheduler, transients, wp_posts, user_meta, self-seeders, per-row actions, background jobs)
+| Behavior | Tabs | Summary | Verdict |
+| --- | --- | --- | --- |
+| `flush_rewrite_rules()` triggered by field change | `dokan_general.custom_store_url` (only when value actually changed) | Compares old vs new; flushes only on diff. No other tab flushes. | Preserve — the rewrite registration MUST follow store-slug change. |
+| Action Scheduler schedule/unschedule | `dokan_reverse_withdrawal` (`BackgroundProcess\CronActions::after_save_settings` — schedules `dokan_reverse_withdrawal_midnight_cron` daily + `dokan_reverse_withdrawal_monthly_cron` cron `0 8 <day> * *` when enabled+by_month; unschedules both when disabled) | Cron actions table mutated synchronously. | Preserve — gating logic depends on `enabled`/`billing_type`/`monthly_billing_day`. |
+| Background process dispatch | `dokan_spmv` (`Dokan_SPMV_Update_Product_Visibility` background job dispatched on EVERY save via `dokan_after_saving_settings`, regardless of whether `show_order` changed; walks `wp_dokan_product_map`) | Each save spawns a `WP_Background_Process` queue; expensive on large marketplaces. | Preserve but gate on actual `show_order` value change to avoid redundant work. |
+| `wp_posts` write — auto-create base product | `dokan_reverse_withdrawal` (`create_reverse_withdrawal_base_product` lazy creation), `dokan_product_advertisement` (`create_advertisement_base_product` inserts hidden `post_type=product` when missing) | Save listener inserts a WC product if the configured id is absent. Latent on installs that have already exercised the module. | Preserve OR move to module activation only. |
+| `wp_posts` write — overwrite page content | `dokan_product_subscription` (`Shortcode::insert_shortcode_into_page` rewrites `subscription_pack` page's `post_content` to literally `[dps_product_pack]` on every save) | **Destructive of admin/customer edits to the subscription page.** Runs unconditionally when `subscription_pack` is non-empty. | Decouple OR keep with explicit admin warning. |
+| `wp_options` side write (companion option) | `dokan_delivery_time` (post-save self-seeder writes `_dokan_delivery_slot_settings`), `dokan_appearance` (none directly, but flat array contains derived state) | `dokan_after_saving_settings` mutates another wp_option row computed from the primary value. | Preserve — downstream consumers read the companion option. |
+| Post-save self-seeder re-writing the SAME row | `dokan_delivery_time` (`generate_admin_delivery_time_settings` calls `update_option($option, …)` post-save with int-coerced/time-normalized values) | Same row is rewritten with sanitized version. | Preserve OR move logic into field-level validation. |
+| Per-row action dispatch | `dokan_rma` (`dokan_pro_register_rms_reason` fires once per `rma_reasons` row on save) | No idempotency / no listener-side validation. | Preserve hook semantics; document. |
+| Token/credential lifecycle untouched on disable | `dokan_printful` (toggling `printful_enable=off` does NOT clear per-vendor `user_meta.dokan_printful_access_token/_refresh_token/_expired_at/_store_id`), `dokan_email_verification` (disabling does not affect `_dokan_email_verification_key` user-meta) | Tokens persist in `user_meta` after admin disables feature. | Document — explicit cleanup needed if disable should revoke. |
+| No side effects (`update_option` only) | `dokan_appearance`, `dokan_privacy`, `dokan_ai`, `dokan_pages` (merge but no extras), `dokan_geolocation`, `dokan_live_search_setting`, `dokan_report_abuse`, `dokan_store_support_setting`, `dokan_vendor_analytics`, `dokan_verification`, `dokan_verification_sms_gateways`, `dokan_printful`, `dokan_colors`, `dokan_social_api`, `dokan_quote_settings`, `dokan_rma` (per-row actions only), `dokan_live_chat`, `dokan_wholesale`, `dokan_germanized`, `dokan_shipping_status_setting`, `dokan_vendor_analytics`, `dokan_menu_manager`, `dokan_spmv` (background job covered above) | 20+ tabs have zero side effects beyond the `update_option` row. | Baseline behavior. |
+| Transient invalidation on save | None observed | No `delete_transient` or cache flushes from any save handler. | Document — pre-existing transients survive saves. |
+
+### Cross-tab leaks & collisions
+| Behavior | Tabs | Summary | Verdict |
+| --- | --- | --- | --- |
+| `dashboard_menu_manager` cross-tab leak | All 30 tabs | Pro MenuManager filter writes `dashboard_menu_manager: []` into every saved option. Documented per-tab; root cause `DataSource.php:45` ungated. | Fix at source. |
+| New-schema cross-tab key collision (`enabled`) | `dokan_verification` (Vendor Verification) + `dokan_email_verification` (new schema relocates 3 fields INTO `dokan_verification` storage, including a top-level `enabled` that collides with the Vendor Verification master gate) | Saving one subpage overwrites the other's master gate. | **P0 — fix before merge.** |
+| New-schema sibling collision (subscription) | `dokan_product_subscription` — new schema declares both legacy keys and renamed keys side-by-side (e.g. `enable_pricing` + `vendor_subscription`); both persist as parallel dead keys. | Schema authoring inconsistency. | Resolve naming + add migration. |
+| Ghost field in DB (no schema, no read site) | `dokan_product_subscription.notify_by_email`, `dokan_verification_sms_gateways.unknown_sms_field` (probe-induced), pre-existing legacy `stripe` in `dokan_withdraw.withdraw_methods` (filtered out on read), stale `dokan_ai_chatgpt_*` and `dokan_ai_max_tokens_for_marketplace` in `dokan_ai` | Keys persist across versions because saves OVERWRITE the entire option but the value comes from a payload that still echoes the stale key. | Migration must scrub on next save OR add upgrader. |
+| Unknown-key persistence (admin can write garbage) | All 30 tabs (Save B probes confirmed) | Save handler accepts any keys in `settingsData[...]` and writes them verbatim. `current_user_can('manage_woocommerce')` is the only gate. | **Fix** — new page must filter to active schema on save. |
+
+### Sensitive-key wrapper behavior (response masking)
+| Behavior | Tabs | Summary | Verdict |
+| --- | --- | --- | --- |
+| Wrapper masks value on response | `dokan_verification_sms_gateways.auth_token`, `dokan_printful.printful_secret_key` | `sanitize_options($value, 'read')` substitutes `"[BLOCKED: Sensitive key]"` for these specific field names. DB stores raw value verbatim. | Document the wrapper's key list — needed for plugin-ui parity. |
+| Wrapper coverage gap — only one half of credential pair | `dokan_verification_sms_gateways.account_sid` (Twilio SID NOT masked while paired `auth_token` IS), `dokan_printful.printful_client_id` (NOT masked while paired `printful_secret_key` IS) | Key list is not pair-aware. | Extend wrapper key list. |
+| No wrapper despite credential field | `dokan_ai.dokan_ai_*_api_key` (OpenAI / Gemini / BRIA-AI / image-gemini API keys all unmasked), `dokan_appearance.gmap_api_key` / `.mapbox_access_token`, `dokan_verification` social-provider secrets (`facebook_app_secret`, etc.), `dokan_social_api.fb_app_secret` and 4 sibling secrets, `dokan_live_chat.app_id` / `.app_secret`, `dokan_vendor_analytics.profile` (opaque GA id) | Plaintext credentials returned in AJAX response. `secret_text:true` / `variant:'show_hide'` are UI-only. | **P0** — extend wrapper to credential fields or stop returning credentials in response. |
+| Boundary probes do NOT trigger key-name heuristic | All probe tests (`probe_sensitive_auth_token`, `probe_sensitive_secret_key`) | Probes named to suggest sensitivity returned UNMASKED — confirms masking is per-explicit-key-name in `sanitize_options('read')`, not regex/substring. | Document — wrapper is allow-list, not pattern-based. |
+
+### Save-mode (overwrite vs merge)
+| Behavior | Tabs | Summary | Verdict |
+| --- | --- | --- | --- |
+| **OVERWRITE** (entire wp_option replaced with payload) | 29/30 tabs | `update_option($section, $value)` writes the full payload. Omitting a key DELETES it from the persisted option. Unknown keys persist. | Preserve — design implication for the new page is profound (see plugin-ui contract). |
+| **MERGE** (`array_replace_recursive`) | `dokan_pages` ONLY | `WeDevs\Dokan\Admin\Hooks::update_pages` (priority 10 on `dokan_save_settings_value`) merges submitted payload into existing option. Partial submits cannot clear a key. | **UNIQUE — preserve as the documented exception** OR converge on overwrite + accept full-payload UI contract. |
 
 ## Surprises
 
-_Filled in Task N+1 (final pass)._
+Things that are NOT obvious from reading `Settings.php` or the schema source. Each item: behavior · evidence (tab or `_trace_artifacts/` path) · implication for the new plugin-ui page.
+
+### Persistence model surprises
+- Save handler is **OVERWRITE on every tab except `dokan_pages`** (29 vs 1 split via `array_replace_recursive` filter). Omitting a key DELETES it (`dokan_appearance.hide_vendor_info` Save B confirms). Implication: new page must always submit full per-section payloads, not deltas.
+- Unknown keys persist across saves on every tab — `current_user_can('manage_woocommerce')` is the only filter (Tasks 8 `dokan_ai` `__unexpected_extra_key__`, 9, 11, 13–22, 26–30). Implication: new page MUST filter to active schema on save.
+- Post-save self-seeder re-`update_option`s the SAME row with coerced values — `dokan_delivery_time.generate_admin_delivery_time_settings` is the only instance (Task 30). Save string → DB int after second pass. Implication: drop the legacy class and you silently lose the type coercion.
+- First-read self-seeder writes defaults — `dokan_shipping_status_setting` only (Task 23). The wp_options row appears without an admin action. Implication: "empty option" sniffs in migrations can mis-classify recently-installed sites.
+- Ghost keys survive forever — `dokan_ai_chatgpt_*` and `dokan_ai_max_tokens_for_marketplace` carried in DB despite never being in the current schema (Task 8); `dokan_product_subscription.notify_by_email` declared by NEITHER legacy nor new schema yet present in the live DB (Task 19); `dokan_withdraw` carried legacy `stripe` until read-side `wp_parse_args` stripped it on next save (Task 3).
+- Display-only fields can persist as zombies — `dokan_printful.printful_app_name`/`printful_app_url`/`printful_redirection_domains` declared `variant: info`/`copy_field` (legacy derived these server-side from `home_url()`) but the React form posts them and the server stores them (Task 18).
+
+### Validation surprises (what the server actually rejects vs accepts)
+- Only **5 of 30 tabs** have any fail-closed validator (`dokan_general` reserved-slug, `dokan_withdraw` negative limit + custom-method required, `dokan_reverse_withdrawal` 7 checks, `dokan_product_advertisement` 3 checks, `dokan_delivery_time` 7 checks). Implication: 25 tabs have zero server-side enforcement of declared `min`/`max`/`options`/`step`.
+- `dokan_selling.admin_percentage` clamp returns previously-saved value when out of range — when previous was empty, clamp returns `""` not `'0'` (Task 2 sub-case `B_admin_percentage_150_fixed`). Brittle fallback.
+- `dokan_selling.commission_type=""` save response returns `"fixed"` immediately (read pipeline runs on response builder) but DB stores `""` (Task 2). Read-time normalization without write-time normalization.
+- `dokan_selling.new_seller_enable_selling` legacy `'on'`/`'off'` mapped to `'automatically'`/`'manually'` ONLY on dedicated GET endpoint — save response shows raw value (Task 2). Two different "current" values for one DB row.
+- Reverse-withdrawal sum check `monthly_billing_day + due_period <= 28` enforced only when `billing_type=by_month`; other validation checks run cumulatively (32 produces BOTH "greater than 28" AND "sum greater than 28") (Task 4).
+- Generic `sanitize_text_field` collapses `\r`/`\n` to spaces on textarea fields — `dokan_email_verification.registration_notice`/`login_notice`, `dokan_privacy.privacy_policy`, `dokan_live_chat.wa_pre_filled_message` cannot hold multi-line text (Task 21 probe).
+- `sanitize_options` does NOT recurse into nested arrays — `dokan_colors.store_color_pallete.*` hex strings (and `dokan_verification.verification_methods_list[].label` rows, `dokan_germanized.vendor_fields[*]`, `dokan_rma.rma_reasons[].value`) bypass `sanitize_text_field` entirely (Task 20). `<script>` round-trips byte-identical in nested values.
+
+### Read-time normalization & Response ≠ DB
+- `dokan_colors.store_color_pallete.value`: `map_legecy_color_pallete_name` rewrites `'purple plus'→'purple pulse'` on response but never persists the fix (Task 20). **First traced tab where post-save response and DB row differ on a sentinel value.** Permanent divergence on legacy installs.
+- `dokan_withdraw.withdraw_methods`: DB stores only selected keys; every read re-runs `wp_parse_args` against `dokan_withdraw_get_methods()` so response always returns all 7 method ids with `''` for unselected (Task 3). Empty option triggers `paypal=>paypal` default via `dokan_settings_withdraw_methods_default` filter. Implication: clients cannot tell from response alone which methods admin actually checked unless they compare against the live registry.
+- `dokan_quote_settings.decrease_offered_price`: persists as positive user-entered string; every consumer reads via `SettingsHelper.php:48` which returns `(float)(-1 * abs(...))` (Task 24). Save value ≠ runtime value. Migrators bypassing the helper see corruption.
+- `dokan_appearance.vendor_layout_style`: filter `set_vendor_latest_layout` injects `'legacy'` on read when empty (Task 6).
+- `dokan_selling.commission_type`: read filter injects `'fixed'` when empty (Task 2).
+- `dokan_selling.additional_fee` / `dokan_withdraw.withdraw_limit`: `wc_format_localized_price` on read can return localized format strings (e.g. `"4,242.00"`) differing from DB scalar.
+
+### Cross-tab / cross-plugin coupling
+- **MenuManager universal leak:** all 30 tabs receive `dashboard_menu_manager: []` written by Pro MenuManager's `DataSource::save_admin_settings` (Tasks 1–30); root cause is ungated assignment at `DataSource.php:45` (`$option_value[Constants::MENU_MANAGER_OPTIONS] = $this->filter_title($filtered_value);` runs even when `$option_name !== DOKAN_MENU_MANAGER`).
+- **New-schema cross-tab collision (P0):** `dokan_email_verification` new schema relocates 3 fields (`enabled`, `registration_notice`, `login_notice`) INTO `dokan_verification` storage — `dokan_verification` already declares its own top-level `enabled` (Task 16). Whoever saves last wins the master gate (Task 21).
+- **Cross-module read coupling:** `dokan_colors.store_color_pallete` consumed by 8 read sites across 4 modules + Lite REST (`color-scheme-customizer/module.php×2`, `product-adv/module.php`, `product-adv/Frontend/Product.php×4`, `elementor/Abstracts/DokanButton.php`, `dokan-lite/REST/VendorDashboardController.php`) (Task 20).
+- **TableRate `clear_notice_cache` listener fires on EVERY save** — registered on `dokan_before_saving_settings` with 3-arg signature; any caller firing the action with fewer args fatals (Task 28).
+- **`dokan_general.dashboard_menu_manager_before_admin_settings` filter** is consumed inside Lite's Settings but only by Pro MenuManager — extension surface (Task 9).
+
+### Side-effect surprises (writes outside the tab's wp_option)
+- `dokan_product_subscription` save rewrites the `subscription_pack` page's `post_content` to literally `[dps_product_pack]` on every save (Task 19) — destructive of any admin/customer customization.
+- `dokan_spmv` save dispatches `Dokan_SPMV_Update_Product_Visibility` background process walking ALL `wp_dokan_product_map` rows on EVERY save (Task 13) — not gated on whether `show_order` actually changed.
+- `dokan_reverse_withdrawal` save schedules/unschedules TWO Action Scheduler crons (midnight daily + monthly cron `0 8 <day> * *`) (Task 4); `dokan_after_saving_settings` p20 also lazily creates a WC product on first enable.
+- `dokan_product_advertisement` save can insert a `post_type=product` row (hidden, virtual, price 0, sold individually) via `create_advertisement_base_product` when the configured id is missing (Task 29). Dormant on installs that already have it.
+- `dokan_general.custom_store_url` change triggers `dokan()->rewrite->register_rule()` + `flush_rewrite_rules()` (Task 1). No other tab flushes.
+- `dokan_delivery_time` save writes companion option `_dokan_delivery_slot_settings` and re-`update_option`s its own row with int-coerced numerics (Task 30).
+- `dokan_printful` disable does NOT revoke per-vendor `user_meta.dokan_printful_access_token/_refresh_token/_expired_at/_store_id` (Task 18).
+- `dokan_email_verification` disable does NOT clear `_dokan_email_verification_key` user-meta (Task 21).
+- `dokan_rma` save dispatches `dokan_pro_register_rms_reason` action **once per row** in `rma_reasons` repeater (Task 25) — no idempotency.
+
+### Schema authoring vs wiring (missing / orphan / wired)
+- **No new-schema counterpart at all:** `dokan_quote_settings` (Task 24), `dokan_social_api` (Task 22) — module-owned tabs absent from `ProSettingsSchema`.
+- **Schema authored but NOT wired:** `dokan_rma` (`RmaSettingsSchema.php` defined; never instantiated, no `register()` call) (Task 25); `dokan_wholesale` (Task 27); `dokan_germanized` (Task 28); `dokan_product_advertisement` (Task 29). Distinct from "no schema" — class exists, awaits a single-line bootstrap.
+- **Schema authored AND wired:** `dokan_delivery_time` only — `DeliveryTimeSettingsSchema::register()` is called from `module.php:72` (Task 30). First Pro module schema actually registered.
+- **Top-level Pro features (not under `modules/`):** `dokan_email_verification` (`includes/EmailVerification.php`), `dokan_social_api` (`includes/SocialLogin.php`) are always-on core Pro features, not togglable modules (Tasks 21, 22).
+- **PHP array key vs inner `name` desync:** `dokan_delivery_time` legacy schema's PHP array key `select_required` vs inner `name=selection_required` — inner `name` wins for the form, leaving `select_required` as a dead PHP key never reaching DB (Task 30).
+- **Schema id typo preserved:** `dokan_verification.linked_key_content` (should be `linkedin_key_content`) (Task 16); `dokan_wholesale.display_price_in_shop_archieve` (should be `archive`) is in BOTH schema AND read site `class-cart-checkout.php:230` (Task 27).
+
+### Sanitization & escape gaps (security-relevant)
+- **Unescaped color values emitted into `<style>` block:** `dokan_colors` — `module.php:476-540` string-concats `$colors['btn_text']` etc. directly. Color picker UI prevents `</style>` payloads; AJAX endpoint does not (Task 20).
+- **Stored XSS surface on `wpeditor` fields:** `dokan_privacy.privacy_policy`, `dokan_rma.rma_policy` — no `wp_kses_post` on save (Tasks 7, 25). Mitigating: admin-only cap required.
+- **Stored XSS surface on textarea credentials/email subjects:** `dokan_verification.facebook_app_secret`, `dokan_verification_sms_gateways.account_sid`, `dokan_product_subscription.cancelling_email_subject` accepted `<script>` verbatim (Tasks 16, 17, 19). Render-site escaping varies.
+- **`javascript:` URL accepted:** `dokan_verification.facebook_redirect_url` (Task 16) — no `esc_url_raw`/`wp_http_validate_url`.
+- **Whitespace API keys:** `dokan_ai.dokan_ai_*_api_key` accepts `'   '` (3 spaces) verbatim — `Manager::is_configured()` reports configured but remote API rejects (Task 8). No `trim()` anywhere.
+- **Plaintext credentials in GET response:** every credential field except 2 (`auth_token`, `printful_secret_key`) returns unmasked. `secret_text:true` / `variant:'show_hide'` are UI-only flags (Tasks 8, 22, 26).
+- **Sensitive-key wrapper covers only ONE half of credential pair:** `account_sid` unmasked while `auth_token` masked (Task 17); `printful_client_id` unmasked while `printful_secret_key` masked (Task 18).
+- **Page/media ids not existence-validated:** `dokan_pages.*` accepts `0`, `999999` without `get_post()` check (Task 5); `dokan_appearance.default_store_banner` / `default_store_profile` same (Task 6); `dokan_privacy.privacy_page='0'` silently disables feature without error (Task 7).
+- **No length cap on options:** `dokan_email_verification` 5000-char probe persists (Task 21 — wp_options is LONGTEXT, so this isn't a server crash, but it isn't bounded either).
+
+### Default / option-list drift between schema and read sites
+- **Schema default unreachable from UI:** `dokan_ai.dokan_ai_gemini_model` default `gemini-2.0-flash` is NOT in the live options list (`2.5-flash`, `2.5-flash-lite-preview-06-17`, `2.5-pro`) (Task 8); `dokan_ai.dokan_ai_image_engine` default `'openai'` not in image options list.
+- **Schema default ≠ read-site fallback:** `dokan_geolocation.show_location_map_pages` schema `'all'` vs read `'shop'` (Task 10); `dokan_live_search_setting.live_search_option` schema `'suggestion_box'` vs widget fallback `'old_live_search'` (Task 11); `dokan_wholesale.display_price_in_shop_archieve` schema `'on'` vs read `'no'` vs new schema `'off'` (Task 27).
+- **Default flips on new schema:** `dokan_product_subscription.subscription_in_registration` `'on'→'off'` (Task 19); `dokan_live_chat` 6 renames + 1 default flip + 1 option-list expansion (Task 26); `dokan_wholesale` shop-archive `on→off` + customer-approval `on→off` (Task 27); `dokan_product_advertisement` 4-of-8 defaults flip (Task 29); `dokan_germanized` multicheck defaults shrink from all-5 to single-item (Task 28).
+- **Live legacy option-value mapping shim:** `dokan_colors.store_color_pallete.value` shim signals historical churn (`'default'→'majestic orange'`, `'purple plus'→'purple pulse'`) without DB normalization (Task 20).
+- **Multicheck values replaced wholesale:** `dokan_germanized.vendor_fields` (5 `dokan_*`-prefixed values → 5 fresh strings with zero shared identifiers); `customer_fields` drops the load-bearing `billing_` prefix that drives WC checkout integration (Task 28).
+
+### Encoding & transport caveats
+- AJAX is `application/x-www-form-urlencoded; charset=UTF-8` (jQuery `$.ajax` default). PHP bracket-parses nested keys (`settingsData[location][latitude]`) correctly (Task 10, 12).
+- **Multipart FormData would NOT bracket-parse** — `location[latitude` would remain a literal top-level key (Task 10). Plugin-ui must not switch to multipart without explicit serialization.
+- Boolean encoding via legacy FormData: `is_switched_on=false` serializes as `""`. `dokan_menu_manager.dashboard_menu_manager.*.is_switched_on` round-trips as `""`/`"1"` (Task 9). New page must accept either `boolean false` or `string ""`.
+- Hyphenated keys round-trip cleanly: `dokan_ai.dokan_ai_image_bria-ai_api_key` (Task 8); `dokan_menu_manager.delivery-time-dashboard` etc. (Task 9).
+- Empty array vs empty string ambiguity: `dokan_verification.verification_methods_list` reaches DB as `""` (string) on empty payload, not `[]` — `foreach` consumers may fatal (Task 16). `dokan_withdraw.withdraw_methods` empty persists as empty STRING `s:0:""`, not empty array (Task 3).
+
+### Legacy bugs surfaced
+- **MenuManager leak root cause:** `DataSource.php:45` ungated assignment — fix is a single `if` guard (all 30 tabs).
+- **`dokan_selling.new_seller_enable_selling` mapper inconsistency** between save response and dedicated GET (Task 2).
+- **`dokan_colors.store_color_pallete.value` permanent DB↔response divergence** (Task 20).
+- **`dokan_email_verification` new schema collides on `dokan_verification.enabled`** (Task 21).
+- **`dokan_verification` social-provider key skew across 17 fields** (4 of 5 providers' read sites use different names than schema declares) (Task 16).
+- **`dokan_verification_sms_gateways` 8/11 dead schema keys** + 2 read-site keys (`nexmo_username`, `nexmo_pass`) absent from schema entirely (Task 17).
+- **`dokan_printful` 13/14 schema keys dead** — entire OAuth credential pair (`printful_client_id`/`printful_secret_key`) reachable in schema only under different names than read sites' `app_id`/`app_secret` (Task 18).
+- **`dokan_product_subscription.products_status_on_expiry` value-format drift** — schema declares `'published'`/`'pending_review'` which don't match `wp_update_post` post_status whitelist `'publish'`/`'pending'` (Task 19).
+- **`Settings::sanitize_options` does not recurse into nested arrays** — `dokan_colors` exposed first (Task 20).
+- **`Dokan_Wholesale_Admin` registers `dokan_settings_sections`/`dokan_settings_fields` filters only when `is_admin()`** — REST/cron/CLI saves bypass field registration (Task 27); same `is_admin()` gate also on RMA (Task 25).
+- **TableRate `clear_notice_cache` 3-arg signature contract** — any caller of `dokan_before_saving_settings` with fewer args fatals (Task 28).
+- **`dokan_delivery_time` legacy schema's `select_required` PHP key vs `selection_required` inner `name`** — dead key, latent bug at Vendor.php:345 read site (Task 30).
 
 ## What the new (plugin-ui) page must reproduce
 
-_Filled in Task N+1 (final pass)._
+Contract derived from the 30-tab trace. Each item: behavior · scope (all tabs / specific tabs) · required action by the new page.
+
+### Required parity (BLOCKING — break these and the feature regresses)
+- **AJAX action name `dokan_save_settings`** · all tabs · accept the legacy action name as a fallback OR migrate every legacy caller (no third-party callers known, but the legacy admin UI still posts this).
+- **Read action `dokan_get_setting_values`** · all tabs · the React form's bootstrap GET path; payload shape `{success: true, data: {<section>: {<key>: <value>, …}, …}}`.
+- **Payload shape `{nonce, section, settingsData[...]}`** · all tabs · nonce field name is `nonce`, validated against `dokan_admin`; `section` parameter (NOT `section_id`); `settingsData` is the flat per-section object posted as nested `application/x-www-form-urlencoded`.
+- **Capability gate `current_user_can('manage_woocommerce')`** · all tabs · this is the only permission check today.
+- **Per-section `wp_option` write target** · all tabs · each section persists to a wp_option row named identically to the section id (`dokan_general`, `dokan_selling`, …). Sole exception is the new-schema-only `dokan_verification` storage for `dokan_email_verification` fields (which is a **bug to fix**, not parity to keep).
+- **OVERWRITE save semantics** · 29 tabs (all except `dokan_pages`) · `update_option($section, $payload)` replaces the entire row; omitted keys are deleted. New page MUST always submit the full per-section payload, not deltas. UI state for hidden/conditional fields must round-trip even when not visually present.
+- **MERGE save semantics for `dokan_pages` only** · `dokan_pages` · `array_replace_recursive` via `Hooks::update_pages` priority 10 — partial submits cannot clear a key. Keep this behavior OR converge on overwrite + audit the 5 page-id consumers.
+- **Filter chain on save AND on response build** · all tabs · response value is built by running `dokan_get_settings_values` over the just-saved value (so read-time mutations also affect the immediate response). New page response builder MUST re-run the read pipeline.
+- **Filter execution order — `dokan_save_settings_value`** · all tabs · priority 10 listeners (Selling clamp, page merger), then priority 99 (MenuManager) — preserve priorities or refactor MenuManager guard.
+- **Fail-closed validators** · 5 tabs · MUST preserve wiring of `dokan_before_saving_settings` (`Settings::validate_admin_settings` for `dokan_reverse_withdrawal`, `Settings::validate_admin_settings` for `dokan_product_advertisement`, `Settings::validate_admin_delivery_settings` for `dokan_delivery_time`), `sanitize_callback` for `dokan_general.custom_store_url` (reserved-slug check), and the Pro `dokan_save_settings_value` listeners for `dokan_withdraw` (negative limit, custom-method required). Without these, invalid data persists silently.
+- **Side effects: rewrite flush** · `dokan_general.custom_store_url` · compare old vs new; flush only on diff.
+- **Side effects: Action Scheduler crons** · `dokan_reverse_withdrawal` · schedule/unschedule midnight + monthly crons based on `enabled`+`billing_type`+`monthly_billing_day`.
+- **Side effects: background job dispatch** · `dokan_spmv` · keep `dokan_after_saving_settings` listener that dispatches `Dokan_SPMV_Update_Product_Visibility` (consider gating on actual `show_order` change).
+- **Side effects: base-product creation** · `dokan_reverse_withdrawal`, `dokan_product_advertisement` · lazy `wp_insert_post` listeners.
+- **Side effects: per-row action `dokan_pro_register_rms_reason`** · `dokan_rma` · fires once per row in `rma_reasons` repeater.
+- **Side effects: page content rewrite** · `dokan_product_subscription` · `Shortcode::insert_shortcode_into_page` rewrites the `subscription_pack` page to `[dps_product_pack]`. **Destructive — surface to admin with a confirm OR keep the legacy behavior verbatim if not changing UX.**
+- **Side effects: companion option write** · `dokan_delivery_time` · keep `_dokan_delivery_slot_settings` write AND the second-pass `update_option` self-seeder that int-coerces numerics + normalizes times.
+- **Read-time normalization filters** · `dokan_withdraw` (paypal default + `wp_parse_args` expansion + unknown-method strip), `dokan_selling.commission_type` (empty → `'fixed'`), `dokan_appearance.vendor_layout_style` (empty → `'legacy'`), `dokan_colors.store_color_pallete.value` (legacy palette name remap) — preserve OR move into save-time normalization with one-shot DB migration.
+- **Response sanitize callbacks** · `dokan_selling.additional_fee` (`wc_format_localized_price`), `dokan_withdraw.withdraw_limit` — keep currency-formatting behavior.
+- **Sensitive-key response masking** · `dokan_verification_sms_gateways.auth_token`, `dokan_printful.printful_secret_key` · keep `[BLOCKED: Sensitive key]` substitution AND **extend to credential pairs the wrapper currently misses** (`account_sid`, `printful_client_id`, every `*_api_key` / `*_app_secret` on the AI / Social / Verification / LiveChat / Appearance tabs). See Required fixes.
+- **`refresh_after_save: true` client signal** · `dokan_withdraw.withdraw_charges`, `dokan_appearance.map_api_source`, `dokan_reverse_withdrawal.enabled` · UI must re-fetch settings after save when these fields are touched.
+- **`show_if` / dependency gating is DISPLAY-ONLY** · all tabs · the server accepts every payload key regardless of parent value (e.g. saving `*_app_id` while `social_login=off`). New page MUST mirror this OR explicitly enforce gates server-side (changing behavior). Preserve unless intentionally tightening.
+
+### Required fixes (legacy bugs that should NOT be ported)
+- **MenuManager `dashboard_menu_manager: []` cross-tab leak** · all 30 tabs · fix at source — gate `dokan-pro/includes/MenuManager/Admin/DataSource.php:45` with `if ( Constants::DOKAN_MENU_MANAGER === $option_name )`. New page MUST also tolerate (ignore on read, strip on save) for backward compat with persisted leaks.
+- **Schema collision on `dokan_verification.enabled`** · `dokan_email_verification` new schema · either namespace the email-verification keys (`email_verification_enabled`, etc.) or restore the dedicated `dokan_email_verification` storage. BOTH features' master gates collide today.
+- **Unknown-key persistence** · all tabs · new save handler MUST filter payload to the active schema keys; persist only declared fields.
+- **`Settings::sanitize_options` does not recurse** · all tabs with nested fields (`dokan_colors`, `dokan_verification`, `dokan_germanized`, `dokan_rma`, `dokan_delivery_time`) · new sanitizer must recurse OR new schema must remain flat.
+- **`sanitize_text_field` collapses newlines on textarea fields** · `dokan_email_verification`, `dokan_privacy`, `dokan_live_chat.wa_pre_filled_message`, `dokan_product_subscription` email body/subject · dispatch to `sanitize_textarea_field` for `textarea` variants.
+- **`sanitize_text_field` strips all HTML on textarea/wpeditor fields** · `dokan_privacy.privacy_policy`, `dokan_rma.rma_policy`, every email body · use `wp_kses_post` for rich-text variants.
+- **No option-list/enum enforcement** · all tabs · validate against declared `options` on save.
+- **No range/min/max enforcement** · `dokan_geolocation` (distance/zoom), `dokan_verification.minimum_social_connections`, `dokan_delivery_time` numerics · validate at save.
+- **Whitespace-only API keys accepted** · `dokan_ai.dokan_ai_*_api_key` · `trim()` and treat all-whitespace as empty.
+- **`javascript:`/invalid URLs accepted** · `dokan_verification.facebook_redirect_url`, all `*_url` fields · apply `esc_url_raw` + `wp_http_validate_url`.
+- **Page/media id existence not checked** · `dokan_pages.*`, `dokan_privacy.privacy_page`, `dokan_appearance.default_store_banner`/`.default_store_profile` · `get_post()` existence check on save (reject or fall back).
+- **Sensitive-key wrapper only masks single side of credential pair** · `dokan_verification_sms_gateways.account_sid` (unmasked), `dokan_printful.printful_client_id` (unmasked) · extend wrapper's key list to cover both halves of OAuth/SDK credential pairs. Audit all credential fields and mask consistently.
+- **Plaintext credentials in GET response** · `dokan_ai.dokan_ai_*_api_key`, `dokan_appearance.gmap_api_key`/`.mapbox_access_token`, `dokan_verification.*_app_secret`, `dokan_social_api.*_app_secret`, `dokan_live_chat.app_id`/`.app_secret` · either mask in response OR stop returning credential values entirely (only existence flag).
+- **`dokan_selling.admin_percentage` clamp uses empty string as fallback** · upgrade to fail-closed with explicit error message, OR fix fallback to literal `'0'`.
+- **`dokan_selling.new_seller_enable_selling` mapper inconsistency** · normalize on write (legacy `'on'`/`'off'` → `'automatically'`/`'manually'`); drop the read-time mapper post-migration.
+- **`dokan_colors.store_color_pallete.value` permanent DB↔response divergence** · add upgrader to normalize legacy names in-place OR move the map into a save-time filter.
+- **Unescaped color values emitted into `<style>` block** · `dokan_colors` · wrap `$colors['btn_text']` etc. in `sanitize_hex_color` / `esc_attr`; skip emission when empty.
+- **`Dokan_Wholesale_Admin` / `dokan_rma` registered only inside `is_admin()` guard** · register filter handlers unconditionally; gate only metabox handlers.
+- **TableRate `clear_notice_cache` 3-arg signature fragility** · either change signature to make 3rd arg optional, or document the contract.
+
+### Required migrations (legacy → new key/shape; must include upgrader)
+Catastrophic key/shape skews from the 30-tab trace. Each tab needs a one-shot upgrader OR save-side mirror OR read-site alias before the new schema can ship.
+
+- **`dokan_verification` (Task 16)** — social-provider key skew across 17 fields:
+  - `facebook_enabled→fb_enable_status`, `facebook_app_id→fb_app_id`, `facebook_app_secret→fb_app_secret`
+  - `google_enabled→google_enable_status`, `google_client_id→google_app_id`, `google_client_secret→google_app_secret`
+  - `linkedin_enabled→linkedin_enable_status`, `linkedin_client_id→linkedin_app_id`, `linkedin_client_secret→linkedin_app_secret`
+  - `x_enabled→twitter_enable_status`, `x_api_key→twitter_app_id`, `x_api_secret→twitter_app_secret`
+  - `apple_*` + `google_key_content` + `linked_key_content` (typo: should be `linkedin_key_content`) + `social_verification_required` + `minimum_social_connections` + `verification_methods_list` — write-only today (no read sites).
+- **`dokan_verification_sms_gateways` (Task 17)** — 8 of 11 schema keys are dead at read sites:
+  - `sms_provider→active_gateway`, `connect_to_twilio→twilio_enable_status`, `from_number→twilio_number`, `account_sid→twilio_username`, `auth_token→twilio_pass`, `sms_code_type→twilio_code_type`, `connect_to_vonage→nexmo_enable_status`, `sms_sent_success→sms_sent_msg`.
+  - PLUS schema MUST add `nexmo_username` / `nexmo_pass` (Vonage credentials currently unreachable).
+- **`dokan_printful` (Task 18)** — 13 of 14 schema keys dead:
+  - `printful_client_id→app_id`, `printful_secret_key→app_secret`, `printful_enable` (no read site), `size_guide_popup_title→popup_title`, `size_guide_popup_text_color→popup_text_color`, `size_guide_popup_background_color→popup_bg_color`, `size_guide_tab_background_color→tab_bg_color`, `size_guide_active_tab_background_color→active_tab_bg_color`, `size_guide_button_text_color→button_text_color`, `size_guide_measurement_unit→primary_measurement_unit` (PLUS value drift `centimeter↔centimetre`).
+  - PLUS `printful_app_name` / `printful_app_url` / `printful_redirection_domains` are display-only (legacy derived server-side via `home_url()`) — new page must omit from save payload OR re-derive on read.
+- **`dokan_product_subscription` (Task 19)** — 6 of 10 schema keys renamed:
+  - `vendor_subscription→enable_pricing`, `subscription_view_page→subscription_pack`, `subscription_in_registration→enable_subscription_pack_in_reg`, `email_notification_expiry→` (no read site — closest peer is ghost `notify_by_email`), `alert_days_before_expiry→no_of_days_before_mail`, `products_status_on_expiry→product_status_after_end` (PLUS value drift `published→publish`, `pending_review→pending`).
+- **`dokan_colors` (Task 20)** — 100% rename: `dashboard_color_customizer→store_color_pallete` AND read-time `'purple plus'→'purple pulse'` normalization needs DB upgrader to drop the read filter.
+- **`dokan_email_verification` (Task 21)** — relocation: new schema writes into `dokan_verification` storage, 3 fields collide with Vendor Verification. Either namespace OR restore dedicated storage.
+- **`dokan_rma` (Task 25)** — 3 key renames + row-shape change for repeater:
+  - `rma_enable_refund_request→rma_refund_requests`, `rma_enable_coupon_request→rma_coupon_requests`, `rma_policy→rma_refund_policy`.
+  - `rma_reasons` rows: legacy `{id, value}` → new `{id, title, order}`. Migrate `value` → `title`; inject `order` by index.
+- **`dokan_live_chat` (Task 26)** — 6 renames + 2 drops + default flip:
+  - `enable→livechat_enabled`, `provider→livechat_provider`, `app_id→livechat_app_id`, `app_secret→livechat_app_secret`, `chat_button_seller_page→livechat_vendor_page_button`, `chat_button_product_page→livechat_product_page_button`.
+  - DROPPED: `wa_opening_method`, `wa_pre_filled_message` (Whatsapp.php reads with no default — WhatsApp button breaks).
+  - Plus default flip on `chat_button_seller_page` (empty → `'on'`) and re-introduction of `messenger` provider (which has an explicit TODO removal comment at `AdminSettings.php:80`).
+- **`dokan_wholesale` (Task 27)** — 3 renames + enum value drift:
+  - `wholesale_price_display→display_wholesale_pricing_to`, `display_price_in_shop_archieve→wholesale_price_on_shop_archive` (typo fix + rename), `need_approval_for_wholesale_customer→need_approval_for_customer`.
+  - Enum value `all_user→all_users` (cosmetic; existing DB rows orphan).
+  - Default flips: shop-archive `on→off`, customer-approval `on→off`.
+- **`dokan_germanized` (Task 28)** — 5 top-level renames + every multicheck value replaced:
+  - `vendor_fields→vendor_extra_fields`, `vendor_registration→eu_vendor_registration_display`, `customer_fields→customer_extra_fields`, `enabled_germanized→germanized_support_vendors`, `override_invoice_number→vendor_invoice_number_override`.
+  - `vendor_fields` value-set: all 5 `dokan_*` values → 5 unrelated strings (only `vat_number` semantically overlaps).
+  - `customer_fields` value-set: all 4 `billing_dokan_*` values → 4 unrelated strings (drops the load-bearing `billing_` prefix that drives WC checkout integration — read site `CustomFields/Billing.php:74-129` renders `<input name="billing_dokan_*">`).
+- **`dokan_product_advertisement` (Task 29)** — 8 top-level renames (all renamed) + 4 default flips + currency-hardcoded key (`advertisement_cost_usd` should be `advertisement_cost`).
+- **`dokan_delivery_time` (Task 30)** — 2 drops + 1 collapse:
+  - DROPPED: `delivery_buffer_unit`, `delivery_buffer_value` (Vendor.php:379/383 still consume).
+  - COLLAPSED: `delivery_day_<weekday>` × 7 → `delivery_days_schedule` (single composite).
+
+### Open product decisions (no obvious right answer; surface for human review)
+- **MenuManager leak — fix at source or tolerate?** Fixing at source (`DataSource.php:45` guard) is a one-line patch in Pro but immediately exposes 30 sites' existing DB rows that carry the stale `dashboard_menu_manager: []` key. New page must still tolerate the stale key on read.
+- **OVERWRITE vs MERGE on `dokan_pages`** — converging on OVERWRITE simplifies the model but forces the UI to always submit all 5 page ids even when the admin changes one. Keep merge as a documented exception, or change UX to require full submits.
+- **Read-time normalization filters** — preserve them (`dokan_withdraw.withdraw_methods` expansion, `dokan_selling.commission_type` injection, `dokan_appearance.vendor_layout_style` injection, `dokan_colors.store_color_pallete.value` remap) OR normalize on write with one-shot DB migration. Preserving keeps DB unchanged; normalizing simplifies the read pipeline.
+- **`dokan_product_subscription` page content rewrite** — `Shortcode::insert_shortcode_into_page` rewrites the chosen page's `post_content` to `[dps_product_pack]` on every save (destructive). Keep as-is, decouple, or add a confirm UX?
+- **`dokan_spmv` background job on every save** — currently dispatches `Dokan_SPMV_Update_Product_Visibility` unconditionally. Gate on actual `show_order` value change to avoid redundant runs, or preserve for simplicity?
+- **Default flips on rebranded fields** — `dokan_live_chat`, `dokan_wholesale`, `dokan_product_advertisement`, `dokan_germanized` all have default flips alongside renames. Should the new schema preserve legacy defaults (safer for existing installs) or commit to the new defaults (cleaner for fresh installs)? Either way, surface a one-time admin notice on upgrade.
+- **`dokan_ai.dokan_ai_image_engine` default `'openai'`** — not in the live image-engine options list (`bria-ai`, `gemini` only). Pick a valid default.
+- **Tabs absent from new schema** — `dokan_quote_settings` (no class), `dokan_social_api` (no class). Decision: migrate now, keep legacy admin page mounted alongside, or defer indefinitely?
+- **Token revocation on disable** — `dokan_printful` disable does NOT clear per-vendor OAuth tokens; `dokan_email_verification` disable does NOT clear verification keys. Wire revocation into the disable flow, or document the persistence?
+- **Sensitive-key wrapper allow-list** — currently masks `auth_token` (Task 17) and `printful_secret_key` (Task 18) only. Extend to all credential fields, or stop returning credentials in responses entirely (return only existence flag)?
+- **`dokan_live_chat.provider='messenger'`** — new schema re-introduces `messenger` as a provider option despite an explicit TODO removal comment in legacy. Keep or drop?
+- **Ghost field `notify_by_email`** — present in `dokan_product_subscription` DB without schema or read site. Drop on next save (cleanup) or keep as a future-hook surface?
+
