@@ -244,11 +244,17 @@ class LegacySettingsBridge {
         if ( is_array( $address ) && isset( $address['option'], $address['field'] ) ) {
             $option = (string) $address['option'];
             $field  = (string) $address['field'];
-            return ( '' !== $option && '' !== $field ) ? [ 'option' => $option, 'field' => $field ] : null;
+            return ( '' !== $option && '' !== $field ) ? [
+				'option' => $option,
+				'field' => $field,
+			] : null;
         }
         if ( is_string( $address ) && strpos( $address, '.' ) !== false ) {
             [ $option, $field ] = explode( '.', $address, 2 );
-            return ( '' !== $option && '' !== $field ) ? [ 'option' => $option, 'field' => $field ] : null;
+            return ( '' !== $option && '' !== $field ) ? [
+				'option' => $option,
+				'field' => $field,
+			] : null;
         }
         return null;
     }
