@@ -1,0 +1,6 @@
+{
+  "note": "After `wp option delete dokan_appearance`, fetched via wp_ajax_dokan_get_setting_values. The slice contains ONLY the key injected by the set_vendor_latest_layout filter (priority 20 on dokan_get_settings_values). All other defaults (declared in get_settings_fields) are NOT applied at read time.",
+  "data": {
+    "vendor_layout_style": "legacy"
+  }
+}

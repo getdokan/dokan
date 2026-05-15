@@ -1,0 +1,40 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/wp-admin/admin-ajax.php",
+    "content_type": "application/x-www-form-urlencoded (FormData)",
+    "body_summary": "action=dokan_save_settings&nonce=<window.dokan.nonce>&section=dokan_appearance&settingsData[vendor_layout_style]=latest&settingsData[vendor_product_editor]=latest&settingsData[show_register_as_vendor]=off&settingsData[store_map]=off&settingsData[map_api_source]=mapbox&settingsData[gmap_api_key]=__T_gmap_001&settingsData[mapbox_access_token]=__T_mbox_001&settingsData[contact_seller]=off&settingsData[store_header_template]=layout2&settingsData[default_store_banner]=https://example.test/__T/banner.png&settingsData[default_store_profile]=https://example.test/__T/profile.png&settingsData[store_open_close]=off&settingsData[enable_theme_store_sidebar]=on&settingsData[hide_vendor_info][email]=email&settingsData[hide_vendor_info][phone]=phone&settingsData[hide_vendor_info][address]=address&settingsData[disable_dokan_fontawesome]=on"
+  },
+  "response": {
+    "success": true,
+    "data": {
+      "message": "Setting has been saved successfully.",
+      "settings": {
+        "name": "dokan_appearance",
+        "value": {
+          "contact_seller": "off",
+          "dashboard_menu_manager": [],
+          "default_store_banner": "https://example.test/__T/banner.png",
+          "default_store_profile": "https://example.test/__T/profile.png",
+          "disable_dokan_fontawesome": "on",
+          "enable_theme_store_sidebar": "on",
+          "gmap_api_key": "__T_gmap_001",
+          "hide_vendor_info": { "email": "email", "phone": "phone", "address": "address" },
+          "map_api_source": "mapbox",
+          "mapbox_access_token": "__T_mbox_001",
+          "show_register_as_vendor": "off",
+          "store_header_template": "layout2",
+          "store_map": "off",
+          "store_open_close": "off",
+          "vendor_layout_style": "latest",
+          "vendor_product_editor": "latest"
+        }
+      }
+    }
+  },
+  "notes": {
+    "save_mode": "OVERWRITE — initial DB keys recaptcha_validation_label, store_banner_width, store_banner_height, appearance_options were not echoed back (not in payload) and removed from DB. Confirmed via wp option get after.",
+    "dashboard_menu_manager": "Pro MenuManager leak — added by Pro filter at priority 99; not Appearance-specific.",
+    "media_strategy": "Sent default_store_banner / default_store_profile as plain URL strings via AJAX — server stores them verbatim with no validation of URL existence."
+  }
+}

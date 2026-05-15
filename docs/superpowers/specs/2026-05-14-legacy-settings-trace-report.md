@@ -305,7 +305,42 @@ The whole field set is finally wrapped by `apply_filters( 'dokan_reverse_withdra
 - **Rewrite rules count before/after Save A:** `394` / `394`. Verdict: **unchanged** — no rewrite flush is triggered by `dokan_pages` save (unlike `custom_store_url` in `dokan_general`).
 - **Newly-created pages?** Pre-save count `19`, post-Save-A count `19`. Verdict: **no auto-creation** during settings save. Page auto-creation only happens at install/upgrade time (`Installer.php`, `V_5_0_0.php`).
 
+### `dokan_appearance` — Appearance
 
+**wp_option name:** `dokan_appearance`
+**Initial GET slice keys (from `/tmp/dokan_initial_get.json`):** `contact_seller`, `enable_theme_store_sidebar`, `hide_vendor_info`, `store_header_template`, `store_banner_width`, `store_banner_height`, `store_open_close`, `disable_dokan_fontawesome`, `map_api_source`, `gmap_api_key`, `mapbox_access_token`, `recaptcha_validation_label`, `vendor_layout_style`, `appearance_options`, `store_map`, `default_store_banner`, `default_store_profile`, `dashboard_menu_manager` (last three are Pro-only or derived; `vendor_product_editor` declared but not in baseline DB)
+**Hooks observed:**
+- `dokan_get_settings_values` priority 20 → `Settings::set_vendor_latest_layout` injects `vendor_layout_style = 'legacy'` when empty (Settings.php:1208). Only Appearance-specific filter.
+- `dokan_save_settings_value` priority 99 → Pro MenuManager leak (writes `dashboard_menu_manager: []`; not Appearance-specific)
+- No `dokan_save_settings_value` merge filter on `dokan_appearance` — `update_option` overwrites the whole array.
+
+| Field | UI control | Type | Default | Sentinel sent | Payload path | Response path | wp_option path | Extra options touched | Round-trips? | Notes |
+| ----- | ---------- | ---- | ------- | ------------- | ------------ | ------------- | -------------- | --------------------- | ------------ | ----- |
+| `vendor_layout_style` | Radio (`latest` / `legacy`) | string | `legacy` (forced by filter when empty) | `latest` | `settingsData[vendor_layout_style]` | `data.settings.value.vendor_layout_style` | `dokan_appearance.vendor_layout_style` | none | yes | `set_vendor_latest_layout` filter re-applies `'legacy'` on read if value is empty. |
+| `vendor_product_editor` | Radio (`latest` / `legacy`) | string | `legacy` | `latest` | `settingsData[vendor_product_editor]` | `data.settings.value.vendor_product_editor` | `dokan_appearance.vendor_product_editor` | none | yes | Not in initial GET slice (key absent until first save). Pro-consumed. |
+| `show_register_as_vendor` | Switcher | `on`/`off` | `on` | `off` | `settingsData[show_register_as_vendor]` | `data.settings.value.show_register_as_vendor` | `dokan_appearance.show_register_as_vendor` | none | yes | Adds vendor toggle to WC My Account form. |
+| `store_map` | Switcher | `on`/`off` | `on` | `off` | `settingsData[store_map]` | `data.settings.value.store_map` | `dokan_appearance.store_map` | none | yes | |
+| `map_api_source` | Radio (`google_maps` / `mapbox`) | string | `google_maps` | `mapbox` | `settingsData[map_api_source]` | `data.settings.value.map_api_source` | `dokan_appearance.map_api_source` | none | yes | `refresh_after_save: true` — triggers full settings re-fetch. |
+| `gmap_api_key` | Text (secret) | string | empty | `__T_gmap_001` | `settingsData[gmap_api_key]` | `data.settings.value.gmap_api_key` | `dokan_appearance.gmap_api_key` | none | yes | `secret_text: true` — masked in UI but stored plain. |
+| `mapbox_access_token` | Text (secret) | string | empty | `__T_mbox_001` | `settingsData[mapbox_access_token]` | `data.settings.value.mapbox_access_token` | `dokan_appearance.mapbox_access_token` | none | yes | `secret_text: true`. Shown only when `map_api_source=mapbox`. |
+| `contact_seller` | Switcher | `on`/`off` | `on` | `off` | `settingsData[contact_seller]` | `data.settings.value.contact_seller` | `dokan_appearance.contact_seller` | none | yes | |
+| `store_header_template` | radio_image (`default`, `layout1`, `layout2`, `layout3`) | string | `default` | `layout2` | `settingsData[store_header_template]` | `data.settings.value.store_header_template` | `dokan_appearance.store_header_template` | none | yes | **No whitelist validation** — Save B value `not-a-template-XYZ` accepted verbatim. |
+| `default_store_banner` | croppable_image (media picker) | string (URL or attachment id) | `assets/images/default-store-banner.png` | `https://example.test/__T/banner.png` | `settingsData[default_store_banner]` | `data.settings.value.default_store_banner` | `dokan_appearance.default_store_banner` | none | yes | Stored verbatim as string; server does not validate URL/attachment existence. Save B value `'0'` and `999999` (non-existent id) also accepted. |
+| `default_store_profile` | croppable_image (media picker) | string (URL or attachment id) | `assets/images/mystery-person.jpg` | `https://example.test/__T/profile.png` | `settingsData[default_store_profile]` | `data.settings.value.default_store_profile` | `dokan_appearance.default_store_profile` | none | yes | Same as above; no validation. |
+| `store_open_close` | Switcher | `on`/`off` | `on` | `off` | `settingsData[store_open_close]` | `data.settings.value.store_open_close` | `dokan_appearance.store_open_close` | none | yes | |
+| `enable_theme_store_sidebar` | Switcher | `on`/`off` | `off` | `on` | `settingsData[enable_theme_store_sidebar]` | `data.settings.value.enable_theme_store_sidebar` | `dokan_appearance.enable_theme_store_sidebar` | none | yes | Read by `store-functions.php:11`. |
+| `hide_vendor_info` | Multicheck (`email`, `phone`, `address`) | assoc array | `{email:'', phone:'', address:''}` | `{email:'email', phone:'phone', address:'address'}` | `settingsData[hide_vendor_info][<k>]` | `data.settings.value.hide_vendor_info` | `dokan_appearance.hide_vendor_info` | none | yes | **Omitting key entirely drops it from DB** (proves overwrite mode). Initial DB had only `phone=phone`. |
+| `disable_dokan_fontawesome` | Switcher | `on`/`off` | `off` | `on` | `settingsData[disable_dokan_fontawesome]` | `data.settings.value.disable_dokan_fontawesome` | `dokan_appearance.disable_dokan_fontawesome` | none | yes | Read by `Assets.php:787`. |
+
+**Filter / boundary findings:**
+- **Empty-option default:** after `wp option delete dokan_appearance` and GET via `wp_ajax_dokan_get_setting_values`, slice = `{vendor_layout_style: "legacy"}` only — the `set_vendor_latest_layout` filter is the *only* source of schema defaults at read time. All other declared `default` values are NOT injected; the UI falls back to React-side defaults instead.
+- **Save mode:** **OVERWRITE** (no merge filter). Confirmed by omitting `hide_vendor_info` in Save B — the key disappeared from DB. Contrast with `dokan_pages` which merges via `array_replace_recursive`. Also: keys present in initial DB but absent from any subsequent save (`recaptcha_validation_label`, `store_banner_width`, `store_banner_height`, `appearance_options`) were dropped on Save A.
+- **Media id = 0:** `default_store_banner='0'` accepted verbatim, stored as string `"0"`. No validation, no attachment-existence check. Would render a broken image on frontend.
+- **Non-existent media id (999999):** `default_store_profile='999999'` accepted verbatim, stored as string `"999999"`. No `get_post()` check.
+- **Invalid select / radio_image value:** `store_header_template='not-a-template-XYZ'` accepted verbatim. No whitelist enforcement against declared `options` array.
+- **Invalid color value:** N/A — Appearance tab declares zero color fields in Lite. (`recaptcha_validation_label` is Pro-only.)
+- **`refresh_after_save` field:** `map_api_source` has this flag — UI re-fetches all settings after save (client-side concern, no server effect).
+- **Round-trip count:** 16 fields declared (excluding 2 `sub_section`), 16 traced, 16 round-tripped after restore Save A.
 
 ## Side-effect / hook checklist
 
