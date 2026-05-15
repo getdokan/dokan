@@ -1,0 +1,61 @@
+{
+  "_meta": "DB snapshots (raw, via `wp db query`) after each Save B sub-case. State is destructive across sub-cases — order matters.",
+  "after_empty_option_test": {
+    "wp_options_row": "missing (option was deleted then never re-saved at this checkpoint)"
+  },
+  "after_negative_full_payload": {
+    "withdraw_methods": {
+      "bank": "bank",
+      "dokan-paypal-marketplace": "dokan-paypal-marketplace",
+      "dokan-stripe-connect": "dokan-stripe-connect",
+      "dokan_custom": "dokan_custom",
+      "dokan_stripe_express": "dokan_stripe_express",
+      "paypal": "paypal",
+      "skrill": "skrill"
+    },
+    "withdraw_method_name": "NegCustom",
+    "withdraw_method_type": "NegType",
+    "withdraw_limit": "4242",
+    "withdraw_order_status": { "wc-completed": "wc-completed", "wc-processing": "wc-processing", "wc-on-hold": "wc-on-hold" },
+    "exclude_cod_payment": "off",
+    "withdraw_date_limit": "999",
+    "hide_withdraw_option": "off",
+    "disbursement": { "manual": "manual", "schedule": "schedule" },
+    "disbursement_schedule": { "quarterly": "quarterly", "monthly": "monthly", "biweekly": "biweekly", "weekly": "weekly" },
+    "weekly_schedule": "monday",
+    "dashboard_menu_manager": [],
+    "_note": "`stripe` payload key dropped before persistence."
+  },
+  "after_custom_blank_validation": {
+    "_note": "Validation failed before update_option. DB still equals `after_negative_full_payload` state."
+  },
+  "after_all_methods_disabled": {
+    "withdraw_methods": "",
+    "_raw_serialized": "s:16:\"withdraw_methods\";s:0:\"\";",
+    "_note": "Empty multicheck persists as empty STRING (length-0). All other keys retained from prior save."
+  },
+  "after_withdraw_limit_neg_1": {
+    "_note": "Validation failed. DB unchanged from `after_all_methods_disabled` state."
+  },
+  "after_withdraw_limit_zero": {
+    "withdraw_limit": "0",
+    "_note": "Other fields retained from negative_full_payload sentinels."
+  },
+  "final_state_after_restore_save_A": {
+    "withdraw_methods": { "paypal": "paypal", "bank": "bank" },
+    "withdraw_method_name": "__T_wmn_001",
+    "withdraw_method_type": "__T_wmt_001",
+    "withdraw_limit": "4242",
+    "withdraw_order_status": { "wc-processing": "wc-processing" },
+    "exclude_cod_payment": "on",
+    "withdraw_date_limit": "7",
+    "hide_withdraw_option": "on",
+    "disbursement": { "manual": "manual" },
+    "disbursement_schedule": { "monthly": "monthly" },
+    "quarterly_schedule": { "month": "june", "week": "2", "days": "tuesday" },
+    "monthly_schedule":  { "week": "2", "days": "wednesday" },
+    "biweekly_schedule": { "week": "2", "days": "thursday" },
+    "weekly_schedule": "friday",
+    "dashboard_menu_manager": []
+  }
+}
