@@ -1922,6 +1922,127 @@ The `Settings::sanitize_options` loop at `dokan-lite/includes/Admin/Settings.php
 - **P2 — Pro MenuManager `dashboard_menu_manager: []` leak persists.** Recurring across all 27 prior Pro tabs.
 - **P2 — `sanitize_options` does not enforce option lists.** Confirmed across all 27 prior tabs; multicheck values with arbitrary strings would persist verbatim.
 
+### `dokan_product_advertisement` — Product Advertising (Pro)
+
+**wp_option name:** `dokan_product_advertisement`
+
+**Initial GET slice (pre-trace):** `/tmp/dokan_initial_get.json → .data.dokan_product_advertisement` returned `[]` (empty array). `wp option get dokan_product_advertisement` on the host install reported the option as **missing** (`STARTING_EXISTED=N`). The Lite AJAX read path returns `[]` whenever the row is absent. Captured `_trace_artifacts/dokan_product_advertisement_baseline_db.json`. Empty-default probe captured at `_trace_artifacts/dokan_product_advertisement_empty_default.json` (`db: []`, `response: []`) — confirming **no self-seeder** on this option.
+
+**Code origin:**
+- Legacy schema: `dokan-pro/modules/product-adv/includes/Admin/Settings.php:13-228`. Class `\WeDevs\DokanPro\Modules\ProductAdvertisement\Admin\Settings` (PSR-4). Adds section `dokan_product_advertisement` via `dokan_settings_sections` filter at `:27` (priority 21), declares fields via `dokan_settings_fields` at `:28` (priority 21). Constructor **also** wires `dokan_before_saving_settings` (priority 20, 2 args) → `validate_admin_settings` and `dokan_after_saving_settings` (priority 20, 1 arg) → `create_advertisement_base_product`. Constructor registers all four hooks unconditionally — **no `is_admin()` gate** at the class level. `module.php:95` instantiates `new Settings()` inside `set_controllers()`, called from `__construct()` — unconditional. **8 persisted fields** (all single-value, no sub_section headers, no multichecks):
+  - `total_available_slot` (number, min `-1`, default `'100'`)
+  - `expire_after_days` (number, min `-1`, default `'10'`)
+  - `per_product_enabled` (switcher, default `'on'`)
+  - `cost` (number, min `0`, default `'15'`, `show_if per_product_enabled = on`)
+  - `vendor_subscription_enabled` (switcher, default `'off'`)
+  - `featured` (switcher, default `'off'`)
+  - `catalog_priority` (switcher, default `'on'`)
+  - `hide_out_of_stock_items` (switcher, default `'off'`)
+  - **None of the 8 fields declares a `sanitize_callback` or `response_sanitize_callback`.** **No credential fields.**
+
+**Read sites (Pro-only, all reading `dokan_product_advertisement`):** 8 total, all inside `dokan-pro/modules/product-adv/includes/Helper.php`:
+- `Helper.php:31` → `dokan_get_option('per_product_enabled', 'dokan_product_advertisement', 'on')`. Read default `'on'` matches schema default.
+- `Helper.php:42` → `dokan_get_option('vendor_subscription_enabled', 'dokan_product_advertisement', 'off')`. Read default `'off'` matches schema default.
+- `Helper.php:74` → `dokan_get_option('featured', 'dokan_product_advertisement', 'off')`. Read default `'off'` matches schema default.
+- `Helper.php:85` → `dokan_get_option('catalog_priority', 'dokan_product_advertisement', 'on')`. Read default `'on'` matches schema default.
+- `Helper.php:96` → `dokan_get_option('hide_out_of_stock_items', 'dokan_product_advertisement', 'off')`. Read default `'off'` matches schema default.
+- `Helper.php:107` → `dokan_get_option('cost', 'dokan_product_advertisement', 15)`. Read default `15` (int) — legacy schema stores string `'15'`; mismatch is benign because the read site immediately calls `floatval()`.
+- `Helper.php:118` → `dokan_get_option('total_available_slot', 'dokan_product_advertisement', 100)`. Read default `100` (int) — same int-vs-string benign mismatch.
+- `Helper.php:252` → `dokan_get_option('expire_after_days', 'dokan_product_advertisement', 10)`. Read default `10` (int) — same benign mismatch.
+- **Cross-plugin reads:** Lite does NOT read `dokan_product_advertisement`. **Cross-module reads: zero** — all 8 read sites live inside `modules/product-adv/`. Consistent with Tasks 27–28.
+
+**Auth:** AJAX `wp_ajax_dokan_save_settings` / `wp_ajax_dokan_get_setting_values` → `WeDevs\Dokan\Admin\Settings::save_settings_value()` / `get_settings_value()`. Nonce `dokan_admin` checked via `check_ajax_referer`. Capability gate is `manage_options` (Lite default). The Pro-side `validate_admin_settings` calls `wp_send_json_error` on bad input — bypasses the rest of the save pipeline.
+
+**Save handler:** Lite `Admin\Settings::save_settings_value()`. OVERWRITE via `update_option('dokan_product_advertisement', $value)`. `sanitize_options($value, 'edit')` runs but **none of the 8 fields declares a `sanitize_callback`** — pass-through. Save flow fires `dokan_before_saving_settings` (3 args) → `update_option` → `dokan_after_saving_settings` (3 args).
+
+**Hook listeners observed on this option:**
+- `dokan_before_saving_settings` (priority 20, Pro) → `Settings::validate_admin_settings` ($option_name, $option_value, 2 args declared). Validates:
+  - `total_available_slot` must be `-1` or positive int — else `wp_send_json_error(400)`.
+  - `expire_after_days` must be `-1` or positive int — else `wp_send_json_error(400)`.
+  - `cost` must be numeric and `>= 0` — else `wp_send_json_error(400)`.
+  - **Pre-validation aborts the save entirely** (no `update_option` runs).
+- `dokan_after_saving_settings` (priority 20, Pro) → `Settings::create_advertisement_base_product` ($option_name, 1 arg declared). Side effects:
+  - Reads `dokan_advertisement_product_id` wp_option.
+  - If unset OR product missing → calls `Helper::create_advertisement_base_product()` which:
+    - Inserts a `wp_posts` row (`post_type=product`, hidden, virtual, price 0, sold individually).
+    - Writes wp_option `dokan_advertisement_product_id` with the new product ID.
+  - In trace run: `dokan_advertisement_product_id=59` was already set and the product existed, so **no new wp_posts row was created during this trace**. The side effect is dormant on installs that have already exercised the module.
+- **No `pre_update_option_dokan_product_advertisement` / `update_option_dokan_product_advertisement` listeners** found (grepped Pro+Lite).
+- Generic `dokan_save_settings_value` (priority 99) → `WeDevs\DokanPro\MenuManager\Admin\DataSource::save_admin_settings` appends `dashboard_menu_manager: []` to the **response** payload (not persisted to DB in this run — see Round-trip note).
+
+**Save A (positive sentinels):** 21 keys including 8 real fields + 1 unknown + 12 adversarial probes (XSS, javascript: URL, 4KB string, serialized array, fake auth/secret tokens, unicode, whitespace, negative number, "NOT_IN_OPTION_LIST"). Captured at `_trace_artifacts/dokan_product_advertisement_save_A.json`. Response after the OVERWRITE captured at `_trace_artifacts/dokan_product_advertisement_after_A.json` — DB row byte-identical to the request payload **plus** the 8 real keys; unknown keys, all 12 probes, the XSS payload (raw `<script>`), the `javascript:` URL, the 4KB blob, and the serialized array literal all **persist verbatim** in `wp_options`. The MenuManager `dashboard_menu_manager: []` leak appears in the response slice only.
+
+**Save B (defaults/flip):** 8 real fields at legacy defaults (`total_available_slot=100`, `expire_after_days=10`, `per_product_enabled=off`, `cost=15`, `vendor_subscription_enabled=off`, `featured=off`, `catalog_priority=on`, `hide_out_of_stock_items=off`). Probes/unknowns omitted to confirm OVERWRITE drops them. Captured at `_trace_artifacts/dokan_product_advertisement_after_B.json` — DB row contains exactly the 8 keys, nothing else. **OVERWRITE confirmed:** all Save A probes/unknowns gone after Save B.
+
+**Round-trip:** `_trace_artifacts/dokan_product_advertisement_reload.json` byte-identical to `_trace_artifacts/dokan_product_advertisement_after_B.json` `.db` slice (`ROUND_TRIP=PASS`). Note: the response payload (from `dokan_save_settings_value` filter) contains `dashboard_menu_manager: []` but the DB row does **not** — this tab's MenuManager leak is response-only, not persisted to DB. Distinct from earlier Pro tabs (e.g. Task 28 Germanized) where it persisted to DB on subsequent reads. The Lite GET (`dokan_get_settings_values` filter) does not re-inject it, so the next reload is clean.
+
+**Cross-tab field-name collision audit:** Zero collisions. None of the 8 field IDs (`total_available_slot`, `expire_after_days`, `per_product_enabled`, `cost`, `vendor_subscription_enabled`, `featured`, `catalog_priority`, `hide_out_of_stock_items`) is referenced as a settings field name in any other `dokan_*` option (`grep` across Lite + all Pro modules).
+
+**New `ProSettingsSchema` status (`ProductAdvSettingsSchema`):** `dokan-pro/modules/product-adv/includes/Admin/Schema/ProductAdvSettingsSchema.php` exists as a flat-array schema but is **NOT YET WIRED**: `grep -rn ProductAdvSettingsSchema dokan-pro/` returns only the class declaration — no `new ProductAdvSettingsSchema()` or `->register()` call anywhere. Status: **authored but orphan** (parallels Task 28 Germanized and earlier tabs). Schema registers as a `subpage` of the Lite-owned `product` page (`page_id => 'product'`, `priority => 100`) — same cross-plugin-ownership structural shift first noted for Germanized. **All 8 field IDs renamed AND defaults shifted:**
+  - `total_available_slot` → `advertisement_available_slots` (default `'100'` → `-1` — **defaults inverted**: legacy caps slots at 100, new schema defaults to unlimited).
+  - `expire_after_days` → `advertisement_expire_days` (default `'10'` → `-1` — **defaults inverted**: legacy expires after 10 days, new schema defaults to never expire).
+  - `cost` → `advertisement_cost_usd` (default `'15'` → `0` — **defaults flipped from paid to free**; key also hardcodes `usd` despite the legacy label using `get_woocommerce_currency()` to render the live currency; new schema also adds `step: 0.01` and `prefix: '$'`).
+  - `per_product_enabled` → `vendor_can_purchase_advertisement` (default `'on'` matches).
+  - `vendor_subscription_enabled` → `advertisement_in_subscription` (default `'off'` → `'on'` — **default flipped**: legacy off by default, new schema on by default).
+  - `featured` → `mark_advertised_as_featured` (default `'off'` → `'on'` — **default flipped**).
+  - `catalog_priority` → `display_advertised_on_top` (default `'on'` matches).
+  - `hide_out_of_stock_items` → `out_of_stock_visibility` (default `'off'` → `'on'` — **default flipped AND label semantics inverted**: legacy label "Out of Stock Visibility" with the switcher meaning "hide when on"; new schema uses the same label but `default: 'on'` plus a `helper_text` that explicitly says "out of stock products will not be displayed" — so the *behavior* matches the legacy "on=hide" but the *default* now hides them).
+
+**Sensitive-key wrapper observed?** **N.** Adversarial probes `probe_sensitive_auth_token` and `probe_sensitive_secret_key` persisted verbatim in `wp_options.option_value` (no Pro `Dokan_Secret_Wrapper`, no `__encrypted__` envelope). Confirmed across all 28 prior tabs.
+
+**Side effects (per-row actions, transients, cron, wp_posts, user_meta):**
+- **wp_posts write (LATENT):** `dokan_after_saving_settings` → `create_advertisement_base_product` inserts a `post_type=product` row if the existing one is missing. Did not fire in this trace because `dokan_advertisement_product_id` already pointed to product `59` (verified post-trace: `ADV_BASE_PRODUCT_ID=59`).
+- **wp_options write:** only `dokan_product_advertisement` itself was written; option diff (`NEW_OPTIONS=...`) shows no other `dokan_*` rows added during the trace. The pre-existing `dokan_advertisement_product_id=59` was not touched.
+- **No transients, no cron, no user_meta** writes observed for the save path itself. (Module's `Install.php` schedules `dokan_product_advertisement_daily_at_midnight_cron` on module activation, not on settings save.)
+- **Per-row action (`dokan_before_saving_settings` validator):** the validator can short-circuit the entire save via `wp_send_json_error(400)` — first tab traced where invalid values cause a **fail-closed** save (no DB write at all). Other tabs let invalid values through verbatim.
+
+**Round-trip table:**
+
+| Field | UI control | Type | Legacy default | New default | Sentinel sent (A) | Payload path | Response path | wp_option path | Round-trips? | Notes |
+| ----- | ---------- | ---- | -------------- | ----------- | ----------------- | ------------ | ------------- | -------------- | ------------ | ----- |
+| `total_available_slot` | number | number | `'100'` | `-1` (NEW) | `'4242'` | `settingsData[total_available_slot]` | `data.settings.value.total_available_slot` | `dokan_product_advertisement.total_available_slot` | yes | Rename target `advertisement_available_slots`; **default flipped 100 → -1**. Pre-save validator enforces `-1 OR positive int`. |
+| `expire_after_days` | number | number | `'10'` | `-1` (NEW) | `'30'` | `settingsData[expire_after_days]` | resp same | `dokan_product_advertisement.expire_after_days` | yes | Rename `advertisement_expire_days`; **default flipped 10 → -1**. Pre-save validator enforces `-1 OR positive int`. |
+| `per_product_enabled` | toggle | switcher | `'on'` | `'on'` | `'on'` | `settingsData[per_product_enabled]` | resp same | `dokan_product_advertisement.per_product_enabled` | yes | Rename `vendor_can_purchase_advertisement`; defaults match. Drives `show_if` for `cost` in legacy schema (new schema drops the `show_if` — `cost` always visible). |
+| `cost` | number | number | `'15'` | `0` (NEW) | `'99.50'` | `settingsData[cost]` | resp same | `dokan_product_advertisement.cost` | yes | Rename `advertisement_cost_usd`; **default flipped 15 → 0**; **label hardcodes `USD` despite legacy using `get_woocommerce_currency()`**. Pre-save validator enforces numeric `>= 0`. New schema adds `step: 0.01` + `prefix: '$'`. |
+| `vendor_subscription_enabled` | toggle | switcher | `'off'` | `'on'` (NEW) | `'on'` | `settingsData[vendor_subscription_enabled]` | resp same | `dokan_product_advertisement.vendor_subscription_enabled` | yes | Rename `advertisement_in_subscription`; **default flipped off → on**. |
+| `featured` | toggle | switcher | `'off'` | `'on'` (NEW) | `'on'` | `settingsData[featured]` | resp same | `dokan_product_advertisement.featured` | yes | Rename `mark_advertised_as_featured`; **default flipped off → on**. |
+| `catalog_priority` | toggle | switcher | `'on'` | `'on'` | `'off'` | `settingsData[catalog_priority]` | resp same | `dokan_product_advertisement.catalog_priority` | yes | Rename `display_advertised_on_top`; defaults match. |
+| `hide_out_of_stock_items` | toggle | switcher | `'off'` | `'on'` (NEW) | `'on'` | `settingsData[hide_out_of_stock_items]` | resp same | `dokan_product_advertisement.hide_out_of_stock_items` | yes | Rename `out_of_stock_visibility`; **default flipped off → on**. Label kept identical in new schema even though default behavior inverted — UI risk: same label, different out-of-the-box behavior. |
+| `unknown_pa_field` | n/a | n/a (unknown) | n/a | n/a | `'__T_FAKE_UNKNOWN_PA_A'` | `settingsData[unknown_pa_field]` | resp same | `dokan_product_advertisement.unknown_pa_field` | yes | Unknown-key persistence confirmed (Task 12+ pattern). |
+| `probe_xss` | n/a | n/a (probe) | n/a | n/a | `'<script>alert(2)</script>'` | `settingsData[probe_xss]` | resp same | DB byte-identical | yes | Raw `<script>` persisted; no sanitize. |
+| `probe_url` | n/a | n/a (probe) | n/a | n/a | `'javascript:alert(1)'` | `settingsData[probe_url]` | resp same | DB byte-identical | yes | `javascript:` URL persisted as plain text; no sanitize. |
+| `probe_serialized` | n/a | n/a (probe) | n/a | n/a | `'a:1:{s:3:"foo";s:3:"bar";}'` | `settingsData[probe_serialized]` | resp same | DB byte-identical (as string literal) | yes | Serialized array stored as string — WP's `update_option` does NOT re-serialize a string that already *looks* serialized; safe but worth noting. |
+| `probe_sensitive_auth_token` | n/a | n/a (probe) | n/a | n/a | `'__T_FAKE_KEY_PA_AUTHTOKEN_A'` | `settingsData[probe_sensitive_auth_token]` | resp same | DB byte-identical | yes | **No credential wrapper applied** — pattern continues from all prior tabs. |
+| `probe_invalid_radio_value` | n/a | n/a (probe) | n/a | n/a | `'NOT_IN_OPTION_LIST'` | `settingsData[probe_invalid_radio_value]` | resp same | DB byte-identical | yes | (No real radio in this tab; probe re-confirms `sanitize_options` doesn't enforce option lists.) |
+| `dashboard_menu_manager` | n/a (Pro MenuManager leak) | array | `[]` | n/a | (not sent by client) | (n/a) | resp has `[]` | **NOT in DB** | n/a | **NEW**: First Pro tab traced where the MenuManager `dashboard_menu_manager` leak appears in the **save response only** and does NOT persist to DB. Subsequent `get_settings_values` reload returns the row without the key. Filter path `dokan_save_settings_value` (response-side) fires unconditionally but the underlying `update_option` had already run with the unmodified payload. Net effect for migrators: the leak is observable in the immediate save response (so the client sees it) but does not contaminate the persisted DB row. |
+
+**DB state restored:** `dokan_product_advertisement` was missing at start; trace `delete_option`'d the test row at end (`FINAL_STATE=DELETED`). `dokan_advertisement_product_id` pre-existed at `59` and was not touched.
+
+**API-key/token state in DB after task:** None — all sentinels prefixed `__T_FAKE_*` / `probe_*`. Final state: **starting state restored** (option deleted because it was unset pre-trace).
+
+**Surprises:**
+- **NEW: MenuManager leak is response-only on this tab, not persisted to DB.** First Pro tab where `dashboard_menu_manager: []` appears only in the save response (via `dokan_save_settings_value` filter) and is absent from both the `wp_options` row and the subsequent reload. Worth comparing against the priority ordering of MenuManager's `save_admin_settings` hook (priority 99 on `dokan_save_settings_value` is response-time, not DB-time — Lite's `update_option` had already committed the payload). Implication: the persistence vs. transient nature of the leak depends on **which** filter MenuManager hooks (`dokan_save_settings_value` = response-only; `dokan_save_settings_value` mutated *before* `update_option` = persisted). Earlier tabs (e.g. Germanized) showed the persisted variant — worth confirming whether that's environmental (different hook ordering due to module load order) or version-dependent.
+- **NEW: Pre-save validator that aborts the entire save via `wp_send_json_error`.** First tab traced where `dokan_before_saving_settings` can short-circuit the save with a 400 response. All other Pro tabs (Tasks 12–28) let invalid input through unchanged. Migration must preserve this validation in the new schema — `validate_admin_settings` is the only thing keeping `total_available_slot=0` or `cost=-5` out of the DB.
+- **NEW: Post-save side effect that writes a `wp_posts` row (WooCommerce product).** First tab where saving the settings has a latent side effect of inserting a product into the catalog (via `create_advertisement_base_product` → `wp_insert_post`). Dormant on installs that already exercised the module; active on first save after a fresh module activation if the install was somehow missing the base product. Migration plan must keep this hook wired or recreate the product elsewhere.
+- **NEW: 4 of 8 defaults flipped in the new schema** (`total_available_slot 100→-1`, `expire_after_days 10→-1`, `vendor_subscription_enabled off→on`, `featured off→on`, `hide_out_of_stock_items off→on`, `cost 15→0`). Of those, `vendor_subscription_enabled` and `featured` change vendor-visible behavior on fresh installs (free advertisements + auto-featured products). `total_available_slot -1` (unlimited) and `expire_after_days -1` (no expiry) materially change the marketplace economics. **Largest cluster of default-flips in any single Pro tab traced so far.**
+- **NEW: Legacy label uses `get_woocommerce_currency()` at render time; new schema hardcodes `USD`.** First field traced where the new schema loses currency localization. `'cost' → 'advertisement_cost_usd'` hardcodes USD in the key name AND drops the dynamic currency label. Marketplaces using EUR/GBP/INR will see a `$` prefix in the new UI.
+- **NEW: Read-default int/string mismatch on 3 fields.** `Helper.php:107/118/252` pass int defaults (`15`, `100`, `10`) where the legacy schema stores strings (`'15'`, `'100'`, `'10'`). Benign because the read sites immediately `floatval()` / `intval()`, but the new schema also stores numbers as int (`default: -1`, `default: 0`), so the mismatch quietly resolves itself.
+- **NOT new:** OVERWRITE save; MenuManager leak (response variant); unknown-key persistence; sanitize_options no-op; plaintext storage of `<script>` / `javascript:` / serialized payloads / fake credentials; no `pre_update_option_*` / `update_option_*` listeners; zero cross-module read coupling; cross-tab field-name collisions: zero — all consistent with Tasks 12–28.
+
+**Commit SHA:** _(self-referential; filled in by commit step)_.
+
+**Concerns:**
+- **P0 — Key renames in new schema with no migration code (8 top-level keys).** All 8 read sites in `modules/product-adv/Helper.php` still reference legacy names. If shipped without an upgrader: every read silently falls back to call-site defaults (which themselves don't all match the new schema's defaults — see P1 below). **Mitigation:** ship a one-shot upgrader OR update read sites to alias both names OR keep legacy names in the new schema.
+- **P0 — 4-of-8 default flips materially change marketplace behavior on fresh installs.** `vendor_subscription_enabled off→on` (vendors get free ads via subscription by default), `featured off→on` (all advertised products auto-featured), `total_available_slot 100→unlimited`, `expire_after_days 10→no-expiry`. **Mitigation:** keep legacy defaults in the new schema (the rename alone suffices for the structural cleanup), OR surface a one-time admin notice flagging the changed defaults.
+- **P0 — `cost` defaults to `0` in the new schema vs. `15` legacy.** Combined with `per_product_enabled = 'on'` default, fresh installs would let vendors post advertisements for free without intentional opt-in. Marketplaces relying on advertisement revenue would see a silent zero-price rollout on migration. **Mitigation:** keep legacy `15` default.
+- **P1 — Hardcoded `USD` in `advertisement_cost_usd` key + `prefix: '$'` in new schema.** Legacy schema localized the label via `get_woocommerce_currency()`. **Mitigation:** rename key to `advertisement_cost` and compute the prefix at render time from the WC currency setting.
+- **P1 — Pre-save validator is the only thing preventing invalid numeric values.** If the migration accidentally drops the `dokan_before_saving_settings` listener (e.g. by replacing the legacy Settings class without porting `validate_admin_settings`), zero/negative slot counts and negative costs will silently persist. **Mitigation:** port the three checks (`total_available_slot != 0`, `expire_after_days != 0`, `cost >= 0`) into the new schema's field-level validation OR keep the legacy validator wired.
+- **P1 — Post-save side effect (`create_advertisement_base_product`) is also wired via legacy hook.** If the migration replaces the Settings class, the latent "create base product on first save" behavior will stop firing too. Installs that lose `dokan_advertisement_product_id` (e.g. clones, dev DBs) would silently fail to purchase advertisements until the product is recreated by some other path. **Mitigation:** port to the new schema OR move the base-product creation into module activation only (rather than relying on settings save).
+- **P1 — `hide_out_of_stock_items → out_of_stock_visibility` keeps the same label but flips the default.** Legacy: label "Out of Stock Visibility", off → out-of-stock items shown. New: same label, on → out-of-stock items hidden. The label is the same but the visible "default state" of the toggle has the opposite meaning. **Mitigation:** rename the label to "Hide Out of Stock Items" to match the actual semantics OR keep the legacy default `'off'`.
+- **P1 — Schema is authored but not registered.** `ProductAdvSettingsSchema::register()` is never called. Same orphan pattern as Tasks 12–28 — the entire batch needs a single registration entry point for all module schemas.
+- **P2 — Pro MenuManager `dashboard_menu_manager: []` leak appears in response only (this tab).** Different surface area than the persisted variant on earlier tabs; clients that cache the save response will still see the spurious key.
+- **P2 — `sanitize_options` does not enforce option lists / types.** Confirmed again; switcher fields persisted `'NOT_IN_OPTION_LIST'` verbatim when sent as a probe value. Consistent with Tasks 12–28.
+
 ## Side-effect / hook checklist
 
 _Filled in Task N+1 (final pass)._

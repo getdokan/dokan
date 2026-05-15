@@ -1,0 +1,23 @@
+{
+    "db": {
+        "total_available_slot": "100",
+        "expire_after_days": "10",
+        "per_product_enabled": "off",
+        "cost": "15",
+        "vendor_subscription_enabled": "off",
+        "featured": "off",
+        "catalog_priority": "on",
+        "hide_out_of_stock_items": "off"
+    },
+    "response": {
+        "total_available_slot": "100",
+        "expire_after_days": "10",
+        "per_product_enabled": "off",
+        "cost": "15",
+        "vendor_subscription_enabled": "off",
+        "featured": "off",
+        "catalog_priority": "on",
+        "hide_out_of_stock_items": "off",
+        "dashboard_menu_manager": []
+    }
+}
