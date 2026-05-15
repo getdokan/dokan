@@ -1,0 +1,29 @@
+{
+  "payload_shape": {
+    "action": "dokan_save_settings",
+    "section": "dokan_menu_manager",
+    "settingsData[dashboard_menu_manager][left_menus][<menu_key>][...]": "all 21 left_menu items, is_switched_on=false (all-disabled), menu_manager_title='' (empty title test), previous_title=<original title>, menu_manager_position=<index>",
+    "settingsData[dashboard_menu_manager][settings_sub_menu][<menu_key>][...]": "all 8 settings_sub_menu items, is_switched_on=false, menu_manager_title=''",
+    "settingsData[__unknown_menu_key__]": "__T_unknown_value__",
+    "settingsData[some_random_field]": "__T_random__"
+  },
+  "response_summary": {
+    "success": true,
+    "data.settings.value.top_keys": ["dashboard_menu_manager", "__unknown_menu_key__", "some_random_field"],
+    "data.settings.value.__unknown_menu_key__": "__T_unknown_value__",
+    "data.settings.value.some_random_field": "__T_random__",
+    "data.settings.value.dashboard_menu_manager.left_menus.products.menu_manager_title": "Products",
+    "data.settings.value.dashboard_menu_manager.left_menus.products.previous_title": "Products",
+    "data.settings.value.dashboard_menu_manager.left_menus.products.is_switched_on": "",
+    "data.settings.value.dashboard_menu_manager.left_menus.<all>.is_switched_on": ""
+  },
+  "findings": {
+    "unknown_top_level_keys_persist": true,
+    "empty_menu_manager_title_falls_back_to_previous_title": "Confirmed by DataSource::filter_title() lines 67-74 — when trimmed title is empty AND previous_title is non-empty, the saved menu_manager_title becomes previous_title (= original title). So sending '' for ALL titles round-trips back to the original titles.",
+    "is_switched_on_false_encoded_as_empty_string": true,
+    "all_top_level_settingsData_keys_other_than_dashboard_menu_manager_pass_through_DataSource_filter_unchanged": true,
+    "filter_does_NOT_remove_unknown_keys": true,
+    "save_mode": "overwrite (full $option_value replaces previous get_option result; no merge)",
+    "see_also": "dokan_menu_manager_after_B.json for full DB state"
+  }
+}

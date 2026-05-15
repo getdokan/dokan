@@ -412,6 +412,56 @@ The whole field set is finally wrapped by `apply_filters( 'dokan_reverse_withdra
 - **Round-trip count:** 11 writable fields declared (excluding 2 `sub_section` labels), 11 traced, 11 round-tripped after restore Save A.
 - **Rewrite rules / cron / other side effects:** none observed. No flush, no scheduled action, no transient invalidation.
 
+### `dokan_menu_manager` — Menu Manager (Pro, FIRST Pro tab)
+
+**wp_option name:** `dokan_menu_manager`
+**Registered by:** Dokan Pro `MenuManager` module — section added in `dokan-pro/includes/MenuManager/Admin/Settings.php::add_menu_manager_section()` (hooked on `dokan_settings_sections` priority 11, inserted after `dokan_appearance`). Fields built in `add_menu_manager_section_fields()` (hooked on `dokan_settings_fields` priority 99).
+**Initial GET slice (pre-trace):** `[]` — option did not exist in DB on the test instance; `get_option('dokan_menu_manager', [])` returns empty array; no schema defaults injected on read by the AJAX endpoint.
+**Live schema (one `sub_tab` field with two inner tabs):**
+- `menu_manager_menu_tab.tabs.left_menus.fields` — 21 menu items: `dashboard, products, orders, requested-quotes, coupons, pos, reports, delivery-time-dashboard, reviews, reverse-withdrawal, seller-badge, product-questions-answers, return-request, staffs, followers, subscription, announcement, analytics, tools, auction, support`.
+- `menu_manager_menu_tab.tabs.settings_sub_menu.fields` — 8 menu items: `store, payment, verification, shipping, shipstation, social, rma, seo`.
+- Each item carries: `title, icon, url, pos, icon_name, react_route?, permission?, switchable, is_sortable`. The frontend (`Sortable.vue:105-152`) augments each item with `menu_key, menu_manager_title, previous_title, is_switched_on, menu_manager_position, edit_now, editable, temporary_disable_edit` before submit.
+- `dashboard` (left) and `store` (settings sub) are pinned (`switchable=false, is_sortable=false`) by `apply_menu_restrictions()` (Settings.php:144-157).
+
+**Hooks observed:**
+- `dokan_settings_sections` p11 → `Settings::add_menu_manager_section` adds the section.
+- `dokan_settings_fields` p99 → `Settings::add_menu_manager_section_fields` builds the `menu_manager_menu_tab` sub-tab. Calls `dokan_get_dashboard_nav()` under a temporary `dokan_is_seller_enabled => true` filter so the admin view sees all vendor menu items.
+- `dokan_menu_manager_restricted_menus` filter — Pro itself + extensions can pin extra items.
+- `dashboard_menu_manager_before_admin_settings` filter — final hook before fields are emitted.
+- `dokan_save_settings_value` p99 → **`DataSource::save_admin_settings` (`dokan-pro/includes/MenuManager/Admin/DataSource.php:36-48`)** — THIS is the same filter that, on every other tab, injects `dashboard_menu_manager: []` (the cross-tab leak observed in Tasks 1–8). On THIS tab the filter does its real work: rebuilds `$option_value['dashboard_menu_manager']` by keeping only `left_menus` / `settings_sub_menu` subkeys, then passes each menu item through `filter_title()` (lines 59-83) to resolve empty `menu_manager_title` via fallback chain `trim(title) -> trim(previous_title) -> item.title`.
+
+| Field group | UI control | Type | Default | Sentinel sent | Payload path | Response path | wp_option path | Round-trips? | Notes |
+| ----------- | ---------- | ---- | ------- | ------------- | ------------ | ------------- | -------------- | ------------ | ----- |
+| `menu_manager_menu_tab` (sub_tab wrapper) | Two tabs (Left Menu / Settings Sub Menu) with sortable/toggle/rename rows | `sub_tab` | — | n/a (container only) | n/a — children submit under `settingsData[dashboard_menu_manager][...]` | n/a | n/a | n/a | The schema key is `menu_manager_menu_tab` but the *payload* and *DB* key is `dashboard_menu_manager` (`Constants::MENU_MANAGER_OPTIONS`). This name mismatch is intentional and handled by `DataSource::save_admin_settings`. |
+| `dashboard_menu_manager.left_menus.<menu_key>` (21 rows; representative: `products`) | Per-row toggle (`is_switched_on`), inline rename (`menu_manager_title`), drag-handle (`menu_manager_position`) | object | — (only populated after first save) | `products`: title=`__T_Products_Renamed__`, on=false, pos swapped with `orders` | `settingsData[dashboard_menu_manager][left_menus][products][menu_manager_title=...][is_switched_on=][menu_manager_position=2][...]` | `data.settings.value.dashboard_menu_manager.left_menus.products.{menu_manager_title, is_switched_on, menu_manager_position}` | `dokan_menu_manager.dashboard_menu_manager.left_menus.products.*` | yes | `is_switched_on=false` serializes as `""` via the FormData boolean encoder. `dashboard` row is pinned (not switchable/sortable). |
+| `dashboard_menu_manager.left_menus.orders` (rename only) | inline rename + drag | object | — | title=`__T_Orders_Renamed__`, pos=1 | `settingsData[dashboard_menu_manager][left_menus][orders][menu_manager_title=__T_Orders_Renamed__]` | `data.settings.value.dashboard_menu_manager.left_menus.orders.menu_manager_title` | `dokan_menu_manager.dashboard_menu_manager.left_menus.orders.menu_manager_title` | yes | Position swap with `products` round-trips. |
+| `dashboard_menu_manager.settings_sub_menu.<menu_key>` (8 rows; representative: `payment`) | Same controls as left_menus rows | object | — | `payment`: title=`__T_Payment_OFF__`, on=false | `settingsData[dashboard_menu_manager][settings_sub_menu][payment][...]` | `data.settings.value.dashboard_menu_manager.settings_sub_menu.payment.*` | `dokan_menu_manager.dashboard_menu_manager.settings_sub_menu.payment.*` | yes | `store` row is pinned. |
+
+**Per-item stored shape (after Save A on `left_menus.products`):**
+```
+{ title, icon, url, pos, icon_name, permission, switchable, is_sortable,
+  menu_key: "products", menu_manager_title: "__T_Products_Renamed__",
+  previous_title: "Products", is_switched_on: "",
+  menu_manager_position: "2", edit_now: "", editable: "1",
+  temporary_disable_edit: "" }
+```
+All booleans round-trip as `""` (false) / `"1"` (true) due to legacy jQuery-style form encoding; the read path treats `""` as falsy.
+
+**Filter / boundary findings:**
+- **Empty-option default:** `wp option delete dokan_menu_manager` + GET → `[]` (empty PHP array). Captured to `_trace_artifacts/dokan_menu_manager_empty_default.json`. The active menu config is recomputed at render time from `dokan_get_dashboard_nav()` when no overlay exists.
+- **Save mode:** **OVERWRITE.** `update_option()` writes the full `$option_value` returned by the `dokan_save_settings_value` filter chain. Confirmed by Save B (which sent only the menu data + 2 unknown keys) — the response/DB contains exactly those keys, nothing else.
+- **Recursive leak (does `dokan_menu_manager` get its own `dashboard_menu_manager: []` leak injected?):** **NO.** The DataSource filter at `DataSource.php:38` is gated by `Constants::DOKAN_MENU_MANAGER === $option_name`, so on THIS tab it populates `dashboard_menu_manager` with the real menu config (built from `$option_value[MENU_MANAGER_OPTIONS]`). It does NOT re-wrap into `dashboard_menu_manager.dashboard_menu_manager`. Verified: `get_option('dokan_menu_manager')['dashboard_menu_manager']` has top-level keys `['left_menus', 'settings_sub_menu']` only.
+- **Cross-tab leak source (the bug observed in Tasks 1–8):** **`dokan-pro/includes/MenuManager/Admin/DataSource.php:45`** — the line `$option_value[ Constants::MENU_MANAGER_OPTIONS ] = $this->filter_title( $filtered_value );` runs **unconditionally** for every option being saved. The `$filtered_value` starts as `[]` and is only populated when `$option_name === DOKAN_MENU_MANAGER` (lines 38-44). On every OTHER tab the conditional is false, `$filtered_value` stays `[]`, and `filter_title([])` returns `[]` — but line 45 still writes `dashboard_menu_manager: []` into the unrelated option. Fix: wrap lines 45-47 in an `if ( Constants::DOKAN_MENU_MANAGER === $option_name )` guard (or early-return at top of the method).
+- **Unknown-key persistence on this tab:** **CONFIRMED, same as other tabs.** Save B included `settingsData[__unknown_menu_key__]=__T_unknown_value__` and `settingsData[some_random_field]=__T_random__`. Both persisted at the top level of the saved option (DB confirmed). The DataSource filter does NOT strip extra keys; the generic `Settings::save_settings_value` handler does NOT filter to the active schema. Same root cause as Task 8 finding.
+- **Empty `menu_manager_title` fallback:** Confirmed by Save B (all titles sent as `''`). `filter_title()` (DataSource.php:67-74) chains: `trim(menu_manager_title)` → if empty, `trim(previous_title)` → if still empty, `item.title`. So sending empty titles round-trips back to the original titles (verified: `products.menu_manager_title` came back as `"Products"`). **Side effect:** the admin cannot save a deliberately blank menu label — the system always re-fills it.
+- **Boolean encoding:** `is_switched_on=false` serializes to `""` (empty string) via the FormData encoder used by the legacy Vue Sortable component. The read side (`Sortable.vue:113`) treats `""` as falsy. The new plugin-ui implementation must accept either `boolean false` OR `string ""` to be backward-compatible with DB rows written by the legacy UI.
+- **Menu-key with hyphen:** Keys like `delivery-time-dashboard`, `requested-quotes`, `product-questions-answers`, `return-request`, `reverse-withdrawal`, `seller-badge` round-trip cleanly through `URLSearchParams[]` bracket encoding. No issues.
+- **Pinned rows:** `dashboard` (left) and `store` (settings_sub) have `switchable=false, is_sortable=false` injected by `apply_menu_restrictions()`. The UI hides toggle/grab controls. The server does NOT enforce this on save — sending `dashboard.is_switched_on=false` would persist, but the UI would never emit that. New plugin-ui should enforce server-side.
+- **Sortable position:** swapping `products` (pos=2) and `orders` (pos=1) round-trips. Position is stored as string-coerced int (`"1"`, `"2"`) — `Sortable.vue:134-138` sorts numerically via `position_a - position_b` which works for string coercion.
+- **Baseline-diff:** Only `dokan_menu_manager` newly created. No side-effect options written. No cron/rewrite/transient invalidation observed in the save path.
+- **Round-trip count:** 21 left + 8 settings_sub = 29 sortable/renamable rows traced via representative sentinels (`products`, `orders`, `payment`). All sentinels round-trip after restore Save A — captured in `_trace_artifacts/dokan_menu_manager_reload.json`.
+- **Frontend caveat:** The UI is Vue 2 (legacy admin settings React+Vue hybrid) — `Sortable.vue` mutates `fieldValue.dashboard_menu_manager` directly on `created()`. There is no per-field `refresh_after_save` handler — meaning after save, the page expects a refresh to re-read state. New plugin-ui flow should explicitly re-fetch.
+
 ## Side-effect / hook checklist
 
 _Filled in Task N+1 (final pass)._

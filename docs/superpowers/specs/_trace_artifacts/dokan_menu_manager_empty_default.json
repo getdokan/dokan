@@ -1,0 +1,6 @@
+{
+  "method": "wp option delete dokan_menu_manager; fresh AJAX GET dokan_get_setting_values",
+  "response_slice_dokan_menu_manager": [],
+  "type": "empty PHP array",
+  "notes": "No schema defaults are injected on read. The legacy AJAX returns get_option('dokan_menu_manager', []) verbatim. The active menu config is computed at frontend render time from dokan_get_dashboard_nav() and the (possibly absent) dashboard_menu_manager overlay."
+}
