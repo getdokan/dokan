@@ -177,6 +177,23 @@ class Settings {
 
             update_option( $option_name, $option_value );
 
+            // Propagate to the new flat option so toggling back to the new UI reflects this save.
+            if ( function_exists( 'dokan_get_container' ) ) {
+                try {
+                    $bridge    = dokan_get_container()->get( \WeDevs\Dokan\Admin\Settings\Migration\LegacySettingsBridge::class );
+                    $new_slice = $bridge->transform_legacy_payload_to_new( $option_name, $option_value );
+                    if ( ! empty( $new_slice ) ) {
+                        $existing_new = get_option( 'dokan_settings', [] );
+                        if ( ! is_array( $existing_new ) ) {
+                            $existing_new = [];
+                        }
+                        update_option( 'dokan_settings', array_merge( $existing_new, $new_slice ), true );
+                    }
+                } catch ( \Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+                    // Container not booted — skip propagation, legacy save still succeeds.
+                }
+            }
+
             /**
              * @since 3.5.1 added $old_options parameter
              */
