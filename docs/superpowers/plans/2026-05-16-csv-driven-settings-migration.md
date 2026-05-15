@@ -166,12 +166,74 @@ git commit -m "docs(settings-mig): freeze CSV-derived field inventory and unmapp
 
 ## Task 1: Bridge upgrades to support the full CSV
 
+> **Scope clarification:** this task **extends the existing `LegacySettingsBridge` class** at `includes/Admin/Settings/Migration/LegacySettingsBridge.php` — it does not replace it. The class stays registered in `AdminSettingsServiceProvider` and the three existing call sites (`Settings.php:183`, `SettingsRegistry.php:306`, `functions.php:1075`) keep using the same `dokan_get_container()->get( LegacySettingsBridge::class )` accessor. The upgrades land as additive methods + an internal refactor; all currently-green tests in `LegacySettingsBridgeTest.php` and `LegacyAjaxBridgePropagationTest.php` must stay green throughout.
+
 The current bridge supports only flat `option.field` addresses and only the `legacy → new` write direction. The CSV reveals 4 needs not covered:
 
 1. **`bridge_only: true`** fields (no UI element but legacy round-trip required).
 2. **Reverse-bulk propagation:** `update_option('dokan_settings')` must mirror back into the relevant legacy `dokan_<section>` rows so direct `get_option()` Pro readers see fresh values.
 3. **Nested-array legacy fields** (e.g., `dokan_geolocation.location.latitude`, `dokan_withdraw.withdraw_methods.paypal`, `dokan_colors.store_color_pallete.value`). Need dotted-path traversal beyond the second segment.
 4. **Schema reshape cases** (e.g., Delivery Time 7 day-fields → 1 `delivery_days_schedule`). Bridge cannot express via per-field `legacy_key`; needs a transformer hook.
+
+### How deep-path legacy keys work (worked example)
+
+The CSV legacy_key `dokan_geolocation.location.latitude` describes a value that lives **inside a nested array** in the legacy wp_option, not a flat key. The bridge handles this by splitting on `.`: the first segment is the wp_option name, and every segment after that is a path inside the option array.
+
+```
+Legacy storage in wp_options:
+┌─ option_name ──────────┐    ┌─ option_value (array, serialized) ─────────────┐
+│ 'dokan_geolocation'    │ →  │ [                                              │
+└────────────────────────┘    │   'show_locations_map' => 'on',                │
+                              │   'location' => [                              │
+                              │     'address'   => '...',                      │
+                              │     'latitude'  => '23.45',  ←─ the target     │
+                              │     'longitude' => '-87.12',                   │
+                              │   ],                                           │
+                              │   ...                                          │
+                              │ ]                                              │
+                              └────────────────────────────────────────────────┘
+```
+
+A field declaration in the schema with `legacy_key: 'dokan_geolocation.location.latitude'` is parsed by `LegacyAddress::parse()` into:
+
+```php
+LegacyAddress {
+    option = 'dokan_geolocation'
+    path   = [ 'location', 'latitude' ]   // every segment after the first
+}
+```
+
+**Read direction (legacy → new):** the bridge calls `get_option('dokan_geolocation')`, then `$address->read_from( $legacy )` walks the path:
+
+```php
+$legacy['location']['latitude']     // returns '23.45'
+```
+
+The new flat option receives the scalar: `dokan_settings[ general_location_latitude ] = '23.45'`.
+
+**Write direction (new → legacy):** when the new UI saves `dokan_settings[ general_location_latitude ] = '23.45'`, the reverse listener calls `$address->write_to( $legacy, '23.45' )`, which mutates the legacy array in place:
+
+```php
+$legacy['location']['latitude'] = '23.45';
+// auto-creates intermediate arrays if missing:
+// if $legacy['location'] is unset, write_to does $legacy['location'] = [];
+```
+
+Then `update_option('dokan_geolocation', $legacy)` persists the full multi-dimensional shape. Any unrelated keys in `dokan_geolocation` (e.g. `show_locations_map`, `map_zoom`) are left untouched — the bridge only writes the specific path it owns.
+
+**Why this matters per the trace:** the 30-tab trace surfaced three legacy options with nested-array shape that the current 2-segment `parse_address` cannot reach:
+
+| Legacy option | Nested path example | Source of complexity |
+| --- | --- | --- |
+| `dokan_geolocation` | `location.latitude`, `location.longitude`, `location.address`, `location.zoom` | `gmap` field type stores 4 sub-keys |
+| `dokan_withdraw` | `withdraw_methods.paypal`, `withdraw_methods.bank`, … | multicheck stored as method-id → '' map |
+| `dokan_colors` | `store_color_pallete.value`, `store_color_pallete.preset` | `radio_image` field with nested value+preset |
+
+Each of these gets a CSV legacy_key with 3 dotted segments, and `LegacyAddress` traverses them uniformly. No special-casing per field.
+
+**Why `LegacyAddress` is a value object rather than a string:** keeping the parsed `option` + `path[]` together (instead of re-parsing the dotted string every call) avoids 3 classes of bugs: (a) silently dropping the third segment, (b) confusing `option.field.subfield` with `option.field_with_dot.subfield`, (c) accumulating allocations in the hot path of `populate_values()`. Tests assert the value object directly.
+
+The non-nested case still works through the same code path: `LegacyAddress::parse('dokan_general.site_logo')` produces `option='dokan_general', path=['site_logo']`, and `read_from`/`write_to` both terminate after one step.
 
 **Files:**
 - Modify: `includes/Admin/Settings/Migration/LegacySettingsBridge.php`
