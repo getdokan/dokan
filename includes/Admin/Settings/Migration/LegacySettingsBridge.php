@@ -72,6 +72,54 @@ class LegacySettingsBridge {
     }
 
     /**
+     * Fill missing keys in the new option from mapped legacy options.
+     *
+     * Never overwrites existing new-option values — new is source of truth.
+     * For mapped keys missing on both sides, falls back to the schema default.
+     * Legacy reads are batched per option name.
+     *
+     * @param array<string,mixed> $new_option Current `dokan_settings` array.
+     *
+     * @return array<string,mixed> Hydrated new option.
+     */
+    public function hydrate_new_from_legacy( array $new_option ): array {
+        $this->build_map();
+
+        $missing_by_option = [];
+        foreach ( $this->map as $new_key => $address ) {
+            if ( array_key_exists( $new_key, $new_option ) ) {
+                continue;
+            }
+            $missing_by_option[ $address['option'] ][ $new_key ] = $address['field'];
+        }
+
+        foreach ( $missing_by_option as $option_name => $pairs ) {
+            $legacy = get_option( $option_name, [] );
+            if ( ! is_array( $legacy ) ) {
+                $legacy = [];
+            }
+            foreach ( $pairs as $new_key => $old_field ) {
+                $new_option[ $new_key ] = array_key_exists( $old_field, $legacy )
+                    ? $legacy[ $old_field ]
+                    : $this->get_schema_default( $new_key );
+            }
+        }
+
+        return $new_option;
+    }
+
+    /**
+     * Schema default for a mapped new key, or `null` if unknown.
+     *
+     * @param string $new_key
+     *
+     * @return mixed
+     */
+    private function get_schema_default( string $new_key ) {
+        return $this->defaults[ $new_key ] ?? null;
+    }
+
+    /**
      * Build (and cache) the mapping, defaults index, and reverse-by-option index.
      *
      * @return array<string,array{option:string,field:string}>
