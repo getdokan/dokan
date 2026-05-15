@@ -1,0 +1,43 @@
+{
+  "_meta": {
+    "capture_method": "Direct fetch() via javascript_tool — read_network_requests does not expose request/response bodies.",
+    "note": "Each Save call replaces the entire wp_option with only the fields in payload (no merge). To preserve negative baseline, the final canonical B-negative was re-run AFTER the filter-validation sub-cases so the persisted state matches negative."
+  },
+  "B_negative": {
+    "description": "Flip toggles back, alt selects, empty repeaters, reset category commission to defaults",
+    "request_body": "action=dokan_save_settings&nonce=<>&section=dokan_selling&settingsData[commission]=&settingsData[commission_type]=percentage&settingsData[additional_fee]=&settingsData[admin_percentage]=&settingsData[commission_fixed_values]=&settingsData[reset_sub_category_when_edit_all_category]=on&settingsData[fee-recipients]=&settingsData[shipping_fee_recipient]=seller&settingsData[tax_fee_recipient]=seller&settingsData[shipping_tax_fee_recipient]=seller&settingsData[selling_capabilities]=&settingsData[new_seller_enable_selling]=automatically&settingsData[one_step_product_create]=on&settingsData[disable_product_popup]=off&settingsData[order_status_change]=on&settingsData[dokan_any_category_selection]=off&settingsData[catalog_mode_settings]=&settingsData[catalog_mode_hide_add_to_cart_button]=off&settingsData[catalog_mode_hide_product_price]=off&settingsData[commission_category_based_values][all][flat]=4&settingsData[commission_category_based_values][all][percentage]=50",
+    "response": {"success":true,"data":{"settings":{"name":"dokan_selling","value":{"commission":"","commission_type":"percentage","additional_fee":"","admin_percentage":"","commission_fixed_values":"","reset_sub_category_when_edit_all_category":"on","fee-recipients":"","shipping_fee_recipient":"seller","tax_fee_recipient":"seller","shipping_tax_fee_recipient":"seller","selling_capabilities":"","new_seller_enable_selling":"automatically","one_step_product_create":"on","disable_product_popup":"off","order_status_change":"on","dokan_any_category_selection":"off","catalog_mode_settings":"","catalog_mode_hide_add_to_cart_button":"off","catalog_mode_hide_product_price":"off","commission_category_based_values":{"all":{"flat":"4","percentage":"50"}},"dashboard_menu_manager":[]}},"message":"Setting has been saved successfully."}}
+  },
+  "B_admin_percentage_150_fixed": {
+    "description": "Send admin_percentage=150 with commission_type=fixed; expected clamp via validate_fixed_price_values",
+    "payload_keys": {"commission_type": "fixed", "admin_percentage": "150", "additional_fee": "10"},
+    "response_value": {"commission":"","commission_type":"fixed","additional_fee":"10","admin_percentage":"","commission_fixed_values":"","reset_sub_category_when_edit_all_category":"on","fee-recipients":"","shipping_fee_recipient":"seller","tax_fee_recipient":"seller","shipping_tax_fee_recipient":"seller","selling_capabilities":"","new_seller_enable_selling":"automatically","one_step_product_create":"on","disable_product_popup":"off","order_status_change":"on","dokan_any_category_selection":"off","catalog_mode_settings":"","catalog_mode_hide_add_to_cart_button":"off","catalog_mode_hide_product_price":"off","commission_category_based_values":{"all":{"flat":"4","percentage":"50"}},"dashboard_menu_manager":[]},
+    "observed_admin_percentage": "",
+    "verdict": "Clamped: filter `validate_fixed_price_values` replaced 150 with `dokan_get_option('admin_percentage', 'dokan_selling', '0')`. Since the previously-stored admin_percentage was empty string (set by B-negative), the clamp value falls back to the EMPTY STRING, not to '0' as the default suggests — because dokan_get_option only returns the third-arg default when the key is unset, not when it is set to empty string."
+  },
+  "B_admin_percentage_neg10_flat": {
+    "description": "Send admin_percentage=-10 with commission_type=flat; expected clamp",
+    "payload_keys": {"commission_type": "flat", "admin_percentage": "-10", "additional_fee": "5"},
+    "response_value": {"commission_type":"flat","admin_percentage":"","additional_fee":"5","dashboard_menu_manager":[]},
+    "observed_admin_percentage": "",
+    "verdict": "Clamped: same fallback to previously-saved (empty) admin_percentage."
+  },
+  "B_commission_type_empty": {
+    "description": "Send commission_type='' (empty); expected `set_commission_type_if_not_set` filter to default to 'fixed' on read",
+    "payload_keys": {"commission_type": "", "admin_percentage": "12", "additional_fee": "3"},
+    "response_value_commission_type": "fixed",
+    "verdict": "Filter fires: response shows commission_type=fixed even though payload was empty. (Filter runs in the post-save `dokan_get_settings_values` chain inside save_settings_value's response builder.) See round-trip confirmation in dokan_selling_reload.json."
+  },
+  "B_new_seller_enable_selling_legacy_on": {
+    "description": "Send legacy value 'on'",
+    "payload_keys": {"new_seller_enable_selling": "on"},
+    "response_value_new_seller_enable_selling": "on",
+    "verdict": "Stored verbatim as 'on'. Mapper in save_settings_value is NOT applied on save; only get_settings_value() maps 'on'→'automatically' / 'off'→'manually' via AdminSettings::get_new_seller_enable_selling_status. The save-response builder reuses the dokan_get_settings_values filter chain but the legacy mapper is gated by `! in_array($status, $settings, true)` (line 136), which is brittle (in_array against an associative array of arrays). See round-trip confirmation in reload."
+  },
+  "B_new_seller_enable_selling_legacy_off": {
+    "description": "Send legacy value 'off'",
+    "payload_keys": {"new_seller_enable_selling": "off"},
+    "response_value_new_seller_enable_selling": "off",
+    "verdict": "Stored verbatim as 'off'."
+  }
+}

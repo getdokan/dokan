@@ -1,0 +1,13 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/wp-admin/admin-ajax.php",
+    "content_type": "application/x-www-form-urlencoded",
+    "body": "action=dokan_save_settings&nonce=<window.dokan.nonce>&section=dokan_selling&settingsData[commission]=&settingsData[commission_type]=flat&settingsData[additional_fee]=4242&settingsData[admin_percentage]=42&settingsData[commission_fixed_values]=&settingsData[reset_sub_category_when_edit_all_category]=off&settingsData[fee-recipients]=&settingsData[shipping_fee_recipient]=admin&settingsData[tax_fee_recipient]=admin&settingsData[shipping_tax_fee_recipient]=admin&settingsData[selling_capabilities]=&settingsData[new_seller_enable_selling]=manually&settingsData[one_step_product_create]=off&settingsData[disable_product_popup]=on&settingsData[order_status_change]=off&settingsData[dokan_any_category_selection]=on&settingsData[catalog_mode_settings]=&settingsData[catalog_mode_hide_add_to_cart_button]=on&settingsData[catalog_mode_hide_product_price]=on&settingsData[commission_category_based_values][all][flat]=7&settingsData[commission_category_based_values][all][percentage]=13",
+    "capture_method": "Direct fetch() via javascript_tool (mirrors UI's AJAX shape). read_network_requests does not expose request/response bodies."
+  },
+  "response": {
+    "status": 200,
+    "body": {"success":true,"data":{"settings":{"name":"dokan_selling","value":{"commission":"","commission_type":"flat","additional_fee":"4242","admin_percentage":"42","commission_fixed_values":"","reset_sub_category_when_edit_all_category":"off","fee-recipients":"","shipping_fee_recipient":"admin","tax_fee_recipient":"admin","shipping_tax_fee_recipient":"admin","selling_capabilities":"","new_seller_enable_selling":"manually","one_step_product_create":"off","disable_product_popup":"on","order_status_change":"off","dokan_any_category_selection":"on","catalog_mode_settings":"","catalog_mode_hide_add_to_cart_button":"on","catalog_mode_hide_product_price":"on","commission_category_based_values":{"all":{"flat":"7","percentage":"13"}},"dashboard_menu_manager":[]}},"message":"Setting has been saved successfully."}}
+  }
+}
