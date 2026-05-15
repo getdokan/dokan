@@ -1,0 +1,1 @@
+{"enabled":"on","payment_gateways":{"cod":"cod"},"billing_type":"by_amount","reverse_balance_threshold":"4242","monthly_billing_day":"15","due_period":"7","failed_actions":{"enable_catalog_mode":"enable_catalog_mode","hide_withdraw_menu":"hide_withdraw_menu","status_inactive":"status_inactive"},"display_notice":"off","dashboard_menu_manager":[]}
