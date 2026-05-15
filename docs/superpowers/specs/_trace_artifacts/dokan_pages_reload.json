@@ -1,0 +1,11 @@
+{
+  "source": "wp option get dokan_pages (after restore Save A)",
+  "dokan_pages": {
+    "dashboard": "6",
+    "my_orders": "8",
+    "store_listing": "7",
+    "dashboard_menu_manager": []
+  },
+  "round_trip_save_A_verdict": "all 5 fields round-tripped in Save A response + after_A.json (dashboard=219, my_orders=11, store_listing=10, reg_tc_page=106, vendor_onboarding=12)",
+  "post_restore_verdict": "dashboard/my_orders/store_listing restored to initial values; reg_tc_page and vendor_onboarding intentionally not re-saved (initial GET had them unset)"
+}

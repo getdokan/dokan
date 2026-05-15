@@ -281,6 +281,30 @@ The whole field set is finally wrapped by `apply_filters( 'dokan_reverse_withdra
 - **Cron / schedule side effects:** verified via `wp_actionscheduler_actions` table. Pre-save baseline: no `*reverse_withdrawal*` pending actions (option did not exist). After Save A (`enabled=on, by_month, day=15`): two pending actions appear — `dokan_reverse_withdrawal_midnight_cron` (daily) and `dokan_reverse_withdrawal_monthly_cron` (cron `0 8 15 * *`). After B1 (`enabled=off`): both pending actions are cleared. After restore Save A: both re-appear. Cron rescheduling logic lives in `BackgroundProcess/CronActions.php::after_save_settings`.
 - **Pro MenuManager leak:** `dashboard_menu_manager: []` written into `dokan_reverse_withdrawal` on every successful save, identical to all other tabs. Confirmed via DB dump after Save A and B1/B6.
 
+### `dokan_pages` — Page Settings
+
+**wp_option name:** `dokan_pages`
+**Initial GET slice keys:** `dashboard`, `store_listing`, `my_orders` (only 3 of 5 declared fields present — `reg_tc_page` and `vendor_onboarding` unset in baseline DB)
+**Hooks observed:**
+- `dokan_save_settings_value` priority 10 → `\WeDevs\Dokan\Admin\Hooks::update_pages` merges submitted payload into existing option via `array_replace_recursive` (only `dokan_pages` section). **Unique to this tab — all other tabs overwrite.**
+- `dokan_save_settings_value` priority 99 → Pro MenuManager leak (writes `dashboard_menu_manager: []`; not Pages-specific)
+
+| Field | UI control | Type | Default | Sentinel sent | Payload path | Response path | wp_option path | Extra options touched | Round-trips? | Notes |
+| ----- | ---------- | ---- | ------- | ------------- | ------------ | ------------- | -------------- | --------------------- | ------------ | ----- |
+| `dashboard` | Page select (`<select>` of published pages) | int (stored as string) | unset (initial DB: `6`) | `219` | `settingsData[dashboard]` | `data.settings.value.dashboard` | `dokan_pages.dashboard` | none | yes (string `"219"`) | Special: dashboard routing depends on this. Restored to `6` after Save B. |
+| `my_orders` | Page select | int (stored as string) | unset (initial DB: `8`) | `11` | `settingsData[my_orders]` | `data.settings.value.my_orders` | `dokan_pages.my_orders` | none | yes (`"11"`) | Used by `template-tags.php:514` for my-orders shortcode. |
+| `store_listing` | Page select | int (stored as string) | unset (initial DB: `7`) | `10` | `settingsData[store_listing]` | `data.settings.value.store_listing` | `dokan_pages.store_listing` | none | yes (`"10"`) | Used by `Rewrites.php:58` for breadcrumbs. |
+| `reg_tc_page` | Page select | int (stored as string) | unset (no schema default) | `106` | `settingsData[reg_tc_page]` | `data.settings.value.reg_tc_page` | `dokan_pages.reg_tc_page` | none | yes (`"106"`) | T&C page id; `functions.php:3423` + `BecomeAVendor.php:191`. |
+| `vendor_onboarding` | Page select | int (stored as string) | unset (no schema default; auto-created by `V_5_0_0::create_vendor_onboarding_page`) | `12` | `settingsData[vendor_onboarding]` | `data.settings.value.vendor_onboarding` | `dokan_pages.vendor_onboarding` | none | yes (`"12"`) | Vendor onboarding/login route. |
+
+**Filter / boundary findings:**
+- **Empty-option default:** after `wp option delete dokan_pages` and GET, slice is `{}`. No schema-level defaults; merge filter has no current settings to fall back on. Installer (`Installer.php:287`) seeds the option at activation with auto-created pages.
+- **Page id = 0:** all 5 fields accepted `0`, coerced to string `"0"`, stored as-is. No "page must exist" validation server-side. Verdict: accepted silently, would break routing if user submitted.
+- **Non-existent page id (999999):** `store_listing=999999` accepted, stored as string `"999999"`. No `get_post()` existence check. Verdict: accepted silently.
+- **Merge semantics (unique to this tab):** submitting `{dashboard: 6, my_orders: 8, store_listing: 7}` after a full B-save preserved `dashboard_menu_manager` key (since merge), but `reg_tc_page` and `vendor_onboarding` from Save B were also preserved at value `"0"` — so partial submits cannot *clear* a key, only overwrite. To remove a key the option itself must be deleted.
+- **Rewrite rules count before/after Save A:** `394` / `394`. Verdict: **unchanged** — no rewrite flush is triggered by `dokan_pages` save (unlike `custom_store_url` in `dokan_general`).
+- **Newly-created pages?** Pre-save count `19`, post-Save-A count `19`. Verdict: **no auto-creation** during settings save. Page auto-creation only happens at install/upgrade time (`Installer.php`, `V_5_0_0.php`).
+
 
 
 ## Side-effect / hook checklist
