@@ -1,0 +1,100 @@
+{
+    "input": {
+        "enabled": "off",
+        "allow_mark_received": "off",
+        "shipping_status_provider": {
+            "sp-usps": "sp-usps"
+        },
+        "shipping_status_list": [
+            {
+                "id": "ss_delivered",
+                "value": "Delivered",
+                "must_use": "true",
+                "desc": "(This is must use item)"
+            },
+            {
+                "id": "ss_in_transit",
+                "value": "In Transit"
+            }
+        ]
+    },
+    "sanitized_edit": {
+        "enabled": "off",
+        "allow_mark_received": "off",
+        "shipping_status_provider": {
+            "sp-usps": "sp-usps"
+        },
+        "shipping_status_list": [
+            {
+                "id": "ss_delivered",
+                "value": "Delivered",
+                "must_use": "true",
+                "desc": "(This is must use item)"
+            },
+            {
+                "id": "ss_in_transit",
+                "value": "In Transit"
+            }
+        ]
+    },
+    "filtered_save": {
+        "enabled": "off",
+        "allow_mark_received": "off",
+        "shipping_status_provider": {
+            "sp-usps": "sp-usps"
+        },
+        "shipping_status_list": [
+            {
+                "id": "ss_delivered",
+                "value": "Delivered",
+                "must_use": "true",
+                "desc": "(This is must use item)"
+            },
+            {
+                "id": "ss_in_transit",
+                "value": "In Transit"
+            }
+        ],
+        "dashboard_menu_manager": []
+    },
+    "db": {
+        "enabled": "off",
+        "allow_mark_received": "off",
+        "shipping_status_provider": {
+            "sp-usps": "sp-usps"
+        },
+        "shipping_status_list": [
+            {
+                "id": "ss_delivered",
+                "value": "Delivered",
+                "must_use": "true",
+                "desc": "(This is must use item)"
+            },
+            {
+                "id": "ss_in_transit",
+                "value": "In Transit"
+            }
+        ],
+        "dashboard_menu_manager": []
+    },
+    "response": {
+        "enabled": "off",
+        "allow_mark_received": "off",
+        "shipping_status_provider": {
+            "sp-usps": "sp-usps"
+        },
+        "shipping_status_list": [
+            {
+                "id": "ss_delivered",
+                "value": "Delivered",
+                "must_use": "true",
+                "desc": "(This is must use item)"
+            },
+            {
+                "id": "ss_in_transit",
+                "value": "In Transit"
+            }
+        ],
+        "dashboard_menu_manager": []
+    }
+}
