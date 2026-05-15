@@ -300,6 +300,16 @@ class SettingsRegistry {
             $stored = [];
         }
 
+        // Fill missing keys from legacy options where mapped (legacy view → new UI bridge).
+        if ( function_exists( 'dokan_get_container' ) ) {
+            try {
+                $bridge = dokan_get_container()->get( \WeDevs\Dokan\Admin\Settings\Migration\LegacySettingsBridge::class );
+                $stored = $bridge->hydrate_new_from_legacy( $stored );
+            } catch ( \Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+                // Container not booted (very early load path) — fall back to raw stored values.
+            }
+        }
+
         foreach ( $elements as &$element ) {
             if ( 'field' !== ( $element['type'] ?? '' ) ) {
                 continue;
