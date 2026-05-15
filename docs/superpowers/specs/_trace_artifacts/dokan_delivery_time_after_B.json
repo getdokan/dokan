@@ -1,0 +1,109 @@
+{
+    "db": {
+        "allow_vendor_override_settings": "off",
+        "selection_required": "on",
+        "delivery_support": [],
+        "delivery_date_label": "",
+        "delivery_buffer_unit": "days",
+        "preorder_date": -1,
+        "delivery_buffer_value": -1,
+        "time_slot_minutes": 99999,
+        "order_per_slot": -1,
+        "delivery_box_info": "",
+        "delivery_day_monday": {
+            "delivery_status": "monday",
+            "opening_time": "11:00 pm",
+            "closing_time": "9:00 am"
+        },
+        "delivery_day_tuesday": {
+            "delivery_status": "tuesday",
+            "opening_time": "",
+            "closing_time": ""
+        },
+        "delivery_day_wednesday": {
+            "delivery_status": "",
+            "opening_time": "",
+            "closing_time": ""
+        },
+        "delivery_day_thursday": {
+            "delivery_status": "",
+            "opening_time": "",
+            "closing_time": ""
+        },
+        "delivery_day_friday": {
+            "delivery_status": "",
+            "opening_time": "",
+            "closing_time": ""
+        },
+        "delivery_day_saturday": {
+            "delivery_status": "",
+            "opening_time": "",
+            "closing_time": ""
+        },
+        "delivery_day_sunday": {
+            "delivery_status": "",
+            "opening_time": "",
+            "closing_time": ""
+        }
+    },
+    "response": {
+        "allow_vendor_override_settings": "off",
+        "selection_required": "on",
+        "delivery_support": [],
+        "delivery_date_label": "",
+        "delivery_buffer_unit": "days",
+        "preorder_date": -1,
+        "delivery_buffer_value": -1,
+        "time_slot_minutes": 99999,
+        "order_per_slot": -1,
+        "delivery_box_info": "",
+        "delivery_day_monday": {
+            "delivery_status": "monday",
+            "opening_time": "11:00 pm",
+            "closing_time": "9:00 am"
+        },
+        "delivery_day_tuesday": {
+            "delivery_status": "tuesday",
+            "opening_time": "",
+            "closing_time": ""
+        },
+        "delivery_day_wednesday": {
+            "delivery_status": "",
+            "opening_time": "",
+            "closing_time": ""
+        },
+        "delivery_day_thursday": {
+            "delivery_status": "",
+            "opening_time": "",
+            "closing_time": ""
+        },
+        "delivery_day_friday": {
+            "delivery_status": "",
+            "opening_time": "",
+            "closing_time": ""
+        },
+        "delivery_day_saturday": {
+            "delivery_status": "",
+            "opening_time": "",
+            "closing_time": ""
+        },
+        "delivery_day_sunday": {
+            "delivery_status": "",
+            "opening_time": "",
+            "closing_time": ""
+        },
+        "dashboard_menu_manager": []
+    },
+    "aborted": false,
+    "die": null,
+    "output": "",
+    "slot_side": {
+        "monday": [],
+        "tuesday": [],
+        "wednesday": [],
+        "thursday": [],
+        "friday": [],
+        "saturday": [],
+        "sunday": []
+    }
+}
