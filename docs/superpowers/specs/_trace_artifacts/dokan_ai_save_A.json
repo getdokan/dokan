@@ -1,0 +1,54 @@
+{
+  "initial_get_slice_keys": [
+    "dokan_ai_engine",
+    "dokan_ai_chatgpt_model",
+    "dokan_ai_gemini_model",
+    "dokan_ai_gemini_api_key",
+    "dokan_ai_chatgpt_api_key",
+    "dokan_ai_max_tokens_for_marketplace",
+    "dokan_ai_openai_api_key",
+    "dokan_ai_openai_model"
+  ],
+  "initial_get_slice_note": "Real API keys present in initial GET were redacted before write. Note: dokan_ai_chatgpt_*, dokan_ai_max_tokens_for_marketplace are stale legacy keys NOT in current settings_fields schema (no UI controls).",
+  "payload": {
+    "action": "dokan_save_settings",
+    "section": "dokan_ai",
+    "settingsData": {
+      "dokan_ai_engine": "openai",
+      "dokan_ai_openai_api_key": "__T_FAKE_KEY_OPENAI_001",
+      "dokan_ai_openai_model": "gpt-4o-mini",
+      "dokan_ai_gemini_api_key": "__T_FAKE_KEY_GEMINI_001",
+      "dokan_ai_gemini_model": "gemini-2.5-flash",
+      "dokan_ai_image_gen_availability": "on",
+      "dokan_ai_image_engine": "gemini",
+      "dokan_ai_image_gemini_api_key": "__T_FAKE_KEY_IMG_GEMINI_001",
+      "dokan_ai_image_gemini_model": "gemini-2.5-flash-image",
+      "dokan_ai_image_bria-ai_api_key": "__T_FAKE_KEY_BRIA_001",
+      "dokan_ai_image_bria-ai_model": "bria-generate-background"
+    }
+  },
+  "response": {
+    "success": true,
+    "data": {
+      "settings": {
+        "name": "dokan_ai",
+        "value": {
+          "dokan_ai_engine": "openai",
+          "dokan_ai_openai_api_key": "__T_FAKE_KEY_OPENAI_001",
+          "dokan_ai_openai_model": "gpt-4o-mini",
+          "dokan_ai_gemini_api_key": "__T_FAKE_KEY_GEMINI_001",
+          "dokan_ai_gemini_model": "gemini-2.5-flash",
+          "dokan_ai_image_gen_availability": "on",
+          "dokan_ai_image_engine": "gemini",
+          "dokan_ai_image_gemini_api_key": "__T_FAKE_KEY_IMG_GEMINI_001",
+          "dokan_ai_image_gemini_model": "gemini-2.5-flash-image",
+          "dokan_ai_image_bria-ai_api_key": "__T_FAKE_KEY_BRIA_001",
+          "dokan_ai_image_bria-ai_model": "bria-generate-background",
+          "dashboard_menu_manager": []
+        },
+        "message": "Setting has been saved successfully."
+      }
+    }
+  },
+  "overwrite_evidence": "Stale keys dokan_ai_chatgpt_api_key, dokan_ai_chatgpt_model, dokan_ai_max_tokens_for_marketplace from initial GET are absent from response/DB after save -> save mode is OVERWRITE."
+}

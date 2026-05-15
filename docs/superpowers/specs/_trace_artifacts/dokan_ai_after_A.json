@@ -1,0 +1,14 @@
+{
+  "dokan_ai_engine": "openai",
+  "dokan_ai_openai_api_key": "__T_FAKE_KEY_OPENAI_001",
+  "dokan_ai_openai_model": "gpt-4o-mini",
+  "dokan_ai_gemini_api_key": "__T_FAKE_KEY_GEMINI_001",
+  "dokan_ai_gemini_model": "gemini-2.5-flash",
+  "dokan_ai_image_gen_availability": "on",
+  "dokan_ai_image_engine": "gemini",
+  "dokan_ai_image_gemini_api_key": "__T_FAKE_KEY_IMG_GEMINI_001",
+  "dokan_ai_image_gemini_model": "gemini-2.5-flash-image",
+  "dokan_ai_image_bria-ai_api_key": "__T_FAKE_KEY_BRIA_001",
+  "dokan_ai_image_bria-ai_model": "bria-generate-background",
+  "dashboard_menu_manager": []
+}
