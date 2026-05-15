@@ -1,0 +1,19 @@
+{
+  "alert_days_before_expiry": "999",
+  "alert_email_body": "",
+  "alert_email_subject": "__T_SUB_ALERT_SUBJ_B",
+  "cancelling_email_body": "__T_SUB_CANCEL_BODY_B",
+  "cancelling_email_subject": "<script>alert(1)</script>",
+  "dashboard_menu_manager": [],
+  "email_notification_expiry": "off",
+  "enable_pricing": "off",
+  "enable_subscription_pack_in_reg": "off",
+  "no_of_days_before_mail": "notanumber",
+  "notify_by_email": "",
+  "product_status_after_end": "invalid_status",
+  "products_status_on_expiry": "bogusvalue",
+  "subscription_in_registration": "off",
+  "subscription_pack": "",
+  "subscription_view_page": "",
+  "vendor_subscription": "off"
+}

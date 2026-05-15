@@ -1,0 +1,29 @@
+{
+  "data": {
+    "message": "Setting has been saved successfully.",
+    "settings": {
+      "name": "dokan_product_subscription",
+      "value": {
+        "alert_days_before_expiry": "7",
+        "alert_email_body": "__T_SUB_ALERT_BODY_A",
+        "alert_email_subject": "__T_SUB_ALERT_SUBJ_A",
+        "cancelling_email_body": "__T_SUB_CANCEL_BODY_A",
+        "cancelling_email_subject": "__T_SUB_CANCEL_SUBJ_A",
+        "dashboard_menu_manager": [],
+        "email_notification_expiry": "on",
+        "enable_pricing": "on",
+        "enable_subscription_pack_in_reg": "on",
+        "no_of_days_before_mail": "7",
+        "notify_by_email": "on",
+        "product_status_after_end": "pending",
+        "products_status_on_expiry": "pending_review",
+        "subscription_in_registration": "on",
+        "subscription_pack": "61",
+        "subscription_view_page": "61",
+        "unknown_product_subscription_field": "__T_FAKE_UNKNOWN_A",
+        "vendor_subscription": "on"
+      }
+    }
+  },
+  "success": true
+}
