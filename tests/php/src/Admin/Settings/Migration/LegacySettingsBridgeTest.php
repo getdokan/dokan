@@ -50,4 +50,42 @@ class LegacySettingsBridgeTest extends DokanTestCase {
         $this->assertArrayNotHasKey( 'no_legacy_field', $map );
         $this->assertArrayNotHasKey( 'not_a_field', $map );
     }
+
+    public function test_dokan_legacy_settings_key_mapping_filter_adds_entries(): void {
+        add_filter( 'dokan_get_admin_settings_schema', '__return_empty_array' );
+        $cb = static function ( array $map ): array {
+            $map['extra_addon_field'] = 'dokan_some_addon.extra';
+            return $map;
+        };
+        add_filter( 'dokan_legacy_settings_key_mapping', $cb );
+
+        $bridge = new LegacySettingsBridge();
+        $map    = $bridge->get_mapping();
+
+        remove_filter( 'dokan_legacy_settings_key_mapping', $cb );
+        remove_filter( 'dokan_get_admin_settings_schema', '__return_empty_array' );
+
+        $this->assertSame(
+            [ 'option' => 'dokan_some_addon', 'field' => 'extra' ],
+            $map['extra_addon_field']
+        );
+    }
+
+    public function test_malformed_legacy_key_is_dropped(): void {
+        $fixture = [
+            [ 'id' => 'good',         'type' => 'field', 'legacy_key' => 'dokan_general.foo' ],
+            [ 'id' => 'no_dot',       'type' => 'field', 'legacy_key' => 'just_a_word' ],
+            [ 'id' => 'empty_option', 'type' => 'field', 'legacy_key' => '.bar' ],
+            [ 'id' => 'empty_field',  'type' => 'field', 'legacy_key' => 'dokan_general.' ],
+        ];
+        $cb = static function () use ( $fixture ) { return $fixture; };
+        add_filter( 'dokan_get_admin_settings_schema', $cb );
+
+        $bridge = new LegacySettingsBridge();
+        $map    = $bridge->get_mapping();
+
+        remove_filter( 'dokan_get_admin_settings_schema', $cb );
+
+        $this->assertSame( [ 'good' ], array_keys( $map ) );
+    }
 }
