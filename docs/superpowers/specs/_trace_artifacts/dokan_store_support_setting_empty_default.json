@@ -1,0 +1,1 @@
+{"note":"After wp option delete dokan_store_support_setting, get_option('dokan_store_support_setting', []) returns []. No schema defaults injected on read.","value":[]}
