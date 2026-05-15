@@ -1,0 +1,14 @@
+{
+    "sms_provider": "twilio",
+    "connect_to_twilio": "on",
+    "from_number": "+15555550100",
+    "account_sid": "__T_FAKE_KEY_TWILIO_SID_001",
+    "auth_token": "__T_FAKE_KEY_TWILIO_AUTH_001",
+    "sms_code_type": "alphanumeric",
+    "connect_to_vonage": "on",
+    "sender_name": "DokanTest",
+    "sms_text": "Your code is %CODE%",
+    "sms_sent_success": "SMS sent successfully",
+    "sms_sent_error": "SMS sending failed",
+    "dashboard_menu_manager": []
+}

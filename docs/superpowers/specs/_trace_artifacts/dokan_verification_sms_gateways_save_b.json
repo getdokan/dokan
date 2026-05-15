@@ -1,0 +1,38 @@
+{
+  "section": "dokan_verification_sms_gateways",
+  "method": "POST application/x-www-form-urlencoded",
+  "action": "dokan_save_settings",
+  "settingsData": {
+    "sms_provider": "maybe",
+    "connect_to_twilio": "off",
+    "from_number": "   ",
+    "account_sid": "<script>alert(1)</script>",
+    "auth_token": "",
+    "sms_code_type": "binary",
+    "connect_to_vonage": "maybe",
+    "sender_name": "",
+    "sms_text": "",
+    "sms_sent_success": "",
+    "sms_sent_error": "",
+    "unknown_sms_field": "__T_FAKE_UNKNOWN_001"
+  },
+  "response": {
+    "success": true,
+    "value_echo": {
+      "sms_provider": "maybe",
+      "connect_to_twilio": "off",
+      "from_number": "   ",
+      "account_sid": "<script>alert(1)</script>",
+      "auth_token": "",
+      "sms_code_type": "binary",
+      "connect_to_vonage": "maybe",
+      "sender_name": "",
+      "sms_text": "",
+      "sms_sent_success": "",
+      "sms_sent_error": "",
+      "unknown_sms_field": "__T_FAKE_UNKNOWN_001",
+      "dashboard_menu_manager": []
+    },
+    "message": "Setting has been saved successfully."
+  }
+}

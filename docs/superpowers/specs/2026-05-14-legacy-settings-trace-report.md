@@ -747,6 +747,72 @@ All booleans round-trip as `""` (false) / `"1"` (true) due to legacy jQuery-styl
 - **API-key/token state in DB after task:** **CLEARED.** Final step ran `wp option delete dokan_verification` so no sentinel strings remain in DB (`wp option get dokan_verification` returns `Error: option does not exist`). All sentinels in artifacts are synthetic `__T_FAKE_KEY_*_001` placeholders — no real OAuth secrets, PEM keys, Apple service IDs, or LinkedIn credentials were used. `grep -E 'sk-|AKIA|eyJ[A-Za-z0-9_-]{20,}|BEGIN [A-Z ]+PRIVATE KEY' _trace_artifacts/dokan_verification_*.json` → only the synthetic `BEGIN PRIVATE KEY` substring inside the multi-line negative probe value, no real key body.
 - **Cross-tab note:** This schema file ALSO registers the `sms-gateways-page` subpage with all SMS/Twilio/Vonage fields — those persist into a **separate** `dokan_verification_sms_gateways` option and are out of scope here; see Task 17.
 
+### `dokan_verification_sms_gateways` — Verification SMS Gateways (Pro)
+
+**wp_option name:** `dokan_verification_sms_gateways`
+
+**Initial GET slice (pre-trace):** absent from `/tmp/dokan_initial_get.json` (`dokan_verification_sms_gateways` not present in the dump; option did not exist in DB at trace start — `wp option get` returned `Error: option does not exist`). Schema defaults (`sms_provider='twilio'`, `connect_to_twilio='off'`, `sms_code_type='numeric'`, `connect_to_vonage='off'`) are NEVER injected on read (Task 8 pattern).
+
+**Source path:**
+- Module bootstrap: `dokan-pro/modules/vendor-verification/module.php`.
+- **Current-branch schema (sibling subpage on the `verification` page, shared file with Task 16):** `dokan-pro/modules/vendor-verification/includes/Admin/Schema/VendorVerificationSettingsSchema.php:472-647`. Filter `dokan_get_admin_settings_schema` p20 → appends subpage `sms-gateways-page` (priority 300). Sections: `sms-provider` (with two fieldgroups `twilio_api_group` and `vonage_api_group`), `sender`. **11 declared writable fields:**
+  - `sms_provider` (select, default `twilio`, options `twilio|vonage`).
+  - `connect_to_twilio` (switch, default `off`, gated by `sms_provider==='twilio'`).
+  - `from_number` (show_hide, no default, in `twilio_api_group`).
+  - `account_sid` (show_hide, no default, in `twilio_api_group`).
+  - `auth_token` (show_hide, no default, in `twilio_api_group`).
+  - `sms_code_type` (select, default `numeric`, options `numeric|alphanumeric`, in `twilio_api_group`).
+  - `connect_to_vonage` (switch, default `off`, gated by `sms_provider==='vonage'`).
+  - `sender_name` (text, in `sender` section).
+  - `sms_text` (textarea, in `sender` section).
+  - `sms_sent_success` (textarea, in `sender` section).
+  - `sms_sent_error` (textarea, in `sender` section).
+- **Read sites (legacy + Twilio/Nexmo gateway code):** `dokan-pro/modules/vendor-verification/lib/sms-verification/gateways.php`:
+  - Line 74 → `dokan_get_option('active_gateway', 'dokan_verification_sms_gateways')` (NOT `sms_provider`).
+  - Line 85 → `dokan_get_option('twilio_code_type', 'dokan_verification_sms_gateways')` (NOT `sms_code_type`).
+  - Line 92 → `dokan_get_option('sms_text', 'dokan_verification_sms_gateways')` — matches schema.
+  - Line 159/209/251 → `dokan_get_option('sms_sent_error', 'dokan_verification_sms_gateways')` — matches schema.
+  - Line 162 → `dokan_get_option('twilio_username', 'dokan_verification_sms_gateways')` (NOT `account_sid`).
+  - Line 163 → `dokan_get_option('twilio_pass', 'dokan_verification_sms_gateways')` (NOT `auth_token`).
+  - Line 164 → `dokan_get_option('twilio_number', 'dokan_verification_sms_gateways')` (NOT `from_number`).
+  - Line 166 → `dokan_get_option('twilio_enable_status', 'dokan_verification_sms_gateways', 'on')` (NOT `connect_to_twilio`).
+  - Line 186/236 → `dokan_get_option('sms_sent_msg', 'dokan_verification_sms_gateways')` (NOT `sms_sent_success`).
+  - Line 215 → `dokan_get_option('nexmo_username', 'dokan_verification_sms_gateways')` (NOT exposed in schema at all).
+  - Line 216 → `dokan_get_option('nexmo_pass', 'dokan_verification_sms_gateways')` (NOT exposed in schema at all).
+  - Line 217 → `dokan_get_option('sender_name', 'dokan_verification_sms_gateways')` — matches schema.
+  - Line 219 → `dokan_get_option('nexmo_enable_status', 'dokan_verification_sms_gateways', 'on')` (NOT `connect_to_vonage`).
+- **Save handler:** `dokan-lite/includes/Admin/Settings.php:150 save_settings_value()`. Nonce `dokan_admin`, action `dokan_save_settings`, OVERWRITE via `update_option('dokan_verification_sms_gateways', $value)`. No tab-specific save filter from the vendor-verification module.
+- **Filters touching this option:** generic `dokan_save_settings_value` only.
+- **Side effects on save:** none observed (no Twilio/Vonage credential-test ping; no transient flush; no rewrite-rules touch; no cron schedule).
+
+**Per-field rows:**
+
+| Field key | UI control | Type | Default | Save A → B sentinels | Form-encoded request key | Response key | DB key | Validation observed | Round-trip OK | Notes / boundary |
+|---|---|---|---|---|---|---|---|---|---|---|
+| `sms_provider` | select (`twilio\|vonage`) | string | `'twilio'` (schema default; no read-site fallback for this exact key) | `'twilio'` (A); `'maybe'` (B, invalid enum) | `settingsData[sms_provider]` | `data.settings.value.sms_provider` | `dokan_verification_sms_gateways.sms_provider` | **none** — invalid enum persisted verbatim | yes | **Key skew:** read site reads `active_gateway` (NOT `sms_provider`). Value written here is dead — provider selection is not honored by `gateways.php:74`. |
+| `connect_to_twilio` | switch | string `'on'\|'off'` | `'off'` | `'on'` (A); `'off'` (B) | `settingsData[connect_to_twilio]` | resp same | `dokan_verification_sms_gateways.connect_to_twilio` | none | yes | **Key skew:** read site reads `twilio_enable_status` (default `'on'`). Value written here is dead. |
+| `from_number` | show_hide (masked) | string | none | `'+15555550100'` (A); `'   '` (B, whitespace) | `settingsData[from_number]` | resp same | `dokan_verification_sms_gateways.from_number` | **none** — no trim, whitespace-only persisted | yes | **Key skew:** read site reads `twilio_number` (`gateways.php:164`). Saved value never reaches Twilio SDK call. |
+| `account_sid` | show_hide (masked) | string (Twilio SID, normally `AC[a-f0-9]{32}`) | none | `'__T_FAKE_KEY_TWILIO_SID_001'` (A); `'<script>alert(1)</script>'` (B, XSS probe) | `settingsData[account_sid]` | resp same | `dokan_verification_sms_gateways.account_sid` | **none** — script tag stored verbatim | yes | **Key skew:** read site reads `twilio_username` (`gateways.php:162`). XSS persisted (same defense-in-depth gap as `dokan_verification` Task 16). |
+| `auth_token` | show_hide (masked) | string (Twilio auth token / 32-char hex) | none | `'__T_FAKE_KEY_TWILIO_AUTH_001'` (A); `''` (B) | `settingsData[auth_token]` | resp same | `dokan_verification_sms_gateways.auth_token` | none | yes | **Key skew:** read site reads `twilio_pass` (`gateways.php:163`). Saved value never reaches Twilio SDK. Round-trip via AJAX `dokan_get_setting_values` echo shows the safety wrapper masking the value as `[BLOCKED: Sensitive key]`, but DB stores the literal sentinel verbatim. |
+| `sms_code_type` | select (`numeric\|alphanumeric`) | string | `'numeric'` | `'alphanumeric'` (A); `'binary'` (B, invalid enum) | `settingsData[sms_code_type]` | resp same | `dokan_verification_sms_gateways.sms_code_type` | **none** — invalid enum persisted | yes | **Key skew:** read site reads `twilio_code_type` (`gateways.php:85`). |
+| `connect_to_vonage` | switch | string | `'off'` | `'on'` (A); `'maybe'` (B, invalid) | `settingsData[connect_to_vonage]` | resp same | `dokan_verification_sms_gateways.connect_to_vonage` | none — `'maybe'` persisted | yes | **Key skew:** read site reads `nexmo_enable_status` (`gateways.php:219`). |
+| `sender_name` | text | string | none | `'DokanTest'` (A); `''` (B) | `settingsData[sender_name]` | resp same | `dokan_verification_sms_gateways.sender_name` | none | yes | **One of only two matching keys.** `gateways.php:217` reads `sender_name` directly — used as the Vonage `from` value. |
+| `sms_text` | textarea | string (may contain `%CODE%`) | none | `'Your code is %CODE%'` (A); `''` (B) | `settingsData[sms_text]` | resp same | `dokan_verification_sms_gateways.sms_text` | none — no enforcement that `%CODE%` placeholder is present | yes | **Matches read site** (`gateways.php:92`). Empty value would result in an empty SMS body downstream; UI does not enforce non-empty. |
+| `sms_sent_success` | textarea | string | none | `'SMS sent successfully'` (A); `''` (B) | `settingsData[sms_sent_success]` | resp same | `dokan_verification_sms_gateways.sms_sent_success` | none | yes | **Key skew:** read site reads `sms_sent_msg` (`gateways.php:186, 236`). Value written here is dead. |
+| `sms_sent_error` | textarea | string | none | `'SMS sending failed'` (A); `''` (B) | `settingsData[sms_sent_error]` | resp same | `dokan_verification_sms_gateways.sms_sent_error` | none | yes | **Matches read site** (`gateways.php:159, 209, 251`). |
+
+**Boundary / filter findings:**
+- **Empty-option default:** `wp option delete dokan_verification_sms_gateways` + `get_option('dokan_verification_sms_gateways', [])` → `[]`. Schema defaults NEVER injected on read. Captured to `_trace_artifacts/dokan_verification_sms_gateways_empty_default.json`.
+- **Save mode:** **OVERWRITE, unfiltered.** Save B's payload completely replaced Save A's payload (every Save A key whose Save B counterpart was `''` reached DB as `''`). Recurring Tasks 8-16 pattern.
+- **Pro MenuManager `dashboard_menu_manager: []` leak:** present in DB after both saves (Task 12 pattern, unchanged).
+- **Unknown-key persistence:** Save B included `unknown_sms_field='__T_FAKE_UNKNOWN_001'` (not declared anywhere in schema). Persisted to DB and round-tripped through `dokan_get_setting_values` unchanged. Same as Tasks 9, 11, 13, 15.
+- **Schema vs read-site key skew — SEVERE (worse than Task 16):** Of the 11 declared schema fields, only **3 share a name with the read site** (`sender_name`, `sms_text`, `sms_sent_error`); the other **8 are dead** at the read sites (`sms_provider`→`active_gateway`, `connect_to_twilio`→`twilio_enable_status`, `from_number`→`twilio_number`, `account_sid`→`twilio_username`, `auth_token`→`twilio_pass`, `sms_code_type`→`twilio_code_type`, `connect_to_vonage`→`nexmo_enable_status`, `sms_sent_success`→`sms_sent_msg`). In addition, **2 read-site keys are NOT exposed in the schema at all**: `nexmo_username` and `nexmo_pass` (Vonage credentials cannot be entered through the new settings UI). The new plugin-ui MUST decide: (a) rename the 8 mismatched schema keys to match the read sites and ADD `nexmo_username`/`nexmo_pass` fields under the Vonage group, OR (b) rename the read sites to match the schema and re-introduce Vonage credential capture, OR (c) add a save-side mirror to write `active_gateway`/`twilio_*`/`nexmo_*`/`sms_sent_msg` alongside the schema names. **Without one of these, the SMS gateway feature is non-functional from the new settings page** — exactly the same severity as Task 16's social-provider skew, but on a smaller tab so a larger proportion (8/11 = 73%) of declared fields are dead.
+- **No on-save validation:** invalid enums (`'maybe'` for `sms_provider`/`connect_to_vonage`, `'binary'` for `sms_code_type`), invalid switch (`'maybe'` for `connect_to_twilio` accepted), XSS string in `account_sid`, whitespace-only phone number, unknown key — all persisted verbatim. Same generic `sanitize_text_field` walk as every other tab. **More dangerous here than usual** because `account_sid`/`auth_token` are credential fields; an XSS payload sitting in a Twilio SID field is unlikely to render anywhere, but the lack of length/format enforcement means credential rotation can silently truncate-then-fail.
+- **Dependency gating is display-only:** UI-side `twilio_api_group` dependency `sms_provider==='twilio'` and `vonage_api_group` dependency `sms_provider==='vonage'` gate visibility, but the AJAX save endpoint accepts every child key regardless of parent. Save B set `sms_provider='maybe'` (neither twilio nor vonage) and the server still stored every Twilio/Vonage child key (Tasks 10, 13, 15, 16 pattern).
+- **Auth-style secrets handling:** `account_sid` and `auth_token` are persisted as plain text in `wp_options.dokan_verification_sms_gateways`. The AJAX read endpoint `dokan_get_setting_values` ROUTES `auth_token` through a safety wrapper that returns `"[BLOCKED: Sensitive key]"` in the response payload, but the DB row itself contains the literal value verbatim. This means the React form never receives the real token (good for browser leak prevention) but also means typing a token, saving, and reloading the page shows the masked label rather than the actual value — and the only way to "see" the persisted token is to dump the DB. Same pattern is NEW to this trace — has not been observed on `dokan_verification` (Task 16) or earlier tabs because the React form there reads via `data.settings.value.*` directly without a sensitive-key wrapper. Worth confirming the wrapper's key list during plugin-ui migration so it correctly masks `auth_token`, `account_sid` (Twilio), and the future `nexmo_pass`.
+- **Round-trip:** 11 declared writable fields + 1 unknown-key probe (`unknown_sms_field`) + Pro MenuManager leak (`dashboard_menu_manager: []`) — all round-trip correctly through AJAX `dokan_get_setting_values` (`_trace_artifacts/dokan_verification_sms_gateways_reload.json`), modulo the `auth_token` safety-wrapper masking described above. DB state in `_trace_artifacts/dokan_verification_sms_gateways_after_b.json` is byte-identical to the values posted in Save B.
+- **API-key/token state in DB after task:** **CLEARED.** Final step ran `wp option delete dokan_verification_sms_gateways` so no sentinel strings remain in DB (`wp option get dokan_verification_sms_gateways` returns `Error: option does not exist`). All sentinels in artifacts are synthetic `__T_FAKE_KEY_TWILIO_*_001` placeholders — no real Twilio Account SIDs (no `AC[a-f0-9]{32}` patterns), no real auth tokens, no real Vonage credentials. `grep -E 'AC[a-f0-9]{32}|SK[a-f0-9]{32}' _trace_artifacts/dokan_verification_sms_gateways_*.json` returned empty (exit 1).
+
 ## Side-effect / hook checklist
 
 _Filled in Task N+1 (final pass)._
