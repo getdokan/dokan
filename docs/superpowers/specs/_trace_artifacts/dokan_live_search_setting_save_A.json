@@ -1,0 +1,30 @@
+{
+  "_note": "Save A — sentinel positive. Captured via jQuery ajaxComplete in tab 615167388. Nonce redacted.",
+  "request": {
+    "url": "https://core-dokan.test/wp-admin/admin-ajax.php",
+    "method": "POST",
+    "contentType": "application/x-www-form-urlencoded; charset=UTF-8",
+    "payload": {
+      "action": "dokan_save_settings",
+      "nonce": "<REDACTED>",
+      "settingsData[live_search_option]": "suggestion_box",
+      "section": "dokan_live_search_setting"
+    }
+  },
+  "response": {
+    "status": 200,
+    "body": {
+      "success": true,
+      "data": {
+        "settings": {
+          "name": "dokan_live_search_setting",
+          "value": {
+            "live_search_option": "suggestion_box",
+            "dashboard_menu_manager": []
+          }
+        },
+        "message": "Setting has been saved successfully."
+      }
+    }
+  }
+}

@@ -501,6 +501,35 @@ All booleans round-trip as `""` (false) / `"1"` (true) due to legacy jQuery-styl
 - **DB state after task:** `dokan_geolocation` left in DB with Save A sentinels (`distance_max=4242`, `location.address=__T_Default_Addr_001`, etc.). User can clear via Reset Defaults on the tab, or `wp option delete dokan_geolocation`.
 - **Round-trip count:** 9/9 writable fields traced, 9/9 round-trip after restore Save A — captured in `_trace_artifacts/dokan_geolocation_reload.json`.
 
+### `dokan_live_search_setting` — Live Search (Pro)
+
+**wp_option name:** `dokan_live_search_setting`
+**Registered by:** Dokan Pro Live Search module — section + fields in `dokan-pro/modules/live-search/module.php:173` (section) and `:196` (fields). Filters: `dokan_settings_sections`, `dokan_settings_fields` (default priority 10).
+**Initial GET slice (pre-trace):** `{ "live_search_option": "old_live_search", "dashboard_menu_manager": [] }` — value present in DB; the `dashboard_menu_manager: []` key is the Pro MenuManager cross-tab leak documented in Task 9.
+**Field count:** 1 writable field.
+
+**Hooks observed:**
+- `dokan_settings_sections` → `Dokan_Live_Search::render_live_search_section` registers the section (`title`, `icon_url`, `document_link`, `settings_title`, `settings_description`).
+- `dokan_settings_fields` → `Dokan_Live_Search::render_live_search_settings` declares the single `live_search_option` select field.
+- `dokan_save_settings_value` p99 → Pro MenuManager leak: `dashboard_menu_manager: []` injected into this option (same cross-tab leak documented in Tasks 1–10).
+- **No** save-side filters from the Live Search module itself — no validation/sanitization beyond the generic `Settings::sanitize_options` pass.
+- Read site: `dokan_get_option( 'live_search_option', 'dokan_live_search_setting', 'old_live_search' )` in `dokan-pro/modules/live-search/classes/class-dokan-live-search.php:53` — **hard-coded fallback `old_live_search`** when option key is missing.
+
+| Field | UI control | Type | Default | Sentinel sent | Payload path | Response path | wp_option path | Extra options touched | Round-trips? | Notes |
+| ----- | ---------- | ---- | ------- | ------------- | ------------ | ------------- | -------------- | --------------------- | ------------ | ----- |
+| `live_search_option` | Select (Search with Suggestion Box / Autoload Replace Current Content) | string enum (`suggestion_box` \| `old_live_search`) | `suggestion_box` (admin schema) — but read-site fallback in widget render is `old_live_search` — **schema-vs-fallback inconsistency** | `suggestion_box` (Save A, positive); `__unknown_enum_val__` (Save B, negative) | `settingsData[live_search_option]` | `data.settings.value.live_search_option` | `dokan_live_search_setting.live_search_option` | none (only the `dashboard_menu_manager: []` leak) | yes | Unknown enum value (`__unknown_enum_val__`) accepted verbatim — no allow-list on save. Frontend widget falls through `if ('old_live_search' === $live_search_option) { ... } else { 'dokan-ajax-search-suggestion' }` so unknown values silently behave as `suggestion_box` mode at render time. |
+
+**Filter / boundary findings:**
+- **Empty-option default:** `wp option delete dokan_live_search_setting` + read → option does not exist; `get_option('dokan_live_search_setting')` returns `false`. `dokan_get_option('live_search_option','dokan_live_search_setting')` returns `''` (empty string) when no fallback arg passed. With the widget's explicit fallback `'old_live_search'`, fresh installs render the legacy autoload-replace mode — contradicting the admin schema default of `suggestion_box`. Captured to `_trace_artifacts/dokan_live_search_setting_empty_default.json`. Same class of bug as Task 10 (`dokan_geolocation.show_location_map_pages`).
+- **Save mode:** **OVERWRITE, unfiltered.** Save B confirmed: payload included one unknown extra key (`some_random_field=__T_Random_001`) and it persisted at the top level of `dokan_live_search_setting`. No schema filter on save. Same bug class as Tasks 8 (`dokan_ai`), 9 (`dokan_menu_manager`), 10 (`dokan_geolocation`).
+- **Unknown enum:** `live_search_option=__unknown_enum_val__` accepted verbatim. Read site degrades silently to the `suggestion_box` rendering branch (no explicit allow-list / no error log). New plugin-ui must enforce the enum (`suggestion_box`, `old_live_search`) on save.
+- **Cross-tab leak:** `dashboard_menu_manager: []` present in DB after every save — root cause documented in Task 9. This tab inherits the leak unchanged.
+- **Real-key redaction:** **N/A** — no API-key fields on this tab. No backup file needed.
+- **Rewrite rules / cron / other side effects:** none. Save path runs `update_option` only; no `flush_rewrite_rules`, no scheduled action, no transient invalidation. The `'dokan_general' === $option_name` rewrite branch in `Settings.php:186` is gated, does not fire for this tab.
+- **Body encoding:** confirmed `application/x-www-form-urlencoded; charset=UTF-8` (jQuery `$.ajax` default). New plugin-ui must not switch to multipart FormData without explicit `settingsData[live_search_option]` serialization, per the encoding finding established in Task 10.
+- **DB state after task:** `dokan_live_search_setting` restored to Save A state (`live_search_option=suggestion_box`). User can clear via Reset Defaults on the tab, or `wp option delete dokan_live_search_setting`.
+- **Round-trip count:** 1/1 writable field traced, 1/1 round-trip after restore Save A — captured in `_trace_artifacts/dokan_live_search_setting_reload.json`.
+
 ## Side-effect / hook checklist
 
 _Filled in Task N+1 (final pass)._

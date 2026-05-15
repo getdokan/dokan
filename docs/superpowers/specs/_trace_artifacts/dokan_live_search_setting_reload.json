@@ -1,0 +1,13 @@
+{
+  "_note": "Post-reload round-trip check. Restored Save A state, navigated to settings page, clicked Live Search tab, read rendered select value.",
+  "wp_option_value": {
+    "live_search_option": "suggestion_box",
+    "dashboard_menu_manager": []
+  },
+  "rendered_ui": {
+    "select_name": "dokan_live_search_setting[live_search_option]",
+    "rendered_value": "suggestion_box",
+    "available_options": ["suggestion_box", "old_live_search"]
+  },
+  "round_trip": "PASS — saved value 'suggestion_box' returned by reload."
+}

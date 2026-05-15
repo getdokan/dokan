@@ -1,0 +1,8 @@
+{
+  "_note": "Empty-option default test after `wp option delete dokan_live_search_setting`.",
+  "wp_option_raw": null,
+  "get_option_default_arg_empty_string": "",
+  "dokan_get_option_no_fallback": "",
+  "dokan_get_option_with_fallback_FALLBACK": "FALLBACK",
+  "interpretation": "Option does not exist after delete; `get_option('dokan_live_search_setting')` returns false (default arg empty). `dokan_get_option('live_search_option', 'dokan_live_search_setting')` returns '' (empty string). With explicit fallback arg, the fallback is honored. The hardcoded read-site fallback in dokan-pro/modules/live-search/classes/class-dokan-live-search.php:53 is 'old_live_search' — so the *frontend search box* defaults to legacy 'Autoload Replace Current Content' mode when the option is missing, even though the *admin schema* declares default 'suggestion_box'. Same schema-vs-fallback inconsistency observed in dokan_geolocation Task 10."
+}
