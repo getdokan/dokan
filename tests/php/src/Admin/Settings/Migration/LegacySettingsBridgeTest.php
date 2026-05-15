@@ -187,4 +187,37 @@ class LegacySettingsBridgeTest extends DokanTestCase {
 
         $this->assertSame( 400, $hydrated['banner_width'] );
     }
+
+    public function test_hydrate_legacy_from_new_overwrites_when_new_has_value(): void {
+        $fixture = [
+            [ 'id' => 'banner_width', 'type' => 'field', 'legacy_key' => 'dokan_appearance.store_banner_width', 'default' => 400 ],
+        ];
+        $cb = static function () use ( $fixture ) { return $fixture; };
+        add_filter( 'dokan_get_admin_settings_schema', $cb );
+        update_option( 'dokan_settings', [ 'banner_width' => 1024 ] );
+
+        $bridge = new LegacySettingsBridge();
+        $merged = $bridge->hydrate_legacy_from_new( 'dokan_appearance', [ 'store_banner_width' => 200 ] );
+
+        remove_filter( 'dokan_get_admin_settings_schema', $cb );
+        delete_option( 'dokan_settings' );
+
+        $this->assertSame( 1024, $merged['store_banner_width'] );
+    }
+
+    public function test_hydrate_legacy_from_new_leaves_legacy_when_new_absent(): void {
+        $fixture = [
+            [ 'id' => 'banner_width', 'type' => 'field', 'legacy_key' => 'dokan_appearance.store_banner_width', 'default' => 400 ],
+        ];
+        $cb = static function () use ( $fixture ) { return $fixture; };
+        add_filter( 'dokan_get_admin_settings_schema', $cb );
+        delete_option( 'dokan_settings' );
+
+        $bridge = new LegacySettingsBridge();
+        $merged = $bridge->hydrate_legacy_from_new( 'dokan_appearance', [ 'store_banner_width' => 200 ] );
+
+        remove_filter( 'dokan_get_admin_settings_schema', $cb );
+
+        $this->assertSame( 200, $merged['store_banner_width'] );
+    }
 }

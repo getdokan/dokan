@@ -109,6 +109,34 @@ class LegacySettingsBridge {
     }
 
     /**
+     * Project the current new option into a legacy-shaped array.
+     *
+     * Asymmetric to `hydrate_new_from_legacy`: this DOES overwrite legacy
+     * values when the new option has them, because the new option is source
+     * of truth. Used by the legacy read path so toggling to legacy reflects
+     * saves made via the new UI.
+     *
+     * @param string              $option_name   Legacy wp_option name.
+     * @param array<string,mixed> $legacy_option Current legacy option array.
+     *
+     * @return array<string,mixed> Legacy-shaped array with new values projected in.
+     */
+    public function hydrate_legacy_from_new( string $option_name, array $legacy_option ): array {
+        $this->build_map();
+        $new_option = get_option( 'dokan_settings', [] );
+        if ( ! is_array( $new_option ) ) {
+            $new_option = [];
+        }
+        $pairs = $this->by_option[ $option_name ] ?? [];
+        foreach ( $pairs as $new_key => $old_field ) {
+            if ( array_key_exists( $new_key, $new_option ) ) {
+                $legacy_option[ $old_field ] = $new_option[ $new_key ];
+            }
+        }
+        return $legacy_option;
+    }
+
+    /**
      * Schema default for a mapped new key, or `null` if unknown.
      *
      * @param string $new_key
