@@ -31,6 +31,19 @@ class SettingsSchema {
             self::product_page()
         );
 
+        // Splice in the CSV-derived schema fragment behind a feature flag.
+        // Default `false` keeps production identical to the hand-authored schema.
+        // The flag flips on in a later migration task once per-tab work lands.
+        if ( (bool) get_option( 'dokan_csv_schema_enabled', false ) ) {
+            $generated_path = __DIR__ . '/Generated/csv_fields.php';
+            if ( is_file( $generated_path ) ) {
+                $generated = require $generated_path;
+                if ( is_array( $generated ) ) {
+                    $elements = array_merge( $elements, $generated );
+                }
+            }
+        }
+
         /**
          * Filter the admin settings schema.
          *
