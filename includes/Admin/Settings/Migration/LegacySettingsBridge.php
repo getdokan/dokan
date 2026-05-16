@@ -265,7 +265,8 @@ class LegacySettingsBridge {
                 if ( $candidate instanceof TransformerInterface ) {
                     $instance = $candidate;
                 }
-            } catch ( \Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+            } catch ( \Throwable $unused ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+                unset( $unused );
                 // Container miss — fall through to direct instantiation.
             }
         }
@@ -275,7 +276,8 @@ class LegacySettingsBridge {
                 if ( $candidate instanceof TransformerInterface ) {
                     $instance = $candidate;
                 }
-            } catch ( \Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+            } catch ( \Throwable $unused ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+                unset( $unused );
                 $instance = null;
             }
         }
