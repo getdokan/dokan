@@ -44,6 +44,38 @@ class SettingsSchema {
             }
         }
 
+        // Lite/Pro gating: when Dokan Pro is inactive, drop elements that
+        // explicitly declare `is_lite: false` (Pro-only). Elements without an
+        // `is_lite` key — hand-authored entries and bridge-only fragment
+        // rows — are preserved untouched. The accessor `dokan()->is_pro_exists()`
+        // is `apply_filters( 'dokan_is_pro_exists', false )` under the hood,
+        // which lets Pro flip the flag at bootstrap and lets tests override it.
+        $pro_active = function_exists( 'dokan' ) && dokan()->is_pro_exists();
+        if ( ! $pro_active ) {
+            $elements = array_values(
+                array_filter(
+                    $elements,
+                    static function ( $element ) {
+                        // Only `type: field` entries are subject to gating —
+                        // pages, sub-pages, sections, and bridge-only rows
+                        // never carry `is_lite` and must pass through.
+                        if ( ! is_array( $element ) || ( $element['type'] ?? '' ) !== 'field' ) {
+                            return true;
+                        }
+
+                        // Backward-compat: hand-authored fields without an
+                        // `is_lite` key (e.g. legacy schema entries and
+                        // extension-registered fields) are NOT filtered.
+                        if ( ! array_key_exists( 'is_lite', $element ) ) {
+                            return true;
+                        }
+
+                        return (bool) $element['is_lite'];
+                    }
+                )
+            );
+        }
+
         /**
          * Filter the admin settings schema.
          *

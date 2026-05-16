@@ -134,6 +134,11 @@ class GeneratedFragmentTest extends DokanTestCase {
 
     public function test_csv_schema_loaded_when_flag_on(): void {
         update_option( 'dokan_csv_schema_enabled', true );
+        // Force Pro active so the Lite/Pro gate in SettingsSchema does not
+        // filter out the 145 `is_lite: false` rows — this test pins the
+        // raw fragment-merge count, NOT the gating behaviour (which has
+        // its own dedicated test class LiteProFieldGatingTest).
+        add_filter( 'dokan_is_pro_exists', '__return_true', 1000 );
 
         try {
             $schema = SettingsSchema::get_schema();
@@ -144,6 +149,7 @@ class GeneratedFragmentTest extends DokanTestCase {
 
             $this->assertSame( 208, $generated_count, 'CSV schema should contribute 208 fields when flag is on.' );
         } finally {
+            remove_filter( 'dokan_is_pro_exists', '__return_true', 1000 );
             delete_option( 'dokan_csv_schema_enabled' );
         }
     }
