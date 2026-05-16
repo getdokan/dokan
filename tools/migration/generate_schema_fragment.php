@@ -188,7 +188,19 @@ foreach ( $inventory_rows as $row ) {
     $description = ( $new_description !== '' && $new_description !== '-' ) ? $new_description : $old_description;
 
     $field_type    = (string) ( $row['FieldType'] ?? '' );
+
+    // CSV DefaultValue cells are wrapped in single quotes by the source export
+    // (Google Sheets style). Strip a leading and/or trailing single quote so
+    // the emitted default matches the legacy stored value verbatim.
     $default_value = $row['DefaultValue'] ?? '';
+    if ( is_string( $default_value ) ) {
+        if ( strlen( $default_value ) >= 1 && substr( $default_value, 0, 1 ) === "'" ) {
+            $default_value = substr( $default_value, 1 );
+        }
+        if ( strlen( $default_value ) >= 1 && substr( $default_value, -1 ) === "'" ) {
+            $default_value = substr( $default_value, 0, -1 );
+        }
+    }
     $other_info    = isset( $row['_other_info'] ) && is_array( $row['_other_info'] )
         ? $row['_other_info']
         : [];
