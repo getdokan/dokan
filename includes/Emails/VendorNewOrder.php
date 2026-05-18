@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Emails;
 
 use WC_Email;
+use WeDevs\Dokan\Utilities\OrderUtil;
 
 /**
  * New Order Email.
@@ -126,13 +127,14 @@ class VendorNewOrder extends WC_Email {
     public function get_content_html() {
         return wc_get_template_html(
             $this->template_html, array(
-                'order'              => $this->object,
-                'email_heading'      => $this->get_heading(),
-                'additional_content' => $this->get_additional_content(),
-                'sent_to_admin'      => true,
-                'plain_text'         => false,
-                'email'              => $this,
-                'order_info'         => $this->order_info,
+                'order'                 => $this->object,
+                'email_heading'         => $this->get_heading(),
+                'additional_content'    => $this->get_additional_content(),
+                'sent_to_admin'         => true,
+                'plain_text'            => false,
+                'email'                 => $this,
+                'order_info'            => $this->order_info,
+                'show_customer_details' => OrderUtil::should_show_email_customer_details( $this->object ),
             ), 'dokan/', $this->template_base
         );
     }
@@ -146,13 +148,14 @@ class VendorNewOrder extends WC_Email {
     public function get_content_plain() {
         return wc_get_template_html(
             $this->template_plain, array(
-                'order'              => $this->object,
-                'email_heading'      => $this->get_heading(),
-                'additional_content' => $this->get_additional_content(),
-                'sent_to_admin'      => true,
-                'plain_text'         => true,
-                'email'              => $this,
-                'order_info'         => $this->order_info,
+                'order'                 => $this->object,
+                'email_heading'         => $this->get_heading(),
+                'additional_content'    => $this->get_additional_content(),
+                'sent_to_admin'         => true,
+                'plain_text'            => true,
+                'email'                 => $this,
+                'order_info'            => $this->order_info,
+                'show_customer_details' => OrderUtil::should_show_email_customer_details( $this->object ),
             ), 'dokan/', $this->template_base
         );
     }
