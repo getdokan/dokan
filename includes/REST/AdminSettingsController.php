@@ -30,7 +30,7 @@ class AdminSettingsController extends DokanBaseAdminController {
      *
      * @var SettingsRegistry
      */
-    private SettingsRegistry $registry;
+    protected SettingsRegistry $registry;
 
     /**
      * Constructor.
@@ -266,7 +266,7 @@ class AdminSettingsController extends DokanBaseAdminController {
      *
      * @return array Field elements.
      */
-    private function get_fields_by_page( array $schema, string $page_id ): array {
+    protected function get_fields_by_page( array $schema, string $page_id ): array {
         // Collect all element IDs that belong to this page.
         $page_element_ids = $this->collect_page_descendants( $schema, $page_id );
 
@@ -286,7 +286,7 @@ class AdminSettingsController extends DokanBaseAdminController {
      *
      * @return string[] All descendant element IDs.
      */
-    private function collect_page_descendants( array $schema, string $page_id ): array {
+    protected function collect_page_descendants( array $schema, string $page_id ): array {
         $parent_pointers = [ 'page_id', 'subpage_id', 'tab_id', 'section_id', 'subsection_id', 'field_group_id' ];
         $ids             = [];
         $queue           = [ $page_id ];
@@ -313,6 +313,12 @@ class AdminSettingsController extends DokanBaseAdminController {
     /**
      * Validate a field value against the field's validation rules.
      *
+     * Applies declarative rules from `$field['validations']` (required,
+     * min_value, max_value, not_in), then runs the optional per-field
+     * `validation_func`, then exposes the accumulated errors to the
+     * `dokan_admin_settings_validate_field` filter so addons can layer
+     * variant-specific or cross-field validation on top.
+     *
      * @since DOKAN_SINCE
      *
      * @param array $field The field schema element.
@@ -320,9 +326,10 @@ class AdminSettingsController extends DokanBaseAdminController {
      *
      * @return string[] Array of error messages (empty if valid).
      */
-    private function validate_field_value( array $field, $value ): array {
+    protected function validate_field_value( array $field, $value ): array {
         $errors      = [];
         $validations = $field['validations'] ?? [];
+        $variant     = $field['variant'] ?? $field['field_type'] ?? '';
 
         foreach ( $validations as $rule ) {
             if ( is_array( $rule ) ) {
@@ -369,7 +376,28 @@ class AdminSettingsController extends DokanBaseAdminController {
             }
         }
 
-        return $errors;
+        /**
+         * Filter the per-field validation errors before they are returned to the caller.
+         *
+         * Symmetric to `dokan_admin_settings_sanitize_field`. Use it to:
+         * - Add validation errors for custom field variants the core controller
+         *   does not know about (e.g. a Pro module's `color_with_alpha` variant).
+         * - Layer cross-field or environment-aware rules (e.g. reject a
+         *   payment-gateway selection when no credentials are configured).
+         * - Localize or rewrite the default error messages.
+         *
+         * Removing an error from the returned array suppresses it; appending a
+         * non-empty string adds one. Returning an empty array marks the field
+         * as valid.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param string[] $errors  Accumulated error messages (may be empty).
+         * @param array    $field   The field schema element being validated.
+         * @param mixed    $value   The submitted value.
+         * @param string   $variant The field's `variant` (or `field_type` fallback) for variant-specific dispatch.
+         */
+        return (array) apply_filters( 'dokan_admin_settings_validate_field', $errors, $field, $value, $variant );
     }
 
     /**
@@ -382,7 +410,7 @@ class AdminSettingsController extends DokanBaseAdminController {
      *
      * @return mixed Sanitized value.
      */
-    private function sanitize_field_value( array $field, $value ) {
+    protected function sanitize_field_value( array $field, $value ) {
         // Use custom sanitize_callback if provided.
         if ( ! empty( $field['sanitize_callback'] ) && is_callable( $field['sanitize_callback'] ) ) {
             return call_user_func( $field['sanitize_callback'], $value );
@@ -464,7 +492,7 @@ class AdminSettingsController extends DokanBaseAdminController {
      *
      * @return mixed
      */
-    private function sanitize_recursive( $value ) {
+    protected function sanitize_recursive( $value ) {
         if ( is_array( $value ) ) {
             return array_map( [ $this, 'sanitize_recursive' ], $value );
         }
