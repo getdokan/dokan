@@ -86,12 +86,6 @@ abstract class SettingsElement {
 	 */
 	public $hook_key = '';
 
-	/**
-	 * The key for generating dynamic Dependency.
-	 *
-	 * @var string $dependency_key Dependency Key.
-	 */
-	public $dependency_key = '';
     /**
      * Page doc link.
      *
@@ -277,28 +271,6 @@ abstract class SettingsElement {
 	}
 
 	/**
-	 * Get Dependencies key.
-	 *
-	 * @return string
-	 */
-	public function get_dependency_key(): string {
-		return $this->dependency_key;
-	}
-
-	/**
-	 * Set Dependencies key.
-	 *
-	 * @param string $dependency_key The dependency_key.
-	 *
-	 * @return SettingsElement
-	 */
-	public function set_dependency_key( string $dependency_key ): SettingsElement {
-		$this->dependency_key = $dependency_key;
-
-		return $this;
-	}
-
-	/**
 	 * Get the Value for the element.
 	 *
 	 * @return mixed
@@ -367,7 +339,6 @@ abstract class SettingsElement {
 		$filtered_children = apply_filters( $this->get_hook_key() . '_children', $this->children, $this ); // phpcs:ignore.
 		foreach ( $filtered_children as $child ) {
 			$child->set_hook_key( $this->get_hook_key() . '_' . $child->get_id() );
-			$child->set_dependency_key( $child->get_id() );
 
             if ( isset( $this->value[ $child->get_id() ] ) ) {
                 $child->set_value( $this->value[ $child->get_id() ] );
@@ -663,7 +634,6 @@ abstract class SettingsElement {
 			'hook_key'       => $this->get_hook_key(),
 			'children'       => $children,
 			'description'    => $this->get_description(),
-			'dependency_key' => $this->get_dependency_key(),
 			'dependencies'   => $this->get_dependencies(),
 			'validations'    => $this->get_validations(),
 		);

@@ -8,8 +8,8 @@ use WeDevs\Dokan\Test\DokanTestCase;
 /**
  * Tests the single-option `dokan_settings` storage model.
  *
- * Covers SettingsRegistry's populate_values() reads, generate_keys()
- * setting dependency_key = id, and the absence of per-page wp_options.
+ * Covers SettingsRegistry's populate_values() reads and the absence of
+ * per-page wp_options.
  *
  * @group admin-settings
  * @group settings-schema
@@ -74,24 +74,6 @@ class SettingsRegistryStorageTest extends DokanTestCase {
 
         $this->assertNotNull( $found, 'vendor_store_url must exist.' );
         $this->assertSame( $found['default'] ?? '', $found['value'], 'Missing stored id must yield the field default.' );
-    }
-
-    public function test_generate_keys_sets_dependency_key_equal_to_id(): void {
-        $schema = ( new SettingsRegistry() )->get_schema( true );
-
-        foreach ( $schema as $el ) {
-            if ( ( $el['type'] ?? '' ) !== 'field' ) {
-                continue;
-            }
-            $id      = $el['id'] ?? '';
-            $dep_key = $el['dependency_key'] ?? '';
-
-            $this->assertSame(
-                $id,
-                $dep_key,
-                sprintf( 'Field "%s" has dependency_key "%s" — expected to equal id.', $id, $dep_key )
-            );
-        }
     }
 
     public function test_no_per_page_wp_options_are_read(): void {

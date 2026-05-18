@@ -19,12 +19,11 @@ use WeDevs\Dokan\Test\DokanTestCase;
 class SettingsElementTest extends DokanTestCase {
 
     /**
-     * After the dependency_key cleanup, a child's dependency_key must equal its
-     * own id — not the parent-prefixed dot-path that the previous implementation
-     * emitted. The JS plugin-ui no longer expects dot-paths, so the PHP layer
-     * must hand back the flat key the formatter assumes.
+     * After the dependency_key cleanup, the dependency_key property/methods
+     * are gone entirely — only `id` survives. Children resolved via the
+     * parent's `get_children()` must carry their declared id unchanged.
      */
-    public function test_dependency_key_equals_id_not_dot_path() {
+    public function test_get_id_returns_field_identifier_after_set_children() {
         $parent = new Page( 'general' );
         $child  = new Field( 'commission_type' );
         $parent->set_children( [ $child ] );
@@ -32,7 +31,9 @@ class SettingsElementTest extends DokanTestCase {
         $children = $parent->get_children();
         $resolved = $children['commission_type'];
 
-        $this->assertSame( 'commission_type', $resolved->get_dependency_key() );
+        $this->assertSame( 'commission_type', $resolved->get_id() );
+        $this->assertFalse( method_exists( $resolved, 'get_dependency_key' ) );
+        $this->assertFalse( method_exists( $resolved, 'set_dependency_key' ) );
     }
 
     /**
@@ -44,9 +45,6 @@ class SettingsElementTest extends DokanTestCase {
         $field = new Field( 'commission_type' );
         $field->add_dependency( 'enable_commission', true );
 
-        // Pretend a parent already assigned a stale dependency_key — id must win.
-        $field->set_dependency_key( 'general.commission_type' );
-
         $dependencies = $field->get_dependencies();
 
         $this->assertCount( 1, $dependencies );
@@ -55,17 +53,24 @@ class SettingsElementTest extends DokanTestCase {
 
     /**
      * Mirrors test_get_dependencies_uses_id_for_self: get_validations() must
-     * stamp the `self` key with the element's id, not its dependency_key.
+     * stamp the `self` key with the element's id.
      */
     public function test_get_validations_uses_id_for_self() {
         $field = new Field( 'commission_type' );
         $field->add_validation( 'required', 'Required' );
 
-        $field->set_dependency_key( 'general.commission_type' );
-
         $validations = $field->get_validations();
 
         $this->assertCount( 1, $validations );
         $this->assertSame( 'commission_type', $validations[0]['self'] );
+    }
+
+    /**
+     * to_array() / populate() output must omit the legacy `dependency_key`
+     * field — it was deleted from the schema in Task 11.
+     */
+    public function test_populate_omits_dependency_key() {
+        $field = new Field( 'site_logo' );
+        $this->assertArrayNotHasKey( 'dependency_key', $field->populate() );
     }
 }

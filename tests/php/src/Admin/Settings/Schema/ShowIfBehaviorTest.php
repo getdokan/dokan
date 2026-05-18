@@ -8,7 +8,7 @@ use WeDevs\Dokan\Test\DokanTestCase;
 /**
  * Behavior tests for show_if / dependencies rules in the Lite SettingsSchema.
  *
- * Phase 2 of the dependency_key cleanup (Task 5) rewrites every dot-path
+ * Phase 2 of the show_if cleanup (Task 5) rewrites every dot-path
  * dependency key in the schema to flat-key form so it resolves to a real
  * field id. These tests guard against regressing back to a dot-path: the
  * client-side `evaluateDependencies()` only resolves flat-key targets to

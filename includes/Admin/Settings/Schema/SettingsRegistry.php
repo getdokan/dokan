@@ -13,13 +13,6 @@ namespace WeDevs\Dokan\Admin\Settings\Schema;
  * 5. Fill default properties (display, dependencies, validations, etc.).
  * 6. Run SchemaValidator in debug/dev mode.
  *
- * `dependency_key` is intentionally NOT generated here. The plugin-ui
- * `settings-formatter` recomputes it from the parent chain at render time
- * (`[parent.dependency_key, child.id].filter(Boolean).join('.')`), so any
- * server-side value would be immediately overwritten on the client. Legacy
- * class-based elements still populate it via
- * `SettingsElement::set_dependency_key()`.
- *
  * @since DOKAN_SINCE
  */
 class SettingsRegistry {
@@ -88,11 +81,6 @@ class SettingsRegistry {
      * Auto-generate hook_key for elements that don't have one.
      *
      * Hook_key format: `dokan_settings_{page}_{subpage}_{section}_{field}_children`.
-     *
-     * `dependency_key` is intentionally not assigned here — the plugin-ui
-     * `settings-formatter` recomputes it from the parent chain on the client
-     * (`[parent.dependency_key, child.id].filter(Boolean).join('.')`) and any
-     * server value would be immediately overwritten.
      *
      * @since DOKAN_SINCE
      *

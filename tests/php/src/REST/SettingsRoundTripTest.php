@@ -251,11 +251,11 @@ class SettingsRoundTripTest extends DokanTestCase {
     /**
      * Dot-path payload keys are silently ignored.
      *
-     * Plugin-ui used to reconstruct `dependency_key` as a dot-path
-     * (parent.child.field), so the controller had a last-segment
-     * fallback to resolve them. After the dot-path cleanup, the
-     * controller only resolves field ids — dot-path keys no longer
-     * match any field, so they are dropped without updating any value.
+     * Plugin-ui used to emit dot-path keys (parent.child.field), so the
+     * controller had a last-segment fallback to resolve them. After the
+     * dot-path cleanup, the controller only resolves field ids — dot-path
+     * keys no longer match any field, so they are dropped without
+     * updating any value.
      *
      * @return void
      */
