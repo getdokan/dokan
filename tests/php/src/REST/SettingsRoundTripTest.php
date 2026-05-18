@@ -249,6 +249,44 @@ class SettingsRoundTripTest extends DokanTestCase {
     }
 
     /**
+     * Dot-path payload keys are silently ignored.
+     *
+     * Plugin-ui used to reconstruct `dependency_key` as a dot-path
+     * (parent.child.field), so the controller had a last-segment
+     * fallback to resolve them. After the dot-path cleanup, the
+     * controller only resolves field ids — dot-path keys no longer
+     * match any field, so they are dropped without updating any value.
+     *
+     * @return void
+     */
+    public function test_rest_put_with_dot_path_payload_skips_unrecognized_key(): void {
+        // Pre-condition: a known field has a value in storage.
+        update_option( 'dokan_settings', [ 'vendor_store_url' => 'unchanged' ] );
+
+        $request = new WP_REST_Request( 'PUT', '/' . $this->namespace . '/settings/general' );
+        $request->set_body_params(
+            [
+                'page_id' => 'general',
+                'values'  => [
+                    // Dot-path key — no longer resolved by the controller.
+                    'general.marketplace.vendor_store_url' => 'ignored',
+                ],
+            ]
+        );
+
+        rest_do_request( $request );
+
+        // Dot-path key didn't match any field id; the value is silently dropped.
+        $settings = get_option( 'dokan_settings', [] );
+        $this->assertIsArray( $settings );
+        $this->assertSame(
+            'unchanged',
+            $settings['vendor_store_url'] ?? null,
+            'Dot-path payload key must not resolve to vendor_store_url anymore.'
+        );
+    }
+
+    /**
      * Round trip: legacy save -> new option -> legacy option matches.
      *
      * Stitches the two halves together: the legacy AJAX bridge call

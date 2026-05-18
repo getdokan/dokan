@@ -125,8 +125,9 @@ class AdminSettingsController extends DokanBaseAdminController {
      * }
      * ```
      *
-     * The keys in `values` are field ids (globally unique, matching dependency_key).
-     * Values are merged into the single `dokan_settings` wp_option.
+     * The keys in `values` are field ids (globally unique per SchemaValidator).
+     * Unknown keys are silently ignored. Values are merged into the single
+     * `dokan_settings` wp_option.
      *
      * @since DOKAN_SINCE
      *
@@ -171,19 +172,6 @@ class AdminSettingsController extends DokanBaseAdminController {
 
         foreach ( $flat_values as $key => $value ) {
             $field = $by_id[ $key ] ?? null;
-
-            // Plugin-ui's <Settings> rebuilds dependency_key as a dot-path
-            // (parent.child.field) regardless of what the backend emits, so
-            // saved payloads arrive keyed by dot-path. Fall back to the last
-            // segment, which always equals the field id.
-            if ( ! $field && false !== strpos( $key, '.' ) ) {
-                $parts = explode( '.', $key );
-                $last  = end( $parts );
-                $field = $by_id[ $last ] ?? null;
-                if ( $field ) {
-                    $key = $last;
-                }
-            }
 
             if ( ! $field ) {
                 continue;
