@@ -278,7 +278,7 @@ class SettingsSchema {
                 ],
             ],
             [
-                'id'           => 'google_map_api_key',
+                'id'           => 'google_map_api_key_group',
                 'type'         => 'fieldgroup',
                 'section_id'   => 'map_api_configuration',
                 'dependencies' => [
@@ -304,7 +304,7 @@ class SettingsSchema {
                 'id'          => 'google_map_base',
                 'type'        => 'field',
                 'variant'     => 'base_field_label',
-                'field_group_id' => 'google_map_api_key',
+                'field_group_id' => 'google_map_api_key_group',
                 'title'       => esc_html__( 'Google Map API Key', 'dokan-lite' ),
                 'description' => sprintf(
                     /* translators: %s: Google Maps API documentation URL */
@@ -317,11 +317,11 @@ class SettingsSchema {
                 'id'             => 'google_map_api_key',
                 'type'           => 'field',
                 'variant'        => 'show_hide',
-                'field_group_id' => 'google_map_api_key',
+                'field_group_id' => 'google_map_api_key_group',
                 'placeholder'    => esc_html__( 'Enter your Google Maps API key', 'dokan-lite' ),
             ],
             [
-                'id'           => 'mapbox_api_key',
+                'id'           => 'mapbox_api_key_group',
                 'type'         => 'fieldgroup',
                 'section_id'   => 'map_api_configuration',
                 'dependencies' => [
@@ -347,7 +347,7 @@ class SettingsSchema {
                 'id'             => 'mapbox_map_base',
                 'type'           => 'field',
                 'variant'        => 'base_field_label',
-                'field_group_id' => 'mapbox_api_key',
+                'field_group_id' => 'mapbox_api_key_group',
                 'title'          => esc_html__( 'Mapbox API Key', 'dokan-lite' ),
                 'description'    => esc_html__( 'Enter your Mapbox API key to enable map functionality.', 'dokan-lite' ),
             ],
@@ -355,7 +355,7 @@ class SettingsSchema {
                 'id'             => 'mapbox_api_key',
                 'type'           => 'field',
                 'variant'        => 'show_hide',
-                'field_group_id' => 'mapbox_api_key',
+                'field_group_id' => 'mapbox_api_key_group',
                 'placeholder'    => esc_html__( 'Enter your Mapbox API key', 'dokan-lite' ),
             ],
         ];
@@ -801,7 +801,7 @@ class SettingsSchema {
                 'subpage_id' => 'reverse_withdrawal',
             ],
             [
-                'id'            => 'enabled',
+                'id'            => 'reverse_withdrawal_enabled',
                 'type'          => 'field',
                 'variant'       => 'switch',
                 'section_id'    => 'reverse_withdrawal_section',

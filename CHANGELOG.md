@@ -1,3 +1,15 @@
+### Unreleased — refactor/simplify-settings-to-flat-array (dev branch only)
+
+**Breaking changes (dev/QA installs only)**
+
+The following admin settings field ids were renamed to be globally unique
+across the flat `dokan_settings` storage. Dev/QA installs running this
+branch must re-save the affected tabs to restore their values:
+
+- `dokan_reverse_withdrawal.enabled` → `dokan_settings.reverse_withdrawal_enabled`
+- `dokan_appearance.google_map_api_key` (fieldgroup id) → `google_map_api_key_group`
+- `dokan_appearance.mapbox_api_key` (fieldgroup id) → `mapbox_api_key_group`
+
 ### v5.0.1 ( May 05, 2026 ) ###
 
 - **update:** Added an admin-controllable vendor registration option on the My Account page.

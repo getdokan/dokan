@@ -21,7 +21,7 @@ class SettingsHelper {
      * @return bool
      */
     public static function is_enabled() {
-        return 'on' === dokan_get_option( 'enabled', 'dokan_reverse_withdrawal', 'off' );
+        return 'on' === dokan_get_option( 'reverse_withdrawal_enabled', 'dokan_reverse_withdrawal', 'off' );
     }
 
     /**
