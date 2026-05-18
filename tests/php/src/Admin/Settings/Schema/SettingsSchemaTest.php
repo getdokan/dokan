@@ -227,8 +227,8 @@ class SettingsSchemaTest extends DokanTestCase {
         // Should depend on billing_type.
         $dep_keys = array_column( $threshold['dependencies'], 'key' );
         $this->assertTrue(
-            in_array( 'reverse_withdrawal.reverse_withdrawal_section.billing_type', $dep_keys, true ),
-            'reverse_balance_threshold should depend on billing_type.'
+            in_array( 'billing_type', $dep_keys, true ),
+            'reverse_balance_threshold should depend on billing_type (flat-key form).'
         );
     }
 

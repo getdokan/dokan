@@ -696,7 +696,7 @@ class Settings {
                     'type'    => 'switcher',
                     'default' => 'off',
                     'show_if' => [
-                        'dokan_selling.one_step_product_create' => [ 'equal' => 'off' ],
+                        'one_step_product_create' => [ 'equal' => 'off' ],
                     ],
                     'tooltip' => __( 'If disabled, instead of a pop up window vendor will redirect to product page when adding new product.', 'dokan-lite' ),
                 ],

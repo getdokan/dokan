@@ -283,7 +283,7 @@ class SettingsSchema {
                 'section_id'   => 'map_api_configuration',
                 'dependencies' => [
                     [
-						'key' => 'location.map_api_configuration.map_api_source',
+						'key' => 'map_api_source',
 						'value' => 'google_maps',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -291,7 +291,7 @@ class SettingsSchema {
 						'comparison' => '==',
 					],
                     [
-						'key' => 'location.map_api_configuration.map_api_source',
+						'key' => 'map_api_source',
 						'value' => 'mapbox',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -326,7 +326,7 @@ class SettingsSchema {
                 'section_id'   => 'map_api_configuration',
                 'dependencies' => [
                     [
-						'key' => 'location.map_api_configuration.map_api_source',
+						'key' => 'map_api_source',
 						'value' => 'mapbox',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -334,7 +334,7 @@ class SettingsSchema {
 						'comparison' => '==',
 					],
                     [
-						'key' => 'location.map_api_configuration.map_api_source',
+						'key' => 'map_api_source',
 						'value' => 'google_maps',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -510,7 +510,7 @@ class SettingsSchema {
                 'additional_fee'   => $default_settings['additional_fee'],
                 'dependencies'     => [
                     [
-						'key' => 'commission.commission.commission_type',
+						'key' => 'commission_type',
 						'value' => 'fixed',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -518,7 +518,7 @@ class SettingsSchema {
 						'comparison' => '!==',
 					],
                     [
-						'key' => 'commission.commission.commission_type',
+						'key' => 'commission_type',
 						'value' => 'fixed',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -549,7 +549,7 @@ class SettingsSchema {
 				],
                 'dependencies'  => [
                     [
-						'key' => 'commission.commission.commission_type',
+						'key' => 'commission_type',
 						'value' => 'category_based',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -557,7 +557,7 @@ class SettingsSchema {
 						'comparison' => '!==',
 					],
                     [
-						'key' => 'commission.commission.commission_type',
+						'key' => 'commission_type',
 						'value' => 'category_based',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -575,7 +575,7 @@ class SettingsSchema {
                 'description'  => esc_html__( 'Amount you will get from each sale', 'dokan-lite' ),
                 'dependencies' => [
                     [
-						'key' => 'commission.commission.commission_type',
+						'key' => 'commission_type',
 						'value' => 'category_based',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -583,7 +583,7 @@ class SettingsSchema {
 						'comparison' => '!==',
 					],
                     [
-						'key' => 'commission.commission.commission_type',
+						'key' => 'commission_type',
 						'value' => 'category_based',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -591,7 +591,7 @@ class SettingsSchema {
 						'comparison' => '===',
 					],
                     [
-						'key' => 'commission.commission.reset_sub_category_when_edit_all_category',
+						'key' => 'reset_sub_category_when_edit_all_category',
 						'value' => 'on',
 						'to_self' => true,
 						'attribute' => 'custom',
@@ -599,7 +599,7 @@ class SettingsSchema {
 						'comparison' => '===',
 					],
                     [
-						'key' => 'commission.commission.reset_sub_category_when_edit_all_category',
+						'key' => 'reset_sub_category_when_edit_all_category',
 						'value' => 'off',
 						'to_self' => true,
 						'attribute' => 'custom',
@@ -665,7 +665,7 @@ class SettingsSchema {
                 'additional_fee'   => '0.00',
                 'dependencies'     => [
                     [
-						'key' => 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal.paypal_withdraw',
+						'key' => 'paypal_withdraw',
 						'value' => 'on',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -673,7 +673,7 @@ class SettingsSchema {
 						'comparison' => '===',
 					],
                     [
-						'key' => 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_paypal.paypal_withdraw',
+						'key' => 'paypal_withdraw',
 						'value' => 'off',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -720,7 +720,7 @@ class SettingsSchema {
                 'additional_fee'   => '0.00',
                 'dependencies'     => [
                     [
-						'key' => 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_bank.bank_transfer_withdraw',
+						'key' => 'bank_transfer_withdraw',
 						'value' => 'on',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -728,7 +728,7 @@ class SettingsSchema {
 						'comparison' => '===',
 					],
                     [
-						'key' => 'withdraw_charge.section_withdraw_charge.withdraw_methods_group_bank.bank_transfer_withdraw',
+						'key' => 'bank_transfer_withdraw',
 						'value' => 'off',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -856,7 +856,7 @@ class SettingsSchema {
                 'step'         => 0.5,
                 'dependencies' => [
                     [
-						'key' => 'reverse_withdrawal.reverse_withdrawal_section.billing_type',
+						'key' => 'billing_type',
 						'value' => 'by_amount',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -864,7 +864,7 @@ class SettingsSchema {
 						'comparison' => '===',
 					],
                     [
-						'key' => 'reverse_withdrawal.reverse_withdrawal_section.billing_type',
+						'key' => 'billing_type',
 						'value' => 'by_month',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -887,7 +887,7 @@ class SettingsSchema {
                 'max_value'    => 28,
                 'dependencies' => [
                     [
-						'key' => 'reverse_withdrawal.reverse_withdrawal_section.billing_type',
+						'key' => 'billing_type',
 						'value' => 'by_month',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -895,7 +895,7 @@ class SettingsSchema {
 						'comparison' => '===',
 					],
                     [
-						'key' => 'reverse_withdrawal.reverse_withdrawal_section.billing_type',
+						'key' => 'billing_type',
 						'value' => 'by_amount',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -1074,7 +1074,7 @@ class SettingsSchema {
 				],
                 'dependencies'  => [
                     [
-						'key' => 'vendor_capabilities.vendor_capabilities.one_page_creation',
+						'key' => 'one_page_creation',
 						'value' => 'on',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -1082,7 +1082,7 @@ class SettingsSchema {
 						'comparison' => '!==',
 					],
                     [
-						'key' => 'vendor_capabilities.vendor_capabilities.one_page_creation',
+						'key' => 'one_page_creation',
 						'value' => 'on',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -1218,7 +1218,7 @@ class SettingsSchema {
                 ),
                 'dependencies'   => [
                     [
-						'key' => 'store.google_recaptcha.google_recaptcha_settings.recaptcha',
+						'key' => 'recaptcha',
 						'value' => 'on',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -1226,7 +1226,7 @@ class SettingsSchema {
 						'comparison' => '===',
 					],
                     [
-						'key' => 'store.google_recaptcha.google_recaptcha_settings.recaptcha',
+						'key' => 'recaptcha',
 						'value' => 'off',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -1245,7 +1245,7 @@ class SettingsSchema {
                 'tooltip'        => esc_html__( 'Insert Google reCAPTCHA v3 site key.', 'dokan-lite' ),
                 'dependencies'   => [
                     [
-						'key' => 'store.google_recaptcha.google_recaptcha_settings.recaptcha',
+						'key' => 'recaptcha',
 						'value' => 'on',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -1253,7 +1253,7 @@ class SettingsSchema {
 						'comparison' => '===',
 					],
                     [
-						'key' => 'store.google_recaptcha.google_recaptcha_settings.recaptcha',
+						'key' => 'recaptcha',
 						'value' => 'off',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -1272,7 +1272,7 @@ class SettingsSchema {
                 'tooltip'        => esc_html__( 'Insert Google reCAPTCHA v3 secret key.', 'dokan-lite' ),
                 'dependencies'   => [
                     [
-						'key' => 'store.google_recaptcha.google_recaptcha_settings.recaptcha',
+						'key' => 'recaptcha',
 						'value' => 'on',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -1280,7 +1280,7 @@ class SettingsSchema {
 						'comparison' => '===',
 					],
                     [
-						'key' => 'store.google_recaptcha.google_recaptcha_settings.recaptcha',
+						'key' => 'recaptcha',
 						'value' => 'off',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -1694,7 +1694,7 @@ class SettingsSchema {
                 'options'      => [], // Populated dynamically from registered AI providers
                 'dependencies' => [
                     [
-						'key' => 'product_generation.product_image_section.product_info_generate',
+						'key' => 'product_info_generate',
 						'value' => 'on',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -1702,7 +1702,7 @@ class SettingsSchema {
 						'comparison' => '===',
 					],
                     [
-						'key' => 'product_generation.product_image_section.product_info_generate',
+						'key' => 'product_info_generate',
 						'value' => 'off',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -1740,8 +1740,8 @@ class SettingsSchema {
 
                 // Add per-provider field groups
                 foreach ( $text_providers as $provider_id => $provider ) {
-                    $dep_generate = 'product_generation.product_image_section.product_info_generate';
-                    $dep_engine   = 'product_generation.product_image_section.product_info_engine';
+                    $dep_generate = 'product_info_generate';
+                    $dep_engine   = 'product_info_engine';
 
                     $elements[] = [
                         'id'           => $provider_id . '_api_info_group',
