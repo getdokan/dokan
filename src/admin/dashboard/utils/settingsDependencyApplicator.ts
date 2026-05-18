@@ -77,19 +77,16 @@ const settingsDependencyApplicator = (
         ...settings.map( ( element ) => {
             const elementDependencies = dependencies.filter(
                 ( dependency ) =>
-                    dependency.key === element.dependency_key ||
-                    dependency.self === element.dependency_key
+                    dependency.key === element.id ||
+                    dependency.self === element.id
             );
 
             elementDependencies.forEach( ( elDep ) => {
-                if ( elDep.to_self && elDep.self === element.dependency_key ) {
+                if ( elDep.to_self && elDep.self === element.id ) {
                     element = {
                         ...applyEffectToElement( { ...element }, elDep ),
                     };
-                } else if (
-                    ! elDep.to_self &&
-                    elDep.key === element.dependency_key
-                ) {
+                } else if ( ! elDep.to_self && elDep.key === element.id ) {
                     element = {
                         ...applyEffectToElement( { ...element }, elDep ),
                     };

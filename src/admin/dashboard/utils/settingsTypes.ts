@@ -47,7 +47,8 @@ export interface SettingsElement {
     display: boolean;
     children: SettingsElement[];
     description?: string;
-    dependency_key: string;
+    /** @deprecated Use `id` directly. Kept optional for back-compat. */
+    dependency_key?: string;
     dependencies: SettingsElementDependency[];
     validations?: SettingsElementValidation[];
     validationError?: string;

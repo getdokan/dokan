@@ -26,10 +26,8 @@ const settingsDependencyValueParser = (
     settings.forEach( ( element ) => {
         dependenciesWithValue.map( ( depWithValue ) => {
             if (
-                ( depWithValue.key === element.dependency_key &&
-                    depWithValue.to_self ) ||
-                ( depWithValue.self === element.dependency_key &&
-                    ! depWithValue.to_self )
+                ( depWithValue.key === element.id && depWithValue.to_self ) ||
+                ( depWithValue.self === element.id && ! depWithValue.to_self )
             ) {
                 depWithValue.currentValue = element.value;
             }

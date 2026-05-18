@@ -22,10 +22,8 @@ export default function DokanDoubleInput( { element }: Props ) {
     const secondValue = value.second ?? element.secondValue ?? '';
 
     const setPart = ( part: 'first' | 'second', val: string ): void => {
-        if ( ! element.dependency_key ) {
-            return;
-        }
-        updateValue( element.dependency_key, {
+        // No guard needed: `id` is always present on field elements.
+        updateValue( element.id, {
             ...value,
             [ part ]: val,
         } );

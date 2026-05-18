@@ -126,10 +126,8 @@ export default function DokanVendorInfoPreview( { element }: Props ) {
         key: keyof VendorInfoValue,
         checked: boolean
     ): void => {
-        if ( ! element.dependency_key ) {
-            return;
-        }
-        updateValue( element.dependency_key, {
+        // No guard needed: `id` is always present on field elements.
+        updateValue( element.id, {
             ...value,
             [ key ]: checked,
         } );
