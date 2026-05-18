@@ -4,7 +4,9 @@
 
 **Goal:** Eliminate the `dependency_key` / `id` duality in the admin settings schema. After this work, `id` is the sole field identifier across PHP storage, REST payloads, plugin-ui state, and `show_if` rules. `dependency_key` ceases to exist as a separate concept.
 
-**Architecture (revised after Task 0 discovery):** Six phases. Phase 0 (audit) is complete. Phase 1 introduces a tolerance layer so server and client can speak both forms during migration. **Phase 2 — the largest — rewrites 56 production dot-path declarations to flat-key form and renames every field id that would collide post-flatten.** Phase 3 migrates every consumer to read `id` directly. Phase 4 removes `dependency_key` from the schema and the abstract class (compat shim still present). Phase 5 documents the new contract. Phase 6 (deferred) removes the transitional REST compat shim once Pro is on a release with flat-key rules. Work spans two plugins (`dokan-lite` PHP+TS and `plugin-ui` TS) and one external surface (REST PUT payload format). The Pro module schemas are the largest blast radius — coordination required.
+**Architecture (revised 2nd pass — no deprecation dance):** Five phases. Phase 0 (audit) is complete. Phase 1 switches server + client to emit/preserve `id` (no tolerance window — landing without transitional compat because this branch hasn't shipped to production). **Phase 2 — the largest — rewrites 56 production dot-path declarations to flat-key form and renames every field id that would collide post-flatten.** Phase 3 migrates every consumer to read `id` directly and rips out the dot-path code paths in the formatter and REST controller in the same pass. Phase 4 drops `dependency_key` from the schema and the abstract class outright (no `@deprecated` shim — getter/setter removed, callers updated). Phase 5 documents the new contract and adds a PHPCS sniff. Work spans two plugins (`dokan-lite` PHP+TS and `plugin-ui` TS) and one external surface (REST PUT payload format). The Pro module schemas are the largest blast radius — coordination required.
+
+**Why no deprecation:** the refactor branch (`refactor/simplify-settings-to-flat-array`) hasn't shipped to production. Anyone running it is a dev/QA install; their stored `dokan_settings` is recoverable by re-saving once after upgrade. Skipping the deprecation period removes Phase 6 (compat removal) and lets Phase 4 land the final state directly.
 
 **Tech Stack:** PHP 7.4+ (`includes/Abstracts/`, `includes/Admin/Settings/`, `includes/REST/`), TypeScript (`src/admin/dashboard/`, `@wedevs/plugin-ui/src/components/settings/`), PHPUnit 9.6 + Brain Monkey, Jest/Vitest for plugin-ui, PHPCS sniff (custom) for regression prevention.
 
@@ -65,8 +67,8 @@ Authoritative scoping doc: this file. Background motivation in the conversation 
 ## Conventions used throughout
 
 - **Field identifier:** `id`. Globally unique per schema. Storage key, payload key, `show_if` matcher key, all use `id`.
-- **Compat-fallback policy:** the REST PUT controller's last-segment fallback (`AdminSettingsController.php:175-186`) becomes a TRANSITIONAL shim with `_doing_it_wrong` deprecation logging. Removed in Phase 6 once Pro is fully on flat-keys (target: 2 minor releases after Phase 2 ships).
-- **Id-rename policy:** when a flat id would collide, pick a domain-prefixed rename (e.g. `subscription_enable_pricing` over `enable_pricing`). Migrate via an upgrade hook that runs once per install, copying `dokan_settings[<old>]` to `dokan_settings[<new>]` and removing the old key.
+- **Compat-fallback policy:** none. The REST PUT controller's last-segment fallback (`AdminSettingsController.php:175-186`) is **deleted** in Phase 3 — no `_doing_it_wrong`, no transitional shim. Dev/QA installs that have payloads in flight need to update their clients.
+- **Id-rename policy:** when a flat id would collide, pick a domain-prefixed rename (e.g. `subscription_enable_pricing` over `enable_pricing`). **No stored-data migration** — dev/QA installs are expected to re-save settings after the upgrade. Document the rename map in release notes so devs know what to redo.
 - **Tests-first cadence:** every behavior change starts with a failing test. Existing test suites (`LegacySettingsBridgeTest`, the 10 `*SchemaTest` files, `SettingsRoundTripTest`, plugin-ui's vitest suite) must stay green through every step.
 - **Commit cadence:** one commit per task. Message format: `refactor(settings): <what>` for code; `test(settings): <what>` for tests; `docs(settings): <what>` for docs; `chore(settings): <what>` for tooling.
 
@@ -307,127 +309,48 @@ git commit -m "docs(settings): exhaustive field id collision audit + rename prop
 
 ---
 
-### Task 4: Implement id renames + upgrade migration
+### Task 4: Apply id renames (no migration helper — dev/QA branch)
 
 **Files:**
 - Modify: `includes/Admin/Settings/Schema/SettingsSchema.php` (hand-authored renames)
 - Modify: `includes/Admin/Settings/Schema/Generated/csv_fields.php` (CSV-side renames; regen via generator after editing the slug rule)
 - Modify: `tools/migration/generate_schema_fragment.php` (if the slug rule needs an override for collision cases)
-- Create: `includes/Admin/Settings/Migration/IdRenameMigration.php` (one-shot wp_options key copier)
-- Modify: `dokan-class.php` (register upgrade hook to run the migration on plugin activation/update)
-- Modify: all read sites (`dokan_get_option`, `get_option('dokan_settings')` direct callers) — accept either old or new id (read-side compat for 1 release cycle, then deprecate)
-- Test: `tests/php/src/Admin/Settings/Migration/IdRenameMigrationTest.php`
-- Coordination: `dokan-pro` renames in the same shape (separate PR in Pro repo)
+- Modify: all read sites (`dokan_get_option`, `get_option('dokan_settings')` direct callers) — update to use new id directly (no read-side compat, no fallback)
+- Coordination: `dokan-pro` renames in the same shape (separate PR in Pro repo, same task list)
 
-- [ ] **Step 1: Failing test for the migration helper**
+- [ ] **Step 1: Apply renames in `SettingsSchema.php`**
 
-```php
-public function test_migration_copies_old_key_to_new_key_once() {
-    update_option( 'dokan_settings', [ 'enable_pricing' => 'on', 'other' => 'x' ] );
+For each hand-authored field whose id is in the rename map, change the `'id' => '...'` value to the new name. Keep `legacy_key` unchanged (storage path in `dokan_<section>` rows is independent of the new id).
 
-    $migration = new \WeDevs\Dokan\Admin\Settings\Migration\IdRenameMigration( [
-        'enable_pricing' => 'subscription_enable_pricing',
-    ] );
-    $migration->run();
+- [ ] **Step 2: Apply renames in the CSV generator**
 
-    $settings = get_option( 'dokan_settings' );
-    $this->assertSame( 'on', $settings['subscription_enable_pricing'] );
-    $this->assertArrayNotHasKey( 'enable_pricing', $settings );
-    $this->assertSame( 'x', $settings['other'] ); // unrelated keys preserved
-}
+Modify `generate_schema_fragment.php` to emit the renamed ids for the 4 known CSV-side collisions. Regenerate the fragment. Re-run all per-tab parity tests; they should still pass because each test asserts mapping from `legacy_key` to `id`, which the rename preserves.
 
-public function test_migration_is_idempotent() {
-    update_option( 'dokan_settings', [ 'subscription_enable_pricing' => 'off' ] );
-
-    $migration = new \WeDevs\Dokan\Admin\Settings\Migration\IdRenameMigration( [
-        'enable_pricing' => 'subscription_enable_pricing',
-    ] );
-    $migration->run();   // first
-    $migration->run();   // second; must not overwrite
-
-    $this->assertSame( 'off', get_option( 'dokan_settings' )['subscription_enable_pricing'] );
-}
-```
-
-- [ ] **Step 2: Implement `IdRenameMigration`**
-
-```php
-namespace WeDevs\Dokan\Admin\Settings\Migration;
-
-class IdRenameMigration {
-    /** @var array<string,string> */
-    private array $rename_map;
-
-    public function __construct( array $rename_map ) {
-        $this->rename_map = $rename_map;
-    }
-
-    public function run(): void {
-        $settings = get_option( 'dokan_settings', [] );
-        if ( ! is_array( $settings ) ) { return; }
-
-        $dirty = false;
-        foreach ( $this->rename_map as $old => $new ) {
-            if ( array_key_exists( $old, $settings ) && ! array_key_exists( $new, $settings ) ) {
-                $settings[ $new ] = $settings[ $old ];
-                unset( $settings[ $old ] );
-                $dirty = true;
-            } elseif ( array_key_exists( $old, $settings ) ) {
-                // Both keys present — new wins; old is cruft from a partial migration.
-                unset( $settings[ $old ] );
-                $dirty = true;
-            }
-        }
-        if ( $dirty ) { update_option( 'dokan_settings', $settings ); }
-    }
-}
-```
-
-- [ ] **Step 3: Apply renames in `SettingsSchema.php`**
-
-For each hand-authored field whose id is in the rename map, change the `'id' => '...'` value to the new name. Keep `legacy_key` unchanged (storage path in `dokan_<section>` rows is independent of new id).
-
-- [ ] **Step 4: Apply renames in the CSV generator**
-
-Modify `generate_schema_fragment.php` to emit the renamed ids for the 4 known CSV-side collisions. Regenerate the fragment. Re-run all per-tab parity tests; they should still pass because the generator's slug-collision suffix logic handles the rename transparently.
-
-- [ ] **Step 5: Update read sites in dokan-lite**
+- [ ] **Step 3: Update read sites in dokan-lite**
 
 ```bash
 grep -rn "dokan_get_option\|get_option.*dokan_settings" includes/ | grep -E "(enable_pricing|enabled|google_details|linkedin_details)"
 ```
 
-For each match, add read-side compat: try new id first, fall back to old id once, log deprecation.
+For each match, change the second argument (section / key) to the new id. No fallback shim — anyone running an older saved `dokan_settings` row will see the default value until they re-save in the new UI.
 
-- [ ] **Step 6: Register migration in `dokan-class.php`**
-
-```php
-// On admin_init or plugin activation
-$migration = new IdRenameMigration( [
-    'enable_pricing'   => 'subscription_enable_pricing',
-    'enabled'          => null,  // not migratable — too ambiguous
-    // ... full list from audit
-] );
-$migration->run();
-```
-
-Use a `dokan_settings_id_rename_migrated_v1` option flag to ensure the migration runs only once.
-
-- [ ] **Step 7: Coordinate dokan-pro**
+- [ ] **Step 4: Coordinate dokan-pro**
 
 Open a parallel PR in `dokan-pro` that applies the same renames in Pro schema files. Lite and Pro must merge in lockstep — pin Pro version requirement in Lite's plugin header once merged.
 
-- [ ] **Step 8: Commit (multiple commits — schema renames, migration helper, read-site updates, dokan-class wiring)**
+- [ ] **Step 5: Document the rename map in release notes**
+
+Add a `## Breaking changes` block to `CHANGELOG.md` (or wherever this branch's release notes live) listing every renamed id. Dev/QA installs need this to know what to redo manually.
+
+- [ ] **Step 6: Commit**
 
 ```bash
 git add includes/Admin/Settings/Schema/SettingsSchema.php \
         includes/Admin/Settings/Schema/Generated/csv_fields.php \
         tools/migration/generate_schema_fragment.php \
-        includes/Admin/Settings/Migration/IdRenameMigration.php \
-        includes/admin/.../*.php \
-        dokan-class.php \
-        tests/php/src/Admin/Settings/Migration/IdRenameMigrationTest.php
-git commit -m "refactor(settings): rename colliding field ids + one-shot wp_options migration"
+        includes/admin/ \
+        CHANGELOG.md
+git commit -m "refactor(settings): rename colliding field ids; dev/QA installs must re-save settings"
 ```
 
 ---
@@ -632,98 +555,128 @@ git commit -m "refactor(settings): dokan-lite legacy frontend reads field id ins
 
 ---
 
-### Task 10: REST controller — install transitional compat fallback with deprecation
+### Task 10: REST controller — delete the dot-path fallback entirely
 
 **Files:**
-- Modify: `includes/REST/AdminSettingsController.php`
-- Test: `tests/php/src/REST/SettingsRoundTripTest.php`
+- Modify: `includes/REST/AdminSettingsController.php` (delete lines 179-186)
+- Modify: `tests/php/src/REST/SettingsRoundTripTest.php` (remove any test that exercised the fallback)
 
-- [ ] **Step 1: Failing test — dot-path PUT payload still resolves but emits deprecation**
+- [ ] **Step 1: Failing test — dot-path PUT payload is now silently ignored (no 500 error, but the field doesn't update)**
 
 ```php
-public function test_rest_put_with_dot_path_payload_warns_but_still_writes() {
-    $this->setExpectedDeprecated( 'AdminSettingsController dot-path payload' );
+public function test_rest_put_with_dot_path_payload_skips_unrecognized_key() {
+    update_option( 'dokan_settings', [ 'setup_wizard_logo_url' => 'unchanged' ] );
 
     $request = new \WP_REST_Request( 'PUT', '/dokan/v1/admin/settings/general' );
     $request->set_body_params( [
-        'general.marketplace.setup_wizard_logo_url' => 'value_via_dotpath',
+        'general.marketplace.setup_wizard_logo_url' => 'ignored',
     ] );
     rest_do_request( $request );
 
-    $this->assertSame( 'value_via_dotpath', get_option( 'dokan_settings' )['setup_wizard_logo_url'] ?? null );
+    // Dot-path key didn't match any field id; the value is silently dropped.
+    $this->assertSame( 'unchanged', get_option( 'dokan_settings' )['setup_wizard_logo_url'] );
 }
 ```
 
-- [ ] **Step 2: Add `_doing_it_wrong` to the fallback at line 179-186**
+- [ ] **Step 2: Delete the fallback at line 179-186**
 
 ```php
+// REMOVE this block entirely:
 if ( ! $field && false !== strpos( $key, '.' ) ) {
     $parts = explode( '.', $key );
     $last  = end( $parts );
     $field = $by_id[ $last ] ?? null;
     if ( $field ) {
-        _doing_it_wrong(
-            __METHOD__,
-            sprintf(
-                'PUT payload key "%s" uses deprecated dot-path form; use field id "%s" instead.',
-                esc_html( $key ),
-                esc_html( $last )
-            ),
-            'DOKAN_NEXT_MAJOR'
-        );
         $key = $last;
     }
 }
 ```
 
-- [ ] **Step 3: Commit**
+Result: `if ( ! $field ) { continue; }` becomes the only handling for unrecognized keys.
+
+- [ ] **Step 3: Update the controller's docblock**
+
+Remove any comment referencing dot-path payload support.
+
+- [ ] **Step 4: Commit**
 
 ```bash
 git add includes/REST/AdminSettingsController.php tests/php/src/REST/SettingsRoundTripTest.php
-git commit -m "refactor(settings): REST PUT dot-path fallback now logs deprecation"
+git commit -m "refactor(settings): drop REST PUT dot-path fallback (id-only payloads)"
 ```
 
 ---
 
 ## Phase 4 — Removal
 
-### Task 11: Drop `dependency_key` from schema; deprecate getter/setter
+### Task 11: Drop `dependency_key` from schema and abstract class outright
 
 **Files:**
-- Modify: `includes/Abstracts/SettingsElement.php` (drop `to_array()` line; deprecate get/set)
-- Modify (plugin-ui): `src/components/settings/settings-formatter.ts` (drop `child.dependency_key = …` fallback line from Task 2)
-- Modify (plugin-ui): `src/components/settings/settings-types.ts` (drop the field)
+- Modify: `includes/Abstracts/SettingsElement.php` (drop the property, getter, setter, `to_array()` entry)
+- Modify (plugin-ui): `src/components/settings/settings-formatter.ts` (drop the `child.dependency_key = …` line from Task 2 entirely)
+- Modify (plugin-ui): `src/components/settings/settings-types.ts` (drop the field from the type)
 - Modify: `src/admin/dashboard/utils/settingsTypes.ts` (drop the field)
 
 - [ ] **Step 1: Failing test — `to_array()` omits dependency_key**
 
-- [ ] **Step 2: Drop the field; deprecate the methods**
-
 ```php
-/** @deprecated DOKAN_NEXT_MAJOR Use get_id() instead. Returns id verbatim. */
-public function get_dependency_key(): string { return $this->get_id(); }
-
-/** @deprecated DOKAN_NEXT_MAJOR No-op. dependency_key is now always equal to id. */
-public function set_dependency_key( string $_unused ): SettingsElement { return $this; }
+public function test_to_array_omits_dependency_key() {
+    $field = new \WeDevs\Dokan\Admin\Settings\Element\Field( [ 'id' => 'site_logo' ] );
+    $this->assertArrayNotHasKey( 'dependency_key', $field->to_array() );
+}
 ```
 
-- [ ] **Step 3: TS — drop the field from types**
+- [ ] **Step 2: Failing test — getter/setter no longer exist on SettingsElement**
 
-Compiler errors point at any remaining consumers; fix by using `id`.
+```php
+public function test_dependency_key_methods_are_removed() {
+    $field = new \WeDevs\Dokan\Admin\Settings\Element\Field( [ 'id' => 'site_logo' ] );
+    $this->assertFalse( method_exists( $field, 'get_dependency_key' ) );
+    $this->assertFalse( method_exists( $field, 'set_dependency_key' ) );
+}
+```
 
-- [ ] **Step 4: Drop formatter fallback line**
+- [ ] **Step 3: Delete the property, getter, setter, and to_array entry**
 
-`settings-formatter.ts:188` (the line we changed in Task 2) is now redundant. Delete it.
+```php
+// In SettingsElement.php — REMOVE:
+//   public $dependency_key = '';
+//   public function get_dependency_key(): string { ... }
+//   public function set_dependency_key( string $dependency_key ): SettingsElement { ... }
+//   'dependency_key' => $this->get_dependency_key(),  // inside to_array()
+```
 
-- [ ] **Step 5: Suites green (both repos)**
+PHP will throw fatals on any remaining caller — that's the discovery mechanism for finding what we missed. Run the suite; for every fatal, replace `->get_dependency_key()` with `->get_id()` and delete `->set_dependency_key(...)` calls (no-ops now).
 
-- [ ] **Step 6: Commit (one per repo)**
+- [ ] **Step 4: TS — drop the field from types**
+
+```ts
+// settings-types.ts (both repos) — remove:
+//   dependency_key?: string;
+```
+
+`tsc` errors point at any remaining consumers; fix each by using `element.id`.
+
+- [ ] **Step 5: Drop the formatter line from Task 2**
+
+```ts
+// settings-formatter.ts — remove these lines installed in Task 2:
+//   child.dependency_key = child.dependency_key || child.id;
+//   element.dependency_key = element.dependency_key || element.id;
+```
+
+- [ ] **Step 6: Suites green (both repos)**
+
+- [ ] **Step 7: Commit (one per repo)**
 
 ```bash
 # dokan-lite
-git commit -m "refactor(settings): drop dependency_key from schema; getter/setter deprecated no-ops"
+git add includes/Abstracts/SettingsElement.php src/admin/dashboard/utils/settingsTypes.ts tests/
+git commit -m "refactor(settings): drop dependency_key from SettingsElement and TS types"
+
 # plugin-ui
 cd /Users/mahbub/Development/Projects/core-dokan/wp-content/plugins/plugin-ui
+git add src/components/settings/
 git commit -m "refactor(settings): drop dependency_key from schema types and formatter"
 ```
 
@@ -749,26 +702,6 @@ Drop the ~407 dot-path `dependency_key` literals in `Settings.stories.tsx`. Repl
 
 ```bash
 git commit -m "docs(settings): extending guide and stories reflect dependency_key removal"
-```
-
----
-
-## Phase 6 — Compat removal (DEFERRED, target: 2 minor releases after Phase 2)
-
-### Task 13: Remove the REST dot-path fallback
-
-Once Pro has shipped a release that uses flat-key rules AND adoption metrics show no `_doing_it_wrong` log entries for the dot-path fallback for 2 release cycles, remove the fallback.
-
-**Files:**
-- Modify: `includes/REST/AdminSettingsController.php` (delete lines 179-186 + the `_doing_it_wrong` block)
-- Modify: `tests/php/src/REST/SettingsRoundTripTest.php` (remove the dot-path PUT test)
-
-- [ ] **Step 1: Delete the fallback**
-- [ ] **Step 2: Delete the corresponding test**
-- [ ] **Step 3: Commit**
-
-```bash
-git commit -m "refactor(settings): remove transitional dot-path PUT fallback"
 ```
 
 ---
@@ -804,17 +737,24 @@ git commit -m "refactor(settings): remove transitional dot-path PUT fallback"
 | Third-party plugin reads `element.dependency_key` from REST response after Phase 4 | LOW | Extension UI breaks | Deprecated getter still returns `id` server-side; on the client, addons should read `element.id` |
 | Stored show_if-related localStorage caches use old dot-path keys | LOW | One-time empty state on first load | Bust cache in upgrade hook |
 
-## Estimated effort (revised)
+## Estimated effort (revised 2nd pass)
 
 | Phase | Tasks | Hours | Status |
 | --- | --- | --- | --- |
-| 0. Discovery | 1 (T0) | 0.5 | ✅ DONE |
-| 1. Tolerance | 2 (T1–T2) | 2 | pending |
-| 2. Rule rewrite | 5 (T3–T7) | **8** (Pro coordination + audit + renames + sniff) | pending |
-| 3. Consumer migration | 3 (T8–T10) | 3 | pending |
-| 4. Removal | 1 (T11) | 1 | pending |
-| 5. Documentation | 1 (T12) | 1 | pending |
-| 6. Compat removal | 1 (T13) | 0.5 | DEFERRED |
-| **Total** | 14 | **~16h** | — |
+| 0. Discovery | 1 (T0) | 0.5 | ✅ DONE (`9e40fd2b8`) |
+| 1. Server emits id; client preserves | 2 (T1–T2) | 1.5 | pending |
+| 2. Rule rewrite + id renames + sniff | 5 (T3–T7) | **6** (no migration helper, no read-side compat shim) | pending |
+| 3. Consumer migration + REST fallback delete | 3 (T8–T10) | 2 | pending |
+| 4. Drop dependency_key outright | 1 (T11) | 1 | pending |
+| 5. Documentation | 1 (T12) | 0.5 | pending |
+| **Total** | 13 | **~11.5h** | — |
 
-Plus calendar time for Pro coordination — likely 1–2 weeks for Pro PR review and a Lite-Pro coordinated release window.
+Plus calendar time for the dokan-pro PR (Task 6) — likely 2–3 days for Pro review and a coordinated merge window. No deprecation hold-back; the changes land as a single coordinated release.
+
+## What changed from the first revision
+
+- **Phase 6 (compat removal) eliminated.** No transitional dot-path shim in REST controller — Task 10 just deletes the fallback. Total task count went from 14 → 13.
+- **Task 4 lost the `IdRenameMigration` helper.** Dev/QA installs re-save settings manually; rename map shipped in release notes.
+- **Task 10 lost the `_doing_it_wrong` step.** Fallback is gone, not deprecated.
+- **Task 11 lost the `@deprecated` shim on the getter/setter.** Methods deleted outright; PHP fatals find any missed callers.
+- **Estimated effort dropped ~4.5 hours.** The deprecation dance was the cheapest part of the plan but added meaningful complexity to several tasks; eliminating it tightens the whole rollout.
