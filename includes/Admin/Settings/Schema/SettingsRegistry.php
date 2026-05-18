@@ -7,11 +7,18 @@ namespace WeDevs\Dokan\Admin\Settings\Schema;
  *
  * Responsibilities:
  * 1. Collect the flat array schema from SettingsSchema::get_schema().
- * 2. Auto-generate hook_key and dependency_key for elements that omit them.
+ * 2. Auto-generate hook_key for elements that omit it.
  * 3. Fire hook_key filters on structural nodes so Pro/extensions can inject children.
  * 4. Populate field values from wp_options (falling back to defaults).
  * 5. Fill default properties (display, dependencies, validations, etc.).
  * 6. Run SchemaValidator in debug/dev mode.
+ *
+ * `dependency_key` is intentionally NOT generated here. The plugin-ui
+ * `settings-formatter` recomputes it from the parent chain at render time
+ * (`[parent.dependency_key, child.id].filter(Boolean).join('.')`), so any
+ * server-side value would be immediately overwritten on the client. Legacy
+ * class-based elements still populate it via
+ * `SettingsElement::set_dependency_key()`.
  *
  * @since DOKAN_SINCE
  */
@@ -44,7 +51,7 @@ class SettingsRegistry {
         // 1. Collect base schema.
         $elements = SettingsSchema::get_schema();
 
-        // 2. Auto-generate hook_key and dependency_key.
+        // 2. Auto-generate hook_key.
         $elements = $this->generate_keys( $elements );
 
         // 3. Fire hook_key filters on structural nodes.
@@ -78,16 +85,20 @@ class SettingsRegistry {
     }
 
     /**
-     * Auto-generate hook_key and dependency_key for elements that don't have them.
+     * Auto-generate hook_key for elements that don't have one.
      *
-     * Hook_key format: `dokan_settings_{page}_{subpage}_{section}_{field}_children`
-     * Dependency_key for fields: equals the field's id (flat storage, keyed by id).
+     * Hook_key format: `dokan_settings_{page}_{subpage}_{section}_{field}_children`.
+     *
+     * `dependency_key` is intentionally not assigned here — the plugin-ui
+     * `settings-formatter` recomputes it from the parent chain on the client
+     * (`[parent.dependency_key, child.id].filter(Boolean).join('.')`) and any
+     * server value would be immediately overwritten.
      *
      * @since DOKAN_SINCE
      *
      * @param array $elements Flat array of schema elements.
      *
-     * @return array Elements with hook_key and dependency_key populated.
+     * @return array Elements with hook_key populated.
      */
     private function generate_keys( array $elements ): array {
         // Build a lookup for resolving parent chains.
@@ -109,8 +120,8 @@ class SettingsRegistry {
         ];
 
         foreach ( $elements as &$element ) {
-            // Skip if already set.
-            if ( ! empty( $element['hook_key'] ) && ! empty( $element['dependency_key'] ) ) {
+            // Skip if hook_key already set.
+            if ( ! empty( $element['hook_key'] ) ) {
                 continue;
             }
 
@@ -149,14 +160,7 @@ class SettingsRegistry {
             }
 
             // hook_key: dokan_settings_{full_path}_children
-            if ( empty( $element['hook_key'] ) ) {
-                $element['hook_key'] = 'dokan_settings_' . implode( '_', $path ) . '_children';
-            }
-
-            // dependency_key: equals the field's id (storage is flat, keyed by id).
-            if ( empty( $element['dependency_key'] ) && 'field' === ( $element['type'] ?? '' ) && ! empty( $element['id'] ) ) {
-                $element['dependency_key'] = $element['id'];
-            }
+            $element['hook_key'] = 'dokan_settings_' . implode( '_', $path ) . '_children';
         }
         unset( $element );
 
