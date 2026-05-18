@@ -18,6 +18,9 @@
     <exclude-pattern type="relative">(^includes)(\/vendor)</exclude-pattern>
     <exclude-pattern type="relative">^/tests/*</exclude-pattern>
     <exclude-pattern type="relative">^/dependencies/*</exclude-pattern>
+    <exclude-pattern type="relative">^/tools/phpcs-sniffs/*</exclude-pattern>
+    <exclude-pattern>*/openspec/*</exclude-pattern>
+    <exclude-pattern>*/\.claude/*</exclude-pattern>
     <exclude-pattern type="relative">*\.twig$</exclude-pattern>
     <exclude-pattern type="relative">*\.css$</exclude-pattern>
     <exclude-pattern type="relative">*\.scss$</exclude-pattern>
@@ -39,6 +42,10 @@
     <!-- Rules: Check PHP version compatibility-->
     <!-- https://github.com/PHPCompatibility/PHPCompatibilityWP -->
     <rule ref="PHPCompatibilityWP"/>
+
+    <!-- Rules: Dokan custom sniffs -->
+    <!-- Forbid dot-path dependency keys in admin settings schema (Tasks 5-7 of dependency_key cleanup). -->
+    <rule ref="./tools/phpcs-sniffs/DokanFlatShowIf/ruleset.xml"/>
 
     <!-- Rules: WordPress Coding Standards -->
     <!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards -->

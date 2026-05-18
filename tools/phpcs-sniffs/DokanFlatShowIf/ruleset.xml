@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<ruleset name="DokanFlatShowIf">
+    <description>Forbid dot-path dependency keys in admin settings schema.</description>
+    <rule ref="./Sniffs/FlatShowIf/FlatShowIfSniff.php"/>
+</ruleset>
