@@ -11,12 +11,31 @@ class VendorOnboardingRegistration extends DokanShortcode {
     /**
      * Vendor onboarding form shortcode callback
      *
+     * @since 5.0.0
+     *
+     * Supported attributes:
+     * - show_login        (yes|no) Show the login form. Default: yes.
+     * - show_registration (yes|no) Show the vendor registration form. Default: yes.
+     *
+     * Hiding one section centers the other in the layout.
+     *
+     * @param array $atts
+     *
      * @return string
      */
     public function render_shortcode( $atts ) {
         if ( is_user_logged_in() ) {
             return esc_html__( 'You are already logged in', 'dokan-lite' );
         }
+
+        $atts = shortcode_atts(
+            [
+                'show_login'        => 'yes',
+                'show_registration' => 'yes',
+            ],
+            $atts,
+            $this->shortcode
+        );
 
         dokan()->scripts->load_form_validate_script();
 
@@ -25,7 +44,9 @@ class VendorOnboardingRegistration extends DokanShortcode {
         wp_enqueue_script( 'dokan-vendor-address' );
         wp_enqueue_script( 'wc-password-strength-meter' );
 
-        $data = dokan_get_seller_registration_form_data();
+        $data                      = dokan_get_seller_registration_form_data();
+        $data['show_login']        = wc_string_to_bool( $atts['show_login'] );
+        $data['show_registration'] = wc_string_to_bool( $atts['show_registration'] );
 
         ob_start();
         dokan_get_template_part( 'account/vendor-onboarding', false, [ 'data' => $data ] );
