@@ -46,6 +46,8 @@
     <!-- Rules: Dokan custom sniffs -->
     <!-- Forbid dot-path dependency keys in admin settings schema (Tasks 5-7 of dependency_key cleanup). -->
     <rule ref="./tools/phpcs-sniffs/DokanFlatShowIf/ruleset.xml"/>
+    <!-- Forbid raw update_option/add_option/delete_option calls against dokan_admin_settings outside SettingsRepository. -->
+    <rule ref="./tools/phpcs-sniffs/DokanSettingsRepository/ruleset.xml"/>
 
     <!-- Rules: WordPress Coding Standards -->
     <!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards -->
