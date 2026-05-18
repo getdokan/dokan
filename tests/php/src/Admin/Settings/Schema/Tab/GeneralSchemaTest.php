@@ -132,14 +132,14 @@ class GeneralSchemaTest extends DokanTestCase {
         foreach ( self::LEGACY_OPTIONS as $option ) {
             delete_option( $option );
         }
-        delete_option( 'dokan_settings' );
+        delete_option( 'dokan_admin_settings' );
     }
 
     public function tear_down() {
         foreach ( self::LEGACY_OPTIONS as $option ) {
             delete_option( $option );
         }
-        delete_option( 'dokan_settings' );
+        delete_option( 'dokan_admin_settings' );
         parent::tear_down();
     }
 
@@ -238,13 +238,13 @@ class GeneralSchemaTest extends DokanTestCase {
                 update_option( $legacy_option, [ $legacy_field => $sentinel ] );
 
                 $slice        = $bridge->transform_legacy_payload_to_new( $legacy_option, [ $legacy_field => $sentinel ] );
-                $existing_new = get_option( 'dokan_settings', [] );
+                $existing_new = get_option( 'dokan_admin_settings', [] );
                 update_option(
-                    'dokan_settings',
+                    'dokan_admin_settings',
                     array_merge( is_array( $existing_new ) ? $existing_new : [], $slice )
                 );
 
-                $new = get_option( 'dokan_settings', [] );
+                $new = get_option( 'dokan_admin_settings', [] );
                 $this->assertSame(
                     $sentinel,
                     $new[ $new_id ] ?? null,
@@ -279,9 +279,9 @@ class GeneralSchemaTest extends DokanTestCase {
                 $payload[ $element['id'] ] = '__T_reverse_' . $element['id'];
             }
 
-            $existing_new = get_option( 'dokan_settings', [] );
+            $existing_new = get_option( 'dokan_admin_settings', [] );
             update_option(
-                'dokan_settings',
+                'dokan_admin_settings',
                 array_merge( is_array( $existing_new ) ? $existing_new : [], $payload )
             );
 

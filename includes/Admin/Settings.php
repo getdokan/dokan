@@ -183,11 +183,8 @@ class Settings {
                     $bridge    = dokan_get_container()->get( \WeDevs\Dokan\Admin\Settings\Migration\LegacySettingsBridge::class );
                     $new_slice = $bridge->transform_legacy_payload_to_new( $option_name, $option_value );
                     if ( ! empty( $new_slice ) ) {
-                        $existing_new = get_option( 'dokan_settings', [] );
-                        if ( ! is_array( $existing_new ) ) {
-                            $existing_new = [];
-                        }
-                        update_option( 'dokan_settings', array_merge( $existing_new, $new_slice ), true );
+                        $repo = dokan_get_container()->get( \WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository::class );
+                        $repo->update( $new_slice );
                     }
                 } catch ( \Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
                     // Container not booted — skip propagation, legacy save still succeeds.

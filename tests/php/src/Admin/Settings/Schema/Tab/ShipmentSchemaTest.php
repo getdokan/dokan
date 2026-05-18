@@ -135,7 +135,7 @@ class ShipmentSchemaTest extends DokanTestCase {
         foreach ( self::LEGACY_OPTIONS as $option ) {
             delete_option( $option );
         }
-        delete_option( 'dokan_settings' );
+        delete_option( 'dokan_admin_settings' );
         delete_option( self::DELIVERY_SLOT_SIDE_OPTION );
     }
 
@@ -143,7 +143,7 @@ class ShipmentSchemaTest extends DokanTestCase {
         foreach ( self::LEGACY_OPTIONS as $option ) {
             delete_option( $option );
         }
-        delete_option( 'dokan_settings' );
+        delete_option( 'dokan_admin_settings' );
         delete_option( self::DELIVERY_SLOT_SIDE_OPTION );
         parent::tear_down();
     }
@@ -223,13 +223,13 @@ class ShipmentSchemaTest extends DokanTestCase {
                 update_option( $legacy_option, [ $legacy_field => $sentinel ] );
 
                 $slice        = $bridge->transform_legacy_payload_to_new( $legacy_option, [ $legacy_field => $sentinel ] );
-                $existing_new = get_option( 'dokan_settings', [] );
+                $existing_new = get_option( 'dokan_admin_settings', [] );
                 update_option(
-                    'dokan_settings',
+                    'dokan_admin_settings',
                     array_merge( is_array( $existing_new ) ? $existing_new : [], $slice )
                 );
 
-                $new = get_option( 'dokan_settings', [] );
+                $new = get_option( 'dokan_admin_settings', [] );
                 $this->assertSame(
                     $sentinel,
                     $new[ $new_id ] ?? null,
@@ -264,9 +264,9 @@ class ShipmentSchemaTest extends DokanTestCase {
                 $payload[ $element['id'] ] = '__T_reverse_' . $element['id'];
             }
 
-            $existing_new = get_option( 'dokan_settings', [] );
+            $existing_new = get_option( 'dokan_admin_settings', [] );
             update_option(
-                'dokan_settings',
+                'dokan_admin_settings',
                 array_merge( is_array( $existing_new ) ? $existing_new : [], $payload )
             );
 
@@ -619,7 +619,7 @@ class ShipmentSchemaTest extends DokanTestCase {
             // Seed `dokan_settings` with the new-UI value AND mirror to
             // legacy via the bridge — this is the exact path the new REST
             // writer will take.
-            update_option( 'dokan_settings', [ $status_field['id'] => 'on' ] );
+            update_option( 'dokan_admin_settings', [ $status_field['id'] => 'on' ] );
 
             $bridge = new LegacySettingsBridge();
             $bridge->write_new_to_legacy( [ $status_field['id'] => 'on' ] );

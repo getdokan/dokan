@@ -74,12 +74,12 @@ class AiAssistSchemaTest extends DokanTestCase {
     public function set_up() {
         parent::set_up();
         delete_option( 'dokan_ai' );
-        delete_option( 'dokan_settings' );
+        delete_option( 'dokan_admin_settings' );
     }
 
     public function tear_down() {
         delete_option( 'dokan_ai' );
-        delete_option( 'dokan_settings' );
+        delete_option( 'dokan_admin_settings' );
         parent::tear_down();
     }
 
@@ -131,10 +131,10 @@ class AiAssistSchemaTest extends DokanTestCase {
                 update_option( 'dokan_ai', [ $legacy_field => $sentinel ] );
 
                 $slice        = $bridge->transform_legacy_payload_to_new( 'dokan_ai', [ $legacy_field => $sentinel ] );
-                $existing_new = get_option( 'dokan_settings', [] );
-                update_option( 'dokan_settings', array_merge( is_array( $existing_new ) ? $existing_new : [], $slice ) );
+                $existing_new = get_option( 'dokan_admin_settings', [] );
+                update_option( 'dokan_admin_settings', array_merge( is_array( $existing_new ) ? $existing_new : [], $slice ) );
 
-                $new = get_option( 'dokan_settings', [] );
+                $new = get_option( 'dokan_admin_settings', [] );
                 $this->assertSame(
                     $sentinel,
                     $new[ $new_id ] ?? null,
@@ -167,9 +167,9 @@ class AiAssistSchemaTest extends DokanTestCase {
                 $payload[ $element['id'] ] = '__T_reverse_' . $element['id'];
             }
 
-            $existing_new = get_option( 'dokan_settings', [] );
+            $existing_new = get_option( 'dokan_admin_settings', [] );
             update_option(
-                'dokan_settings',
+                'dokan_admin_settings',
                 array_merge( is_array( $existing_new ) ? $existing_new : [], $payload )
             );
 

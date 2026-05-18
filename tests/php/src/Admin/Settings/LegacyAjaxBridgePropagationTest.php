@@ -25,12 +25,12 @@ class LegacyAjaxBridgePropagationTest extends DokanTestCase {
             'dokan_appearance',
             [ 'store_banner_width' => 555 ]
         );
-        $existing = get_option( 'dokan_settings', [] );
-        update_option( 'dokan_settings', array_merge( is_array( $existing ) ? $existing : [], $slice ), true );
+        $existing = get_option( 'dokan_admin_settings', [] );
+        update_option( 'dokan_admin_settings', array_merge( is_array( $existing ) ? $existing : [], $slice ), true );
 
         remove_filter( 'dokan_get_admin_settings_schema', $cb );
-        $stored = get_option( 'dokan_settings', [] );
-        delete_option( 'dokan_settings' );
+        $stored = get_option( 'dokan_admin_settings', [] );
+        delete_option( 'dokan_admin_settings' );
 
         $this->assertSame( 555, $stored['banner_width'] );
     }

@@ -2,8 +2,11 @@
 
 namespace WeDevs\Dokan\Admin\Settings\Migration;
 
+use WeDevs\Dokan\Admin\Settings\Migration\Transformer\CallableTransformer;
 use WeDevs\Dokan\Admin\Settings\Migration\Transformer\PassThroughTransformer;
 use WeDevs\Dokan\Admin\Settings\Migration\Transformer\TransformerInterface;
+use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository;
+use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepositoryInterface;
 use WeDevs\Dokan\Admin\Settings\Schema\SettingsSchema;
 
 /**
@@ -41,18 +44,63 @@ class LegacySettingsBridge {
     private ?array $by_option = null;
 
     /**
-     * Cached transformer FQCNs keyed by new-flat id.
+     * Cached transformer specs keyed by new-flat id. Each value is either a
+     * FQCN string (class implementing TransformerInterface) or an array shape
+     * `['to_new' => callable, 'to_legacy' => callable]` for callable adapters.
      *
-     * @var array<string,string>|null
+     * @var array<string,string|array{to_new:mixed,to_legacy:mixed}>|null
      */
     private ?array $transformers = null;
 
     /**
-     * Cached resolved transformer instances keyed by FQCN.
+     * Cached resolved transformer instances keyed by FQCN (for class specs)
+     * or by `callable:<new_key>` (for callable-pair specs).
      *
      * @var array<string,TransformerInterface>
      */
     private array $transformer_cache = [];
+
+    /**
+     * Re-entry latch for {@see build_map()}. True while a build is in flight.
+     *
+     * `harvest_from_schema()` applies the `dokan_get_admin_settings_schema`
+     * filter; some Pro module schema callbacks call `dokan_get_option()` which
+     * funnels back through the bridge. Without this guard the nested call would
+     * recurse indefinitely. While building, nested callers receive the
+     * partially-built map (or an empty array on the first call) — a tolerable
+     * approximation, since the only callers in that path are computing their
+     * own default values during schema construction.
+     *
+     * @var bool
+     */
+    private bool $building_map = false;
+
+    /**
+     * Number of callbacks attached to `dokan_get_admin_settings_schema` when
+     * the cached map was last built. Used to invalidate the memo when more
+     * schema providers register later in the request — Pro modules register
+     * during `init` at varying priorities, so a bridge caller firing at init
+     * priority 5 would otherwise freeze a half-built map before priority 10
+     * registrations land.
+     *
+     * @var int|null
+     */
+    private ?int $cached_filter_count = null;
+
+    /**
+     * Settings repository — used to read the current new payload when
+     * projecting it back into a legacy-shaped array.
+     *
+     * @var SettingsRepositoryInterface
+     */
+    private SettingsRepositoryInterface $settings_repo;
+
+    /**
+     * @param SettingsRepositoryInterface|null $settings_repo Optional repo for testing.
+     */
+    public function __construct( ?SettingsRepositoryInterface $settings_repo = null ) {
+        $this->settings_repo = $settings_repo ?? new SettingsRepository();
+    }
 
     /**
      * Return the normalized mapping of new flat ids to legacy addresses.
@@ -155,7 +203,7 @@ class LegacySettingsBridge {
      */
     public function hydrate_legacy_from_new( string $option_name, array $legacy_option ): array {
         $this->build_map();
-        $new_option = get_option( 'dokan_settings', [] );
+        $new_option = $this->settings_repo->all();
         if ( ! is_array( $new_option ) ) {
             $new_option = [];
         }
@@ -251,10 +299,27 @@ class LegacySettingsBridge {
      * @return TransformerInterface
      */
     private function resolve_transformer( string $new_key ): TransformerInterface {
-        $fqcn = $this->transformers[ $new_key ] ?? null;
-        if ( null === $fqcn || '' === $fqcn ) {
+        $spec = $this->transformers[ $new_key ] ?? null;
+        if ( null === $spec || '' === $spec ) {
             return $this->get_pass_through();
         }
+
+        if ( is_array( $spec ) ) {
+            $cache_key = 'callable:' . $new_key;
+            if ( isset( $this->transformer_cache[ $cache_key ] ) ) {
+                return $this->transformer_cache[ $cache_key ];
+            }
+            try {
+                $instance = new CallableTransformer( $spec['to_new'], $spec['to_legacy'] );
+            } catch ( \Throwable $unused ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+                unset( $unused );
+                $instance = $this->get_pass_through();
+            }
+            $this->transformer_cache[ $cache_key ] = $instance;
+            return $instance;
+        }
+
+        $fqcn = $spec;
         if ( isset( $this->transformer_cache[ $fqcn ] ) ) {
             return $this->transformer_cache[ $fqcn ];
         }
@@ -303,31 +368,54 @@ class LegacySettingsBridge {
     /**
      * Build (and cache) the mapping, defaults index, and reverse-by-option index.
      *
+     * The map is memoized but keyed on the current callback count of
+     * `dokan_get_admin_settings_schema`. Pro modules register their
+     * filter callbacks during `init` at varying priorities; if a bridge
+     * caller fires before all are registered, the count grows on the next
+     * call and the memo invalidates automatically.
+     *
+     * Recursion safety: see `$building_map`.
+     *
      * @return array<string,LegacyAddress>
      */
     private function build_map(): array {
-        if ( $this->map !== null ) {
+        if ( $this->building_map ) {
+            return is_array( $this->map ) ? $this->map : [];
+        }
+
+        global $wp_filter;
+        $filter_count = ( isset( $wp_filter['dokan_get_admin_settings_schema'] ) && ! empty( $wp_filter['dokan_get_admin_settings_schema']->callbacks ) )
+            ? count( $wp_filter['dokan_get_admin_settings_schema']->callbacks, COUNT_RECURSIVE )
+            : 0;
+
+        if ( $this->map !== null && $this->cached_filter_count === $filter_count ) {
             return $this->map;
         }
 
-        [ $map, $defaults, $transformers ] = $this->harvest_from_schema();
+        $this->building_map = true;
+        try {
+            [ $map, $defaults, $transformers ] = $this->harvest_from_schema();
 
-        /**
-         * Filter the legacy-to-new key mapping.
-         *
-         * Allows addons to register mappings the per-field `legacy_key`
-         * attribute cannot express (legacy-only fields, bulk additions,
-         * non-`dokan_*` source options).
-         *
-         * @since DOKAN_SINCE
-         *
-         * @param array<string,string|array{option:string,field:string}> $map
-         */
-        $map = apply_filters( 'dokan_legacy_settings_key_mapping', $map );
+            /**
+             * Filter the legacy-to-new key mapping.
+             *
+             * Allows addons to register mappings the per-field `legacy_key`
+             * attribute cannot express (legacy-only fields, bulk additions,
+             * non-`dokan_*` source options).
+             *
+             * @since DOKAN_SINCE
+             *
+             * @param array<string,string|array{option:string,field:string}> $map
+             */
+            $map = apply_filters( 'dokan_legacy_settings_key_mapping', $map );
 
-        [ $this->map, $this->by_option ] = $this->normalize( $map );
-        $this->defaults                  = $defaults;
-        $this->transformers              = $transformers;
+            [ $this->map, $this->by_option ] = $this->normalize( $map );
+            $this->defaults                  = $defaults;
+            $this->transformers              = $transformers;
+            $this->cached_filter_count       = $filter_count;
+        } finally {
+            $this->building_map = false;
+        }
 
         return $this->map;
     }
@@ -339,7 +427,7 @@ class LegacySettingsBridge {
      * Bridge-only fields participate in mapping but are not emitted by the
      * new UI; they still round-trip through the bridge.
      *
-     * @return array{0: array<string,string|array{option:string,field:string}>, 1: array<string,mixed>, 2: array<string,string>}
+     * @return array{0: array<string,string|array{option:string,field:string}>, 1: array<string,mixed>, 2: array<string,string|array{to_new:mixed,to_legacy:mixed}>}
      */
     private function harvest_from_schema(): array {
         $map          = [];
@@ -367,6 +455,15 @@ class LegacySettingsBridge {
             $transformer = $element['legacy_transformer'] ?? null;
             if ( is_string( $transformer ) && '' !== $transformer ) {
                 $transformers[ $id ] = $transformer;
+            } elseif (
+                is_array( $transformer )
+                && array_key_exists( 'to_new', $transformer )
+                && array_key_exists( 'to_legacy', $transformer )
+            ) {
+                $transformers[ $id ] = [
+                    'to_new'    => $transformer['to_new'],
+                    'to_legacy' => $transformer['to_legacy'],
+                ];
             }
         }
 

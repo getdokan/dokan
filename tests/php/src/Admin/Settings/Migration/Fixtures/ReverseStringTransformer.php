@@ -23,4 +23,15 @@ final class ReverseStringTransformer implements TransformerInterface {
     public function to_legacy( $new_value ) {
         return is_string( $new_value ) ? strrev( $new_value ) : $new_value;
     }
+
+    /**
+     * Static reverser exposed for `[Class, method]` callable-transformer tests.
+     *
+     * @param mixed $value
+     *
+     * @return mixed
+     */
+    public static function reverse( $value ) {
+        return is_string( $value ) ? strrev( $value ) : $value;
+    }
 }

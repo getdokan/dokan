@@ -15,13 +15,13 @@ class DokanGetOptionReflectsNewSettingsTest extends DokanTestCase {
         ];
         $cb = static function () use ( $fixture ) { return $fixture; };
         add_filter( 'dokan_get_admin_settings_schema', $cb );
-        update_option( 'dokan_settings', [ 'banner_width' => 1280 ] );
+        update_option( 'dokan_admin_settings', [ 'banner_width' => 1280 ] );
         delete_option( 'dokan_appearance' );
 
         $value = dokan_get_option( 'store_banner_width', 'dokan_appearance', 'unused' );
 
         remove_filter( 'dokan_get_admin_settings_schema', $cb );
-        delete_option( 'dokan_settings' );
+        delete_option( 'dokan_admin_settings' );
 
         $this->assertSame( 1280, $value );
     }

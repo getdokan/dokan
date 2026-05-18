@@ -21,9 +21,9 @@ use WP_REST_Request;
  *  1. Legacy AJAX save -> new `dokan_settings` (via
  *     `bridge->transform_legacy_payload_to_new()` then merge+update).
  *  2. REST PUT (writes `dokan_settings`) -> legacy `dokan_*` option
- *     (via the `update_option_dokan_settings` listener registered by
+ *     (via the `dokan_admin_settings_changed` listener registered by
  *     `BridgeBootstrap`).
- *  3. Direct `update_option('dokan_settings', ...)` -> legacy `dokan_*`
+ *  3. Direct `update_option('dokan_admin_settings', ...)` -> legacy `dokan_*`
  *     option (same listener, independent of the REST controller).
  *
  * @group admin-settings
@@ -69,12 +69,12 @@ class SettingsRoundTripTest extends DokanTestCase {
 
         // Clean storage before every test so assertions don't see stale
         // values from previous runs.
-        delete_option( 'dokan_settings' );
+        delete_option( 'dokan_admin_settings' );
         delete_option( 'dokan_general' );
 
         // Belt-and-suspenders: the production bootstrap (via
         // `WeDevs_Dokan::init_hooks()`) already registers a
-        // `BridgeBootstrap` listener on `update_option_dokan_settings`.
+        // `BridgeBootstrap` listener on `dokan_admin_settings_changed`.
         // The test registers a second instance so reverse-propagation is
         // guaranteed to fire even if the test environment skipped the
         // hookable boot pass.
@@ -85,12 +85,11 @@ class SettingsRoundTripTest extends DokanTestCase {
 
     public function tear_down() {
         if ( $this->test_bootstrap ) {
-            remove_action( 'update_option_dokan_settings', [ $this->test_bootstrap, 'on_new_option_updated' ], 10 );
-            remove_action( 'add_option_dokan_settings', [ $this->test_bootstrap, 'on_new_option_added' ], 10 );
+            remove_action( 'dokan_admin_settings_changed', [ $this->test_bootstrap, 'on_settings_changed' ], 10 );
             $this->test_bootstrap = null;
         }
         delete_option( 'dokan_csv_schema_enabled' );
-        delete_option( 'dokan_settings' );
+        delete_option( 'dokan_admin_settings' );
         delete_option( 'dokan_general' );
         parent::tear_down();
     }
@@ -136,15 +135,12 @@ class SettingsRoundTripTest extends DokanTestCase {
 
         $payload = [ 'setup_wizard_logo_url' => 'https://example.test/logo.png' ];
 
-        $bridge   = new LegacySettingsBridge();
-        $slice    = $bridge->transform_legacy_payload_to_new( 'dokan_general', $payload );
-        $existing = get_option( 'dokan_settings', [] );
-        if ( ! is_array( $existing ) ) {
-            $existing = [];
-        }
-        update_option( 'dokan_settings', array_merge( $existing, $slice ), true );
+        $bridge = new LegacySettingsBridge();
+        $slice  = $bridge->transform_legacy_payload_to_new( 'dokan_general', $payload );
+        $repo   = new \WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository();
+        $repo->update( $slice );
 
-        $new = get_option( 'dokan_settings', [] );
+        $new = get_option( 'dokan_admin_settings', [] );
 
         $this->assertIsArray( $new );
         $this->assertArrayHasKey(
@@ -164,7 +160,7 @@ class SettingsRoundTripTest extends DokanTestCase {
      *
      * The new UI calls PUT `/dokan/v1/admin/settings/{page_id}`, which
      * writes `dokan_settings`. The `BridgeBootstrap` listener (registered
-     * on `update_option_dokan_settings`) mirrors mapped keys to their
+     * on `dokan_admin_settings_changed`) mirrors mapped keys to their
      * legacy option counterparts. Uses the hand-authored `vendor_store_url`
      * field on the `general` page which carries `legacy_key
      * => 'dokan_general.custom_store_url'`.
@@ -199,7 +195,7 @@ class SettingsRoundTripTest extends DokanTestCase {
         $this->assertSame( 200, $response->get_status() );
 
         // Verify the flat option was written.
-        $new = get_option( 'dokan_settings', [] );
+        $new = get_option( 'dokan_admin_settings', [] );
         $this->assertSame(
             'mystorez',
             $new['vendor_store_url'] ?? null,
@@ -220,69 +216,66 @@ class SettingsRoundTripTest extends DokanTestCase {
     /**
      * Direct write of `dokan_settings` fires reverse propagation.
      *
-     * Isolates the `update_option_dokan_settings` listener from the REST
-     * stack: any code path that writes the flat option (the REST
-     * controller, a migration, an addon) must trigger the mirror.
+     * Isolates the `dokan_admin_settings_changed` listener from the REST
+     * stack: any code path that goes through the repository (REST
+     * controller, migration, addon, direct call) triggers the mirror.
      *
      * @return void
      */
-    public function test_dokan_settings_update_fires_reverse_propagation(): void {
+    public function test_repository_update_fires_reverse_propagation(): void {
         $vendor_field = $this->find_csv_field( 'dokan_general', 'setup_wizard_logo_url' );
         if ( null === $vendor_field ) {
             $this->markTestSkipped( 'Expected mapped field "setup_wizard_logo_url" not found.' );
             return;
         }
 
-        update_option(
-            'dokan_settings',
-            [ $vendor_field['id'] => 'reverse_value' ],
-            true
-        );
+        ( new \WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository() )
+            ->update( [ $vendor_field['id'] => 'reverse_value' ] );
 
         $legacy = get_option( 'dokan_general', [] );
         $this->assertIsArray( $legacy );
         $this->assertSame(
             'reverse_value',
             $legacy['setup_wizard_logo_url'] ?? null,
-            'Writing dokan_settings must mirror mapped keys to the legacy dokan_general option.'
+            'Repository update must mirror mapped keys to the legacy dokan_general option.'
         );
     }
 
     /**
-     * Dot-path payload keys are silently ignored.
+     * Dot-path payload keys resolve to their leaf id.
      *
-     * Plugin-ui used to emit dot-path keys (parent.child.field), so the
-     * controller had a last-segment fallback to resolve them. After the
-     * dot-path cleanup, the controller only resolves field ids — dot-path
-     * keys no longer match any field, so they are dropped without
-     * updating any value.
+     * plugin-ui emits dot-path keys (`parent.child.field`) reflecting its
+     * internal tree state. The controller normalizes each key to the last
+     * segment, which is what `SchemaValidator` guarantees to be globally
+     * unique among field ids. This keeps the REST contract id-only from the
+     * schema's perspective while accepting the form's emitted shape.
      *
      * @return void
      */
-    public function test_rest_put_with_dot_path_payload_skips_unrecognized_key(): void {
+    public function test_rest_put_with_dot_path_payload_resolves_to_leaf_id(): void {
         // Pre-condition: a known field has a value in storage.
-        update_option( 'dokan_settings', [ 'vendor_store_url' => 'unchanged' ] );
+        ( new \WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository() )
+            ->update( [ 'vendor_store_url' => 'unchanged' ] );
 
         $request = new WP_REST_Request( 'PUT', '/' . $this->namespace . '/settings/general' );
         $request->set_body_params(
             [
                 'page_id' => 'general',
                 'values'  => [
-                    // Dot-path key — no longer resolved by the controller.
-                    'general.marketplace.vendor_store_url' => 'ignored',
+                    // Dot-path key — controller strips to leaf id `vendor_store_url`.
+                    'general.marketplace.vendor_store_url' => 'updated-via-dotpath',
                 ],
             ]
         );
 
         rest_do_request( $request );
 
-        // Dot-path key didn't match any field id; the value is silently dropped.
-        $settings = get_option( 'dokan_settings', [] );
+        $settings = get_option( 'dokan_admin_settings', [] );
         $this->assertIsArray( $settings );
         $this->assertSame(
-            'unchanged',
+            'updated-via-dotpath',
             $settings['vendor_store_url'] ?? null,
-            'Dot-path payload key must not resolve to vendor_store_url anymore.'
+            'Dot-path payload key must resolve to its leaf id (vendor_store_url).'
         );
     }
 
@@ -308,15 +301,12 @@ class SettingsRoundTripTest extends DokanTestCase {
         $legacy_payload = [ 'setup_wizard_logo_url' => 'first_value' ];
         update_option( 'dokan_general', $legacy_payload );
 
-        $bridge   = new LegacySettingsBridge();
-        $slice    = $bridge->transform_legacy_payload_to_new( 'dokan_general', $legacy_payload );
-        $existing = get_option( 'dokan_settings', [] );
-        if ( ! is_array( $existing ) ) {
-            $existing = [];
-        }
-        update_option( 'dokan_settings', array_merge( $existing, $slice ), true );
+        $bridge = new LegacySettingsBridge();
+        $slice  = $bridge->transform_legacy_payload_to_new( 'dokan_general', $legacy_payload );
+        $repo   = new \WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository();
+        $repo->update( $slice );
 
-        // The bootstrap mirror fires on the dokan_settings write and writes
+        // The bootstrap mirror fires on dokan_admin_settings_changed and writes
         // back to dokan_general — but with the same value, so legacy stays
         // consistent.
         $legacy_after = get_option( 'dokan_general', [] );
@@ -326,13 +316,9 @@ class SettingsRoundTripTest extends DokanTestCase {
             'Legacy option survives the round-trip without value drift.'
         );
 
-        // 2. Now write a NEW value via dokan_settings only — legacy must
+        // 2. Now write a NEW value via the repository only — legacy must
         // catch up via the listener.
-        update_option(
-            'dokan_settings',
-            [ $vendor_field['id'] => 'second_value' ],
-            true
-        );
+        $repo->update( [ $vendor_field['id'] => 'second_value' ] );
 
         $legacy_final = get_option( 'dokan_general', [] );
         $this->assertSame(

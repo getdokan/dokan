@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\REST;
 
+use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository;
+use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepositoryInterface;
 use WeDevs\Dokan\Admin\Settings\Schema\SettingsRegistry;
 use WP_Error;
 use WP_REST_Request;
@@ -33,12 +35,21 @@ class AdminSettingsController extends DokanBaseAdminController {
     protected SettingsRegistry $registry;
 
     /**
+     * Settings repository instance.
+     *
+     * @var SettingsRepositoryInterface
+     */
+    protected SettingsRepositoryInterface $settings_repo;
+
+    /**
      * Constructor.
      *
-     * @param SettingsRegistry|null $registry Optional registry instance (for testing).
+     * @param SettingsRegistry|null            $registry      Optional registry instance (for testing).
+     * @param SettingsRepositoryInterface|null $settings_repo Optional repository instance (for testing).
      */
-    public function __construct( ?SettingsRegistry $registry = null ) {
-        $this->registry = $registry ?? new SettingsRegistry();
+    public function __construct( ?SettingsRegistry $registry = null, ?SettingsRepositoryInterface $settings_repo = null ) {
+        $this->registry      = $registry ?? new SettingsRegistry();
+        $this->settings_repo = $settings_repo ?? new SettingsRepository();
     }
 
     /**
@@ -106,7 +117,7 @@ class AdminSettingsController extends DokanBaseAdminController {
          *
          * @param array $schema The full flat array schema with values.
          */
-        $schema = apply_filters( 'dokan_admin_settings_response', $schema );
+        $schema = apply_filters( 'dokan_rest_admin_settings_response', $schema );
 
         return rest_ensure_response( $schema );
     }
@@ -171,7 +182,15 @@ class AdminSettingsController extends DokanBaseAdminController {
         $sanitized         = [];
 
         foreach ( $flat_values as $key => $value ) {
-            $field = $by_id[ $key ] ?? null;
+            // The form renderer (plugin-ui) emits dot-path keys like
+            // `page.subpage.field_id` reflecting its internal tree state.
+            // Normalize to the leaf id, which is what the schema declares
+            // and what SchemaValidator guarantees to be globally unique.
+            $leaf_id = false !== strpos( (string) $key, '.' )
+                ? substr( (string) $key, strrpos( (string) $key, '.' ) + 1 )
+                : (string) $key;
+
+            $field = $by_id[ $leaf_id ] ?? null;
 
             if ( ! $field ) {
                 continue;
@@ -179,11 +198,11 @@ class AdminSettingsController extends DokanBaseAdminController {
 
             $errors = $this->validate_field_value( $field, $value );
             if ( ! empty( $errors ) ) {
-                $validation_errors[ $key ] = $errors;
+                $validation_errors[ $leaf_id ] = $errors;
                 continue;
             }
 
-            $sanitized[ $key ] = $this->sanitize_field_value( $field, $value );
+            $sanitized[ $leaf_id ] = $this->sanitize_field_value( $field, $value );
         }
 
         if ( ! empty( $validation_errors ) ) {
@@ -197,51 +216,35 @@ class AdminSettingsController extends DokanBaseAdminController {
             );
         }
 
-        $existing = get_option( 'dokan_settings', [] );
-        if ( ! is_array( $existing ) ) {
-            $existing = [];
-        }
-
         /**
          * Fired before saving admin settings.
-         *
-         * Signature retained at 3 args for backward compatibility with Pro and
-         * 3rd-party listeners that registered with `accepted_args=3`. The third
-         * argument is the wp_option key being written (always `'dokan_settings'`
-         * in the new flat-storage model) — kept as the original `$storage_key`
-         * slot so existing callbacks that gated on a specific option name still
-         * receive arg 3 they expect.
          *
          * @since DOKAN_SINCE
          *
          * @param string $page_id     The page being saved.
          * @param array  $sanitized   Sanitized values keyed by field id.
-         * @param string $storage_key The wp_options key (always 'dokan_settings').
+         * @param string $storage_key The wp_options key.
          */
-        do_action( 'dokan_before_saving_settings', $page_id, $sanitized, 'dokan_settings' );
+        do_action( 'dokan_rest_before_saving_settings', $page_id, $sanitized, SettingsRepository::OPTION_KEY );
 
-        $merged = array_merge( $existing, $sanitized );
-
-        update_option( 'dokan_settings', $merged, true );
+        $this->settings_repo->update( $sanitized );
+        $merged = $this->settings_repo->all();
 
         /**
          * Fired after saving admin settings.
-         *
-         * Signature retained at 4 args for backward compatibility with Pro and
-         * 3rd-party listeners.
          *
          * @since DOKAN_SINCE
          *
          * @param string $page_id     The page that was saved.
          * @param array  $sanitized   Sanitized values that were saved.
-         * @param string $storage_key The wp_options key (always 'dokan_settings').
-         * @param array  $merged      The full merged dokan_settings array.
+         * @param string $storage_key The wp_options key.
+         * @param array  $merged      The full merged settings array.
          */
-        do_action( 'dokan_after_saving_settings', $page_id, $sanitized, 'dokan_settings', $merged );
+        do_action( 'dokan_rest_after_saving_settings', $page_id, $sanitized, SettingsRepository::OPTION_KEY, $merged );
 
         $this->registry->clear_cache();
 
-        return rest_ensure_response( apply_filters( 'dokan_admin_settings_response', $this->registry->get_schema() ) );
+        return rest_ensure_response( apply_filters( 'dokan_rest_admin_settings_response', $this->registry->get_schema() ) );
     }
 
     /**
@@ -385,7 +388,7 @@ class AdminSettingsController extends DokanBaseAdminController {
          * @param mixed    $value   The submitted value.
          * @param string   $variant The field's `variant` (or `field_type` fallback) for variant-specific dispatch.
          */
-        return (array) apply_filters( 'dokan_admin_settings_validate_field', $errors, $field, $value, $variant );
+        return (array) apply_filters( 'dokan_rest_admin_settings_validate_field', $errors, $field, $value, $variant );
     }
 
     /**
@@ -467,7 +470,7 @@ class AdminSettingsController extends DokanBaseAdminController {
                  * @param array  $field   The field schema element.
                  * @param string $variant The field variant string.
                  */
-                return apply_filters( 'dokan_admin_settings_sanitize_field', $value, $field, $variant );
+                return apply_filters( 'dokan_rest_admin_settings_sanitize_field', $value, $field, $variant );
         }
     }
 

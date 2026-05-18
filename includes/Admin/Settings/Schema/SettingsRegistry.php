@@ -2,6 +2,9 @@
 
 namespace WeDevs\Dokan\Admin\Settings\Schema;
 
+use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository;
+use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepositoryInterface;
+
 /**
  * Settings Registry — collects, processes, and serves the admin settings schema.
  *
@@ -23,6 +26,22 @@ class SettingsRegistry {
      * @var array|null
      */
     private ?array $cache = null;
+
+    /**
+     * Settings repository — single read surface for the stored payload.
+     *
+     * @var SettingsRepositoryInterface
+     */
+    private SettingsRepositoryInterface $settings_repo;
+
+    /**
+     * Constructor.
+     *
+     * @param SettingsRepositoryInterface|null $settings_repo Optional repository for testing.
+     */
+    public function __construct( ?SettingsRepositoryInterface $settings_repo = null ) {
+        $this->settings_repo = $settings_repo ?? new SettingsRepository();
+    }
 
     /**
      * Get the fully processed settings schema.
@@ -287,10 +306,7 @@ class SettingsRegistry {
      * @return array Elements with field `value` populated.
      */
     private function populate_values( array $elements ): array {
-        $stored = get_option( 'dokan_settings', [] );
-        if ( ! is_array( $stored ) ) {
-            $stored = [];
-        }
+        $stored = $this->settings_repo->all();
 
         // Fill missing keys from legacy options where mapped (legacy view → new UI bridge).
         if ( function_exists( 'dokan_get_container' ) ) {

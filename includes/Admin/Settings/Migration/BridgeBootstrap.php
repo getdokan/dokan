@@ -7,16 +7,14 @@ use WeDevs\Dokan\Contracts\Hookable;
 /**
  * Bridge Bootstrap.
  *
- * Wires the `dokan_settings` option lifecycle into
- * {@see LegacySettingsBridge::write_new_to_legacy()} so that every save of
- * the new flat option mirrors changed keys back into the relevant legacy
- * `dokan_<section>` wp_options. This keeps direct `get_option()` Pro
- * readers seeing fresh values without forcing them through the new option.
+ * Subscribes to the repository's `dokan_admin_settings_changed` action so that
+ * every save of the new flat option mirrors changed keys back into the
+ * relevant legacy `dokan_<section>` wp_options. Direct-`get_option()`
+ * readers (Pro modules, third-party code) keep seeing fresh values
+ * without going through the new option.
  *
- * A static reentry guard prevents infinite recursion when
- * `write_new_to_legacy()` writes to a `dokan_<section>` option and a
- * downstream listener (legacy AJAX save handler or another mirror)
- * re-emits `update_option('dokan_settings', ...)`.
+ * Reentry guard prevents infinite recursion if `write_new_to_legacy()`
+ * triggers a downstream listener that re-emits a repository update.
  *
  * @since DOKAN_SINCE
  */
@@ -72,51 +70,30 @@ class BridgeBootstrap implements Hookable {
      * {@inheritDoc}
      */
     public function register_hooks(): void {
-        add_action( 'update_option_dokan_settings', [ $this, 'on_new_option_updated' ], 10, 2 );
-        add_action( 'add_option_dokan_settings', [ $this, 'on_new_option_added' ], 10, 2 );
+        add_action( 'dokan_admin_settings_changed', [ $this, 'on_settings_changed' ], 10, 3 );
     }
 
     /**
-     * Handle `update_option_dokan_settings`.
+     * Handle `dokan_admin_settings_changed`.
      *
-     * Mirrors only the keys whose value differs from the previous payload.
+     * The repository pre-computes the diff so the bootstrap doesn't need
+     * to redo that work; it just mirrors the changed keys.
      *
-     * @param mixed $old_value
-     * @param mixed $new_value
+     * @param array<string,mixed> $changed     Added/modified entries.
+     * @param array<string,mixed> $old         Payload before the write (unused).
+     * @param array<string,mixed> $new_payload Payload after the write (unused).
      *
      * @return void
      */
-    public function on_new_option_updated( $old_value, $new_value ): void {
+    public function on_settings_changed( $changed, $old = [], $new_payload = [] ): void {
+        unset( $old, $new_payload );
         if ( self::$in_reverse_write ) {
             return;
         }
-        $changed = $this->diff_changed_keys( (array) $old_value, (array) $new_value );
-        if ( empty( $changed ) ) {
+        if ( ! is_array( $changed ) || empty( $changed ) ) {
             return;
         }
         $this->mirror( $changed );
-    }
-
-    /**
-     * Handle `add_option_dokan_settings`.
-     *
-     * First-time insert: every key is "changed".
-     *
-     * @param string $option_name
-     * @param mixed  $value
-     *
-     * @return void
-     */
-    public function on_new_option_added( $option_name, $value ): void {
-        unset( $option_name );
-        if ( self::$in_reverse_write ) {
-            return;
-        }
-        $value = (array) $value;
-        if ( empty( $value ) ) {
-            return;
-        }
-        $this->mirror( $value );
     }
 
     /**
@@ -137,23 +114,5 @@ class BridgeBootstrap implements Hookable {
         } finally {
             self::$in_reverse_write = false;
         }
-    }
-
-    /**
-     * Diff two option payloads, returning only changed/added entries.
-     *
-     * @param array<string,mixed> $old_payload
-     * @param array<string,mixed> $new_payload
-     *
-     * @return array<string,mixed>
-     */
-    private function diff_changed_keys( array $old_payload, array $new_payload ): array {
-        $changed = [];
-        foreach ( $new_payload as $k => $v ) {
-            if ( ! array_key_exists( $k, $old_payload ) || $old_payload[ $k ] !== $v ) {
-                $changed[ $k ] = $v;
-            }
-        }
-        return $changed;
     }
 }

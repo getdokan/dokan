@@ -19,17 +19,17 @@ class SettingsRegistryStorageTest extends DokanTestCase {
 
     protected function setUp(): void {
         parent::setUp();
-        delete_option( 'dokan_settings' );
+        delete_option( 'dokan_admin_settings' );
     }
 
     protected function tearDown(): void {
-        delete_option( 'dokan_settings' );
+        delete_option( 'dokan_admin_settings' );
         parent::tearDown();
     }
 
     public function test_populate_values_reads_from_dokan_settings_by_id(): void {
         update_option(
-            'dokan_settings',
+            'dokan_admin_settings',
             [
                 'vendor_store_url' => 'shop',
                 'map_api_source'   => 'mapbox',
@@ -60,7 +60,7 @@ class SettingsRegistryStorageTest extends DokanTestCase {
     }
 
     public function test_populate_values_falls_back_to_default_when_id_absent(): void {
-        update_option( 'dokan_settings', [] );
+        update_option( 'dokan_admin_settings', [] );
 
         $schema = ( new SettingsRegistry() )->get_schema( true );
 
@@ -80,7 +80,7 @@ class SettingsRegistryStorageTest extends DokanTestCase {
         // Seed the OLD per-page key with a value that would have been read by the previous code path.
         update_option( 'dokan_settings_general', [ 'marketplace' => [ 'marketplace_settings' => [ 'vendor_store_url' => 'OLD_VALUE' ] ] ] );
         // The new key is empty, so reads should fall back to the field default — NOT to OLD_VALUE.
-        delete_option( 'dokan_settings' );
+        delete_option( 'dokan_admin_settings' );
 
         $schema = ( new SettingsRegistry() )->get_schema( true );
 

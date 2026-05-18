@@ -284,13 +284,13 @@ class LegacySettingsBridgeTest extends DokanTestCase {
 			return $fixture;
 		};
         add_filter( 'dokan_get_admin_settings_schema', $cb );
-        update_option( 'dokan_settings', [ 'banner_width' => 1024 ] );
+        update_option( 'dokan_admin_settings', [ 'banner_width' => 1024 ] );
 
         $bridge = new LegacySettingsBridge();
         $merged = $bridge->hydrate_legacy_from_new( 'dokan_appearance', [ 'store_banner_width' => 200 ] );
 
         remove_filter( 'dokan_get_admin_settings_schema', $cb );
-        delete_option( 'dokan_settings' );
+        delete_option( 'dokan_admin_settings' );
 
         $this->assertSame( 1024, $merged['store_banner_width'] );
     }
@@ -308,7 +308,7 @@ class LegacySettingsBridgeTest extends DokanTestCase {
 			return $fixture;
 		};
         add_filter( 'dokan_get_admin_settings_schema', $cb );
-        delete_option( 'dokan_settings' );
+        delete_option( 'dokan_admin_settings' );
 
         $bridge = new LegacySettingsBridge();
         $merged = $bridge->hydrate_legacy_from_new( 'dokan_appearance', [ 'store_banner_width' => 200 ] );
@@ -320,7 +320,7 @@ class LegacySettingsBridgeTest extends DokanTestCase {
 
     public function test_writes_back_to_legacy_options_on_new_save(): void {
         update_option( 'dokan_general', [ 'site_logo' => 'old.png' ] );
-        update_option( 'dokan_settings', [ 'general_marketplace_site_logo' => 'new.png' ] );
+        update_option( 'dokan_admin_settings', [ 'general_marketplace_site_logo' => 'new.png' ] );
 
         $map_filter = static function ( $map ) {
             $map['general_marketplace_site_logo'] = [
@@ -337,7 +337,7 @@ class LegacySettingsBridgeTest extends DokanTestCase {
         remove_filter( 'dokan_legacy_settings_key_mapping', $map_filter );
         $stored = get_option( 'dokan_general' );
         delete_option( 'dokan_general' );
-        delete_option( 'dokan_settings' );
+        delete_option( 'dokan_admin_settings' );
 
         $this->assertContains( 'dokan_general', $written );
         $this->assertSame( 'new.png', $stored['site_logo'] );
@@ -443,21 +443,21 @@ class LegacySettingsBridgeTest extends DokanTestCase {
         add_filter( 'dokan_legacy_settings_key_mapping', $map_filter );
 
         delete_option( 'dokan_general' );
-        delete_option( 'dokan_settings' );
+        delete_option( 'dokan_admin_settings' );
 
         $bridge    = new LegacySettingsBridge();
         $bootstrap = new \WeDevs\Dokan\Admin\Settings\Migration\BridgeBootstrap( $bridge );
         $bootstrap->register_hooks();
 
-        update_option( 'dokan_settings', [ 'general_marketplace_site_logo' => 'new.png' ] );
+        $repo = new \WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository();
+        $repo->update( [ 'general_marketplace_site_logo' => 'new.png' ] );
 
         $stored_legacy = get_option( 'dokan_general' );
 
         remove_filter( 'dokan_legacy_settings_key_mapping', $map_filter );
-        remove_action( 'update_option_dokan_settings', [ $bootstrap, 'on_new_option_updated' ], 10 );
-        remove_action( 'add_option_dokan_settings', [ $bootstrap, 'on_new_option_added' ], 10 );
+        remove_action( 'dokan_admin_settings_changed', [ $bootstrap, 'on_settings_changed' ], 10 );
         delete_option( 'dokan_general' );
-        delete_option( 'dokan_settings' );
+        delete_option( 'dokan_admin_settings' );
 
         $this->assertIsArray( $stored_legacy );
         $this->assertSame( 'new.png', $stored_legacy['site_logo'] );
@@ -474,38 +474,156 @@ class LegacySettingsBridgeTest extends DokanTestCase {
         add_filter( 'dokan_legacy_settings_key_mapping', $map_filter );
 
         delete_option( 'dokan_general' );
-        delete_option( 'dokan_settings' );
-        // Seed the new option so subsequent writes go through `update_option_*`
-        // (not `add_option_*`).
-        update_option( 'dokan_settings', [ 'general_marketplace_site_logo' => 'seed.png' ] );
+        delete_option( 'dokan_admin_settings' );
 
         $bridge    = new LegacySettingsBridge();
         $bootstrap = new \WeDevs\Dokan\Admin\Settings\Migration\BridgeBootstrap( $bridge );
         $bootstrap->register_hooks();
+        $repo = new \WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository();
+        $repo->update( [ 'general_marketplace_site_logo' => 'seed.png' ] );
 
-        // Count outer-fire invocations only — bootstrap mirror is on priority
-        // 10, counter is on priority 5 so it fires before mirror.
+        // Count `dokan_admin_settings_changed` firings at priority 5 so it runs
+        // before the bootstrap mirror at priority 10.
         $invocations = 0;
         $counter     = static function () use ( &$invocations ) {
             ++$invocations;
         };
-        add_action( 'update_option_dokan_settings', $counter, 5 );
+        add_action( 'dokan_admin_settings_changed', $counter, 5 );
 
-        update_option( 'dokan_settings', [ 'general_marketplace_site_logo' => 'first.png' ] );
-        update_option( 'dokan_settings', [ 'general_marketplace_site_logo' => 'second.png' ] );
+        $repo->update( [ 'general_marketplace_site_logo' => 'first.png' ] );
+        $repo->update( [ 'general_marketplace_site_logo' => 'second.png' ] );
 
-        remove_action( 'update_option_dokan_settings', $counter, 5 );
-        remove_action( 'update_option_dokan_settings', [ $bootstrap, 'on_new_option_updated' ], 10 );
-        remove_action( 'add_option_dokan_settings', [ $bootstrap, 'on_new_option_added' ], 10 );
+        remove_action( 'dokan_admin_settings_changed', $counter, 5 );
+        remove_action( 'dokan_admin_settings_changed', [ $bootstrap, 'on_settings_changed' ], 10 );
         remove_filter( 'dokan_legacy_settings_key_mapping', $map_filter );
         $stored_legacy = get_option( 'dokan_general' );
         delete_option( 'dokan_general' );
-        delete_option( 'dokan_settings' );
+        delete_option( 'dokan_admin_settings' );
 
-        // Two top-level update_option calls — counter should fire exactly twice,
+        // Two top-level repository updates — counter should fire exactly twice,
         // not more (no infinite loop, no nested re-entry).
         $this->assertSame( 2, $invocations );
         $this->assertSame( 'second.png', $stored_legacy['site_logo'] );
+    }
+
+    public function test_callable_transformer_pair_runs_for_both_directions(): void {
+        $fixture = [
+            [
+                'id'                 => 'banner_caption',
+                'type'               => 'field',
+                'legacy_key'         => 'dokan_appearance.banner_caption',
+                'legacy_transformer' => [
+                    'to_new'    => 'strtoupper',
+                    'to_legacy' => 'strtolower',
+                ],
+                'default'            => '',
+            ],
+        ];
+        $cb = static function () use ( $fixture ) {
+            return $fixture;
+        };
+        add_filter( 'dokan_get_admin_settings_schema', $cb );
+
+        update_option( 'dokan_appearance', [ 'banner_caption' => 'hello' ] );
+
+        $bridge   = new LegacySettingsBridge();
+        $hydrated = $bridge->hydrate_new_from_legacy( [] );
+        $this->assertSame( 'HELLO', $hydrated['banner_caption'] );
+
+        $bridge->write_new_to_legacy( [ 'banner_caption' => 'WORLD' ] );
+        $stored = get_option( 'dokan_appearance' );
+
+        remove_filter( 'dokan_get_admin_settings_schema', $cb );
+        delete_option( 'dokan_appearance' );
+
+        $this->assertSame( 'world', $stored['banner_caption'] );
+    }
+
+    public function test_callable_transformer_accepts_class_method_array(): void {
+        $fixture = [
+            [
+                'id'                 => 'banner_caption',
+                'type'               => 'field',
+                'legacy_key'         => 'dokan_appearance.banner_caption',
+                'legacy_transformer' => [
+                    'to_new'    => [ \WeDevs\Dokan\Test\Admin\Settings\Migration\Fixtures\ReverseStringTransformer::class, 'reverse' ],
+                    'to_legacy' => [ \WeDevs\Dokan\Test\Admin\Settings\Migration\Fixtures\ReverseStringTransformer::class, 'reverse' ],
+                ],
+                'default'            => '',
+            ],
+        ];
+        $cb = static function () use ( $fixture ) {
+            return $fixture;
+        };
+        add_filter( 'dokan_get_admin_settings_schema', $cb );
+        update_option( 'dokan_appearance', [ 'banner_caption' => 'abc' ] );
+
+        $bridge   = new LegacySettingsBridge();
+        $hydrated = $bridge->hydrate_new_from_legacy( [] );
+
+        remove_filter( 'dokan_get_admin_settings_schema', $cb );
+        delete_option( 'dokan_appearance' );
+
+        $this->assertSame( 'cba', $hydrated['banner_caption'] );
+    }
+
+    public function test_callable_transformer_rejects_closure_and_falls_back(): void {
+        $fixture = [
+            [
+                'id'                 => 'banner_caption',
+                'type'               => 'field',
+                'legacy_key'         => 'dokan_appearance.banner_caption',
+                'legacy_transformer' => [
+                    'to_new'    => static function ( $v ) {
+                        return strrev( (string) $v );
+                    },
+                    'to_legacy' => static function ( $v ) {
+                        return strrev( (string) $v );
+                    },
+                ],
+                'default'            => '',
+            ],
+        ];
+        $cb = static function () use ( $fixture ) {
+            return $fixture;
+        };
+        add_filter( 'dokan_get_admin_settings_schema', $cb );
+        update_option( 'dokan_appearance', [ 'banner_caption' => 'abc' ] );
+
+        $bridge   = new LegacySettingsBridge();
+        $hydrated = $bridge->hydrate_new_from_legacy( [] );
+
+        remove_filter( 'dokan_get_admin_settings_schema', $cb );
+        delete_option( 'dokan_appearance' );
+
+        // Closure is rejected by CallableTransformer; bridge falls back to pass-through.
+        $this->assertSame( 'abc', $hydrated['banner_caption'] );
+    }
+
+    public function test_callable_transformer_ignored_when_pair_incomplete(): void {
+        $fixture = [
+            [
+                'id'                 => 'banner_caption',
+                'type'               => 'field',
+                'legacy_key'         => 'dokan_appearance.banner_caption',
+                'legacy_transformer' => [ 'to_new' => 'strtoupper' ],
+                'default'            => '',
+            ],
+        ];
+        $cb = static function () use ( $fixture ) {
+            return $fixture;
+        };
+        add_filter( 'dokan_get_admin_settings_schema', $cb );
+        update_option( 'dokan_appearance', [ 'banner_caption' => 'abc' ] );
+
+        $bridge   = new LegacySettingsBridge();
+        $hydrated = $bridge->hydrate_new_from_legacy( [] );
+
+        remove_filter( 'dokan_get_admin_settings_schema', $cb );
+        delete_option( 'dokan_appearance' );
+
+        // Incomplete pair is ignored at harvest; pass-through applies.
+        $this->assertSame( 'abc', $hydrated['banner_caption'] );
     }
 
     public function test_bridge_only_field_round_trips(): void {
