@@ -163,6 +163,8 @@ Temporary Items
 .apdisk
 
 # custom files
+# Track package-lock.json in tests/pw (override parent ignore)
+!package-lock.json
 
 #vscode
 .idea/
@@ -177,6 +179,10 @@ playwright-report/
 blob-report/
 playwright/.cache/
 visual.spec.ts-snapshots/
+
+# wp-env runtime artifacts surfaced via the wp-data mapping
+wp-data/debug.log
+wp-data/*.log
 
 # vscode
 .vscode/

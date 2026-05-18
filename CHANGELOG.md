@@ -1,3 +1,16 @@
+### v5.0.2 ( May 18, 2026 ) ###
+
+- **new:** Added a date range filter on the vendor dashboard Withdraw Requests table to filter results by start and end dates.
+- **update:** Centralized vendor selling activation and deactivation and introduced a new filter to control vendor selling eligibility.
+- **update:** Added customization filters to control the visibility of customer billing and shipping details in vendor order emails and vendor order detail pages.
+- **update:** Added options to independently show or hide the login and registration sections of the vendor onboarding shortcode form, with adaptive layout.
+- **update:** Renamed the Quick View modal label from "Page View" to "Views" and added a Views column to the product list.
+- **fix:** Resolved product attribute data inconsistency between taxonomy-enabled and standard attributes on the new product UI.
+- **fix:** Auto-select the vendor's default payment method in the withdraw request modal.
+- **fix:** Corrected the "View Details" link in the What's New admin notice to route to the appropriate changelog page.
+- **fix:** Prevented a PHP deprecation notice caused by a menu position type-cast.
+- **fix:** Ensured jQuery blockUI loads on the seller setup wizard and other custom enqueue pages.
+
 ### v5.0.1 ( May 05, 2026 ) ###
 
 - **update:** Added an admin-controllable vendor registration option on the My Account page.

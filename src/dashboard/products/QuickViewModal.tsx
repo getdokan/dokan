@@ -181,7 +181,7 @@ export const QuickViewModal = ( {
                             </tr>
                             <tr>
                                 <td className="py-2 text-gray-500">
-                                    { __( 'Page View', 'dokan-lite' ) }
+                                    { __( 'Views', 'dokan-lite' ) }
                                 </td>
                                 <td className="py-2 text-right text-gray-900">
                                     { product.page_view ?? 0 }

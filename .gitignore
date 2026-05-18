@@ -13,12 +13,14 @@ package-lock.json
 config.json
 /lib/packages/
 /lib/classes/
+.env
 
 # Composer
 /vendor/
 phpcs-report.txt
 /phpcs.xml
 .phpunit.result.cache
+test-results/
 
 #unwanted webpack files
 /assets/js/

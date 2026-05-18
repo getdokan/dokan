@@ -1,7 +1,5 @@
 import 'dotenv/config';
-
-// const { BASE_URL, SERVER_URL } = process.env;
-const SERVER_URL = process.env.SERVER_URL ? process.env.SERVER_URL : process.env.BASE_URL + '/wp-json';
+import { SERVER_URL } from './helpers';
 
 export const endPoints = {
     serverUrl: `${SERVER_URL}`,
