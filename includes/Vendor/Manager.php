@@ -528,7 +528,7 @@ class Manager {
     /**
      * Activate a vendor (enable selling).
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.2
      *
      * @param int $vendor_id
      *
@@ -547,7 +547,7 @@ class Manager {
     /**
      * Deactivate a vendor (disable selling).
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.2
      *
      * @param int $vendor_id
      *

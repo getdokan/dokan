@@ -1003,7 +1003,7 @@ class Vendor {
          * to a block should hook into this filter or check `dokan_is_seller_enabled()`
          * after the call.
          *
-         * @since DOKAN_SINCE
+         * @since 5.0.2
          *
          * @param bool $enable_selling Whether to enable selling. Default true.
          * @param int  $vendor_id      The vendor ID.
