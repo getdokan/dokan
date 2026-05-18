@@ -188,6 +188,10 @@ class SettingsSchema {
             ],
             [
                 'id'          => 'dashboard',
+                'legacy_key' => [
+                    'option' => 'dokan_pages',
+                    'field'  => 'dashboard',
+                ],
                 'type'        => 'field',
                 'variant'     => 'select',
                 'section_id'  => 'dashboard_section',
@@ -203,6 +207,10 @@ class SettingsSchema {
             ],
             [
                 'id'          => 'my_orders',
+                'legacy_key' => [
+                    'option' => 'dokan_pages',
+                    'field'  => 'my_orders',
+                ],
                 'type'        => 'field',
                 'variant'     => 'select',
                 'section_id'  => 'my_orders_section',
@@ -218,6 +226,10 @@ class SettingsSchema {
             ],
             [
                 'id'          => 'store_listing',
+                'legacy_key' => [
+                    'option' => 'dokan_pages',
+                    'field'  => 'store_listing',
+                ],
                 'type'        => 'field',
                 'variant'     => 'select',
                 'section_id'  => 'store_listing_section',
@@ -233,6 +245,10 @@ class SettingsSchema {
             ],
             [
                 'id'          => 'reg_tc_page',
+                'legacy_key' => [
+                    'option' => 'dokan_pages',
+                    'field'  => 'reg_tc_page',
+                ],
                 'type'        => 'field',
                 'variant'     => 'select',
                 'section_id'  => 'reg_tc_page_section',
@@ -260,6 +276,10 @@ class SettingsSchema {
             ],
             [
                 'id'          => 'map_api_source',
+                'legacy_key' => [
+                    'option' => 'dokan_appearance',
+                    'field'  => 'map_api_source',
+                ],
                 'type'        => 'field',
                 'variant'     => 'radio_capsule',
                 'section_id'  => 'map_api_configuration',
@@ -479,6 +499,10 @@ class SettingsSchema {
             ],
             [
                 'id'          => 'commission_type',
+                'legacy_key' => [
+                    'option' => 'dokan_selling',
+                    'field'  => 'commission_type',
+                ],
                 'type'        => 'field',
                 'variant'     => 'radio_capsule',
                 'section_id'  => 'commission',
@@ -532,6 +556,10 @@ class SettingsSchema {
             ],
             [
                 'id'            => 'reset_sub_category_when_edit_all_category',
+                'legacy_key' => [
+                    'option' => 'dokan_selling',
+                    'field'  => 'reset_sub_category_when_edit_all_category',
+                ],
                 'type'          => 'field',
                 'variant'       => 'switch',
                 'section_id'    => 'commission',
@@ -568,6 +596,10 @@ class SettingsSchema {
             ],
             [
                 'id'           => 'commission_category_based_values',
+                'legacy_key' => [
+                    'option' => 'dokan_selling',
+                    'field'  => 'commission_category_based_values',
+                ],
                 'type'         => 'field',
                 'variant'      => 'category_based_commission',
                 'section_id'   => 'commission',
@@ -819,6 +851,10 @@ class SettingsSchema {
             ],
             [
                 'id'          => 'billing_type',
+                'legacy_key' => [
+                    'option' => 'dokan_reverse_withdrawal',
+                    'field'  => 'billing_type',
+                ],
                 'type'        => 'field',
                 'variant'     => 'radio_capsule',
                 'section_id'  => 'reverse_withdrawal_section',
@@ -840,6 +876,10 @@ class SettingsSchema {
             ],
             [
                 'id'           => 'reverse_balance_threshold',
+                'legacy_key' => [
+                    'option' => 'dokan_reverse_withdrawal',
+                    'field'  => 'reverse_balance_threshold',
+                ],
                 'type'         => 'field',
                 'variant'      => 'number',
                 'section_id'   => 'reverse_withdrawal_section',
@@ -875,6 +915,10 @@ class SettingsSchema {
             ],
             [
                 'id'           => 'monthly_billing_day',
+                'legacy_key' => [
+                    'option' => 'dokan_reverse_withdrawal',
+                    'field'  => 'monthly_billing_day',
+                ],
                 'type'         => 'field',
                 'variant'      => 'number',
                 'section_id'   => 'reverse_withdrawal_section',
@@ -906,6 +950,10 @@ class SettingsSchema {
             ],
             [
                 'id'          => 'due_period',
+                'legacy_key' => [
+                    'option' => 'dokan_reverse_withdrawal',
+                    'field'  => 'due_period',
+                ],
                 'type'        => 'field',
                 'variant'     => 'number',
                 'section_id'  => 'reverse_withdrawal_section',
@@ -921,6 +969,10 @@ class SettingsSchema {
             ],
             [
                 'id'          => 'failed_actions',
+                'legacy_key' => [
+                    'option' => 'dokan_reverse_withdrawal',
+                    'field'  => 'failed_actions',
+                ],
                 'type'        => 'field',
                 'variant'     => 'multicheck',
                 'section_id'  => 'reverse_withdrawal_section',
@@ -944,6 +996,10 @@ class SettingsSchema {
             ],
             [
                 'id'            => 'display_notice',
+                'legacy_key' => [
+                    'option' => 'dokan_reverse_withdrawal',
+                    'field'  => 'display_notice',
+                ],
                 'type'          => 'field',
                 'variant'       => 'switch',
                 'section_id'    => 'reverse_withdrawal_section',
@@ -1093,6 +1149,10 @@ class SettingsSchema {
             ],
             [
                 'id'            => 'order_status_change',
+                'legacy_key' => [
+                    'option' => 'dokan_selling',
+                    'field'  => 'order_status_change',
+                ],
                 'type'          => 'field',
                 'variant'       => 'switch',
                 'section_id'    => 'vendor_capabilities',
@@ -1583,6 +1643,10 @@ class SettingsSchema {
             ],
             [
                 'id'            => 'admin_access',
+                'legacy_key' => [
+                    'option' => 'dokan_general',
+                    'field'  => 'admin_access',
+                ],
                 'type'          => 'field',
                 'variant'       => 'switch',
                 'section_id'    => 'admin_access_section',
@@ -1605,6 +1669,10 @@ class SettingsSchema {
             ],
             [
                 'id'              => 'data_clear_on_uninstall',
+                'legacy_key' => [
+                    'option' => 'dokan_general',
+                    'field'  => 'data_clear_on_uninstall',
+                ],
                 'type'            => 'field',
                 'variant'         => 'switch',
                 'section_id'      => 'data_clear_section',
