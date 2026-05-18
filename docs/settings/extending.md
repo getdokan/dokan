@@ -1,5 +1,13 @@
 # Dokan Settings — Extending the Admin Settings
 
+> **Note (DOKAN_NEXT_MAJOR):** The `dependency_key` attribute has been removed
+> from the settings schema. Use the field's `id` directly. `show_if` and
+> `dependencies` rule keys are now flat field ids — dot-paths are no longer
+> supported. See the [dependency_key cleanup plan][cleanup-plan] for migration
+> context.
+>
+> [cleanup-plan]: https://github.com/getdokan/dokan/blob/refactor/simplify-settings-to-flat-array/docs/superpowers/plans/2026-05-18-dependency-key-cleanup.md
+
 > This guide covers the CSV-driven settings migration layer that bridges the legacy
 > per-page `dokan_*` wp_options to the new flat `dokan_settings` wp_option.
 
