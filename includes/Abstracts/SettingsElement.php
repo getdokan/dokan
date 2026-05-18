@@ -367,7 +367,7 @@ abstract class SettingsElement {
 		$filtered_children = apply_filters( $this->get_hook_key() . '_children', $this->children, $this ); // phpcs:ignore.
 		foreach ( $filtered_children as $child ) {
 			$child->set_hook_key( $this->get_hook_key() . '_' . $child->get_id() );
-			$child->set_dependency_key( trim( $this->get_dependency_key() . '.' . $child->get_id(), '. ' ) );
+			$child->set_dependency_key( $child->get_id() );
 
             if ( isset( $this->value[ $child->get_id() ] ) ) {
                 $child->set_value( $this->value[ $child->get_id() ] );
@@ -404,11 +404,11 @@ abstract class SettingsElement {
 	 * @return array
 	 */
 	public function get_dependencies(): array {
-		$dependency_key = $this->get_dependency_key();
+		$self = $this->get_id();
 
 		return array_map(
-			function ( $dependency ) use ( $dependency_key ) {
-				$dependency['self'] = $dependency_key;
+			function ( $dependency ) use ( $self ) {
+				$dependency['self'] = $self;
 				return $dependency;
 			},
 			$this->dependencies
@@ -461,11 +461,11 @@ abstract class SettingsElement {
 	 * @return array
 	 */
 	public function get_validations(): array {
-		$dependency_key = $this->get_dependency_key();
+		$self = $this->get_id();
 
 		return array_map(
-			function ( $validation ) use ( $dependency_key ) {
-				$validation['self'] = $dependency_key;
+			function ( $validation ) use ( $self ) {
+				$validation['self'] = $self;
 				return $validation;
 			},
 			$this->validations
