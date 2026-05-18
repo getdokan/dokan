@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Admin\Settings\Schema;
 
+use WeDevs\Dokan\Utilities\AdminSettings;
+
 /**
  * Flat array settings schema for the admin settings page.
  *
@@ -995,6 +997,12 @@ class SettingsSchema {
                 'description'   => esc_html__( 'Immediately enable selling for newly registered vendors.', 'dokan-lite' ),
                 'tooltip'       => esc_html__( 'If checked, vendors will have permission to sell immediately after registration.', 'dokan-lite' ),
                 'default'       => 'automatically',
+                'options'       => self::map_array_to_radio_capsule_options( dokan_get_container()->get( AdminSettings::class )->new_seller_enable_selling_statuses() ),
+                'legacy_key' => [
+					'option' => 'dokan_selling',
+					'field' => 'new_seller_enable_selling',
+				],
+
             ],
             [
                 'id'            => 'address_fields',
@@ -1467,6 +1475,43 @@ class SettingsSchema {
                 'description' => esc_html__( 'Choose which sections to show when customers view individual products.', 'dokan-lite' ),
             ],
         ];
+    }
+
+    /**
+     * Convert an associative `value => label` array into the shape a
+     * `radio_capsule` field's `options` attribute expects.
+     *
+     * Each input pair becomes one `{ title, value, icon }` element. Use this
+     * to feed the output of helpers such as
+     * `AdminSettings::new_seller_enable_selling_statuses()` (which return
+     * `value => label` maps) directly into a `radio_capsule` schema element
+     * without losing the option order or having to repeat the icon-lookup
+     * boilerplate at every call site.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array<string,string> $options Associative map of `option_value => display_label`.
+     *                                      Keys become the field value; values become the visible title.
+     * @param array<string,string> $icons   Optional `option_value => icon_identifier` map used to attach
+     *                                      an icon to each capsule. Missing keys default to `''`.
+     *
+     * @return array<int,array{title:string,value:string,icon:string}>
+     */
+    public static function map_array_to_radio_capsule_options( array $options, array $icons = [] ): array {
+        $labels = array_values( $options );
+        $values = array_keys( $options );
+
+        return array_map(
+            function ( $label, $value ) use ( $icons ) {
+                return [
+					'title' => $label,
+					'value' => $value,
+					'icon'  => $icons[ $value ] ?? '',
+                ];
+            },
+            $labels,
+            $values
+        );
     }
 
     /**
