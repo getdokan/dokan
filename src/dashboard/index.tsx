@@ -1,5 +1,7 @@
 import { createRoot } from '@wordpress/element';
 import domReady from '@wordpress/dom-ready';
+import { addFilter } from '@wordpress/hooks';
+import { __ } from '@wordpress/i18n';
 import Layout from '../layout';
 import getRoutes, { withRouter } from '../routing';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
@@ -7,6 +9,22 @@ import { useSelect } from '@wordpress/data';
 import coreStore from '@dokan/stores/core';
 import Skeleton from '@src/layout/Skeleton';
 import { generateColorVariants } from '@dokan/utilities';
+
+// `<DataViews>` (via @wordpress/dataviews) renders its Actions column header
+// against the core 'default' text domain, whose translations don't load on the
+// frontend. Re-route the 'default' "Actions" lookup through 'dokan-lite' so
+// Dokan's translation wins.
+addFilter(
+    'i18n.gettext_default',
+    'dokan-lite/dataviews-actions-label',
+    ( translation: string, text: string ) => {
+        if ( text !== 'Actions' ) {
+            return translation;
+        }
+        const dokanTranslation = __( 'Actions', 'dokan-lite' );
+        return dokanTranslation !== 'Actions' ? dokanTranslation : translation;
+    }
+);
 
 const App = () => {
     const routes = getRoutes();

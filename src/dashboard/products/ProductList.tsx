@@ -936,6 +936,7 @@ function ProductList() {
                     onReset: onFilterReset,
                 } }
                 search={ true }
+                actionsLabel={ __( 'Actions', 'dokan-lite' ) }
                 actions={ filteredActions }
                 selection={ selection }
                 onChangeSelection={ ( ids: string[] ) => setSelection( ids ) }
