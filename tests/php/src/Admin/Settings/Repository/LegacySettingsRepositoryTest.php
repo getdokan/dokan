@@ -267,4 +267,16 @@ class LegacySettingsRepositoryTest extends DokanTestCase {
 
         $this->assertSame( 'marketplace', get_option( 'dokan_admin_settings' )['vendor_store_url'] );
     }
+
+    public function test_dokan_get_option_reads_through_repository(): void {
+        update_option( 'dokan_general', [ 'custom_store_url' => 'shop' ] );
+        update_option( 'dokan_admin_settings', [ 'vendor_store_url' => 'marketplace' ] );
+
+        // Flush repo cache so the next read sees the freshly-set options.
+        dokan_get_container()
+            ->get( LegacySettingsRepository::class )
+            ->flush_cache( null );
+
+        $this->assertSame( 'marketplace', dokan_get_option( 'custom_store_url', 'dokan_general' ) );
+    }
 }
