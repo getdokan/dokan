@@ -121,7 +121,38 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
     }
 
     public function replace( string $section, array $payload ): array {
-        return [];
+        $current = $this->all( $section );
+
+        /** This filter is documented in includes/Admin/Settings/Repository/LegacySettingsRepository.php */
+        $payload = (array) apply_filters( 'dokan_legacy_settings_pre_save', $payload, $section, $current );
+
+        $diff = self::diff( $current, $payload );
+        foreach ( $current as $k => $_ ) {
+            if ( ! array_key_exists( $k, $payload ) ) {
+                $diff[ $k ] = null;
+            }
+        }
+
+        update_option( $section, $payload, true );
+        $this->snapshots[ $section ] = $this->bridge->hydrate_legacy_from_new( $section, $payload );
+
+        try {
+            $flat_slice = $this->bridge->transform_legacy_payload_to_new( $section, $payload );
+            if ( ! empty( $flat_slice ) ) {
+                $this->new_repo->update( $flat_slice );
+            }
+        } catch ( \Throwable $e ) {
+            if ( function_exists( 'dokan_log' ) ) {
+                dokan_log( '[LegacySettingsRepository] mirror replace failed: ' . $e->getMessage() );
+            }
+        }
+
+        if ( ! empty( $diff ) ) {
+            /** This action is documented in includes/Admin/Settings/Repository/LegacySettingsRepository.php */
+            do_action( 'dokan_legacy_settings_changed', $section, $diff, $current, $payload );
+        }
+
+        return $diff;
     }
 
     public function flush_cache( ?string $section = null ): void {

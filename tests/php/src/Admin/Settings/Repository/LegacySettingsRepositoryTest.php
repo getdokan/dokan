@@ -232,4 +232,39 @@ class LegacySettingsRepositoryTest extends DokanTestCase {
 
         $this->assertSame( [ 'admin_access' => 'off' ], $changed );
     }
+
+    public function test_replace_writes_payload_whole(): void {
+        update_option( 'dokan_general', [ 'a' => 1, 'b' => 2 ] );
+        delete_option( 'dokan_admin_settings' );
+
+        $repo = new LegacySettingsRepository();
+        $repo->replace( 'dokan_general', [ 'c' => 3 ] );
+
+        $this->assertSame( [ 'c' => 3 ], get_option( 'dokan_general' ) );
+    }
+
+    public function test_replace_returns_diff_with_removed_keys_as_null(): void {
+        update_option( 'dokan_general', [ 'a' => 1, 'b' => 2 ] );
+
+        $repo = new LegacySettingsRepository();
+        $repo->all( 'dokan_general' );
+
+        $diff = $repo->replace( 'dokan_general', [ 'a' => 1, 'c' => 3 ] );
+
+        // `b` removed, `c` added, `a` unchanged.
+        $this->assertArrayHasKey( 'b', $diff );
+        $this->assertNull( $diff['b'] );
+        $this->assertSame( 3, $diff['c'] );
+        $this->assertArrayNotHasKey( 'a', $diff );
+    }
+
+    public function test_replace_mirrors_mapped_keys_to_new_option(): void {
+        delete_option( 'dokan_general' );
+        delete_option( 'dokan_admin_settings' );
+
+        $repo = new LegacySettingsRepository();
+        $repo->replace( 'dokan_general', [ 'custom_store_url' => 'marketplace' ] );
+
+        $this->assertSame( 'marketplace', get_option( 'dokan_admin_settings' )['vendor_store_url'] );
+    }
 }
