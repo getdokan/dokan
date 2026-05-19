@@ -18,12 +18,28 @@ import DokanDoubleInput from './fields/DokanDoubleInput';
  * times stacks duplicate handlers — keep callers to a single invocation.
  */
 export function registerSettingsFields(): void {
+    // Inject the vendor SVG preview into plugin-ui's `info_preview` field.
+    // Scopes by element id so this filter only fires for the vendor visibility
+    // setting and leaves other info_preview fields with their default behavior.
     addFilter(
-        'dokan_settings_vendor_info_preview_field',
+        'dokan_settings_info_preview_field_preview',
         'dokan-lite/vendor-info-preview',
-        ( _defaultComponent: React.ReactNode, element: SettingsElement ) => (
-            <DokanVendorInfoPreview element={ element } />
-        )
+        (
+            defaultPreview: React.ReactNode,
+            element: SettingsElement,
+            value: Record< string, boolean >
+        ) => {
+            if ( element.id !== 'vendor_info_visibility' ) {
+                return defaultPreview;
+            }
+            return (
+                <DokanVendorInfoPreview
+                    showEmail={ Boolean( value?.store_email ) }
+                    showPhone={ Boolean( value?.store_phone ) }
+                    showAddress={ Boolean( value?.store_address ) }
+                />
+            );
+        }
     );
 
     addFilter(
