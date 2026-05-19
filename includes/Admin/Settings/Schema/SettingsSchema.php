@@ -1632,10 +1632,6 @@ class SettingsSchema {
                         'value' => 'more_products_tab',
                         'label' => esc_html__( 'More products tab', 'dokan-lite' ),
                     ],
-                    [
-                        'value' => 'shipping_tab',
-                        'label' => esc_html__( 'Shipping tab', 'dokan-lite' ),
-                    ],
                 ],
                 'default'     => [
                     'vendor_info'       => true,
@@ -1650,10 +1646,6 @@ class SettingsSchema {
                     'more_products_tab' => [
 						'option' => 'dokan_general',
 						'field' => 'enabled_more_products_tab',
-					],
-                    'shipping_tab'      => [
-						'option' => 'dokan_selling',
-						'field' => 'disable_shipping_tab',
 					],
                 ],
                 'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\SingleProductAppearanceTransformer::class,
