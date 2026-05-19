@@ -3224,7 +3224,9 @@ function dokan_get_permalink( $page_id ) {
         return false;
     }
 
-    $pages = get_option( 'dokan_pages' );
+    $pages = dokan_get_container()
+        ->get( \WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepository::class )
+        ->all( 'dokan_pages' );
 
     return isset( $pages[ $page_id ] ) ? get_permalink( $pages[ $page_id ] ) : false;
 }
@@ -3603,7 +3605,9 @@ function dokan_met_minimum_php_version_for_wc( $required_version = '7.0' ) {
  * @return bool
  */
 function dokan_has_map_api_key() {
-    $dokan_appearance = get_option( 'dokan_appearance', [] );
+    $dokan_appearance = dokan_get_container()
+        ->get( \WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepository::class )
+        ->all( 'dokan_appearance' );
 
     if ( ! empty( $dokan_appearance['map_api_source'] ) && 'google_maps' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['gmap_api_key'] ) ) {
         return true;
