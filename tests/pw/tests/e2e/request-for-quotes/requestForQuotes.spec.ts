@@ -188,10 +188,14 @@ test.describe('Request For Quotes (React) Tests @pro', () => {
         const page = await ctx.newPage();
         await page.goto(toPath(`dashboard/requested-quotes/`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(3000);
         // Page may show a heading-only screen with "you haven't received any quotes" copy.
-        const bodyText = await page.locator('body').innerText();
-        expect(bodyText.trim().length, 'RFQ page should render some content').toBeGreaterThan(50);
+        await expect
+            .poll(async () => (await page.locator('body').innerText()).trim().length, {
+                timeout: 30_000,
+                intervals: [500, 1000, 2000, 3000],
+                message: 'RFQ page should render some content',
+            })
+            .toBeGreaterThan(50);
         await page.close();
         await ctx.close();
     });
