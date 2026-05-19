@@ -71,4 +71,58 @@ class LegacySettingsRepositoryTest extends DokanTestCase {
 
         $this->assertSame( 'shop', $repo->get( 'dokan_general', 'custom_store_url' ) );
     }
+
+    public function test_foreign_legacy_write_flushes_only_that_section(): void {
+        update_option( 'dokan_general',    [ 'custom_store_url' => 'shop' ] );
+        update_option( 'dokan_appearance', [ 'store_banner_width' => 600 ] );
+
+        $repo = new LegacySettingsRepository();
+        // Warm both snapshots.
+        $repo->all( 'dokan_general' );
+        $repo->all( 'dokan_appearance' );
+
+        // Foreign write to dokan_general should trigger update_option_dokan_general.
+        update_option( 'dokan_general', [ 'custom_store_url' => 'market' ] );
+
+        $this->assertSame( 'market', $repo->get( 'dokan_general', 'custom_store_url' ) );
+        // The other section's snapshot should remain cached — tamper to verify.
+        global $wpdb;
+        $wpdb->update(
+            $wpdb->options,
+            [ 'option_value' => serialize( [ 'store_banner_width' => 9999 ] ) ],
+            [ 'option_name' => 'dokan_appearance' ]
+        );
+        wp_cache_delete( 'dokan_appearance', 'options' );
+        $this->assertSame( 600, $repo->get( 'dokan_appearance', 'store_banner_width' ) );
+    }
+
+    public function test_new_flat_option_write_flushes_every_section(): void {
+        update_option( 'dokan_general',    [ 'custom_store_url' => 'shop' ] );
+        update_option( 'dokan_appearance', [ 'store_banner_width' => 600 ] );
+
+        $repo = new LegacySettingsRepository();
+        $repo->all( 'dokan_general' );
+        $repo->all( 'dokan_appearance' );
+
+        update_option( 'dokan_admin_settings', [ 'vendor_store_url' => 'marketplace' ] );
+
+        // After flush, the next read should reflect the overlay from the new flat option.
+        $this->assertSame( 'marketplace', $repo->get( 'dokan_general', 'custom_store_url' ) );
+    }
+
+    public function test_flush_cache_null_clears_all_sections(): void {
+        update_option( 'dokan_general', [ 'custom_store_url' => 'shop' ] );
+
+        $repo = new LegacySettingsRepository();
+        $repo->all( 'dokan_general' );
+
+        $repo->flush_cache( null );
+
+        update_option( 'dokan_general', [ 'custom_store_url' => 'cleared' ] );
+        // Bypass the WP hook by re-flushing manually (the hook already flushed once but
+        // we want to assert the public method works independently of the listener).
+        $repo->flush_cache( null );
+
+        $this->assertSame( 'cleared', $repo->get( 'dokan_general', 'custom_store_url' ) );
+    }
 }

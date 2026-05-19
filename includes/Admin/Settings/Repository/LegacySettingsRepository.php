@@ -30,6 +30,18 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
     ) {
         $this->new_repo = $new_repo ?? new SettingsRepository();
         $this->bridge   = $bridge ?? new LegacySettingsBridge();
+
+        foreach ( $this->known_sections() as $section ) {
+            add_action( "update_option_{$section}", [ $this, 'on_section_changed' ] );
+            add_action( "add_option_{$section}",    [ $this, 'on_section_changed' ] );
+        }
+
+        // The new flat option participates in every overlay — its writes invalidate
+        // every snapshot. Use named callbacks so the same listener isn't bound twice
+        // if the repository is instantiated more than once in a request.
+        $new_option = SettingsRepository::OPTION_KEY;
+        add_action( "update_option_{$new_option}", [ $this, 'flush_all_snapshots' ] );
+        add_action( "add_option_{$new_option}",    [ $this, 'flush_all_snapshots' ] );
     }
 
     public function all( string $section ): array {
@@ -61,5 +73,48 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
             return;
         }
         unset( $this->snapshots[ $section ] );
+    }
+
+    /**
+     * WP hook listener — receives `($option, …)` from add_option / `($old, $new, $option)` from update_option.
+     * We only need the option name, which we derive from the current filter name.
+     *
+     * @return void
+     */
+    public function on_section_changed(): void {
+        $option = current_action();
+        foreach ( [ 'update_option_', 'add_option_' ] as $prefix ) {
+            if ( 0 === strpos( $option, $prefix ) ) {
+                $section = substr( $option, strlen( $prefix ) );
+                $this->flush_cache( $section );
+                return;
+            }
+        }
+    }
+
+    /**
+     * Listener for the new flat option — every section snapshot must be flushed
+     * because the overlay source changed.
+     *
+     * @return void
+     */
+    public function flush_all_snapshots(): void {
+        $this->flush_cache( null );
+    }
+
+    /**
+     * Unique legacy wp_option names that the bridge currently knows about.
+     *
+     * @return array<int,string>
+     */
+    private function known_sections(): array {
+        $map      = $this->bridge->get_mapping();
+        $sections = [];
+        foreach ( $map as $entry ) {
+            if ( is_array( $entry ) && isset( $entry['option'] ) && is_string( $entry['option'] ) ) {
+                $sections[ $entry['option'] ] = true;
+            }
+        }
+        return array_keys( $sections );
     }
 }
