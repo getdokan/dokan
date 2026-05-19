@@ -21,8 +21,7 @@ addFilter(
         if ( text !== 'Actions' ) {
             return translation;
         }
-        const dokanTranslation = __( 'Actions', 'dokan-lite' );
-        return dokanTranslation !== 'Actions' ? dokanTranslation : translation;
+        return __( 'Actions', 'dokan-lite' );
     }
 );
 
