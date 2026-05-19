@@ -33,11 +33,18 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
     }
 
     public function all( string $section ): array {
-        return [];
+        if ( ! array_key_exists( $section, $this->snapshots ) ) {
+            $raw = get_option( $section, [] );
+            $raw = is_array( $raw ) ? $raw : [];
+
+            $this->snapshots[ $section ] = $this->bridge->hydrate_legacy_from_new( $section, $raw );
+        }
+        return $this->snapshots[ $section ];
     }
 
     public function get( string $section, string $key, $default_value = null ) {
-        return $default_value;
+        $all = $this->all( $section );
+        return array_key_exists( $key, $all ) ? $all[ $key ] : $default_value;
     }
 
     public function update( string $section, array $slice ): array {
