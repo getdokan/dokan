@@ -125,4 +125,111 @@ class LegacySettingsRepositoryTest extends DokanTestCase {
 
         $this->assertSame( 'cleared', $repo->get( 'dokan_general', 'custom_store_url' ) );
     }
+
+    public function test_update_persists_to_legacy_section_option(): void {
+        update_option( 'dokan_general', [ 'other' => 'preserved' ] );
+        delete_option( 'dokan_admin_settings' );
+
+        $repo    = new LegacySettingsRepository();
+        $changed = $repo->update( 'dokan_general', [ 'custom_store_url' => 'shop' ] );
+
+        $this->assertSame( [ 'custom_store_url' => 'shop' ], $changed );
+        $this->assertSame(
+            [ 'other' => 'preserved', 'custom_store_url' => 'shop' ],
+            get_option( 'dokan_general' )
+        );
+    }
+
+    public function test_update_mirrors_mapped_keys_to_new_flat_option(): void {
+        delete_option( 'dokan_general' );
+        delete_option( 'dokan_admin_settings' );
+
+        $repo = new LegacySettingsRepository();
+        $repo->update( 'dokan_general', [ 'custom_store_url' => 'marketplace' ] );
+
+        $new = get_option( 'dokan_admin_settings' );
+        $this->assertIsArray( $new );
+        // Schema maps vendor_store_url → dokan_general.custom_store_url (SettingsSchema.php:153-165).
+        $this->assertSame( 'marketplace', $new['vendor_store_url'] );
+    }
+
+    public function test_update_with_no_change_is_a_noop(): void {
+        update_option( 'dokan_general', [ 'custom_store_url' => 'shop' ] );
+
+        $repo = new LegacySettingsRepository();
+        // Warm the snapshot first so $current matches the on-disk value.
+        $repo->all( 'dokan_general' );
+
+        $changed = $repo->update( 'dokan_general', [ 'custom_store_url' => 'shop' ] );
+        $this->assertSame( [], $changed );
+    }
+
+    public function test_update_fires_pre_save_filter_and_changed_action(): void {
+        delete_option( 'dokan_general' );
+        delete_option( 'dokan_admin_settings' );
+
+        $filter_received = null;
+        $action_payload  = null;
+
+        add_filter(
+            'dokan_legacy_settings_pre_save',
+            static function ( $slice, $section, $current ) use ( &$filter_received ) {
+                $filter_received = [ 'slice' => $slice, 'section' => $section, 'current' => $current ];
+                return $slice;
+            },
+            10,
+            3
+        );
+
+        add_action(
+            'dokan_legacy_settings_changed',
+            static function ( $section, $changed, $before, $after ) use ( &$action_payload ) {
+                $action_payload = compact( 'section', 'changed', 'before', 'after' );
+            },
+            10,
+            4
+        );
+
+        $repo = new LegacySettingsRepository();
+        $repo->update( 'dokan_general', [ 'custom_store_url' => 'shop' ] );
+
+        $this->assertSame( 'dokan_general', $filter_received['section'] );
+        $this->assertSame( [ 'custom_store_url' => 'shop' ], $filter_received['slice'] );
+        $this->assertSame( 'dokan_general', $action_payload['section'] );
+        $this->assertSame( [ 'custom_store_url' => 'shop' ], $action_payload['changed'] );
+    }
+
+    public function test_pre_save_filter_can_mutate_slice(): void {
+        delete_option( 'dokan_general' );
+
+        add_filter(
+            'dokan_legacy_settings_pre_save',
+            static function ( $slice ) {
+                $slice['custom_store_url'] = 'overridden';
+                return $slice;
+            }
+        );
+
+        $repo = new LegacySettingsRepository();
+        $repo->update( 'dokan_general', [ 'custom_store_url' => 'original' ] );
+
+        $this->assertSame( 'overridden', get_option( 'dokan_general' )['custom_store_url'] );
+    }
+
+    public function test_update_returns_only_changed_entries(): void {
+        update_option( 'dokan_general', [
+            'custom_store_url' => 'shop',
+            'admin_access'     => 'on',
+        ] );
+
+        $repo = new LegacySettingsRepository();
+        $repo->all( 'dokan_general' );
+
+        $changed = $repo->update( 'dokan_general', [
+            'custom_store_url' => 'shop',    // unchanged
+            'admin_access'     => 'off',     // changed
+        ] );
+
+        $this->assertSame( [ 'admin_access' => 'off' ], $changed );
+    }
 }

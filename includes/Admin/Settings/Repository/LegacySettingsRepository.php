@@ -60,7 +60,64 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
     }
 
     public function update( string $section, array $slice ): array {
-        return [];
+        $current = $this->all( $section );
+
+        /**
+         * Filter the slice about to be merged into a legacy section option.
+         *
+         * Subscribers may add, remove, or normalize keys. Returning an empty
+         * array effectively blocks the write (the diff becomes empty and
+         * neither the legacy option nor the new-flat mirror is touched).
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array<string,mixed> $slice   Incoming change set.
+         * @param string              $section Legacy wp_option name.
+         * @param array<string,mixed> $current Overlay-applied view before the write.
+         */
+        $slice = (array) apply_filters( 'dokan_legacy_settings_pre_save', $slice, $section, $current );
+
+        $changed = self::diff( $current, $slice );
+        if ( empty( $changed ) ) {
+            return [];
+        }
+
+        $raw    = get_option( $section, [] );
+        $raw    = is_array( $raw ) ? $raw : [];
+        $merged = array_merge( $raw, $slice );
+
+        update_option( $section, $merged, true );
+        // Refresh our snapshot now — the WP hook already flushed it, but we want
+        // the next read in *this* request to skip a get_option round-trip.
+        $this->snapshots[ $section ] = $this->bridge->hydrate_legacy_from_new( $section, $merged );
+
+        // Mirror mapped keys into the new flat option. Best-effort: a thrown
+        // exception from the bridge or new repo is caught and logged so the
+        // legacy write that already landed is not silently rolled back.
+        try {
+            $flat_slice = $this->bridge->transform_legacy_payload_to_new( $section, $slice );
+            if ( ! empty( $flat_slice ) ) {
+                $this->new_repo->update( $flat_slice );
+            }
+        } catch ( \Throwable $e ) {
+            if ( function_exists( 'dokan_log' ) ) {
+                dokan_log( '[LegacySettingsRepository] mirror write failed: ' . $e->getMessage() );
+            }
+        }
+
+        /**
+         * Fired after a successful write to a legacy section option.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param string              $section Legacy wp_option name.
+         * @param array<string,mixed> $changed Added/changed entries.
+         * @param array<string,mixed> $current Overlay-applied view before the write.
+         * @param array<string,mixed> $merged  Raw section payload after the write.
+         */
+        do_action( 'dokan_legacy_settings_changed', $section, $changed, $current, $merged );
+
+        return $changed;
     }
 
     public function replace( string $section, array $payload ): array {
@@ -116,5 +173,23 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
             }
         }
         return array_keys( $sections );
+    }
+
+    /**
+     * Strict-equality diff: returns added or modified entries only.
+     *
+     * @param array<string,mixed> $old
+     * @param array<string,mixed> $new_payload
+     *
+     * @return array<string,mixed>
+     */
+    private static function diff( array $old, array $new_payload ): array {
+        $out = [];
+        foreach ( $new_payload as $k => $v ) {
+            if ( ! array_key_exists( $k, $old ) || $old[ $k ] !== $v ) {
+                $out[ $k ] = $v;
+            }
+        }
+        return $out;
     }
 }
