@@ -15,9 +15,11 @@ use InvalidArgumentException;
  *         'to_legacy' => [ MyHelper::class, 'to_string' ],
  *     ],
  *
- * Only string callables and `[Class, method]` array callables are accepted —
- * closures and bound-object callables are rejected because the schema array
- * travels through `apply_filters` and must remain serializable / filter-safe.
+ * Accepts string callables, `[Class, method]` array callables, closures, and
+ * invokable objects. Closures and invokable objects are convenient for inline
+ * transforms but cannot be serialized — if the schema is ever cached to a
+ * transient or other persistent store, use a string callable, a
+ * `[Class, method]` pair, or a dedicated transformer class instead.
  *
  * @since DOKAN_SINCE
  */
@@ -76,10 +78,12 @@ final class CallableTransformer implements TransformerInterface {
             is_array( $candidate )
             && 2 === count( $candidate )
             && isset( $candidate[0], $candidate[1] )
-            && is_string( $candidate[0] )
             && is_string( $candidate[1] )
             && is_callable( $candidate )
         ) {
+            return $candidate;
+        }
+        if ( ( $candidate instanceof \Closure ) || ( is_object( $candidate ) && is_callable( $candidate ) ) ) {
             return $candidate;
         }
         throw new InvalidArgumentException(
@@ -87,7 +91,7 @@ final class CallableTransformer implements TransformerInterface {
             // identifier passed from this class itself, not user input.
             esc_html(
                 sprintf(
-                    'CallableTransformer "%s" must be a string callable or [Class, method] array; closures and object callables are not supported.',
+                    'CallableTransformer "%s" must be a string callable, [Class, method] array, closure, or invokable object.',
                     $label
                 )
             )

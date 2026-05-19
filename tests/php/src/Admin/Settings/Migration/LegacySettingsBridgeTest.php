@@ -567,7 +567,7 @@ class LegacySettingsBridgeTest extends DokanTestCase {
         $this->assertSame( 'cba', $hydrated['banner_caption'] );
     }
 
-    public function test_callable_transformer_rejects_closure_and_falls_back(): void {
+    public function test_callable_transformer_accepts_closure(): void {
         $fixture = [
             [
                 'id'                 => 'banner_caption',
@@ -596,8 +596,8 @@ class LegacySettingsBridgeTest extends DokanTestCase {
         remove_filter( 'dokan_get_admin_settings_schema', $cb );
         delete_option( 'dokan_appearance' );
 
-        // Closure is rejected by CallableTransformer; bridge falls back to pass-through.
-        $this->assertSame( 'abc', $hydrated['banner_caption'] );
+        // Closures are accepted by CallableTransformer; to_new runs on hydrate.
+        $this->assertSame( 'cba', $hydrated['banner_caption'] );
     }
 
     public function test_callable_transformer_ignored_when_pair_incomplete(): void {
