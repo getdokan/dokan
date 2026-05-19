@@ -1077,6 +1077,58 @@ class SettingsSchema {
 					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
 					'value' => 'off',
 				],
+                'legacy_key' => [
+                    'option' => 'dokan_general',
+                    'field' => 'enabled_address_on_reg',
+                ],
+            ],
+            [
+                'id'            => 'vendor_setup_wizard_logo',
+                'type'          => 'field',
+                'variant'       => 'wp_media_upload',
+                'subpage_id'    => 'vendor_onboarding',
+                'title'         => esc_html__( 'Vendor Setup Wizard Logo', 'dokan-lite' ),
+                'description'   => esc_html__( 'Upload a logo for the vendor setup wizard.', 'dokan-lite' ),
+                'allowed_types' => [ 'image/jpeg', 'image/png', 'image/gif', 'image/svg+xml' ],
+                'max_file_size' => 2097152,
+                'legacy_key'    => [
+                    'option' => 'dokan_general',
+                    'field'  => 'setup_wizard_logo_url',
+                ],
+            ],
+            [
+                'id'          => 'vendor_setup_wizard_message',
+                'type'        => 'field',
+                'variant'     => 'rich_text',
+                'subpage_id'  => 'vendor_onboarding',
+                'title'       => esc_html__( 'Vendor Setup Wizard Message', 'dokan-lite' ),
+                'description' => esc_html__( 'Welcome message shown to vendors during setup.', 'dokan-lite' ),
+                'legacy_key'    => [
+                    'option' => 'dokan_general',
+                    'field'  => 'setup_wizard_message',
+                ],
+            ],
+            [
+                'id'            => 'welcome_wizard',
+                'type'          => 'field',
+                'variant'       => 'switch',
+                'subpage_id'    => 'vendor_onboarding',
+                'title'         => esc_html__( 'Welcome Wizard', 'dokan-lite' ),
+                'description'   => esc_html__( 'Show the vendor setup wizard after first login.', 'dokan-lite' ),
+                'default'       => 'on',
+                'enable_state'  => [
+					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state' => [
+					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+					'value' => 'off',
+				],
+                'legacy_key'    => [
+					'option' => 'dokan_general',
+					'field'  => 'disable_welcome_wizard',
+				],
+                'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\InvertOnOffTransformer::class,
             ],
 
             // === SubPage: Vendor Capabilities ===
@@ -1208,7 +1260,7 @@ class SettingsSchema {
                 'id'          => 'store',
                 'type'        => 'subpage',
                 'page_id'     => 'appearance',
-                'title'       => esc_html__( 'Store Page', 'dokan-lite' ),
+                'title'       => esc_html__( 'Store', 'dokan-lite' ),
                 'priority'    => 100,
             ],
 
@@ -1230,6 +1282,10 @@ class SettingsSchema {
                 'default'     => 12,
                 'min_value'   => 1,
                 'step'        => 1,
+                'legacy_key' => [
+                    'option' => 'dokan_general',
+                    'field' => 'store_products_per_page',
+                ],
             ],
 
             // Google reCAPTCHA
@@ -1431,6 +1487,7 @@ class SettingsSchema {
 						'image' => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/store/store-page-template-four.svg',
 					],
                 ],
+                'radio_variant' => 'template',
             ],
 
             // Store Time Widget
@@ -1490,10 +1547,29 @@ class SettingsSchema {
             [
                 'id'          => 'vendor_info_visibility',
                 'type'        => 'field',
-                'variant'     => 'vendor_info_preview',
+                'variant'     => 'info_preview',
                 'section_id'  => 'vendor_info_visibility_section',
                 'title'       => esc_html__( 'Vendor Info Visibility', 'dokan-lite' ),
                 'description' => esc_html__( 'Choose what vendor details to show customers in single store page.', 'dokan-lite' ),
+                'options'     => [
+                    [
+                        'value' => 'store_email',
+                        'label' => esc_html__( 'Email Address', 'dokan-lite' ),
+                    ],
+                    [
+                        'value' => 'store_phone',
+                        'label' => esc_html__( 'Phone Number', 'dokan-lite' ),
+                    ],
+                    [
+                        'value' => 'store_address',
+                        'label' => esc_html__( 'Store Address', 'dokan-lite' ),
+                    ],
+                ],
+                'default'     => [
+                    'store_email'   => true,
+                    'store_phone'   => true,
+                    'store_address' => true,
+                ],
             ],
 
             // Dokan Font
@@ -1668,31 +1744,30 @@ class SettingsSchema {
                 'subpage_id' => 'privacy',
             ],
             [
-                'id'              => 'data_clear_on_uninstall',
-                'legacy_key' => [
+                'id'             => 'data_clear_on_uninstall',
+                'legacy_key'     => [
                     'option' => 'dokan_general',
                     'field'  => 'data_clear_on_uninstall',
                 ],
-                'type'            => 'field',
-                'variant'         => 'switch',
-                'section_id'      => 'data_clear_section',
-                'title'           => esc_html__( 'Clear Data on Uninstall', 'dokan-lite' ),
-                'description'     => esc_html__( 'Remove all Dokan data when the plugin is uninstalled.', 'dokan-lite' ),
-                'default'         => 'off',
-                'switcher_type'   => 'error',
-                'should_confirm'  => true,
-                'enable_state'    => [
-					'label' => esc_html__( 'Clear Data', 'dokan-lite' ),
-					'value' => 'on',
-				],
-                'disable_state'   => [
-					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
-					'value' => 'off',
-				],
-                'confirm_modal'   => [
+                'type'           => 'field',
+                'variant'        => 'danger_switch',
+                'section_id'     => 'data_clear_section',
+                'title'          => esc_html__( 'Data Clear Consent', 'dokan-lite' ),
+                'description'    => esc_html__( 'Permanently delete all data and database tables related to Dokan and Dokan Pro plugins. This action cannot be undone.', 'dokan-lite' ),
+                'icon'           => 'TriangleAlert',
+                'default'        => 'off',
+                'enable_state'   => [
+                    'label' => esc_html__( 'Clear Data', 'dokan-lite' ),
+                    'value' => 'on',
+                ],
+                'disable_state'  => [
+                    'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+                    'value' => 'off',
+                ],
+                'confirm_modal'  => [
                     'title'             => esc_html__( 'Are you sure to delete all data?', 'dokan-lite' ),
                     'confirmationTitle' => esc_html__( 'Are you sure to delete all data?', 'dokan-lite' ),
-                    'description'       => esc_html__( 'All data and tables related to Dokan and Dokan Pro will be deleted permanently. This action cannot be undone.', 'dokan-lite' ),
+                    'description'       => esc_html__( 'All data and tables related to Dokan and Dokan Pro will be deleted permanently. You will not be able to recover your lost data unless you keep a backup. Do you want to continue?', 'dokan-lite' ),
                     'confirmText'       => esc_html__( 'Yes, Delete', 'dokan-lite' ),
                     'cancelText'        => esc_html__( 'Cancel', 'dokan-lite' ),
                     'checkboxLabel'     => esc_html__( 'Yes, I understand.', 'dokan-lite' ),
