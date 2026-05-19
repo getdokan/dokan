@@ -283,7 +283,8 @@ export class AbuseReportsPage {
     }
 
     async isSettingsHeadingVisible(): Promise<boolean> {
-        return await this.page.getByRole('heading', { name: /Product Report Abuse Settings/i }).isVisible();
+        await this.page.getByRole('heading', { name: /Product Report Abuse Settings/i }).waitFor({ state: 'visible', timeout: 10000 });
+        return true;
     }
 
     async getSettingsDocLinkHref(): Promise<string> {
@@ -292,11 +293,13 @@ export class AbuseReportsPage {
     }
 
     async isReportedByHeadingVisible(): Promise<boolean> {
-        return await this.page.locator(this.admin.reportedByHeading).isVisible();
+        await this.page.locator(this.admin.reportedByHeading).waitFor({ state: 'visible', timeout: 10000 });
+        return true;
     }
 
     async isReasonsHeadingVisible(): Promise<boolean> {
-        return await this.page.locator(this.admin.reasonsHeading).isVisible();
+        await this.page.locator(this.admin.reasonsHeading).waitFor({ state: 'visible', timeout: 10000 });
+        return true;
     }
 
     async enableReportedBySliderIfDisabled() {

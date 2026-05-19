@@ -185,9 +185,12 @@ test.describe('Vendor Verifications (React) Tests @pro', () => {
         const page = await ctx.newPage();
         await page.goto(toPath(`dashboard/settings/verification/`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(3000);
-        const bodyText = await page.locator('body').innerText();
-        expect(bodyText.trim().length).toBeGreaterThan(50);
+        await expect
+            .poll(async () => (await page.locator('body').innerText()).trim().length, {
+                timeout: 30_000,
+                intervals: [500, 1000, 2000, 3000],
+            })
+            .toBeGreaterThan(50);
         await page.close();
         await ctx.close();
     });
@@ -204,7 +207,7 @@ test.describe('Admin Vendor Verifications (React) Tests @pro', () => {
     test('Test Case 1 - Page renders without fatal', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(toPath(`wp-admin/admin.php?page=dokan-vendor-verification`));
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/verifications`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);
@@ -216,11 +219,14 @@ test.describe('Admin Vendor Verifications (React) Tests @pro', () => {
     test('Test Case 2 - Page renders content', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(toPath(`wp-admin/admin.php?page=dokan-vendor-verification`));
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/verifications`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(3000);
-        const bodyText = await page.locator('body').innerText();
-        expect(bodyText.trim().length).toBeGreaterThan(50);
+        await expect
+            .poll(async () => (await page.locator('body').innerText()).trim().length, {
+                timeout: 30_000,
+                intervals: [500, 1000, 2000, 3000],
+            })
+            .toBeGreaterThan(50);
         await page.close();
         await ctx.close();
     });

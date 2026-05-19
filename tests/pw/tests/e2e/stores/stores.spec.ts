@@ -70,7 +70,7 @@ test.describe('Admin Vendors (React) Tests @lite', () => {
         const page = await ctx.newPage();
         await page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/vendors`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(3000);
+        await expect(page.locator('#dokan-admin-dashboard .pui-root').first()).toBeVisible({ timeout: 30_000 });
         expect(page.url()).toMatch(/#\/vendors/);
         const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);
         expect(fatal).toBe(false);
@@ -83,7 +83,7 @@ test.describe('Admin Vendors (React) Tests @lite', () => {
         const page = await ctx.newPage();
         await page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/vendors`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(4000);
+        await expect(page.locator('#dokan-admin-dashboard .pui-root').first()).toBeVisible({ timeout: 30_000 });
         const tableVisible = await page.locator('table, [role="table"], [class*="dataviews"]').first().isVisible({ timeout: 3000 }).catch(() => false);
         expect(tableVisible, 'Vendors page should show a DataViews table').toBe(true);
         await page.close();
@@ -95,7 +95,7 @@ test.describe('Admin Vendors (React) Tests @lite', () => {
         const page = await ctx.newPage();
         await page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/vendors/create`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(3000);
+        await expect(page.locator('#dokan-admin-dashboard .pui-root').first()).toBeVisible({ timeout: 30_000 });
         expect(page.url()).toMatch(/#\/vendors\/create/);
         // Form should have a name / username input
         const formInput = page.locator('input[type="text"], input[type="email"]');
@@ -109,9 +109,9 @@ test.describe('Admin Vendors (React) Tests @lite', () => {
         const page = await ctx.newPage();
         await page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/vendors`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-admin-dashboard .pui-root').first()).toBeVisible({ timeout: 30_000 });
         await page.reload({ waitUntil: 'domcontentloaded' });
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-admin-dashboard .pui-root').first()).toBeVisible({ timeout: 30_000 });
         expect(page.url()).toMatch(/#\/vendors/);
         await page.close();
         await ctx.close();
@@ -123,7 +123,7 @@ test.describe('Admin Vendors (React) Tests @lite', () => {
         const vendorId = process.env.VENDOR_ID || '1';
         await page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/vendors/${vendorId}`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(3000);
+        await expect(page.locator('#dokan-admin-dashboard .pui-root').first()).toBeVisible({ timeout: 30_000 });
         expect(page.url()).toContain('#/vendors/');
         const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);
         expect(fatal).toBe(false);
