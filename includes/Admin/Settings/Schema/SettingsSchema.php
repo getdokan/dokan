@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Admin\Settings\Schema;
 
+use WeDevs\Dokan\Admin\Settings\Migration\Transformer\InvertOnOffTransformer;
 use WeDevs\Dokan\Utilities\AdminSettings;
 
 /**
@@ -170,139 +171,200 @@ class SettingsSchema {
                     return ! in_array( $value, dokan_get_reserved_url_slugs(), true );
                 },
             ],
+            [
+                'id'            => 'catalog_mode_add_to_cart_button_visibility',
+                'type'          => 'field',
+                'variant'       => 'switch',
+                'section_id'    => 'marketplace_settings',
+                'title'         => esc_html__( 'Add to Cart Button Visibility', 'dokan-lite' ),
+                'description'   => esc_html__( 'Show or hide the Add to Cart button on product pages in catalog mode.', 'dokan-lite' ),
+                'default'       => 'on',
+                'enable_state'  => [
+					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state' => [
+					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+					'value' => 'off',
+				],
+                'legacy_key'    => [
+                    'option' => 'dokan_selling',
+                    'field'  => 'catalog_mode_hide_add_to_cart_button',
+				],
+                'legacy_transformer' => InvertOnOffTransformer::class,
+            ],
+			[
+				'id'            => 'catalog_mode_hide_product_price',
+				'type'          => 'field',
+				'variant'       => 'switch',
+				'section_id'    => 'marketplace_settings',
+                'title'   => __( 'Product Price Visibility', 'dokan-lite' ),
+                'description'    => __( 'Check to hide product price.', 'dokan-lite' ),
+                'default' => 'on',
+				'enable_state'  => [
+					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+					'value' => 'on',
+				],
+				'disable_state' => [
+					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+					'value' => 'off',
+				],
+				'legacy_key'    => [
+					'option' => 'dokan_selling',
+					'field'  => 'catalog_mode_hide_product_price',
+				],
+                'dependencies' => [
+					[
+						'key' => 'catalog_mode_add_to_cart_button_visibility',
+						'value' => 'off',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'show',
+						'comparison' => '===',
+					],
+					[
+						'key' => 'catalog_mode_add_to_cart_button_visibility',
+						'value' => 'off',
+						'to_self' => true,
+						'attribute' => 'display',
+						'effect' => 'hide',
+						'comparison' => '!==',
+					],
+				],
+                'legacy_transformer' => InvertOnOffTransformer::class,
+			],
+			// === SubPage: Page Setup ===
+			[
+				'id'          => 'dokan_pages',
+				'type'        => 'subpage',
+				'page_id'     => 'general',
+				'title'       => esc_html__( 'Page Setup', 'dokan-lite' ),
+				'description' => esc_html__( 'Link your WordPress pages to essential Dokan marketplace functions and features.', 'dokan-lite' ),
+				'priority'    => 200,
+				'doc_link'    => 'https://wedevs.com/docs/dokan/settings/page-settings-2/',
+			],
+			[
+				'id'         => 'dashboard_section',
+				'type'       => 'section',
+				'subpage_id' => 'dokan_pages',
+			],
+			[
+				'id'          => 'dashboard',
+				'legacy_key' => [
+					'option' => 'dokan_pages',
+					'field'  => 'dashboard',
+				],
+				'type'        => 'field',
+				'variant'     => 'select',
+				'section_id'  => 'dashboard_section',
+				'title'       => esc_html__( 'Dashboard', 'dokan-lite' ),
+				'description' => esc_html__( 'Select a page to show vendor dashboard.', 'dokan-lite' ),
+				'placeholder' => esc_html__( 'Select page', 'dokan-lite' ),
+				'options'     => $pages_array,
+			],
+			[
+				'id'         => 'my_orders_section',
+				'type'       => 'section',
+				'subpage_id' => 'dokan_pages',
+			],
+			[
+				'id'          => 'my_orders',
+				'legacy_key' => [
+					'option' => 'dokan_pages',
+					'field'  => 'my_orders',
+				],
+				'type'        => 'field',
+				'variant'     => 'select',
+				'section_id'  => 'my_orders_section',
+				'title'       => esc_html__( 'My Orders', 'dokan-lite' ),
+				'description' => esc_html__( 'Select a page to show my orders', 'dokan-lite' ),
+				'placeholder' => esc_html__( 'Select page', 'dokan-lite' ),
+				'options'     => $pages_array,
+			],
+			[
+				'id'         => 'store_listing_section',
+				'type'       => 'section',
+				'subpage_id' => 'dokan_pages',
+			],
+			[
+				'id'          => 'store_listing',
+				'legacy_key' => [
+					'option' => 'dokan_pages',
+					'field'  => 'store_listing',
+				],
+				'type'        => 'field',
+				'variant'     => 'select',
+				'section_id'  => 'store_listing_section',
+				'title'       => esc_html__( 'Store Listing', 'dokan-lite' ),
+				'description' => esc_html__( 'Select a page to show all stores', 'dokan-lite' ),
+				'placeholder' => esc_html__( 'Select page', 'dokan-lite' ),
+				'options'     => $pages_array,
+			],
+			[
+				'id'         => 'reg_tc_page_section',
+				'type'       => 'section',
+				'subpage_id' => 'dokan_pages',
+			],
+			[
+				'id'          => 'reg_tc_page',
+				'legacy_key' => [
+					'option' => 'dokan_pages',
+					'field'  => 'reg_tc_page',
+				],
+				'type'        => 'field',
+				'variant'     => 'select',
+				'section_id'  => 'reg_tc_page_section',
+				'title'       => esc_html__( 'Terms and Conditions Page', 'dokan-lite' ),
+				'description' => esc_html__( 'Select where you want to add Dokan pages.', 'dokan-lite' ),
+				'placeholder' => esc_html__( 'Select page', 'dokan-lite' ),
+				'tooltip'     => esc_html__( 'Select a page to display the Terms and Conditions of your store for Vendors.', 'dokan-lite' ),
+				'options'     => $pages_array,
+			],
 
-            // === SubPage: Page Setup ===
-            [
-                'id'          => 'dokan_pages',
-                'type'        => 'subpage',
-                'page_id'     => 'general',
-                'title'       => esc_html__( 'Page Setup', 'dokan-lite' ),
-                'description' => esc_html__( 'Link your WordPress pages to essential Dokan marketplace functions and features.', 'dokan-lite' ),
-                'priority'    => 200,
-                'doc_link'    => 'https://wedevs.com/docs/dokan/settings/page-settings-2/',
-            ],
-            [
-                'id'         => 'dashboard_section',
-                'type'       => 'section',
-                'subpage_id' => 'dokan_pages',
-            ],
-            [
-                'id'          => 'dashboard',
-                'legacy_key' => [
-                    'option' => 'dokan_pages',
-                    'field'  => 'dashboard',
-                ],
-                'type'        => 'field',
-                'variant'     => 'select',
-                'section_id'  => 'dashboard_section',
-                'title'       => esc_html__( 'Dashboard', 'dokan-lite' ),
-                'description' => esc_html__( 'Select a page to show vendor dashboard.', 'dokan-lite' ),
-                'placeholder' => esc_html__( 'Select page', 'dokan-lite' ),
-                'options'     => $pages_array,
-            ],
-            [
-                'id'         => 'my_orders_section',
-                'type'       => 'section',
-                'subpage_id' => 'dokan_pages',
-            ],
-            [
-                'id'          => 'my_orders',
-                'legacy_key' => [
-                    'option' => 'dokan_pages',
-                    'field'  => 'my_orders',
-                ],
-                'type'        => 'field',
-                'variant'     => 'select',
-                'section_id'  => 'my_orders_section',
-                'title'       => esc_html__( 'My Orders', 'dokan-lite' ),
-                'description' => esc_html__( 'Select a page to show my orders', 'dokan-lite' ),
-                'placeholder' => esc_html__( 'Select page', 'dokan-lite' ),
-                'options'     => $pages_array,
-            ],
-            [
-                'id'         => 'store_listing_section',
-                'type'       => 'section',
-                'subpage_id' => 'dokan_pages',
-            ],
-            [
-                'id'          => 'store_listing',
-                'legacy_key' => [
-                    'option' => 'dokan_pages',
-                    'field'  => 'store_listing',
-                ],
-                'type'        => 'field',
-                'variant'     => 'select',
-                'section_id'  => 'store_listing_section',
-                'title'       => esc_html__( 'Store Listing', 'dokan-lite' ),
-                'description' => esc_html__( 'Select a page to show all stores', 'dokan-lite' ),
-                'placeholder' => esc_html__( 'Select page', 'dokan-lite' ),
-                'options'     => $pages_array,
-            ],
-            [
-                'id'         => 'reg_tc_page_section',
-                'type'       => 'section',
-                'subpage_id' => 'dokan_pages',
-            ],
-            [
-                'id'          => 'reg_tc_page',
-                'legacy_key' => [
-                    'option' => 'dokan_pages',
-                    'field'  => 'reg_tc_page',
-                ],
-                'type'        => 'field',
-                'variant'     => 'select',
-                'section_id'  => 'reg_tc_page_section',
-                'title'       => esc_html__( 'Terms and Conditions Page', 'dokan-lite' ),
-                'description' => esc_html__( 'Select where you want to add Dokan pages.', 'dokan-lite' ),
-                'placeholder' => esc_html__( 'Select page', 'dokan-lite' ),
-                'tooltip'     => esc_html__( 'Select a page to display the Terms and Conditions of your store for Vendors.', 'dokan-lite' ),
-                'options'     => $pages_array,
-            ],
-
-            // === SubPage: Location ===
-            [
-                'id'          => 'location',
-                'type'        => 'subpage',
-                'page_id'     => 'general',
-                'title'       => esc_html__( 'Location', 'dokan-lite' ),
-                'description' => esc_html__( 'Configure how map locations are displayed throughout your marketplace.', 'dokan-lite' ),
-                'priority'    => 300,
-                'doc_link'    => 'https://wedevs.com/docs/dokan/settings/page-settings-2/',
-            ],
-            [
-                'id'         => 'map_api_configuration',
-                'type'       => 'section',
-                'subpage_id' => 'location',
-            ],
-            [
-                'id'          => 'map_api_source',
-                'legacy_key' => [
-                    'option' => 'dokan_appearance',
-                    'field'  => 'map_api_source',
-                ],
-                'type'        => 'field',
-                'variant'     => 'radio_capsule',
-                'section_id'  => 'map_api_configuration',
-                'title'       => esc_html__( 'Map API Source', 'dokan-lite' ),
-                'description' => esc_html__( 'Which map API source you want to use in your site?', 'dokan-lite' ),
-                'default'     => 'google_maps',
-                'options'     => [
-                    [
+			// === SubPage: Location ===
+			[
+				'id'          => 'location',
+				'type'        => 'subpage',
+				'page_id'     => 'general',
+				'title'       => esc_html__( 'Location', 'dokan-lite' ),
+				'description' => esc_html__( 'Configure how map locations are displayed throughout your marketplace.', 'dokan-lite' ),
+				'priority'    => 300,
+				'doc_link'    => 'https://wedevs.com/docs/dokan/settings/page-settings-2/',
+			],
+			[
+				'id'         => 'map_api_configuration',
+				'type'       => 'section',
+				'subpage_id' => 'location',
+			],
+			[
+				'id'          => 'map_api_source',
+				'legacy_key' => [
+					'option' => 'dokan_appearance',
+					'field'  => 'map_api_source',
+				],
+				'type'        => 'field',
+				'variant'     => 'radio_capsule',
+				'section_id'  => 'map_api_configuration',
+				'title'       => esc_html__( 'Map API Source', 'dokan-lite' ),
+				'description' => esc_html__( 'Which map API source you want to use in your site?', 'dokan-lite' ),
+				'default'     => 'google_maps',
+				'options'     => [
+					[
 						'title' => esc_html__( 'Google Maps', 'dokan-lite' ),
 						'value' => 'google_maps',
 					],
-                    [
+					[
 						'title' => esc_html__( 'Mapbox', 'dokan-lite' ),
 						'value' => 'mapbox',
 					],
-                ],
-            ],
-            [
-                'id'           => 'google_map_api_key_group',
-                'type'         => 'fieldgroup',
-                'section_id'   => 'map_api_configuration',
-                'dependencies' => [
-                    [
+				],
+			],
+			[
+				'id'           => 'google_map_api_key_group',
+				'type'         => 'fieldgroup',
+				'section_id'   => 'map_api_configuration',
+				'dependencies' => [
+					[
 						'key' => 'map_api_source',
 						'value' => 'google_maps',
 						'to_self' => true,
@@ -310,7 +372,7 @@ class SettingsSchema {
 						'effect' => 'show',
 						'comparison' => '==',
 					],
-                    [
+					[
 						'key' => 'map_api_source',
 						'value' => 'mapbox',
 						'to_self' => true,
@@ -318,34 +380,34 @@ class SettingsSchema {
 						'effect' => 'hide',
 						'comparison' => '==',
 					],
-                ],
-            ],
-            [
-                'id'          => 'google_map_base',
-                'type'        => 'field',
-                'variant'     => 'base_field_label',
-                'field_group_id' => 'google_map_api_key_group',
-                'title'       => esc_html__( 'Google Map API Key', 'dokan-lite' ),
-                'description' => sprintf(
-                    /* translators: %s: Google Maps API documentation URL */
-                    __( '<a href="%s" target="_blank" rel="noopener noreferrer">API Key</a> is needed to display map on store page.', 'dokan-lite' ),
-                    'https://developers.google.com/maps/documentation/javascript/'
-                ),
-                'tooltip'     => __( 'Insert Google API Key (with hyperlink) to display store map.', 'dokan-lite' ),
-            ],
-            [
-                'id'             => 'google_map_api_key',
-                'type'           => 'field',
-                'variant'        => 'show_hide',
-                'field_group_id' => 'google_map_api_key_group',
-                'placeholder'    => esc_html__( 'Enter your Google Maps API key', 'dokan-lite' ),
-            ],
-            [
-                'id'           => 'mapbox_api_key_group',
-                'type'         => 'fieldgroup',
-                'section_id'   => 'map_api_configuration',
-                'dependencies' => [
-                    [
+				],
+			],
+			[
+				'id'          => 'google_map_base',
+				'type'        => 'field',
+				'variant'     => 'base_field_label',
+				'field_group_id' => 'google_map_api_key_group',
+				'title'       => esc_html__( 'Google Map API Key', 'dokan-lite' ),
+				'description' => sprintf(
+					/* translators: %s: Google Maps API documentation URL */
+					__( '<a href="%s" target="_blank" rel="noopener noreferrer">API Key</a> is needed to display map on store page.', 'dokan-lite' ),
+					'https://developers.google.com/maps/documentation/javascript/'
+				),
+				'tooltip'     => __( 'Insert Google API Key (with hyperlink) to display store map.', 'dokan-lite' ),
+			],
+			[
+				'id'             => 'google_map_api_key',
+				'type'           => 'field',
+				'variant'        => 'show_hide',
+				'field_group_id' => 'google_map_api_key_group',
+				'placeholder'    => esc_html__( 'Enter your Google Maps API key', 'dokan-lite' ),
+			],
+			[
+				'id'           => 'mapbox_api_key_group',
+				'type'         => 'fieldgroup',
+				'section_id'   => 'map_api_configuration',
+				'dependencies' => [
+					[
 						'key' => 'map_api_source',
 						'value' => 'mapbox',
 						'to_self' => true,
@@ -353,7 +415,7 @@ class SettingsSchema {
 						'effect' => 'show',
 						'comparison' => '==',
 					],
-                    [
+					[
 						'key' => 'map_api_source',
 						'value' => 'google_maps',
 						'to_self' => true,
@@ -361,24 +423,24 @@ class SettingsSchema {
 						'effect' => 'hide',
 						'comparison' => '==',
 					],
-                ],
-            ],
-            [
-                'id'             => 'mapbox_map_base',
-                'type'           => 'field',
-                'variant'        => 'base_field_label',
-                'field_group_id' => 'mapbox_api_key_group',
-                'title'          => esc_html__( 'Mapbox API Key', 'dokan-lite' ),
-                'description'    => esc_html__( 'Enter your Mapbox API key to enable map functionality.', 'dokan-lite' ),
-            ],
-            [
-                'id'             => 'mapbox_api_key',
-                'type'           => 'field',
-                'variant'        => 'show_hide',
-                'field_group_id' => 'mapbox_api_key_group',
-                'placeholder'    => esc_html__( 'Enter your Mapbox API key', 'dokan-lite' ),
-            ],
-        ];
+				],
+			],
+			[
+				'id'             => 'mapbox_map_base',
+				'type'           => 'field',
+				'variant'        => 'base_field_label',
+				'field_group_id' => 'mapbox_api_key_group',
+				'title'          => esc_html__( 'Mapbox API Key', 'dokan-lite' ),
+				'description'    => esc_html__( 'Enter your Mapbox API key to enable map functionality.', 'dokan-lite' ),
+			],
+			[
+				'id'             => 'mapbox_api_key',
+				'type'           => 'field',
+				'variant'        => 'show_hide',
+				'field_group_id' => 'mapbox_api_key_group',
+				'placeholder'    => esc_html__( 'Enter your Mapbox API key', 'dokan-lite' ),
+			],
+		];
     }
 
     /**
@@ -420,7 +482,7 @@ class SettingsSchema {
                 'subpage_id' => 'fees',
             ],
             [
-                'id'          => 'shipping_fee',
+                'id'          => 'shipping_fee_recipient',
                 'type'        => 'field',
                 'variant'     => 'radio_capsule',
                 'section_id'  => 'fees',
@@ -439,9 +501,13 @@ class SettingsSchema {
 						'icon' => 'User',
 					],
                 ],
+                'legacy_key' => [
+                    'option' => 'dokan_selling',
+                    'field'  => 'shipping_fee_recipient',
+                ],
             ],
             [
-                'id'          => 'product_tax_fee',
+                'id'          => 'product_tax_fee_recipient',
                 'type'        => 'field',
                 'variant'     => 'radio_capsule',
                 'section_id'  => 'fees',
@@ -460,9 +526,13 @@ class SettingsSchema {
 						'icon' => 'User',
 					],
                 ],
+                'legacy_key' => [
+                    'option' => 'dokan_selling',
+                    'field'  => 'tax_fee_recipient',
+                ],
             ],
             [
-                'id'          => 'shipping_tax_fee',
+                'id'          => 'shipping_tax_fee_recipient',
                 'type'        => 'field',
                 'variant'     => 'radio_capsule',
                 'section_id'  => 'fees',
@@ -480,6 +550,10 @@ class SettingsSchema {
 						'value' => 'admin',
 						'icon' => 'User',
 					],
+                ],
+                'legacy_key' => [
+                    'option' => 'dokan_selling',
+                    'field'  => 'shipping_tax_fee_recipient',
                 ],
             ],
 
@@ -685,6 +759,8 @@ class SettingsSchema {
 					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
 					'value' => 'off',
 				],
+                'legacy_key'         => 'dokan_withdraw.withdraw_methods.paypal',
+                'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\WithdrawMethodToggleTransformer::for_method( 'paypal' ),
             ],
             [
                 'id'               => 'paypal_withdraw_charges',
@@ -716,6 +792,8 @@ class SettingsSchema {
                 'validations'      => [
                     [ 'not_empty' => esc_html__( 'Both percentage and fixed fee is required.', 'dokan-lite' ) ],
                 ],
+                'legacy_key'         => 'dokan_withdraw.withdraw_charges.paypal',
+                'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\WithdrawChargeTransformer::class,
             ],
             // Bank Transfer
             [
@@ -740,6 +818,8 @@ class SettingsSchema {
 					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
 					'value' => 'off',
 				],
+                'legacy_key'         => 'dokan_withdraw.withdraw_methods.bank',
+                'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\WithdrawMethodToggleTransformer::for_method( 'bank' ),
             ],
             [
                 'id'               => 'bank_transfer_withdraw_charges',
@@ -771,6 +851,8 @@ class SettingsSchema {
                 'validations'      => [
                     [ 'not_empty' => esc_html__( 'Both percentage and fixed fee is required.', 'dokan-lite' ) ],
                 ],
+                'legacy_key'         => 'dokan_withdraw.withdraw_charges.bank',
+                'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\WithdrawChargeTransformer::class,
             ],
             // Note: Pro adds more withdraw methods (Skrill, Razorpay, Stripe, Paystack, Custom) via dokan_get_admin_settings_schema filter
 
@@ -789,7 +871,19 @@ class SettingsSchema {
                 'description' => esc_html__( 'Minimum balance required to make a withdraw request. Leave blank to set no minimum limits.', 'dokan-lite' ),
                 'prefix'      => function_exists( 'get_woocommerce_currency_symbol' ) ? get_woocommerce_currency_symbol() : '$',
                 'default'     => 50,
+                'legacy_key' => [
+                    'option' => 'dokan_withdraw',
+                    'field'  => 'withdraw_limit',
+                ],
             ],
+
+            // Order Status for Withdraw
+            [
+                'id'         => 'withdraw_order_status_section',
+                'type'       => 'section',
+                'subpage_id' => 'withdraw_charge',
+            ],
+            self::withdraw_order_status_field(),
 
             // COD Payments
             [
@@ -798,7 +892,7 @@ class SettingsSchema {
                 'subpage_id' => 'withdraw_charge',
             ],
             [
-                'id'          => 'cod_payments',
+                'id'          => 'include_cod_payments_in_balance',
                 'type'        => 'field',
                 'variant'     => 'radio_capsule',
                 'section_id'  => 'cod_payments_section',
@@ -808,13 +902,18 @@ class SettingsSchema {
                 'options'     => [
                     [
 						'title' => esc_html__( 'Include', 'dokan-lite' ),
-						'value' => 'include',
+						'value' => 'on',
 					],
                     [
 						'title' => esc_html__( 'Exclude', 'dokan-lite' ),
-						'value' => 'exclude',
+						'value' => 'off',
 					],
                 ],
+                'legacy_key' => [
+                    'option' => 'dokan_withdraw',
+                    'field'  => 'exclude_cod_payment',
+                ],
+                'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\InvertOnOffTransformer::class,
             ],
 
             // === SubPage: Reverse Withdrawal ===
@@ -1019,6 +1118,46 @@ class SettingsSchema {
     }
 
     /**
+     * Build the `withdraw_order_status` multi-switch field.
+     *
+     * Options are derived from the legacy `dokan_settings_withdraw_order_status_options`
+     * filter so Pro modules / extensions that already extend that filter continue to
+     * add statuses on both the legacy and new UIs with one declaration. The new
+     * field stores a `Record<string,bool>` keyed by status (e.g. `wc-completed`),
+     * each slot bridged through {@see MulticheckSlotTransformer} to the legacy
+     * `dokan_withdraw.withdraw_order_status` parent array.
+     *
+     * @return array
+     */
+    private static function withdraw_order_status_field(): array {
+        $statuses = AdminSettings::withdraw_order_status_options();
+
+        $options    = [];
+        $legacy_key = [];
+        foreach ( $statuses as $value => $label ) {
+            $options[]            = [
+                'value' => (string) $value,
+                'label' => (string) $label,
+            ];
+            $legacy_key[ $value ] = 'dokan_withdraw.withdraw_order_status.' . $value;
+        }
+        $slot_keys = array_keys( $legacy_key );
+
+        return [
+            'id'                 => 'withdraw_order_status',
+            'type'               => 'field',
+            'variant'            => 'multicheck',
+            'section_id'         => 'withdraw_order_status_section',
+            'title'              => esc_html__( 'Order Status for Withdraw', 'dokan-lite' ),
+            'description'        => esc_html__( 'Order status for which vendor can make a withdraw request.', 'dokan-lite' ),
+            'options'            => $options,
+            'default'            => [ 'wc-processing' ],
+            'legacy_key'         => $legacy_key,
+            'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\MulticheckArrayTransformer::for_slots( $slot_keys ),
+        ];
+    }
+
+    /**
      * Vendor page schema.
      *
      * @return array
@@ -1146,7 +1285,7 @@ class SettingsSchema {
                 'subpage_id' => 'vendor_capabilities',
             ],
             [
-                'id'            => 'one_page_creation',
+                'id'            => 'one_page_product_creation',
                 'type'          => 'field',
                 'variant'       => 'switch',
                 'section_id'    => 'vendor_capabilities',
@@ -1162,6 +1301,10 @@ class SettingsSchema {
 					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
 					'value' => 'off',
 				],
+                'legacy_key'    => [
+                    'option' => 'dokan_selling',
+                    'field'  => 'one_step_product_create',
+                ],
             ],
             [
                 'id'            => 'product_popup',
@@ -1182,7 +1325,7 @@ class SettingsSchema {
 				],
                 'dependencies'  => [
                     [
-						'key' => 'one_page_creation',
+						'key' => 'one_page_product_creation',
 						'value' => 'on',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -1190,7 +1333,7 @@ class SettingsSchema {
 						'comparison' => '!==',
 					],
                     [
-						'key' => 'one_page_creation',
+						'key' => 'one_page_product_creation',
 						'value' => 'on',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -1198,6 +1341,11 @@ class SettingsSchema {
 						'comparison' => '===',
 					],
                 ],
+                'legacy_key'    => [
+                    'option' => 'dokan_selling',
+                    'field'  => 'disable_product_popup',
+                ],
+                'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\InvertOnOffTransformer::class,
             ],
             [
                 'id'            => 'order_status_change',
@@ -1222,7 +1370,7 @@ class SettingsSchema {
 				],
             ],
             [
-                'id'            => 'select_any_category',
+                'id'            => 'vendor_select_any_product_category',
                 'type'          => 'field',
                 'variant'       => 'switch',
                 'section_id'    => 'vendor_capabilities',
@@ -1237,6 +1385,10 @@ class SettingsSchema {
 					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
 					'value' => 'off',
 				],
+                'legacy_key'    => [
+                    'option' => 'dokan_selling',
+                    'field'  => 'dokan_any_category_selection',
+                ],
             ],
         ];
     }
