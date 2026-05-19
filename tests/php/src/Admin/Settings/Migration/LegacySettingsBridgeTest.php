@@ -654,4 +654,148 @@ class LegacySettingsBridgeTest extends DokanTestCase {
 
         $this->assertSame( 'world', $stored['setup_wizard_message'] );
     }
+
+    public function test_multi_mapping_hydrates_from_legacy_via_slots(): void {
+        $fixture = [
+            [
+                'id'                 => 'product_page_appearance',
+                'type'               => 'field',
+                'legacy_key'         => [
+                    'vendor_info'   => [ 'option' => 'dokan_appearance', 'field' => 'show_vendor_info' ],
+                    'more_products' => [ 'option' => 'dokan_appearance', 'field' => 'show_more_products' ],
+                    'shipping_tab'  => [ 'option' => 'dokan_appearance', 'field' => 'show_shipping_tab' ],
+                ],
+                'legacy_transformer' => [
+                    'to_new'    => static function ( $slots ) {
+                        return [
+                            'vendor_info'   => ! empty( $slots['vendor_info'] ),
+                            'more_products' => ! empty( $slots['more_products'] ),
+                            'shipping_tab'  => ! empty( $slots['shipping_tab'] ),
+                        ];
+                    },
+                    'to_legacy' => static function ( $new ) {
+                        return [
+                            'vendor_info'   => ! empty( $new['vendor_info'] ) ? 'on' : '',
+                            'more_products' => ! empty( $new['more_products'] ) ? 'on' : '',
+                            'shipping_tab'  => ! empty( $new['shipping_tab'] ) ? 'on' : '',
+                        ];
+                    },
+                ],
+                'default'            => [ 'vendor_info' => false, 'more_products' => false, 'shipping_tab' => false ],
+            ],
+        ];
+        $cb = static function () use ( $fixture ) {
+            return $fixture;
+        };
+        add_filter( 'dokan_get_admin_settings_schema', $cb );
+
+        update_option( 'dokan_appearance', [
+            'show_vendor_info'   => 'on',
+            'show_more_products' => '',
+            'show_shipping_tab'  => 'on',
+        ] );
+
+        $bridge   = new LegacySettingsBridge();
+        $hydrated = $bridge->hydrate_new_from_legacy( [] );
+
+        remove_filter( 'dokan_get_admin_settings_schema', $cb );
+        delete_option( 'dokan_appearance' );
+
+        $this->assertSame(
+            [ 'vendor_info' => true, 'more_products' => false, 'shipping_tab' => true ],
+            $hydrated['product_page_appearance']
+        );
+    }
+
+    public function test_multi_mapping_writes_back_each_slot(): void {
+        $fixture = [
+            [
+                'id'                 => 'product_page_appearance',
+                'type'               => 'field',
+                'legacy_key'         => [
+                    'vendor_info'   => [ 'option' => 'dokan_appearance', 'field' => 'show_vendor_info' ],
+                    'more_products' => [ 'option' => 'dokan_appearance', 'field' => 'show_more_products' ],
+                    'shipping_tab'  => [ 'option' => 'dokan_appearance', 'field' => 'show_shipping_tab' ],
+                ],
+                'legacy_transformer' => [
+                    'to_new'    => static function ( $slots ) {
+                        return $slots;
+                    },
+                    'to_legacy' => static function ( $new ) {
+                        return [
+                            'vendor_info'   => ! empty( $new['vendor_info'] ) ? 'on' : '',
+                            'more_products' => ! empty( $new['more_products'] ) ? 'on' : '',
+                            'shipping_tab'  => ! empty( $new['shipping_tab'] ) ? 'on' : '',
+                        ];
+                    },
+                ],
+                'default'            => [],
+            ],
+        ];
+        $cb = static function () use ( $fixture ) {
+            return $fixture;
+        };
+        add_filter( 'dokan_get_admin_settings_schema', $cb );
+
+        $bridge = new LegacySettingsBridge();
+        $bridge->write_new_to_legacy( [
+            'product_page_appearance' => [
+                'vendor_info'   => true,
+                'more_products' => false,
+                'shipping_tab'  => true,
+            ],
+        ] );
+        $stored = get_option( 'dokan_appearance' );
+
+        remove_filter( 'dokan_get_admin_settings_schema', $cb );
+        delete_option( 'dokan_appearance' );
+
+        $this->assertSame( 'on', $stored['show_vendor_info'] );
+        $this->assertSame( '', $stored['show_more_products'] );
+        $this->assertSame( 'on', $stored['show_shipping_tab'] );
+    }
+
+    public function test_multi_mapping_spans_multiple_legacy_options(): void {
+        $fixture = [
+            [
+                'id'                 => 'cross_option_field',
+                'type'               => 'field',
+                'legacy_key'         => [
+                    'a' => [ 'option' => 'dokan_appearance', 'field' => 'slot_a' ],
+                    'b' => [ 'option' => 'dokan_general', 'field' => 'slot_b' ],
+                ],
+                'legacy_transformer' => [
+                    'to_new'    => static function ( $slots ) {
+                        return $slots;
+                    },
+                    'to_legacy' => static function ( $new ) {
+                        return [ 'a' => $new['a'] ?? '', 'b' => $new['b'] ?? '' ];
+                    },
+                ],
+                'default'            => [],
+            ],
+        ];
+        $cb = static function () use ( $fixture ) {
+            return $fixture;
+        };
+        add_filter( 'dokan_get_admin_settings_schema', $cb );
+
+        update_option( 'dokan_appearance', [ 'slot_a' => 'A' ] );
+        update_option( 'dokan_general', [ 'slot_b' => 'B' ] );
+
+        $bridge   = new LegacySettingsBridge();
+        $hydrated = $bridge->hydrate_new_from_legacy( [] );
+        $this->assertSame( [ 'a' => 'A', 'b' => 'B' ], $hydrated['cross_option_field'] );
+
+        $bridge->write_new_to_legacy( [ 'cross_option_field' => [ 'a' => 'A2', 'b' => 'B2' ] ] );
+        $stored_app = get_option( 'dokan_appearance' );
+        $stored_gen = get_option( 'dokan_general' );
+
+        remove_filter( 'dokan_get_admin_settings_schema', $cb );
+        delete_option( 'dokan_appearance' );
+        delete_option( 'dokan_general' );
+
+        $this->assertSame( 'A2', $stored_app['slot_a'] );
+        $this->assertSame( 'B2', $stored_gen['slot_b'] );
+    }
 }
