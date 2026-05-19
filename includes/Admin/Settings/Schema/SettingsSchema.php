@@ -1488,6 +1488,10 @@ class SettingsSchema {
 					],
                 ],
                 'radio_variant' => 'template',
+                'legacy_key' => [
+                    'option' => 'dokan_appearance',
+                    'field'  => 'store_header_template',
+                ],
             ],
 
             // Store Time Widget
@@ -1570,6 +1574,11 @@ class SettingsSchema {
                     'store_phone'   => true,
                     'store_address' => true,
                 ],
+                'legacy_key' => [
+                    'option' => 'dokan_appearance',
+                    'field'  => 'hide_vendor_info',
+                ],
+                'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\HideVendorInfoTransformer::class,
             ],
 
             // Dokan Font
@@ -1594,6 +1603,11 @@ class SettingsSchema {
 					'label' => esc_html__( 'Disable', 'dokan-lite' ),
 					'value' => 'off',
 				],
+                'legacy_key' => [
+                    'option' => 'dokan_appearance',
+                    'field'  => 'disable_dokan_fontawesome',
+                ],
+                'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\InvertOnOffTransformer::class,
             ],
 
             // Single Product Preview
@@ -1603,12 +1617,46 @@ class SettingsSchema {
                 'subpage_id' => 'store',
             ],
             [
-                'id'          => 'single_product_preview',
+                'id'          => 'single_product_page_appearance',
                 'type'        => 'field',
-                'variant'     => 'single_product_preview',
+                'variant'     => 'info_preview',
                 'section_id'  => 'single_product_preview_section',
                 'title'       => esc_html__( 'Single Product Page Appearance', 'dokan-lite' ),
                 'description' => esc_html__( 'Choose which sections to show when customers view individual products.', 'dokan-lite' ),
+                'options'     => [
+                    [
+                        'value' => 'vendor_info',
+                        'label' => esc_html__( 'Vendor Info', 'dokan-lite' ),
+                    ],
+                    [
+                        'value' => 'more_products_tab',
+                        'label' => esc_html__( 'More products tab', 'dokan-lite' ),
+                    ],
+                    [
+                        'value' => 'shipping_tab',
+                        'label' => esc_html__( 'Shipping tab', 'dokan-lite' ),
+                    ],
+                ],
+                'default'     => [
+                    'vendor_info'       => true,
+                    'more_products_tab' => true,
+                    'shipping_tab'      => true,
+                ],
+                'legacy_key'  => [
+                    'vendor_info'       => [
+						'option' => 'dokan_general',
+						'field' => 'show_vendor_info',
+					],
+                    'more_products_tab' => [
+						'option' => 'dokan_general',
+						'field' => 'enabled_more_products_tab',
+					],
+                    'shipping_tab'      => [
+						'option' => 'dokan_selling',
+						'field' => 'disable_shipping_tab',
+					],
+                ],
+                'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\SingleProductAppearanceTransformer::class,
             ],
         ];
     }
