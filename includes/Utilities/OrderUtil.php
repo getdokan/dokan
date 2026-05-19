@@ -217,7 +217,7 @@ class OrderUtil {
      * Centralizes the gate so the same hook value is honored across all vendor email templates
      * (vendor-new-order / vendor-completed-order, HTML and plain text).
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.2
      *
      * @param WC_Order $order Order object.
      *
@@ -229,7 +229,7 @@ class OrderUtil {
          * Filter whether to render customer-identifying details (billing/shipping address, billing full name,
          * customer email) in vendor order emails.
          *
-         * @since DOKAN_SINCE
+         * @since 5.0.2
          *
          * @param bool     $show  Whether to render customer details. Default true.
          * @param WC_Order $order Order object.

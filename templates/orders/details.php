@@ -120,7 +120,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
             /**
              * Filter whether to render the billing address section on the vendor order details page.
              *
-             * @since DOKAN_SINCE
+             * @since 5.0.2
              *
              * @param bool      $show  Whether to display the billing address. Default true.
              * @param \WC_Order $order Order object.
@@ -130,7 +130,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                 /**
                  * Filter the formatted billing address rendered on the vendor order details page.
                  *
-                 * @since DOKAN_SINCE
+                 * @since 5.0.2
                  *
                  * @param string    $formatted_billing_address Formatted billing address HTML.
                  * @param \WC_Order $order                     Order object.
@@ -157,7 +157,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
             /**
              * Filter whether to render the shipping address section on the vendor order details page.
              *
-             * @since DOKAN_SINCE
+             * @since 5.0.2
              *
              * @param bool      $show  Whether to display the shipping address. Default true.
              * @param \WC_Order $order Order object.
@@ -167,7 +167,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                 /**
                  * Filter the formatted shipping address rendered on the vendor order details page.
                  *
-                 * @since DOKAN_SINCE
+                 * @since 5.0.2
                  *
                  * @param string    $formatted_shipping_address Formatted shipping address HTML.
                  * @param \WC_Order $order                      Order object.
