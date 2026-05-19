@@ -9,7 +9,6 @@ import type {
 } from '@wordpress/dataviews/src/types';
 import { kebabCase, snakeCase } from '@dokan/utilities';
 import { useEffect, useState } from '@wordpress/element';
-import './style.scss';
 import { AdminFilterProps } from '@src/components/AdminFilter';
 import { AdminTabProps } from '@src/components/AdminTab';
 import { AdminTab, AdminFilter } from '@src/components';

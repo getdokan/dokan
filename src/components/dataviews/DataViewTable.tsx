@@ -11,7 +11,6 @@ import { kebabCase, snakeCase } from '@dokan/utilities';
 import { useEffect } from '@wordpress/element';
 import { useWindowDimensions } from '@dokan/hooks';
 import { __, setLocaleData } from '@wordpress/i18n';
-import './style.scss';
 
 type ItemWithId = { id: string };
 
