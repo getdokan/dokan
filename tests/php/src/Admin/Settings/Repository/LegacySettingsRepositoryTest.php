@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\Test\Admin\Settings\Repository;
 
 use WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepository;
 use WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepositoryInterface;
+use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository;
 use WeDevs\Dokan\Test\DokanTestCase;
 
 /**
@@ -277,6 +278,31 @@ class LegacySettingsRepositoryTest extends DokanTestCase {
             ->get( LegacySettingsRepository::class )
             ->flush_cache( null );
 
+        $this->assertSame( 'marketplace', dokan_get_option( 'custom_store_url', 'dokan_general' ) );
+    }
+
+    public function test_integration_round_trip_through_container(): void {
+        // Set both options to a value that differs from what the test will write
+        // so the diff is always non-empty regardless of any prior test's cached state.
+        update_option( 'dokan_general', [ 'custom_store_url' => 'before' ] );
+        update_option( 'dokan_admin_settings', [ 'vendor_store_url' => 'before' ] );
+
+        // Flush every in-request snapshot (container singletons + internal private
+        // repos inside LegacySettingsRepository and LegacySettingsBridge) so the
+        // next read reflects the options we just set.
+        $container = dokan_get_container();
+        $container->get( LegacySettingsRepository::class )->flush_cache( null );
+        $container->get( SettingsRepository::class )->flush_cache();
+
+        $repo = $container->get( LegacySettingsRepository::class );
+
+        $repo->update( 'dokan_general', [ 'custom_store_url' => 'marketplace' ] );
+
+        // Legacy storage updated.
+        $this->assertSame( 'marketplace', get_option( 'dokan_general' )['custom_store_url'] );
+        // New flat storage updated via mirror.
+        $this->assertSame( 'marketplace', get_option( 'dokan_admin_settings' )['vendor_store_url'] );
+        // dokan_get_option() resolves through the repo and sees the overlay.
         $this->assertSame( 'marketplace', dokan_get_option( 'custom_store_url', 'dokan_general' ) );
     }
 }
