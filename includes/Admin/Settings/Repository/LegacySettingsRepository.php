@@ -33,7 +33,7 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
 
         foreach ( $this->known_sections() as $section ) {
             add_action( "update_option_{$section}", [ $this, 'on_section_changed' ] );
-            add_action( "add_option_{$section}",    [ $this, 'on_section_changed' ] );
+            add_action( "add_option_{$section}", [ $this, 'on_section_changed' ] );
         }
 
         // The new flat option participates in every overlay — its writes invalidate
@@ -41,7 +41,7 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
         // if the repository is instantiated more than once in a request.
         $new_option = SettingsRepository::OPTION_KEY;
         add_action( "update_option_{$new_option}", [ $this, 'flush_all_snapshots' ] );
-        add_action( "add_option_{$new_option}",    [ $this, 'flush_all_snapshots' ] );
+        add_action( "add_option_{$new_option}", [ $this, 'flush_all_snapshots' ] );
     }
 
     public function all( string $section ): array {

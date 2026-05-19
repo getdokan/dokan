@@ -73,7 +73,7 @@ class LegacySettingsRepositoryTest extends DokanTestCase {
     }
 
     public function test_foreign_legacy_write_flushes_only_that_section(): void {
-        update_option( 'dokan_general',    [ 'custom_store_url' => 'shop' ] );
+        update_option( 'dokan_general', [ 'custom_store_url' => 'shop' ] );
         update_option( 'dokan_appearance', [ 'store_banner_width' => 600 ] );
 
         $repo = new LegacySettingsRepository();
@@ -97,7 +97,7 @@ class LegacySettingsRepositoryTest extends DokanTestCase {
     }
 
     public function test_new_flat_option_write_flushes_every_section(): void {
-        update_option( 'dokan_general',    [ 'custom_store_url' => 'shop' ] );
+        update_option( 'dokan_general', [ 'custom_store_url' => 'shop' ] );
         update_option( 'dokan_appearance', [ 'store_banner_width' => 600 ] );
 
         $repo = new LegacySettingsRepository();
