@@ -8,6 +8,7 @@ use WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepository;
 use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository;
 use WeDevs\Dokan\Admin\Settings\Schema\SchemaValidator;
 use WeDevs\Dokan\Admin\Settings\Schema\SettingsRegistry;
+use WeDevs\Dokan\Admin\Settings\SettingsAccessor;
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
 
 class AdminSettingsServiceProvider extends BaseServiceProvider {
@@ -26,6 +27,7 @@ class AdminSettingsServiceProvider extends BaseServiceProvider {
         LegacySettingsBridge::class,
         LegacySettingsRepository::class,
         BridgeBootstrap::class,
+        SettingsAccessor::class,
     ];
 
 	/**
