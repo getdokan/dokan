@@ -40,6 +40,27 @@ interface SettingsAccessorInterface {
 	public function has( string $key ): bool;
 
 	/**
+	 * Whether `$key` has a value present in storage (the flat option or, via
+	 * the legacy bridge, a mapped per-section legacy option).
+	 *
+	 * Distinct from {@see has()}: a registered key with no stored value
+	 * returns true from `has()` (it's known to the schema) but false from
+	 * `has_stored()` (its effective value comes from the schema default,
+	 * not from a user-set value).
+	 *
+	 * Use this to preserve runtime fallback contracts that depend on whether
+	 * the user explicitly set a value — e.g. "fall back to the product tax
+	 * recipient when shipping_tax_fee_recipient isn't explicitly stored".
+	 *
+	 * @since DOKAN_SINCE
+	 *
+	 * @param string $key Flat schema id.
+	 *
+	 * @return bool
+	 */
+	public function has_stored( string $key ): bool;
+
+	/**
 	 * Snapshot of every registered field's effective value, keyed by id.
 	 *
 	 * @return array<string,mixed>
