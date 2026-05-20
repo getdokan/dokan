@@ -1,6 +1,0 @@
-{
-  "method": "wp option delete dokan_pages; GET /wp-json/dokan/v1/settings; read data.dokan_pages",
-  "dokan_pages": {},
-  "keys": [],
-  "verdict": "No defaults declared on field schema; merge filter sees no current settings and writes whatever payload contains"
-}

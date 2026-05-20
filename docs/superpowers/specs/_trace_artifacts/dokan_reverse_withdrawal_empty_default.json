@@ -1,4 +1,0 @@
-{
-  "note": "Initial GET of dokan_get_setting_values when dokan_reverse_withdrawal option does NOT exist in wp_options (wp option get returned: 'Could not get dokan_reverse_withdrawal option. Does it exist?')",
-  "data.dokan_reverse_withdrawal": []
-}

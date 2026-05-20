@@ -1,4 +1,0 @@
-{
-  "_note": "Empty-option default. After `wp option delete dokan_report_abuse`, `get_option('dokan_report_abuse', [])` returns `[]` (empty PHP array). No schema defaults injected on read. Read sites that need values supply their own fallback per call (e.g., SingleProduct.php:62 `(array) get_option( 'dokan_report_abuse', [] )` then iterate `$options['abuse_reasons'] ?? []`).",
-  "value": []
-}
