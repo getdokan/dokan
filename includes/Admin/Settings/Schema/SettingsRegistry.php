@@ -35,6 +35,16 @@ class SettingsRegistry {
     private ?array $field_index = null;
 
     /**
+     * Lazy set of ids that are present in storage (flat option or via the
+     * legacy bridge overlay). Null until first {@see is_stored()} call.
+     *
+     * Keys are flat schema ids; values are unused (the array is used as a set).
+     *
+     * @var array<string,bool>|null
+     */
+    private ?array $stored_keys = null;
+
+    /**
      * Settings repository — single read surface for the stored payload.
      *
      * @var SettingsRepositoryInterface
@@ -102,6 +112,7 @@ class SettingsRegistry {
     public function clear_cache(): void {
         $this->cache       = null;
         $this->field_index = null;
+        $this->stored_keys = null;
     }
 
     /**
@@ -144,6 +155,56 @@ class SettingsRegistry {
                 continue;
             }
             $this->field_index[ $id ] = $element;
+        }
+    }
+
+    /**
+     * Whether `$id` has a value present in storage (the flat option or, via
+     * the legacy bridge, a mapped per-section legacy option).
+     *
+     * Returns false for unregistered ids, and false when the only "value" the
+     * accessor would return is the schema default. Use this to distinguish a
+     * user-set value from a defaulted one — e.g. when preserving a runtime
+     * fallback that depends on another setting.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $id Flat schema id.
+     *
+     * @return bool
+     */
+    public function is_stored( string $id ): bool {
+        if ( null === $this->stored_keys ) {
+            $this->build_stored_keys();
+        }
+        return isset( $this->stored_keys[ $id ] );
+    }
+
+    /**
+     * Build the set of ids present in storage, applying the same bridge
+     * overlay {@see populate_values()} uses so legacy-only values count
+     * as "stored".
+     *
+     * @return void
+     */
+    private function build_stored_keys(): void {
+        $stored = $this->settings_repo->all();
+
+        if ( function_exists( 'dokan_get_container' ) ) {
+            try {
+                $bridge = dokan_get_container()->get( \WeDevs\Dokan\Admin\Settings\Migration\LegacySettingsBridge::class );
+                $stored = $bridge->hydrate_new_from_legacy( $stored );
+            } catch ( \Throwable $unused ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+                unset( $unused );
+                // Container not booted — fall back to flat-only view.
+            }
+        }
+
+        $this->stored_keys = [];
+        foreach ( array_keys( $stored ) as $id ) {
+            if ( is_string( $id ) && '' !== $id ) {
+                $this->stored_keys[ $id ] = true;
+            }
         }
     }
 
