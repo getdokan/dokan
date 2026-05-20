@@ -1,8 +1,0 @@
-{
-    "enable_out_of_stock": "off",
-    "enable_ajax_add_to_quote": "off",
-    "redirect_to_quote_page": "off",
-    "enable_convert_to_order": "off",
-    "enable_quote_converter_display": "off",
-    "decrease_offered_price": "0"
-}

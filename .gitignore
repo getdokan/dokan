@@ -29,3 +29,7 @@ test-results/
 !/assets/css/vue-frontend.css
 !/assets/css/wp-version-before-5-3.css
 .vscode
+
+# Planning/design scaffolding — kept local, not in repo
+/docs/superpowers/
+/openspec/
