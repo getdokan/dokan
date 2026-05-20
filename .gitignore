@@ -33,3 +33,11 @@ test-results/
 # Planning/design scaffolding — kept local, not in repo
 /docs/superpowers/
 /openspec/
+
+# Personal Claude Code framework configs (opsx / openspec workflow)
+# Team-shared skills under .claude/skills/dokan-* remain tracked.
+/.claude/commands/opsx/
+/.claude/skills/openspec-apply-change/
+/.claude/skills/openspec-archive-change/
+/.claude/skills/openspec-explore/
+/.claude/skills/openspec-propose/
