@@ -33,3 +33,20 @@ test-results/
 # Planning/design scaffolding — kept local, not in repo
 /docs/superpowers/
 /openspec/
+
+# Personal Claude Code framework configs (opsx / openspec workflow)
+# Team-shared skills under .claude/skills/dokan-* remain tracked.
+/.claude/commands/opsx/
+/.claude/skills/openspec-apply-change/
+/.claude/skills/openspec-archive-change/
+/.claude/skills/openspec-explore/
+/.claude/skills/openspec-propose/
+
+# Personal GitHub Copilot framework configs (opsx / openspec workflow)
+# Team-shared .github files (ISSUE_TEMPLATE, pull_request_template,
+# workflows) remain tracked.
+/.github/prompts/opsx-*.prompt.md
+/.github/skills/openspec-apply-change/
+/.github/skills/openspec-archive-change/
+/.github/skills/openspec-explore/
+/.github/skills/openspec-propose/
