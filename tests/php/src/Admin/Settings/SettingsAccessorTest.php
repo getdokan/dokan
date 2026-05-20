@@ -39,4 +39,21 @@ class SettingsAccessorTest extends DokanTestCase {
 		$accessor = new SettingsAccessor( new SettingsRegistry() );
 		$this->assertSame( 'store', $accessor->get( 'vendor_store_url' ) );
 	}
+
+	public function test_get_returns_fallback_for_unregistered_key(): void {
+		$accessor = new SettingsAccessor( new SettingsRegistry() );
+		$this->assertSame(
+			'sentinel',
+			$accessor->get( 'not_a_real_setting_xyz', 'sentinel' )
+		);
+	}
+
+	public function test_get_ignores_fallback_when_key_is_registered(): void {
+		// Stored value present — fallback should be ignored.
+		$repo = new SettingsRepository();
+		$repo->update( [ 'vendor_store_url' => 'boutique' ] );
+
+		$accessor = new SettingsAccessor( new SettingsRegistry() );
+		$this->assertSame( 'boutique', $accessor->get( 'vendor_store_url', 'IGNORED' ) );
+	}
 }
