@@ -35,7 +35,15 @@ class AdminSettingsServiceProvider extends BaseServiceProvider {
      */
 	public function register(): void {
         foreach ( $this->services as $service ) {
-            $definition = $this->share_with_implements_tags( $service );
+            if ( SettingsAccessor::class === $service ) {
+                // SettingsAccessor requires SettingsRegistry; League's
+                // reflection-based auto-resolve cannot satisfy a non-nullable
+                // typed parameter without an explicit binding, so the
+                // dependency is wired here.
+                $definition = $this->share_with_implements_tags( $service )->addArgument( SettingsRegistry::class );
+            } else {
+                $definition = $this->share_with_implements_tags( $service );
+            }
             $this->add_tags( $definition, $this->tags );
         }
     }
