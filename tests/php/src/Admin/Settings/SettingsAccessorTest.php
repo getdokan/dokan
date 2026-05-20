@@ -32,4 +32,11 @@ class SettingsAccessorTest extends DokanTestCase {
 		$accessor = new SettingsAccessor( new SettingsRegistry() );
 		$this->assertSame( 'boutique', $accessor->get( 'vendor_store_url' ) );
 	}
+
+	public function test_get_returns_schema_default_when_no_stored_value(): void {
+		// dokan_admin_settings is empty (cleared in setUp). vendor_store_url has a
+		// schema default of 'store' (see SettingsSchema.php:165).
+		$accessor = new SettingsAccessor( new SettingsRegistry() );
+		$this->assertSame( 'store', $accessor->get( 'vendor_store_url' ) );
+	}
 }
