@@ -26,10 +26,10 @@ class SettingsRegistryFindFieldTest extends DokanTestCase {
 
 	public function test_find_field_returns_field_array_for_registered_id(): void {
 		$registry = new SettingsRegistry();
-		$field    = $registry->find_field( 'vendor_store_url' );
+		$field    = $registry->find_field( 'vendor_store_url_slug' );
 
-		$this->assertNotNull( $field, 'vendor_store_url must be registered.' );
-		$this->assertSame( 'vendor_store_url', $field['id'] );
+		$this->assertNotNull( $field, 'vendor_store_url_slug must be registered.' );
+		$this->assertSame( 'vendor_store_url_slug', $field['id'] );
 		$this->assertSame( 'field', $field['type'] );
 		$this->assertArrayHasKey( 'default', $field );
 	}
@@ -62,14 +62,14 @@ class SettingsRegistryFindFieldTest extends DokanTestCase {
 		$registry = new SettingsRegistry();
 
 		// Prime the index.
-		$this->assertNotNull( $registry->find_field( 'vendor_store_url' ) );
+		$this->assertNotNull( $registry->find_field( 'vendor_store_url_slug' ) );
 
 		// Mutate stored value, clear cache, re-read — the rebuilt field should reflect the new value.
 		$repo = new SettingsRepository();
-		$repo->update( [ 'vendor_store_url' => 'boutique' ] );
+		$repo->update( [ 'vendor_store_url_slug' => 'boutique' ] );
 		$registry->clear_cache();
 
-		$field = $registry->find_field( 'vendor_store_url' );
+		$field = $registry->find_field( 'vendor_store_url_slug' );
 		$this->assertNotNull( $field );
 		$this->assertSame( 'boutique', $field['value'] );
 	}

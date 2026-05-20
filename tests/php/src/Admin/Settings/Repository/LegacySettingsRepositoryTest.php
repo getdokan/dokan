@@ -45,7 +45,7 @@ class LegacySettingsRepositoryTest extends DokanTestCase {
 
     public function test_overlay_from_new_option_wins_over_raw_section(): void {
         update_option( 'dokan_general', [ 'custom_store_url' => 'shop' ] );
-        update_option( 'dokan_admin_settings', [ 'vendor_store_url' => 'marketplace' ] );
+        update_option( 'dokan_admin_settings', [ 'vendor_store_url_slug' => 'marketplace' ] );
 
         $repo = new LegacySettingsRepository();
         $this->assertSame(
@@ -105,7 +105,7 @@ class LegacySettingsRepositoryTest extends DokanTestCase {
         $repo->all( 'dokan_general' );
         $repo->all( 'dokan_appearance' );
 
-        update_option( 'dokan_admin_settings', [ 'vendor_store_url' => 'marketplace' ] );
+        update_option( 'dokan_admin_settings', [ 'vendor_store_url_slug' => 'marketplace' ] );
 
         // After flush, the next read should reflect the overlay from the new flat option.
         $this->assertSame( 'marketplace', $repo->get( 'dokan_general', 'custom_store_url' ) );
@@ -150,8 +150,8 @@ class LegacySettingsRepositoryTest extends DokanTestCase {
 
         $new = get_option( 'dokan_admin_settings' );
         $this->assertIsArray( $new );
-        // Schema maps vendor_store_url → dokan_general.custom_store_url (SettingsSchema.php:153-165).
-        $this->assertSame( 'marketplace', $new['vendor_store_url'] );
+        // Schema maps vendor_store_url_slug → dokan_general.custom_store_url (SettingsSchema.php:153-165).
+        $this->assertSame( 'marketplace', $new['vendor_store_url_slug'] );
     }
 
     public function test_update_with_no_change_is_a_noop(): void {
@@ -266,12 +266,12 @@ class LegacySettingsRepositoryTest extends DokanTestCase {
         $repo = new LegacySettingsRepository();
         $repo->replace( 'dokan_general', [ 'custom_store_url' => 'marketplace' ] );
 
-        $this->assertSame( 'marketplace', get_option( 'dokan_admin_settings' )['vendor_store_url'] );
+        $this->assertSame( 'marketplace', get_option( 'dokan_admin_settings' )['vendor_store_url_slug'] );
     }
 
     public function test_dokan_get_option_reads_through_repository(): void {
         update_option( 'dokan_general', [ 'custom_store_url' => 'shop' ] );
-        update_option( 'dokan_admin_settings', [ 'vendor_store_url' => 'marketplace' ] );
+        update_option( 'dokan_admin_settings', [ 'vendor_store_url_slug' => 'marketplace' ] );
 
         // Flush repo cache so the next read sees the freshly-set options.
         dokan_get_container()
@@ -285,7 +285,7 @@ class LegacySettingsRepositoryTest extends DokanTestCase {
         // Set both options to a value that differs from what the test will write
         // so the diff is always non-empty regardless of any prior test's cached state.
         update_option( 'dokan_general', [ 'custom_store_url' => 'before' ] );
-        update_option( 'dokan_admin_settings', [ 'vendor_store_url' => 'before' ] );
+        update_option( 'dokan_admin_settings', [ 'vendor_store_url_slug' => 'before' ] );
 
         // Flush every in-request snapshot (container singletons + internal private
         // repos inside LegacySettingsRepository and LegacySettingsBridge) so the
@@ -301,7 +301,7 @@ class LegacySettingsRepositoryTest extends DokanTestCase {
         // Legacy storage updated.
         $this->assertSame( 'marketplace', get_option( 'dokan_general' )['custom_store_url'] );
         // New flat storage updated via mirror.
-        $this->assertSame( 'marketplace', get_option( 'dokan_admin_settings' )['vendor_store_url'] );
+        $this->assertSame( 'marketplace', get_option( 'dokan_admin_settings' )['vendor_store_url_slug'] );
         // dokan_get_option() resolves through the repo and sees the overlay.
         $this->assertSame( 'marketplace', dokan_get_option( 'custom_store_url', 'dokan_general' ) );
     }

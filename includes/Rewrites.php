@@ -16,7 +16,7 @@ class Rewrites {
      * Hook into the functions
      */
     public function __construct() {
-        $this->custom_store_url = dokan()->settings->get( 'vendor_store_url' );
+        $this->custom_store_url = dokan()->settings->get( 'vendor_store_url_slug' );
 
         add_action( 'init', [ $this, 'register_rule' ] );
         add_action( 'pre_get_posts', [ $this, 'store_query_filter' ] );
@@ -108,7 +108,7 @@ class Rewrites {
         $base = empty( $base ) ? 'product' : $base;
 
         // get custom store url from settings so that we can use it from other places
-        $this->custom_store_url = dokan()->settings->get( 'vendor_store_url' );
+        $this->custom_store_url = dokan()->settings->get( 'vendor_store_url_slug' );
 
         // special treatment for product cat
         if ( stripos( $base, 'product_cat' ) ) {
@@ -312,7 +312,7 @@ class Rewrites {
             }
 
             $store_info  = dokan_get_store_info( $seller_info->data->ID );
-            $product_ppp = dokan()->settings->get( 'store_product_per_page' );
+            $product_ppp = dokan()->settings->get( 'store_products_per_page' );
 
             do_action( 'dokan_store_page_query_filter', $query, $store_info );
             set_query_var( 'posts_per_page', apply_filters( 'dokan_store_products_per_page', $product_ppp ) );
