@@ -13,11 +13,13 @@ $value = dokan()->settings->get( 'vendor_store_url' );
 ```php
 dokan()->settings->get( string $key, $fallback = null );
 dokan()->settings->has( string $key ): bool;
+dokan()->settings->has_stored( string $key ): bool;
 dokan()->settings->all(): array;
 ```
 
 - `$key` is the flat schema id (the `id` field on a `SettingsElement` in `includes/Admin/Settings/Schema/SettingsSchema.php`). It is **not** the legacy section/field name from `dokan_get_option()`.
 - `$fallback` is only used when `$key` is not registered in the schema. For registered keys the schema default is authoritative — do not pass a `$fallback` to override it.
+- `has()` checks whether the id is **registered** in the schema. `has_stored()` checks whether a **user-set value** exists in storage (the new flat option, or — via the legacy bridge — a mapped per-section option). Use `has_stored()` when you need to distinguish a user choice from a schema default falling through — e.g. to preserve a runtime fallback that depends on another setting.
 - `all()` returns every registered field's effective value (stored value, or schema default when nothing is stored), keyed by id.
 
 ## Choosing the right key
