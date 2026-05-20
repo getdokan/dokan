@@ -25,7 +25,13 @@ class LegacySettingsBridge {
     /**
      * Cached normalized mapping, lazily built per-request.
      *
-     * @var array<string,LegacyAddress>|null
+     * Each entry is either:
+     *   - A single {@see LegacyAddress} for 1:1 mappings, or
+     *   - `array<string $slot, LegacyAddress>` for 1:N mappings, where each
+     *     slot name is a logical handle the transformer uses to assemble the
+     *     unified new value from / split it into N legacy addresses.
+     *
+     * @var array<string, LegacyAddress|array<string, LegacyAddress>>|null
      */
     private ?array $map = null;
 
@@ -39,7 +45,12 @@ class LegacySettingsBridge {
     /**
      * Cached reverse index keyed by legacy option name.
      *
-     * @var array<string,array<string,LegacyAddress>>|null
+     * For each option, the inner array maps new_key → entry, where the entry
+     * is either a single {@see LegacyAddress} (1:1 mapping) or
+     * `array<string $slot, LegacyAddress>` containing only the slots whose
+     * addresses live under that option (1:N mappings can span options).
+     *
+     * @var array<string, array<string, LegacyAddress|array<string, LegacyAddress>>>|null
      */
     private ?array $by_option = null;
 
@@ -105,16 +116,30 @@ class LegacySettingsBridge {
     /**
      * Return the normalized mapping of new flat ids to legacy addresses.
      *
-     * @return array<string,array{option:string,field:string}>
+     * Single-mapped entries surface as `['option' => ..., 'field' => ...]`.
+     * Multi-mapped entries surface as `[$slot => ['option' => ..., 'field' => ...], ...]`.
+     *
+     * @return array<string, array{option:string,field:string}|array<string,array{option:string,field:string}>>
      */
     public function get_mapping(): array {
         $this->build_map();
         $out = [];
-        foreach ( $this->map as $new_key => $address ) {
-            $out[ $new_key ] = [
-                'option' => $address->option(),
-                'field'  => implode( '.', $address->path() ),
-            ];
+        foreach ( $this->map as $new_key => $entry ) {
+            if ( $entry instanceof LegacyAddress ) {
+                $out[ $new_key ] = [
+                    'option' => $entry->option(),
+                    'field'  => implode( '.', $entry->path() ),
+                ];
+                continue;
+            }
+            $multi = [];
+            foreach ( $entry as $slot => $address ) {
+                $multi[ $slot ] = [
+                    'option' => $address->option(),
+                    'field'  => implode( '.', $address->path() ),
+                ];
+            }
+            $out[ $new_key ] = $multi;
         }
         return $out;
     }
@@ -133,17 +158,43 @@ class LegacySettingsBridge {
      */
     public function transform_legacy_payload_to_new( string $option_name, array $legacy_payload ): array {
         $this->build_map();
-        $pairs = $this->by_option[ $option_name ] ?? [];
-        $slice = [];
-        foreach ( $pairs as $new_key => $address ) {
-            // For nested paths the AJAX payload still arrives as a top-level
-            // structure under the section option, so we read the path from
-            // that payload directly.
-            $value = $address->read_from( $legacy_payload );
-            if ( null === $value && ! $this->path_exists( $legacy_payload, $address->path() ) ) {
+        $pairs            = $this->by_option[ $option_name ] ?? [];
+        $slice            = [];
+        $other_opt_cache  = [];
+        foreach ( $pairs as $new_key => $entry ) {
+            if ( $entry instanceof LegacyAddress ) {
+                // For nested paths the AJAX payload still arrives as a top-level
+                // structure under the section option, so we read the path from
+                // that payload directly.
+                $value = $entry->read_from( $legacy_payload );
+                if ( null === $value && ! $this->path_exists( $legacy_payload, $entry->path() ) ) {
+                    continue;
+                }
+                $slice[ $new_key ] = $this->resolve_transformer( $new_key )->to_new( $value );
                 continue;
             }
-            $slice[ $new_key ] = $this->resolve_transformer( $new_key )->to_new( $value );
+
+            // Multi-mapped: assemble all slot values into one array, then
+            // hand off to the transformer. Slots in other legacy options are
+            // fetched via get_option(), cached per request.
+            $all_slots   = $this->map[ $new_key ];
+            $values      = [];
+            $any_present = false;
+            foreach ( $all_slots as $slot => $address ) {
+                $source = $address->option() === $option_name
+                    ? $legacy_payload
+                    : ( $other_opt_cache[ $address->option() ] ??= $this->read_option( $address->option() ) );
+                if ( $this->path_exists( $source, $address->path() ) ) {
+                    $values[ $slot ] = $address->read_from( $source );
+                    $any_present     = true;
+                } else {
+                    $values[ $slot ] = null;
+                }
+            }
+            if ( ! $any_present ) {
+                continue;
+            }
+            $slice[ $new_key ] = $this->resolve_transformer( $new_key )->to_new( $values );
         }
         return $slice;
     }
@@ -162,27 +213,37 @@ class LegacySettingsBridge {
     public function hydrate_new_from_legacy( array $new_option ): array {
         $this->build_map();
 
-        $missing_by_option = [];
-        foreach ( $this->map as $new_key => $address ) {
+        $legacy_cache = [];
+
+        foreach ( $this->map as $new_key => $entry ) {
             if ( array_key_exists( $new_key, $new_option ) ) {
                 continue;
             }
-            $missing_by_option[ $address->option() ][ $new_key ] = $address;
-        }
-
-        foreach ( $missing_by_option as $option_name => $pairs ) {
-            $legacy = get_option( $option_name, [] );
-            if ( ! is_array( $legacy ) ) {
-                $legacy = [];
-            }
-            foreach ( $pairs as $new_key => $address ) {
-                if ( $this->path_exists( $legacy, $address->path() ) ) {
-                    $value                  = $address->read_from( $legacy );
-                    $new_option[ $new_key ] = $this->resolve_transformer( $new_key )->to_new( $value );
+            if ( $entry instanceof LegacyAddress ) {
+                $legacy = $legacy_cache[ $entry->option() ] ??= $this->read_option( $entry->option() );
+                if ( $this->path_exists( $legacy, $entry->path() ) ) {
+                    $new_option[ $new_key ] = $this->resolve_transformer( $new_key )->to_new( $entry->read_from( $legacy ) );
                 } else {
                     $new_option[ $new_key ] = $this->get_schema_default( $new_key );
                 }
+                continue;
             }
+
+            // Multi-mapped: read every slot, then transform.
+            $values      = [];
+            $any_present = false;
+            foreach ( $entry as $slot => $address ) {
+                $legacy = $legacy_cache[ $address->option() ] ??= $this->read_option( $address->option() );
+                if ( $this->path_exists( $legacy, $address->path() ) ) {
+                    $values[ $slot ] = $address->read_from( $legacy );
+                    $any_present     = true;
+                } else {
+                    $values[ $slot ] = null;
+                }
+            }
+            $new_option[ $new_key ] = $any_present
+                ? $this->resolve_transformer( $new_key )->to_new( $values )
+                : $this->get_schema_default( $new_key );
         }
 
         return $new_option;
@@ -208,12 +269,27 @@ class LegacySettingsBridge {
             $new_option = [];
         }
         $pairs = $this->by_option[ $option_name ] ?? [];
-        foreach ( $pairs as $new_key => $address ) {
+        foreach ( $pairs as $new_key => $entry ) {
             if ( ! array_key_exists( $new_key, $new_option ) ) {
                 continue;
             }
-            $legacy_value = $this->resolve_transformer( $new_key )->to_legacy( $new_option[ $new_key ] );
-            $address->write_to( $legacy_option, $legacy_value );
+            if ( $entry instanceof LegacyAddress ) {
+                $legacy_value = $this->resolve_transformer( $new_key )->to_legacy( $new_option[ $new_key ] );
+                $entry->write_to( $legacy_option, $legacy_value );
+                continue;
+            }
+            // Multi-mapped: transform once, then write only the slots whose
+            // addresses live under this option ($entry is pre-filtered).
+            $multi_result = $this->resolve_transformer( $new_key )->to_legacy( $new_option[ $new_key ] );
+            if ( ! is_array( $multi_result ) ) {
+                continue;
+            }
+            foreach ( $entry as $slot => $address ) {
+                if ( ! array_key_exists( $slot, $multi_result ) ) {
+                    continue;
+                }
+                $address->write_to( $legacy_option, $multi_result[ $slot ] );
+            }
         }
         return $legacy_option;
     }
@@ -234,21 +310,33 @@ class LegacySettingsBridge {
         $this->build_map();
         $changes_by_option = [];
         foreach ( $new_slice as $new_key => $value ) {
-            $address = $this->map[ $new_key ] ?? null;
-            if ( ! $address instanceof LegacyAddress ) {
+            $entry = $this->map[ $new_key ] ?? null;
+            if ( $entry instanceof LegacyAddress ) {
+                $legacy_value                              = $this->resolve_transformer( $new_key )->to_legacy( $value );
+                $changes_by_option[ $entry->option() ][]   = [ $entry, $legacy_value ];
                 continue;
             }
-            $legacy_value                                = $this->resolve_transformer( $new_key )->to_legacy( $value );
-            $changes_by_option[ $address->option() ][]   = [ $address, $legacy_value ];
+            if ( ! is_array( $entry ) ) {
+                continue;
+            }
+            // Multi-mapped: run the transformer once and fan slot values out to
+            // their respective options.
+            $multi_result = $this->resolve_transformer( $new_key )->to_legacy( $value );
+            if ( ! is_array( $multi_result ) ) {
+                continue;
+            }
+            foreach ( $entry as $slot => $address ) {
+                if ( ! array_key_exists( $slot, $multi_result ) ) {
+                    continue;
+                }
+                $changes_by_option[ $address->option() ][] = [ $address, $multi_result[ $slot ] ];
+            }
         }
         $written = [];
         foreach ( $changes_by_option as $option_name => $entries ) {
-            $legacy = get_option( $option_name, [] );
-            if ( ! is_array( $legacy ) ) {
-                $legacy = [];
-            }
-            foreach ( $entries as $entry ) {
-                [ $address, $legacy_value ] = $entry;
+            $legacy = $this->read_option( $option_name );
+            foreach ( $entries as $pair ) {
+                [ $address, $legacy_value ] = $pair;
                 $address->write_to( $legacy, $legacy_value );
             }
             update_option( $option_name, $legacy );
@@ -473,26 +561,70 @@ class LegacySettingsBridge {
     /**
      * Normalize raw addresses into value objects, dropping malformed entries.
      *
-     * @param array<string,string|array{option:string,field:string}> $map
+     * Two `legacy_key` shapes are accepted:
+     *   - Single: dotted string ("option.field") or struct
+     *     `['option' => ..., 'field' => ...]`.
+     *   - Multi:  associative array of slot name => single-form address. The
+     *     transformer's `to_new` receives `array<slot, mixed>`; `to_legacy`
+     *     must return the same shape.
      *
-     * @return array{0: array<string,LegacyAddress>, 1: array<string,array<string,LegacyAddress>>}
+     * @param array<string, mixed> $map
+     *
+     * @return array{0: array<string, LegacyAddress|array<string, LegacyAddress>>, 1: array<string, array<string, LegacyAddress|array<string, LegacyAddress>>>}
      */
     private function normalize( array $map ): array {
         $normalized = [];
         $by_option  = [];
 
-        foreach ( $map as $new_key => $address ) {
-            $object = LegacyAddress::parse( $address );
-            if ( null === $object ) {
-                if ( function_exists( 'dokan_log' ) ) {
-                    dokan_log( sprintf( '[LegacySettingsBridge] dropping malformed legacy_key for "%s"', $new_key ) );
-                }
+        foreach ( $map as $new_key => $raw ) {
+            // Try single shape first.
+            $single = LegacyAddress::parse( $raw );
+            if ( null !== $single ) {
+                $normalized[ $new_key ]                      = $single;
+                $by_option[ $single->option() ][ $new_key ]  = $single;
                 continue;
             }
-            $normalized[ $new_key ]                      = $object;
-            $by_option[ $object->option() ][ $new_key ]  = $object;
+
+            // Multi shape: assoc array of slot => address-input.
+            if ( is_array( $raw ) ) {
+                $multi = [];
+                foreach ( $raw as $slot => $address_input ) {
+                    if ( ! is_string( $slot ) || '' === $slot ) {
+                        continue;
+                    }
+                    $address = LegacyAddress::parse( $address_input );
+                    if ( null === $address ) {
+                        continue;
+                    }
+                    $multi[ $slot ] = $address;
+                }
+                if ( ! empty( $multi ) ) {
+                    $normalized[ $new_key ] = $multi;
+                    foreach ( $multi as $slot => $address ) {
+                        $by_option[ $address->option() ][ $new_key ][ $slot ] = $address;
+                    }
+                    continue;
+                }
+            }
+
+            if ( function_exists( 'dokan_log' ) ) {
+                dokan_log( sprintf( '[LegacySettingsBridge] dropping malformed legacy_key for "%s"', $new_key ) );
+            }
         }
 
         return [ $normalized, $by_option ];
+    }
+
+    /**
+     * Read a wp_option and coerce non-array values to an empty array so callers
+     * can safely path-walk the result.
+     *
+     * @param string $option_name
+     *
+     * @return array<string, mixed>
+     */
+    private function read_option( string $option_name ): array {
+        $value = get_option( $option_name, [] );
+        return is_array( $value ) ? $value : [];
     }
 }

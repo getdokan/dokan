@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\DependencyManagement\Providers;
 
 use WeDevs\Dokan\Admin\Settings\Migration\BridgeBootstrap;
 use WeDevs\Dokan\Admin\Settings\Migration\LegacySettingsBridge;
+use WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepository;
 use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository;
 use WeDevs\Dokan\Admin\Settings\Schema\SchemaValidator;
 use WeDevs\Dokan\Admin\Settings\Schema\SettingsRegistry;
@@ -23,6 +24,7 @@ class AdminSettingsServiceProvider extends BaseServiceProvider {
         SchemaValidator::class,
         SettingsRepository::class,
         LegacySettingsBridge::class,
+        LegacySettingsRepository::class,
         BridgeBootstrap::class,
     ];
 

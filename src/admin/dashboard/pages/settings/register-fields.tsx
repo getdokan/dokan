@@ -18,20 +18,39 @@ import DokanDoubleInput from './fields/DokanDoubleInput';
  * times stacks duplicate handlers — keep callers to a single invocation.
  */
 export function registerSettingsFields(): void {
+    // Inject Dokan-specific SVG previews into plugin-ui's `info_preview` field.
+    // Dispatches by element id so each schema-driven info_preview field can
+    // contribute its own dynamic mock without re-implementing the field.
     addFilter(
-        'dokan_settings_vendor_info_preview_field',
-        'dokan-lite/vendor-info-preview',
-        ( _defaultComponent: React.ReactNode, element: SettingsElement ) => (
-            <DokanVendorInfoPreview element={ element } />
-        )
-    );
-
-    addFilter(
-        'dokan_settings_single_product_preview_field',
-        'dokan-lite/single-product-preview',
-        ( _defaultComponent: React.ReactNode, element: SettingsElement ) => (
-            <DokanSingleProductPreview element={ element } />
-        )
+        'dokan_settings_info_preview_field_preview',
+        'dokan-lite/info-preview',
+        (
+            defaultPreview: React.ReactNode,
+            element: SettingsElement,
+            value: Record< string, boolean >
+        ) => {
+            if ( element.id === 'vendor_info_visibility' ) {
+                return (
+                    <DokanVendorInfoPreview
+                        showEmail={ Boolean( value?.store_email ) }
+                        showPhone={ Boolean( value?.store_phone ) }
+                        showAddress={ Boolean( value?.store_address ) }
+                    />
+                );
+            }
+            if ( element.id === 'single_product_page_appearance' ) {
+                return (
+                    <DokanSingleProductPreview
+                        showVendorInfo={ Boolean( value?.vendor_info ) }
+                        showMoreProductsTab={ Boolean(
+                            value?.more_products_tab
+                        ) }
+                        showShippingTab={ Boolean( value?.shipping_tab ) }
+                    />
+                );
+            }
+            return defaultPreview;
+        }
     );
 
     addFilter(

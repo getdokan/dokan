@@ -1066,18 +1066,18 @@ add_filter( 'manage_edit-product_columns', 'dokan_admin_product_columns' );
 function dokan_get_option( $option, $section, $default_value = '' ) {
     [ $option, $section ] = dokan_admin_settings_rearrange_map( $option, $section );
 
-    $options = get_option( $section );
-    $options = is_array( $options ) ? $options : [];
-
-    // Reflect new-UI saves in legacy reads (new option is source of truth).
     if ( function_exists( 'dokan_get_container' ) ) {
         try {
-            $bridge  = dokan_get_container()->get( \WeDevs\Dokan\Admin\Settings\Migration\LegacySettingsBridge::class );
-            $options = $bridge->hydrate_legacy_from_new( $section, $options );
+            return dokan_get_container()
+                ->get( \WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepository::class )
+                ->get( $section, $option, $default_value );
         } catch ( \Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
-            // Container not booted — fall back to raw legacy read.
+            // Container not booted — fall back to raw legacy read (no overlay).
         }
     }
+
+    $options = get_option( $section );
+    $options = is_array( $options ) ? $options : [];
 
     if ( isset( $options[ $option ] ) ) {
         return $options[ $option ];
@@ -3224,7 +3224,9 @@ function dokan_get_permalink( $page_id ) {
         return false;
     }
 
-    $pages = get_option( 'dokan_pages' );
+    $pages = dokan_get_container()
+        ->get( \WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepository::class )
+        ->all( 'dokan_pages' );
 
     return isset( $pages[ $page_id ] ) ? get_permalink( $pages[ $page_id ] ) : false;
 }
@@ -3603,7 +3605,9 @@ function dokan_met_minimum_php_version_for_wc( $required_version = '7.0' ) {
  * @return bool
  */
 function dokan_has_map_api_key() {
-    $dokan_appearance = get_option( 'dokan_appearance', [] );
+    $dokan_appearance = dokan_get_container()
+        ->get( \WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepository::class )
+        ->all( 'dokan_appearance' );
 
     if ( ! empty( $dokan_appearance['map_api_source'] ) && 'google_maps' === $dokan_appearance['map_api_source'] && ! empty( $dokan_appearance['gmap_api_key'] ) ) {
         return true;

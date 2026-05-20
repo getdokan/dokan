@@ -1,21 +1,4 @@
 import { __ } from '@wordpress/i18n';
-import {
-    LabeledCheckbox,
-    useSettings,
-    type SettingsElement,
-} from '@wedevs/plugin-ui';
-
-type VendorInfoValue = {
-    store_email?: boolean;
-    store_phone?: boolean;
-    store_address?: boolean;
-};
-
-const DEFAULT_VALUE: VendorInfoValue = {
-    store_email: true,
-    store_phone: true,
-    store_address: true,
-};
 
 type PreviewProps = {
     showEmail: boolean;
@@ -23,11 +6,11 @@ type PreviewProps = {
     showAddress: boolean;
 };
 
-const VendorPreviewImage = ( {
+export default function DokanVendorInfoPreview( {
     showEmail,
     showPhone,
     showAddress,
-}: PreviewProps ) => {
+}: PreviewProps ) {
     return (
         <div className="bg-[#efeaff] rounded p-2 w-[156px] h-[11rem] flex flex-col relative overflow-hidden">
             <div className="flex flex-col items-center mb-4 mt-1">
@@ -105,94 +88,6 @@ const VendorPreviewImage = ( {
                         <div className="h-[3px] bg-[#bfacf9] rounded-full w-[56px]"></div>
                     </div>
                 ) }
-            </div>
-        </div>
-    );
-};
-
-type Props = {
-    element: SettingsElement;
-};
-
-export default function DokanVendorInfoPreview( { element }: Props ) {
-    const { updateValue } = useSettings();
-
-    const value: VendorInfoValue =
-        ( element.value as VendorInfoValue ) ||
-        ( element.default as VendorInfoValue ) ||
-        DEFAULT_VALUE;
-
-    const handleToggle = (
-        key: keyof VendorInfoValue,
-        checked: boolean
-    ): void => {
-        // No guard needed: `id` is always present on field elements.
-        updateValue( element.id, {
-            ...value,
-            [ key ]: checked,
-        } );
-    };
-
-    const showEmail = Boolean( value.store_email );
-    const showPhone = Boolean( value.store_phone );
-    const showAddress = Boolean( value.store_address );
-
-    return (
-        <div className="bg-white p-5">
-            <div className="flex items-start justify-between">
-                <div className="flex-1 max-w-lg">
-                    { ( element.label || element.title ) && (
-                        <div className="text-sm font-semibold text-foreground">
-                            { element.label || element.title }
-                        </div>
-                    ) }
-                    { element.description && (
-                        <div className="text-xs text-muted-foreground leading-relaxed mt-1">
-                            { element.description }
-                        </div>
-                    ) }
-
-                    <div className="mt-4 flex flex-col gap-3">
-                        <LabeledCheckbox
-                            label={ __( 'Email Address', 'dokan-lite' ) }
-                            checked={ showEmail }
-                            onCheckedChange={ ( checked ) =>
-                                handleToggle(
-                                    'store_email',
-                                    Boolean( checked )
-                                )
-                            }
-                        />
-                        <LabeledCheckbox
-                            label={ __( 'Phone Number', 'dokan-lite' ) }
-                            checked={ showPhone }
-                            onCheckedChange={ ( checked ) =>
-                                handleToggle(
-                                    'store_phone',
-                                    Boolean( checked )
-                                )
-                            }
-                        />
-                        <LabeledCheckbox
-                            label={ __( 'Store Address', 'dokan-lite' ) }
-                            checked={ showAddress }
-                            onCheckedChange={ ( checked ) =>
-                                handleToggle(
-                                    'store_address',
-                                    Boolean( checked )
-                                )
-                            }
-                        />
-                    </div>
-                </div>
-
-                <div className="ml-8">
-                    <VendorPreviewImage
-                        showEmail={ showEmail }
-                        showPhone={ showPhone }
-                        showAddress={ showAddress }
-                    />
-                </div>
             </div>
         </div>
     );
