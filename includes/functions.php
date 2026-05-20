@@ -159,7 +159,7 @@ function dokan_is_product_author( $product_id = 0 ) {
  * @return bool
  */
 function dokan_is_store_page() {
-    $custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
+    $custom_store_url = dokan()->settings->get( 'vendor_store_url_slug' );
 
     if ( get_query_var( $custom_store_url ) ) {
         return true;
@@ -189,7 +189,7 @@ function dokan_is_product_edit_page() {
 function dokan_is_seller_dashboard() {
     global $wp_query;
 
-    $page_id = apply_filters( 'dokan_get_dashboard_page_id', dokan_get_option( 'dashboard', 'dokan_pages' ) );
+    $page_id = apply_filters( 'dokan_get_dashboard_page_id', dokan()->settings->get( 'vendor_dashboard_page' ) );
 
     if ( ! $page_id ) {
         return false;
@@ -1149,7 +1149,7 @@ function dokan_get_store_url( $user_id, $tab = '' ) {
 
     $userdata         = get_userdata( $user_id );
     $user_nicename    = ( false !== $userdata ) ? $userdata->user_nicename : '';
-    $custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
+    $custom_store_url = dokan()->settings->get( 'vendor_store_url_slug' );
 
     $path = '/' . $custom_store_url . '/' . $user_nicename . '/';
     if ( $tab ) {
@@ -1867,7 +1867,7 @@ function dokan_disable_admin_bar( $show_admin_bar ) {
 
     if ( $current_user->ID !== 0 ) {
         $role = reset( $current_user->roles );
-        $block_admin_access = dokan_get_option( 'admin_access', 'dokan_general', 'on' );
+        $block_admin_access = dokan()->settings->get( 'admin_access' );
         if ( OrderUtil::is_hpos_enabled() ) {
             $block_admin_access = 'on';
         }
@@ -2044,7 +2044,7 @@ add_filter( 'get_avatar_url', 'dokan_get_avatar_url', 99, 3 );
  * @return string url
  */
 function dokan_get_navigation_url( $name = '', $new_url = false ) {
-    $page_id = (int) dokan_get_option( 'dashboard', 'dokan_pages', 0 );
+    $page_id = (int) dokan()->settings->get( 'vendor_dashboard_page' );
 
     if ( ! $page_id ) {
         return '';
@@ -2590,7 +2590,7 @@ function dokan_after_login_redirect( $redirect_to, $user ) {
     if ( ! empty( $_GET['redirect_to'] ) ) { // phpcs:ignore
         $redirect_to = esc_url( wp_unslash( $_GET['redirect_to'] ) ); // phpcs:ignore
     } elseif ( user_can( $user, 'dokandar' ) && wc_get_page_permalink( 'checkout' ) !== $redirect_to ) {
-        $seller_dashboard = (int) dokan_get_option( 'dashboard', 'dokan_pages' );
+        $seller_dashboard = (int) dokan()->settings->get( 'vendor_dashboard_page' );
 
         if ( $seller_dashboard !== - 1 ) {
             $redirect_to = get_permalink( $seller_dashboard );
@@ -3242,7 +3242,7 @@ function dokan_is_store_listing() {
     $page_id = get_the_ID();
     $found   = false;
 
-    if ( $page_id === intval( dokan_get_option( 'store_listing', 'dokan_pages' ) ) ) {
+    if ( $page_id === intval( dokan()->settings->get( 'store_listing_page' ) ) ) {
         $found = true;
     }
 
@@ -3292,7 +3292,7 @@ function dokan_generate_username( $name = 'store' ) {
  * @return string
  */
 function dokan_replace_policy_page_link_placeholders( $text ) {
-    $privacy_page_id = dokan_get_option( 'privacy_page', 'dokan_privacy' );
+    $privacy_page_id = dokan()->settings->get( 'privacy_policy_page' );
     $privacy_link    = $privacy_page_id ? '<a href="' . esc_url( get_permalink( $privacy_page_id ) ) . '" class="dokan-privacy-policy-link" target="_blank">' . __( 'privacy policy', 'dokan-lite' ) . '</a>' : __( 'privacy policy', 'dokan-lite' );
 
     $find_replace = [
@@ -3313,8 +3313,16 @@ function dokan_replace_policy_page_link_placeholders( $text ) {
  * @return string
  */
 function dokan_privacy_policy_text( $return = false ) {
+    // Two sites in this block remain on dokan_get_option() until their schema
+    // entries declare matching defaults:
+    //   - enable_privacy: schema default 'on' vs historical '' (the historical
+    //     contract was "off when unset"; a literal migration would silently
+    //     enable privacy on every install that never touched the setting).
+    //   - privacy_policy: schema has no default, but this call site supplies a
+    //     long localized fallback text. A literal migration would silently
+    //     blank out the privacy policy on unconfigured sites.
     $is_enabled   = 'on' === dokan_get_option( 'enable_privacy', 'dokan_privacy' );
-    $privacy_page = dokan_get_option( 'privacy_page', 'dokan_privacy' );
+    $privacy_page = dokan()->settings->get( 'privacy_policy_page' );
     $privacy_text = dokan_get_option( 'privacy_policy', 'dokan_privacy', __( 'Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]', 'dokan-lite' ) );
 
     if ( ! $is_enabled || ! $privacy_page ) {
@@ -3433,7 +3441,7 @@ function dokan_admin_settings_rearrange_map( $option, $section ) {
  * @return string | null on failure
  */
 function dokan_get_terms_condition_url() {
-    $page_id = dokan_get_option( 'reg_tc_page', 'dokan_pages' );
+    $page_id = dokan()->settings->get( 'reg_tc_page' );
 
     if ( ! $page_id ) {
         return null;

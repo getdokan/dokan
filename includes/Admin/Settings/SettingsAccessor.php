@@ -65,6 +65,13 @@ final class SettingsAccessor implements SettingsAccessorInterface {
 	/**
 	 * {@inheritDoc}
 	 */
+	public function has_stored( string $key ): bool {
+		return $this->has( $key ) && $this->registry->is_stored( $key );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public function all(): array {
 		$out = [];
 		foreach ( $this->registry->get_schema() as $element ) {

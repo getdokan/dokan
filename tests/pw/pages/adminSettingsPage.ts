@@ -671,7 +671,7 @@ export class AdminSettingsPage extends BasePage {
     async getEnableSellingOptionFromNewSettings(): Promise<string> {
         await this.navigateToNewVendorOnboardingSettings();
 
-        const baseLocator = this.page.locator('#dokan_settings_vendor_vendor_onboarding_enable_selling');
+        const baseLocator = this.page.locator('#dokan_settings_vendor_vendor_onboarding_vendor_auto_enable_selling');
         await baseLocator.waitFor({ state: 'visible', timeout: 10000 });
 
         // Find the currently selected button (aria-checked="true")
@@ -689,7 +689,7 @@ export class AdminSettingsPage extends BasePage {
     async updateEnableSellingOptionInNewSettings(option: string) {
         await this.navigateToNewVendorOnboardingSettings();
 
-        const baseLocator = this.page.locator('#dokan_settings_vendor_vendor_onboarding_enable_selling');
+        const baseLocator = this.page.locator('#dokan_settings_vendor_vendor_onboarding_vendor_auto_enable_selling');
         await baseLocator.waitFor({ state: 'visible', timeout: 10000 });
 
         const targetButton = baseLocator.locator(`[role="radio"][name="${option}"]`);
@@ -749,7 +749,7 @@ export class AdminSettingsPage extends BasePage {
         await this.navigateToNewVendorOnboardingSettings();
 
         const switchElement = this.page
-            .locator('#dokan_settings_vendor_vendor_onboarding_address_fields')
+            .locator('#dokan_settings_vendor_vendor_onboarding_vendor_registration_address_fields')
             .getByRole('switch');
 
         await switchElement.waitFor({ state: 'visible', timeout: 10000 });
@@ -780,7 +780,7 @@ export class AdminSettingsPage extends BasePage {
         await this.navigateToNewVendorOnboardingSettings();
 
         const switchElement = this.page
-            .locator('#dokan_settings_vendor_vendor_onboarding_address_fields')
+            .locator('#dokan_settings_vendor_vendor_onboarding_vendor_registration_address_fields')
             .getByRole('switch');
 
         await switchElement.waitFor({ state: 'visible', timeout: 10000 });
@@ -904,7 +904,7 @@ export class AdminSettingsPage extends BasePage {
 
         // Locate the switch element for Welcome Wizard
         const switchElement = this.page
-            .locator('#dokan_settings_vendor_vendor_onboarding_welcome_wizard')
+            .locator('#dokan_settings_vendor_vendor_onboarding_vendor_welcome_wizard_enabled')
             .getByRole('switch');
 
         await switchElement.waitFor({ state: 'visible', timeout: 10000 });
@@ -934,7 +934,7 @@ export class AdminSettingsPage extends BasePage {
         console.log('Navigated to New Vendor Settings for Welcome Wizard check.......');
 
         const switchElement = this.page
-            .locator('#dokan_settings_vendor_vendor_onboarding_welcome_wizard')
+            .locator('#dokan_settings_vendor_vendor_onboarding_vendor_welcome_wizard_enabled')
             .getByRole('switch');
 
         await switchElement.waitFor({ state: 'visible', timeout: 10000 });

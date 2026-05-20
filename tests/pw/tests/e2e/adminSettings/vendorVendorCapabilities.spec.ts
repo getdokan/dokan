@@ -127,14 +127,14 @@ const newDataset = {
         
         // Product Popup - Switch
         {
-            selector: '#dokan_settings_vendor_vendor_capabilities_vendor_capabilities_product_popup button[role="switch"]',
+            selector: '#dokan_settings_vendor_vendor_capabilities_vendor_capabilities_vendor_new_product_popup button[role="switch"]',
             type: 'switch',
             value: true,
         },
         
         // Order Status Change - Switch
         {
-            selector: '#dokan_settings_vendor_vendor_capabilities_vendor_capabilities_order_status_change button[role="switch"]',
+            selector: '#dokan_settings_vendor_vendor_capabilities_vendor_capabilities_vendor_can_change_order_status button[role="switch"]',
             type: 'switch',
             value: true,
         },

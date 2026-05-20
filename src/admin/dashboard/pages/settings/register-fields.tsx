@@ -29,7 +29,7 @@ export function registerSettingsFields(): void {
             element: SettingsElement,
             value: Record< string, boolean >
         ) => {
-            if ( element.id === 'vendor_info_visibility' ) {
+            if ( element.id === 'store_page_vendor_info_visibility' ) {
                 return (
                     <DokanVendorInfoPreview
                         showEmail={ Boolean( value?.store_email ) }

@@ -491,7 +491,7 @@ test.describe('Admin Settings Migration', () => {
         const oldNavigationFunction = 'navigateToOldSellingOptions'; 
         const newNavigationFunction = 'navigateToNewVendorCapabilitiesSettings'; 
         const checkboxClass = 'disable_product_popup'; 
-        const fieldSelectorId = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_product_popup';
+        const fieldSelectorId = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_vendor_new_product_popup';
         const fieldKey = 'productPopupField'; 
 
         // step 0: Ensure "One Page Product Creation" is disabled before testing "Product Popup"
@@ -533,7 +533,7 @@ test.describe('Admin Settings Migration', () => {
         const oldNavigationFunction = 'navigateToOldSellingOptions'; 
         const newNavigationFunction = 'navigateToNewVendorCapabilitiesSettings'; 
         const checkboxClass = 'order_status_change';
-        const fieldSelectorId = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_order_status_change';
+        const fieldSelectorId = 'dokan_settings_vendor_vendor_capabilities_vendor_capabilities_vendor_can_change_order_status';
         const fieldKey = 'orderStatusChangeField'; 
 
         // step 0: Ensure "One Page Product Creation" is disabled before testing "Product Popup"

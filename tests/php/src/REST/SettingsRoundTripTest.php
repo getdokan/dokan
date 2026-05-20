@@ -161,7 +161,7 @@ class SettingsRoundTripTest extends DokanTestCase {
      * The new UI calls PUT `/dokan/v1/admin/settings/{page_id}`, which
      * writes `dokan_settings`. The `BridgeBootstrap` listener (registered
      * on `dokan_admin_settings_changed`) mirrors mapped keys to their
-     * legacy option counterparts. Uses the hand-authored `vendor_store_url`
+     * legacy option counterparts. Uses the hand-authored `vendor_store_url_slug`
      * field on the `general` page which carries `legacy_key
      * => 'dokan_general.custom_store_url'`.
      *
@@ -173,7 +173,7 @@ class SettingsRoundTripTest extends DokanTestCase {
             [
                 'page_id' => 'general',
                 'values'  => [
-                    'vendor_store_url' => 'mystorez',
+                    'vendor_store_url_slug' => 'mystorez',
                 ],
             ]
         );
@@ -198,7 +198,7 @@ class SettingsRoundTripTest extends DokanTestCase {
         $new = get_option( 'dokan_admin_settings', [] );
         $this->assertSame(
             'mystorez',
-            $new['vendor_store_url'] ?? null,
+            $new['vendor_store_url_slug'] ?? null,
             'REST PUT should have written the value into dokan_settings.'
         );
 
@@ -255,15 +255,15 @@ class SettingsRoundTripTest extends DokanTestCase {
     public function test_rest_put_with_dot_path_payload_resolves_to_leaf_id(): void {
         // Pre-condition: a known field has a value in storage.
         ( new \WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository() )
-            ->update( [ 'vendor_store_url' => 'unchanged' ] );
+            ->update( [ 'vendor_store_url_slug' => 'unchanged' ] );
 
         $request = new WP_REST_Request( 'PUT', '/' . $this->namespace . '/settings/general' );
         $request->set_body_params(
             [
                 'page_id' => 'general',
                 'values'  => [
-                    // Dot-path key — controller strips to leaf id `vendor_store_url`.
-                    'general.marketplace.vendor_store_url' => 'updated-via-dotpath',
+                    // Dot-path key — controller strips to leaf id `vendor_store_url_slug`.
+                    'general.marketplace.vendor_store_url_slug' => 'updated-via-dotpath',
                 ],
             ]
         );
@@ -274,8 +274,8 @@ class SettingsRoundTripTest extends DokanTestCase {
         $this->assertIsArray( $settings );
         $this->assertSame(
             'updated-via-dotpath',
-            $settings['vendor_store_url'] ?? null,
-            'Dot-path payload key must resolve to its leaf id (vendor_store_url).'
+            $settings['vendor_store_url_slug'] ?? null,
+            'Dot-path payload key must resolve to its leaf id (vendor_store_url_slug).'
         );
     }
 
