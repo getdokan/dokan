@@ -28,6 +28,13 @@ class SettingsRegistry {
     private ?array $cache = null;
 
     /**
+     * Lazy id-keyed index of field elements. Null until first {@see find_field()} call.
+     *
+     * @var array<string,array>|null
+     */
+    private ?array $field_index = null;
+
+    /**
      * Settings repository — single read surface for the stored payload.
      *
      * @var SettingsRepositoryInterface
@@ -93,7 +100,51 @@ class SettingsRegistry {
      * @since DOKAN_SINCE
      */
     public function clear_cache(): void {
-        $this->cache = null;
+        $this->cache       = null;
+        $this->field_index = null;
+    }
+
+    /**
+     * Find a registered field element by its flat schema id.
+     *
+     * Returns the element array as it appears in {@see get_schema()} — i.e.
+     * with `value` populated via the bridge overlay and `default` filled.
+     * Returns null for unknown ids or for non-`field` elements (structural
+     * nodes share the id-space but are intentionally excluded).
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $id Flat schema id.
+     *
+     * @return array|null
+     */
+    public function find_field( string $id ): ?array {
+        if ( null === $this->field_index ) {
+            $this->build_field_index();
+        }
+        return $this->field_index[ $id ] ?? null;
+    }
+
+    /**
+     * Build the id-keyed field index from the processed schema.
+     *
+     * Structural elements (pages, sections, tabs, etc.) are excluded — only
+     * elements with `type: field` participate.
+     *
+     * @return void
+     */
+    private function build_field_index(): void {
+        $this->field_index = [];
+        foreach ( $this->get_schema() as $element ) {
+            if ( ( $element['type'] ?? '' ) !== 'field' ) {
+                continue;
+            }
+            $id = $element['id'] ?? '';
+            if ( '' === $id ) {
+                continue;
+            }
+            $this->field_index[ $id ] = $element;
+        }
     }
 
     /**
