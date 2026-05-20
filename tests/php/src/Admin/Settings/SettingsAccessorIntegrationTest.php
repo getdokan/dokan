@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Test\Admin\Settings;
 
 use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository;
+use WeDevs\Dokan\Admin\Settings\Schema\SettingsRegistry;
 use WeDevs\Dokan\Admin\Settings\SettingsAccessorInterface;
 use WeDevs\Dokan\Test\DokanTestCase;
 
@@ -18,12 +19,16 @@ class SettingsAccessorIntegrationTest extends DokanTestCase {
         $repo = new SettingsRepository();
         $repo->replace( [] );
         delete_option( 'dokan_general' );
+        // The shared SettingsRegistry caches its processed schema. Force a
+        // rebuild so each test sees the storage state it just set up.
+        dokan_get_container()->get( SettingsRegistry::class )->clear_cache();
     }
 
     protected function tearDown(): void {
         $repo = new SettingsRepository();
         $repo->replace( [] );
         delete_option( 'dokan_general' );
+        dokan_get_container()->get( SettingsRegistry::class )->clear_cache();
         parent::tearDown();
     }
 

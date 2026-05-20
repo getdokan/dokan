@@ -95,6 +95,21 @@ class ServiceProvider extends BootableServiceProvider {
      */
 	public function register(): void {
 		foreach ( $this->services as $key => $class_name ) {
+			if ( 'settings' === $key ) {
+				// Alias to the SettingsAccessor binding registered by
+				// AdminSettingsServiceProvider so dokan()->settings and
+				// $container->get(SettingsAccessorInterface::class) return
+				// the same shared instance.
+				$this->getContainer()
+					->addShared(
+						$key,
+						function () use ( $class_name ) {
+							return $this->getContainer()->get( $class_name );
+						}
+					)
+					->addTag( self::TAG );
+				continue;
+			}
 			$this->getContainer()->addShared( $key, $class_name )->addTag( self::TAG );
 		}
     }
