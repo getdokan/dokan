@@ -166,7 +166,7 @@ class Fees {
         if ( $saved_shipping_recipient ) {
             $shipping_recipient = $saved_shipping_recipient;
         } else {
-            $shipping_recipient = apply_filters( 'dokan_shipping_fee_recipient', dokan_get_option( 'shipping_fee_recipient', 'dokan_selling', 'seller' ), $order->get_id() );
+            $shipping_recipient = apply_filters( 'dokan_shipping_fee_recipient', dokan()->settings->get( 'shipping_fee_recipient' ), $order->get_id() );
             $order->update_meta_data( 'shipping_fee_recipient', $shipping_recipient );
             $order->save();
         }
@@ -199,7 +199,7 @@ class Fees {
         if ( $saved_tax_recipient ) {
             $tax_recipient = $saved_tax_recipient;
         } else {
-            $tax_recipient = apply_filters( 'dokan_tax_fee_recipient', dokan_get_option( 'tax_fee_recipient', 'dokan_selling', 'seller' ), $order->get_id() );
+            $tax_recipient = apply_filters( 'dokan_tax_fee_recipient', dokan()->settings->get( 'product_tax_fee_recipient' ), $order->get_id() );
             $order->update_meta_data( 'tax_fee_recipient', $tax_recipient );
             $order->save();
         }
@@ -225,6 +225,10 @@ class Fees {
         }
 
         $default_tax_fee_recipient = $this->get_tax_fee_recipient( $order->get_id() ); // this is needed for backward compatibility
+        // Not migrated to dokan()->settings->get() yet: the third argument is a
+        // dynamic default that falls back to the product tax recipient when this
+        // setting is unset. The schema can only express a static default, so
+        // this site stays on dokan_get_option() until that BC contract is revisited.
         $shipping_tax_recipient    = dokan_get_option( 'shipping_tax_fee_recipient', 'dokan_selling', $default_tax_fee_recipient );
         $shipping_tax_recipient    = apply_filters( 'dokan_shipping_tax_fee_recipient', $shipping_tax_recipient, $order->get_id() );
 
