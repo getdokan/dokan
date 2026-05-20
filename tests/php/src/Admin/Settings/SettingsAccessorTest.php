@@ -67,6 +67,42 @@ class SettingsAccessorTest extends DokanTestCase {
 		$this->assertFalse( $accessor->has( 'not_a_real_setting_xyz' ) );
 	}
 
+	public function test_has_stored_returns_false_for_unregistered_id(): void {
+		$accessor = new SettingsAccessor( new SettingsRegistry() );
+		$this->assertFalse( $accessor->has_stored( 'not_a_real_setting_xyz' ) );
+	}
+
+	public function test_has_stored_returns_false_when_registered_but_unset(): void {
+		// dokan_admin_settings is empty (cleared in setUp). vendor_store_url is
+		// registered with a schema default — has() is true, has_stored() must be false.
+		$accessor = new SettingsAccessor( new SettingsRegistry() );
+		$this->assertTrue( $accessor->has( 'vendor_store_url' ) );
+		$this->assertFalse( $accessor->has_stored( 'vendor_store_url' ) );
+	}
+
+	public function test_has_stored_returns_true_when_value_in_new_flat_option(): void {
+		$repo = new SettingsRepository();
+		$repo->update( [ 'vendor_store_url' => 'boutique' ] );
+
+		$accessor = new SettingsAccessor( new SettingsRegistry() );
+		$this->assertTrue( $accessor->has_stored( 'vendor_store_url' ) );
+	}
+
+	public function test_has_stored_returns_true_when_value_only_in_legacy_option(): void {
+		// New flat option is empty; legacy dokan_general.custom_store_url is set.
+		// The bridge overlay must make this count as "stored".
+		update_option( 'dokan_general', [ 'custom_store_url' => 'shoppe' ] );
+
+		$accessor = new SettingsAccessor( new SettingsRegistry() );
+		$this->assertTrue(
+			$accessor->has_stored( 'vendor_store_url' ),
+			'A value present only in the mapped legacy option must count as stored via the bridge overlay.'
+		);
+
+		// Cleanup outside the standard tearDown.
+		delete_option( 'dokan_general' );
+	}
+
 	public function test_all_returns_every_field_keyed_by_id_with_value_or_default(): void {
 		$repo = new SettingsRepository();
 		$repo->update( [ 'vendor_store_url' => 'boutique' ] );
