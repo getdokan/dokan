@@ -56,4 +56,30 @@ class SettingsAccessorTest extends DokanTestCase {
 		$accessor = new SettingsAccessor( new SettingsRegistry() );
 		$this->assertSame( 'boutique', $accessor->get( 'vendor_store_url', 'IGNORED' ) );
 	}
+
+	public function test_has_returns_true_for_registered_field_id(): void {
+		$accessor = new SettingsAccessor( new SettingsRegistry() );
+		$this->assertTrue( $accessor->has( 'vendor_store_url' ) );
+	}
+
+	public function test_has_returns_false_for_unregistered_id(): void {
+		$accessor = new SettingsAccessor( new SettingsRegistry() );
+		$this->assertFalse( $accessor->has( 'not_a_real_setting_xyz' ) );
+	}
+
+	public function test_all_returns_every_field_keyed_by_id_with_value_or_default(): void {
+		$repo = new SettingsRepository();
+		$repo->update( [ 'vendor_store_url' => 'boutique' ] );
+
+		$accessor = new SettingsAccessor( new SettingsRegistry() );
+		$all      = $accessor->all();
+
+		$this->assertIsArray( $all );
+		$this->assertArrayHasKey( 'vendor_store_url', $all );
+		$this->assertSame( 'boutique', $all['vendor_store_url'] );
+
+		foreach ( $all as $id => $_value ) {
+			$this->assertIsString( $id );
+		}
+	}
 }
