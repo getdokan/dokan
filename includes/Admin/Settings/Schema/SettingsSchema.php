@@ -2099,77 +2099,51 @@ class SettingsSchema {
     /**
      * AI Assist page schema.
      *
-     * Static schema covering Content Generation (text + image), with
-     * per-provider fieldgroups for OpenAI / Gemini (text) and Leonardo AI
-     * (image). Provider fieldgroups are gated by the section toggle and
-     * the engine select via standard `dependencies` rules; the consuming
-     * Intelligence module reads the resulting flat ids
-     * (e.g. `openai_api_key`, `gemini_model`, `leonardo_api_key`).
+     * Page/subpage/section structure is static; engine options and per-provider
+     * fieldgroups (api_info / api_notice / api_key / model) are generated
+     * dynamically from {@see \WeDevs\Dokan\Intelligence\Manager}'s registered
+     * providers, so adding a new AI provider (Lite or Pro) flows through with
+     * no schema edits. Each generated api_key/model field declares its own
+     * `legacy_key` against the `dokan_ai` option using the established
+     * `dokan_ai_<provider_id>_api_key` / `dokan_ai_<provider_id>_model`
+     * convention (`dokan_ai_image_<provider_id>_*` for the image side), so the
+     * legacy admin form and the new UI stay in sync via the bridge.
+     *
+     * The image section is appended only when at least one image-capable
+     * provider is registered — Lite ships none, Pro registers Leonardo AI
+     * (and any others) via the Intelligence Manager, so Lite-only installs
+     * see just the text section.
      *
      * @return array
      */
     private static function ai_assist_page(): array {
-        // Reusable dependency: visible when product_info_generate is 'on'.
         $on_generate = [
-            [
-				'key' => 'product_info_generate',
-				'value' => 'on',
-				'to_self' => true,
-				'attribute' => 'display',
-				'effect' => 'show',
-				'comparison' => '===',
-			],
-            [
-				'key' => 'product_info_generate',
-				'value' => 'on',
-				'to_self' => true,
-				'attribute' => 'display',
-				'effect' => 'hide',
-				'comparison' => '!==',
-			],
+            [ 'key' => 'product_info_generate', 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '===' ],
+            [ 'key' => 'product_info_generate', 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '!==' ],
         ];
-        // Reusable dependency: visible when product_image_enhancement is 'on'.
         $on_enhance = [
-            [
-				'key' => 'product_image_enhancement',
-				'value' => 'on',
-				'to_self' => true,
-				'attribute' => 'display',
-				'effect' => 'show',
-				'comparison' => '===',
-			],
-            [
-				'key' => 'product_image_enhancement',
-				'value' => 'on',
-				'to_self' => true,
-				'attribute' => 'display',
-				'effect' => 'hide',
-				'comparison' => '!==',
-			],
+            [ 'key' => 'product_image_enhancement', 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '===' ],
+            [ 'key' => 'product_image_enhancement', 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '!==' ],
         ];
-        // Build a "visible when <engine_key> === <value>" dependency pair.
         $when_engine = static function ( string $engine_key, string $value ): array {
             return [
-                [
-					'key' => $engine_key,
-					'value' => $value,
-					'to_self' => true,
-					'attribute' => 'display',
-					'effect' => 'show',
-					'comparison' => '===',
-				],
-                [
-					'key' => $engine_key,
-					'value' => $value,
-					'to_self' => true,
-					'attribute' => 'display',
-					'effect' => 'hide',
-					'comparison' => '!==',
-				],
+                [ 'key' => $engine_key, 'value' => $value, 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '===' ],
+                [ 'key' => $engine_key, 'value' => $value, 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '!==' ],
             ];
         };
 
-        return [
+        $text_providers  = self::resolve_ai_providers( 'text' );
+        $image_providers = self::resolve_ai_providers( 'image' );
+
+        $provider_options = static function ( array $providers ): array {
+            $out = [];
+            foreach ( $providers as $id => $provider ) {
+                $out[] = [ 'title' => $provider->get_title(), 'value' => (string) $id ];
+            }
+            return $out;
+        };
+
+        $elements = [
             [
                 'id'          => 'ai_assist',
                 'type'        => 'page',
@@ -2187,6 +2161,8 @@ class SettingsSchema {
                 'priority'    => 100,
                 'doc_link'    => 'https://dokan.co/docs/wordpress/settings/dokan-ai-assistant/',
             ],
+
+            // ===== Product Info (text) =====
             [
                 'id'         => 'product_image_section',
                 'type'       => 'section',
@@ -2200,14 +2176,8 @@ class SettingsSchema {
                 'title'         => esc_html__( 'Product Info Generate', 'dokan-lite' ),
                 'description'   => esc_html__( 'Let vendors generate product info by AI.', 'dokan-lite' ),
                 'default'       => 'on',
-                'enable_state'  => [
-					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
-					'value' => 'on',
-				],
-                'disable_state' => [
-					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
-					'value' => 'off',
-				],
+                'enable_state'  => [ 'label' => esc_html__( 'Enabled', 'dokan-lite' ), 'value' => 'on' ],
+                'disable_state' => [ 'label' => esc_html__( 'Disabled', 'dokan-lite' ), 'value' => 'off' ],
             ],
             [
                 'id'           => 'product_info_engine',
@@ -2216,245 +2186,218 @@ class SettingsSchema {
                 'section_id'   => 'product_image_section',
                 'title'        => esc_html__( 'Engine', 'dokan-lite' ),
                 'description'  => esc_html__( 'Select which AI provider to use for generating content.', 'dokan-lite' ),
-                'default'      => 'chatgpt',
-                'options'      => [
-                    [
-						'title' => esc_html__( 'ChatGPT', 'dokan-lite' ),
-						'value' => 'chatgpt',
-					],
-                    [
-						'title' => esc_html__( 'Gemini', 'dokan-lite' ),
-						'value' => 'gemini',
-					],
-                ],
+                'default'      => 'openai',
+                'options'      => $provider_options( $text_providers ),
+                'legacy_key'   => 'dokan_ai.dokan_ai_engine',
                 'dependencies' => $on_generate,
             ],
+        ];
 
-            // OpenAI fieldgroup (visible when engine = chatgpt)
-            [
-                'id'           => 'openai_api_info_group',
-                'type'         => 'fieldgroup',
-                'section_id'   => 'product_image_section',
-                'dependencies' => $when_engine( 'product_info_engine', 'chatgpt' ),
-            ],
-            [
-                'id'             => 'openai_api_info',
-                'type'           => 'field',
-                'variant'        => 'base_field_label',
-                'field_group_id' => 'openai_api_info_group',
-                'title'          => esc_html__( 'OpenAI API', 'dokan-lite' ),
-                'icon'           => 'CircleCheck',
-                'description'    => esc_html__( 'Connect to your OpenAI account with your website.', 'dokan-lite' ),
-                'image_url'      => 'https://images.seeklogo.com/logo-png/46/2/chatgpt-logo-png_seeklogo-465219.png',
-                'dependencies'   => $on_generate,
-            ],
-            [
-                'id'             => 'openai_api_notice',
-                'type'           => 'field',
-                'variant'        => 'info',
-                'field_group_id' => 'openai_api_info_group',
-                'title'          => esc_html__( 'You can get your API Keys in your', 'dokan-lite' ),
-                'link_text'      => esc_html__( 'OpenAI Account.', 'dokan-lite' ),
-                'link_url'       => 'https://platform.openai.com/api-keys',
-                'show_icon'      => true,
-                'dependencies'   => $on_generate,
-            ],
-            [
-                'id'             => 'openai_api_key',
-                'type'           => 'field',
-                'variant'        => 'show_hide',
-                'field_group_id' => 'openai_api_info_group',
-                'title'          => esc_html__( 'API Key', 'dokan-lite' ),
-                'tooltip'        => esc_html__( 'Enter your OpenAI API key for content generation.', 'dokan-lite' ),
-                'placeholder'    => esc_html__( 'Enter your OpenAI API key', 'dokan-lite' ),
-                'dependencies'   => $on_generate,
-            ],
-            [
-                'id'           => 'openai_model',
-                'type'         => 'field',
-                'variant'      => 'select',
-                'section_id'   => 'product_image_section',
-                'title'        => esc_html__( 'Model', 'dokan-lite' ),
-                'description'  => esc_html__( 'More advanced models provide higher quality output but may cost more per generation.', 'dokan-lite' ),
-                'default'      => 'chatgpt-4o-latest',
-                'options'      => [
+        // Per-text-provider fieldgroups — dynamic from Manager registry.
+        foreach ( $text_providers as $provider_id => $provider ) {
+            $pid = (string) $provider_id;
+            $elements = array_merge(
+                $elements,
+                self::ai_provider_group(
                     [
-						'title' => esc_html__( 'OpenAI GPT-3.5 Turbo', 'dokan-lite' ),
-						'value' => 'gpt-3.5-turbo',
-					],
-                    [
-						'title' => esc_html__( 'OpenAI GPT-4o Mini', 'dokan-lite' ),
-						'value' => 'gpt-4o-mini',
-					],
-                    [
-						'title' => esc_html__( 'OpenAI GPT-4o', 'dokan-lite' ),
-						'value' => 'gpt-4o',
-					],
-                    [
-						'title' => esc_html__( 'OpenAI ChatGPT-4o', 'dokan-lite' ),
-						'value' => 'chatgpt-4o-latest',
-					],
-                ],
-                'dependencies' => array_merge( $on_generate, $when_engine( 'product_info_engine', 'chatgpt' ) ),
-            ],
+                        'provider_id'     => $pid,
+                        'provider'        => $provider,
+                        'section_id'      => 'product_image_section',
+                        'engine_field_id' => 'product_info_engine',
+                        'toggle_deps'     => $on_generate,
+                        'engine_deps'     => $when_engine( 'product_info_engine', $pid ),
+                        'api_key_legacy'  => 'dokan_ai.dokan_ai_' . $pid . '_api_key',
+                        'model_legacy'    => 'dokan_ai.dokan_ai_' . $pid . '_model',
+                        'model_kind'      => 'text',
+                        'id_prefix'       => 'text',
+                    ]
+                )
+            );
+        }
 
-            // Gemini fieldgroup (visible when engine = gemini)
-            [
-                'id'           => 'gemini_api_info_group',
-                'type'         => 'fieldgroup',
-                'section_id'   => 'product_image_section',
-                'dependencies' => $when_engine( 'product_info_engine', 'gemini' ),
-            ],
-            [
-                'id'             => 'gemini_api_info',
-                'type'           => 'field',
-                'variant'        => 'base_field_label',
-                'field_group_id' => 'gemini_api_info_group',
-                'title'          => esc_html__( 'Gemini API', 'dokan-lite' ),
-                'description'    => esc_html__( 'Connect to your Gemini account with your website.', 'dokan-lite' ),
-                'image_url'      => 'https://raw.githubusercontent.com/lobehub/lobe-icons/refs/heads/master/packages/static-png/dark/gemini-color.png',
-                'dependencies'   => $on_generate,
-            ],
-            [
-                'id'             => 'gemini_api_notice',
-                'type'           => 'field',
-                'variant'        => 'info',
-                'field_group_id' => 'gemini_api_info_group',
-                'title'          => esc_html__( 'You can get your API Keys in your Gemini Account.', 'dokan-lite' ),
-                'link_text'      => esc_html__( 'Gemini Account', 'dokan-lite' ),
-                'link_url'       => 'https://aistudio.google.com/app/apikey',
-                'show_icon'      => true,
-                'dependencies'   => $on_generate,
-            ],
-            [
-                'id'             => 'gemini_api_key',
-                'type'           => 'field',
-                'variant'        => 'show_hide',
-                'field_group_id' => 'gemini_api_info_group',
-                'title'          => esc_html__( 'API Key', 'dokan-lite' ),
-                'tooltip'        => esc_html__( 'Enter your Gemini API key for content generation.', 'dokan-lite' ),
-                'placeholder'    => esc_html__( 'Enter your Gemini API key', 'dokan-lite' ),
-                'dependencies'   => $on_generate,
-            ],
-            [
-                'id'           => 'gemini_model',
-                'type'         => 'field',
-                'variant'      => 'select',
-                'section_id'   => 'product_image_section',
-                'title'        => esc_html__( 'Model', 'dokan-lite' ),
-                'description'  => esc_html__( 'More advanced models provide higher quality output but may cost more per generation.', 'dokan-lite' ),
-                'default'      => 'gemini-2.0-flash',
-                'options'      => [
-                    [
-						'title' => esc_html__( 'Gemini 2.5 Flash', 'dokan-lite' ),
-						'value' => 'gemini-2.5-flash',
-					],
-                    [
-						'title' => esc_html__( 'Gemini 2.5 Pro', 'dokan-lite' ),
-						'value' => 'gemini-2.5-pro',
-					],
-                    [
-						'title' => esc_html__( 'Gemini 2.5 Flash Lite', 'dokan-lite' ),
-						'value' => 'gemini-2.5-flash-lite-preview-06-17',
-					],
-                ],
-                'dependencies' => array_merge( $on_generate, $when_engine( 'product_info_engine', 'gemini' ) ),
-            ],
-
-            // ===== Product Image Enhancement =====
-            [
+        // ===== Product Image Enhancement (Pro: only renders when image providers exist) =====
+        if ( ! empty( $image_providers ) ) {
+            $elements[] = [
                 'id'         => 'product_description_section',
                 'type'       => 'section',
                 'subpage_id' => 'product_generation',
-            ],
-            [
+            ];
+            $elements[] = [
                 'id'            => 'product_image_enhancement',
                 'type'          => 'field',
                 'variant'       => 'switch',
                 'section_id'    => 'product_description_section',
                 'title'         => esc_html__( 'Product Image Enhancement', 'dokan-lite' ),
                 'description'   => esc_html__( 'Allow vendors to enhance and generate professional product images using AI.', 'dokan-lite' ),
-                'default'       => 'on',
-                'enable_state'  => [
-					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
-					'value' => 'on',
-				],
-                'disable_state' => [
-					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
-					'value' => 'off',
-				],
-            ],
-            [
+                'default'       => 'off',
+                'enable_state'  => [ 'label' => esc_html__( 'Enabled', 'dokan-lite' ), 'value' => 'on' ],
+                'disable_state' => [ 'label' => esc_html__( 'Disabled', 'dokan-lite' ), 'value' => 'off' ],
+                'legacy_key'    => 'dokan_ai.dokan_ai_image_gen_availability',
+            ];
+            $elements[] = [
                 'id'           => 'product_image_engine',
                 'type'         => 'field',
                 'variant'      => 'select',
                 'section_id'   => 'product_description_section',
                 'title'        => esc_html__( 'Engine', 'dokan-lite' ),
                 'description'  => esc_html__( 'Select your AI provider for image processing and generation.', 'dokan-lite' ),
-                'default'      => 'leonardo-ai',
-                'options'      => [
-                    [
-						'title' => esc_html__( 'Leonardo AI', 'dokan-lite' ),
-						'value' => 'leonardo-ai',
-					],
-                ],
+                'default'      => 'openai',
+                'options'      => $provider_options( $image_providers ),
+                'legacy_key'   => 'dokan_ai.dokan_ai_image_engine',
                 'dependencies' => $on_enhance,
-            ],
+            ];
 
-            // Leonardo AI fieldgroup (visible when engine = leonardo-ai)
+            foreach ( $image_providers as $provider_id => $provider ) {
+                $pid = (string) $provider_id;
+                $elements = array_merge(
+                    $elements,
+                    self::ai_provider_group(
+                        [
+                            'provider_id'     => $pid,
+                            'provider'        => $provider,
+                            'section_id'      => 'product_description_section',
+                            'engine_field_id' => 'product_image_engine',
+                            'toggle_deps'     => $on_enhance,
+                            'engine_deps'     => $when_engine( 'product_image_engine', $pid ),
+                            'api_key_legacy'  => 'dokan_ai.dokan_ai_image_' . $pid . '_api_key',
+                            'model_legacy'    => 'dokan_ai.dokan_ai_image_' . $pid . '_model',
+                            'model_kind'      => 'image',
+                            'id_prefix'       => 'image',
+                        ]
+                    )
+                );
+            }
+        }
+
+        return $elements;
+    }
+
+    /**
+     * Resolve registered AI providers for the given kind ('text' | 'image').
+     *
+     * Returns an empty array when the Intelligence module is not loaded or
+     * the container can't resolve Manager — keeps schema generation
+     * best-effort so a partial bootstrap never breaks the settings UI.
+     *
+     * @param string $kind
+     *
+     * @return array
+     */
+    private static function resolve_ai_providers( string $kind ): array {
+        if ( ! class_exists( '\WeDevs\Dokan\Intelligence\Manager' ) ) {
+            return [];
+        }
+        try {
+            $manager = dokan()->get_container()->get( \WeDevs\Dokan\Intelligence\Manager::class );
+            return 'image' === $kind
+                ? $manager->get_image_supported_providers()
+                : $manager->get_text_supported_providers();
+        } catch ( \Throwable $e ) {
+            unset( $e );
+            return [];
+        }
+    }
+
+    /**
+     * Build the 5-element per-provider fieldgroup (group + api_info +
+     * api_notice + api_key + model). Shared between the text and image
+     * sections so the dynamic shape stays in lock-step on both sides.
+     *
+     * @param array $cfg
+     *
+     * @return array
+     */
+    private static function ai_provider_group( array $cfg ): array {
+        $pid          = $cfg['provider_id'];
+        $provider     = $cfg['provider'];
+        $toggle_deps  = $cfg['toggle_deps'];
+        $engine_deps  = $cfg['engine_deps'];
+        // Section-scoped prefix prevents id collisions when the same
+        // provider id (e.g. "gemini") appears in both text and image
+        // provider registries.
+        $prefix       = isset( $cfg['id_prefix'] ) && '' !== $cfg['id_prefix']
+            ? rtrim( (string) $cfg['id_prefix'], '_' ) . '_'
+            : '';
+        $group_id     = $prefix . $pid . '_api_info_group';
+
+        // Build model options + default model id defensively — providers may
+        // not implement get_models_by_type / get_default_model_id.
+        $model_options = [];
+        if ( method_exists( $provider, 'get_models_by_type' ) ) {
+            $model_const = 'image' === ( $cfg['model_kind'] ?? '' )
+                ? '\WeDevs\Dokan\Intelligence\Services\Model::SUPPORTS_IMAGE'
+                : '\WeDevs\Dokan\Intelligence\Services\Model::SUPPORTS_TEXT';
+            try {
+                $models = $provider->get_models_by_type( constant( $model_const ) );
+                foreach ( $models as $model_id => $model ) {
+                    $model_options[] = [ 'title' => $model->get_title(), 'value' => (string) $model_id ];
+                }
+            } catch ( \Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+                unset( $e );
+            }
+        }
+        $default_model = method_exists( $provider, 'get_default_model_id' ) ? (string) $provider->get_default_model_id() : '';
+
+        $api_key_url = method_exists( $provider, 'get_api_key_url' ) ? (string) $provider->get_api_key_url() : '';
+        $image_url   = method_exists( $provider, 'get_image_url' ) ? (string) $provider->get_image_url() : '';
+
+        return [
             [
-                'id'           => 'leonardo_api_info_group',
+                'id'           => $group_id,
                 'type'         => 'fieldgroup',
-                'section_id'   => 'product_description_section',
-                'dependencies' => $when_engine( 'product_image_engine', 'leonardo-ai' ),
+                'section_id'   => $cfg['section_id'],
+                'dependencies' => $engine_deps,
             ],
             [
-                'id'             => 'leonardo_api_info',
+                'id'             => $prefix . $pid . '_api_info',
                 'type'           => 'field',
                 'variant'        => 'base_field_label',
-                'field_group_id' => 'leonardo_api_info_group',
-                'title'          => esc_html__( 'Leonardo AI API', 'dokan-lite' ),
+                'field_group_id' => $group_id,
+                /* translators: %s: Provider title */
+                'title'          => sprintf( esc_html__( '%s API', 'dokan-lite' ), $provider->get_title() ),
                 'icon'           => 'CircleCheck',
-                'description'    => esc_html__( 'Connect to your Leonardo AI account with your website.', 'dokan-lite' ),
-                'image_url'      => 'https://brandlogos.net/wp-content/uploads/2025/05/leonardo_ai-logo_brandlogos.net_ctjsa.png',
-                'dependencies'   => $on_enhance,
+                /* translators: %s: Provider title */
+                'description'    => sprintf( esc_html__( 'Connect to your %s account with your website.', 'dokan-lite' ), $provider->get_title() ),
+                'image_url'      => $image_url,
+                'dependencies'   => $toggle_deps,
             ],
             [
-                'id'             => 'leonardo_api_notice',
+                'id'             => $prefix . $pid . '_api_notice',
                 'type'           => 'field',
                 'variant'        => 'info',
-                'field_group_id' => 'leonardo_api_info_group',
-                'title'          => esc_html__( 'You can get your API Keys in your', 'dokan-lite' ),
-                'link_text'      => esc_html__( 'Leonardo AI account.', 'dokan-lite' ),
-                'link_url'       => 'https://leonardo.ai/api',
+                'field_group_id' => $group_id,
+                /* translators: %s: Provider title */
+                'title'          => sprintf( esc_html__( 'You can get your API Keys in your %s Account.', 'dokan-lite' ), $provider->get_title() ),
+                /* translators: %s: Provider title */
+                'link_text'      => sprintf( esc_html__( '%s Account', 'dokan-lite' ), $provider->get_title() ),
+                'link_url'       => $api_key_url,
                 'show_icon'      => true,
-                'dependencies'   => $on_enhance,
+                'dependencies'   => $toggle_deps,
             ],
             [
-                'id'             => 'leonardo_api_key',
+                'id'             => $prefix . $pid . '_api_key',
                 'type'           => 'field',
                 'variant'        => 'show_hide',
-                'field_group_id' => 'leonardo_api_info_group',
+                'field_group_id' => $group_id,
                 'title'          => esc_html__( 'API Key', 'dokan-lite' ),
-                'tooltip'        => esc_html__( 'Enter your Leonardo AI API key for image generation.', 'dokan-lite' ),
-                'placeholder'    => esc_html__( 'Enter your Leonardo AI API key', 'dokan-lite' ),
-                'dependencies'   => $on_enhance,
+                /* translators: %s: Provider title */
+                'tooltip'        => sprintf( esc_html__( 'Enter your %s API key.', 'dokan-lite' ), $provider->get_title() ),
+                /* translators: %s: Provider title */
+                'placeholder'    => sprintf( esc_html__( 'Enter your %s API key', 'dokan-lite' ), $provider->get_title() ),
+                'legacy_key'     => $cfg['api_key_legacy'],
+                'dependencies'   => $toggle_deps,
             ],
             [
-                'id'           => 'leonardo_model',
+                'id'           => $prefix . $pid . '_model',
                 'type'         => 'field',
                 'variant'      => 'select',
-                'section_id'   => 'product_description_section',
+                'section_id'   => $cfg['section_id'],
                 'title'        => esc_html__( 'Model', 'dokan-lite' ),
-                'description'  => esc_html__( 'Choose the AI model for image enhancement and generation. Different models excel at various image types and styles.', 'dokan-lite' ),
-                'default'      => '',
-                'options'      => [
-                    [
-						'title' => esc_html__( 'Select Model', 'dokan-lite' ),
-						'value' => '',
-					],
-                ],
-                'dependencies' => array_merge( $on_enhance, $when_engine( 'product_image_engine', 'leonardo-ai' ) ),
+                'description'  => esc_html__( 'More advanced models provide higher quality output but may cost more per generation.', 'dokan-lite' ),
+                'default'      => $default_model,
+                'options'      => $model_options,
+                'legacy_key'   => $cfg['model_legacy'],
+                'dependencies' => array_merge( $toggle_deps, $engine_deps ),
             ],
         ];
     }
