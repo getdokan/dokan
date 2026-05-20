@@ -75,11 +75,26 @@ class SettingsAccessorTest extends DokanTestCase {
 		$all      = $accessor->all();
 
 		$this->assertIsArray( $all );
+		$this->assertNotEmpty( $all, 'all() must return every registered field, not an empty array.' );
 		$this->assertArrayHasKey( 'vendor_store_url', $all );
 		$this->assertSame( 'boutique', $all['vendor_store_url'] );
 
 		foreach ( $all as $id => $_value ) {
 			$this->assertIsString( $id );
+		}
+
+		// Cross-check exhaustiveness: every field id the registry knows about
+		// must appear in the snapshot.
+		$registry = new SettingsRegistry();
+		foreach ( $registry->get_schema() as $element ) {
+			if ( ( $element['type'] ?? '' ) !== 'field' ) {
+				continue;
+			}
+			$id = $element['id'] ?? '';
+			if ( '' === $id ) {
+				continue;
+			}
+			$this->assertArrayHasKey( $id, $all, "Field {$id} must be present in all() snapshot." );
 		}
 	}
 }

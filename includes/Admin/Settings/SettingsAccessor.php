@@ -26,6 +26,11 @@ final class SettingsAccessor implements SettingsAccessorInterface {
 	 */
 	private array $logged_unknown_keys = [];
 
+	/**
+	 * @since DOKAN_SINCE
+	 *
+	 * @param SettingsRegistry $registry
+	 */
 	public function __construct( SettingsRegistry $registry ) {
 		$this->registry = $registry;
 	}
@@ -41,6 +46,8 @@ final class SettingsAccessor implements SettingsAccessorInterface {
 			return $fallback;
 		}
 
+		// The registry's populate_values() always sets 'value'; this guard
+		// handles schema elements injected by extensions that bypass it.
 		if ( array_key_exists( 'value', $field ) ) {
 			return $field['value'];
 		}
