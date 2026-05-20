@@ -16,7 +16,7 @@ class Rewrites {
      * Hook into the functions
      */
     public function __construct() {
-        $this->custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
+        $this->custom_store_url = dokan()->settings->get( 'vendor_store_url' );
 
         add_action( 'init', [ $this, 'register_rule' ] );
         add_action( 'pre_get_posts', [ $this, 'store_query_filter' ] );
@@ -55,7 +55,7 @@ class Rewrites {
         $author      = get_query_var( $this->custom_store_url );
         $seller_info = get_user_by( 'slug', $author );
 
-        $crumbs[1] = [ ucwords( $this->custom_store_url ), get_permalink( dokan_get_option( 'store_listing', 'dokan_pages' ) ) ];
+        $crumbs[1] = [ ucwords( $this->custom_store_url ), get_permalink( dokan()->settings->get( 'store_listing_page' ) ) ];
         if ( ! $seller_info ) {
             $crumbs[2] = [ __( 'Error 404', 'dokan-lite' ), '' ];
             return $crumbs;
@@ -108,7 +108,7 @@ class Rewrites {
         $base = empty( $base ) ? 'product' : $base;
 
         // get custom store url from settings so that we can use it from other places
-        $this->custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
+        $this->custom_store_url = dokan()->settings->get( 'vendor_store_url' );
 
         // special treatment for product cat
         if ( stripos( $base, 'product_cat' ) ) {
@@ -146,7 +146,7 @@ class Rewrites {
     public function resolve_wc_query_conflict( $query_vars ) {
         global $post;
 
-        $dashboard_id = apply_filters( 'dokan_get_dashboard_page_id', dokan_get_option( 'dashboard', 'dokan_pages', 0 ) );
+        $dashboard_id = apply_filters( 'dokan_get_dashboard_page_id', dokan()->settings->get( 'vendor_dashboard_page' ) );
 
         if ( ! empty( $post->ID ) && apply_filters( 'dokan_get_current_page_id', $post->ID ) === absint( $dashboard_id ) ) {
             unset( $query_vars['orders'] );
@@ -312,7 +312,7 @@ class Rewrites {
             }
 
             $store_info  = dokan_get_store_info( $seller_info->data->ID );
-            $product_ppp = dokan_get_option( 'store_products_per_page', 'dokan_general', 12 );
+            $product_ppp = dokan()->settings->get( 'store_product_per_page' );
 
             do_action( 'dokan_store_page_query_filter', $query, $store_info );
             set_query_var( 'posts_per_page', apply_filters( 'dokan_store_products_per_page', $product_ppp ) );
