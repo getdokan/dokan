@@ -23,6 +23,7 @@ class ServiceProvider extends BootableServiceProvider {
         'product_block'       => \WeDevs\Dokan\Blocks\ProductBlock::class,
         'pageview'            => \WeDevs\Dokan\PageViews::class,
         'seller_wizard'       => \WeDevs\Dokan\Vendor\SetupWizard::class,
+        'settings'            => \WeDevs\Dokan\Admin\Settings\SettingsAccessor::class,
         'core'                => \WeDevs\Dokan\Core::class,
         'scripts'             => \WeDevs\Dokan\Assets::class,
         'email'               => \WeDevs\Dokan\Emails\Manager::class,
