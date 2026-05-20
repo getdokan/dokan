@@ -159,7 +159,7 @@ function dokan_is_product_author( $product_id = 0 ) {
  * @return bool
  */
 function dokan_is_store_page() {
-    $custom_store_url = dokan()->settings->get( 'vendor_store_url' );
+    $custom_store_url = dokan()->settings->get( 'vendor_store_url_slug' );
 
     if ( get_query_var( $custom_store_url ) ) {
         return true;
@@ -1149,7 +1149,7 @@ function dokan_get_store_url( $user_id, $tab = '' ) {
 
     $userdata         = get_userdata( $user_id );
     $user_nicename    = ( false !== $userdata ) ? $userdata->user_nicename : '';
-    $custom_store_url = dokan()->settings->get( 'vendor_store_url' );
+    $custom_store_url = dokan()->settings->get( 'vendor_store_url_slug' );
 
     $path = '/' . $custom_store_url . '/' . $user_nicename . '/';
     if ( $tab ) {

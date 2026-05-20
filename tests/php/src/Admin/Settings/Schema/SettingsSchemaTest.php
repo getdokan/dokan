@@ -175,10 +175,10 @@ class SettingsSchemaTest extends DokanTestCase {
     // Expected fields
     // =========================================================================
 
-    public function test_vendor_store_url_field_exists(): void {
-        $field = $this->find_element( 'vendor_store_url', 'field' );
+    public function test_vendor_store_url_slug_field_exists(): void {
+        $field = $this->find_element( 'vendor_store_url_slug', 'field' );
 
-        $this->assertNotNull( $field, 'vendor_store_url field not found.' );
+        $this->assertNotNull( $field, 'vendor_store_url_slug field not found.' );
         $this->assertSame( 'text', $field['variant'] );
         $this->assertSame( 'store', $field['default'] );
         $this->assertSame( 'marketplace_settings', $field['section_id'] );

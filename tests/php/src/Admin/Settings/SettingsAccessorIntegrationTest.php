@@ -43,14 +43,14 @@ class SettingsAccessorIntegrationTest extends DokanTestCase {
     }
 
     public function test_dokan_settings_get_returns_schema_default_when_unset(): void {
-        $this->assertSame( 'store', dokan()->settings->get( 'vendor_store_url' ) );
+        $this->assertSame( 'store', dokan()->settings->get( 'vendor_store_url_slug' ) );
     }
 
     public function test_dokan_settings_get_reads_new_flat_option(): void {
         $repo = new SettingsRepository();
-        $repo->update( [ 'vendor_store_url' => 'boutique' ] );
+        $repo->update( [ 'vendor_store_url_slug' => 'boutique' ] );
 
-        $this->assertSame( 'boutique', dokan()->settings->get( 'vendor_store_url' ) );
+        $this->assertSame( 'boutique', dokan()->settings->get( 'vendor_store_url_slug' ) );
     }
 
     public function test_dokan_settings_get_overlays_legacy_section_value(): void {
@@ -59,10 +59,10 @@ class SettingsAccessorIntegrationTest extends DokanTestCase {
         update_option( 'dokan_general', [ 'custom_store_url' => 'shoppe' ] );
 
         // The legacy field 'dokan_general.custom_store_url' maps to flat id
-        // 'vendor_store_url' (see SettingsSchema.php:166).
+        // 'vendor_store_url_slug' (see SettingsSchema.php:166).
         $this->assertSame(
             'shoppe',
-            dokan()->settings->get( 'vendor_store_url' ),
+            dokan()->settings->get( 'vendor_store_url_slug' ),
             'Accessor must reflect legacy per-section values via the bridge overlay.'
         );
     }
