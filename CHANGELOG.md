@@ -1,3 +1,9 @@
+### v5.0.3 ( May 21, 2026 ) ###
+
+- **update:** Exposed manual withdrawal availability and withdraw-visibility flags in the vendor dashboard REST API.
+- **fix:** Restricted the Customers REST endpoint to self-service to prevent vendors from modifying other user accounts.
+- **fix:** Translated the "Actions" column header on vendor dashboard DataViews tables.
+
 ### v5.0.2 ( May 18, 2026 ) ###
 
 - **new:** Added a date range filter on the vendor dashboard Withdraw Requests table to filter results by start and end dates.
