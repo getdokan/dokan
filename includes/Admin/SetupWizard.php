@@ -545,9 +545,9 @@ class SetupWizard {
         // call a hook for other plugins to do their thing
         do_action( 'dokan_share_essentials_updated', $share_essentials );
 
-        update_option( 'dokan_general', $general_options );
-        update_option( 'dokan_selling', $selling_options );
-        update_option( 'dokan_appearance', $appearance );
+        dokan_save_legacy_settings_section( 'dokan_general', $general_options );
+        dokan_save_legacy_settings_section( 'dokan_selling', $selling_options );
+        dokan_save_legacy_settings_section( 'dokan_appearance', $appearance );
 
         do_action( 'dokan_admin_setup_wizard_save_step_store' );
 
@@ -624,7 +624,7 @@ class SetupWizard {
         $options['new_seller_enable_selling'] = dokan_get_container()->get( AdminSettings::class )->get_new_seller_enable_selling_status( sanitize_text_field( wp_unslash( $_POST['new_seller_enable_selling'] ) ) ?? 'automatically' );
         $options['order_status_change']       = isset( $_POST['order_status_change'] ) ? 'on' : 'off';
 
-        update_option( 'dokan_selling', $options );
+        dokan_save_legacy_settings_section( 'dokan_selling', $options );
 
         do_action( 'dokan_admin_setup_wizard_save_step_setup_selling', $options, [] );
 
@@ -654,7 +654,7 @@ class SetupWizard {
         $options['commission_category_based_values']          = isset( $_POST['dokan_commission_category_based'] ) ? wc_clean( json_decode( sanitize_text_field( wp_unslash( $_POST['dokan_commission_category_based'] ) ), true ) ) : [];
         $options['reset_sub_category_when_edit_all_category'] = isset( $_POST['reset_sub_category'] ) && false === dokan_string_to_bool( $_POST['reset_sub_category'] ) ? 'off' : 'on';
 
-        update_option( 'dokan_selling', $options );
+        dokan_save_legacy_settings_section( 'dokan_selling', $options );
 
         do_action( 'dokan_admin_setup_wizard_save_step_setup_commission', $options, [] );
 
@@ -891,7 +891,7 @@ class SetupWizard {
          */
         $options = apply_filters( 'dokan_setup_wizard_save_withdraw_options', $options, [] );
 
-        update_option( 'dokan_withdraw', $options );
+        dokan_save_legacy_settings_section( 'dokan_withdraw', $options );
 
         wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;

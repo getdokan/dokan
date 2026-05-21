@@ -31,6 +31,7 @@ final class SettingsRepository implements SettingsRepositoryInterface {
     public function __construct() {
         add_action( 'update_option_' . self::OPTION_KEY, [ $this, 'flush_cache' ] );
         add_action( 'add_option_' . self::OPTION_KEY, [ $this, 'flush_cache' ] );
+        add_action( 'delete_option_' . self::OPTION_KEY, [ $this, 'flush_cache' ] );
     }
 
     /**

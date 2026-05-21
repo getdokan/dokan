@@ -1087,6 +1087,44 @@ function dokan_get_option( $option, $section, $default_value = '' ) {
 }
 
 /**
+ * Save a legacy section option through the settings repository.
+ *
+ * Routes a full-row legacy payload through {@see LegacySettingsRepository::replace()},
+ * which:
+ *   1. Mirrors mapped keys into the new flat `dokan_admin_settings` option
+ *      (the canonical source of truth).
+ *   2. Strips those mapped keys from the payload.
+ *   3. Persists the unmapped remainder under the legacy `$option_name` row.
+ *   4. Fires `dokan_legacy_settings_changed` and refreshes the in-request snapshot.
+ *
+ * Callers should NOT also call `update_option( $option_name, ... )` — the
+ * repository owns that write. If the DI container is unavailable (early
+ * bootstrap, isolated tests), this falls back to a raw `update_option` so
+ * legacy writes still succeed without the source-of-truth guarantee.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param string              $option_name Legacy wp_option name (e.g. `dokan_general`).
+ * @param array<string,mixed> $payload     Legacy-shaped payload to persist.
+ *
+ * @return void
+ */
+function dokan_save_legacy_settings_section( string $option_name, array $payload ): void {
+    if ( ! function_exists( 'dokan_get_container' ) ) {
+        update_option( $option_name, $payload );
+        return;
+    }
+    try {
+        dokan_get_container()
+            ->get( \WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepository::class )
+            ->replace( $option_name, $payload );
+    } catch ( \Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+        unset( $e );
+        update_option( $option_name, $payload );
+    }
+}
+
+/**
  * Redirect users from standard WordPress register page to woocommerce
  * my account page
  *

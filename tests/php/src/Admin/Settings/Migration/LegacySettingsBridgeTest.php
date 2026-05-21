@@ -11,6 +11,34 @@ use WeDevs\Dokan\Test\DokanTestCase;
  */
 class LegacySettingsBridgeTest extends DokanTestCase {
 
+    /**
+     * Clear the new-flat option and its caches before each test so leaks
+     * from a sibling test cannot bleed through the BridgeBootstrap overlay
+     * filter that wraps every `get_option('dokan_*')` read.
+     */
+    public function set_up() {
+        parent::set_up();
+        delete_option( 'dokan_admin_settings' );
+        wp_cache_delete( 'dokan_admin_settings', 'options' );
+        wp_cache_delete( 'alloptions', 'options' );
+        wp_cache_delete( 'notoptions', 'options' );
+        if ( function_exists( 'dokan_get_container' ) ) {
+            try {
+                dokan_get_container()
+                    ->get( \WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository::class )
+                    ->flush_cache();
+                dokan_get_container()
+                    ->get( \WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepository::class )
+                    ->flush_cache( null );
+                dokan_get_container()
+                    ->get( \WeDevs\Dokan\Admin\Settings\Migration\LegacySettingsBridge::class )
+                    ->flush_cache();
+            } catch ( \Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+                unset( $e );
+            }
+        }
+    }
+
     public function test_class_exists_and_construct(): void {
         $bridge = new LegacySettingsBridge();
         $this->assertInstanceOf( LegacySettingsBridge::class, $bridge );
@@ -432,7 +460,7 @@ class LegacySettingsBridgeTest extends DokanTestCase {
         $this->assertSame( 'zyx', $stored['store_banner_width'] );
     }
 
-    public function test_bridge_bootstrap_mirrors_changed_keys_to_legacy(): void {
+    public function test_bridge_bootstrap_overlay_projects_new_into_legacy_read(): void {
         $map_filter = static function ( $map ) {
             $map['general_marketplace_site_logo'] = [
 				'option' => 'dokan_general',
@@ -447,23 +475,27 @@ class LegacySettingsBridgeTest extends DokanTestCase {
 
         $bridge    = new LegacySettingsBridge();
         $bootstrap = new \WeDevs\Dokan\Admin\Settings\Migration\BridgeBootstrap( $bridge );
-        $bootstrap->register_hooks();
+        $bootstrap->register_overlay_filters();
 
         $repo = new \WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository();
         $repo->update( [ 'general_marketplace_site_logo' => 'new.png' ] );
 
         $stored_legacy = get_option( 'dokan_general' );
 
+        remove_filter( 'option_dokan_general', [ $bootstrap, 'apply_overlay' ], 10 );
+        remove_filter( 'default_option_dokan_general', [ $bootstrap, 'apply_overlay' ], 10 );
         remove_filter( 'dokan_legacy_settings_key_mapping', $map_filter );
-        remove_action( 'dokan_admin_settings_changed', [ $bootstrap, 'on_settings_changed' ], 10 );
         delete_option( 'dokan_general' );
         delete_option( 'dokan_admin_settings' );
 
+        // Under the new-as-canonical model the legacy DB row is NOT written
+        // when the new option changes; instead the read-time overlay synthesizes
+        // the legacy shape from dokan_admin_settings on every get_option call.
         $this->assertIsArray( $stored_legacy );
         $this->assertSame( 'new.png', $stored_legacy['site_logo'] );
     }
 
-    public function test_bridge_bootstrap_reentry_guard_prevents_recursion(): void {
+    public function test_bridge_bootstrap_overlay_reentry_guard_prevents_recursion(): void {
         $map_filter = static function ( $map ) {
             $map['general_marketplace_site_logo'] = [
 				'option' => 'dokan_general',
@@ -478,32 +510,40 @@ class LegacySettingsBridgeTest extends DokanTestCase {
 
         $bridge    = new LegacySettingsBridge();
         $bootstrap = new \WeDevs\Dokan\Admin\Settings\Migration\BridgeBootstrap( $bridge );
-        $bootstrap->register_hooks();
+        $bootstrap->register_overlay_filters();
+
+        // Seed a row so `option_<name>` (rather than `default_option_<name>`)
+        // is the active read hook; the counter measures only this filter.
+        update_option( 'dokan_general', [ 'placeholder' => 'x' ] );
+
+        // Count overlay invocations: a recursive `get_option` from inside the
+        // bridge's hydrate path would re-enter `apply_overlay` and re-fire
+        // this listener if the reentry latch were broken.
+        $invocations = 0;
+        $counter     = static function ( $value ) use ( &$invocations ) {
+            ++$invocations;
+            return $value;
+        };
+        // Priority 9 — runs before the overlay (priority 10).
+        add_filter( 'option_dokan_general', $counter, 9 );
+
         $repo = new \WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository();
         $repo->update( [ 'general_marketplace_site_logo' => 'seed.png' ] );
 
-        // Count `dokan_admin_settings_changed` firings at priority 5 so it runs
-        // before the bootstrap mirror at priority 10.
-        $invocations = 0;
-        $counter     = static function () use ( &$invocations ) {
-            ++$invocations;
-        };
-        add_action( 'dokan_admin_settings_changed', $counter, 5 );
+        // Two top-level reads — counter should fire exactly twice, not more.
+        $first  = get_option( 'dokan_general' );
+        $second = get_option( 'dokan_general' );
 
-        $repo->update( [ 'general_marketplace_site_logo' => 'first.png' ] );
-        $repo->update( [ 'general_marketplace_site_logo' => 'second.png' ] );
-
-        remove_action( 'dokan_admin_settings_changed', $counter, 5 );
-        remove_action( 'dokan_admin_settings_changed', [ $bootstrap, 'on_settings_changed' ], 10 );
+        remove_filter( 'option_dokan_general', $counter, 9 );
+        remove_filter( 'option_dokan_general', [ $bootstrap, 'apply_overlay' ], 10 );
+        remove_filter( 'default_option_dokan_general', [ $bootstrap, 'apply_overlay' ], 10 );
         remove_filter( 'dokan_legacy_settings_key_mapping', $map_filter );
-        $stored_legacy = get_option( 'dokan_general' );
         delete_option( 'dokan_general' );
         delete_option( 'dokan_admin_settings' );
 
-        // Two top-level repository updates — counter should fire exactly twice,
-        // not more (no infinite loop, no nested re-entry).
-        $this->assertSame( 2, $invocations );
-        $this->assertSame( 'second.png', $stored_legacy['site_logo'] );
+        $this->assertSame( 2, $invocations, 'Overlay must not re-enter itself.' );
+        $this->assertSame( 'seed.png', $first['site_logo'] );
+        $this->assertSame( 'seed.png', $second['site_logo'] );
     }
 
     public function test_callable_transformer_pair_runs_for_both_directions(): void {

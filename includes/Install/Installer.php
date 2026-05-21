@@ -148,7 +148,7 @@ class Installer {
 
         if ( ! $installed_version ) {
             $options = get_option( 'dokan_selling' );
-            update_option( 'dokan_selling', $options );
+            dokan_save_legacy_settings_section( 'dokan_selling', is_array( $options ) ? $options : [] );
         }
     }
 

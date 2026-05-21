@@ -175,6 +175,6 @@ class CommissionStep extends AbstractStep {
         $dokan_selling['commission_category_based_values']          = $data['commission']['commission_category_based_values'] ?? $default_settings['commission_category_based_values'];
         $dokan_selling['reset_sub_category_when_edit_all_category'] = $data['commission']['reset_sub_category_when_edit_all_category'] ?? $default_settings['reset_sub_category_when_edit_all_category'];
 
-        update_option( 'dokan_selling', $dokan_selling );
+        dokan_save_legacy_settings_section( 'dokan_selling', $dokan_selling );
     }
 }

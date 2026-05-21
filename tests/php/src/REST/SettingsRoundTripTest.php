@@ -72,20 +72,26 @@ class SettingsRoundTripTest extends DokanTestCase {
         delete_option( 'dokan_admin_settings' );
         delete_option( 'dokan_general' );
 
-        // Belt-and-suspenders: the production bootstrap (via
-        // `WeDevs_Dokan::init_hooks()`) already registers a
-        // `BridgeBootstrap` listener on `dokan_admin_settings_changed`.
-        // The test registers a second instance so reverse-propagation is
-        // guaranteed to fire even if the test environment skipped the
-        // hookable boot pass.
+        // The production bootstrap registers its overlay filters on the
+        // `init` action which has already fired by the time this test runs.
+        // Call `register_overlay_filters()` directly so reads in this test
+        // hit the overlay path.
         $bridge               = new LegacySettingsBridge();
         $this->test_bootstrap = new BridgeBootstrap( $bridge );
-        $this->test_bootstrap->register_hooks();
+        $this->test_bootstrap->register_overlay_filters();
     }
 
     public function tear_down() {
         if ( $this->test_bootstrap ) {
-            remove_action( 'dokan_admin_settings_changed', [ $this->test_bootstrap, 'on_settings_changed' ], 10 );
+            // The bootstrap registered overlay filters on every mapped
+            // section's `option_<name>` / `default_option_<name>` hooks.
+            // Remove them so they don't bleed into sibling tests.
+            global $wp_filter;
+            foreach ( array_keys( $wp_filter ) as $hook_name ) {
+                if ( strpos( $hook_name, 'option_dokan_' ) === 0 || strpos( $hook_name, 'default_option_dokan_' ) === 0 ) {
+                    remove_filter( $hook_name, [ $this->test_bootstrap, 'apply_overlay' ], 10 );
+                }
+            }
             $this->test_bootstrap = null;
         }
         delete_option( 'dokan_csv_schema_enabled' );
@@ -202,23 +208,28 @@ class SettingsRoundTripTest extends DokanTestCase {
             'REST PUT should have written the value into dokan_settings.'
         );
 
-        // Verify the BridgeBootstrap listener mirrored the change into the
-        // legacy `dokan_general` option.
+        // Under the new-as-canonical model, the legacy DB row is NOT
+        // back-written. Instead, the BridgeBootstrap overlay filter
+        // synthesizes the legacy shape on read by projecting mapped values
+        // from dokan_admin_settings. A direct `get_option('dokan_general')`
+        // therefore observes the new value through the filter, even though
+        // no row update occurred.
         $legacy = get_option( 'dokan_general', [] );
         $this->assertIsArray( $legacy );
         $this->assertSame(
             'mystorez',
             $legacy['custom_store_url'] ?? null,
-            'REST PUT must reverse-propagate through BridgeBootstrap to the legacy dokan_general.custom_store_url.'
+            'BridgeBootstrap overlay filter must project the new value into the legacy view.'
         );
     }
 
     /**
-     * Direct write of `dokan_settings` fires reverse propagation.
+     * Direct write of `dokan_settings` surfaces in legacy reads via overlay.
      *
-     * Isolates the `dokan_admin_settings_changed` listener from the REST
-     * stack: any code path that goes through the repository (REST
-     * controller, migration, addon, direct call) triggers the mirror.
+     * Any code path that writes the new flat option (REST controller,
+     * migration, addon, direct call) must be visible to direct
+     * `get_option('dokan_*')` readers via the read-time overlay filter
+     * installed by BridgeBootstrap. No DB-level mirror runs.
      *
      * @return void
      */
@@ -237,7 +248,7 @@ class SettingsRoundTripTest extends DokanTestCase {
         $this->assertSame(
             'reverse_value',
             $legacy['setup_wizard_logo_url'] ?? null,
-            'Repository update must mirror mapped keys to the legacy dokan_general option.'
+            'New-flat write must surface in get_option() via the overlay filter.'
         );
     }
 
@@ -280,13 +291,12 @@ class SettingsRoundTripTest extends DokanTestCase {
     }
 
     /**
-     * Round trip: legacy save -> new option -> legacy option matches.
+     * Round trip: legacy save -> new option -> legacy read sees fresh value.
      *
-     * Stitches the two halves together: the legacy AJAX bridge call
-     * writes the flat option, the bootstrap listener mirrors it back.
-     * Confirms the legacy option ends up with the same value after the
-     * full bidirectional trip — there is no shape drift between the two
-     * stores.
+     * Under the new-as-canonical model the legacy DB row is never back-
+     * written. The round-trip is verified via the read-time overlay:
+     * subsequent `get_option('dokan_general')` calls project the latest
+     * new-flat value into the returned array.
      *
      * @return void
      */
@@ -297,34 +307,31 @@ class SettingsRoundTripTest extends DokanTestCase {
             return;
         }
 
-        // 1. Legacy AJAX save path: write legacy then propagate to new.
-        $legacy_payload = [ 'setup_wizard_logo_url' => 'first_value' ];
-        update_option( 'dokan_general', $legacy_payload );
+        // 1. Legacy save path: mapped key lands in dokan_admin_settings,
+        //    legacy row holds the unmapped remainder only.
+        dokan_save_legacy_settings_section(
+            'dokan_general',
+            [ 'setup_wizard_logo_url' => 'first_value' ]
+        );
 
-        $bridge = new LegacySettingsBridge();
-        $slice  = $bridge->transform_legacy_payload_to_new( 'dokan_general', $legacy_payload );
-        $repo   = new \WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository();
-        $repo->update( $slice );
-
-        // The bootstrap mirror fires on dokan_admin_settings_changed and writes
-        // back to dokan_general — but with the same value, so legacy stays
-        // consistent.
+        // Read via get_option — the overlay projects the new value back in.
         $legacy_after = get_option( 'dokan_general', [] );
         $this->assertSame(
             'first_value',
             $legacy_after['setup_wizard_logo_url'] ?? null,
-            'Legacy option survives the round-trip without value drift.'
+            'Legacy view reflects the new-flat write via the overlay filter.'
         );
 
-        // 2. Now write a NEW value via the repository only — legacy must
-        // catch up via the listener.
-        $repo->update( [ $vendor_field['id'] => 'second_value' ] );
+        // 2. Write a NEW value via the new-flat repository directly. Legacy
+        //    readers must observe the fresh value through the same overlay.
+        ( new \WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository() )
+            ->update( [ $vendor_field['id'] => 'second_value' ] );
 
         $legacy_final = get_option( 'dokan_general', [] );
         $this->assertSame(
             'second_value',
             $legacy_final['setup_wizard_logo_url'] ?? null,
-            'New writes propagate back so legacy readers see the fresh value.'
+            'Subsequent new-flat writes surface in legacy reads via the overlay.'
         );
     }
 }

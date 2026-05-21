@@ -12,6 +12,42 @@ use WeDevs\Dokan\Test\DokanTestCase;
  */
 class LegacySettingsRepositoryTest extends DokanTestCase {
 
+    /**
+     * The autoloaded options cache leaks `dokan_admin_settings` writes
+     * between tests in this class — DB rollback restores the table but
+     * `alloptions` retains stale values. Combined with the BridgeBootstrap
+     * overlay filter that now intercepts every `get_option('dokan_*')` read,
+     * a leaked entry can mask the section-only assertions below.
+     *
+     * Explicitly clear both the option and the cache before each test so
+     * every case starts from a known empty new-flat state.
+     */
+    public function set_up() {
+        parent::set_up();
+        delete_option( 'dokan_admin_settings' );
+        wp_cache_delete( 'dokan_admin_settings', 'options' );
+        wp_cache_delete( 'alloptions', 'options' );
+        wp_cache_delete( 'notoptions', 'options' );
+        // DB rollback between tests doesn't fire `delete_option_*` hooks
+        // (the row is already gone), so the DI container's shared repository
+        // and bridge instances retain stale snapshots. Flush them all.
+        if ( function_exists( 'dokan_get_container' ) ) {
+            try {
+                dokan_get_container()
+                    ->get( \WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository::class )
+                    ->flush_cache();
+                dokan_get_container()
+                    ->get( \WeDevs\Dokan\Admin\Settings\Repository\LegacySettingsRepository::class )
+                    ->flush_cache( null );
+                dokan_get_container()
+                    ->get( \WeDevs\Dokan\Admin\Settings\Migration\LegacySettingsBridge::class )
+                    ->flush_cache();
+            } catch ( \Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+                unset( $e );
+            }
+        }
+    }
+
     public function test_class_implements_interface(): void {
         $repo = new LegacySettingsRepository();
         $this->assertInstanceOf( LegacySettingsRepositoryInterface::class, $repo );
