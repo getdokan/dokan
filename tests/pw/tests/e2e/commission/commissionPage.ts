@@ -87,20 +87,27 @@ export class CommissionPage {
             .locator('div.nav-tab')
             .filter({ has: this.page.locator('div.nav-title', { hasText: /^\s*Selling Options\s*$/ }) });
 
-        // Do NOT force the click. If the tab fails actionability, the Vue
-        // settings shell hasn't fully mounted and a forced click would fire on
-        // inert markup — the click event dispatches but Vue's handler doesn't
-        // react, leaving the commission form unrendered and the dropdown wait
-        // timing out. Retry click + render-check together so a transiently-
-        // inert tab doesn't poison the run.
-        await expect(async () => {
-            await tab.click();
-            // Proof that the click registered AND Vue rendered the panel:
-            // the outer `.nav-tab` gains `.nav-tab-active` and the commission
-            // form mounts.
-            await expect(tabContainer).toHaveClass(/\bnav-tab-active\b/, { timeout: 2000 });
-            await this.page.locator(this.admin.commissionTypeDropdown).waitFor({ state: 'visible', timeout: 5000 });
-        }).toPass({ timeout: 20000 });
+        // The Vue settings shell persists the last active tab across navigations.
+        // If Selling Options is already active on entry, clicking it is a no-op
+        // (no class change → no re-render trigger), which used to leave the
+        // dropdown wait spinning while Vue was still mid-mount.
+        const alreadyActive = await tabContainer.evaluate(el => el.classList.contains('nav-tab-active'));
+        if (!alreadyActive) {
+            // Do NOT force the click. If the tab fails actionability, the Vue
+            // settings shell hasn't fully mounted and a forced click would fire
+            // on inert markup — the click event dispatches but Vue's handler
+            // doesn't react, leaving the commission form unrendered. Retry
+            // click + class-check together so a transiently-inert tab doesn't
+            // poison the run.
+            await expect(async () => {
+                await tab.click();
+                await expect(tabContainer).toHaveClass(/\bnav-tab-active\b/, { timeout: 2000 });
+            }).toPass({ timeout: 20000 });
+        }
+
+        // Whether we clicked or skipped, the dropdown is the real signal that
+        // Vue has finished mounting the Selling Options panel.
+        await this.page.locator(this.admin.commissionTypeDropdown).waitFor({ state: 'visible', timeout: 30000 });
     }
 
     async selectCommissionType(value: string) {

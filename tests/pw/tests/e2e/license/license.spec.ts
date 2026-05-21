@@ -63,7 +63,7 @@ test.describe('Admin License Manager (React) Tests @pro', () => {
     test('Test Case 1 - License manager page renders', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(toPath(`wp-admin/admin.php?page=dokan-license`));
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/license`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);
@@ -75,11 +75,14 @@ test.describe('Admin License Manager (React) Tests @pro', () => {
     test('Test Case 2 - License page renders content', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(toPath(`wp-admin/admin.php?page=dokan-license`));
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/license`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(3000);
-        const bodyText = await page.locator('body').innerText();
-        expect(bodyText.trim().length).toBeGreaterThan(50);
+        await expect
+            .poll(async () => (await page.locator('body').innerText()).trim().length, {
+                timeout: 30_000,
+                intervals: [500, 1000, 2000, 3000],
+            })
+            .toBeGreaterThan(50);
         await page.close();
         await ctx.close();
     });

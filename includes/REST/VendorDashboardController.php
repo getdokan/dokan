@@ -414,6 +414,7 @@ class VendorDashboardController extends \WP_REST_Controller {
             'language'              => get_locale(),
             'week_start_on'         => get_option( 'start_of_week' ),
             'store_color'           => dokan_get_option( 'store_color_pallete', 'dokan_colors', [] ),
+            'enable_withdraw'       => dokan_get_option( 'hide_withdraw_option', 'dokan_withdraw', 'off' ) === 'off',
             'timezone_utc'          => $timezone_utc,
             'ai_settings'           => [
                 'ai_text_enable'    => $is_text_configured,
@@ -594,6 +595,12 @@ class VendorDashboardController extends \WP_REST_Controller {
                 'store_color' => [
                     'description' => esc_html__( 'Store color.', 'dokan-lite' ),
                     'type'        => 'object',
+                    'context'     => [ 'view' ],
+                    'readonly'    => true,
+                ],
+                'enable_withdraw' => [
+                    'description' => esc_html__( 'Enable withdraw option.', 'dokan-lite' ),
+                    'type'        => 'boolean',
                     'context'     => [ 'view' ],
                     'readonly'    => true,
                 ],

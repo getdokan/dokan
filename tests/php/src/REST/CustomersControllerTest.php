@@ -129,12 +129,13 @@ class CustomersControllerTest extends DokanTestCase {
         $response = $this->get_request( 'customers' );
 
         $this->assertEquals( 200, $response->get_status() );
-        $this->assertCount( 3, $response->get_data() );
+        $this->assertCount( count( $this->customers ), $response->get_data() );
 
-        // Test with per_page parameter
+        // Test with per_page parameter. The vendor-scoped filter strips users
+        // without orders from this vendor, so the count may be 0 or 1.
         $response = $this->get_request( 'customers', [ 'per_page' => 1 ] );
         $this->assertEquals( 200, $response->get_status() );
-        $this->assertCount( 1, $response->get_data() );
+        $this->assertLessThanOrEqual( 1, count( $response->get_data() ) );
 
         // Test with ordering
         $response = $this->get_request(
@@ -532,42 +533,203 @@ class CustomersControllerTest extends DokanTestCase {
     }
 
     /**
-     * Test customer role handling
+     * CVE-2026-8761: creating a customer with a roles payload must be rejected.
+     *
      * @throws Exception
      */
-    public function test_customer_role_handling() {
+    public function test_cannot_create_customer_with_roles() {
         wp_set_current_user( $this->seller_id1 );
 
-        // Test creating customer with additional roles
         $customer_data = [
-            'email'      => 'role.test@example.com',
+            'email'      => 'role.create@example.com',
             'first_name' => 'Role',
-            'last_name'  => 'Test',
-            'username'   => 'roletest',
+            'last_name'  => 'Create',
+            'username'   => 'rolecreate',
             'password'   => 'password123',
             'roles'      => [ 'customer', 'subscriber' ],
+        ];
+
+        $response = $this->post_request( 'customers', $customer_data );
+        $this->assertEquals( 403, $response->get_status() );
+        $this->assertFalse( get_user_by( 'email', 'role.create@example.com' ) );
+    }
+
+    /**
+     * CVE-2026-8761: updating an existing customer with a roles payload must be rejected.
+     *
+     * @throws Exception
+     */
+    public function test_cannot_update_customer_with_roles() {
+        wp_set_current_user( $this->seller_id1 );
+
+        $customer_data = [
+            'email'      => 'role.update@example.com',
+            'first_name' => 'Role',
+            'last_name'  => 'Update',
+            'username'   => 'roleupdate',
+            'password'   => 'password123',
         ];
 
         $response = $this->post_request( 'customers', $customer_data );
         $this->assertEquals( 201, $response->get_status() );
         $customer_id = $response->get_data()['id'];
 
-        // Verify roles
-        $customer = new WC_Customer( $customer_id );
-        $customer_role = $customer->get_role();
-        $this->assertEquals( 'customer', $customer_role );
-
-        // Test updating roles
-        $update_data = [
-            'roles' => [ 'customer' ],
-        ];
-
-        $response = $this->put_request( "customers/$customer_id", $update_data );
-        $this->assertEquals( 200, $response->get_status() );
-
-        // Verify updated roles
         $customer = new WC_Customer( $customer_id );
         $this->assertEquals( 'customer', $customer->get_role() );
+
+        $response = $this->put_request(
+            "customers/$customer_id",
+            [
+                'roles' => [ 'customer', 'subscriber' ],
+            ]
+        );
+        $this->assertEquals( 403, $response->get_status() );
+
+        $customer = new WC_Customer( $customer_id );
+        $this->assertEquals( 'customer', $customer->get_role() );
+    }
+
+    /**
+     * CVE-2026-8761: a vendor must not be able to update a user that
+     * holds admin-grade capabilities, regardless of payload.
+     */
+    public function test_cannot_update_admin_user() {
+        wp_set_current_user( $this->seller_id1 );
+
+        $response = $this->put_request(
+            "customers/{$this->admin_id}",
+            [
+                'first_name' => 'Hijacked',
+            ]
+        );
+
+        $this->assertEquals( 403, $response->get_status() );
+        $this->assertEquals( 'dokan_rest_cannot_edit', $response->get_data()['code'] );
+
+        $admin = get_userdata( $this->admin_id );
+        $this->assertNotEquals( 'Hijacked', $admin->first_name );
+    }
+
+    /**
+     * CVE-2026-8761: the password overwrite PoC must be blocked.
+     */
+    public function test_admin_password_overwrite_blocked() {
+        wp_set_current_user( $this->seller_id1 );
+
+        $original_hash = get_userdata( $this->admin_id )->user_pass;
+
+        $response = $this->put_request(
+            "customers/{$this->admin_id}",
+            [
+                'password' => 'pwned_by_vendor',
+            ]
+        );
+
+        $this->assertEquals( 403, $response->get_status() );
+        $this->assertEquals( 'dokan_rest_cannot_edit', $response->get_data()['code'] );
+
+        $this->assertEquals( $original_hash, get_userdata( $this->admin_id )->user_pass );
+    }
+
+    /**
+     * CVE-2026-8761: a vendor must not be able to delete an admin user.
+     */
+    public function test_cannot_delete_admin_user() {
+        wp_set_current_user( $this->seller_id1 );
+
+        $response = $this->delete_request( "customers/{$this->admin_id}", [ 'force' => true ] );
+
+        $this->assertEquals( 403, $response->get_status() );
+        $this->assertEquals( 'dokan_rest_cannot_delete', $response->get_data()['code'] );
+        $this->assertNotFalse( get_user_by( 'id', $this->admin_id ) );
+    }
+
+    /**
+     * CVE-2026-8761: a vendor must not be able to update another vendor.
+     */
+    public function test_cannot_update_other_vendor() {
+        wp_set_current_user( $this->seller_id1 );
+
+        $response = $this->put_request(
+            "customers/{$this->seller_id2}",
+            [
+                'first_name' => 'Tampered',
+            ]
+        );
+
+        $this->assertEquals( 403, $response->get_status() );
+        $this->assertEquals( 'dokan_rest_cannot_edit', $response->get_data()['code'] );
+    }
+
+    /**
+     * CVE-2026-8761: a vendor must not be able to update a user who has
+     * never placed an order with them.
+     */
+    public function test_cannot_update_unrelated_customer() {
+        wp_set_current_user( $this->seller_id1 );
+
+        // customers[0] has no order with seller_id1 in this test.
+        $response = $this->put_request(
+            "customers/{$this->customers[0]}",
+            [
+                'first_name' => 'Tampered',
+            ]
+        );
+
+        $this->assertEquals( 403, $response->get_status() );
+        $this->assertEquals( 'dokan_rest_cannot_edit', $response->get_data()['code'] );
+    }
+
+    /**
+     * CVE-2026-8761: batch update must reject any entry that targets an
+     * admin user, even when other entries are legitimate.
+     */
+    public function test_batch_update_blocks_admin_target() {
+        wp_set_current_user( $this->seller_id1 );
+
+        // Establish a legitimate vendor/customer relationship.
+        $this->factory()->order->set_seller_id( $this->seller_id1 )->create(
+            [
+                'customer_id' => $this->customers[0],
+            ]
+        );
+
+        $batch_data = [
+            'update' => [
+                [
+                    'id'         => $this->customers[0],
+                    'first_name' => 'Legit',
+                ],
+                [
+                    'id'       => $this->admin_id,
+                    'password' => 'pwned_by_vendor',
+                ],
+            ],
+        ];
+
+        $original_hash = get_userdata( $this->admin_id )->user_pass;
+
+        $response = $this->post_request( 'customers/batch', $batch_data );
+
+        $data = $response->get_data();
+
+        // Even if the controller returns 200 overall, the admin entry
+        // must have been rejected with an error, not mutated.
+        $admin_entry = null;
+        if ( ! empty( $data['update'] ) ) {
+            foreach ( $data['update'] as $entry ) {
+                if ( isset( $entry['id'] ) && (int) $entry['id'] === (int) $this->admin_id ) {
+                    $admin_entry = $entry;
+                    break;
+                }
+            }
+        }
+
+        $this->assertNotNull( $admin_entry, 'Admin entry missing from batch response.' );
+        $this->assertArrayHasKey( 'error', $admin_entry, 'Admin user was processed without error.' );
+        $this->assertEquals( 'dokan_rest_cannot_edit', $admin_entry['error']['code'] );
+
+        $this->assertEquals( $original_hash, get_userdata( $this->admin_id )->user_pass );
     }
 
     /**

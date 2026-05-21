@@ -1,14 +1,14 @@
 # Copyright (c) 2026 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 5.0.2\n"
+"Project-Id-Version: Dokan 5.0.3\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-18T09:10:02+00:00\n"
+"POT-Creation-Date: 2026-05-21T10:33:31+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -5467,6 +5467,7 @@ msgstr ""
 
 #: includes/Order/Admin/Hooks.php:106
 #: assets/js/components.js:172
+#: assets/js/frontend.js:179
 #: assets/js/vue-admin.js:2
 msgid "Actions"
 msgstr ""
@@ -7076,41 +7077,58 @@ msgstr ""
 msgid "Comma-separated list of customer IDs to exclude."
 msgstr ""
 
-#: includes/REST/CustomersController.php:63
+#: includes/REST/CustomersController.php:62
 #: includes/REST/ExportController.php:70
 #: includes/REST/WithdrawExportController.php:201
 msgid "Sorry, you cannot list resources."
 msgstr ""
 
-#: includes/REST/CustomersController.php:64
+#: includes/REST/CustomersController.php:63
 msgid "Sorry, you are not allowed to create resources."
 msgstr ""
 
-#: includes/REST/CustomersController.php:65
+#: includes/REST/CustomersController.php:64
 msgid "Sorry, you are not allowed to edit this resource."
 msgstr ""
 
-#: includes/REST/CustomersController.php:66
+#: includes/REST/CustomersController.php:65
 msgid "Sorry, you are not allowed to delete this resource."
 msgstr ""
 
-#: includes/REST/CustomersController.php:67
+#: includes/REST/CustomersController.php:66
 msgid "Sorry, you are not allowed to batch update resources."
 msgstr ""
 
-#: includes/REST/CustomersController.php:68
+#: includes/REST/CustomersController.php:67
 msgid "Sorry, you are not allowed to search customers."
 msgstr ""
 
-#: includes/REST/CustomersController.php:172
+#: includes/REST/CustomersController.php:101
+msgid "Invalid user."
+msgstr ""
+
+#: includes/REST/CustomersController.php:119
+#: includes/REST/CustomersController.php:124
+msgid "You cannot operate on this user."
+msgstr ""
+
+#: includes/REST/CustomersController.php:128
+msgid "You cannot operate on this customer."
+msgstr ""
+
+#: includes/REST/CustomersController.php:267
 msgid "You do not have permission to search customers."
 msgstr ""
 
-#: includes/REST/CustomersController.php:180
+#: includes/REST/CustomersController.php:275
 msgid "Search term is required."
 msgstr ""
 
-#: includes/REST/CustomersController.php:265
+#: includes/REST/CustomersController.php:355
+msgid "You cannot modify the role of a user."
+msgstr ""
+
+#: includes/REST/CustomersController.php:365
 msgid "Invalid customer."
 msgstr ""
 
@@ -7889,7 +7907,7 @@ msgid "True the prices included tax during checkout."
 msgstr ""
 
 #: includes/REST/OrderController.php:1055
-#: includes/REST/VendorDashboardController.php:620
+#: includes/REST/VendorDashboardController.php:627
 msgid "User ID who owns the order. 0 for guests."
 msgstr ""
 
@@ -8829,123 +8847,127 @@ msgstr ""
 msgid "Group By"
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:439
+#: includes/REST/VendorDashboardController.php:440
 msgid "Site title."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:445
+#: includes/REST/VendorDashboardController.php:446
 msgid "Tagline."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:451
+#: includes/REST/VendorDashboardController.php:452
 msgid "Favicon."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:457
+#: includes/REST/VendorDashboardController.php:458
 msgid "Payment currency."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:463
+#: includes/REST/VendorDashboardController.php:464
 msgid "Currency Options."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:469
+#: includes/REST/VendorDashboardController.php:470
 msgid "Payment currency position."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:475
+#: includes/REST/VendorDashboardController.php:476
 msgid "Currency symbol."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:481
+#: includes/REST/VendorDashboardController.php:482
 msgid "Decimal separator."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:487
+#: includes/REST/VendorDashboardController.php:488
 msgid "Thousand separator."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:493
+#: includes/REST/VendorDashboardController.php:494
 msgid "Decimal point."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:499
+#: includes/REST/VendorDashboardController.php:500
 msgid "Tax Calculation enabled or not."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:505
+#: includes/REST/VendorDashboardController.php:506
 msgid "Tax display in cart price."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:511
+#: includes/REST/VendorDashboardController.php:512
 msgid "Tax Tax price round up in subtotal."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:517
+#: includes/REST/VendorDashboardController.php:518
 msgid "Coupon enabled in store."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:523
+#: includes/REST/VendorDashboardController.php:524
 msgid "Compound coupon calculation."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:529
+#: includes/REST/VendorDashboardController.php:530
 msgid "Measurement unit for weight."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:535
+#: includes/REST/VendorDashboardController.php:536
 msgid "Measurement unit for dimension."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:541
+#: includes/REST/VendorDashboardController.php:542
 msgid "Enabled product reviews."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:547
+#: includes/REST/VendorDashboardController.php:548
 msgid "Enabled product rating."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:553
+#: includes/REST/VendorDashboardController.php:554
 msgid "Enabled product stock management."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:559
+#: includes/REST/VendorDashboardController.php:560
 msgid "Store timezone."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:565
+#: includes/REST/VendorDashboardController.php:566
 msgid "Store date format."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:571
+#: includes/REST/VendorDashboardController.php:572
 msgid "Store time format."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:577
+#: includes/REST/VendorDashboardController.php:578
 msgid "Store UTC time."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:583
+#: includes/REST/VendorDashboardController.php:584
 msgid "Store language."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:589
+#: includes/REST/VendorDashboardController.php:590
 msgid "Store start of week."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:595
+#: includes/REST/VendorDashboardController.php:596
 msgid "Store color."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:601
+#: includes/REST/VendorDashboardController.php:602
+msgid "Enable withdraw option."
+msgstr ""
+
+#: includes/REST/VendorDashboardController.php:608
 msgid "Store AI Settings."
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:626
+#: includes/REST/VendorDashboardController.php:633
 msgid "Start date to show orders"
 msgstr ""
 
-#: includes/REST/VendorDashboardController.php:633
+#: includes/REST/VendorDashboardController.php:640
 msgid "End date to show orders"
 msgstr ""
 
@@ -9036,16 +9058,16 @@ msgstr ""
 msgid "List of withdraw IDs to be deleted"
 msgstr ""
 
-#: includes/REST/WithdrawControllerV2.php:135
+#: includes/REST/WithdrawControllerV2.php:136
 msgid "Please provide Withdraw method."
 msgstr ""
 
-#: includes/REST/WithdrawControllerV2.php:139
+#: includes/REST/WithdrawControllerV2.php:140
 #: includes/Withdraw/Hooks.php:253
 msgid "Method not active."
 msgstr ""
 
-#: includes/REST/WithdrawControllerV2.php:145
+#: includes/REST/WithdrawControllerV2.php:146
 #: includes/Withdraw/Hooks.php:259
 msgid "Default method update successful."
 msgstr ""
