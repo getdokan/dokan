@@ -175,21 +175,11 @@ class Settings {
              */
             do_action( 'dokan_before_saving_settings', $option_name, $option_value, $old_options );
 
-            update_option( $option_name, $option_value );
-
-            // Propagate to the new flat option so toggling back to the new UI reflects this save.
-            if ( function_exists( 'dokan_get_container' ) ) {
-                try {
-                    $bridge    = dokan_get_container()->get( \WeDevs\Dokan\Admin\Settings\Migration\LegacySettingsBridge::class );
-                    $new_slice = $bridge->transform_legacy_payload_to_new( $option_name, $option_value );
-                    if ( ! empty( $new_slice ) ) {
-                        $repo = dokan_get_container()->get( \WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository::class );
-                        $repo->update( $new_slice );
-                    }
-                } catch ( \Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
-                    // Container not booted — skip propagation, legacy save still succeeds.
-                }
-            }
+            // Route through the legacy settings repository: mapped keys are
+            // mirrored into the new flat option (the canonical source of
+            // truth) and stripped from the legacy row, which receives the
+            // unmapped subset only.
+            dokan_save_legacy_settings_section( $option_name, $option_value );
 
             /**
              * @since 3.5.1 added $old_options parameter

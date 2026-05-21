@@ -114,6 +114,27 @@ class LegacySettingsBridge {
     }
 
     /**
+     * Flush the in-request caches held by this bridge and its collaborators.
+     *
+     * Drops the mapping memo, the defaults/transformers indices, and asks the
+     * underlying `SettingsRepositoryInterface` to drop its snapshot. Useful in
+     * tests where the DB is rolled back between cases without firing the
+     * option hooks (a `delete_option` on an already-empty row is a no-op).
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function flush_cache(): void {
+        $this->map                 = null;
+        $this->defaults            = null;
+        $this->transformers        = null;
+        $this->by_option           = null;
+        $this->cached_filter_count = null;
+        $this->settings_repo->flush_cache();
+    }
+
+    /**
      * Return the normalized mapping of new flat ids to legacy addresses.
      *
      * Single-mapped entries surface as `['option' => ..., 'field' => ...]`.
@@ -292,6 +313,112 @@ class LegacySettingsBridge {
             }
         }
         return $legacy_option;
+    }
+
+    /**
+     * Remove mapped key paths from a legacy-shaped payload.
+     *
+     * Used by writers that persist a legacy section option but want the
+     * mapped keys to live exclusively in the new flat option. For 1:1
+     * addresses, walks the path and unsets the leaf; for 1:N multi mappings
+     * unsets every slot whose address lives under this section. Empty
+     * parent arrays produced by leaf removal are pruned so the section row
+     * doesn't accumulate dead structure.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string              $option_name Legacy wp_option name.
+     * @param array<string,mixed> $payload     Legacy-shaped payload.
+     *
+     * @return array<string,mixed> Payload with mapped paths removed.
+     */
+    public function strip_mapped_keys( string $option_name, array $payload ): array {
+        $this->build_map();
+        $pairs = $this->by_option[ $option_name ] ?? [];
+        if ( empty( $pairs ) ) {
+            return $payload;
+        }
+        foreach ( $pairs as $entry ) {
+            if ( $entry instanceof LegacyAddress ) {
+                $this->unset_path( $payload, $entry->path() );
+                continue;
+            }
+            // Multi-mapped slice: only the slots in this option are present here.
+            foreach ( $entry as $address ) {
+                $this->unset_path( $payload, $address->path() );
+            }
+        }
+        return $payload;
+    }
+
+    /**
+     * Persist a legacy section payload through the bridge:
+     *   1. Mirror mapped keys into the new flat option.
+     *   2. Strip those mapped keys from the payload.
+     *
+     * Returns the stripped payload; the caller is responsible for the
+     * `update_option( $option_name, ... )` write. The split keeps callers
+     * in control of side effects (do_action hooks, cache flushes, etc.)
+     * while centralizing the strip + mirror logic.
+     *
+     * Strict mode: stripping happens unconditionally. If the new-option
+     * write throws, we log and continue — the mapped values are lost from
+     * this save, but the legacy row never holds mapped data. Source of
+     * truth stays single.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string              $option_name Legacy wp_option name.
+     * @param array<string,mixed> $payload     Legacy-shaped payload.
+     *
+     * @return array<string,mixed> Stripped payload, safe to `update_option`.
+     */
+    public function persist_legacy_section( string $option_name, array $payload ): array {
+        try {
+            $new_slice = $this->transform_legacy_payload_to_new( $option_name, $payload );
+            if ( ! empty( $new_slice ) ) {
+                $this->settings_repo->update( $new_slice );
+            }
+        } catch ( \Throwable $e ) {
+            if ( function_exists( 'dokan_log' ) ) {
+                dokan_log( '[LegacySettingsBridge] persist_legacy_section new-write failed: ' . $e->getMessage() );
+            }
+        }
+        return $this->strip_mapped_keys( $option_name, $payload );
+    }
+
+    /**
+     * Unset a value at the given path; prune empty arrays back up the chain.
+     *
+     * Recursive because PHP's stacked-reference pattern (`$stack[] = &$cursor;
+     * $cursor = &$cursor[$seg];`) silently rebinds the stored references when
+     * `$cursor` is reassigned.
+     *
+     * @param array<string,mixed> $target By-reference legacy payload.
+     * @param array<int,string>   $path
+     * @param int                 $i      Current path index.
+     *
+     * @return void
+     */
+    private function unset_path( array &$target, array $path, int $i = 0 ): void {
+        if ( empty( $path ) || ! array_key_exists( $i, $path ) ) {
+            return;
+        }
+        $segment = $path[ $i ];
+        if ( ! is_array( $target ) || ! array_key_exists( $segment, $target ) ) {
+            return;
+        }
+        if ( $i === count( $path ) - 1 ) {
+            unset( $target[ $segment ] );
+            return;
+        }
+        if ( ! is_array( $target[ $segment ] ) ) {
+            return;
+        }
+        $this->unset_path( $target[ $segment ], $path, $i + 1 );
+        if ( empty( $target[ $segment ] ) ) {
+            unset( $target[ $segment ] );
+        }
     }
 
     /**

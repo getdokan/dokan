@@ -34,6 +34,7 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
         foreach ( $this->known_sections() as $section ) {
             add_action( "update_option_{$section}", [ $this, 'on_section_changed' ] );
             add_action( "add_option_{$section}", [ $this, 'on_section_changed' ] );
+            add_action( "delete_option_{$section}", [ $this, 'on_section_changed' ] );
         }
 
         // The new flat option participates in every overlay — its writes invalidate
@@ -42,6 +43,7 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
         $new_option = SettingsRepository::OPTION_KEY;
         add_action( "update_option_{$new_option}", [ $this, 'flush_all_snapshots' ] );
         add_action( "add_option_{$new_option}", [ $this, 'flush_all_snapshots' ] );
+        add_action( "delete_option_{$new_option}", [ $this, 'flush_all_snapshots' ] );
     }
 
     public function all( string $section ): array {
@@ -82,28 +84,22 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
             return [];
         }
 
+        // Route the incoming slice through the bridge: mapped keys go to the
+        // new flat option only; the legacy row holds unmapped keys only.
+        $stripped_slice = $this->bridge->persist_legacy_section( $section, $slice );
+
         $raw    = get_option( $section, [] );
         $raw    = is_array( $raw ) ? $raw : [];
-        $merged = array_merge( $raw, $slice );
+        // Defensive: a previously-stored legacy row may still hold mapped keys
+        // (lazy migration policy — we never backfill on read). Strip them on
+        // every write so the saved row converges on the invariant.
+        $raw    = $this->bridge->strip_mapped_keys( $section, $raw );
+        $merged = array_merge( $raw, $stripped_slice );
 
         update_option( $section, $merged, true );
         // Refresh our snapshot now — the WP hook already flushed it, but we want
         // the next read in *this* request to skip a get_option round-trip.
         $this->snapshots[ $section ] = $this->bridge->hydrate_legacy_from_new( $section, $merged );
-
-        // Mirror mapped keys into the new flat option. Best-effort: a thrown
-        // exception from the bridge or new repo is caught and logged so the
-        // legacy write that already landed is not silently rolled back.
-        try {
-            $flat_slice = $this->bridge->transform_legacy_payload_to_new( $section, $slice );
-            if ( ! empty( $flat_slice ) ) {
-                $this->new_repo->update( $flat_slice );
-            }
-        } catch ( \Throwable $e ) {
-            if ( function_exists( 'dokan_log' ) ) {
-                dokan_log( '[LegacySettingsRepository] mirror write failed: ' . $e->getMessage() );
-            }
-        }
 
         /**
          * Fired after a successful write to a legacy section option.
@@ -133,19 +129,13 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
             }
         }
 
-        update_option( $section, $payload, true );
-        $this->snapshots[ $section ] = $this->bridge->hydrate_legacy_from_new( $section, $payload );
+        // `replace` is a full-row write, so mapped keys must be peeled off
+        // before we land the legacy option. The bridge mirrors them into the
+        // new flat option as a side effect.
+        $stripped_payload = $this->bridge->persist_legacy_section( $section, $payload );
 
-        try {
-            $flat_slice = $this->bridge->transform_legacy_payload_to_new( $section, $payload );
-            if ( ! empty( $flat_slice ) ) {
-                $this->new_repo->update( $flat_slice );
-            }
-        } catch ( \Throwable $e ) {
-            if ( function_exists( 'dokan_log' ) ) {
-                dokan_log( '[LegacySettingsRepository] mirror replace failed: ' . $e->getMessage() );
-            }
-        }
+        update_option( $section, $stripped_payload, true );
+        $this->snapshots[ $section ] = $this->bridge->hydrate_legacy_from_new( $section, $stripped_payload );
 
         if ( ! empty( $diff ) ) {
             /** This action is documented in includes/Admin/Settings/Repository/LegacySettingsRepository.php */
