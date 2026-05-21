@@ -69,10 +69,16 @@ class SettingsRegistry {
      *
      * Listens to:
      *   - The new flat option ({@see SettingsRepository::OPTION_KEY}) where
-     *     all admin writes land.
+     *     all admin writes land. Wired immediately — the option name is a
+     *     constant and needs no schema introspection.
      *   - Every legacy `dokan_*` section that the bridge knows about — Pro
      *     and third-party `update_option()` writes against those sections
-     *     would otherwise leave the registry overlay stale.
+     *     would otherwise leave the registry overlay stale. **Deferred to
+     *     `init`** because enumerating the sections requires building the
+     *     bridge map, which harvests {@see SettingsSchema::get_schema()},
+     *     which runs `get_posts()`, which fires `pre_get_posts` hooks that
+     *     in turn read `dokan()->settings`. Doing that from the constructor
+     *     re-enters DI resolution and fatals the request.
      *
      * @return void
      */
@@ -81,6 +87,26 @@ class SettingsRegistry {
         add_action( "update_option_{$new_option}", [ $this, 'clear_cache' ] );
         add_action( "add_option_{$new_option}", [ $this, 'clear_cache' ] );
 
+        if ( ! function_exists( 'did_action' ) ) {
+            return;
+        }
+        if ( did_action( 'init' ) ) {
+            $this->register_legacy_section_hooks();
+            return;
+        }
+        add_action( 'init', [ $this, 'register_legacy_section_hooks' ], 0 );
+    }
+
+    /**
+     * Register `update_option_{section}` / `add_option_{section}` listeners
+     * for every legacy section the bridge knows about. Must run on or after
+     * `init` — see {@see register_cache_invalidation_hooks()} for why.
+     *
+     * Public so it can be invoked as a WP action callback.
+     *
+     * @return void
+     */
+    public function register_legacy_section_hooks(): void {
         if ( ! function_exists( 'dokan_get_container' ) ) {
             return;
         }

@@ -21,7 +21,7 @@ class SettingsHelper {
      * @return bool
      */
     public static function is_enabled() {
-        return 'on' === dokan_get_option( 'reverse_withdrawal_enabled', 'dokan_reverse_withdrawal', 'off' );
+        return 'on' === dokan()->settings->get( 'reverse_withdrawal_enabled' );
     }
 
     /**
@@ -32,9 +32,9 @@ class SettingsHelper {
      * @return array
      */
     public static function get_enabled_payment_gateways() {
-        $payment_methods = dokan_get_option( 'payment_gateways', 'dokan_reverse_withdrawal', [] );
+        $payment_methods = dokan()->settings->get( 'reverse_withdrawal_payment_gateways' );
 
-        return array_filter( $payment_methods );
+        return array_filter( (array) $payment_methods );
     }
 
     /**
@@ -58,7 +58,7 @@ class SettingsHelper {
      * @return string
      */
     public static function get_billing_type() {
-        return dokan_get_option( 'billing_type', 'dokan_reverse_withdrawal', 'by_amount' );
+        return dokan()->settings->get( 'reverse_withdrawal_billing_type' );
     }
 
     /**
@@ -69,7 +69,7 @@ class SettingsHelper {
      * @return float
      */
     public static function get_reverse_balance_threshold() {
-        $limit = dokan_get_option( 'reverse_balance_threshold', 'dokan_reverse_withdrawal', '150' );
+        $limit = dokan()->settings->get( 'reverse_withdrawal_balance_threshold' );
 
         return (float) abs( wc_format_decimal( $limit, 2 ) );
     }
@@ -82,7 +82,7 @@ class SettingsHelper {
      * @return float
      */
     public static function get_billing_day() {
-        $billing_day = dokan_get_option( 'monthly_billing_day', 'dokan_reverse_withdrawal', '1' );
+        $billing_day = dokan()->settings->get( 'reverse_withdrawal_monthly_billing_day' );
 
         return absint( $billing_day );
     }
@@ -95,7 +95,7 @@ class SettingsHelper {
      * @return float
      */
     public static function get_due_period() {
-        $due_period = dokan_get_option( 'due_period', 'dokan_reverse_withdrawal', '7' );
+        $due_period = dokan()->settings->get( 'reverse_withdrawal_due_period' );
 
         return absint( $due_period );
     }
@@ -108,9 +108,9 @@ class SettingsHelper {
      * @return array
      */
     public static function get_failed_actions() {
-        $failed_actions = dokan_get_option( 'failed_actions', 'dokan_reverse_withdrawal', [] );
+        $failed_actions = dokan()->settings->get( 'reverse_withdrawal_failed_penalty_actions' );
 
-        return array_filter( $failed_actions );
+        return array_filter( (array) $failed_actions );
     }
 
     /**
@@ -121,9 +121,7 @@ class SettingsHelper {
      * @return bool
      */
     public static function is_failed_action_enabled( $action ) {
-        $failed_actions = dokan_get_option( 'failed_actions', 'dokan_reverse_withdrawal', [] );
-
-        return isset( $failed_actions[ $action ] );
+        return in_array( $action, static::get_failed_actions(), true );
     }
 
     /**
@@ -134,7 +132,7 @@ class SettingsHelper {
      * @return bool
      */
     public static function display_payment_notice_on_vendor_dashboard() {
-        return 'on' === dokan_get_option( 'display_notice', 'dokan_reverse_withdrawal', 'on' );
+        return 'on' === dokan()->settings->get( 'reverse_withdrawal_grace_period_notice' );
     }
 
     /**
@@ -145,6 +143,10 @@ class SettingsHelper {
      * @return bool
      */
     public static function send_balance_exceeded_announcement() {
+        // Pro-owned setting: the Send Announcement field is registered by
+        // Dokan Pro, not by Lite. This site stays on dokan_get_option() until
+        // Pro adds a schema entry and a corresponding migration commit lands
+        // there.
         return 'on' === dokan_get_option( 'send_announcement', 'dokan_reverse_withdrawal', 'off' );
     }
 
