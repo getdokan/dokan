@@ -140,7 +140,7 @@ const newDataset = {
         
         // Display Notice During Grace Period - Switch
         {
-            selector: '#dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_display_notice button[role="switch"]',
+            selector: '#dokan_settings_transaction_reverse_withdrawal_reverse_withdrawal_section_reverse_withdrawal_grace_period_notice button[role="switch"]',
             type: 'switch',
             value: true,
         },

@@ -53,12 +53,12 @@ const newDataset = {
     //selector: '#dokan_settings_general >> #dokan_settings_general_marketplace',
     fields: [
         {
-            selector: '#dokan_settings_vendor_vendor_onboarding_enable_selling button[name="automatically"]',
+            selector: '#dokan_settings_vendor_vendor_onboarding_vendor_auto_enable_selling button[name="automatically"]',
             type: 'radio',
             value: 'true',
         },
         {
-            selector: '#dokan_settings_vendor_vendor_onboarding_address_fields button[role="switch"]',
+            selector: '#dokan_settings_vendor_vendor_onboarding_vendor_registration_address_fields button[role="switch"]',
             type: 'switch',
             value: true,
         },
@@ -68,7 +68,7 @@ const newDataset = {
             value: true,
         },
         {
-            selector: '#dokan_settings_vendor_vendor_onboarding_welcome_wizard button[role="switch"]',
+            selector: '#dokan_settings_vendor_vendor_onboarding_vendor_welcome_wizard_enabled button[role="switch"]',
             type: 'switch',
             value: false, // Note: Inverted value compared to old setting
         },

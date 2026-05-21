@@ -1393,7 +1393,7 @@ export const data = {
             newUI: {
                 generalButton: '#dokan_settings_general button',
                 marketplaceLink: '#dokan_settings_general_marketplace',
-                vendorStoreUrlField: '#dokan_settings_general_marketplace_marketplace_settings_vendor_store_url input',
+                vendorStoreUrlField: '#dokan_settings_general_marketplace_marketplace_settings_vendor_store_url_slug input',
                 singleSellerModeField: '#dokan_settings_general_marketplace_marketplace_settings_enable_single_seller_mode',
                 saveButton: '#dokan-admin-settings-save-btn button',
                 successMessage: '.notice-success, .updated',
