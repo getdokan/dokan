@@ -163,7 +163,7 @@ class ShowIfBehaviorTest extends DokanTestCase {
     public function test_reverse_withdrawal_billing_type_dependencies_are_flat(): void {
         $threshold = null;
         foreach ( $this->schema as $element ) {
-            if ( ( $element['id'] ?? '' ) === 'reverse_balance_threshold'
+            if ( ( $element['id'] ?? '' ) === 'reverse_withdrawal_balance_threshold'
                 && ( $element['type'] ?? '' ) === 'field'
             ) {
                 $threshold = $element;
@@ -173,7 +173,7 @@ class ShowIfBehaviorTest extends DokanTestCase {
 
         $this->assertNotNull(
             $threshold,
-            'reverse_balance_threshold field must exist in the schema.'
+            'reverse_withdrawal_balance_threshold field must exist in the schema.'
         );
         $this->assertArrayHasKey( 'dependencies', $threshold );
         $this->assertNotEmpty( $threshold['dependencies'] );
@@ -181,16 +181,16 @@ class ShowIfBehaviorTest extends DokanTestCase {
         $dep_keys = array_column( $threshold['dependencies'], 'key' );
 
         $this->assertContains(
-            'billing_type',
+            'reverse_withdrawal_billing_type',
             $dep_keys,
-            'reverse_balance_threshold should depend on the flat key `billing_type`.'
+            'reverse_withdrawal_balance_threshold should depend on the flat key `reverse_withdrawal_billing_type`.'
         );
 
         foreach ( $dep_keys as $dep_key ) {
             $this->assertStringNotContainsString(
                 '.',
                 (string) $dep_key,
-                "reverse_balance_threshold dependency key '{$dep_key}' must be flat, not dot-path."
+                "reverse_withdrawal_balance_threshold dependency key '{$dep_key}' must be flat, not dot-path."
             );
         }
     }
