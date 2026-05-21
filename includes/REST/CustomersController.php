@@ -73,8 +73,13 @@ class CustomersController extends WC_REST_Customers_Controller {
 
         // CVE-2026-8761: object-level authorization for mutating actions.
         $target_id = isset( $request['id'] ) ? (int) $request['id'] : 0;
-        if ( $target_id > 0 && in_array( $action, [ 'edit', 'delete' ], true ) && is_wp_error( $this->is_target_user_allowed( $target_id ) ) ) {
-            return new WP_Error( "dokan_rest_cannot_$action", $messages[ $action ], [ 'status' => 403 ] );
+        if ( $target_id > 0 && in_array( $action, [ 'view', 'edit', 'delete' ], true ) ) {
+            $allowed = $this->is_target_user_allowed( $target_id );
+            if ( is_wp_error( $allowed ) ) {
+                $status = $allowed->get_error_data();
+                $status = isset( $status['status'] ) ? (int) $status['status'] : 403;
+                return new WP_Error( "dokan_rest_cannot_$action", $messages[ $action ], [ 'status' => $status ] );
+            }
         }
 
         return true;
@@ -151,7 +156,24 @@ class CustomersController extends WC_REST_Customers_Controller {
     public function get_items( $request ) {
         return $this->perform_vendor_action(
             function () use ( $request ) {
-                return parent::get_items( $request );
+                $response = parent::get_items( $request );
+                if ( is_wp_error( $response ) || ! ( $response instanceof WP_REST_Response ) ) {
+                    return $response;
+                }
+
+                $vendor_id = dokan_get_current_user_id();
+                $data = array_values(
+                    array_filter(
+                        (array) $response->get_data(),
+                        static function ( $item ) use ( $vendor_id ) {
+							$id = is_array( $item ) ? ( $item['id'] ?? 0 ) : 0;
+							return $id && dokan_customer_has_order_from_this_seller( $id, $vendor_id );
+                        }
+                    )
+                );
+
+                $response->set_data( $data );
+                return $response;
             }
         );
     }
@@ -345,9 +367,11 @@ class CustomersController extends WC_REST_Customers_Controller {
      */
     private function perform_vendor_action( callable $action ) {
         add_filter( 'woocommerce_rest_check_permissions', [ $this, 'check_vendor_permission' ], 10, 4 );
-        $result = $action();
-        remove_filter( 'woocommerce_rest_check_permissions', [ $this, 'check_vendor_permission' ], 10 );
-        return $result;
+        try {
+            return $action();
+        } finally {
+            remove_filter( 'woocommerce_rest_check_permissions', [ $this, 'check_vendor_permission' ], 10 );
+        }
     }
 
     /**
