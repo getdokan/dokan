@@ -219,16 +219,16 @@ class SettingsSchemaTest extends DokanTestCase {
     }
 
     public function test_reverse_withdrawal_fields_have_correct_dependencies(): void {
-        $threshold = $this->find_element( 'reverse_balance_threshold', 'field' );
+        $threshold = $this->find_element( 'reverse_withdrawal_balance_threshold', 'field' );
 
         $this->assertNotNull( $threshold );
         $this->assertNotEmpty( $threshold['dependencies'] );
 
-        // Should depend on billing_type.
+        // Should depend on reverse_withdrawal_billing_type.
         $dep_keys = array_column( $threshold['dependencies'], 'key' );
         $this->assertTrue(
-            in_array( 'billing_type', $dep_keys, true ),
-            'reverse_balance_threshold should depend on billing_type (flat-key form).'
+            in_array( 'reverse_withdrawal_billing_type', $dep_keys, true ),
+            'reverse_withdrawal_balance_threshold should depend on reverse_withdrawal_billing_type (flat-key form).'
         );
     }
 
