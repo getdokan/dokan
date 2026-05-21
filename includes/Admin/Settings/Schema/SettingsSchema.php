@@ -1215,27 +1215,6 @@ class SettingsSchema {
 					'value' => 'off',
 				],
             ],
-            [
-                'id'            => 'reverse_withdrawal_send_announcement',
-                'legacy_key'    => [
-                    'option' => 'dokan_reverse_withdrawal',
-                    'field'  => 'send_announcement',
-                ],
-                'type'          => 'field',
-                'variant'       => 'switch',
-                'section_id'    => 'reverse_withdrawal_section',
-                'title'         => esc_html__( 'Send Announcement?', 'dokan-lite' ),
-                'description'   => esc_html__( 'Send platform announcements to vendors during the grace period. Limited to one announcement per billing period.', 'dokan-lite' ),
-                'default'       => 'off',
-                'enable_state'  => [
-					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
-					'value' => 'on',
-				],
-                'disable_state' => [
-					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
-					'value' => 'off',
-				],
-            ],
             self::reverse_withdrawal_payment_gateways_field(),
         ];
     }

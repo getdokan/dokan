@@ -143,7 +143,11 @@ class SettingsHelper {
      * @return bool
      */
     public static function send_balance_exceeded_announcement() {
-        return 'on' === dokan()->settings->get( 'reverse_withdrawal_send_announcement' );
+        // Pro-owned setting: the Send Announcement field is registered by
+        // Dokan Pro, not by Lite. This site stays on dokan_get_option() until
+        // Pro adds a schema entry and a corresponding migration commit lands
+        // there.
+        return 'on' === dokan_get_option( 'send_announcement', 'dokan_reverse_withdrawal', 'off' );
     }
 
     /**
