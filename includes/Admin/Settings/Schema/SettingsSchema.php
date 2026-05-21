@@ -2256,7 +2256,7 @@ class SettingsSchema {
                         'section_id'      => 'product_image_section',
                         'engine_field_id' => 'ai_product_info_engine',
                         'toggle_deps'     => $on_generate,
-                        'engine_deps'     => $when_engine( 'product_info_engine', $pid ),
+                        'engine_deps'     => $when_engine( 'ai_product_info_engine', $pid ),
                         'api_key_legacy'  => 'dokan_ai.dokan_ai_' . $pid . '_api_key',
                         'model_legacy'    => 'dokan_ai.dokan_ai_' . $pid . '_model',
                         'model_kind'      => 'text',
