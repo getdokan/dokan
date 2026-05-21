@@ -4,6 +4,28 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.0.3',
+        'released' => '2026-05-21',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Exposed manual withdrawal availability and withdraw-visibility flags in the vendor dashboard REST API.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Restricted the Customers REST endpoint to self-service to prevent vendors from modifying other user accounts.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Translated the "Actions" column header on vendor dashboard DataViews tables.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.0.2',
         'released' => '2026-05-18',
         'changes'  => [

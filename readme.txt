@@ -7,7 +7,7 @@ Tested up to: 6.9
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 5.0.2
+Stable tag: 5.0.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -352,6 +352,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v5.0.3 ( May 21, 2026 ) =
+- **update:** Exposed manual withdrawal availability and withdraw-visibility flags in the vendor dashboard REST API.
+- **fix:** Restricted the Customers REST endpoint to self-service to prevent vendors from modifying other user accounts.
+- **fix:** Translated the "Actions" column header on vendor dashboard DataViews tables.
+
 = v5.0.2 ( May 18, 2026 ) =
 - **new:** Added a date range filter on the vendor dashboard Withdraw Requests table to filter results by start and end dates.
 - **update:** Centralized vendor selling activation and deactivation and introduced a new filter to control vendor selling eligibility.
@@ -401,8 +406,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **update:** Update the Pro Features admin menu color to highlight it with the brand color.
 - **fix:** Add the missing alt attribute to the store header banner image on the store listing page.
 - **fix:** Display a warning message when admin tries to approve a vendor withdrawal request exceeding the available balance.
-
-= v4.3.2 ( Mar 13, 2026 ) =
-- **fix:** Prevent unauthenticated access to customer information via the Store Reviews REST API endpoint.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
