@@ -101,7 +101,19 @@ class CustomersController extends WC_REST_Customers_Controller {
             return new WP_Error( 'dokan_rest_invalid_target', __( 'Invalid user.', 'dokan-lite' ), [ 'status' => 404 ] );
         }
 
-        $protected_caps = [ 'manage_options', 'manage_woocommerce', 'edit_users', 'delete_users', 'list_users', 'promote_users', 'create_users', 'remove_users' ];
+        $protected_caps = apply_filters(
+            'dokan_rest_protected_user_caps',
+            [
+                'manage_options',
+				'manage_woocommerce',
+                'edit_users',
+				'delete_users',
+				'list_users',
+				'promote_users',
+				'create_users',
+				'remove_users',
+			]
+        );
         foreach ( $protected_caps as $cap ) {
             if ( user_can( $target_id, $cap ) ) {
                 return new WP_Error( 'dokan_rest_forbidden_target', __( 'You cannot operate on this user.', 'dokan-lite' ), [ 'status' => 403 ] );
