@@ -151,7 +151,7 @@ class SettingsSchema {
                 'subpage_id' => 'marketplace',
             ],
             [
-                'id'              => 'vendor_store_url',
+                'id'              => 'vendor_store_url_slug',
                 'type'            => 'field',
                 'variant'         => 'text',
                 'section_id'      => 'marketplace_settings',
@@ -1006,6 +1006,7 @@ class SettingsSchema {
 					'option' => 'dokan_reverse_withdrawal',
 					'field' => 'enabled',
 				],
+                'priority'    => 50,
             ],
             [
                 'id'          => 'reverse_withdrawal_billing_type',
@@ -1195,7 +1196,7 @@ class SettingsSchema {
                 ),
             ],
             [
-                'id'            => 'display_notice',
+                'id'            => 'reverse_withdrawal_grace_period_notice',
                 'legacy_key' => [
                     'option' => 'dokan_reverse_withdrawal',
                     'field'  => 'display_notice',
@@ -1215,6 +1216,52 @@ class SettingsSchema {
 					'value' => 'off',
 				],
             ],
+            self::reverse_withdrawal_payment_gateways_field(),
+        ];
+    }
+
+    /**
+     * Build the `reverse_withdrawal_payment_gateways` multicheck field.
+     *
+     * Options are derived from the `dokan_reverse_withdrawal_payment_gateways`
+     * filter (the same source the legacy {@see SettingsHelper::get_reverse_withrawal_payment_gateways()}
+     * uses) so Pro modules / extensions that already extend that filter continue
+     * to register gateways with one declaration. The new field stores a flat
+     * list of selected gateway ids; each slot bridges through
+     * {@see MulticheckArrayTransformer} to the legacy WP-multicheck shape under
+     * `dokan_reverse_withdrawal.payment_gateways`.
+     *
+     * @return array
+     */
+    private static function reverse_withdrawal_payment_gateways_field(): array {
+        $gateways = apply_filters(
+            'dokan_reverse_withdrawal_payment_gateways',
+            [ 'cod' => esc_html__( 'Cash on delivery', 'dokan-lite' ) ]
+        );
+
+        $options    = [];
+        $legacy_key = [];
+        foreach ( $gateways as $value => $label ) {
+            $options[]            = [
+                'value' => (string) $value,
+                'label' => (string) $label,
+            ];
+            $legacy_key[ $value ] = 'dokan_reverse_withdrawal.payment_gateways.' . $value;
+        }
+        $slot_keys = array_keys( $legacy_key );
+
+        return [
+            'id'                 => 'reverse_withdrawal_payment_gateways',
+            'type'               => 'field',
+            'variant'            => 'multicheck',
+            'section_id'         => 'reverse_withdrawal_section',
+            'title'              => esc_html__( 'Enable Reverse Withdrawal for this Gateway', 'dokan-lite' ),
+            'description'        => esc_html__( 'Check the payment gateways you want to enable reverse withdrawal for. For now, only cash on delivery is available.', 'dokan-lite' ),
+            'options'            => $options,
+            'default'            => [ 'cod' ],
+            'legacy_key'         => $legacy_key,
+            'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\MulticheckArrayTransformer::for_slots( $slot_keys ),
+            'priority'           => 70,
         ];
     }
 
@@ -1285,7 +1332,7 @@ class SettingsSchema {
                 'doc_link'    => 'https://wedevs.com/docs/dokan-lite/vendor-onboarding/',
             ],
             [
-                'id'            => 'enable_selling',
+                'id'            => 'vendor_auto_enable_selling',
                 'type'          => 'field',
                 'variant'       => 'radio_capsule',
                 'subpage_id'    => 'vendor_onboarding',
@@ -1301,7 +1348,7 @@ class SettingsSchema {
 
             ],
             [
-                'id'            => 'address_fields',
+                'id'            => 'vendor_registration_address_fields',
                 'type'          => 'field',
                 'variant'       => 'switch',
                 'subpage_id'    => 'vendor_onboarding',
@@ -1349,7 +1396,7 @@ class SettingsSchema {
                 ],
             ],
             [
-                'id'            => 'welcome_wizard',
+                'id'            => 'vendor_welcome_wizard_enabled',
                 'type'          => 'field',
                 'variant'       => 'switch',
                 'subpage_id'    => 'vendor_onboarding',
@@ -1408,7 +1455,7 @@ class SettingsSchema {
                 ],
             ],
             [
-                'id'            => 'product_popup',
+                'id'            => 'vendor_new_product_popup',
                 'type'          => 'field',
                 'variant'       => 'switch',
                 'section_id'    => 'vendor_capabilities',
@@ -1449,7 +1496,7 @@ class SettingsSchema {
                 'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\InvertOnOffTransformer::class,
             ],
             [
-                'id'            => 'order_status_change',
+                'id'            => 'vendor_can_change_order_status',
                 'legacy_key' => [
                     'option' => 'dokan_selling',
                     'field'  => 'order_status_change',
@@ -1524,7 +1571,7 @@ class SettingsSchema {
                 'subpage_id' => 'store',
             ],
             [
-                'id'          => 'store_product_per_page',
+                'id'          => 'store_products_per_page',
                 'type'        => 'field',
                 'variant'     => 'number',
                 'section_id'  => 'products_page',
@@ -1553,7 +1600,7 @@ class SettingsSchema {
                 'section_id' => 'google_recaptcha',
             ],
             [
-                'id'             => 'recaptcha',
+                'id'             => 'google_recaptcha_enabled',
                 'type'           => 'field',
                 'variant'        => 'switch',
                 'field_group_id' => 'google_recaptcha_settings',
@@ -1575,7 +1622,7 @@ class SettingsSchema {
 				],
             ],
             [
-                'id'             => 'recaptcha_info',
+                'id'             => 'google_recaptcha_info',
                 'type'           => 'field',
                 'variant'        => 'info',
                 'field_group_id' => 'google_recaptcha_settings',
@@ -1587,7 +1634,7 @@ class SettingsSchema {
                 ),
                 'dependencies'   => [
                     [
-						'key' => 'recaptcha',
+						'key' => 'google_recaptcha_enabled',
 						'value' => 'on',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -1595,7 +1642,7 @@ class SettingsSchema {
 						'comparison' => '===',
 					],
                     [
-						'key' => 'recaptcha',
+						'key' => 'google_recaptcha_enabled',
 						'value' => 'off',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -1605,7 +1652,7 @@ class SettingsSchema {
                 ],
             ],
             [
-                'id'             => 'recaptcha_site_key',
+                'id'             => 'google_recaptcha_site_key',
                 'type'           => 'field',
                 'variant'        => 'show_hide',
                 'field_group_id' => 'google_recaptcha_settings',
@@ -1614,7 +1661,7 @@ class SettingsSchema {
                 'tooltip'        => esc_html__( 'Insert Google reCAPTCHA v3 site key.', 'dokan-lite' ),
                 'dependencies'   => [
                     [
-						'key' => 'recaptcha',
+						'key' => 'google_recaptcha_enabled',
 						'value' => 'on',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -1622,7 +1669,7 @@ class SettingsSchema {
 						'comparison' => '===',
 					],
                     [
-						'key' => 'recaptcha',
+						'key' => 'google_recaptcha_enabled',
 						'value' => 'off',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -1632,7 +1679,7 @@ class SettingsSchema {
                 ],
             ],
             [
-                'id'             => 'recaptcha_secret_key',
+                'id'             => 'google_recaptcha_secret_key',
                 'type'           => 'field',
                 'variant'        => 'show_hide',
                 'field_group_id' => 'google_recaptcha_settings',
@@ -1641,7 +1688,7 @@ class SettingsSchema {
                 'tooltip'        => esc_html__( 'Insert Google reCAPTCHA v3 secret key.', 'dokan-lite' ),
                 'dependencies'   => [
                     [
-						'key' => 'recaptcha',
+						'key' => 'google_recaptcha_enabled',
 						'value' => 'on',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -1649,7 +1696,7 @@ class SettingsSchema {
 						'comparison' => '===',
 					],
                     [
-						'key' => 'recaptcha',
+						'key' => 'google_recaptcha_enabled',
 						'value' => 'off',
 						'to_self' => true,
 						'attribute' => 'display',
@@ -1666,7 +1713,7 @@ class SettingsSchema {
                 'subpage_id' => 'store',
             ],
             [
-                'id'            => 'store_clossing_time_widget',
+                'id'            => 'store_contact_form_enabled',
                 'type'          => 'field',
                 'variant'       => 'switch',
                 'section_id'    => 'store_contact_form_section',
@@ -1714,7 +1761,7 @@ class SettingsSchema {
                 'subpage_id' => 'store',
             ],
             [
-                'id'                => 'store_template',
+                'id'                => 'store_header_template',
                 'type'              => 'field',
                 'variant'           => 'customize_radio',
                 'section_id'        => 'store_template',
@@ -1758,7 +1805,7 @@ class SettingsSchema {
                 'subpage_id' => 'store',
             ],
             [
-                'id'            => 'store_time_widget',
+                'id'            => 'store_opening_closing_time_widget',
                 'type'          => 'field',
                 'variant'       => 'switch',
                 'section_id'    => 'store_time_widget_section',
@@ -1786,7 +1833,7 @@ class SettingsSchema {
                 'subpage_id' => 'store',
             ],
             [
-                'id'            => 'store_opening_time',
+                'id'            => 'store_sidebar_from_theme',
                 'type'          => 'field',
                 'variant'       => 'switch',
                 'section_id'    => 'store_sidebar_section',
@@ -1814,7 +1861,7 @@ class SettingsSchema {
                 'subpage_id' => 'store',
             ],
             [
-                'id'          => 'vendor_info_visibility',
+                'id'          => 'store_page_vendor_info_visibility',
                 'type'        => 'field',
                 'variant'     => 'info_preview',
                 'section_id'  => 'vendor_info_visibility_section',
@@ -1853,7 +1900,7 @@ class SettingsSchema {
                 'subpage_id' => 'store',
             ],
             [
-                'id'            => 'dokan_font',
+                'id'            => 'dokan_fontawesome_enabled',
                 'type'          => 'field',
                 'variant'       => 'switch',
                 'section_id'    => 'dokan_font_section',
@@ -1982,7 +2029,7 @@ class SettingsSchema {
                 'subpage_id' => 'privacy',
             ],
             [
-                'id'            => 'privacy_policy_display',
+                'id'            => 'privacy_policy_visibility',
                 'type'          => 'field',
                 'variant'       => 'switch',
                 'section_id'    => 'privacy_settings',
@@ -2038,7 +2085,7 @@ class SettingsSchema {
                 'subpage_id' => 'privacy',
             ],
             [
-                'id'            => 'admin_access',
+                'id'            => 'admin_access_for_vendors',
                 'legacy_key' => [
                     'option' => 'dokan_general',
                     'field'  => 'admin_access',
@@ -2118,17 +2165,59 @@ class SettingsSchema {
      */
     private static function ai_assist_page(): array {
         $on_generate = [
-            [ 'key' => 'product_info_generate', 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '===' ],
-            [ 'key' => 'product_info_generate', 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '!==' ],
+            [
+				'key' => 'ai_product_info_generate',
+				'value' => 'on',
+				'to_self' => true,
+				'attribute' => 'display',
+				'effect' => 'show',
+				'comparison' => '===',
+			],
+            [
+				'key' => 'ai_product_info_generate',
+				'value' => 'on',
+				'to_self' => true,
+				'attribute' => 'display',
+				'effect' => 'hide',
+				'comparison' => '!==',
+			],
         ];
         $on_enhance = [
-            [ 'key' => 'product_image_enhancement', 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '===' ],
-            [ 'key' => 'product_image_enhancement', 'value' => 'on', 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '!==' ],
+            [
+				'key' => 'ai_product_image_enhancement',
+				'value' => 'on',
+				'to_self' => true,
+				'attribute' => 'display',
+				'effect' => 'show',
+				'comparison' => '===',
+			],
+            [
+				'key' => 'ai_product_image_enhancement',
+				'value' => 'on',
+				'to_self' => true,
+				'attribute' => 'display',
+				'effect' => 'hide',
+				'comparison' => '!==',
+			],
         ];
         $when_engine = static function ( string $engine_key, string $value ): array {
             return [
-                [ 'key' => $engine_key, 'value' => $value, 'to_self' => true, 'attribute' => 'display', 'effect' => 'show', 'comparison' => '===' ],
-                [ 'key' => $engine_key, 'value' => $value, 'to_self' => true, 'attribute' => 'display', 'effect' => 'hide', 'comparison' => '!==' ],
+                [
+					'key' => $engine_key,
+					'value' => $value,
+					'to_self' => true,
+					'attribute' => 'display',
+					'effect' => 'show',
+					'comparison' => '===',
+				],
+                [
+					'key' => $engine_key,
+					'value' => $value,
+					'to_self' => true,
+					'attribute' => 'display',
+					'effect' => 'hide',
+					'comparison' => '!==',
+				],
             ];
         };
 
@@ -2138,7 +2227,10 @@ class SettingsSchema {
         $provider_options = static function ( array $providers ): array {
             $out = [];
             foreach ( $providers as $id => $provider ) {
-                $out[] = [ 'title' => $provider->get_title(), 'value' => (string) $id ];
+                $out[] = [
+					'title' => $provider->get_title(),
+					'value' => (string) $id,
+				];
             }
             return $out;
         };
@@ -2169,18 +2261,24 @@ class SettingsSchema {
                 'subpage_id' => 'product_generation',
             ],
             [
-                'id'            => 'product_info_generate',
+                'id'            => 'ai_product_info_generate',
                 'type'          => 'field',
                 'variant'       => 'switch',
                 'section_id'    => 'product_image_section',
                 'title'         => esc_html__( 'Product Info Generate', 'dokan-lite' ),
                 'description'   => esc_html__( 'Let vendors generate product info by AI.', 'dokan-lite' ),
                 'default'       => 'on',
-                'enable_state'  => [ 'label' => esc_html__( 'Enabled', 'dokan-lite' ), 'value' => 'on' ],
-                'disable_state' => [ 'label' => esc_html__( 'Disabled', 'dokan-lite' ), 'value' => 'off' ],
+                'enable_state'  => [
+					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state' => [
+					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+					'value' => 'off',
+				],
             ],
             [
-                'id'           => 'product_info_engine',
+                'id'           => 'ai_product_info_engine',
                 'type'         => 'field',
                 'variant'      => 'select',
                 'section_id'   => 'product_image_section',
@@ -2203,9 +2301,9 @@ class SettingsSchema {
                         'provider_id'     => $pid,
                         'provider'        => $provider,
                         'section_id'      => 'product_image_section',
-                        'engine_field_id' => 'product_info_engine',
+                        'engine_field_id' => 'ai_product_info_engine',
                         'toggle_deps'     => $on_generate,
-                        'engine_deps'     => $when_engine( 'product_info_engine', $pid ),
+                        'engine_deps'     => $when_engine( 'ai_product_info_engine', $pid ),
                         'api_key_legacy'  => 'dokan_ai.dokan_ai_' . $pid . '_api_key',
                         'model_legacy'    => 'dokan_ai.dokan_ai_' . $pid . '_model',
                         'model_kind'      => 'text',
@@ -2223,19 +2321,25 @@ class SettingsSchema {
                 'subpage_id' => 'product_generation',
             ];
             $elements[] = [
-                'id'            => 'product_image_enhancement',
+                'id'            => 'ai_product_image_enhancement',
                 'type'          => 'field',
                 'variant'       => 'switch',
                 'section_id'    => 'product_description_section',
                 'title'         => esc_html__( 'Product Image Enhancement', 'dokan-lite' ),
                 'description'   => esc_html__( 'Allow vendors to enhance and generate professional product images using AI.', 'dokan-lite' ),
                 'default'       => 'off',
-                'enable_state'  => [ 'label' => esc_html__( 'Enabled', 'dokan-lite' ), 'value' => 'on' ],
-                'disable_state' => [ 'label' => esc_html__( 'Disabled', 'dokan-lite' ), 'value' => 'off' ],
+                'enable_state'  => [
+					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state' => [
+					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+					'value' => 'off',
+				],
                 'legacy_key'    => 'dokan_ai.dokan_ai_image_gen_availability',
             ];
             $elements[] = [
-                'id'           => 'product_image_engine',
+                'id'           => 'ai_product_image_engine',
                 'type'         => 'field',
                 'variant'      => 'select',
                 'section_id'   => 'product_description_section',
@@ -2330,7 +2434,10 @@ class SettingsSchema {
             try {
                 $models = $provider->get_models_by_type( constant( $model_const ) );
                 foreach ( $models as $model_id => $model ) {
-                    $model_options[] = [ 'title' => $model->get_title(), 'value' => (string) $model_id ];
+                    $model_options[] = [
+						'title' => $model->get_title(),
+						'value' => (string) $model_id,
+					];
                 }
             } catch ( \Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
                 unset( $e );

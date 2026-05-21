@@ -31,7 +31,7 @@ class SettingsRegistryStorageTest extends DokanTestCase {
         update_option(
             'dokan_admin_settings',
             [
-                'vendor_store_url' => 'shop',
+                'vendor_store_url_slug' => 'shop',
                 'map_api_source'   => 'mapbox',
             ]
         );
@@ -44,7 +44,7 @@ class SettingsRegistryStorageTest extends DokanTestCase {
             if ( ( $el['type'] ?? '' ) !== 'field' ) {
                 continue;
             }
-            if ( ( $el['id'] ?? '' ) === 'vendor_store_url' ) {
+            if ( ( $el['id'] ?? '' ) === 'vendor_store_url_slug' ) {
                 $store_url_field = $el;
             }
             if ( ( $el['id'] ?? '' ) === 'map_api_source' ) {
@@ -52,8 +52,8 @@ class SettingsRegistryStorageTest extends DokanTestCase {
             }
         }
 
-        $this->assertNotNull( $store_url_field, 'Field vendor_store_url must exist in the schema.' );
-        $this->assertSame( 'shop', $store_url_field['value'], 'vendor_store_url value must come from dokan_settings.' );
+        $this->assertNotNull( $store_url_field, 'Field vendor_store_url_slug must exist in the schema.' );
+        $this->assertSame( 'shop', $store_url_field['value'], 'vendor_store_url_slug value must come from dokan_settings.' );
 
         $this->assertNotNull( $map_source_field, 'Field map_api_source must exist in the schema.' );
         $this->assertSame( 'mapbox', $map_source_field['value'], 'map_api_source value must come from dokan_settings.' );
@@ -66,19 +66,19 @@ class SettingsRegistryStorageTest extends DokanTestCase {
 
         $found = null;
         foreach ( $schema as $el ) {
-            if ( ( $el['type'] ?? '' ) === 'field' && ( $el['id'] ?? '' ) === 'vendor_store_url' ) {
+            if ( ( $el['type'] ?? '' ) === 'field' && ( $el['id'] ?? '' ) === 'vendor_store_url_slug' ) {
                 $found = $el;
                 break;
             }
         }
 
-        $this->assertNotNull( $found, 'vendor_store_url must exist.' );
+        $this->assertNotNull( $found, 'vendor_store_url_slug must exist.' );
         $this->assertSame( $found['default'] ?? '', $found['value'], 'Missing stored id must yield the field default.' );
     }
 
     public function test_no_per_page_wp_options_are_read(): void {
         // Seed the OLD per-page key with a value that would have been read by the previous code path.
-        update_option( 'dokan_settings_general', [ 'marketplace' => [ 'marketplace_settings' => [ 'vendor_store_url' => 'OLD_VALUE' ] ] ] );
+        update_option( 'dokan_settings_general', [ 'marketplace' => [ 'marketplace_settings' => [ 'vendor_store_url_slug' => 'OLD_VALUE' ] ] ] );
         // The new key is empty, so reads should fall back to the field default — NOT to OLD_VALUE.
         delete_option( 'dokan_admin_settings' );
 
@@ -86,7 +86,7 @@ class SettingsRegistryStorageTest extends DokanTestCase {
 
         $found = null;
         foreach ( $schema as $el ) {
-            if ( ( $el['type'] ?? '' ) === 'field' && ( $el['id'] ?? '' ) === 'vendor_store_url' ) {
+            if ( ( $el['type'] ?? '' ) === 'field' && ( $el['id'] ?? '' ) === 'vendor_store_url_slug' ) {
                 $found = $el;
                 break;
             }

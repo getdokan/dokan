@@ -68,7 +68,7 @@ const newDataset = {
     selector: '#dokan_settings_general >> #dokan_settings_general_marketplace',
     fields: [
         {
-            selector: '#dokan_settings_general_marketplace_marketplace_settings_vendor_store_url input',
+            selector: '#dokan_settings_general_marketplace_marketplace_settings_vendor_store_url_slug input',
             type: 'text',
             value: 'my-url',
         },

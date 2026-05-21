@@ -46,42 +46,42 @@ const newDataset = {
     selector: '#dokan_settings_appearance >> #dokan_settings_appearance_store',
     fields: [
         {
-            selector: '#dokan_settings_appearance_store_products_page_store_product_per_page input[placeholder="Products Per Page"]',
+            selector: '#dokan_settings_appearance_store_products_page_store_products_per_page input[placeholder="Products Per Page"]',
             type: 'number',
             value: '12',
         },
         {
-            selector: '#dokan_settings_appearance_store_google_recaptcha_google_recaptcha_settings_recaptcha button[role="switch"]',
+            selector: '#dokan_settings_appearance_store_google_recaptcha_google_recaptcha_settings_google_recaptcha_enabled button[role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_appearance_store_google_recaptcha_google_recaptcha_settings_recaptcha_site_key input[placeholder="Site Key"]',
+            selector: '#dokan_settings_appearance_store_google_recaptcha_google_recaptcha_settings_google_recaptcha_site_key input[placeholder="Site Key"]',
             type: 'text',
             value: 'SITE_KEY_123',
         },
         {
-            selector: '#dokan_settings_appearance_store_google_recaptcha_google_recaptcha_settings_recaptcha_secret_key input[placeholder="Secret Key"]',
+            selector: '#dokan_settings_appearance_store_google_recaptcha_google_recaptcha_settings_google_recaptcha_secret_key input[placeholder="Secret Key"]',
             type: 'text',
             value: 'SECRET_KEY_123',
         },
         {
-            selector: '#dokan_settings_appearance_store_store_contact_form_section_store_clossing_time_widget button[role="switch"]',
+            selector: '#dokan_settings_appearance_store_store_contact_form_section_store_contact_form_enabled button[role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_appearance_store_store_time_widget_section_store_time_widget button[role="switch"]',
+            selector: '#dokan_settings_appearance_store_store_time_widget_section_store_opening_closing_time_widget button[role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_appearance_store_store_sidebar_section_store_opening_time button[role="switch"]',
+            selector: '#dokan_settings_appearance_store_store_sidebar_section_store_sidebar_from_theme button[role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_appearance_store_dokan_font_section_dokan_font button[role="switch"]',
+            selector: '#dokan_settings_appearance_store_dokan_font_section_dokan_fontawesome_enabled button[role="switch"]',
             type: 'switch',
             value: true,
         },    
