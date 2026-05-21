@@ -199,9 +199,13 @@ class AiAssistSchemaTest extends DokanTestCase {
 
         $first = $tab_fields[0];
 
-        $map_filter = function ( $map ) use ( $first ) {
-            $map[ $first['id'] ] = $first['legacy_key'];
-            return $map;
+        // Replace the entire mapping (rather than amend) so the bridge sees
+        // exactly one declared mapping. The hand-authored schema declares
+        // `ai_product_info_engine` against the same legacy address as the
+        // CSV-derived field we're testing, which would otherwise inflate
+        // the slice. Test isolation requires owning the full map here.
+        $map_filter = function () use ( $first ) {
+            return [ $first['id'] => $first['legacy_key'] ];
         };
         add_filter( 'dokan_legacy_settings_key_mapping', $map_filter );
 
@@ -212,8 +216,7 @@ class AiAssistSchemaTest extends DokanTestCase {
             // payload includes both a real declared field AND an attacker
             // drift key. The bridge MUST filter to declared mappings only,
             // protecting `dokan_settings` from inheriting the historical
-            // `dokan_ai_chatgpt_*` schema drift documented in the trace
-            // report (lines 401-402).
+            // `dokan_ai_chatgpt_*` schema drift.
             $payload = [
                 $first['legacy_key']['field']     => 'real-value',
                 '__attacker_drift_legacy_field__' => 'drift-value',
@@ -228,6 +231,9 @@ class AiAssistSchemaTest extends DokanTestCase {
                 $slice,
                 'Unknown legacy keys must not pollute the new-option slice; expected exactly one declared field.'
             );
+            // Drift key uses the legacy field name; the new-option slice is
+            // keyed by new flat ids, so this assertion is a belt-and-braces
+            // check that no garbage propagated under either naming.
             $this->assertArrayNotHasKey(
                 '__attacker_drift_legacy_field__',
                 $slice,
