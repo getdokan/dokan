@@ -598,6 +598,12 @@ class VendorDashboardController extends \WP_REST_Controller {
                     'context'     => [ 'view' ],
                     'readonly'    => true,
                 ],
+                'enable_withdraw' => [
+                    'description' => esc_html__( 'Enable withdraw option.', 'dokan-lite' ),
+                    'type'        => 'boolean',
+                    'context'     => [ 'view' ],
+                    'readonly'    => true,
+                ],
                 'ai_settings'    => [
                     'description' => esc_html__( 'Store AI Settings.', 'dokan-lite' ),
                     'type'        => 'object',
