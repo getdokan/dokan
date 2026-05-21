@@ -108,9 +108,9 @@ class SettingsHelper {
      * @return array
      */
     public static function get_failed_actions() {
-        $failed_actions = dokan_get_option( 'failed_actions', 'dokan_reverse_withdrawal', [] );
+        $failed_actions = dokan()->settings->get( 'reverse_withdrawal_failed_penalty_actions' );
 
-        return array_filter( $failed_actions );
+        return array_filter( (array) $failed_actions );
     }
 
     /**
@@ -121,9 +121,7 @@ class SettingsHelper {
      * @return bool
      */
     public static function is_failed_action_enabled( $action ) {
-        $failed_actions = dokan_get_option( 'failed_actions', 'dokan_reverse_withdrawal', [] );
-
-        return isset( $failed_actions[ $action ] );
+        return in_array( $action, static::get_failed_actions(), true );
     }
 
     /**
