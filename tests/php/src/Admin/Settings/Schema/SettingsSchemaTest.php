@@ -210,9 +210,12 @@ class SettingsSchemaTest extends DokanTestCase {
         $field = $this->find_element( 'data_clear_on_uninstall', 'field' );
 
         $this->assertNotNull( $field );
-        $this->assertSame( 'switch', $field['variant'] );
-        $this->assertTrue( $field['should_confirm'] );
-        $this->assertSame( 'error', $field['switcher_type'] );
+
+        // The schema uses a `danger_switch` variant that subsumes the old
+        // `switch` + `should_confirm: true` + `switcher_type: 'error'`
+        // combination. The variant alone signals the destructive-action
+        // styling; only the modal copy is still declared inline.
+        $this->assertSame( 'danger_switch', $field['variant'] );
         $this->assertArrayHasKey( 'confirm_modal', $field );
         $this->assertArrayHasKey( 'title', $field['confirm_modal'] );
         $this->assertArrayHasKey( 'confirmText', $field['confirm_modal'] );
