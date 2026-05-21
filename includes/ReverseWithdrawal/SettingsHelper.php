@@ -21,7 +21,7 @@ class SettingsHelper {
      * @return bool
      */
     public static function is_enabled() {
-        return 'on' === dokan_get_option( 'reverse_withdrawal_enabled', 'dokan_reverse_withdrawal', 'off' );
+        return 'on' === dokan()->settings->get( 'reverse_withdrawal_enabled' );
     }
 
     /**
@@ -58,7 +58,7 @@ class SettingsHelper {
      * @return string
      */
     public static function get_billing_type() {
-        return dokan_get_option( 'billing_type', 'dokan_reverse_withdrawal', 'by_amount' );
+        return dokan()->settings->get( 'reverse_withdrawal_billing_type' );
     }
 
     /**
@@ -69,7 +69,7 @@ class SettingsHelper {
      * @return float
      */
     public static function get_reverse_balance_threshold() {
-        $limit = dokan_get_option( 'reverse_balance_threshold', 'dokan_reverse_withdrawal', '150' );
+        $limit = dokan()->settings->get( 'reverse_withdrawal_balance_threshold' );
 
         return (float) abs( wc_format_decimal( $limit, 2 ) );
     }
@@ -82,7 +82,7 @@ class SettingsHelper {
      * @return float
      */
     public static function get_billing_day() {
-        $billing_day = dokan_get_option( 'monthly_billing_day', 'dokan_reverse_withdrawal', '1' );
+        $billing_day = dokan()->settings->get( 'reverse_withdrawal_monthly_billing_day' );
 
         return absint( $billing_day );
     }
@@ -95,7 +95,7 @@ class SettingsHelper {
      * @return float
      */
     public static function get_due_period() {
-        $due_period = dokan_get_option( 'due_period', 'dokan_reverse_withdrawal', '7' );
+        $due_period = dokan()->settings->get( 'reverse_withdrawal_due_period' );
 
         return absint( $due_period );
     }
@@ -134,7 +134,7 @@ class SettingsHelper {
      * @return bool
      */
     public static function display_payment_notice_on_vendor_dashboard() {
-        return 'on' === dokan_get_option( 'display_notice', 'dokan_reverse_withdrawal', 'on' );
+        return 'on' === dokan()->settings->get( 'reverse_withdrawal_grace_period_notice' );
     }
 
     /**

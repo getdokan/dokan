@@ -34,17 +34,6 @@ class SettingsHelperTest extends DokanTestCase {
     }
 
     public function test_is_enabled_returns_true_when_legacy_on(): void {
-        // SKIPPED PRE-MIGRATION: SettingsHelper::is_enabled() currently calls
-        // dokan_get_option('reverse_withdrawal_enabled', 'dokan_reverse_withdrawal'),
-        // but the legacy admin form (ReverseWithdrawal\Admin\Settings) saves to field
-        // 'enabled'. dokan_get_option() does no flat-id → legacy-field translation,
-        // so this read always misses and returns the default 'off'. The Task 3
-        // migration replaces the call with dokan()->settings->get('reverse_withdrawal_enabled'),
-        // which goes through SettingsRegistry + LegacySettingsBridge and correctly
-        // overlays the legacy 'enabled' field onto the flat id. After that commit,
-        // remove this skip.
-        $this->markTestSkipped( 'Pre-migration: is_enabled() reads the wrong legacy field name (introduced by 66303f35f). Unskip in the Task 3 migration commit that swaps to dokan()->settings->get().' );
-
         update_option( 'dokan_reverse_withdrawal', [ 'enabled' => 'on' ] );
         $this->assertTrue( SettingsHelper::is_enabled() );
     }
