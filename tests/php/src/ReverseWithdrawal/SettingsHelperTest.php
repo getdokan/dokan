@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Test\ReverseWithdrawal;
 
+use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository;
 use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\Test\DokanTestCase;
 
@@ -19,14 +20,17 @@ class SettingsHelperTest extends DokanTestCase {
 
     protected function setUp(): void {
         parent::setUp();
-        delete_option( 'dokan_reverse_withdrawal' );
-        delete_option( 'dokan_admin_settings' );
+        $this->reset_storage();
     }
 
     protected function tearDown(): void {
-        delete_option( 'dokan_reverse_withdrawal' );
-        delete_option( 'dokan_admin_settings' );
+        $this->reset_storage();
         parent::tearDown();
+    }
+
+    private function reset_storage(): void {
+        ( new SettingsRepository() )->replace( [] );
+        delete_option( 'dokan_reverse_withdrawal' );
     }
 
     public function test_is_enabled_returns_false_when_unset(): void {
@@ -73,20 +77,24 @@ class SettingsHelperTest extends DokanTestCase {
     }
 
     public function test_is_failed_action_enabled_for_selected_action(): void {
-        update_option( 'dokan_reverse_withdrawal', [
-            'failed_actions' => [ 'enable_catalog_mode' => 'enable_catalog_mode' ],
-        ] );
+        update_option(
+            'dokan_reverse_withdrawal', [
+				'failed_actions' => [ 'enable_catalog_mode' => 'enable_catalog_mode' ],
+			]
+        );
         $this->assertTrue( SettingsHelper::is_failed_action_enabled( 'enable_catalog_mode' ) );
         $this->assertFalse( SettingsHelper::is_failed_action_enabled( 'hide_withdraw_menu' ) );
     }
 
     public function test_get_failed_actions_returns_selected_actions(): void {
-        update_option( 'dokan_reverse_withdrawal', [
-            'failed_actions' => [
-                'enable_catalog_mode' => 'enable_catalog_mode',
-                'status_inactive'     => 'status_inactive',
-            ],
-        ] );
+        update_option(
+            'dokan_reverse_withdrawal', [
+				'failed_actions' => [
+					'enable_catalog_mode' => 'enable_catalog_mode',
+					'status_inactive'     => 'status_inactive',
+				],
+			]
+        );
         $actions = SettingsHelper::get_failed_actions();
         // Shape may be associative (pre-migration) or list (post-migration with
         // MulticheckArrayTransformer). Assert value membership only, not shape.
@@ -96,9 +104,11 @@ class SettingsHelperTest extends DokanTestCase {
     }
 
     public function test_is_gateway_enabled_for_reverse_withdrawal_cod(): void {
-        update_option( 'dokan_reverse_withdrawal', [
-            'payment_gateways' => [ 'cod' => 'cod' ],
-        ] );
+        update_option(
+            'dokan_reverse_withdrawal', [
+				'payment_gateways' => [ 'cod' => 'cod' ],
+			]
+        );
         $this->assertTrue( SettingsHelper::is_gateway_enabled_for_reverse_withdrawal( 'cod' ) );
         $this->assertFalse( SettingsHelper::is_gateway_enabled_for_reverse_withdrawal( 'stripe' ) );
     }
