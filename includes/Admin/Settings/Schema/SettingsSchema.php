@@ -1006,6 +1006,7 @@ class SettingsSchema {
 					'option' => 'dokan_reverse_withdrawal',
 					'field' => 'enabled',
 				],
+                'priority'    => 50,
             ],
             [
                 'id'          => 'reverse_withdrawal_billing_type',
@@ -1260,6 +1261,7 @@ class SettingsSchema {
             'default'            => [ 'cod' ],
             'legacy_key'         => $legacy_key,
             'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\MulticheckArrayTransformer::for_slots( $slot_keys ),
+            'priority'           => 70,
         ];
     }
 
