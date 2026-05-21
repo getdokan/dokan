@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Admin\Settings\Schema;
 
+use WeDevs\Dokan\Admin\Settings\Migration\LegacySettingsBridge;
 use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository;
 use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepositoryInterface;
 
@@ -58,6 +59,62 @@ class SettingsRegistry {
      */
     public function __construct( ?SettingsRepositoryInterface $settings_repo = null ) {
         $this->settings_repo = $settings_repo ?? new SettingsRepository();
+        $this->register_cache_invalidation_hooks();
+    }
+
+    /**
+     * Invalidate the processed schema cache whenever its underlying storage
+     * changes. Without this, consumers like {@see SettingsAccessor::get()}
+     * return stale values after any in-request option write.
+     *
+     * Listens to:
+     *   - The new flat option ({@see SettingsRepository::OPTION_KEY}) where
+     *     all admin writes land.
+     *   - Every legacy `dokan_*` section that the bridge knows about — Pro
+     *     and third-party `update_option()` writes against those sections
+     *     would otherwise leave the registry overlay stale.
+     *
+     * @return void
+     */
+    private function register_cache_invalidation_hooks(): void {
+        $new_option = SettingsRepository::OPTION_KEY;
+        add_action( "update_option_{$new_option}", [ $this, 'clear_cache' ] );
+        add_action( "add_option_{$new_option}", [ $this, 'clear_cache' ] );
+
+        if ( ! function_exists( 'dokan_get_container' ) ) {
+            return;
+        }
+        try {
+            $bridge = dokan_get_container()->get( LegacySettingsBridge::class );
+            if ( ! $bridge instanceof LegacySettingsBridge ) {
+                return;
+            }
+        } catch ( \Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+            // Bridge not booted yet — fall back to new-flat-option-only invalidation.
+            return;
+        }
+
+        foreach ( $this->known_legacy_sections( $bridge ) as $section ) {
+            add_action( "update_option_{$section}", [ $this, 'clear_cache' ] );
+            add_action( "add_option_{$section}", [ $this, 'clear_cache' ] );
+        }
+    }
+
+    /**
+     * Unique legacy section option names mentioned in the bridge mapping.
+     *
+     * @param LegacySettingsBridge $bridge
+     *
+     * @return array<int,string>
+     */
+    private function known_legacy_sections( LegacySettingsBridge $bridge ): array {
+        $sections = [];
+        foreach ( $bridge->get_mapping() as $entry ) {
+            if ( is_array( $entry ) && isset( $entry['option'] ) && is_string( $entry['option'] ) ) {
+                $sections[ $entry['option'] ] = true;
+            }
+        }
+        return array_keys( $sections );
     }
 
     /**
