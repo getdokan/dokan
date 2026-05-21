@@ -32,6 +32,10 @@ class SettingsHelper {
      * @return array
      */
     public static function get_enabled_payment_gateways() {
+        // TODO(settings-migration): migrate to dokan()->settings->get( 'transactions_reverse_withdrawal_payment_gateways' )
+        // once SettingsSchema flips the dokan_csv_schema_enabled flag on by
+        // default. The flat id is currently defined only in the CSV-fragment
+        // schema, which is feature-flag-gated off in production.
         $payment_methods = dokan_get_option( 'payment_gateways', 'dokan_reverse_withdrawal', [] );
 
         return array_filter( $payment_methods );
@@ -143,6 +147,10 @@ class SettingsHelper {
      * @return bool
      */
     public static function send_balance_exceeded_announcement() {
+        // TODO(settings-migration): migrate to dokan()->settings->get( 'transactions_reverse_withdrawal_send_announcement' )
+        // once SettingsSchema flips the dokan_csv_schema_enabled flag on by
+        // default. The flat id is currently defined only in the CSV-fragment
+        // schema, which is feature-flag-gated off in production.
         return 'on' === dokan_get_option( 'send_announcement', 'dokan_reverse_withdrawal', 'off' );
     }
 
