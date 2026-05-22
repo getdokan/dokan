@@ -145,7 +145,7 @@ const SelectEdit = ( { data, field, onChange, validity }: any ) => {
     };
 
     // Fields with a `creatable` flag (e.g. product tags) use a creatable multi-select; Enter is swallowed when creation is off so it doesn't submit the form.
-    const useTaggable = field.creatable !== undefined && isMulti;
+    const useTaggable = field.creatable && isMulti;
     const canCreate = Boolean( field.creatable );
 
     return (
