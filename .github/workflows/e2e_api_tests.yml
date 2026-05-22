@@ -109,9 +109,24 @@ jobs:
                   composer i || composer update
                   composer i --no-dev -o || composer update --no-dev -o
 
-            - name: Npm install and build (Dokan-lite)
+            # node_modules cache: skips ~2-3 min of `npm ci` on cache hit.
+            # Keyed on the lockfile so any dependency change invalidates the
+            # cache automatically. Same key is restored in build_pro to skip
+            # the redundant lite install there too.
+            - name: Cache lite node_modules
+              id: lite-nm
+              uses: actions/cache@v4
+              with:
+                  path: node_modules
+                  key: lite-nm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+            - name: Npm install (Dokan-lite)
+              if: steps.lite-nm.outputs.cache-hit != 'true'
               run: |
                   npm ci --prefer-offline --no-audit --no-fund || npm i
+
+            - name: Npm build (Dokan-lite)
+              run: |
                   npm run build
 
             # Tar the runtime tree (excludes node_modules, .git, dev-only output).
@@ -180,18 +195,40 @@ jobs:
                       package-lock.json
                       dokan-pro/package-lock.json
 
+            # Share the same node_modules cache that build_lite produced.
+            # Same key, so a cache hit here means pro skips the ~3 min of
+            # redundant lite install entirely. On cache miss we still fall
+            # back to npm ci (e.g., after a lockfile change).
+            - name: Cache lite node_modules
+              id: lite-nm
+              uses: actions/cache@v4
+              with:
+                  path: node_modules
+                  key: lite-nm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
             # Install lite's node_modules so dokan-pro/webpack.config.js can
             # require lite-root JS helpers (webpack-dependency-mapping.js etc).
             # Skip `npm run build` — we don't ship lite's assets from this job.
-            - name: Install dokan-lite npm deps (no build)
+            - name: Install dokan-lite npm deps (no build, skip on cache hit)
+              if: steps.lite-nm.outputs.cache-hit != 'true'
               run: |
                   npm ci --prefer-offline --no-audit --no-fund || npm i
+
+            # Cache pro's own node_modules separately (its lockfile is independent).
+            - name: Cache pro node_modules
+              id: pro-nm
+              uses: actions/cache@v4
+              with:
+                  path: dokan-pro/node_modules
+                  key: pro-nm-${{ runner.os }}-${{ hashFiles('dokan-pro/package-lock.json') }}
 
             - name: Build Dokan Pro
               working-directory: dokan-pro
               run: |
                   composer i --no-dev -o
-                  npm ci --prefer-offline --no-audit --no-fund || npm i
+                  if [ "${{ steps.pro-nm.outputs.cache-hit }}" != "true" ]; then
+                      npm ci --prefer-offline --no-audit --no-fund || npm i
+                  fi
                   npm run build
 
             # Fetch only tests/plugins from test_utils branch (premium plugins not in default branch)
