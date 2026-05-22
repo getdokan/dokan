@@ -326,9 +326,19 @@ const WithdrawPage = () => {
             icon: <XCircle size={ 16 } className="!fill-none" />,
             isPrimary: false,
             supportsBulk: true,
+            isDestructive: true,
+            confirmTitle: __( 'Cancel Withdrawal', 'dokan-lite' ),
+            confirmMessage: __(
+                'Are you sure you want to cancel the selected withdrawal(s)?',
+                'dokan-lite'
+            ),
+            confirmButtonLabel: __( 'Cancel Withdrawal', 'dokan-lite' ),
             isEligible: ( item ) => item?.status === 'pending',
-            callback: ( items ) => {
-                openModal( 'cancel', items );
+            callback: async ( items: any[] ) => {
+                await handleBulkAction(
+                    'cancelled',
+                    items.map( ( item ) => item.id )
+                );
             },
         },
         {
@@ -346,9 +356,19 @@ const WithdrawPage = () => {
             label: () => getActionLabel( <Trash size={ 16 } className="!fill-none" />, __( 'Delete', 'dokan-lite' ) ),
             icon: <Trash size={ 16 } className="!fill-none" />,
             supportsBulk: true,
+            isDestructive: true,
+            confirmTitle: __( 'Delete Withdrawal', 'dokan-lite' ),
+            confirmMessage: __(
+                'Are you sure you want to delete the selected withdrawal(s)? This action cannot be undone.',
+                'dokan-lite'
+            ),
+            confirmButtonLabel: __( 'Delete', 'dokan-lite' ),
             isEligible: ( item ) => item?.status !== 'approved',
-            callback: ( items ) => {
-                openModal( 'delete', items );
+            callback: async ( items: any[] ) => {
+                await handleBulkAction(
+                    'delete',
+                    items.map( ( item ) => item.id )
+                );
             },
         },
         {
@@ -1033,100 +1053,6 @@ const WithdrawPage = () => {
                                     d="M5 13l4 4L19 7"
                                 />
                             </svg>
-                        </div>
-                    }
-                />
-            ) }
-
-            { modalState.isOpen && modalState.type === 'cancel' && (
-                <DokanModal
-                    isOpen={ modalState.isOpen }
-                    namespace={ `cancel-withdrawal-${ modalState.items.length }` }
-                    onClose={ closeModal }
-                    onConfirm={ async () => {
-                        await handleBulkAction(
-                            'cancelled',
-                            modalState.items.map( ( item ) => item.id )
-                        );
-                        closeModal();
-                    } }
-                    dialogTitle={ __( 'Cancel Withdrawal', 'dokan-lite' ) }
-                    confirmButtonText={ __(
-                        'Cancel Withdrawal',
-                        'dokan-lite'
-                    ) }
-                    confirmationTitle={ __(
-                        'Confirm Cancellation',
-                        'dokan-lite'
-                    ) }
-                    confirmationDescription={
-                        modalState.items.length === 1
-                            ? __(
-                                  'Are you sure you want to cancel this withdrawal?',
-                                  'dokan-lite'
-                              )
-                            : sprintf(
-                                  __(
-                                      'Are you sure you want to cancel these %d withdrawals?',
-                                      'dokan-lite'
-                                  ),
-                                  modalState.items.length
-                              )
-                    }
-                    confirmButtonVariant="primary"
-                    dialogIcon={
-                        <div className="flex items-center justify-center shrink-0 w-14 h-14 bg-orange-50 border border-orange-50 rounded-full">
-                            <svg
-                                className="w-6 h-6 text-orange-600"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M6 18L18 6M6 6l12 12"
-                                />
-                            </svg>
-                        </div>
-                    }
-                />
-            ) }
-
-            { modalState.isOpen && modalState.type === 'delete' && (
-                <DokanModal
-                    isOpen={ modalState.isOpen }
-                    namespace={ `delete-withdrawal-${ modalState.items.length }` }
-                    onClose={ closeModal }
-                    onConfirm={ async () => {
-                        await handleBulkAction(
-                            'delete',
-                            modalState.items.map( ( item ) => item.id )
-                        );
-                        closeModal();
-                    } }
-                    dialogTitle={ __( 'Delete Withdrawal', 'dokan-lite' ) }
-                    confirmButtonText={ __( 'Delete', 'dokan-lite' ) }
-                    confirmationTitle={ __( 'Confirm Deletion', 'dokan-lite' ) }
-                    confirmationDescription={
-                        modalState.items.length === 1
-                            ? __(
-                                  'Are you sure you want to delete this withdrawal? This action cannot be undone.',
-                                  'dokan-lite'
-                              )
-                            : sprintf(
-                                  __(
-                                      'Are you sure you want to delete these %d withdrawals? This action cannot be undone.',
-                                      'dokan-lite'
-                                  ),
-                                  modalState.items.length
-                              )
-                    }
-                    confirmButtonVariant="primary"
-                    dialogIcon={
-                        <div className="flex items-center justify-center shrink-0 w-14 h-14 bg-red-50 border border-red-50 rounded-full">
-                            <Trash size={ 24 } className="text-red-600" />
                         </div>
                     }
                 />

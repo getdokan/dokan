@@ -395,6 +395,35 @@ const VendorsPage = ( props ) => {
             setConfirmState( { mode: 'single', action, vendor: v } );
         }
     };
+    const runVendorStatusAction = async (
+        action: 'approve' | 'disable',
+        ids: number[],
+        isBulk: boolean
+    ) => {
+        if ( ! ids.length ) {
+            return;
+        }
+        if ( ! isBulk ) {
+            await apiFetch( {
+                path: `/dokan/v1/stores/${ ids[ 0 ] }/status`,
+                method: 'PUT',
+                data: {
+                    status: action === 'approve' ? 'active' : 'inactive',
+                },
+            } as any );
+        } else {
+            await apiFetch( {
+                path: `/dokan/v1/stores/batch`,
+                method: 'POST',
+                data:
+                    action === 'approve' ? { approved: ids } : { pending: ids },
+            } as any );
+        }
+        await fetchVendors();
+        if ( isBulk ) {
+            setSelection( [] );
+        }
+    };
     const getConfirmConfig = ( state: NonNullable< typeof confirmState > ) => {
         const isApprove = state.action === 'approve';
         const isBulk = state.mode === 'bulk';
@@ -490,44 +519,18 @@ const VendorsPage = ( props ) => {
                                 onConfirm={ async () => {
                                     setIsConfirmLoading( true );
                                     try {
-                                        if ( confirmState.mode === 'single' ) {
-                                            await apiFetch( {
-                                                path: `/dokan/v1/stores/${ confirmState.vendor.id }/status`,
-                                                method: 'PUT',
-                                                data: {
-                                                    status:
-                                                        confirmState.action ===
-                                                        'approve'
-                                                            ? 'active'
-                                                            : 'inactive',
-                                                },
-                                            } as any );
-                                        } else {
-                                            const ids = confirmState.vendorIds;
-                                            if (
-                                                confirmState.action ===
-                                                'approve'
-                                            ) {
-                                                await apiFetch( {
-                                                    path: `/dokan/v1/stores/batch`,
-                                                    method: 'POST',
-                                                    data: { approved: ids },
-                                                } as any );
-                                            } else {
-                                                await apiFetch( {
-                                                    path: `/dokan/v1/stores/batch`,
-                                                    method: 'POST',
-                                                    data: { pending: ids },
-                                                } as any );
-                                            }
-                                        }
-                                        await fetchVendors();
-                                        // Clear selection after bulk actions
-                                        if ( confirmState.mode === 'bulk' ) {
-                                            setSelection( [] );
-                                        }
+                                        const ids =
+                                            confirmState.mode === 'single'
+                                                ? [ confirmState.vendor.id ]
+                                                : confirmState.vendorIds;
+                                        await runVendorStatusAction(
+                                            confirmState.action,
+                                            ids,
+                                            confirmState.mode === 'bulk'
+                                        );
                                     } finally {
                                         setIsConfirmLoading( false );
+                                        setConfirmState( null );
                                     }
                                 } }
                             />
@@ -687,10 +690,22 @@ const VendorsPage = ( props ) => {
                                     ),
                                     supportsBulk: true,
                                     isPrimary: false,
+                                    isDestructive: true,
+                                    confirmTitle: __( 'Disable Vendor', 'dokan-lite' ),
+                                    confirmMessage: __(
+                                        'Are you sure you want to disable the selected vendor(s) from selling?',
+                                        'dokan-lite'
+                                    ),
+                                    confirmButtonLabel: __( 'Yes, Disable', 'dokan-lite' ),
                                     isEligible: ( item: Vendor ) =>
                                         !! item.enabled,
-                                    callback: ( args: any ) => {
-                                        openConfirmFor( 'disable', args );
+                                    callback: async ( args: any ) => {
+                                        const ids = extractIdsFromArgs( args );
+                                        await runVendorStatusAction(
+                                            'disable',
+                                            ids,
+                                            ids.length > 1
+                                        );
                                     },
                                 },
                             ] as any
