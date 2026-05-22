@@ -142,7 +142,7 @@ class PayloadResolver {
      *
      * @param array $tags Array of tag IDs and/or new tag names.
      *
-     * @retrun array of tag objects for WC REST API: [ { id: int } | { name: string }, ... ].
+     * @return array of tag objects for WC REST API: [ { id: int } | { name: string }, ... ].
      */
     public function map_tags_to_objects( array $tags ): array {
         $can_create = dokan()->is_pro_exists()
