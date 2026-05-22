@@ -144,11 +144,13 @@ const SelectEdit = ( { data, field, onChange, validity }: any ) => {
         }
     };
 
-    // Creatable multi-select (e.g. product tags); when creation is disabled, Enter is swallowed so it doesn't submit the form.
-    if ( field.creatable !== undefined && isMulti ) {
-        const canCreate = Boolean( field.creatable );
-        return (
-            <CustomField field={ field } error={ getValidationError( validity ) }>
+    // Fields with a `creatable` flag (e.g. product tags) use a creatable multi-select; Enter is swallowed when creation is off so it doesn't submit the form.
+    const useTaggable = field.creatable !== undefined && isMulti;
+    const canCreate = Boolean( field.creatable );
+
+    return (
+        <CustomField field={ field } error={ getValidationError( validity ) }>
+            { useTaggable ? (
                 <div
                     onKeyDown={ ( e: React.KeyboardEvent ) => {
                         if ( e.key === 'Enter' && ! canCreate ) {
@@ -165,21 +167,17 @@ const SelectEdit = ( { data, field, onChange, validity }: any ) => {
                         onChange={ handleChange }
                     />
                 </div>
-            </CustomField>
-        );
-    }
-
-    return (
-        <CustomField field={ field } error={ getValidationError( validity ) }>
-            <Select
-                options={ options }
-                isMulti={ isMulti }
-                placeholder={ placeholder }
-                value={ getSelectedValue() }
-                // Specific Tree Props
-                components={ treeComponents }
-                onChange={ handleChange }
-            />
+            ) : (
+                <Select
+                    options={ options }
+                    isMulti={ isMulti }
+                    placeholder={ placeholder }
+                    value={ getSelectedValue() }
+                    // Specific Tree Props
+                    components={ treeComponents }
+                    onChange={ handleChange }
+                />
+            ) }
         </CustomField>
     );
 };
