@@ -6,7 +6,39 @@ export {
     VIEW_LAYOUTS,
 } from '@wordpress/dataviews/wp';
 export { default as AdminDataViews } from './dataviews/AdminDataViewTable';
-export { DataViews } from '@wedevs/plugin-ui';
+export { DataViews, Switch, LabeledSwitch } from '@wedevs/plugin-ui';
+
+import { Switch as _PluginUISwitch } from '@wedevs/plugin-ui';
+
+/**
+ * Legacy alias for the old `DokanSwitch` component. The underlying
+ * plugin-ui `Switch` is a Radix primitive that exposes
+ * `onCheckedChange(value: boolean)`. Old call sites (e.g., dokan-pro's
+ * delivery-time module) pass `onChange(value: boolean)`. This adapter
+ * forwards both names so neither API change breaks consumers.
+ */
+type DokanSwitchProps = {
+	checked?: boolean;
+	onChange?: ( value: boolean ) => void;
+	onCheckedChange?: ( value: boolean ) => void;
+	[ key: string ]: unknown;
+};
+
+export const DokanSwitch = ( {
+	onChange,
+	onCheckedChange,
+	checked = false,
+	...rest
+}: DokanSwitchProps ) => {
+	const handler = onCheckedChange ?? onChange;
+	return (
+		<_PluginUISwitch
+			checked={ checked }
+			onCheckedChange={ handler }
+			{ ...rest }
+		/>
+	);
+};
 export { default as DokanModal } from './modals/DokanModal';
 export { default as SortableList } from './sortable-list';
 export { default as ListEmpty } from './dataviews/ListEmpty';
@@ -41,7 +73,7 @@ export { default as SearchInput } from './SearchInput';
 export { default as Select } from './Select';
 export { default as ShortContent } from './ShortContent';
 export { default as DokanTab } from './Tab';
-export { default as TimePicker } from './TimePicker';
+export { default as TimePicker, default as DokanTimePicker } from './TimePicker';
 export { default as MediaUploader } from './Upload';
 export { default as UserCard } from './UserCard';
 export { default as StatCard } from './StatCard';
