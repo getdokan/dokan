@@ -59,7 +59,6 @@
     @include windraw-reset;
 }
 
-// Scoped to the withdraw page (`:has(.dokan-withdraw-wrapper)`): keep the toaster above the @wordpress/components Modal backdrop (z-index 100000) so rejection toasts aren't dimmed by the overlay.
 body:has(.dokan-withdraw-wrapper) .dokan-toaster {
     z-index: 100001 !important;
 }
