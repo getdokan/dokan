@@ -152,7 +152,15 @@ class PayloadResolver {
         foreach ( $tags as $tag ) {
             if ( is_numeric( $tag ) && (int) $tag > 0 ) {
                 $result[] = [ 'id' => (int) $tag ];
-            } elseif ( $can_create && is_string( $tag ) && ( $name = trim( wp_unslash( $tag ) ) ) !== '' ) {
+                continue;
+            }
+
+            if ( ! $can_create || ! is_string( $tag ) ) {
+                continue;
+            }
+
+            $name = trim( wp_unslash( $tag ) );
+            if ( '' !== $name ) {
                 $result[] = [ 'name' => $name ];
             }
         }
