@@ -109,9 +109,24 @@ jobs:
                   composer i || composer update
                   composer i --no-dev -o || composer update --no-dev -o
 
-            - name: Npm install and build (Dokan-lite)
+            # node_modules cache: skips ~2-3 min of `npm ci` on cache hit.
+            # Keyed on the lockfile so any dependency change invalidates the
+            # cache automatically. Same key is restored in build_pro to skip
+            # the redundant lite install there too.
+            - name: Cache lite node_modules
+              id: lite-nm
+              uses: actions/cache@v4
+              with:
+                  path: node_modules
+                  key: lite-nm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+            - name: Npm install (Dokan-lite)
+              if: steps.lite-nm.outputs.cache-hit != 'true'
               run: |
                   npm ci --prefer-offline --no-audit --no-fund || npm i
+
+            - name: Npm build (Dokan-lite)
+              run: |
                   npm run build
 
             # Tar the runtime tree (excludes node_modules, .git, dev-only output).
@@ -180,18 +195,40 @@ jobs:
                       package-lock.json
                       dokan-pro/package-lock.json
 
+            # Share the same node_modules cache that build_lite produced.
+            # Same key, so a cache hit here means pro skips the ~3 min of
+            # redundant lite install entirely. On cache miss we still fall
+            # back to npm ci (e.g., after a lockfile change).
+            - name: Cache lite node_modules
+              id: lite-nm
+              uses: actions/cache@v4
+              with:
+                  path: node_modules
+                  key: lite-nm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
             # Install lite's node_modules so dokan-pro/webpack.config.js can
             # require lite-root JS helpers (webpack-dependency-mapping.js etc).
             # Skip `npm run build` — we don't ship lite's assets from this job.
-            - name: Install dokan-lite npm deps (no build)
+            - name: Install dokan-lite npm deps (no build, skip on cache hit)
+              if: steps.lite-nm.outputs.cache-hit != 'true'
               run: |
                   npm ci --prefer-offline --no-audit --no-fund || npm i
+
+            # Cache pro's own node_modules separately (its lockfile is independent).
+            - name: Cache pro node_modules
+              id: pro-nm
+              uses: actions/cache@v4
+              with:
+                  path: dokan-pro/node_modules
+                  key: pro-nm-${{ runner.os }}-${{ hashFiles('dokan-pro/package-lock.json') }}
 
             - name: Build Dokan Pro
               working-directory: dokan-pro
               run: |
                   composer i --no-dev -o
-                  npm ci --prefer-offline --no-audit --no-fund || npm i
+                  if [ "${{ steps.pro-nm.outputs.cache-hit }}" != "true" ]; then
+                      npm ci --prefer-offline --no-audit --no-fund || npm i
+                  fi
                   npm run build
 
             # Fetch only tests/plugins from test_utils branch (premium plugins not in default branch)
@@ -242,8 +279,8 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                shardIndex: [1, 2, 3, 4, 5, 6]
-                shardTotal: [6]
+                shardIndex: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                shardTotal: [12]
 
         steps:
             - name: Download dokan-lite build artifact
@@ -279,7 +316,15 @@ jobs:
                   cache: npm
                   cache-dependency-path: tests/pw/package-lock.json
 
+            - name: Cache test deps (tests/pw/node_modules)
+              id: pw-nm
+              uses: actions/cache@v4
+              with:
+                  path: tests/pw/node_modules
+                  key: pw-nm-${{ runner.os }}-${{ hashFiles('tests/pw/package-lock.json') }}
+
             - name: Install test dependencies
+              if: steps.pw-nm.outputs.cache-hit != 'true'
               working-directory: tests/pw
               run: |
                   npm ci --prefer-offline --no-audit --no-fund || npm i
@@ -373,6 +418,29 @@ jobs:
                   node ./utils/getShardSpecs.js ${{ matrix.shardIndex }} ${{ matrix.shardTotal }} > /tmp/shard-specs.txt
                   echo "spec count: $(wc -l < /tmp/shard-specs.txt)"
 
+            # Emit a per-shard manifest (no GITHUB_STEP_SUMMARY write here — that
+            # would clutter the run page with 12 collapsed cards). merge-reports
+            # collects these manifests from artifacts and renders one consolidated
+            # shard feature map below the quality report.
+            - name: Write shard feature manifest
+              if: always()
+              working-directory: tests/pw
+              run: |
+                  if [ -s /tmp/shard-specs.txt ]; then
+                      mkdir -p playwright
+                      node -e '
+                          const fs = require("fs");
+                          const specs = fs.readFileSync("/tmp/shard-specs.txt", "utf8").split("\n").filter(Boolean);
+                          const features = [...new Set(specs.map(s => s.replace(/^tests\/e2e\//, "").split("/")[0]))].sort();
+                          fs.writeFileSync("playwright/shard-features.json", JSON.stringify({
+                              shardIndex: ${{ matrix.shardIndex }},
+                              shardTotal: ${{ matrix.shardTotal }},
+                              specCount: specs.length,
+                              features
+                          }, null, 2));
+                      '
+                  fi
+
             - name: 🧪 Run e2e tests-${{ matrix.shardIndex }}
               id: e2e-test
               if: success() && (github.event_name != 'workflow_dispatch' || ( github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All')))
@@ -401,8 +469,13 @@ jobs:
                          playwright-report/e2e/summary-report/results.e2e.bak.json
                   fi
 
+            # Coverage walks the suite a second time. Skip on PRs to halve the
+            # per-shard test runtime; develop pushes still compute it.
             - name: 🧪 Run e2e coverage
-              if: always() && (steps.e2e-test.outcome == 'success' || steps.e2e-test.outcome == 'failure')
+              if: |
+                always()
+                && (steps.e2e-test.outcome == 'success' || steps.e2e-test.outcome == 'failure')
+                && github.event_name != 'pull_request'
               working-directory: tests/pw
               run: |
                   npm run test:e2e:coverage
@@ -480,7 +553,15 @@ jobs:
                   cache: npm
                   cache-dependency-path: tests/pw/package-lock.json
 
+            - name: Cache test deps (tests/pw/node_modules)
+              id: pw-nm
+              uses: actions/cache@v4
+              with:
+                  path: tests/pw/node_modules
+                  key: pw-nm-${{ runner.os }}-${{ hashFiles('tests/pw/package-lock.json') }}
+
             - name: Install test dependencies
+              if: steps.pw-nm.outputs.cache-hit != 'true'
               working-directory: tests/pw
               run: |
                   npm ci --prefer-offline --no-audit --no-fund || npm i
@@ -630,7 +711,15 @@ jobs:
                   cache: npm
                   cache-dependency-path: tests/pw/package-lock.json
 
+            - name: Cache test deps (tests/pw/node_modules)
+              id: pw-nm
+              uses: actions/cache@v4
+              with:
+                  path: tests/pw/node_modules
+                  key: pw-nm-${{ runner.os }}-${{ hashFiles('tests/pw/package-lock.json') }}
+
             - name: Install test dependencies
+              if: steps.pw-nm.outputs.cache-hit != 'true'
               working-directory: tests/pw
               run: |
                   npm ci --prefer-offline --no-audit --no-fund || npm i
@@ -672,9 +761,14 @@ jobs:
               run: |
                   REPORT_TYPE=e2e npx ts-node ./utils/mergeSummaryReport.ts
 
+            # No coverage on PR runs (skipped per-shard above), so the merge
+            # would exit 1 on missing inputs. Quality report handles missing
+            # E2E_COVERAGE via an existsSync guard.
             - name: Generate merged coverage report
               id: merge-coverage-report
-              if: steps.download-test-artifacts.outcome == 'success'
+              if: |
+                steps.download-test-artifacts.outcome == 'success'
+                && github.event_name != 'pull_request'
               working-directory: tests/pw
               run: |
                   REPORT_TYPE=e2e npx ts-node ./utils/mergeCoverageSummary.ts
@@ -745,6 +839,43 @@ jobs:
                   if [ -f tests/pw/all-reports/quality-report.md ]; then
                       cat tests/pw/all-reports/quality-report.md >> "$GITHUB_STEP_SUMMARY"
                   fi
+
+            # Consolidate per-shard feature manifests into one table so reviewers
+            # see "which features ran in which shard" in a single place at the
+            # top of the run page — without polluting each shard's job page.
+            - name: Append shard feature map to job summary
+              if: always() && steps.download-test-artifacts.outcome == 'success'
+              working-directory: tests/pw
+              run: |
+                  node -e '
+                      const fs = require("fs");
+                      const path = require("path");
+                      const baseDir = "./all-reports";
+                      if (!fs.existsSync(baseDir)) process.exit(0);
+                      const shards = [];
+                      for (const entry of fs.readdirSync(baseDir)) {
+                          const featuresPath = path.join(baseDir, entry, "playwright", "shard-features.json");
+                          if (fs.existsSync(featuresPath)) {
+                              try {
+                                  shards.push(JSON.parse(fs.readFileSync(featuresPath, "utf8")));
+                              } catch (e) { /* skip malformed */ }
+                          }
+                      }
+                      if (shards.length === 0) process.exit(0);
+                      shards.sort((a, b) => a.shardIndex - b.shardIndex);
+                      const lines = [
+                          "",
+                          "## Shard Feature Map",
+                          "",
+                          "| Shard | Specs | Features tested |",
+                          "|-------|-------|------------------|",
+                      ];
+                      for (const s of shards) {
+                          lines.push(`| ${s.shardIndex}/${s.shardTotal} | ${s.specCount} | ${s.features.join(", ")} |`);
+                      }
+                      lines.push("");
+                      fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, lines.join("\n"));
+                  '
 
             - name: Upload final test artifact
               if: always() && steps.download-test-artifacts.outcome == 'success'
