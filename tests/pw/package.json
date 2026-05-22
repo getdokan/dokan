@@ -53,6 +53,7 @@
         "test:ui": "npx playwright test --project=e2e_tests --ui",
         "test:debug": "npx playwright test --project=e2e_tests --debug",
         "test:report": "npx playwright show-report",
+        "refresh-shard-labels": "node ./utils/generateShardLabels.js",
         "check:users": "npm run wp-env run tests-cli -- wp user list",
         "check:plugins": "npm run wp-env run tests-cli -- wp plugin list --status=active",
         "check:pages": "npm run wp-env run tests-cli -- wp post list --post_type=page --fields=ID,post_title,post_status,post_author",

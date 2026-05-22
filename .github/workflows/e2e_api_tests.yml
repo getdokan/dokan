@@ -232,7 +232,12 @@ jobs:
                   compression-level: 0
 
     e2e_tests:
-        name: e2e tests
+        # Sidebar label uses matrix.label so reviewers see the dominant feature
+        # area at a glance instead of "(2, 12)". Labels are generated from the
+        # committed duration baseline by tests/pw/utils/generateShardLabels.js;
+        # refresh via `npm --prefix tests/pw run refresh-shard-labels` whenever
+        # shard-durations.json is updated.
+        name: "E2E · ${{ matrix.label }} · Shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }}"
         runs-on: ubuntu-latest
         timeout-minutes: 30
         # Wait for both build jobs. build_pro is conditional (fork PRs) and may not run;
@@ -242,8 +247,22 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                shardIndex: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-                shardTotal: [12]
+                # Labels mirror tests/pw/utils/shard-labels.json. Regenerate via
+                # `npm --prefix tests/pw run refresh-shard-labels` after refreshing
+                # the duration baseline, then paste the printed YAML block here.
+                include:
+                    - { shardIndex:  1, shardTotal: 12, label: "New Product Form" }
+                    - { shardIndex:  2, shardTotal: 12, label: "Orders" }
+                    - { shardIndex:  3, shardTotal: 12, label: "Vendor Products" }
+                    - { shardIndex:  4, shardTotal: 12, label: "Announcements" }
+                    - { shardIndex:  5, shardTotal: 12, label: "Announcements" }
+                    - { shardIndex:  6, shardTotal: 12, label: "EU Compliance" }
+                    - { shardIndex:  7, shardTotal: 12, label: "Dashboard" }
+                    - { shardIndex:  8, shardTotal: 12, label: "Geolocation" }
+                    - { shardIndex:  9, shardTotal: 12, label: "Abuse Reports" }
+                    - { shardIndex: 10, shardTotal: 12, label: "Dokan Invoice" }
+                    - { shardIndex: 11, shardTotal: 12, label: "Withdraws" }
+                    - { shardIndex: 12, shardTotal: 12, label: "Admin" }
 
         steps:
             - name: Download dokan-lite build artifact
@@ -372,6 +391,25 @@ jobs:
               run: |
                   node ./utils/getShardSpecs.js ${{ matrix.shardIndex }} ${{ matrix.shardTotal }} > /tmp/shard-specs.txt
                   echo "spec count: $(wc -l < /tmp/shard-specs.txt)"
+
+            # Surface the per-shard feature list on the job's Summary tab.
+            # Sidebar label (matrix.label) only shows the dominant feature; this
+            # gives the full picture one click in, so reviewers can answer
+            # "which features ran in this shard" without scrolling logs.
+            - name: Write shard feature summary
+              if: always()
+              run: |
+                  if [ -s /tmp/shard-specs.txt ]; then
+                      {
+                          echo "## E2E · ${{ matrix.label }} · Shard ${{ matrix.shardIndex }}/${{ matrix.shardTotal }}"
+                          echo ""
+                          spec_count=$(wc -l < /tmp/shard-specs.txt | tr -d ' ')
+                          feature_count=$(sed 's|tests/e2e/||' /tmp/shard-specs.txt | awk -F/ '{print $1}' | sort -u | wc -l | tr -d ' ')
+                          echo "**${feature_count} feature(s), ${spec_count} spec file(s):**"
+                          echo ""
+                          sed 's|tests/e2e/||' /tmp/shard-specs.txt | awk -F/ '{print $1}' | sort -u | sed 's/^/- /'
+                      } >> "$GITHUB_STEP_SUMMARY"
+                  fi
 
             - name: 🧪 Run e2e tests-${{ matrix.shardIndex }}
               id: e2e-test
