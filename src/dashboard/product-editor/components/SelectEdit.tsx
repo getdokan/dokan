@@ -1,4 +1,5 @@
 import { Select } from '@src/components';
+import { TaggableSelect } from '@getdokan/dokan-ui';
 import { applyFilters } from '@wordpress/hooks';
 import { CheckSquare, Square } from 'lucide-react';
 import { useMemo } from 'react';
@@ -109,10 +110,18 @@ const SelectEdit = ( { data, field, onChange, validity }: any ) => {
             ) {
                 return currentValue;
             }
-            // If IDs/Strings
-            return options.filter( ( option: Option ) =>
-                currentValue.includes( option.value )
-            );
+            // Preserve unknown values (e.g. newly-typed tags) so they still render as chips.
+            return currentValue.map( ( item: any ) => {
+                const match = options.find(
+                    ( option: Option ) => option.value === item
+                );
+                if ( match ) {
+                    return match;
+                }
+                const label =
+                    typeof item === 'string' ? item : String( item );
+                return { value: item, label } as Option;
+            } );
         }
 
         // Handle Single values
@@ -123,6 +132,33 @@ const SelectEdit = ( { data, field, onChange, validity }: any ) => {
 
     const treeComponents = isTreeMode ? { Option: OptionComponent } : undefined;
 
+    const handleChange = ( input: any ) => {
+        if ( isMulti ) {
+            const values = Array.isArray( input )
+                ? input.map( ( item ) => item.value )
+                : [];
+            onChange( { [ field.id ]: values } );
+        } else {
+            const value = input ? input.value : '';
+            onChange( { [ field.id ]: value } );
+        }
+    };
+
+    // Creatable multi-select for fields that accept inline new entries (e.g. product tags).
+    if ( field.creatable && isMulti ) {
+        return (
+            <CustomField field={ field } error={ getValidationError( validity ) }>
+                <TaggableSelect
+                    isMulti
+                    options={ options }
+                    placeholder={ placeholder }
+                    value={ getSelectedValue() }
+                    onChange={ handleChange }
+                />
+            </CustomField>
+        );
+    }
+
     return (
         <CustomField field={ field } error={ getValidationError( validity ) }>
             <Select
@@ -132,19 +168,7 @@ const SelectEdit = ( { data, field, onChange, validity }: any ) => {
                 value={ getSelectedValue() }
                 // Specific Tree Props
                 components={ treeComponents }
-                onChange={ ( input: any ) => {
-                    if ( isMulti ) {
-                        // Handle multi-select always as array of values
-                        const values = Array.isArray( input )
-                            ? input.map( ( item ) => item.value )
-                            : [];
-                        onChange( { [ field.id ]: values } );
-                    } else {
-                        // Handle single select
-                        const value = input ? input.value : '';
-                        onChange( { [ field.id ]: value } );
-                    }
-                } }
+                onChange={ handleChange }
             />
         </CustomField>
     );
