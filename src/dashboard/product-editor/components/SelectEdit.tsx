@@ -144,17 +144,27 @@ const SelectEdit = ( { data, field, onChange, validity }: any ) => {
         }
     };
 
-    // Creatable multi-select for fields that accept inline new entries (e.g. product tags).
-    if ( field.creatable && isMulti ) {
+    // Creatable multi-select (e.g. product tags); when creation is disabled, Enter is swallowed so it doesn't submit the form.
+    if ( field.creatable !== undefined && isMulti ) {
+        const canCreate = Boolean( field.creatable );
         return (
             <CustomField field={ field } error={ getValidationError( validity ) }>
-                <TaggableSelect
-                    isMulti
-                    options={ options }
-                    placeholder={ placeholder }
-                    value={ getSelectedValue() }
-                    onChange={ handleChange }
-                />
+                <div
+                    onKeyDown={ ( e: React.KeyboardEvent ) => {
+                        if ( e.key === 'Enter' && ! canCreate ) {
+                            e.preventDefault();
+                        }
+                    } }
+                >
+                    <TaggableSelect
+                        isMulti
+                        options={ options }
+                        placeholder={ placeholder }
+                        value={ getSelectedValue() }
+                        isValidNewOption={ () => canCreate }
+                        onChange={ handleChange }
+                    />
+                </div>
             </CustomField>
         );
     }

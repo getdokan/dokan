@@ -138,7 +138,11 @@ class PayloadResolver {
     /**
      * Map tag IDs and (when vendors can create tags) new-name strings to the WC REST tag shape.
      *
-     * @since 5.0.0
+     * @since DOKAN_SINCE
+     *
+     * @param array $tags Array of tag IDs and/or new tag names.
+     *
+     * @retrun array of tag objects for WC REST API: [ { id: int } | { name: string }, ... ].
      */
     public function map_tags_to_objects( array $tags ): array {
         $can_create = dokan()->is_pro_exists()
