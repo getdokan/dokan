@@ -44,7 +44,7 @@ export default defineConfig({
     /* The maximum number of retry attempts given to failed tests.  */
     retries: parseBoolean(CI) ? 1 : 0,
     /* Opt out of parallel tests on CI. */
-    workers: parseBoolean(CI) ? 4 : 4,
+    workers: parseBoolean(CI) ? 1 : 4,
     /* Whether to report slow test files. Pass null to disable this feature. */
     reportSlowTests: { max: 2, threshold: 25 },
     /* Configure reporters */
