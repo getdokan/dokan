@@ -121,7 +121,7 @@ const Layout = ( {
                     { footerComponent ? footerComponent : <Footer /> }
                 </div>
                 <PluginArea scope={ route.id } />
-                <DokanToaster />
+                <DokanToaster containerClassName="dokan-toaster" />
             </SlotFillProvider>
         </ThemeProvider>
     );
