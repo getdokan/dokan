@@ -316,7 +316,15 @@ jobs:
                   cache: npm
                   cache-dependency-path: tests/pw/package-lock.json
 
+            - name: Cache test deps (tests/pw/node_modules)
+              id: pw-nm
+              uses: actions/cache@v4
+              with:
+                  path: tests/pw/node_modules
+                  key: pw-nm-${{ runner.os }}-${{ hashFiles('tests/pw/package-lock.json') }}
+
             - name: Install test dependencies
+              if: steps.pw-nm.outputs.cache-hit != 'true'
               working-directory: tests/pw
               run: |
                   npm ci --prefer-offline --no-audit --no-fund || npm i
@@ -545,7 +553,15 @@ jobs:
                   cache: npm
                   cache-dependency-path: tests/pw/package-lock.json
 
+            - name: Cache test deps (tests/pw/node_modules)
+              id: pw-nm
+              uses: actions/cache@v4
+              with:
+                  path: tests/pw/node_modules
+                  key: pw-nm-${{ runner.os }}-${{ hashFiles('tests/pw/package-lock.json') }}
+
             - name: Install test dependencies
+              if: steps.pw-nm.outputs.cache-hit != 'true'
               working-directory: tests/pw
               run: |
                   npm ci --prefer-offline --no-audit --no-fund || npm i
@@ -695,7 +711,15 @@ jobs:
                   cache: npm
                   cache-dependency-path: tests/pw/package-lock.json
 
+            - name: Cache test deps (tests/pw/node_modules)
+              id: pw-nm
+              uses: actions/cache@v4
+              with:
+                  path: tests/pw/node_modules
+                  key: pw-nm-${{ runner.os }}-${{ hashFiles('tests/pw/package-lock.json') }}
+
             - name: Install test dependencies
+              if: steps.pw-nm.outputs.cache-hit != 'true'
               working-directory: tests/pw
               run: |
                   npm ci --prefer-offline --no-audit --no-fund || npm i
