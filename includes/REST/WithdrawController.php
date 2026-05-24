@@ -319,6 +319,10 @@ class WithdrawController extends WP_REST_Controller {
             'orderby'  => 'DESC',
         ];
 
+        if ( $request['is_export'] ) {
+            $args['limit'] = $request['total_items'];
+        }
+
         $user_id = null;
 
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
@@ -374,8 +378,18 @@ class WithdrawController extends WP_REST_Controller {
 
         // Export items.
         $exporter = new WithdrawLogExporter();
-        $step     = isset( $params['page'] ) ? absint( $params['page'] ) : 1;
-        $statuses = [ 'pending', 'completed', 'cancelled' ];
+        $step     = isset( $request['page'] ) ? absint( $request['page'] ) : 1;
+
+        // Set dynamic filename based on filters BEFORE generating file.
+        $exporter->set_filename_from_filters(
+            [
+                'user_id'        => $args['user_id'] ?? '',
+                'status'         => ! empty( $request['status'] ) ? sanitize_text_field( $request['status'] ) : '',
+                'payment_method' => $args['method'] ?? '',
+                'start_date'     => $args['start_date'] ?? '',
+                'end_date'       => $args['end_date'] ?? '',
+            ]
+        );
 
         $exporter->set_items( $data );
         $exporter->set_page( $step );
@@ -393,7 +407,8 @@ class WithdrawController extends WP_REST_Controller {
             $export_data['step'] = 'done';
             $export_data['url']  = add_query_arg(
                 [
-                    'download-withdraw-log-csv'  => wp_create_nonce( 'download-withdraw-log-csv-nonce' ),
+                    'download-withdraw-log-csv' => wp_create_nonce( 'download-withdraw-log-csv-nonce' ),
+                    'filename'                  => $exporter->get_filename(),
                 ],
                 admin_url( 'admin.php' )
             );

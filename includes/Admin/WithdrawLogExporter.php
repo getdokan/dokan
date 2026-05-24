@@ -35,7 +35,7 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
      *
      * @var string
      */
-    protected $filename = 'dokan-withdraw-log-export.csv';
+    protected $filename = 'dokan-withdraw-log.csv';
 
     /**
      * Items to export.
@@ -95,6 +95,62 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
      */
     public function set_total_rows( $total_rows ) {
         $this->total_rows = absint( $total_rows );
+    }
+
+    /**
+     * Generate and set filename based on applied filters.
+     *
+     * Format: dokan-withdraw-log{_vendor-name}{_status}{_method}{_date-range}.csv
+     * Only includes filter parts that are actually applied.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $filters Array of filter parameters (user_id, status, payment_method, start_date, end_date).
+     *
+     * @return void
+     */
+    public function set_filename_from_filters( $filters = [] ) {
+        $parts = [ 'dokan-withdraw-log' ];
+
+        // Add vendor name if filtered by user_id.
+        if ( ! empty( $filters['user_id'] ) ) {
+            $store_info = dokan_get_store_info( absint( $filters['user_id'] ) );
+            $store_name = ! empty( $store_info['store_name'] )
+                ? sanitize_title( $store_info['store_name'] )
+                : 'vendor-' . absint( $filters['user_id'] );
+
+            // Truncate if too long (max 50 chars for store name part).
+            if ( strlen( $store_name ) > 50 ) {
+                $store_name = substr( $store_name, 0, 44 ) . '-trunc';
+            }
+
+            $parts[] = $store_name;
+        }
+
+        // Add status if filtered.
+        if ( ! empty( $filters['status'] ) ) {
+            $parts[] = sanitize_title( $filters['status'] );
+        }
+
+        // Add payment method if filtered.
+        if ( ! empty( $filters['payment_method'] ) ) {
+            $parts[] = sanitize_title( $filters['payment_method'] );
+        }
+
+        // Add date range if both start and end dates are provided (Y-M-d format).
+        if ( ! empty( $filters['start_date'] ) && ! empty( $filters['end_date'] ) ) {
+            $start_timestamp = strtotime( $filters['start_date'] );
+            $end_timestamp   = strtotime( $filters['end_date'] );
+
+            // Only add if both dates are valid timestamps.
+            if ( $start_timestamp && $end_timestamp ) {
+                $start   = strtolower( wp_date( 'Y-M-d', $start_timestamp ) );
+                $end     = strtolower( wp_date( 'Y-M-d', $end_timestamp ) );
+                $parts[] = $start . '_to_' . $end;
+            }
+        }
+
+        $this->set_filename( implode( '_', $parts ) );
     }
 
     /**
@@ -199,35 +255,35 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
                 $column_value = $withdraw_item['created'] ?? '';
                 break;
 
-            case "paypal_email":
+            case 'paypal_email':
                 $column_value = $withdraw_item['details']['paypal']['email'] ?? '';
                 break;
 
-            case "skrill_email":
+            case 'skrill_email':
                 $column_value = $withdraw_item['details']['skrill']['email'] ?? '';
                 break;
 
-            case "dokan_custom_method":
-            case "dokan_custom_value":
+            case 'dokan_custom_method':
+            case 'dokan_custom_value':
                 $field        = substr_replace( $key, '', 0, 13 );
                 $column_value = $withdraw_item['details']['dokan_custom'][ $field ] ?? '';
                 break;
 
-            case "bank_ac_name":
-            case "bank_ac_number":
-            case "bank_ac_type":
-            case "bank_bank_name":
-            case "bank_bank_addr":
-            case "bank_declaration":
-            case "bank_iban":
-            case "bank_routing_number":
-            case "bank_swift":
+            case 'bank_ac_name':
+            case 'bank_ac_number':
+            case 'bank_ac_type':
+            case 'bank_bank_name':
+            case 'bank_bank_addr':
+            case 'bank_declaration':
+            case 'bank_iban':
+            case 'bank_routing_number':
+            case 'bank_swift':
                 $field        = substr_replace( $key, '', 0, 5 );
                 $column_value = $withdraw_item['details']['bank'][ $field ] ?? '';
                 break;
 
             default:
-                $column_value = $withdraw_item[$key] ?? '';
+                $column_value = $withdraw_item[ $key ] ?? '';
         }
 
         return $column_value;
