@@ -21,7 +21,6 @@ Transform your WooCommerce site into a multivendor marketplace with Dokan – an
 
 Dokan is built and maintained by weDevs — a WordPress-focused software company with 13 years in the ecosystem, trusted by over 1 million users across its product portfolio.
 Dokan is under active development, with regular releases, security improvements, and ongoing compatibility updates for the latest versions of WordPress and WooCommerce.
-Recently updated: Dokan Pro v5.0.1 (May 18, 2026) — added Paystack support for the order-pay endpoint, introduced search and sorting on the Product Add-ons admin list, and resolved multiple fixes across Stripe Express checkout, vendor verification, and email notifications.
 
 Hear what reputed WordPress influencer and online business strategist, Darrel Wilson, has to say about Dokan Multivendor Marketplace.
 
@@ -36,7 +35,7 @@ Hear what reputed WordPress influencer and online business strategist, Darrel Wi
 👉 **Easy Delivery Management with [Dokan Delivery Driver App](https://dokan.co/wordpress/delivery-driver-app/)** (Pro) with real-time order tracking, live timeline updates, and an asynchronous system between admin, vendors, customers, and delivery drivers.
 
 👉 **Confused about how to get started?** Read our blogs from [weDevs](https://wedevs.com/blog/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) and [Dokan](https://dokan.co/blog/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) 
-👉 **Docs & Support:** [Acess Now](https://dokan.co/docs/wordpress/) 
+👉 **Docs & Support:** [Access Now](https://dokan.co/docs/wordpress/) 
 
 **Here is how you can build your multivendor marketplace with Dokan.**
 
@@ -301,7 +300,7 @@ Our migration tools support importing from:
 * ✅ **WCFM Marketplace** → Dokan
 * ✅ **MultiVendorX** → Dokan
 
-All your vendor data, products, and orders transfer safely — zero downtime, zero data loss.
+It helps to migrate all your vendor data, products, and orders safely. 
 
 = WE KNOW WE ARE NOT PERFECT THAT’S WHY WE ARE IMPROVING EVERYDAY =
 
