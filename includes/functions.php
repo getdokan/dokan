@@ -4348,3 +4348,19 @@ function dokan_get_new_product_url() {
         dokan_get_navigation_url( 'new-product' )
     );
 }
+
+/**
+ * Get the current Agent Attribution mode.
+ *
+ * Canonical accessor for the per-vendor / marketplace / off attribution choice.
+ * Pro modules + theme code branch on this so feeds + page schema stay in sync.
+ *
+ * @return string 'vendor' | 'marketplace' | 'off'. Defaults to 'vendor' when
+ *                the StructuredData package isn't loaded (early bootstrap).
+ */
+function dokan_agent_attribution_mode() {
+    if ( class_exists( '\WeDevs\Dokan\StructuredData\Settings' ) ) {
+        return \WeDevs\Dokan\StructuredData\Settings::current_mode();
+    }
+    return 'vendor';
+}

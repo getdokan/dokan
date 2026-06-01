@@ -26,6 +26,10 @@ class CommonServiceProvider extends BaseServiceProvider {
         \WeDevs\Dokan\Exceptions\Handler::class,
         \WeDevs\Dokan\Shortcodes\FullWidthVendorLayout::class,
         \WeDevs\Dokan\Vendor\ApiMeta::class,
+        \WeDevs\Dokan\AgentDiscovery\Manager::class,
+        \WeDevs\Dokan\AgentAbilities\Manager::class,
+        \WeDevs\Dokan\StructuredData\Manager::class,
+        \WeDevs\Dokan\StructuredData\Settings::class,
 	];
 
 	/**
