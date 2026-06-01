@@ -44,8 +44,6 @@ test.describe('Seller badge test', () => {
     });
 
     test('admin can edit seller badge', { tag: ['@pro', '@admin'] }, async () => { await admin.editSellerBadge({ ...data.sellerBadge, badgeName: data.sellerBadge.eventName.productsPublished }); });
-    test.skip('admin can filter vendors by seller badge', { tag: ['@pro', '@admin'] }, async () => { await admin.filterVendorsByBadge(data.sellerBadge.eventName.productsPublished); });
-    test.skip('admin can view seller badge vendors', { tag: ['@pro', '@admin'] }, async () => { await admin.sellerBadgeVendors(data.sellerBadge.eventName.productsPublished); });
     test('admin can view seller badges acquired by vendor', { tag: ['@pro', '@admin'] }, async () => { await admin.sellerBadgeAcquiredByVendor(data.predefined.vendorStores.vendor1); });
 
     test('admin can update seller badge status', { tag: ['@pro', '@admin'] }, async () => {
