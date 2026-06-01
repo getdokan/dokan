@@ -51,6 +51,13 @@ class GoogleRecaptchaV3Provider extends AbstractProvider {
      */
     public function register_assets(): void {
         // The handle is already registered in Assets::get_scripts() as 'dokan-google-recaptcha'.
+        static $registered = false;
+
+        // Guard against duplicate enqueue/inline-script when called more than once per request.
+        if ( $registered ) {
+            return;
+        }
+
         if ( ! $this->is_ready() ) {
             return;
         }
@@ -61,6 +68,28 @@ class GoogleRecaptchaV3Provider extends AbstractProvider {
         // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion,WordPress.WP.EnqueuedResourceParameters.NotInFooter
         wp_enqueue_script( 'dokan-google-recaptcha', 'https://www.google.com/recaptcha/api.js?render=' . $site, [ 'dokan-util-helper' ] );
         wp_localize_script( 'dokan-google-recaptcha', 'dokan_google_recaptcha', [ 'recaptcha_sitekey' => $site ] );
+
+        // Registration is a plain (non-AJAX) POST, so the invisible v3 token must be
+        // generated on submit and injected into the hidden field before the form is sent.
+        // Self-contained vanilla JS (depends only on grecaptcha + the localized site key)
+        // so it needs no JS bundle rebuild. Scoped to `form.register`, so it is inert on
+        // the contact/store pages that also load this script.
+        wp_add_inline_script( 'dokan-google-recaptcha', $this->get_registration_inline_script() );
+
+        $registered = true;
+    }
+
+    /**
+     * Inline script that injects the invisible reCAPTCHA v3 token into the registration form on submit.
+     *
+     * @since 5.0.1
+     *
+     * @return string
+     */
+    protected function get_registration_inline_script(): string {
+        $action = 'dokan_registration_recaptcha';
+
+        return "(function(){document.addEventListener('submit',function(e){var form=e.target;if(!form||!form.matches||!form.matches('form.register')){return;}var field=form.querySelector('.dokan_recaptcha_token');if(!field||field.value){return;}if(typeof grecaptcha==='undefined'||typeof dokan_google_recaptcha==='undefined'||!dokan_google_recaptcha.recaptcha_sitekey){return;}e.preventDefault();if(!form.querySelector('input[name=\"register\"][type=\"hidden\"]')){var h=document.createElement('input');h.type='hidden';h.name='register';h.value='Register';form.appendChild(h);}grecaptcha.ready(function(){grecaptcha.execute(dokan_google_recaptcha.recaptcha_sitekey,{action:'{$action}'}).then(function(token){field.value=token;form.submit();});});},true);})();";
     }
 
     /**
