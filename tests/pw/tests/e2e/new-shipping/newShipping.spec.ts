@@ -180,16 +180,18 @@ test.describe('Shipping (React) functionality', () => {
     });
 
     test.describe('customer', () => {
-        // A customer is also not a vendor, so the React shipping settings route
-        // is not their surface. The customer-facing parity is "a customer at
-        // checkout sees the vendor's shipping option". Full WC Blocks checkout
-        // (cart hydration + billing combobox + shipping recalculation) is heavy
-        // and non-deterministic in this environment, so per the task spec it is
-        // skipped with an explicit reason rather than faked. The deterministic
-        // half (vendor configures a method, it is reflected) is covered by the
-        // vendor + business-flow tests above/below.
-        test('customer at checkout sees the vendor shipping option (React)', { tag: ['@pro', '@customer', '@new-ui'] }, async () => {
-            test.skip(true, 'WC Blocks checkout shipping recalculation for a vendor per-zone method is not deterministic here; vendor-side configuration is covered by the React vendor tests.');
+        // A customer is not a vendor, so the React shipping *settings* route is
+        // not their surface. Their parity is "a customer at checkout sees the
+        // vendor's shipping option". Driving the full WC Blocks checkout UI is
+        // non-deterministic, so we assert the same outcome through the WC Store
+        // API — the exact cart/shipping engine the Blocks checkout consumes:
+        // add the vendor's product, set a destination, and confirm the vendor's
+        // zone method is offered as a rate.
+        test('customer at checkout is offered the vendor shipping option via the Store API (React)', { tag: ['@pro', '@customer', '@new-ui'] }, async () => {
+            await NewShippingPage.ensureUsZoneHasMethod();
+            const { packages, rates } = await NewShippingPage.customerVendorShippingRates();
+            expect(packages, 'cart resolves a per-vendor shipping package for the vendor product').toBeGreaterThan(0);
+            expect(rates.length, 'customer is offered at least one of the vendor zone shipping rates at checkout').toBeGreaterThan(0);
         });
 
         test('customer loading the vendor shipping route does not produce a PHP fatal (React)', { tag: ['@pro', '@customer', '@new-ui'] }, async ({ browser }) => {
@@ -231,6 +233,14 @@ test.describe('Shipping (React) functionality', () => {
                 await shipping.goto();
                 await shipping.openZoneByName();
                 expect(await shipping.isMethodListedExact(title), 'method persisted across navigation').toBe(true);
+
+                // Customer half: a customer adding the vendor's product and
+                // setting a destination is now offered a shipping rate from the
+                // vendor's zone (asserted via the WC Store API, the engine the
+                // checkout uses) — the method the vendor just configured is live.
+                const { packages, rates } = await NewShippingPage.customerVendorShippingRates();
+                expect(packages, 'customer cart resolves the vendor shipping package').toBeGreaterThan(0);
+                expect(rates.length, 'customer is offered the vendor zone shipping rate(s) the vendor configured').toBeGreaterThan(0);
 
                 // Clean up so the seeded zone is left as found.
                 await shipping.deleteShippingMethod(title);

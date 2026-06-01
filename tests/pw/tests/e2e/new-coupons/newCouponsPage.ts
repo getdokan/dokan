@@ -276,6 +276,20 @@ export class NewCouponsPage {
         await option.click();
     }
 
+    /** Open the Radix discount-type select and return the visible option
+     *  labels (then close it). Used to assert which discount types the React
+     *  coupon form actually offers. */
+    async getDiscountTypeOptions(): Promise<string[]> {
+        const trigger = this.page.locator(newCouponsSelectors.discountTypeTrigger).first();
+        await trigger.waitFor({ state: 'visible', timeout: 10000 });
+        await trigger.click();
+        const options = this.page.getByRole('option');
+        await options.first().waitFor({ state: 'visible', timeout: 5000 });
+        const labels = (await options.allInnerTexts()).map(t => t.trim()).filter(Boolean);
+        await this.page.keyboard.press('Escape').catch(() => undefined);
+        return labels;
+    }
+
     /** Fill the coupon amount. For `percent` it is a SimpleInput; for
      *  `fixed_product` it is a masked DokanPriceInput — both expose `#coupon_amount`.
      *  Clear then type so the mask handler runs per-keystroke. */

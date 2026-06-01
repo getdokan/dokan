@@ -123,12 +123,21 @@ test.describe('Coupons (React) functionality', () => {
             }
         });
 
-        // The discount-type select offers only percent/fixed_product (and
-        // booking/recurring) from `window.dokanCoupon.coupon_types`. `fixed_cart`
-        // is NOT a creatable option in the React form (it exists only in the
-        // list display mapping), so a fixed-cart coupon cannot be created here.
-        test.skip('vendor can create a fixed-cart-discount coupon (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
-            // Intentionally skipped — see note above.
+        // The React coupon form intentionally does NOT offer "Fixed cart
+        // discount": its discount types come from `window.dokanCoupon.coupon_types`
+        // (percent / fixed_product, plus booking/recurring), and `fixed_cart`
+        // exists only in the list display mapping. Rather than skip, assert that
+        // UI contract directly — this passes today and fails loudly if Dokan ever
+        // adds fixed-cart to the React form (a signal to add create coverage).
+        test('fixed-cart discount is not offered in the React coupon form (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
+            await coupons.gotoCreate();
+            const options = await coupons.getDiscountTypeOptions();
+            expect(options, 'discount-type select offers Percentage discount').toContain('Percentage discount');
+            expect(options, 'discount-type select offers Fixed product discount').toContain('Fixed product discount');
+            expect(
+                options.some(o => /fixed cart/i.test(o)),
+                'React form does not offer "Fixed cart discount" (created only via the legacy/admin form)'
+            ).toBe(false);
         });
 
         test('vendor can edit a coupon via /coupons/update/:id (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
