@@ -26,9 +26,9 @@ const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.js
 // from `window.dokanCoupon.coupon_types`, which exposes `percent` and
 // `fixed_product` (and booking/recurring types) but NOT `fixed_cart`. The
 // "Fixed cart discount" label only exists in the list display mapping, so a
-// fixed-cart coupon cannot be created through this React form — that case is
-// covered by `test.skip` with an explicit reason, and a fixed-PRODUCT coupon
-// is exercised instead.
+// fixed-cart coupon cannot be created through this React form. That UI contract
+// is asserted directly (a test that the option is NOT offered), and a
+// fixed-PRODUCT coupon is exercised as the real create case.
 // ============================================
 
 // Delete every coupon this file created (prefix `pwnewui`) via the REAL

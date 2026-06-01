@@ -15,10 +15,11 @@ const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.
 // Ported from the legacy `reverse-withdraws` spec, driving the React UI.
 // Reverse withdrawal is largely admin-driven (admin adds a debit; the vendor
 // React surface is read-only: a balance/threshold widget + a transactions
-// DataViews table). Admin-only management actions that have NO React surface
-// are asserted via REST (apiUtils.getAllReverseWithdrawalStores) or test.skip'd
-// with an explicit reason — never driven through legacy wp-admin and never a
-// fake pass.
+// DataViews table). The admin's React-relevant parity is asserted via REST
+// (apiUtils.getAllReverseWithdrawalStores); admin-only management actions that
+// have NO React surface (add a debit, filter/clear) are out of scope here and
+// covered by the legacy `reverse-withdraws` spec — never driven through legacy
+// wp-admin from this @new-ui spec and never a fake pass.
 // ============================================
 
 test.describe('Reverse Withdrawal (React) functionality', () => {
