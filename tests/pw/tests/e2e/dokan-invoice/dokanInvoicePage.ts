@@ -61,8 +61,10 @@ export class DokanInvoicePage {
         // WC PDF buttons in the order edit sidebar metabox.
         invoiceButton: 'a.button.invoice',
         packingSlipButton: 'a.button.packing-slip',
-        // Plugin row used by the activation regression test.
-        dokanInvoiceRow: "tr[data-slug='dokan-invoice']",
+        // Plugin row used by the activation regression test. Match on data-plugin (the plugin file
+        // path) — WordPress derives data-slug from the display name ("Dokan - PDF Invoice" =>
+        // dokan-pdf-invoice) for premium plugins, not the folder name.
+        dokanInvoiceRow: "tr[data-plugin='dokan-invoice/dokan-invoice.php']",
     };
 
     vendor = {
