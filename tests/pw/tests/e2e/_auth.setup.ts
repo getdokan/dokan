@@ -52,20 +52,21 @@ async function frontendLogin(page: Page, user: { username: string; password: str
 }
 
 async function adminLogin(page: Page, user: { username: string; password: string }, storageState?: string): Promise<void> {
-    await page.goto('wp-admin', { waitUntil: 'networkidle' });
+    await page.goto('wp-admin', { waitUntil: 'domcontentloaded' });
     const hasLoginForm = await page.locator('#user_login').isVisible().catch(() => false);
     if (hasLoginForm) {
         await page.locator('#user_login').fill(user.username);
         await page.locator('#user_pass').fill(user.password);
-        await Promise.all([
-            page.waitForLoadState('load'),
-            page.waitForResponse(r => r.url().includes('wp-admin')),
-            page.locator('#wp-submit').click(),
-        ]);
-        if (storageState) await page.context().storageState({ path: storageState });
-        const loggedIn = await getCurrentUser(page);
-        expect(loggedIn).toBe(user.username);
+        // Don't race on the post-login redirect response (mirrors frontendLogin). On a loaded CI
+        // runner it can fire before the listener attaches, or the heavy first wp-admin load can blow
+        // the 15s budget, and Promise.all hangs. Click, let navigation settle, then verify the cookie.
+        await page.locator('#wp-submit').click();
+        await page.waitForLoadState('domcontentloaded');
     }
+    await expect
+        .poll(async () => await getCurrentUser(page), { timeout: 30000 })
+        .toBe(user.username);
+    if (storageState) await page.context().storageState({ path: storageState });
 }
 
 async function getProductEditNonce(page: Page): Promise<string> {
