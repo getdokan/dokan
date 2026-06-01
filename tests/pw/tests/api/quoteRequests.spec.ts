@@ -78,6 +78,7 @@ test.describe('request quote api test', () => {
         expect(responseBody).toMatchSchema(schemas.quoteRequestsSchema.quoteRequestSchema);
     });
 
+    // KEEP SKIPPED: stale payload — backend /batch handler now requires { action, items } and returns 404 for the legacy { trash } shape, so this would fail.
     test.skip('update batch request quote', { tag: ['@pro'] }, async () => {
         const allRequestQuoteIds = (await apiUtils.getAllQuoteRequests()).map((a: { id: unknown }) => a.id);
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchRequestQuotes, { data: { trash: allRequestQuoteIds } });

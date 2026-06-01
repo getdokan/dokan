@@ -39,6 +39,7 @@ test.describe('Vendor delivery time test', () => {
     test('admin can enable delivery time module', { tag: ['@pro', '@admin'] }, async () => { await admin.enableDeliveryTimeModule(); });
     test('vendor can view delivery time menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorDeliveryTimeRenderProperly(); });
     test('vendor can view delivery time settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorDeliveryTimeSettingsRenderProperly(); });
+    // KEEP skipped: setDeliveryTimeSettings is an empty stub in the page object and data.vendor.deliveryTime is empty; no real implementation to run.
     test.skip('vendor can set delivery time settings', { tag: ['@pro', '@vendor'] }, async () => { await vendor.setDeliveryTimeSettings(data.vendor.deliveryTime); });
     test('vendor can filter delivery time', { tag: ['@pro', '@vendor'] }, async () => { await vendor.filterDeliveryTime('delivery'); });
     test('vendor can change view style of delivery time calendar', { tag: ['@pro', '@vendor'] }, async () => { await vendor.updateCalendarView('week'); });
@@ -48,6 +49,7 @@ test.describe('Vendor delivery time test', () => {
         await customer.placeOrderWithDeliverTimeStorePickup('delivery-time', data.deliveryTime);
     });
 
+    // KEEP skipped: addProductToCart and placeOrderWithDeliverTimeStorePickup are empty stubs in the page object; no real store-pickup checkout implementation to run.
     test.skip('customer can buy product with store pickup', { tag: ['@pro', '@customer'] }, async () => {
         await customer.addProductToCart(data.predefined.simpleProduct.product1.name, 'single-product');
         await customer.placeOrderWithDeliverTimeStorePickup('store-pickup', data.deliveryTime);

@@ -222,8 +222,11 @@ test.describe('Product details functionality test', () => {
     test('vendor can update product geolocation (individual)', { tag: ['@pro', '@vendor'] }, async () => { await vendor.addProductGeolocation(productIdFull, data.product.productInfo.geolocation); });
     test('vendor can remove product geolocation (individual)', { tag: ['@pro', '@vendor'] }, async () => { await vendor.removeProductGeolocation(productIdFull); });
 
+    // KEEP skipped: addProductEuCompliance page-object method is a stub; EU Compliance Fields module not present in standard seeded CI env
     test.skip('vendor can add product EU compliance data', { tag: ['@pro', '@vendor'] }, async () => { await vendor.addProductEuCompliance(productIdBasic, data.product.productInfo.euCompliance); });
+    // KEEP skipped: addProductEuCompliance page-object method is a stub; EU Compliance Fields module not present in standard seeded CI env
     test.skip('vendor can update product EU compliance data', { tag: ['@pro', '@vendor'] }, async () => { await vendor.addProductEuCompliance(productIdFull, data.product.productInfo.euCompliance); });
+    // KEEP skipped: addProductEuCompliance page-object method is a stub; EU Compliance Fields module not present in standard seeded CI env
     test.skip('vendor can remove product EU compliance data', { tag: ['@pro', '@vendor'] }, async () => { await vendor.addProductEuCompliance(productIdFull, { ...data.product.productInfo.euCompliance, productUnits: '', basePriceUnits: '', freeShipping: false, regularUnitPrice: '', saleUnitPrice: '', optionalMiniDescription: '' }); });
 
     test('vendor can add product addon', { tag: ['@pro', '@vendor'] }, async () => { await vendor.addProductAddon(productIdBasic, data.product.productInfo.addon); });

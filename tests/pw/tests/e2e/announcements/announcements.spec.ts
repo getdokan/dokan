@@ -333,6 +333,9 @@ test.describe('Announcements Tests @pro', () => {
         await context.close();
     });
 
+    // KEEP SKIPPED: vendorNewDashboard.announcementsUrl uses the malformed hash route
+    // `dashboard/new/#announcement` (no slash) which the HashRouter does not resolve to
+    // the announcement view, so the detail card never renders and the test times out.
     test.skip('Test Case 14 - Vendor Views Announcement Detail in New Vendor Dashboard', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         // Using vendor session storage
         const context = await browser.newContext({ storageState: v1 });

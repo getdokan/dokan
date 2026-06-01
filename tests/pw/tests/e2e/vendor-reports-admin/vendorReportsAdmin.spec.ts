@@ -8,6 +8,7 @@ const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.jso
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 const { PRODUCT_ID } = process.env;
 
+// KEEP skipped: page object (vendorReportsAdminPage.ts) is all stubs — ApiUtils/ReportsPage/VendorReportsPage methods are empty/return dummy values; also @pro logs/reports features not in standard Lite CI seed.
 test.describe.skip('Reports test', () => {
     let admin: ReportsPage;
     let vendor: VendorReportsPage;

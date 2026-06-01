@@ -7,6 +7,7 @@ import { toPath } from '@utils/helpers';
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 
+// KEEP SKIPPED: VendorAnalyticsPage + ApiUtils methods are empty stubs (no real implementation).
 test.describe.skip('Vendor analytics test', () => {
     let admin: VendorAnalyticsPage;
     let vendor: VendorAnalyticsPage;

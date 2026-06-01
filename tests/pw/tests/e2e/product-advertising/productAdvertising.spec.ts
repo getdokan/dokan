@@ -84,6 +84,7 @@ test.describe('Product Advertising test (vendor)', () => {
         await apiUtils.updateOrderStatus(orderId, 'wc-completed', payloads.adminAuth);
     });
 
+    // KEEP skipped: needs WooCommerce Bookings module (not in standard seeded CI); createBookableProduct/buyProductAdvertising page-object methods are stubs.
     test.skip('vendor can buy booking product advertising', { tag: ['@pro', '@vendor'] }, async () => {
         test.slow();
         const [, , productName] = await apiUtils.createBookableProduct(payloads.createBookableProduct(), payloads.vendorAuth);
@@ -92,6 +93,7 @@ test.describe('Product Advertising test (vendor)', () => {
         await vendor.assertProductAdvertisementIsBought(productName, 'booking', BookingPage);
     });
 
+    // KEEP skipped: needs Simple Auctions plugin (not in standard seeded CI); createAuctionProduct/buyProductAdvertising page-object methods are stubs.
     test.skip('vendor can buy auction product advertising', { tag: ['@pro', '@vendor'] }, async () => {
         test.slow();
         const [, , productName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
@@ -100,6 +102,7 @@ test.describe('Product Advertising test (vendor)', () => {
         await vendor.assertProductAdvertisementIsBought(productName, 'auction', AuctionsPage);
     });
 
+    // KEEP skipped: disableProductAdvertisingModule page-object method is an empty stub (no real implementation).
     test.skip('admin can disable product advertising module', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.deactivateModules(payloads.moduleIds.productAdvertising, payloads.adminAuth);
         await admin.disableProductAdvertisingModule();

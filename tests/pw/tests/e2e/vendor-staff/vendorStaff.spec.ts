@@ -7,6 +7,7 @@ import { toPath } from '@utils/helpers';
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 
+// KEEP skipped: VendorStaffPage/ApiUtils methods are unimplemented stubs (empty bodies) and data/payloads are empty placeholders; enabling would run no-op tests.
 test.describe.skip('Vendor staff test (vendor)', () => {
     let admin: VendorStaffPage;
     let vendor: VendorStaffPage;

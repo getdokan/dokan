@@ -79,7 +79,7 @@ test.describe('Catalog mode test', () => {
         await vendor.goIfNotThere('dashboard/settings/store');
         // todo: implement vendor store settings catalog mode via self-contained page
     });
-//Flaky test
+    // Skipped: stub body - only creates a product, the single-product catalog mode flow is not yet implemented (no page-object method).
     test.skip('vendor can set catalog mode (single product)', { tag: ['@lite', '@vendor'] }, async () => {
         await api.createProduct(undefined, api.userAuth(vendorName));
         // todo: implement vendor single product catalog mode via self-contained page
@@ -107,7 +107,7 @@ test.describe('Catalog mode test', () => {
     });
 
     //customer
-//Need to fix
+    // Skipped: known failure - catalog mode does not hide price/add-to-cart on single product + store search pages as asserted; needs investigation/fix.
     test.skip('customer can view product in catalog mode', { tag: ['@lite', '@customer'] }, async () => {
         await customer.viewCatalogModeProduct(productName, vendorName);
     });

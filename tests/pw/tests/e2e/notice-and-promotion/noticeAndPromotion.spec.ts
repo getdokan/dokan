@@ -26,6 +26,7 @@ test.describe('Dokan pro feature promo test', () => {
         await admin.dokanPromotionRenderProperly();
     });
 
+    // KEEP skipped: page-object method dokanProPromotionRenderProperly() is an empty stub (not implemented).
     test.skip('admin can view Dokan premium features promotions', { tag: ['@lite', '@liteOnly', '@exploratory', '@admin'] }, async () => {
         await admin.dokanProPromotionRenderProperly();
     });

@@ -5,6 +5,7 @@ import path from 'path';
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 import { toPath } from '@utils/helpers';
 
+// KEEP skipped: LoginPage.adminLogin / AdminDashboardPage.adminDashboardRenderProperly are empty stubs (no real login), so this never authenticates.
 test.skip('should redirect all the header items from the help menu', { tag: ['@lite', '@admin'] }, async ({ page }) => {
     const loginPage = new LoginPage(page);
     const adminDashboardPage = new AdminDashboardPage(page);
@@ -42,6 +43,7 @@ test.describe('Setup guide functionality test', () => {
         if (await setupGuideBtn.isVisible()) await setupGuideBtn.click();
     });
 
+    // KEEP skipped: beforeEach relies on the same empty adminLogin/adminDashboardRenderProperly stubs, so the admin session is never established.
     test.skip('should redirect all the header items from the help menu', { tag: ['@lite', '@admin'] }, async ({ page }) => {
         const menuItems = [{ name: "What's New" }];
         await page.locator('[data-test-id="dokan-dashboard-header-help-menu-container"] button').hover();

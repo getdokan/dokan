@@ -8,6 +8,7 @@ const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.
 
 const { CUSTOMER_ID, PRODUCT_ID } = process.env;
 
+// KEEP skipped: page object (settingPage.ts) is entirely stub/no-op — SettingPage, ApiUtils, dbUtils, helpers have no real implementations.
 test.describe.skip('Settings test', () => {
     let admin: SettingPage;
     let vendor: SettingPage;

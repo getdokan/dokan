@@ -21,6 +21,7 @@ test.describe('Vendor functionality test', () => {
         await v.vendorRegister(data.vendor.vendorInfo, { ...data.vendorSetupWizard, choice: false });
     });
 
+    // KEEP skipped: dbUtils.updateOptionValue is a no-op stub, so the address-on-registration option is never actually enabled.
     test.skip('vendor can register (address fields are enabled)', { tag: ['@lite', '@vendor'] }, async ({ page }) => {
         const v = new VendorPage(page);
         await dbUtils.updateOptionValue(dbData.dokan.optionName.general, { enabled_address_on_reg: 'on' });
@@ -39,8 +40,10 @@ test.describe('Vendor functionality test', () => {
         await loginPage.logout();
     });
 
+    // KEEP skipped: vendorSetupWizard is a no-op stub; the setup wizard is not part of the Dokan 5.0.0 onboarding flow.
     test.skip('vendor can setup setup-wizard', { tag: ['@lite', '@vendor'] }, async () => { await vendor.vendorSetupWizard(data.vendorSetupWizard); });
     test('vendor can view account details menu page', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => { await vendor.vendorAccountDetailsRenderProperly(); });
     test('vendor update account details', { tag: ['@lite', '@vendor'] }, async () => { await vendor.addVendorDetails(data.vendor); });
+    // KEEP skipped: visitStore is an empty stub and predefined vendorStores.vendor1 is an empty string.
     test.skip('vendor can visit own Store', { tag: ['@lite', '@vendor'] }, async () => { await vendor.visitStore(data.predefined.vendorStores.vendor1); });
 });

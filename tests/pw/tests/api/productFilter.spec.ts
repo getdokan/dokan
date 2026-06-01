@@ -18,6 +18,7 @@ test.describe('product filter api test', () => {
         await apiUtils.dispose();
     });
 
+    // KEEP SKIPPED: the v2 products-filter endpoint returns HTTP 500 (critical error) on this build — pending fix.
     test.skip('get products filter by data', { tag: ['@lite', '@v2'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getProductsFilterByData);
         expect(response.ok()).toBeTruthy();

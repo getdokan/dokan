@@ -20,7 +20,7 @@ test.describe('Vendor Reports test', () => {
 
     test.afterAll(async () => { await vPage?.close(); await apiUtils.dispose(); });
 
-    test.skip('vendor can view reports dashboard page', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => { await vendor.vendorReportsRenderProperly(); });
+    test.skip('vendor can view reports dashboard page', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => { await vendor.vendorReportsRenderProperly(); }); // KEEP SKIPPED: vendorReportsRenderProperly() is an empty stub (no real implementation/assertions)
     test('vendor can navigate to analytics products page', { tag: ['@lite', '@vendor'] }, async () => { await vendor.navigateToAnalyticsPage('products'); });
     test('vendor can navigate to analytics revenue page', { tag: ['@lite', '@vendor'] }, async () => { await vendor.navigateToAnalyticsPage('revenue'); });
     test('vendor can navigate to analytics orders page', { tag: ['@lite', '@vendor'] }, async () => { await vendor.navigateToAnalyticsPage('orders'); });
@@ -56,12 +56,12 @@ test.describe('Vendor Reports test', () => {
     test('vendor can filter revenue analytics by product category', { tag: ['@lite', '@vendor'] }, async () => { await vendor.testCategoryFilter('revenue'); });
     test('vendor can filter orders analytics by order status', { tag: ['@lite', '@vendor'] }, async () => { await vendor.testOrderStatusFilter('orders'); });
     test('vendor reports pages load within acceptable time', { tag: ['@lite', '@performance', '@vendor'] }, async () => { await vendor.testPageLoadPerformance(); });
-    test.skip('vendor reports are responsive on mobile devices', { tag: ['@lite', '@responsive', '@vendor'] }, async () => { await vendor.testMobileResponsiveness(); });
-    test.skip('vendor reports are responsive on tablet devices', { tag: ['@lite', '@responsive', '@vendor'] }, async () => { await vendor.testTabletResponsiveness(); });
+    test.skip('vendor reports are responsive on mobile devices', { tag: ['@lite', '@responsive', '@vendor'] }, async () => { await vendor.testMobileResponsiveness(); }); // KEEP SKIPPED: testMobileResponsiveness() is an empty stub (no real implementation/assertions)
+    test.skip('vendor reports are responsive on tablet devices', { tag: ['@lite', '@responsive', '@vendor'] }, async () => { await vendor.testTabletResponsiveness(); }); // KEEP SKIPPED: testTabletResponsiveness() is an empty stub (no real implementation/assertions)
     test('vendor sees appropriate message when no data available', { tag: ['@lite', '@vendor'] }, async () => { await vendor.testNoDataMessage(); });
     test('vendor handles analytics page errors gracefully', { tag: ['@lite', '@vendor'] }, async () => { await vendor.testErrorHandling(); });
     test('vendor reports data matches API responses', { tag: ['@lite', '@integration', '@vendor'] }, async () => { await vendor.validateReportsWithAPI(apiUtils); });
-    test.skip('vendor reports pages are accessible', { tag: ['@lite', '@accessibility', '@vendor'] }, async () => { await vendor.testAccessibility(); });
+    test.skip('vendor reports pages are accessible', { tag: ['@lite', '@accessibility', '@vendor'] }, async () => { await vendor.testAccessibility(); }); // KEEP SKIPPED: testAccessibility() is an empty stub (no real implementation/assertions)
 });
 
 // ============================================
