@@ -16,10 +16,48 @@ var Dokan_Vendor_Registration = {
         $( '#seller-url', form ).on( 'keyup', this.renderUrl );
         $( '#seller-url', form ).on( 'focusout', this.checkSlugAvailability );
 
+        // Generate the invisible reCAPTCHA v3 token right before the form is submitted.
+        form.on( 'submit', this.maybeInjectRecaptchaToken );
+
         this.validationLocalized();
         this.handlePasswordStrengthObserver();
         // this.validate(this);
         $( document ).trigger( 'dokan_event_seller_registration_form' );
+    },
+
+    // Inject the invisible reCAPTCHA v3 token into the registration form on submit.
+    //
+    // Registration is a plain (non-AJAX) POST, so the hidden token field rendered by the
+    // captcha provider stays empty until populated here. Applies to Google reCAPTCHA v3 only —
+    // Cloudflare Turnstile fills the field via its own visible-widget callback, and with no
+    // provider configured the token field is absent, so this is a no-op.
+    maybeInjectRecaptchaToken: function(e) {
+        var $form  = $( this );
+        var $token = $form.find( '.dokan_recaptcha_token' );
+
+        // No captcha field (provider not configured) or token already set (Turnstile).
+        if ( ! $token.length || $token.val() ) {
+            return;
+        }
+
+        // The helper and the localized site key only exist when reCAPTCHA v3 is active.
+        if ( 'undefined' === typeof dokan_google_recaptcha || 'undefined' === typeof dokan_execute_recaptcha ) {
+            return;
+        }
+
+        e.preventDefault();
+
+        // A programmatic submit drops the clicked button's value, but WooCommerce requires
+        // `register` in POST, so re-add it as a hidden field.
+        if ( ! $form.find( 'input[name=register][type=hidden]' ).length ) {
+            $( '<input>', { type: 'hidden', name: 'register', value: 'Register' } ).appendTo( $form );
+        }
+
+        dokan_execute_recaptcha( 'form.register .dokan_recaptcha_token', 'dokan_registration_recaptcha' ).then( function() {
+            // Avoid re-triggering this handler on the programmatic submit.
+            $form.off( 'submit', Dokan_Vendor_Registration.maybeInjectRecaptchaToken );
+            $form.get( 0 ).submit();
+        } );
     },
 
     validate: function(self) {
