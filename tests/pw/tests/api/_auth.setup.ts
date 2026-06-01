@@ -26,11 +26,12 @@ async function adminLogin(page: Page, user: { username: string; password: string
     if (hasLoginForm) {
         await page.locator('#user_login').fill(user.username);
         await page.locator('#user_pass').fill(user.password);
-        // Don't race on the post-login redirect response. On a loaded CI runner it can fire before
-        // the listener attaches, or the heavy first wp-admin load can blow the 15s budget, and
-        // Promise.all hangs. Click, let navigation settle, then verify via the logged-in cookie.
-        await page.locator('#wp-submit').click();
-        await page.waitForLoadState('domcontentloaded');
+        // Submit WITHOUT auto-waiting on the post-login navigation. The wp-admin dashboard render is
+        // slow on CI (admin_init fires blocking wordpress.org update checks), so click()'s built-in
+        // "wait for navigation to finish" hits the 15s actionTimeout and the step fails. The auth
+        // cookie is set by the fast wp-login.php 302, so we fire the submit via dispatchEvent (no nav
+        // wait) and confirm authentication by polling the logged-in cookie below.
+        await page.locator('#wp-submit').dispatchEvent('click');
     }
     await expect
         .poll(async () => await getCurrentUser(page), { timeout: 30000 })
