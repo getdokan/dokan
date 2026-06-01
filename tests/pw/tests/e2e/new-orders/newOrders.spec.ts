@@ -123,7 +123,9 @@ test.describe('Orders (React) functionality', () => {
 
         test('vendor status-change action issues a non-GET request (React)', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             const result = await orders.changeFirstRowStatusAndCaptureRequest();
-            test.skip(result.label === null, 'No status-change action available for the current order status');
+            // The seeded order is wc-processing, so a status-change row action is
+            // always available — assert it was found rather than skipping.
+            expect(result.label, 'a status-change action is available in the row menu').not.toBeNull();
             expect(result.sawNonGet, `status change "${result.label}" issued a non-GET REST request`).toBe(true);
         });
 
@@ -202,8 +204,10 @@ test.describe('Orders (React) functionality', () => {
             await vPage.close();
             await vCtx.close();
 
-            // 4. Assert the change persisted (re-query the order via REST).
-            test.skip(!changed, 'Completed action not available for the order in its current state');
+            // 4. The seeded order is wc-processing, so the "Completed" action is
+            //    available — assert the vendor applied it, then confirm it
+            //    persisted by re-querying the order via REST.
+            expect(changed, 'vendor could mark the seeded processing order Completed').toBe(true);
             const [, body] = await apiUtils.getSingleOrder(flowOrderId, payloads.vendorAuth);
             expect(body.status, 'order status persisted as completed').toBe('completed');
 

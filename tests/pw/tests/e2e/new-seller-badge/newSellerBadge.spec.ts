@@ -75,10 +75,7 @@ test.describe('Seller Badge (React) functionality', () => {
         // Edge / negative: a no-match search must not throw a PHP fatal and the
         // tab strip must still be intact (graceful empty result).
         test('vendor sees no fatal when searching for a non-existent badge (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
-            if (!(await badge.searchPresent())) {
-                test.skip(true, 'search input not rendered on this build');
-                return;
-            }
+            expect(await badge.searchPresent(), 'badges page renders a search input').toBe(true);
             await badge.fillSearch('zzz-no-such-badge-zzz');
             expect(await badge.hasNoPhpFatal(), 'no PHP fatal on empty search result').toBe(true);
             expect(await badge.tabsVisible(), 'tabs intact during search').toBe(true);
