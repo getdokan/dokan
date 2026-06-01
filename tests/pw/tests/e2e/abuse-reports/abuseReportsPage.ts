@@ -357,7 +357,10 @@ export class AbuseReportsPage {
 
     async clickSaveChanges() {
         await Promise.all([
-            this.page.waitForResponse(res => res.url().includes('wp-admin') && res.request().method() === 'POST'),
+            // The Dokan settings save is an admin-ajax POST. Exclude only the WP heartbeat (also an
+            // admin-ajax POST, fires every ~15-60s) by its post body's action=heartbeat — a heartbeat
+            // tick landing in the wait window could otherwise satisfy it before the save round-trips.
+            this.page.waitForResponse(res => res.request().method() === 'POST' && res.url().includes('wp-admin') && !(res.request().postData() ?? '').includes('action=heartbeat')),
             this.page.locator(this.admin.saveChangesButton).click(),
         ]);
         await this.page.waitForLoadState('domcontentloaded');
