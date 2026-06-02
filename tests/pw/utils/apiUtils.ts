@@ -430,8 +430,14 @@ export class ApiUtils {
     }
 
     // delete product
-    async deleteProduct(productId: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.delete(endPoints.deleteProduct(productId), { headers: auth });
+    async deleteProduct(productId: string, auth?: auth, force = false): Promise<responseBody> {
+        // force=true bypasses trash and permanently removes the post. A trashed
+        // product still loads via wc_get_product(), so callers that need the
+        // product to actually disappear (e.g. orphaned-record tests) must force.
+        const [, responseBody] = await this.delete(endPoints.deleteProduct(productId), {
+            params: force ? { force: true } : {},
+            headers: auth,
+        });
         return responseBody;
     }
 

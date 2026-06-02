@@ -145,9 +145,20 @@ Do last; some may be **dropped** if the feature doesn't exist:
 
 These assert *actual* behavior and effectively record bugs/gaps:
 1. **Success message** doc ("Thank you for your response") ≠ code ("Your report has been submitted…"). — P1-3
-2. **`per_page`** — UI sends it, controller **hardcodes 20** (schema gap). — Phase 2 REST
+2. **`per_page`** — UI sends it, controller **hardcodes 20** (schema gap). — Phase 2 REST / TC31
 3. **No rate-limiting / duplicate-submission** detection per user/IP. — Phase 3
 4. **Uncertain features** (drag-reorder reasons, DataViews density toggle, global search, most-reported-vendors endpoint) — verify existence first; drop if absent.
+5. **🐞 Orphaned-product row breaks the list response shape (admin page crashes).**
+   `dokan_report_abuse_get_reports()` (report-abuse `functions.php`) skips a
+   report whose product was deleted via `if ( ! $product ) { continue; }` but
+   keeps building `$data[$i]` with the **original** loop index. When a *valid*
+   row follows an orphaned one the PHP array has non-sequential keys, so
+   `json_encode` emits a JSON **object** (`{"1":{…}}`) instead of an array. The
+   REST call stays HTTP 200, but the admin React list then throws
+   `n.filter is not a function` / `l.some is not a function` and the **entire
+   Abuse Reports admin page fails to render**. Fix: re-index with
+   `array_values()` before returning. Covered by **MD-5** (asserts the
+   orphan-drop + no-fatal in the isolated single-row case and documents this gap). — P1-7
 
 # Suggested execution
 
