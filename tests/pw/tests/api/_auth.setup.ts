@@ -53,6 +53,17 @@ setup.describe('add users', () => {
     });
 
     setup('authenticate admin', { tag: ['@lite'] }, async ({ page }) => {
+        // The api project's default per-test timeout is 15s (api.config.ts) —
+        // tuned for fast REST calls. This step is the one exception: it performs
+        // a real browser login whose cookie-poll alone allows 30s (see
+        // adminLogin). The wp.org-blocking mu-plugin removes the admin_init
+        // stall, but a cold PHP-FPM / loaded CI runner can still push the
+        // goto+submit+cookie past 15s and kill the test mid-poll — the sole
+        // cause of the flaky "authenticate admin" step (it passes on e2e, which
+        // budgets 60s). Give this one setup the same headroom so a slow-but-
+        // successful login isn't truncated. The assertion (logged-in cookie ===
+        // username) is unchanged.
+        setup.setTimeout(60_000);
         await adminLogin(page, data.admin, data.auth.adminAuthFile);
     }); // todo: need to resolve why wc_orders table isn't created
 
