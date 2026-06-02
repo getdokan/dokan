@@ -25,15 +25,10 @@ var Dokan_Vendor_Registration = {
         $( document ).trigger( 'dokan_event_seller_registration_form' );
     },
 
-    // Inject the invisible reCAPTCHA v3 token into the registration form on submit.
-    //
-    // Registration is a plain (non-AJAX) POST, so the hidden token field rendered by the
-    // captcha provider stays empty until populated here. Applies to Google reCAPTCHA v3 only —
-    // Cloudflare Turnstile fills the field via its own visible-widget callback, and with no
-    // provider configured the token field is absent, so this is a no-op.
+    // On submit, populate the empty reCAPTCHA v3 token field; no-op for Turnstile (self-fills) or when no provider is configured.
     maybeInjectRecaptchaToken: function(e) {
-        var $form  = $( this );
-        var $token = $form.find( '.dokan_recaptcha_token' );
+        const $form = $( this ),
+            $token  = $form.find( '.dokan_recaptcha_token' );
 
         // No captcha field (provider not configured) or token already set (Turnstile).
         if ( ! $token.length || $token.val() ) {
@@ -47,17 +42,22 @@ var Dokan_Vendor_Registration = {
 
         e.preventDefault();
 
-        // A programmatic submit drops the clicked button's value, but WooCommerce requires
-        // `register` in POST, so re-add it as a hidden field.
+        // A programmatic submit drops the clicked button's value, so re-add the `register` field WooCommerce requires.
         if ( ! $form.find( 'input[name=register][type=hidden]' ).length ) {
             $( '<input>', { type: 'hidden', name: 'register', value: 'Register' } ).appendTo( $form );
         }
 
-        dokan_execute_recaptcha( 'form.register .dokan_recaptcha_token', 'dokan_registration_recaptcha' ).then( function() {
-            // Avoid re-triggering this handler on the programmatic submit.
-            $form.off( 'submit', Dokan_Vendor_Registration.maybeInjectRecaptchaToken );
-            $form.get( 0 ).submit();
-        } );
+        // Disable the submit button so a double-click can't fire a second submit while the token is generated.
+        const $submitButton = $form.find( '[type=submit]' ).prop( 'disabled', true ),
+            submitForm = function() {
+                $submitButton.prop( 'disabled', false );
+                $form.off( 'submit', Dokan_Vendor_Registration.maybeInjectRecaptchaToken );
+                $form.get( 0 ).submit();
+            };
+
+        // Submit once the reCAPTCHA step settles, either way: with the token on success, or with an empty token on failure so the server returns a clear error instead of the form hanging.
+        dokan_execute_recaptcha( 'form.register .dokan_recaptcha_token', 'dokan_registration_recaptcha' )
+            .then( submitForm, submitForm );
     },
 
     validate: function(self) {

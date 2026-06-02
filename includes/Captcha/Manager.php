@@ -29,9 +29,7 @@ class Manager implements Hookable {
         // Hook to render extra form fields if needed
         add_action( 'dokan_contact_form', [ $this, 'maybe_render_contact_form_field' ], 20 );
 
-        // Render & validate captcha on the vendor/customer registration forms.
-        // `register_form` is fired by the Dokan vendor registration & onboarding templates;
-        // `woocommerce_register_form` by the WooCommerce My Account registration form.
+        // Render & validate captcha on the Dokan (`register_form`) and WooCommerce My Account (`woocommerce_register_form`) registration forms.
         add_action( 'register_form', [ $this, 'maybe_render_registration_field' ], 20 );
         add_action( 'woocommerce_register_form', [ $this, 'maybe_render_registration_field' ], 20 );
         add_action( 'woocommerce_register_post', [ $this, 'validate_registration_captcha' ], 20, 3 );
@@ -148,7 +146,7 @@ class Manager implements Hookable {
      * `woocommerce_register_form` (WooCommerce My Account registration). A static guard makes
      * sure the field is output only once per request, avoiding a duplicate token field/widget.
      *
-     * @since 5.0.3
+     * @since DOKAN_SINCE
      *
      * @return void
      */
@@ -156,6 +154,11 @@ class Manager implements Hookable {
         static $rendered = false;
 
         if ( $rendered ) {
+            return;
+        }
+
+        // Skip wp-login.php: it also fires `register_form` but has no token script and is validated by WordPress core, not here.
+        if ( isset( $GLOBALS['pagenow'] ) && 'wp-login.php' === $GLOBALS['pagenow'] ) {
             return;
         }
 
@@ -178,7 +181,7 @@ class Manager implements Hookable {
      * after the registration nonce has already been verified upstream. Adds an error to the
      * registration error bag when verification fails, which aborts the registration.
      *
-     * @since 5.0.3
+     * @since DOKAN_SINCE
      *
      * @param string    $username          Submitted username.
      * @param string    $email             Submitted email.
@@ -187,6 +190,12 @@ class Manager implements Hookable {
      * @return void
      */
     public function validate_registration_captcha( $username, $email, $validation_errors ): void {
+        // Enforce only on a real registration-form submit; programmatic wc_create_new_customer() callers post no `register` field nor captcha.
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Presence check only; WooCommerce verifies the registration nonce before this hook fires.
+        if ( ! isset( $_POST['register'] ) ) {
+            return;
+        }
+
         // Captcha is rendered on the registration form only, not during checkout account creation.
         if ( function_exists( 'is_checkout' ) && is_checkout() ) {
             return;
