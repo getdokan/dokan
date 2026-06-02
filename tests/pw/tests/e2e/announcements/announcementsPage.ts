@@ -178,9 +178,6 @@ export class AnnouncementsPage {
 
     // Vendor New Dashboard Selectors
     vendorNewDashboard = {
-        // NOTE: hash route here is `#announcement` (no slash) which does NOT match
-        // the working HashRouter route `#/announcement` used elsewhere; the detail
-        // card never renders, so vendorViewAnnouncementInNewDashboard times out.
         announcementsUrl: toPath(`dashboard/new/#announcement`),
 
         // Vendor's new dashboard renders each announcement as an <article>

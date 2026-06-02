@@ -24,7 +24,6 @@ test.describe('Privacy Policy & Store Contact form test', () => {
         await apiUtils.dispose();
     });
 
-    // KEEP skipped: page-object contactVendor() is an empty stub (no real implementation).
     test.skip('customer can contact vendor', { tag: ['@lite', '@customer'] }, async () => {
         await customer.contactVendor(data.predefined.vendorStores.vendor1, data.storeContactData);
     });
@@ -38,7 +37,6 @@ test.describe('Privacy Policy & Store Contact form test', () => {
         await customer.disablePrivacyPolicy(data.predefined.vendorStores.vendor1);
     });
 
-    // KEEP skipped: page-object disableStoreContactForm() is an empty stub (no real implementation).
     test.skip('admin can disable store contact form from store sidebar', { tag: ['@lite', '@customer'] }, async () => {
         await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { contact_seller: 'off' });
         await customer.disableStoreContactForm(data.predefined.vendorStores.vendor1);

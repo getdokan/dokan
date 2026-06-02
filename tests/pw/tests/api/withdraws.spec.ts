@@ -40,7 +40,6 @@ test.describe('withdraw api test', () => {
         expect(responseBody).toMatchSchema(schemas.withdrawsSchema.withdrawPaymentMethod);
     });
 
-    // skip: schema expects last_withdraw as an array, but GET /withdraw/balance returns it as a JSON object (assoc array / stdClass) - schema validation fails
     test.skip('get balance details', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getBalanceDetails);
         expect(response.ok()).toBeTruthy();

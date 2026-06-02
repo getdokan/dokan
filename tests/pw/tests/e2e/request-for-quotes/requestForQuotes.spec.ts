@@ -33,7 +33,6 @@ test.describe('Request for quotation test admin', () => {
 
     test('admin can view quotes menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => { await admin.adminQuotesRenderProperly(); });
     test('admin can add quote', { tag: ['@pro', '@admin'] }, async () => { await admin.addQuote(data.requestForQuotation.quote()); });
-    // KEEP skipped: editQuote() page-object method is an empty stub (no real implementation).
     test.skip('admin can edit quote', { tag: ['@pro', '@admin'] }, async () => { await admin.editQuote({ ...data.requestForQuotation.quote(), id: quoteId }); });
 
     test('admin can trash quote', { tag: ['@pro', '@admin'] }, async () => {
@@ -129,7 +128,6 @@ test.describe('Request for quotation test customer', () => {
     test('customer can view request for quote menu page', { tag: ['@pro', '@exploratory', '@customer'] }, async () => { await customer.requestForQuoteRenderProperly(); });
     test('customer can view requested quote page', { tag: ['@pro', '@exploratory', '@customer'] }, async () => { await customer.requestedQuotesRenderProperly(); });
     test('customer can view requested quote details', { tag: ['@pro', '@exploratory', '@customer'] }, async () => { await customer.customerViewRequestedQuoteDetails(quoteId); });
-    // KEEP skipped: customerUpdateRequestedQuote() page-object method is an empty stub (no real implementation).
     test.skip('customer can update quote request', { tag: ['@pro', '@customer'] }, async () => { await customer.customerUpdateRequestedQuote(quoteId, { ...data.requestForQuotation.customerQuoteProduct, productName: productName }); });
 
     test('customer can pay for order converted from quote request', { tag: ['@pro', '@customer'] }, async () => {

@@ -7,7 +7,6 @@ import { toPath } from '@utils/helpers';
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 
-// KEEP skipped: page-object methods (WholesalePage/CustomerPage/ApiUtils) are stubs with no real implementation.
 test.describe.skip('Wholesale test (admin)', () => {
     let admin: WholesalePage;
     let customer: WholesalePage;

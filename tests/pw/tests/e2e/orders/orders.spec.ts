@@ -13,6 +13,8 @@ const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.js
 // TEST SETUP
 // ============================================
 
+const { DOKAN_PRO } = process.env;
+
 test.describe('Order functionality test @lite', () => {
     let orderId: string;
 
@@ -85,6 +87,16 @@ test.describe('Order functionality test @lite', () => {
         await context.close();
     });
 
+    test.skip('vendor can view order details', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+        const context = await browser.newContext({ storageState: v1 });
+        const page = await context.newPage();
+        const ordersPage = new OrdersPage(page);
+        await ordersPage.viewOrderDetails(orderId);
+        await ordersPage.waitForPageReady();
+        await page.close();
+        await context.close();
+    });
+
     test('vendor can update order status on order table', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
         const context = await browser.newContext({ storageState: v1 });
         const page = await context.newPage();
@@ -95,11 +107,70 @@ test.describe('Order functionality test @lite', () => {
         await context.close();
     });
 
+    test.skip('vendor can update order status on order details', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+        const freshOrderId = await OrdersPage.createTestOrder(await request.newContext());
+        const context = await browser.newContext({ storageState: v1 });
+        const page = await context.newPage();
+        const ordersPage = new OrdersPage(page);
+        await ordersPage.updateOrderStatus(freshOrderId, ordersPage.testData.order.orderStatus.completed);
+        await ordersPage.waitForPageReady();
+        await page.close();
+        await context.close();
+    });
+
+    test.skip('vendor can add order note', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+        const context = await browser.newContext({ storageState: v1 });
+        const page = await context.newPage();
+        const ordersPage = new OrdersPage(page);
+        await ordersPage.addOrderNote(orderId, ordersPage.testData.orderNote.customer);
+        await ordersPage.waitForPageReady();
+        await page.close();
+        await context.close();
+    });
+
+    test.skip('vendor can add private order note', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+        const context = await browser.newContext({ storageState: v1 });
+        const page = await context.newPage();
+        const ordersPage = new OrdersPage(page);
+        await ordersPage.addOrderNote(orderId, ordersPage.testData.orderNote.private);
+        await ordersPage.waitForPageReady();
+        await page.close();
+        await context.close();
+    });
+
+    test.skip('vendor can add tracking details to order', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+        const context = await browser.newContext({ storageState: v1 });
+        const page = await context.newPage();
+        const ordersPage = new OrdersPage(page);
+        if (DOKAN_PRO) {
+            await OrdersPage.disableShippingStatus();
+            await ordersPage.addTrackingDetails(orderId, ordersPage.testData.orderTrackingDetails);
+            await OrdersPage.enableShippingStatus();
+        } else {
+            await ordersPage.addTrackingDetails(orderId, ordersPage.testData.orderTrackingDetails);
+        }
+        await ordersPage.waitForPageReady();
+        await page.close();
+        await context.close();
+    });
+
     test('vendor can add shipment to order', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const context = await browser.newContext({ storageState: v1 });
         const page = await context.newPage();
         const ordersPage = new OrdersPage(page);
         await ordersPage.addShipment(orderId, ordersPage.testData.orderShipmentDetails);
+        await ordersPage.waitForPageReady();
+        await page.close();
+        await context.close();
+    });
+
+    test.skip('vendor can add downloadable product permission to order', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+        const downloadableProductName = await OrdersPage.createDownloadableProduct(await request.newContext());
+        const context = await browser.newContext({ storageState: v1 });
+        const page = await context.newPage();
+        const ordersPage = new OrdersPage(page);
+        await ordersPage.addDownloadableProduct(orderId, downloadableProductName);
+        await ordersPage.removeDownloadableProduct(orderId, downloadableProductName);
         await ordersPage.waitForPageReady();
         await page.close();
         await context.close();

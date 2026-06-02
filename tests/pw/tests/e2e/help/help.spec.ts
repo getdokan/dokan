@@ -25,7 +25,6 @@ test.describe('Dokan help test', () => {
         await admin.adminHelpRenderProperly();
     });
 
-    // KEEP SKIPPED: stale selectors after AdminBar refactor — hover target '.dokan-admin-header-menu .menu-icon' and the '//div[@class="list-item"]' dropdown wrapper no longer exist (items are now direct <a> in a flex container, and "What's New" is now "Changelog"); would fail today.
     test.skip('admin can view get help dropdown', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
         await admin.adminGetHelpDropdownRenderProperly();
     });

@@ -139,17 +139,14 @@ test.describe('EU Compliance test', () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'company-info');
     });
 
-    // KEEP skipped: ProductsPage.addProductEuCompliance is an unimplemented stub (no real UI flow).
     test.skip('vendor can add product EU compliance data', { tag: ['@pro', '@vendor'] }, async () => {
         await productsPage.addProductEuCompliance(productName, data.product.productInfo.euCompliance);
     });
 
-    // KEEP skipped: ProductsPage.addProductEuCompliance is an unimplemented stub (no real UI flow).
     test.skip('vendor can update product EU compliance data', { tag: ['@pro', '@vendor'] }, async () => {
         await productsPage.addProductEuCompliance(euProductName, data.product.productInfo.euCompliance);
     });
 
-    // KEEP skipped: ProductsPage.addProductEuCompliance is an unimplemented stub (no real UI flow).
     test.skip('vendor can remove product EU compliance data', { tag: ['@pro', '@vendor'] }, async () => {
         await productsPage.addProductEuCompliance(productName, { ...data.product.productInfo.euCompliance, productUnits: '', basePriceUnits: '', freeShipping: false, regularUnitPrice: '', saleUnitPrice: '', optionalMiniDescription: '' });
     });
@@ -174,7 +171,6 @@ test.describe('EU Compliance test', () => {
         await customer.viewVendorEuComplianceData(data.predefined.vendorStores.vendor1);
     });
 
-    // KEEP skipped: viewProductEuComplianceData only navigates and no-ops; depends on the unimplemented product EU compliance flow.
     test.skip('customer can view product EU compliance data on single product page', { tag: ['@pro', '@customer'] }, async () => {
         await customer.viewProductEuComplianceData(euProductName);
     });

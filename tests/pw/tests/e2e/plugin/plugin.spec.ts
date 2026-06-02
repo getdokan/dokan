@@ -86,12 +86,8 @@ test.describe('Plugin functionality test', () => {
         }
     });
 
-    // skip: empty test body; deactivating Dokan Lite would break the rest of the suite's marketplace env
     test.skip('admin can deactivate Dokan plugin', { tag: ['@lite', '@admin'] }, async () => {});
-    // skip: empty test body; deactivating Dokan Lite would break the rest of the suite's marketplace env
     test.skip('admin can deactivate Dokan plugin with deactivate reason', { tag: ['@lite', '@admin'] }, async () => {});
-    // skip: empty test body; deleting Dokan Pro would break the seeded CI environment
     test.skip('admin can delete Dokan pro plugin', { tag: ['@pro', '@admin'] }, async () => {});
-    // skip: empty test body; deleting Dokan Lite would break the seeded CI environment
     test.skip('admin can delete Dokan plugin', { tag: ['@lite', '@admin'] }, async () => {});
 });

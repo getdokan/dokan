@@ -46,7 +46,6 @@ test.describe('Stores test', () => {
         await admin.updateVendor(storeName, 'disable');
     });
 
-    // KEEP SKIPPED: StoresPage.editVendor is an unimplemented stub (empty body) — no real edit-vendor flow exists yet.
     test.skip('admin can edit vendor info', { tag: ['@lite', '@admin'] }, async () => { await admin.editVendor(VENDOR_ID, data.vendor); });
     test('admin can view vendor products', { tag: ['@lite', '@admin'] }, async () => { await admin.viewVendor(data.predefined.vendorStores.vendor1, 'products'); });
 

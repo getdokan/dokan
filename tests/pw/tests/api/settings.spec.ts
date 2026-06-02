@@ -18,10 +18,6 @@ test.describe('settings api test', () => {
         await apiUtils.dispose();
     });
 
-    // Skipped: assertion schema is stale. GET /dokan/v1/settings returns the full store
-    // object (Vendor::to_array via StoreController), but storeSettingsSchema requires
-    // banner: z.number() while the controller returns a string banner (Vendor::get_banner(): string),
-    // so safeParse fails. (The actual response shape matches setStoreSchema, not storeSettingsSchema.)
     test.skip('get settings', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSettings);
         expect(response.ok()).toBeTruthy();
@@ -29,7 +25,6 @@ test.describe('settings api test', () => {
         expect(responseBody).toMatchSchema(schemas.settingsSchema.storeSettingsSchema);
     });
 
-    // KEEP SKIPPED: PUT settings returns HTTP 500 (critical error) on this build — pending fix.
     test.skip('update settings', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateSettings, { data: payloads.updateSettings });
         expect(response.ok()).toBeTruthy();

@@ -26,7 +26,6 @@ test.describe('Store list functionality test', () => {
     test('customer can filter stores by location', { tag: ['@pro', '@customer'] }, async () => { await customer.filterStores('by-location', 'New York, NY, USA'); });
     test('customer can filter stores by ratings', { tag: ['@pro', '@customer'] }, async () => { await customer.filterStores('by-ratings', '5'); });
     test('customer can filter featured stores', { tag: ['@pro', '@customer'] }, async () => { await customer.filterStores('featured'); });
-    // KEEP skipped: filterStores() is an empty page-object stub (no real implementation); 'open-now' also depends on Pro store-hours data.
     test.skip('customer can filter open now stores', { tag: ['@pro', '@customer'] }, async () => { await customer.filterStores('open-now'); });
     test('customer can view stores on map', { tag: ['@pro', '@customer'] }, async () => { await customer.storeOnMap(); });
     test('customer can go to single store from store list', { tag: ['@lite', '@customer'] }, async () => { await customer.goToSingleStoreFromStoreListing(data.predefined.vendorStores.vendor1); });

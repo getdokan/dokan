@@ -18,9 +18,7 @@ test.describe('Single store functionality test', () => {
 
     test.afterAll(async () => { await cPage?.close(); });
 
-    // KEEP skipped: singleStoreRenderProperly is an empty stub in singleStorePage.ts (no real implementation).
     test.skip('customer can view single store page', { tag: ['@lite', '@exploratory', '@customer'] }, async () => { await customer.singleStoreRenderProperly(data.predefined.vendorStores.vendor1); });
-    // KEEP skipped: storeOpenCloseTime is an empty stub in singleStorePage.ts (no real implementation).
     test.skip('customer can view store open-close time on single store', { tag: ['@lite', '@customer'] }, async () => { await customer.storeOpenCloseTime(data.predefined.vendorStores.vendor1); });
     test('customer can search product on single store', { tag: ['@lite', '@customer'] }, async () => { await customer.singleStoreSearchProduct(data.predefined.vendorStores.vendor1, data.predefined.simpleProduct.product1.name); });
     test('customer can sort products on single store', { tag: ['@lite', '@customer'] }, async () => { await customer.singleStoreSortProducts(data.predefined.vendorStores.vendor1, 'price'); });

@@ -8,8 +8,6 @@ const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.js
 
 const { PRODUCT_ID } = process.env;
 
-// KEEP SKIPPED: ProductReviewsPage methods (vendorProductReviewsRenderProperly, viewProductReview,
-// updateProductReview, productReviewsBulkActions) and ApiUtils.createProductReview are unimplemented stubs.
 test.describe.skip('Product Reviews test', () => {
     let vendor: ProductReviewsPage;
     let vPage: Page;

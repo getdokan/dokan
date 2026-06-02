@@ -33,10 +33,8 @@ test.describe('Shortcodes test', () => {
         await apiUtils.dispose();
     });
 
-    // KEEP skipped: page-object method createPageWithShortcode is an empty stub (no real implementation).
     test.skip('admin can create page with dokan shortcode', { tag: ['@lite', '@admin'] }, async () => { await admin.createPageWithShortcode(data.pageTitle, data.dokanShortcodes.dashboard); });
 
-    // KEEP skipped: page-object method viewDashboard is an empty stub (no real implementation).
     test.skip('vendor can view Dokan dashboard (shortcode)', { tag: ['@lite', '@admin'] }, async () => {
         const [responseBody, pageId] = await apiUtils.createPage(payloads.dashboardShortcode, payloads.adminAuth);
         await vendor.viewDashboard(responseBody.link);
@@ -51,7 +49,6 @@ test.describe('Shortcodes test', () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.vendorSubscription, dbData.dokan.vendorSubscriptionSettings);
     });
 
-    // KEEP skipped: page-object method viewVendorRegistrationForm is an empty stub (no real implementation).
     test.skip('guest user can view vendor registration form (shortcode)', { tag: ['@lite', '@admin'] }, async ({ page }) => {
         const guest = new ShortcodePage(page);
         const [responseBody, pageId] = await apiUtils.createPage(payloads.vendorRegistrationShortcode, payloads.adminAuth);
@@ -59,7 +56,6 @@ test.describe('Shortcodes test', () => {
         await apiUtils.deletePage(pageId, payloads.adminAuth);
     });
 
-    // KEEP skipped: page-object method viewVendorOnboardingForm is an empty stub (no real implementation).
     test.skip('guest user can view vendor onboarding form (shortcode)', { tag: ['@lite', '@admin'] }, async ({ page }) => {
         const guest = new ShortcodePage(page);
         const [responseBody, pageId] = await apiUtils.createPage(payloads.vendorOnboardingShortcode, payloads.adminAuth);
@@ -98,14 +94,12 @@ test.describe('Shortcodes test', () => {
         await apiUtils.deletePage(pageId, payloads.adminAuth);
     });
 
-    // KEEP skipped: page-object method viewStores is an empty stub (no real implementation).
     test.skip('customer can view stores (shortcode)', { tag: ['@lite', '@admin'] }, async () => {
         const [responseBody, pageId] = await apiUtils.createPage(payloads.storesShortcode, payloads.adminAuth);
         await customer.viewStores(responseBody.link);
         await apiUtils.deletePage(pageId, payloads.adminAuth);
     });
 
-    // KEEP skipped: page-object method viewMyOrders is an empty stub (no real implementation).
     test.skip('customer can view my orders (shortcode)', { tag: ['@lite', '@admin'] }, async () => {
         const [responseBody, pageId] = await apiUtils.createPage(payloads.myOrdersShortcode, payloads.adminAuth);
         await customer.viewMyOrders(responseBody.link);

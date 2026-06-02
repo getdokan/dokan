@@ -5,7 +5,6 @@ import path from 'path';
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 const { DOKAN_PRO, VENDOR_ID } = process.env;
 
-// KEEP skipped: page object (./vendorSettingsPage) and ApiUtils/dbUtils/data are empty stubs with no real implementation; tests assert nothing real.
 test.describe.skip('Vendor settings test', () => {
     let vendor: VendorSettingsPage;
     let vPage: Page;
@@ -30,9 +29,7 @@ test.describe.skip('Vendor settings test', () => {
     test('vendor can view social profile settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorSocialProfileSettingsRenderProperly(); });
     test('vendor can view rma settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorRmaSettingsRenderProperly(); });
     test('vendor can view store seo settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorStoreSeoSettingsRenderProperly(); });
-    // KEEP skipped: setStoreSettings page-object method is an empty stub (no real banner upload flow).
     test.skip('vendor can set store banner settings', { tag: ['@lite', '@vendor'] }, async () => { await vendor.setStoreSettings(data.vendor.vendorInfo, 'banner'); });
-    // KEEP skipped: setStoreSettings page-object method is an empty stub (no real profile-picture upload flow).
     test.skip('vendor can set store profile picture settings', { tag: ['@lite', '@vendor'] }, async () => { await vendor.setStoreSettings(data.vendor.vendorInfo, 'profile-picture'); });
     test('vendor can set store basic settings', { tag: ['@lite', '@vendor'] }, async () => { await vendor.setStoreSettings(data.vendor.vendorInfo, 'basic'); });
     test('vendor can set store address settings', { tag: ['@lite', '@vendor'] }, async () => { await vendor.setStoreSettings(data.vendor.vendorInfo, 'address'); });

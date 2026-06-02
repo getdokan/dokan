@@ -8,7 +8,6 @@ const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.jso
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.json');
 
-// KEEP SKIPPED: RMA (Pro-only) module flow; page-object methods are all empty stubs (no real implementation).
 test.describe.skip('Vendor RMA test', () => {
     let admin: VendorReturnRequestPage;
     let vendor: VendorReturnRequestPage;
@@ -66,7 +65,6 @@ test.describe.skip('Vendor RMA test', () => {
         await customer.customerRequestWarranty(orderId, data.predefined.simpleProduct.product1.name, data.rma.requestWarranty);
     });
 
-    // KEEP SKIPPED: RMA disable flow backed by stub ApiUtils/page-object methods (no real implementation).
     test.skip('admin can disable RMA module', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.deactivateModules(payloads.moduleIds.rma, payloads.adminAuth);
         await admin.disableRmaModule();

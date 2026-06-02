@@ -33,8 +33,7 @@ test.describe('Dashboard test', () => {
     });
 
     // admin
-    // Asserts the React admin dashboard layout (To-Do, Analytics, Vendor Metrics, Marketplace Stats)
-    // which needs Pro features and seeded data; flagged known-broken (TODO: need to fix). Keep skipped.
+    // TODO: need to fix
     test.skip('admin can view Dokan dashboard', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
         await admin.adminDashboardRenderProperly();
     });

@@ -59,7 +59,6 @@ test.describe('Product functionality test', () => {
         await admin.deleteCustomField({ block: blockLabel, label: fieldLabel });
     });
 
-    // KEEP skipped: feature not merged yet and page-object method resetProductFormManagerSettings is an empty stub
     test.skip('admin can reset product form manager settings', { tag: ['@pro', '@admin'] }, async () => {
         const blockLabel = await admin.addCustomBlock(data.dokanSettings.productFormManager.customBlock());
         await admin.resetProductFormManagerSettings(blockLabel);

@@ -27,7 +27,6 @@ test.describe('Tools test', () => {
 
     test('admin can regenerate order commission', { tag: ['@pro', '@admin'] }, async () => { await admin.regenerateOrderCommission(); });
     test('admin can check for duplicate orders', { tag: ['@pro', '@admin'] }, async () => { await admin.checkForDuplicateOrders(); });
-    // KEEP skipped: setDokanSetupWizard page-object method is an empty stub (no real implementation).
     test.skip('admin can set Dokan setup wizard', { tag: ['@lite', '@admin'] }, async () => { await admin.setDokanSetupWizard(data.dokanSetupWizard); });
     test('admin can regenerate variable product variations author IDs', { tag: ['@pro', '@admin'] }, async () => { await admin.regenerateVariableProductVariationsAuthorIds(); });
 

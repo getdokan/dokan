@@ -22,7 +22,7 @@ test.describe('Diagnostic notice test', () => {
         await db.dispose();
     });
 
-    // KEEP SKIPPED: asserts exact long diagnostic-notice paragraph text (brittle copy strings) and the page object deletes dokan-lite_* options while siblings use dokan_* — flaky/broken, needs fixing
+    // TODO: need to fix
     test.skip('admin can view Dokan diagnostic notice', { tag: ['@lite', '@admin'] }, async () => {
         await admin.dokanDiagnosticNoticeRenderProperly(diagnosticNoticeData);
     });

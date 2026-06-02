@@ -42,8 +42,6 @@ test.describe('Color scheme customizer test', () => {
         await admin.addColorPalette('custom', colorsData.paletteValues.custom, 'custom');
     });
 
-    // Skipped: same blocker as "add custom color palette" — relies on the removed
-    // "Custom Color Palette" h3 section; needs a rewrite against the new React UI.
     test.skip('admin can update custom color palette', { tag: ['@pro', '@admin'] }, async () => {
         await admin.addColorPalette('custom', colorsData.paletteValues.custom2, 'custom');
     });

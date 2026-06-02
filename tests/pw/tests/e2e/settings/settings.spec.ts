@@ -23,9 +23,7 @@ test.describe('Settings test', () => {
     test('admin can view settings menu page', { tag: ['@lite', '@exploratory', '@admin'] }, async () => { await admin.dokanSettingsRenderProperly(); });
     test('admin can scroll to top on settings', { tag: ['@lite', '@admin'] }, async () => { await admin.scrollToTopSettings(); });
     test('admin can search settings', { tag: ['@lite', '@admin'] }, async () => { await admin.searchSettings('Selling Options'); });
-    // KEEP SKIPPED: setDokanGeneralSettings is an empty stub in settingsPage.ts (no real implementation)
     test.skip('admin can set Dokan general settings', { tag: ['@lite', '@admin'] }, async () => { await admin.setDokanGeneralSettings(data.dokanSettings.general); });
-    // KEEP SKIPPED: setDokanSellingSettings is an empty stub in settingsPage.ts (no real implementation)
     test.skip('admin can set Dokan selling settings', { tag: ['@lite', '@admin'] }, async () => { await admin.setDokanSellingSettings(data.dokanSettings.selling); });
     test('admin can set Dokan withdraw settings', { tag: ['@lite', '@admin'] }, async () => { await admin.setDokanWithdrawSettings(data.dokanSettings.withdraw); });
     test('admin can set Dokan reverse withdraw settings', { tag: ['@lite', '@admin'] }, async () => { await admin.setDokanReverseWithdrawSettings(data.dokanSettings.reverseWithdraw); });

@@ -70,7 +70,6 @@ test.describe('Payments test', () => {
         await api.updateBatchWcSettingsOptions('general', payloads.currency, payloads.adminAuth);
         await admin.setupPaypalMarketPlace(testData.payment);
     });
-    // KEEP skipped: external MangoPay service + setupMangoPay() page-object method is an unimplemented stub
     test.skip('admin can add Mangopay payment method', { tag: ['@pro', '@admin'] }, async () => {
         test.slow();
         await api.updateBatchWcSettingsOptions('general', payloads.currency, payloads.adminAuth);

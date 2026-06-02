@@ -1,7 +1,5 @@
-import { Locator, Page, expect, request } from '@playwright/test';
+import { Locator, Page, expect } from '@playwright/test';
 import { closeAnnouncementModal, toPath } from '@utils/helpers';
-
-const BASE_URL = process.env.BASE_URL || 'http://localhost:9999';
 
 // ============================================
 // TEST DATA
@@ -87,68 +85,6 @@ export class NewShippingPage {
     constructor(page: Page) {
         this.page = page;
         void closeAnnouncementModal(page);
-    }
-
-    // ---- Customer-facing parity (WC Store API) ----
-    // The "customer at checkout sees the vendor shipping option" flow is asserted
-    // through the WC Store API (the same cart/shipping engine the WC Blocks
-    // checkout drives) rather than the non-deterministic Blocks checkout UI.
-    // Pure REST → no browser page needed, so these are static.
-
-    /** Ensure the seeded US zone (id 1) has at least one shipping method, so the
-     *  customer cart has a vendor rate to surface. Adds a flat_rate only when the
-     *  zone has none (idempotent; matches the seed's natural state). Admin auth. */
-    static async ensureUsZoneHasMethod(zoneId = 1): Promise<void> {
-        const { ADMIN, ADMIN_PASSWORD } = process.env;
-        const ctx = await request.newContext({
-            baseURL: BASE_URL,
-            httpCredentials: { username: ADMIN || 'admin', password: ADMIN_PASSWORD || 'password' },
-            ignoreHTTPSErrors: true,
-        });
-        try {
-            const res = await ctx.get(`/wp-json/wc/v3/shipping/zones/${zoneId}/methods`);
-            const methods = res.ok() ? await res.json() : [];
-            if (!Array.isArray(methods) || methods.length === 0) {
-                await ctx.post(`/wp-json/wc/v3/shipping/zones/${zoneId}/methods`, { data: { method_id: 'flat_rate' } });
-            }
-        } finally {
-            await ctx.dispose();
-        }
-    }
-
-    /** Drive the WC Store API as the customer: add the vendor's product, set a
-     *  shipping destination, and return the shipping packages + rate names the
-     *  customer is offered. A vendor product yields a per-vendor package whose
-     *  rates come from the vendor's own zone (Dokan vendor shipping). */
-    static async customerVendorShippingRates(
-        productId = process.env.PRODUCT_ID,
-        address: Record<string, string> = { country: 'US', state: 'NY', city: 'New York', postcode: '10001' },
-    ): Promise<{ packages: number; rates: string[] }> {
-        const { CUSTOMER, USER_PASSWORD } = process.env;
-        const ctx = await request.newContext({
-            baseURL: BASE_URL,
-            httpCredentials: { username: CUSTOMER || 'customer1', password: USER_PASSWORD || 'password' },
-            ignoreHTTPSErrors: true,
-        });
-        try {
-            // GET the cart first to obtain the Store API Nonce + Cart-Token.
-            const cart = await ctx.get('/wp-json/wc/store/v1/cart');
-            const h = cart.headers();
-            const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-            if (h['nonce']) headers['Nonce'] = h['nonce'];
-            if (h['cart-token']) headers['Cart-Token'] = h['cart-token'];
-
-            await ctx.post('/wp-json/wc/store/v1/cart/add-item', { headers, data: { id: Number(productId), quantity: 1 } });
-            // Setting the shipping destination triggers a shipping recalculation;
-            // the response body already carries the recalculated shipping_rates.
-            const upd = await ctx.post('/wp-json/wc/store/v1/cart/update-customer', { headers, data: { shipping_address: address } });
-            const body = (await upd.json()) as { shipping_rates?: Array<{ name: string; shipping_rates?: Array<{ name: string }> }> };
-            const packages = body.shipping_rates ?? [];
-            const rates = packages.flatMap(p => (p.shipping_rates ?? []).map(r => r.name));
-            return { packages: packages.length, rates };
-        } finally {
-            await ctx.dispose();
-        }
     }
 
     // ---- Locators ----

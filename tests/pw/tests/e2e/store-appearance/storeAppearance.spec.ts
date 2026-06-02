@@ -28,7 +28,6 @@ test.describe('Store Appearance test', () => {
     });
 
     ['enable', 'disable'].forEach((status: string) => {
-        // KEEP skipped: viewStoreMapOnStoreSidebar is an unimplemented stub; store map also needs an external map provider (Google Maps/Mapbox).
         test.skip(`admin can ${status} store map on store sidebar`, { tag: ['@lite', '@admin'] }, async () => {
             await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { store_map: status === 'enable' ? 'on' : 'off' });
             await admin.viewStoreMapOnStoreSidebar(status as 'enable' | 'disable', data.predefined.vendorStores.vendor1);
@@ -36,7 +35,6 @@ test.describe('Store Appearance test', () => {
     });
 
     ['Google Maps', 'Mapbox'].forEach((api: string) => {
-        // KEEP skipped: depends on external map providers (Google Maps/Mapbox) and viewMapAPISource is an unimplemented stub.
         test.skip(`admin can set map api source (${api})`, { tag: ['@lite', '@admin'] }, async () => {
             await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { store_map: 'on', map_api_source: api === 'Google Maps' ? 'google_maps' : 'mapbox' });
             await admin.viewMapAPISource(api as 'Google Maps' | 'Mapbox', data.predefined.vendorStores.vendor1);
@@ -44,7 +42,6 @@ test.describe('Store Appearance test', () => {
     });
 
     ['enable', 'disable'].forEach((status: string) => {
-        // KEEP skipped: depends on the external Google reCAPTCHA service and viewGoogleRecaptcha is an unimplemented stub.
         test.skip(`admin can ${status} Google reCAPTCHA validation`, { tag: ['@lite', '@admin'] }, async () => {
             await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { recaptcha_enable_status: status === 'enable' ? 'on' : 'off' });
             await admin.viewGoogleRecaptcha(status as 'enable' | 'disable', data.predefined.vendorStores.vendor1);
@@ -59,7 +56,6 @@ test.describe('Store Appearance test', () => {
     });
 
     ['default', 'layout1', 'layout2', 'layout3'].forEach((template: string) => {
-        // KEEP skipped: viewStoreHeaderTemplate is an unimplemented stub (empty page-object method, no real verification).
         test.skip(`admin can set store header template (${template})`, { tag: ['@lite', '@admin'] }, async () => {
             await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { store_header_template: template });
             await admin.viewStoreHeaderTemplate(template as 'default' | 'layout1' | 'layout2' | 'layout3', data.predefined.vendorStores.vendor1);
