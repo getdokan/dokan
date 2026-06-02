@@ -43,13 +43,10 @@ add_filter(
     3
 );
 
-// --- Safety net: cap any remaining outbound request so one slow host can't stall a render. ---
-add_filter(
-    'http_request_args',
-    static function ( $args ) {
-        $args['timeout'] = min( isset( $args['timeout'] ) ? (float) $args['timeout'] : 5, 3 );
-        return $args;
-    }
-);
+// NOTE: deliberately NO blanket http_request_args timeout cap here. Capping every outbound
+// request (e.g. to 3s) throttles legitimate Dokan calls that set their own higher budget —
+// the admin Help page does wp_remote_get( 'https://dokan.co/wp-json/org/help', ['timeout'=>15] ),
+// and a 3s cap made that flaky (empty Help page -> "Basics" not found). The wordpress.org block
+// above already removes the update-check calls that were the real source of slow admin renders.
 
 // phpcs:enable
