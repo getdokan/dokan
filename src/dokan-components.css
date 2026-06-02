@@ -103,6 +103,13 @@ svg.components-checkbox-control__indeterminate:where([dir="rtl"], [dir="rtl"] *)
     transform: translate(-50%, -50%);
 }
 
+/* RTL: WP's physical `margin-right` on the checkbox input lands on its start side in RTL, shoving the box ~4px off
+   the checkmark (which centers on the container). Flip the gap to the inline-end side so box and tick line up. */
+.components-checkbox-control__input[type="checkbox"]:where([dir="rtl"], [dir="rtl"] *) {
+    margin-right: 0 !important;
+    margin-left: 4px !important;
+}
+
 /* ========== Link Styles ========== */
 a:not(.dokan-btn):not([class*="dokan-btn-"]):not(.skip-color-module) {
     color: var(--color-primary);
