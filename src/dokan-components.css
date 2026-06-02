@@ -85,18 +85,13 @@ input[type="radio"]:focus {
     @apply -translate-x-2;
 }
 
-/* RTL: the dokan-ui ToggleSwitch ships only LTR knob translate; pin it so the knob mirrors — OFF rests right, ON
-   travels left. Plain CSS (not @apply) so the [data-state] + dir selectors stay intact, and `translate: none`
-   cancels the LTR `translate` utility that would otherwise stack with the transform. */
-button[role="switch"]:not([data-slot]) span:where([dir="rtl"], [dir="rtl"] *) {
-    translate: none !important;
-    transition: transform 200ms;
-}
-button[role="switch"]:not([data-slot]) span[data-state="unchecked"]:where([dir="rtl"], [dir="rtl"] *) {
-    transform: translateX(1rem) !important;
-}
-button[role="switch"]:not([data-slot]) span[data-state="checked"]:where([dir="rtl"], [dir="rtl"] *) {
-    transform: translateX(-0.25rem) !important;
+/* RTL: the dokan-ui ToggleSwitch ships only LTR knob translate. Knob travel depends on the button's flex anchor,
+   which differs per page (some switch buttons carry large padding), so fixed translate values can't fit all.
+   Instead render the control in its known-good LTR geometry and mirror the whole thing — correct for any anchor.
+   (data-slot switches bring their own RTL handling, so skip them.) */
+button[role="switch"]:not([data-slot]):where([dir="rtl"], [dir="rtl"] *) {
+    direction: ltr;
+    transform: scaleX(-1);
 }
 
 /* WP checkbox/radio ship LTR-only mark centering, so re-center the tick and dot when the dashboard flips to RTL */
