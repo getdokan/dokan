@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-01T09:59:58.400Z",
+  "generatedAt": "2026-06-02T09:36:01.072Z",
   "shards": 13,
   "specs": [
     {
@@ -10,7 +10,7 @@
     {
       "file": "abuse-reports/abuseReports.spec.ts",
       "ms": 262897,
-      "tests": 38
+      "tests": 42
     },
     {
       "file": "announcements/announcements.spec.ts",
@@ -88,6 +88,11 @@
       "tests": 6
     },
     {
+      "file": "abuse-reports/abuseReportsSecurity.spec.ts",
+      "ms": 85709,
+      "tests": 9
+    },
+    {
       "file": "new-reverse-withdraw/newReverseWithdraw.spec.ts",
       "ms": 79699,
       "tests": 13
@@ -98,14 +103,29 @@
       "tests": 8
     },
     {
+      "file": "abuse-reports/abuseReportsSettings.spec.ts",
+      "ms": 75108,
+      "tests": 8
+    },
+    {
       "file": "customer/customer.spec.ts",
       "ms": 74173,
+      "tests": 11
+    },
+    {
+      "file": "abuse-reports/abuseReportsCustomerForm.spec.ts",
+      "ms": 70224,
       "tests": 11
     },
     {
       "file": "new-store-reviews/newStoreReviews.spec.ts",
       "ms": 63845,
       "tests": 9
+    },
+    {
+      "file": "abuse-reports/abuseReportsModalDelete.spec.ts",
+      "ms": 62040,
+      "tests": 6
     },
     {
       "file": "new-store-seo/newStoreSeo.spec.ts",
@@ -156,6 +176,11 @@
       "file": "vendor-shipping/vendorShipping.spec.ts",
       "ms": 35269,
       "tests": 13
+    },
+    {
+      "file": "abuse-reports/abuseReportsList.spec.ts",
+      "ms": 34547,
+      "tests": 8
     },
     {
       "file": "setup-guide/setupGuide.spec.ts",
@@ -211,6 +236,11 @@
       "file": "vendor-delivery-time/vendorDeliveryTime.spec.ts",
       "ms": 25425,
       "tests": 13
+    },
+    {
+      "file": "abuse-reports/abuseReportsPermissions.spec.ts",
+      "ms": 24149,
+      "tests": 10
     },
     {
       "file": "geolocation/geolocation.spec.ts",
@@ -381,6 +411,11 @@
       "file": "product-tabs/productTabs.spec.ts",
       "ms": 8020,
       "tests": 2
+    },
+    {
+      "file": "abuse-reports/abuseReportsRest.spec.ts",
+      "ms": 6258,
+      "tests": 7
     },
     {
       "file": "single-store/singleStore.spec.ts",
