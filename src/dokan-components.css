@@ -85,16 +85,13 @@ input[type="radio"]:focus {
     @apply -translate-x-2;
 }
 
-/* RTL: the dokan-ui ToggleSwitch ships only LTR knob translate. Knob travel depends on the button's flex anchor,
-   which differs per page (some switch buttons carry large padding), so fixed translate values can't fit all.
-   Instead render the control in its known-good LTR geometry and mirror the whole thing — correct for any anchor.
-   (data-slot switches bring their own RTL handling, so skip them.) */
+/* RTL: mirror the whole toggle so the knob lands correctly regardless of each page's button padding. */
 button[role="switch"]:not([data-slot]):where([dir="rtl"], [dir="rtl"] *) {
     direction: ltr;
     transform: scaleX(-1);
 }
 
-/* WP checkbox/radio ship LTR-only mark centering, so re-center the tick and dot when the dashboard flips to RTL */
+/* RTL: re-center the checkmark and radio dot, which WordPress positions for LTR only. */
 svg.components-checkbox-control__checked:where([dir="rtl"], [dir="rtl"] *),
 svg.components-checkbox-control__indeterminate:where([dir="rtl"], [dir="rtl"] *),
 .components-radio-control__input[type="radio"]:checked:where([dir="rtl"], [dir="rtl"] *)::before {
@@ -103,11 +100,10 @@ svg.components-checkbox-control__indeterminate:where([dir="rtl"], [dir="rtl"] *)
     transform: translate(-50%, -50%);
 }
 
-/* RTL: WP's physical `margin-right` on the checkbox input lands on its start side in RTL, shoving the box ~4px off
-   the checkmark (which centers on the container). Flip the gap to the inline-end side so box and tick line up. */
-.components-checkbox-control__input[type="checkbox"]:where([dir="rtl"], [dir="rtl"] *) {
-    margin-right: 0 !important;
-    margin-left: 4px !important;
+/* Logical margin on the checkbox input so the box stays centered under its checkmark in RTL too. */
+.components-checkbox-control__input[type="checkbox"] {
+    margin: 0 !important;
+    margin-inline-end: 4px !important;
 }
 
 /* ========== Link Styles ========== */
