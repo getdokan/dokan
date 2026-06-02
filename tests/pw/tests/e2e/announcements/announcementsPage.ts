@@ -521,7 +521,9 @@ export class AnnouncementsPage {
         await this.page.selectOption(this.admin.bulkActions.selectAction, action);
 
         await Promise.all([
-            this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200),
+            // Wait for the bulk MUTATION (non-GET), not the list's refetch GET to the same
+            // endpoint — matching the GET would resolve before the rows are actually actioned.
+            this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.request().method() !== 'GET' && res.status() < 400),
             this.page.locator(this.admin.bulkActions.applyAction).click(),
         ]);
         await this.page.waitForLoadState('load');
@@ -658,7 +660,9 @@ export class AnnouncementsPage {
         // Sequential trash calls used to race the loader and the next row's
         // Actions button became unclickable.
         await Promise.all([
-            this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() < 400),
+            // Wait for the trash MUTATION (non-GET), not the table's refetch GET to the same
+            // endpoint — matching the GET would resolve before the row is actually trashed.
+            this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.request().method() !== 'GET' && res.status() < 400),
             this.page.locator(this.adminNewDashboard.confirmTrash).click(),
         ]);
         await this.page.waitForLoadState('domcontentloaded');

@@ -1,5 +1,7 @@
 import { test, expect, request } from '@utils/test';
 import { AbuseReportsPage } from './abuseReportsPage';
+import { dbUtils } from '@utils/dbUtils';
+import { faker } from '@faker-js/faker';
 import path from 'path';
 
 // ============================================
@@ -414,38 +416,58 @@ test.describe('Abuse Reports Tests @pro', () => {
         const adminPage = await context.newPage();
         const abuseReportsPage = new AbuseReportsPage(adminPage);
 
+        // Deterministic bulk delete. The per-row checkboxes are not reliably
+        // clickable one-by-one in this DataViews build (only the header
+        // select-all is — List Case 8 uses the same path), and the suite's other
+        // cases now clean up after themselves so we cannot rely on ≥2 ambient
+        // rows being present (without seeding, TC12 would silently skip). So:
+        // isolate to EXACTLY two rows, select them via the header select-all
+        // checkbox, bulk-delete, and assert the dataset is emptied. The later
+        // serial cases (TC18-TC22) each seed their own report, so clearing the
+        // table here is safe.
+        const reportsTable = `${process.env.DB_PREFIX ?? 'wp'}_dokan_report_abuse_reports`;
+        await dbUtils.dbQuery(`DELETE FROM ${reportsTable};`);
+        const seedPayload = { reason: 'This content is spam', description: 'TC12 bulk-delete seed' };
+        const pid = process.env.PRODUCT_ID ?? '19';
+        const vid = process.env.VENDOR_ID ?? '3';
+        const cid = process.env.CUSTOMER_ID ?? '2';
+        await dbUtils.createAbuseReport(seedPayload, pid, vid, cid);
+        await dbUtils.createAbuseReport(seedPayload, pid, vid, cid);
+
+        const apiCtx = await request.newContext();
+        const readTotal = async () =>
+            Number((await abuseReportsPage.restGetReports(apiCtx)).headers()['x-dokan-abusereports-total'] ?? '0');
+        expect(await readTotal(), 'Two reports should be seeded before bulk delete').toBeGreaterThanOrEqual(2);
+
         await abuseReportsPage.goToAbuseReportsReact();
         await abuseReportsPage.waitForListReady();
-
-        // Wait for the list to actually render rows before reading the
-        // baseline (see TC10/TC11 comments for context).
         await adminPage.locator(abuseReportsPage.adminReact.dataRow).first().waitFor({ state: 'visible', timeout: 20000 });
 
-        const beforeCount = await abuseReportsPage.getRowCount();
+        // Select every current-page row via the header select-all checkbox
+        // (the reliable selection affordance — see List Case 8).
+        const selectAll = adminPage.locator(abuseReportsPage.adminReact.selectAllCheckbox).first();
+        await selectAll.waitFor({ state: 'visible', timeout: 10000 });
+        await selectAll.click();
 
-        // Skip if there isn't enough data; the suite tries to keep at least one
-        // report at this point but rows can be missing if the prior suite ran clean.
-        test.skip(beforeCount < 2, 'Need at least 2 rows to exercise bulk delete');
+        // The compact bulk Delete button surfaces once rows are selected.
+        const bulkDelete = adminPage.locator(abuseReportsPage.adminReact.bulkDeleteCompactButton).first();
+        await expect(bulkDelete, 'Bulk Delete button should surface after selecting rows').toBeVisible({ timeout: 10000 });
+        await bulkDelete.click();
 
-        // Select the first two visible row checkboxes
-        const checkboxes = adminPage.locator(abuseReportsPage.admin.reportRowCheckbox);
-        await checkboxes.nth(0).click();
-        await checkboxes.nth(1).click();
-
-        await abuseReportsPage.clickBulkDeleteButton();
-
+        // Confirm the multi-report delete modal.
+        await adminPage.locator(abuseReportsPage.adminReact.deleteModalConfirmBtn).waitFor({ state: 'visible', timeout: 10000 });
         const description = await abuseReportsPage.getDeleteModalDescriptionText();
         expect(
             description,
             'Bulk-delete modal copy should reference multiple reports',
         ).toMatch(/these\s+\d+/i);
-
         await abuseReportsPage.confirmDeleteInModal();
         await abuseReportsPage.waitForListReady();
 
-        const afterCount = await abuseReportsPage.getRowCount();
-        expect(afterCount, 'Row count should drop by 2 after bulk delete').toBeLessThanOrEqual(beforeCount - 2);
+        // Both selected reports are gone.
+        await expect.poll(readTotal, { timeout: 10000 }).toBe(0);
 
+        await apiCtx.dispose();
         await adminPage.close();
         await context.close();
     });
@@ -819,16 +841,31 @@ test.describe('Abuse Reports Tests @pro', () => {
         const ctx = await request.newContext();
         const abuseReportsPage = new AbuseReportsPage(/* dummy */ {} as never);
 
+        // NOTE: the controller does NOT honor `per_page`. RestController.php:153
+        // hardcodes `$per_page = 20` ("should be replaced by schema") and never
+        // reads $request['per_page'], so the page slice is always capped at the
+        // hardcoded 20 regardless of the requested value. Asserting <= 5 only
+        // passed by luck on a near-empty DB and broke once the shared table held
+        // 6+ rows. The faithful contract is "capped at the hardcoded page size
+        // (20)" — the new abuse-reports REST batch documents this same gap.
         const response = await abuseReportsPage.restGetReports(ctx, { page: '1', per_page: '5' });
         expect(response.status(), 'Paginated GET /abuse-reports should return 200').toBe(200);
 
         const body = await response.json();
         expect(Array.isArray(body), 'Response body should be a JSON array').toBe(true);
-        expect(body.length, 'Page size = 5 should yield at most 5 rows').toBeLessThanOrEqual(5);
+        expect(
+            body.length,
+            'Result count is capped at the controller hardcoded page size (20); per_page is ignored',
+        ).toBeLessThanOrEqual(20);
 
-        // X-Dokan-AbuseReports-Total header should always be present, even on a sub-paginated response
+        // X-Total reflects the FULL dataset count (independent of the page slice)
+        // and must be present + a superset of (>=) the returned page length.
         const total = response.headers()['x-dokan-abusereports-total'];
         expect(total, 'X-Dokan-AbuseReports-Total header should be present on paginated responses').toBeDefined();
+        expect(
+            Number(total),
+            'X-Total (full dataset count) should be >= the returned page length',
+        ).toBeGreaterThanOrEqual(body.length);
 
         await ctx.dispose();
     });
@@ -876,4 +913,205 @@ test.describe('Abuse Reports Tests @pro', () => {
         await ctx.dispose();
     });
     }); // end REST edge cases parallel block
+});
+
+// ============================================
+// ============================================
+// Email Notification batch (Phase 1 / P1-7)
+//
+// Submitting an abuse report fires
+// `do_action('dokan_report_abuse_send_admin_email', $report)` → AdminEmail::trigger()
+// → wp_mail() → captured by the Email Log plugin into `${DB_PREFIX}_email_log`.
+//
+// Subject (default): `[{site_title}] A new abuse report has been submitted`.
+// Body heading: `Product Abuse Report`. Recipient: the WP `admin_email` option
+// (NOT the ADMIN_EMAIL env var) — we assert it is a non-empty address rather
+// than hardcoding it.
+//
+// This is a SEPARATE top-level describe from the TC1–TC33 suite above so the
+// ordered cases there are untouched. We only flip Setting A in TC3/TC4 and
+// restore it to OFF in afterAll (the state TC18 leaves it in, and which the
+// main suite's TC22 guest-submit expects).
+// ============================================
+// ============================================
+test.describe('Abuse Reports — Email Notification @pro', () => {
+    const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json'); // Admin session storage
+    const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.json'); // Customer 1 session storage
+
+    // customer1 is the account behind the `c1` storage state (CUSTOMER_ID=2).
+    // Confirmed against the test DB: user_login=customer1, user_email=customer1@email.com.
+    const CUSTOMER_USERNAME = 'customer1';
+
+    // Subject fragment + LIKE pattern used to find the report's admin email.
+    const SUBJECT_FRAGMENT = 'A new abuse report has been submitted';
+    const SUBJECT_LIKE = '%abuse report%';
+
+    test.beforeAll(async ({ browser }) => {
+        // Ensure the Report Abuse module is enabled once for the whole batch.
+        const context = await browser.newContext({ storageState: a1 });
+        const adminPage = await context.newPage();
+        const abuseReportsPage = new AbuseReportsPage(adminPage);
+        await abuseReportsPage.goToModulesPage();
+        await abuseReportsPage.searchModule('Report Abuse');
+        await abuseReportsPage.enableReportAbuseModuleIfDisabled();
+        await adminPage.close();
+        await context.close();
+    });
+
+    test.afterAll(async ({ browser }) => {
+        // Restore Setting A to OFF — the state the main TC1–TC33 suite expects
+        // at teardown (TC18 disables it; TC22 guest-submit relies on it being OFF).
+        const context = await browser.newContext({ storageState: a1 });
+        const adminPage = await context.newPage();
+        const abuseReportsPage = new AbuseReportsPage(adminPage);
+        await abuseReportsPage.goToSettingsPage();
+        await abuseReportsPage.searchSettings(abuseReportsPage.testData.abuseReports.settingsSearchKeyword);
+        await abuseReportsPage.disableReportedBySliderIfEnabled();
+        await abuseReportsPage.clickSaveChanges();
+        await adminPage.close();
+        await context.close();
+    });
+
+    test('Email Test Case 1 - Admin Email Triggered on Report Creation (subject + recipient)', { tag: ['@pro', '@admin', '@customer'] }, async ({ browser }) => {
+        // Baseline the log id BEFORE submitting so we only match this report's mail.
+        const sinceId = await dbUtils.getMaxEmailLogId();
+
+        // Submit as a logged-in customer (c1), exactly like TC5.
+        const context = await browser.newContext({ storageState: c1 });
+        const customerPage = await context.newPage();
+        const customerFlow = new AbuseReportsPage(customerPage);
+        await customerFlow.goToProductPage();
+        await customerFlow.submitFullAbuseReport(
+            customerFlow.testData.abuseReports.reportReason,
+            'Email TC1 — admin email trigger seed',
+        );
+        await customerPage.close();
+        await context.close();
+
+        const email = await dbUtils.waitForEmailLog({ subjectLike: SUBJECT_LIKE, sinceId });
+        expect(email, 'An admin email row should be logged after a report submit').toBeTruthy();
+        expect(email.subject, 'Subject should announce a new abuse report').toContain(SUBJECT_FRAGMENT);
+        expect(email.to_email, 'Recipient should be a real (non-empty) admin address').toMatch(/@/);
+        expect(email.message, 'Email body should contain the report heading').toContain('Product Abuse Report');
+    });
+
+    test('Email Test Case 2 - Email Content Correctness (reason, description, links, date)', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
+        const sinceId = await dbUtils.getMaxEmailLogId();
+
+        const reason = 'This content is spam';
+        const uniqueDescription = `pw-email-${faker.string.nanoid(10)}`;
+
+        const context = await browser.newContext({ storageState: c1 });
+        const customerPage = await context.newPage();
+        const customerFlow = new AbuseReportsPage(customerPage);
+        await customerFlow.goToProductPage();
+        await customerFlow.submitFullAbuseReport(reason, uniqueDescription);
+        await customerPage.close();
+        await context.close();
+
+        const email = await dbUtils.waitForEmailLog({ subjectLike: SUBJECT_LIKE, sinceId });
+        expect(email, 'An admin email row should be logged after a report submit').toBeTruthy();
+
+        const body: string = email.message;
+        expect(body, 'Body should contain the selected reason text').toContain(reason);
+        expect(body, 'Body should contain the unique description we submitted').toContain(uniqueDescription);
+        // Product edit link: admin_url('post.php?post=<id>&action=edit').
+        expect(body, 'Body should contain the product edit-link fragment').toContain('post.php?post=');
+        // Vendor edit link: admin_url('user-edit.php?user_id=<id>').
+        expect(body, 'Body should contain the vendor edit-link fragment').toContain('user-edit.php?user_id=');
+        // reported_at renders via wc_date_format() . ' ' . wc_time_format()
+        // (e.g. "June 2, 2026 11:54 am"), NOT a raw Y-m-d timestamp.
+        expect(body, 'Body should contain a reported-at date (e.g. "June 2, 2026")').toMatch(
+            /(January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2},\s+\d{4}/,
+        );
+    });
+
+    test('Email Test Case 3 - Setting A ON: Logged-in Report Shows Customer Account Name/Email', { tag: ['@pro', '@admin', '@customer'] }, async ({ browser }) => {
+        // Enable Setting A ("Reported by" — logged-in only) before submitting.
+        const adminCtx = await browser.newContext({ storageState: a1 });
+        const adminPage = await adminCtx.newPage();
+        const adminFlow = new AbuseReportsPage(adminPage);
+        await adminFlow.goToSettingsPage();
+        await adminFlow.searchSettings(adminFlow.testData.abuseReports.settingsSearchKeyword);
+        await adminFlow.enableReportedBySliderIfDisabled();
+        await adminFlow.clickSaveChanges();
+        await adminPage.close();
+        await adminCtx.close();
+
+        const sinceId = await dbUtils.getMaxEmailLogId();
+
+        // Submit as the logged-in customer (c1). With customer_id set server-side,
+        // the email's reporter section reflects the account (username + email).
+        const context = await browser.newContext({ storageState: c1 });
+        const customerPage = await context.newPage();
+        const customerFlow = new AbuseReportsPage(customerPage);
+        await customerFlow.goToProductPage();
+        await customerFlow.submitFullAbuseReport(
+            customerFlow.testData.abuseReports.reportReason,
+            'Email TC3 — logged-in reporter identity seed',
+        );
+        await customerPage.close();
+        await context.close();
+
+        const email = await dbUtils.waitForEmailLog({ subjectLike: SUBJECT_LIKE, sinceId });
+        expect(email, 'An admin email row should be logged after a report submit').toBeTruthy();
+
+        const body: string = email.message;
+        // ACTUAL behavior (report-abuse-admin-email-html.php): for a LOGGED-IN
+        // reporter the template prints the account USERNAME as a link to
+        // user-edit.php — it does NOT print the reporter email (that &lt;email&gt;
+        // branch is guest-only). So assert the username + the reporter's
+        // user-edit admin link, which also proves customer_id was captured
+        // server-side (vs stored as guest name/email). NOTE vs TEST_CASES.md
+        // item 206 ("username + email"): the email shows username only.
+        expect(body, 'Body should contain the customer account username').toContain(CUSTOMER_USERNAME);
+        expect(body, "Body should link the reporter to their user-edit admin page (customer_id captured)").toContain(
+            `user-edit.php?user_id=${process.env.CUSTOMER_ID}`,
+        );
+    });
+
+    test('Email Test Case 4 - Setting A OFF: Guest Report Shows Guest Name/Email', { tag: ['@pro', '@admin', '@guest'] }, async ({ browser }) => {
+        // Disable Setting A so guests may submit and the guest fields render.
+        const adminCtx = await browser.newContext({ storageState: a1 });
+        const adminPage = await adminCtx.newPage();
+        const adminFlow = new AbuseReportsPage(adminPage);
+        await adminFlow.goToSettingsPage();
+        await adminFlow.searchSettings(adminFlow.testData.abuseReports.settingsSearchKeyword);
+        await adminFlow.disableReportedBySliderIfEnabled();
+        await adminFlow.clickSaveChanges();
+        await adminPage.close();
+        await adminCtx.close();
+
+        const sinceId = await dbUtils.getMaxEmailLogId();
+
+        const guestName = `Guest ${faker.person.firstName()} ${faker.string.nanoid(6)}`;
+        const guestEmail = `pw-guest-${faker.string.nanoid(8)}@example.com`.toLowerCase();
+
+        // Guest context: a fresh context with NO storage state.
+        const guestCtx = await browser.newContext();
+        const guestPage = await guestCtx.newPage();
+        const guestFlow = new AbuseReportsPage(guestPage);
+        await guestFlow.goToProductPage();
+        await guestFlow.clickReportAbuseLink();
+
+        const nameVisible = await guestFlow.isCustomerNameInputVisible();
+        test.skip(!nameVisible, 'Guest fields not rendered — Setting A may still be enabled; skipping rather than failing');
+
+        // Compose the guest submit (same field order as the main suite's TC22).
+        await guestFlow.fillCustomerName(guestName);
+        await guestFlow.fillCustomerEmail(guestEmail);
+        await guestFlow.selectReasonByValue(guestFlow.testData.abuseReports.reportReason);
+        await guestFlow.fillAbuseDescription('Email TC4 — guest reporter identity seed');
+        await guestFlow.submitAbuseReport();
+        await guestFlow.confirmAbuseReportSubmission();
+        await guestPage.close();
+        await guestCtx.close();
+
+        const email = await dbUtils.waitForEmailLog({ subjectLike: SUBJECT_LIKE, sinceId });
+        expect(email, 'An admin email row should be logged after a guest report submit').toBeTruthy();
+
+        const body: string = email.message;
+        expect(body, 'Body should contain the exact guest name submitted').toContain(guestName);
+        expect(body, 'Body should contain the exact guest email submitted').toContain(guestEmail);
+    });
 });

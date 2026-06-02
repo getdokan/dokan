@@ -347,12 +347,32 @@ jobs:
                     cp .wp-env.json .wp-env.override.json
                   fi
 
+            # Route Docker Hub pulls through Google's public pull-through mirror. The wp-env images
+            # (mariadb, phpmyadmin, wordpress, composer — all official library/* images) then come
+            # from the mirror instead of registry-1.docker.io, dodging Docker Hub's anonymous
+            # pull-rate-limit / connection timeouts that randomly fail one shard's `wp-env start`.
+            # No credentials needed; Docker falls back to Docker Hub if the mirror misses an image.
+            - name: Route Docker Hub pulls through a mirror (avoids anonymous rate-limit/timeouts)
+              run: |
+                  # Merge into any existing daemon.json (jq is preinstalled on the runner) so we
+                  # never clobber the runner's own Docker config; create it only if absent.
+                  sudo mkdir -p /etc/docker
+                  if [ -s /etc/docker/daemon.json ]; then
+                      sudo jq '. + {"registry-mirrors": ["https://mirror.gcr.io"]}' /etc/docker/daemon.json | sudo tee /etc/docker/daemon.json.tmp >/dev/null
+                      sudo mv /etc/docker/daemon.json.tmp /etc/docker/daemon.json
+                  else
+                      echo '{ "registry-mirrors": ["https://mirror.gcr.io"] }' | sudo tee /etc/docker/daemon.json >/dev/null
+                  fi
+                  sudo systemctl restart docker
+                  # Wait for the daemon socket instead of a fixed sleep.
+                  for i in $(seq 1 15); do docker info >/dev/null 2>&1 && break; sleep 1; done
+
             - name: Start WordPress Env
               id: wp-env
               uses: nick-fields/retry@v3
               with:
-                  timeout_minutes: 5
-                  max_attempts: 2
+                  timeout_minutes: 6
+                  max_attempts: 3
                   retry_on: error
                   command: |
                       cd tests/pw
@@ -583,12 +603,32 @@ jobs:
                     cp .wp-env.json .wp-env.override.json
                   fi
 
+            # Route Docker Hub pulls through Google's public pull-through mirror. The wp-env images
+            # (mariadb, phpmyadmin, wordpress, composer — all official library/* images) then come
+            # from the mirror instead of registry-1.docker.io, dodging Docker Hub's anonymous
+            # pull-rate-limit / connection timeouts that randomly fail one shard's `wp-env start`.
+            # No credentials needed; Docker falls back to Docker Hub if the mirror misses an image.
+            - name: Route Docker Hub pulls through a mirror (avoids anonymous rate-limit/timeouts)
+              run: |
+                  # Merge into any existing daemon.json (jq is preinstalled on the runner) so we
+                  # never clobber the runner's own Docker config; create it only if absent.
+                  sudo mkdir -p /etc/docker
+                  if [ -s /etc/docker/daemon.json ]; then
+                      sudo jq '. + {"registry-mirrors": ["https://mirror.gcr.io"]}' /etc/docker/daemon.json | sudo tee /etc/docker/daemon.json.tmp >/dev/null
+                      sudo mv /etc/docker/daemon.json.tmp /etc/docker/daemon.json
+                  else
+                      echo '{ "registry-mirrors": ["https://mirror.gcr.io"] }' | sudo tee /etc/docker/daemon.json >/dev/null
+                  fi
+                  sudo systemctl restart docker
+                  # Wait for the daemon socket instead of a fixed sleep.
+                  for i in $(seq 1 15); do docker info >/dev/null 2>&1 && break; sleep 1; done
+
             - name: Start WordPress Env
               id: wp-env
               uses: nick-fields/retry@v3
               with:
-                  timeout_minutes: 5
-                  max_attempts: 2
+                  timeout_minutes: 6
+                  max_attempts: 3
                   retry_on: error
                   command: |
                       cd tests/pw
