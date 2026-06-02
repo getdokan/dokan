@@ -148,6 +148,33 @@ const SelectEdit = ( { data, field, onChange, validity }: any ) => {
     const useTaggable = field.creatable && isMulti;
     const canCreate = Boolean( field.creatable );
 
+    // Only surface the "Create" option for a non-empty, non-duplicate entry so an empty `Create ""` never shows.
+    const isValidNewOption = (
+        inputValue: string,
+        selectValue: readonly any[],
+        selectOptions: readonly any[]
+    ) => {
+        const trimmed = inputValue.trim();
+        const matchesExisting = ( option: any ) =>
+            String( option?.label )
+                .trim()
+                .toLowerCase() === trimmed.toLowerCase();
+        const isValid =
+            canCreate &&
+            !! trimmed &&
+            ! selectValue.some( matchesExisting ) &&
+            ! selectOptions.some( matchesExisting );
+
+        // Let extensions override whether a typed entry may be created (e.g. per-field tag rules).
+        return applyFilters(
+            'dokan_product_editor_is_valid_new_option',
+            isValid,
+            inputValue,
+            field,
+            data
+        ) as boolean;
+    };
+
     return (
         <CustomField field={ field } error={ getValidationError( validity ) }>
             { useTaggable ? (
@@ -163,7 +190,7 @@ const SelectEdit = ( { data, field, onChange, validity }: any ) => {
                         options={ options }
                         placeholder={ placeholder }
                         value={ getSelectedValue() }
-                        isValidNewOption={ () => canCreate }
+                        isValidNewOption={ isValidNewOption }
                         onChange={ handleChange }
                     />
                 </div>
