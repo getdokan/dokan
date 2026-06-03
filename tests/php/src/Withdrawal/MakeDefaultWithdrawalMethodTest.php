@@ -28,12 +28,12 @@ class MakeDefaultWithdrawalMethodTest extends DokanAjaxTestCase {
         // Create a seller user
         $user = $this->factory()->seller->create();
 
-        // Set the current user to the created seller
-        wp_set_current_user( $user );
-
         // Add the dokan_manage_withdraw capability to the user
         $user_obj = get_user_by( 'id', $user );
         $user_obj->add_cap( 'dokan_manage_withdraw' );
+
+        // Set the current user to the created seller again to refresh capabilities
+        wp_set_current_user( $user );
 
         // Set up PayPal payment method for the user
         $profile_settings = [
@@ -63,8 +63,8 @@ class MakeDefaultWithdrawalMethodTest extends DokanAjaxTestCase {
         // Handle the AJAX request
         try {
             $this->_handleAjax( 'dokan_withdraw_handle_make_default_method' );
-        } catch ( WPAjaxDieContinueException $e ) {
-            // This is expected for AJAX handlers that call wp_die()
+        } catch ( WPAjaxDieContinueException $e ) { // phpcs:ignore
+            // This exception is expected when the AJAX handler calls wp_die()
         }
 
         // Get the last response
