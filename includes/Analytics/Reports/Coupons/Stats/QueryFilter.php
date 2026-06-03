@@ -31,8 +31,5 @@ class QueryFilter extends OrdersQueryFilter {
 
         add_filter( 'woocommerce_analytics_clauses_where_coupons_stats_total', [ $this, 'add_where_subquery' ], 30 );
         add_filter( 'woocommerce_analytics_clauses_where_coupons_stats_interval', [ $this, 'add_where_subquery' ], 30 );
-
-        // Todo: We may remove the "woocommerce_admin_report_columns" filter after completing coupon amount sub-order distributions.
-        add_filter( 'woocommerce_admin_report_columns', [ $this, 'modify_admin_report_columns' ], 20, 3 );
     }
 }

@@ -26,8 +26,6 @@ class QueryFilter extends BaseQueryFilter {
 	public function register_hooks(): void {
 		add_filter( 'woocommerce_analytics_clauses_join_coupons_subquery', [ $this, 'add_join_subquery' ] );
         add_filter( 'woocommerce_analytics_clauses_where_coupons_subquery', [ $this, 'add_where_subquery' ], 30 );
-
-        add_filter( 'woocommerce_admin_report_columns', [ $this, 'modify_admin_report_columns' ], 20, 3 );
     }
 
     /**
