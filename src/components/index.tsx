@@ -73,7 +73,10 @@ export { default as SearchInput } from './SearchInput';
 export { default as Select } from './Select';
 export { default as ShortContent } from './ShortContent';
 export { default as DokanTab } from './Tab';
-export { default as TimePicker, default as DokanTimePicker } from './TimePicker';
+export {
+    default as TimePicker,
+    default as DokanTimePicker,
+} from './TimePicker';
 export { default as MediaUploader } from './Upload';
 export { default as UserCard } from './UserCard';
 export { default as StatCard } from './StatCard';
