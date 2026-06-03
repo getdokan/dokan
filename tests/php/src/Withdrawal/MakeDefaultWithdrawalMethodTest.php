@@ -63,9 +63,8 @@ class MakeDefaultWithdrawalMethodTest extends DokanAjaxTestCase {
         // Handle the AJAX request
         try {
             $this->_handleAjax( 'dokan_withdraw_handle_make_default_method' );
-        } catch ( WPAjaxDieContinueException $e ) {
+        } catch ( WPAjaxDieContinueException $e ) { // phpcs:ignore
             // This exception is expected when the AJAX handler calls wp_die()
-            echo 'AJAX handler completed with wp_die()';
         }
 
         // Get the last response
