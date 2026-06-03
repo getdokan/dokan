@@ -23,7 +23,6 @@
     "env:start": "wp-env start",
     "env:start:coverage": "wp-env start -- --xdebug=profile,trace,debug",
     "env:stop": "wp-env stop",
-    "env:cli": "wp-env run cli",
     "phpunit": "wp-env run cli --env-cwd=wp-content/plugins/dokan vendor/bin/phpunit -c phpunit.xml",
     "phpunit:coverage": "npm run phpunit -- --coverage-text",
     "test:phpunit": "wp-env start && npm run phpunit && wp-env stop"
