@@ -16,7 +16,7 @@ jobs:
 
       - name: Npm install and build
         run: |
-            npm ci
+            npm i
             npm run build
 
       - name: Setup PHP
