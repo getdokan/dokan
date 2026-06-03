@@ -546,10 +546,9 @@ class CustomersControllerTest extends DokanTestCase {
             'last_name'  => 'Create',
             'username'   => 'rolecreate',
             'password'   => 'password123',
-            'roles'      => [ 'customer', 'subscriber' ],
         ];
 
-        $response = $this->post_request( 'customers', $customer_data );
+        $response = $this->post_request( 'customers?roles=customer', $customer_data );
         $this->assertEquals( 403, $response->get_status() );
         $this->assertFalse( get_user_by( 'email', 'role.create@example.com' ) );
     }
