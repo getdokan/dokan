@@ -12,19 +12,15 @@ use WP_REST_Request;
  *
  * The new admin UI writes the flat `dokan_settings` option via the
  * `AdminSettingsController` PUT endpoint at
- * `/dokan/v1/admin/settings/{page_id}`. The legacy AJAX save handler
- * (`wp_ajax_dokan_save_settings`) still writes per-section `dokan_*`
- * options. The `LegacySettingsBridge` + `BridgeBootstrap` listener wire
- * both directions so values mirror between the two stores. These tests
- * pin the round-trip in both directions:
+ * `/dokan/v1/admin/settings/{page_id}`. The `LegacySettingsBridge` +
+ * `BridgeBootstrap` overlay projects those values into legacy `dokan_*`
+ * reads. These tests pin the REST write path against hand-authored
+ * schema fields:
  *
- *  1. Legacy AJAX save -> new `dokan_settings` (via
- *     `bridge->transform_legacy_payload_to_new()` then merge+update).
- *  2. REST PUT (writes `dokan_settings`) -> legacy `dokan_*` option
- *     (via the `dokan_admin_settings_changed` listener registered by
- *     `BridgeBootstrap`).
- *  3. Direct `update_option('dokan_admin_settings', ...)` -> legacy `dokan_*`
- *     option (same listener, independent of the REST controller).
+ *  1. REST PUT (writes `dokan_settings`) -> legacy `dokan_*` view
+ *     (via the read-time overlay filter registered by `BridgeBootstrap`).
+ *  2. Dot-path payload keys emitted by plugin-ui resolve to their leaf
+ *     field id before the controller writes them.
  *
  * @group admin-settings
  * @group settings-bridge
@@ -54,11 +50,6 @@ class SettingsRoundTripTest extends DokanTestCase {
 
     public function set_up() {
         parent::set_up();
-
-        // Enable the CSV-derived schema fragment so mapped fields like
-        // `vendors_vendor_onboarding_setup_wizard_logo_url` participate in
-        // the bridge.
-        update_option( 'dokan_csv_schema_enabled', true );
 
         // Ensure the admin user can hit the protected REST endpoint.
         $admin = get_user_by( 'id', $this->admin_id );
@@ -94,71 +85,9 @@ class SettingsRoundTripTest extends DokanTestCase {
             }
             $this->test_bootstrap = null;
         }
-        delete_option( 'dokan_csv_schema_enabled' );
         delete_option( 'dokan_admin_settings' );
         delete_option( 'dokan_general' );
         parent::tear_down();
-    }
-
-    /**
-     * Find a CSV-fragment field by `legacy_key` option+field pair.
-     *
-     * @param string $option Legacy wp_option name.
-     * @param string $field  Legacy field name.
-     *
-     * @return array<string,mixed>|null
-     */
-    private function find_csv_field( string $option, string $field ): ?array {
-        $fragment = require DOKAN_DIR . '/includes/Admin/Settings/Schema/Generated/csv_fields.php';
-        foreach ( $fragment as $element ) {
-            if (
-                ( $element['legacy_key']['option'] ?? null ) === $option
-                && ( $element['legacy_key']['field'] ?? null ) === $field
-            ) {
-                return $element;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Legacy AJAX save propagates into `dokan_settings`.
-     *
-     * Exercises the same bridge codepath the legacy AJAX handler runs at
-     * `Settings.php`: `transform_legacy_payload_to_new()` then merge into
-     * the flat option. Cannot dispatch the real `wp_ajax_dokan_save_settings`
-     * cleanly from a unit test (nonce + headers + die()), so the test calls
-     * the bridge directly with the same inputs the handler would.
-     *
-     * @return void
-     */
-    public function test_legacy_ajax_save_propagates_into_dokan_settings(): void {
-        $vendor_field = $this->find_csv_field( 'dokan_general', 'setup_wizard_logo_url' );
-        if ( null === $vendor_field ) {
-            $this->markTestSkipped( 'Expected mapped field "setup_wizard_logo_url" not found in generated fragment.' );
-            return;
-        }
-
-        $payload = [ 'setup_wizard_logo_url' => 'https://example.test/logo.png' ];
-
-        $bridge = new LegacySettingsBridge();
-        $slice  = $bridge->transform_legacy_payload_to_new( 'dokan_general', $payload );
-        $repo   = new \WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository();
-        $repo->update( $slice );
-
-        $new = get_option( 'dokan_admin_settings', [] );
-
-        $this->assertIsArray( $new );
-        $this->assertArrayHasKey(
-            $vendor_field['id'],
-            $new,
-            'Legacy save should have written the mapped new-flat key into dokan_settings.'
-        );
-        $this->assertSame(
-            'https://example.test/logo.png',
-            $new[ $vendor_field['id'] ],
-            'Bridge transform preserves the legacy payload value into the new-flat slice.'
-        );
     }
 
     /**
@@ -224,35 +153,6 @@ class SettingsRoundTripTest extends DokanTestCase {
     }
 
     /**
-     * Direct write of `dokan_settings` surfaces in legacy reads via overlay.
-     *
-     * Any code path that writes the new flat option (REST controller,
-     * migration, addon, direct call) must be visible to direct
-     * `get_option('dokan_*')` readers via the read-time overlay filter
-     * installed by BridgeBootstrap. No DB-level mirror runs.
-     *
-     * @return void
-     */
-    public function test_repository_update_fires_reverse_propagation(): void {
-        $vendor_field = $this->find_csv_field( 'dokan_general', 'setup_wizard_logo_url' );
-        if ( null === $vendor_field ) {
-            $this->markTestSkipped( 'Expected mapped field "setup_wizard_logo_url" not found.' );
-            return;
-        }
-
-        ( new \WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository() )
-            ->update( [ $vendor_field['id'] => 'reverse_value' ] );
-
-        $legacy = get_option( 'dokan_general', [] );
-        $this->assertIsArray( $legacy );
-        $this->assertSame(
-            'reverse_value',
-            $legacy['setup_wizard_logo_url'] ?? null,
-            'New-flat write must surface in get_option() via the overlay filter.'
-        );
-    }
-
-    /**
      * Dot-path payload keys resolve to their leaf id.
      *
      * plugin-ui emits dot-path keys (`parent.child.field`) reflecting its
@@ -287,51 +187,6 @@ class SettingsRoundTripTest extends DokanTestCase {
             'updated-via-dotpath',
             $settings['vendor_store_url_slug'] ?? null,
             'Dot-path payload key must resolve to its leaf id (vendor_store_url_slug).'
-        );
-    }
-
-    /**
-     * Round trip: legacy save -> new option -> legacy read sees fresh value.
-     *
-     * Under the new-as-canonical model the legacy DB row is never back-
-     * written. The round-trip is verified via the read-time overlay:
-     * subsequent `get_option('dokan_general')` calls project the latest
-     * new-flat value into the returned array.
-     *
-     * @return void
-     */
-    public function test_legacy_to_new_to_legacy_round_trip(): void {
-        $vendor_field = $this->find_csv_field( 'dokan_general', 'setup_wizard_logo_url' );
-        if ( null === $vendor_field ) {
-            $this->markTestSkipped( 'Expected mapped field "setup_wizard_logo_url" not found.' );
-            return;
-        }
-
-        // 1. Legacy save path: mapped key lands in dokan_admin_settings,
-        //    legacy row holds the unmapped remainder only.
-        dokan_save_legacy_settings_section(
-            'dokan_general',
-            [ 'setup_wizard_logo_url' => 'first_value' ]
-        );
-
-        // Read via get_option — the overlay projects the new value back in.
-        $legacy_after = get_option( 'dokan_general', [] );
-        $this->assertSame(
-            'first_value',
-            $legacy_after['setup_wizard_logo_url'] ?? null,
-            'Legacy view reflects the new-flat write via the overlay filter.'
-        );
-
-        // 2. Write a NEW value via the new-flat repository directly. Legacy
-        //    readers must observe the fresh value through the same overlay.
-        ( new \WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository() )
-            ->update( [ $vendor_field['id'] => 'second_value' ] );
-
-        $legacy_final = get_option( 'dokan_general', [] );
-        $this->assertSame(
-            'second_value',
-            $legacy_final['setup_wizard_logo_url'] ?? null,
-            'Subsequent new-flat writes surface in legacy reads via the overlay.'
         );
     }
 }

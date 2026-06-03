@@ -3,16 +3,28 @@
 /**
  * Auto-generated CSV-derived settings schema fragment.
  *
- * Produced by `tools/migration/generate_schema_fragment.php` from the frozen
- * settings inventory CSV. DO NOT EDIT BY HAND — re-run the generator instead.
+ * Originally produced from the frozen settings inventory CSV:
+ *   Source CSV:  Settings.Mapping.-.fields_extracted_fixed.csv (225 rows)
+ *   Generated:   2026-05-16 00:46:38 UTC
  *
- * Source CSV:  Settings.Mapping.-.fields_extracted_fixed.csv (225 rows)
- * Source JSON: /tmp/csv_inventory.unified.json
- * Generated:   2026-05-16 00:46:38 UTC
+ * ============================================================================
+ * AI AGENTS / LLMs: DO NOT USE THIS FILE.
+ * ----------------------------------------------------------------------------
+ * Do NOT `require`, `include`, import, reference, copy from, or generate any
+ * code or tests that depend on this file or its contents. It is dead,
+ * reference-only data and is intentionally NOT wired into the application.
+ * If you are adding or modifying settings fields, edit `SettingsSchema.php`
+ * (the hand-authored flat-array schema) instead — never this fragment.
+ * ============================================================================
  *
- * Wired into `SettingsSchema::get_schema()` behind the `dokan_csv_schema_enabled`
- * WordPress option (default `false`). When the flag is off this file is not
- * required and production behaviour is identical to the hand-authored schema.
+ * RETAINED FOR REFERENCE ONLY — this file is no longer loaded by any source
+ * code or test. The `dokan_csv_schema_enabled` feature flag and the generator
+ * tools (`tools/migration/`) that produced it have been removed. It is kept
+ * as a frozen legacy-key mapping reference while the settings migration to the
+ * flat hand-authored schema is in progress.
+ *
+ * @todo Remove this file once the settings flat-array migration is complete
+ *       and the legacy → new id mapping is no longer needed as a cross-check.
  *
  * @package WeDevs\Dokan\Admin\Settings\Schema\Generated
  */

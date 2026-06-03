@@ -34,22 +34,9 @@ class SettingsSchema {
             self::product_page()
         );
 
-        // Splice in the CSV-derived schema fragment behind a feature flag.
-        // Default `false` keeps production identical to the hand-authored schema.
-        // The flag flips on in a later migration task once per-tab work lands.
-        if ( (bool) get_option( 'dokan_csv_schema_enabled', false ) ) {
-            $generated_path = __DIR__ . '/Generated/csv_fields.php';
-            if ( is_file( $generated_path ) ) {
-                $generated = require $generated_path;
-                if ( is_array( $generated ) ) {
-                    $elements = array_merge( $elements, $generated );
-                }
-            }
-        }
-
         // Lite/Pro gating: when Dokan Pro is inactive, drop elements that
         // explicitly declare `is_lite: false` (Pro-only). Elements without an
-        // `is_lite` key — hand-authored entries and bridge-only fragment
+        // `is_lite` key — hand-authored entries and extension-registered
         // rows — are preserved untouched. The accessor `dokan()->is_pro_exists()`
         // is `apply_filters( 'dokan_is_pro_exists', false )` under the hood,
         // which lets Pro flip the flag at bootstrap and lets tests override it.
@@ -60,8 +47,8 @@ class SettingsSchema {
                     $elements,
                     static function ( $element ) {
                         // Only `type: field` entries are subject to gating —
-                        // pages, sub-pages, sections, and bridge-only rows
-                        // never carry `is_lite` and must pass through.
+                        // pages, sub-pages, and sections never carry `is_lite`
+                        // and must pass through.
                         if ( ! is_array( $element ) || ( $element['type'] ?? '' ) !== 'field' ) {
                             return true;
                         }
