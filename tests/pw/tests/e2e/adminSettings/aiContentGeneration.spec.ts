@@ -21,48 +21,56 @@ const oldDataset = {
     ],
 };
 
+// New-UI selectors use the stable test contract exposed by the refactored
+// settings app: each field wrapper carries `data-testid="settings-field-<id>"`
+// and nav items `data-testid="settings-menu-<id>"`. The control inside is a
+// Base UI element (`button[role="combobox"]`, `[role="switch"]`,
+// `input[type="password"]`). Verified against the live DOM at
+// page=dokan-dashboard. NOTE: the text engine is set to OpenAI so the OpenAI
+// API key/model fields it fills stay visible (engine selection gates which
+// provider group renders) and to mirror the legacy `oldDataset` (OpenAI).
 const newDataset = {
     title: 'Admin Setting: AI Assist',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_ai_assist >> #dokan_settings_ai_assist_product_generation',
+    selector: '[data-testid="settings-menu-ai_assist"] >> [data-testid="settings-menu-product_generation"]',
     fields: [
         {
-            selector: '#dokan_settings_ai_assist_product_generation_product_image_section_product_info_generate button[role="switch"]',
+            selector: '[data-testid="settings-field-ai_product_info_generate"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_ai_assist_product_generation_product_image_section_product_info_engine button[role="combobox"]',
+            selector: '[data-testid="settings-field-ai_product_info_engine"] button[role="combobox"]',
             type: 'radix-dropdown',
-            value: 'Gemini',
+            value: 'OpenAI',
         },
         {
-            selector: '#dokan_settings_ai_assist_product_generation_product_image_section_openai_api_info_group_openai_api_key input[type="password"]',
+            selector: '[data-testid="settings-field-text_openai_api_key"] input[type="password"]',
             type: 'text',
             value: 'your-openai-api-key',
         },
         {
-            selector: '#dokan_settings_ai_assist_product_generation_product_image_section_openai_api_info_group_openai_model button[role="combobox"]',
+            selector: '[data-testid="settings-field-text_openai_model"] button[role="combobox"]',
             type: 'radix-dropdown',
             value: 'OpenAI GPT-4o Mini',
         },
         {
-            selector: '#dokan_settings_ai_assist_product_generation_product_description_section_product_image_enhancement button[role="switch"]',
+            selector: '[data-testid="settings-field-ai_product_image_enhancement"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_ai_assist_product_generation_product_description_section_product_image_engine button[role="combobox"]',
+            selector: '[data-testid="settings-field-ai_product_image_engine"] button[role="combobox"]',
             type: 'radix-dropdown',
             value: 'Gemini',
         },
         {
-            selector: '#dokan_settings_ai_assist_product_generation_product_description_section_gemini_api_info_group_gemini_api_key input[type="password"]',
+            selector: '[data-testid="settings-field-image_gemini_api_key"] input[type="password"]',
             type: 'text',
             value: 'your-gemini-api-key',
         },
         {
-            selector: '#dokan_settings_ai_assist_product_generation_product_description_section_gemini_api_info_group_gemini_model button[role="combobox"]',
+            selector: '[data-testid="settings-field-image_gemini_model"] button[role="combobox"]',
             type: 'radix-dropdown',
             value: 'Gemini 2.5 Flash Image (aka Nano Banana)',
         },

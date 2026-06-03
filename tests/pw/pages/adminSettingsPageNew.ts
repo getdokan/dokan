@@ -87,6 +87,22 @@ export class AdminSettingsPageNew extends AdminPage {
                     await expect(trigger.locator('span')).toHaveText(field.value);
                     break;
                 }
+                case 'radix-dropdown': {
+                    // Base UI Select: field.selector is the combobox trigger.
+                    // Open it, pick the option by its visible label (rendered
+                    // in a portal as role="option"), then confirm the trigger
+                    // reflects the chosen label.
+                    const trigger = this.page.locator(field.selector);
+                    await trigger.waitFor({ state: 'visible' });
+                    await trigger.click();
+
+                    const option = this.page.getByRole('option', { name: field.value, exact: true });
+                    await option.waitFor({ state: 'visible', timeout: 15000 });
+                    await option.click();
+
+                    await expect(trigger).toContainText(field.value);
+                    break;
+                }
                 case 'email':
                     await this.page.fill(field.selector, field.value);
                     break;
@@ -244,6 +260,13 @@ export class AdminSettingsPageNew extends AdminPage {
                 case 'select': {
                     const value = await this.page.inputValue(field.selector);
                     expect(value).toBe(field.value);
+                    break;
+                }
+                case 'radix-dropdown': {
+                    // Base UI Select trigger reflects the selected option's
+                    // label as its text content.
+                    const trigger = this.page.locator(field.selector);
+                    await expect(trigger).toContainText(field.value);
                     break;
                 }
                 case 'textarea': {
