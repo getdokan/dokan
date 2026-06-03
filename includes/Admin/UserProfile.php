@@ -569,7 +569,17 @@ class UserProfile {
         }
 
         update_user_meta( $user_id, 'dokan_profile_settings', $store_settings );
-        update_user_meta( $user_id, 'dokan_enable_selling', $selling );
+
+        $current_selling = dokan_is_seller_enabled( $user_id ) ? 'yes' : 'no';
+
+        if ( $selling !== $current_selling ) {
+            if ( 'yes' === $selling ) {
+                dokan()->vendor->activate( $user_id );
+            } else {
+                dokan()->vendor->deactivate( $user_id );
+            }
+        }
+
         update_user_meta( $user_id, 'dokan_publishing', $publishing );
         update_user_meta( $user_id, 'dokan_admin_percentage', wc_format_decimal( $percentage ) );
         update_user_meta( $user_id, 'dokan_admin_percentage_type', $percentage_type );

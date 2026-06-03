@@ -4,6 +4,7 @@ import {
     TaggableSelect,
 } from '@getdokan/dokan-ui';
 import { DokanButton, DokanModal, Select } from '@src/components';
+import DebouncedInput from '@src/components/DebouncedInput';
 import apiFetch from '@wordpress/api-fetch';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
@@ -219,11 +220,11 @@ const AttributeCard = ( {
                 <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4 bg-white">
                     { /* Name Field - Editable only for Custom Attributes */ }
                     <div>
-                        <SimpleInput
+                        <DebouncedInput
                             label={ __( 'Name', 'dokan-lite' ) }
                             value={ attr.name }
-                            onChange={ ( e ) =>
-                                handleAttributeChange( 'name', e.target.value )
+                            onChange={ ( value: string ) =>
+                                handleAttributeChange( 'name', value )
                             }
                             disabled={ !! attr.is_taxonomy }
                             className="w-full px-3 py-2 border rounded text-sm disabled:bg-gray-100 disabled:text-gray-500"

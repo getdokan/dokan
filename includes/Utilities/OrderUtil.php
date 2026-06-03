@@ -209,4 +209,31 @@ class OrderUtil {
 
         return WCOrderUtil::get_table_for_order_meta();
     }
+
+    /**
+     * Determine whether customer-identifying details (billing/shipping address, billing full name, customer email)
+     * should be rendered in vendor order emails.
+     *
+     * Centralizes the gate so the same hook value is honored across all vendor email templates
+     * (vendor-new-order / vendor-completed-order, HTML and plain text).
+     *
+     * @since 5.0.2
+     *
+     * @param WC_Order $order Order object.
+     *
+     * @return bool True to render customer details, false to hide.
+     */
+    public static function should_show_email_customer_details( $order ): bool {
+
+        /**
+         * Filter whether to render customer-identifying details (billing/shipping address, billing full name,
+         * customer email) in vendor order emails.
+         *
+         * @since 5.0.2
+         *
+         * @param bool     $show  Whether to render customer details. Default true.
+         * @param WC_Order $order Order object.
+         */
+        return (bool) apply_filters( 'dokan_email_show_customer_details', true, $order );
+    }
 }

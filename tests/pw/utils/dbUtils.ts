@@ -254,4 +254,60 @@ export const dbUtils = {
         await dbUtils.setUserMeta(sellerId, 'dokan_geo_public', '1', false);
         await dbUtils.setUserMeta(sellerId, 'dokan_geo_address', 'New York, NY, USA', false);
     },
+
+    // ============================================
+    // EMAIL LOG (Email Log plugin → ${dbPrefix}_email_log)
+    // ============================================
+    // The Email Log plugin records every wp_mail() call into its own table
+    // BEFORE the SMTP transport runs, so a row exists even when the env's
+    // sendmail can't connect. These helpers let tests assert the admin email
+    // fired by a front-end abuse-report submit.
+
+    // highest existing email-log id — record this BEFORE an action so later
+    // reads only consider rows created by that action (avoids matching mail
+    // left over from earlier tests in the run).
+    async getMaxEmailLogId(): Promise<number> {
+        const query = `SELECT MAX(id) AS id FROM ${dbPrefix}_email_log;`;
+        const res = await dbUtils.dbQuery(query);
+        return Number(res[0]?.id ?? 0);
+    },
+
+    // parametrised read of recent email-log rows, newest first. All filters
+    // are optional; `sinceId` scopes to rows created after a recorded baseline.
+    async getEmailLogs(opts: { subjectLike?: string; toEmail?: string; sinceId?: number } = {}): Promise<any[]> {
+        const { subjectLike, toEmail, sinceId } = opts;
+        const where: string[] = [];
+        const params: any[] = [];
+        if (subjectLike !== undefined) {
+            where.push('subject LIKE ?');
+            params.push(subjectLike);
+        }
+        if (toEmail !== undefined) {
+            where.push('to_email = ?');
+            params.push(toEmail);
+        }
+        if (sinceId !== undefined) {
+            where.push('id > ?');
+            params.push(sinceId);
+        }
+        const whereClause = where.length ? `WHERE ${where.join(' AND ')}` : '';
+        const query = `SELECT id, to_email, subject, message, headers, sent_date FROM ${dbPrefix}_email_log ${whereClause} ORDER BY id DESC LIMIT 5;`;
+        const res = await dbUtils.dbQuery(query, params);
+        return res as any[];
+    },
+
+    // poll the email log until a matching row appears or the timeout elapses —
+    // the submit → wp_mail path is async, so the row may not be present the
+    // instant the front-end confirmation dialog closes.
+    async waitForEmailLog(opts: { subjectLike?: string; toEmail?: string; sinceId?: number } = {}, timeoutMs: number = 15000): Promise<any | null> {
+        const start = Date.now();
+        while (Date.now() - start < timeoutMs) {
+            const rows = await dbUtils.getEmailLogs(opts);
+            if (rows.length > 0) {
+                return rows[0];
+            }
+            await new Promise(resolve => setTimeout(resolve, 500));
+        }
+        return null;
+    },
 };

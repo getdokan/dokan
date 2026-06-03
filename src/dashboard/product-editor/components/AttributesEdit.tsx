@@ -146,7 +146,7 @@ const AttributesEdit = ( { data, field, onChange, validity }: any ) => {
                 { /* Attribute List */ }
                 { attributes.map( ( attr, index ) => (
                     <AttributeCard
-                        key={ `${ attr.name }-${ attr.position }` }
+                        key={ attr.position }
                         attr={ attr }
                         options={ options }
                         productType={ productType }

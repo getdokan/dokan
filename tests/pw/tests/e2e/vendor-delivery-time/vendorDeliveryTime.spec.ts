@@ -84,9 +84,12 @@ test.describe('Vendor Delivery Time (React) Tests @pro', () => {
         const page = await ctx.newPage();
         await page.goto(toPath(`dashboard/delivery-time-dashboard/`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(3000);
-        const bodyText = await page.locator('body').innerText();
-        expect(bodyText.trim().length).toBeGreaterThan(50);
+        await expect
+            .poll(async () => (await page.locator('body').innerText()).trim().length, {
+                timeout: 30_000,
+                intervals: [500, 1000, 2000, 3000],
+            })
+            .toBeGreaterThan(50);
         await page.close();
         await ctx.close();
     });
@@ -117,9 +120,12 @@ test.describe('Delivery Time Front-end (React) Tests @pro', () => {
         const page = await ctx.newPage();
         await page.goto(toPath(`product/p1_v1-simple/`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(4000);
-        const bodyText = await page.locator('body').innerText();
-        expect(bodyText.trim().length).toBeGreaterThan(50);
+        await expect
+            .poll(async () => (await page.locator('body').innerText()).trim().length, {
+                timeout: 30_000,
+                intervals: [500, 1000, 2000, 3000],
+            })
+            .toBeGreaterThan(50);
         await page.close();
         await ctx.close();
     });

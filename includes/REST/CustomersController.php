@@ -58,27 +58,105 @@ class CustomersController extends WC_REST_Customers_Controller {
      * @return WP_Error|boolean
      */
     protected function check_permission( $request, $action ) {
+        $messages = [
+            'view'   => __( 'Sorry, you cannot list resources.', 'dokan-lite' ),
+            'create' => __( 'Sorry, you are not allowed to create resources.', 'dokan-lite' ),
+            'edit'   => __( 'Sorry, you are not allowed to edit this resource.', 'dokan-lite' ),
+            'delete' => __( 'Sorry, you are not allowed to delete this resource.', 'dokan-lite' ),
+            'batch'  => __( 'Sorry, you are not allowed to batch update resources.', 'dokan-lite' ),
+            'search' => __( 'Sorry, you are not allowed to search customers.', 'dokan-lite' ),
+        ];
+
         if ( ! $this->check_vendor_permission() ) {
-            $messages = [
-                'view'   => __( 'Sorry, you cannot list resources.', 'dokan-lite' ),
-                'create' => __( 'Sorry, you are not allowed to create resources.', 'dokan-lite' ),
-                'edit'   => __( 'Sorry, you are not allowed to edit this resource.', 'dokan-lite' ),
-                'delete' => __( 'Sorry, you are not allowed to delete this resource.', 'dokan-lite' ),
-                'batch'  => __( 'Sorry, you are not allowed to batch update resources.', 'dokan-lite' ),
-                'search' => __( 'Sorry, you are not allowed to search customers.', 'dokan-lite' ),
-            ];
             return new WP_Error( "dokan_rest_cannot_$action", $messages[ $action ], [ 'status' => rest_authorization_required_code() ] );
         }
+
+        // CVE-2026-8761: object-level authorization for mutating actions.
+        $target_id = isset( $request['id'] ) ? (int) $request['id'] : 0;
+        if ( $target_id > 0 && in_array( $action, [ 'view', 'edit', 'delete' ], true ) ) {
+            $allowed = $this->is_target_user_allowed( $target_id );
+            if ( is_wp_error( $allowed ) ) {
+                $status = $allowed->get_error_data();
+                $status = isset( $status['status'] ) ? (int) $status['status'] : 403;
+                return new WP_Error( "dokan_rest_cannot_$action", $messages[ $action ], [ 'status' => $status ] );
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Verify the requesting vendor may mutate the target user.
+     *
+     * Rejects targets that are missing, hold admin-grade capabilities,
+     * are themselves a vendor, or have never placed an order with the
+     * requesting vendor. CVE-2026-8761.
+     *
+     * @param int $target_id Target user id.
+     *
+     * @return true|WP_Error
+     */
+    protected function is_target_user_allowed( int $target_id ) {
+        if ( $target_id <= 0 || ! get_userdata( $target_id ) ) {
+            return new WP_Error( 'dokan_rest_invalid_target', __( 'Invalid user.', 'dokan-lite' ), [ 'status' => 404 ] );
+        }
+
+        $protected_caps = apply_filters(
+            'dokan_rest_protected_user_caps',
+            [
+                'manage_options',
+				'manage_woocommerce',
+                'edit_users',
+				'delete_users',
+				'list_users',
+				'promote_users',
+				'create_users',
+				'remove_users',
+			]
+        );
+        foreach ( $protected_caps as $cap ) {
+            if ( user_can( $target_id, $cap ) ) {
+                return new WP_Error( 'dokan_rest_forbidden_target', __( 'You cannot operate on this user.', 'dokan-lite' ), [ 'status' => 403 ] );
+            }
+        }
+
+        if ( dokan_is_user_seller( $target_id ) ) {
+            return new WP_Error( 'dokan_rest_forbidden_target', __( 'You cannot operate on this user.', 'dokan-lite' ), [ 'status' => 403 ] );
+        }
+
+        if ( ! dokan_customer_has_order_from_this_seller( $target_id, dokan_get_current_user_id() ) ) {
+            return new WP_Error( 'dokan_rest_forbidden_target', __( 'You cannot operate on this customer.', 'dokan-lite' ), [ 'status' => 403 ] );
+        }
+
         return true;
     }
 
     /**
      * Check if the current user has vendor permissions.
      *
+     * Doubles as a callback on the woocommerce_rest_check_permissions
+     * filter so WooCommerce's internal capability checks for mutating
+     * operations (create/edit/delete/batch) re-validate the target user.
+     * Read context is allowed through for the vendor.
+     *
+     * @param bool|mixed $permission  Original permission decision when used as a filter callback.
+     * @param string     $context     Operation context (read/edit/delete/create/batch).
+     * @param int        $object_id   Target object id.
+     * @param string     $object_type Object type (expected: user).
+     *
      * @return bool
      */
-    public function check_vendor_permission(): bool {
-        return dokan_is_user_seller( dokan_get_current_user_id() );
+    public function check_vendor_permission( $permission = false, $context = '', $object_id = 0, $object_type = '' ): bool {
+        if ( ! dokan_is_user_seller( dokan_get_current_user_id() ) ) {
+            return false;
+        }
+
+        $object_id = (int) $object_id;
+        if ( $object_id > 0 && ( '' === $object_type || 'user' === $object_type ) && in_array( $context, [ 'create', 'edit', 'delete', 'batch' ], true ) ) {
+            return ! is_wp_error( $this->is_target_user_allowed( $object_id ) );
+        }
+
+        return true;
     }
 
     /**
@@ -90,7 +168,24 @@ class CustomersController extends WC_REST_Customers_Controller {
     public function get_items( $request ) {
         return $this->perform_vendor_action(
             function () use ( $request ) {
-                return parent::get_items( $request );
+                $response = parent::get_items( $request );
+                if ( is_wp_error( $response ) || ! ( $response instanceof WP_REST_Response ) ) {
+                    return $response;
+                }
+
+                $vendor_id = dokan_get_current_user_id();
+                $data = array_values(
+                    array_filter(
+                        (array) $response->get_data(),
+                        static function ( $item ) use ( $vendor_id ) {
+							$id = is_array( $item ) ? ( $item['id'] ?? 0 ) : 0;
+							return $id && dokan_customer_has_order_from_this_seller( $id, $vendor_id );
+                        }
+                    )
+                );
+
+                $response->set_data( $data );
+                return $response;
             }
         );
     }
@@ -255,6 +350,11 @@ class CustomersController extends WC_REST_Customers_Controller {
      * @return WP_Error|WC_Data
      */
     protected function prepare_object_for_database( $request, $creating = false ) {
+        // CVE-2026-8761: never allow role/roles via this endpoint.
+        if ( null !== $request->get_param( 'role' ) || null !== $request->get_param( 'roles' ) ) {
+            return new WP_Error( 'dokan_rest_forbidden_field', __( 'You cannot modify the role of a user.', 'dokan-lite' ), [ 'status' => 403 ] );
+        }
+
         $customer = parent::prepare_object_for_database( $request, $creating );
 
         if ( is_wp_error( $customer ) ) {
@@ -278,10 +378,12 @@ class CustomersController extends WC_REST_Customers_Controller {
      * @return mixed The result of the action.
      */
     private function perform_vendor_action( callable $action ) {
-        add_filter( 'woocommerce_rest_check_permissions', [ $this, 'check_vendor_permission' ] );
-        $result = $action();
-        remove_filter( 'woocommerce_rest_check_permissions', [ $this, 'check_vendor_permission' ] );
-        return $result;
+        add_filter( 'woocommerce_rest_check_permissions', [ $this, 'check_vendor_permission' ], 10, 4 );
+        try {
+            return $action();
+        } finally {
+            remove_filter( 'woocommerce_rest_check_permissions', [ $this, 'check_vendor_permission' ], 10 );
+        }
     }
 
     /**

@@ -87,7 +87,13 @@ const buildHeader = core => {
     const shortSha = SHA ? String(SHA).slice(0, 7) : '';
     const commitUrl = SHA && repo ? `${GITHUB_SERVER_URL || 'https://github.com'}/${repo}/commit/${SHA}` : '';
 
-    core.summary.addHeading('🧪 Playwright Test Report', 1);
+    // GitHub job summaries only render images from a URL (base64/data-URIs are stripped), so the
+    // logo is referenced from the repo by a commit-pinned raw URL. Falls back to the emoji locally.
+    const assetRef = SHA || process.env.GITHUB_SHA || 'develop';
+    const pwLogo = repo
+        ? `<img src="https://raw.githubusercontent.com/${repo}/${assetRef}/tests/pw/utils/assets/playwright_logo.png" alt="Playwright" height="28"> `
+        : '🧪 ';
+    core.summary.addRaw(`<h1>${pwLogo}Playwright Test Report</h1>`).addEOL();
 
     const metaRows = [
         SHA ? `**Commit:** [\`${shortSha}\`](${commitUrl})` : '',

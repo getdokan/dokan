@@ -352,7 +352,14 @@ if (SUMMARY_FILE) {
     const lines = [];
 
     // --- Header ---------------------------------------------------------
-    lines.push(`<h1>🛡 Dokan QA — Quality Report</h1>`);
+    // GitHub job summaries only render images from a URL (base64/data-URIs are stripped), so the
+    // logo is referenced from the repo by a commit-pinned raw URL. Falls back to the emoji locally.
+    const assetRef = process.env.SHA || process.env.GITHUB_SHA || 'develop';
+    const repoSlug = process.env.GITHUB_REPOSITORY || '';
+    const dokanLogo = repoSlug
+        ? `<img src="https://raw.githubusercontent.com/${repoSlug}/${assetRef}/tests/pw/utils/assets/dokan_logo.png" alt="Dokan" height="28"> `
+        : '🛡 ';
+    lines.push(`<h1>${dokanLogo}Dokan QA — Quality Report</h1>`);
     lines.push('');
     lines.push('<p>');
     lines.push('  ' + badge('Branch', branch, C.purpleLight, { labelColor: C.purplePrimary, logo: 'git', logoColor: 'white' }));

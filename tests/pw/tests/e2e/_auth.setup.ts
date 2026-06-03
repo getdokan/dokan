@@ -52,20 +52,22 @@ async function frontendLogin(page: Page, user: { username: string; password: str
 }
 
 async function adminLogin(page: Page, user: { username: string; password: string }, storageState?: string): Promise<void> {
-    await page.goto('wp-admin', { waitUntil: 'networkidle' });
+    await page.goto('wp-admin', { waitUntil: 'domcontentloaded' });
     const hasLoginForm = await page.locator('#user_login').isVisible().catch(() => false);
     if (hasLoginForm) {
         await page.locator('#user_login').fill(user.username);
         await page.locator('#user_pass').fill(user.password);
-        await Promise.all([
-            page.waitForLoadState('load'),
-            page.waitForResponse(r => r.url().includes('wp-admin')),
-            page.locator('#wp-submit').click(),
-        ]);
-        if (storageState) await page.context().storageState({ path: storageState });
-        const loggedIn = await getCurrentUser(page);
-        expect(loggedIn).toBe(user.username);
+        // Submit WITHOUT auto-waiting on the post-login navigation. The wp-admin dashboard render is
+        // slow on CI (admin_init fires blocking wordpress.org update checks), so click()'s built-in
+        // "wait for navigation to finish" hits the 15s actionTimeout and the step fails. The auth
+        // cookie is set by the fast wp-login.php 302, so we fire the submit via dispatchEvent (no nav
+        // wait) and confirm authentication by polling the logged-in cookie below.
+        await page.locator('#wp-submit').dispatchEvent('click');
     }
+    await expect
+        .poll(async () => await getCurrentUser(page), { timeout: 30000 })
+        .toBe(user.username);
+    if (storageState) await page.context().storageState({ path: storageState });
 }
 
 async function getProductEditNonce(page: Page): Promise<string> {

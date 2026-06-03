@@ -78,10 +78,14 @@ test.describe('Admin Setup Guide (React) Tests @lite', () => {
         const page = await ctx.newPage();
         await page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/setup`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(4000);
         // Just verify the body has content (not a blank page).
-        const bodyText = await page.locator('body').innerText();
-        expect(bodyText.trim().length, 'Setup guide page should not be blank').toBeGreaterThan(50);
+        await expect
+            .poll(async () => (await page.locator('body').innerText()).trim().length, {
+                timeout: 30_000,
+                intervals: [500, 1000, 2000, 3000],
+                message: 'Setup guide page should not be blank',
+            })
+            .toBeGreaterThan(50);
         await page.close();
         await ctx.close();
     });
