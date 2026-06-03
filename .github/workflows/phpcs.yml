@@ -1,6 +1,6 @@
 on: pull_request
 
-name: Inspections
+name: PHPCS Inspections
 jobs:
   runPHPCSInspection:
     name: Run PHPCS inspection
@@ -57,7 +57,9 @@ jobs:
       - name: Start WordPress Environment
         run: |
             npm run env:start
-
+      - name: Install WooCommerce in container
+        run: |
+            npm run env:cli -- plugin install woocommerce --activate
       - name: Running the phpunit tests
         run: |
             npm run phpunit
