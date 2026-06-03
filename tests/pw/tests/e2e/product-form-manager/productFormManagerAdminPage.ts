@@ -19,7 +19,11 @@ import { toPath, SERVER_URL } from '@utils/helpers';
 //              is_custom?, is_mandatory?, show_in_admin?, options?, labels?, visibilities?, requireds? }
 // ============================================================================
 
-const { ADMIN, ADMIN_PASSWORD, VENDOR, USER_PASSWORD } = process.env;
+const { ADMIN, ADMIN_PASSWORD, VENDOR, CUSTOMER, USER_PASSWORD } = process.env;
+
+// The admin builder + REST routes live behind the Dokan Pro `product_editor`
+// module. Every /dokan/v1/product-editor/* route 404s until it is activated.
+export const PRODUCT_EDITOR_MODULE_ID = 'product_editor';
 
 function basicAuth(username: string, password: string): string {
     return 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
@@ -70,6 +74,7 @@ export interface SchemaItem {
     type: 'section' | 'field';
     label: string;
     description?: string;
+    placeholder?: string;
     variant?: string;
     visibility?: boolean;
     required?: boolean;
@@ -117,6 +122,9 @@ export const api = {
     vendorAuth() {
         return { Authorization: basicAuth(VENDOR!, USER_PASSWORD!) };
     },
+    customerAuth() {
+        return { Authorization: basicAuth(CUSTOMER!, USER_PASSWORD!) };
+    },
     async get(endpoint: string, headers?: Record<string, string>): Promise<any> {
         const r = await this._ctx!.get(`${SERVER_URL}${endpoint}`, {
             headers: headers ?? this.adminAuth(),
@@ -134,6 +142,51 @@ export const api = {
         await this._ctx!.delete(`${SERVER_URL}${endpoint}`, {
             headers: headers ?? this.adminAuth(),
         });
+    },
+    // POST that returns the raw HTTP status — used by permission negatives where
+    // we assert a 401/403 rather than parsing the WP_Error body.
+    async postStatus(
+        endpoint: string,
+        payload: any,
+        headers?: Record<string, string>
+    ): Promise<number> {
+        const r = await this._ctx!.post(`${SERVER_URL}${endpoint}`, {
+            headers: headers ?? this.adminAuth(),
+            data: payload,
+        });
+        return r.status();
+    },
+    async put(endpoint: string, payload: any, headers?: Record<string, string>): Promise<any> {
+        const r = await this._ctx!.put(`${SERVER_URL}${endpoint}`, {
+            headers: headers ?? this.adminAuth(),
+            data: payload,
+        });
+        return r.json();
+    },
+
+    // --- Module activation -----------------------------------------------------
+    _moduleWasInactive: false,
+    // Activate the product_editor module (remembering whether it was off) so the
+    // spec is self-sufficient on a fresh env where the module ships inactive.
+    async ensureModuleActive(): Promise<void> {
+        const mods = await this.get('/dokan/v1/admin/modules');
+        const mod = Array.isArray(mods)
+            ? (mods as Array<{ id: string; active?: boolean }>).find(
+                  (m) => m.id === PRODUCT_EDITOR_MODULE_ID
+              )
+            : undefined;
+        this._moduleWasInactive = mod ? !mod.active : true;
+        await this.put('/dokan/v1/admin/modules/activate', {
+            module: [PRODUCT_EDITOR_MODULE_ID],
+        });
+    },
+    // Leave the env exactly as found: only deactivate if it was inactive before.
+    async restoreModuleState(): Promise<void> {
+        if (this._moduleWasInactive) {
+            await this.put('/dokan/v1/admin/modules/deactivate', {
+                module: [PRODUCT_EDITOR_MODULE_ID],
+            }).catch(() => undefined);
+        }
     },
 
     // --- Form Manager settings -------------------------------------------------
@@ -198,6 +251,40 @@ export const api = {
         return Number(created.id);
     },
     async createVendorProduct(categoryId: number): Promise<string> {
+        return this.createVendorProductWithFields(categoryId, {});
+    },
+    // Create a vendor product of an explicit type (simple | variable | grouped |
+    // external) so the editor can be checked per product type.
+    async createVendorProductOfType(
+        type: 'simple' | 'variable' | 'grouped' | 'external',
+        categoryId: number
+    ): Promise<string> {
+        const payload: Record<string, any> = {
+            name: `PW PFM ${type} ${faker.string.nanoid(6)}`,
+            type,
+            status: 'publish',
+            // `description` is a required+mandatory default field; populate it so
+            // the editor's save button is gated only by the field under test.
+            description: 'PW autotest product description.',
+            categories: [{ id: categoryId }],
+        };
+        if (type === 'simple' || type === 'external') {
+            payload.regular_price = '20';
+        }
+        if (type === 'external') {
+            payload.external_url = 'https://example.com';
+            payload.button_text = 'Buy';
+        }
+        const json = await this.post('/dokan/v1/products', payload, this.vendorAuth());
+        return String(json.id);
+    },
+    // Create a vendor-owned product, optionally passing custom-field values as
+    // top-level params (keyed by field id). The product_editor save hooks
+    // (dokan_new_product_added) persist those as product meta keyed by field id.
+    async createVendorProductWithFields(
+        categoryId: number,
+        extraParams: Record<string, any>
+    ): Promise<string> {
         const json = await this.post(
             '/dokan/v1/products',
             {
@@ -205,11 +292,24 @@ export const api = {
                 type: 'simple',
                 regular_price: '20',
                 status: 'publish',
+                // `description` is a required+mandatory default field; populate it so
+                // the editor's save button is gated only by the field under test.
+                description: 'PW autotest product description.',
                 categories: [{ id: categoryId }],
+                ...extraParams,
             },
             this.vendorAuth()
         );
         return String(json.id);
+    },
+    // Read a single product-meta value (by key) from the vendor product. Custom
+    // field values only round-trip through REST meta_data when the field id is
+    // NOT underscore-prefixed (underscore ids are protected/hidden meta).
+    async getProductMetaValue(productId: string, key: string): Promise<any> {
+        const product = await this.getProduct(productId);
+        const meta = Array.isArray(product?.meta_data) ? product.meta_data : [];
+        const found = meta.find((m: { key: string; value: any }) => m?.key === key);
+        return found ? found.value : undefined;
     },
     async deleteProduct(productId: string): Promise<void> {
         await this.del(`/dokan/v1/products/${productId}?force=true`, this.vendorAuth());
@@ -267,8 +367,21 @@ export class ProductFormManager {
     // ========================================================================
     // ADMIN: navigation & tabs
     // ========================================================================
+    // Both the admin builder and the vendor editor are hash-routed SPAs. Calling
+    // page.goto() with only a changed URL fragment is a no-op (no document
+    // reload), so React state — active tab, open edit panels, the in-memory
+    // schema, the loaded product — would leak from the previous test. Routing
+    // through about:blank forces a fresh document load and a clean React mount
+    // every time, which is what isolates these tests from one another.
+    private async freshGoto(url: string): Promise<void> {
+        await this.page.goto('about:blank');
+        await this.page.goto(url);
+    }
+
     async goto(): Promise<void> {
-        await this.page.goto(toPath('wp-admin/admin.php?page=dokan-dashboard#/product-form-manager'));
+        await this.freshGoto(
+            toPath('wp-admin/admin.php?page=dokan-dashboard#/product-form-manager')
+        );
         await this.page.waitForLoadState('domcontentloaded');
         await this.page
             .getByRole('button', { name: 'Save Changes' })
@@ -317,10 +430,8 @@ export class ProductFormManager {
     private async pickFieldType(label: string): Promise<void> {
         // react-select (@dokan/components) — control opens a portal menu.
         await this.page.locator('.react-select__control').first().click();
-        const option = this.page
-            .locator('.react-select__option')
-            .filter({ hasText: label })
-            .first();
+        // Exact match: "Select" must not also resolve "Multi Select" (strict-mode).
+        const option = this.page.getByRole('option', { name: label, exact: true }).first();
         await option.waitFor({ state: 'visible', timeout: 5000 });
         await option.click();
     }
@@ -432,6 +543,15 @@ export class ProductFormManager {
         await this.fieldRow(card, fieldLabel).getByRole('switch').nth(0).click();
     }
 
+    // The visibility toggle of a field row (switch #0). Exposed so a test can
+    // assert it is disabled for an is_mandatory field (the builder forbids hiding
+    // mandatory fields).
+    fieldVisibilitySwitch(sectionLabel: string, fieldLabel: string): Locator {
+        return this.fieldRow(this.sectionCard(sectionLabel), fieldLabel)
+            .getByRole('switch')
+            .nth(0);
+    }
+
     async toggleFieldRequired(sectionLabel: string, fieldLabel: string): Promise<void> {
         const card = this.sectionCard(sectionLabel);
         await this.fieldRow(card, fieldLabel).getByRole('switch').nth(1).click();
@@ -463,7 +583,7 @@ export class ProductFormManager {
     // VENDOR: product editor reflection
     // ========================================================================
     async gotoVendorEditor(productId: string): Promise<void> {
-        await this.page.goto(toPath(`dashboard/new/#/products/${productId}/edit`));
+        await this.freshGoto(toPath(`dashboard/new/#/products/${productId}/edit`));
         await this.page.waitForLoadState('domcontentloaded');
         await this.page
             .locator('#dokan-vendor-dashboard-root')
@@ -475,6 +595,12 @@ export class ProductFormManager {
         );
     }
 
+    // The `#dokan-form-field-{id}` wrapper is emitted only by variants that render
+    // through the CustomField wrapper (select, textarea, editor, datetime, image,
+    // file, async_select, attributes, price…). Plain text/number fields render a
+    // bare control with NO such wrapper, so id-based assertions only suit the
+    // wrapped variants (default fields use them). For variant-agnostic checks,
+    // assert on the rendered field label instead (see *ByLabel helpers).
     vendorField(fieldId: string): Locator {
         return this.page.locator(`#dokan-form-field-${fieldId}`);
     }
@@ -487,9 +613,89 @@ export class ProductFormManager {
         await expect(this.vendorField(fieldId)).toHaveCount(0);
     }
 
+    // Every rendered field (custom or default) carries its label in a
+    // `.dokan-form-field-label` node — the variant-agnostic way to assert a field
+    // is present/absent in the vendor editor regardless of its input wrapper.
+    vendorFieldByLabel(label: string): Locator {
+        return this.page
+            .locator('.dokan-form-field-label')
+            .filter({ hasText: label });
+    }
+
+    async assertVendorFieldVisibleByLabel(label: string): Promise<void> {
+        await expect(this.vendorFieldByLabel(label).first()).toBeVisible({ timeout: 15000 });
+    }
+
+    async assertVendorFieldAbsentByLabel(label: string): Promise<void> {
+        await expect(this.vendorFieldByLabel(label)).toHaveCount(0);
+    }
+
+    // A field's help text (description) renders verbatim in the vendor editor.
+    // The wrapper class differs per variant (text/select/etc. use
+    // `.dokan-form-field-description`; number/radio/checkbox render it on the bare
+    // control), so assert on the unique description text itself.
+    async assertVendorDescriptionVisible(description: string): Promise<void> {
+        await expect(this.page.getByText(description, { exact: false }).first()).toBeVisible({
+            timeout: 15000,
+        });
+    }
+
+    // Placeholder-capable variants (text, textarea) surface the configured
+    // placeholder as the control's `placeholder` attribute.
+    async assertVendorPlaceholderVisible(placeholder: string): Promise<void> {
+        await expect(
+            this.page
+                .locator(
+                    `input[placeholder="${placeholder}"], textarea[placeholder="${placeholder}"]`
+                )
+                .first()
+        ).toBeVisible({ timeout: 15000 });
+    }
+
     async assertVendorSeesText(text: string): Promise<void> {
         await expect(this.page.getByText(text, { exact: false }).first()).toBeVisible({
             timeout: 15000,
         });
+    }
+
+    // ========================================================================
+    // VENDOR: save / fill (for required-field enforcement during create & edit)
+    // ========================================================================
+    // The editor's save button is rendered into the dashboard header via a Fill
+    // slot; its label is "Update Product" (existing product) or "Save Changes"
+    // (new), and it is `disabled` whenever the form is invalid — so a required
+    // field left empty disables it.
+    vendorSaveButton(): Locator {
+        return this.page
+            .getByRole('button', { name: /Update Product|Save Changes/ })
+            .first();
+    }
+
+    async fillVendorFieldByPlaceholder(placeholder: string, value: string): Promise<void> {
+        await this.page.getByPlaceholder(placeholder).first().fill(value);
+    }
+
+    // A CustomField-wrapped field (textarea/select/…) renders a "(REQUIRED)"
+    // marker beside its label when configured required. Scoped to the field's
+    // #dokan-form-field-{id} wrapper so other required fields don't interfere.
+    async assertVendorFieldRequiredMarker(fieldId: string): Promise<void> {
+        await expect(
+            this.vendorField(fieldId).getByText('(REQUIRED)', { exact: false })
+        ).toBeVisible({ timeout: 15000 });
+    }
+
+    async assertVendorFieldNoRequiredMarker(fieldId: string): Promise<void> {
+        await expect(this.vendorField(fieldId)).toBeVisible({ timeout: 15000 });
+        await expect(
+            this.vendorField(fieldId).getByText('(REQUIRED)', { exact: false })
+        ).toHaveCount(0);
+    }
+
+    // Click save and wait for the success toast ("Product saved successfully.").
+    async saveVendorProduct(): Promise<void> {
+        await this.vendorSaveButton().click();
+        await expect(
+            this.page.getByText('Product saved successfully.', { exact: false }).first()
+        ).toBeVisible({ timeout: 20000 });
     }
 }
