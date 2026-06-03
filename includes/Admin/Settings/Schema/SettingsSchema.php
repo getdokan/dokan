@@ -2169,24 +2169,6 @@ class SettingsSchema {
 				'comparison' => '!==',
 			],
         ];
-        $on_enhance = [
-            [
-				'key' => 'ai_product_image_enhancement',
-				'value' => 'on',
-				'to_self' => true,
-				'attribute' => 'display',
-				'effect' => 'show',
-				'comparison' => '===',
-			],
-            [
-				'key' => 'ai_product_image_enhancement',
-				'value' => 'on',
-				'to_self' => true,
-				'attribute' => 'display',
-				'effect' => 'hide',
-				'comparison' => '!==',
-			],
-        ];
         $when_engine = static function ( string $engine_key, string $value ): array {
             return [
                 [
@@ -2208,8 +2190,7 @@ class SettingsSchema {
             ];
         };
 
-        $text_providers  = self::resolve_ai_providers( 'text' );
-        $image_providers = self::resolve_ai_providers( 'image' );
+        $text_providers = self::resolve_ai_providers( 'text' );
 
         $provider_options = static function ( array $providers ): array {
             $out = [];
@@ -2300,65 +2281,11 @@ class SettingsSchema {
             );
         }
 
-        // ===== Product Image Enhancement (Pro: only renders when image providers exist) =====
-        if ( ! empty( $image_providers ) ) {
-            $elements[] = [
-                'id'         => 'product_description_section',
-                'type'       => 'section',
-                'subpage_id' => 'product_generation',
-            ];
-            $elements[] = [
-                'id'            => 'ai_product_image_enhancement',
-                'type'          => 'field',
-                'variant'       => 'switch',
-                'section_id'    => 'product_description_section',
-                'title'         => esc_html__( 'Product Image Enhancement', 'dokan-lite' ),
-                'description'   => esc_html__( 'Allow vendors to enhance and generate professional product images using AI.', 'dokan-lite' ),
-                'default'       => 'off',
-                'enable_state'  => [
-					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
-					'value' => 'on',
-				],
-                'disable_state' => [
-					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
-					'value' => 'off',
-				],
-                'legacy_key'    => 'dokan_ai.dokan_ai_image_gen_availability',
-            ];
-            $elements[] = [
-                'id'           => 'ai_product_image_engine',
-                'type'         => 'field',
-                'variant'      => 'select',
-                'section_id'   => 'product_description_section',
-                'title'        => esc_html__( 'Engine', 'dokan-lite' ),
-                'description'  => esc_html__( 'Select your AI provider for image processing and generation.', 'dokan-lite' ),
-                'default'      => 'openai',
-                'options'      => $provider_options( $image_providers ),
-                'legacy_key'   => 'dokan_ai.dokan_ai_image_engine',
-                'dependencies' => $on_enhance,
-            ];
-
-            foreach ( $image_providers as $provider_id => $provider ) {
-                $pid = (string) $provider_id;
-                $elements = array_merge(
-                    $elements,
-                    self::ai_provider_group(
-                        [
-                            'provider_id'     => $pid,
-                            'provider'        => $provider,
-                            'section_id'      => 'product_description_section',
-                            'engine_field_id' => 'product_image_engine',
-                            'toggle_deps'     => $on_enhance,
-                            'engine_deps'     => $when_engine( 'product_image_engine', $pid ),
-                            'api_key_legacy'  => 'dokan_ai.dokan_ai_image_' . $pid . '_api_key',
-                            'model_legacy'    => 'dokan_ai.dokan_ai_image_' . $pid . '_model',
-                            'model_kind'      => 'image',
-                            'id_prefix'       => 'image',
-                        ]
-                    )
-                );
-            }
-        }
+        // NOTE: Product Image Enhancement (the `product_description_section`
+        // and its image engine / per-image-provider groups) is registered by
+        // Dokan Pro via `dokan_get_admin_settings_schema`
+        // (see ProSettingsSchema::ai_assist_settings()). It depends on image
+        // providers that only Pro registers, so it lives entirely in Pro.
 
         return $elements;
     }
@@ -2370,11 +2297,14 @@ class SettingsSchema {
      * the container can't resolve Manager — keeps schema generation
      * best-effort so a partial bootstrap never breaks the settings UI.
      *
+     * Public so Dokan Pro can resolve image providers when registering the
+     * Product Image Enhancement schema via `dokan_get_admin_settings_schema`.
+     *
      * @param string $kind
      *
      * @return array
      */
-    private static function resolve_ai_providers( string $kind ): array {
+    public static function resolve_ai_providers( string $kind ): array {
         if ( ! class_exists( '\WeDevs\Dokan\Intelligence\Manager' ) ) {
             return [];
         }
@@ -2391,14 +2321,16 @@ class SettingsSchema {
 
     /**
      * Build the 5-element per-provider fieldgroup (group + api_info +
-     * api_notice + api_key + model). Shared between the text and image
-     * sections so the dynamic shape stays in lock-step on both sides.
+     * api_notice + api_key + model). Shared between the Lite text section and
+     * the Pro image section (registered via `dokan_get_admin_settings_schema`)
+     * so the dynamic per-provider shape stays in lock-step across both
+     * plugins. Public for that cross-plugin reuse.
      *
      * @param array $cfg
      *
      * @return array
      */
-    private static function ai_provider_group( array $cfg ): array {
+    public static function ai_provider_group( array $cfg ): array {
         $pid          = $cfg['provider_id'];
         $provider     = $cfg['provider'];
         $toggle_deps  = $cfg['toggle_deps'];
