@@ -898,19 +898,54 @@ test.describe('Product Form Manager', () => {
     // (labels / visibilities keyed by product-type slug), not a field-to-field
     // condition builder. These round-trip through REST; the third case documents
     // the `requireds` gap (R5) where the sanitizer silently drops the override.
+    //
+    // Each test seeds its OWN custom field (with the override) rather than mutating
+    // a shared default field, so they can't contaminate each other through the
+    // single global option (which is what made an attributes-based version flaky).
     // ========================================================================
     test.describe('per-product-type overrides', () => {
+        // Append a custom field carrying the given per-type override maps and
+        // return its id. Caller asserts the override on the GET round-trip.
+        const seedFieldWithOverrides = async (
+            tag: string,
+            overrides: Partial<SchemaItem>
+        ): Promise<string> => {
+            const baseline = await api.getSchema();
+            const blockId = `dokan_custom_section_ov_${tag}`;
+            const fieldId = `dokan_custom_field_ov_${tag}`;
+            await api.saveSchema([
+                ...baseline,
+                {
+                    id: blockId,
+                    section_id: null,
+                    type: 'section',
+                    label: `OV Block ${tag}`,
+                    visibility: true,
+                    is_custom: true,
+                },
+                {
+                    id: fieldId,
+                    section_id: blockId,
+                    type: 'field',
+                    label: `OV Field ${tag}`,
+                    variant: 'text',
+                    visibility: true,
+                    required: false,
+                    is_custom: true,
+                    ...overrides,
+                },
+            ]);
+            return fieldId;
+        };
+
         test(
             'a per-type visibility override persists (PFM-P01)',
             { tag: ['@pro', '@admin'] },
             async () => {
-                const baseline = await api.getSchema();
-                const { field } = api.pickOptionalDefaultField(baseline)!;
-                const next = baseline.map((i) =>
-                    i.id === field.id ? { ...i, visibilities: { variable: false } } : i
-                );
-                await api.saveSchema(next);
-                const saved = (await api.getSchema()).find((i) => i.id === field.id);
+                const fieldId = await seedFieldWithOverrides(uid(), {
+                    visibilities: { variable: false },
+                });
+                const saved = (await api.getSchema()).find((i) => i.id === fieldId);
                 expect(saved?.visibilities?.variable).toBe(false);
             }
         );
@@ -919,14 +954,11 @@ test.describe('Product Form Manager', () => {
             'a per-type label override persists (PFM-P03)',
             { tag: ['@pro', '@admin'] },
             async () => {
-                const baseline = await api.getSchema();
-                const { field } = api.pickOptionalDefaultField(baseline)!;
                 const label = `PW Variable Label ${uid()}`;
-                const next = baseline.map((i) =>
-                    i.id === field.id ? { ...i, labels: { variable: label } } : i
-                );
-                await api.saveSchema(next);
-                const saved = (await api.getSchema()).find((i) => i.id === field.id);
+                const fieldId = await seedFieldWithOverrides(uid(), {
+                    labels: { variable: label },
+                });
+                const saved = (await api.getSchema()).find((i) => i.id === fieldId);
                 expect(saved?.labels?.variable).toBe(label);
             }
         );
@@ -935,13 +967,10 @@ test.describe('Product Form Manager', () => {
             'a per-type required override is dropped by the REST sanitizer (gap R5)',
             { tag: ['@pro', '@admin'] },
             async () => {
-                const baseline = await api.getSchema();
-                const { field } = api.pickOptionalDefaultField(baseline)!;
-                const next = baseline.map((i) =>
-                    i.id === field.id ? { ...i, requireds: { simple: true } } : i
-                );
-                await api.saveSchema(next);
-                const saved = (await api.getSchema()).find((i) => i.id === field.id);
+                const fieldId = await seedFieldWithOverrides(uid(), {
+                    requireds: { simple: true },
+                });
+                const saved = (await api.getSchema()).find((i) => i.id === fieldId);
                 // Documents current behavior: sanitize_schema_item() has no
                 // `requireds` branch, so per-type required overrides never persist.
                 expect(saved?.requireds).toBeUndefined();

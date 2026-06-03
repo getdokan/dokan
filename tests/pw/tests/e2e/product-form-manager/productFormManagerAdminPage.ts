@@ -169,16 +169,35 @@ export const api = {
     // Activate the product_editor module (remembering whether it was off) so the
     // spec is self-sufficient on a fresh env where the module ships inactive.
     async ensureModuleActive(): Promise<void> {
-        const mods = await this.get('/dokan/v1/admin/modules');
-        const mod = Array.isArray(mods)
-            ? (mods as Array<{ id: string; active?: boolean }>).find(
-                  (m) => m.id === PRODUCT_EDITOR_MODULE_ID
-              )
-            : undefined;
-        this._moduleWasInactive = mod ? !mod.active : true;
-        await this.put('/dokan/v1/admin/modules/activate', {
-            module: [PRODUCT_EDITOR_MODULE_ID],
-        });
+        const isActive = (list: any): boolean =>
+            Array.isArray(list) &&
+            (list as Array<{ id: string; active?: boolean }>).find(
+                (m) => m.id === PRODUCT_EDITOR_MODULE_ID
+            )?.active === true;
+
+        const before = await this.get('/dokan/v1/admin/modules');
+        this._moduleWasInactive = !isActive(before);
+
+        if (this._moduleWasInactive) {
+            await this.put('/dokan/v1/admin/modules/activate', {
+                module: [PRODUCT_EDITOR_MODULE_ID],
+            });
+        }
+
+        // Fail fast with a clear precondition error: confirm the module is active
+        // AND its REST route actually serves the form schema. Without this guard a
+        // failed activation (e.g. Dokan Pro inactive) surfaces later as confusing
+        // "not persisted" assertion failures instead of an actionable message.
+        const after = await this.get('/dokan/v1/admin/modules');
+        const schema = await this.getSchema();
+        if (!isActive(after) || schema.length === 0) {
+            throw new Error(
+                'Precondition failed: the "product_editor" (Product Form Manager) module ' +
+                    'is not active or GET /dokan/v1/product-editor/settings returned no schema. ' +
+                    'Ensure Dokan Pro is active and the product_editor module can be enabled ' +
+                    'before running these tests.'
+            );
+        }
     },
     // Leave the env exactly as found: only deactivate if it was inactive before.
     async restoreModuleState(): Promise<void> {
@@ -375,7 +394,11 @@ export class ProductFormManager {
     // every time, which is what isolates these tests from one another.
     private async freshGoto(url: string): Promise<void> {
         await this.page.goto('about:blank');
-        await this.page.goto(url);
+        // Resolve as soon as the document is parsed rather than waiting for the
+        // full `load` event — the WP dashboard pulls many assets and `load` can
+        // exceed the default 30s under CI/parallel load. Readiness is then gated
+        // by the explicit element waits in goto()/gotoVendorEditor().
+        await this.page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
     }
 
     async goto(): Promise<void> {
@@ -593,6 +616,13 @@ export class ProductFormManager {
             undefined,
             { timeout: 30000 }
         );
+        // product_id being set only means the editor bootstrapped — the form
+        // fields paint a moment later (after /init/fields resolves). Wait for the
+        // form to actually render so text/label assertions don't race a slow load.
+        await this.page
+            .locator('.dokan-form-field-label')
+            .first()
+            .waitFor({ state: 'visible', timeout: 30000 });
     }
 
     // The `#dokan-form-field-{id}` wrapper is emitted only by variants that render
