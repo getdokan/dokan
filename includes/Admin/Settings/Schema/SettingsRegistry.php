@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Admin\Settings\Schema;
 
+use WeDevs\Dokan\Admin\Settings\Migration\LegacySettingsBridge;
 use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository;
 use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepositoryInterface;
 
@@ -28,6 +29,23 @@ class SettingsRegistry {
     private ?array $cache = null;
 
     /**
+     * Lazy id-keyed index of field elements. Null until first {@see find_field()} call.
+     *
+     * @var array<string,array>|null
+     */
+    private ?array $field_index = null;
+
+    /**
+     * Lazy set of ids that are present in storage (flat option or via the
+     * legacy bridge overlay). Null until first {@see is_stored()} call.
+     *
+     * Keys are flat schema ids; values are unused (the array is used as a set).
+     *
+     * @var array<string,bool>|null
+     */
+    private ?array $stored_keys = null;
+
+    /**
      * Settings repository — single read surface for the stored payload.
      *
      * @var SettingsRepositoryInterface
@@ -41,6 +59,88 @@ class SettingsRegistry {
      */
     public function __construct( ?SettingsRepositoryInterface $settings_repo = null ) {
         $this->settings_repo = $settings_repo ?? new SettingsRepository();
+        $this->register_cache_invalidation_hooks();
+    }
+
+    /**
+     * Invalidate the processed schema cache whenever its underlying storage
+     * changes. Without this, consumers like {@see SettingsAccessor::get()}
+     * return stale values after any in-request option write.
+     *
+     * Listens to:
+     *   - The new flat option ({@see SettingsRepository::OPTION_KEY}) where
+     *     all admin writes land. Wired immediately — the option name is a
+     *     constant and needs no schema introspection.
+     *   - Every legacy `dokan_*` section that the bridge knows about — Pro
+     *     and third-party `update_option()` writes against those sections
+     *     would otherwise leave the registry overlay stale. **Deferred to
+     *     `init`** because enumerating the sections requires building the
+     *     bridge map, which harvests {@see SettingsSchema::get_schema()},
+     *     which runs `get_posts()`, which fires `pre_get_posts` hooks that
+     *     in turn read `dokan()->settings`. Doing that from the constructor
+     *     re-enters DI resolution and fatals the request.
+     *
+     * @return void
+     */
+    private function register_cache_invalidation_hooks(): void {
+        $new_option = SettingsRepository::OPTION_KEY;
+        add_action( "update_option_{$new_option}", [ $this, 'clear_cache' ] );
+        add_action( "add_option_{$new_option}", [ $this, 'clear_cache' ] );
+
+        if ( ! function_exists( 'did_action' ) ) {
+            return;
+        }
+        if ( did_action( 'init' ) ) {
+            $this->register_legacy_section_hooks();
+            return;
+        }
+        add_action( 'init', [ $this, 'register_legacy_section_hooks' ], 0 );
+    }
+
+    /**
+     * Register `update_option_{section}` / `add_option_{section}` listeners
+     * for every legacy section the bridge knows about. Must run on or after
+     * `init` — see {@see register_cache_invalidation_hooks()} for why.
+     *
+     * Public so it can be invoked as a WP action callback.
+     *
+     * @return void
+     */
+    public function register_legacy_section_hooks(): void {
+        if ( ! function_exists( 'dokan_get_container' ) ) {
+            return;
+        }
+        try {
+            $bridge = dokan_get_container()->get( LegacySettingsBridge::class );
+            if ( ! $bridge instanceof LegacySettingsBridge ) {
+                return;
+            }
+        } catch ( \Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+            // Bridge not booted yet — fall back to new-flat-option-only invalidation.
+            return;
+        }
+
+        foreach ( $this->known_legacy_sections( $bridge ) as $section ) {
+            add_action( "update_option_{$section}", [ $this, 'clear_cache' ] );
+            add_action( "add_option_{$section}", [ $this, 'clear_cache' ] );
+        }
+    }
+
+    /**
+     * Unique legacy section option names mentioned in the bridge mapping.
+     *
+     * @param LegacySettingsBridge $bridge
+     *
+     * @return array<int,string>
+     */
+    private function known_legacy_sections( LegacySettingsBridge $bridge ): array {
+        $sections = [];
+        foreach ( $bridge->get_mapping() as $entry ) {
+            if ( is_array( $entry ) && isset( $entry['option'] ) && is_string( $entry['option'] ) ) {
+                $sections[ $entry['option'] ] = true;
+            }
+        }
+        return array_keys( $sections );
     }
 
     /**
@@ -93,7 +193,102 @@ class SettingsRegistry {
      * @since DOKAN_SINCE
      */
     public function clear_cache(): void {
-        $this->cache = null;
+        $this->cache       = null;
+        $this->field_index = null;
+        $this->stored_keys = null;
+    }
+
+    /**
+     * Find a registered field element by its flat schema id.
+     *
+     * Returns the element array as it appears in {@see get_schema()} — i.e.
+     * with `value` populated via the bridge overlay and `default` filled.
+     * Returns null for unknown ids or for non-`field` elements (structural
+     * nodes share the id-space but are intentionally excluded).
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $id Flat schema id.
+     *
+     * @return array|null
+     */
+    public function find_field( string $id ): ?array {
+        if ( null === $this->field_index ) {
+            $this->build_field_index();
+        }
+        return $this->field_index[ $id ] ?? null;
+    }
+
+    /**
+     * Build the id-keyed field index from the processed schema.
+     *
+     * Structural elements (pages, sections, tabs, etc.) are excluded — only
+     * elements with `type: field` participate.
+     *
+     * @return void
+     */
+    private function build_field_index(): void {
+        $this->field_index = [];
+        foreach ( $this->get_schema() as $element ) {
+            if ( ( $element['type'] ?? '' ) !== 'field' ) {
+                continue;
+            }
+            $id = $element['id'] ?? '';
+            if ( '' === $id ) {
+                continue;
+            }
+            $this->field_index[ $id ] = $element;
+        }
+    }
+
+    /**
+     * Whether `$id` has a value present in storage (the flat option or, via
+     * the legacy bridge, a mapped per-section legacy option).
+     *
+     * Returns false for unregistered ids, and false when the only "value" the
+     * accessor would return is the schema default. Use this to distinguish a
+     * user-set value from a defaulted one — e.g. when preserving a runtime
+     * fallback that depends on another setting.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $id Flat schema id.
+     *
+     * @return bool
+     */
+    public function is_stored( string $id ): bool {
+        if ( null === $this->stored_keys ) {
+            $this->build_stored_keys();
+        }
+        return isset( $this->stored_keys[ $id ] );
+    }
+
+    /**
+     * Build the set of ids present in storage, applying the same bridge
+     * overlay {@see populate_values()} uses so legacy-only values count
+     * as "stored".
+     *
+     * @return void
+     */
+    private function build_stored_keys(): void {
+        $stored = $this->settings_repo->all();
+
+        if ( function_exists( 'dokan_get_container' ) ) {
+            try {
+                $bridge = dokan_get_container()->get( \WeDevs\Dokan\Admin\Settings\Migration\LegacySettingsBridge::class );
+                $stored = $bridge->hydrate_new_from_legacy( $stored );
+            } catch ( \Throwable $unused ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+                unset( $unused );
+                // Container not booted — fall back to flat-only view.
+            }
+        }
+
+        $this->stored_keys = [];
+        foreach ( array_keys( $stored ) as $id ) {
+            if ( is_string( $id ) && '' !== $id ) {
+                $this->stored_keys[ $id ] = true;
+            }
+        }
     }
 
     /**

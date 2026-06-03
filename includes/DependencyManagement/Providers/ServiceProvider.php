@@ -23,6 +23,7 @@ class ServiceProvider extends BootableServiceProvider {
         'product_block'       => \WeDevs\Dokan\Blocks\ProductBlock::class,
         'pageview'            => \WeDevs\Dokan\PageViews::class,
         'seller_wizard'       => \WeDevs\Dokan\Vendor\SetupWizard::class,
+        'settings'            => \WeDevs\Dokan\Admin\Settings\SettingsAccessor::class,
         'core'                => \WeDevs\Dokan\Core::class,
         'scripts'             => \WeDevs\Dokan\Assets::class,
         'email'               => \WeDevs\Dokan\Emails\Manager::class,
@@ -94,6 +95,23 @@ class ServiceProvider extends BootableServiceProvider {
      */
 	public function register(): void {
 		foreach ( $this->services as $key => $class_name ) {
+			if ( 'settings' === $key ) {
+				// Alias to the shared SettingsAccessor binding registered by
+				// AdminSettingsServiceProvider — without the closure, addShared()
+				// would construct a second instance. dokan()->settings is the
+				// canonical access path; SettingsAccessorInterface is registered
+				// as a tag, not a standalone binding, so it cannot be resolved
+				// directly via $container->get().
+				$this->getContainer()
+					->addShared(
+						$key,
+						function () use ( $class_name ) {
+							return $this->getContainer()->get( $class_name );
+						}
+					)
+					->addTag( self::TAG );
+				continue;
+			}
 			$this->getContainer()->addShared( $key, $class_name )->addTag( self::TAG );
 		}
     }

@@ -10,6 +10,7 @@ use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepository;
 use WeDevs\Dokan\Admin\Settings\Repository\SettingsRepositoryInterface;
 use WeDevs\Dokan\Admin\Settings\Schema\SchemaValidator;
 use WeDevs\Dokan\Admin\Settings\Schema\SettingsRegistry;
+use WeDevs\Dokan\Admin\Settings\SettingsAccessor;
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
 
 class AdminSettingsServiceProvider extends BaseServiceProvider {
@@ -28,6 +29,7 @@ class AdminSettingsServiceProvider extends BaseServiceProvider {
         LegacySettingsBridge::class,
         LegacySettingsRepository::class,
         BridgeBootstrap::class,
+        SettingsAccessor::class,
     ];
 
 	/**
@@ -35,7 +37,15 @@ class AdminSettingsServiceProvider extends BaseServiceProvider {
      */
 	public function register(): void {
         foreach ( $this->services as $service ) {
-            $definition = $this->share_with_implements_tags( $service );
+            if ( SettingsAccessor::class === $service ) {
+                // SettingsAccessor requires SettingsRegistry; League's
+                // reflection-based auto-resolve cannot satisfy a non-nullable
+                // typed parameter without an explicit binding, so the
+                // dependency is wired here.
+                $definition = $this->share_with_implements_tags( $service )->addArgument( SettingsRegistry::class );
+            } else {
+                $definition = $this->share_with_implements_tags( $service );
+            }
             $this->add_tags( $definition, $this->tags );
         }
 
