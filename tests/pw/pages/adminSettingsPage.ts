@@ -154,7 +154,7 @@ export class AdminSettingsPage extends BasePage {
         return await storeField.inputValue();
     }
 
-    async updateSingleSellerModeInNewSettings(enabled: boolean) {
+    async updateSingleSellerModeInNewSettings(_enabled: boolean) {
         await this.navigateToNewMarketplaceSettings();
 
         // Find the switch element - look for the actual switch input or button

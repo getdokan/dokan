@@ -79,7 +79,6 @@ test.describe('Admin Settings Migration', () => {
     // Test for `General -> Marketplace -> Store Category` settings synchronization.
     test('should maintain bi-directional data synchronization for store category settings', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
         // Test scenario following the exact steps from issue description
-        const testData = data.adminSettingsMigration.testData;
         
         // Step 1: Update new settings to 'none'
         await adminSettingsPage.updateStoreCategoryInNewSettings('none');
@@ -106,7 +105,7 @@ test.describe('Admin Settings Migration', () => {
     });
 
 
-    test('should maintain bi-directional data synchronization for show customer details to vendors settings', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
+    test('should maintain bi-directional data synchronization for show customer details to vendors settings', { tag: ['@lite', '@admin', '@migration'] }, async () => {
         // Test scenario for verifying synchronization of "Show customer details to vendors" setting between new and old UIs
         
         // Step 1: Get current status from new settings and toggle it
@@ -132,7 +131,7 @@ test.describe('Admin Settings Migration', () => {
         expect(newValueAfterOldUpdate1).toBe(!status); // Final value should be inverted correctly
     });
 
-    test('should maintain bi-directional data synchronization for guest product enquiry settings', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
+    test('should maintain bi-directional data synchronization for guest product enquiry settings', { tag: ['@lite', '@admin', '@migration'] }, async () => {
         // Test scenario for verifying synchronization of "Guest Product Enquiry" setting between new and old UIs
 
         // Step 1: Get current status from new settings and toggle it
@@ -158,7 +157,7 @@ test.describe('Admin Settings Migration', () => {
         expect(newValueAfterOldUpdate1).toBe(!status); // Final value should be inverted correctly
     });
 
-    test('should maintain bi-directional data synchronization for Add to Cart Button Visibility settings', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
+    test('should maintain bi-directional data synchronization for Add to Cart Button Visibility settings', { tag: ['@lite', '@admin', '@migration'] }, async () => {
         // Step 1: Get current status from new settings and toggle it
         let status = await adminSettingsPage.getAddToCartButtonVisibilityFromNewSettings();
         await adminSettingsPage.updateAddToCartButtonVisibilityInNewSettings(!status);
@@ -182,7 +181,7 @@ test.describe('Admin Settings Migration', () => {
         expect(newValueAfterOldUpdate1).toBe(!status); // Final value should be inverted correctly
     });
 
-    test('should maintain bi-directional data synchronization for Live Search Options settings', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
+    test('should maintain bi-directional data synchronization for Live Search Options settings', { tag: ['@lite', '@admin', '@migration'] }, async () => {
         // Test scenario for verifying synchronization of "Live Search Options" setting between new and old UIs
 
         // Step 1: Get current value from new settings and toggle it
@@ -210,7 +209,7 @@ test.describe('Admin Settings Migration', () => {
         expect(finalNewValue).toBe(secondToggleValue);
     });
 
-    test('should maintain bi-directional data synchronization for Enable Selling settings', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
+    test('should maintain bi-directional data synchronization for Enable Selling settings', { tag: ['@lite', '@admin', '@migration'] }, async () => {
         // Test scenario for verifying synchronization of "Enable Selling" setting between new and old UIs
 
         // Step 1: Get current value from new settings and toggle it
@@ -238,7 +237,7 @@ test.describe('Admin Settings Migration', () => {
         expect(finalNewValue).toBe(secondToggleValue);
     });
 
-    test('should maintain bi-directional data synchronization for Address Fields setting', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
+    test('should maintain bi-directional data synchronization for Address Fields setting', { tag: ['@lite', '@admin', '@migration'] }, async () => {
         // Test scenario for verifying synchronization of "Address Fields" setting between new and old UIs
 
         // Step 1: Get current value from new settings and toggle it
@@ -266,7 +265,7 @@ test.describe('Admin Settings Migration', () => {
         expect(finalNewValue).toBe(secondToggleValue);
     });
 
-    test('should maintain bi-directional data synchronization for terms and conditions setting', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
+    test('should maintain bi-directional data synchronization for terms and conditions setting', { tag: ['@lite', '@admin', '@migration'] }, async () => {
         // Test scenario for verifying synchronization of "Terms and Conditions" setting between new and old UIs
         
         // Step 1: Get current status from new settings and toggle it
@@ -293,7 +292,7 @@ test.describe('Admin Settings Migration', () => {
     });
 
     // Test for `General -> Marketplace -> Welcome Wizard` settings synchronization.
-    test('should maintain bi-directional data synchronization for welcome wizard setting', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
+    test('should maintain bi-directional data synchronization for welcome wizard setting', { tag: ['@lite', '@admin', '@migration'] }, async () => {
         // Test scenario for verifying synchronization of "Welcome Wizard" setting between new and old UIs
 
         // Step 1: Get current status from new settings and toggle it
@@ -390,7 +389,7 @@ test.describe('Admin Settings Migration', () => {
     // ******************* //
 
     // Test for `Vendor Capabilities -> Duplicate Product` settings synchronization.
-    test('should maintain bi-directional data synchronization for Duplicate Product', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
+    test('should maintain bi-directional data synchronization for Duplicate Product', { tag: ['@lite', '@admin', '@migration'] }, async () => {
 
         const oldNavigationFunction = 'navigateToOldSellingOptions'; 
         const newNavigationFunction = 'navigateToNewVendorCapabilitiesSettings'; 
@@ -422,7 +421,7 @@ test.describe('Admin Settings Migration', () => {
     });
 
     // Test for `Vendor Capabilities -> Allow vendors to create orders settings syncronization
-    test('should maintain bi-directional data synchronization for Allow vendors to create orders', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
+    test('should maintain bi-directional data synchronization for Allow vendors to create orders', { tag: ['@lite', '@admin', '@migration'] }, async () => {
 
         const oldNavigationFunction = 'navigateToOldSellingOptions'; 
         const newNavigationFunction = 'navigateToNewVendorCapabilitiesSettings'; 
@@ -454,7 +453,7 @@ test.describe('Admin Settings Migration', () => {
     });
 
     // Test for `Vendor Capabilities -> One Page Product Creation` settings synchronization.
-    test('should maintain bi-directional data synchronization for One Page Product Creation', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
+    test('should maintain bi-directional data synchronization for One Page Product Creation', { tag: ['@lite', '@admin', '@migration'] }, async () => {
 
         const oldNavigationFunction = 'navigateToOldSellingOptions'; 
         const newNavigationFunction = 'navigateToNewVendorCapabilitiesSettings'; 
@@ -486,7 +485,7 @@ test.describe('Admin Settings Migration', () => {
     });
 
     // Test for `Vendor Capabilities -> Product Popup` settings synchronization.
-    test('should maintain bi-directional data synchronization for Product Popup', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
+    test('should maintain bi-directional data synchronization for Product Popup', { tag: ['@lite', '@admin', '@migration'] }, async () => {
 
         const oldNavigationFunction = 'navigateToOldSellingOptions'; 
         const newNavigationFunction = 'navigateToNewVendorCapabilitiesSettings'; 
@@ -528,7 +527,7 @@ test.describe('Admin Settings Migration', () => {
 
 
     // Test for `Vendor Capabilities -> Order Status Change` settings synchronization.
-    test('should maintain bi-directional data synchronization for Order Status Change', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
+    test('should maintain bi-directional data synchronization for Order Status Change', { tag: ['@lite', '@admin', '@migration'] }, async () => {
 
         const oldNavigationFunction = 'navigateToOldSellingOptions'; 
         const newNavigationFunction = 'navigateToNewVendorCapabilitiesSettings'; 
@@ -570,7 +569,7 @@ test.describe('Admin Settings Migration', () => {
 
 
     // Test for `Vendor Capabilities -> Select any category settings synchronization.
-    test('should maintain bi-directional data synchronization for Select any category', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
+    test('should maintain bi-directional data synchronization for Select any category', { tag: ['@lite', '@admin', '@migration'] }, async () => {
 
         const oldNavigationFunction = 'navigateToOldSellingOptions'; 
         const newNavigationFunction = 'navigateToNewVendorCapabilitiesSettings'; 
@@ -613,7 +612,7 @@ test.describe('Admin Settings Migration', () => {
 
     // Test for `Vendor Capabilities -> Auction Functions` settings synchronization.
     // Ned to ensure Auction module and woocommerce auction plugin is active before running this test.
-    test('should maintain bi-directional data synchronization for Auction Functions for New Vendors', { tag: ['@lite', '@admin', '@migration'] }, async ({ page }) => {
+    test('should maintain bi-directional data synchronization for Auction Functions for New Vendors', { tag: ['@lite', '@admin', '@migration'] }, async () => {
 
         const oldNavigationFunction = 'navigateToOldSellingOptions'; 
         const newNavigationFunction = 'navigateToNewVendorCapabilitiesSettings'; 

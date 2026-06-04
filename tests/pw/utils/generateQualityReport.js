@@ -27,21 +27,24 @@ const path = require('path');
 const TEMPLATE_PATH = path.join(__dirname, 'quality-report-template.html');
 const OUTPUT_FILE = process.env.OUTPUT_FILE || path.join(process.cwd(), 'qa-report.html');
 
+/** @param {string|null|undefined} filePath @returns {any} */
 const readJson = filePath => {
     if (!filePath || !fs.existsSync(filePath)) return null;
     try {
         return JSON.parse(fs.readFileSync(filePath, 'utf8'));
     } catch (e) {
-        console.warn(`generateQualityReport: failed to parse ${filePath}: ${e.message}`);
+        console.warn(`generateQualityReport: failed to parse ${filePath}: ${e instanceof Error ? e.message : String(e)}`);
         return null;
     }
 };
 
+/** @param {*} value @param {number} [fallback] @returns {number} */
 const num = (value, fallback = 0) => {
     const n = Number(value);
     return Number.isFinite(n) ? n : fallback;
 };
 
+/** @param {number} ms */
 const formatDuration = ms => {
     if (!Number.isFinite(ms) || ms <= 0) return '—';
     const h = Math.floor(ms / 3_600_000);
@@ -54,6 +57,7 @@ const formatDuration = ms => {
     return parts.join(' ');
 };
 
+/** @param {number} bytes */
 const formatBytes = bytes => {
     if (!Number.isFinite(bytes) || bytes <= 0) return '—';
     const units = ['B', 'KB', 'MB', 'GB'];
@@ -66,12 +70,14 @@ const formatBytes = bytes => {
     return `${n.toFixed(n >= 100 ? 0 : 1)} ${units[i]}`;
 };
 
+/** @param {string} dir */
 const dirSize = dir => {
     let total = 0;
     if (!fs.existsSync(dir)) return 0;
     const stack = [dir];
     while (stack.length) {
         const cur = stack.pop();
+        if (!cur) continue;
         const stat = fs.statSync(cur);
         if (stat.isDirectory()) {
             for (const child of fs.readdirSync(cur)) stack.push(path.join(cur, child));
@@ -82,13 +88,14 @@ const dirSize = dir => {
     return total;
 };
 
-const escape = value => String(value ?? '').replace(/[&<>"']/g, c => ({
+/** @param {*} value @returns {string} */
+const escape = value => String(value ?? '').replace(/[&<>"']/g, c => (/** @type {Record<string, string>} */ ({
     '&': '&amp;',
     '<': '&lt;',
     '>': '&gt;',
     '"': '&quot;',
     "'": '&#39;',
-}[c]));
+})[c] ?? c));
 
 // ----------------------------------------------------------------------------
 
@@ -97,6 +104,7 @@ const e2eResult = readJson(process.env.E2E_TEST_RESULT);
 const apiCoverageRaw = readJson(process.env.API_COVERAGE);
 const e2eCoverageRaw = readJson(process.env.E2E_COVERAGE);
 
+/** @param {any} report */
 const suiteShape = report => {
     if (!report) return null;
     const total = num(report.total_tests);
@@ -117,6 +125,7 @@ const suiteShape = report => {
     };
 };
 
+/** @param {any} raw */
 const coverageShape = (raw) => {
     if (!raw) return { pct: null, total: 0, covered: 0 };
     const pctRaw = String(raw.coverage ?? '').replace('%', '').trim();
@@ -140,6 +149,8 @@ const totals = {
     failed: num(api?.failed) + num(e2e?.failed),
     skipped: num(api?.skipped) + num(e2e?.skipped),
     durationMs: num(api?.durationMs) + num(e2e?.durationMs),
+    ran: 0,
+    passRate: 0,
 };
 totals.ran = totals.passed + totals.failed;
 totals.passRate = totals.ran > 0 ? Math.round((totals.passed / totals.ran) * 1000) / 10 : 0;
@@ -155,7 +166,6 @@ if (combinedTotal > 0) {
 }
 
 const overallFailed = totals.failed > 0;
-const overallStatus = overallFailed ? 'failed' : 'passed';
 
 // ----------------------------------------------------------------------------
 // Artifacts (best-effort: list immediate subdirs under ARTIFACTS_DIR)
@@ -194,7 +204,9 @@ const prNumber = process.env.PR_NUMBER || '—';
 const runId = process.env.GITHUB_RUN_ID || '—';
 const today = new Date().toISOString().slice(0, 10);
 
+/** @param {*} v */
 const fmtPct = v => v === null || v === undefined ? '—' : `${num(v).toFixed(1)}`;
+/** @param {*} v */
 const fmtCount = v => v === null || v === undefined ? '—' : String(num(v));
 
 const placeholders = {
@@ -291,11 +303,18 @@ if (SUMMARY_FILE) {
         ink:           '1a1a1a',
     };
 
+    /** @param {*} n */
     const fmtNum = n => Number.isFinite(Number(n)) ? Number(n).toLocaleString('en-US') : '—';
+
+    /**
+     * @typedef {{ style?: string, labelColor?: string, logo?: string, logoColor?: string }} BadgeOpts
+     */
 
     // shields.io URL builder. Plain badges only — labelColor + color give us
     // the two-tone look the design uses for metric tiles.
+    /** @param {string} label @param {string} message @param {string} color @param {BadgeOpts} [opts] */
     const shieldUrl = (label, message, color, opts = {}) => {
+        /** @param {*} s */
         const enc = s => encodeURIComponent(String(s).replace(/-/g, '--').replace(/_/g, '__'));
         const params = new URLSearchParams({ style: opts.style || 'for-the-badge' });
         if (opts.labelColor) params.set('labelColor', opts.labelColor);
@@ -303,6 +322,7 @@ if (SUMMARY_FILE) {
         if (opts.logoColor)  params.set('logoColor', opts.logoColor);
         return `https://img.shields.io/badge/${enc(label)}-${enc(message)}-${color}?${params.toString()}`;
     };
+    /** @param {string} label @param {string} message @param {string} color @param {BadgeOpts} [opts] @param {string} [alt] */
     const badge = (label, message, color, opts = {}, alt) =>
         `<img alt="${escape(alt || `${label}: ${message}`)}" src="${shieldUrl(label, message, color, opts)}">`;
 
@@ -310,24 +330,19 @@ if (SUMMARY_FILE) {
         ? badge('✕  Tests failed', `${totals.failed} failure${totals.failed === 1 ? '' : 's'} · ${totals.passRate.toFixed(1)}% pass rate`, C.red, { labelColor: C.purplePrimary })
         : badge('✓  All tests passed', `Build is green · ${totals.passRate.toFixed(1)}% pass rate`, C.teal, { labelColor: C.purplePrimary });
 
+    /** @param {any} s */
     const suiteStatusBadge = (s) => {
         if (!s)            return badge('No data', '—', C.gray);
         if (s.failed > 0)  return badge('Failed', `${s.failed} failure${s.failed === 1 ? '' : 's'}`, C.red);
         return badge('Passed', `${s.passRate.toFixed(1)}% pass rate`, C.green);
     };
 
-    const passRateBadge = (pct) => badge(
-        'Pass rate',
-        `${pct.toFixed(1)}%`,
-        pct >= 99 ? C.green : pct >= 90 ? C.amber : C.red,
-        { style: 'flat-square' },
-    );
-
     const apiCovStr = apiCov.pct === null ? '—' : `${apiCov.pct.toFixed(2)}%`;
     const e2eCovStr = e2eCov.pct === null ? '—' : `${e2eCov.pct.toFixed(2)}%`;
     const totalCovStr = totalCoveragePct === null ? '—' : `${totalCoveragePct.toFixed(2)}%`;
 
     // Metrics tile (renders as a labelColor=purple / value=brand-color shield).
+    /** @param {string} label @param {string} value @param {string} color */
     const metricTile = (label, value, color) => `      <td align="center" valign="middle">${badge(label, value, color, { labelColor: C.purplePrimary })}</td>`;
 
     const artifactsTable = (() => {
@@ -416,8 +431,8 @@ if (SUMMARY_FILE) {
     lines.push('    </tr>');
     lines.push('  </thead>');
     lines.push('  <tbody>');
+    /** @param {string} label @param {any} s @param {string} covStr */
     const suiteTr = (label, s, covStr) => {
-        const tag = s && s.failed > 0 ? 'failed' : 'ok';
         const passedCell = s ? `<strong>${fmtNum(s.passed)}</strong>` : '—';
         const failedCell = s ? (s.failed > 0 ? `<strong style="color:#${C.red}">${fmtNum(s.failed)}</strong>` : '0') : '—';
         const passRateCell = s ? `<img alt="${s.passRate.toFixed(1)}%" src="${shieldUrl('', `${s.passRate.toFixed(1)}%`, s.failed > 0 ? C.red : s.passRate >= 99 ? C.green : C.amber, { style: 'flat-square' })}">` : '—';
