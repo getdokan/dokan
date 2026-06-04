@@ -2,7 +2,6 @@ import { test } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
 import { data } from '@utils/testData';
-import { da } from '@faker-js/faker/.'; 
 
 // --- Dataset Definitions ---
 
