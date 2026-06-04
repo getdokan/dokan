@@ -68,6 +68,11 @@
       "tests": 11
     },
     {
+      "file": "product-form-manager/productFormManagerAdmin.spec.ts",
+      "ms": 133598,
+      "tests": 46
+    },
+    {
       "file": "new-products/newProducts.spec.ts",
       "ms": 126333,
       "tests": 15
@@ -576,11 +581,6 @@
       "file": "privacy-policy/privacyPolicy.spec.ts",
       "ms": 18,
       "tests": 4
-    },
-    {
-      "file": "product-form-manager/productFormManager.spec.ts",
-      "ms": 0,
-      "tests": 9
     },
     {
       "file": "products/products.spec.ts",
