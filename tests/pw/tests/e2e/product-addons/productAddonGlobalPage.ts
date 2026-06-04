@@ -207,6 +207,14 @@ export class ProductAddonGlobalPage {
         await expect(this.page.getByText(name, { exact: false }).first()).toBeVisible({ timeout: 30_000 });
     }
 
+    // Assert `value` renders inside the SAME DataViews row as the add-on `name`
+    // (not merely somewhere on the page) — so a category/priority cell is verified
+    // against the row it actually belongs to.
+    async assertRowContains(name: string, value: string): Promise<void> {
+        const row = this.page.locator('tr.dataviews-view-table__row', { hasText: name });
+        await expect(row.getByText(value, { exact: false }).first()).toBeVisible({ timeout: 15_000 });
+    }
+
     async assertEmptyState(): Promise<void> {
         await this.gotoList();
         await expect(this.page.getByText(globalAddonSelectors.noData)).toBeVisible({ timeout: 30_000 });

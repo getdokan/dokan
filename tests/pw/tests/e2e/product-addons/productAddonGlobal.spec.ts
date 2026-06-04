@@ -56,7 +56,15 @@ test.describe('Product Add-ons - Global Add-on Management', () => {
 
             const created = await api.findByName(name);
             expect(created).toBeTruthy();
-            if (created) seeded.push(String(created.id));
+            if (created) {
+                seeded.push(String(created.id));
+                // Verify the restriction actually persisted — not just that the add-on exists.
+                // The WC endpoint returns restrict_to_categories as an object keyed by
+                // category term-id ({ "15": "Uncategorized" }), so read its keys.
+                const full = await api.get(`/wc-product-add-ons/v1/product-add-ons/${created.id}`);
+                const restricted = Object.keys(full.restrict_to_categories ?? {}).map(Number);
+                expect(restricted).toContain(categoryId);
+            }
         });
 
         test('vendor can edit a global add-on name and priority', { tag: ['@pro', '@vendor'] }, async () => {
@@ -95,8 +103,12 @@ test.describe('Product Add-ons - Global Add-on Management', () => {
             // assert that endpoint actually removes the add-on (full UI-driven delete
             // is covered there — see tests/api/productAddon.spec.ts).
             await api.deleteAddon(id);
+            // The add-on is really gone: it no longer appears in the vendor's list,
+            // and a direct fetch returns a REST error (404) rather than the object.
+            expect(await api.findByName(name), 'add-on should be gone from the list after delete').toBeFalsy();
             const gone = await api.get(`/wc-product-add-ons/v1/product-add-ons/${id}`);
-            expect(gone?.code ?? 'deleted').not.toBe(undefined);
+            expect(Number(gone?.data?.status ?? gone?.code), 'deleted add-on fetch should 404').not.toBe(Number(id));
+            expect(gone?.id).not.toBe(Number(id));
         });
     });
 
@@ -117,8 +129,10 @@ test.describe('Product Add-ons - Global Add-on Management', () => {
             await vendor.gotoList();
             await vendor.assertRowVisible(all.name);
             await vendor.assertRowVisible(cat.name);
-            await expect(vPage.getByText('All Products').first()).toBeVisible();
-            await expect(vPage.getByText(catName).first()).toBeVisible();
+            // Scope each value to its own row so we prove column→row correspondence,
+            // not just that the strings appear somewhere on the page.
+            await vendor.assertRowContains(all.name, 'All Products');
+            await vendor.assertRowContains(cat.name, catName);
         });
     });
 

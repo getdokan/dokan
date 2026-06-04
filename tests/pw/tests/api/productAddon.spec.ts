@@ -74,6 +74,21 @@ test.describe('Vendor Product Add-ons REST API', () => {
             expect(Number(after.priority)).toBe(42);
         });
 
+        test('vendor can restrict an add-on to a category (persists on update)', { tag: ['@pro', '@vendor'] }, async () => {
+            const id = await seedForVendor();
+            const [, categoryId] = await apiUtils.createCategory(payloads.createCategoryRandom(), payloads.adminAuth);
+
+            const [response] = await apiUtils.put(`${base}/${id}`, {
+                headers: payloads.vendorAuth,
+                data: { restrict_to_categories: [Number(categoryId)], fields: payloads.createGlobalProductAddons().fields },
+            });
+            expect(response.ok()).toBeTruthy();
+
+            const [, after] = await apiUtils.get(`${base}/${id}`, { headers: payloads.vendorAuth });
+            const restrictedIds = (after.categories ?? after.restrict_to_categories ?? []).map((c: any) => Number(c?.id ?? c));
+            expect(restrictedIds).toContain(Number(categoryId));
+        });
+
         test('vendor can delete an add-on', { tag: ['@pro', '@vendor'] }, async () => {
             const id = await seedForVendor();
             const [delResponse] = await apiUtils.delete(`${base}/${id}`, { headers: payloads.vendorAuth });
@@ -85,23 +100,29 @@ test.describe('Vendor Product Add-ons REST API', () => {
 
         test('vendor can serialize then unserialize add-ons (export/import round-trip)', { tag: ['@pro', '@vendor'] }, async () => {
             const addons = payloads.createGlobalProductAddons().fields;
+            const originalName = (addons[0] as any).name as string;
 
             const [serResponse, serBody] = await apiUtils.post(`${base}/serialize`, {
                 headers: payloads.vendorAuth,
                 data: { addons },
             });
             expect(serResponse.ok()).toBeTruthy();
+            // The export contract is a non-empty serialized string carrying the field name.
             const serialized = serBody?.data ?? serBody;
-            expect(typeof serialized === 'string' || typeof serialized === 'object').toBeTruthy();
+            expect(typeof serialized).toBe('string');
+            expect((serialized as string).length).toBeGreaterThan(0);
+            expect(serialized as string).toContain(originalName);
 
             const [unserResponse, unserBody] = await apiUtils.post(`${base}/unserialize`, {
                 headers: payloads.vendorAuth,
-                data: { data: typeof serialized === 'string' ? serialized : JSON.stringify(serialized) },
+                data: { data: serialized },
             });
             expect(unserResponse.ok()).toBeTruthy();
             const decoded = unserBody?.addons ?? unserBody;
             expect(Array.isArray(decoded)).toBeTruthy();
-            expect((decoded as any[]).length).toBeGreaterThan(0);
+            // Round-trip fidelity: same field count, and the field name survives intact.
+            expect((decoded as any[]).length).toBe(addons.length);
+            expect((decoded as any[]).map((a) => a.name)).toContain(originalName);
         });
     });
 
@@ -116,6 +137,35 @@ test.describe('Vendor Product Add-ons REST API', () => {
             const otherId = await seedForVendor(VENDOR2_ID ?? VENDOR_ID!);
             const [response] = await apiUtils.get(`${base}/${otherId}`, { headers: payloads.vendorAuth });
             expect([401, 403, 404]).toContain(response.status());
+        });
+
+        test('vendor cannot update another vendor’s add-on', { tag: ['@pro', '@vendor'] }, async () => {
+            const otherId = await seedForVendor(VENDOR2_ID ?? VENDOR_ID!);
+            const [response] = await apiUtils.put(`${base}/${otherId}`, {
+                headers: payloads.vendorAuth,
+                data: { name: `Hijack ${Date.now()}`, priority: 99 },
+            });
+            expect([401, 403, 404]).toContain(response.status());
+
+            // The add-on must be untouched: verified via the WC endpoint (admin) so the
+            // check is independent of the vendor-scoped controller that just denied us.
+            const after = await apiUtils.getSingleProductAddon(otherId, payloads.adminAuth);
+            expect(String(after?.name ?? '')).not.toContain('Hijack');
+        });
+
+        test('vendor cannot delete another vendor’s add-on', { tag: ['@pro', '@vendor'] }, async () => {
+            const otherId = await seedForVendor(VENDOR2_ID ?? VENDOR_ID!);
+            const [response] = await apiUtils.delete(`${base}/${otherId}`, { headers: payloads.vendorAuth });
+            expect([401, 403, 404]).toContain(response.status());
+
+            // The add-on still exists (was not deleted by the unauthorized request).
+            const stillThere = await apiUtils.getSingleProductAddon(otherId, payloads.adminAuth);
+            expect(String(stillThere?.id)).toBe(otherId);
+        });
+
+        test('fetching a non-existent add-on returns 404', { tag: ['@pro', '@vendor'] }, async () => {
+            const [response] = await apiUtils.get(`${base}/99999999`, { headers: payloads.vendorAuth });
+            expect(response.status()).toBe(404);
         });
 
         test('unserialize rejects malformed data', { tag: ['@pro', '@vendor'] }, async () => {

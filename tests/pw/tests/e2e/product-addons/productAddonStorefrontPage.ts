@@ -15,6 +15,28 @@ function basicAuth(username: string, password: string): string {
     return 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 }
 
+// Parse a WooCommerce-formatted price string into a number, tolerant of the store's
+// decimal/thousands separators. This store renders "$110,00" (comma decimal), so a
+// naive digit+dot strip turns "110,00" into 11000 — we must detect which separator
+// is the decimal one (the right-most of '.' / ',') before normalizing.
+export function parsePrice(text: string): number {
+    const cleaned = text.replace(/[^0-9.,]/g, '');
+    if (!cleaned) return NaN;
+    const lastComma = cleaned.lastIndexOf(',');
+    const lastDot = cleaned.lastIndexOf('.');
+    let normalized: string;
+    if (lastComma > lastDot) {
+        // comma is the decimal separator: dots are thousands separators.
+        normalized = cleaned.replace(/\./g, '').replace(',', '.');
+    } else if (lastDot > lastComma) {
+        // dot is the decimal separator: commas are thousands separators.
+        normalized = cleaned.replace(/,/g, '');
+    } else {
+        normalized = cleaned;
+    }
+    return Number(normalized);
+}
+
 // ============================================
 // TYPES
 // ============================================
@@ -146,6 +168,9 @@ export const api = {
     },
 
     // Seed a global add-on restricted to a category, owned by the vendor.
+    // Dokan's storefront scopes global add-ons by post_author (it only loads
+    // add-ons authored by the product's vendor), so the add-on must be re-assigned
+    // to the vendor or it never renders on the vendor's product page.
     async seedGlobalAddon(categoryId: number): Promise<string> {
         const body = await this.post('/wc-product-add-ons/v1/product-add-ons', {
             name: `PW Global SF ${faker.string.nanoid(6)}`,
@@ -153,7 +178,14 @@ export const api = {
             restrict_to_categories: [categoryId],
             fields: [field({ name: `Gift wrap ${faker.string.nanoid(4)}`, type: 'checkbox', options: [{ label: 'Yes', price: '5', price_type: 'flat_fee' }] })],
         });
-        return String(body.id);
+        // Fail loudly on a bad/non-object response so a retrying caller re-attempts
+        // instead of proceeding with an "undefined" id that can never render.
+        if (!body?.id) {
+            throw new Error(`seedGlobalAddon: create returned no id — ${JSON.stringify(body).slice(0, 200)}`);
+        }
+        const id = String(body.id);
+        await dbUtils.updateCell(id, VENDOR_ID); // vendor ownership (storefront author scoping)
+        return id;
     },
 
     async deleteProduct(id: string): Promise<void> {
@@ -221,8 +253,7 @@ export class ProductAddonStorefrontPage {
     async readGrandTotal(): Promise<number> {
         const total = this.page.locator(storefrontSelectors.grandTotal).first();
         await total.waitFor({ state: 'visible', timeout: 10_000 });
-        const txt = (await total.innerText()).replace(/[^0-9.]/g, '');
-        return Number(txt);
+        return parsePrice(await total.innerText());
     }
 
     async addToCart(): Promise<void> {
@@ -242,13 +273,18 @@ export class ProductAddonStorefrontPage {
 
     async readCartTotal(): Promise<number> {
         const total = this.page.locator(storefrontSelectors.cartTotal).last();
-        const txt = (await total.innerText()).replace(/[^0-9.]/g, '');
-        return Number(txt);
+        return parsePrice(await total.innerText());
     }
 
-    // The product stays on the page (item not added) when a required field is empty.
-    async assertAddToCartBlocked(): Promise<void> {
+    // A required/invalid add-on field must prevent the product from being added.
+    // WC Product Add-ons enforces required fields and min/max with its own client-side
+    // validation (no server-rendered .woocommerce-error and no HTML5 form invalidity),
+    // so the only reliable, mechanism-agnostic signal is the outcome: the (uniquely
+    // named) product never makes it into the cart. Assert that directly.
+    async assertAddToCartBlocked(productName: string): Promise<void> {
         await this.page.locator(storefrontSelectors.addToCart).click();
-        await expect(this.page.locator(storefrontSelectors.wooNotice).first()).toBeVisible({ timeout: 10_000 });
+        await this.page.waitForTimeout(2000); // allow a submit/AJAX attempt to settle
+        await this.gotoCart();
+        await expect(this.page.getByText(productName, { exact: false })).toHaveCount(0);
     }
 }
