@@ -37,9 +37,9 @@ export default defineConfig({
     /* The number of times to repeat each test, useful for debugging flaky tests. */
     repeatEach: parseBoolean(CI) ? 0 : 0,
     /* The maximum number of retry attempts given to failed tests.  */
-    retries: parseBoolean(CI) ? 1 : 0,
+    retries: parseBoolean(CI) ? 2 : 0,
     /* Opt out of parallel tests on CI. */
-    workers: parseBoolean(CI) ? 4 : 4,
+    workers: parseBoolean(CI) ? 1 : 4,
     /* Whether to report slow test files. Pass null to disable this feature. */
     reportSlowTests: { max: 2, threshold: 10 },
     /* Configure reporters */

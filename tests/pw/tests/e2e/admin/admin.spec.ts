@@ -136,7 +136,7 @@ test.describe('Admin Tests @lite', () => {
 test.describe('Admin Dokan Dashboard (React) Tests @lite', () => {
     test('Test Case 1 - / (root) route mounts', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
         const { ctx, page } = await openAdminRoute(browser, '/');
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-admin-dashboard .pui-root').first()).toBeVisible({ timeout: 30_000 });
         expect(page.url()).toMatch(/page=dokan-dashboard/);
         expect(await page.locator(fatalLocator).first().isVisible({ timeout: 1000 }).catch(() => false)).toBe(false);
         await page.close();
@@ -145,7 +145,7 @@ test.describe('Admin Dokan Dashboard (React) Tests @lite', () => {
 
     test('Test Case 2 - /vendors mounts', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
         const { ctx, page } = await openAdminRoute(browser, '/vendors');
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-admin-dashboard .pui-root').first()).toBeVisible({ timeout: 30_000 });
         expect(page.url()).toMatch(/#\/vendors/);
         expect(await page.locator(fatalLocator).first().isVisible({ timeout: 1000 }).catch(() => false)).toBe(false);
         await page.close();
@@ -154,7 +154,7 @@ test.describe('Admin Dokan Dashboard (React) Tests @lite', () => {
 
     test('Test Case 3 - /vendors/create mounts', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
         const { ctx, page } = await openAdminRoute(browser, '/vendors/create');
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-admin-dashboard .pui-root').first()).toBeVisible({ timeout: 30_000 });
         expect(page.url()).toMatch(/#\/vendors\/create/);
         expect(await page.locator(fatalLocator).first().isVisible({ timeout: 1000 }).catch(() => false)).toBe(false);
         await page.close();
@@ -163,7 +163,7 @@ test.describe('Admin Dokan Dashboard (React) Tests @lite', () => {
 
     test('Test Case 4 - /pro-modules mounts', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
         const { ctx, page } = await openAdminRoute(browser, '/pro-modules');
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-admin-dashboard .pui-root').first()).toBeVisible({ timeout: 30_000 });
         expect(page.url()).toMatch(/#\/pro-modules/);
         expect(await page.locator(fatalLocator).first().isVisible({ timeout: 1000 }).catch(() => false)).toBe(false);
         await page.close();
@@ -172,7 +172,7 @@ test.describe('Admin Dokan Dashboard (React) Tests @lite', () => {
 
     test('Test Case 5 - /setup (setup guide) mounts', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
         const { ctx, page } = await openAdminRoute(browser, '/setup');
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-admin-dashboard .pui-root').first()).toBeVisible({ timeout: 30_000 });
         expect(page.url()).toMatch(/#\/setup/);
         expect(await page.locator(fatalLocator).first().isVisible({ timeout: 1000 }).catch(() => false)).toBe(false);
         await page.close();
@@ -181,7 +181,7 @@ test.describe('Admin Dokan Dashboard (React) Tests @lite', () => {
 
     test('Test Case 6 - /extensions mounts', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
         const { ctx, page } = await openAdminRoute(browser, '/extensions');
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-admin-dashboard .pui-root').first()).toBeVisible({ timeout: 30_000 });
         expect(page.url()).toMatch(/#\/extensions/);
         expect(await page.locator(fatalLocator).first().isVisible({ timeout: 1000 }).catch(() => false)).toBe(false);
         await page.close();
@@ -190,7 +190,7 @@ test.describe('Admin Dokan Dashboard (React) Tests @lite', () => {
 
     test('Test Case 7 - /changelog mounts', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
         const { ctx, page } = await openAdminRoute(browser, '/changelog');
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-admin-dashboard .pui-root').first()).toBeVisible({ timeout: 30_000 });
         expect(page.url()).toMatch(/#\/changelog/);
         // The changelog renders historical fix messages that include the
         // word "error" or even "fatal error" in body copy. We don't apply
@@ -204,7 +204,7 @@ test.describe('Admin Dokan Dashboard (React) Tests @lite', () => {
 
     test('Test Case 8 - /dummy-data mounts', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
         const { ctx, page } = await openAdminRoute(browser, '/dummy-data');
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-admin-dashboard .pui-root').first()).toBeVisible({ timeout: 30_000 });
         expect(page.url()).toMatch(/#\/dummy-data/);
         expect(await page.locator(fatalLocator).first().isVisible({ timeout: 1000 }).catch(() => false)).toBe(false);
         await page.close();
@@ -213,7 +213,7 @@ test.describe('Admin Dokan Dashboard (React) Tests @lite', () => {
 
     test('Test Case 9 - /reverse-withdrawal mounts', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const { ctx, page } = await openAdminRoute(browser, '/reverse-withdrawal');
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-admin-dashboard .pui-root').first()).toBeVisible({ timeout: 30_000 });
         expect(page.url()).toMatch(/#\/reverse-withdrawal/);
         expect(await page.locator(fatalLocator).first().isVisible({ timeout: 1000 }).catch(() => false)).toBe(false);
         await page.close();
@@ -222,7 +222,7 @@ test.describe('Admin Dokan Dashboard (React) Tests @lite', () => {
 
     test('Test Case 10 - /withdraw (admin) mounts', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
         const { ctx, page } = await openAdminRoute(browser, '/withdraw');
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-admin-dashboard .pui-root').first()).toBeVisible({ timeout: 30_000 });
         expect(page.url()).toMatch(/#\/withdraw/);
         expect(await page.locator(fatalLocator).first().isVisible({ timeout: 1000 }).catch(() => false)).toBe(false);
         await page.close();
@@ -231,7 +231,7 @@ test.describe('Admin Dokan Dashboard (React) Tests @lite', () => {
 
     test('Test Case 11 - Unknown HashRouter route falls through (NoMatch)', { tag: ['@lite', '@exploratory', '@admin'] }, async ({ browser }) => {
         const { ctx, page } = await openAdminRoute(browser, '/this-does-not-exist');
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-admin-dashboard .pui-root').first()).toBeVisible({ timeout: 30_000 });
         expect(await page.locator(fatalLocator).first().isVisible({ timeout: 1000 }).catch(() => false)).toBe(false);
         // The shell still renders (#wpwrap from WP admin layout)
         await expect(page.locator(adminReactRoot).first()).toBeVisible();
@@ -241,9 +241,9 @@ test.describe('Admin Dokan Dashboard (React) Tests @lite', () => {
 
     test('Test Case 12 - Reload preserves /vendors route', { tag: ['@lite', '@admin'] }, async ({ browser }) => {
         const { ctx, page } = await openAdminRoute(browser, '/vendors');
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-admin-dashboard .pui-root').first()).toBeVisible({ timeout: 30_000 });
         await page.reload({ waitUntil: 'domcontentloaded' });
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-admin-dashboard .pui-root').first()).toBeVisible({ timeout: 30_000 });
         expect(page.url()).toMatch(/#\/vendors/);
         await page.close();
         await ctx.close();

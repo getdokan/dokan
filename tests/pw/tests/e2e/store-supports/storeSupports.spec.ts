@@ -176,7 +176,7 @@ test.describe('Store Supports (React) Tests @pro', () => {
         const page = await ctx.newPage();
         await page.goto(toPath(`dashboard/support/`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-vendor-dashboard-layout-root')).toBeVisible({ timeout: 30_000 });
         const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
         expect(fatal).toBe(false);
         await page.close();
@@ -188,7 +188,7 @@ test.describe('Store Supports (React) Tests @pro', () => {
         const page = await ctx.newPage();
         await page.goto(toPath(`dashboard/support/`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(3000);
+        await expect(page.locator('#dokan-vendor-dashboard-layout-root')).toBeVisible({ timeout: 30_000 });
         const tableVisible = await page.locator('table, [role="table"]').first().isVisible({ timeout: 3000 }).catch(() => false);
         const emptyVisible = await page.locator("text=/no tickets|no support|nothing/i").first().isVisible({ timeout: 1000 }).catch(() => false);
         expect(tableVisible || emptyVisible).toBe(true);
@@ -199,9 +199,9 @@ test.describe('Store Supports (React) Tests @pro', () => {
     test('Test Case 3 - Admin support page renders', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(toPath(`wp-admin/edit.php?post_type=dokan_store_support`));
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/admin-store-support`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-admin-dashboard .pui-root').first()).toBeVisible({ timeout: 30_000 });
         const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);
         expect(fatal).toBe(false);
         await page.close();
@@ -213,9 +213,9 @@ test.describe('Store Supports (React) Tests @pro', () => {
         const page = await ctx.newPage();
         await page.goto(toPath(`dashboard/support/`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-vendor-dashboard-layout-root')).toBeVisible({ timeout: 30_000 });
         await page.reload({ waitUntil: 'domcontentloaded' });
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-vendor-dashboard-layout-root')).toBeVisible({ timeout: 30_000 });
         const fatal = await page.locator("text=/Fatal error|Parse error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
         expect(fatal).toBe(false);
         await page.close();

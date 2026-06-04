@@ -250,13 +250,15 @@ class PayloadResolver {
         $result = [];
 
         foreach ( $attributes as $index => $attr ) {
-            $options = $attr['options'] ?? [];
+            $options     = $attr['options'] ?? [];
+            $is_taxonomy = ! empty( $attr['is_taxonomy'] );
 
             if ( ! is_array( $options ) ) {
                 $options = [ $options ];
             }
 
-            if ( isset( $attr['terms'] ) && is_array( $attr['terms'] ) ) {
+            if ( $is_taxonomy && isset( $attr['terms'] ) && is_array( $attr['terms'] ) ) {
+                // Taxonomy attributes send options as numeric term IDs; resolve them to term labels.
                 $options = array_map(
                     static function ( $o ) use ( $attr ) {
                         foreach ( $attr['terms'] as $t ) {
@@ -269,6 +271,7 @@ class PayloadResolver {
                     $options
                 );
             } else {
+                // Custom attribute options are already string labels — keep as-is.
                 $options = array_map( 'strval', $options );
             }
 

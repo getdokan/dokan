@@ -990,6 +990,37 @@ class Vendor {
      * @return array
      */
     public function make_active() {
+        /**
+         * Filter whether selling should be enabled for a vendor.
+         *
+         * Allows extensions (verification, KYC, compliance, etc.) to short-circuit
+         * vendor activation. Returning false prevents the `dokan_enable_selling`
+         * meta update, the `dokan_vendor_enabled` action, and the product status
+         * revert background job from running.
+         *
+         * Note: callers of `make_active()` cannot distinguish a blocked activation
+         * from a successful one via the return value; consumers that need to react
+         * to a block should hook into this filter or check `dokan_is_seller_enabled()`
+         * after the call.
+         *
+         * @since 5.0.2
+         *
+         * @param bool $enable_selling Whether to enable selling. Default true.
+         * @param int  $vendor_id      The vendor ID.
+         */
+        $enable_selling = apply_filters( 'dokan_can_enable_selling', true, $this->get_id() );
+
+        if ( ! $enable_selling ) {
+            dokan_log(
+                sprintf(
+                    'Vendor activation blocked for vendor #%d by dokan_can_enable_selling filter.',
+                    $this->get_id()
+                )
+            );
+
+            return $this->to_array();
+        }
+
         $this->update_meta( 'dokan_enable_selling', 'yes' );
 
         // change product status to publish
@@ -1001,7 +1032,7 @@ class Vendor {
     }
 
     /**
-     * Make vendor active
+     * Make vendor inactive
      *
      * @since 2.8.0
      *

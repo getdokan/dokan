@@ -351,15 +351,32 @@ export class AnnouncementsPage {
         ]);
         await this.page.waitForLoadState('load');
 
-        // saveAsDraft stays on the edit form; navigate back to the announcement list
-        await this.goToAnnouncementsPage();
-        // Default tab is "All" which is paginated; a freshly-created draft
-        // can land beyond page 1 depending on existing-data ordering. Switch
-        // to the Draft tab so the new draft is guaranteed on page 1.
-        await Promise.all([
-            this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() === 200).catch(() => null),
-            this.page.locator(this.admin.navTabs.draft).click(),
-        ]);
+        // saveAsDraft stays on the edit form; navigate directly to the Draft
+        // tab via the hash route. Default tab is "All" which is paginated, so
+        // a freshly-created draft can land beyond page 1 in a dirty DB; the
+        // Draft filter sorts the new row to page 1.
+        //
+        // Why goto() and not navTabs.draft.click(): the tab click races the
+        // post-navigate re-render — the table loader overlay appears AFTER
+        // any pre-click wait runs (when the React shell starts fetching) and
+        // intercepts pointer events for 15s. A hash-route navigation triggers
+        // the same Vue/React routing without the actionability race.
+        await this.page.goto(toPath(`wp-admin/admin.php?page=dokan#/announcement?status=draft`));
+        await this.page.waitForLoadState('load');
+        // Mirror goToAnnouncementsPage's table-ready wait. A hash-route nav
+        // resolves before the Vue list re-fetches with the new filter, so a
+        // straight visibility assertion races the fetch.
+        await this.page.waitForFunction(
+            () => {
+                const table = document.querySelector('table.wp-list-table');
+                if (!table) return false;
+                const tbody = table.querySelector('tbody');
+                if (!tbody) return false;
+                return tbody.querySelectorAll('tr').length > 0 || !!tbody.querySelector('.no-items');
+            },
+            null,
+            { timeout: 15000 },
+        );
         // Draft items render as <a> wrapped in <strong>; announcementCell
         // walks up from the inner <a> to the <td>.
         await expect(this.page.locator(this.admin.announcementCell(title))).toBeVisible();
@@ -623,8 +640,11 @@ export class AnnouncementsPage {
         await this.page.goto(this.adminNewDashboard.announcementsUrl);
         await this.page.waitForLoadState('domcontentloaded');
 
+        // The status text can appear in column header + badge cells; use
+        // .first() to avoid strict-mode violations when more than one
+        // matching node is rendered.
         await expect(
-            this.page.getByText('Scheduled', { exact: true }),
+            this.page.getByText('Scheduled', { exact: true }).first(),
             'Text "Scheduled" should be visible on the page',
         ).toBeVisible();
 
@@ -634,8 +654,17 @@ export class AnnouncementsPage {
     async trashAnnouncementByTitle(title: string) {
         await this.page.locator(this.adminNewDashboard.rowActionButton(title)).click();
         await this.page.locator(this.adminNewDashboard.moveToTrash).click();
-        await this.page.locator(this.adminNewDashboard.confirmTrash).click();
+        // The confirm fires a REST mutation; the table then refetches.
+        // Sequential trash calls used to race the loader and the next row's
+        // Actions button became unclickable.
+        await Promise.all([
+            this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.status() < 400),
+            this.page.locator(this.adminNewDashboard.confirmTrash).click(),
+        ]);
         await this.page.waitForLoadState('domcontentloaded');
+        // Wait for the post-mutation table re-render to settle before any
+        // follow-up Actions-button click on the same view.
+        await expect(this.page.locator('.loading')).toBeHidden({ timeout: 15000 });
     }
 
     async trashAndPermanentlyDeleteAnnouncementsInNewAdminDashboard() {

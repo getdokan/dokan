@@ -48,7 +48,7 @@ test.describe('Vendor Shipping (React) Tests @pro', () => {
         const page = await ctx.newPage();
         await page.goto(toPath(`dashboard/settings/shipping`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-vendor-dashboard-layout-root')).toBeVisible({ timeout: 30_000 });
 
         const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
         expect(fatal, 'Vendor shipping page should not show a PHP fatal').toBe(false);
@@ -61,7 +61,7 @@ test.describe('Vendor Shipping (React) Tests @pro', () => {
         const page = await ctx.newPage();
         await page.goto(toPath(`dashboard/settings/shipping`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(3000);
+        await expect(page.locator('#dokan-vendor-dashboard-layout-root')).toBeVisible({ timeout: 30_000 });
 
         // Either React zone list (e.g. .dokan-shipping-zones) or legacy table (.shipping-method-table)
         const reactZones = await page.locator('[class*="shipping-zone"], [class*="ShippingZone"], .dokan-react-shipping').first().isVisible({ timeout: 3000 }).catch(() => false);
@@ -81,7 +81,7 @@ test.describe('Vendor Shipping (React) Tests @pro', () => {
         const page = await ctx.newPage();
         await page.goto(toPath(`dashboard/settings/shipping`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(3000);
+        await expect(page.locator('#dokan-vendor-dashboard-layout-root')).toBeVisible({ timeout: 30_000 });
 
         // Look for shipping-policy related text
         const policyVisible = await page.locator("text=/shipping policy|policy|refund/i").first().isVisible({ timeout: 3000 }).catch(() => false);
@@ -97,9 +97,9 @@ test.describe('Vendor Shipping (React) Tests @pro', () => {
         const page = await ctx.newPage();
         await page.goto(toPath(`dashboard/settings/shipping`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-vendor-dashboard-layout-root')).toBeVisible({ timeout: 30_000 });
         await page.reload({ waitUntil: 'domcontentloaded' });
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-vendor-dashboard-layout-root')).toBeVisible({ timeout: 30_000 });
         const fatal = await page.locator("text=/Fatal error|Parse error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
         expect(fatal, 'Reload should not crash the shipping page').toBe(false);
         await page.close();
