@@ -7,7 +7,7 @@ import productEditorStore from '@dokan/stores/product-editor';
 import { getFieldConfig } from '../field-config';
 import { Attribute, DefaultAttribute, FormItem } from '../types';
 import { resolveLabel, resolveRequired, resolveVisibility } from '../utils';
-import { applyFilters, doAction } from '@wordpress/hooks';
+import { doAction } from '@wordpress/hooks';
 
 /**
  * Hook that provides product editor state and actions from the Redux store.
@@ -165,15 +165,11 @@ export function useProductEditor(
                 e.stopPropagation();
             }
             try {
-                // Lets modules (e.g. Rank Math SEO) chain a Promise here to
-                // persist their own data before the product itself is saved.
-                await applyFilters(
-                    'dokan_product_editor_pre_save',
-                    Promise.resolve(),
-                    productId
-                );
                 await saveProduct( productId );
+
+                // Lets features persist their own data once the product has been saved.
                 doAction( 'dokan_product_editor_after_save', productId );
+
                 toast( {
                     type: 'success',
                     title: __( 'Product saved successfully.', 'dokan-lite' ),
