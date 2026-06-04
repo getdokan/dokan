@@ -1,7 +1,10 @@
 import { test } from '@playwright/test';
-import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
-import { data } from '@utils/testData';
+import path from 'path';
+
+// Reuse the admin session captured by the auth_setup project instead of
+// logging in through the UI before every test.
+const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 
 const oldDataset = {
     title: 'Admin Old Setting: AI Assist',
@@ -78,15 +81,12 @@ const newDataset = {
 };
 
 test.describe('Admin Setting: AI Assist', () => {
-    let loginPage: LoginPage;
+    test.use({ storageState: a1 });
+
     let adminSettingsPage: AdminSettingsPage;
 
     test.beforeEach(async ({ page }) => {
-        loginPage = new LoginPage(page);
         adminSettingsPage = new AdminSettingsPage(page);
-
-        // Login as admin
-        await loginPage.adminLogin(data.admin);
     });
     test('New to Old AI Assist Settings synchronization', { tag: ['@lite', '@admin', '@migration'] }, async () => {
         await test.step('Update new settings', async () => {
