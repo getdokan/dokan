@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-22T10:12:19.565Z",
+  "generatedAt": "2026-06-04T06:58:55.093Z",
   "shards": 13,
   "specs": [
     {
@@ -41,6 +41,11 @@
       "file": "new-product-form/newProductFormValidation.spec.ts",
       "ms": 157355,
       "tests": 9
+    },
+    {
+      "file": "product-form-manager/productFormManagerAdmin.spec.ts",
+      "ms": 133598,
+      "tests": 46
     },
     {
       "file": "new-product-form/newProductFormAdvanced.spec.ts",
@@ -491,11 +496,6 @@
       "file": "single-product/singleProduct.spec.ts",
       "ms": 21,
       "tests": 8
-    },
-    {
-      "file": "product-form-manager/productFormManager.spec.ts",
-      "ms": 0,
-      "tests": 9
     },
     {
       "file": "products/products.spec.ts",
