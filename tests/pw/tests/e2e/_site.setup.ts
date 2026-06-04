@@ -44,6 +44,16 @@ setup.describe('site setup', () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.basicAuth));
     });
 
+    // Email Log (wordpress.org) — captures every outgoing mail into the
+    // `wp_email_log` DB table so the abuse-report email tests can assert on
+    // subject/body/recipient. The plugin is downloaded + installed by the
+    // wp-env `plugins` array (host-side fetch, so it is NOT blocked by the
+    // wp.org-blocking mu-plugin); here we only activate it (a `wp plugin
+    // install` from inside WP would hit wp.org and fail).
+    setup('activate Email Log', { tag: ['@lite'] }, async () => {
+        await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.emailLog));
+    });
+
     setup('activate Woocommerce', { tag: ['@lite'] }, async () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.woocommerce));
     });
