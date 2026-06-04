@@ -664,7 +664,7 @@ export const dbData = {
                         menu_manager_position: '1',
                         title: 'Addons',
                         icon: '<i class="fas fa-puzzle-piece" aria-hidden="true"></i>',
-                        url: `${BASE_URL}/dashboard/settings/product-addon/`,
+                        url: `${BASE_URL}/dashboard/new/#settings/product-addon`,
                         pos: '40',
                     },
                     payment: {

@@ -1,5 +1,9 @@
-import { Page } from '@playwright/test';
-import { closeAnnouncementModal } from '@utils/helpers';
+import { Page, expect } from '@playwright/test';
+import { closeAnnouncementModal, toPath } from '@utils/helpers';
+
+// New React vendor-dashboard surface for product add-ons (Dokan 5.0.0+).
+// The list lives in the HashRouter dashboard; the add/edit form is still the legacy settings page.
+export const addonListPath = 'dashboard/new/#settings/product-addon';
 
 export const data = {
     vendor: { addon: () => ({}) as any },
@@ -40,6 +44,27 @@ export class ApiUtils {
 
 export class ProductAddonsPage {
     constructor(readonly page: Page) { void closeAnnouncementModal(page); }
+
+    // --- New React UI (Dokan 5.0.0+) ------------------------------------------------
+    async gotoAddonList(): Promise<void> {
+        await this.page.goto(toPath(addonListPath));
+        await this.page.waitForLoadState('domcontentloaded');
+    }
+
+    // List page renders: heading + "Create New Addon" action, with no PHP fatal error.
+    async assertAddonListRenders(): Promise<void> {
+        await this.gotoAddonList();
+        await expect(this.page.getByRole('heading', { name: 'Product Addons' })).toBeVisible({ timeout: 30_000 });
+        await expect(this.page.getByRole('link', { name: /Create New Addon/i })).toBeVisible();
+        await expect(this.page.getByText(/Fatal error|Parse error|There has been a critical error/i)).toBeHidden();
+    }
+
+    // List page is interactive: the DataViews search box renders.
+    async assertAddonListContent(): Promise<void> {
+        await this.gotoAddonList();
+        await expect(this.page.getByRole('textbox', { name: 'Search' })).toBeVisible({ timeout: 30_000 });
+    }
+
     async enableProductAddonModule(): Promise<void> {}
     async disableProductAddonModule(): Promise<void> {}
     async vendorProductAddonsSettingsRenderProperly(): Promise<void> {}

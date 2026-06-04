@@ -1,9 +1,7 @@
-import { Page, expect, test } from '@utils/test';
+import { Page, test } from '@utils/test';
 import { ProductAddonsPage, ProductsPage, ApiUtils, data, payloads, dbUtils, responseBody } from './productAddonsPage';
 import { serialize } from 'php-serialize';
 import path from 'path';
-
-import { toPath } from '@utils/helpers';
 
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 
@@ -114,29 +112,20 @@ test.describe('Product addon functionality test', () => {
 // the legacy tests above for parity coverage during rollout.
 
 test.describe('Product Add-ons (React) Tests @pro', () => {
-    test('Test Case 1 - Vendor add-ons page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('vendor add-ons list page renders (new React UI)', { tag: ['@pro', '@vendor', '@exploratory'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(toPath(`dashboard/addon/`));
-        await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(2000);
-        const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
-        expect(fatal).toBe(false);
+        const vendor = new ProductAddonsPage(page);
+        await vendor.assertAddonListRenders();
         await page.close();
         await ctx.close();
     });
 
-    test('Test Case 2 - Add-ons page renders content', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('vendor add-ons list renders search and content (new React UI)', { tag: ['@pro', '@vendor', '@exploratory'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(toPath(`dashboard/addon/`));
-        await page.waitForLoadState('domcontentloaded');
-        await expect
-            .poll(async () => (await page.locator('body').innerText()).trim().length, {
-                timeout: 30_000,
-                intervals: [500, 1000, 2000, 3000],
-            })
-            .toBeGreaterThan(50);
+        const vendor = new ProductAddonsPage(page);
+        await vendor.assertAddonListContent();
         await page.close();
         await ctx.close();
     });

@@ -1263,7 +1263,9 @@ export const data = {
 
                 // sub menus
                 settingsStore: 'dashboard/settings/store',
-                settingsAddon: 'dashboard/settings/product-addon',
+                // Addon list moved to the new React dashboard (Dokan 5.0.0+); the add/edit form is still the legacy settings page.
+                settingsAddon: 'dashboard/new/#settings/product-addon',
+                settingsAddonAdd: 'dashboard/settings/product-addon/?add=1',
                 settingsAddonEdit: (addonId: string) => `dashboard/settings/product-addon/?edit=${addonId}`,
                 settingsPayment: 'dashboard/settings/payment',
                 settingsPrintful: 'dashboard/settings/printful',
