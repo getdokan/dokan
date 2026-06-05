@@ -2050,6 +2050,27 @@ class SettingsSchema {
 				],
             ],
             [
+                'id'            => 'seller_enable_terms_and_conditions',
+                'type'          => 'field',
+                'variant'       => 'switch',
+                'section_id'    => 'privacy_settings',
+                'title'         => esc_html__( 'Store Terms and Conditions', 'dokan-lite' ),
+                'description'   => esc_html__( 'Enable terms and conditions for vendor stores', 'dokan-lite' ),
+                'default'       => 'off',
+                'enable_state'  => [
+					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state' => [
+					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+					'value' => 'off',
+				],
+                'legacy_key'    => [
+                    'option' => 'dokan_general',
+                    'field'  => 'seller_enable_terms_and_conditions',
+                ],
+            ],
+            [
                 'id'         => 'privacy_policy_content',
                 'type'       => 'section',
                 'subpage_id' => 'privacy',
