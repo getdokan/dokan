@@ -427,7 +427,19 @@ class AdminSettingsController extends DokanBaseAdminController {
                 return is_numeric( $value ) ? $value + 0 : 0;
 
             case 'switch':
-                return in_array( $value, [ 'on', 'off' ], true ) ? $value : 'off';
+                // Allow the default on/off plus any custom on/off values a field
+                // declares via enable_state/disable_state (e.g. provider switches
+                // store their id when enabled and '' when disabled).
+                $allowed_switch  = [ 'on', 'off' ];
+                $disabled_switch = 'off';
+                if ( isset( $field['enable_state']['value'] ) ) {
+                    $allowed_switch[] = $field['enable_state']['value'];
+                }
+                if ( isset( $field['disable_state']['value'] ) ) {
+                    $allowed_switch[]  = $field['disable_state']['value'];
+                    $disabled_switch   = $field['disable_state']['value'];
+                }
+                return in_array( $value, $allowed_switch, true ) ? $value : $disabled_switch;
 
             case 'select':
             case 'radio':
