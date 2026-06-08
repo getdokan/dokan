@@ -668,6 +668,10 @@ class SettingsSchema {
                 'validations'      => [
                     [ 'not_empty' => esc_html__( 'Both percentage and fixed fee is required.', 'dokan-lite' ) ],
                 ],
+                'legacy_key'       => [
+                    'admin_percentage' => 'dokan_selling.admin_percentage',
+                    'additional_fee'   => 'dokan_selling.additional_fee',
+                ],
             ],
             [
                 'id'            => 'reset_sub_category_when_edit_all_category',
