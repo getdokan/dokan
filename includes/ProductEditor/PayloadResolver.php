@@ -118,13 +118,53 @@ class PayloadResolver {
         ];
 
         foreach ( $taxonomy_map as $schema_key => $api_key ) {
-            if ( isset( $data[ $schema_key ] ) && is_array( $data[ $schema_key ] ) ) {
-                $data[ $api_key ] = $this->map_ids_to_objects( $data[ $schema_key ] );
-                unset( $data[ $schema_key ] );
+            if ( ! isset( $data[ $schema_key ] ) || ! is_array( $data[ $schema_key ] ) ) {
+                continue;
             }
+
+            // Tags accept new-name strings; other taxonomies are mapped by ID only.
+            if ( Elements::TAGS === $schema_key ) {
+                $data[ $api_key ] = $this->map_tags_to_objects( $data[ $schema_key ] );
+            } else {
+                $data[ $api_key ] = $this->map_ids_to_objects( $data[ $schema_key ] );
+            }
+
+            unset( $data[ $schema_key ] );
         }
 
         return $data;
+    }
+
+    /**
+     * Map tag IDs and (when vendors can create tags) new-name strings to the WC REST tag shape.
+     *
+     * @since 5.0.4
+     *
+     * @param array $tags Array of tag IDs and/or new tag names.
+     *
+     * @return array of tag objects for WC REST API: [ { id: int } | { name: string }, ... ].
+     */
+    public function map_tags_to_objects( array $tags ): array {
+        $can_create = dokan()->is_pro_exists()
+            && 'on' === dokan_get_option( 'product_vendors_can_create_tags', 'dokan_selling', 'off' );
+
+        $result = [];
+        foreach ( $tags as $tag ) {
+            if ( is_numeric( $tag ) && (int) $tag > 0 ) {
+                $result[] = [ 'id' => (int) $tag ];
+                continue;
+            }
+
+            if ( ! $can_create || ! is_string( $tag ) ) {
+                continue;
+            }
+
+            $name = trim( wp_unslash( $tag ) );
+            if ( '' !== $name ) {
+                $result[] = [ 'name' => $name ];
+            }
+        }
+        return $result;
     }
 
     /**

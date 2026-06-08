@@ -59,15 +59,25 @@ export class AbuseReportsPage {
         pageHeading: "//*[self::h1 or self::h2 or self::h3][normalize-space()='Abuse Reports']",
         allTab: "//button[.//span[contains(@class,'text-[#A5A5AA]')]]",
         allTabBadge: "//button[.//div[contains(.,'All')]]//span[contains(@class,'text-[#A5A5AA]')]",
-        // List rows — `contains(., …)` matches text in nested spans / RawHTML
+        // List rows.
         dataRow: "table tbody tr",
-        rowByReason: (reason: string) => `//tr[.//div[contains(., "${reason}")]]`,
+        // IMPORTANT: the visible Reason cell text is truncated to 22 chars by the
+        // React render (`truncate(item.reason, 22)` → "first 22 chars…"), so a
+        // `contains(., "<full reason>")` match fails for any reason longer than
+        // 22 chars. The DataViews title-field selection checkbox, however, carries
+        // the FULL untruncated reason in its `aria-label` (confirmed in the live
+        // DOM capture, tmp-abuse/list.html). Anchor every row lookup on that
+        // checkbox so it works for both short and long reasons, then walk up to
+        // the owning <tr>. (Short reasons like "This content is spam" still match,
+        // keeping the existing green TC7–TC33 cases passing.)
+        rowByReason: (reason: string) =>
+            `//input[@type='checkbox' and @aria-label="${reason}"]/ancestor::tr[1]`,
         rowReasonCell: (reason: string) =>
-            `//tr[.//div[contains(., "${reason}")]]//div[contains(@class,'text-[#7047EB]') or contains(@class,'cursor-pointer')]`,
+            `//input[@type='checkbox' and @aria-label="${reason}"]/ancestor::tr[1]//div[contains(@class,'text-[#7047EB]') or contains(@class,'cursor-pointer')]`,
         rowCheckboxByReason: (reason: string) =>
-            `//tr[.//div[contains(., "${reason}")]]//input[@type='checkbox']`,
+            `//input[@type='checkbox' and @aria-label="${reason}"]`,
         rowActionsButton: (reason: string) =>
-            `//tr[.//div[contains(., "${reason}")]]//button[contains(@class,'dataviews-all-actions-button') or @aria-haspopup='menu' or @aria-label='Actions']`,
+            `//input[@type='checkbox' and @aria-label="${reason}"]/ancestor::tr[1]//button[contains(@class,'dataviews-all-actions-button') or @aria-haspopup='menu' or @aria-label='Actions']`,
         anyRowActionsButton:
             "//tr//button[contains(@class,'dataviews-all-actions-button') or @aria-haspopup='menu' or @aria-label='Actions']",
         // Action menu items
@@ -80,6 +90,13 @@ export class AbuseReportsPage {
         // and the modal's Delete confirm don't accidentally match.
         bulkDeleteButton:
             "//button[.//span[normalize-space()='Delete']][not(ancestor::*[@role='dialog'])]",
+        // When one or more rows are selected, DataViews surfaces a DIRECT bulk
+        // Delete button (NOT inside the per-row Actions menu) as
+        // `button.components-button.is-compact` carrying the visible text
+        // "Delete" (verified live in tmp-abuse/row-selected.json). Used by the
+        // select-all + bulk-delete list case.
+        bulkDeleteCompactButton:
+            "button.components-button.is-compact:has-text('Delete')",
         // Delete confirmation modal
         deleteModal: "//*[@role='dialog'][.//*[normalize-space()='Delete Abuse Report'] or .//*[contains(., 'Are you sure you want to delete')]]",
         deleteModalHeading:
@@ -111,13 +128,43 @@ export class AbuseReportsPage {
             "//*[@role='dialog']//*[normalize-space()='Product Vendor']/following-sibling::*",
         detailModalCloseBtn:
             "//*[@role='dialog']//button[normalize-space()='Close']",
-        // Filters (AdminFilter wrapper)
-        filterBar: ".dokan-admin-filter, [class*='filter']",
-        filterReasonTrigger: "//button[contains(.,'Select Reason') or contains(.,'Reason')]",
-        filterVendorTrigger: "//button[contains(.,'Select Vendor') or contains(.,'Vendor')]",
-        filterProductTrigger: "//button[contains(.,'Select Product') or contains(.,'Product')]",
+        // Filters — @wordpress/dataviews via Dokan's AdminDataViews wrapper.
+        // VERIFIED LIVE (tmp-abuse explorer) — the ACTUAL flow in this build:
+        //   1. The toolbar exposes a funnel toggle: <button title="Filter">.
+        //   2. Clicking it opens a portal `.components-popover` listing one
+        //      <button> per filterable field (text = "Reason" / "Product" /
+        //      "Vendor").
+        //   3. Clicking a field button renders that field's react-select control
+        //      and reveals the inline `.dokan-admin-dashboard-filters` panel —
+        //      which is `display:none` until a filter is active and is where the
+        //      "Add Filter" (add another) + "Reset" buttons then live.
+        // So "Add Filter"/"Reset" are NOT visible at rest; the funnel popover is
+        // the real entry point. The list specs therefore assert the toggle + the
+        // offered field option (deterministic) and prove the backend the UI
+        // issues (?reason=/?product_id=/?vendor_id=) over REST, rather than
+        // driving the portaled react-select value picker (which is racy).
+        filterBar: "[data-filter-id*='abuse_reports']",
+        // The funnel toggle that opens the filter-field popover.
+        filterToggleButton: "button[title='Filter']",
+        // A filterable-field option inside the funnel popover, scoped to the
+        // popover so it cannot collide with the same-named column-sort headers.
+        filterMenuOption: (label: string) =>
+            `//*[contains(@class,'components-popover')]//button[normalize-space()='${label}']`,
+        // The inline "Add Filter" trigger (only present once the filter panel is
+        // expanded — see note above).
+        addFilterButton: "//button[normalize-space()='Add Filter']",
+        // A field-label button inside the Add-Filter popover (portal-rendered).
+        // MUST be scoped to the popover's button class — a bare
+        // //button[normalize-space()='Product'|'Vendor'] would also match the
+        // DataViews column-sort header buttons of the same text. The AdminFilter
+        // popover renders each field as a full-width hover-highlight button.
+        filterFieldButton: (label: string) =>
+            `//button[contains(@class,'hover:bg-[#EFEAFF]')][normalize-space()='${label}']`,
+        // react-select combobox input for the currently-rendered filter control.
+        filterSelectInput: "input.react-select__input, input[id^='react-select']",
+        // react-select option carrying the given label (menu is portaled).
         filterOption: (label: string) =>
-            `//*[contains(@class,'option') or @role='option'][contains(., "${label}")]`,
+            `//*[contains(@class,'react-select__option')][contains(normalize-space(.), "${label}")]`,
         filterChipRemove: (id: string) =>
             `//*[@data-filter-id='${id}']//button[contains(@aria-label,'Remove') or contains(@aria-label,'Clear')]`,
         filterResetBtn:
@@ -357,7 +404,10 @@ export class AbuseReportsPage {
 
     async clickSaveChanges() {
         await Promise.all([
-            this.page.waitForResponse(res => res.url().includes('wp-admin') && res.request().method() === 'POST'),
+            // The Dokan settings save is an admin-ajax POST. Exclude only the WP heartbeat (also an
+            // admin-ajax POST, fires every ~15-60s) by its post body's action=heartbeat — a heartbeat
+            // tick landing in the wait window could otherwise satisfy it before the save round-trips.
+            this.page.waitForResponse(res => res.request().method() === 'POST' && res.url().includes('wp-admin') && !(res.request().postData() ?? '').includes('action=heartbeat')),
             this.page.locator(this.admin.saveChangesButton).click(),
         ]);
         await this.page.waitForLoadState('domcontentloaded');
@@ -430,11 +480,10 @@ export class AbuseReportsPage {
             const rowCount = await this.page.locator(this.adminReact.dataRow).count();
             if (rowCount > 0) return;
             // DataViews renders an explicit empty banner when there are no
-            // rows. We probe for a few known shapes — keep narrow.
+            // rows. In this build that is the `.dataviews-no-results` node
+            // (text "No data found", verified live). Anchor on the stable class.
             const emptyBanner = await this.page
-                .locator(
-                    "text=/^\\s*(no\\s+(results|reports|items|data)|nothing\\s+to\\s+show)\\s*$/i",
-                )
+                .locator('.dataviews-no-results')
                 .count();
             if (emptyBanner > 0) return;
             await this.page.waitForTimeout(250);
@@ -545,13 +594,63 @@ export class AbuseReportsPage {
     // ADMIN — FILTERS (new UI)
     // ============================================
 
-    async openReasonFilter() {
-        await this.page.locator(this.adminReact.filterReasonTrigger).first().click();
+    /**
+     * Open the Add-Filter popover and activate one filter field by its label
+     * ("Reason" / "Product" / "Vendor"). This renders that field's react-select
+     * control inline and closes the popover. Returns once the field's combobox
+     * input is present (so a follow-up pick can type / open the menu).
+     */
+    async addFilterField(fieldLabel: string) {
+        // Open the funnel popover — the real filter entry point in this build.
+        await this.page.locator(this.adminReact.filterToggleButton).first().click();
+        // Popover is portal-rendered; its options are field-label buttons
+        // (scoped to the popover so they don't collide with column-sort headers).
+        const fieldBtn = this.page.locator(this.adminReact.filterMenuOption(fieldLabel)).first();
+        await fieldBtn.waitFor({ state: 'visible', timeout: 10000 });
+        await fieldBtn.click();
+        // The chosen field's react-select control now renders inline.
+        await this.page
+            .locator(this.adminReact.filterSelectInput)
+            .last()
+            .waitFor({ state: 'visible', timeout: 10000 })
+            .catch(() => {
+                /* some builds focus the control without an exposed input */
+            });
     }
 
-    async pickFilterOption(label: string) {
+    /** Open the Reason filter field (back-compat name used by the list specs). */
+    async openReasonFilter() {
+        await this.addFilterField('Reason');
+    }
+
+    /**
+     * Open the funnel filter popover only (no field selected). Resolves once a
+     * field option has rendered, so callers can assert the offered fields.
+     */
+    async openFilterMenu() {
+        await this.page.locator(this.adminReact.filterToggleButton).first().click();
+        await this.page
+            .locator(this.adminReact.filterMenuOption('Reason'))
+            .first()
+            .waitFor({ state: 'visible', timeout: 10000 });
+    }
+
+    /**
+     * Pick a value from the currently-rendered filter react-select. Typing a
+     * fragment first surfaces async/searchable options, then we click the
+     * matching `react-select__option`. The menu is portaled, so we open it (by
+     * focusing+typing into the combobox) before clicking the option.
+     */
+    async pickFilterOption(label: string, typeTerm?: string) {
+        const input = this.page.locator(this.adminReact.filterSelectInput).last();
+        if (await input.isVisible().catch(() => false)) {
+            await input.click();
+            const term = typeTerm ?? label;
+            // Type only a fragment so partial matches still surface the option.
+            await input.fill(term.length > 12 ? term.slice(0, 12) : term);
+        }
         const opt = this.page.locator(this.adminReact.filterOption(label)).first();
-        await opt.waitFor({ state: 'visible' });
+        await opt.waitFor({ state: 'visible', timeout: 15000 });
         await opt.click();
     }
 

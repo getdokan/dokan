@@ -326,10 +326,15 @@ const WithdrawPage = () => {
             isEligible: ( item ) => item?.status === 'pending',
             callback: ( items ) => {
                 const failedItems = items.filter( ( item ) => {
-                    const requestedAmount = parseFloat( item?.amount ) || 0;
-                    const currentBalance = parseFloat( item?.user?.balance ) || 0;
-                    
-                    return currentBalance < requestedAmount;
+                    // Compare in integer cents so float drift can't reject an exact-balance request — mirrors the backend approval guard.
+                    const requestedCents = Math.round(
+                        ( parseFloat( item?.amount ) || 0 ) * 100
+                    );
+                    const balanceCents = Math.round(
+                        ( parseFloat( item?.user?.balance ) || 0 ) * 100
+                    );
+
+                    return balanceCents < requestedCents;
                 } );
 
                 if ( failedItems.length > 0 ) {
