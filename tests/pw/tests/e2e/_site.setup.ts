@@ -56,6 +56,18 @@ setup.describe('site setup', () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.dokanPro));
     });
 
+    // Rank Math SEO is a wordpress.org dependency of the Dokan "Rank Math SEO"
+    // product-editor integration. It is not a sibling clone, so install it from
+    // the wp.org repo (and activate) here. Non-fatal: the module/tests are
+    // written to tolerate the plugin being absent (DependencyNotice).
+    setup('install & activate Rank Math SEO', { tag: ['@lite'] }, async () => {
+        try {
+            await helpers.exeCommandWpcli(data.commands.wpcli.installPlugin(data.installWp.plugins.rankMath));
+        } catch (error) {
+            console.log('Rank Math SEO install/activation had issues, but continuing...', error);
+        }
+    });
+
     setup('flush rewrite rules after plugin activation', { tag: ['@lite'] }, async () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.flushRewrite);
     });

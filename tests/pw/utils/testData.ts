@@ -2928,6 +2928,7 @@ export const data = {
             woocommerceProductAddons: 'woocommerce-product-addons',
             woocommerceSimpleAuctions: 'woocommerce-simple-auctions',
             woocommercePdfInvoices: 'woocommerce-pdf-invoices-packing-slips',
+            rankMath: 'seo-by-rank-math',
         },
     },
 
