@@ -43,7 +43,7 @@
       "tests": 24
     },
     {
-      "file": "new-product-form/newProductFormValidation.spec.ts",
+      "file": "product-form-manager/newProductFormValidation.spec.ts",
       "ms": 157434,
       "tests": 9
     },
@@ -83,12 +83,12 @@
       "tests": 13
     },
     {
-      "file": "new-product-form/newProductFormAdvanced.spec.ts",
+      "file": "product-form-manager/newProductFormAdvanced.spec.ts",
       "ms": 112900,
       "tests": 12
     },
     {
-      "file": "new-product-form/newProductForm.spec.ts",
+      "file": "product-form-manager/newProductForm.spec.ts",
       "ms": 87008,
       "tests": 6
     },
