@@ -18,26 +18,26 @@ import { Switch as _PluginUISwitch } from '@wedevs/plugin-ui';
  * forwards both names so neither API change breaks consumers.
  */
 type DokanSwitchProps = {
-	checked?: boolean;
-	onChange?: ( value: boolean ) => void;
-	onCheckedChange?: ( value: boolean ) => void;
-	[ key: string ]: unknown;
+    checked?: boolean;
+    onChange?: ( value: boolean ) => void;
+    onCheckedChange?: ( value: boolean ) => void;
+    [ key: string ]: unknown;
 };
 
 export const DokanSwitch = ( {
-	onChange,
-	onCheckedChange,
-	checked = false,
-	...rest
+    onChange,
+    onCheckedChange,
+    checked = false,
+    ...rest
 }: DokanSwitchProps ) => {
-	const handler = onCheckedChange ?? onChange;
-	return (
-		<_PluginUISwitch
-			checked={ checked }
-			onCheckedChange={ handler }
-			{ ...rest }
-		/>
-	);
+    const handler = onCheckedChange ?? onChange;
+    return (
+        <_PluginUISwitch
+            checked={ checked }
+            onCheckedChange={ handler }
+            { ...rest }
+        />
+    );
 };
 export { default as DokanModal } from './modals/DokanModal';
 export { default as SortableList } from './sortable-list';
@@ -68,6 +68,11 @@ export { default as Popover } from './Popover';
 export { default as PriceHtml } from './PriceHtml';
 export { default as DokanPriceInput } from './PriceInput';
 export { default as ProductAsyncSelect } from './ProductAsyncSelect';
+export {
+    default as Repeater,
+    type RepeaterRow,
+    type RepeaterProps,
+} from './Repeater';
 export { default as RichText } from './richtext/RichText';
 export { default as SearchInput } from './SearchInput';
 export { default as Select } from './Select';

@@ -3,6 +3,7 @@ import type { SettingsElement } from '@wedevs/plugin-ui';
 import DokanVendorInfoPreview from './fields/DokanVendorInfoPreview';
 import DokanSingleProductPreview from './fields/DokanSingleProductPreview';
 import DokanDoubleInput from './fields/DokanDoubleInput';
+import DokanRepeaterField from './fields/DokanRepeaterField';
 
 /**
  * Registers Dokan-specific field renderers with plugin-ui's filter system.
@@ -58,6 +59,15 @@ export function registerSettingsFields(): void {
         'dokan-lite/double-input',
         ( _defaultComponent: React.ReactNode, element: SettingsElement ) => (
             <DokanDoubleInput element={ element } />
+        )
+    );
+
+    // Editable, reorderable list for any `variant: 'repeater'` field.
+    addFilter(
+        'dokan_settings_repeater_field',
+        'dokan-lite/repeater',
+        ( _defaultComponent: React.ReactNode, element: SettingsElement ) => (
+            <DokanRepeaterField element={ element } />
         )
     );
 
