@@ -16,7 +16,7 @@ const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.
 // Parity coverage for the 5.0.0 React rewrite of the vendor Products LIST.
 // Surface: /dashboard/new/#/products  (DataViews, Lite).
 // Ported from the legacy `products` spec (list-level titles only — the product
-// CREATE/EDIT editor is covered by `new-product-form`, NOT duplicated here),
+// CREATE/EDIT editor is covered by `product-form-manager`, NOT duplicated here),
 // plus a cross-role business flow (seeded React product -> vendor list ->
 // customer storefront).
 // Fixture: pre-seeded simple product `p1_v1 (simple)` (id 19), published,

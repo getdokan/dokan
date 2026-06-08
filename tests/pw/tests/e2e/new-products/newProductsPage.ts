@@ -7,7 +7,7 @@ import { closeAnnouncementModal, toPath } from '@utils/helpers';
 // The site is pre-seeded with the simple product `p1_v1 (simple)` (id 19),
 // published, in-stock, owned by `vendor1store`. These tests drive the React
 // products LIST around that fixture (the editor itself lives in
-// `new-product-form`, so this folder never creates/edits products).
+// `product-form-manager`, so this folder never creates/edits products).
 export const newProductsData = {
     seededProductName: 'p1_v1 (simple)',
     seededProductId: '19',

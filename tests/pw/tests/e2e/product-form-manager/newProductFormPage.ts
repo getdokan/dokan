@@ -115,12 +115,19 @@ export const newProductFormSelectors = {
     // WP media modal — opened when feature / gallery upload buttons are
     // clicked. Use the same selectors as the legacy product form so the
     // upload flow is consistent.
+    // Each MediaUploader instance leaves its own `.media-modal` in the DOM, so
+    // there can be several at once (featured + gallery). Always scope to the
+    // one that is currently visible. Inner selectors are relative to that modal.
     wpMedia: {
-        modal: '.media-modal',
+        modal: '.media-modal:visible',
         uploadMenu: 'button#menu-item-upload',
-        fileInput: '.media-modal input[type="file"]',
-        firstAttachment: '.media-modal .attachment',
-        selectButton: '.media-modal .media-toolbar-primary button.media-button-select',
+        libraryMenu: 'button#menu-item-browse',
+        fileInput: 'input[type="file"]',
+        firstAttachment: '.attachment',
+        selectButton: '.media-toolbar-primary button.media-button-select',
+        // Some media frames (e.g. featured image with cropping) show an
+        // "insert"/crop button instead of/after select.
+        insertButton: '.media-toolbar-primary button.media-button-insert',
     },
 } as const;
 
@@ -255,28 +262,35 @@ export class NewProductFormPage {
         }
     }
 
-    private reactSelectControl(wrapper: string): Locator {
-        return this.page.locator(`${wrapper} .react-select__control`).first();
+    // React-select renders in two flavours here: the classed `<Select>` (adds
+    // `react-select__*` classes) and the creatable `TaggableSelect` used for
+    // product tags when vendors may create tags (emotion-hashed classes, no
+    // `react-select__*`). Both keep stable ARIA roles, so target those instead
+    // of the class prefix.
+    private reactSelectInput(wrapper: string): Locator {
+        return this.page.locator(`${wrapper} input[role="combobox"]`).first();
     }
 
-    private reactSelectInput(wrapper: string): Locator {
-        return this.page.locator(`${wrapper} input.react-select__input`).first();
+    private reactSelectOption(text?: string): Locator {
+        const base = this.page.locator('[role="option"]');
+        return text
+            ? base.filter({ hasText: new RegExp(`^\\s*${escapeRegExp(text)}\\s*$`, 'i') })
+            : base;
     }
 
     private async chooseReactSelectOption(wrapper: string, optionText: string): Promise<void> {
-        await this.reactSelectControl(wrapper).click();
-        await this.page
-            .locator('.react-select__option', { hasText: new RegExp(`^\\s*${escapeRegExp(optionText)}\\s*$`, 'i') })
-            .first()
-            .click();
+        // Clicking the combobox input opens the menu for both react-select flavours.
+        await this.reactSelectInput(wrapper).click();
+        await this.reactSelectOption(optionText).first().click();
     }
 
     private async setReactSelectByTyping(wrapper: string, value: string): Promise<void> {
         const input = this.reactSelectInput(wrapper);
         await input.click();
         await input.fill(value);
-        const option = this.page
-            .locator('.react-select__option')
+        // For creatable tags the matching option reads `Create "value"`, so match
+        // on a substring rather than the exact label.
+        const option = this.reactSelectOption()
             .filter({ hasText: new RegExp(escapeRegExp(value), 'i') })
             .first();
         await option.waitFor({ state: 'visible', timeout: 5000 }).catch(() => undefined);
@@ -491,33 +505,87 @@ export class NewProductFormPage {
         await this.uploadViaMediaModal(filePath);
     }
 
-    async uploadGallery(filePaths: string[]): Promise<void> {
-        await this.page.locator(newProductFormSelectors.galleryImageButton).first().click();
-        await this.uploadViaMediaModal(filePaths);
+    /**
+     * Adds each file as a separate gallery image. We upload one file per media
+     * session because multi-file selection races — the modal's "Select" button
+     * enables as soon as the first attachment is selected, so a single session
+     * reliably captures only one image. The gallery merges by id across
+     * sessions, so looping yields all images.
+     */
+    async uploadGallery(filePaths: readonly string[]): Promise<void> {
+        for (const filePath of filePaths) {
+            await this.page.locator(newProductFormSelectors.galleryImageButton).first().click();
+            await this.uploadViaMediaModal(filePath);
+        }
     }
 
     private async uploadViaMediaModal(filePath: string | string[]): Promise<void> {
         const m = newProductFormSelectors.wpMedia;
-        await this.page.locator(m.modal).waitFor({ state: 'visible', timeout: 15000 });
-        await this.page.locator(m.uploadMenu).click().catch(() => undefined);
-        await this.page.locator(m.fileInput).first().setInputFiles(filePath);
-        // Wait for the new attachment to appear and be selected.
-        await this.page.locator(m.firstAttachment).first().waitFor({ state: 'visible', timeout: 30000 });
-        // Ensure at least the first attachment is selected.
-        const selectBtn = this.page.locator(m.selectButton).first();
-        await selectBtn.waitFor({ state: 'visible' });
-        const isEnabled = await selectBtn.isEnabled().catch(() => false);
-        if (!isEnabled) {
-            await this.page.locator(m.firstAttachment).first().click();
-        }
+        const modal = this.page.locator(m.modal).first();
+        await modal.waitFor({ state: 'visible', timeout: 15000 });
+        // Send the file(s) through the Upload tab's input. WP then switches to
+        // the library view with the new attachment(s) auto-selected.
+        await modal.locator(m.uploadMenu).click().catch(() => undefined);
+        await modal.locator(m.fileInput).first().setInputFiles(filePath);
+
+        // The "Select" button only enables once an attachment is selected.
+        // Auto-selection can lag while the upload finishes, so poll: if the
+        // button is still disabled, nudge by clicking the first attachment.
+        const selectBtn = modal.locator(m.selectButton).first();
+        await expect(async () => {
+            if (!(await selectBtn.isEnabled().catch(() => false))) {
+                await modal.locator(m.firstAttachment).first().click().catch(() => undefined);
+            }
+            await expect(selectBtn).toBeEnabled({ timeout: 1000 });
+        }).toPass({ timeout: 30000 });
+
         await selectBtn.click();
-        await this.page.locator(m.modal).waitFor({ state: 'hidden', timeout: 15000 }).catch(() => undefined);
+        // Featured-image crop frames show an extra "insert" step.
+        const insertBtn = modal.locator(m.insertButton).first();
+        if (await insertBtn.isVisible().catch(() => false)) {
+            await insertBtn.click().catch(() => undefined);
+        }
+        await modal.waitFor({ state: 'hidden', timeout: 15000 }).catch(() => undefined);
+    }
+
+    // Preview <img> elements rendered after a successful upload.
+    get featureImagePreview(): Locator {
+        return this.page.locator('#dokan-form-field-image_id img, .dokan-product-image_id img');
+    }
+
+    get galleryImagePreviews(): Locator {
+        return this.page.locator('#dokan-form-field-gallery_image_ids .dokan-product-gallery_image_ids img');
+    }
+
+    async featureImageCount(): Promise<number> {
+        return this.featureImagePreview.count();
     }
 
     async galleryItemCount(): Promise<number> {
-        return this.page
-            .locator('#dokan-form-field-gallery_image_ids img, .dokan-product-gallery_image_ids img')
-            .count();
+        return this.galleryImagePreviews.count();
+    }
+
+    /**
+     * Remove the featured image. The remove button is the overlay `<button>`
+     * inside the preview item; it's hover-revealed (`opacity-0`), so we hover
+     * the item first. Opacity doesn't block Playwright clicks but hovering keeps
+     * the interaction realistic.
+     */
+    async removeFeatureImage(): Promise<void> {
+        const item = this.page.locator('#dokan-form-field-image_id .dokan-product-image_id').first();
+        if (!(await item.count())) return;
+        await item.hover().catch(() => undefined);
+        await item.locator('button[type="button"]').first().click();
+    }
+
+    async removeGalleryImage(index = 0): Promise<void> {
+        const item = this.page
+            .locator('#dokan-form-field-gallery_image_ids .dokan-product-gallery_image_ids')
+            .filter({ has: this.page.locator('img') })
+            .nth(index);
+        if (!(await item.count())) return;
+        await item.hover().catch(() => undefined);
+        await item.locator('button[type="button"]').first().click();
     }
 
     // ---- Pro: wholesale / RMA / bulk-discount / geolocation ----
