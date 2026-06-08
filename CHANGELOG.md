@@ -1,3 +1,11 @@
+### v5.0.4 ( Jun 08, 2026 ) ###
+
+- **update:** Improved RTL support for the switch button transition in the new vendor dashboard layout.
+- **update:** Made the vendor analytics panel compatible with the vendor-specific Coupons report.
+- **fix:** Allowed vendors to create new product tags inline from the new product editor.
+- **fix:** Resolved withdraw approval failing on an exact fractional balance.
+- **fix:** Added ownership checks to order AJAX handlers to prevent vendors from modifying orders they don't own.
+
 ### v5.0.3 ( May 21, 2026 ) ###
 
 - **update:** Exposed manual withdrawal availability and withdraw-visibility flags in the vendor dashboard REST API.

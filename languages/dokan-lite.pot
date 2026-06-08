@@ -1,14 +1,14 @@
 # Copyright (c) 2026 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 5.0.3\n"
+"Project-Id-Version: Dokan 5.0.4\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-21T10:33:31+00:00\n"
+"POT-Creation-Date: 2026-06-08T06:18:31+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -88,7 +88,7 @@ msgstr ""
 #: includes/Admin/Notices/WhatsNew.php:78
 #: includes/Admin/Settings.php:122
 #: includes/Admin/Settings.php:157
-#: includes/Ajax.php:330
+#: includes/Ajax.php:347
 #: includes/ReverseWithdrawal/Ajax.php:37
 msgid "Invalid nonce"
 msgstr ""
@@ -795,7 +795,7 @@ msgstr ""
 #: includes/Admin/Dashboard/Pages/Status.php:24
 #: includes/Admin/WithdrawLogExporter.php:114
 #: includes/Product/functions.php:215
-#: includes/ProductEditor/FormSchema.php:849
+#: includes/ProductEditor/FormSchema.php:850
 #: includes/REST/WithdrawExportController.php:44
 #: templates/my-orders.php:27
 #: templates/orders/listing.php:33
@@ -2742,11 +2742,11 @@ msgid "Note"
 msgstr ""
 
 #: includes/Ajax.php:72
-#: includes/Ajax.php:1067
-#: includes/Ajax.php:1095
+#: includes/Ajax.php:1113
+#: includes/Ajax.php:1141
 #: includes/Dashboard/Templates/Withdraw.php:121
-#: includes/Withdraw/Hooks.php:169
-#: includes/Withdraw/Hooks.php:244
+#: includes/Withdraw/Hooks.php:171
+#: includes/Withdraw/Hooks.php:246
 msgid "You have no permission to do this action"
 msgstr ""
 
@@ -2764,8 +2764,8 @@ msgstr ""
 #: includes/Dashboard/Templates/Settings.php:490
 #: includes/Dashboard/Templates/Settings.php:550
 #: includes/Dashboard/Templates/Withdraw.php:116
-#: includes/Withdraw/Hooks.php:165
-#: includes/Withdraw/Hooks.php:240
+#: includes/Withdraw/Hooks.php:167
+#: includes/Withdraw/Hooks.php:242
 msgid "Are you cheating?"
 msgstr ""
 
@@ -2784,82 +2784,87 @@ msgstr ""
 msgid "You do not have permission to change this order"
 msgstr ""
 
-#: includes/Ajax.php:297
+#: includes/Ajax.php:301
+#: includes/Ajax.php:310
 msgid "You have no permission to manage this order"
 msgstr ""
 
-#: includes/Ajax.php:340
+#: includes/Ajax.php:318
+msgid "Invalid order."
+msgstr ""
+
+#: includes/Ajax.php:357
 msgid "Please provide your name."
 msgstr ""
 
-#: includes/Ajax.php:345
+#: includes/Ajax.php:362
 msgid "Please provide your email."
 msgstr ""
 
-#: includes/Ajax.php:352
+#: includes/Ajax.php:369
 #: includes/template-tags.php:176
 msgid "Something went wrong!"
 msgstr ""
 
-#: includes/Ajax.php:362
+#: includes/Ajax.php:379
 msgid "reCAPTCHA verification failed!"
 msgstr ""
 
-#: includes/Ajax.php:369
+#: includes/Ajax.php:386
 #: includes/REST/StoreController.php:1004
 msgid "Email sent successfully!"
 msgstr ""
 
-#: includes/Ajax.php:428
+#: includes/Ajax.php:458
 #: templates/orders/details.php:327
 msgid "Delete note"
 msgstr ""
 
-#: includes/Ajax.php:458
+#: includes/Ajax.php:492
 msgid "Shipping provider: "
 msgstr ""
 
-#: includes/Ajax.php:458
+#: includes/Ajax.php:492
 msgid "Shipping number: "
 msgstr ""
 
-#: includes/Ajax.php:458
+#: includes/Ajax.php:492
 msgid "Shipped date: "
 msgstr ""
 
-#: includes/Ajax.php:498
+#: includes/Ajax.php:532
 #: includes/woo-views/html-product-download.php:14
 #: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/vue-admin.js:2
 msgid "Delete"
 msgstr ""
 
-#: includes/Ajax.php:539
+#: includes/Ajax.php:585
 #: includes/Product/Hooks.php:65
 msgid "Error: Nonce verification failed"
 msgstr ""
 
-#: includes/Ajax.php:627
+#: includes/Ajax.php:673
 msgid "Image could not be processed. Please go back and try again."
 msgstr ""
 
-#: includes/Ajax.php:987
+#: includes/Ajax.php:1033
 msgid "Please Login to Continue"
 msgstr ""
 
-#: includes/Ajax.php:1009
+#: includes/Ajax.php:1055
 msgid "Invalid username or password."
 msgstr ""
 
-#: includes/Ajax.php:1020
+#: includes/Ajax.php:1066
 msgid "Wrong username or password."
 msgstr ""
 
-#: includes/Ajax.php:1049
+#: includes/Ajax.php:1095
 msgid "User logged in successfully."
 msgstr ""
 
-#: includes/Ajax.php:1071
+#: includes/Ajax.php:1117
 msgid "id param is required"
 msgstr ""
 
@@ -3017,7 +3022,7 @@ msgid "Clear"
 msgstr ""
 
 #: includes/Assets.php:1004
-#: includes/Withdraw/Hooks.php:90
+#: includes/Withdraw/Hooks.php:88
 #: assets/js/dokan-admin-dashboard.js:179
 msgid "Custom"
 msgstr ""
@@ -6023,7 +6028,7 @@ msgid "Set scheduled sale dates"
 msgstr ""
 
 #: includes/Product/functions.php:229
-#: includes/ProductEditor/FormSchema.php:677
+#: includes/ProductEditor/FormSchema.php:678
 #: templates/products/inventory.php:3
 msgid "Inventory"
 msgstr ""
@@ -6328,242 +6333,242 @@ msgstr ""
 msgid "Tags"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:604
+#: includes/ProductEditor/FormSchema.php:605
 msgid "Brands"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:606
+#: includes/ProductEditor/FormSchema.php:607
 msgid "Select product brands"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:615
+#: includes/ProductEditor/FormSchema.php:616
 msgid "Feature Image"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:618
+#: includes/ProductEditor/FormSchema.php:619
 msgid "Select product image"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:625
+#: includes/ProductEditor/FormSchema.php:626
 msgid "Gallery Image"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:628
+#: includes/ProductEditor/FormSchema.php:629
 msgid "Select product gallery images"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:635
+#: includes/ProductEditor/FormSchema.php:636
 #: templates/products/edit-product-single.php:499
 msgid "Short Description"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:637
+#: includes/ProductEditor/FormSchema.php:638
 msgid "Enter product short description"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:644
+#: includes/ProductEditor/FormSchema.php:645
 #: templates/products/edit-product-single.php:519
 #: templates/products/new-product.php:288
 msgid "Description"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:646
+#: includes/ProductEditor/FormSchema.php:647
 msgid "Enter product description"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:654
+#: includes/ProductEditor/FormSchema.php:655
 #: templates/products/download-virtual.php:4
 #: templates/products/products-listing-row.php:246
 msgid "Downloadable"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:656
+#: includes/ProductEditor/FormSchema.php:657
 #: templates/products/download-virtual.php:4
 msgid "Downloadable products give access to a file upon purchase."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:664
+#: includes/ProductEditor/FormSchema.php:665
 #: templates/products/download-virtual.php:9
 #: templates/products/products-listing-row.php:244
 msgid "Virtual"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:666
+#: includes/ProductEditor/FormSchema.php:667
 msgid "Virtual products are intangible and are not shipped."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:678
+#: includes/ProductEditor/FormSchema.php:679
 msgid "Manage inventory for this product"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:685
+#: includes/ProductEditor/FormSchema.php:686
 #: templates/products/inventory.php:14
 #: templates/products/products-listing-row.php:172
 #: templates/products/products-listing.php:125
 msgid "SKU"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:685
+#: includes/ProductEditor/FormSchema.php:686
 msgid "Stock Keeping Unit"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:687
+#: includes/ProductEditor/FormSchema.php:688
 msgid "Enter product SKU"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:688
+#: includes/ProductEditor/FormSchema.php:689
 msgid "SKU refers to a Stock-keeping unit, a unique identifier for each distinct product and service that can be purchased."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:695
+#: includes/ProductEditor/FormSchema.php:696
 msgid "GTIN, UPC, EAN, or ISBN"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:695
+#: includes/ProductEditor/FormSchema.php:696
 msgid "Product Identifiers"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:697
+#: includes/ProductEditor/FormSchema.php:698
 msgid "Enter code"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:698
+#: includes/ProductEditor/FormSchema.php:699
 msgid "Enter a barcode or any other identifier unique to this product. It can help you list this product on other channels or marketplaces."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:705
+#: includes/ProductEditor/FormSchema.php:706
 #: templates/products/inventory.php:19
 msgid "Stock Status"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:707
+#: includes/ProductEditor/FormSchema.php:708
 #: includes/REST/DummyDataController.php:444
 #: includes/REST/ProductController.php:2124
 msgid "Controls whether or not the product is listed as \"in stock\" or \"out of stock\" on the frontend."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:722
+#: includes/ProductEditor/FormSchema.php:723
 msgid "Manage stock?"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:724
+#: includes/ProductEditor/FormSchema.php:725
 msgid "Manage stock level (quantity)"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:731
+#: includes/ProductEditor/FormSchema.php:732
 #: templates/products/inventory.php:47
 msgid "Stock quantity"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:734
+#: includes/ProductEditor/FormSchema.php:735
 msgid "Stock quantity. If this is a variable product this value will be used to control stock for all variations, unless you define stock at variation level."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:748
+#: includes/ProductEditor/FormSchema.php:749
 #: templates/products/inventory.php:55
 msgid "Low stock threshold"
 msgstr ""
 
 #. translators: %d: store-wide threshold
-#: includes/ProductEditor/FormSchema.php:752
+#: includes/ProductEditor/FormSchema.php:753
 msgid "Store-wide threshold (%d)"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:755
+#: includes/ProductEditor/FormSchema.php:756
 msgid "When product stock reaches this amount you will be notified by email. It is possible to define different values for each variation individually."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:769
+#: includes/ProductEditor/FormSchema.php:770
 #: templates/products/inventory.php:61
 msgid "Allow Backorders"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:771
+#: includes/ProductEditor/FormSchema.php:772
 msgid "If managing stock, this controls whether or not backorders are allowed. If enabled, stock quantity can go below 0."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:786
+#: includes/ProductEditor/FormSchema.php:787
 msgid "Allow only one quantity of this product to be bought in a single order."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:788
+#: includes/ProductEditor/FormSchema.php:789
 msgid "Check to let customers to purchase only 1 item in a single order. This is particularly useful for items that have limited quantity, for example art or handmade goods."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:797
+#: includes/ProductEditor/FormSchema.php:798
 #: templates/products/downloadable.php:3
 msgid "Downloadable Options"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:798
+#: includes/ProductEditor/FormSchema.php:799
 #: templates/products/downloadable.php:4
 msgid "Configure your downloadable product settings"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:806
+#: includes/ProductEditor/FormSchema.php:807
 msgid "Downloadable Files"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:809
+#: includes/ProductEditor/FormSchema.php:810
 msgid "Upload files that customers can download after purchase."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:817
+#: includes/ProductEditor/FormSchema.php:818
 #: templates/products/downloadable.php:58
 msgid "Download Limit"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:819
+#: includes/ProductEditor/FormSchema.php:820
 #: templates/orders/order-download-permission-html.php:64
 #: templates/products/downloadable.php:59
 msgid "Unlimited"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:820
+#: includes/ProductEditor/FormSchema.php:821
 msgid "Leave blank for unlimited re-downloads."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:828
+#: includes/ProductEditor/FormSchema.php:829
 #: templates/products/downloadable.php:63
 msgid "Download Expiry"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:830
+#: includes/ProductEditor/FormSchema.php:831
 #: templates/orders/order-download-permission-html.php:72
 #: templates/products/downloadable.php:64
 msgid "Never"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:831
+#: includes/ProductEditor/FormSchema.php:832
 msgid "Enter the number of days before a download link expires, or leave blank."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:841
+#: includes/ProductEditor/FormSchema.php:842
 #: templates/products/others.php:7
 msgid "Other Options"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:842
+#: includes/ProductEditor/FormSchema.php:843
 #: templates/products/others.php:8
 msgid "Set your extra product options"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:860
+#: includes/ProductEditor/FormSchema.php:861
 #: templates/products/others.php:28
 msgid "Visibility"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:870
-#: includes/ProductEditor/FormSchema.php:872
+#: includes/ProductEditor/FormSchema.php:871
+#: includes/ProductEditor/FormSchema.php:873
 #: templates/products/others.php:41
 msgid "Purchase Note"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:873
+#: includes/ProductEditor/FormSchema.php:874
 msgid "Customer will get this in order email."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:880
+#: includes/ProductEditor/FormSchema.php:881
 #: templates/products/others.php:52
 msgid "Enable product reviews"
 msgstr ""
@@ -9063,12 +9068,12 @@ msgid "Please provide Withdraw method."
 msgstr ""
 
 #: includes/REST/WithdrawControllerV2.php:140
-#: includes/Withdraw/Hooks.php:253
+#: includes/Withdraw/Hooks.php:255
 msgid "Method not active."
 msgstr ""
 
 #: includes/REST/WithdrawControllerV2.php:146
-#: includes/Withdraw/Hooks.php:259
+#: includes/Withdraw/Hooks.php:261
 msgid "Default method update successful."
 msgstr ""
 
@@ -10404,32 +10409,32 @@ msgstr ""
 msgid "- %1$s - %2$s - ****%3$s"
 msgstr ""
 
-#: includes/Withdraw/Hooks.php:175
+#: includes/Withdraw/Hooks.php:177
 msgid "You already have a pending withdraw request."
 msgstr ""
 
-#: includes/Withdraw/Hooks.php:179
+#: includes/Withdraw/Hooks.php:181
 msgid "Withdraw method is required"
 msgstr ""
 
-#: includes/Withdraw/Hooks.php:183
+#: includes/Withdraw/Hooks.php:185
 #: assets/js/frontend.js:179
 msgid "Withdraw amount is required"
 msgstr ""
 
-#: includes/Withdraw/Hooks.php:190
+#: includes/Withdraw/Hooks.php:192
 msgid "Withdraw method is not activated."
 msgstr ""
 
-#: includes/Withdraw/Hooks.php:194
+#: includes/Withdraw/Hooks.php:196
 msgid "Negative withdraw amount is not permitted."
 msgstr ""
 
-#: includes/Withdraw/Hooks.php:228
+#: includes/Withdraw/Hooks.php:230
 msgid "Withdraw request successful."
 msgstr ""
 
-#: includes/Withdraw/Hooks.php:249
+#: includes/Withdraw/Hooks.php:251
 msgid "Please provide Withdrew method."
 msgstr ""
 
@@ -10437,44 +10442,44 @@ msgstr ""
 msgid "Withdraw amount required "
 msgstr ""
 
-#: includes/Withdraw/Manager.php:45
+#: includes/Withdraw/Manager.php:49
 msgid "You don't have enough balance for this request"
 msgstr ""
 
 #. translators: %s: withdraw limit amount
-#: includes/Withdraw/Manager.php:50
+#: includes/Withdraw/Manager.php:54
 msgid "Withdraw amount must be greater than or equal to %s"
 msgstr ""
 
-#: includes/Withdraw/Manager.php:54
+#: includes/Withdraw/Manager.php:58
 msgid "Withdraw method is not active."
 msgstr ""
 
-#: includes/Withdraw/Manager.php:58
+#: includes/Withdraw/Manager.php:62
 msgid "Vendor is not enabled for selling, please contact site admin"
 msgstr ""
 
-#: includes/Withdraw/Manager.php:62
+#: includes/Withdraw/Manager.php:66
 msgid "Withdraw is already approved."
 msgstr ""
 
-#: includes/Withdraw/Manager.php:74
+#: includes/Withdraw/Manager.php:78
 msgid "Withdraw amount is less then the withdraw charge."
 msgstr ""
 
-#: includes/Withdraw/Manager.php:111
+#: includes/Withdraw/Manager.php:115
 msgid "Invalid permission to cancel the request."
 msgstr ""
 
-#: includes/Withdraw/Manager.php:117
+#: includes/Withdraw/Manager.php:121
 msgid "Invalid cancel withdraw request"
 msgstr ""
 
-#: includes/Withdraw/Manager.php:157
+#: includes/Withdraw/Manager.php:161
 msgid "Could not update withdraw status"
 msgstr ""
 
-#: includes/Withdraw/Manager.php:191
+#: includes/Withdraw/Manager.php:195
 msgid "Could not add new withdraw approval request."
 msgstr ""
 

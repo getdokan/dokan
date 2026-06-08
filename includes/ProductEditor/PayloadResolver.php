@@ -138,7 +138,7 @@ class PayloadResolver {
     /**
      * Map tag IDs and (when vendors can create tags) new-name strings to the WC REST tag shape.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.4
      *
      * @param array $tags Array of tag IDs and/or new tag names.
      *
