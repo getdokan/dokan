@@ -4,6 +4,36 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.0.4',
+        'released' => '2026-06-08',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Improved RTL support for the switch button transition in the new vendor dashboard layout.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Made the vendor analytics panel compatible with the vendor-specific Coupons report.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Allowed vendors to create new product tags inline from the new product editor.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Resolved withdraw approval failing on an exact fractional balance.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added ownership checks to order AJAX handlers to prevent vendors from modifying orders they don\'t own.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.0.3',
         'released' => '2026-05-21',
         'changes'  => [
