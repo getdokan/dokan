@@ -103,6 +103,43 @@ export const data = {
     }),
 };
 
+// Default fields the "default field" tests target. A field qualifies only if it
+// is a real, vendor-facing core field that is safe to toggle: non-custom,
+// non-mandatory, optional, visible & admin-editable, AND renders in the vendor
+// product editor inside a `#dokan-form-field-{id}` wrapper (so the vendor-
+// reflection assertions can find it). These ids are tried in order; the first one
+// present in the live schema (and still matching those constraints) wins.
+//
+// Curated on purpose: an active module can inject schema items that look like
+// default fields but aren't safe to target. The Product Add-ons module injects
+// `product_addons_sub_*` checkbox CONFIG toggles that are `required:true`, never
+// render as vendor product fields, and have `is_mandatory` force-cleared by the
+// module (ProductEditorFields::clear_legacy_mandatory_flags). Those sort ahead of
+// the core fields, so an unfiltered scan used to grab one and break the rename /
+// required / is_mandatory / vendor-reflection cases.
+const PREFERRED_DEFAULT_FIELD_IDS = [
+    'purchase_note',
+    'short_description',
+    'stock_status',
+    'tax_class',
+    'shipping_class',
+];
+
+// Variants whose vendor-editor control renders through the CustomField wrapper
+// (emitting `#dokan-form-field-{id}`). Used by the fallback search only.
+const VENDOR_WRAPPED_VARIANTS: ReadonlySet<string> = new Set([
+    'textarea',
+    'editor',
+    'select',
+    'multiselect',
+    'datetime',
+    'image',
+    'gallery',
+    'file',
+    'async_select',
+    'attributes',
+]);
+
 // ----------------------------------------------------------------------------
 // API CLIENT
 // ----------------------------------------------------------------------------
@@ -241,19 +278,44 @@ export const api = {
         return schema.find((i) => i.type === 'field' && i.label === label);
     },
     // A default (non-custom) field that is editable in the admin UI and safe to
-    // toggle: visible in admin, not mandatory, currently visible, optional, text-like.
+    // toggle: visible in admin, not mandatory, currently visible, optional, and
+    // vendor-facing. Prefers a curated core field (see PREFERRED_DEFAULT_FIELD_IDS)
+    // so a module-injected pseudo-field can never be picked; falls back to any
+    // optional default field that renders the vendor `#dokan-form-field-{id}`
+    // wrapper.
     pickOptionalDefaultField(
         schema: SchemaItem[]
     ): { section: SchemaItem; field: SchemaItem } | undefined {
-        for (const field of this.fields(schema)) {
-            if (field.is_custom || field.is_mandatory) continue;
-            if (field.show_in_admin === false) continue;
-            if (field.visibility === false) continue;
-            const section = schema.find(
-                (s) => s.type === 'section' && s.id === field.section_id
+        const isEditableOptional = (field: SchemaItem): boolean =>
+            field.type === 'field' &&
+            !field.is_custom &&
+            !field.is_mandatory &&
+            field.show_in_admin !== false &&
+            field.visibility !== false &&
+            field.required !== true;
+        const adminSectionOf = (field: SchemaItem): SchemaItem | undefined =>
+            schema.find(
+                (s) =>
+                    s.type === 'section' &&
+                    s.id === field.section_id &&
+                    s.show_in_admin !== false
             );
-            if (!section || section.show_in_admin === false) continue;
-            return { section, field };
+
+        // Prefer a known-stable, vendor-rendering core field.
+        for (const id of PREFERRED_DEFAULT_FIELD_IDS) {
+            const field = schema.find((i) => i.id === id);
+            if (field && isEditableOptional(field)) {
+                const section = adminSectionOf(field);
+                if (section) return { section, field };
+            }
+        }
+
+        // Fallback: any optional default field that renders the vendor wrapper.
+        for (const field of this.fields(schema)) {
+            if (!isEditableOptional(field)) continue;
+            if (!VENDOR_WRAPPED_VARIANTS.has(String(field.variant))) continue;
+            const section = adminSectionOf(field);
+            if (section) return { section, field };
         }
         return undefined;
     },
