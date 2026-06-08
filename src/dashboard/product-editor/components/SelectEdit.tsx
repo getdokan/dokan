@@ -1,4 +1,5 @@
 import { Select } from '@src/components';
+import { TaggableSelect } from '@getdokan/dokan-ui';
 import { applyFilters } from '@wordpress/hooks';
 import { CheckSquare, Square } from 'lucide-react';
 import { useMemo } from 'react';
@@ -109,10 +110,18 @@ const SelectEdit = ( { data, field, onChange, validity }: any ) => {
             ) {
                 return currentValue;
             }
-            // If IDs/Strings
-            return options.filter( ( option: Option ) =>
-                currentValue.includes( option.value )
-            );
+            // Preserve unknown values (e.g. newly-typed tags) so they still render as chips.
+            return currentValue.map( ( item: any ) => {
+                const match = options.find(
+                    ( option: Option ) => option.value === item
+                );
+                if ( match ) {
+                    return match;
+                }
+                const label =
+                    typeof item === 'string' ? item : String( item );
+                return { value: item, label } as Option;
+            } );
         }
 
         // Handle Single values
@@ -123,29 +132,79 @@ const SelectEdit = ( { data, field, onChange, validity }: any ) => {
 
     const treeComponents = isTreeMode ? { Option: OptionComponent } : undefined;
 
+    const handleChange = ( input: any ) => {
+        if ( isMulti ) {
+            const values = Array.isArray( input )
+                ? input.map( ( item ) => item.value )
+                : [];
+            onChange( { [ field.id ]: values } );
+        } else {
+            const value = input ? input.value : '';
+            onChange( { [ field.id ]: value } );
+        }
+    };
+
+    // Fields with a `creatable` flag (e.g. product tags) use a creatable multi-select; Enter is swallowed when creation is off so it doesn't submit the form.
+    const useTaggable = field.creatable && isMulti;
+    const canCreate = Boolean( field.creatable );
+
+    // Only surface the "Create" option for a non-empty, non-duplicate entry so an empty `Create ""` never shows.
+    const isValidNewOption = (
+        inputValue: string,
+        selectValue: readonly any[],
+        selectOptions: readonly any[]
+    ) => {
+        const trimmed = inputValue.trim();
+        const matchesExisting = ( option: any ) =>
+            String( option?.label )
+                .trim()
+                .toLowerCase() === trimmed.toLowerCase();
+        const isValid =
+            canCreate &&
+            !! trimmed &&
+            ! selectValue.some( matchesExisting ) &&
+            ! selectOptions.some( matchesExisting );
+
+        // Let extensions override whether a typed entry may be created (e.g. per-field tag rules).
+        return applyFilters(
+            'dokan_product_editor_is_valid_new_option',
+            isValid,
+            inputValue,
+            field,
+            data
+        ) as boolean;
+    };
+
     return (
         <CustomField field={ field } error={ getValidationError( validity ) }>
-            <Select
-                options={ options }
-                isMulti={ isMulti }
-                placeholder={ placeholder }
-                value={ getSelectedValue() }
-                // Specific Tree Props
-                components={ treeComponents }
-                onChange={ ( input: any ) => {
-                    if ( isMulti ) {
-                        // Handle multi-select always as array of values
-                        const values = Array.isArray( input )
-                            ? input.map( ( item ) => item.value )
-                            : [];
-                        onChange( { [ field.id ]: values } );
-                    } else {
-                        // Handle single select
-                        const value = input ? input.value : '';
-                        onChange( { [ field.id ]: value } );
-                    }
-                } }
-            />
+            { useTaggable ? (
+                <div
+                    onKeyDown={ ( e: React.KeyboardEvent ) => {
+                        if ( e.key === 'Enter' && ! canCreate ) {
+                            e.preventDefault();
+                        }
+                    } }
+                >
+                    <TaggableSelect
+                        isMulti
+                        options={ options }
+                        placeholder={ placeholder }
+                        value={ getSelectedValue() }
+                        isValidNewOption={ isValidNewOption }
+                        onChange={ handleChange }
+                    />
+                </div>
+            ) : (
+                <Select
+                    options={ options }
+                    isMulti={ isMulti }
+                    placeholder={ placeholder }
+                    value={ getSelectedValue() }
+                    // Specific Tree Props
+                    components={ treeComponents }
+                    onChange={ handleChange }
+                />
+            ) }
         </CustomField>
     );
 };
