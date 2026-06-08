@@ -6,6 +6,9 @@ import {
     Settings,
     useSettings,
     Button,
+    Spinner,
+    Toaster,
+    toast,
     type SettingsElement,
 } from '@wedevs/plugin-ui';
 import { registerSettingsFields } from './register-fields';
@@ -100,6 +103,7 @@ const UrlSync = (): null => {
 export default function SettingsPage() {
     const [ schema, setSchema ] = useState< SettingsElement[] >( [] );
     const [ loading, setLoading ] = useState< boolean >( true );
+    const [ saving, setSaving ] = useState< boolean >( false );
 
     useEffect( () => {
         apiFetch< SettingsElement[] >( { path: '/dokan/v1/admin/settings' } )
@@ -114,19 +118,29 @@ export default function SettingsPage() {
             } );
     }, [] );
 
-    const handleSave = (
+    const handleSave = async (
         scopeId: string,
         _treeValues: Record< string, unknown >,
         flatValues: Record< string, unknown >
-    ): void => {
-        apiFetch( {
-            path: `/dokan/v1/admin/settings/${ scopeId }`,
-            method: 'PUT',
-            data: { values: flatValues },
-        } ).catch( ( error ) => {
+    ): Promise< void > => {
+        setSaving( true );
+        try {
+            await apiFetch( {
+                path: `/dokan/v1/admin/settings/${ scopeId }`,
+                method: 'PUT',
+                data: { values: flatValues },
+            } );
+            toast.success( __( 'Settings saved.', 'dokan-lite' ) );
+        } catch ( error ) {
             // eslint-disable-next-line no-console
             console.error( 'Failed to save settings:', error );
-        } );
+            toast.error(
+                ( error as { message?: string } )?.message ||
+                    __( 'Failed to save settings.', 'dokan-lite' )
+            );
+        } finally {
+            setSaving( false );
+        }
     };
 
     // Changing the top-level page resets subpage/tab — plugin-ui will auto-
@@ -142,26 +156,32 @@ export default function SettingsPage() {
     const initialPage = getUrlParam( URL_PARAM_PAGE ) || undefined;
 
     return (
-        <Settings
-            schema={ schema }
-            loading={ loading }
-            title={ __( 'Dokan Settings', 'dokan-lite' ) }
-            hookPrefix="dokan"
-            applyFilters={ applyFilters }
-            onSave={ handleSave }
-            initialPage={ initialPage }
-            onNavigate={ handleNavigate }
-            renderSaveButton={ ( { dirty, hasErrors, onSave } ) => (
-                <>
-                    <UrlSync />
-                    <Button
-                        onClick={ onSave }
-                        disabled={ ! dirty || hasErrors }
-                    >
-                        { __( 'Save Changes', 'dokan-lite' ) }
-                    </Button>
-                </>
-            ) }
-        />
+        <>
+            <Settings
+                schema={ schema }
+                loading={ loading }
+                title={ __( 'Dokan Settings', 'dokan-lite' ) }
+                hookPrefix="dokan"
+                applyFilters={ applyFilters }
+                onSave={ handleSave }
+                initialPage={ initialPage }
+                onNavigate={ handleNavigate }
+                renderSaveButton={ ( { dirty, hasErrors, onSave } ) => (
+                    <>
+                        <UrlSync />
+                        <Button
+                            onClick={ onSave }
+                            disabled={ ! dirty || hasErrors || saving }
+                        >
+                            { saving && <Spinner className="size-4 mr-2" /> }
+                            { saving
+                                ? __( 'Saving…', 'dokan-lite' )
+                                : __( 'Save Changes', 'dokan-lite' ) }
+                        </Button>
+                    </>
+                ) }
+            />
+            <Toaster richColors />
+        </>
     );
 }

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from '@wordpress/element';
-import { Input, cn } from '@wedevs/plugin-ui';
+import { Input, Switch, cn } from '@wedevs/plugin-ui';
 import { GripVertical, Pencil, Trash2, Plus, X, Check } from 'lucide-react';
 
 /**
@@ -13,6 +13,10 @@ export type RepeaterRow = {
     order?: number;
     /** Non-removable rows hide the delete control. */
     required?: boolean;
+    /** Activate/deactivate state, used when `rowToggle` is on. */
+    enabled?: boolean;
+    /** Disable just the activate/deactivate toggle (keeps rename enabled). */
+    toggleLocked?: boolean;
     [ key: string ]: unknown;
 };
 
@@ -27,6 +31,12 @@ export type RepeaterProps = {
     placeholder?: string;
     /** Badge text shown on `required` rows (e.g. "Must Have"). Omit to hide. */
     requiredLabel?: string;
+    /** Render a per-row activate/deactivate toggle bound to `row.enabled`. */
+    rowToggle?: boolean;
+    /** Show the "add new row" action (default true). */
+    addable?: boolean;
+    /** Show the per-row delete control (default true). */
+    deletable?: boolean;
     disabled?: boolean;
     className?: string;
 };
@@ -65,28 +75,15 @@ function normalizeRows( raw: unknown ): RepeaterRow[] {
     } );
 }
 
-/**
- * Generic, controlled repeater: an editable list of text rows with inline
- * add / edit / delete and drag-to-reorder (via the grip handle).
- *
- * Presentation-only and schema-agnostic, so it can back any "list of items"
- * setting (abuse reasons, RMA reasons, shipping statuses, …) or be reused
- * outside the settings screen entirely.
- * @param root0
- * @param root0.value
- * @param root0.onChange
- * @param root0.addLabel
- * @param root0.placeholder
- * @param root0.disabled
- * @param root0.className
- * @param root0.requiredLabel
- */
 export default function Repeater( {
     value,
     onChange,
     addLabel = 'Add Item',
     placeholder,
     requiredLabel,
+    rowToggle = false,
+    addable = true,
+    deletable = true,
     disabled = false,
     className,
 }: RepeaterProps ) {
@@ -159,6 +156,12 @@ export default function Repeater( {
         commit( rows.filter( ( row ) => row.id !== id ) );
     };
 
+    const setRowEnabled = ( id: string, enabled: boolean ): void => {
+        commit(
+            rows.map( ( row ) => ( row.id === id ? { ...row, enabled } : row ) )
+        );
+    };
+
     const onDrop = ( dropIndex: number ): void => {
         if ( dragIndex === null || dragIndex === dropIndex ) {
             setDragIndex( null );
@@ -219,7 +222,7 @@ export default function Repeater( {
         <div
             ref={ containerRef }
             className={ cn(
-                'flex flex-col w-full border-t border-border',
+                'flex flex-col w-full divide-y divide-border',
                 className
             ) }
         >
@@ -234,7 +237,7 @@ export default function Repeater( {
                         onDrop={ () => onDrop( index ) }
                         onDragEnd={ () => setDragIndex( null ) }
                         className={ cn(
-                            'flex items-center gap-3 py-3 border-b border-border',
+                            'flex items-center gap-3 py-3',
                             dragIndex === index && 'opacity-50'
                         ) }
                     >
@@ -272,37 +275,54 @@ export default function Repeater( {
                                 >
                                     <Pencil className="size-4" />
                                 </button>
+                                { rowToggle && (
+                                    <Switch
+                                        aria-label="Toggle"
+                                        checked={ row.enabled !== false }
+                                        onCheckedChange={ (
+                                            checked: boolean
+                                        ) => setRowEnabled( row.id, checked ) }
+                                        disabled={
+                                            disabled ||
+                                            Boolean( row.toggleLocked )
+                                        }
+                                    />
+                                ) }
                             </>
                         ) }
-                        <button
-                            type="button"
-                            aria-label="Remove item"
-                            onClick={ () => removeRow( row.id ) }
-                            disabled={ disabled || Boolean( row.required ) }
-                            className={ ICON_BUTTON }
-                        >
-                            <Trash2 className="size-4" />
-                        </button>
+                        { deletable && (
+                            <button
+                                type="button"
+                                aria-label="Remove item"
+                                onClick={ () => removeRow( row.id ) }
+                                disabled={ disabled || Boolean( row.required ) }
+                                className={ ICON_BUTTON }
+                            >
+                                <Trash2 className="size-4" />
+                            </button>
+                        ) }
                     </div>
                 );
             } ) }
 
             { editingId === NEW_ROW && (
-                <div className="flex items-center gap-3 py-3 border-b border-border">
+                <div className="flex items-center gap-3 py-3">
                     <GripVertical className="size-4 shrink-0 text-muted-foreground opacity-40" />
                     { draftInput }
                     { editControls }
                 </div>
             ) }
 
-            <button
-                type="button"
-                onClick={ startAdd }
-                disabled={ disabled || editingId !== null }
-                className="flex items-center gap-1.5 self-start py-3 text-sm font-medium text-primary transition-colors hover:text-primary/80 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-                <Plus className="size-4" /> { addLabel }
-            </button>
+            { addable && (
+                <button
+                    type="button"
+                    onClick={ startAdd }
+                    disabled={ disabled || editingId !== null }
+                    className="flex items-center gap-1.5 self-start py-3 text-sm font-medium text-primary transition-colors hover:text-primary/80 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <Plus className="size-4" /> { addLabel }
+                </button>
+            ) }
         </div>
     );
 }

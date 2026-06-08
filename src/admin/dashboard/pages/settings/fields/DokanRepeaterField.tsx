@@ -21,6 +21,10 @@ export default function DokanRepeaterField( { element }: Props ) {
     const rawRows = ( element.value ?? element.default ?? [] ) as RepeaterRow[];
     // Treat the legacy `must_use` flag as `required` so protected rows (e.g.
     // mandatory shipping statuses) render the badge and lock edit/delete.
+    // The activate/deactivate flag (`enabled`) is normalized to a real boolean
+    // by the backend schema (e.g. MenuManager maps `is_switched_on` → `enabled`),
+    // so it passes through verbatim. Only the legacy `must_use` → `required`
+    // fallback is kept here for repeaters that still emit the old flag.
     const rows = Array.isArray( rawRows )
         ? rawRows.map( ( row ) => ( {
               ...row,
@@ -65,6 +69,9 @@ export default function DokanRepeaterField( { element }: Props ) {
                 addLabel={ addLabel }
                 placeholder={ placeholder }
                 requiredLabel={ requiredLabel }
+                rowToggle={ Boolean( element.row_toggle ) }
+                addable={ element.addable !== false }
+                deletable={ element.deletable !== false }
                 disabled={ Boolean( element.disabled ) }
             />
         </div>
