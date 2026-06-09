@@ -962,8 +962,9 @@ class SettingsSchema {
                 'page_id'     => 'transaction',
                 'title'       => esc_html__( 'Reverse Withdrawal', 'dokan-lite' ),
                 'description' => esc_html__( 'Set up commission collection from vendors on Cash on Delivery orders. Control when and how to charge money from vendor accounts when they owe you.', 'dokan-lite' ),
-                'priority'    => 400,
-                'doc_link'    => 'https://wedevs.com/docs/dokan/withdraw/dokan-reverse-withdrawal/',
+                'priority'      => 400,
+                'doc_link'      => 'https://wedevs.com/docs/dokan/withdraw/dokan-reverse-withdrawal/',
+                'doc_link_text' => esc_html__( 'Doc', 'dokan-lite' ),
             ],
             [
                 'id'         => 'reverse_withdrawal_section',
