@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { execSync } from 'child_process';
 import { Browser, BrowserContextOptions, Page } from '@playwright/test';
+import { log } from '@utils/logger';
 
 const { CI, SITE_PATH } = process.env;
 
@@ -461,14 +462,13 @@ export const helpers = {
         process.chdir(directoryPath);
         try {
             const output = execSync(command, { encoding: 'utf-8' });
-            const trimmed = output.trim();
-            if (trimmed) console.log(trimmed);
+            log.output(output);
             return output;
         } catch (error: any) {
             // Surface only the meaningful CLI message (stderr/stdout) instead of
             // dumping the full Node error object (status, pid, output[], …).
             const message = String(error?.stderr || error?.stdout || error?.message || error).trim();
-            console.log(`⚠ command failed: ${command}\n  ${message.replace(/\n/g, '\n  ')}`);
+            log.warn(`command failed: ${command}`, message);
             return new Error(message);
         }
     },

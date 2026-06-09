@@ -5,6 +5,7 @@ import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 import { helpers, BASE_URL, toPath } from '@utils/helpers';
+import { log } from '@utils/logger';
 
 const { CI } = process.env;
 
@@ -13,20 +14,24 @@ setup.describe('site setup', () => {
 
     setup.beforeAll(async () => {
         apiUtils = new ApiUtils(await request.newContext());
+        log.section('Dokan', `preparing ${CI ? 'CI' : 'local'} test environment`);
     });
 
     setup.afterAll(async () => {
         await apiUtils.dispose();
+        log.success('Environment ready', 'all setup steps completed');
     });
 
     setup('set wp debug config', { tag: ['@lite'] }, async () => {
         for (const [key, value] of Object.entries(data.installWp.debugInfo)) {
             await helpers.exeCommandWpcli(data.commands.wpcli.setDebugConfig(key, value));
         }
+        log.success('WP debug config set');
     });
 
     setup('set permalink (post_name)', { tag: ['@lite'] }, async () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.rewritePermalink);
+        log.success('Permalink structure set', 'post_name');
     });
 
     setup('get server url', { tag: ['@lite'] }, async () => {
@@ -35,13 +40,15 @@ setup.describe('site setup', () => {
         if (headers.link) {
             const serverUrl = headers.link.includes('rest_route') ? toPath('?rest_route=') : toPath('wp-json');
             helpers.createEnvVar('SERVER_URL', serverUrl);
+            log.success('Server URL resolved', serverUrl);
         } else {
-            console.log("Headers link doesn't exists");
+            log.skip('Server URL not resolved', 'response had no Link header');
         }
     });
 
     setup('activate basic auth', { tag: ['@lite'] }, async () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.basicAuth));
+        log.success('Basic Auth activated');
     });
 
     // Email Log (wordpress.org) — captures every outgoing mail into the
@@ -52,18 +59,22 @@ setup.describe('site setup', () => {
     // install` from inside WP would hit wp.org and fail).
     setup('activate Email Log', { tag: ['@lite'] }, async () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.emailLog));
+        log.success('Email Log activated');
     });
 
     setup('activate Woocommerce', { tag: ['@lite'] }, async () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.woocommerce));
+        log.success('WooCommerce activated');
     });
 
     setup('activate Dokan Lite', { tag: ['@lite'] }, async () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.dokanLite));
+        log.success('Dokan Lite activated');
     });
 
     setup('activate Dokan Pro', { tag: ['@pro'] }, async () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.dokanPro));
+        log.success('Dokan Pro activated');
     });
 
     // Rank Math SEO is a wordpress.org dependency of the Dokan "Rank Math SEO"
@@ -76,60 +87,66 @@ setup.describe('site setup', () => {
     setup('activate Rank Math SEO', { tag: ['@lite'] }, async () => {
         try {
             await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.rankMath));
+            log.success('Rank Math SEO activated');
         } catch {
-            console.log('↪ Rank Math SEO not activated — continuing without it.');
+            log.skip('Rank Math SEO not activated', 'continuing without it');
         }
     });
 
     setup('flush rewrite rules after plugin activation', { tag: ['@lite'] }, async () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.flushRewrite);
+        log.success('Rewrite rules flushed');
     });
 
     setup('activate theme (storefront)', { tag: ['@lite'] }, async () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.activateTheme(data.installWp.themes.storefront));
+        log.success('Theme activated', 'storefront');
     });
-
-
 
     setup('activate Woocommerce booking', { tag: ['@pro'] }, async () => {
         try {
             // Increase memory limit before activation
             await helpers.exeCommandWpcli('wp config set WP_MEMORY_LIMIT 1024M');
             await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.woocommerceBookings));
+            log.success('WooCommerce Bookings activated');
         } catch {
-            console.log('↪ WooCommerce Bookings not activated — continuing without it.');
+            log.skip('WooCommerce Bookings not activated', 'continuing without it');
         }
     });
 
     setup('activate Woocommerce product addons', { tag: ['@pro'] }, async () => {
         try {
             await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.woocommerceProductAddons));
+            log.success('WooCommerce Product Addons activated');
         } catch {
-            console.log('↪ WooCommerce Product Addons not activated — continuing without it.');
+            log.skip('WooCommerce Product Addons not activated', 'continuing without it');
         }
     });
 
     setup('activate Woocommerce simple auctions', { tag: ['@pro'] }, async () => {
         try {
             await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.woocommerceSimpleAuctions));
+            log.success('WooCommerce Simple Auctions activated');
         } catch {
-            console.log('↪ WooCommerce Simple Auctions not activated — continuing without it.');
+            log.skip('WooCommerce Simple Auctions not activated', 'continuing without it');
         }
     });
 
     setup('activate Woocommerce subscriptions', { tag: ['@pro'] }, async () => {
         try {
             await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.woocommerceSubscriptions));
+            log.success('WooCommerce Subscriptions activated');
         } catch {
-            console.log('↪ WooCommerce Subscriptions not activated — continuing without it.');
+            log.skip('WooCommerce Subscriptions not activated', 'continuing without it');
         }
     });
 
     setup('activate Woocommerce PDF invoices & packing slips', { tag: ['@pro'] }, async () => {
         try {
             await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.woocommercePdfInvoices));
+            log.success('WooCommerce PDF Invoices activated');
         } catch {
-            console.log('↪ WooCommerce PDF Invoices not activated — continuing without it.');
+            log.skip('WooCommerce PDF Invoices not activated', 'continuing without it');
         }
     });
 
@@ -147,13 +164,15 @@ setup.describe('site setup', () => {
         // update`, which exits non-zero when the value is unchanged and would
         // fail the whole setup chain on a re-run of an already-seeded site.
         await helpers.exeCommandWpcli(`wp eval 'update_option("wpo_wcpdf_version", "5.11.0");'`);
+        log.success('Seeded wpo_wcpdf_version', '5.11.0');
     });
 
     setup('activate Dokan Invoice', { tag: ['@pro'] }, async () => {
         try {
             await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.dokanInvoice));
+            log.success('Dokan Invoice activated');
         } catch {
-            console.log('↪ Dokan Invoice not activated — continuing without it.');
+            log.skip('Dokan Invoice not activated', 'continuing without it');
         }
     });
 
@@ -176,13 +195,16 @@ setup.describe('site setup', () => {
         await helpers.exeCommandWpcli(
             `wp eval 'update_option("wpo_wcpdf_documents_settings_invoice", ["enabled" => "1", "attach_to_email_ids" => [], "my_account_buttons" => "always"]); update_option("wpo_wcpdf_documents_settings_packing-slip", ["enabled" => "1", "my_account_buttons" => "always"]);'`,
         );
+        log.success('WC PDF documents enabled', 'invoice + packing-slip');
     });
+
     setup('set dokan license', { tag: ['@pro'] }, async () => {
         setup.skip(!process.env.LICENSE_KEY, 'LICENSE_KEY env var not set – skipping license setup (fork PR or unconfigured secret)');
         try {
             await dbUtils.setOptionValue(dbData.dokan.optionName.dokanProLicense, dbData.dokan.dokanProLicense);
+            log.success('Dokan Pro license set');
         } catch (error) {
-            console.log('↪ Dokan license not set — continuing without it.', (error as Error)?.message ?? '');
+            log.skip('Dokan license not set', (error as Error)?.message ?? 'continuing without it');
         }
     });
 
@@ -193,16 +215,20 @@ setup.describe('site setup', () => {
         // Activate the core batch first, then attempt 'auction' separately as a non-fatal step.
         const coreModules = dbData.dokan.modules.filter((m: string) => m !== 'auction');
         const [response] = await apiUtils.activateModules(coreModules, payloads.adminAuth);
-        if (!response.ok()) {
-            console.log('↪ Core module activation failed — continuing.');
+        if (response.ok()) {
+            log.success('Dokan modules activated', `${coreModules.length} core modules`);
+        } else {
+            log.warn('Core module activation failed', 'continuing');
         }
         try {
             const [auctionResponse] = await apiUtils.activateModules(['auction'], payloads.adminAuth);
-            if (!auctionResponse.ok()) {
-                console.log('↪ Auction module not available (woocommerce-simple-auctions may be missing) — continuing.');
+            if (auctionResponse.ok()) {
+                log.success('Auction module activated');
+            } else {
+                log.skip('Auction module not available', 'woocommerce-simple-auctions may be missing');
             }
         } catch (error) {
-            console.log('↪ Auction module activation skipped —', (error as Error)?.message ?? '');
+            log.skip('Auction module skipped', (error as Error)?.message ?? '');
         }
     });
 
@@ -210,8 +236,9 @@ setup.describe('site setup', () => {
         const siteSettings = await apiUtils.setSiteSettings(payloads.siteSettings, payloads.adminAuth);
         if (siteSettings) {
             expect(siteSettings).toEqual(expect.objectContaining(payloads.siteSettings));
+            log.success('Site general settings applied');
         } else {
-            console.log('↪ Failed to set site settings — continuing.');
+            log.warn('Failed to set site settings', 'continuing');
         }
     });
 
@@ -220,9 +247,10 @@ setup.describe('site setup', () => {
             const [, systemInfo] = await apiUtils.getSystemStatus(payloads.adminAuth);
             if (systemInfo) {
                 helpers.writeFile(data.systemInfo, JSON.stringify(systemInfo));
+                log.success('Environment info captured', data.systemInfo);
             }
         } catch {
-            console.log('↪ Failed to get system info — continuing.');
+            log.skip('Environment info not captured', 'continuing');
         }
     });
 });
