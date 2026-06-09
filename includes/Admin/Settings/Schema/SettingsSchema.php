@@ -1392,6 +1392,27 @@ class SettingsSchema {
                 ],
             ],
             [
+                'id'            => 'show_register_as_vendor',
+                'type'          => 'field',
+                'variant'       => 'switch',
+                'subpage_id'    => 'vendor_onboarding',
+                'title'         => __( 'Show "Register as a Vendor" in Sign Up Page', 'dokan-lite' ),
+                'description'   => __( 'Adds the "I am a customer / I am a vendor" role toggle to the WooCommerce My Account sign-up form.', 'dokan-lite' ),
+                'default'       => 'on',
+                'enable_state'  => [
+					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state' => [
+					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+					'value' => 'off',
+				],
+                'legacy_key'    => [
+                    'option' => 'dokan_appearance',
+                    'field'  => 'show_register_as_vendor',
+                ],
+            ],
+            [
                 'id'            => 'vendor_setup_wizard_logo',
                 'type'          => 'field',
                 'variant'       => 'wp_media_upload',
@@ -1610,124 +1631,6 @@ class SettingsSchema {
                 ],
             ],
 
-            // Google reCAPTCHA
-            [
-                'id'         => 'google_recaptcha',
-                'type'       => 'section',
-                'subpage_id' => 'store',
-            ],
-            [
-                'id'         => 'google_recaptcha_settings',
-                'type'       => 'fieldgroup',
-                'section_id' => 'google_recaptcha',
-            ],
-            [
-                'id'             => 'google_recaptcha_enabled',
-                'type'           => 'field',
-                'variant'        => 'switch',
-                'field_group_id' => 'google_recaptcha_settings',
-                'title'          => esc_html__( 'Google reCaptcha Validation', 'dokan-lite' ),
-                'description'    => sprintf(
-                    /* translators: %s: Help link */
-                    __( 'Connect to enable spam protection that works automatically in the background <a href="%s" target="_blank" rel="noopener noreferrer">Get Help</a>', 'dokan-lite' ),
-                    'https://developers.google.com/recaptcha/docs/v3'
-                ),
-                'default'        => 'off',
-                'image_url'      => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/social-onboarding/google.svg',
-                'enable_state'   => [
-					'label' => esc_html__( 'Enable', 'dokan-lite' ),
-					'value' => 'on',
-				],
-                'disable_state'  => [
-					'label' => esc_html__( 'Disable', 'dokan-lite' ),
-					'value' => 'off',
-				],
-            ],
-            [
-                'id'             => 'google_recaptcha_info',
-                'type'           => 'field',
-                'variant'        => 'info',
-                'field_group_id' => 'google_recaptcha_settings',
-                'title'          => esc_html__( 'Need Help?', 'dokan-lite' ),
-                'description'    => sprintf(
-                    /* translators: %s: Google reCaptcha URL */
-                    __( "If you don't have a Google reCaptcha account, <a href=\"%s\" target=\"_blank\" rel=\"noopener noreferrer\">+ Create Google reCaptcha</a>", 'dokan-lite' ),
-                    'https://www.google.com/recaptcha/admin/create'
-                ),
-                'dependencies'   => [
-                    [
-						'key' => 'google_recaptcha_enabled',
-						'value' => 'on',
-						'to_self' => true,
-						'attribute' => 'display',
-						'effect' => 'show',
-						'comparison' => '===',
-					],
-                    [
-						'key' => 'google_recaptcha_enabled',
-						'value' => 'off',
-						'to_self' => true,
-						'attribute' => 'display',
-						'effect' => 'hide',
-						'comparison' => '===',
-					],
-                ],
-            ],
-            [
-                'id'             => 'google_recaptcha_site_key',
-                'type'           => 'field',
-                'variant'        => 'show_hide',
-                'field_group_id' => 'google_recaptcha_settings',
-                'title'          => esc_html__( 'Site Key', 'dokan-lite' ),
-                'placeholder'    => esc_html__( 'Site Key', 'dokan-lite' ),
-                'tooltip'        => esc_html__( 'Insert Google reCAPTCHA v3 site key.', 'dokan-lite' ),
-                'dependencies'   => [
-                    [
-						'key' => 'google_recaptcha_enabled',
-						'value' => 'on',
-						'to_self' => true,
-						'attribute' => 'display',
-						'effect' => 'show',
-						'comparison' => '===',
-					],
-                    [
-						'key' => 'google_recaptcha_enabled',
-						'value' => 'off',
-						'to_self' => true,
-						'attribute' => 'display',
-						'effect' => 'hide',
-						'comparison' => '===',
-					],
-                ],
-            ],
-            [
-                'id'             => 'google_recaptcha_secret_key',
-                'type'           => 'field',
-                'variant'        => 'show_hide',
-                'field_group_id' => 'google_recaptcha_settings',
-                'title'          => esc_html__( 'Secret Key', 'dokan-lite' ),
-                'placeholder'    => esc_html__( 'Secret Key', 'dokan-lite' ),
-                'tooltip'        => esc_html__( 'Insert Google reCAPTCHA v3 secret key.', 'dokan-lite' ),
-                'dependencies'   => [
-                    [
-						'key' => 'google_recaptcha_enabled',
-						'value' => 'on',
-						'to_self' => true,
-						'attribute' => 'display',
-						'effect' => 'show',
-						'comparison' => '===',
-					],
-                    [
-						'key' => 'google_recaptcha_enabled',
-						'value' => 'off',
-						'to_self' => true,
-						'attribute' => 'display',
-						'effect' => 'hide',
-						'comparison' => '===',
-					],
-                ],
-            ],
-
             // Contact Form
             [
                 'id'         => 'store_contact_form_section',
@@ -1756,6 +1659,39 @@ class SettingsSchema {
 				],
             ],
 
+            // Default Store Media
+            [
+                'id'         => 'store_default_media_section',
+                'type'       => 'section',
+                'subpage_id' => 'store',
+            ],
+            [
+                'id'            => 'default_store_banner',
+                'type'          => 'field',
+                'variant'       => 'wp_media_upload',
+                'section_id'    => 'store_default_media_section',
+                'title'         => esc_html__( 'Default Store Banner', 'dokan-lite' ),
+                'allowed_types' => [ 'image/jpeg', 'image/png', 'image/gif' ],
+                'default'       => DOKAN_PLUGIN_ASSEST . '/images/default-store-banner.png',
+                'legacy_key'    => [
+                    'option' => 'dokan_appearance',
+                    'field'  => 'default_store_banner',
+                ],
+            ],
+            [
+                'id'            => 'default_store_profile',
+                'type'          => 'field',
+                'variant'       => 'wp_media_upload',
+                'section_id'    => 'store_default_media_section',
+                'title'         => esc_html__( 'Default Store Profile Picture', 'dokan-lite' ),
+                'allowed_types' => [ 'image/jpeg', 'image/png', 'image/gif' ],
+                'default'       => DOKAN_PLUGIN_ASSEST . '/images/mystery-person.jpg',
+                'legacy_key'    => [
+                    'option' => 'dokan_appearance',
+                    'field'  => 'default_store_profile',
+                ],
+            ],
+
             // Banner Dimension
             [
                 'id'         => 'store_banner_dimension_section',
@@ -1774,6 +1710,14 @@ class SettingsSchema {
 					'first' => 625,
 					'second' => 300,
 				],
+                // Legacy stores width/height as two separate keys under
+                // `dokan_appearance` (Pro-injected). Bridge each to its own
+                // slot of the `double_input` value via {@see DoubleInputTransformer}.
+                'legacy_key'         => [
+                    'first'  => 'dokan_appearance.store_banner_width',
+                    'second' => 'dokan_appearance.store_banner_height',
+                ],
+                'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\DoubleInputTransformer::for_slots( 625, 300 ),
             ],
 
             // Store Template
@@ -2478,6 +2422,281 @@ class SettingsSchema {
                 'description' => esc_html__( 'Configure moderation settings, return policies, and customer request management.', 'dokan-lite' ),
                 'icon'        => 'Settings2',
                 'priority'    => 900,
+            ],
+
+            // === SubPage: Captcha ===
+            [
+                'id'            => 'captcha',
+                'type'          => 'subpage',
+                'page_id'       => 'moderation',
+                'title'         => esc_html__( 'Captcha', 'dokan-lite' ),
+                'description'   => esc_html__( 'Add bot and spam protection to the forms across your store.', 'dokan-lite' ),
+                'priority'      => 100,
+                'doc_link'      => 'https://wedevs.com/docs/dokan/settings/dokan-recaptacha-v3-integration/',
+                'doc_link_text' => esc_html__( 'Doc', 'dokan-lite' ),
+            ],
+            [
+                'id'         => 'captcha_section',
+                'type'       => 'section',
+                'subpage_id' => 'captcha',
+            ],
+            [
+                'id'            => 'captcha_enable_status',
+                'type'          => 'field',
+                'variant'       => 'switch',
+                'section_id'    => 'captcha_section',
+                'title'         => esc_html__( 'Captcha Service', 'dokan-lite' ),
+                'description'   => esc_html__( 'Activate captcha on every form that supports it.', 'dokan-lite' ),
+                'default'       => 'on',
+                'enable_state'  => [
+					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state' => [
+					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+					'value' => 'off',
+				],
+                'legacy_key'    => [
+                    'option' => 'dokan_appearance',
+                    'field'  => 'captcha_enable_status',
+                ],
+            ],
+            [
+                'id'           => 'captcha_provider',
+                'type'         => 'field',
+                'variant'      => 'select',
+                'section_id'   => 'captcha_section',
+                'title'        => esc_html__( 'Captcha Provider', 'dokan-lite' ),
+                'description'  => esc_html__( 'Select the captcha provider to use for this marketplace', 'dokan-lite' ),
+                'default'      => 'google_recaptcha_v3',
+                'options'      => [
+                    [
+						'title' => esc_html__( 'Google reCAPTCHA v3', 'dokan-lite' ),
+						'value' => 'google_recaptcha_v3',
+					],
+                    [
+						'title' => esc_html__( 'Cloudflare Turnstile', 'dokan-lite' ),
+						'value' => 'cloudflare_turnstile',
+					],
+                ],
+                'legacy_key'   => [
+                    'option' => 'dokan_appearance',
+                    'field'  => 'captcha_provider',
+                ],
+                'dependencies' => [
+                    [
+						'key' => 'captcha_enable_status',
+						'value' => 'on',
+						'attribute' => 'display',
+						'effect' => 'show',
+						'comparison' => '===',
+					],
+                    [
+						'key' => 'captcha_enable_status',
+						'value' => 'off',
+						'attribute' => 'display',
+						'effect' => 'hide',
+						'comparison' => '===',
+					],
+                ],
+            ],
+            // Provider card — collapsible switch (icon header + toggle). The
+            // toggle bridges to the legacy `recaptcha_enable_status` flag;
+            // credential fields nest below.
+            [
+                'id'            => 'recaptcha_validation_label',
+                'type'          => 'field',
+                'variant'       => 'collapsible_switch',
+                'section_id'    => 'captcha_section',
+                'title'         => esc_html__( 'Google reCAPTCHA v3 Validation', 'dokan-lite' ),
+                'description'   => sprintf(
+                    /* translators: 1: opening anchor tag, 2: closing anchor tag */
+                    esc_html__( 'Google reCAPTCHA v3 credentials are required to enable captcha for supported forms. %1$sGet Help%2$s', 'dokan-lite' ),
+                    '<a href="https://wedevs.com/docs/dokan/settings/dokan-recaptacha-v3-integration/" target="_blank" rel="noopener noreferrer">',
+                    '</a>'
+                ),
+                'image_url'     => DOKAN_PLUGIN_ASSEST . '/images/admin-settings-icons/social-onboarding/google.svg',
+                'collapsed'     => false,
+                'default'       => 'on',
+                'enable_state'  => [
+					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state' => [
+					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+					'value' => 'off',
+				],
+                'legacy_key'    => [
+                    'option' => 'dokan_appearance',
+                    'field'  => 'recaptcha_enable_status',
+                ],
+                'dependencies'  => [
+                    [
+						'key' => 'captcha_enable_status',
+						'value' => 'on',
+						'attribute' => 'display',
+						'effect' => 'show',
+						'comparison' => '===',
+					],
+                    [
+						'key' => 'captcha_enable_status',
+						'value' => 'on',
+						'attribute' => 'display',
+						'effect' => 'hide',
+						'comparison' => '!==',
+					],
+                    [
+						'key' => 'captcha_provider',
+						'value' => 'google_recaptcha_v3',
+						'attribute' => 'display',
+						'effect' => 'show',
+						'comparison' => '===',
+					],
+                    [
+						'key' => 'captcha_provider',
+						'value' => 'google_recaptcha_v3',
+						'attribute' => 'display',
+						'effect' => 'hide',
+						'comparison' => '!==',
+					],
+                ],
+            ],
+            [
+                'id'             => 'recaptcha_admin_notice',
+                'type'           => 'field',
+                'variant'        => 'info',
+                'field_group_id' => 'recaptcha_validation_label',
+                'show_icon'      => true,
+                'title'          => esc_html__( 'You can get your Site Key and Secret Key from your reCAPTCHA admin console.', 'dokan-lite' ),
+                'link_title'     => esc_html__( 'Admin Console', 'dokan-lite' ),
+                'link_url'       => 'https://www.google.com/recaptcha/admin',
+            ],
+            [
+                'id'             => 'recaptcha_site_key',
+                'type'           => 'field',
+                'variant'        => 'show_hide',
+                'field_group_id' => 'recaptcha_validation_label',
+                'title'          => esc_html__( 'Site Key', 'dokan-lite' ),
+                'placeholder'    => esc_html__( 'Site Key', 'dokan-lite' ),
+                'tooltip'        => esc_html__( 'Insert Google reCAPTCHA v3 site key.', 'dokan-lite' ),
+                'default'        => '',
+                'legacy_key'     => [
+                    'option' => 'dokan_appearance',
+                    'field'  => 'recaptcha_site_key',
+                ],
+            ],
+            [
+                'id'             => 'recaptcha_secret_key',
+                'type'           => 'field',
+                'variant'        => 'show_hide',
+                'field_group_id' => 'recaptcha_validation_label',
+                'title'          => esc_html__( 'Secret Key', 'dokan-lite' ),
+                'placeholder'    => esc_html__( 'Secret Key', 'dokan-lite' ),
+                'tooltip'        => esc_html__( 'Insert Google reCAPTCHA v3 secret key.', 'dokan-lite' ),
+                'default'        => '',
+                'legacy_key'     => [
+                    'option' => 'dokan_appearance',
+                    'field'  => 'recaptcha_secret_key',
+                ],
+            ],
+
+            // Provider card — Cloudflare Turnstile. Shown when that provider is
+            // selected; credential fields bridge to the legacy `turnstile_*` keys.
+            [
+                'id'            => 'turnstile_validation_label',
+                'type'          => 'field',
+                'variant'       => 'collapsible_switch',
+                'section_id'    => 'captcha_section',
+                'title'         => esc_html__( 'Cloudflare Turnstile Validation', 'dokan-lite' ),
+                'description'   => sprintf(
+                    /* translators: 1: opening anchor tag, 2: closing anchor tag */
+                    esc_html__( 'Cloudflare Turnstile credentials are required to enable captcha for supported forms. %1$sGet Help%2$s', 'dokan-lite' ),
+                    '<a href="https://developers.cloudflare.com/turnstile/" target="_blank" rel="noopener noreferrer">',
+                    '</a>'
+                ),
+                'image_url'     => DOKAN_PLUGIN_ASSEST . '/images/cloudflare.png',
+                'collapsed'     => false,
+                'default'       => 'on',
+                'enable_state'  => [
+					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
+					'value' => 'on',
+				],
+                'disable_state' => [
+					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
+					'value' => 'off',
+				],
+                'legacy_key'    => [
+                    'option' => 'dokan_appearance',
+                    'field'  => 'turnstile_enable_status',
+                ],
+                'dependencies'  => [
+                    [
+						'key' => 'captcha_enable_status',
+						'value' => 'on',
+						'attribute' => 'display',
+						'effect' => 'show',
+						'comparison' => '===',
+					],
+                    [
+						'key' => 'captcha_enable_status',
+						'value' => 'on',
+						'attribute' => 'display',
+						'effect' => 'hide',
+						'comparison' => '!==',
+					],
+                    [
+						'key' => 'captcha_provider',
+						'value' => 'cloudflare_turnstile',
+						'attribute' => 'display',
+						'effect' => 'show',
+						'comparison' => '===',
+					],
+                    [
+						'key' => 'captcha_provider',
+						'value' => 'cloudflare_turnstile',
+						'attribute' => 'display',
+						'effect' => 'hide',
+						'comparison' => '!==',
+					],
+                ],
+            ],
+            [
+                'id'             => 'turnstile_admin_notice',
+                'type'           => 'field',
+                'variant'        => 'info',
+                'field_group_id' => 'turnstile_validation_label',
+                'show_icon'      => true,
+                'title'          => esc_html__( 'You can get your Site Key and Secret Key from your Cloudflare Turnstile dashboard.', 'dokan-lite' ),
+                'link_title'     => esc_html__( 'Turnstile Dashboard', 'dokan-lite' ),
+                'link_url'       => 'https://dash.cloudflare.com/?to=/:account/turnstile',
+            ],
+            [
+                'id'             => 'turnstile_site_key',
+                'type'           => 'field',
+                'variant'        => 'show_hide',
+                'field_group_id' => 'turnstile_validation_label',
+                'title'          => esc_html__( 'Site Key', 'dokan-lite' ),
+                'placeholder'    => esc_html__( 'Site Key', 'dokan-lite' ),
+                'tooltip'        => esc_html__( 'Insert Cloudflare Turnstile site key.', 'dokan-lite' ),
+                'default'        => '',
+                'legacy_key'     => [
+                    'option' => 'dokan_appearance',
+                    'field'  => 'turnstile_site_key',
+                ],
+            ],
+            [
+                'id'             => 'turnstile_secret_key',
+                'type'           => 'field',
+                'variant'        => 'show_hide',
+                'field_group_id' => 'turnstile_validation_label',
+                'title'          => esc_html__( 'Secret Key', 'dokan-lite' ),
+                'placeholder'    => esc_html__( 'Secret Key', 'dokan-lite' ),
+                'tooltip'        => esc_html__( 'Insert Cloudflare Turnstile secret key.', 'dokan-lite' ),
+                'default'        => '',
+                'legacy_key'     => [
+                    'option' => 'dokan_appearance',
+                    'field'  => 'turnstile_secret_key',
+                ],
             ],
         ];
     }
