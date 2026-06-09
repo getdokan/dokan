@@ -81,9 +81,22 @@ class SettingsSchema {
     /**
      * Helper to get pages for select dropdowns.
      *
+     * Memoized per request: this issues an unbounded page query, so the
+     * result is cached statically and looked up at most once. Field `options`
+     * reference this lazily (via a closure — see general_page() and the
+     * privacy policy field) so the query only fires when SettingsRegistry
+     * resolves the schema for the admin UI/REST — never on the front-end
+     * legacy-settings bridge harvest path, which ignores `options`.
+     *
      * @return array
      */
     private static function get_page_options(): array {
+        static $cache = null;
+
+        if ( null !== $cache ) {
+            return $cache;
+        }
+
         $pages_array = [];
         $pages       = get_posts(
             [
@@ -101,7 +114,32 @@ class SettingsSchema {
             }
         }
 
-        return $pages_array;
+        $cache = $pages_array;
+
+        return $cache;
+    }
+
+    /**
+     * Lazy provider for the page-select option list.
+     *
+     * Returns a closure that yields {@see get_page_options()} when invoked.
+     * Fields reference this so the page query is deferred until
+     * SettingsRegistry resolves the schema for the admin UI/REST — the
+     * front-end legacy-settings bridge harvests the schema but never reads
+     * `options`, so the query is skipped on every public request.
+     *
+     * Public so Pro modules (which always load alongside Lite) can reuse the
+     * same lazy page-option provider via the `dokan_get_admin_settings_schema`
+     * filter instead of duplicating the query. Sharing this also shares the
+     * per-request memo in {@see get_page_options()}, so the admin build runs
+     * the page query once across all consumers.
+     *
+     * @return \Closure
+     */
+    public static function get_lazy_page_options(): \Closure {
+        return static function () {
+            return self::get_page_options();
+        };
     }
 
     /**
@@ -110,7 +148,7 @@ class SettingsSchema {
      * @return array
      */
     private static function general_page(): array {
-        $pages_array = self::get_page_options();
+        $pages_options = self::get_lazy_page_options();
 
         return [
             // Page
@@ -247,7 +285,7 @@ class SettingsSchema {
 				'title'       => esc_html__( 'Dashboard', 'dokan-lite' ),
 				'description' => esc_html__( 'Select a page to show vendor dashboard.', 'dokan-lite' ),
 				'placeholder' => esc_html__( 'Select page', 'dokan-lite' ),
-				'options'     => $pages_array,
+				'options'     => $pages_options,
 			],
 			[
 				'id'         => 'my_orders_section',
@@ -266,7 +304,7 @@ class SettingsSchema {
 				'title'       => esc_html__( 'My Orders', 'dokan-lite' ),
 				'description' => esc_html__( 'Select a page to show my orders', 'dokan-lite' ),
 				'placeholder' => esc_html__( 'Select page', 'dokan-lite' ),
-				'options'     => $pages_array,
+				'options'     => $pages_options,
 			],
 			[
 				'id'         => 'store_listing_section',
@@ -285,7 +323,7 @@ class SettingsSchema {
 				'title'       => esc_html__( 'Store Listing', 'dokan-lite' ),
 				'description' => esc_html__( 'Select a page to show all stores', 'dokan-lite' ),
 				'placeholder' => esc_html__( 'Select page', 'dokan-lite' ),
-				'options'     => $pages_array,
+				'options'     => $pages_options,
 			],
 			[
 				'id'         => 'reg_tc_page_section',
@@ -305,7 +343,7 @@ class SettingsSchema {
 				'description' => esc_html__( 'Select where you want to add Dokan pages.', 'dokan-lite' ),
 				'placeholder' => esc_html__( 'Select page', 'dokan-lite' ),
 				'tooltip'     => esc_html__( 'Select a page to display the Terms and Conditions of your store for Vendors.', 'dokan-lite' ),
-				'options'     => $pages_array,
+				'options'     => $pages_options,
 			],
             [
 				'id'         => 'vendor_onboarding_page_section',
@@ -324,7 +362,7 @@ class SettingsSchema {
 				'title'       => esc_html__( 'Vendor Onboarding Page', 'dokan-lite' ),
 				'description' => esc_html__( 'Select a page for vendor onboarding and login', 'dokan-lite' ),
 				'placeholder' => esc_html__( 'Select page', 'dokan-lite' ),
-				'options'     => $pages_array,
+				'options'     => $pages_options,
 			],
 
 			// === SubPage: Location ===
@@ -2043,7 +2081,7 @@ class SettingsSchema {
                 'section_id' => 'privacy_settings',
                 'title'      => esc_html__( 'Privacy Policy Page', 'dokan-lite' ),
                 'description' => esc_html__( 'Choose which page displays your privacy policy.', 'dokan-lite' ),
-                'options'    => self::get_page_options(),
+                'options'    => self::get_lazy_page_options(),
                 'legacy_key' => [
 					'option' => 'dokan_privacy',
 					'field' => 'privacy_page',
