@@ -2187,24 +2187,7 @@ class SettingsSchema {
      * @return array
      */
     private static function ai_assist_page(): array {
-        $on_generate = [
-            [
-				'key' => 'ai_product_info_generate',
-				'value' => 'on',
-				'to_self' => true,
-				'attribute' => 'display',
-				'effect' => 'show',
-				'comparison' => '===',
-			],
-            [
-				'key' => 'ai_product_info_generate',
-				'value' => 'on',
-				'to_self' => true,
-				'attribute' => 'display',
-				'effect' => 'hide',
-				'comparison' => '!==',
-			],
-        ];
+        // Legacy `show_if` gate: reveal a provider's API key + model only while its engine is selected (single-entry show-on-===, per PR #5727).
         $when_engine = static function ( string $engine_key, string $value ): array {
             return [
                 [
@@ -2214,14 +2197,6 @@ class SettingsSchema {
 					'attribute' => 'display',
 					'effect' => 'show',
 					'comparison' => '===',
-				],
-                [
-					'key' => $engine_key,
-					'value' => $value,
-					'to_self' => true,
-					'attribute' => 'display',
-					'effect' => 'hide',
-					'comparison' => '!==',
 				],
             ];
         };
@@ -2258,40 +2233,25 @@ class SettingsSchema {
                 'doc_link'    => 'https://dokan.co/docs/wordpress/settings/dokan-ai-assistant/',
             ],
 
-            // ===== Product Info (text) =====
+            // ===== AI Product Info Generator (text) =====
+            // Header-only section like the legacy `dokan_ai_product_info` sub_section — no enable toggle, engine selector always visible.
             [
-                'id'         => 'product_image_section',
-                'type'       => 'section',
-                'subpage_id' => 'product_generation',
+                'id'          => 'product_info_section',
+                'type'        => 'section',
+                'subpage_id'  => 'product_generation',
+                'title'       => esc_html__( 'AI Product Info Generator', 'dokan-lite' ),
+                'description' => esc_html__( 'Let vendors generate product info by AI', 'dokan-lite' ),
             ],
             [
-                'id'            => 'ai_product_info_generate',
-                'type'          => 'field',
-                'variant'       => 'switch',
-                'section_id'    => 'product_image_section',
-                'title'         => esc_html__( 'Product Info Generate', 'dokan-lite' ),
-                'description'   => esc_html__( 'Let vendors generate product info by AI.', 'dokan-lite' ),
-                'default'       => 'on',
-                'enable_state'  => [
-					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
-					'value' => 'on',
-				],
-                'disable_state' => [
-					'label' => esc_html__( 'Disabled', 'dokan-lite' ),
-					'value' => 'off',
-				],
-            ],
-            [
-                'id'           => 'ai_product_info_engine',
-                'type'         => 'field',
-                'variant'      => 'select',
-                'section_id'   => 'product_image_section',
-                'title'        => esc_html__( 'Engine', 'dokan-lite' ),
-                'description'  => esc_html__( 'Select which AI provider to use for generating content.', 'dokan-lite' ),
-                'default'      => 'openai',
-                'options'      => $provider_options( $text_providers ),
-                'legacy_key'   => 'dokan_ai.dokan_ai_engine',
-                'dependencies' => $on_generate,
+                'id'          => 'ai_product_info_engine',
+                'type'        => 'field',
+                'variant'     => 'select',
+                'section_id'  => 'product_info_section',
+                'title'       => esc_html__( 'Engine', 'dokan-lite' ),
+                'description' => esc_html__( 'Select which AI provider to use for generating content.', 'dokan-lite' ),
+                'default'     => 'openai',
+                'options'     => $provider_options( $text_providers ),
+                'legacy_key'  => 'dokan_ai.dokan_ai_engine',
             ],
         ];
 
@@ -2304,9 +2264,8 @@ class SettingsSchema {
                     [
                         'provider_id'     => $pid,
                         'provider'        => $provider,
-                        'section_id'      => 'product_image_section',
+                        'section_id'      => 'product_info_section',
                         'engine_field_id' => 'ai_product_info_engine',
-                        'toggle_deps'     => $on_generate,
                         'engine_deps'     => $when_engine( 'ai_product_info_engine', $pid ),
                         'api_key_legacy'  => 'dokan_ai.dokan_ai_' . $pid . '_api_key',
                         'model_legacy'    => 'dokan_ai.dokan_ai_' . $pid . '_model',
@@ -2369,8 +2328,8 @@ class SettingsSchema {
     public static function ai_provider_group( array $cfg ): array {
         $pid          = $cfg['provider_id'];
         $provider     = $cfg['provider'];
-        $toggle_deps  = $cfg['toggle_deps'];
-        $engine_deps  = $cfg['engine_deps'];
+        $toggle_deps  = $cfg['toggle_deps'] ?? [];
+        $engine_deps  = $cfg['engine_deps'] ?? [];
         // Section-scoped prefix prevents id collisions when the same
         // provider id (e.g. "gemini") appears in both text and image
         // provider registries.
@@ -2403,6 +2362,50 @@ class SettingsSchema {
         $api_key_url = method_exists( $provider, 'get_api_key_url' ) ? (string) $provider->get_api_key_url() : '';
         $image_url   = method_exists( $provider, 'get_image_url' ) ? (string) $provider->get_image_url() : '';
 
+        // Children inherit the group's engine gate; only pin an extra toggle gate (Pro's image switch) when a caller supplies one — Lite text passes none.
+        $api_info = [
+            'id'             => $prefix . $pid . '_api_info',
+            'type'           => 'field',
+            'variant'        => 'base_field_label',
+            'field_group_id' => $group_id,
+            /* translators: %s: Provider title */
+            'title'          => sprintf( esc_html__( '%s API', 'dokan-lite' ), $provider->get_title() ),
+            'icon'           => 'CircleCheck',
+            /* translators: %s: Provider title */
+            'description'    => sprintf( esc_html__( 'Connect to your %s account with your website.', 'dokan-lite' ), $provider->get_title() ),
+            'image_url'      => $image_url,
+        ];
+        $api_notice = [
+            'id'             => $prefix . $pid . '_api_notice',
+            'type'           => 'field',
+            'variant'        => 'info',
+            'field_group_id' => $group_id,
+            /* translators: %s: Provider title */
+            'title'          => sprintf( esc_html__( 'You can get your API Keys in your %s Account.', 'dokan-lite' ), $provider->get_title() ),
+            /* translators: %s: Provider title */
+            'link_text'      => sprintf( esc_html__( '%s Account', 'dokan-lite' ), $provider->get_title() ),
+            'link_url'       => $api_key_url,
+            'show_icon'      => true,
+        ];
+        $api_key = [
+            'id'             => $prefix . $pid . '_api_key',
+            'type'           => 'field',
+            'variant'        => 'show_hide',
+            'field_group_id' => $group_id,
+            'title'          => esc_html__( 'API Key', 'dokan-lite' ),
+            /* translators: %s: Provider title */
+            'tooltip'        => sprintf( esc_html__( 'Enter your %s API key.', 'dokan-lite' ), $provider->get_title() ),
+            /* translators: %s: Provider title */
+            'placeholder'    => sprintf( esc_html__( 'Enter your %s API key', 'dokan-lite' ), $provider->get_title() ),
+            'legacy_key'     => $cfg['api_key_legacy'],
+        ];
+
+        if ( ! empty( $toggle_deps ) ) {
+            $api_info['dependencies']   = $toggle_deps;
+            $api_notice['dependencies'] = $toggle_deps;
+            $api_key['dependencies']    = $toggle_deps;
+        }
+
         return [
             [
                 'id'           => $group_id,
@@ -2410,45 +2413,9 @@ class SettingsSchema {
                 'section_id'   => $cfg['section_id'],
                 'dependencies' => $engine_deps,
             ],
-            [
-                'id'             => $prefix . $pid . '_api_info',
-                'type'           => 'field',
-                'variant'        => 'base_field_label',
-                'field_group_id' => $group_id,
-                /* translators: %s: Provider title */
-                'title'          => sprintf( esc_html__( '%s API', 'dokan-lite' ), $provider->get_title() ),
-                'icon'           => 'CircleCheck',
-                /* translators: %s: Provider title */
-                'description'    => sprintf( esc_html__( 'Connect to your %s account with your website.', 'dokan-lite' ), $provider->get_title() ),
-                'image_url'      => $image_url,
-                'dependencies'   => $toggle_deps,
-            ],
-            [
-                'id'             => $prefix . $pid . '_api_notice',
-                'type'           => 'field',
-                'variant'        => 'info',
-                'field_group_id' => $group_id,
-                /* translators: %s: Provider title */
-                'title'          => sprintf( esc_html__( 'You can get your API Keys in your %s Account.', 'dokan-lite' ), $provider->get_title() ),
-                /* translators: %s: Provider title */
-                'link_text'      => sprintf( esc_html__( '%s Account', 'dokan-lite' ), $provider->get_title() ),
-                'link_url'       => $api_key_url,
-                'show_icon'      => true,
-                'dependencies'   => $toggle_deps,
-            ],
-            [
-                'id'             => $prefix . $pid . '_api_key',
-                'type'           => 'field',
-                'variant'        => 'show_hide',
-                'field_group_id' => $group_id,
-                'title'          => esc_html__( 'API Key', 'dokan-lite' ),
-                /* translators: %s: Provider title */
-                'tooltip'        => sprintf( esc_html__( 'Enter your %s API key.', 'dokan-lite' ), $provider->get_title() ),
-                /* translators: %s: Provider title */
-                'placeholder'    => sprintf( esc_html__( 'Enter your %s API key', 'dokan-lite' ), $provider->get_title() ),
-                'legacy_key'     => $cfg['api_key_legacy'],
-                'dependencies'   => $toggle_deps,
-            ],
+            $api_info,
+            $api_notice,
+            $api_key,
             [
                 'id'           => $prefix . $pid . '_model',
                 'type'         => 'field',
@@ -2459,7 +2426,7 @@ class SettingsSchema {
                 'default'      => $default_model,
                 'options'      => $model_options,
                 'legacy_key'   => $cfg['model_legacy'],
-                'dependencies' => array_merge( $toggle_deps, $engine_deps ),
+                'dependencies' => empty( $toggle_deps ) ? $engine_deps : array_merge( $toggle_deps, $engine_deps ),
             ],
         ];
     }
