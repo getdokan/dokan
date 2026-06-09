@@ -2,12 +2,12 @@
 Contributors: tareq1988, dokaninc, wedevs, nizamuddinbabu
 Donate Link: https://dokan.co/wordpress/pricing/
 Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivendor, multivendor marketplace
-Requires at least: 6.8
-Tested up to: 6.9
+Requires at least: 6.9
+Tested up to: 7.0
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 5.0.3
+Stable tag: 5.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -376,6 +376,13 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v5.0.4 ( Jun 08, 2026 ) =
+- **update:** Improved RTL support for the switch button transition in the new vendor dashboard layout.
+- **update:** Made the vendor analytics panel compatible with the vendor-specific Coupons report.
+- **fix:** Allowed vendors to create new product tags inline from the new product editor.
+- **fix:** Resolved withdraw approval failing on an exact fractional balance.
+- **fix:** Added ownership checks to order AJAX handlers to prevent vendors from modifying orders they don't own.
+
 = v5.0.3 ( May 21, 2026 ) =
 - **update:** Exposed manual withdrawal availability and withdraw-visibility flags in the vendor dashboard REST API.
 - **fix:** Restricted the Customers REST endpoint to self-service to prevent vendors from modifying other user accounts.
@@ -423,12 +430,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **fix:** Corrected the balance display on the Reverse Withdraw page.
 - **fix:** Corrected the back-link URL on the order details page.
 - **fix:** Fixed the active state of vendor sidebar submenu items.
-
-= v4.3.3 ( Mar 31, 2026 ) =
-- **update:** Manage changelog notification dot visibility for Dokan Lite and Pro based on new version availability.
-- **update:** Add confirmation modal for order status change actions in the vendor dashboard order listing.
-- **update:** Update the Pro Features admin menu color to highlight it with the brand color.
-- **fix:** Add the missing alt attribute to the store header banner image on the store listing page.
-- **fix:** Display a warning message when admin tries to approve a vendor withdrawal request exceeding the available balance.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
