@@ -2957,6 +2957,7 @@ export const data = {
             installPlugin: (plugin: string) => `wp plugin install ${plugin} --activate --force`,
             activatePlugin: (plugin: string) => `wp plugin activate ${plugin}`,
             activateTheme: (theme: string) => `wp theme activate ${theme}`,
+            updateOption: (name: string, value: string) => `wp option update ${name} ${value}`,
             rewritePermalink: `wp rewrite structure /%postname%/`,
             flushRewrite: `wp rewrite flush --hard`,
         },

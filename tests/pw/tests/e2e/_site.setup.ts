@@ -88,6 +88,19 @@ setup.describe('site setup', () => {
         try {
             await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.rankMath));
             log.success('Rank Math SEO activated');
+
+            // Mark Rank Math as registered + configured up front. The setup wizard
+            // (completed via UI in _auth.setup.ts) sets `rank_math_registration_skip`,
+            // but that flag is fragile — when it is missing, Rank Math's
+            // `is_invalid_registration()` returns true and Dokan Pro's Rank Math
+            // module short-circuits (module.php returns early), so the SEO panel in
+            // the product editor renders empty. The `RANK_MATH_REGISTRATION_SKIP`
+            // constant makes `is_invalid_registration()` short-circuit to "valid"
+            // unconditionally — an immune backstop for headless/CI runs.
+            await helpers.exeCommandWpcli(data.commands.wpcli.setDebugConfig('RANK_MATH_REGISTRATION_SKIP', true));
+            await helpers.exeCommandWpcli(data.commands.wpcli.updateOption('rank_math_registration_skip', '1'));
+            await helpers.exeCommandWpcli(data.commands.wpcli.updateOption('rank_math_is_configured', '1'));
+            log.success('Rank Math SEO marked as registered & configured');
         } catch {
             log.skip('Rank Math SEO not activated', 'continuing without it');
         }

@@ -20,8 +20,6 @@ import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { toPath, SERVER_URL, closeAnnouncementModal } from '@utils/helpers';
 
-const { PRODUCT_EDIT_NONCE } = process.env;
-
 // SELECTORS ------------------------------------------------------
 export const rankMathSelectors = {
     // Legacy (pre-5.0.0) vendor product editor — templates/product-seo-content.php
@@ -98,9 +96,15 @@ export class RankMathPage {
         void closeAnnouncementModal(page);
     }
 
-    // Open a seeded product in the vendor (legacy) product editor.
+    // Open a seeded product in the vendor product editor.
     async gotoVendorProductEditor(productId: string): Promise<void> {
         await this.page.goto(toPath(`dashboard/new/#products/${productId}/edit`));
+        // The vendor dashboard is a hash-routed SPA: navigating to the same
+        // `dashboard/new/` base with only a different #hash does NOT trigger a
+        // server reload, so the server-rendered Rank Math markup (which depends on
+        // the module being active/inactive) can be stale from a previous test.
+        // Force a full reload so each open reflects the current server state.
+        await this.page.reload();
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.waitForTimeout(3000);
     }
@@ -139,6 +143,27 @@ export class RankMathPage {
             }
         }
         expect(found, 'Rank Math SEO section / dependency notice should be present').toBe(true);
+    }
+
+    // New (5.0.0+) Product Form Manager: the SEO card header + subtitle render.
+    async assertSeoCardPresent(): Promise<void> {
+        await expect(this.page.locator(rankMathSelectors.newEditor.seoCard).first()).toBeVisible({ timeout: 15000 });
+        await expect(this.page.locator(rankMathSelectors.newEditor.panelDescription).first()).toBeVisible({ timeout: 15000 });
+    }
+
+    // Strong assertion: the Rank Math metabox actually booted. Its wrapper is
+    // adopted into the panel and Rank Math's classic.js populates it with fields.
+    // Version-agnostic — proves the metabox mounted without pinning to Rank Math's
+    // internal markup (which would be the CMB2-bootstrap regression's tell).
+    async assertSeoPanelRendersFields(): Promise<void> {
+        const wrapper = this.page.locator(rankMathSelectors.legacy.mountWrapper);
+        await expect(wrapper).toBeAttached({ timeout: 20000 });
+        await expect
+            .poll(async () => wrapper.evaluate(el => el.childElementCount).catch(() => 0), {
+                timeout: 20000,
+                message: 'Rank Math metabox wrapper should be populated with fields',
+            })
+            .toBeGreaterThan(0);
     }
 
     // Negative: with the module disabled the metabox mount node must NOT render.
