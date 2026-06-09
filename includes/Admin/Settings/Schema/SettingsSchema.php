@@ -1613,12 +1613,15 @@ class SettingsSchema {
                 'type'        => 'subpage',
                 'page_id'     => 'appearance',
                 'title'       => esc_html__( 'Vendor Dashboard', 'dokan-lite' ),
+                'description' => esc_html__( 'Choose the interface style vendors see for their dashboard and product editor.', 'dokan-lite' ),
                 'priority'    => 150,
             ],
             [
-                'id'         => 'vendor_dashboard_section',
-                'type'       => 'section',
-                'subpage_id' => 'vendor_dashboard',
+                'id'          => 'vendor_dashboard_section',
+                'type'        => 'section',
+                'subpage_id'  => 'vendor_dashboard',
+                'title'       => esc_html__( 'Vendor Dashboard Appearance', 'dokan-lite' ),
+                'description' => esc_html__( 'Configure the appearance and style of the vendor dashboard.', 'dokan-lite' ),
             ],
             [
                 'id'          => 'vendor_layout_style',
