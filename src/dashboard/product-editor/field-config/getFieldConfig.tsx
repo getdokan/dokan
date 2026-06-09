@@ -21,13 +21,30 @@ export const getFieldConfig = ( field: FormItem ) => {
             return [];
         }
 
+        // Labels come from the REST schema as raw term names, which may contain
+        // HTML entities (e.g. "Home &amp; Decor"). Decode them recursively so
+        // both the dropdown options and the selected chips render correctly.
+        const decodeOption = ( option: any ): any => ( {
+            ...option,
+            label:
+                typeof option.label === 'string'
+                    ? decodeEntities( option.label )
+                    : option.label,
+            ...( Array.isArray( option.children )
+                ? { children: option.children.map( decodeOption ) }
+                : {} ),
+        } );
+
         let normalizedOptions = [];
         if ( Array.isArray( options ) ) {
-            normalizedOptions = [ ...options ]; // Clone to prevent mutation of the original array
+            normalizedOptions = options.map( decodeOption );
         } else {
             normalizedOptions = Object.entries( options ).map(
                 ( [ value, label ] ) => ( {
-                    label,
+                    label:
+                        typeof label === 'string'
+                            ? decodeEntities( label )
+                            : label,
                     value,
                 } )
             );
