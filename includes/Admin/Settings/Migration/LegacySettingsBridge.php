@@ -583,11 +583,12 @@ class LegacySettingsBridge {
     /**
      * Build (and cache) the mapping, defaults index, and reverse-by-option index.
      *
-     * The map is memoized but keyed on the current callback count of
-     * `dokan_get_admin_settings_schema`. Pro modules register their
-     * filter callbacks during `init` at varying priorities; if a bridge
-     * caller fires before all are registered, the count grows on the next
-     * call and the memo invalidates automatically.
+     * The map is memoized but keyed on the combined callback count of
+     * `dokan_get_admin_settings_schema` and `dokan_intelligence_providers`
+     * (the latter drives the dynamic AI api_key/model fields). Contributors
+     * register at varying priorities during boot; if a bridge caller fires
+     * before all are registered, the count grows on the next call and the
+     * memo invalidates automatically.
      *
      * Recursion safety: see `$building_map`.
      *
@@ -599,9 +600,13 @@ class LegacySettingsBridge {
         }
 
         global $wp_filter;
-        $filter_count = ( isset( $wp_filter['dokan_get_admin_settings_schema'] ) && ! empty( $wp_filter['dokan_get_admin_settings_schema']->callbacks ) )
-            ? count( $wp_filter['dokan_get_admin_settings_schema']->callbacks, COUNT_RECURSIVE )
-            : 0;
+
+        $filter_count = 0;
+        foreach ( [ 'dokan_get_admin_settings_schema', 'dokan_intelligence_providers' ] as $hook ) {
+            if ( isset( $wp_filter[ $hook ] ) && ! empty( $wp_filter[ $hook ]->callbacks ) ) {
+                $filter_count += count( $wp_filter[ $hook ]->callbacks, COUNT_RECURSIVE );
+            }
+        }
 
         if ( $this->map !== null && $this->cached_filter_count === $filter_count ) {
             return $this->map;
