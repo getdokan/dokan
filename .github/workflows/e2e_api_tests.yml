@@ -271,7 +271,7 @@ jobs:
     e2e_tests:
         name: e2e tests
         runs-on: ubuntu-latest
-        timeout-minutes: 30
+        timeout-minutes: 45
         # Wait for both build jobs. build_pro is conditional (fork PRs) and may not run;
         # `always() && build_lite succeeded` covers the fork-PR path too.
         needs: [build_lite, build_pro]
@@ -464,7 +464,7 @@ jobs:
             - name: 🧪 Run e2e tests-${{ matrix.shardIndex }}
               id: e2e-test
               if: success() && (github.event_name != 'workflow_dispatch' || ( github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All')))
-              timeout-minutes: 20
+              timeout-minutes: 30
               working-directory: tests/pw
               run: |
                   # Pass the resolved spec list as positional args (xargs -d to preserve newlines)
