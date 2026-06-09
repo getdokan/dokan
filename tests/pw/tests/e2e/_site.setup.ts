@@ -67,14 +67,17 @@ setup.describe('site setup', () => {
     });
 
     // Rank Math SEO is a wordpress.org dependency of the Dokan "Rank Math SEO"
-    // product-editor integration. It is not a sibling clone, so install it from
-    // the wp.org repo (and activate) here. Non-fatal: the module/tests are
-    // written to tolerate the plugin being absent (DependencyNotice).
-    setup('install & activate Rank Math SEO', { tag: ['@lite'] }, async () => {
+    // product-editor integration. Like Email Log, it is downloaded + installed
+    // host-side by the wp-env `plugins` array (so it is NOT blocked by the
+    // wp.org-blocking mu-plugin); here we only activate it (a `wp plugin
+    // install` from inside WP would hit wp.org and fail). Non-fatal: the
+    // module/tests are written to tolerate the plugin being absent
+    // (DependencyNotice).
+    setup('activate Rank Math SEO', { tag: ['@lite'] }, async () => {
         try {
-            await helpers.exeCommandWpcli(data.commands.wpcli.installPlugin(data.installWp.plugins.rankMath));
+            await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.rankMath));
         } catch (error) {
-            console.log('Rank Math SEO install/activation had issues, but continuing...', error);
+            console.log('Rank Math SEO activation had issues, but continuing...', error);
         }
     });
 
@@ -140,7 +143,14 @@ setup.describe('site setup', () => {
     // the next admin page load. Seeding the option here makes the
     // new-class branch (`WPO_WCPDF`) win on the very first load.
     setup('seed wpo_wcpdf_version (workaround for dokan-invoice <=1.2.8)', { tag: ['@pro'] }, async () => {
-        await helpers.exeCommandWpcli('wp option update wpo_wcpdf_version 5.11.0 --autoload=yes');
+        // `wp option update` exits non-zero when the value is unchanged, so a
+        // re-run on an already-seeded site would fail the whole setup chain.
+        // Tolerate that no-op case while still surfacing genuine failures.
+        try {
+            await helpers.exeCommandWpcli('wp option update wpo_wcpdf_version 5.11.0 --autoload=yes');
+        } catch (error) {
+            console.log('wpo_wcpdf_version already seeded, skipping...', error);
+        }
     });
 
     setup('activate Dokan Invoice', { tag: ['@pro'] }, async () => {
