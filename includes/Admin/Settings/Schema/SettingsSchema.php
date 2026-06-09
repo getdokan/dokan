@@ -1607,6 +1607,66 @@ class SettingsSchema {
                 'priority'    => 100,
             ],
 
+            // === SubPage: Vendor Dashboard ===
+            [
+                'id'          => 'vendor_dashboard',
+                'type'        => 'subpage',
+                'page_id'     => 'appearance',
+                'title'       => esc_html__( 'Vendor Dashboard', 'dokan-lite' ),
+                'priority'    => 150,
+            ],
+            [
+                'id'         => 'vendor_dashboard_section',
+                'type'       => 'section',
+                'subpage_id' => 'vendor_dashboard',
+            ],
+            [
+                'id'          => 'vendor_layout_style',
+                'type'        => 'field',
+                'variant'     => 'radio_capsule',
+                'section_id'  => 'vendor_dashboard_section',
+                'title'       => esc_html__( 'Vendor Dashboard Style', 'dokan-lite' ),
+                'description' => esc_html__( 'Select the user interface for the vendor dashboard.', 'dokan-lite' ),
+                'default'     => 'legacy',
+                'options'     => [
+                    [
+						'title' => esc_html__( 'New UI', 'dokan-lite' ),
+						'value' => 'latest',
+					],
+                    [
+						'title' => esc_html__( 'Legacy UI', 'dokan-lite' ),
+						'value' => 'legacy',
+					],
+                ],
+                'legacy_key'  => [
+                    'option' => 'dokan_appearance',
+                    'field'  => 'vendor_layout_style',
+                ],
+            ],
+            [
+                'id'          => 'vendor_product_editor',
+                'type'        => 'field',
+                'variant'     => 'radio_capsule',
+                'section_id'  => 'vendor_dashboard_section',
+                'title'       => esc_html__( 'Vendor Product Editor', 'dokan-lite' ),
+                'description' => esc_html__( 'Select the user interface for the vendor product editor.', 'dokan-lite' ),
+                'default'     => 'legacy',
+                'options'     => [
+                    [
+						'title' => esc_html__( 'New UI', 'dokan-lite' ),
+						'value' => 'latest',
+					],
+                    [
+						'title' => esc_html__( 'Legacy UI', 'dokan-lite' ),
+						'value' => 'legacy',
+					],
+                ],
+                'legacy_key'  => [
+                    'option' => 'dokan_appearance',
+                    'field'  => 'vendor_product_editor',
+                ],
+            ],
+
             // Products Per Page
             [
                 'id'         => 'products_page',
