@@ -81,22 +81,21 @@ class SettingsSchema {
     /**
      * Helper to get pages for select dropdowns.
      *
-     * Memoized per request: this issues an unbounded page query, so the
-     * result is cached statically and looked up at most once. Field `options`
-     * reference this lazily (via a closure — see general_page() and the
-     * privacy policy field) so the query only fires when SettingsRegistry
+     * Field `options` reference this lazily (via a closure — see general_page()
+     * and the privacy policy field) so the query only fires when SettingsRegistry
      * resolves the schema for the admin UI/REST — never on the front-end
      * legacy-settings bridge harvest path, which ignores `options`.
+     *
+     * Intentionally NOT memoized in a function-static. WordPress's per-request
+     * WP_Query cache already dedupes this identical page query across the field
+     * call sites (a repeat call issues no SQL), and that cache is invalidated
+     * when pages change. A function-static here would instead be un-resettable
+     * (no reflection access, clear_cache() can't reach it) and could serve stale
+     * options within a long-lived process or after a page is created mid-request.
      *
      * @return array
      */
     private static function get_page_options(): array {
-        static $cache = null;
-
-        if ( null !== $cache ) {
-            return $cache;
-        }
-
         $pages_array = [];
         $pages       = get_posts(
             [
@@ -114,9 +113,7 @@ class SettingsSchema {
             }
         }
 
-        $cache = $pages_array;
-
-        return $cache;
+        return $pages_array;
     }
 
     /**

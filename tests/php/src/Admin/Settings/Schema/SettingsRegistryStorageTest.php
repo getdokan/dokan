@@ -103,6 +103,54 @@ class SettingsRegistryStorageTest extends DokanTestCase {
         );
     }
 
+    /**
+     * The resolved page-select options must contain the site's actual pages
+     * (value = ID, title = post_title) and must reflect pages created after an
+     * earlier build — guarding against an un-bustable per-process options memo.
+     *
+     * @group settings-perf
+     */
+    public function test_resolved_page_options_include_pages_and_reflect_new_pages(): void {
+        // A page that exists at build time must appear in the resolved options.
+        $page_a    = self::factory()->post->create(
+            [ 'post_type' => 'page', 'post_title' => 'Dokan Lazy Options Page A' ]
+        );
+        $by_value  = wp_list_pluck( $this->resolved_page_options( 'vendor_dashboard_page' ), 'title', 'value' );
+
+        $this->assertArrayHasKey( $page_a, $by_value, 'Resolved page options must include a page that exists at build time.' );
+        $this->assertSame( 'Dokan Lazy Options Page A', $by_value[ $page_a ], 'Resolved option title must match the page title.' );
+
+        // A page created AFTER the first build must appear in a subsequent build.
+        // An un-bustable static memo would serve the stale first result here;
+        // WP_Query's own cache (invalidated on page creation) makes the fresh
+        // build reflect it.
+        $page_b   = self::factory()->post->create(
+            [ 'post_type' => 'page', 'post_title' => 'Dokan Lazy Options Page B' ]
+        );
+        $values_b = wp_list_pluck( $this->resolved_page_options( 'vendor_dashboard_page' ), 'value' );
+
+        $this->assertContains( $page_b, $values_b, 'Page options must reflect pages created after an earlier build (no stale memo).' );
+    }
+
+    /**
+     * Build the schema via the registry and return one field's resolved options.
+     *
+     * @param string $field_id Field id to locate.
+     *
+     * @return array Resolved options array for the field.
+     */
+    private function resolved_page_options( string $field_id ): array {
+        foreach ( ( new SettingsRegistry() )->get_schema( true ) as $el ) {
+            if ( ( $el['id'] ?? '' ) === $field_id ) {
+                $this->assertIsArray( $el['options'], "Field {$field_id} options must resolve to an array." );
+
+                return $el['options'];
+            }
+        }
+
+        $this->fail( "Field {$field_id} not found in the resolved schema." );
+    }
+
     public function test_populate_values_falls_back_to_default_when_id_absent(): void {
         update_option( 'dokan_admin_settings', [] );
 
