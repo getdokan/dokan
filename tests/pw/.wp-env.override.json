@@ -9,7 +9,7 @@
                 "https://github.com/WP-API/Basic-Auth/archive/master.zip",
                 "https://downloads.wordpress.org/plugin/woocommerce.zip",
                 "https://downloads.wordpress.org/plugin/email-log.zip",
-                "https://downloads.wordpress.org/plugin/seo-by-rank-math.zip"
+                "https://downloads.wordpress.org/plugin/seo-by-rank-math.1.0.271.1.zip"
             ],
             "themes": ["https://downloads.wordpress.org/theme/storefront.zip"],
             "config": {
