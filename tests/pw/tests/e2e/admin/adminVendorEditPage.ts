@@ -236,14 +236,63 @@ export class AdminVendorEditPage {
     }
 
     // ---- Commission (Fixed) ----
-    /** Set the Fixed admin commission percentage + additional fee. Targets the two
-     *  number inputs the FixedCommissionInput renders inside the Commission card. */
+    /** Set the Fixed admin commission percentage + additional fee.
+     *  The Fixed type renders the Admin Commission (%) and Additional Fee as
+     *  dokan-ui PRICE inputs: type="text" cleave-masked fields (e.g. "10,00"),
+     *  NOT type="number". On the Commission tab the General tab is unmounted, so
+     *  `input.appearance-none` matches exactly these two fields (nth0=percentage,
+     *  nth1=additional fee). Type per-keystroke + blur so the cleave mask and the
+     *  controlled onChange commit the value. */
     async setFixedCommission(percentage: string, additionalFee: string): Promise<void> {
-        const inputs = this.page.locator('input[type="number"]');
-        await inputs.first().waitFor({ state: 'visible', timeout: 10000 });
-        await inputs.nth(0).fill(percentage);
-        await inputs.nth(1).fill(additionalFee);
-        await this.page.waitForTimeout(400);
+        const inputs = this.page.locator('#dokan-admin-dashboard input.appearance-none');
+        const pct = inputs.nth(0);
+        const fee = inputs.nth(1);
+        await pct.waitFor({ state: 'visible', timeout: 10000 });
+        // The commission fields populate from the loaded vendor a tick AFTER the
+        // Commission tab paints. Editing during that window is silently clobbered
+        // by the late populate. Wait for the value to STABILISE (populate done)
+        // before editing — a fixed sleep raced it (flaky: the percentage reverted).
+        await this.waitForStableValue(pct);
+        const wantPct = percentage.replace(/[^\d]/g, '');
+        const wantFee = additionalFee.replace(/[^\d]/g, '');
+        // Type BOTH, then verify BOTH held: a stray populate can clobber the first
+        // field while the second is being typed, so re-type the pair until both
+        // stick (verifying per-field individually misses that cross-field clobber).
+        for (let attempt = 0; attempt < 5; attempt++) {
+            await this.typeMasked(pct, percentage);
+            await this.typeMasked(fee, additionalFee);
+            await this.page.waitForTimeout(400);
+            const gotPct = (await pct.inputValue().catch(() => '')).replace(/[^\d]/g, '');
+            const gotFee = (await fee.inputValue().catch(() => '')).replace(/[^\d]/g, '');
+            // Cleave appends ",00" -> "15" becomes digits "1500"; match the lead.
+            if (gotPct.startsWith(wantPct) && gotFee.startsWith(wantFee)) {
+                return;
+            }
+        }
+    }
+
+    /** Wait until a field's value is non-empty and unchanged across two reads —
+     *  i.e. the loaded-vendor populate has settled and won't clobber a later edit. */
+    private async waitForStableValue(loc: Locator): Promise<void> {
+        let prev: string | null = null;
+        for (let i = 0; i < 40; i++) {
+            const v = await loc.inputValue().catch(() => '');
+            if (v !== '' && v === prev) {
+                return;
+            }
+            prev = v;
+            await this.page.waitForTimeout(150);
+        }
+    }
+
+    /** Replace a cleave-masked price input's value, committing on blur. fill('')
+     *  does NOT clear a cleave mask (typed digits append); triple-click selects
+     *  the full masked value so typing over the selection replaces it. */
+    private async typeMasked(loc: Locator, value: string): Promise<void> {
+        await loc.click({ clickCount: 3 });
+        await loc.pressSequentially(value, { delay: 50 });
+        await loc.blur();
+        await this.page.waitForTimeout(150);
     }
 
     // ---- Save / Discard ----

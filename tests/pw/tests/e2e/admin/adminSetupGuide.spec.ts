@@ -134,7 +134,7 @@ test.describe('Admin Setup Guide wizard functionality', () => {
             await expect(setup.stepperHeading).toBeVisible();
         });
 
-        test.fixme('Commission step: switching type to Category Based toggles the dependent fields', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
+        test('Commission step: switching type to Category Based toggles the dependent fields', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
             await setup.goto();
             // Advance to the Commission step first.
             await setup.selectRadioBox(adminSetupGuideData.basic.recipientValue);
@@ -142,9 +142,10 @@ test.describe('Admin Setup Guide wizard functionality', () => {
             await expect.poll(async () => setup.getActiveStepTitle(), { timeout: 15000 }).toBe('Commission');
             // Fixed (default) shows the combine_input "Admin Commission".
             expect(await setup.isFieldVisible('Admin Commission'), 'Admin Commission visible on Fixed').toBe(true);
-            // Switching to Category Based reveals the parent-category switch field.
+            // Switching to Category Based reveals the parent-category switch field
+            // (full label: "Apply Parent Category Commission to All Subcategories").
             await setup.selectCommissionType('Category Based');
-            expect(await setup.isFieldVisible('Apply Parent Category Commission'), 'category-based dependent field shows').toBe(true);
+            expect(await setup.isFieldVisible('Apply Parent Category Commission to All Subcategories'), 'category-based dependent field shows').toBe(true);
         });
 
         test('Skip on Commission advances without writing dokan_selling commission_type', { tag: ['@lite', '@admin'] }, async () => {

@@ -232,17 +232,17 @@ export class AdminSetupGuidePage {
         await opt.click();
     }
 
-    /** Choose a value in the Commission Type FormSelect dropdown. */
+    /** Choose a value in the Commission Type select dropdown. */
     async selectCommissionType(optionLabel: string): Promise<void> {
-        // The dokan-ui FormSelect renders a clickable control; clicking it opens
-        // a listbox whose options are role=option (portalled into .dokan-layout).
-        const control = this.page.locator('#commission_type, [name="commission_type"]').first();
-        if (await control.isVisible().catch(() => false)) {
-            await control.click();
-        } else {
-            // Fallback: click the select wrapper near the "Commission Type" label.
-            await this.page.getByText('Commission Type', { exact: true }).click();
-        }
+        // The Commission Type control is a dokan-ui/Radix Select rendered as a
+        // <button role="combobox"> — NOT a native <select> nor an
+        // #commission_type input. Click the trigger to open the portalled
+        // listbox, then pick the option (role=option, portalled to <body>).
+        // The commission step has exactly one combobox, so .first() is the
+        // Commission Type trigger.
+        const trigger = this.page.locator('button[role="combobox"]').first();
+        await trigger.waitFor({ state: 'visible', timeout: 10000 });
+        await trigger.click();
         const option = this.page.getByRole('option', { name: optionLabel, exact: true }).first();
         await option.waitFor({ state: 'visible', timeout: 10000 });
         await option.click();

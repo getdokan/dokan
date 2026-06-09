@@ -196,15 +196,21 @@ test.describe('Admin Dummy Data importer functionality', () => {
             await ctx?.close();
         });
 
-        test.fixme('Run the Importer drives the progress bar to 100% and switches to the Result panel', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
+        test('Run the Importer drives the progress bar and switches to the Result panel', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
             await dummy.mockStatus(statusNo);
-            await dummy.mockCsv([adminDummyDataData.vendorRow, adminDummyDataData.productRow]);
-            await dummy.stubImport();
+            // Two vendors so the import runs in two chunks: the bar advances to 50%
+            // (rendered while the SECOND chunk is in flight) before done flips to the
+            // Result panel. The component batches the final setProgress(100) with
+            // setDone(true), so a value of 100 is never painted in the <progress>
+            // element — the Result panel ("Import complete!") IS the 100% state.
+            await dummy.mockCsv([adminDummyDataData.vendorRow, adminDummyDataData.productRow, adminDummyDataData.vendorRow2, adminDummyDataData.productRow2]);
+            await dummy.stubImport(1200); // hold each chunk so the mid-import bar is observable
             await dummy.goto();
             await dummy.clickRunImporter();
-            // Single seeded vendor -> recursion completes -> Result panel renders.
+            // Bar is genuinely driven: after the first of two chunks it sits at 50%.
+            await expect.poll(() => dummy.progressValue(), { message: 'progress bar advances mid-import', timeout: 15000 }).toBeGreaterThanOrEqual(50);
+            // Recursion completes -> done=true -> Result panel renders.
             await expect(dummy.completeHeading).toBeVisible({ timeout: 15000 });
-            expect(await dummy.progressValue(), 'progress reaches 100%').toBe(100);
         });
 
         test('each import POST carries vendor_data, vendor_index and total_vendors', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
@@ -219,7 +225,7 @@ test.describe('Admin Dummy Data importer functionality', () => {
             expect(body.total_vendors, 'total_vendors counts the seeded vendors').toBeGreaterThan(0);
         });
 
-        test.fixme('confirming Clear Data sends a DELETE and returns the body to the Importer state', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
+        test('confirming Clear Data sends a DELETE and returns the body to the Importer state', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
             // First load: Result panel (import_status yes). After clear, the
             // component reloads status — serve "no" so the Importer body returns.
             let statusCall = 0;
@@ -233,7 +239,12 @@ test.describe('Admin Dummy Data importer functionality', () => {
             await dummy.goto();
             await dummy.openClearModal();
             const [del] = await Promise.all([page.waitForRequest(adminDummyDataEndpoints.clear, { timeout: 15000 }), dummy.confirmClear()]);
-            expect(del.method(), 'clear uses DELETE').toBe('DELETE');
+            // The component calls apiFetch({ method: 'DELETE' }), but @wordpress/
+            // api-fetch's httpV1Middleware tunnels PATCH/PUT/DELETE as a POST carrying
+            // an X-HTTP-Method-Override header (proxy compatibility). So the genuine
+            // DELETE intent is asserted via that header, not the raw HTTP method.
+            const override = ((await del.allHeaders())['x-http-method-override'] || '').toUpperCase();
+            expect(del.method() === 'DELETE' || override === 'DELETE', 'Clear Data issues a DELETE (tunnelled as POST + X-HTTP-Method-Override)').toBe(true);
             // resetToImport + reloadStatus -> Importer body (Run button) returns.
             await expect(dummy.runImporterButton).toBeVisible({ timeout: 15000 });
         });

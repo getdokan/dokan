@@ -27,6 +27,10 @@ const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.js
 const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.json');
 
 let apiUtils: ApiUtils;
+// The reverse-withdrawal option this spec enables globally in beforeAll; captured
+// so afterAll can restore it. Leaving the feature ON marketplace-wide can alter
+// withdrawal eligibility / vendor status in unrelated specs.
+let originalReverseWithdraw: object | string | null = null;
 const ids: { owing?: string; drilldown?: string; negative?: string; filterTarget?: string } = {};
 
 // Seed a vendor store (idempotent + re-runnable) and force it active. Look up
@@ -71,6 +75,14 @@ test.describe('Admin Reverse Withdrawal functionality', () => {
         apiUtils = new ApiUtils(await request.newContext());
 
         // Enable the reverse-withdrawal feature + COD gateway (the dues source).
+        // Capture the prior option first (guarded — it may not exist on a fresh
+        // seed) so afterAll can restore it instead of leaving the feature ON
+        // marketplace-wide for later specs.
+        try {
+            originalReverseWithdraw = await dbUtils.getOptionValue(dbData.dokan.optionName.reverseWithdraw);
+        } catch {
+            originalReverseWithdraw = null;
+        }
         await dbUtils.setOptionValue(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
         await apiUtils.updatePaymentGateway('cod', { enabled: true }, payloads.adminAuth);
 
@@ -93,6 +105,14 @@ test.describe('Admin Reverse Withdrawal functionality', () => {
     });
 
     test.afterAll(async () => {
+        // Restore the reverse-withdrawal feature toggle so it is not left enabled
+        // marketplace-wide for unrelated specs. If there was no prior option,
+        // disable it explicitly (its fresh-seed default is off).
+        if (originalReverseWithdraw && typeof originalReverseWithdraw === 'object') {
+            await dbUtils.setOptionValue(dbData.dokan.optionName.reverseWithdraw, originalReverseWithdraw);
+        } else {
+            await dbUtils.setOptionValue(dbData.dokan.optionName.reverseWithdraw, { ...dbData.dokan.reverseWithdrawSettings, enabled: 'off' });
+        }
         await apiUtils.dispose();
     });
 
@@ -235,12 +255,14 @@ test.describe('Admin Reverse Withdrawal functionality', () => {
             expect(empty, 'no rows / empty-state for an unmatched search').toBe(true);
         });
 
-        test.fixme('a negative-balance transaction renders the amount wrapped in parentheses in the drill-down', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+        test('a negative-balance transaction renders the amount wrapped in parentheses in the drill-down', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
             await rw.gotoStore(ids.negative!);
             await expect(rw.drilldownRoot).toBeVisible();
-            // The credit > debit makes the running balance negative; field
-            // renderers wrap negatives in "( ... )".
-            await expect.poll(async () => /\(\s*.*\)/.test(await rw.page.locator('table tbody').innerText()), { timeout: 15000 }).toBe(true);
+            // The credit > debit makes the running balance negative; the Balance
+            // cell wraps it as "( $x,xx )". innerText splits that cell across
+            // lines, so match with a newline-tolerant pattern ([^)]* spans
+            // newlines; the `.` in /\(\s*.*\)/ would not).
+            await expect.poll(async () => /\([^)]*\)/.test(await rw.page.locator('table tbody').innerText()), { timeout: 15000 }).toBe(true);
         });
 
         test('deep-linking / reload directly onto a drill-down route survives a hard reload', { tag: ['@pro', '@admin'] }, async () => {

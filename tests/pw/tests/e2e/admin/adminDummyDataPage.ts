@@ -22,6 +22,12 @@ export const adminDummyDataData = {
     csvHeader: 'type,id,first_name,last_name,username,email,store_name,name,description,vendor,attribute_1_name,attribute_1_value,attribute_1_visible,attribute_1_global,attribute_2_name,attribute_2_value,attribute_2_visible,attribute_2_global,manage_stock',
     vendorRow: 'vendor,1,ADD,Vendor,add_dummy_vendor,add_dummy_vendor@example.test,ADD Dummy Store,,,,,,,,,,,,',
     productRow: 'product,,,,,,,ADD Dummy Product,A dummy product,1,Color,"Red,Blue",yes,,Size,"S,M",yes,,1',
+    // A second vendor (+ product) so a multi-chunk import renders an intermediate
+    // progress value (50%) in the <progress> bar BEFORE done flips to the Result
+    // panel — the importer batches setProgress(100)+setDone(true) together, so the
+    // bar can only be observed advancing on a non-final chunk.
+    vendorRow2: 'vendor,2,ADD,Vendor2,add_dummy_vendor2,add_dummy_vendor2@example.test,ADD Dummy Store 2,,,,,,,,,,,,',
+    productRow2: 'product,,,,,,,ADD Dummy Product 2,A second dummy product,2,Color,"Red,Blue",yes,,Size,"S,M",yes,,1',
 } as const;
 
 // ============================================
@@ -167,8 +173,9 @@ export class AdminDummyDataPage {
 
     /** Intercept POST import so it is OBSERVED but never reaches WordPress.
      * Returns the incoming vendor_index + 1 so the importer recursion advances
-     * and reaches 100% without writing any rows to the DB. */
-    async stubImport(): Promise<void> {
+     * and reaches 100% without writing any rows to the DB. `delayMs` holds each
+     * chunk open so the in-progress <progress> bar is observable between chunks. */
+    async stubImport(delayMs = 0): Promise<void> {
         await this.page.route(adminDummyDataEndpoints.import, async (route: Route, req: Request) => {
             let nextIndex = 1;
             try {
@@ -176,6 +183,9 @@ export class AdminDummyDataPage {
                 nextIndex = (data?.vendor_index ?? 0) + 1;
             } catch {
                 nextIndex = 1;
+            }
+            if (delayMs) {
+                await new Promise(resolve => setTimeout(resolve, delayMs));
             }
             await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ vendor_index: nextIndex }) });
         });

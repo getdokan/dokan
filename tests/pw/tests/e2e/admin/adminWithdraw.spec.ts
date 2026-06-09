@@ -44,6 +44,9 @@ const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.
 const STATUS = { pending: 0, approved: 1, cancelled: 2 } as const;
 
 let apiUtils: ApiUtils;
+// The marketplace withdraw limit this spec lowers to 0 in beforeAll; captured so
+// afterAll can restore it (default seed value is '10', see utils/dbData.ts).
+let originalWithdrawLimit = '10';
 const ids: { pending?: string; cancelled?: string; approveTarget?: string; cancelTarget?: string; poor?: string } = {};
 
 // Seed (idempotent) a vendor store with paypal/bank payment configured and
@@ -94,8 +97,15 @@ test.describe('Admin Withdraw list functionality', () => {
         apiUtils = new ApiUtils(await request.newContext());
 
         // Lower the withdraw limit so no seeded amount is ever rejected and the
-        // admin Approve never trips the minimum-limit guard.
-        await dbUtils.updateOptionValue('dokan_withdraw', { withdraw_limit: '0' });
+        // admin Approve never trips the minimum-limit guard. Capture the previous
+        // value first so afterAll can restore it: this is a GLOBAL option, and
+        // leaving it at 0 breaks later specs that read the marketplace minimum
+        // (e.g. new-withdraw, whose vendor flow would then submit an
+        // unsubmittable 0-amount request). Fall back to '10' if a prior crashed
+        // run already left it at 0.
+        const [prevWithdrawSettings] = await dbUtils.updateOptionValue('dokan_withdraw', { withdraw_limit: '0' });
+        const prevLimit = prevWithdrawSettings?.withdraw_limit;
+        originalWithdrawLimit = prevLimit && prevLimit !== '0' ? String(prevLimit) : '10';
 
         // Read-only fixtures.
         ids.pending = await seedVendor(adminWithdrawData.pending);
@@ -127,6 +137,10 @@ test.describe('Admin Withdraw list functionality', () => {
     });
 
     test.afterAll(async () => {
+        // Restore the global withdraw limit we lowered to 0 so later specs that
+        // read the marketplace minimum (e.g. new-withdraw) aren't left with a 0
+        // limit that makes a minimum-amount (0) request unsubmittable.
+        await dbUtils.updateOptionValue('dokan_withdraw', { withdraw_limit: originalWithdrawLimit });
         await apiUtils.dispose();
     });
 
