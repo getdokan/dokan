@@ -2757,7 +2757,20 @@ export const schemas = {
     },
 
     // rank math schema
+    // store-current-editable-post returns a plain boolean (true on success).
     rankMathSchema: z.boolean(),
+
+    // editor-data returns Rank Math's localized metabox payload — a large object.
+    // Assert the stable keys the editor relies on rather than the full shape
+    // (Rank Math adds/removes keys across versions). `schemas` is appended by Dokan.
+    rankMathEditorDataSchema: z
+        .object({
+            objectID: z.union([z.string(), z.number()]),
+            objectType: z.string(),
+            assessor: z.any(),
+            schemas: z.any(),
+        })
+        .passthrough(),
 
     // seller badge schema
     sellerBadgeSchema: {
