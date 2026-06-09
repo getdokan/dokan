@@ -78,7 +78,7 @@ test.describe('Vendor Reviews (React) Tests @pro', () => {
         const page = await ctx.newPage();
         await page.goto(toPath(`dashboard/reviews/`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-vendor-dashboard-layout-root')).toBeVisible({ timeout: 30_000 });
 
         const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
         expect(fatal, 'Reviews page should not show a PHP fatal').toBe(false);
@@ -91,7 +91,7 @@ test.describe('Vendor Reviews (React) Tests @pro', () => {
         const page = await ctx.newPage();
         await page.goto(toPath(`dashboard/reviews/`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(3000);
+        await expect(page.locator('#dokan-vendor-dashboard-layout-root')).toBeVisible({ timeout: 30_000 });
 
         const tableVisible = await page.locator('table, [role="table"]').first().isVisible({ timeout: 3000 }).catch(() => false);
         const emptyVisible = await page.locator("text=/no reviews|nothing to show|empty/i").first().isVisible({ timeout: 1000 }).catch(() => false);
@@ -106,7 +106,7 @@ test.describe('Vendor Reviews (React) Tests @pro', () => {
         const page = await ctx.newPage();
         await page.goto(toPath(`dashboard/reviews/`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-vendor-dashboard-layout-root')).toBeVisible({ timeout: 30_000 });
 
         await expect(
             page.locator("h1, h2, h3").filter({ hasText: /reviews?/i }).first(),
@@ -122,9 +122,9 @@ test.describe('Vendor Reviews (React) Tests @pro', () => {
         const page = await ctx.newPage();
         await page.goto(toPath(`dashboard/reviews/`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-vendor-dashboard-layout-root')).toBeVisible({ timeout: 30_000 });
         await page.reload({ waitUntil: 'domcontentloaded' });
-        await page.waitForTimeout(2000);
+        await expect(page.locator('#dokan-vendor-dashboard-layout-root')).toBeVisible({ timeout: 30_000 });
         const fatal = await page.locator("text=/Fatal error|Parse error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
         expect(fatal).toBe(false);
         await page.close();

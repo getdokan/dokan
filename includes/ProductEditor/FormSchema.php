@@ -595,6 +595,7 @@ class FormSchema {
                 'placeholder'      => 'on' === $can_create_tags ? __( 'Select tags/Add tags', 'dokan-lite' ) : __( 'Select product tags', 'dokan-lite' ),
                 'value'            => [],
                 'options'          => self::get_product_tags(),
+                'creatable'        => 'on' === $can_create_tags,
                 'visibility'       => true,
             ],
             [

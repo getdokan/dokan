@@ -1,3 +1,30 @@
+### v5.0.4 ( Jun 08, 2026 ) ###
+
+- **update:** Improved RTL support for the switch button transition in the new vendor dashboard layout.
+- **update:** Made the vendor analytics panel compatible with the vendor-specific Coupons report.
+- **fix:** Allowed vendors to create new product tags inline from the new product editor.
+- **fix:** Resolved withdraw approval failing on an exact fractional balance.
+- **fix:** Added ownership checks to order AJAX handlers to prevent vendors from modifying orders they don't own.
+
+### v5.0.3 ( May 21, 2026 ) ###
+
+- **update:** Exposed manual withdrawal availability and withdraw-visibility flags in the vendor dashboard REST API.
+- **fix:** Restricted the Customers REST endpoint to self-service to prevent vendors from modifying other user accounts.
+- **fix:** Translated the "Actions" column header on vendor dashboard DataViews tables.
+
+### v5.0.2 ( May 18, 2026 ) ###
+
+- **new:** Added a date range filter on the vendor dashboard Withdraw Requests table to filter results by start and end dates.
+- **update:** Centralized vendor selling activation and deactivation and introduced a new filter to control vendor selling eligibility.
+- **update:** Added customization filters to control the visibility of customer billing and shipping details in vendor order emails and vendor order detail pages.
+- **update:** Added options to independently show or hide the login and registration sections of the vendor onboarding shortcode form, with adaptive layout.
+- **update:** Renamed the Quick View modal label from "Page View" to "Views" and added a Views column to the product list.
+- **fix:** Resolved product attribute data inconsistency between taxonomy-enabled and standard attributes on the new product UI.
+- **fix:** Auto-select the vendor's default payment method in the withdraw request modal.
+- **fix:** Corrected the "View Details" link in the What's New admin notice to route to the appropriate changelog page.
+- **fix:** Prevented a PHP deprecation notice caused by a menu position type-cast.
+- **fix:** Ensured jQuery blockUI loads on the seller setup wizard and other custom enqueue pages.
+
 ### v5.0.1 ( May 05, 2026 ) ###
 
 - **update:** Added an admin-controllable vendor registration option on the My Account page.

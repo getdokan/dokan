@@ -629,6 +629,13 @@ class Assets {
             ];
         }
 
+        if ( ! wp_script_is( $jquery_blockui, 'registered' ) ) {
+            $scripts[ $jquery_blockui ] = [
+                'src'  => WC()->plugin_url() . '/assets/js/jquery-blockui/jquery.blockUI' . $suffix . '.js',
+                'deps' => [ 'jquery' ],
+            ];
+        }
+
         $components_asset_file = DOKAN_DIR . '/assets/js/components.asset.php';
         if ( file_exists( $components_asset_file ) ) {
             $components_asset = require $components_asset_file;

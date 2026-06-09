@@ -184,9 +184,12 @@ test.describe('Vendor Payments Settings (React) Tests @lite', () => {
         const page = await ctx.newPage();
         await page.goto(toPath(`dashboard/settings/payment/`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(3000);
-        const bodyText = await page.locator('body').innerText();
-        expect(bodyText.trim().length).toBeGreaterThan(50);
+        await expect
+            .poll(async () => (await page.locator('body').innerText()).trim().length, {
+                timeout: 30_000,
+                intervals: [500, 1000, 2000, 3000],
+            })
+            .toBeGreaterThan(50);
         await page.close();
         await ctx.close();
     });

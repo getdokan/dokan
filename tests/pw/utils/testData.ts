@@ -2897,7 +2897,12 @@ export const data = {
             WP_DEBUG: true,
             SCRIPT_DEBUG: true,
             WP_DEBUG_LOG: '/var/www/html/wp-data/debug.log',
-            WP_DEBUG_DISPLAY: true,
+            // Keep PHP notices/deprecations OUT of the response body. With DISPLAY on,
+            // a WP-core deprecation (e.g. WP 7.0 kses.php preg_replace(null)) prints before
+            // headers and corrupts wp_redirect()/wp_safe_redirect() Location headers, which
+            // breaks admin-login and order-status redirects in the browser tests. Errors are
+            // still captured via WP_DEBUG + WP_DEBUG_LOG above.
+            WP_DEBUG_DISPLAY: false,
         },
 
         // site info
@@ -2929,6 +2934,7 @@ export const data = {
             woocommerceSimpleAuctions: 'woocommerce-simple-auctions',
             woocommercePdfInvoices: 'woocommerce-pdf-invoices-packing-slips',
             rankMath: 'seo-by-rank-math',
+            emailLog: 'email-log',
         },
     },
 

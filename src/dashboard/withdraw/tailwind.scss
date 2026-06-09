@@ -58,3 +58,7 @@
 .dokan-withdraw-style-reset {
     @include windraw-reset;
 }
+
+body:has(.dokan-withdraw-wrapper) .dokan-toaster {
+    z-index: 100001 !important;
+}

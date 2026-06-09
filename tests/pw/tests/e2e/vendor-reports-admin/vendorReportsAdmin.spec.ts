@@ -49,7 +49,7 @@ test.describe('Admin Vendor Reports (React) Tests @pro', () => {
     test('Test Case 1 - Admin reports page renders', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(toPath(`wp-admin/admin.php?page=dokan_reports`));
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/reports`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         const fatal = await page.locator(".notice-error, body.error-page").first().isVisible({ timeout: 1000 }).catch(() => false);
@@ -61,11 +61,14 @@ test.describe('Admin Vendor Reports (React) Tests @pro', () => {
     test('Test Case 2 - Admin reports page renders content', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
-        await page.goto(toPath(`wp-admin/admin.php?page=dokan_reports`));
+        await page.goto(toPath(`wp-admin/admin.php?page=dokan-dashboard#/reports`));
         await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(3000);
-        const bodyText = await page.locator('body').innerText();
-        expect(bodyText.trim().length).toBeGreaterThan(50);
+        await expect
+            .poll(async () => (await page.locator('body').innerText()).trim().length, {
+                timeout: 30_000,
+                intervals: [500, 1000, 2000, 3000],
+            })
+            .toBeGreaterThan(50);
         await page.close();
         await ctx.close();
     });

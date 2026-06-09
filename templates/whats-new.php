@@ -4,6 +4,110 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.0.4',
+        'released' => '2026-06-08',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Improved RTL support for the switch button transition in the new vendor dashboard layout.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Made the vendor analytics panel compatible with the vendor-specific Coupons report.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Allowed vendors to create new product tags inline from the new product editor.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Resolved withdraw approval failing on an exact fractional balance.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added ownership checks to order AJAX handlers to prevent vendors from modifying orders they don\'t own.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.0.3',
+        'released' => '2026-05-21',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Exposed manual withdrawal availability and withdraw-visibility flags in the vendor dashboard REST API.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Restricted the Customers REST endpoint to self-service to prevent vendors from modifying other user accounts.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Translated the "Actions" column header on vendor dashboard DataViews tables.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.0.2',
+        'released' => '2026-05-18',
+        'changes'  => [
+            'New Feature' => [
+                [
+                    'title'       => 'Added a date range filter on the vendor dashboard Withdraw Requests table to filter results by start and end dates.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Centralized vendor selling activation and deactivation and introduced a new filter to control vendor selling eligibility.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added customization filters to control the visibility of customer billing and shipping details in vendor order emails and vendor order detail pages.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added options to independently show or hide the login and registration sections of the vendor onboarding shortcode form, with adaptive layout.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Renamed the Quick View modal label from "Page View" to "Views" and added a Views column to the product list.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Resolved product attribute data inconsistency between taxonomy-enabled and standard attributes on the new product UI.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Auto-select the vendor\'s default payment method in the withdraw request modal.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Corrected the "View Details" link in the What\'s New admin notice to route to the appropriate changelog page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Prevented a PHP deprecation notice caused by a menu position type-cast.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Ensured jQuery blockUI loads on the seller setup wizard and other custom enqueue pages.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.0.1',
         'released' => '2026-05-05',
         'changes'  => [

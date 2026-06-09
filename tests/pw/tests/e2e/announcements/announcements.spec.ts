@@ -1,8 +1,11 @@
 import { test, expect } from '@utils/test';
+import { request } from '@playwright/test';
 import { AnnouncementsPage } from './announcementsPage';
 import path from 'path';
 
 import { toPath } from '@utils/helpers';
+import { ApiUtils } from '@utils/apiUtils';
+import { payloads } from '@utils/payloads';
 
 // ============================================
 // SESSION STORAGE VARIABLES
@@ -15,6 +18,18 @@ const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.js
 // ============================================
 
 test.describe('Announcements Tests @pro', () => {
+    // Wipe accumulated announcements before this file's tests run. The legacy
+    // admin list paginates (10/page) and sorts by date desc — once the table
+    // grows past a few hundred rows (especially with scheduled-in-the-future
+    // rows that pin to the top), freshly-published rows from these tests fall
+    // off page 1 and the `<strong>title</strong>` selectors stop finding them.
+    test.beforeAll(async () => {
+        const apiUtils = new ApiUtils(await request.newContext());
+        await apiUtils.deleteAllAnnouncements(payloads.adminAuth);
+        await apiUtils.dispose();
+    });
+
+
     // ============================================
     // TEST CASES
     // ============================================
