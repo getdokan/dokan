@@ -128,7 +128,16 @@ setup.describe('site setup', () => {
     // the next admin page load. Seeding the option here makes the
     // new-class branch (`WPO_WCPDF`) win on the very first load.
     setup('seed wpo_wcpdf_version (workaround for dokan-invoice <=1.2.8)', { tag: ['@pro'] }, async () => {
-        await helpers.exeCommandWpcli('wp option update wpo_wcpdf_version 5.11.0 --autoload=yes');
+        try {
+            await helpers.exeCommandWpcli('wp option update wpo_wcpdf_version 5.11.0 --autoload=yes');
+        } catch (error) {
+            // `wp option update` exits non-zero when the value is unchanged — e.g.
+            // WC PDF already wrote this version on activation. The post-condition
+            // (option === 5.11.0) is already satisfied, so this is a benign no-op;
+            // don't let it abort the whole site_setup project (which would skip
+            // auth/env setup downstream).
+            console.log('wpo_wcpdf_version already set / update skipped:', error);
+        }
     });
 
     setup('activate Dokan Invoice', { tag: ['@pro'] }, async () => {
