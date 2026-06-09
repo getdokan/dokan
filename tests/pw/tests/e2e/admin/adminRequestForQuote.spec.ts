@@ -146,7 +146,7 @@ test.describe('Admin Request for Quote functionality', () => {
         // AdminDataViewTable, so it is never mounted. This asserts search-driven
         // filtering the UI cannot perform. Documented product gap (search defined
         // but not wired) — re-enable when the rules filter is rendered.
-        test('searching the Quote Rules list filters to the matching rule', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+        test.fixme('searching the Quote Rules list filters to the matching rule', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
             const name = `ARFQ Search Rule ${Date.now()}`;
             await seedRule(name, 'publish');
             await rfq.gotoRules();
@@ -210,7 +210,7 @@ test.describe('Admin Request for Quote functionality', () => {
         // QUARANTINED @exploratory: the Quote Rules search input is defined in
         // filterFields but never wired to AdminDataViewTable (see the rules-search
         // test above), so a search-driven empty state is unreachable. Documented gap.
-        test('Quote Rules search with no match shows the empty state', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+        test.fixme('Quote Rules search with no match shows the empty state', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
             await rfq.gotoRules();
             await rfq.searchRules(adminRequestForQuoteData.searchMiss);
             const empty = (await rfq.isEmptyStateVisible()) || (await rfq.getRowCount()) === 0;

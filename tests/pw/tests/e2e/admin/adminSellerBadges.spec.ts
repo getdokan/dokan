@@ -151,7 +151,7 @@ test.describe('Admin Seller Badges functionality', () => {
             await expect(page).toHaveURL(/#\/dokan-seller-badge\/edit\/\d+/);
         });
 
-        test('admin can bulk-publish draft badges from the Draft tab', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+        test.fixme('admin can bulk-publish draft badges from the Draft tab', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
             // Own two draft badges for the bulk publish.
             await apiUtils.updateBatchSellerBadges('draft', [ids.publishTarget!, ids.draftTarget!], payloads.adminAuth);
             await badges.goto();

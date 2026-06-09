@@ -266,11 +266,16 @@ export class AdminVendorCreatePage {
     }
 
     // ---- Availability indicators ----
+    // The indicator is rendered AFTER a debounced AJAX availability check, so we
+    // must WAIT for it. locator.isVisible() does NOT wait (it snapshots the
+    // current state and ignores its timeout), which raced the AJAX response and
+    // intermittently reported a free slug as unavailable; waitFor() retries.
     async isStoreUrlAvailable(): Promise<boolean> {
         return await this.page
             .locator(adminVendorCreateSelectors.available)
             .first()
-            .isVisible({ timeout: 8000 })
+            .waitFor({ state: 'visible', timeout: 12000 })
+            .then(() => true)
             .catch(() => false);
     }
 
@@ -278,7 +283,8 @@ export class AdminVendorCreatePage {
         return await this.page
             .locator(adminVendorCreateSelectors.notAvailable)
             .first()
-            .isVisible({ timeout: 8000 })
+            .waitFor({ state: 'visible', timeout: 12000 })
+            .then(() => true)
             .catch(() => false);
     }
 
