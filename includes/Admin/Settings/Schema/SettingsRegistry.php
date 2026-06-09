@@ -75,12 +75,47 @@ class SettingsRegistry {
         // 5. Populate field values from storage.
         $elements = $this->populate_values( $elements );
 
+        // 5b. Resolve lazily-declared option lists (e.g. DB-backed page
+        // selects) into concrete arrays. Deferred to here so the front-end
+        // legacy-settings bridge — which harvests SettingsSchema but never
+        // reads `options` — does not pay for the query on every request.
+        $elements = $this->resolve_dynamic_options( $elements );
+
         // 6. Validate in debug mode.
         $this->maybe_validate( $elements );
 
         $this->cache = $elements;
 
         return $this->cache;
+    }
+
+    /**
+     * Resolve lazily-declared option lists into concrete arrays.
+     *
+     * Fields whose option list is expensive to build (e.g. a DB-backed page
+     * select) declare `options` as a closure instead of an eager array, so
+     * the cost is paid only here — when the schema is built for the admin
+     * UI/REST. The front-end legacy-settings bridge harvests SettingsSchema
+     * directly and never reads `options`, so it never invokes these closures.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $elements Flat schema elements.
+     *
+     * @return array
+     */
+    private function resolve_dynamic_options( array $elements ): array {
+        foreach ( $elements as &$element ) {
+            if ( ! isset( $element['options'] ) || ! ( $element['options'] instanceof \Closure ) ) {
+                continue;
+            }
+
+            $callback           = $element['options'];
+            $element['options'] = (array) $callback();
+        }
+        unset( $element );
+
+        return $elements;
     }
 
     /**

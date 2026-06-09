@@ -59,6 +59,50 @@ class SettingsRegistryStorageTest extends DokanTestCase {
         $this->assertSame( 'mapbox', $map_source_field['value'], 'map_api_source value must come from dokan_settings.' );
     }
 
+    /**
+     * DB-backed option lists (page selects) must be lazy on the raw schema —
+     * a closure, so the front-end legacy bridge never triggers the page query
+     * when it harvests SettingsSchema — and resolved to a concrete array by
+     * SettingsRegistry for the admin/REST consumer.
+     *
+     * @group settings-perf
+     */
+    public function test_dynamic_page_options_are_lazy_raw_and_resolved_by_registry(): void {
+        // Raw schema: the page-backed select carries a closure, not an array.
+        $raw       = \WeDevs\Dokan\Admin\Settings\Schema\SettingsSchema::get_schema();
+        $raw_field = null;
+        foreach ( $raw as $el ) {
+            if ( ( $el['id'] ?? '' ) === 'vendor_dashboard_page' ) {
+                $raw_field = $el;
+                break;
+            }
+        }
+
+        $this->assertNotNull( $raw_field, 'vendor_dashboard_page field must exist in the raw schema.' );
+        $this->assertArrayHasKey( 'options', $raw_field );
+        $this->assertInstanceOf(
+            \Closure::class,
+            $raw_field['options'],
+            'Page options must be lazy (a closure) on the raw schema so the bridge skips the query.'
+        );
+
+        // Registry output: the same field exposes a resolved array, no closure.
+        $resolved       = ( new SettingsRegistry() )->get_schema( true );
+        $resolved_field = null;
+        foreach ( $resolved as $el ) {
+            if ( ( $el['id'] ?? '' ) === 'vendor_dashboard_page' ) {
+                $resolved_field = $el;
+                break;
+            }
+        }
+
+        $this->assertNotNull( $resolved_field, 'vendor_dashboard_page field must exist in the registry schema.' );
+        $this->assertIsArray(
+            $resolved_field['options'],
+            'SettingsRegistry must resolve lazy page options to an array.'
+        );
+    }
+
     public function test_populate_values_falls_back_to_default_when_id_absent(): void {
         update_option( 'dokan_admin_settings', [] );
 

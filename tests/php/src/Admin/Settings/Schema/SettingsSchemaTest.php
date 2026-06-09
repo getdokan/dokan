@@ -323,11 +323,14 @@ class SettingsSchemaTest extends DokanTestCase {
         );
 
         foreach ( $fields as $field ) {
-            // Some selects have dynamic options (populated at runtime).
+            // Some selects declare dynamic options lazily as a closure on the
+            // raw schema (e.g. DB-backed page lists). SettingsRegistry resolves
+            // these to arrays before the UI/REST consumes them; the resolved
+            // contract is asserted in SettingsRegistryStorageTest.
             if ( isset( $field['options'] ) ) {
-                $this->assertIsArray(
-                    $field['options'],
-                    "Field '{$field['id']}' options should be an array."
+                $this->assertTrue(
+                    is_array( $field['options'] ) || $field['options'] instanceof \Closure,
+                    "Field '{$field['id']}' options must be an array or a lazy closure."
                 );
             }
         }
