@@ -76,8 +76,8 @@ setup.describe('site setup', () => {
     setup('activate Rank Math SEO', { tag: ['@lite'] }, async () => {
         try {
             await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.rankMath));
-        } catch (error) {
-            console.log('Rank Math SEO activation had issues, but continuing...', error);
+        } catch {
+            console.log('↪ Rank Math SEO not activated — continuing without it.');
         }
     });
 
@@ -96,40 +96,40 @@ setup.describe('site setup', () => {
             // Increase memory limit before activation
             await helpers.exeCommandWpcli('wp config set WP_MEMORY_LIMIT 1024M');
             await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.woocommerceBookings));
-        } catch (error) {
-            console.log('WooCommerce Bookings activation had issues, but continuing...');
+        } catch {
+            console.log('↪ WooCommerce Bookings not activated — continuing without it.');
         }
     });
 
     setup('activate Woocommerce product addons', { tag: ['@pro'] }, async () => {
         try {
             await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.woocommerceProductAddons));
-        } catch (error) {
-            console.log('WooCommerce Product Addons activation had issues, but continuing...');
+        } catch {
+            console.log('↪ WooCommerce Product Addons not activated — continuing without it.');
         }
     });
 
     setup('activate Woocommerce simple auctions', { tag: ['@pro'] }, async () => {
         try {
             await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.woocommerceSimpleAuctions));
-        } catch (error) {
-            console.log('WooCommerce Simple Auctions activation had issues, but continuing...');
+        } catch {
+            console.log('↪ WooCommerce Simple Auctions not activated — continuing without it.');
         }
     });
 
     setup('activate Woocommerce subscriptions', { tag: ['@pro'] }, async () => {
         try {
             await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.woocommerceSubscriptions));
-        } catch (error) {
-            console.log('WooCommerce Subscriptions activation had issues, but continuing...');
+        } catch {
+            console.log('↪ WooCommerce Subscriptions not activated — continuing without it.');
         }
     });
 
     setup('activate Woocommerce PDF invoices & packing slips', { tag: ['@pro'] }, async () => {
         try {
             await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.woocommercePdfInvoices));
-        } catch (error) {
-            console.log('WooCommerce PDF Invoices activation had issues, but continuing...', error);
+        } catch {
+            console.log('↪ WooCommerce PDF Invoices not activated — continuing without it.');
         }
     });
 
@@ -143,21 +143,17 @@ setup.describe('site setup', () => {
     // the next admin page load. Seeding the option here makes the
     // new-class branch (`WPO_WCPDF`) win on the very first load.
     setup('seed wpo_wcpdf_version (workaround for dokan-invoice <=1.2.8)', { tag: ['@pro'] }, async () => {
-        // `wp option update` exits non-zero when the value is unchanged, so a
-        // re-run on an already-seeded site would fail the whole setup chain.
-        // Tolerate that no-op case while still surfacing genuine failures.
-        try {
-            await helpers.exeCommandWpcli('wp option update wpo_wcpdf_version 5.11.0 --autoload=yes');
-        } catch (error) {
-            console.log('wpo_wcpdf_version already seeded, skipping...', error);
-        }
+        // Use `wp eval` + update_option (idempotent) rather than `wp option
+        // update`, which exits non-zero when the value is unchanged and would
+        // fail the whole setup chain on a re-run of an already-seeded site.
+        await helpers.exeCommandWpcli(`wp eval 'update_option("wpo_wcpdf_version", "5.11.0");'`);
     });
 
     setup('activate Dokan Invoice', { tag: ['@pro'] }, async () => {
         try {
             await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.dokanInvoice));
-        } catch (error) {
-            console.log('Dokan Invoice activation had issues, but continuing...', error);
+        } catch {
+            console.log('↪ Dokan Invoice not activated — continuing without it.');
         }
     });
 
@@ -186,7 +182,7 @@ setup.describe('site setup', () => {
         try {
             await dbUtils.setOptionValue(dbData.dokan.optionName.dokanProLicense, dbData.dokan.dokanProLicense);
         } catch (error) {
-            console.log('License setup failed, but continuing...', error);
+            console.log('↪ Dokan license not set — continuing without it.', (error as Error)?.message ?? '');
         }
     });
 
@@ -198,15 +194,15 @@ setup.describe('site setup', () => {
         const coreModules = dbData.dokan.modules.filter((m: string) => m !== 'auction');
         const [response] = await apiUtils.activateModules(coreModules, payloads.adminAuth);
         if (!response.ok()) {
-            console.log('Core module activation failed, but continuing...');
+            console.log('↪ Core module activation failed — continuing.');
         }
         try {
             const [auctionResponse] = await apiUtils.activateModules(['auction'], payloads.adminAuth);
             if (!auctionResponse.ok()) {
-                console.log('Auction module not available (woocommerce-simple-auctions may be missing), continuing...');
+                console.log('↪ Auction module not available (woocommerce-simple-auctions may be missing) — continuing.');
             }
         } catch (error) {
-            console.log('Auction module activation skipped:', error);
+            console.log('↪ Auction module activation skipped —', (error as Error)?.message ?? '');
         }
     });
 
@@ -215,7 +211,7 @@ setup.describe('site setup', () => {
         if (siteSettings) {
             expect(siteSettings).toEqual(expect.objectContaining(payloads.siteSettings));
         } else {
-            console.log('Failed to set site settings, but continuing...');
+            console.log('↪ Failed to set site settings — continuing.');
         }
     });
 
@@ -225,8 +221,8 @@ setup.describe('site setup', () => {
             if (systemInfo) {
                 helpers.writeFile(data.systemInfo, JSON.stringify(systemInfo));
             }
-        } catch (error) {
-            console.log('Failed to get system info, but continuing...');
+        } catch {
+            console.log('↪ Failed to get system info — continuing.');
         }
     });
 });
