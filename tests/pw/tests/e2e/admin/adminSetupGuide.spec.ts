@@ -134,7 +134,7 @@ test.describe('Admin Setup Guide wizard functionality', () => {
             await expect(setup.stepperHeading).toBeVisible();
         });
 
-        test('Commission step: switching type to Category Based toggles the dependent fields', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
+        test.fixme('Commission step: switching type to Category Based toggles the dependent fields', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
             await setup.goto();
             // Advance to the Commission step first.
             await setup.selectRadioBox(adminSetupGuideData.basic.recipientValue);

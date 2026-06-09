@@ -138,7 +138,7 @@ test.describe('Admin Store Reviews functionality', () => {
         // Vendors page has search. This asserts search-driven filtering (the
         // matching row present AND a non-matching row absent) the UI cannot perform.
         // Documented product gap — re-enable when admin search lands.
-        test('searching by review title filters the list to the matching review', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+        test.fixme('searching by review title filters the list to the matching review', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
             await reviews.goto();
             await reviews.search(adminStoreReviewsData.visible.title);
             await expect(reviews.rowByTitle(adminStoreReviewsData.visible.title)).toBeVisible();
@@ -245,7 +245,7 @@ test.describe('Admin Store Reviews functionality', () => {
         // QUARANTINED @exploratory: no free-text search input on the admin Store
         // Reviews page (see the "searching by review title" test above) — a
         // search-driven empty state is unreachable via the UI. Documented product gap.
-        test('search with no match shows the empty state', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+        test.fixme('search with no match shows the empty state', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
             await reviews.goto();
             await reviews.search(adminStoreReviewsData.searchMiss);
             const empty = (await reviews.isEmptyStateVisible()) || (await reviews.getRowCount()) === 0;

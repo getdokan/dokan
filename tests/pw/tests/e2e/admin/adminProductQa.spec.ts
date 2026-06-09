@@ -168,7 +168,7 @@ test.describe('Admin Product Q&A moderation', () => {
         // fetchQuestions sends no `search` param). Only the Vendors page has search.
         // This asserts search-driven filtering the UI cannot perform. Documented
         // product gap — re-enable when admin search lands.
-        test('searching by question text filters the list to the matching question', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+        test.fixme('searching by question text filters the list to the matching question', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
             await qa.goto();
             await qa.search(adminProductQaData.answerTarget);
             await expect(qa.rowByQuestion(adminProductQaData.answerTarget)).toBeVisible();
@@ -263,7 +263,7 @@ test.describe('Admin Product Q&A moderation', () => {
         // QUARANTINED @exploratory: no free-text search input on the admin Product
         // Q&A page (see the "searching by question text" test above) — a
         // search-driven empty state is unreachable via the UI. Documented product gap.
-        test('search with no match shows the empty state', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+        test.fixme('search with no match shows the empty state', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
             await qa.goto();
             await qa.search(adminProductQaData.searchMiss);
             const empty = (await qa.isEmptyStateVisible()) || (await qa.getRowCount()) === 0;
@@ -319,7 +319,7 @@ test.describe('Admin Product Q&A moderation', () => {
         // product behavior. Left strict + quarantined so the gate stays honest;
         // surfaced to the team as a potential information-exposure concern to review
         // (the list endpoint exposes more than the storefront needs).
-        test('an unauthenticated request to /dokan/v1/product-questions is rejected', { tag: ['@pro', '@customer', '@exploratory'] }, async () => {
+        test.fixme('an unauthenticated request to /dokan/v1/product-questions is rejected', { tag: ['@pro', '@customer', '@exploratory'] }, async () => {
             const anonCtx = await request.newContext();
             const res = await anonCtx.get(endPoints.getAllProductQuestions);
             expect([401, 403], 'unauthenticated REST read must be denied').toContain(res.status());

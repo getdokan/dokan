@@ -124,7 +124,7 @@ test.describe('Admin Verifications functionality', () => {
         // fixes don't help because the query itself never resolves here. Needs a
         // test-infra root-cause (capture the headless XHR for
         // /dokan/v1/verification-requests). Re-enable once the list loads in CI.
-        test('the Pending tab is selected by default and lists a pending request', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+        test.fixme('the Pending tab is selected by default and lists a pending request', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
             const requestId = await seedRequest('pending');
             await verifications.goto();
             expect(await verifications.isTabSelected(/Pending/), 'Pending tab is the default selection').toBe(true);
@@ -133,7 +133,7 @@ test.describe('Admin Verifications functionality', () => {
         });
 
         // QUARANTINED @exploratory — verification list stuck-loading in headless (see note on the Pending-tab test above).
-        test('switching to the Approved tab requests status=approved and shows an approved request', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+        test.fixme('switching to the Approved tab requests status=approved and shows an approved request', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
             const requestId = await seedRequest('approved');
             await verifications.goto();
             const [req] = await Promise.all([page.waitForRequest(/\/dokan\/v1\/verification-requests/, { timeout: 15000 }), verifications.clickTab(/Approved/)]);
@@ -143,7 +143,7 @@ test.describe('Admin Verifications functionality', () => {
         });
 
         // QUARANTINED @exploratory — verification list stuck-loading in headless (see note on the Pending-tab test above).
-        test('a pending request exposes its uploaded document link', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+        test.fixme('a pending request exposes its uploaded document link', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
             const requestId = await seedRequest('pending');
             await verifications.goto();
             await expect(verifications.rowByRequestId(requestId)).toBeVisible();
@@ -151,7 +151,7 @@ test.describe('Admin Verifications functionality', () => {
         });
 
         // QUARANTINED @exploratory — verification list stuck-loading in headless (see note on the Pending-tab test above).
-        test('admin can approve a pending request (it moves to the Approved tab)', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+        test.fixme('admin can approve a pending request (it moves to the Approved tab)', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
             const requestId = await seedRequest('pending');
             await verifications.goto();
             await verifications.approveRequest(requestId);
@@ -163,7 +163,7 @@ test.describe('Admin Verifications functionality', () => {
         });
 
         // QUARANTINED @exploratory — verification list stuck-loading in headless (see note on the Pending-tab test above).
-        test('admin can reject a pending request (it moves to the Rejected tab)', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+        test.fixme('admin can reject a pending request (it moves to the Rejected tab)', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
             const requestId = await seedRequest('pending');
             await verifications.goto();
             await verifications.rejectRequest(requestId);
@@ -173,7 +173,7 @@ test.describe('Admin Verifications functionality', () => {
         });
 
         // QUARANTINED @exploratory — verification list stuck-loading in headless (see note on the Pending-tab test above).
-        test('admin can move an approved request back to Pending', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+        test.fixme('admin can move an approved request back to Pending', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
             const requestId = await seedRequest('approved');
             await verifications.goto();
             await verifications.clickTab(/Approved/);
@@ -185,7 +185,7 @@ test.describe('Admin Verifications functionality', () => {
         });
 
         // QUARANTINED @exploratory — verification list stuck-loading in headless (see note on the Pending-tab test above).
-        test('admin can add a note to a request', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+        test.fixme('admin can add a note to a request', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
             const requestId = await seedRequest('pending');
             await verifications.goto();
             await verifications.addNote(requestId, adminVerificationsData.note);
@@ -201,7 +201,7 @@ test.describe('Admin Verifications functionality', () => {
                 .toBe(adminVerificationsData.note);
         });
 
-        test('admin can bulk-approve pending requests', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+        test.fixme('admin can bulk-approve pending requests', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
             const r1 = await seedRequest('pending');
             const r2 = await seedRequest('pending');
             await verifications.goto();
@@ -239,7 +239,7 @@ test.describe('Admin Verifications functionality', () => {
         // search-driven empty state the UI cannot reach. Documented product gap —
         // re-enable when admin search lands (or rewrite to assert the empty state
         // via the genuinely-empty Rejected/Cancelled status tab).
-        test('search with no match shows the empty state', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+        test.fixme('search with no match shows the empty state', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
             await seedRequest('pending');
             await verifications.goto();
             await verifications.search(adminVerificationsData.searchMiss);

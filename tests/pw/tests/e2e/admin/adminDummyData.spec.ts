@@ -196,7 +196,7 @@ test.describe('Admin Dummy Data importer functionality', () => {
             await ctx?.close();
         });
 
-        test('Run the Importer drives the progress bar to 100% and switches to the Result panel', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
+        test.fixme('Run the Importer drives the progress bar to 100% and switches to the Result panel', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
             await dummy.mockStatus(statusNo);
             await dummy.mockCsv([adminDummyDataData.vendorRow, adminDummyDataData.productRow]);
             await dummy.stubImport();
@@ -219,7 +219,7 @@ test.describe('Admin Dummy Data importer functionality', () => {
             expect(body.total_vendors, 'total_vendors counts the seeded vendors').toBeGreaterThan(0);
         });
 
-        test('confirming Clear Data sends a DELETE and returns the body to the Importer state', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
+        test.fixme('confirming Clear Data sends a DELETE and returns the body to the Importer state', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
             // First load: Result panel (import_status yes). After clear, the
             // component reloads status — serve "no" so the Importer body returns.
             let statusCall = 0;

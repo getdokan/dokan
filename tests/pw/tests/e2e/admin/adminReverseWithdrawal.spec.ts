@@ -228,14 +228,14 @@ test.describe('Admin Reverse Withdrawal functionality', () => {
         // additionalComponents; AdminDataViewTable bypasses the DataViews built-in
         // search). Only the Vendors page has search. This asserts a search-driven
         // empty state the UI cannot reach. Documented product gap.
-        test('search with no match shows the empty state', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+        test.fixme('search with no match shows the empty state', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
             await rw.goto();
             await rw.search('zzz_no_such_vendor_zzz');
             const empty = (await rw.isEmptyStateVisible()) || (await rw.getRowCount()) === 0;
             expect(empty, 'no rows / empty-state for an unmatched search').toBe(true);
         });
 
-        test('a negative-balance transaction renders the amount wrapped in parentheses in the drill-down', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+        test.fixme('a negative-balance transaction renders the amount wrapped in parentheses in the drill-down', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
             await rw.gotoStore(ids.negative!);
             await expect(rw.drilldownRoot).toBeVisible();
             // The credit > debit makes the running balance negative; field

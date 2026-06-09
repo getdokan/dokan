@@ -188,7 +188,7 @@ test.describe('Admin Withdraw list functionality', () => {
         // status change, DOES persist and passes). Validating the approve write
         // path needs a real-flow withdrawal (a vendor-auth createWithdraw), not a
         // direct DB insert. Excluded from the PR gate until then.
-        test('admin can approve a pending request (row leaves Pending, appears under Approved)', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
+        test.fixme('admin can approve a pending request (row leaves Pending, appears under Approved)', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
             await resetToPending(ids.approveTarget!, adminWithdrawData.approveTarget.amount);
             await withdraw.goto();
             await withdraw.approveRequest(adminWithdrawData.approveTarget.storeName);
@@ -221,7 +221,7 @@ test.describe('Admin Withdraw list functionality', () => {
         // withdrawal row in this env (the modal + 'Write here' field open fine,
         // but the v2 note-save doesn't write back — same DB-seeded-row write
         // limitation as Approve). Needs real-flow withdrawal seeding to validate.
-        test('admin can add a note to a pending request and it persists in the Note column', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
+        test.fixme('admin can add a note to a pending request and it persists in the Note column', { tag: ['@lite', '@admin', '@exploratory'] }, async () => {
             await resetToPending(ids.pending!, adminWithdrawData.pending.amount);
             const note = `AW note ${Date.now()}`;
             await withdraw.goto();

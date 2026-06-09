@@ -249,7 +249,7 @@ test.describe('Admin Abuse Reports list functionality @pro', () => {
         // input[placeholder="Search"] mounts (only the Vendors page adds a SearchInput).
         // So a search-driven empty state is unreachable via the UI. Documented product
         // gap — re-enable when admin search lands.
-        test('searching for an unmatched reason shows the empty state', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+        test.fixme('searching for an unmatched reason shows the empty state', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
             await dbUtils.dbQuery(`DELETE FROM ${ABUSE_TABLE};`);
             await seedReports(adminAbuseReportsData.reasons.spam, 'AABR empty-state seed', 1);
 
