@@ -8,6 +8,7 @@ use Closure;
  * Builds a callable transformer pair for a `double_input` variant whose two
  * inputs each bridge to an independent scalar legacy key.
  *
+ * Shapes:
  *   legacy: two separate keys (e.g. `store_banner_width`, `store_banner_height`)
  *   new:    [ 'first' => <int>, 'second' => <int> ]   // the double_input value shape
  *
@@ -49,22 +50,22 @@ final class DoubleInputTransformer {
         string $first_slot = 'first',
         string $second_slot = 'second'
     ): array {
-        $coerce = static function ( $value, int $default ): int {
-            return ( is_numeric( $value ) ) ? (int) $value : $default;
+        $coerce = static function ( $value, int $fallback ): int {
+            return ( is_numeric( $value ) ) ? (int) $value : $fallback;
         };
 
         return [
             'to_new'    => static function ( $legacy_values ) use ( $coerce, $first_default, $second_default, $first_slot, $second_slot ) {
                 $values = is_array( $legacy_values ) ? $legacy_values : [];
                 return [
-                    $first_slot  => $coerce( $values[ $first_slot ]  ?? null, $first_default ),
+                    $first_slot  => $coerce( $values[ $first_slot ] ?? null, $first_default ),
                     $second_slot => $coerce( $values[ $second_slot ] ?? null, $second_default ),
                 ];
             },
             'to_legacy' => static function ( $new_value ) use ( $coerce, $first_default, $second_default, $first_slot, $second_slot ) {
                 $values = is_array( $new_value ) ? $new_value : [];
                 return [
-                    $first_slot  => $coerce( $values[ $first_slot ]  ?? null, $first_default ),
+                    $first_slot  => $coerce( $values[ $first_slot ] ?? null, $first_default ),
                     $second_slot => $coerce( $values[ $second_slot ] ?? null, $second_default ),
                 ];
             },
