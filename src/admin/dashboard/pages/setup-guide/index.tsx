@@ -13,7 +13,7 @@ import { registerSettingsFields } from './register-fields';
 // the settings page (idempotent — safe to call from both entry points).
 registerSettingsFields();
 
-type StepMeta = {
+export type Step = {
     id: string;
     title: string;
     is_completed: boolean;
@@ -25,7 +25,7 @@ const SetupGuide = () => {
     const [ loading, setLoading ] = useState< boolean >( true );
 
     useEffect( () => {
-        const metas: StepMeta[] = getSettings( 'setup' )?.steps ?? [];
+        const metas: Step[] = getSettings( 'setup' )?.steps ?? [];
         let cancelled = false;
 
         ( async () => {
