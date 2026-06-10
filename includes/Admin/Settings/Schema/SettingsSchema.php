@@ -1613,7 +1613,7 @@ class SettingsSchema {
                 'type'        => 'subpage',
                 'page_id'     => 'appearance',
                 'title'       => esc_html__( 'Vendor Dashboard', 'dokan-lite' ),
-                'description' => esc_html__( 'Choose the interface style vendors see for their dashboard and product editor.', 'dokan-lite' ),
+                'description' => esc_html__( 'Manage vendor dashboard settings and appearance for your marketplace.', 'dokan-lite' ),
                 'priority'    => 150,
             ],
             [
