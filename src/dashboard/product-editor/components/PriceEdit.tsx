@@ -1,7 +1,7 @@
 import { DokanPriceInput } from '@src/components';
-import { formatNumber, formatPrice } from '@src/utilities';
+import { formatNumber, formatPrice, unformatNumber } from '@src/utilities';
 import apiFetch from '@wordpress/api-fetch';
-import { useState } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { addQueryArgs } from '@wordpress/url';
 import CustomField, { getValidationError } from './CustomField';
@@ -13,9 +13,21 @@ const PriceEdit = ( { data, field, onChange, validity }: any ) => {
     );
 
     // Keep the locale-formatted string for display; the store stays canonical.
-    const [ displayValue, setDisplayValue ] = useState( () =>
+    const [ displayValue, setDisplayValue ] = useState< string | number >( () =>
         formatNumber( data[ field.id ] ?? '' )
     );
+
+    // Re-sync the display when the stored value changes outside this input
+    // (e.g. switching products or external store updates). Comparing the
+    // canonical values keeps the value the user is actively typing intact.
+    useEffect( () => {
+        const stored = data[ field.id ] ?? '';
+        setDisplayValue( ( current ) =>
+            Number( unformatNumber( current ) ) === Number( stored )
+                ? current
+                : formatNumber( stored )
+        );
+    }, [ data, field.id ] );
 
     const vendorEarningHandler = async ( price: number ) => {
         if ( field.id === 'regular_price' ) {
