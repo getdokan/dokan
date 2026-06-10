@@ -367,12 +367,69 @@ jobs:
                   # Wait for the daemon socket instead of a fixed sleep.
                   for i in $(seq 1 15); do docker info >/dev/null 2>&1 && break; sleep 1; done
 
+            # wp-env pulls four Docker Hub library images on every run: mariadb:lts and
+            # phpmyadmin via compose, plus the wordpress / wordpress:cli build bases.
+            # Anonymous Docker Hub pulls from shared runner IPs randomly time out even
+            # with the gcr mirror configured (the daemon silently falls back to
+            # registry-1.docker.io when the mirror misses), so pre-seed the images:
+            # restore them from the actions cache, else pull from AWS's public mirror
+            # of Docker official images and retag. Once the images exist locally,
+            # compose/build skip the Docker Hub pull entirely. The ISO week in the
+            # cache key stops the floating tags (lts, latest) from pinning forever.
+            - name: Compute wp-env image list and cache key
+              id: wp-env-images
+              working-directory: tests/pw
+              run: |
+                  PHP=$(jq -r '.env.tests.phpVersion // empty' .wp-env.override.json)
+                  if [ -z "$PHP" ]; then PHP=$(jq -r '.env.tests.phpVersion // empty' .wp-env.json); fi
+                  IMAGES="mariadb:lts phpmyadmin:latest wordpress${PHP:+:php$PHP} wordpress:cli${PHP:+-php$PHP}"
+                  echo "list=$IMAGES" >> "$GITHUB_OUTPUT"
+                  echo "key=wp-env-images-v1-php${PHP:-default}-$(date +%G-%V)" >> "$GITHUB_OUTPUT"
+                  echo "images: $IMAGES"
+
+            - name: Restore wp-env docker images from cache
+              uses: actions/cache@v4
+              with:
+                  path: ~/.cache/wp-env-images
+                  key: ${{ steps.wp-env-images.outputs.key }}
+
+            - name: Pre-seed wp-env docker images
+              run: |
+                  IMAGES="${{ steps.wp-env-images.outputs.list }}"
+                  TAR="$HOME/.cache/wp-env-images/images.tar"
+                  if [ -f "$TAR" ]; then
+                      docker load -i "$TAR"
+                  else
+                      mkdir -p "$(dirname "$TAR")"
+                      complete=true
+                      for img in $IMAGES; do
+                          pulled=false
+                          for attempt in 1 2 3; do
+                              if docker pull "public.ecr.aws/docker/library/$img"; then pulled=true; break; fi
+                              sleep 15
+                          done
+                          if [ "$pulled" = true ]; then
+                              docker tag "public.ecr.aws/docker/library/$img" "$img"
+                              docker rmi "public.ecr.aws/docker/library/$img" >/dev/null
+                          else
+                              echo "::warning::could not pre-seed $img from the ECR mirror; wp-env will pull it from Docker Hub"
+                              complete=false
+                          fi
+                      done
+                      # Only cache a complete set so a partial failure is retried next run.
+                      if [ "$complete" = true ]; then docker save -o "$TAR" $IMAGES; fi
+                  fi
+                  docker image ls
+
             - name: Start WordPress Env
               id: wp-env
               uses: nick-fields/retry@v3
               with:
                   timeout_minutes: 6
                   max_attempts: 3
+                  # Space the attempts out: Docker Hub's anonymous throttle window
+                  # outlives back-to-back retries, so waiting beats hammering.
+                  retry_wait_seconds: 90
                   retry_on: error
                   command: |
                       cd tests/pw
@@ -623,12 +680,69 @@ jobs:
                   # Wait for the daemon socket instead of a fixed sleep.
                   for i in $(seq 1 15); do docker info >/dev/null 2>&1 && break; sleep 1; done
 
+            # wp-env pulls four Docker Hub library images on every run: mariadb:lts and
+            # phpmyadmin via compose, plus the wordpress / wordpress:cli build bases.
+            # Anonymous Docker Hub pulls from shared runner IPs randomly time out even
+            # with the gcr mirror configured (the daemon silently falls back to
+            # registry-1.docker.io when the mirror misses), so pre-seed the images:
+            # restore them from the actions cache, else pull from AWS's public mirror
+            # of Docker official images and retag. Once the images exist locally,
+            # compose/build skip the Docker Hub pull entirely. The ISO week in the
+            # cache key stops the floating tags (lts, latest) from pinning forever.
+            - name: Compute wp-env image list and cache key
+              id: wp-env-images
+              working-directory: tests/pw
+              run: |
+                  PHP=$(jq -r '.env.tests.phpVersion // empty' .wp-env.override.json)
+                  if [ -z "$PHP" ]; then PHP=$(jq -r '.env.tests.phpVersion // empty' .wp-env.json); fi
+                  IMAGES="mariadb:lts phpmyadmin:latest wordpress${PHP:+:php$PHP} wordpress:cli${PHP:+-php$PHP}"
+                  echo "list=$IMAGES" >> "$GITHUB_OUTPUT"
+                  echo "key=wp-env-images-v1-php${PHP:-default}-$(date +%G-%V)" >> "$GITHUB_OUTPUT"
+                  echo "images: $IMAGES"
+
+            - name: Restore wp-env docker images from cache
+              uses: actions/cache@v4
+              with:
+                  path: ~/.cache/wp-env-images
+                  key: ${{ steps.wp-env-images.outputs.key }}
+
+            - name: Pre-seed wp-env docker images
+              run: |
+                  IMAGES="${{ steps.wp-env-images.outputs.list }}"
+                  TAR="$HOME/.cache/wp-env-images/images.tar"
+                  if [ -f "$TAR" ]; then
+                      docker load -i "$TAR"
+                  else
+                      mkdir -p "$(dirname "$TAR")"
+                      complete=true
+                      for img in $IMAGES; do
+                          pulled=false
+                          for attempt in 1 2 3; do
+                              if docker pull "public.ecr.aws/docker/library/$img"; then pulled=true; break; fi
+                              sleep 15
+                          done
+                          if [ "$pulled" = true ]; then
+                              docker tag "public.ecr.aws/docker/library/$img" "$img"
+                              docker rmi "public.ecr.aws/docker/library/$img" >/dev/null
+                          else
+                              echo "::warning::could not pre-seed $img from the ECR mirror; wp-env will pull it from Docker Hub"
+                              complete=false
+                          fi
+                      done
+                      # Only cache a complete set so a partial failure is retried next run.
+                      if [ "$complete" = true ]; then docker save -o "$TAR" $IMAGES; fi
+                  fi
+                  docker image ls
+
             - name: Start WordPress Env
               id: wp-env
               uses: nick-fields/retry@v3
               with:
                   timeout_minutes: 6
                   max_attempts: 3
+                  # Space the attempts out: Docker Hub's anonymous throttle window
+                  # outlives back-to-back retries, so waiting beats hammering.
+                  retry_wait_seconds: 90
                   retry_on: error
                   command: |
                       cd tests/pw
@@ -699,6 +813,12 @@ jobs:
               run: |
                   npm run wp-env run tests-cli wp db export wp-data/db.sql
 
+            # playwright-report/e2e is excluded: the docker:setup step runs the
+            # site/auth/env setup projects through playwright.config.ts, which
+            # writes setup-run blob/summary/spec-duration files under
+            # playwright-report/e2e/. Shipping those in this artifact made the
+            # merge-reports job count the api job's setup run as an extra e2e
+            # shard (inflating e2e totals) and fed its blob into the html report.
             - name: Archive test artifacts (screenshots, HTML snapshots, Reports)
               if: always() && steps.debug-log.outcome == 'success'
               uses: actions/upload-artifact@v4
@@ -708,6 +828,7 @@ jobs:
                       tests/pw/wp-data
                       tests/pw/playwright
                       tests/pw/playwright-report
+                      !tests/pw/playwright-report/e2e/**
                   if-no-files-found: ignore
                   retention-days: 1
 
