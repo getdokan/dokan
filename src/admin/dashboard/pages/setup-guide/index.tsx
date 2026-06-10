@@ -1,93 +1,107 @@
 import { useEffect, useState } from '@wordpress/element';
-import getSettings from '../../settings/getSettings';
-import StepSettings, { SettingsElement } from './StepSettings';
-import StepComponent from './components/StepComponent';
-import CompletedStep from './components/CompletedStep';
 import apiFetch from '@wordpress/api-fetch';
+import { applyFilters } from '@wordpress/hooks';
+import {
+    Onboarding,
+    type OnboardingStep,
+    type SettingsElement,
+} from '@wedevs/plugin-ui';
+import getSettings from '../../settings/getSettings';
+import { registerSettingsFields } from './register-fields';
 
-export type Step = {
-    title: string;
+// Register Dokan custom field variants so the wizard renders them exactly like
+// the settings page (idempotent — safe to call from both entry points).
+registerSettingsFields();
+
+type StepMeta = {
     id: string;
+    title: string;
     is_completed: boolean;
     skippable: boolean;
-    previous_step: string;
-    next_step: string;
 };
 
 const SetupGuide = () => {
-    const [ steps, setSteps ] = useState< Step[] >( [] );
-    const [ isAllStepsCompleted, setIsAllStepsCompleted ] =
-        useState< boolean >( false );
+    const [ steps, setSteps ] = useState< OnboardingStep[] >( [] );
+    const [ loading, setLoading ] = useState< boolean >( true );
 
-    const defaultStep = {
-        id: '',
-        is_completed: false,
-        next_step: '',
-        skippable: false,
-        previous_step: '',
-        title: '',
+    useEffect( () => {
+        const metas: StepMeta[] = getSettings( 'setup' )?.steps ?? [];
+        let cancelled = false;
+
+        ( async () => {
+            const built = await Promise.all(
+                metas.map( async ( meta ): Promise< OnboardingStep > => {
+                    const schema = await apiFetch< SettingsElement[] >( {
+                        path: `/dokan/v1/admin/setup-guide/${ meta.id }`,
+                    } );
+
+                    return {
+                        id: meta.id,
+                        label: meta.title,
+                        schema,
+                        skippable: meta.skippable,
+                        completed: meta.is_completed,
+                    };
+                } )
+            );
+
+            if ( ! cancelled ) {
+                setSteps( built );
+                setLoading( false );
+            }
+        } )();
+
+        return () => {
+            cancelled = true;
+        };
+    }, [] );
+
+    const handleStepSave = async (
+        stepId: string,
+        _treeValues: Record< string, unknown >,
+        flatValues: Record< string, unknown >
+    ): Promise< void > => {
+        await apiFetch( {
+            path: `/dokan/v1/admin/setup-guide/${ stepId }`,
+            method: 'POST',
+            data: { values: flatValues },
+        } );
+
+        setSteps( ( prev ) =>
+            prev.map( ( step ) =>
+                step.id === stepId ? { ...step, completed: true } : step
+            )
+        );
     };
-    const [ currentStep, setCurrentStep ] = useState< Step >( {
-        ...defaultStep,
-    } );
-    useEffect( () => {
-        const allSteps: Step[] = getSettings( 'setup' ).steps;
 
-        setSteps( allSteps );
-    }, [] );
+    const handleComplete = async (): Promise< void > => {
+        try {
+            await apiFetch( {
+                path: '/dokan/v1/admin/setup-guide/',
+                method: 'POST',
+                data: { setup_completed: true },
+            } );
+        } catch ( error ) {
+            // eslint-disable-next-line no-console
+            console.error( 'Failed to mark setup complete:', error );
+        }
 
-    useEffect( () => {
-        const allSteps: Step[] = getSettings( 'setup' ).steps;
-        setSteps( allSteps );
-    }, [] );
-
-    useEffect( () => {
-        const isCompleted = steps.every( ( step ) => step.is_completed );
-        // You can use this variable or set it to a state if needed
-        setIsAllStepsCompleted( isCompleted );
-    }, [ steps ] );
-
-    const handleStepsChange = ( newSteps ) => {
-        setSteps( newSteps );
-
-        const isCompleted = newSteps.every( ( step ) => step.is_completed );
-        setIsAllStepsCompleted( isCompleted );
-
-        if ( isCompleted ) {
-            try {
-                apiFetch< SettingsElement[] >( {
-                    path: '/dokan/v1/admin/setup-guide/',
-                    method: 'POST',
-                    data: { setup_completed: true },
-                } );
-
-                setCurrentStep( { ...defaultStep } );
-            } catch ( err ) {}
+        const dashboardUrl = getSettings( 'header_info' )?.dashboard_url;
+        if ( dashboardUrl ) {
+            window.location.href = dashboardUrl;
         }
     };
 
     return (
-        <div className="grid grid-cols-12 lg:gap-6 gap-4 @container/main">
-            <StepComponent currentStep={ currentStep } steps={ steps } />
-            <div className="@3xl/main:col-span-9 @xl/main:col-span-8 col-span-12 bg-white shadow rounded-lg @container/step-body">
-                { isAllStepsCompleted ? (
-                    <CompletedStep
-                        dashBoardUrl={
-                            dokanAdminDashboardSettings?.header_info
-                                ?.dashboard_url
-                        }
-                        steps={ steps }
-                    />
-                ) : (
-                    <StepSettings
-                        steps={ steps }
-                        currentStep={ currentStep }
-                        updateStep={ handleStepsChange }
-                        setCurrentStep={ setCurrentStep }
-                    />
-                ) }
-            </div>
-        </div>
+        <Onboarding
+            steps={ steps }
+            orientation="vertical"
+            hookPrefix="dokan"
+            applyFilters={ applyFilters }
+            loading={ loading }
+            onStepSave={ handleStepSave }
+            onComplete={ handleComplete }
+        />
     );
 };
 
