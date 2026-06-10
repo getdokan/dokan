@@ -12,12 +12,6 @@ const PriceEdit = ( { data, field, onChange, validity }: any ) => {
         Number( data.vendor_earning )
     );
 
-    // Regular and sale prices can never be negative; restrict input to
-    // positive values for these fields only, leaving other price fields
-    // (and other DokanPriceInput consumers) free to allow negatives.
-    const isPositiveOnly =
-        field.id === 'regular_price' || field.id === 'sale_price';
-
     // Keep the locale-formatted string for display; the store stays canonical.
     const [ displayValue, setDisplayValue ] = useState< string | number >( () =>
         formatNumber( data[ field.id ] ?? '' )
@@ -86,9 +80,6 @@ const PriceEdit = ( { data, field, onChange, validity }: any ) => {
                 value={ displayValue }
                 namespace={ `dokan-field-${ field.id }` }
                 className="product-editor-price-input"
-                { ...( isPositiveOnly && {
-                    maskRule: { numeralPositiveOnly: true },
-                } ) }
                 input={ {
                     id: field.id,
                     placeholder: field.placeholder || '',
