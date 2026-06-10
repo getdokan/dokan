@@ -28,7 +28,6 @@ export const DokanPriceInput = ( props: DokanPriceInputProps ) => {
         className: 'focus:border-none',
         maskRule: {
             numeral: true,
-            numeralPositiveOnly: true,
             numeralDecimalMark: window?.dokanFrontend?.currency?.decimal ?? '.',
             delimiter: window?.dokanFrontend?.currency?.thousand ?? ',',
             numeralDecimalScale:
