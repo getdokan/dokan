@@ -16,6 +16,9 @@ interface TestReport {
     suite_duration: number;
     suite_duration_formatted?: string;
     all_suite_durations: number[];
+    merged_reports?: number;
+    expected_reports?: number | null;
+    missing_reports?: number;
     tests: string[];
     passed_tests: string[];
     failed_tests: string[];
@@ -128,8 +131,40 @@ if (reportPaths.length === 0) {
     process.exit(1);
 }
 
+// Detect shards that never reported. Every shard writes
+// playwright/shard-features.json (with shardTotal) BEFORE its tests start,
+// and results.json only AFTER they finish — so when a shard job dies early
+// (e.g. wp-env never starts), the surviving manifests still tell us how many
+// reports to expect. Without this check a dead shard silently shrinks the
+// merged totals while the report stays green.
+const findExpectedShards = (dir: string): number => {
+    let expected = 0;
+    const files = fs.readdirSync(dir);
+    files.forEach(file => {
+        const fullPath = path.join(dir, file);
+        if (fs.statSync(fullPath).isDirectory()) {
+            expected = Math.max(expected, findExpectedShards(fullPath));
+        } else if (file === 'shard-features.json' && fullPath.includes(`test-artifact-${REPORT_TYPE}`)) {
+            try {
+                const manifest = JSON.parse(fs.readFileSync(fullPath, 'utf8'));
+                expected = Math.max(expected, Number(manifest.shardTotal) || 0);
+            } catch (e) {
+                console.warn(`Could not parse ${fullPath}: ${e.message}`);
+            }
+        }
+    });
+    return expected;
+};
+const expectedReports = findExpectedShards(reportsFolder) || Number(process.env.EXPECTED_SHARDS) || 0;
+
 // Merge reports
 const mergedReport = mergeReports(reportPaths);
+mergedReport.merged_reports = reportPaths.length;
+mergedReport.expected_reports = expectedReports > 0 ? expectedReports : null;
+mergedReport.missing_reports = expectedReports > 0 ? Math.max(0, expectedReports - reportPaths.length) : 0;
+if (mergedReport.missing_reports > 0) {
+    console.warn(`WARNING: only ${reportPaths.length} of ${expectedReports} ${REPORT_TYPE} shard reports found — merged totals under-count the suite.`);
+}
 
 // Save the merged report
 const outputPath = './all-reports/merged-summary.json';

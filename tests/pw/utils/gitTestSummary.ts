@@ -47,6 +47,7 @@ const fmtPct = value => (value === null || value === undefined ? '—' : `${num(
 const verdictBadge = result => {
     if (!result) return '⚪️ No data';
     if (result.failed > 0) return '🔴 Failed';
+    if (num(result.missing_reports) > 0) return '🟠 Incomplete';
     return '🟢 Passed';
 };
 
@@ -115,16 +116,36 @@ const buildOverallBanner = (core, results) => {
             acc.passed += num(r.passed);
             acc.failed += num(r.failed);
             acc.skipped += num(r.skipped);
+            acc.missing += num(r.missing_reports);
             return acc;
         },
-        { total: 0, passed: 0, failed: 0, skipped: 0 },
+        { total: 0, passed: 0, failed: 0, skipped: 0, missing: 0 },
     );
 
-    const status = totals.failed > 0 ? '🔴 **Failed**' : '🟢 **Passed**';
+    const status = totals.failed > 0 ? '🔴 **Failed**' : totals.missing > 0 ? '🟠 **Incomplete**' : '🟢 **Passed**';
     const ran = totals.passed + totals.failed;
     const rate = ran === 0 ? '—' : `${((totals.passed / ran) * 100).toFixed(1)}%`;
 
-    core.summary.addRaw(`> ${status} &nbsp;·&nbsp; **${totals.passed.toLocaleString()} / ${totals.total.toLocaleString()}** tests passed &nbsp;·&nbsp; pass rate **${rate}**`).addEOL().addEOL();
+    // Spell the arithmetic out (total = passed + failed + skipped; pass rate is
+    // over the tests that ran) so the numbers reconcile at a glance.
+    core.summary
+        .addRaw(
+            `> ${status} &nbsp;·&nbsp; **${totals.passed.toLocaleString()} / ${totals.total.toLocaleString()}** tests passed (${totals.failed.toLocaleString()} failed, ${totals.skipped.toLocaleString()} skipped) &nbsp;·&nbsp; pass rate **${rate}** of the ${ran.toLocaleString()} tests run`,
+        )
+        .addEOL()
+        .addEOL();
+
+    // A shard that dies before uploading its results would otherwise just
+    // shrink the totals silently — call it out instead of reporting green.
+    results.forEach(r => {
+        if (!r || num(r.missing_reports) === 0) return;
+        core.summary
+            .addRaw(
+                `> ⚠️ **${r.suite_name || 'Suite'} results are incomplete:** only ${num(r.merged_reports)} of ${num(r.expected_reports)} shard reports were uploaded — a shard job died before finishing (e.g. environment start failure), so the totals above under-count the suite. Check the failed jobs on this run.`,
+            )
+            .addEOL()
+            .addEOL();
+    });
 };
 
 const buildSuiteTable = (core, rows) => {
