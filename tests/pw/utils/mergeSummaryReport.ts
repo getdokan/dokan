@@ -104,8 +104,16 @@ const findReports = (dir: string): void => {
         if (isDirectory) {
             findReports(fullPath); // Recurse into all directories
         } else if (file === 'results.json') {
-            // Push the file path if it matches REPORT_TYPE
-            if (fullPath.includes(`${path.sep}${REPORT_TYPE}${path.sep}`)) {
+            // Only consume summaries from this suite's own shard artifacts
+            // (all-reports/test-artifact-<REPORT_TYPE>*). Matching any path that
+            // contains the report type is not enough: every job (including the
+            // api job) runs the site/auth/env setup projects via
+            // playwright.config.ts, whose summary reporter writes to
+            // playwright-report/e2e/summary-report/results.json. The e2e shard
+            // run overwrites that file, but the api job never does — so its
+            // setup-run summary ships inside test-artifact-api and used to be
+            // merged as a 13th e2e shard, inflating the merged totals.
+            if (fullPath.includes(`test-artifact-${REPORT_TYPE}`) && fullPath.includes(`${path.sep}${REPORT_TYPE}${path.sep}`)) {
                 console.log(`Matched file: ${fullPath}`);
                 reportPaths.push(fullPath);
             }

@@ -699,6 +699,12 @@ jobs:
               run: |
                   npm run wp-env run tests-cli wp db export wp-data/db.sql
 
+            # playwright-report/e2e is excluded: the docker:setup step runs the
+            # site/auth/env setup projects through playwright.config.ts, which
+            # writes setup-run blob/summary/spec-duration files under
+            # playwright-report/e2e/. Shipping those in this artifact made the
+            # merge-reports job count the api job's setup run as an extra e2e
+            # shard (inflating e2e totals) and fed its blob into the html report.
             - name: Archive test artifacts (screenshots, HTML snapshots, Reports)
               if: always() && steps.debug-log.outcome == 'success'
               uses: actions/upload-artifact@v4
@@ -708,6 +714,7 @@ jobs:
                       tests/pw/wp-data
                       tests/pw/playwright
                       tests/pw/playwright-report
+                      !tests/pw/playwright-report/e2e/**
                   if-no-files-found: ignore
                   retention-days: 1
 
