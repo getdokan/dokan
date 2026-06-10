@@ -1,5 +1,5 @@
 import { DokanPriceInput } from '@src/components';
-import { formatPrice } from '@src/utilities';
+import { formatNumber, formatPrice } from '@src/utilities';
 import apiFetch from '@wordpress/api-fetch';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
@@ -10,6 +10,11 @@ import { decodeEntities } from '@wordpress/html-entities';
 const PriceEdit = ( { data, field, onChange, validity }: any ) => {
     const [ vendorEarning, setVendorEarning ] = useState(
         Number( data.vendor_earning )
+    );
+
+    // Keep the locale-formatted string for display; the store stays canonical.
+    const [ displayValue, setDisplayValue ] = useState( () =>
+        formatNumber( data[ field.id ] ?? '' )
     );
 
     const vendorEarningHandler = async ( price: number ) => {
@@ -60,14 +65,15 @@ const PriceEdit = ( { data, field, onChange, validity }: any ) => {
         >
             <DokanPriceInput
                 label=""
-                value={ data[ field.id ] }
+                value={ displayValue }
                 namespace={ `dokan-field-${ field.id }` }
                 className="product-editor-price-input"
                 input={ {
                     id: field.id,
                     placeholder: field.placeholder || '',
                 } }
-                onChange={ ( _, rawValue ) => {
+                onChange={ ( formattedValue, rawValue ) => {
+                    setDisplayValue( formattedValue );
                     const value = Number( rawValue );
                     onChange( { [ field.id ]: value } );
                     void vendorEarningHandler( value );
