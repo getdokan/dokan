@@ -72,6 +72,8 @@ export interface CategoryRowProps {
     hasChildren: boolean;
     onToggle: ( id: string | number ) => void;
     commissionInputsProps: CommissionInputsProps;
+    /** Extra classes for the row container (e.g. the settings table's `last:border-b-0`). */
+    className?: string;
 }
 
 export interface CategoryBasedCommissionProps {
@@ -95,6 +97,14 @@ export interface CategoryBasedCommissionProps {
     display?: boolean;
     debounceDelay?: number;
     validationError?: string;
+
+    // Context-specific presentation: consumers push classes; the vendor editor passes none.
+    /** Extra classes for the column header (e.g. the settings table's top border). */
+    headerClassName?: string;
+    /** Extra classes for each category row (e.g. the settings table's `last:border-b-0`). */
+    rowClassName?: string;
+    /** Open the category list on load when a category already has a custom amount. */
+    autoExpandCustomized?: boolean;
 }
 
 export interface FixedCommissionInputValues {
