@@ -1780,7 +1780,7 @@ class SettingsSchema {
                     'first'  => 'dokan_appearance.store_banner_width',
                     'second' => 'dokan_appearance.store_banner_height',
                 ],
-                'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\DoubleInputTransformer::for_slots( 625, 300 ),
+                'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\DoubleInputTransformer::class,
             ],
 
             // Store Template
