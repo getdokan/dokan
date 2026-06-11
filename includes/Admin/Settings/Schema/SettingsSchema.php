@@ -997,8 +997,9 @@ class SettingsSchema {
                 'page_id'     => 'transaction',
                 'title'       => esc_html__( 'Reverse Withdrawal', 'dokan-lite' ),
                 'description' => esc_html__( 'Set up commission collection from vendors on Cash on Delivery orders. Control when and how to charge money from vendor accounts when they owe you.', 'dokan-lite' ),
-                'priority'    => 400,
-                'doc_link'    => 'https://wedevs.com/docs/dokan/withdraw/dokan-reverse-withdrawal/',
+                'priority'      => 400,
+                'doc_link'      => 'https://wedevs.com/docs/dokan/withdraw/dokan-reverse-withdrawal/',
+                'doc_link_text' => esc_html__( 'Doc', 'dokan-lite' ),
             ],
             [
                 'id'         => 'reverse_withdrawal_section',
@@ -1235,52 +1236,6 @@ class SettingsSchema {
 					'value' => 'off',
 				],
             ],
-            self::reverse_withdrawal_payment_gateways_field(),
-        ];
-    }
-
-    /**
-     * Build the `reverse_withdrawal_payment_gateways` multicheck field.
-     *
-     * Options are derived from the `dokan_reverse_withdrawal_payment_gateways`
-     * filter (the same source the legacy {@see SettingsHelper::get_reverse_withrawal_payment_gateways()}
-     * uses) so Pro modules / extensions that already extend that filter continue
-     * to register gateways with one declaration. The new field stores a flat
-     * list of selected gateway ids; each slot bridges through
-     * {@see MulticheckArrayTransformer} to the legacy WP-multicheck shape under
-     * `dokan_reverse_withdrawal.payment_gateways`.
-     *
-     * @return array
-     */
-    private static function reverse_withdrawal_payment_gateways_field(): array {
-        $gateways = apply_filters(
-            'dokan_reverse_withdrawal_payment_gateways',
-            [ 'cod' => esc_html__( 'Cash on delivery', 'dokan-lite' ) ]
-        );
-
-        $options    = [];
-        $legacy_key = [];
-        foreach ( $gateways as $value => $label ) {
-            $options[]            = [
-                'value' => (string) $value,
-                'label' => (string) $label,
-            ];
-            $legacy_key[ $value ] = 'dokan_reverse_withdrawal.payment_gateways.' . $value;
-        }
-        $slot_keys = array_keys( $legacy_key );
-
-        return [
-            'id'                 => 'reverse_withdrawal_payment_gateways',
-            'type'               => 'field',
-            'variant'            => 'multicheck',
-            'section_id'         => 'reverse_withdrawal_section',
-            'title'              => esc_html__( 'Enable Reverse Withdrawal for this Gateway', 'dokan-lite' ),
-            'description'        => esc_html__( 'Check the payment gateways you want to enable reverse withdrawal for. For now, only cash on delivery is available.', 'dokan-lite' ),
-            'options'            => $options,
-            'default'            => [ 'cod' ],
-            'legacy_key'         => $legacy_key,
-            'legacy_transformer' => \WeDevs\Dokan\Admin\Settings\Migration\Transformer\MulticheckArrayTransformer::for_slots( $slot_keys ),
-            'priority'           => 70,
         ];
     }
 
