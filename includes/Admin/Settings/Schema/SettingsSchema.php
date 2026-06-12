@@ -1607,19 +1607,19 @@ class SettingsSchema {
                 'priority'    => 100,
             ],
 
-            // === SubPage: Vendor Dashboard ===
+            // === SubPage: Vendor Panel ===
             [
-                'id'          => 'vendor_dashboard',
+                'id'          => 'vendor_panel',
                 'type'        => 'subpage',
                 'page_id'     => 'appearance',
-                'title'       => esc_html__( 'Vendor Dashboard', 'dokan-lite' ),
-                'description' => esc_html__( 'Manage vendor dashboard settings and appearance for your marketplace.', 'dokan-lite' ),
-                'priority'    => 150,
+                'title'       => esc_html__( 'Vendor Panel', 'dokan-lite' ),
+                'description' => esc_html__( 'Manage Vendor Panel appearance settings and modifications', 'dokan-lite' ),
+                'priority'    => 50,
             ],
             [
                 'id'          => 'vendor_dashboard_section',
                 'type'        => 'section',
-                'subpage_id'  => 'vendor_dashboard',
+                'subpage_id'  => 'vendor_panel',
                 'title'       => esc_html__( 'Vendor Dashboard Appearance', 'dokan-lite' ),
                 'description' => esc_html__( 'Configure the appearance and style of the vendor dashboard.', 'dokan-lite' ),
             ],
