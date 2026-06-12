@@ -166,6 +166,10 @@ export function useProductEditor(
             }
             try {
                 await saveProduct( productId );
+
+                // Lets features persist their own data once the product has been saved.
+                doAction( 'dokan_product_editor_after_save', productId );
+
                 toast( {
                     type: 'success',
                     title: __( 'Product saved successfully.', 'dokan-lite' ),

@@ -208,10 +208,10 @@ const productVariationSchema = z.object({
     price: z.string(),
     regular_price: z.string(),
     sale_price: z.string(),
-    date_on_sale_from: z.null(),
-    date_on_sale_from_gmt: z.null(),
-    date_on_sale_to: z.null(),
-    date_on_sale_to_gmt: z.null(),
+    date_on_sale_from: z.string().nullable(),
+    date_on_sale_from_gmt: z.string().nullable(),
+    date_on_sale_to: z.string().nullable(),
+    date_on_sale_to_gmt: z.string().nullable(),
     on_sale: z.boolean(),
     visible: z.boolean(),
     purchasable: z.boolean(),
@@ -223,7 +223,7 @@ const productVariationSchema = z.object({
     tax_status: z.string(),
     tax_class: z.string(),
     manage_stock: z.boolean(),
-    stock_quantity: z.null(),
+    stock_quantity: z.number().nullable(),
     in_stock: z.boolean(),
     backorders: z.string(),
     backorders_allowed: z.boolean(),
@@ -653,7 +653,14 @@ const ordersSummarySchema = z.object({
 const orderDownloadSchema = z.object({
     permission_id: z.string().or(z.number()),
     download_id: z.string().or(z.number()),
-    product_id: z.string().or(z.number()),
+    product_id: z.string().or(z.number()).optional(),
+    product: z
+        .object({
+            id: z.string().or(z.number()),
+            name: z.string().optional(),
+            thumbnail: z.any().optional(),
+        })
+        .optional(),
     order_id: z.string().or(z.number()),
     order_key: z.string(),
     user_email: z.string().email(),
@@ -892,7 +899,7 @@ const settingV2Schema = z.object({
     label: z.string(),
     description: z.string(),
     parent_id: z.string().or(z.number()).optional(),
-    sub_groups: z.array(z.any()), // Adjust the type of sub_groups if you know the specific structure
+    sub_groups: z.array(z.any()).optional(), // Adjust the type of sub_groups if you know the specific structure
     _links: z.object({
         options: z.object({ href: z.string().url() }),
         collection: z.object({ href: z.string().url() }),
@@ -1164,7 +1171,7 @@ const storeReviewSchemaStoreEndpoint = z.object({
     author: z.object({
         id: z.string().or(z.number()),
         name: z.string(),
-        email: z.string().email(),
+        email: z.string().email().optional(),
         url: z.string().optional(),
         avatar: z.string().url(),
     }),
@@ -2750,7 +2757,20 @@ export const schemas = {
     },
 
     // rank math schema
+    // store-current-editable-post returns a plain boolean (true on success).
     rankMathSchema: z.boolean(),
+
+    // editor-data returns Rank Math's localized metabox payload — a large object.
+    // Assert the stable keys the editor relies on rather than the full shape
+    // (Rank Math adds/removes keys across versions). `schemas` is appended by Dokan.
+    rankMathEditorDataSchema: z
+        .object({
+            objectID: z.union([z.string(), z.number()]),
+            objectType: z.string(),
+            assessor: z.any(),
+            schemas: z.any(),
+        })
+        .passthrough(),
 
     // seller badge schema
     sellerBadgeSchema: {

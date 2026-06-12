@@ -7,11 +7,28 @@ on:
     # workflow will trigger on pull request
     pull_request:
         branches: [develop]
+        paths-ignore:
+            - '**.md'
+            - '**.txt'
+            - 'docs/**'
+            - '.github/ISSUE_TEMPLATE/**'
+            - '**/*.po'
+            - '**/*.pot'
+            - '**/*.svg'
+            - 'assets/images/**'
     # workflow will trigger on push to develop branch
     push:
         branches: [develop]
-
-    # workflow can be manually triggered
+        paths-ignore:
+            - '**.md'
+            - '**.txt'
+            - 'docs/**'
+            - '.github/ISSUE_TEMPLATE/**'
+            - '**/*.po'
+            - '**/*.pot'
+            - '**/*.svg'
+            - 'assets/images/**'
+   # workflow can be manually triggered
     workflow_dispatch:
         inputs:
             testsuite:
@@ -47,9 +64,13 @@ env:
     USER_PASSWORD: 01dokan01
     GMAP: ${{secrets.GMAP}}
     MAPBOX: ${{secrets.MAPBOX}}
+    LICENSE_KEY: ${{secrets.LICENSE_KEY}}
     BASE_URL: http://localhost:9999
     CI: true
     HEADLESS: true
+    # TODO: Remove this after testing
+    DOKAN_PRO: true
+    NO_SETUP: false
     FORCE_COLOR: 1
     DB_HOST_NAME: localhost
     DB_USER_NAME: root
@@ -66,74 +87,384 @@ env:
     E2E_COVERAGE: ./tests/pw/playwright-report/e2e/coverage-report/coverage.json
 
 jobs:
-    e2e_tests:
-        name: e2e tests
+    # Build dokan-lite and dokan-pro once. Two parallel jobs (build_lite, build_pro)
+    # so the slower of the two (~6 min) gates downstream jobs instead of ~12 min serial.
+    # Each consumer job downloads the tar artifacts and skips its own build steps.
+    build_lite:
+        name: build dokan-lite
         runs-on: ubuntu-latest
-        timeout-minutes: 20
-        strategy:
-            fail-fast: false
-            matrix:
-                shardIndex: [1, 2, 3]
-                shardTotal: [3]
-
+        timeout-minutes: 15
         steps:
-            # Checkout testing repo
             - name: Checkout testing repo
-              id: clone-dokan-lite
               uses: actions/checkout@v4
 
-            # Use desired version of NodeJS
             - name: Use desired version of NodeJS
               uses: actions/setup-node@v4
               with:
                   node-version: 20
                   cache: npm
 
-            # Composer install and build (Dokan-lite)
             - name: Composer install and build (Dokan-lite)
               run: |
                   composer i || composer update
                   composer i --no-dev -o || composer update --no-dev -o
 
-            # Npm install and build (Dokan-lite)
-            - name: Npm install and build (Dokan-lite)
+            # node_modules cache: skips ~2-3 min of `npm ci` on cache hit.
+            # Keyed on the lockfile so any dependency change invalidates the
+            # cache automatically. Same key is restored in build_pro to skip
+            # the redundant lite install there too.
+            - name: Cache lite node_modules
+              id: lite-nm
+              uses: actions/cache@v4
+              with:
+                  path: node_modules
+                  key: lite-nm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+            - name: Npm install (Dokan-lite)
+              if: steps.lite-nm.outputs.cache-hit != 'true'
               run: |
-                  npm ci || npm i
+                  npm ci --prefer-offline --no-audit --no-fund || npm i
+
+            - name: Npm build (Dokan-lite)
+              run: |
                   npm run build
 
-            # Install test dependencies
+            # Tar the runtime tree (excludes node_modules, .git, dev-only output).
+            # tar preserves perms + symlinks unlike upload-artifact's zip path.
+            - name: Tar dokan-lite build output
+              run: |
+                  tar --exclude=./.git \
+                      --exclude=./node_modules \
+                      --exclude=./tests/pw/node_modules \
+                      --exclude=./tests/pw/playwright \
+                      --exclude=./tests/pw/playwright-report \
+                      --exclude=./tests/pw/wp-data \
+                      --exclude=./tests/pw/test-results \
+                      -czf /tmp/dokan-lite-build.tar.gz .
+
+            - name: Upload dokan-lite build artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: dokan-lite-build
+                  path: /tmp/dokan-lite-build.tar.gz
+                  retention-days: 1
+                  compression-level: 0
+
+    build_pro:
+        name: build dokan-pro
+        runs-on: ubuntu-latest
+        timeout-minutes: 15
+        # Only run when secrets are available (i.e. not a fork PR). Same gate as today.
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+        steps:
+            # Pro's webpack.config.js calls getDokanLitePath() which resolves
+            # ../dokan-lite from inside the pro folder, and also requires
+            # lite-root files like webpack-dependency-mapping.js that pull in
+            # lodash from lite's node_modules. So lite needs both source AND
+            # node_modules in this job — but NOT a full build (we never use
+            # lite's assets/). Replicate the layout: lite at runner root with
+            # a self-symlink, pro as sibling.
+            - name: Checkout dokan-lite source (for pro webpack path resolution)
+              uses: actions/checkout@v4
+
+            - name: Prepare dokan-lite folder
+              run: |
+                  ln -s . dokan-lite
+
+            - name: Checkout Dokan Pro
+              uses: actions/checkout@v4
+              with:
+                  repository: getdokan/dokan-pro
+                  ref: develop
+                  path: dokan-pro
+                  token: ${{ secrets.DOKAN_PRO_TOKEN }}
+
+            - name: Checkout Dokan Invoice
+              uses: actions/checkout@v4
+              with:
+                  repository: getdokan/dokan-invoice
+                  ref: develop
+                  path: dokan-invoice
+
+            - name: Use desired version of NodeJS
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
+                  cache-dependency-path: |
+                      package-lock.json
+                      dokan-pro/package-lock.json
+
+            # Share the same node_modules cache that build_lite produced.
+            # Same key, so a cache hit here means pro skips the ~3 min of
+            # redundant lite install entirely. On cache miss we still fall
+            # back to npm ci (e.g., after a lockfile change).
+            - name: Cache lite node_modules
+              id: lite-nm
+              uses: actions/cache@v4
+              with:
+                  path: node_modules
+                  key: lite-nm-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+            # Install lite's node_modules so dokan-pro/webpack.config.js can
+            # require lite-root JS helpers (webpack-dependency-mapping.js etc).
+            # Skip `npm run build` — we don't ship lite's assets from this job.
+            - name: Install dokan-lite npm deps (no build, skip on cache hit)
+              if: steps.lite-nm.outputs.cache-hit != 'true'
+              run: |
+                  npm ci --prefer-offline --no-audit --no-fund || npm i
+
+            # Cache pro's own node_modules separately (its lockfile is independent).
+            - name: Cache pro node_modules
+              id: pro-nm
+              uses: actions/cache@v4
+              with:
+                  path: dokan-pro/node_modules
+                  key: pro-nm-${{ runner.os }}-${{ hashFiles('dokan-pro/package-lock.json') }}
+
+            - name: Build Dokan Pro
+              working-directory: dokan-pro
+              run: |
+                  composer i --no-dev -o
+                  if [ "${{ steps.pro-nm.outputs.cache-hit }}" != "true" ]; then
+                      npm ci --prefer-offline --no-audit --no-fund || npm i
+                  fi
+                  npm run build
+
+            # Fetch only tests/plugins from test_utils branch (premium plugins not in default branch)
+            - name: Fetch WooCommerce premium plugins from test_utils
+              working-directory: dokan-pro
+              run: |
+                  git fetch origin test_utils
+                  git checkout origin/test_utils -- tests/plugins
+
+            # Extract any zipped premium plugins collected from test_utils
+            - name: Collect WooCommerce premium plugins
+              run: |
+                  PLUGINS_DIR="dokan-pro/tests/plugins"
+                  for zip in "$PLUGINS_DIR"/*.zip; do
+                      [ -f "$zip" ] || continue
+                      plugin_dir="${zip%.zip}"
+                      if [ ! -d "$plugin_dir" ]; then
+                          echo "Extracting: $zip"
+                          unzip -q "$zip" -d "$PLUGINS_DIR"
+                      fi
+                  done
+                  echo "Available premium plugins:"
+                  ls -la "$PLUGINS_DIR"
+
+            - name: Tar dokan-pro + dokan-invoice
+              run: |
+                  tar --exclude='dokan-pro/.git' \
+                      --exclude='dokan-pro/node_modules' \
+                      --exclude='dokan-invoice/.git' \
+                      -czf /tmp/dokan-pro-build.tar.gz dokan-pro dokan-invoice
+
+            - name: Upload dokan-pro build artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: dokan-pro-build
+                  path: /tmp/dokan-pro-build.tar.gz
+                  retention-days: 1
+                  compression-level: 0
+
+    e2e_tests:
+        name: e2e tests
+        runs-on: ubuntu-latest
+        timeout-minutes: 45
+        # Wait for both build jobs. build_pro is conditional (fork PRs) and may not run;
+        # `always() && build_lite succeeded` covers the fork-PR path too.
+        needs: [build_lite, build_pro]
+        if: always() && needs.build_lite.result == 'success' && (needs.build_pro.result == 'success' || needs.build_pro.result == 'skipped')
+        strategy:
+            fail-fast: false
+            matrix:
+                shardIndex: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                shardTotal: [12]
+
+        steps:
+            - name: Download dokan-lite build artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: dokan-lite-build
+                  path: /tmp/
+
+            - name: Extract dokan-lite build
+              id: clone-dokan-lite
+              run: |
+                  tar -xzf /tmp/dokan-lite-build.tar.gz
+                  rm /tmp/dokan-lite-build.tar.gz
+                  ln -s . dokan-lite
+
+            - name: Download dokan-pro build artifact
+              if: needs.build_pro.result == 'success'
+              uses: actions/download-artifact@v4
+              with:
+                  name: dokan-pro-build
+                  path: /tmp/
+
+            - name: Extract dokan-pro build
+              if: needs.build_pro.result == 'success'
+              run: |
+                  tar -xzf /tmp/dokan-pro-build.tar.gz
+                  rm /tmp/dokan-pro-build.tar.gz
+
+            - name: Use desired version of NodeJS
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: npm
+                  cache-dependency-path: tests/pw/package-lock.json
+
+            - name: Cache test deps (tests/pw/node_modules)
+              id: pw-nm
+              uses: actions/cache@v4
+              with:
+                  path: tests/pw/node_modules
+                  key: pw-nm-${{ runner.os }}-${{ hashFiles('tests/pw/package-lock.json') }}
+
             - name: Install test dependencies
+              if: steps.pw-nm.outputs.cache-hit != 'true'
               working-directory: tests/pw
               run: |
-                  npm ci || npm i
+                  npm ci --prefer-offline --no-audit --no-fund || npm i
 
-            # Create wp debuglog file
             - name: Create wp debuglog file
               id: debug-log
               working-directory: tests/pw
               run: |
                   mkdir -p wp-data && touch wp-data/debug.log
 
-            # Start wordpress environment
+            # Use CI config (../../dokan-pro) when dokan-pro present; lite-only when not (fork PR)
+            - name: Prepare wp-env config
+              working-directory: tests/pw
+              run: |
+                  if [ -d "../../dokan-pro" ]; then
+                    echo "Dokan Pro present, using .wp-env.ci.json"
+                    cp .wp-env.ci.json .wp-env.override.json
+                  else
+                    echo "Dokan Pro not present, using lite-only wp-env config"
+                    cp .wp-env.json .wp-env.override.json
+                  fi
+
+            # Route Docker Hub pulls through Google's public pull-through mirror. The wp-env images
+            # (mariadb, phpmyadmin, wordpress, composer — all official library/* images) then come
+            # from the mirror instead of registry-1.docker.io, dodging Docker Hub's anonymous
+            # pull-rate-limit / connection timeouts that randomly fail one shard's `wp-env start`.
+            # No credentials needed; Docker falls back to Docker Hub if the mirror misses an image.
+            - name: Route Docker Hub pulls through a mirror (avoids anonymous rate-limit/timeouts)
+              run: |
+                  # Merge into any existing daemon.json (jq is preinstalled on the runner) so we
+                  # never clobber the runner's own Docker config; create it only if absent.
+                  sudo mkdir -p /etc/docker
+                  if [ -s /etc/docker/daemon.json ]; then
+                      sudo jq '. + {"registry-mirrors": ["https://mirror.gcr.io"]}' /etc/docker/daemon.json | sudo tee /etc/docker/daemon.json.tmp >/dev/null
+                      sudo mv /etc/docker/daemon.json.tmp /etc/docker/daemon.json
+                  else
+                      echo '{ "registry-mirrors": ["https://mirror.gcr.io"] }' | sudo tee /etc/docker/daemon.json >/dev/null
+                  fi
+                  sudo systemctl restart docker
+                  # Wait for the daemon socket instead of a fixed sleep.
+                  for i in $(seq 1 15); do docker info >/dev/null 2>&1 && break; sleep 1; done
+
+            # wp-env pulls four Docker Hub library images on every run: mariadb:lts and
+            # phpmyadmin via compose, plus the wordpress / wordpress:cli build bases.
+            # Anonymous Docker Hub pulls from shared runner IPs randomly time out even
+            # with the gcr mirror configured (the daemon silently falls back to
+            # registry-1.docker.io when the mirror misses), so pre-seed the images:
+            # restore them from the actions cache, else pull from AWS's public mirror
+            # of Docker official images and retag. Once the images exist locally,
+            # compose/build skip the Docker Hub pull entirely. The ISO week in the
+            # cache key stops the floating tags (lts, latest) from pinning forever.
+            - name: Compute wp-env image list and cache key
+              id: wp-env-images
+              working-directory: tests/pw
+              run: |
+                  PHP=$(jq -r '.env.tests.phpVersion // empty' .wp-env.override.json)
+                  if [ -z "$PHP" ]; then PHP=$(jq -r '.env.tests.phpVersion // empty' .wp-env.json); fi
+                  IMAGES="mariadb:lts phpmyadmin:latest wordpress${PHP:+:php$PHP} wordpress:cli${PHP:+-php$PHP}"
+                  echo "list=$IMAGES" >> "$GITHUB_OUTPUT"
+                  echo "key=wp-env-images-v1-php${PHP:-default}-$(date +%G-%V)" >> "$GITHUB_OUTPUT"
+                  echo "images: $IMAGES"
+
+            - name: Restore wp-env docker images from cache
+              uses: actions/cache@v4
+              with:
+                  path: ~/.cache/wp-env-images
+                  key: ${{ steps.wp-env-images.outputs.key }}
+
+            - name: Pre-seed wp-env docker images
+              run: |
+                  IMAGES="${{ steps.wp-env-images.outputs.list }}"
+                  TAR="$HOME/.cache/wp-env-images/images.tar"
+                  if [ -f "$TAR" ]; then
+                      docker load -i "$TAR"
+                  else
+                      mkdir -p "$(dirname "$TAR")"
+                      complete=true
+                      for img in $IMAGES; do
+                          pulled=false
+                          for attempt in 1 2 3; do
+                              if docker pull "public.ecr.aws/docker/library/$img"; then pulled=true; break; fi
+                              sleep 15
+                          done
+                          if [ "$pulled" = true ]; then
+                              docker tag "public.ecr.aws/docker/library/$img" "$img"
+                              docker rmi "public.ecr.aws/docker/library/$img" >/dev/null
+                          else
+                              echo "::warning::could not pre-seed $img from the ECR mirror; wp-env will pull it from Docker Hub"
+                              complete=false
+                          fi
+                      done
+                      # Only cache a complete set so a partial failure is retried next run.
+                      if [ "$complete" = true ]; then docker save -o "$TAR" $IMAGES; fi
+                  fi
+                  docker image ls
+
             - name: Start WordPress Env
               id: wp-env
               uses: nick-fields/retry@v3
               with:
-                  timeout_minutes: 5
-                  max_attempts: 2
+                  timeout_minutes: 6
+                  max_attempts: 3
+                  # Space the attempts out: Docker Hub's anonymous throttle window
+                  # outlives back-to-back retries, so waiting beats hammering.
+                  retry_wait_seconds: 90
                   retry_on: error
                   command: |
                       cd tests/pw
                       npm run start:env
 
-            # Get Playwright version
+            - name: Activate WooCommerce premium plugins
+              if: needs.build_pro.result == 'success'
+              working-directory: tests/pw
+              run: |
+                  npm run wp-env run tests-cli wp plugin activate \
+                      woocommerce-bookings \
+                      woocommerce-subscriptions \
+                      woocommerce-product-addons \
+                      woocommerce-simple-auctions \
+                      woocommerce-pdf-invoices-packing-slips \
+                      dokan-pro \
+                      dokan-invoice
+
+            - name: Enable Dokan New React UI (vendor dashboard + product editor)
+              working-directory: tests/pw
+              run: |
+                  npm run wp-env run tests-cli wp eval '
+                      $appearance = get_option("dokan_appearance", []);
+                      $appearance["vendor_layout_style"]   = "latest";
+                      $appearance["vendor_product_editor"] = "latest";
+                      update_option("dokan_appearance", $appearance);
+                      echo "Dokan appearance set to latest UI" . PHP_EOL;
+                  '
+
             - name: Get installed Playwright version
               id: playwright-version
               working-directory: tests/pw
               run: |
                   echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> "$GITHUB_ENV"
 
-            # Cache browser binaries, cache key is based on Playwright version and OS
             - name: Cache playwright binaries
               id: playwright-cache
               uses: actions/cache@v4
@@ -144,56 +475,103 @@ jobs:
                   restore-keys: |
                       ${{ runner.os }}-playwright-
 
-            # Install browser binaries & OS dependencies if cache missed
             - name: Install Playwright browser binaries & OS dependencies
               id: pw-install
               if: steps.playwright-cache.outputs.cache-hit != 'true'
               working-directory: tests/pw
               run: |
-                  npm run pw:chrome-with-deps
+                  npx playwright install --with-deps chromium
 
-            # # Install only the OS dependencies if cache hit
-            # - name: Install Playwright OS dependencies
-            #   if: steps.playwright-cache.outputs.cache-hit == 'true'
-            #   working-directory: tests/pw
-            #   run: |
-            #     npm run pw:chrome-deps-only
+            - name: Run docker setup
+              working-directory: tests/pw
+              run: npm run docker:setup
 
-            # Run E2E tests
+            # Resolve the spec list for this shard from the committed duration baseline.
+            # Falls back to alphabetical sharding if the baseline is missing.
+            - name: Resolve balanced shard spec list
+              id: shard-specs
+              working-directory: tests/pw
+              run: |
+                  node ./utils/getShardSpecs.js ${{ matrix.shardIndex }} ${{ matrix.shardTotal }} > /tmp/shard-specs.txt
+                  echo "spec count: $(wc -l < /tmp/shard-specs.txt)"
+
+            # Emit a per-shard manifest (no GITHUB_STEP_SUMMARY write here — that
+            # would clutter the run page with 12 collapsed cards). merge-reports
+            # collects these manifests from artifacts and renders one consolidated
+            # shard feature map below the quality report.
+            - name: Write shard feature manifest
+              if: always()
+              working-directory: tests/pw
+              run: |
+                  if [ -s /tmp/shard-specs.txt ]; then
+                      mkdir -p playwright
+                      node -e '
+                          const fs = require("fs");
+                          const specs = fs.readFileSync("/tmp/shard-specs.txt", "utf8").split("\n").filter(Boolean);
+                          const features = [...new Set(specs.map(s => s.replace(/^tests\/e2e\//, "").split("/")[0]))].sort();
+                          fs.writeFileSync("playwright/shard-features.json", JSON.stringify({
+                              shardIndex: ${{ matrix.shardIndex }},
+                              shardTotal: ${{ matrix.shardTotal }},
+                              specCount: specs.length,
+                              features
+                          }, null, 2));
+                      '
+                  fi
+
             - name: 🧪 Run e2e tests-${{ matrix.shardIndex }}
               id: e2e-test
               if: success() && (github.event_name != 'workflow_dispatch' || ( github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All')))
-              timeout-minutes: 15
+              timeout-minutes: 30
               working-directory: tests/pw
               run: |
-                  npm run test:e2e -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+                  # Pass the resolved spec list as positional args (xargs -d to preserve newlines)
+                  if [ -s /tmp/shard-specs.txt ]; then
+                      xargs -a /tmp/shard-specs.txt -d '\n' npm run test:e2e --
+                  else
+                      # No baseline — fall back to Playwright's built-in alphabetical sharding
+                      npm run test:e2e -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+                  fi
 
-            # Run e2e coverage
+            # Snapshot the e2e summary before coverage runs — both projects use
+            # the same playwright.config.ts and write summaryReporter output to
+            # the same results.json, so the coverage teardown otherwise
+            # overwrites the actual e2e shard summary with its own (1-test)
+            # report and the merge step under-counts e2e by ~1000 tests.
+            - name: Preserve e2e summary before coverage
+              if: always() && steps.e2e-test.outcome != 'cancelled'
+              working-directory: tests/pw
+              run: |
+                  if [ -f playwright-report/e2e/summary-report/results.json ]; then
+                      cp playwright-report/e2e/summary-report/results.json \
+                         playwright-report/e2e/summary-report/results.e2e.bak.json
+                  fi
+
+            # Coverage walks the suite a second time. Skip on PRs to halve the
+            # per-shard test runtime; develop pushes still compute it.
             - name: 🧪 Run e2e coverage
-              if: always() && (steps.e2e-test.outcome == 'success' || steps.e2e-test.outcome == 'failure')
+              if: |
+                always()
+                && (steps.e2e-test.outcome == 'success' || steps.e2e-test.outcome == 'failure')
+                && github.event_name != 'pull_request'
               working-directory: tests/pw
               run: |
                   npm run test:e2e:coverage
 
-            # # Prepare test summary
-            # - name: Prepare test summary
-            #   id: prepare-test-summary
-            #   uses: actions/github-script@v7
-            #   if: always() && steps.clone-dokan-lite.outcome == 'success'
-            #   with:
-            #       result-encoding: string
-            #       script: |
-            #           const script = require("./tests/pw/utils/gitTestSummary.ts")
-            #           return await script({github, context, core})
+            - name: Restore e2e summary after coverage
+              if: always() && steps.e2e-test.outcome != 'cancelled'
+              working-directory: tests/pw
+              run: |
+                  if [ -f playwright-report/e2e/summary-report/results.e2e.bak.json ]; then
+                      mv playwright-report/e2e/summary-report/results.e2e.bak.json \
+                         playwright-report/e2e/summary-report/results.json
+                  fi
 
-            # Backup Database
             - name: Backup Database
               if: always() && steps.wp-env.outcome == 'success'
               working-directory: tests/pw
               run: |
                   npm run wp-env run tests-cli wp db export wp-data/db.sql
 
-            # Upload artifacts
             - name: Archive test artifacts (screenshots, HTML snapshots, Reports)
               if: always() && steps.debug-log.outcome == 'success'
               uses: actions/upload-artifact@v4
@@ -209,7 +587,9 @@ jobs:
     api_tests:
         name: api tests
         runs-on: ubuntu-latest
-        timeout-minutes: 10
+        timeout-minutes: 25
+        needs: [build_lite, build_pro]
+        if: always() && needs.build_lite.result == 'success' && (needs.build_pro.result == 'success' || needs.build_pro.result == 'skipped')
         strategy:
             fail-fast: false
             matrix:
@@ -217,63 +597,187 @@ jobs:
                 shardTotal: [1]
 
         steps:
-            # Checkout testing repo
-            - name: Checkout testing repo
-              id: clone-dokan-lite
-              uses: actions/checkout@v4
+            - name: Download dokan-lite build artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: dokan-lite-build
+                  path: /tmp/
 
-            # Use desired version of NodeJS
+            - name: Extract dokan-lite build
+              id: clone-dokan-lite
+              run: |
+                  tar -xzf /tmp/dokan-lite-build.tar.gz
+                  rm /tmp/dokan-lite-build.tar.gz
+                  ln -s . dokan-lite
+
+            - name: Download dokan-pro build artifact
+              if: needs.build_pro.result == 'success'
+              uses: actions/download-artifact@v4
+              with:
+                  name: dokan-pro-build
+                  path: /tmp/
+
+            - name: Extract dokan-pro build
+              if: needs.build_pro.result == 'success'
+              run: |
+                  tar -xzf /tmp/dokan-pro-build.tar.gz
+                  rm /tmp/dokan-pro-build.tar.gz
+
             - name: Use desired version of NodeJS
               uses: actions/setup-node@v4
               with:
                   node-version: 20
                   cache: npm
+                  cache-dependency-path: tests/pw/package-lock.json
 
-            # Composer install and build (Dokan-lite)
-            - name: Composer install and build (Dokan-lite)
-              run: |
-                  composer i || composer update
-                  composer i --no-dev -o || composer update --no-dev -o
+            - name: Cache test deps (tests/pw/node_modules)
+              id: pw-nm
+              uses: actions/cache@v4
+              with:
+                  path: tests/pw/node_modules
+                  key: pw-nm-${{ runner.os }}-${{ hashFiles('tests/pw/package-lock.json') }}
 
-            # Npm install and build (Dokan-lite)
-            - name: Npm install and build (Dokan-lite)
-              run: |
-                  npm ci || npm i
-                  npm run build
-
-            # Install test dependencies
             - name: Install test dependencies
+              if: steps.pw-nm.outputs.cache-hit != 'true'
               working-directory: tests/pw
               run: |
-                  npm ci || npm i
+                  npm ci --prefer-offline --no-audit --no-fund || npm i
 
-            # Create wp debuglog file
             - name: Create wp debuglog file
               id: debug-log
               working-directory: tests/pw
               run: |
                   mkdir -p wp-data && touch wp-data/debug.log
 
-            # Start wordpress environment
+            - name: Prepare wp-env config
+              working-directory: tests/pw
+              run: |
+                  if [ -d "../../dokan-pro" ]; then
+                    echo "Dokan Pro present, using .wp-env.ci.json"
+                    cp .wp-env.ci.json .wp-env.override.json
+                  else
+                    echo "Dokan Pro not present, using lite-only wp-env config"
+                    cp .wp-env.json .wp-env.override.json
+                  fi
+
+            # Route Docker Hub pulls through Google's public pull-through mirror. The wp-env images
+            # (mariadb, phpmyadmin, wordpress, composer — all official library/* images) then come
+            # from the mirror instead of registry-1.docker.io, dodging Docker Hub's anonymous
+            # pull-rate-limit / connection timeouts that randomly fail one shard's `wp-env start`.
+            # No credentials needed; Docker falls back to Docker Hub if the mirror misses an image.
+            - name: Route Docker Hub pulls through a mirror (avoids anonymous rate-limit/timeouts)
+              run: |
+                  # Merge into any existing daemon.json (jq is preinstalled on the runner) so we
+                  # never clobber the runner's own Docker config; create it only if absent.
+                  sudo mkdir -p /etc/docker
+                  if [ -s /etc/docker/daemon.json ]; then
+                      sudo jq '. + {"registry-mirrors": ["https://mirror.gcr.io"]}' /etc/docker/daemon.json | sudo tee /etc/docker/daemon.json.tmp >/dev/null
+                      sudo mv /etc/docker/daemon.json.tmp /etc/docker/daemon.json
+                  else
+                      echo '{ "registry-mirrors": ["https://mirror.gcr.io"] }' | sudo tee /etc/docker/daemon.json >/dev/null
+                  fi
+                  sudo systemctl restart docker
+                  # Wait for the daemon socket instead of a fixed sleep.
+                  for i in $(seq 1 15); do docker info >/dev/null 2>&1 && break; sleep 1; done
+
+            # wp-env pulls four Docker Hub library images on every run: mariadb:lts and
+            # phpmyadmin via compose, plus the wordpress / wordpress:cli build bases.
+            # Anonymous Docker Hub pulls from shared runner IPs randomly time out even
+            # with the gcr mirror configured (the daemon silently falls back to
+            # registry-1.docker.io when the mirror misses), so pre-seed the images:
+            # restore them from the actions cache, else pull from AWS's public mirror
+            # of Docker official images and retag. Once the images exist locally,
+            # compose/build skip the Docker Hub pull entirely. The ISO week in the
+            # cache key stops the floating tags (lts, latest) from pinning forever.
+            - name: Compute wp-env image list and cache key
+              id: wp-env-images
+              working-directory: tests/pw
+              run: |
+                  PHP=$(jq -r '.env.tests.phpVersion // empty' .wp-env.override.json)
+                  if [ -z "$PHP" ]; then PHP=$(jq -r '.env.tests.phpVersion // empty' .wp-env.json); fi
+                  IMAGES="mariadb:lts phpmyadmin:latest wordpress${PHP:+:php$PHP} wordpress:cli${PHP:+-php$PHP}"
+                  echo "list=$IMAGES" >> "$GITHUB_OUTPUT"
+                  echo "key=wp-env-images-v1-php${PHP:-default}-$(date +%G-%V)" >> "$GITHUB_OUTPUT"
+                  echo "images: $IMAGES"
+
+            - name: Restore wp-env docker images from cache
+              uses: actions/cache@v4
+              with:
+                  path: ~/.cache/wp-env-images
+                  key: ${{ steps.wp-env-images.outputs.key }}
+
+            - name: Pre-seed wp-env docker images
+              run: |
+                  IMAGES="${{ steps.wp-env-images.outputs.list }}"
+                  TAR="$HOME/.cache/wp-env-images/images.tar"
+                  if [ -f "$TAR" ]; then
+                      docker load -i "$TAR"
+                  else
+                      mkdir -p "$(dirname "$TAR")"
+                      complete=true
+                      for img in $IMAGES; do
+                          pulled=false
+                          for attempt in 1 2 3; do
+                              if docker pull "public.ecr.aws/docker/library/$img"; then pulled=true; break; fi
+                              sleep 15
+                          done
+                          if [ "$pulled" = true ]; then
+                              docker tag "public.ecr.aws/docker/library/$img" "$img"
+                              docker rmi "public.ecr.aws/docker/library/$img" >/dev/null
+                          else
+                              echo "::warning::could not pre-seed $img from the ECR mirror; wp-env will pull it from Docker Hub"
+                              complete=false
+                          fi
+                      done
+                      # Only cache a complete set so a partial failure is retried next run.
+                      if [ "$complete" = true ]; then docker save -o "$TAR" $IMAGES; fi
+                  fi
+                  docker image ls
+
             - name: Start WordPress Env
               id: wp-env
               uses: nick-fields/retry@v3
               with:
-                  timeout_minutes: 5
-                  max_attempts: 2
+                  timeout_minutes: 6
+                  max_attempts: 3
+                  # Space the attempts out: Docker Hub's anonymous throttle window
+                  # outlives back-to-back retries, so waiting beats hammering.
+                  retry_wait_seconds: 90
                   retry_on: error
                   command: |
                       cd tests/pw
                       npm run start:env
 
-            # Get Playwright version
+            - name: Activate WooCommerce premium plugins
+              if: needs.build_pro.result == 'success'
+              working-directory: tests/pw
+              run: |
+                  npm run wp-env run tests-cli wp plugin activate \
+                      woocommerce-bookings \
+                      woocommerce-subscriptions \
+                      woocommerce-product-addons \
+                      woocommerce-simple-auctions \
+                      woocommerce-pdf-invoices-packing-slips \
+                      dokan-pro \
+                      dokan-invoice
+
+            - name: Enable Dokan New React UI (vendor dashboard + product editor)
+              working-directory: tests/pw
+              run: |
+                  npm run wp-env run tests-cli wp eval '
+                      $appearance = get_option("dokan_appearance", []);
+                      $appearance["vendor_layout_style"]   = "latest";
+                      $appearance["vendor_product_editor"] = "latest";
+                      update_option("dokan_appearance", $appearance);
+                      echo "Dokan appearance set to latest UI" . PHP_EOL;
+                  '
+
             - name: Get installed Playwright version
               id: playwright-version
               working-directory: tests/pw
               run: |
                   echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> "$GITHUB_ENV"
 
-            # Cache browser binaries, cache key is based on Playwright version and OS
             - name: Cache playwright binaries
               id: playwright-cache
               uses: actions/cache@v4
@@ -284,59 +788,47 @@ jobs:
                   restore-keys: |
                       ${{ runner.os }}-playwright-
 
-            # Install browser binaries & OS dependencies if cache missed
             - name: Install Playwright browser binaries & OS dependencies
               id: pw-install
               if: steps.playwright-cache.outputs.cache-hit != 'true'
               working-directory: tests/pw
               run: |
-                  npm run pw:chrome-with-deps
+                  npx playwright install --with-deps chromium
 
-            # # Install only the OS dependencies if cache hit
-            # - name: Install Playwright OS dependencies
-            #   if: steps.playwright-cache.outputs.cache-hit == 'true'
-            #   working-directory: tests/pw
-            #   run: |
-            #     npm run pw:chrome-deps-only
+            - name: Run docker setup
+              working-directory: tests/pw
+              run: npm run docker:setup
 
-            # Run API tests
             - name: 🧪 Run api tests-${{ matrix.shardIndex }}
               id: api-test
               if: always() && steps.wp-env.outcome == 'success' && ( github.event_name != 'workflow_dispatch'  || ( github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'API' || github.event.inputs.testsuite == 'All')))
-              timeout-minutes: 5
+              timeout-minutes: 15
               working-directory: tests/pw
               run: |
                   npm run test:api -- --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
 
-            # # Prepare test summary
-            # - name: Prepare test summary
-            #   id: prepare-test-summary
-            #   if: always() && steps.clone-dokan-lite.outcome == 'success'
-            #   uses: actions/github-script@v7
-            #   with:
-            #       result-encoding: string
-            #       script: |
-            #           const script = require("./tests/pw/utils/gitTestSummary.ts")
-            #           return await script({github, context, core})
-
-            # Backup Database
             - name: Backup Database
               if: always() && steps.wp-env.outcome == 'success'
               working-directory: tests/pw
               run: |
                   npm run wp-env run tests-cli wp db export wp-data/db.sql
 
-            # Upload artifacts
+            # playwright-report/e2e is excluded: the docker:setup step runs the
+            # site/auth/env setup projects through playwright.config.ts, which
+            # writes setup-run blob/summary/spec-duration files under
+            # playwright-report/e2e/. Shipping those in this artifact made the
+            # merge-reports job count the api job's setup run as an extra e2e
+            # shard (inflating e2e totals) and fed its blob into the html report.
             - name: Archive test artifacts (screenshots, HTML snapshots, Reports)
               if: always() && steps.debug-log.outcome == 'success'
               uses: actions/upload-artifact@v4
               with:
-                #   name: test-artifact-api-${{ matrix.shardIndex }}
                   name: test-artifact-api
                   path: |
                       tests/pw/wp-data
                       tests/pw/playwright
                       tests/pw/playwright-report
+                      !tests/pw/playwright-report/e2e/**
                   if-no-files-found: ignore
                   retention-days: 1
 
@@ -356,25 +848,43 @@ jobs:
             E2E_COVERAGE: ./tests/pw/all-reports/merged-coverage.json
 
         steps:
-            # Checkout testing repo
             - name: Checkout testing repo
               id: clone-dokan-lite
               uses: actions/checkout@v4
 
-            # Use desired version of NodeJS
+            - name: Prepare dokan-lite folder
+              run: |
+                  ln -s . dokan-lite
+
+            - name: Checkout Dokan Pro
+              if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+              uses: actions/checkout@v4
+              with:
+                  repository: getdokan/dokan-pro
+                  ref: develop
+                  path: dokan-pro
+                  token: ${{ secrets.DOKAN_PRO_TOKEN }}
+
             - name: Use desired version of NodeJS
               uses: actions/setup-node@v4
               with:
                   node-version: 20
                   cache: npm
+                  cache-dependency-path: tests/pw/package-lock.json
 
-            # Install test dependencies
+            - name: Cache test deps (tests/pw/node_modules)
+              id: pw-nm
+              uses: actions/cache@v4
+              with:
+                  path: tests/pw/node_modules
+                  key: pw-nm-${{ runner.os }}-${{ hashFiles('tests/pw/package-lock.json') }}
+
             - name: Install test dependencies
+              if: steps.pw-nm.outputs.cache-hit != 'true'
               working-directory: tests/pw
               run: |
-                  npm ci || npm i
+                  npm ci --prefer-offline --no-audit --no-fund || npm i
 
-            # Download all test artifacts from GitHub Actions
             - name: Download all test artifacts from GitHub Actions
               id: download-test-artifacts
               uses: actions/download-artifact@v4
@@ -382,15 +892,17 @@ jobs:
                   path: tests/pw/all-reports
                   pattern: test-artifact-*
 
-            # Move all blob report folder contents into a single folder
+            # download-artifact silently does nothing when no artifacts match
+            # (e.g. all upstream test jobs were skipped after a build failure),
+            # so the all-reports dir may not exist yet. Pre-create it so the
+            # subsequent move/merge steps don't crash on a missing cwd.
             - name: Move all blob report folder contents into a single folder
-              working-directory: tests/pw/all-reports
+              if: always() && steps.download-test-artifacts.outcome == 'success'
               run: |
-                  mkdir -p all-blob-reports
+                  mkdir -p tests/pw/all-reports/all-blob-reports
+                  cd tests/pw/all-reports
                   find . -type f -path "*/blob-report/*" -exec mv {} all-blob-reports/ \;
-              #   ls all-blob-reports
 
-            # Generate HTML Report
             - name: Generate HTML Report
               id: generate-html-report
               working-directory: tests/pw
@@ -398,13 +910,11 @@ jobs:
                   npx playwright merge-reports --reporter html ./all-reports/all-blob-reports
                   mv playwright-report ./all-reports/html-report
 
-            # Clean all extracted blob reports (except ZIPs)
             - name: Clean all extracted blob reports (except ZIPs)
               working-directory: tests/pw
               run: |
                   find all-reports/all-blob-reports -mindepth 1 ! -name "*.zip" -exec rm -rf {} +
 
-            # Generate merged summary report
             - name: Generate merged summary report
               id: merge-summary-report
               if: steps.download-test-artifacts.outcome == 'success'
@@ -412,15 +922,40 @@ jobs:
               run: |
                   REPORT_TYPE=e2e npx ts-node ./utils/mergeSummaryReport.ts
 
-            # Generate merged coverage report
+            # No coverage on PR runs (skipped per-shard above), so the merge
+            # would exit 1 on missing inputs. Quality report handles missing
+            # E2E_COVERAGE via an existsSync guard.
             - name: Generate merged coverage report
               id: merge-coverage-report
-              if: steps.download-test-artifacts.outcome == 'success'
+              if: |
+                steps.download-test-artifacts.outcome == 'success'
+                && github.event_name != 'pull_request'
               working-directory: tests/pw
               run: |
                   REPORT_TYPE=e2e npx ts-node ./utils/mergeCoverageSummary.ts
 
-            # Prepare test summary
+            # Aggregate per-shard spec-durations.json files into a single
+            # baseline. Uploaded as artifact so maintainers can periodically
+            # commit it to tests/pw/utils/shard-durations.json to keep
+            # balanced sharding accurate as the suite evolves.
+            - name: Aggregate spec-duration baseline
+              id: aggregate-baseline
+              if: always() && steps.download-test-artifacts.outcome == 'success'
+              working-directory: tests/pw
+              run: |
+                  node ./utils/aggregateSpecDurations.js \
+                      ./all-reports \
+                      ./all-reports/shard-durations.json || true
+
+            - name: Upload spec-duration baseline
+              if: always() && steps.aggregate-baseline.outcome == 'success'
+              uses: actions/upload-artifact@v4
+              with:
+                  name: shard-durations-baseline
+                  path: tests/pw/all-reports/shard-durations.json
+                  if-no-files-found: ignore
+                  retention-days: 14
+
             - name: Prepare test summary
               id: prepare-test-summary
               if: always() && steps.merge-summary-report.outcome == 'success'
@@ -431,28 +966,78 @@ jobs:
                       const script = require("./tests/pw/utils/gitTestSummary.ts")
                       return await script({github, context, core})
 
-            # # Find PR comment
-            # - name: Find PR comment by github-actions[bot]
-            #   id: find-comment
-            #   if: github.event_name == 'pull_request'
-            #   uses: peter-evans/find-comment@v3
-            #   with:
-            #       issue-number: ${{ github.event.pull_request.number }}
-            #       comment-author: 'github-actions[bot]'
-            #       body-includes: Tests Summary
+            # Render the branded HTML quality report (full design, downloadable
+            # as artifact) plus a markdown variant for the GitHub job summary.
+            # GitHub strips <style>/CSS from step summaries, so the HTML can't
+            # render inline — the markdown uses shields.io badges, themed
+            # Mermaid charts, and HTML tables that GH does render natively.
+            #
+            # NOTE: no `working-directory` here — the job-level env block sets
+            # API_TEST_RESULT etc. as repo-root-relative paths, so the script
+            # must run from the repo root for those to resolve.
+            - name: Generate Quality Report
+              id: quality-report
+              if: always() && steps.download-test-artifacts.outcome == 'success'
+              env:
+                  ARTIFACTS_DIR: ./tests/pw/all-reports
+                  OUTPUT_FILE: ./tests/pw/all-reports/quality-report.html
+                  SUMMARY_FILE: ./tests/pw/all-reports/quality-report.md
+              run: |
+                  node ./tests/pw/utils/generateQualityReport.js
 
-            # # Post test summary as PR comment
-            # - name: Create or update PR comment
-            #   if: github.event_name == 'pull_request'
-            #   uses: peter-evans/create-or-update-comment@v4
-            #   with:
-            #       comment-id: ${{ steps.find-comment.outputs.comment-id }}
-            #       issue-number: ${{ github.event.pull_request.number }}
-            #       body: ${{ steps.prepare-test-summary.outputs.result }}
-            #       reactions: hooray
-            #       edit-mode: replace
+            - name: Upload Quality Report
+              if: always() && steps.quality-report.outcome == 'success'
+              uses: actions/upload-artifact@v4
+              with:
+                  name: quality-report
+                  path: tests/pw/all-reports/quality-report.html
+                  if-no-files-found: ignore
+                  retention-days: 30
 
-            # Upload final test artifact
+            - name: Append Quality Report to job summary
+              if: always() && steps.quality-report.outcome == 'success'
+              run: |
+                  if [ -f tests/pw/all-reports/quality-report.md ]; then
+                      cat tests/pw/all-reports/quality-report.md >> "$GITHUB_STEP_SUMMARY"
+                  fi
+
+            # Consolidate per-shard feature manifests into one table so reviewers
+            # see "which features ran in which shard" in a single place at the
+            # top of the run page — without polluting each shard's job page.
+            - name: Append shard feature map to job summary
+              if: always() && steps.download-test-artifacts.outcome == 'success'
+              working-directory: tests/pw
+              run: |
+                  node -e '
+                      const fs = require("fs");
+                      const path = require("path");
+                      const baseDir = "./all-reports";
+                      if (!fs.existsSync(baseDir)) process.exit(0);
+                      const shards = [];
+                      for (const entry of fs.readdirSync(baseDir)) {
+                          const featuresPath = path.join(baseDir, entry, "playwright", "shard-features.json");
+                          if (fs.existsSync(featuresPath)) {
+                              try {
+                                  shards.push(JSON.parse(fs.readFileSync(featuresPath, "utf8")));
+                              } catch (e) { /* skip malformed */ }
+                          }
+                      }
+                      if (shards.length === 0) process.exit(0);
+                      shards.sort((a, b) => a.shardIndex - b.shardIndex);
+                      const lines = [
+                          "",
+                          "## Shard Feature Map",
+                          "",
+                          "| Shard | Specs | Features tested |",
+                          "|-------|-------|------------------|",
+                      ];
+                      for (const s of shards) {
+                          lines.push(`| ${s.shardIndex}/${s.shardTotal} | ${s.specCount} | ${s.features.join(", ")} |`);
+                      }
+                      lines.push("");
+                      fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, lines.join("\n"));
+                  '
+
             - name: Upload final test artifact
               if: always() && steps.download-test-artifacts.outcome == 'success'
               uses: actions/upload-artifact@v4
@@ -461,4 +1046,3 @@ jobs:
                   path: tests/pw/all-reports
                   if-no-files-found: ignore
                   retention-days: 7
-

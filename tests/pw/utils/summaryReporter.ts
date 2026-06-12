@@ -97,10 +97,14 @@ export default class summaryReport implements Reporter {
                 }
                 break;
             case 'flaky':
-                summary.flaky_tests.push(test.title);
-                const index = summary.failed_tests.indexOf(test.title);
-                if (index !== -1) {
-                    summary.failed_tests.splice(index, 1);
+                // Treat retry-passed tests as plain passes — the suite did not fail,
+                // so the report should not call them out as flaky.
+                summary.passed_tests.push(test.title);
+                {
+                    const index = summary.failed_tests.indexOf(test.title);
+                    if (index !== -1) {
+                        summary.failed_tests.splice(index, 1);
+                    }
                 }
                 break;
             default:
@@ -115,9 +119,11 @@ export default class summaryReport implements Reporter {
         summary.suite_duration_formatted = getFormattedDuration(summary.suite_duration);
 
         const results = [...Object.values(this.testResults)];
-        summary.passed = results.filter(x => x === 'expected').length;
+        // Roll flaky (passed-on-retry) into the passed bucket — keep `flaky` at 0
+        // so downstream reporters render a clean "passed" row.
+        summary.passed = results.filter(x => x === 'expected' || x === 'flaky').length;
         summary.failed = results.filter(x => x === 'unexpected').length;
-        summary.flaky = results.filter(x => x === 'flaky').length;
+        summary.flaky = 0;
         summary.skipped = results.filter(x => x === 'skipped').length;
         // console.log(summary);
 

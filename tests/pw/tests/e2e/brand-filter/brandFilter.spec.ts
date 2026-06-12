@@ -1,0 +1,34 @@
+import { test, expect } from '@utils/test';
+
+import { toPath } from '@utils/helpers';
+
+// Product Brand Filter (React) — front-end React surface in Dokan 5.0.0+. Mount URL: /shop/
+
+test.describe('Product Brand Filter (React) Tests @pro', () => {
+    test('Test Case 1 - Page renders without fatal', { tag: ['@pro', '@guest'] }, async ({ browser }) => {
+        const ctx = await browser.newContext();
+        const page = await ctx.newPage();
+        await page.goto(toPath(`shop/`));
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForTimeout(3000);
+        const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
+        expect(fatal).toBe(false);
+        await page.close();
+        await ctx.close();
+    });
+
+    test('Test Case 2 - Page renders content', { tag: ['@pro', '@guest'] }, async ({ browser }) => {
+        const ctx = await browser.newContext();
+        const page = await ctx.newPage();
+        await page.goto(toPath(`shop/`));
+        await page.waitForLoadState('domcontentloaded');
+        await expect
+            .poll(async () => (await page.locator('body').innerText()).trim().length, {
+                timeout: 30_000,
+                intervals: [500, 1000, 2000, 3000],
+            })
+            .toBeGreaterThan(50);
+        await page.close();
+        await ctx.close();
+    });
+});

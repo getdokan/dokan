@@ -1,6 +1,12 @@
 on: pull_request
 
-name: Inspections
+# Cancels all previous workflow runs for pull requests that have not completed.
+concurrency:
+    # The concurrency group contains the workflow name and the branch name for pull requests or the commit hash for any other events.
+    group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+    cancel-in-progress: true
+
+name: PHPCS Inspections
 jobs:
   runPHPCSInspection:
     name: Run PHPCS inspection
@@ -8,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Use desired version of NodeJS
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
             node-version: 20
@@ -43,16 +49,20 @@ jobs:
       - id: changes
         run: |
           URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files"
-          FILES=$(curl --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' -s -X GET -G $URL | jq -r '.[] | .filename' | xargs)
+          FILES=$(curl --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' -s -X GET -G "$URL" \
+            | jq -r '.[] | select(.status != "removed") | .filename' \
+            | grep -E '\.php$' \
+            | while read -r f; do [ -f "$f" ] && echo "$f"; done \
+            | xargs)
           echo "files=$FILES" >> $GITHUB_OUTPUT
 
       - name: Detect coding standard violations
+        if: steps.changes.outputs.files != ''
         run: vendor/bin/phpcs ${{ steps.changes.outputs.files }} -q --report=checkstyle | cs2pr --graceful-warnings
 
       - name: Start WordPress Environment
         run: |
             npm run env:start
-
       - name: Running the phpunit tests
         run: |
             npm run phpunit

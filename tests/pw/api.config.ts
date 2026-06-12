@@ -14,7 +14,7 @@ export default defineConfig({
     /* Folder for test artifacts such as screenshots, videos, traces, etc. */
     outputDir: 'playwright/api/test-artifacts/',
     /* Path to the global setup file. This file will be required and run before all the tests. */
-    // globalSetup: './global-setup',
+    globalSetup: './global-setup',
     /* Path to the global teardown file. This file will be required and run after all the tests. */
     // globalTeardown: './global-teardown',
     /* Maximum time in milliseconds the whole test suite can run */
@@ -33,17 +33,17 @@ export default defineConfig({
     /* Run tests in files in parallel */
     // fullyParallel  : true,
     /* Fail the build on CI if you accidentally left test.only in the source code. */
-    // forbidOnly     : !!CI,
+    forbidOnly: parseBoolean(CI),
     /* The number of times to repeat each test, useful for debugging flaky tests. */
     repeatEach: parseBoolean(CI) ? 0 : 0,
     /* The maximum number of retry attempts given to failed tests.  */
-    retries: parseBoolean(CI) ? 1 : 0,
+    retries: parseBoolean(CI) ? 2 : 0,
     /* Opt out of parallel tests on CI. */
-    workers: parseBoolean(CI) ? 4 : 4,
+    workers: parseBoolean(CI) ? 1 : 4,
     /* Whether to report slow test files. Pass null to disable this feature. */
     reportSlowTests: { max: 2, threshold: 10 },
     /* Configure reporters */
-    reporter: CI
+    reporter: parseBoolean(CI)
         ? [
               //   ['github'],
               ['html', { open: 'never', outputFolder: 'playwright-report/api/html-report' }],

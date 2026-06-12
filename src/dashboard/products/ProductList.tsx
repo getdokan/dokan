@@ -221,12 +221,12 @@ function ProductList() {
             isPrimary: true,
             render: ( { item }: { item: ProductItem } ) => (
                 <div className="flex items-center gap-3 min-w-xs">
-                    <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 shrink-0">
+                    <div className="w-12 h-12 overflow-hidden bg-gray-100 rounded-lg shrink-0">
                         { item.images?.[ 0 ]?.src ? (
                             <img
                                 src={ item.images[ 0 ].src }
                                 alt={ item.images[ 0 ].alt || item.name }
-                                className="w-full h-full object-cover"
+                                className="object-cover w-full h-full"
                             />
                         ) : (
                             <div className="w-full h-full bg-gray-100" />
@@ -242,7 +242,7 @@ function ProductList() {
                                 maxLength={ 32 }
                             />
                         </a>
-                        <span className="text-xs text-gray-500 block">
+                        <span className="block text-xs text-gray-500">
                             { sprintf(
                                 /* translators: %s: SKU */
                                 __( 'SKU: %s', 'dokan' ),
@@ -320,10 +320,10 @@ function ProductList() {
                 if ( item.on_sale && item.regular_price && item.sale_price ) {
                     return (
                         <div className="flex flex-col">
-                            <span className="line-through text-red-400">
+                            <span className="text-red-400 line-through">
                                 <PriceHtml price={ item.regular_price } />
                             </span>
-                            <span className="text-green-600 font-medium">
+                            <span className="font-medium text-green-600">
                                 <PriceHtml price={ item.sale_price } />
                             </span>
                         </div>
@@ -343,6 +343,14 @@ function ProductList() {
                     <span className="text-gray-400">{ '—' }</span>
                 ),
         },
+        {
+            id: 'views',
+            label: __( 'Views', 'dokan-lite' ),
+            enableSorting: false,
+            render: ( { item }: { item: ProductItem } ) => (
+                <span>{ item.page_view ?? 0 }</span>
+            ),
+        },
     ];
 
     const [ view, setView ] = useState( {
@@ -352,7 +360,7 @@ function ProductList() {
         type: 'table',
         status: 'all',
         titleField: 'name',
-        fields: [ 'type', 'stock', 'status', 'price', 'earning', 'advertise' ],
+        fields: [ 'type', 'stock', 'status', 'price', 'earning', 'advertise', 'views' ],
     } );
 
     /**

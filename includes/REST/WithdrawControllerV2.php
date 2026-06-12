@@ -100,6 +100,7 @@ class WithdrawControllerV2 extends WithdrawController {
         return rest_ensure_response(
             [
                 'withdraw_method' => $default_withdraw_method,
+                'is_manual_withdraw_enable' => ! empty( dokan_get_option( 'disbursement', 'dokan_withdraw' )['manual'] ?? false ),
                 'payment_methods' => array_values( $payment_methods ),
                 'active_methods'  => $active_methods,
                 'setup_url'       => $setup_url,

@@ -13,13 +13,14 @@ class ReactUrlGenerationTest extends DokanTestCase {
 	public function set_up() {
 		parent::set_up();
 		wp_set_current_user( $this->admin_id );
+        new \WeDevs\Dokan\VendorNavMenuChecker();
 	}
 
 	public static function data_provider(): array {
 		return [
 			[
 				'slug' => 'withdraw',
-				'new_url' => '/dashboard/new/#withdraw',
+				'new_url' => '/dashboard/new/#withdraw/',
 			],
 
 		];
@@ -30,7 +31,7 @@ class ReactUrlGenerationTest extends DokanTestCase {
 	 * @dataProvider data_provider
      */
     public function test_dokan_get_navigation_url( $slug, $expected ): void {
-		$url = dokan_get_navigation_url( $slug );
+		$url = dokan_get_navigation_url( $slug, true );
 		$this->assertEquals( home_url() . $expected, $url );
     }
 }

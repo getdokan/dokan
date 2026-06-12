@@ -230,6 +230,8 @@ export const dbData = {
         },
 
         appearanceSettings: {
+            vendor_layout_style: 'latest', // 'latest' = New UI, 'legacy' = Legacy UI
+            vendor_product_editor: 'latest', // 'latest' = New UI, 'legacy' = Legacy UI
             appearance_options: '',
             store_map: 'on', // 'on', 'off'
             map_api_source: 'google_maps', // google_maps, mapbox
@@ -2185,14 +2187,15 @@ export const dbData = {
             'live_chat',
             'live_search',
             'mangopay',
-            'moip',
+            // 'moip', // Deprecated - removed in Dokan Pro 4.2+
             'order_min_max',
             'paypal_marketplace',
+            'paystack',
             'printful',
             'product_addon',
             'product_advertising',
+            'product_editor', // Product Form Manager — required by the Rank Math new product-editor SEO card
             'product_enquiry',
-            // 'product_form_customization', // todo: enable after PR is merged
             'product_qa',
             'product_subscription',
             'rank_math',
@@ -2211,6 +2214,7 @@ export const dbData = {
             'table_rate_shipping',
             'vendor_analytics',
             'vendor_staff',
+            'vendor_support',
             'vendor_verification',
             'vsp',
             'wholesale',

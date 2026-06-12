@@ -1,7 +1,5 @@
 import 'dotenv/config';
-
-// const { BASE_URL, SERVER_URL } = process.env;
-const SERVER_URL = process.env.SERVER_URL ? process.env.SERVER_URL : process.env.BASE_URL + '/wp-json';
+import { SERVER_URL } from './helpers';
 
 export const endPoints = {
     serverUrl: `${SERVER_URL}`,
@@ -297,6 +295,7 @@ export const endPoints = {
 
     // rank math
     rankMath: (productId: string) => `${SERVER_URL}/dokan/v2/rank-math/${productId}/store-current-editable-post`,
+    rankMathEditorData: (productId: string) => `${SERVER_URL}/dokan/v2/rank-math/${productId}/editor-data`,
 
     // product duplicate
     createDuplicateProduct: (productId: string) => `${SERVER_URL}/dokan/v2/products/${productId}/duplicate`,
