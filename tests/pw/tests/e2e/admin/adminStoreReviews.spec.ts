@@ -1,6 +1,7 @@
 import { test, expect, Page, BrowserContext } from '@utils/test';
 import { request } from '@playwright/test';
 import { AdminStoreReviewsPage, adminStoreReviewsData } from './adminStoreReviewsPage';
+import { applyAndValidateDataViewsFilter } from './adminDataViews';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
@@ -124,6 +125,14 @@ test.describe('Admin Store Reviews functionality', () => {
             await expect(reviews.columnHeader(/Rating/)).toBeVisible();
             expect(await reviews.getRowCount(), 'seeded review rows render').toBeGreaterThan(0);
             expect(await reviews.hasNoPhpFatal(), 'no PHP fatal').toBe(true);
+        });
+
+        test('applying the Vendor filter refetches the reviews list and re-renders the table', { tag: ['@pro', '@admin'] }, async () => {
+            await reviews.goto();
+            const result = await applyAndValidateDataViewsFilter(page, { requestFragment: 'dokan/v1/store-reviews', field: 'Vendor' });
+            expect(result.requestFired, 'applying the Vendor filter refetched the reviews list').toBe(true);
+            expect(result.noPhpFatal, 'no PHP fatal after filtering').toBe(true);
+            expect(result.ok, 'the Vendor filter applied and the table re-rendered (rows or empty state)').toBe(true);
         });
 
         test('All and Trash status tabs are present on the list', { tag: ['@pro', '@admin'] }, async () => {

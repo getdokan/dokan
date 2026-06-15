@@ -1,6 +1,7 @@
 import { test, expect, Page, BrowserContext } from '@utils/test';
 import { request } from '@playwright/test';
 import { AdminAbuseReportsPage, adminAbuseReportsData } from './adminAbuseReportsPage';
+import { applyAndValidateDataViewsFilter } from './adminDataViews';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
@@ -104,6 +105,14 @@ test.describe('Admin Abuse Reports list functionality @pro', () => {
         test.afterEach(async () => {
             await page?.close();
             await ctx?.close();
+        });
+
+        test('applying the Vendor filter refetches the list and re-renders the table', { tag: ['@pro', '@admin'] }, async () => {
+            await reports.goto();
+            const result = await applyAndValidateDataViewsFilter(page, { requestFragment: 'dokan/v1/abuse-reports', field: 'Vendor' });
+            expect(result.requestFired, 'applying the Vendor filter refetched the list').toBe(true);
+            expect(result.noPhpFatal, 'no PHP fatal after filtering').toBe(true);
+            expect(result.ok, 'the Vendor filter applied and the table re-rendered (rows or empty state)').toBe(true);
         });
 
         test('admin can view the Abuse Reports list with DataViews table and columns', { tag: ['@pro', '@admin'] }, async () => {

@@ -1,6 +1,7 @@
 import { test, expect, Page, BrowserContext } from '@utils/test';
 import { request } from '@playwright/test';
 import { AdminVendorsPage, adminVendorsData } from './adminVendorsPage';
+import { applyAndValidateDataViewsFilter } from './adminDataViews';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import path from 'path';
@@ -72,6 +73,15 @@ test.describe('Admin Vendors list functionality', () => {
         test.afterEach(async () => {
             await page?.close();
             await ctx?.close();
+        });
+
+        // Vendors filter fields are Pro-injected, so this is @pro.
+        test('applying the Subscription filter refetches the list and re-renders the table', { tag: ['@pro', '@admin'] }, async () => {
+            await vendors.goto();
+            const result = await applyAndValidateDataViewsFilter(page, { requestFragment: 'dokan/v1/stores', field: 'Subscription' });
+            expect(result.requestFired, 'applying the Subscription filter refetched the list').toBe(true);
+            expect(result.noPhpFatal, 'no PHP fatal after filtering').toBe(true);
+            expect(result.ok, 'the Subscription filter applied and the table re-rendered (rows or empty state)').toBe(true);
         });
 
         test('admin can view the Vendors list with DataViews table and columns', { tag: ['@lite', '@admin'] }, async () => {

@@ -1,6 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { toPath } from '@utils/helpers';
-import { confirmDataViewsAction, dataViewsConfirm, waitForDataViewsSettle } from './adminDataViews';
+import { confirmDataViewsAction, dataViewsConfirm, waitForDataViewsSettle, DATA_ROW } from './adminDataViews';
 
 // Admin-only Vendor Support DataViews list. Test data namespaced with "AVS".
 export const adminVendorSupportData = {
@@ -16,7 +16,7 @@ export const adminVendorSupportData = {
 
 export const adminVendorSupportSelectors = {
     reactRoot: '#dokan-admin-dashboard',
-    dataRow: 'table tbody tr',
+    dataRow: DATA_ROW,
     search: 'input[placeholder="Search"]',
     rowActionsBtn: "button[aria-label='Actions']",
     emptyState: 'text=/no data found|no tickets|no items|no results/i',

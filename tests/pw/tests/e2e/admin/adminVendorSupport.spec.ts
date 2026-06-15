@@ -4,6 +4,7 @@ import { AdminVendorSupportPage, adminVendorSupportData } from './adminVendorSup
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { SERVER_URL } from '@utils/helpers';
+import { applyAndValidateDataViewsFilter } from './adminDataViews';
 import path from 'path';
 
 // Admin-only Vendor Support spec. Ticket seeding is best-effort: mount/tab/filter/
@@ -109,13 +110,21 @@ test.describe('Admin Vendor Support functionality @pro', () => {
             await expect(support.rowBySubject(adminVendorSupportData.ticket.subject)).toBeVisible();
         });
 
-        test('the row Actions menu exposes View / Mark as read / Close', { tag: ['@pro', '@admin'] }, async () => {
+        test('applying the Vendor filter refetches the tickets list and re-renders the table', { tag: ['@pro', '@admin'] }, async () => {
+            await support.goto();
+            const result = await applyAndValidateDataViewsFilter(page, { requestFragment: adminVendorSupportData.rest.tickets, field: 'Vendor' });
+            expect(result.requestFired, 'applying the Vendor filter refetched the tickets list').toBe(true);
+            expect(result.noPhpFatal, 'no PHP fatal after filtering').toBe(true);
+            expect(result.ok, 'the Vendor filter applied and the table re-rendered (rows or empty state)').toBe(true);
+        });
+
+        test('the row Actions menu exposes View / Close / Delete', { tag: ['@pro', '@admin'] }, async () => {
             test.skip(!seed.ticketSeeded, 'no vendor-support ticket could be seeded in this env');
             await support.goto();
             await support.openRowActionMenuFor(adminVendorSupportData.ticket.subject);
             expect(await support.actionMenuItemVisible(/^View$/i), 'View offered').toBe(true);
-            expect(await support.actionMenuItemVisible(/Mark as read/i), 'Mark as read offered').toBe(true);
             expect(await support.actionMenuItemVisible(/^Close$/i), 'Close offered').toBe(true);
+            expect(await support.actionMenuItemVisible(/^Delete$/i), 'Delete offered').toBe(true);
         });
 
         test('Close is destructive and opens the inline confirmation (alertdialog) before closing', { tag: ['@pro', '@admin'] }, async () => {

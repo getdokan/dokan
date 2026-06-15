@@ -1,5 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { toPath } from '@utils/helpers';
+import { DATA_ROW, SKELETON } from './adminDataViews';
 
 export const adminReportsData = {
     // The vendor store every seeded order targets (idempotent + re-runnable).
@@ -47,7 +48,8 @@ export const adminReportsSelectors = {
     reactRoot: '#dokan-admin-dashboard',
     panel: '.dokan-reports-admin',
     table: 'table',
-    dataRow: 'table tbody tr',
+    // Real (non-skeleton) DataViews rows.
+    dataRow: DATA_ROW,
     // The D3 chart renders an <svg> inside the ReportsSalesChart card.
     chartSvg: 'svg',
     emptyState: 'text=/no logs found|no earnings found|no data found|no items|no results/i',
@@ -167,6 +169,8 @@ export class AdminReportsPage {
     /** Wait until either >=1 DataViews row OR the empty-state has painted (a table
      * tab is "ready" in either state). */
     async waitForTableSettled(timeoutMs = 20000): Promise<void> {
+        // Wait out the loading skeleton so its rows aren't read as fresh data.
+        await this.page.locator(SKELETON).first().waitFor({ state: 'hidden', timeout: timeoutMs }).catch(() => undefined);
         const start = Date.now();
         while (Date.now() - start < timeoutMs) {
             if ((await this.rows.count()) > 0) return;
@@ -207,6 +211,37 @@ export class AdminReportsPage {
         });
         await this.page.keyboard.press('Escape').catch(() => undefined);
         return names;
+    }
+
+    /** Apply an "Order Status" value via the Filter and return the refetch URL. */
+    async applyOrderStatusFilter(optionLabel: string, requestFragment: string): Promise<string> {
+        const control = this.page.locator('.react-select__control').first();
+        // Reuse the control if already showing; otherwise open Filter → Order Status.
+        if (!(await control.isVisible().catch(() => false))) {
+            await this.openFilter();
+            await this.page.getByRole('button', { name: 'Order Status', exact: true }).first().click();
+            await control.waitFor({ state: 'visible', timeout: 10000 });
+        }
+        const [req] = await Promise.all([
+            this.page.waitForRequest(r => r.url().includes(requestFragment) && r.url().includes('order_status'), { timeout: 15000 }),
+            (async () => {
+                await control.click();
+                await this.page.locator('.react-select__option').filter({ hasText: new RegExp(`^${optionLabel}$`, 'i') }).first().click();
+            })(),
+        ]);
+        await this.waitForTableSettled();
+        return req.url();
+    }
+
+    /** True when every visible data row's text matches the given status pattern. */
+    async everyRowMatchesStatus(status: RegExp): Promise<boolean> {
+        const count = await this.rows.count();
+        if (count === 0) return false;
+        for (let i = 0; i < count; i++) {
+            const text = (await this.rows.nth(i).innerText()).trim();
+            if (!status.test(text)) return false;
+        }
+        return true;
     }
 
     /** Click the "Export" toolbar button and return the downloaded file's
