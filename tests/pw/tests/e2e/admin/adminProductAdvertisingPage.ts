@@ -252,9 +252,7 @@ export class AdminProductAdvertisingPage {
         return this.page.getByRole('heading', { name: 'Delete Advertisement' }).first();
     }
 
-    /** Confirm the Plugin UI DataViews inline action confirm (Expire / Delete).
-     * The legacy `confirmLabel` (e.g. 'Yes, Expire' / 'Yes, Delete') is no longer
-     * needed — we delegate to the shared helper that clicks the primary button. */
+    /** Confirm the inline DataViews action (clicks the primary, non-Cancel button). */
     async confirmModal(confirmLabel: string): Promise<void> {
         void confirmLabel;
         await confirmDataViewsAction(this.page);

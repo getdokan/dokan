@@ -1,33 +1,10 @@
 import { Locator, Page } from '@playwright/test';
 
-// ============================================================================
-// Shared helpers for the @wedevs/plugin-ui DataViews inline action confirm used
-// across every Dokan admin DataView table (WP Admin → Dokan → React dashboard).
-//
-// The admin tables migrated from the hand-rolled DokanModal (role="dialog") to
-// the Plugin UI DataViews built-in confirm. Verified live (2026-06-15):
-//   • container: role="alertdialog", stable class `.pui-dataview-alert-dialog`
-//   • <h2> heading (action title) + <p> description
-//   • exactly two buttons: "Cancel" and a primary confirm.
-//
-// IMPORTANT: the primary confirm label is NOT consistent across tables — the
-// `confirmButtonLabel` each action declares varies. Verified live (2026-06-15):
-//   • bare verb: Withdraw ("Approve"), Abuse Reports ("Delete"), RFQ /
-//     Store Reviews / Announcements ("Move to Trash"), Verifications ("Approve"),
-//     Wholesale ("Deactivate").
-//   • "Yes, <Verb>": Vendors ("Yes, Disable"), Seller Badge ("Yes, Delete"),
-//     Advertising ("Yes, Expire"), Refunds ("Yes, Cancel").
-// (This label inconsistency is a tracked UX nit — see the bug notes.) Because the
-// label is unreliable, the confirm helper targets "the button that is NOT the
-// exact 'Cancel' dismiss" instead of matching a verb. That is also why actions
-// whose own verb is "Cancel" (e.g. Cancel Withdrawal → "Yes, Cancel") still work.
-//
-// The old page objects waited for getByRole('dialog') and clicked a button whose
-// name equalled the action label ("Approve" / "Delete" / "Move to Trash"). Both
-// assumptions broke: the role is now "alertdialog" and the confirm label moved.
-// These helpers target the new surface in one place so the page objects don't
-// each re-encode it.
-// ============================================================================
+// Shared helpers for the @wedevs/plugin-ui DataViews inline action confirm
+// (role="alertdialog") used across every Dokan admin DataView table. The primary
+// confirm label is inconsistent across tables (bare verb vs "Yes, <Verb>"), so
+// the helpers target "the button that is NOT the exact 'Cancel' dismiss" rather
+// than matching a verb.
 
 /** The Plugin UI DataViews inline confirm (role="alertdialog"). */
 export function dataViewsConfirm(page: Page): Locator {
@@ -35,9 +12,8 @@ export function dataViewsConfirm(page: Page): Locator {
 }
 
 /**
- * Click the primary confirm button of the inline confirm — i.e. everything that
- * is NOT the "Cancel" dismiss button (e.g. "Yes, Approve", "Yes, Delete").
- * Using "not exactly Cancel" is robust even for actions like "Cancel Withdrawal"
+ * Click the primary confirm button (everything that is NOT the exact "Cancel"
+ * dismiss button), so it is robust even for actions like "Cancel Withdrawal"
  * whose confirm button itself contains the word "Cancel".
  */
 export async function confirmDataViewsAction(page: Page, timeout = 10000): Promise<void> {
@@ -68,19 +44,12 @@ export async function isDataViewsConfirmOpen(page: Page, timeout = 5000): Promis
 }
 
 /**
- * Wait for a DataViews list to SETTLE after a tab switch, search, or initial
- * load. The list refetches asynchronously (debounced search + REST roundtrip)
- * and paints STALE/cached rows first, so reading row counts / empty state too
- * early yields stale data — the root cause of the flaky "empty state" / "row
- * count" / "row not found" checks.
- *
- * The reliable signal is the refetch itself, so we:
- *   1. allow any debounced request to dispatch (`debounceMs`),
- *   2. wait for the network to go idle (the REST refetch completes),
- *   3. confirm the table has painted its fresh state (>=1 row OR the
- *      "No data found" empty state).
- * Network waits fall back to their timeout (never throw) so a page with
- * background polling can't wedge the suite.
+ * Wait for a DataViews list to settle after a tab switch, search, or initial
+ * load. The list refetches asynchronously and paints stale/cached rows first, so
+ * reading row counts / empty state too early yields stale data. We let the
+ * debounced request dispatch, wait for the network to go idle, then confirm the
+ * table painted its fresh state (>=1 row OR the empty state). Network waits fall
+ * back to their timeout (never throw) so background polling can't wedge the suite.
  */
 export async function waitForDataViewsSettle(
     page: Page,

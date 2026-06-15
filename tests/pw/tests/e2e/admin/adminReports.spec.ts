@@ -6,21 +6,6 @@ import { payloads } from '@utils/payloads';
 import { SERVER_URL } from '@utils/helpers';
 import path from 'path';
 
-// ============================================
-// ADMIN REPORTS — new React admin dashboard (Dokan Pro 5.0.0+)
-// Surface: wp-admin/admin.php?page=dokan-dashboard#/reports (HashRouter).
-//
-// Lives in Dokan Pro, so the whole suite is gated behind @pro. ADMIN-ONLY spec.
-// The Reports page is a TABBED, READ-only surface: a "Reports" overview (D3 chart
-// + By Month/By Year/By Vendor sub-tabs), an "All Logs" commission-log table and
-// an "Admin Earnings" earnings table. To guarantee at least one commission /
-// earning / log row, the beforeAll seeds — over REST, never the vendor/customer
-// UI — a vendor store + product + customer + ONE completed order
-// (apiUtils.createOrderWithStatus, 'wc-completed', admin auth). getSellerId /
-// getCustomerId-first keeps re-creation idempotent so a re-run never 400s.
-// See tests/pw/test-cases/admin-dashboard-seeding-strategy.md (§ Reports).
-// ============================================
-
 // SESSION STORAGE STATES
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');

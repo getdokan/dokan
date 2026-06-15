@@ -23,21 +23,6 @@ async function questionExists(questionId: string): Promise<boolean> {
     return res.ok();
 }
 
-// ============================================
-// ADMIN PRODUCT Q&A — new React admin dashboard (Dokan Pro 5.0.0+)
-// Surface: wp-admin/admin.php?page=dokan-dashboard#/product-qa (AdminDataViews,
-// module-gated by the `product_qa` Pro module).
-//
-// ADMIN-ONLY spec. The admin #/product-qa DataView only MODERATES pre-existing
-// customer questions (status tabs All/Unread/Read/Unanswered/Answered, vendor +
-// product filters, bulk read/unread/delete, plus a single-question detail page
-// for answer/visibility/delete). This spec never drives the storefront question
-// form: the full chain (vendor store -> vendor product -> customer -> question
-// -> optional answer) is seeded programmatically via the REST API.
-// See tests/pw/test-cases/admin-dashboard-seeding-strategy.md (§ Product Q&A).
-// All seeded names are namespaced with the "AQA" prefix.
-// ============================================
-
 // SESSION STORAGE STATES
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
@@ -163,12 +148,8 @@ test.describe('Admin Product Q&A moderation', () => {
             expect(await qa.hasNoPhpFatal(), 'no PHP fatal').toBe(true);
         });
 
-        // QUARANTINED @exploratory: the admin Product Q&A DataViews page renders NO
-        // free-text search input (ProductQAList.tsx mounts no <SearchInput>; the
-        // component tracks searchValue state but never renders a box, and
-        // fetchQuestions sends no `search` param). Only the Vendors page has search.
-        // This asserts search-driven filtering the UI cannot perform. Documented
-        // product gap — re-enable when admin search lands.
+        // QUARANTINED: the admin Product Q&A page renders no free-text search input,
+        // so this asserts filtering the UI cannot perform. Re-enable when search lands.
         test.fixme('searching by question text filters the list to the matching question', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
             await qa.goto();
             await qa.search(adminProductQaData.answerTarget);
@@ -252,22 +233,7 @@ test.describe('Admin Product Q&A moderation', () => {
             expect(await qa.actionMenuItemVisible(/^Delete$/i), 'Delete offered').toBe(true);
         });
 
-        // BUG (verified live 2026-06-15): the row Actions "Delete" on the admin
-        // Product Q&A table fires the delete immediately with NO confirmation. Every
-        // other migrated admin DataView (Abuse Reports, Store Reviews, Seller Badge,
-        // RFQ, Vendors, Withdraw, Wholesale, Advertising, Verifications, even Vendor
-        // Support Close/Delete) opens the Plugin UI inline confirm (role="alertdialog")
-        // first. Root cause: @wedevs/plugin-ui only wraps an action's callback with the
-        // confirm modal when the action declares `isDestructive: true` (the confirm
-        // text is then `confirmTitle`/`confirmMessage`/`confirmButtonLabel`, each with a
-        // default). The `product-qa-delete` action in dokan-pro
-        // modules/product-qa/src/admin/ProductQAList.tsx omits `isDestructive`, so its
-        // callback runs straight away. Fix = add `isDestructive: true` (cf. the abuse
-        // reports delete in report-abuse/src/admin/dashboard/ReportAbusePage.tsx, or
-        // vendor-support Close/Delete in vendor-support/src/components/List.tsx, which
-        // all set it). Quarantined until then. When fixed, the first-row Delete opens
-        // the confirm and dismissDataViewsAction() cancels it, so no row is destroyed.
-        test.fixme('row Delete must show an inline confirmation before deleting', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+        test('row Delete must show an inline confirmation before deleting', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
             await qa.goto();
             await qa.clickTab(/^All/);
             await qa.openFirstRowActionMenu();
@@ -294,9 +260,8 @@ test.describe('Admin Product Q&A moderation', () => {
             await ctx?.close();
         });
 
-        // QUARANTINED @exploratory: no free-text search input on the admin Product
-        // Q&A page (see the "searching by question text" test above) — a
-        // search-driven empty state is unreachable via the UI. Documented product gap.
+        // QUARANTINED: no search input on the admin Product Q&A page, so a
+        // search-driven empty state is unreachable via the UI.
         test.fixme('search with no match shows the empty state', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
             await qa.goto();
             await qa.search(adminProductQaData.searchMiss);
@@ -343,16 +308,11 @@ test.describe('Admin Product Q&A moderation', () => {
             await ctx.close();
         });
 
-        // QUARANTINED @exploratory — SECURITY OBSERVATION, not a flaky test.
-        // Confirmed live: GET /dokan/v1/product-questions returns HTTP 200 to an
-        // ANONYMOUS caller, leaking every question with internal fields (user_id,
-        // read flag, status) and with no product scoping. The server does this by
-        // design: QuestionsApi::get_items_permissions_check() returns true
-        // unconditionally (product questions render on the storefront product page).
-        // The assertion below (must be 401/403) therefore fails against current
-        // product behavior. Left strict + quarantined so the gate stays honest;
-        // surfaced to the team as a potential information-exposure concern to review
-        // (the list endpoint exposes more than the storefront needs).
+        // QUARANTINED — security observation, not a flaky test. GET
+        // /dokan/v1/product-questions returns 200 to an anonymous caller (its
+        // permission check returns true unconditionally), so the 401/403 assertion
+        // below fails against current behavior. Left strict + quarantined so the gate
+        // stays honest and the potential info-exposure stays visible.
         test.fixme('an unauthenticated request to /dokan/v1/product-questions is rejected', { tag: ['@pro', '@customer', '@exploratory'] }, async () => {
             const anonCtx = await request.newContext();
             const res = await anonCtx.get(endPoints.getAllProductQuestions);

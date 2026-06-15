@@ -207,12 +207,7 @@ export class AdminStoreReviewsPage {
         await item.click();
     }
 
-    /**
-     * Confirm the Plugin UI DataViews inline confirm (role="alertdialog"). The
-     * primary button now reads "Yes, <Verb>" (e.g. "Yes, Move to Trash"), not the
-     * bare action label, so we click the non-Cancel button. `confirmLabel` is kept
-     * for caller readability only.
-     */
+    /** Confirm the inline DataViews action (clicks the primary, non-Cancel button). */
     async confirmModal(confirmLabel?: string): Promise<void> {
         void confirmLabel;
         await confirmDataViewsAction(this.page);

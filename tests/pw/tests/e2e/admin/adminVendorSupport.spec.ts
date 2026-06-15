@@ -6,20 +6,9 @@ import { payloads } from '@utils/payloads';
 import { SERVER_URL } from '@utils/helpers';
 import path from 'path';
 
-// ============================================
-// ADMIN VENDOR SUPPORT — new React admin dashboard (Dokan Pro 5.0.0+)
-// Surface: wp-admin/admin.php?page=dokan-dashboard#/vendor-support
-// (@wedevs/plugin-ui DataViews, module-gated by the `vendor-support` Pro module).
-//
-// ADMIN-ONLY spec. The admin Vendor Support list moderates the support tickets
-// vendors raised to the marketplace admin (status tabs All/Active/Closed, a
-// search box, a Vendor + Date Range filter, and row actions View / Close /
-// Mark as read / Delete). The ticket itself is seeded over REST
-// (POST /dokan/v1/vendor-support/tickets), never via the vendor UI. Seeding is
-// BEST-EFFORT: the mount / tab / filter / access-control tests don't need a row,
-// so a seeding hiccup must not cascade — the row-dependent tests skip when no
-// ticket was seeded. All seeded names are namespaced with the "AVS" prefix.
-// ============================================
+// Admin-only Vendor Support spec. Ticket seeding is best-effort: mount/tab/filter/
+// access-control tests don't need a row, so a seeding hiccup must not cascade —
+// row-dependent tests skip when no ticket was seeded. Seeded names use the "AVS" prefix.
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
@@ -45,10 +34,7 @@ test.describe('Admin Vendor Support functionality @pro', () => {
         apiUtils = new ApiUtils(await request.newContext());
         seed.vendorId = await seedVendor(adminVendorSupportData.vendor);
 
-        // Best-effort: create ONE ticket for the seeded vendor so the list, search,
-        // row-action and confirm tests have a deterministic row. The POST mirrors
-        // the NewTicket form payload ({subject, message, vendor_id}); admin auth +
-        // explicit vendor_id attributes it to the seeded vendor.
+        // Best-effort: seed ONE ticket so row-dependent tests have a deterministic row.
         try {
             const [res] = await apiUtils.post(
                 `${SERVER_URL}${adminVendorSupportData.rest.tickets}`,
@@ -66,7 +52,6 @@ test.describe('Admin Vendor Support functionality @pro', () => {
         await apiUtils.dispose();
     });
 
-    // ----------------------------------------
     test.describe('happy paths', () => {
         let ctx: BrowserContext;
         let page: Page;
@@ -150,7 +135,6 @@ test.describe('Admin Vendor Support functionality @pro', () => {
         });
     });
 
-    // ----------------------------------------
     test.describe('edge cases', () => {
         let ctx: BrowserContext;
         let page: Page;
@@ -182,7 +166,6 @@ test.describe('Admin Vendor Support functionality @pro', () => {
         });
     });
 
-    // ----------------------------------------
     test.describe('negative cases', () => {
         test('REST: an unauthenticated request to the vendor-support tickets is rejected', { tag: ['@pro', '@customer'] }, async () => {
             const apiCtx = await request.newContext();

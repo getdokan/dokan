@@ -244,9 +244,7 @@ export class AdminRequestForQuotePage {
         await item.click();
     }
 
-    /** Confirm the Plugin UI DataViews inline action confirm. The legacy
-     * `confirmLabel` is no longer needed — we delegate to the shared helper that
-     * clicks the primary (non-Cancel) button. */
+    /** Confirm the inline DataViews action (clicks the primary, non-Cancel button). */
     async confirmModal(confirmLabel = 'Confirm'): Promise<void> {
         void confirmLabel;
         await confirmDataViewsAction(this.page);

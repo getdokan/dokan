@@ -2,29 +2,7 @@ import { Locator, Page } from '@playwright/test';
 import { toPath } from '@utils/helpers';
 import { confirmDataViewsAction, dataViewsConfirm, waitForDataViewsSettle } from './adminDataViews';
 
-// ============================================
-// TEST DATA — namespaced with the "AVS" area prefix.
-// ============================================
-// The admin Vendor Support page (Dokan Pro 5.0.0+ React admin dashboard) is a
-// @wedevs/plugin-ui DataViews list mounted at
-// admin.php?page=dokan-dashboard#/vendor-support via the
-// `dokan-admin-dashboard-routes` filter (module-gated by the `vendor-support`
-// Pro module). It is ADMIN-only: it lists the support tickets vendors raised to
-// the marketplace admin. A ticket detail page lives at #/vendor-support/:id.
-//
-// Verified against dokan-pro/modules/vendor-support/src/components/List.tsx +
-// admin/dashboard/index.tsx (live 2026-06-15):
-//   - Status tabs: All / Active / Closed (counts via /vendor-support/tickets/counts).
-//   - Columns: Ticket Id, Vendor, Subject, Status, Date (+ Actions).
-//   - Free-text search box (placeholder "Search") + a "Filter" with Vendor and
-//     Date Range fields.
-//   - Row actions: View, Close (destructive → inline confirm), Mark as read,
-//     Delete (admin-only, destructive → inline confirm). Close/Delete declare
-//     `isDestructive: true`, which is what makes @wedevs/plugin-ui wrap them with
-//     the role="alertdialog" confirm (default copy "Are you sure? …").
-//
-// Tickets are seeded over REST (POST /dokan/v1/vendor-support/tickets with
-// {subject, message, vendor_id}), never via the vendor UI.
+// Admin-only Vendor Support DataViews list. Test data namespaced with "AVS".
 export const adminVendorSupportData = {
     vendor: { storeName: 'AVS Support Vendor', userLogin: 'avs_support_vendor', email: 'avs_support_vendor@example.test' },
     ticket: { subject: 'AVS Listed Ticket', message: 'AVS ticket body — please assist with my store payouts.' },
@@ -45,10 +23,6 @@ export const adminVendorSupportSelectors = {
     phpFatal: 'text=/Fatal error|Parse error|There has been a critical error/i',
 } as const;
 
-// ============================================
-// PAGE OBJECT — admin Vendor Support list.
-// Surface: wp-admin/admin.php?page=dokan-dashboard#/vendor-support
-// ============================================
 export class AdminVendorSupportPage {
     readonly page: Page;
     readonly url = toPath('wp-admin/admin.php?page=dokan-dashboard#/vendor-support');
@@ -57,7 +31,6 @@ export class AdminVendorSupportPage {
         this.page = page;
     }
 
-    // ---- Locators ----
     get reactRoot(): Locator {
         return this.page.locator(adminVendorSupportSelectors.reactRoot).first();
     }
@@ -84,7 +57,6 @@ export class AdminVendorSupportPage {
         return this.rows.filter({ hasText: new RegExp(escapeRegExp(subject), 'i') }).first();
     }
 
-    // ---- Navigation / readiness ----
     async goto(): Promise<void> {
         await this.page.goto(this.url);
         await this.page.waitForLoadState('domcontentloaded');
@@ -115,7 +87,6 @@ export class AdminVendorSupportPage {
         return !fatal;
     }
 
-    // ---- Reads ----
     async getRowCount(): Promise<number> {
         return await this.rows.count();
     }
@@ -131,7 +102,6 @@ export class AdminVendorSupportPage {
         return (await this.rowBySubject(subject).count()) > 0;
     }
 
-    // ---- Tabs ----
     async clickTab(name: RegExp): Promise<void> {
         const tab = this.tab(name);
         await tab.waitFor({ state: 'visible', timeout: 10000 });
@@ -140,7 +110,6 @@ export class AdminVendorSupportPage {
         await waitForDataViewsSettle(this.page);
     }
 
-    // ---- Search ----
     async search(term: string): Promise<void> {
         await this.searchBox.waitFor({ state: 'visible', timeout: 10000 });
         await this.searchBox.fill(term);
@@ -151,7 +120,6 @@ export class AdminVendorSupportPage {
         await waitForDataViewsSettle(this.page, { debounceMs: 600 });
     }
 
-    // ---- Filter ----
     async openFilter(): Promise<void> {
         const f = this.page.getByRole('button', { name: 'Filter', exact: true }).first();
         await f.waitFor({ state: 'visible', timeout: 10000 });
@@ -172,7 +140,6 @@ export class AdminVendorSupportPage {
         return names;
     }
 
-    // ---- Row actions ----
     async openRowActionMenuFor(subject: string): Promise<void> {
         const row = this.rowBySubject(subject);
         await row.waitFor({ state: 'visible', timeout: 10000 });
@@ -202,7 +169,6 @@ export class AdminVendorSupportPage {
         await confirmDataViewsAction(this.page);
     }
 
-    // ---- Authorization (non-admin) ----
     async isAccessDenied(): Promise<boolean> {
         const rootVisible = await this.reactRoot.isVisible({ timeout: 5000 }).catch(() => false);
         const headingVisible = await this.heading.isVisible({ timeout: 2000 }).catch(() => false);

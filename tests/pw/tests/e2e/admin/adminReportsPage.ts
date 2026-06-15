@@ -1,38 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { toPath } from '@utils/helpers';
 
-// ============================================
-// TEST DATA — namespaced with the "ARPT" area prefix.
-// ============================================
-// The admin Reports page (Dokan Pro 5.0.0+ React admin dashboard) is a TABBED
-// reports surface mounted at admin.php?page=dokan-dashboard#/reports via the
-// `dokan-admin-dashboard-routes` filter (path '/reports'). It is ADMIN-only and
-// READ-only: every report row / chart is computed server-side from the orders
-// already in the marketplace. To guarantee at least one commission/earning row
-// this folder seeds — over REST, never the vendor/customer UI — a vendor store +
-// a product + a customer + ONE completed order (apiUtils.createOrderWithStatus,
-// 'wc-completed', admin auth).
-//
-// The page has TWO tab levels, BOTH rendered as role=tab:
-//   - Top-level HeaderCard buttons (role="tab"): "Reports" (the active default,
-//     the overview/charts panel), "All Logs" (commission-log DataViews table),
-//     "Admin Earnings" (earnings DataViews table + summary cards).
-//   - Inside the "Reports" overview, an AdminTab (WP TabPanel -> role=tab) with
-//     the sub-tabs "By Month" (by-day), "By Year" (by-year), "By Vendor"
-//     (by-vendor). These sub-tabs only exist while the "Reports" card is active;
-//     switching to All Logs / Admin Earnings unmounts them.
-// So the five named tabs from the brief — All Logs, Admin Earnings, By Month,
-// By Year, By Vendor — are all role=tab.
-//
-// REST endpoints each panel fires (verified against the React source):
-//   - Reports overview  -> GET /dokan/v1/admin/report-stats/summary  (ReportStats)
-//                          GET /dokan/v1/admin/report-stats/overview  (ReportsSalesChart, D3 chart)
-//   - All Logs          -> GET /dokan/v1/admin/report-logs           (AllLogs DataViews)
-//   - Admin Earnings    -> GET /dokan/v1/admin/report-earnings       (AdminEarnings DataViews)
-//                          GET /dokan/v1/admin/report-earnings/summary (EarningStats cards)
-// (The brief mentioned report/summary + report/overview; the new dashboard's
-// actual paths are the report-stats/* + report-logs + report-earnings ones above,
-// which is what these tests assert.)
 export const adminReportsData = {
     // The vendor store every seeded order targets (idempotent + re-runnable).
     vendor: { storeName: 'ARPT Reports Vendor', userLogin: 'arpt_reports_vendor', email: 'arpt_reports_vendor@example.test' },
@@ -61,8 +29,7 @@ export const adminReportsData = {
         earningsSummary: '/dokan/v1/admin/report-earnings/summary',
     },
 
-    // Toolbar (Export + Filter) verified live 2026-06-15. Neither table has a
-    // standalone search box — free-text search is the "Order Search" filter field.
+    // Neither table has a standalone search box — free-text search is the "Order Search" filter field.
     allLogs: {
         // The fields the "Filter" toolbar button exposes for All Logs.
         filterFields: ['Vendor', 'Order Status', 'Date Range', 'Order Search'],
@@ -76,37 +43,22 @@ export const adminReportsData = {
     },
 } as const;
 
-// ============================================
-// SELECTORS — verified against
-// dokan-pro/src/admin/reports/components/reports/index.tsx (ReportsAdmin),
-// ReportsOverview.tsx + ReportsSalesChart.tsx (overview + D3 chart),
-// logs/AllLogs.tsx + earnings/AdminEarnings.tsx (AdminDataViews tables),
-// HeaderCard.tsx (role="tab" cards) and dokan-lite AdminHeader.tsx (the h1
-// "Reports") / AdminTab.tsx (WP TabPanel -> role=tab sub-tabs).
-// ============================================
 export const adminReportsSelectors = {
     reactRoot: '#dokan-admin-dashboard',
-    // The reports panel wrapper class (index.tsx outer div).
     panel: '.dokan-reports-admin',
     table: 'table',
     dataRow: 'table tbody tr',
     // The D3 chart renders an <svg> inside the ReportsSalesChart card.
     chartSvg: 'svg',
-    // DataViews empty state (AllLogs "No logs found" / AdminEarnings "No earnings found").
     emptyState: 'text=/no logs found|no earnings found|no data found|no items|no results/i',
     // A panel-level red error box (the {error} branches in each panel).
     errorBox: '.text-red-600',
-    // PHP fatal markers.
     phpFatal: 'text=/Fatal error|Parse error|There has been a critical error/i',
 } as const;
 
-// ============================================
-// PAGE OBJECT — admin Reports (Dokan Pro 5.0.0+ React admin dashboard).
-// Surface: wp-admin/admin.php?page=dokan-dashboard#/reports (HashRouter).
-// NOTE: admin-facing — the vendor announcement modal does NOT appear in wp-admin,
-// so this page object deliberately does NOT register the closeAnnouncementModal
-// handler.
-// ============================================
+// PAGE OBJECT — admin Reports. Surface: admin.php?page=dokan-dashboard#/reports.
+// Admin-facing, so it deliberately does NOT register closeAnnouncementModal (the
+// vendor announcement modal never appears in wp-admin).
 export class AdminReportsPage {
     readonly page: Page;
     readonly url = toPath('wp-admin/admin.php?page=dokan-dashboard#/reports');
@@ -115,7 +67,6 @@ export class AdminReportsPage {
         this.page = page;
     }
 
-    // ---- Locators ----
     get reactRoot(): Locator {
         return this.page.locator(adminReportsSelectors.reactRoot).first();
     }
@@ -146,7 +97,6 @@ export class AdminReportsPage {
         return this.page.getByRole('columnheader', { name }).first();
     }
 
-    // ---- Navigation / readiness ----
     async goto(): Promise<void> {
         await this.page.goto(this.url);
         await this.page.waitForLoadState('domcontentloaded');
@@ -174,9 +124,8 @@ export class AdminReportsPage {
         return !fatal;
     }
 
-    // ---- Tabs ----
     /** True when a tab with the given label is present (role=tab). isVisible() does
-     * NOT wait, so we waitFor() (the gotcha: a snapshot would race the mount). */
+     * NOT wait, so we waitFor() to avoid racing the mount. */
     async isTabVisible(name: string): Promise<boolean> {
         try {
             await this.tab(name).waitFor({ state: 'visible', timeout: 10000 });
@@ -207,7 +156,6 @@ export class AdminReportsPage {
         return req.url();
     }
 
-    // ---- Reads ----
     async getRowCount(): Promise<number> {
         return await this.rows.count();
     }
@@ -237,7 +185,6 @@ export class AdminReportsPage {
         }
     }
 
-    // ---- Toolbar: Filter + Export ----
     /** Open the DataViews "Filter" toolbar button (the active table panel's). */
     async openFilter(): Promise<void> {
         const f = this.page.getByRole('button', { name: 'Filter', exact: true }).first();
@@ -272,7 +219,6 @@ export class AdminReportsPage {
         return download ? download.suggestedFilename() : null;
     }
 
-    // ---- Authorization (non-admin) ----
     /** True when the admin Reports UI is NOT reachable for the current user. */
     async isAccessDenied(): Promise<boolean> {
         const rootVisible = await this.reactRoot.isVisible({ timeout: 5000 }).catch(() => false);

@@ -278,9 +278,7 @@ export class AdminAnnouncementsPage {
         await item.click();
     }
 
-    /** Confirm the Plugin UI DataViews inline action confirm (Trash / Delete).
-     * The legacy `confirmLabel` is no longer needed — the confirm button now reads
-     * "Yes, <Verb>" — so we delegate to the shared helper. */
+    /** Confirm the inline DataViews action (clicks the primary, non-Cancel button). */
     async confirmModal(confirmLabel: string): Promise<void> {
         void confirmLabel;
         await confirmDataViewsAction(this.page);

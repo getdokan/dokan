@@ -2,23 +2,11 @@ import { Locator, Page } from '@playwright/test';
 import { toPath } from '@utils/helpers';
 import { confirmDataViewsAction, waitForDataViewsSettle } from './adminDataViews';
 
-// ============================================
-// TEST DATA
-// ============================================
-// Vendors + withdrawal requests this folder seeds (REST createStore for the
-// vendor account, DB insert into {prefix}_dokan_withdraw for the request rows)
-// so the admin Withdraw list is deterministic. This is an ADMIN-only spec: the
-// withdrawal state it asserts against is created programmatically, never by
-// driving the vendor UI. See tests/pw/test-cases/admin-dashboard-seeding-strategy.md
-// (§ Withdraw). All data names are prefixed "AW" to stay collision-free with the
-// other admin specs running in parallel.
 export const adminWithdrawData = {
-    // Read-only fixtures — a standing pending and a standing cancelled request
-    // that the list/tab read assertions filter to, never mutated.
-    // NOTE: the withdraw list has NO search box and rows have NO avatar, so rows
-    // are isolated by hasText on the store name. Names are kept SHORT (no cell
-    // truncation) and NON-OVERLAPPING (no name is a substring of another — e.g.
-    // 'AW Cancel' must not collide with the cancelled fixture, hence 'AW Voided').
+    // Read-only fixtures — a standing pending and a standing cancelled request,
+    // never mutated. Names are SHORT (no cell truncation) and NON-OVERLAPPING (no
+    // name is a substring of another) because rows are isolated by hasText on the
+    // store name (the list has no search box and rows have no avatar).
     pending: { storeName: 'AWX Pending', userLogin: 'awx_pending', email: 'awx_pending@example.test', amount: '25' },
     cancelled: { storeName: 'AWX Voided', userLogin: 'awx_voided', email: 'awx_voided@example.test', amount: '30' },
     // Dedicated mutation targets — each approve / cancel / delete test owns one
@@ -31,35 +19,18 @@ export const adminWithdrawData = {
     poor: { storeName: 'AWX Poor', userLogin: 'awx_poor', email: 'awx_poor@example.test', amount: '500' },
 } as const;
 
-// ============================================
-// SELECTORS — verified against src/admin/dashboard/pages/withdraw/index.tsx.
-// The admin Withdraw page is the unified @dokan/components AdminDataViews list
-// mounted on #dokan-admin-dashboard at admin.php?page=dokan-dashboard#/withdraw.
-// Status tabs are pending/approved/cancelled/all (the 'approved' tab maps to the
-// backend 'completed' status). Row + bulk actions live behind a 3-dot menu:
-// View, Approve (pending-only), Cancel (pending-only), Add Note, Delete.
-// ============================================
 export const adminWithdrawSelectors = {
     reactRoot: '#dokan-admin-dashboard',
     dataRow: 'table tbody tr',
-    // NOTE: the withdraw list has NO inline search box (only tabs + Filter +
-    // Export), so rows are isolated by hasText on the store name, not search.
     // Per-row 3-dot actions trigger (scoped to a row; the bulk toolbar shares the label).
     rowActionsBtn: "button[aria-label='Actions']",
-    // DataViews empty state when no row matches.
     emptyState: 'text=/no data found|no items|no results|nothing to show|no withdraw/i',
-    // PHP fatal markers.
     phpFatal: 'text=/Fatal error|Parse error|There has been a critical error/i',
 } as const;
 
-// ============================================
-// PAGE OBJECT — admin Withdraw list (Dokan 5.0.0+ React admin dashboard)
-// Surface: wp-admin/admin.php?page=dokan-dashboard#/withdraw
-// NOTE: admin-facing — the vendor announcement modal does NOT appear in
-// wp-admin, so this page object deliberately does NOT register the
-// closeAnnouncementModal handler (a generic role=dialog handler would race the
-// Approve / Cancel / Delete confirmation modal).
-// ============================================
+// PAGE OBJECT — admin Withdraw list. Surface: admin.php?page=dokan-dashboard#/withdraw.
+// Admin-facing, so it deliberately does NOT register closeAnnouncementModal — a
+// generic role=dialog handler would race the Approve / Cancel / Delete confirm modal.
 export class AdminWithdrawPage {
     readonly page: Page;
     readonly url = toPath('wp-admin/admin.php?page=dokan-dashboard#/withdraw');
@@ -68,7 +39,6 @@ export class AdminWithdrawPage {
         this.page = page;
     }
 
-    // ---- Locators ----
     get reactRoot(): Locator {
         return this.page.locator(adminWithdrawSelectors.reactRoot).first();
     }
@@ -97,7 +67,6 @@ export class AdminWithdrawPage {
         return this.rows.filter({ hasText: new RegExp(escapeRegExp(name), 'i') }).first();
     }
 
-    // ---- Navigation / readiness ----
     async goto(): Promise<void> {
         await this.page.goto(this.url);
         await this.page.waitForLoadState('domcontentloaded');
@@ -139,7 +108,6 @@ export class AdminWithdrawPage {
         return !fatal;
     }
 
-    // ---- Reads ----
     async getRowCount(): Promise<number> {
         return await this.rows.count();
     }
@@ -177,7 +145,6 @@ export class AdminWithdrawPage {
         return selected === 'true';
     }
 
-    // ---- Tabs ----
     async clickTab(name: RegExp): Promise<void> {
         const tab = this.tab(name);
         await tab.waitFor({ state: 'visible', timeout: 10000 });
@@ -186,7 +153,6 @@ export class AdminWithdrawPage {
         await waitForDataViewsSettle(this.page); // wait for the tab refetch to settle (avoids stale rows).
     }
 
-    // ---- Row actions ----
     /** Open the 3-dot actions menu for the row matching a store name. */
     async openRowActionMenuFor(storeName: string): Promise<void> {
         const row = this.rowByStoreName(storeName);
@@ -299,7 +265,6 @@ export class AdminWithdrawPage {
         await this.confirmModal('Add Note');
     }
 
-    // ---- Authorization (non-admin) ----
     /** True when the admin Withdraw UI is NOT reachable for the current user. */
     async isAccessDenied(): Promise<boolean> {
         const rootVisible = await this.reactRoot.isVisible({ timeout: 5000 }).catch(() => false);
