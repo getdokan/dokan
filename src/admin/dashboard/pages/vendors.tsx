@@ -9,7 +9,6 @@ import {
     SearchInput,
     getActionLabel,
 } from '@dokan/components';
-import DokanModal from '../../../components/modals/DokanModal';
 import { Vendor } from '../../../definitions/dokan-vendor';
 import {
     Plus,
@@ -130,22 +129,6 @@ const VendorsPage = ( props ) => {
         approved: 0,
         pending: 0,
     } );
-
-    // Confirmation modal state for single and bulk actions
-    const [ confirmState, setConfirmState ] = useState<
-        | null
-        | {
-              mode: 'single';
-              action: 'approve' | 'disable';
-              vendor: Vendor;
-          }
-        | {
-              mode: 'bulk';
-              action: 'approve' | 'disable';
-              vendorIds: number[];
-          }
-    >( null );
-    const [ isConfirmLoading, setIsConfirmLoading ] = useState( false );
 
     const fetchVendors = async (
         args?: Partial< {
@@ -375,26 +358,6 @@ const VendorsPage = ( props ) => {
         }
         return [];
     };
-    const extractSingleFromArgs = ( args: any ): Vendor | null => {
-        if ( args?.item ) {
-            return args.item as Vendor;
-        }
-        if ( Array.isArray( args ) && args.length ) {
-            return args[ 0 ] as Vendor;
-        }
-        return null;
-    };
-    const openConfirmFor = ( action: 'approve' | 'disable', args: any ) => {
-        const ids = extractIdsFromArgs( args );
-        if ( ids.length > 1 ) {
-            setConfirmState( { mode: 'bulk', action, vendorIds: ids } );
-            return;
-        }
-        const v = extractSingleFromArgs( args );
-        if ( v ) {
-            setConfirmState( { mode: 'single', action, vendor: v } );
-        }
-    };
     const runVendorStatusAction = async (
         action: 'approve' | 'disable',
         ids: number[],
@@ -424,41 +387,6 @@ const VendorsPage = ( props ) => {
             setSelection( [] );
         }
     };
-    const getConfirmConfig = ( state: NonNullable< typeof confirmState > ) => {
-        const isApprove = state.action === 'approve';
-        const isBulk = state.mode === 'bulk';
-        return {
-            title: isApprove
-                ? __( 'Approve Vendor', 'dokan-lite' )
-                : __( 'Disable Vendor', 'dokan-lite' ),
-            // @ts-ignore
-            // eslint-disable-next-line no-nested-ternary
-            description: isBulk
-                ? isApprove
-                    ? __(
-                          'Are you sure you want to approve the selected vendors?',
-                          'dokan-lite'
-                      )
-                    : __(
-                          'Are you sure you want to disable the selected vendors from selling?',
-                          'dokan-lite'
-                      )
-                : isApprove
-                ? __(
-                      'Are you sure you want to approve this vendor?',
-                      'dokan-lite'
-                  )
-                : __(
-                      'Are you sure you want to disable this vendor from selling?',
-                      'dokan-lite'
-                  ),
-            confirmText: isApprove
-                ? __( 'Yes, Approve', 'dokan-lite' )
-                : __( 'Yes, Disable', 'dokan-lite' ),
-            variant: isApprove ? 'primary' : ( 'danger' as const ),
-        };
-    };
-
     // Handle tab selection for status filtering
     const handleTabSelect = ( tabName ) => {
         setStatus( tabName );
@@ -497,46 +425,6 @@ const VendorsPage = ( props ) => {
 
             { /* Table */ }
             <div>
-                { /* Confirmation Modal */ }
-                { confirmState &&
-                    ( () => {
-                        const cfg = getConfirmConfig( confirmState );
-                        return (
-                            <DokanModal
-                                isOpen={ !! confirmState }
-                                onClose={ () => setConfirmState( null ) }
-                                namespace="dokan-admin-vendors-confirm"
-                                dialogTitle={ __(
-                                    'Confirmation',
-                                    'dokan-lite'
-                                ) }
-                                confirmationTitle={ cfg.title }
-                                confirmationDescription={ cfg.description }
-                                confirmButtonText={ cfg.confirmText }
-                                // @ts-ignore
-                                confirmButtonVariant={ cfg.variant }
-                                loading={ isConfirmLoading }
-                                onConfirm={ async () => {
-                                    setIsConfirmLoading( true );
-                                    try {
-                                        const ids =
-                                            confirmState.mode === 'single'
-                                                ? [ confirmState.vendor.id ]
-                                                : confirmState.vendorIds;
-                                        await runVendorStatusAction(
-                                            confirmState.action,
-                                            ids,
-                                            confirmState.mode === 'bulk'
-                                        );
-                                    } finally {
-                                        setIsConfirmLoading( false );
-                                        setConfirmState( null );
-                                    }
-                                } }
-                            />
-                        );
-                    } )() }
-
                 <div className="dokan-admin-dashboard-datatable">
                     <DataViews
                         data={ data }
@@ -669,10 +557,23 @@ const VendorsPage = ( props ) => {
                                     ),
                                     supportsBulk: true,
                                     isPrimary: false,
+                                    isDestructive: true,
+                                    confirmTone: 'positive',
+                                    confirmTitle: __( 'Approve Vendor', 'dokan-lite' ),
+                                    confirmMessage: __(
+                                        'Are you sure you want to approve the selected vendor(s)?',
+                                        'dokan-lite'
+                                    ),
+                                    confirmButtonLabel: __( 'Yes, Approve', 'dokan-lite' ),
                                     isEligible: ( item: Vendor ) =>
                                         ! item.enabled,
-                                    callback: ( args: any ) => {
-                                        openConfirmFor( 'approve', args );
+                                    callback: async ( args: any ) => {
+                                        const ids = extractIdsFromArgs( args );
+                                        await runVendorStatusAction(
+                                            'approve',
+                                            ids,
+                                            ids.length > 1
+                                        );
                                     },
                                 },
                                 {

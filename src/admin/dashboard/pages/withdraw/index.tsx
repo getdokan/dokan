@@ -296,8 +296,16 @@ const WithdrawPage = () => {
             icon: <Check size={ 16 } className="!fill-none" />,
             isPrimary: false,
             supportsBulk: true,
+            isDestructive: true,
+            confirmTone: 'positive',
+            confirmTitle: __( 'Approve Withdrawal', 'dokan-lite' ),
+            confirmMessage: __(
+                'Are you sure you want to approve the selected withdrawal(s)?',
+                'dokan-lite'
+            ),
+            confirmButtonLabel: __( 'Approve', 'dokan-lite' ),
             isEligible: ( item ) => item?.status === 'pending',
-            callback: ( items ) => {
+            callback: async ( items: any[] ) => {
                 const failedItems = items.filter( ( item ) => {
                     // Compare in integer cents so float drift can't reject an exact-balance request — mirrors the backend approval guard.
                     const requestedCents = Math.round(
@@ -322,7 +330,10 @@ const WithdrawPage = () => {
                     return;
                 }
 
-                openModal( 'approve', items );
+                await handleBulkAction(
+                    'approved',
+                    items.map( ( item ) => item.id )
+                );
             },
         },
         {
@@ -1011,57 +1022,6 @@ const WithdrawPage = () => {
                     } }
                 />
             </div>
-
-            { /* DokanModal for approve, cancel, delete actions */ }
-            { modalState.isOpen && modalState.type === 'approve' && (
-                <DokanModal
-                    isOpen={ modalState.isOpen }
-                    namespace={ `approve-withdrawal-${ modalState.items.length }` }
-                    onClose={ closeModal }
-                    onConfirm={ async () => {
-                        await handleBulkAction(
-                            'approved',
-                            modalState.items.map( ( item ) => item.id )
-                        );
-                        closeModal();
-                    } }
-                    dialogTitle={ __( 'Approve Withdrawal', 'dokan-lite' ) }
-                    confirmButtonText={ __( 'Approve', 'dokan-lite' ) }
-                    confirmationTitle={ __( 'Confirm Approval', 'dokan-lite' ) }
-                    confirmationDescription={
-                        modalState.items.length === 1
-                            ? __(
-                                  'Are you sure you want to approve this withdrawal?',
-                                  'dokan-lite'
-                              )
-                            : sprintf(
-                                  __(
-                                      'Are you sure you want to approve these %d withdrawals?',
-                                      'dokan-lite'
-                                  ),
-                                  modalState.items.length
-                              )
-                    }
-                    confirmButtonVariant="primary"
-                    dialogIcon={
-                        <div className="flex items-center justify-center shrink-0 w-14 h-14 bg-green-50 border border-green-50 rounded-full">
-                            <svg
-                                className="w-6 h-6 text-green-600"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M5 13l4 4L19 7"
-                                />
-                            </svg>
-                        </div>
-                    }
-                />
-            ) }
 
             { modalState.isOpen &&
                 modalState.type === 'add-note' &&
