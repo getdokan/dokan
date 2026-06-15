@@ -10,6 +10,13 @@ import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { RawHTML } from '@wordpress/element';
 
+// A select option; tree fields (e.g. categories) nest deeper options under `children`.
+type FieldOption = {
+    label: string;
+    value?: string | number;
+    children?: FieldOption[];
+};
+
 export const getFieldConfig = ( field: FormItem ) => {
     /**
      * Helper function to normalize options into an array of label/value objects.
@@ -21,35 +28,23 @@ export const getFieldConfig = ( field: FormItem ) => {
             return [];
         }
 
-        // Labels come from the REST schema as raw term names, which may contain
-        // HTML entities (e.g. "Home &amp; Decor"). Decode them recursively so
-        // both the dropdown options and the selected chips render correctly.
-        const decodeOption = ( option: any ): any => ( {
+        // Term names arrive HTML-encoded from the schema; decode the whole tree so options and chips read naturally.
+        const decodeOption = ( option: FieldOption ): FieldOption => ( {
             ...option,
-            label:
-                typeof option.label === 'string'
-                    ? decodeEntities( option.label )
-                    : option.label,
+            label: decodeEntities( option.label ),
             ...( Array.isArray( option.children )
                 ? { children: option.children.map( decodeOption ) }
                 : {} ),
         } );
 
-        let normalizedOptions = [];
         if ( Array.isArray( options ) ) {
-            normalizedOptions = options.map( decodeOption );
-        } else {
-            normalizedOptions = Object.entries( options ).map(
-                ( [ value, label ] ) => ( {
-                    label:
-                        typeof label === 'string'
-                            ? decodeEntities( label )
-                            : label,
-                    value,
-                } )
-            );
+            return options.map( decodeOption );
         }
-        return normalizedOptions;
+
+        return Object.entries( options ).map( ( [ value, label ] ) => ( {
+            label: decodeEntities( label ),
+            value,
+        } ) );
     };
     const mappedField = {
         ...field,

@@ -21,12 +21,13 @@ function buildHierarchicalOptions( map: CategoryMap ): ProductCategoryOption[] {
     function appendChildren( parentId: number, depth: number ) {
         const children = Object.values( map )
             .filter( ( cat ) => cat.parent_id === parentId )
+            .map( ( cat ) => ( { ...cat, name: decodeEntities( cat.name ) } ) )
             .sort( ( a, b ) => a.name.localeCompare( b.name ) );
 
         for ( const cat of children ) {
             result.push( {
                 value: cat.term_id,
-                label: INDENT.repeat( depth ) + decodeEntities( cat.name ),
+                label: INDENT.repeat( depth ) + cat.name,
             } );
             appendChildren( cat.term_id, depth + 1 );
         }
