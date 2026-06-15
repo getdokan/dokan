@@ -3,10 +3,11 @@ import {
     SimpleInput,
     TaggableSelect,
 } from '@getdokan/dokan-ui';
-import { DokanButton, DokanModal, Select } from '@src/components';
+import { AsyncSelect, DokanButton, DokanModal } from '@src/components';
 import DebouncedInput from '@src/components/DebouncedInput';
 import apiFetch from '@wordpress/api-fetch';
-import { useState } from '@wordpress/element';
+import { addQueryArgs } from '@wordpress/url';
+import { useCallback, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { GripVertical } from 'lucide-react';
 import { Attribute } from '../../types';
@@ -15,7 +16,6 @@ export type AttributeCardProps = {
     attr: Attribute;
     productType?: string;
     cardExpanded?: boolean;
-    options: any[];
     onUpdate: ( updatedAttribute: Attribute ) => void;
     onRemove: ( e: React.MouseEvent< HTMLSpanElement, MouseEvent > ) => void;
     index: number;
@@ -29,7 +29,6 @@ export type AttributeCardProps = {
 
 const AttributeCard = ( {
     attr,
-    options,
     onUpdate,
     onRemove,
     productType,
@@ -47,9 +46,12 @@ const AttributeCard = ( {
     const [ isAddTermModalOpen, setIsAddTermModalOpen ] = useState( false );
     const [ newTermName, setNewTermName ] = useState( '' );
     const [ isAddingTerm, setIsAddingTerm ] = useState( false );
+    const [ isSelectingAll, setIsSelectingAll ] = useState( false );
 
-    // @ts-ignore
-    const canAddNewAttribute = Boolean( window.dokanProductEditor?.can_add_new_attribute );
+    const canAddNewAttribute = Boolean(
+        // @ts-ignore
+        window.dokanProductEditor?.can_add_new_attribute
+    );
 
     const handleAttributeChange = ( key: keyof Attribute, value: any ) => {
         onUpdate( {
@@ -58,41 +60,50 @@ const AttributeCard = ( {
         } );
     };
 
-    const attributeOptions = ( attrId: number ) => {
-        if ( attr.is_taxonomy ) {
-            return (
-                options.find(
-                    ( option: any ) =>
-                        Number( option.value ) === Number( attrId )
-                )?.terms || []
-            );
-        }
-
-        return attr.options.map( ( optionValue: any ) => ( {
+    // Options for custom (non-taxonomy) attributes are stored inline on the attribute.
+    const customAttributeOptions = () =>
+        ( attr.options || [] ).map( ( optionValue: any ) => ( {
             value: optionValue,
             label: optionValue,
         } ) );
-    };
 
-    const attributeValues = ( attrValue: Attribute ) => {
-        return (
-            options
-                .find(
-                    ( option: any ) =>
-                        Number( option.value ) === Number( attrValue.id )
-                )
-                ?.terms?.filter( ( term: any ) =>
-                    ( attr.options as any[] ).includes( term.value )
-                ) || []
-        );
-    };
+    const termsEndpoint = `/dokan/v1/products/attributes/${ attr.id }/terms`;
+
+    const mapTerm = ( term: any ) => ( {
+        value: term.value,
+        label: term.label,
+    } );
+
+    // Lazily fetch (searchable) terms for a taxonomy attribute. Terms are no
+    // longer embedded in the form schema, so stores with very large attribute
+    // taxonomies do not exhaust memory while building the editor.
+    const loadTerms = useCallback(
+        async ( inputValue: string ) => {
+            if ( ! attr.is_taxonomy || ! attr.id ) {
+                return [];
+            }
+            try {
+                const data: any = await apiFetch( {
+                    path: addQueryArgs( termsEndpoint, {
+                        search: inputValue || '',
+                        per_page: 20,
+                    } ),
+                } );
+                return Array.isArray( data ) ? data.map( mapTerm ) : [];
+            } catch {
+                return [];
+            }
+        },
+        [ attr.id, attr.is_taxonomy ] // eslint-disable-line react-hooks/exhaustive-deps
+    );
 
     const attributeChangeHandler = ( selected: any ) => {
-        const values = selected.map( ( val: any ) => val.value );
+        const normalized = Array.isArray( selected ) ? selected : [];
+        const values = normalized.map( ( val: any ) => val.value );
         onUpdate( {
             ...attr,
             options: values,
-            terms: selected,
+            terms: normalized,
         } );
     };
 
@@ -100,9 +111,26 @@ const AttributeCard = ( {
         setIsExpanded( ! isExpanded );
     };
 
-    const handleSelectAll = () => {
-        const allOptions = attributeOptions( attr.id );
-        attributeChangeHandler( allOptions );
+    const handleSelectAll = async () => {
+        if ( ! attr.is_taxonomy || ! attr.id ) {
+            return;
+        }
+
+        setIsSelectingAll( true );
+        try {
+            const maxTerms = 1000; // Safety cap so a pathologically large taxonomy can't be selected at once.
+            const data: any = await apiFetch( {
+                path: addQueryArgs( termsEndpoint, { per_page: maxTerms } ),
+            } );
+
+            attributeChangeHandler(
+                Array.isArray( data ) ? data.map( mapTerm ) : []
+            );
+        } catch {
+            // Selecting all terms failed silently.
+        } finally {
+            setIsSelectingAll( false );
+        }
     };
 
     const handleSelectNone = () => {
@@ -127,7 +155,7 @@ const AttributeCard = ( {
                 label: response.name,
             };
 
-            const currentValues = attributeValues( attr );
+            const currentValues = attr.terms ?? [];
             attributeChangeHandler( [ ...currentValues, newTerm ] );
 
             setNewTermName( '' );
@@ -142,9 +170,7 @@ const AttributeCard = ( {
     return (
         <div
             className={ `border rounded bg-white overflow-hidden transition-[border-color,opacity] duration-200 ${
-                isDragOver
-                    ? 'border-primary border-dashed'
-                    : ''
+                isDragOver ? 'border-primary border-dashed' : ''
             }` }
             draggable={ isDraggable }
             onDragStart={ () => onDragStart( index ) }
@@ -245,11 +271,15 @@ const AttributeCard = ( {
 
                         { attr.is_taxonomy ? (
                             <>
-                                <Select
+                                <AsyncSelect
+                                    // @ts-ignore react-select multi generic
                                     isMulti
-                                    value={ attr.terms ?? attributeValues( attr ) }
-                                    options={ attributeOptions( attr.id ) }
-                                    onChange={ ( selected ) =>
+                                    cacheOptions
+                                    defaultOptions
+                                    closeMenuOnSelect={ false }
+                                    value={ attr.terms ?? [] }
+                                    loadOptions={ loadTerms }
+                                    onChange={ ( selected: any ) =>
                                         attributeChangeHandler( selected )
                                     }
                                     placeholder={ __(
@@ -262,6 +292,8 @@ const AttributeCard = ( {
                                         type="button"
                                         variant="secondary"
                                         onClick={ handleSelectAll }
+                                        disabled={ isSelectingAll }
+                                        loading={ isSelectingAll }
                                     >
                                         { __( 'Select all', 'dokan-lite' ) }
                                     </DokanButton>
@@ -277,15 +309,10 @@ const AttributeCard = ( {
                                             type="button"
                                             variant="secondary"
                                             onClick={ () =>
-                                                setIsAddTermModalOpen(
-                                                    true
-                                                )
+                                                setIsAddTermModalOpen( true )
                                             }
                                         >
-                                            { __(
-                                                'Add New',
-                                                'dokan-lite'
-                                            ) }
+                                            { __( 'Add New', 'dokan-lite' ) }
                                         </DokanButton>
                                     ) }
                                 </div>
@@ -299,9 +326,7 @@ const AttributeCard = ( {
                                             'dokan-lite'
                                         ) }
                                         onClose={ () => {
-                                            setIsAddTermModalOpen(
-                                                false
-                                            );
+                                            setIsAddTermModalOpen( false );
                                             setNewTermName( '' );
                                         } }
                                         onConfirm={ handleAddNewTerm }
@@ -312,26 +337,24 @@ const AttributeCard = ( {
                                         dialogContent={
                                             <div>
                                                 <SimpleInput
-                                                    label={ __( 'Term Name', 'dokan-lite' ) }
-                                                    value={
-                                                        newTermName
-                                                    }
+                                                    label={ __(
+                                                        'Term Name',
+                                                        'dokan-lite'
+                                                    ) }
+                                                    value={ newTermName }
                                                     onChange={ ( e ) =>
                                                         setNewTermName(
-                                                            e.target
-                                                                .value
+                                                            e.target.value
                                                         )
                                                     }
                                                     className="w-full px-3 py-2 border rounded text-sm"
                                                     input={ {
                                                         id: `dokan-new-term-${ attr.id }`,
-                                                        placeholder:
-                                                            __(
-                                                                'Enter term name',
-                                                                'dokan-lite'
-                                                            ),
-                                                        autoFocus:
-                                                            true,
+                                                        placeholder: __(
+                                                            'Enter term name',
+                                                            'dokan-lite'
+                                                        ),
+                                                        autoFocus: true,
                                                     } }
                                                 />
                                             </div>
@@ -342,7 +365,7 @@ const AttributeCard = ( {
                         ) : (
                             <TaggableSelect
                                 isMulti
-                                value={ attributeOptions( attr.id ) }
+                                value={ customAttributeOptions() }
                                 onChange={ ( selected ) =>
                                     attributeChangeHandler( selected )
                                 }

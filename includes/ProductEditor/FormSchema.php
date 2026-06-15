@@ -453,16 +453,18 @@ class FormSchema {
                 'label'      => __( 'General', 'dokan-lite' ),
                 'required'   => true,
                 'visibility' => true,
+                'is_mandatory' => true,
             ],
             [
                 'id'             => Elements::NAME,
-                'section_id'   => Elements::SECTION_GENERAL,
+                'section_id'     => Elements::SECTION_GENERAL,
                 'type'           => 'field',
                 'label'          => __( 'Title', 'dokan-lite' ),
                 'variant'        => 'text',
                 'placeholder'    => __( 'Enter product title...', 'dokan-lite' ),
                 'required'       => true,
                 'visibility'     => true,
+                'is_mandatory'   => true,
             ],
             [
                 'id'               => Elements::SLUG,
@@ -483,6 +485,7 @@ class FormSchema {
                 'variant'        => 'select',
                 'value'          => 'simple',
                 'required'       => true,
+                'is_mandatory'   => true,
                 'options'        => $this->get_product_types(),
                 'description'    => __( 'Choose Variable if your product has multiple attributes - like sizes, colors, quality etc', 'dokan-lite' ),
                 'tooltip'        => __( 'Choose product type.', 'dokan-lite' ),
@@ -584,6 +587,7 @@ class FormSchema {
                 'value'            => [],
                 'options'          => ProductCategoryHelper::get_product_categories_tree( true ),
                 'required'         => true,
+                'is_mandatory'     => true,
                 'visibility'       => true,
             ],
             [
@@ -646,6 +650,7 @@ class FormSchema {
                 'variant'        => 'editor',
                 'placeholder'    => __( 'Enter product description', 'dokan-lite' ),
                 'required'       => true,
+                'is_mandatory'   => true,
                 'visibility'     => true,
             ],
             [
@@ -862,6 +867,7 @@ class FormSchema {
                 'variant'      => 'select',
                 'options'      => dokan_get_product_visibility_options(),
                 'required'     => true,
+                'is_mandatory' => true,
                 'visibility'   => true,
             ],
             [

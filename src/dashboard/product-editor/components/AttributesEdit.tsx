@@ -1,6 +1,7 @@
-import { DokanButton, Select } from '@src/components';
+import { AsyncSelect, DokanButton, Select } from '@src/components';
 import { useCallback, useMemo, useRef, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
+import apiFetch from '@wordpress/api-fetch';
 import { useProductEditor } from '../hooks/useProductEditor';
 import { Attribute } from '../types';
 import CustomField, { getValidationError } from './CustomField';
@@ -12,7 +13,6 @@ const AttributesEdit = ( { data, field, onChange, validity }: any ) => {
     const { isLoading, submitHandler, getDefaultValue, handleDefaultChange } =
         useProductEditor( data.id );
     const { type: productType } = data;
-    const options = field.elements || [];
     const [ cardExpanded, setCardExpanded ] = useState( false );
 
     // Drag-and-drop reorder state.
@@ -66,22 +66,53 @@ const AttributesEdit = ( { data, field, onChange, validity }: any ) => {
     // Using a separate state to manage the "Add new" selection
     const [ selectedAttrAdd, setSelectedAttrAdd ] = useState< any >( null );
 
-    // Options for the "Add new" dropdown: Custom + Global Attributes
-    const addOptions = useMemo( () => {
-        const options = [
-            { label: __( 'Custom Attribute', 'dokan-lite' ), value: '' },
-            ...field.elements,
-        ];
-        return options.filter( ( opt ) => {
-            // Exclude already added attributes
-            return ! attributes.some( ( attr ) => {
-                if ( attr.is_taxonomy ) {
-                    return Number( attr.id ) === Number( opt.value );
-                }
-                return false;
-            } );
-        } );
-    }, [ field.elements, attributes ] );
+    // Lazily fetch the "Add new" dropdown options: Custom + global attribute
+    // taxonomies. Taxonomies are loaded on demand from the REST endpoint instead
+    // of being embedded in the form schema.
+    const loadAddOptions = useCallback(
+        async ( inputValue: string ) => {
+            const customOption = {
+                label: __( 'Custom Attribute', 'dokan-lite' ),
+                value: '',
+            };
+
+            let taxonomies: any[] = [];
+            try {
+                const result: any = await apiFetch( {
+                    path: '/dokan/v1/products/attributes',
+                } );
+                taxonomies = Array.isArray( result ) ? result : [];
+            } catch {
+                taxonomies = [];
+            }
+
+            const search = ( inputValue || '' ).toLowerCase();
+            const taxOptions = taxonomies
+                .map( ( t: any ) => ( {
+                    label: t.name,
+                    value: t.id,
+                    slug: t.slug,
+                } ) )
+                // Exclude already-added global attributes.
+                .filter(
+                    ( opt ) =>
+                        ! attributes.some(
+                            ( attr ) =>
+                                attr.is_taxonomy &&
+                                Number( attr.id ) === Number( opt.value )
+                        )
+                )
+                .filter( ( opt ) =>
+                    search ? opt.label.toLowerCase().includes( search ) : true
+                );
+
+            const includeCustom =
+                ! search || customOption.label.toLowerCase().includes( search );
+
+            return includeCustom ? [ customOption, ...taxOptions ] : taxOptions;
+        },
+        [ attributes ]
+    );
 
     const handleAddAttribute = () => {
         const newAttribute: Attribute = {
@@ -148,7 +179,6 @@ const AttributesEdit = ( { data, field, onChange, validity }: any ) => {
                     <AttributeCard
                         key={ attr.position }
                         attr={ attr }
-                        options={ options }
                         productType={ productType }
                         cardExpanded={ cardExpanded }
                         onUpdate={ ( value: any ) =>
@@ -171,9 +201,14 @@ const AttributesEdit = ( { data, field, onChange, validity }: any ) => {
                 { /* Add New Section */ }
                 <div className="flex gap-2 items-center">
                     <div className="grow">
-                        <Select
-                            options={ addOptions }
+                        <AsyncSelect
+                            // Remount when the attribute list changes so the
+                            // exclusion of already-added attributes refreshes.
+                            key={ attributes.length }
+                            cacheOptions
+                            defaultOptions
                             value={ selectedAttrAdd }
+                            loadOptions={ loadAddOptions }
                             onChange={ ( val: any ) =>
                                 setSelectedAttrAdd( val )
                             }
