@@ -1,5 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { toPath } from '@utils/helpers';
+import { confirmDataViewsAction, dismissDataViewsAction, waitForDataViewsSettle } from './adminDataViews';
 
 // ============================================
 // TEST DATA
@@ -96,6 +97,7 @@ export class AdminRefundRequestsPage {
         await this.page.goto(this.url);
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     /** Ready when the React root is visible AND either ≥1 row OR the empty-state has painted. */
@@ -107,12 +109,14 @@ export class AdminRefundRequestsPage {
             if ((await this.emptyState.count()) > 0) return;
             await this.page.waitForTimeout(250);
         }
+        await waitForDataViewsSettle(this.page);
     }
 
     async reload(): Promise<void> {
         await this.page.reload();
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     async hasNoPhpFatal(): Promise<boolean> {
@@ -146,14 +150,14 @@ export class AdminRefundRequestsPage {
         await tab.waitFor({ state: 'visible', timeout: 10000 });
         await tab.scrollIntoViewIfNeeded().catch(() => undefined);
         await tab.click();
-        await this.page.waitForTimeout(900); // DataViews refetch + repaint.
+        await waitForDataViewsSettle(this.page);
     }
 
     async search(query: string): Promise<void> {
         const input = this.searchBox;
         await input.waitFor({ state: 'visible', timeout: 10000 });
         await input.fill(query);
-        await this.page.waitForTimeout(1000); // debounced search.
+        await waitForDataViewsSettle(this.page);
     }
 
     async clearSearch(): Promise<void> {
@@ -200,13 +204,12 @@ export class AdminRefundRequestsPage {
         return present;
     }
 
-    /** Confirm a DokanModal action button by its exact label, e.g.
-     * 'Yes, Cancel' / 'Delete Refund'. */
+    /** Confirm the Plugin UI DataViews inline action confirm (Cancel / Delete).
+     * The legacy `confirmLabel` (e.g. 'Yes, Cancel' / 'Delete Refund') is no longer
+     * needed — we delegate to the shared helper that clicks the primary button. */
     async confirmModal(confirmLabel: string): Promise<void> {
-        const btn = this.page.getByRole('button', { name: new RegExp(escapeRegExp(confirmLabel), 'i') }).first();
-        await btn.waitFor({ state: 'visible', timeout: 10000 });
-        await btn.click();
-        await this.page.waitForTimeout(1500); // PUT batch + list refetch.
+        void confirmLabel;
+        await confirmDataViewsAction(this.page);
     }
 
     /** Open a row's menu, choose "Refund Manually", which fires the batch PUT
@@ -229,9 +232,7 @@ export class AdminRefundRequestsPage {
     async openCancelModalAndDismiss(orderId: string): Promise<void> {
         await this.openRowActionMenuFor(orderId);
         await this.clickActionMenuItem('Cancel');
-        const dialog = this.page.getByRole('dialog').first();
-        await dialog.waitFor({ state: 'visible', timeout: 10000 });
-        await this.page.keyboard.press('Escape');
+        await dismissDataViewsAction(this.page);
         await this.page.waitForTimeout(600);
     }
 

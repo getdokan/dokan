@@ -60,6 +60,20 @@ export const adminReportsData = {
         earnings: '/dokan/v1/admin/report-earnings',
         earningsSummary: '/dokan/v1/admin/report-earnings/summary',
     },
+
+    // Toolbar (Export + Filter) verified live 2026-06-15. Neither table has a
+    // standalone search box — free-text search is the "Order Search" filter field.
+    allLogs: {
+        // The fields the "Filter" toolbar button exposes for All Logs.
+        filterFields: ['Vendor', 'Order Status', 'Date Range', 'Order Search'],
+        // Export downloads a CSV named report-logs_<YYYY-MM-DD>.csv.
+        exportFilename: /report-logs.*\.csv$/i,
+    },
+    adminEarnings: {
+        filterFields: ['Earning Type', 'Vendor', 'Date Range', 'Order Search'],
+        // Export downloads a CSV named earning-reports_<YYYY-MM-DD>.csv.
+        exportFilename: /earning-reports.*\.csv$/i,
+    },
 } as const;
 
 // ============================================
@@ -221,6 +235,41 @@ export class AdminReportsPage {
         } catch {
             return false;
         }
+    }
+
+    // ---- Toolbar: Filter + Export ----
+    /** Open the DataViews "Filter" toolbar button (the active table panel's). */
+    async openFilter(): Promise<void> {
+        const f = this.page.getByRole('button', { name: 'Filter', exact: true }).first();
+        await f.waitFor({ state: 'visible', timeout: 10000 });
+        await f.click();
+        await this.page.waitForTimeout(800); // portaled filter popover paints.
+    }
+
+    /** The field labels the open Filter popover offers (Vendor / Date Range / …).
+     * The popover is portaled (radix), so we read it from the live DOM rather than
+     * a single scoped locator. Call after openFilter(). */
+    async openFilterFieldNames(): Promise<string[]> {
+        await this.openFilter();
+        const names = await this.page.evaluate(() => {
+            const vis = (e: Element) => e.getClientRects().length > 0;
+            const txt = (e: Element) => (e.textContent || '').trim().replace(/\s+/g, ' ');
+            const pops = Array.from(document.querySelectorAll('[data-radix-popper-content-wrapper],.components-popover,[class*="popover"]')).filter(vis);
+            const cand = pops.flatMap(p => Array.from(p.querySelectorAll('button,[role="menuitem"],[role="option"],label')).filter(vis).map(txt));
+            return [...new Set(cand)].filter(t => t && t.length < 28 && !/^add filter$|^reset$|^filter$|^×$/i.test(t));
+        });
+        await this.page.keyboard.press('Escape').catch(() => undefined);
+        return names;
+    }
+
+    /** Click the "Export" toolbar button and return the downloaded file's
+     * suggested filename (or null if no download fired within the timeout). The
+     * download waiter is armed BEFORE the click so a fast export is not missed. */
+    async exportDownloadFilename(timeoutMs = 15000): Promise<string | null> {
+        const exportBtn = this.page.getByRole('button', { name: /^Export$/ }).first();
+        await exportBtn.waitFor({ state: 'visible', timeout: 10000 });
+        const [download] = await Promise.all([this.page.waitForEvent('download', { timeout: timeoutMs }).catch(() => null), exportBtn.click()]);
+        return download ? download.suggestedFilename() : null;
     }
 
     // ---- Authorization (non-admin) ----

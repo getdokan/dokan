@@ -1,6 +1,7 @@
 import { test, expect, Page, BrowserContext } from '@utils/test';
 import { request } from '@playwright/test';
 import { AdminProductQaPage, adminProductQaData } from './adminProductQaPage';
+import { isDataViewsConfirmOpen, dismissDataViewsAction } from './adminDataViews';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
@@ -240,6 +241,39 @@ test.describe('Admin Product Q&A moderation', () => {
             await qa.bulkAction(/Mark as Read/i);
             const toast = await qa.successToastVisible();
             expect(toast, 'success toast after bulk read').toBe(true);
+        });
+
+        test('the row Actions menu exposes Mark as Read / Mark as Unread / Delete', { tag: ['@pro', '@admin'] }, async () => {
+            await qa.goto();
+            await qa.clickTab(/^All/);
+            await qa.openFirstRowActionMenu();
+            expect(await qa.actionMenuItemVisible(/Mark as Read/i), 'Mark as Read offered').toBe(true);
+            expect(await qa.actionMenuItemVisible(/Mark as Unread/i), 'Mark as Unread offered').toBe(true);
+            expect(await qa.actionMenuItemVisible(/^Delete$/i), 'Delete offered').toBe(true);
+        });
+
+        // BUG (verified live 2026-06-15): the row Actions "Delete" on the admin
+        // Product Q&A table fires the delete immediately with NO confirmation. Every
+        // other migrated admin DataView (Abuse Reports, Store Reviews, Seller Badge,
+        // RFQ, Vendors, Withdraw, Wholesale, Advertising, Verifications, even Vendor
+        // Support Close/Delete) opens the Plugin UI inline confirm (role="alertdialog")
+        // first. Root cause: @wedevs/plugin-ui only wraps an action's callback with the
+        // confirm modal when the action declares `isDestructive: true` (the confirm
+        // text is then `confirmTitle`/`confirmMessage`/`confirmButtonLabel`, each with a
+        // default). The `product-qa-delete` action in dokan-pro
+        // modules/product-qa/src/admin/ProductQAList.tsx omits `isDestructive`, so its
+        // callback runs straight away. Fix = add `isDestructive: true` (cf. the abuse
+        // reports delete in report-abuse/src/admin/dashboard/ReportAbusePage.tsx, or
+        // vendor-support Close/Delete in vendor-support/src/components/List.tsx, which
+        // all set it). Quarantined until then. When fixed, the first-row Delete opens
+        // the confirm and dismissDataViewsAction() cancels it, so no row is destroyed.
+        test.fixme('row Delete must show an inline confirmation before deleting', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+            await qa.goto();
+            await qa.clickTab(/^All/);
+            await qa.openFirstRowActionMenu();
+            await qa.clickActionMenuItem(/^Delete$/i);
+            expect(await isDataViewsConfirmOpen(page), 'inline confirm opens before a destructive delete').toBe(true);
+            await dismissDataViewsAction(page);
         });
     });
 

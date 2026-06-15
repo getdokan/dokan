@@ -1,6 +1,7 @@
 import { APIRequestContext, Locator, Page } from '@playwright/test';
 import { toPath, SERVER_URL } from '@utils/helpers';
 import { payloads } from '@utils/payloads';
+import { confirmDataViewsAction, dismissDataViewsAction, waitForDataViewsSettle } from './adminDataViews';
 
 // ============================================
 // TEST DATA
@@ -115,6 +116,7 @@ export class AdminProductAdvertisingPage {
         await this.page.goto(this.url);
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     /** Ready when the React root is visible AND either >=1 row OR the empty-state has painted. */
@@ -126,12 +128,14 @@ export class AdminProductAdvertisingPage {
             if ((await this.emptyState.count()) > 0) return;
             await this.page.waitForTimeout(250);
         }
+        await waitForDataViewsSettle(this.page);
     }
 
     async reload(): Promise<void> {
         await this.page.reload();
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     async hasNoPhpFatal(): Promise<boolean> {
@@ -178,7 +182,7 @@ export class AdminProductAdvertisingPage {
         await tab.waitFor({ state: 'visible', timeout: 10000 });
         await tab.scrollIntoViewIfNeeded().catch(() => undefined);
         await tab.click();
-        await this.page.waitForTimeout(900); // DataViews refetch + repaint.
+        await waitForDataViewsSettle(this.page);
     }
 
     /** This page has a REAL search box (mounted via additionalComponents), so the
@@ -187,7 +191,7 @@ export class AdminProductAdvertisingPage {
         const input = this.searchBox;
         await input.waitFor({ state: 'visible', timeout: 10000 });
         await input.fill(query);
-        await this.page.waitForTimeout(900); // debounced search.
+        await waitForDataViewsSettle(this.page);
     }
 
     async clearSearch(): Promise<void> {
@@ -248,14 +252,12 @@ export class AdminProductAdvertisingPage {
         return this.page.getByRole('heading', { name: 'Delete Advertisement' }).first();
     }
 
-    /** Confirm a DokanModal by its button label, e.g. 'Yes, Expire' / 'Yes, Delete'. */
+    /** Confirm the Plugin UI DataViews inline action confirm (Expire / Delete).
+     * The legacy `confirmLabel` (e.g. 'Yes, Expire' / 'Yes, Delete') is no longer
+     * needed — we delegate to the shared helper that clicks the primary button. */
     async confirmModal(confirmLabel: string): Promise<void> {
-        const dialog = this.page.getByRole('dialog').first();
-        await dialog.waitFor({ state: 'visible', timeout: 10000 });
-        const btn = dialog.getByRole('button', { name: new RegExp(`^${escapeRegExp(confirmLabel)}$`, 'i') }).first();
-        await btn.waitFor({ state: 'visible', timeout: 10000 });
-        await btn.click();
-        await this.page.waitForTimeout(1200); // batch POST + list refetch.
+        void confirmLabel;
+        await confirmDataViewsAction(this.page);
     }
 
     /** Open the row menu for an ACTIVE advertisement, choose Expire, confirm. */
@@ -268,10 +270,7 @@ export class AdminProductAdvertisingPage {
 
     /** Cancel the Expire confirmation modal without expiring. */
     async cancelExpire(): Promise<void> {
-        const dialog = this.page.getByRole('dialog').first();
-        const btn = dialog.getByRole('button', { name: /Cancel/i }).first();
-        await btn.waitFor({ state: 'visible', timeout: 10000 });
-        await btn.click();
+        await dismissDataViewsAction(this.page);
         await this.expireModalHeading.waitFor({ state: 'hidden', timeout: 10000 });
     }
 

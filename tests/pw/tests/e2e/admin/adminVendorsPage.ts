@@ -1,5 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { toPath } from '@utils/helpers';
+import { confirmDataViewsAction, waitForDataViewsSettle } from './adminDataViews';
 
 // ============================================
 // TEST DATA
@@ -107,6 +108,7 @@ export class AdminVendorsPage {
         await this.page.goto(this.url);
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     /** Ready when the React root is visible AND either ≥1 row OR the empty-state has painted. */
@@ -124,6 +126,7 @@ export class AdminVendorsPage {
         await this.page.reload();
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     async hasNoPhpFatal(): Promise<boolean> {
@@ -209,12 +212,12 @@ export class AdminVendorsPage {
         await item.click();
     }
 
-    /** Confirm the Approve/Disable modal, e.g. 'Yes, Approve' / 'Yes, Disable'. */
+    /** Confirm the Plugin UI DataViews inline action confirm (Approve / Disable).
+     * The legacy `confirmLabel` (e.g. 'Yes, Approve' / 'Yes, Disable') is no longer
+     * needed — we delegate to the shared helper that clicks the primary button. */
     async confirmModal(confirmLabel: string): Promise<void> {
-        const btn = this.page.getByRole('button', { name: new RegExp(escapeRegExp(confirmLabel), 'i') }).first();
-        await btn.waitFor({ state: 'visible', timeout: 10000 });
-        await btn.click();
-        await this.page.waitForTimeout(1200); // PUT/POST + list refetch.
+        void confirmLabel;
+        await confirmDataViewsAction(this.page);
     }
 
     /** Open the row menu for a pending vendor, choose Approve Vendors, confirm. */

@@ -1,5 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { toPath } from '@utils/helpers';
+import { confirmDataViewsAction, waitForDataViewsSettle } from './adminDataViews';
 
 // ============================================
 // TEST DATA
@@ -105,6 +106,7 @@ export class AdminVerificationsPage {
         await this.page.goto(this.url);
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     /** Ready when the React root is visible AND either the data has fully loaded
@@ -127,6 +129,7 @@ export class AdminVerificationsPage {
         await this.page.reload();
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     async hasNoPhpFatal(): Promise<boolean> {
@@ -235,15 +238,12 @@ export class AdminVerificationsPage {
         await item.click();
     }
 
-    /** Confirm a DokanModal action by its confirm button label, e.g. 'Approve' /
-     * 'Reject' / 'Mark as Pending' / 'Add Note' / 'Update Note'. */
+    /** Confirm the Plugin UI DataViews inline action confirm (Approve / Reject /
+     * Mark as Pending). The legacy `confirmLabel` is no longer needed — we delegate
+     * to the shared helper that clicks the primary (non-Cancel) button. */
     async confirmModal(confirmLabel: string): Promise<void> {
-        const dialog = this.page.getByRole('dialog').first();
-        await dialog.waitFor({ state: 'visible', timeout: 10000 });
-        const btn = dialog.getByRole('button', { name: new RegExp(`^${escapeRegExp(confirmLabel)}$`, 'i') }).first();
-        await btn.waitFor({ state: 'visible', timeout: 10000 });
-        await btn.click();
-        await this.page.waitForTimeout(1200); // PATCH/batch + list refetch.
+        void confirmLabel;
+        await confirmDataViewsAction(this.page);
     }
 
     /** Open the row menu for a pending request, choose Approve, confirm. */

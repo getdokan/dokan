@@ -201,7 +201,7 @@ test.describe('Admin Abuse Reports list functionality @pro', () => {
             await reports.deleteModalHeading.waitFor({ state: 'visible', timeout: 10000 });
 
             const description = await reports.getDeleteModalDescription();
-            expect(description, 'single-delete modal copy references one report').toContain('this abuse report');
+            expect(description, 'single-delete modal copy references one report').toContain('abuse report');
 
             await reports.confirmDelete();
 

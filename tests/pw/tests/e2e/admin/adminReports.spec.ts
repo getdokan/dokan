@@ -156,6 +156,44 @@ test.describe('Admin Reports functionality @pro', () => {
             expect(await reports.hasNoPhpFatal(), 'no PHP fatal on Admin Earnings').toBe(true);
         });
 
+        test('"All Logs" Filter exposes the Vendor / Order Status / Date Range / Order Search fields', { tag: ['@pro', '@admin'] }, async () => {
+            await reports.goto();
+            await reports.clickTab(adminReportsData.topTabs.allLogs);
+            await reports.waitForTableSettled();
+            const fields = await reports.openFilterFieldNames();
+            for (const expected of adminReportsData.allLogs.filterFields) {
+                expect(fields.some(f => f.toLowerCase().includes(expected.toLowerCase())), `All Logs filter offers "${expected}"`).toBe(true);
+            }
+        });
+
+        test('"All Logs" Export downloads a report-logs CSV', { tag: ['@pro', '@admin'] }, async () => {
+            await reports.goto();
+            await reports.clickTab(adminReportsData.topTabs.allLogs);
+            await reports.waitForTableSettled();
+            const filename = await reports.exportDownloadFilename();
+            expect(filename, 'All Logs Export triggers a file download').not.toBeNull();
+            expect(filename!, 'downloaded file is a report-logs CSV').toMatch(adminReportsData.allLogs.exportFilename);
+        });
+
+        test('"Admin Earnings" Filter exposes the Earning Type / Vendor / Date Range / Order Search fields', { tag: ['@pro', '@admin'] }, async () => {
+            await reports.goto();
+            await reports.clickTab(adminReportsData.topTabs.adminEarnings);
+            await reports.waitForTableSettled();
+            const fields = await reports.openFilterFieldNames();
+            for (const expected of adminReportsData.adminEarnings.filterFields) {
+                expect(fields.some(f => f.toLowerCase().includes(expected.toLowerCase())), `Admin Earnings filter offers "${expected}"`).toBe(true);
+            }
+        });
+
+        test('"Admin Earnings" Export downloads an earnings CSV', { tag: ['@pro', '@admin'] }, async () => {
+            await reports.goto();
+            await reports.clickTab(adminReportsData.topTabs.adminEarnings);
+            await reports.waitForTableSettled();
+            const filename = await reports.exportDownloadFilename();
+            expect(filename, 'Admin Earnings Export triggers a file download').not.toBeNull();
+            expect(filename!, 'downloaded file is an earning-reports CSV').toMatch(adminReportsData.adminEarnings.exportFilename);
+        });
+
         test('the "By Year" breakdown sub-tab refetches the chart with a by-year filter', { tag: ['@pro', '@admin'] }, async () => {
             await reports.goto();
             // The By Year sub-tab lives inside the active "Reports" overview.

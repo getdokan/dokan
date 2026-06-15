@@ -304,8 +304,8 @@ test.describe('Admin Withdraw list functionality', () => {
             const withdraw = new AdminWithdrawPage(page);
             await withdraw.goto();
             await withdraw.startApprove(adminWithdrawData.poor.storeName);
-            expect(await withdraw.modalContains(/Insufficient Balance/i), 'insufficient-balance modal opens instead of the approve confirmation').toBe(true);
-            await withdraw.confirmModal('Close');
+            expect(await withdraw.modalContains(/Insufficient Balance/i), 'insufficient-balance modal opens after confirming the approve').toBe(true);
+            await withdraw.closeDialog('Close');
             // The row is still pending — no approval happened.
             await withdraw.goto();
             expect(await withdraw.statusOfRow(adminWithdrawData.poor.storeName)).toBe('Pending');

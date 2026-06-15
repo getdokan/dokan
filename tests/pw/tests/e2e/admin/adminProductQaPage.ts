@@ -1,5 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { toPath } from '@utils/helpers';
+import { waitForDataViewsSettle } from './adminDataViews';
 
 // ============================================
 // TEST DATA — Admin Product Q&A moderation (#/product-qa, pro).
@@ -123,6 +124,7 @@ export class AdminProductQaPage {
         await this.page.goto(this.url);
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     /** Ready when the React root is visible AND either ≥1 row OR the empty-state has painted. */
@@ -140,6 +142,7 @@ export class AdminProductQaPage {
         await this.page.reload();
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     async hasNoPhpFatal(): Promise<boolean> {

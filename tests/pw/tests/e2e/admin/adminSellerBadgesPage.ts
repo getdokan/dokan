@@ -1,5 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { toPath } from '@utils/helpers';
+import { waitForDataViewsSettle } from './adminDataViews';
 
 // ============================================
 // TEST DATA
@@ -157,6 +158,7 @@ export class AdminSellerBadgesPage {
         await this.page.goto(this.url);
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     /** Ready when the Vue root + page wrapper are visible AND either ≥1 row OR
@@ -176,6 +178,7 @@ export class AdminSellerBadgesPage {
         await this.page.reload();
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     async hasNoPhpFatal(): Promise<boolean> {

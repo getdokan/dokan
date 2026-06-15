@@ -1,5 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { toPath } from '@utils/helpers';
+import { confirmDataViewsAction, waitForDataViewsSettle } from './adminDataViews';
 
 // ============================================
 // TEST DATA
@@ -136,6 +137,7 @@ export class AdminRequestForQuotePage {
         await this.page.goto(this.url);
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     async gotoRules(): Promise<void> {
@@ -159,6 +161,7 @@ export class AdminRequestForQuotePage {
         await this.page.reload();
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     async hasNoPhpFatal(): Promise<boolean> {
@@ -241,12 +244,12 @@ export class AdminRequestForQuotePage {
         await item.click();
     }
 
-    /** Confirm the DokanModal — both lists use confirmButtonText "Confirm". */
+    /** Confirm the Plugin UI DataViews inline action confirm. The legacy
+     * `confirmLabel` is no longer needed — we delegate to the shared helper that
+     * clicks the primary (non-Cancel) button. */
     async confirmModal(confirmLabel = 'Confirm'): Promise<void> {
-        const btn = this.page.getByRole('button', { name: new RegExp(escapeRegExp(confirmLabel), 'i') }).first();
-        await btn.waitFor({ state: 'visible', timeout: 10000 });
-        await btn.click();
-        await this.page.waitForTimeout(1500); // POST batch + list refetch.
+        void confirmLabel;
+        await confirmDataViewsAction(this.page);
     }
 
     /** Open the row menu for a row, choose Trash, confirm the modal. */

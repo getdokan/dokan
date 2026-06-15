@@ -1,6 +1,7 @@
 import { APIRequestContext, Locator, Page } from '@playwright/test';
 import { toPath, SERVER_URL } from '@utils/helpers';
 import { payloads } from '@utils/payloads';
+import { confirmDataViewsAction, waitForDataViewsSettle } from './adminDataViews';
 
 // ============================================
 // TEST DATA
@@ -119,6 +120,7 @@ export class AdminWholesaleCustomerPage {
         await this.page.goto(this.url);
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     /** Ready when the React root is visible AND either >=1 row OR the empty-state has painted. */
@@ -130,12 +132,14 @@ export class AdminWholesaleCustomerPage {
             if ((await this.emptyState.count()) > 0) return;
             await this.page.waitForTimeout(250);
         }
+        await waitForDataViewsSettle(this.page);
     }
 
     async reload(): Promise<void> {
         await this.page.reload();
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     async hasNoPhpFatal(): Promise<boolean> {
@@ -183,7 +187,7 @@ export class AdminWholesaleCustomerPage {
         await tab.waitFor({ state: 'visible', timeout: 10000 });
         await tab.scrollIntoViewIfNeeded().catch(() => undefined);
         await tab.click();
-        await this.page.waitForTimeout(900); // DataViews refetch + repaint.
+        await waitForDataViewsSettle(this.page);
     }
 
     /** Type into the (real) search box and wait for the debounced refetch. The
@@ -192,7 +196,7 @@ export class AdminWholesaleCustomerPage {
         const input = this.searchBox;
         await input.waitFor({ state: 'visible', timeout: 10000 });
         await input.fill(query);
-        await this.page.waitForTimeout(1000); // debounced search -> REST refetch.
+        await waitForDataViewsSettle(this.page);
     }
 
     async clearSearch(): Promise<void> {
@@ -233,15 +237,12 @@ export class AdminWholesaleCustomerPage {
         return offered;
     }
 
-    /** Confirm a DokanModal, e.g. 'Activate' / 'Deactivate' / 'Delete'. Waits for
-     * the batch PUT + list refetch to settle. */
-    async confirmModal(confirmLabel: string): Promise<void> {
-        const dialog = this.page.getByRole('dialog').first();
-        await dialog.waitFor({ state: 'visible', timeout: 10000 });
-        const btn = dialog.getByRole('button', { name: new RegExp(`^${escapeRegExp(confirmLabel)}$`, 'i') }).first();
-        await btn.waitFor({ state: 'visible', timeout: 10000 });
-        await btn.click();
-        await this.page.waitForTimeout(1200); // batch PUT + list refetch.
+    /** Confirm the Plugin UI DataViews inline confirm (role="alertdialog"). The
+     * primary button reads "Yes, <Verb>" (e.g. "Yes, Activate"), so we click the
+     * non-Cancel button. `confirmLabel` is kept for caller readability only. */
+    async confirmModal(confirmLabel?: string): Promise<void> {
+        void confirmLabel;
+        await confirmDataViewsAction(this.page);
     }
 
     /** Open the row menu for a deactive customer, choose Activate, confirm. */
