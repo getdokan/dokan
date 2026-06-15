@@ -12,22 +12,20 @@ const PriceEdit = ( { data, field, onChange, validity }: any ) => {
         Number( data.vendor_earning )
     );
 
-    // Keep the locale-formatted string for display; the store stays canonical.
-    const [ displayValue, setDisplayValue ] = useState< string | number >( () =>
-        formatNumber( data[ field.id ] ?? '' )
+    // Canonical store value for this field; the input shows a locale-formatted copy.
+    const storedValue = data[ field.id ] ?? '';
+    const [ displayValue, setDisplayValue ] = useState< string >( () =>
+        formatNumber( storedValue )
     );
 
-    // Re-sync the display when the stored value changes outside this input
-    // (e.g. switching products or external store updates). Comparing the
-    // canonical values keeps the value the user is actively typing intact.
+    // Re-format only when the canonical value changes outside this input (product switch or external update); equal values keep what the user is typing.
     useEffect( () => {
-        const stored = data[ field.id ] ?? '';
         setDisplayValue( ( current ) =>
-            Number( unformatNumber( current ) ) === Number( stored )
+            Number( unformatNumber( current ) ) === Number( storedValue )
                 ? current
-                : formatNumber( stored )
+                : formatNumber( storedValue )
         );
-    }, [ data, field.id ] );
+    }, [ storedValue, field.id ] );
 
     const vendorEarningHandler = async ( price: number ) => {
         if ( field.id === 'regular_price' ) {
