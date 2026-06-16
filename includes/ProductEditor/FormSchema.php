@@ -600,9 +600,9 @@ class FormSchema {
                 'variant'          => 'async_select',
                 'placeholder'      => 'on' === $can_create_tags ? __( 'Select tags/Add tags', 'dokan-lite' ) : __( 'Select product tags', 'dokan-lite' ),
                 'value'            => [],
-                // Tags are loaded on demand from this endpoint (searchable/paginated) instead of
+                // Tags load on demand from WooCommerce core (searchable/paginated) instead of
                 // embedding the whole tag taxonomy in the schema, which can exhaust memory on large stores.
-                'api_endpoint'     => '/dokan/v1/products/tags',
+                'api_endpoint'     => '/wc/v3/products/tags',
                 'creatable'        => 'on' === $can_create_tags,
                 'visibility'       => true,
             ],
