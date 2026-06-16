@@ -65,6 +65,13 @@ env:
     GMAP: ${{secrets.GMAP}}
     MAPBOX: ${{secrets.MAPBOX}}
     LICENSE_KEY: ${{secrets.LICENSE_KEY}}
+    # Stripe Connect (test mode) — provided as repo secrets, never hardcoded.
+    # Absent on forked-PR runs, so the Stripe Connect suite self-skips there.
+    TEST_PUBLISH_KEY_STRIPE_CONNECT: ${{secrets.TEST_PUBLISH_KEY_STRIPE_CONNECT}}
+    TEST_SECRET_KEY_STRIPE_CONNECT: ${{secrets.TEST_SECRET_KEY_STRIPE_CONNECT}}
+    TEST_CLIENT_ID_STRIPE_CONNECT: ${{secrets.TEST_CLIENT_ID_STRIPE_CONNECT}}
+    STRIPE_VENDOR1_ACCT: ${{secrets.STRIPE_VENDOR1_ACCT}}
+    STRIPE_VENDOR2_ACCT: ${{secrets.STRIPE_VENDOR2_ACCT}}
     BASE_URL: http://localhost:9999
     CI: true
     HEADLESS: true
