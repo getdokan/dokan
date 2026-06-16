@@ -18,6 +18,15 @@ async function questionIsAnswered(questionId: string): Promise<boolean> {
     return Boolean(body?.answer?.id);
 }
 
+// Whether a question is currently marked read (used to confirm a bulk read).
+async function questionIsRead(questionId: string): Promise<boolean> {
+    const [res, body] = await apiUtils.get(endPoints.getSingleProductQuestion(questionId), { headers: payloads.adminAuth }, false);
+    if (!res.ok()) {
+        return false;
+    }
+    return Boolean(Number(body?.read));
+}
+
 // Whether a question still resolves via REST (used to confirm a delete).
 async function questionExists(questionId: string): Promise<boolean> {
     const [res] = await apiUtils.get(endPoints.getSingleProductQuestion(questionId), { headers: payloads.adminAuth }, false);
@@ -219,7 +228,7 @@ test.describe('Admin Product Q&A moderation', () => {
             await expect.poll(async () => questionExists(qid), { timeout: 15000 }).toBe(false);
         });
 
-        test('admin can bulk Mark-as-Read questions and sees the success toast', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
+        test('admin can bulk Mark-as-Read questions and the read state persists', { tag: ['@pro', '@admin'] }, async () => {
             // Reset the bulk targets to unread so the read action is eligible on the All tab.
             for (const id of ids.bulk) {
                 await apiUtils.updateProductQuestion(id, { read: false }, payloads.adminAuth);
@@ -229,8 +238,8 @@ test.describe('Admin Product Q&A moderation', () => {
             await qa.search('AQA bulk');
             await qa.selectAllVisibleRows();
             await qa.bulkAction(/Mark as Read/i);
-            const toast = await qa.successToastVisible();
-            expect(toast, 'success toast after bulk read').toBe(true);
+            // Assert the persisted read state, not the transient success toast (which auto-dismisses).
+            await expect.poll(async () => (await Promise.all(ids.bulk.map(id => questionIsRead(id)))).every(Boolean), { timeout: 15000 }).toBe(true);
         });
 
         test('the row Actions menu exposes Mark as Read / Mark as Unread / Delete', { tag: ['@pro', '@admin'] }, async () => {

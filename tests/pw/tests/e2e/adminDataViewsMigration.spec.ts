@@ -5,6 +5,10 @@ import { dbUtils } from '@utils/dbUtils';
 // #/subscriptions only registers when "Enable Vendor Subscription" is on.
 let prevEnablePricing = 'off';
 
+// The migrated DataViews pages always live on page=dokan-dashboard; page=dokan
+// renders the legacy panel unless the new dashboard is the configured default.
+const dash = (url: string) => url.replace('page=dokan#', 'page=dokan-dashboard#');
+
 const failOnPageError = (page: Page, errors: string[]) => {
     page.on('pageerror', (err) => {
         errors.push(err.message);
@@ -49,7 +53,7 @@ test.describe('Admin DataViews migration smoke', () => {
     });
 
     test('Withdraw page renders DataViews tabs and Export', { tag: ['@lite', '@admin'] }, async () => {
-        await aPage.goto(data.subUrls.backend.dokan.withdraw, { waitUntil: 'domcontentloaded' });
+        await aPage.goto(dash(data.subUrls.backend.dokan.withdraw), { waitUntil: 'domcontentloaded' });
         await expect(aPage.getByRole('tab', { name: /Pending/ })).toBeVisible();
         await expect(aPage.getByRole('tab', { name: /Approved/ })).toBeVisible();
         await expect(aPage.getByRole('tab', { name: /Cancelled/ })).toBeVisible();
@@ -59,7 +63,7 @@ test.describe('Admin DataViews migration smoke', () => {
     });
 
     test('Vendors page renders DataViews tabs and Add Vendor', { tag: ['@lite', '@admin'] }, async () => {
-        await aPage.goto(data.subUrls.backend.dokan.vendors, { waitUntil: 'domcontentloaded' });
+        await aPage.goto(dash(data.subUrls.backend.dokan.vendors), { waitUntil: 'domcontentloaded' });
         await expect(aPage.getByRole('tab', { name: /^All/ })).toBeVisible();
         await expect(aPage.getByRole('tab', { name: /Approved/ })).toBeVisible();
         await expect(aPage.getByRole('tab', { name: /Pending/ })).toBeVisible();
@@ -68,14 +72,14 @@ test.describe('Admin DataViews migration smoke', () => {
     });
 
     test('Reverse Withdrawal page renders stats and Add New', { tag: ['@lite', '@admin'] }, async () => {
-        await aPage.goto(data.subUrls.backend.dokan.reverseWithdraws, { waitUntil: 'domcontentloaded' });
+        await aPage.goto(dash(data.subUrls.backend.dokan.reverseWithdraws), { waitUntil: 'domcontentloaded' });
         await expect(aPage.getByRole('heading', { name: 'Reverse Withdrawal' })).toBeVisible();
         await expect(aPage.getByRole('button', { name: 'Add New' })).toBeVisible();
         expectNoMigrationRegressions(errors);
     });
 
     test('Refunds page renders DataViews tabs', { tag: ['@pro', '@admin'] }, async () => {
-        await aPage.goto(data.subUrls.backend.dokan.refunds, { waitUntil: 'domcontentloaded' });
+        await aPage.goto(dash(data.subUrls.backend.dokan.refunds), { waitUntil: 'domcontentloaded' });
         await expect(aPage.getByRole('tab', { name: /Pending/ })).toBeVisible();
         await expect(aPage.getByRole('tab', { name: /Approved/ })).toBeVisible();
         await expect(aPage.getByRole('tab', { name: /Cancelled/ })).toBeVisible();
@@ -83,18 +87,19 @@ test.describe('Admin DataViews migration smoke', () => {
     });
 
     test('Reports page renders Earning Overview tab and Export buttons', { tag: ['@pro', '@admin'] }, async () => {
-        await aPage.goto(data.subUrls.backend.dokan.reports, { waitUntil: 'domcontentloaded' });
+        await aPage.goto(dash(data.subUrls.backend.dokan.reports), { waitUntil: 'domcontentloaded' });
+        await aPage.getByRole('tab', { name: 'Admin Earnings', exact: true }).click();
         await expect(aPage.getByRole('tab', { name: /Earning Overview/ })).toBeVisible();
         await expect(aPage.getByRole('button', { name: 'Export' }).first()).toBeVisible();
         expectNoMigrationRegressions(errors);
 
-        await aPage.goto(data.subUrls.backend.dokan.allLogs, { waitUntil: 'domcontentloaded' });
+        await aPage.goto(dash(data.subUrls.backend.dokan.allLogs), { waitUntil: 'domcontentloaded' });
         await expect(aPage.getByRole('tab', { name: /Overview/ })).toBeVisible();
         expectNoMigrationRegressions(errors);
     });
 
     test('Announcement page renders 6 status tabs', { tag: ['@pro', '@admin'] }, async () => {
-        await aPage.goto(data.subUrls.backend.dokan.announcements, { waitUntil: 'domcontentloaded' });
+        await aPage.goto(dash(data.subUrls.backend.dokan.announcements), { waitUntil: 'domcontentloaded' });
         for (const name of ['All', 'Published', 'Pending', 'Scheduled', 'Draft', 'Trash']) {
             await expect(aPage.getByRole('tab', { name: new RegExp(`^${name}`) })).toBeVisible();
         }
@@ -102,7 +107,7 @@ test.describe('Admin DataViews migration smoke', () => {
     });
 
     test('Verifications page renders 4 status tabs', { tag: ['@pro', '@admin'] }, async () => {
-        await aPage.goto(data.subUrls.backend.dokan.verifications, { waitUntil: 'domcontentloaded' });
+        await aPage.goto(dash(data.subUrls.backend.dokan.verifications), { waitUntil: 'domcontentloaded' });
         for (const name of ['Pending', 'Approved', 'Rejected', 'Cancelled']) {
             await expect(aPage.getByRole('tab', { name: new RegExp(name) })).toBeVisible();
         }
@@ -110,21 +115,21 @@ test.describe('Admin DataViews migration smoke', () => {
     });
 
     test('Abuse Reports page renders DataViews', { tag: ['@pro', '@admin'] }, async () => {
-        await aPage.goto(data.subUrls.backend.dokan.abuseReports, { waitUntil: 'domcontentloaded' });
+        await aPage.goto(dash(data.subUrls.backend.dokan.abuseReports), { waitUntil: 'domcontentloaded' });
         await expect(aPage.getByRole('heading', { name: 'Abuse Reports' })).toBeVisible();
         await expect(aPage.getByRole('tab', { name: /^All/ })).toBeVisible();
         expectNoMigrationRegressions(errors);
     });
 
     test('Store Reviews page renders All / Trash tabs', { tag: ['@pro', '@admin'] }, async () => {
-        await aPage.goto(data.subUrls.backend.dokan.storeReviews, { waitUntil: 'domcontentloaded' });
+        await aPage.goto(dash(data.subUrls.backend.dokan.storeReviews), { waitUntil: 'domcontentloaded' });
         await expect(aPage.getByRole('tab', { name: /^All/ })).toBeVisible();
         await expect(aPage.getByRole('tab', { name: /Trash/ })).toBeVisible();
         expectNoMigrationRegressions(errors);
     });
 
     test('Product Q&A page renders 5 status tabs', { tag: ['@pro', '@admin'] }, async () => {
-        await aPage.goto(data.subUrls.backend.dokan.productQA, { waitUntil: 'domcontentloaded' });
+        await aPage.goto(dash(data.subUrls.backend.dokan.productQA), { waitUntil: 'domcontentloaded' });
         for (const name of ['All', 'Unread', 'Read', 'Unanswered', 'Answered']) {
             await expect(aPage.getByRole('tab', { name: new RegExp(`^${name}`) })).toBeVisible();
         }
@@ -132,7 +137,7 @@ test.describe('Admin DataViews migration smoke', () => {
     });
 
     test('Store Support page renders Open / Closed / All tabs', { tag: ['@pro', '@admin'] }, async () => {
-        await aPage.goto(data.subUrls.backend.dokan.storeSupport, { waitUntil: 'domcontentloaded' });
+        await aPage.goto(dash(data.subUrls.backend.dokan.storeSupport), { waitUntil: 'domcontentloaded' });
         for (const name of ['Open', 'Closed', 'All']) {
             await expect(aPage.getByRole('tab', { name: new RegExp(`^${name}`) })).toBeVisible();
         }
@@ -140,7 +145,7 @@ test.describe('Admin DataViews migration smoke', () => {
     });
 
     test('Seller Badge page renders All / Published / Draft tabs and Create Badge', { tag: ['@pro', '@admin'] }, async () => {
-        await aPage.goto(data.subUrls.backend.dokan.sellerBadge, { waitUntil: 'domcontentloaded' });
+        await aPage.goto(dash(data.subUrls.backend.dokan.sellerBadge), { waitUntil: 'domcontentloaded' });
         await expect(aPage.getByRole('button', { name: 'Create Badge' })).toBeVisible();
         for (const name of ['All', 'Published', 'Draft']) {
             await expect(aPage.getByRole('tab', { name: new RegExp(`^${name}`) })).toBeVisible();
@@ -149,13 +154,13 @@ test.describe('Admin DataViews migration smoke', () => {
     });
 
     test('Subscriptions page renders DataViews', { tag: ['@pro', '@admin'] }, async () => {
-        await aPage.goto(data.subUrls.backend.dokan.subscriptions, { waitUntil: 'domcontentloaded' });
+        await aPage.goto(dash(data.subUrls.backend.dokan.subscriptions), { waitUntil: 'domcontentloaded' });
         await expect(aPage.getByRole('tab', { name: /^All/ })).toBeVisible();
         expectNoMigrationRegressions(errors);
     });
 
     test('Wholesale Customer page renders All / Active / Deactive tabs', { tag: ['@pro', '@admin'] }, async () => {
-        await aPage.goto(data.subUrls.backend.dokan.wholeSaleCustomer, { waitUntil: 'domcontentloaded' });
+        await aPage.goto(dash(data.subUrls.backend.dokan.wholeSaleCustomer), { waitUntil: 'domcontentloaded' });
         for (const name of ['All', 'Active', 'Deactive']) {
             await expect(aPage.getByRole('tab', { name: new RegExp(`^${name}`) })).toBeVisible();
         }
@@ -163,7 +168,7 @@ test.describe('Admin DataViews migration smoke', () => {
     });
 
     test('Product Advertising page renders All / Active / Expired tabs and Add New', { tag: ['@pro', '@admin'] }, async () => {
-        await aPage.goto(data.subUrls.backend.dokan.productAdvertising, { waitUntil: 'domcontentloaded' });
+        await aPage.goto(dash(data.subUrls.backend.dokan.productAdvertising), { waitUntil: 'domcontentloaded' });
         await expect(aPage.getByRole('button', { name: 'Add New' })).toBeVisible();
         for (const name of ['All', 'Active', 'Expired']) {
             await expect(aPage.getByRole('tab', { name: new RegExp(`^${name}`) })).toBeVisible();
@@ -172,7 +177,7 @@ test.describe('Admin DataViews migration smoke', () => {
     });
 
     test('Request for Quotation page renders 11 status tabs', { tag: ['@pro', '@admin'] }, async () => {
-        await aPage.goto(data.subUrls.backend.dokan.requestForQuote, { waitUntil: 'domcontentloaded' });
+        await aPage.goto(dash(data.subUrls.backend.dokan.requestForQuote), { waitUntil: 'domcontentloaded' });
         for (const name of [
             'All',
             'Pending',
@@ -192,21 +197,21 @@ test.describe('Admin DataViews migration smoke', () => {
     });
 
     test('Store Categories page renders Add Store Category and table', { tag: ['@pro', '@admin'] }, async () => {
-        await aPage.goto(data.subUrls.backend.dokan.storeCategories, { waitUntil: 'domcontentloaded' });
+        await aPage.goto(dash(data.subUrls.backend.dokan.storeCategories), { waitUntil: 'domcontentloaded' });
         await expect(aPage.getByRole('heading', { name: 'Store Categories' })).toBeVisible();
         await expect(aPage.getByRole('button', { name: 'Add Store Category' })).toBeVisible();
         expectNoMigrationRegressions(errors);
     });
 
     test('Tab switching updates URL on Vendors page', { tag: ['@lite', '@admin'] }, async () => {
-        await aPage.goto(data.subUrls.backend.dokan.vendors, { waitUntil: 'domcontentloaded' });
+        await aPage.goto(dash(data.subUrls.backend.dokan.vendors), { waitUntil: 'domcontentloaded' });
         await aPage.getByRole('tab', { name: /^Approved/ }).click();
         await expect(aPage.getByRole('tab', { name: /^Approved/ })).toHaveAttribute('aria-selected', 'true');
         expectNoMigrationRegressions(errors);
     });
 
     test('Row action menu opens on Withdraw page', { tag: ['@lite', '@admin'] }, async () => {
-        await aPage.goto(data.subUrls.backend.dokan.withdraw, { waitUntil: 'domcontentloaded' });
+        await aPage.goto(dash(data.subUrls.backend.dokan.withdraw), { waitUntil: 'domcontentloaded' });
         const actionButtons = aPage.getByRole('button', { name: 'Actions' });
         if ((await actionButtons.count()) > 0) {
             await actionButtons.first().click();
