@@ -516,6 +516,17 @@ export class StripeConnectPage {
     }
 
     async gotoClassicCheckout(): Promise<void> {
+        // The classic Stripe Express Checkout Element (Link/Apple/Google Pay) loads
+        // an invisible hCaptcha from js.stripe.com that, over HTTP (and on CI runner
+        // IPs), escalates into a VISIBLE hCaptcha challenge. That challenge blocks
+        // the place-order submit (no wc-ajax=checkout / no PaymentIntent confirm
+        // ever fires), so the classic card + 3DS flows time out. We only exercise
+        // the CARD Payment Element here (wallets can't work over HTTP anyway), so
+        // neutralise the wallet script — it loads as a no-op, the Express element
+        // never mounts, and no hCaptcha is triggered. Block checkout is untouched.
+        await this.page.route('**/stripe-connect-express-classic.js*', route =>
+            route.fulfill({ status: 200, contentType: 'application/javascript', body: '' }),
+        );
         await this.page.goto(this.checkout.classicUrl);
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.locator(this.checkout.placeOrderClassic).waitFor({ state: 'visible', timeout: 30_000 });
