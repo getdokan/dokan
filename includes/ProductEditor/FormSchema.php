@@ -3,7 +3,6 @@
 namespace WeDevs\Dokan\ProductEditor;
 
 use WC_Product;
-use WeDevs\Dokan\ProductCategory\Helper as ProductCategoryHelper;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -582,10 +581,13 @@ class FormSchema {
                 'section_id'       => Elements::SECTION_GENERAL,
                 'type'             => 'field',
                 'label'            => __( 'Categories', 'dokan-lite' ),
-                'variant'          => 'multiselect',
+                'variant'          => 'async_select',
                 'placeholder'      => __( 'Select product categories', 'dokan-lite' ),
                 'value'            => [],
-                'options'          => ProductCategoryHelper::get_product_categories_tree( true ),
+                // Loaded on demand as a nested tree instead of embedding the whole
+                // category hierarchy in the schema, which bloats memory on large catalogs.
+                'api_endpoint'     => '/dokan/v1/products/categories/tree',
+                'tree'             => true,
                 'required'         => true,
                 'is_mandatory'     => true,
                 'visibility'       => true,
@@ -595,10 +597,12 @@ class FormSchema {
                 'section_id'       => Elements::SECTION_GENERAL,
                 'type'             => 'field',
                 'label'            => __( 'Tags', 'dokan-lite' ),
-                'variant'          => 'multiselect',
+                'variant'          => 'async_select',
                 'placeholder'      => 'on' === $can_create_tags ? __( 'Select tags/Add tags', 'dokan-lite' ) : __( 'Select product tags', 'dokan-lite' ),
                 'value'            => [],
-                'options'          => self::get_product_tags(),
+                // Tags are loaded on demand from this endpoint (searchable/paginated) instead of
+                // embedding the whole tag taxonomy in the schema, which can exhaust memory on large stores.
+                'api_endpoint'     => '/dokan/v1/products/tags',
                 'creatable'        => 'on' === $can_create_tags,
                 'visibility'       => true,
             ],
@@ -1035,8 +1039,14 @@ class FormSchema {
             case Elements::DATE_ON_SALE_TO:
                 $to = $product->get_date_on_sale_to( 'edit' );
                 return $to ? $to->date( 'Y-m-d' ) : '';
+            case Elements::CATEGORIES:
+                // Async select expects [ { value, label }, ... ] so selected categories render
+                // without the full category tree being embedded in the schema.
+                return self::terms_to_async_options( $product->get_category_ids(), 'product_cat' );
             case Elements::TAGS:
-                return $product->get_tag_ids();
+                // Async select expects [ { value, label }, ... ] so selected tags render
+                // without the full tag list being embedded in the schema.
+                return self::terms_to_async_options( $product->get_tag_ids(), 'product_tag' );
             case Elements::BRANDS:
                 if ( method_exists( $product, 'get_brand_ids' ) ) {
                     return $product->get_brand_ids();
@@ -1124,6 +1134,50 @@ class FormSchema {
             }
         }
         return $data;
+    }
+
+    /**
+     * Convert a list of term IDs to async-select options: [ { value, label }, ... ].
+     *
+     * Used by async-select fields (e.g. tags) so the currently selected terms render
+     * their labels without embedding the whole taxonomy in the form schema.
+     *
+     * @since 5.0.5
+     *
+     * @param array  $term_ids Term IDs.
+     * @param string $taxonomy Taxonomy name.
+     *
+     * @return array
+     */
+    public static function terms_to_async_options( array $term_ids, string $taxonomy ): array {
+        $term_ids = array_filter( array_map( 'absint', $term_ids ) );
+        if ( empty( $term_ids ) ) {
+            return [];
+        }
+
+        $terms = get_terms(
+            [
+                'taxonomy'   => $taxonomy,
+                'include'    => $term_ids,
+                'hide_empty' => false,
+                'orderby'    => 'name',
+                'order'      => 'ASC',
+            ]
+        );
+
+        if ( is_wp_error( $terms ) ) {
+            return [];
+        }
+
+        return array_map(
+            function ( $term ) {
+                return [
+                    'value' => $term->term_id,
+                    'label' => $term->name,
+                ];
+            },
+            $terms
+        );
     }
 
     /**
