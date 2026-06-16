@@ -1,5 +1,9 @@
 import { test, expect, Page } from '@playwright/test';
 import { data } from '@utils/testData';
+import { dbUtils } from '@utils/dbUtils';
+
+// #/subscriptions only registers when "Enable Vendor Subscription" is on.
+let prevEnablePricing = 'off';
 
 const failOnPageError = (page: Page, errors: string[]) => {
     page.on('pageerror', (err) => {
@@ -27,6 +31,9 @@ test.describe('Admin DataViews migration smoke', () => {
     const errors: string[] = [];
 
     test.beforeAll(async ({ browser }) => {
+        const [prev] = await dbUtils.updateOptionValue('dokan_product_subscription', { enable_pricing: 'on' });
+        prevEnablePricing = prev?.enable_pricing && prev.enable_pricing !== 'on' ? String(prev.enable_pricing) : 'off';
+
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         failOnPageError(aPage, errors);
@@ -38,6 +45,7 @@ test.describe('Admin DataViews migration smoke', () => {
 
     test.afterAll(async () => {
         await aPage.close();
+        await dbUtils.updateOptionValue('dokan_product_subscription', { enable_pricing: prevEnablePricing });
     });
 
     test('Withdraw page renders DataViews tabs and Export', { tag: ['@lite', '@admin'] }, async () => {

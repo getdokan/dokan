@@ -250,17 +250,26 @@ test.describe('Admin Reports functionality @pro', () => {
             expect(filename!, 'downloaded file is an earning-reports CSV').toMatch(adminReportsData.adminEarnings.exportFilename);
         });
 
+        test('the "By Month" breakdown sub-tab refetches the chart with a by-day filter', { tag: ['@pro', '@admin'] }, async () => {
+            await reports.goto();
+            // By Month is the default-active breakdown, so switch away before asserting it refetches.
+            await reports.clickTab(adminReportsData.breakdownTabs.byYear);
+            const [req] = await Promise.all([page.waitForRequest(r => r.url().includes(adminReportsData.rest.statsOverview) && r.url().includes('by-day') && r.method() === 'GET', { timeout: 15000 }), reports.tab(adminReportsData.breakdownTabs.byMonth).click()]);
+            expect(req.url(), 'By Month refetched the overview chart with filter_type=by-day').toContain('by-day');
+            expect(await reports.isChartVisible(), 'the chart re-renders on the By Month breakdown').toBe(true);
+        });
+
         test('the "By Year" breakdown sub-tab refetches the chart with a by-year filter', { tag: ['@pro', '@admin'] }, async () => {
             await reports.goto();
-            // The By Year sub-tab lives inside the active "Reports" overview.
             const [req] = await Promise.all([page.waitForRequest(r => r.url().includes(adminReportsData.rest.statsOverview) && r.url().includes('by-year') && r.method() === 'GET', { timeout: 15000 }), reports.tab(adminReportsData.breakdownTabs.byYear).click()]);
             expect(req.url(), 'By Year refetched the overview chart with filter_type=by-year').toContain('by-year');
             expect(await reports.isChartVisible(), 'the chart re-renders on the By Year breakdown').toBe(true);
         });
 
-        test('the "By Vendor" breakdown sub-tab renders its panel without a PHP fatal', { tag: ['@pro', '@admin'] }, async () => {
+        test('the "By Vendor" breakdown sub-tab refetches the chart with a by-vendor filter', { tag: ['@pro', '@admin'] }, async () => {
             await reports.goto();
-            await reports.clickTab(adminReportsData.breakdownTabs.byVendor);
+            const [req] = await Promise.all([page.waitForRequest(r => r.url().includes(adminReportsData.rest.statsOverview) && r.url().includes('by-vendor') && r.method() === 'GET', { timeout: 15000 }), reports.tab(adminReportsData.breakdownTabs.byVendor).click()]);
+            expect(req.url(), 'By Vendor refetched the overview chart with filter_type=by-vendor').toContain('by-vendor');
             expect(await reports.isChartVisible(), 'the chart paints on the By Vendor breakdown').toBe(true);
             expect(await reports.hasNoPhpFatal(), 'no PHP fatal on the By Vendor breakdown').toBe(true);
         });
