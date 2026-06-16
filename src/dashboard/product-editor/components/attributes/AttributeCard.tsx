@@ -7,7 +7,8 @@ import { AsyncSelect, DokanButton, DokanModal } from '@src/components';
 import DebouncedInput from '@src/components/DebouncedInput';
 import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
-import { useCallback, useState } from '@wordpress/element';
+import { debounce } from '@wordpress/compose';
+import { useCallback, useEffect, useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { GripVertical } from 'lucide-react';
 import { Attribute } from '../../types';
@@ -95,6 +96,29 @@ const AttributeCard = ( {
             }
         },
         [ attr.id, attr.is_taxonomy ] // eslint-disable-line react-hooks/exhaustive-deps
+    );
+
+    // Debounce term lookups so typing in the AsyncSelect fires a single request
+    // after the user pauses, instead of one request per keystroke. react-select's
+    // callback form is used because a lodash-style debounce cannot return the
+    // pending promise the promise form expects. Rest args satisfy the
+    // `(...args: unknown[]) => unknown` constraint of @wordpress/compose's debounce.
+    const debouncedLoadTerms = useMemo(
+        () =>
+            debounce( ( ...args: unknown[] ) => {
+                const inputValue = ( args[ 0 ] as string ) || '';
+                const callback = args[ 1 ] as (
+                    options: ReturnType< typeof mapTerm >[]
+                ) => void;
+                loadTerms( inputValue ).then( callback );
+            }, 300 ),
+        [ loadTerms ]
+    );
+
+    // Cancel any pending debounced lookup when the card unmounts or the loader changes.
+    useEffect(
+        () => () => debouncedLoadTerms.cancel(),
+        [ debouncedLoadTerms ]
     );
 
     const attributeChangeHandler = ( selected: any ) => {
@@ -195,8 +219,9 @@ const AttributeCard = ( {
                 } }
             >
                 <div className="flex items-center gap-2">
-                    <span
-                        className="cursor-grab text-gray-400 hover:text-gray-600"
+                    <button
+                        type="button"
+                        className="cursor-grab text-gray-400 hover:text-gray-600 bg-transparent border-none"
                         onMouseDown={ ( e ) => {
                             e.stopPropagation();
                             setIsDraggable( true );
@@ -205,19 +230,19 @@ const AttributeCard = ( {
                         onClick={ ( e ) => e.stopPropagation() }
                     >
                         <GripVertical size={ 16 } />
-                    </span>
+                    </button>
                     <span className="font-semibold text-gray-700 text-sm">
                         { attr.name || __( 'New Attribute', 'dokan-lite' ) }
                     </span>
                 </div>
                 <div className="flex items-center gap-3">
-                    <span
-                        role="button"
+                    <button
+                        type="button"
                         onClick={ onRemove }
-                        className="text-red-500 hover:text-red-700 text-xs font-medium"
+                        className="text-red-500 hover:text-red-700 text-xs font-medium bg-transparent border-none"
                     >
                         { __( 'Remove', 'dokan-lite' ) }
-                    </span>
+                    </button>
 
                     <span
                         className={ `transform transition-transform duration-200 ${
@@ -265,7 +290,10 @@ const AttributeCard = ( {
 
                     { /* Values Field */ }
                     <div>
-                        <label className="block text-xs font-medium text-gray-500 mb-1">
+                        <label
+                            className="block text-xs font-medium text-gray-500 mb-1"
+                            htmlFor={ `dokan-attr-values-${ attr.id }` }
+                        >
                             { __( 'Value(s)', 'dokan-lite' ) }
                         </label>
 
@@ -278,7 +306,7 @@ const AttributeCard = ( {
                                     defaultOptions
                                     closeMenuOnSelect={ false }
                                     value={ attr.terms ?? [] }
-                                    loadOptions={ loadTerms }
+                                    loadOptions={ debouncedLoadTerms }
                                     onChange={ ( selected: any ) =>
                                         attributeChangeHandler( selected )
                                     }
@@ -378,7 +406,10 @@ const AttributeCard = ( {
                     </div>
 
                     <div className="col-span-1 md:col-span-2 mt-2 text-sm text-gray-600 flex flex-col md:flex-row gap-4">
-                        <label className="inline-flex items-center">
+                        <label
+                            className="inline-flex items-center"
+                            htmlFor={ `dokan-attr-visible-${ attr.id }` }
+                        >
                             <SimpleCheckbox
                                 checked={ attr.visible }
                                 onChange={ ( e ) =>
@@ -398,7 +429,10 @@ const AttributeCard = ( {
                         </label>
 
                         { productType?.includes( 'variable' ) && (
-                            <label className="inline-flex items-center">
+                            <label
+                                className="inline-flex items-center"
+                                htmlFor={ `dokan-attr-variation-${ attr.id }` }
+                            >
                                 <SimpleCheckbox
                                     checked={ attr.variation }
                                     onChange={ ( e ) =>

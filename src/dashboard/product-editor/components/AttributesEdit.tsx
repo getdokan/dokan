@@ -9,7 +9,10 @@ import AttributeCard from './attributes/AttributeCard';
 import { applyFilters } from '@wordpress/hooks';
 
 const AttributesEdit = ( { data, field, onChange, validity }: any ) => {
-    const attributes: Attribute[] = data[ field.id ] || [];
+    const attributes: Attribute[] = useMemo(
+        () => data[ field.id ] || [],
+        [ data, field.id ]
+    );
     const { isLoading, submitHandler, getDefaultValue, handleDefaultChange } =
         useProductEditor( data.id );
     const { type: productType } = data;
