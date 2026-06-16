@@ -182,7 +182,7 @@ jobs:
               uses: actions/checkout@v4
               with:
                   repository: getdokan/dokan-pro
-                  ref: develop
+                  ref: feat/stripe-connect-revemp # TEMP (PR #5646): revert to develop before merge
                   path: dokan-pro
                   token: ${{ secrets.DOKAN_PRO_TOKEN }}
 
@@ -868,7 +868,7 @@ jobs:
               uses: actions/checkout@v4
               with:
                   repository: getdokan/dokan-pro
-                  ref: develop
+                  ref: feat/stripe-connect-revemp # TEMP (PR #5646): revert to develop before merge
                   path: dokan-pro
                   token: ${{ secrets.DOKAN_PRO_TOKEN }}
 
