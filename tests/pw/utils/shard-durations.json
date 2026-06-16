@@ -8,6 +8,11 @@
       "tests": 16
     },
     {
+      "file": "stripe-connect/stripeConnect.spec.ts",
+      "ms": 270000,
+      "tests": 21
+    },
+    {
       "file": "abuse-reports/abuseReports.spec.ts",
       "ms": 294185,
       "tests": 42

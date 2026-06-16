@@ -101,6 +101,70 @@ export const dbUtils = {
         return [currentMetaValue, newMetaValue];
     },
 
+    /**
+     * Seed a vendor as Stripe-Connect-connected WITHOUT the Stripe OAuth login.
+     * Writes exactly what the OAuth callback does (RegisterWithdrawMethods.php:218-223):
+     * `dokan_connected_vendor_id` + `_stripe_connect_access_key` (+ the
+     * `dokan_profile_settings[payment][stripe]` flag for parity).
+     *
+     * `suppressValidation` (default true) pre-sets the weekly access-key check
+     * transient so a placeholder access key is NOT validated against Stripe (and
+     * thus NOT wiped) if the seeded vendor's dashboard is loaded during a test
+     * (dokan-pro module.php:193-238 deletes both meta on a failed Account::retrieve).
+     *
+     * NOTE: a placeholder `accountId` is enough for the gateway to show at
+     * checkout and for the card charge (charged on the platform account). The
+     * later vendor `Transfer::create` needs a REAL Stripe test connected account
+     * — pass a genuine `acct_…` for money/split/refund assertions.
+     */
+    async seedStripeConnectedVendor(
+        vendorId: string | number,
+        opts: { accountId: string; accessKey?: string; suppressValidation?: boolean },
+    ): Promise<void> {
+        const { accountId, accessKey = 'placeholder_access_key', suppressValidation = true } = opts;
+        const id = String(vendorId);
+        await dbUtils.setUserMeta(id, 'dokan_connected_vendor_id', accountId);
+        await dbUtils.setUserMeta(id, '_stripe_connect_access_key', accessKey);
+        // Optional parity flag (not read by checkout/availability/splits); best-effort.
+        try {
+            await dbUtils.updateUserMeta(id, 'dokan_profile_settings', { payment: { stripe: 1 } }, true);
+        } catch {
+            await dbUtils.setUserMeta(id, 'dokan_profile_settings', { payment: { stripe: 1 } }, true);
+        }
+        if (suppressValidation) {
+            const name = `dokan_check_stripe_access_key_valid_${vendorId}`;
+            const timeout = Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60;
+            await dbUtils.setOptionValue(`_transient_${name}`, 'sent', false);
+            await dbUtils.setOptionValue(`_transient_timeout_${name}`, String(timeout), false);
+        }
+    },
+
+    /**
+     * Empty a logged-in customer's WooCommerce cart so a fresh browser context
+     * starts clean. A logged-in cart lives in TWO places — the
+     * `_woocommerce_persistent_cart_*` user meta AND the live session row in
+     * `_woocommerce_sessions` (keyed by user id) — so both must be cleared, or
+     * leftover items from prior tests (e.g. declined-card tests that never
+     * complete) pollute later checkouts.
+     */
+    async clearCustomerCart(userId: string | number): Promise<void> {
+        await dbUtils.dbQuery(`DELETE FROM ${dbPrefix}_usermeta WHERE user_id = ? AND meta_key LIKE '_woocommerce_persistent_cart_%';`, [
+            String(userId),
+        ]);
+        await dbUtils.dbQuery(`DELETE FROM ${dbPrefix}_woocommerce_sessions WHERE session_key = ?;`, [String(userId)]);
+    },
+
+    /** Undo seedStripeConnectedVendor — restores the vendor to "not connected". */
+    async removeStripeConnectedVendor(vendorId: string | number): Promise<void> {
+        const id = String(vendorId);
+        await dbUtils.dbQuery(
+            `DELETE FROM ${dbPrefix}_usermeta WHERE user_id = ? AND meta_key IN ('dokan_connected_vendor_id', '_stripe_connect_access_key');`,
+            [id],
+        );
+        const name = `dokan_check_stripe_access_key_valid_${vendorId}`;
+        await dbUtils.dbQuery(`DELETE FROM ${dbPrefix}_options WHERE option_name IN (?, ?);`, [`_transient_${name}`, `_transient_timeout_${name}`]);
+    },
+
     // get option value
     async getOptionValue(optionName: string): Promise<any> {
         const query = `Select option_value FROM ${dbPrefix}_options WHERE option_name = ?;`;
