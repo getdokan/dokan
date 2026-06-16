@@ -527,6 +527,15 @@ export class StripeConnectPage {
         await this.page.route('**/stripe-connect-express-classic.js*', route =>
             route.fulfill({ status: 200, contentType: 'application/javascript', body: '' }),
         );
+        // Stripe Link (inside the Payment Element) loads an invisible hCaptcha that,
+        // on CI runner IPs, escalates into a VISIBLE interactive challenge —
+        // unsolvable by automation — which blocks the classic in-page confirm
+        // (place-order never submits). A plain card payment doesn't require
+        // hCaptcha (it gates Link enrolment, not the card charge), so block all
+        // hCaptcha resources: Link enrolment is skipped and the card confirm
+        // proceeds. Does NOT touch the 3DS challenge (served from
+        // testmode-acs.stripe.com, no "hcaptcha" in the URL).
+        await this.page.route(/hcaptcha/i, route => route.abort());
         await this.page.goto(this.checkout.classicUrl);
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.locator(this.checkout.placeOrderClassic).waitFor({ state: 'visible', timeout: 30_000 });
