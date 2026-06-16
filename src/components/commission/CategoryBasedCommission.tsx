@@ -29,6 +29,9 @@ const CategoryBasedCommission: React.FC< CategoryBasedCommissionProps > = ( {
     display = true,
     debounceDelay = 500,
     validationError,
+    headerClassName = '',
+    rowClassName = '',
+    autoExpandCustomized = false,
 } ) => {
     // Initialize commission state with proper memoization
     const initialCommission = useMemo( (): CommissionValues => {
@@ -46,7 +49,12 @@ const CategoryBasedCommission: React.FC< CategoryBasedCommissionProps > = ( {
     const [ expandedIds, setExpandedIds ] = useState<
         Array< string | number >
     >( [] );
-    const [ allCategoryOpen, setAllCategoryOpen ] = useState( false );
+    // Open the list on load when a category already has a custom amount (opt-in via the prop).
+    const [ allCategoryOpen, setAllCategoryOpen ] = useState(
+        () =>
+            autoExpandCustomized &&
+            Object.keys( commissionValues?.items || {} ).length > 0
+    );
 
     // Memoize categories to avoid dependency issues
     const categoriesMemo = useMemo( () => categories || {}, [ categories ] );
@@ -286,7 +294,7 @@ const CategoryBasedCommission: React.FC< CategoryBasedCommissionProps > = ( {
 
     return (
         <div className="w-full bg-white overflow-auto">
-            <CommissionHeader />
+            <CommissionHeader className={ headerClassName } />
             <div className="border-t border-[#E9E9E9]">
                 <CategoryRow
                     category={ {
@@ -301,6 +309,7 @@ const CategoryBasedCommission: React.FC< CategoryBasedCommissionProps > = ( {
                     hasChildren={ categoriesList.length > 0 }
                     onToggle={ handleToggle }
                     commissionInputsProps={ commissionInputsProps }
+                    className={ rowClassName }
                 />
                 { allCategoryOpen && (
                     <CategoryTree
@@ -308,6 +317,7 @@ const CategoryBasedCommission: React.FC< CategoryBasedCommissionProps > = ( {
                         expandedIds={ expandedIds }
                         onToggle={ handleToggle }
                         commissionInputsProps={ commissionInputsProps }
+                        rowClassName={ rowClassName }
                     />
                 ) }
             </div>

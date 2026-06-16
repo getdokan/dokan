@@ -678,8 +678,8 @@ class SettingsSchema {
                 'type'             => 'field',
                 'variant'          => 'combine_input',
                 'section_id'       => 'commission',
-                'title'            => esc_html__( 'Admin Commission', 'dokan-lite' ),
-                'description'      => esc_html__( 'Amount you will get from sales in both percentage and fixed fee', 'dokan-lite' ),
+                'title'            => esc_html__( 'Commission Amount', 'dokan-lite' ),
+                'description'      => esc_html__( 'Amount you will get from sales in both percentage and fixed fee.', 'dokan-lite' ),
                 'admin_percentage' => $default_settings['admin_percentage'],
                 'additional_fee'   => $default_settings['additional_fee'],
                 'dependencies'     => [
@@ -703,6 +703,19 @@ class SettingsSchema {
                 'validations'      => [
                     [ 'not_empty' => esc_html__( 'Both percentage and fixed fee is required.', 'dokan-lite' ) ],
                 ],
+                // Server-side mirror of the client check (like delivery-time): both percentage and flat fee are required, so the save is blocked if either is empty.
+                'validation_func'  => function ( $value ) {
+                    $percentage = is_array( $value ) ? ( $value['admin_percentage'] ?? '' ) : '';
+                    $flat       = is_array( $value ) ? ( $value['additional_fee'] ?? '' ) : '';
+                    if ( '' === trim( (string) $percentage ) || '' === trim( (string) $flat ) ) {
+                        return esc_html__( 'Both percentage and fixed fee is required.', 'dokan-lite' );
+                    }
+                    return true;
+                },
+                'legacy_key'       => [
+                    'admin_percentage' => 'dokan_selling.admin_percentage',
+                    'additional_fee'   => 'dokan_selling.additional_fee',
+                ],
             ],
             [
                 'id'            => 'reset_sub_category_when_edit_all_category',
@@ -714,8 +727,8 @@ class SettingsSchema {
                 'variant'       => 'switch',
                 'section_id'    => 'commission',
                 'title'         => esc_html__( 'Apply Parent Category Commission to All Subcategories', 'dokan-lite' ),
-                'description'   => esc_html__( "Important: 'All Categories' commission serves as your marketplace's default rate and cannot be empty. If 0 is given in value, then the marketplace will deduct no commission from vendors", 'dokan-lite' ),
-                'tooltip'       => esc_html__( "When enabled, changing a parent category's commission rate will automatically update all its subcategories. Disable this option to maintain independent commission rates for subcategories", 'dokan-lite' ),
+                'description'   => __( "Important: 'All Categories' commission serves as your marketplace's default rate and cannot be empty. If 0 is given in value, then the marketplace will deduct no commission from vendors", 'dokan-lite' ),
+                'tooltip'       => __( "When enabled, changing a parent category's commission rate will automatically update all its subcategories. Disable this option to maintain independent commission rates for subcategories", 'dokan-lite' ),
                 'default'       => 'on',
                 'enable_state'  => [
 					'label' => esc_html__( 'Enabled', 'dokan-lite' ),
@@ -753,8 +766,8 @@ class SettingsSchema {
                 'type'         => 'field',
                 'variant'      => 'category_based_commission',
                 'section_id'   => 'commission',
-                'title'        => esc_html__( 'Admin Commission', 'dokan-lite' ),
-                'description'  => esc_html__( 'Amount you will get from each sale', 'dokan-lite' ),
+                'title'        => esc_html__( 'Commission Amount', 'dokan-lite' ),
+                'description'  => esc_html__( 'Amount you will get from sales in both percentage and fixed fee.', 'dokan-lite' ),
                 'dependencies' => [
                     [
 						'key' => 'commission_type',
@@ -772,26 +785,20 @@ class SettingsSchema {
 						'effect' => 'show',
 						'comparison' => '===',
 					],
-                    [
-						'key' => 'reset_sub_category_when_edit_all_category',
-						'value' => 'on',
-						'to_self' => true,
-						'attribute' => 'custom',
-						'effect' => 'custom',
-						'comparison' => '===',
-					],
-                    [
-						'key' => 'reset_sub_category_when_edit_all_category',
-						'value' => 'off',
-						'to_self' => true,
-						'attribute' => 'custom',
-						'effect' => 'custom',
-						'comparison' => '===',
-					],
                 ],
                 'validations'  => [
                     [ 'not_empty' => esc_html__( 'Both percentage and fixed fee is required.', 'dokan-lite' ) ],
                 ],
+                // Server-side mirror of the client check (like delivery-time): the All-Categories rate needs both percentage and flat fee, so the save is blocked if either is empty.
+                'validation_func' => function ( $value ) {
+                    $all        = is_array( $value ) && isset( $value['all'] ) ? $value['all'] : [];
+                    $percentage = $all['percentage'] ?? '';
+                    $flat       = $all['flat'] ?? '';
+                    if ( '' === trim( (string) $percentage ) || '' === trim( (string) $flat ) ) {
+                        return esc_html__( 'Admin Commission is required.', 'dokan-lite' );
+                    }
+                    return true;
+                },
             ],
 
             // === SubPage: Withdraw ===
@@ -1312,7 +1319,7 @@ class SettingsSchema {
                 'subpage_id'    => 'vendor_onboarding',
                 'title'         => esc_html__( 'Enable Selling', 'dokan-lite' ),
                 'description'   => esc_html__( 'Immediately enable selling for newly registered vendors.', 'dokan-lite' ),
-                'tooltip'       => esc_html__( 'If checked, vendors will have permission to sell immediately after registration.', 'dokan-lite' ),
+                'tooltip'       => esc_html__( 'If checked, vendors will have permission to sell immediately after registration. If unchecked, newly registered vendors cannot add products until selling capability is activated manually from admin dashboard.', 'dokan-lite' ),
                 'default'       => 'automatically',
                 'options'       => self::map_array_to_radio_capsule_options( dokan_get_container()->get( AdminSettings::class )->new_seller_enable_selling_statuses() ),
                 'legacy_key' => [
