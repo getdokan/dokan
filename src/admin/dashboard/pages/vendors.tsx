@@ -383,15 +383,15 @@ const VendorsPage = ( props ) => {
             } as any );
         }
         await fetchVendors();
-        if ( isBulk ) {
-            setSelection( [] );
-        }
+        // Clear any row selection regardless of bulk/single so a single
+        // selected row doesn't stay highlighted after the action.
+        setSelection( [] );
     };
     // Handle tab selection for status filtering
     const handleTabSelect = ( tabName ) => {
+        // Updating status + resetting the page drives a single refetch via the
+        // effect above; calling fetchVendors() here too would double-fetch.
         setStatus( tabName );
-        // also refresh current page with new status
-        fetchVendors( { status: tabName, page: 1 } );
         setView( ( prev: any ) => ( { ...prev, page: 1 } ) );
     };
 
@@ -568,12 +568,21 @@ const VendorsPage = ( props ) => {
                                     isEligible: ( item: Vendor ) =>
                                         ! item.enabled,
                                     callback: async ( args: any ) => {
-                                        const ids = extractIdsFromArgs( args );
-                                        await runVendorStatusAction(
-                                            'approve',
-                                            ids,
-                                            ids.length > 1
-                                        );
+                                        try {
+                                            const ids =
+                                                extractIdsFromArgs( args );
+                                            await runVendorStatusAction(
+                                                'approve',
+                                                ids,
+                                                ids.length > 1
+                                            );
+                                        } catch ( e ) {
+                                            // eslint-disable-next-line no-console
+                                            console.error(
+                                                'Failed to approve vendor(s)',
+                                                e
+                                            );
+                                        }
                                     },
                                 },
                                 {
@@ -601,12 +610,21 @@ const VendorsPage = ( props ) => {
                                     isEligible: ( item: Vendor ) =>
                                         !! item.enabled,
                                     callback: async ( args: any ) => {
-                                        const ids = extractIdsFromArgs( args );
-                                        await runVendorStatusAction(
-                                            'disable',
-                                            ids,
-                                            ids.length > 1
-                                        );
+                                        try {
+                                            const ids =
+                                                extractIdsFromArgs( args );
+                                            await runVendorStatusAction(
+                                                'disable',
+                                                ids,
+                                                ids.length > 1
+                                            );
+                                        } catch ( e ) {
+                                            // eslint-disable-next-line no-console
+                                            console.error(
+                                                'Failed to disable vendor(s)',
+                                                e
+                                            );
+                                        }
                                     },
                                 },
                             ] as any

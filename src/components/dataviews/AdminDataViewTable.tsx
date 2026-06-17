@@ -17,7 +17,7 @@ import { twMerge } from 'tailwind-merge';
 import { Funnel } from 'lucide-react';
 import { Item } from '@wordpress/components/build-types/navigation/types';
 import ListEmpty from '@src/components/dataviews/ListEmpty';
-import { getTranslatedStrings } from './DataViewTable';
+import { getTranslatedStrings } from '@src/utilities/getTranslatedStrings';
 
 type ItemWithId = { id: string };
 
