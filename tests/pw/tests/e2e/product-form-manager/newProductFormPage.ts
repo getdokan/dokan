@@ -103,6 +103,10 @@ export const newProductFormSelectors = {
 
     purchaseNote: 'textarea[placeholder="Purchase Note"]',
 
+    // Attributes section — the "Add" picker and each card's term picker are
+    // async react-selects (taxonomies/terms lazy-load over REST).
+    attributesWrapper: '#dokan-form-field-attributes',
+
     // Save button — rendered into the page header via WP Fill slot.
     saveButton:
         'button:has-text("Save Changes"), button:has-text("Update Product"), button:has-text("Create Product"), button:has-text("Publish")',
@@ -445,19 +449,70 @@ export class NewProductFormPage {
         await this.chooseReactSelectOption(newProductFormSelectors.productTypeWrapper, labelMap[type]);
     }
 
+    // ---- Attributes (lazy-loaded global attributes + terms) ----
+    get attributesSection(): Locator {
+        return this.page.locator(newProductFormSelectors.attributesWrapper);
+    }
+
+    // The "Add" picker renders after any cards, so it's the last combobox.
+    get addAttributeInput(): Locator {
+        return this.attributesSection.locator('input[role="combobox"]').last();
+    }
+
+    attributeCard(name: string): Locator {
+        return this.attributesSection
+            .locator('span.font-semibold')
+            .filter({ hasText: new RegExp(escapeRegExp(name), 'i') })
+            .first();
+    }
+
+    // A card's selected terms render inside the term select's value container.
+    get attributeTermsValue(): Locator {
+        return this.attributesSection.locator('.react-select__value-container').first();
+    }
+
+    /**
+     * Add a global attribute taxonomy via the async picker, then "Add New".
+     */
+    async addGlobalAttribute(name: string): Promise<void> {
+        // The section sits low on a long form, so the open menu can render
+        // outside the viewport — filter by typing and commit with Enter rather
+        // than clicking the option (which is viewport-fragile here).
+        await this.attributesSection.scrollIntoViewIfNeeded().catch(() => undefined);
+        const input = this.addAttributeInput;
+        await input.click();
+        await input.fill(name);
+        await this.reactSelectOption(name)
+            .first()
+            .waitFor({ state: 'visible', timeout: 8000 });
+        await this.page.keyboard.press('Enter');
+        // Before a card exists there is exactly one "Add New" button (the picker's).
+        await this.attributesSection
+            .getByRole('button', { name: /add new/i })
+            .first()
+            .click();
+        await this.attributeCard(name).waitFor({ state: 'visible', timeout: 8000 });
+    }
+
+    async selectAllAttributeTerms(): Promise<void> {
+        await this.attributesSection
+            .getByRole('button', { name: /^select all$/i })
+            .first()
+            .click();
+    }
+
     // ---- Save / drafts ----
     async save(): Promise<void> {
         const btn = this.saveButton;
         await btn.waitFor({ state: 'visible' });
-        // The Save button starts disabled and only flips to enabled once the
-        // form's debounced validation has caught up with all the fields we
-        // just filled. Poll until it's enabled rather than force-clicking,
-        // which would bypass that gate and submit an empty payload.
-        await expect(btn).toBeEnabled({ timeout: 10000 }).catch(() => undefined);
-        // If the button stays disabled, that itself is the form's "blocked
-        // save" signal — return without clicking so negative-case tests can
-        // observe the disabled state instead of timing out on a forced click.
-        if (!(await btn.isEnabled())) return;
+        // Poll until debounced validation enables the button rather than
+        // force-clicking (which would submit an empty payload). A valid form
+        // enables within ~1-2s; the short wait keeps negative-case tests, where
+        // it never enables, from idling on a dead wait.
+        await expect(btn).toBeEnabled({ timeout: 6000 }).catch(() => undefined);
+        // Staying disabled is itself the "blocked save" signal — return without
+        // clicking so negative-case tests can observe it.
+        if (!(await btn.isEnabled().catch(() => false))) return;
         await btn.click();
     }
 
@@ -521,7 +576,9 @@ export class NewProductFormPage {
 
     private async uploadViaMediaModal(filePath: string | string[]): Promise<void> {
         const m = newProductFormSelectors.wpMedia;
-        const modal = this.page.locator(m.modal).first();
+        // Feature and gallery uploaders each keep their own `.media-modal`; a
+        // stale one can linger, so drive the LAST visible modal (the newest).
+        const modal = this.page.locator(m.modal).last();
         await modal.waitFor({ state: 'visible', timeout: 15000 });
         // Send the file(s) through the Upload tab's input. WP then switches to
         // the library view with the new attachment(s) auto-selected.
@@ -545,7 +602,12 @@ export class NewProductFormPage {
         if (await insertBtn.isVisible().catch(() => false)) {
             await insertBtn.click().catch(() => undefined);
         }
-        await modal.waitFor({ state: 'hidden', timeout: 15000 }).catch(() => undefined);
+        // Ensure this frame closes before the next upload opens one, so two
+        // modals never coexist; nudge with Escape if it lingers.
+        await modal.waitFor({ state: 'hidden', timeout: 10000 }).catch(async () => {
+            await this.page.keyboard.press('Escape').catch(() => undefined);
+            await modal.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => undefined);
+        });
     }
 
     // Preview <img> elements rendered after a successful upload.

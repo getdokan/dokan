@@ -162,9 +162,13 @@ export const api = {
     customerAuth() {
         return { Authorization: basicAuth(CUSTOMER!, USER_PASSWORD!) };
     },
+    // Generous request timeout so transient slowness under parallel workers
+    // doesn't fail a test on the default ceiling.
+    _reqTimeout: 30000,
     async get(endpoint: string, headers?: Record<string, string>): Promise<any> {
         const r = await this._ctx!.get(`${SERVER_URL}${endpoint}`, {
             headers: headers ?? this.adminAuth(),
+            timeout: this._reqTimeout,
         });
         return r.json();
     },
@@ -172,12 +176,14 @@ export const api = {
         const r = await this._ctx!.post(`${SERVER_URL}${endpoint}`, {
             headers: headers ?? this.adminAuth(),
             data: payload,
+            timeout: this._reqTimeout,
         });
         return r.json();
     },
     async del(endpoint: string, headers?: Record<string, string>): Promise<void> {
         await this._ctx!.delete(`${SERVER_URL}${endpoint}`, {
             headers: headers ?? this.adminAuth(),
+            timeout: this._reqTimeout,
         });
     },
     // POST that returns the raw HTTP status — used by permission negatives where
@@ -190,6 +196,7 @@ export const api = {
         const r = await this._ctx!.post(`${SERVER_URL}${endpoint}`, {
             headers: headers ?? this.adminAuth(),
             data: payload,
+            timeout: this._reqTimeout,
         });
         return r.status();
     },
@@ -197,6 +204,7 @@ export const api = {
         const r = await this._ctx!.put(`${SERVER_URL}${endpoint}`, {
             headers: headers ?? this.adminAuth(),
             data: payload,
+            timeout: this._reqTimeout,
         });
         return r.json();
     },
@@ -314,6 +322,33 @@ export const api = {
         for (const field of this.fields(schema)) {
             if (!isEditableOptional(field)) continue;
             if (!VENDOR_WRAPPED_VARIANTS.has(String(field.variant))) continue;
+            const section = adminSectionOf(field);
+            if (section) return { section, field };
+        }
+        return undefined;
+    },
+
+    // Inverse of pickOptionalDefaultField: a default field that is mandatory by
+    // design (is_mandatory in the PHP schema, e.g. Title / Categories) and shown
+    // in the admin builder, whose visibility toggle the builder must lock.
+    pickMandatoryDefaultField(
+        schema: SchemaItem[]
+    ): { section: SchemaItem; field: SchemaItem } | undefined {
+        const isShownMandatory = (field: SchemaItem): boolean =>
+            field.type === 'field' &&
+            !field.is_custom &&
+            field.is_mandatory === true &&
+            field.show_in_admin !== false;
+        const adminSectionOf = (field: SchemaItem): SchemaItem | undefined =>
+            schema.find(
+                (s) =>
+                    s.type === 'section' &&
+                    s.id === field.section_id &&
+                    s.show_in_admin !== false
+            );
+
+        for (const field of this.fields(schema)) {
+            if (!isShownMandatory(field)) continue;
             const section = adminSectionOf(field);
             if (section) return { section, field };
         }

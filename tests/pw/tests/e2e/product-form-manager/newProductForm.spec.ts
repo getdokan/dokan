@@ -35,8 +35,9 @@ test.describe('Vendor new product form (React) functionality', () => {
             await form.waitForSaveSuccess();
         });
 
-        //need fix
-        test.skip('vendor can create a product with every option filled', { tag: ['@lite', '@vendor'] }, async () => {
+        test('vendor can create a product with every option filled', { tag: ['@lite', '@vendor'] }, async () => {
+            // Many fields + two media-modal uploads — legitimately long.
+            test.slow();
             const data = newProductFormData.valid();
 
             await form.fillBasicInfo(data);

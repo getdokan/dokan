@@ -980,19 +980,22 @@ test.describe('Product Form Manager', () => {
 
     // ========================================================================
     // MANDATORY FIELD — the builder must not let an admin hide a field flagged
-    // is_mandatory (PFM-N04). The flag is set via REST, then the UI is asserted.
+    // is_mandatory (PFM-N04). The flag is defined in the PHP schema and there's
+    // no UI to set it, so we assert the lock on a genuinely-mandatory default
+    // field (e.g. Title) rather than writing one via REST.
     // ========================================================================
     test.describe('mandatory field UI contract', () => {
         test(
-            'the visibility toggle is disabled for an is_mandatory field',
+            'the visibility toggle is locked for a default mandatory field',
             { tag: ['@pro', '@admin'] },
             async () => {
                 const baseline = await api.getSchema();
-                const { section, field } = api.pickOptionalDefaultField(baseline)!;
-                const next = baseline.map((i) =>
-                    i.id === field.id ? { ...i, is_mandatory: true } : i
-                );
-                await api.saveSchema(next);
+                const picked = api.pickMandatoryDefaultField(baseline);
+                expect(
+                    picked,
+                    'expected at least one default is_mandatory field in the schema'
+                ).toBeTruthy();
+                const { section, field } = picked!;
 
                 await admin.goto();
                 await expect(
