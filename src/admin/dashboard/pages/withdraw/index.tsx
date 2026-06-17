@@ -283,8 +283,8 @@ const WithdrawPage = () => {
     const actions = [
         {
             id: 'view',
-            label: () => getActionLabel( <Eye size={ 16 } className="!fill-none" />, __( 'View', 'dokan-lite' ) ),
-            icon: <Eye size={ 16 } className="!fill-none" />,
+            label: () => getActionLabel( <Eye size={ 16 } className="fill-none!" />, __( 'View', 'dokan-lite' ) ),
+            icon: <Eye size={ 16 } className="fill-none!" />,
             isPrimary: false,
             callback: ( items ) => {
                 openModal( 'view', items );
@@ -292,8 +292,8 @@ const WithdrawPage = () => {
         },
         {
             id: 'approved',
-            label: () => getActionLabel( <Check size={ 16 } className="!fill-none" />, __( 'Approve', 'dokan-lite' ) ),
-            icon: <Check size={ 16 } className="!fill-none" />,
+            label: () => getActionLabel( <Check size={ 16 } className="fill-none!" />, __( 'Approve', 'dokan-lite' ) ),
+            icon: <Check size={ 16 } className="fill-none!" />,
             isPrimary: false,
             supportsBulk: true,
             isDestructive: true,
@@ -338,8 +338,8 @@ const WithdrawPage = () => {
         },
         {
             id: 'cancelled',
-            label: () => getActionLabel( <XCircle size={ 16 } className="!fill-none" />, __( 'Cancel', 'dokan-lite' ) ),
-            icon: <XCircle size={ 16 } className="!fill-none" />,
+            label: () => getActionLabel( <XCircle size={ 16 } className="fill-none!" />, __( 'Cancel', 'dokan-lite' ) ),
+            icon: <XCircle size={ 16 } className="fill-none!" />,
             isPrimary: false,
             supportsBulk: true,
             isDestructive: true,
@@ -359,8 +359,8 @@ const WithdrawPage = () => {
         },
         {
             id: 'add-note',
-            label: () => getActionLabel( <MessageSquare size={ 16 } className="!fill-none" />, __( 'Add Note', 'dokan-lite' ) ),
-            icon: <MessageSquare size={ 16 } className="!fill-none" />,
+            label: () => getActionLabel( <MessageSquare size={ 16 } className="fill-none!" />, __( 'Add Note', 'dokan-lite' ) ),
+            icon: <MessageSquare size={ 16 } className="fill-none!" />,
             isPrimary: false,
             isEligible: ( item ) => item?.status !== 'approved',
             callback: ( items ) => {
@@ -369,8 +369,8 @@ const WithdrawPage = () => {
         },
         {
             id: 'delete',
-            label: () => getActionLabel( <Trash size={ 16 } className="!fill-none" />, __( 'Delete', 'dokan-lite' ) ),
-            icon: <Trash size={ 16 } className="!fill-none" />,
+            label: () => getActionLabel( <Trash size={ 16 } className="fill-none!" />, __( 'Delete', 'dokan-lite' ) ),
+            icon: <Trash size={ 16 } className="fill-none!" />,
             supportsBulk: true,
             isDestructive: true,
             confirmTitle: __( 'Delete Withdrawal', 'dokan-lite' ),
@@ -389,8 +389,8 @@ const WithdrawPage = () => {
         },
         {
             id: 'paypal',
-            label: () => getActionLabel( <Download size={ 16 } className="!fill-none" />, __( 'Download PayPal mass payment file', 'dokan-lite' ) ),
-            icon: <Download size={ 16 } className="!fill-none" />,
+            label: () => getActionLabel( <Download size={ 16 } className="fill-none!" />, __( 'Download PayPal mass payment file', 'dokan-lite' ) ),
+            icon: <Download size={ 16 } className="fill-none!" />,
             isPrimary: false,
             supportsBulk: true,
             isEligible: ( item ) => 'paypal' === item?.method,

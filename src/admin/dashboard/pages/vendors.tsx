@@ -238,7 +238,7 @@ const VendorsPage = ( props ) => {
 
     // Fields for DataViews
     const loadingClass = twMerge(
-        '!bg-neutral-200 !rounded !animate-pulse !text-transparent'
+        'bg-neutral-200! rounded! animate-pulse! text-transparent!'
     );
     const fields = applyFilters(
         'dokan-admin-vendors-list-column-fields',
@@ -443,13 +443,13 @@ const VendorsPage = ( props ) => {
                                     id: 'edit',
                                     label: () =>
                                         getActionLabel(
-                                            <Pencil size={ 16 } className="!fill-none" />,
+                                            <Pencil size={ 16 } className="fill-none!" />,
                                             __( 'Edit', 'dokan-lite' )
                                         ),
                                     icon: (
                                         <Pencil
                                             size={ 16 }
-                                            className="!fill-none"
+                                            className="fill-none!"
                                         />
                                     ),
                                     isPrimary: false,
@@ -468,13 +468,13 @@ const VendorsPage = ( props ) => {
                                     id: 'see-products',
                                     label: () =>
                                         getActionLabel(
-                                            <Box size={ 16 } className="!fill-none" />,
+                                            <Box size={ 16 } className="fill-none!" />,
                                             __( 'See Products', 'dokan-lite' )
                                         ),
                                     icon: (
                                         <Box
                                             size={ 16 }
-                                            className="!fill-none"
+                                            className="fill-none!"
                                         />
                                     ),
                                     supportsBulk: false,
@@ -493,13 +493,13 @@ const VendorsPage = ( props ) => {
                                     id: 'see-orders',
                                     label: () =>
                                         getActionLabel(
-                                            <ShoppingBag size={ 16 } className="!fill-none" />,
+                                            <ShoppingBag size={ 16 } className="fill-none!" />,
                                             __( 'See Orders', 'dokan-lite' )
                                         ),
                                     icon: (
                                         <ShoppingBag
                                             size={ 16 }
-                                            className="!fill-none"
+                                            className="fill-none!"
                                         />
                                     ),
                                     isPrimary: false,
@@ -519,13 +519,13 @@ const VendorsPage = ( props ) => {
                                     id: 'switch-to',
                                     label: () =>
                                         getActionLabel(
-                                            <ArrowLeftRight size={ 16 } className="!fill-none" />,
+                                            <ArrowLeftRight size={ 16 } className="fill-none!" />,
                                             __( 'Switch to', 'dokan-lite' )
                                         ),
                                     icon: (
                                         <ArrowLeftRight
                                             size={ 16 }
-                                            className="!fill-none"
+                                            className="fill-none!"
                                         />
                                     ),
                                     isPrimary: false,
@@ -546,13 +546,13 @@ const VendorsPage = ( props ) => {
                                     id: 'approve-vendor',
                                     label: () =>
                                         getActionLabel(
-                                            <Check size={ 16 } className="!fill-none" />,
+                                            <Check size={ 16 } className="fill-none!" />,
                                             __( 'Approve Vendors', 'dokan-lite' )
                                         ),
                                     icon: (
                                         <Check
                                             size={ 16 }
-                                            className="!fill-none"
+                                            className="fill-none!"
                                         />
                                     ),
                                     supportsBulk: true,
@@ -589,13 +589,13 @@ const VendorsPage = ( props ) => {
                                     id: 'disable-selling',
                                     label: () =>
                                         getActionLabel(
-                                            <Ban size={ 16 } className="!fill-none" />,
+                                            <Ban size={ 16 } className="fill-none!" />,
                                             __( 'Disable Selling', 'dokan-lite' )
                                         ),
                                     icon: (
                                         <Ban
                                             size={ 16 }
-                                            className="!fill-none"
+                                            className="fill-none!"
                                         />
                                     ),
                                     supportsBulk: true,
