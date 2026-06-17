@@ -920,20 +920,52 @@ class FormSchema {
         $items = apply_filters( 'dokan_product_editor_prepared_schema', $items, $product_id );
 
         if ( $product instanceof WC_Product ) {
+            $values = $this->get_field_values( $items, $product );
             foreach ( $items as &$item ) {
-                if ( $item['type'] === 'field' ) {
-                    $value         = $this->resolve_field_value( $item['id'], $product );
-                    $value         = $this->format_field_value( $value, $item['variant'] ?? 'text' );
-                    if ( empty( $value ) && isset( $item['value'] ) ) {
-                        // set default value from schema if resolved value is empty, e.g. for new products or when product meta is not set.
-                        $value = $item['value'];
-                    }
-                    $item['value'] = $value;
+                if ( $item['type'] === 'field' && array_key_exists( $item['id'], $values ) ) {
+                    $item['value'] = $values[ $item['id'] ];
                 }
             }
+            unset( $item );
         }
 
         return $items;
+    }
+
+    /**
+     * Resolve and format values for a set of schema fields against a product.
+     *
+     * Lets callers that already hold field definitions resolve per-product
+     * values without rebuilding the whole schema. The frontend variation
+     * renderer uses this to avoid one full schema build per variation.
+     *
+     * @since 5.0.5
+     *
+     * @param array      $fields  Schema field items (each with at least 'id', 'type', 'variant').
+     * @param WC_Product $product Product to resolve values against.
+     *
+     * @return array<string, mixed> Map of field id => formatted value.
+     */
+    public function get_field_values( array $fields, WC_Product $product ): array {
+        $values = [];
+
+        foreach ( $fields as $field ) {
+            if ( ( $field['type'] ?? '' ) !== 'field' || ! isset( $field['id'] ) ) {
+                continue;
+            }
+
+            $value = $this->resolve_field_value( $field['id'], $product );
+            $value = $this->format_field_value( $value, $field['variant'] ?? 'text' );
+
+            if ( empty( $value ) && isset( $field['value'] ) ) {
+                // Fall back to the field's schema default, e.g. for new products or unset meta.
+                $value = $field['value'];
+            }
+
+            $values[ $field['id'] ] = $value;
+        }
+
+        return $values;
     }
 
     /**
