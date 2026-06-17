@@ -413,7 +413,11 @@ export class StripeConnectPage {
     async clickConnectExpectStripeRedirect(): Promise<void> {
         await this.gotoVendorStripeManage();
         await Promise.all([
-            this.page.waitForURL(/connect\.stripe\.com/, { timeout: 30_000 }),
+            // Only assert the redirect INITIATED — resolve as soon as the
+            // navigation to Stripe commits. The default waitUntil:'load' waits for
+            // Stripe's heavy external OAuth page to fully load, which routinely
+            // exceeds 30s on CI (the observed flake) even though the redirect fired.
+            this.page.waitForURL(/connect\.stripe\.com/, { timeout: 30_000, waitUntil: 'commit' }),
             this.page.locator(this.vendor.connectButton).click(),
         ]);
     }
@@ -536,6 +540,21 @@ export class StripeConnectPage {
         // proceeds. Does NOT touch the 3DS challenge (served from
         // testmode-acs.stripe.com, no "hcaptcha" in the URL).
         await this.page.route(/hcaptcha/i, route => route.abort());
+        // ...but blocking hCaptcha alone isn't enough: hCaptcha is a Stripe LINK
+        // feature (a plain card charge never uses it). Link's consumer lookup on
+        // the entered email is what invokes it; on a cold CI session Stripe
+        // escalates to a visible challenge, and because we've blocked hCaptcha the
+        // inline confirm STALLS waiting for a token that never arrives (the
+        // observed first-attempt flake; the warm retry isn't risk-challenged so it
+        // passes). There is no gateway setting to disable Link, so disable it at
+        // the network layer: with Link's endpoints unreachable the Payment Element
+        // degrades to a plain card form and confirmPayment never touches hCaptcha.
+        // Core PE/confirm calls (api.stripe.com/v1/elements|payment_intents|
+        // payment_methods) are left intact.
+        await this.page.route(
+            /merchant-ui-api\.stripe\.com|link\.stripe\.com|api\.stripe\.com\/v1\/(consumers|consumer_sessions|link_account_sessions)/,
+            route => route.abort(),
+        );
         await this.page.goto(this.checkout.classicUrl);
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.locator(this.checkout.placeOrderClassic).waitFor({ state: 'visible', timeout: 30_000 });
@@ -592,7 +611,9 @@ export class StripeConnectPage {
 
     async placeClassicOrderExpectReceived(): Promise<void> {
         await this.page.locator(this.checkout.placeOrderClassic).click();
-        await this.page.waitForURL('**/order-received/**', { timeout: 60_000 });
+        // Cold-start tolerant: the first classic confirm on a CI runner is slow
+        // (cold Stripe.js + connection), so allow the same headroom as block.
+        await this.page.waitForURL('**/order-received/**', { timeout: 90_000 });
     }
 
     async placeClassicOrderExpectError(): Promise<void> {
@@ -621,9 +642,24 @@ export class StripeConnectPage {
     /** Select the Stripe Connect block payment method and wait for the PE to mount. */
     async selectBlockGateway(): Promise<void> {
         const radio = this.page.locator(this.blockSelectors.gatewayRadio);
+        const mount = this.page.locator(this.checkout.blockMount);
         await radio.waitFor({ state: 'visible', timeout: 30_000 });
-        await radio.click();
-        await this.page.locator(this.checkout.blockMount).waitFor({ state: 'visible', timeout: 30_000 });
+        // The WC Checkout block re-renders on hydration / shipping-rate + totals
+        // updates, which can swallow the first radio click (the method never gets
+        // selected, so its Payment Element never mounts — the observed cold-start
+        // flake). Re-select until the PE actually mounts.
+        const deadline = Date.now() + 45_000;
+        while (Date.now() < deadline) {
+            await radio.click({ timeout: 8_000 }).catch(() => undefined);
+            try {
+                await mount.waitFor({ state: 'visible', timeout: 8_000 });
+                return;
+            } catch {
+                await this.page.waitForTimeout(700); // block still settling — re-select
+            }
+        }
+        // Last attempt with a clear failure if the PE genuinely never mounts.
+        await mount.waitFor({ state: 'visible', timeout: 10_000 });
     }
 
     async placeBlockOrderExpectReceived(): Promise<void> {
@@ -658,7 +694,9 @@ export class StripeConnectPage {
      * callers assert the order STATUS, not the URL.
      */
     async complete3DSChallenge(): Promise<void> {
-        const deadline = Date.now() + 45_000;
+        // Cold-start tolerant: on the first CI attempt the confirm (and thus the
+        // ACS challenge appearing) is slow, so poll well past the warm timing.
+        const deadline = Date.now() + 75_000;
         while (Date.now() < deadline) {
             for (const frame of this.page.frames()) {
                 for (const name of [/complete authentication/i, /^complete$/i, /authorize test payment/i]) {

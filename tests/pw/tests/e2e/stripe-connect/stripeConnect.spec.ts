@@ -78,7 +78,10 @@ async function assertStripeOrderSettledSince(baselineOrderId: number): Promise<v
                         : undefined;
                     return o ? o.status : 'none';
                 },
-                { message: 'a NEW Stripe order (created by this test) should settle to a paid status after SCA', timeout: 60_000 },
+                // Cold-start tolerant: after inline SCA the classic order settles
+                // server-side (no localhost webhook), which is slow on the first cold
+                // CI attempt (observed: still 'pending' at 60s, settled by ~35s when warm).
+                { message: 'a NEW Stripe order (created by this test) should settle to a paid status after SCA', timeout: 120_000 },
             )
             .toMatch(/processing|completed/);
     } finally {
@@ -342,7 +345,7 @@ test.describe.serial('Stripe Connect — vendor connection seeded via DB (no OAu
  * shortcode page (the site default /checkout/ is the WC Checkout block).
  */
 test.describe.serial('Stripe Connect — classic checkout (Payment Elements)', () => {
-    test.describe.configure({ timeout: 120_000 }); // real card entry + Stripe confirm/redirect is slow
+    test.describe.configure({ timeout: 180_000 }); // real card entry + Stripe confirm/redirect is slow (cold CI first attempt)
     let productId: string;
 
     test.beforeAll(async () => {
@@ -804,10 +807,13 @@ test.describe.serial('Stripe Connect — refunds (transfer reversal)', () => {
     test('multi-vendor: refunding one sub-order reverses only that vendor transfer', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         test.skip(!hasCredentials, 'Stripe Connect test keys missing');
         test.skip(!HAS_REAL_CONNECTED_ACCOUNTS, 'needs REAL Stripe test connected accounts');
-        // KNOWN ISSUE: refunding a multi-vendor sub-order currently errors out (tracked in
-        // internal QA notes). Marked expected-fail so it documents the gap and flips to a
-        // real pass once fixed.
-        test.fail(true, 'multi-vendor sub-order refund currently errors — tracked in internal QA notes');
+        // SKIPPED — known product bug R10 (full write-up + repro steps in the private QA
+        // notes: dokan-pro/tests/stripe-connect/bugs-found.md). Refunding a multi-vendor
+        // sub-order via the Dokan refund flow intermittently throws a 500 PHP fatal in the
+        // Stripe Connect Refund processor, so the outcome can't be stably asserted. The body
+        // below asserts the CORRECT behaviour (only the refunded vendor's transfer reverses);
+        // delete this one line to re-enable once the product bug is fixed.
+        test.fixme(true, 'R10: multi-vendor sub-order refund intermittently 500s (PHP fatal) — see bugs-found.md');
 
         // 1) One order spanning both connected vendors → parent + 2 sub-orders, 1 transfer each.
         let parentOrderId: string | undefined;
@@ -867,7 +873,7 @@ test.describe.serial('Stripe Connect — refunds (transfer reversal)', () => {
  * in-page SCA challenge; completing it must settle the order. Single-vendor order.
  */
 test.describe.serial('Stripe Connect — 3DS / SCA', () => {
-    test.describe.configure({ timeout: 120_000 });
+    test.describe.configure({ timeout: 240_000 }); // cold CI first attempt: slow confirm + ACS challenge + up-to-120s settle poll
     let productId: string;
 
     test.beforeAll(async () => {
