@@ -20,6 +20,7 @@ export { default as DokanAlert } from './Alert';
 export { default as AsyncSelect } from './AsyncSelect';
 export { default as DokanBadge } from './Badge';
 export { default as DokanButton } from './Button';
+export { default as ToolsSection } from './ToolsSection';
 export { default as CouponAsyncSelect } from './CouponAsyncSelect';
 export { default as CustomerFilter } from './CustomerFilter';
 export { default as DateRangePicker } from './DateRangePicker';
