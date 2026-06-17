@@ -162,8 +162,7 @@ export const api = {
     customerAuth() {
         return { Authorization: basicAuth(CUSTOMER!, USER_PASSWORD!) };
     },
-    // Generous request timeout so transient slowness under parallel workers
-    // doesn't fail a test on the default ceiling.
+    // Generous request timeout to absorb transient slowness under parallel workers.
     _reqTimeout: 30000,
     async get(endpoint: string, headers?: Record<string, string>): Promise<any> {
         const r = await this._ctx!.get(`${SERVER_URL}${endpoint}`, {
@@ -328,9 +327,8 @@ export const api = {
         return undefined;
     },
 
-    // Inverse of pickOptionalDefaultField: a default field that is mandatory by
-    // design (is_mandatory in the PHP schema, e.g. Title / Categories) and shown
-    // in the admin builder, whose visibility toggle the builder must lock.
+    // A default field flagged is_mandatory in the PHP schema (e.g. Title) and
+    // shown in the admin builder, whose visibility toggle the builder must lock.
     pickMandatoryDefaultField(
         schema: SchemaItem[]
     ): { section: SchemaItem; field: SchemaItem } | undefined {

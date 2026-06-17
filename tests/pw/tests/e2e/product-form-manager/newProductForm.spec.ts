@@ -36,7 +36,6 @@ test.describe('Vendor new product form (React) functionality', () => {
         });
 
         test('vendor can create a product with every option filled', { tag: ['@lite', '@vendor'] }, async () => {
-            // Many fields + two media-modal uploads — legitimately long.
             test.slow();
             const data = newProductFormData.valid();
 

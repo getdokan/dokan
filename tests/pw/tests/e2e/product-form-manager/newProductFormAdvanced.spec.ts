@@ -70,7 +70,7 @@ test.describe('Vendor new product form (React) advanced options', () => {
     });
 
     // ============================================
-    // ATTRIBUTES — global attributes and their terms now lazy-load over REST.
+    // ATTRIBUTES
     // ============================================
     test.describe('attributes', () => {
         test('vendor can add a global attribute whose terms lazy-load', { tag: ['@lite', '@vendor'] }, async () => {
@@ -78,7 +78,6 @@ test.describe('Vendor new product form (React) advanced options', () => {
             await form.addGlobalAttribute('sizes');
             await expect(form.attributeCard('sizes')).toBeVisible();
 
-            // Select all fetches the full term list from the lazy-load endpoint.
             await form.selectAllAttributeTerms();
 
             await expect(form.attributeTermsValue).toContainText('s');
