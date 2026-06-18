@@ -404,6 +404,21 @@ export class NewProductFormPage {
         }
     }
 
+    /** Number of currently-selected categories (multi-value chips, else a single value). */
+    async selectedCategoryCount(): Promise<number> {
+        const multi = await this.page.locator(`${newProductFormSelectors.categoryWrapper} .react-select__multi-value__label`).count();
+        if (multi > 0) return multi;
+        return await this.page.locator(`${newProductFormSelectors.categoryWrapper} .react-select__single-value`).count();
+    }
+
+    /** True when a category with the given name is currently selected (multi or single). */
+    async isCategorySelected(name: string): Promise<boolean> {
+        const chip = this.page.locator(`${newProductFormSelectors.categoryWrapper} .react-select__multi-value__label`, { hasText: new RegExp(`^\\s*${escapeRegExp(name)}\\s*$`, 'i') });
+        if ((await chip.count()) > 0) return true;
+        const single = this.page.locator(`${newProductFormSelectors.categoryWrapper} .react-select__single-value`, { hasText: new RegExp(escapeRegExp(name), 'i') });
+        return (await single.count()) > 0;
+    }
+
     async addTags(tags: string[]): Promise<void> {
         for (const tag of tags) {
             await this.setReactSelectByTyping(newProductFormSelectors.tagsWrapper, tag);
