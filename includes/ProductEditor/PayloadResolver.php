@@ -150,6 +150,12 @@ class PayloadResolver {
 
         $result = [];
         foreach ( $tags as $tag ) {
+            // Async-select sends option objects: [ { value, label, __isNew__ }, ... ].
+            // Existing tags carry a numeric term ID as value; newly created ones carry the typed name.
+            if ( is_array( $tag ) && isset( $tag['value'] ) ) {
+                $tag = $tag['value'];
+            }
+
             if ( is_numeric( $tag ) && (int) $tag > 0 ) {
                 $result[] = [ 'id' => (int) $tag ];
                 continue;
@@ -340,6 +346,10 @@ class PayloadResolver {
     public function map_ids_to_objects( array $ids ): array {
         return array_map(
             static function ( $id ) {
+                // Async-select sends option objects [ { value, label }, ... ]; pull the id out.
+                if ( is_array( $id ) && isset( $id['value'] ) ) {
+                    $id = $id['value'];
+                }
                 return [ 'id' => (int) $id ];
             },
             $ids
