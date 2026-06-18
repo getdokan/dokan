@@ -130,20 +130,32 @@ const TreeSelectField = ( { data, field, onChange, validity }: FieldProps ) => {
         };
     }, [ field.api_endpoint ] );
 
+    // Storage stays an array of option objects regardless of single/multiple, so the
+    // payload resolver keeps working; only the value/onChange shapes are adapted for
+    // react-select's single-select mode.
+    const selected = Array.isArray( data[ field.id ] ) ? data[ field.id ] : [];
+    const value = field.multiple ? selected : selected[ 0 ] ?? null;
+
     return (
         <CustomField field={ field } error={ getValidationError( validity ) }>
             <Select
                 isMulti={ field.multiple }
                 options={ options }
-                value={ data[ field.id ] ?? [] }
+                value={ value }
                 placeholder={ field.placeholder }
-                closeMenuOnSelect={ false }
+                closeMenuOnSelect={ !! field.multiple }
                 hideSelectedOptions={ false }
                 // @ts-ignore indented tree option
                 components={ { Option: TreeOptionComponent } }
-                onChange={ ( value: any ) =>
-                    onChange( { [ field.id ]: value ?? [] } )
-                }
+                onChange={ ( next: any ) => {
+                    let normalized: any[] = [];
+                    if ( field.multiple ) {
+                        normalized = next ?? [];
+                    } else if ( next ) {
+                        normalized = [ next ];
+                    }
+                    onChange( { [ field.id ]: normalized } );
+                } }
             />
         </CustomField>
     );

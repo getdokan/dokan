@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\ProductEditor;
 
 use WC_Product;
+use WeDevs\Dokan\ProductCategory\Helper as ProductCategoryHelper;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -406,6 +407,9 @@ class FormSchema {
 
         $can_create_tags = dokan()->is_pro_exists() ? dokan_get_option( 'product_vendors_can_create_tags', 'dokan_selling', 'off' ) : 'off';
 
+        // Vendors may be restricted to a single product category via the admin selling settings.
+        $is_single_category = ProductCategoryHelper::product_category_selection_is_single();
+
         $dep_downloadable = [
             [
                 'comparison' => '==',
@@ -588,6 +592,8 @@ class FormSchema {
                 // category hierarchy in the schema, which bloats memory on large catalogs.
                 'api_endpoint'     => '/dokan/v1/products/categories/tree',
                 'tree'             => true,
+                // Honor the admin "single vs. multiple" category selection setting.
+                'multiple'         => ! $is_single_category,
                 'required'         => true,
                 'is_mandatory'     => true,
                 'visibility'       => true,
@@ -1074,7 +1080,14 @@ class FormSchema {
             case Elements::CATEGORIES:
                 // Async select expects [ { value, label }, ... ] so selected categories render
                 // without the full category tree being embedded in the schema.
-                return self::terms_to_async_options( $product->get_category_ids(), 'product_cat' );
+                $category_options = self::terms_to_async_options( $product->get_category_ids(), 'product_cat' );
+
+                // Single-category stores keep one selection; surface only the first saved term.
+                if ( ProductCategoryHelper::product_category_selection_is_single() ) {
+                    return array_slice( $category_options, 0, 1 );
+                }
+
+                return $category_options;
             case Elements::TAGS:
                 // Async select expects [ { value, label }, ... ] so selected tags render
                 // without the full tag list being embedded in the schema.

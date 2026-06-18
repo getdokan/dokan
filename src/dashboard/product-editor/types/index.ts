@@ -75,6 +75,7 @@ export type FormItem = {
     requireds?: Record< string, boolean >;
     value?: any;
     variant?: string;
+    multiple?: boolean;
     options?: { label: string; value: string }[] | Record< string, string >;
     options_map?: Record< string, { label: string; value: string }[] >;
     dependencies?: DependencyCondition[];
