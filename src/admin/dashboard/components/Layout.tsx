@@ -5,7 +5,6 @@ import { pluginUITokens } from '@src/layout';
 import { ThemeProvider } from '@wedevs/plugin-ui';
 import { useEffect } from '@wordpress/element';
 import { setLocaleData } from '@wordpress/i18n';
-import { getTranslatedStrings } from '@src/components/dataviews/DataViewTable';
 import { getTranslatedStrings } from '@src/utilities/getTranslatedStrings';
 import { DokanAdminRoute } from './Dashboard';
 
