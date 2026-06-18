@@ -746,6 +746,36 @@
       "file": "visual/visual.spec.ts",
       "ms": 0,
       "tests": 57
+    },
+    {
+      "file": "stripe-connect/stripeConnectVendorSubExtra.spec.ts",
+      "ms": 240000,
+      "tests": 7
+    },
+    {
+      "file": "stripe-connect/stripeConnectEdgeAdvertisement.spec.ts",
+      "ms": 210000,
+      "tests": 4
+    },
+    {
+      "file": "stripe-connect/stripeConnectSettings.spec.ts",
+      "ms": 210000,
+      "tests": 4
+    },
+    {
+      "file": "stripe-connect/stripeConnectSavedCards.spec.ts",
+      "ms": 165000,
+      "tests": 6
+    },
+    {
+      "file": "stripe-connect/stripeConnectSecurity.spec.ts",
+      "ms": 150000,
+      "tests": 4
+    },
+    {
+      "file": "stripe-connect/stripeConnectCurrency.spec.ts",
+      "ms": 90000,
+      "tests": 3
     }
   ]
 }

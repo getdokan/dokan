@@ -594,8 +594,12 @@ export class StripeConnectPage {
             .catch(() => undefined);
     }
 
-    /** Select the Stripe Connect gateway and wait for the Payment Element to mount + settle. */
-    async selectClassicGateway(): Promise<void> {
+    /**
+     * Select the Stripe Connect gateway and (by default) wait for the Payment Element to mount + settle.
+     * Pass { expectPaymentElement: false } for the SAVED-TOKEN flow: when stored cards exist the classic
+     * form defaults to a saved-token radio and the new-card PE stays HIDDEN, so waiting for it would time out.
+     */
+    async selectClassicGateway({ expectPaymentElement = true }: { expectPaymentElement?: boolean } = {}): Promise<void> {
         await this.waitForCheckoutSettled(); // settle any update from billing entry
         // The radio is overlaid by a styled <li> that intercepts pointer events, so
         // click its LABEL (what WC listens to). Confirm selection by the PE mounting
@@ -605,8 +609,10 @@ export class StripeConnectPage {
         await label.scrollIntoViewIfNeeded().catch(() => undefined);
         await label.click();
         await this.waitForCheckoutSettled(); // settle the update_checkout from the gateway change
-        await this.page.locator(this.checkout.classicMount).waitFor({ state: 'visible', timeout: 30_000 });
-        await this.waitForCheckoutSettled(); // ensure the PE box finished (re)rendering
+        if (expectPaymentElement) {
+            await this.page.locator(this.checkout.classicMount).waitFor({ state: 'visible', timeout: 30_000 });
+            await this.waitForCheckoutSettled(); // ensure the PE box finished (re)rendering
+        }
     }
 
     async placeClassicOrderExpectReceived(): Promise<void> {
@@ -631,6 +637,61 @@ export class StripeConnectPage {
         gatewayRadio: '#radio-control-wc-payment-method-options-dokan-stripe-connect',
         placeOrder: '.wc-block-components-checkout-place-order-button',
         error: '.wc-block-components-notice-banner.is-error, .woocommerce-error',
+    };
+
+    // WC Checkout block coupon panel (Suite C5). The coupon UI is a collapsible
+    // panel: a `.wc-block-components-panel__button` ("Add a coupon") that expands
+    // the `.wc-block-components-totals-coupon__form` holding the code input
+    // (`#wc-block-components-totals-coupon__input-0`, placeholder "Enter code")
+    // and the Apply button (`.wc-block-components-totals-coupon__button`).
+    blockCoupon = {
+        panelButton: '.wc-block-components-panel__button',
+        form: '.wc-block-components-totals-coupon__form',
+        input: '#wc-block-components-totals-coupon__input-0, .wc-block-components-totals-coupon__input input',
+        applyButton: '.wc-block-components-totals-coupon__button',
+        // A per-coupon removable chip rendered under the order summary once applied.
+        appliedChip: '.wc-block-components-totals-discount, .wc-block-components-chip',
+    };
+
+    // Saved cards (Suite F) — WC core /my-account/payment-methods/ table. The
+    // dokan-stripe-connect token rows render here as standard WC payment-method
+    // rows: the method cell reads "Visa ending in 4242", the expires cell "12/34",
+    // and the actions cell holds the Make-default / Delete links. Selectors match
+    // woocommerce/templates/myaccount/payment-methods.php.
+    myAccount = {
+        url: toPath('my-account/payment-methods'),
+        table: 'table.woocommerce-MyAccount-paymentMethods',
+        rows: 'tr.payment-method',
+        methodCell: 'td.payment-method-method',
+        expiresCell: 'td.payment-method-expires',
+        deleteBtn: 'a.button.delete',
+        defaultBtn: 'a.button.default',
+        // A row gains this class once it is the default payment method.
+        defaultRow: 'tr.payment-method.default-payment-method',
+    };
+
+    // My-Account → Add payment method (Suite F). This SetupIntent flow ATTACHES
+    // the pm on Stripe (unlike the block-checkout save path, which is a gateway
+    // bug). The Payment Element mount id is shared with classic checkout
+    // (confirmed from gateway source).
+    addPaymentMethod = {
+        url: toPath('my-account/add-payment-method'),
+        form: '#add_payment_method',
+        gatewayRadio: 'input[name="payment_method"][value="dokan-stripe-connect"]',
+        gatewayLabel: 'label[for="payment_method_dokan-stripe-connect"]',
+        mount: '#dokan-stripe-connect-payment-element',
+        submit: '#place_order',
+    };
+
+    // Admin Subscriptions list (VS7) — the dokan-pro subscription module's React
+    // page on the NEW admin dashboard (admin.php?page=dokan-dashboard#/subscriptions),
+    // a @wedevs/plugin-ui DataViews grid (same family as the other admin DataViews
+    // pages). No reliable search box on Pro DataViews pages, so we scan the rows.
+    adminSubscriptions = {
+        url: toPath('wp-admin/admin.php?page=dokan-dashboard#/subscriptions'),
+        // The DataViews table + its data rows (tbody rows carry the vendor/pack data).
+        table: '.dataviews-view-table, table.dataviews-view-table',
+        rows: '.dataviews-view-table tbody tr, table.dataviews-view-table tbody tr',
     };
 
     async gotoBlockCheckout(): Promise<void> {
@@ -678,6 +739,29 @@ export class StripeConnectPage {
         await expect(this.page, 'declined card must not reach order-received').not.toHaveURL(/order-received/);
     }
 
+    /**
+     * Regression guard for the "Could not initialize Stripe" bug on the recurring
+     * vendor-subscription (product_pack) block checkout: after the gateway is
+     * selected, assert the Payment Element actually mounted (container visible + a
+     * real Stripe card iframe rendered) and that NO init error surfaced. Does NOT
+     * place an order. Call after selectBlockGateway().
+     */
+    async assertBlockPaymentElementReady(): Promise<void> {
+        await expect(
+            this.page.locator(this.checkout.blockMount),
+            'Stripe Connect Payment Element should mount on the subscription-pack block checkout',
+        ).toBeVisible({ timeout: 30_000 });
+        // The PE-init failure renders the singular ".dokan-stripe-pe-error" list ("Could not initialize Stripe")
+        // in place of the card fields — assert it is absent.
+        await expect(
+            this.page.locator('ul.dokan-stripe-pe-error'),
+            'no Stripe Payment Element init error ("Could not initialize Stripe") should appear',
+        ).toHaveCount(0);
+        await expect(this.page.locator('body'), 'checkout must not show a Stripe init error').not.toContainText(/could not initialize stripe/i);
+        // Strongest proof the Elements bootstrapped: a real Stripe card iframe is present (throws if none mounts).
+        await this.findStripePeFrame();
+    }
+
     // ---- 3DS / SCA ----
 
     /**
@@ -717,5 +801,361 @@ export class StripeConnectPage {
             await this.page.waitForTimeout(500);
         }
         throw new Error('Stripe 3DS challenge "Complete" button not found');
+    }
+
+    // ============================================
+    // VENDOR SUBSCRIPTION DASHBOARD (cancel / reactivate / active-pack state)
+    // ============================================
+
+    // Vendor subscription packs page (DPS). The active-pack banner + the
+    // cancel/reactivate form render here once the vendor holds an active pack.
+    // The cancel/reactivate form id + submit name are shared; the hidden input
+    // (dps_cancel_subscription vs dps_activate_subscription) + the success ?msg
+    // distinguish the two server-side states.
+    // Vendor subscription on the NEW React dashboard (/dashboard/new/#/subscription). The "Current Subscription"
+    // card shows the active pack + a Cancel/Activate action. Cancel opens a confirm modal ("Yes, Cancel") then
+    // calls REST (no navigation — SPA re-render) → a "still active till" alert + the action flips to "Activate".
+    // Reactivate calls REST directly (no modal) → the alert clears + the action flips back to "Cancel".
+    vendorSubscription = {
+        dashboardUrl: toPath('dashboard/new/#/subscription?tab=packs'),
+        cardTitle: 'Current Subscription',
+    };
+
+    async gotoVendorSubscriptionDashboard(): Promise<void> {
+        await this.page.goto(this.vendorSubscription.dashboardUrl);
+        await this.page.waitForLoadState('domcontentloaded');
+        await closeAnnouncementModal(this.page);
+        // Wait for the React Current Subscription card to render.
+        await this.page
+            .getByText(this.vendorSubscription.cardTitle, { exact: false })
+            .first()
+            .waitFor({ state: 'visible', timeout: 30_000 });
+    }
+
+    /** VS4.1: assert the React Current Subscription card shows the active pack + the Cancel control. */
+    async assertActivePackBanner(packTitle?: string): Promise<void> {
+        await this.gotoVendorSubscriptionDashboard();
+        await expect(
+            this.page.getByText(/You are using/i).first(),
+            'Current Subscription card should show the active pack for a subscribed vendor',
+        ).toBeVisible({ timeout: 20_000 });
+        if (packTitle) {
+            await expect(this.page.getByText(packTitle, { exact: false }).first(), 'card names the active pack').toBeVisible();
+        }
+        await expect(
+            this.page.getByRole('button', { name: 'Cancel', exact: true }),
+            'the Cancel control renders for an active recurring subscription',
+        ).toBeVisible();
+    }
+
+    /** VS5.1: cancel the recurring subscription via the React UI (Cancel → confirm modal → REST, SPA re-render). */
+    async cancelSubscriptionFromDashboard(): Promise<void> {
+        await this.gotoVendorSubscriptionDashboard();
+        await this.page.getByRole('button', { name: 'Cancel', exact: true }).click();
+        const confirm = this.page.getByRole('button', { name: 'Yes, Cancel' });
+        await expect(confirm, 'a Cancel confirmation modal should appear').toBeVisible({ timeout: 10_000 });
+        await confirm.click();
+        // REST call → SPA re-render (no navigation): the cancelled-but-active alert appears + the action flips.
+        await expect(
+            this.page.getByText(/still active till/i).first(),
+            'after cancel, the "still active till" alert should appear',
+        ).toBeVisible({ timeout: 20_000 });
+        await expect(
+            this.page.getByRole('button', { name: 'Activate', exact: true }),
+            'after cancel, the action should flip to Activate',
+        ).toBeVisible();
+    }
+
+    /** VS5.2: reactivate the cancelled-but-active subscription via the React UI (Activate → REST, no modal). */
+    async reactivateSubscriptionFromDashboard(): Promise<void> {
+        await this.gotoVendorSubscriptionDashboard();
+        await this.page.getByRole('button', { name: 'Activate', exact: true }).click();
+        // Direct REST call → the cancelled alert clears and the action flips back to Cancel.
+        await expect(
+            this.page.getByText(/still active till/i),
+            'after reactivate, the cancelled alert should clear',
+        ).toHaveCount(0, { timeout: 20_000 });
+        await expect(
+            this.page.getByRole('button', { name: 'Cancel', exact: true }),
+            'after reactivate, the action should flip back to Cancel',
+        ).toBeVisible({ timeout: 20_000 });
+    }
+
+    // ============================================
+    // SAVED CARDS (Suite F) — /my-account/payment-methods/
+    // ============================================
+
+    /** Open the customer's saved payment-methods page (logged-in context required). */
+    async gotoMyAccountPaymentMethods(): Promise<void> {
+        await this.page.goto(this.myAccount.url);
+        await this.page.waitForLoadState('domcontentloaded');
+        // The table only renders when ≥1 token exists; the page heading always does.
+        await this.page.locator(this.myAccount.table).first().waitFor({ state: 'visible', timeout: 30_000 });
+    }
+
+    /**
+     * Save a card via My Account → Add payment method (SetupIntent → pm ATTACHED on Stripe,
+     * unlike the block-checkout save path). Fills the PE, submits form#add_payment_method
+     * (→ confirmSetup → redirect back → finalise_add_payment_method attaches + tokenizes),
+     * and waits for the saved-card redirect to /payment-methods/.
+     */
+    async addCardViaMyAccount(card: string = STRIPE_CARDS.success): Promise<void> {
+        // Same Link/hCaptcha neutralisation classic checkout needs (CI runner IPs can escalate to a visible challenge).
+        await this.page.route('**/stripe-connect-express-classic.js*', route =>
+            route.fulfill({ status: 200, contentType: 'application/javascript', body: '' }),
+        );
+        await this.page.route(/hcaptcha/i, route => route.abort());
+        await this.page.route(
+            /merchant-ui-api\.stripe\.com|link\.stripe\.com|api\.stripe\.com\/v1\/(consumers|consumer_sessions|link_account_sessions)/,
+            route => route.abort(),
+        );
+        await this.page.goto(this.addPaymentMethod.url);
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.page.locator(this.addPaymentMethod.form).waitFor({ state: 'visible', timeout: 30_000 });
+        const radio = this.page.locator(this.addPaymentMethod.gatewayRadio);
+        if ((await radio.count().catch(() => 0)) && !(await radio.isChecked().catch(() => false))) {
+            const label = this.page.locator(this.addPaymentMethod.gatewayLabel);
+            await label.scrollIntoViewIfNeeded().catch(() => undefined);
+            await label.click().catch(() => undefined);
+        }
+        await this.page.locator(this.addPaymentMethod.mount).waitFor({ state: 'visible', timeout: 30_000 });
+        await this.fillCardDetails(card);
+        await this.page.locator(this.addPaymentMethod.submit).click();
+        await this.page.waitForURL('**/my-account/payment-methods/**', { timeout: 90_000 });
+        await this.page.locator(this.myAccount.table).first().waitFor({ state: 'visible', timeout: 20_000 });
+    }
+
+    /**
+     * F2: assert a saved card is listed as "<Brand> ending in <last4>". WC core
+     * renders the method cell as sprintf('%1$s ending in %2$s', brandLabel, last4),
+     * so we match the last4 (the brand label varies — Visa/visa).
+     */
+    async assertSavedCardListed(last4: string = '4242'): Promise<void> {
+        const row = this.page.locator(this.myAccount.rows).filter({ hasText: new RegExp(`ending in ${last4}`, 'i') });
+        await expect(row.first(), `saved card ending in ${last4} should be listed`).toBeVisible({ timeout: 20_000 });
+    }
+
+    /**
+     * F4: set the first saved card as default. WC nonce-redirects to
+     * set-default-payment-method/{id} then back; the chosen row then carries the
+     * `default-payment-method` class. Idempotent only at the UI level — call on a
+     * row that is not already default.
+     */
+    async setSavedCardDefault(): Promise<void> {
+        await this.page.locator(this.myAccount.rows).first().waitFor({ state: 'visible', timeout: 20_000 });
+        const defaultLink = this.page.locator(this.myAccount.rows).locator(this.myAccount.defaultBtn).first();
+        // WC marks the FIRST saved token as the default automatically (set_users_default), which already
+        // fires woocommerce_payment_token_set_default → the gateway sets the Stripe default. So when there
+        // is a single card there is NO "Make default" link to click — the default state already holds.
+        // Click it only when a non-default card actually offers it; either way assert a default row exists.
+        if (await defaultLink.count().catch(() => 0)) {
+            await Promise.all([
+                this.page.waitForLoadState('domcontentloaded'),
+                defaultLink.click(),
+            ]);
+        }
+        await expect(
+            this.page.locator(this.myAccount.defaultRow).first(),
+            'a saved card should be marked as the default payment method',
+        ).toBeVisible({ timeout: 20_000 });
+    }
+
+    /**
+     * F5: delete the first saved card. WC nonce-redirects to
+     * delete-payment-method/{id} then back; the dokan-stripe-connect path also
+     * detaches the PaymentMethod on Stripe.
+     */
+    async deleteSavedCard(): Promise<void> {
+        const deleteLink = this.page.locator(this.myAccount.rows).locator(this.myAccount.deleteBtn).first();
+        await Promise.all([
+            this.page.waitForLoadState('domcontentloaded'),
+            deleteLink.click(),
+        ]);
+        await this.page.waitForLoadState('domcontentloaded');
+    }
+
+    /** F5: assert no saved-card row ends in the given last4 (deleted). */
+    async assertSavedCardAbsent(last4: string = '4242'): Promise<void> {
+        const row = this.page.locator(this.myAccount.rows).filter({ hasText: new RegExp(`ending in ${last4}`, 'i') });
+        await expect(row, `saved card ending in ${last4} should be gone`).toHaveCount(0, { timeout: 20_000 });
+    }
+
+    /**
+     * F1: tick the WC block "Save payment information to my account…" checkbox so
+     * the entered card is tokenized on order placement. The block renders the WC
+     * core save-card control, matched by its label text (the checkbox id varies
+     * across WC versions). Call after selectBlockGateway() / before placing.
+     */
+    async tickSaveCardBlock(): Promise<void> {
+        const checkbox = this.page.getByLabel(/save payment information/i).first();
+        await checkbox.waitFor({ state: 'visible', timeout: 20_000 });
+        await checkbox.check();
+        await expect(checkbox, 'block save-card checkbox should be ticked').toBeChecked();
+    }
+
+    /**
+     * F3: select an existing saved-token radio at CLASSIC checkout instead of
+     * entering a new card. WC core renders the token radios as
+     * input[name="wc-dokan-stripe-connect-payment-token"] (checkout.savedTokenRadios)
+     * with value=WC token db id plus a 'new' option. With no id, picks the first
+     * real saved token (value !== 'new'); otherwise the radio matching tokenDbId.
+     * Server then routes through TokenProcessor (off-session charge on the pm_).
+     */
+    async selectSavedTokenClassic(tokenDbId?: string | number): Promise<void> {
+        const radios = this.page.locator(this.checkout.savedTokenRadios);
+        await radios.first().waitFor({ state: 'attached', timeout: 20_000 });
+        const target =
+            tokenDbId !== undefined
+                ? radios.filter({ has: this.page.locator(`[value="${tokenDbId}"]`) }).first()
+                : radios.filter({ hasNot: this.page.locator('[value="new"]') }).first();
+        // The radio sits under a styled label; check() handles the underlying input.
+        await target.check();
+        await expect(target, 'a saved-token radio should be selected (not "new")').toBeChecked();
+    }
+
+    // ============================================
+    // SETTINGS-BEHAVIOUR MATRIX (negative / gateway-availability)
+    // ============================================
+
+    /**
+     * S3/S4: navigate to checkout and assert the dokan-stripe-connect payment
+     * method is NOT available (radio + Payment Element mount both absent). Used
+     * when the gateway is disabled or "almost ready" (not is_ready), so WC drops
+     * it from the available gateways.
+     */
+    async assertGatewayAbsentAtCheckout(variant: 'classic' | 'block' = 'block'): Promise<void> {
+        if (variant === 'classic') {
+            await this.gotoClassicCheckout();
+            await expect(
+                this.page.locator(this.checkout.gatewayRadio),
+                'Stripe Connect classic radio should be absent when the gateway is unavailable',
+            ).toHaveCount(0, { timeout: 20_000 });
+            await expect(
+                this.page.locator(this.checkout.classicMount),
+                'Stripe Connect classic Payment Element should never mount',
+            ).toHaveCount(0);
+            return;
+        }
+        await this.gotoBlockCheckout();
+        await expect(
+            this.page.locator(this.blockSelectors.gatewayRadio),
+            'Stripe Connect block radio should be absent when the gateway is unavailable',
+        ).toHaveCount(0, { timeout: 20_000 });
+        await expect(
+            this.page.locator(this.checkout.blockMount),
+            'Stripe Connect block Payment Element should never mount',
+        ).toHaveCount(0);
+    }
+
+    /**
+     * S1: after the gateway is selected and place-order is clicked, assert the
+     * non-connected-seller validation error fires (text /enabled Stripe as a
+     * payment gateway/) and no order is created. The block runs at WC validation
+     * before any Stripe confirm, so this is a card-less negative.
+     */
+    async assertCheckoutBlockedForNonConnectedVendor(variant: 'classic' | 'block' = 'classic'): Promise<void> {
+        const errorSelector = variant === 'classic' ? this.checkout.error : this.blockSelectors.error;
+        const placeOrder = variant === 'classic' ? this.checkout.placeOrderClassic : this.blockSelectors.placeOrder;
+        await this.page.locator(placeOrder).click();
+        const error = this.page.locator(errorSelector).first();
+        await expect(error, 'non-connected vendor should block checkout with an error notice').toBeVisible({
+            timeout: 40_000,
+        });
+        await expect(error, 'error should name the Stripe-not-configured cause').toContainText(
+            /enabled Stripe as a payment gateway|Please remove/i,
+        );
+        await expect(this.page, 'a blocked checkout must not reach order-received').not.toHaveURL(/order-received/);
+    }
+
+    /**
+     * S4: assert the Stripe Connect withdraw method never registers on admin Dokan
+     * settings → Withdraw Options (gateway not ready). Does NOT reuse
+     * gotoWithdrawOptions(), which waits for the toggle to ATTACH and would hang
+     * here — instead it opens the tab and asserts the toggle is absent.
+     */
+    async assertStripeWithdrawMethodAbsent(): Promise<void> {
+        await this.gotoDokanSettings();
+        await this.page.locator(this.admin.withdrawOptionsTab).click();
+        await expect(
+            this.page.locator(this.admin.withdrawMethodToggleInput(StripeConnectPage.WITHDRAW_METHOD)),
+            'Stripe Connect withdraw method should not register when the gateway is not ready',
+        ).toHaveCount(0, { timeout: 20_000 });
+    }
+
+    /**
+     * S4: on the vendor payment settings page, assert the "Direct to Stripe
+     * Connect" menu link and the connect button are both absent (the withdraw
+     * method is unregistered, so the connect/manage UI never renders).
+     */
+    async assertVendorConnectUiAbsent(): Promise<void> {
+        await this.page.goto(this.vendor.paymentSettingsUrl);
+        await this.page.waitForLoadState('domcontentloaded');
+        await expect(
+            this.page.locator(this.vendor.addStripeConnectLink),
+            'the "Direct to Stripe Connect" menu link should be absent when the method is unregistered',
+        ).toHaveCount(0, { timeout: 20_000 });
+        await expect(
+            this.page.locator(this.vendor.connectButton),
+            'the vendor Stripe connect button should be absent when the method is unregistered',
+        ).toHaveCount(0);
+    }
+
+    // ============================================
+    // ADMIN SUBSCRIPTIONS (VS7) — React DataViews
+    // ============================================
+
+    /** Open the admin Subscriptions DataViews page and wait for the grid to render. */
+    async gotoAdminSubscriptions(): Promise<void> {
+        await this.page.goto(this.adminSubscriptions.url);
+        await this.page.waitForLoadState('domcontentloaded');
+        // Client-side DataViews grid — wait for at least one data row to render.
+        await this.page.locator(this.adminSubscriptions.rows).first().waitFor({ state: 'visible', timeout: 30_000 });
+    }
+
+    /**
+     * VS7: assert the subscribed vendor appears in the Subscriptions DataViews
+     * list. No reliable search box on Pro DataViews pages, so scan the rows for
+     * one containing the vendor store name (or the pack title).
+     */
+    async assertVendorInSubscriptionsList(storeNameOrPackTitle: string): Promise<void> {
+        const row = this.page
+            .locator(this.adminSubscriptions.rows)
+            .filter({ hasText: storeNameOrPackTitle });
+        await expect(
+            row.first(),
+            `subscriptions list should contain a row for "${storeNameOrPackTitle}"`,
+        ).toBeVisible({ timeout: 20_000 });
+    }
+
+    // ============================================
+    // EDGE (C5) — block coupon
+    // ============================================
+
+    /**
+     * C5: apply a coupon at block checkout. Opens the collapsible coupon panel
+     * (idempotent — only clicks the expander when the form is hidden), fills the
+     * code, applies, and waits for the totals to refresh (an apply-coupon Store
+     * API round-trip). Triggers the WC update that re-renders the payment box.
+     */
+    async applyCouponBlock(code: string): Promise<void> {
+        const form = this.page.locator(this.blockCoupon.form);
+        if (!(await form.isVisible().catch(() => false))) {
+            await this.page.locator(this.blockCoupon.panelButton).first().click();
+        }
+        const input = this.page.locator(this.blockCoupon.input).first();
+        await input.waitFor({ state: 'visible', timeout: 20_000 });
+        await input.fill(code);
+        // Apply, then wait for the Store API apply-coupon response so the totals
+        // (and the re-rendered payment box) have settled before continuing.
+        await Promise.all([
+            this.page
+                .waitForResponse(
+                    res => /wc\/store\/v\d+\/cart\/apply-coupon|wc-ajax=apply_coupon/i.test(res.url()),
+                    { timeout: 20_000 },
+                )
+                .catch(() => undefined),
+            this.page.locator(this.blockCoupon.applyButton).first().click(),
+        ]);
+        await this.waitForCheckoutSettled();
     }
 }

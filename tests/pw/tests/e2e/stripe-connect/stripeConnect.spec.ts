@@ -1,4 +1,4 @@
-import { test, expect, request, Page, BrowserContext } from '@utils/test';
+import { test, expect, request, Page, Browser, BrowserContext } from '@utils/test';
 import { log } from '@utils/logger';
 import { dbUtils } from '@utils/dbUtils';
 import { ApiUtils } from '@utils/apiUtils';
@@ -168,6 +168,7 @@ async function ensureClassicCheckoutPage(): Promise<void> {
 
 const MODULE_STRIPE = 'stripe';
 const MODULE_STRIPE_EXPRESS = 'stripe_express';
+const MODULE_PRODUCT_SUBSCRIPTION = 'product_subscription'; // "Vendor Subscription" module (vendors buy packs to sell)
 
 // Credentials gate. Building the suite never requires keys; running the
 // gateway/vendor steps does. `hasCredentials` => can configure the gateway.
@@ -216,6 +217,16 @@ test.describe.serial('Stripe Connect — pre-setup (admin gateway configuration)
         await stripe.setModuleEnabled(MODULE_STRIPE, true); // idempotent
         expect(await stripe.isModuleEnabled(MODULE_STRIPE), 'Stripe Connect must be enabled').toBe(true);
         log.success('Stripe Connect module is enabled');
+    });
+
+    test('admin can enable the Vendor Subscription module', { tag: ['@pro', '@admin'] }, async () => {
+        await stripe.gotoModules();
+        if (await stripe.isModuleEnabled(MODULE_PRODUCT_SUBSCRIPTION)) {
+            log.skip('Vendor Subscription module already enabled — skipping the toggle');
+        }
+        await stripe.setModuleEnabled(MODULE_PRODUCT_SUBSCRIPTION, true); // idempotent
+        expect(await stripe.isModuleEnabled(MODULE_PRODUCT_SUBSCRIPTION), 'Vendor Subscription module must be enabled').toBe(true);
+        log.success('Vendor Subscription (product_subscription) module is enabled — vendors can buy subscription packs');
     });
 
     test('admin can add Stripe Connect payment method', { tag: ['@pro', '@admin'] }, async () => {
@@ -930,5 +941,577 @@ test.describe.serial('Stripe Connect — 3DS / SCA', () => {
             await page.close();
             await ctx.close();
         }
+    });
+});
+
+/** Give a user (e.g. the vendor buying a pack) a billing+shipping address so the block checkout can proceed. */
+async function ensureBillingAddress(userId: string | number): Promise<void> {
+    const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+    try {
+        await ctx.put(`${SERVER_URL}/wc/v3/customers/${userId}`, {
+            data: { billing: payloads.createOrder.billing, shipping: payloads.createOrder.shipping },
+        });
+    } finally {
+        await ctx.dispose();
+    }
+}
+
+/**
+ * Toggle the Vendor Subscription feature (dokan_product_subscription[enable_pricing]). The subscription module
+ * returns early on init when this is off — it gates the vendor dashboard subscription endpoint AND the site-wide
+ * product-gating hooks. Enable = set the option ON + flush rewrites in a SEPARATE request (so that request's
+ * bootstrap re-reads it on and registers the dashboard endpoint). Disable (teardown) = set it OFF so later specs
+ * on the same worker see vendors un-gated again. Both POSTs are checked so a missing/forbidden route fails loudly.
+ */
+async function setVendorSubscriptionFeature(enabled: boolean): Promise<void> {
+    const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+    try {
+        const route = enabled ? 'enable-vendor-subscription' : 'disable-vendor-subscription';
+        const res = await ctx.post(`${SERVER_URL}/dokan-test/v1/${route}`);
+        if (!res.ok()) {
+            throw new Error(`dokan-test/v1/${route} failed (${res.status()}): ${(await res.text()).slice(0, 200)}`);
+        }
+        if (enabled) {
+            // The /dashboard/subscription endpoint only registers after a flush that re-reads enable_pricing=on.
+            const flush = await ctx.post(`${SERVER_URL}/dokan-test/v1/flush-rewrites`);
+            if (!flush.ok()) {
+                throw new Error(`dokan-test/v1/flush-rewrites failed (${flush.status()}): ${(await flush.text()).slice(0, 200)}`);
+            }
+        }
+    } finally {
+        await ctx.dispose();
+    }
+}
+
+/**
+ * Seed a vendor-subscription pack: ensure the feature is enabled, create it as a simple product via REST, flip its
+ * type to product_pack in the DB (REST rejects the product_pack type), set a default admin commission, and apply any
+ * extra post-meta. Returns [packId, packName]. Used by the vendor-subscription describes (recurring/non-recurring/trial).
+ */
+async function seedSubscriptionPack(payload: object, extraMeta: Array<[string, string]> = []): Promise<[string, string]> {
+    await setVendorSubscriptionFeature(true);
+    await dbUtils.setSubscriptionProductType();
+    const api = new ApiUtils(await request.newContext());
+    const [, id, name] = await api.createProduct(payload, payloads.adminAuth);
+    await dbUtils.updateProductType(id);
+    await dbUtils.setPostMeta(id, '_subscription_product_admin_commission_type', 'percentage', false);
+    await dbUtils.setPostMeta(id, '_subscription_product_admin_commission', '10', false);
+    for (const [k, v] of extraMeta) {
+        await dbUtils.setPostMeta(id, k, v, false);
+    }
+    return [id, name];
+}
+
+/** Buy a pack as the vendor through the block checkout (clean start). Returns the order id from order-received. */
+async function buyPackExpectReceived(browser: Browser, packId: string, card: string = STRIPE_CARDS.success): Promise<string | undefined> {
+    const ctx = await browser.newContext({ storageState: vendorAuth });
+    const page = await ctx.newPage();
+    try {
+        const stripe = new StripeConnectPage(page);
+        await dbUtils.clearCustomerCart(VENDOR_ID);
+        await dbUtils.removeVendorSubscription(VENDOR_ID);
+        await stripe.addProductToCart(packId);
+        await stripe.gotoBlockCheckout();
+        await stripe.selectBlockGateway();
+        await stripe.fillCardDetails(card);
+        await stripe.placeBlockOrderExpectReceived();
+        return page.url().match(/order-received\/(\d+)/)?.[1];
+    } finally {
+        await page.close();
+        await ctx.close();
+    }
+}
+
+/** Read a single order-meta value (admin auth). Returns undefined when the key is absent. */
+async function getOrderMetaValue(orderId: string, key: string): Promise<string | undefined> {
+    const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+    try {
+        const res = await ctx.get(`${SERVER_URL}/wc/v3/orders/${orderId}?_fields=meta_data`);
+        const body = (await res.json().catch(() => ({}))) as { meta_data?: Array<{ key: string; value: string }> };
+        return (body.meta_data ?? []).find(m => m.key === key)?.value;
+    } finally {
+        await ctx.dispose();
+    }
+}
+
+/** Cancel any created Stripe subscriptions, reset the vendor's subscription state, restore the feature flag, and trash the pack. */
+async function cleanupSubscription(packId: string | undefined, subIds: string[] = []): Promise<void> {
+    if (stripeApi.hasSecretKey()) {
+        // Resolve the live sub id robustly: the caller's captured id(s) PLUS the vendor's current meta — a test
+        // that threw before capturing the id still leaves _stripe_subscription_id on the vendor (set at activation),
+        // and we must cancel it BEFORE removeVendorSubscription wipes that row, or the live sub leaks.
+        const metaSub = await dbUtils.getUserMetaValue(VENDOR_ID, '_stripe_subscription_id');
+        const toCancel = [...new Set([...subIds, metaSub].filter((s): s is string => !!s && /^sub_/.test(s)))];
+        for (const s of toCancel) {
+            await stripeApi.cancelSubscription(s);
+        }
+    }
+    await dbUtils.removeVendorSubscription(VENDOR_ID);
+    await dbUtils.clearCustomerCart(VENDOR_ID);
+    // Restore the site default (feature off) so later specs on the same worker see vendors un-gated.
+    await setVendorSubscriptionFeature(false);
+    if (packId) {
+        const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+        try {
+            await ctx.delete(`${SERVER_URL}/wc/v3/products/${packId}?force=true`);
+        } finally {
+            await ctx.dispose();
+        }
+    }
+}
+
+/**
+ * Vendor subscription via Stripe Connect (P0 slice). A vendor buys a RECURRING
+ * subscription pack (`product_pack`) — the path that previously failed with
+ * "Could not initialize Stripe" (the Payment Element never mounted). Verifies the
+ * PE now mounts (VS1.1), a purchase activates the vendor + creates a real Stripe
+ * Subscription (VS1.2), and the pack fee is platform revenue with no vendor
+ * transfer (VS8.5). The buyer is the vendor (vendorAuth); the pack is an
+ * admin-owned product, so the buyer does NOT need to be Stripe-connected.
+ *
+ * Precondition: the admin pre-setup describe above (run earlier in this file)
+ * enabled the `product_subscription` module + configured the gateway.
+ */
+test.describe.serial('Stripe Connect — vendor subscription (recurring pack)', () => {
+    test.describe.configure({ timeout: 180_000 }); // real card entry + Stripe confirm/redirect is slow (cold CI first attempt)
+    let packId: string;
+    let subscriptionOrderId: string | undefined;
+    let subscriptionIntentId = '';
+    let stripeSubId = ''; // captured from order meta in VS1.2 so afterAll can always cancel the live sub
+
+    test.beforeAll(async () => {
+        // No Stripe keys → the whole describe skips; don't seed/mutate the site for tests that won't run.
+        if (!hasCredentials) {
+            return;
+        }
+        // Buyer (vendor) needs a billing address for the block checkout + a clean, unsubscribed start.
+        await ensureBillingAddress(VENDOR_ID);
+        await dbUtils.clearCustomerCart(VENDOR_ID);
+        await dbUtils.removeVendorSubscription(VENDOR_ID);
+        // Seed a recurring subscription pack: create it as a simple product via REST, then flip its type to
+        // product_pack directly in the DB (REST rejects the product_pack type), then save its commission.
+        await dbUtils.setSubscriptionProductType();
+        const api = new ApiUtils(await request.newContext());
+        [, packId] = await api.createProduct(payloads.createDokanSubscriptionProductRecurring(), payloads.adminAuth);
+        await dbUtils.updateProductType(packId);
+        // Admin commission on the pack, set directly: the dokan/v1/subscription/save-commission REST route is not
+        // registered on this build (404) and is unrelated to the purchase/activation flow these tests verify.
+        await dbUtils.setPostMeta(packId, '_subscription_product_admin_commission_type', 'percentage', false);
+        await dbUtils.setPostMeta(packId, '_subscription_product_admin_commission', '10', false);
+    });
+
+    test.afterAll(async () => {
+        const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+        try {
+            // Cancel the live Stripe subscription (test-mode hygiene). Resolve its id robustly so a run that failed
+            // mid-test still cleans up: prefer the value captured in VS1.2, then the ORDER meta (written
+            // synchronously at purchase), and only then the vendor user meta (written by the ASYNC activation —
+            // absent if the test threw before activation completed).
+            let subId: string | null = stripeSubId || null;
+            if (!subId && subscriptionOrderId) {
+                const res = await ctx.get(`${SERVER_URL}/wc/v3/orders/${subscriptionOrderId}?_fields=meta_data`);
+                const body = (await res.json().catch(() => ({}))) as { meta_data?: Array<{ key: string; value: string }> };
+                subId = (body.meta_data ?? []).find(m => m.key === '_stripe_subscription_id')?.value ?? null;
+            }
+            if (!subId) {
+                subId = await dbUtils.getUserMetaValue(VENDOR_ID, '_stripe_subscription_id');
+            }
+            if (subId && /^sub_/.test(subId) && stripeApi.hasSecretKey()) {
+                await stripeApi.cancelSubscription(subId);
+            }
+            // Trash the seeded pack so subscription packs don't accumulate across runs.
+            if (packId) {
+                await ctx.delete(`${SERVER_URL}/wc/v3/products/${packId}?force=true`);
+            }
+        } finally {
+            await ctx.dispose();
+        }
+        await dbUtils.removeVendorSubscription(VENDOR_ID);
+        await dbUtils.clearCustomerCart(VENDOR_ID);
+    });
+
+    // VS1.1 — regression guard for the fixed "Could not initialize Stripe" bug (PE must mount; no order placed).
+    test('vendor: Stripe Connect Payment Element mounts on a recurring pack checkout', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        test.skip(!hasCredentials, 'Stripe Connect test keys missing — set TEST_*_STRIPE_CONNECT in tests/pw/.env');
+        const ctx = await browser.newContext({ storageState: vendorAuth });
+        const page = await ctx.newPage();
+        try {
+            const stripe = new StripeConnectPage(page);
+            await dbUtils.clearCustomerCart(VENDOR_ID);
+            await stripe.addProductToCart(packId);
+            await stripe.gotoBlockCheckout();
+            await stripe.selectBlockGateway();
+            await stripe.assertBlockPaymentElementReady(); // PE mounts → no "Could not initialize Stripe"
+            log.success('Recurring subscription-pack checkout mounted the Stripe Connect Payment Element (no init error)');
+        } finally {
+            await page.close();
+            await ctx.close();
+        }
+    });
+
+    // VS1.2 — full purchase → vendor activated + a real Stripe Subscription created.
+    test('vendor: buying a recurring pack via Stripe Connect activates the subscription', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        test.skip(!hasCredentials, 'Stripe Connect test keys missing — set TEST_*_STRIPE_CONNECT in tests/pw/.env');
+        const ctx = await browser.newContext({ storageState: vendorAuth });
+        const page = await ctx.newPage();
+        try {
+            const stripe = new StripeConnectPage(page);
+            await dbUtils.clearCustomerCart(VENDOR_ID);
+            await dbUtils.removeVendorSubscription(VENDOR_ID); // clean, unsubscribed start
+            await stripe.addProductToCart(packId);
+            await stripe.gotoBlockCheckout();
+            await stripe.selectBlockGateway();
+            await stripe.fillCardDetails(STRIPE_CARDS.success);
+            await stripe.placeBlockOrderExpectReceived();
+            subscriptionOrderId = page.url().match(/order-received\/(\d+)/)?.[1];
+        } finally {
+            await page.close();
+            await ctx.close();
+        }
+        expect(subscriptionOrderId, 'captured the subscription order id from the order-received URL').toBeTruthy();
+
+        const api = new ApiUtils(await request.newContext());
+        // Order settled to a paid status (cold CI confirm can lag) and was paid with the Stripe Connect gateway.
+        await expect
+            .poll(
+                async () => {
+                    const [, o] = await api.getSingleOrder(subscriptionOrderId as string, payloads.adminAuth);
+                    return o.status as string;
+                },
+                { message: 'the subscription order should settle to a paid status', timeout: 60_000 },
+            )
+            .toMatch(/processing|completed/);
+
+        const [, order] = await api.getSingleOrder(subscriptionOrderId as string, payloads.adminAuth);
+        expect(order.payment_method, 'paid with the Stripe Connect gateway').toBe('dokan-stripe-connect');
+        const meta = (k: string): string | undefined => (order.meta_data ?? []).find((m: { key: string; value: string }) => m.key === k)?.value;
+        const orderSubId = meta('_stripe_subscription_id');
+        subscriptionIntentId = meta('_stripe_intent_id') ?? meta('dokan_stripe_intent_id') ?? '';
+        stripeSubId = orderSubId ?? ''; // so afterAll can cancel the live sub even if a later assertion throws
+        expect(orderSubId, 'order carries a Stripe Subscription id (sub_…)').toMatch(/^sub_/);
+        expect(subscriptionIntentId, 'order carries a Stripe PaymentIntent id (pi_…)').toMatch(/^pi_/);
+
+        // Vendor is activated: pack assigned + can publish + recurring active + Stripe sub id stored.
+        await expect
+            .poll(async () => dbUtils.getUserMetaValue(VENDOR_ID, 'can_post_product'), {
+                message: 'vendor should be activated (can_post_product) after the subscription purchase',
+                timeout: 30_000,
+            })
+            .toBe('1');
+        expect(await dbUtils.getUserMetaValue(VENDOR_ID, 'product_package_id'), 'active pack assigned to vendor').toBe(packId);
+        expect(await dbUtils.getUserMetaValue(VENDOR_ID, '_customer_recurring_subscription'), 'recurring subscription marked active').toBe('active');
+        expect(await dbUtils.getUserMetaValue(VENDOR_ID, '_stripe_subscription_id'), 'vendor carries the Stripe Subscription id').toMatch(/^sub_/);
+
+        // Stripe is the source of truth: the Subscription object is live.
+        const sub = await stripeApi.getSubscription(orderSubId as string);
+        expect(sub.status, 'Stripe subscription should be active or trialing').toMatch(/active|trialing/);
+        log.success(`Recurring vendor subscription activated — order ${subscriptionOrderId}, Stripe sub ${orderSubId} (${sub.status})`);
+    });
+
+    // VS8.5 — money correctness: the pack fee is admin revenue, never split to a vendor connected account.
+    test('vendor subscription: pack fee is charged to the platform with no vendor transfer', { tag: ['@pro', '@vendor'] }, async () => {
+        test.skip(!hasCredentials, 'Stripe Connect test keys missing — set TEST_*_STRIPE_CONNECT in tests/pw/.env');
+        test.skip(!subscriptionIntentId, 'no subscription PaymentIntent captured from the purchase test');
+        const chargeId = await stripeApi.getLatestChargeId(subscriptionIntentId);
+        // Dokan uses the SEPARATE charges-and-transfers model: a vendor payout would be a Transfer whose
+        // source_transaction === this charge. Assert the ledger shows NONE — the charge's own
+        // transfer/destination fields are always empty for this gateway, so they cannot prove this.
+        const transfers = await stripeApi.transfersForCharge(chargeId);
+        expect(
+            transfers.length,
+            'a vendor-subscription pack fee is admin revenue — no Transfer should be funded by this charge (no vendor payout)',
+        ).toBe(0);
+        log.success(`Subscription pack charge ${chargeId} is platform revenue — ${transfers.length} vendor transfers funded by it`);
+    });
+
+    // VS1.5 — a declined card on the recurring-pack checkout must surface an error and create NO paid order.
+    test('vendor: a declined card on the recurring pack checkout shows an error and creates no paid order', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        test.skip(!hasCredentials, 'Stripe Connect test keys missing — set TEST_*_STRIPE_CONNECT in tests/pw/.env');
+        const baseline = await getLatestStripeOrderId(); // pin: only a NEWER order would be this test's
+        const ctx = await browser.newContext({ storageState: vendorAuth });
+        const page = await ctx.newPage();
+        try {
+            const stripe = new StripeConnectPage(page);
+            await dbUtils.clearCustomerCart(VENDOR_ID);
+            await dbUtils.removeVendorSubscription(VENDOR_ID);
+            await stripe.addProductToCart(packId);
+            await stripe.gotoBlockCheckout();
+            await stripe.selectBlockGateway();
+            await stripe.fillCardDetails(STRIPE_CARDS.declined);
+            await stripe.placeBlockOrderExpectError();
+            log.success('Declined card on the pack checkout surfaced an inline error (no order-received)');
+        } finally {
+            await page.close();
+            await ctx.close();
+        }
+        // No NEW Stripe Connect order settled to a paid status — a decline must not subscribe the vendor.
+        const apiCtx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+        try {
+            const res = await apiCtx.get(`${SERVER_URL}/wc/v3/orders?per_page=10&orderby=date&order=desc&_fields=id,status,payment_method`);
+            const orders = (await res.json().catch(() => [])) as Array<{ id: number; status: string; payment_method: string }>;
+            const newPaid = Array.isArray(orders)
+                ? orders.find(o => o.payment_method === 'dokan-stripe-connect' && Number(o.id) > baseline && /processing|completed/.test(o.status))
+                : undefined;
+            expect(newPaid, 'a declined card must not create a paid Stripe Connect subscription order').toBeFalsy();
+        } finally {
+            await apiCtx.dispose();
+        }
+    });
+});
+
+/**
+ * Non-recurring (lifetime) subscription pack via Stripe Connect (VS3.1). A non-recurring pack does NOT route to the
+ * subscription-intent path (StripeController only does that for cart_contains_dps_recurring_pack) — it charges via a
+ * plain one-off PaymentIntent and creates NO Stripe Subscription. The vendor is still activated (DPS activate), but
+ * with no recurring flag and no Stripe sub id.
+ */
+test.describe.serial('Stripe Connect — vendor subscription (non-recurring lifetime pack)', () => {
+    test.describe.configure({ timeout: 180_000 });
+    let packId: string;
+
+    test.beforeAll(async () => {
+        if (!hasCredentials) {
+            return;
+        }
+        await ensureBillingAddress(VENDOR_ID);
+        // Lifetime: _pack_validity=-1 → 'unlimited' end-date; the factory keeps _enable_recurring_payment='no'.
+        [packId] = await seedSubscriptionPack(payloads.createDokanSubscriptionProduct(), [['_pack_validity', '-1']]);
+    });
+
+    test.afterAll(async () => {
+        await cleanupSubscription(packId, []); // no Stripe sub is created for a non-recurring pack
+    });
+
+    test('vendor: a non-recurring lifetime pack activates via a one-off PaymentIntent (no Stripe subscription)', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        test.skip(!hasCredentials, 'Stripe Connect test keys missing — set TEST_*_STRIPE_CONNECT in tests/pw/.env');
+        const orderId = await buyPackExpectReceived(browser, packId);
+        expect(orderId, 'captured the order id from the order-received URL').toBeTruthy();
+
+        // Order settled via a one-off PaymentIntent, paid with Stripe Connect, carrying NO Stripe subscription id.
+        const api = new ApiUtils(await request.newContext());
+        await expect
+            .poll(
+                async () => {
+                    const [, o] = await api.getSingleOrder(orderId as string, payloads.adminAuth);
+                    return o.status as string;
+                },
+                { message: 'the non-recurring pack order should settle to a paid status', timeout: 60_000 },
+            )
+            .toMatch(/processing|completed/);
+        const intentId = (await getOrderMetaValue(orderId as string, '_stripe_intent_id')) ?? (await getOrderMetaValue(orderId as string, 'dokan_stripe_intent_id'));
+        expect(intentId, 'order carries a Stripe PaymentIntent id (pi_…)').toMatch(/^pi_/);
+        expect(await getOrderMetaValue(orderId as string, '_stripe_subscription_id'), 'a non-recurring pack must NOT create a Stripe Subscription').toBeFalsy();
+
+        // Vendor activated, but NOT recurring and with NO Stripe subscription id on the vendor.
+        await expect
+            .poll(async () => dbUtils.getUserMetaValue(VENDOR_ID, 'can_post_product'), {
+                message: 'vendor should be activated after the non-recurring pack purchase',
+                timeout: 30_000,
+            })
+            .toBe('1');
+        expect(await dbUtils.getUserMetaValue(VENDOR_ID, 'product_package_id'), 'active pack assigned to vendor').toBe(packId);
+        expect(await dbUtils.getUserMetaValue(VENDOR_ID, '_customer_recurring_subscription'), 'non-recurring → recurring flag is NOT active').not.toBe('active');
+        expect(await dbUtils.getUserMetaValue(VENDOR_ID, '_stripe_subscription_id'), 'non-recurring → no Stripe subscription id on the vendor').toBeNull();
+        expect(await dbUtils.getUserMetaValue(VENDOR_ID, 'product_pack_enddate'), 'lifetime pack → unlimited validity').toBe('unlimited');
+
+        // Money: the pack fee is platform revenue — no vendor transfer (same invariant as VS8.5).
+        const chargeId = await stripeApi.getLatestChargeId(intentId as string);
+        expect((await stripeApi.transfersForCharge(chargeId)).length, 'no vendor transfer should be funded by the pack charge').toBe(0);
+        log.success(`Non-recurring lifetime pack: order ${orderId} settled via ${intentId}, no Stripe subscription, vendor activated`);
+    });
+});
+
+/**
+ * Cancel & reactivate a recurring vendor subscription from the dashboard (VS4.1 active-pack banner, VS5.1 cancel,
+ * VS5.2 reactivate). The vendor cancel button schedules a Stripe cancel_at_period_end (the sub stays active till the
+ * period ends) and the reactivate button clears it — both are synchronous Stripe API calls in the POST handler (no
+ * webhook needed). beforeAll buys the pack once so all three tests run against the subscribed state.
+ */
+test.describe.serial('Stripe Connect — vendor subscription cancel & reactivate', () => {
+    test.describe.configure({ timeout: 180_000 });
+    let packId: string;
+    let packName = '';
+    let stripeSubId = '';
+
+    test.beforeAll(async ({ browser }) => {
+        if (!hasCredentials) {
+            return;
+        }
+        await ensureBillingAddress(VENDOR_ID);
+        [packId, packName] = await seedSubscriptionPack(payloads.createDokanSubscriptionProductRecurring());
+        const orderId = await buyPackExpectReceived(browser, packId);
+        expect(orderId, 'setup: the recurring pack was purchased').toBeTruthy();
+        stripeSubId = (await getOrderMetaValue(orderId as string, '_stripe_subscription_id')) ?? '';
+        expect(stripeSubId, 'setup: a Stripe subscription was created').toMatch(/^sub_/);
+    });
+
+    test.afterAll(async () => {
+        await cleanupSubscription(packId, [stripeSubId]);
+    });
+
+    test('vendor: the dashboard shows the active subscription pack', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        test.skip(!hasCredentials, 'Stripe Connect test keys missing — set TEST_*_STRIPE_CONNECT in tests/pw/.env');
+        const ctx = await browser.newContext({ storageState: vendorAuth });
+        const page = await ctx.newPage();
+        try {
+            const stripe = new StripeConnectPage(page);
+            await stripe.assertActivePackBanner(packName);
+            log.success(`Vendor dashboard shows the active pack "${packName}" + the cancel control`);
+        } finally {
+            await page.close();
+            await ctx.close();
+        }
+    });
+
+    test('vendor: cancels the recurring subscription (Stripe cancel_at_period_end, stays active)', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        test.skip(!hasCredentials, 'Stripe Connect test keys missing — set TEST_*_STRIPE_CONNECT in tests/pw/.env');
+        const ctx = await browser.newContext({ storageState: vendorAuth });
+        const page = await ctx.newPage();
+        try {
+            const stripe = new StripeConnectPage(page);
+            await stripe.cancelSubscriptionFromDashboard(); // asserts the React cancelled-but-active state
+        } finally {
+            await page.close();
+            await ctx.close();
+        }
+        expect(await dbUtils.getUserMetaValue(VENDOR_ID, 'dokan_has_active_cancelled_subscrption'), 'vendor flagged as active-cancelled').toBeTruthy();
+        const sub = await stripeApi.getSubscription(stripeSubId);
+        expect(sub.cancel_at_period_end, 'Stripe sub scheduled to cancel at period end').toBe(true);
+        expect(sub.status, 'Stripe sub stays active until period end (not immediately canceled)').toBe('active');
+        log.success(`Subscription ${stripeSubId} set to cancel_at_period_end (status ${sub.status})`);
+    });
+
+    test('vendor: reactivates the cancelled-but-active subscription', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        test.skip(!hasCredentials, 'Stripe Connect test keys missing — set TEST_*_STRIPE_CONNECT in tests/pw/.env');
+        const ctx = await browser.newContext({ storageState: vendorAuth });
+        const page = await ctx.newPage();
+        try {
+            const stripe = new StripeConnectPage(page);
+            await stripe.reactivateSubscriptionFromDashboard(); // asserts the React reactivated state
+        } finally {
+            await page.close();
+            await ctx.close();
+        }
+        expect(await dbUtils.getUserMetaValue(VENDOR_ID, 'dokan_has_active_cancelled_subscrption'), 'active-cancelled flag cleared').toBeFalsy();
+        const sub = await stripeApi.getSubscription(stripeSubId);
+        expect(sub.cancel_at_period_end, 'reactivation clears the scheduled cancel').toBe(false);
+        expect(sub.status, 'Stripe sub remains active').toBe('active');
+        log.success(`Subscription ${stripeSubId} reactivated (cancel_at_period_end=false)`);
+    });
+});
+
+/**
+ * Recurring vendor-subscription pack WITH a free trial (VS2.1). A trial recurring pack still creates a Stripe
+ * Subscription, but with a future trial_end → status 'trialing' and no immediate charge (the first invoice is
+ * deferred / a SetupIntent collects the card). The vendor is activated for the trial window. The vendor must NOT
+ * have "used" a trial before, or Stripe applies no trial (has_used_trial_pack reads user-meta dokan_used_trial_pack).
+ */
+test.describe.serial('Stripe Connect — vendor subscription (free trial)', () => {
+    test.describe.configure({ timeout: 180_000 });
+    const TRIAL_META = ['dokan_used_trial_pack', '_dokan_subscription_is_on_trial', '_dokan_subscription_trial_until'];
+    let packId: string;
+    let stripeSubId = '';
+
+    test.beforeAll(async () => {
+        if (!hasCredentials) {
+            return;
+        }
+        await ensureBillingAddress(VENDOR_ID);
+        await dbUtils.deleteUserMeta(VENDOR_ID, TRIAL_META); // ensure the vendor hasn't "used" a trial → Stripe applies trial_end
+        [packId] = await seedSubscriptionPack(payloads.createDokanSubscriptionProductRecurring(), [
+            ['dokan_subscription_enable_trial', 'yes'],
+            ['dokan_subscription_trail_range', '3'], // note: source meta key is misspelled "trail"
+            ['dokan_subscription_trial_period_types', 'day'],
+        ]);
+    });
+
+    test.afterAll(async () => {
+        await cleanupSubscription(packId, [stripeSubId]);
+        await dbUtils.deleteUserMeta(VENDOR_ID, TRIAL_META);
+    });
+
+    test('vendor: a recurring pack with a free trial creates a trialing subscription (no immediate charge)', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        test.skip(!hasCredentials, 'Stripe Connect test keys missing — set TEST_*_STRIPE_CONNECT in tests/pw/.env');
+        const orderId = await buyPackExpectReceived(browser, packId);
+        expect(orderId, 'captured the order id from the order-received URL').toBeTruthy();
+
+        const subId = (await getOrderMetaValue(orderId as string, '_stripe_subscription_id')) ?? '';
+        expect(subId, 'a trial recurring pack still creates a Stripe subscription (sub_…)').toMatch(/^sub_/);
+        stripeSubId = subId;
+
+        // Stripe is the source of truth: a free-trial subscription is 'trialing' with a future trial_end (no charge yet).
+        const sub = await stripeApi.getSubscription(subId);
+        expect(sub.status, 'a free-trial subscription should be trialing').toBe('trialing');
+        expect(Number(sub.trial_end), 'trial_end should be in the future').toBeGreaterThan(Math.floor(Date.now() / 1000));
+
+        // The vendor is activated for the trial window.
+        await expect
+            .poll(async () => dbUtils.getUserMetaValue(VENDOR_ID, 'can_post_product'), {
+                message: 'vendor should be activated during the trial',
+                timeout: 30_000,
+            })
+            .toBe('1');
+        expect(await dbUtils.getUserMetaValue(VENDOR_ID, 'product_package_id'), 'active pack assigned to vendor').toBe(packId);
+        log.success(`Free-trial subscription created — Stripe sub ${subId} status=${sub.status}, trial_end=${sub.trial_end}`);
+    });
+});
+
+/**
+ * 3DS / SCA on a recurring vendor-subscription pack checkout (VS1.4). The first-invoice PaymentIntent for the
+ * recurring pack requires SCA with the 3DS test card; completing the in-page challenge must settle the subscription
+ * (same mechanics as the product-order 3DS tests — assert the order STATUS server-side, since the browser redirect
+ * to order-received is unreliable in automation).
+ */
+test.describe.serial('Stripe Connect — vendor subscription 3DS / SCA', () => {
+    test.describe.configure({ timeout: 240_000 }); // cold CI: slow confirm + ACS challenge + settle poll
+    let packId: string;
+    let stripeSubId = '';
+
+    test.beforeAll(async () => {
+        if (!hasCredentials) {
+            return;
+        }
+        await ensureBillingAddress(VENDOR_ID);
+        [packId] = await seedSubscriptionPack(payloads.createDokanSubscriptionProductRecurring());
+    });
+
+    test.afterAll(async () => {
+        await cleanupSubscription(packId, [stripeSubId]);
+    });
+
+    test('vendor: a 3DS card on the recurring pack checkout completes after SCA and activates the subscription', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        test.skip(!hasCredentials, 'Stripe Connect test keys missing — set TEST_*_STRIPE_CONNECT in tests/pw/.env');
+        const ctx = await browser.newContext({ storageState: vendorAuth });
+        const page = await ctx.newPage();
+        try {
+            const stripe = new StripeConnectPage(page);
+            await dbUtils.clearCustomerCart(VENDOR_ID);
+            await dbUtils.removeVendorSubscription(VENDOR_ID);
+            await stripe.addProductToCart(packId);
+            await stripe.gotoBlockCheckout();
+            await stripe.selectBlockGateway();
+            const baseline = await getLatestStripeOrderId(); // pin: only a NEWER order (this test's) counts
+            await stripe.fillCardDetails(STRIPE_CARDS.threeDS);
+            await page.locator(stripe.blockSelectors.placeOrder).click();
+            await stripe.complete3DSChallenge();
+            await assertStripeOrderSettledSince(baseline);
+        } finally {
+            await page.close();
+            await ctx.close();
+        }
+        // Vendor activated + a live Stripe subscription created (same invariants as VS1.2, settled via SCA).
+        await expect
+            .poll(async () => dbUtils.getUserMetaValue(VENDOR_ID, 'can_post_product'), {
+                message: 'vendor should be activated after the 3DS subscription purchase',
+                timeout: 30_000,
+            })
+            .toBe('1');
+        expect(await dbUtils.getUserMetaValue(VENDOR_ID, 'product_package_id'), 'active pack assigned to vendor').toBe(packId);
+        expect(await dbUtils.getUserMetaValue(VENDOR_ID, '_customer_recurring_subscription'), 'recurring subscription marked active').toBe('active');
+        stripeSubId = (await dbUtils.getUserMetaValue(VENDOR_ID, '_stripe_subscription_id')) ?? '';
+        expect(stripeSubId, 'vendor carries the Stripe Subscription id').toMatch(/^sub_/);
+        const sub = await stripeApi.getSubscription(stripeSubId);
+        expect(sub.status, 'Stripe subscription should be active/trialing after SCA').toMatch(/active|trialing/);
+        log.success(`3DS recurring subscription settled after SCA — Stripe sub ${stripeSubId} (${sub.status})`);
     });
 });

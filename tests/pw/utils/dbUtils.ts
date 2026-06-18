@@ -165,6 +165,34 @@ export const dbUtils = {
         await dbUtils.dbQuery(`DELETE FROM ${dbPrefix}_options WHERE option_name IN (?, ?);`, [`_transient_${name}`, `_transient_timeout_${name}`]);
     },
 
+    // safe scalar user-meta read — returns the raw meta_value string (NOT unserialized), or null when the row is absent.
+    // getUserMeta() throws on a missing row (res[0] is undefined); use this when a meta may legitimately not exist yet.
+    async getUserMetaValue(userId: string | number, metaKey: string): Promise<string | null> {
+        const res = await dbUtils.dbQuery(`SELECT meta_value FROM ${dbPrefix}_usermeta WHERE user_id = ? AND meta_key = ?;`, [String(userId), metaKey]);
+        return res.length ? (res[0].meta_value as string) : null;
+    },
+
+    // remove a vendor's active vendor-subscription (product_pack) state — cleanup for the vendor-subscription specs.
+    // Does NOT cancel the Stripe subscription itself; pair with stripeApi.cancelSubscription() when a sub_… exists.
+    async removeVendorSubscription(vendorId: string | number): Promise<void> {
+        await dbUtils.dbQuery(
+            `DELETE FROM ${dbPrefix}_usermeta WHERE user_id = ? AND meta_key IN (` +
+                `'product_package_id', 'product_order_id', 'product_pack_startdate', 'product_pack_enddate', ` +
+                `'can_post_product', 'product_no_with_pack', '_customer_recurring_subscription', ` +
+                `'_stripe_subscription_id', 'dokan_has_active_cancelled_subscrption');`,
+            [String(vendorId)],
+        );
+    },
+
+    // delete one or more user-meta rows by key (generic — no named helper existed for arbitrary keys).
+    async deleteUserMeta(userId: string | number, metaKeys: string[]): Promise<void> {
+        if (!metaKeys.length) {
+            return;
+        }
+        const placeholders = metaKeys.map(() => '?').join(', ');
+        await dbUtils.dbQuery(`DELETE FROM ${dbPrefix}_usermeta WHERE user_id = ? AND meta_key IN (${placeholders});`, [String(userId), ...metaKeys]);
+    },
+
     // get option value
     async getOptionValue(optionName: string): Promise<any> {
         const query = `Select option_value FROM ${dbPrefix}_options WHERE option_name = ?;`;
@@ -450,5 +478,55 @@ export const dbUtils = {
             await new Promise(resolve => setTimeout(resolve, 500));
         }
         return null;
+    },
+
+    // ============================================
+    // STRIPE CONNECT — SAVED CARDS + GATEWAY SETTINGS
+    // ============================================
+
+    // read a customer's saved payment tokens (+ their tokenmeta) for a gateway —
+    // WC exposes NO REST endpoint for payment tokens, so saved-card verification
+    // (F1/F3/F5) must read the DB directly. Joins ${dbPrefix}_woocommerce_payment_tokens
+    // to ${dbPrefix}_woocommerce_payment_tokenmeta (FK payment_token_id) and pulls
+    // the four card meta keys (last4, brand, expiry_month, expiry_year). The `token`
+    // column holds the Stripe pm_ id for a DynamicPaymentMethod token.
+    async getCustomerPaymentTokens(userId: string | number, gatewayId: string = 'dokan-stripe-connect'): Promise<Array<{ token_id: number; token: string; type: string; last4: string; brand: string; expiry: string; is_default: number }>> {
+        const query = `SELECT token_id, token, type, is_default FROM ${dbPrefix}_woocommerce_payment_tokens WHERE user_id = ? AND gateway_id = ?;`;
+        const rows = await dbUtils.dbQuery(query, [String(userId), gatewayId]);
+        const tokens: Array<{ token_id: number; token: string; type: string; last4: string; brand: string; expiry: string; is_default: number }> = [];
+        for (const row of rows as Array<{ token_id: number; token: string; type: string; is_default: number }>) {
+            const metaRows = await dbUtils.dbQuery(
+                `SELECT meta_key, meta_value FROM ${dbPrefix}_woocommerce_payment_tokenmeta WHERE payment_token_id = ? AND meta_key IN ('last4', 'brand', 'expiry_month', 'expiry_year');`,
+                [row.token_id],
+            );
+            const meta: Record<string, string> = {};
+            for (const m of metaRows as Array<{ meta_key: string; meta_value: string }>) {
+                meta[m.meta_key] = m.meta_value;
+            }
+            tokens.push({
+                token_id: row.token_id,
+                token: row.token,
+                type: row.type,
+                last4: meta.last4 ?? '',
+                brand: meta.brand ?? '',
+                expiry: meta.expiry_month && meta.expiry_year ? `${meta.expiry_month}/${meta.expiry_year}` : '',
+                is_default: row.is_default,
+            });
+        }
+        return tokens;
+    },
+
+    // partial-update ONE key of the serialized Stripe Connect gateway option
+    // (woocommerce_dokan-stripe-connect_settings) WITHOUT disturbing the other keys —
+    // the settings-behaviour matrix toggles a single key (allow_non_connected_sellers /
+    // enabled) and re-running configureGateway would risk clearing the saved test keys.
+    // Reads the existing option (getOptionValue throws if the row is missing — the
+    // gateway is configured by pre-setup, so the row is assumed present), sets the one
+    // key, and writes it back serialized.
+    async setStripeGatewaySetting(key: string, value: string): Promise<void> {
+        const optionName = 'woocommerce_dokan-stripe-connect_settings';
+        const settings = await dbUtils.getOptionValue(optionName);
+        settings[key] = value;
+        await dbUtils.setOptionValue(optionName, settings);
     },
 };
