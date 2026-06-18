@@ -1,7 +1,7 @@
 import { DokanPriceInput } from '@src/components';
-import { formatPrice } from '@src/utilities';
+import { formatNumber, formatPrice, unformatNumber } from '@src/utilities';
 import apiFetch from '@wordpress/api-fetch';
-import { useState } from '@wordpress/element';
+import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { addQueryArgs } from '@wordpress/url';
 import CustomField, { getValidationError } from './CustomField';
@@ -11,6 +11,21 @@ const PriceEdit = ( { data, field, onChange, validity }: any ) => {
     const [ vendorEarning, setVendorEarning ] = useState(
         Number( data.vendor_earning )
     );
+
+    // Canonical store value for this field; the input shows a locale-formatted copy.
+    const storedValue = data[ field.id ] ?? '';
+    const [ displayValue, setDisplayValue ] = useState< string >( () =>
+        formatNumber( storedValue )
+    );
+
+    // Re-format only when the canonical value changes outside this input (product switch or external update); equal values keep what the user is typing.
+    useEffect( () => {
+        setDisplayValue( ( current ) =>
+            Number( unformatNumber( current ) ) === Number( storedValue )
+                ? current
+                : formatNumber( storedValue )
+        );
+    }, [ storedValue, field.id ] );
 
     const vendorEarningHandler = async ( price: number ) => {
         if ( field.id === 'regular_price' ) {
@@ -60,14 +75,15 @@ const PriceEdit = ( { data, field, onChange, validity }: any ) => {
         >
             <DokanPriceInput
                 label=""
-                value={ data[ field.id ] }
+                value={ displayValue }
                 namespace={ `dokan-field-${ field.id }` }
                 className="product-editor-price-input"
                 input={ {
                     id: field.id,
                     placeholder: field.placeholder || '',
                 } }
-                onChange={ ( _, rawValue ) => {
+                onChange={ ( formattedValue, rawValue ) => {
+                    setDisplayValue( formattedValue );
                     const value = Number( rawValue );
                     onChange( { [ field.id ]: value } );
                     void vendorEarningHandler( value );
