@@ -2,6 +2,7 @@
 
 use WeDevs\Dokan\Utilities\ReportUtil;
 use WeDevs\Dokan\Dashboard\Templates\Dashboard;
+use WeDevs\Dokan\Admin\Dashboard\LegacySwitcher;
 
 /**
  * Sort navigation menu items by position
@@ -29,6 +30,10 @@ function dokan_nav_sort_by_pos( $a, $b ) {
  * @return array
  */
 function dokan_get_dashboard_nav(): array {
+    // The "Vendor Product Editor" setting drives the whole product UI, so the legacy editor also keeps the legacy listing page.
+    // TODO: Drop this toggle once the legacy product pages are removed — then always register the new (React) product page.
+    $use_new_product_ui = ! dokan_get_container()->get( LegacySwitcher::class )->is_product_editor_legacy_preferred();
+
     $menus = [
         'dashboard' => [
             'title'      => __( 'Dashboard', 'dokan-lite' ),
@@ -41,11 +46,10 @@ function dokan_get_dashboard_nav(): array {
         'products'  => [
             'title'      => __( 'Products', 'dokan-lite' ),
             'icon'       => '<i class="fas fa-briefcase"></i>',
-            'url'        => dokan_get_navigation_url( 'products' ),
+            'url'        => dokan_get_navigation_url( 'products', $use_new_product_ui ),
             'pos'        => 30,
             'icon_name'  => 'Box',
             'permission' => 'dokan_view_product_menu',
-            'react_route' => 'products',
         ],
         'orders'    => [
             'title'       => __( 'Orders', 'dokan-lite' ),

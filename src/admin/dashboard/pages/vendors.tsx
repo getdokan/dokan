@@ -238,7 +238,7 @@ const VendorsPage = ( props ) => {
 
     // Fields for DataViews
     const loadingClass = twMerge(
-        '!bg-neutral-200 !rounded !animate-pulse !text-transparent'
+        'bg-neutral-200! rounded! animate-pulse! text-transparent!'
     );
     const fields = applyFilters(
         'dokan-admin-vendors-list-column-fields',
@@ -383,15 +383,15 @@ const VendorsPage = ( props ) => {
             } as any );
         }
         await fetchVendors();
-        if ( isBulk ) {
-            setSelection( [] );
-        }
+        // Clear any row selection regardless of bulk/single so a single
+        // selected row doesn't stay highlighted after the action.
+        setSelection( [] );
     };
     // Handle tab selection for status filtering
     const handleTabSelect = ( tabName ) => {
+        // Updating status + resetting the page drives a single refetch via the
+        // effect above; calling fetchVendors() here too would double-fetch.
         setStatus( tabName );
-        // also refresh current page with new status
-        fetchVendors( { status: tabName, page: 1 } );
         setView( ( prev: any ) => ( { ...prev, page: 1 } ) );
     };
 
@@ -443,13 +443,13 @@ const VendorsPage = ( props ) => {
                                     id: 'edit',
                                     label: () =>
                                         getActionLabel(
-                                            <Pencil size={ 16 } className="!fill-none" />,
+                                            <Pencil size={ 16 } className="fill-none!" />,
                                             __( 'Edit', 'dokan-lite' )
                                         ),
                                     icon: (
                                         <Pencil
                                             size={ 16 }
-                                            className="!fill-none"
+                                            className="fill-none!"
                                         />
                                     ),
                                     isPrimary: false,
@@ -468,13 +468,13 @@ const VendorsPage = ( props ) => {
                                     id: 'see-products',
                                     label: () =>
                                         getActionLabel(
-                                            <Box size={ 16 } className="!fill-none" />,
+                                            <Box size={ 16 } className="fill-none!" />,
                                             __( 'See Products', 'dokan-lite' )
                                         ),
                                     icon: (
                                         <Box
                                             size={ 16 }
-                                            className="!fill-none"
+                                            className="fill-none!"
                                         />
                                     ),
                                     supportsBulk: false,
@@ -493,13 +493,13 @@ const VendorsPage = ( props ) => {
                                     id: 'see-orders',
                                     label: () =>
                                         getActionLabel(
-                                            <ShoppingBag size={ 16 } className="!fill-none" />,
+                                            <ShoppingBag size={ 16 } className="fill-none!" />,
                                             __( 'See Orders', 'dokan-lite' )
                                         ),
                                     icon: (
                                         <ShoppingBag
                                             size={ 16 }
-                                            className="!fill-none"
+                                            className="fill-none!"
                                         />
                                     ),
                                     isPrimary: false,
@@ -519,13 +519,13 @@ const VendorsPage = ( props ) => {
                                     id: 'switch-to',
                                     label: () =>
                                         getActionLabel(
-                                            <ArrowLeftRight size={ 16 } className="!fill-none" />,
+                                            <ArrowLeftRight size={ 16 } className="fill-none!" />,
                                             __( 'Switch to', 'dokan-lite' )
                                         ),
                                     icon: (
                                         <ArrowLeftRight
                                             size={ 16 }
-                                            className="!fill-none"
+                                            className="fill-none!"
                                         />
                                     ),
                                     isPrimary: false,
@@ -546,13 +546,13 @@ const VendorsPage = ( props ) => {
                                     id: 'approve-vendor',
                                     label: () =>
                                         getActionLabel(
-                                            <Check size={ 16 } className="!fill-none" />,
+                                            <Check size={ 16 } className="fill-none!" />,
                                             __( 'Approve Vendors', 'dokan-lite' )
                                         ),
                                     icon: (
                                         <Check
                                             size={ 16 }
-                                            className="!fill-none"
+                                            className="fill-none!"
                                         />
                                     ),
                                     supportsBulk: true,
@@ -568,25 +568,34 @@ const VendorsPage = ( props ) => {
                                     isEligible: ( item: Vendor ) =>
                                         ! item.enabled,
                                     callback: async ( args: any ) => {
-                                        const ids = extractIdsFromArgs( args );
-                                        await runVendorStatusAction(
-                                            'approve',
-                                            ids,
-                                            ids.length > 1
-                                        );
+                                        try {
+                                            const ids =
+                                                extractIdsFromArgs( args );
+                                            await runVendorStatusAction(
+                                                'approve',
+                                                ids,
+                                                ids.length > 1
+                                            );
+                                        } catch ( e ) {
+                                            // eslint-disable-next-line no-console
+                                            console.error(
+                                                'Failed to approve vendor(s)',
+                                                e
+                                            );
+                                        }
                                     },
                                 },
                                 {
                                     id: 'disable-selling',
                                     label: () =>
                                         getActionLabel(
-                                            <Ban size={ 16 } className="!fill-none" />,
+                                            <Ban size={ 16 } className="fill-none!" />,
                                             __( 'Disable Selling', 'dokan-lite' )
                                         ),
                                     icon: (
                                         <Ban
                                             size={ 16 }
-                                            className="!fill-none"
+                                            className="fill-none!"
                                         />
                                     ),
                                     supportsBulk: true,
@@ -601,12 +610,21 @@ const VendorsPage = ( props ) => {
                                     isEligible: ( item: Vendor ) =>
                                         !! item.enabled,
                                     callback: async ( args: any ) => {
-                                        const ids = extractIdsFromArgs( args );
-                                        await runVendorStatusAction(
-                                            'disable',
-                                            ids,
-                                            ids.length > 1
-                                        );
+                                        try {
+                                            const ids =
+                                                extractIdsFromArgs( args );
+                                            await runVendorStatusAction(
+                                                'disable',
+                                                ids,
+                                                ids.length > 1
+                                            );
+                                        } catch ( e ) {
+                                            // eslint-disable-next-line no-console
+                                            console.error(
+                                                'Failed to disable vendor(s)',
+                                                e
+                                            );
+                                        }
                                     },
                                 },
                             ] as any

@@ -6,6 +6,7 @@ import { ThemeProvider } from '@wedevs/plugin-ui';
 import { useEffect } from '@wordpress/element';
 import { setLocaleData } from '@wordpress/i18n';
 import { getTranslatedStrings } from '@src/components/dataviews/DataViewTable';
+import { getTranslatedStrings } from '@src/utilities/getTranslatedStrings';
 import { DokanAdminRoute } from './Dashboard';
 
 const Layout = ( {
@@ -25,7 +26,6 @@ const Layout = ( {
                 pluginId="dokan-admin-dashboard"
                 tokens={ pluginUITokens }
             >
-                { /* Plugin UI WordPress styles are scoped to .dokan-admin-dashboard-layout (see base-tailwind.css). */ }
                 <div className="dokan-admin-dashboard-layout">
                     { children }
                 </div>
