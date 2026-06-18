@@ -30,7 +30,7 @@ class Menu {
     public function add_admin_menu() {
         global $submenu;
 
-        $capability = dokana_admin_menu_capability();
+        $capability = dokan_admin_menu_capability();
         if ( ! current_user_can( $capability ) ) {
             return;
         }
