@@ -31,6 +31,7 @@ function dokan_nav_sort_by_pos( $a, $b ) {
  */
 function dokan_get_dashboard_nav(): array {
     // The "Vendor Product Editor" setting drives the whole product UI, so the legacy editor also keeps the legacy listing page.
+    // TODO: Drop this toggle once the legacy product pages are removed — then always register the new (React) product page.
     $use_new_product_ui = ! dokan_get_container()->get( LegacySwitcher::class )->is_product_editor_legacy_preferred();
 
     $menus = [
