@@ -1,4 +1,4 @@
-### v5.0.5 ( Jun 18, 2026 ) ###
+### v5.0.5 ( Jun 19, 2026 ) ###
 
 - **update:** Migrated all admin dashboard tables to the unified Plugin UI DataViews component.
 - **update:** Updated price formatting in the product editor to use locale-specific display.
