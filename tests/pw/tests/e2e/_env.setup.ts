@@ -93,6 +93,12 @@ setup.describe('setup woocommerce settings', () => {
     });
 
     setup('add attributes', { tag: ['@lite'] }, async () => {
+        // PR #3270 routes dokan/v1 attribute-term creation through a permission gate that requires the
+        // `add_new_attribute` selling option to be 'on'. This setup runs BEFORE "admin set dokan selling
+        // settings", so apply the selling settings here first — otherwise createAttributeTerm() 403s on a
+        // fresh env (where the option defaults to 'off').
+        await dbUtils.setOptionValue(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
+
         // delete previous attributes
         await apiUtils.updateBatchAttributes('delete', []);
 
