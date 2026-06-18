@@ -8,6 +8,7 @@ import apiFetch from '@wordpress/api-fetch';
 import { addQueryArgs } from '@wordpress/url';
 import { debounce } from '@wordpress/compose';
 import { applyFilters } from '@wordpress/hooks';
+import { decodeEntities } from '@wordpress/html-entities';
 import { useEffect, useMemo, useState } from '@wordpress/element';
 
 type FieldProps = {
@@ -24,6 +25,17 @@ type TreeOption = {
     children?: TreeOption[];
 };
 
+// Term names arrive HTML-encoded (e.g. "Hello &amp; World") from the REST endpoints and
+// schema-resolved saved values; decode each option's label so menus and chips read naturally.
+const decodeLabel = ( option: any ) =>
+    option && typeof option.label === 'string'
+        ? { ...option, label: decodeEntities( option.label ) }
+        : option;
+
+// Decode the selected value(s), which may be a single option, an array, or nullish.
+const decodeValue = ( value: any ) =>
+    Array.isArray( value ) ? value.map( decodeLabel ) : decodeLabel( value );
+
 // Fetch `{ value, label }` options from an endpoint, optionally filtered by `search`.
 const fetchOptions = async (
     endpoint?: string,
@@ -39,7 +51,7 @@ const fetchOptions = async (
         return Array.isArray( result )
             ? result.map( ( item: any ) => ( {
                   value: item.id,
-                  label: item.name,
+                  label: decodeEntities( item.name ),
               } ) )
             : [];
     } catch {
@@ -121,7 +133,9 @@ const TreeSelectField = ( { data, field, onChange, validity }: FieldProps ) => {
                 ( result: any ) =>
                     active &&
                     setOptions(
-                        flattenTree( Array.isArray( result ) ? result : [] )
+                        flattenTree(
+                            Array.isArray( result ) ? result : []
+                        ).map( decodeLabel )
                     )
             )
             .catch( () => {} );
@@ -133,7 +147,9 @@ const TreeSelectField = ( { data, field, onChange, validity }: FieldProps ) => {
     // Storage stays an array of option objects regardless of single/multiple, so the
     // payload resolver keeps working; only the value/onChange shapes are adapted for
     // react-select's single-select mode.
-    const selected = Array.isArray( data[ field.id ] ) ? data[ field.id ] : [];
+    const selected = Array.isArray( data[ field.id ] )
+        ? data[ field.id ].map( decodeLabel )
+        : [];
     const value = field.multiple ? selected : selected[ 0 ] ?? null;
 
     return (
@@ -194,7 +210,7 @@ const CreatableSelectField = ( {
             <TaggableSelect
                 isMulti={ field.multiple }
                 options={ options }
-                value={ data[ field.id ] ?? [] }
+                value={ decodeValue( data[ field.id ] ?? [] ) }
                 placeholder={ field.placeholder }
                 // Server already filters by `search`; keep all returned options.
                 filterOption={ null }
@@ -235,7 +251,7 @@ const AsyncMultiSelectField = ( {
                 isMulti={ field.multiple }
                 cacheOptions
                 defaultOptions
-                value={ data[ field.id ] }
+                value={ decodeValue( data[ field.id ] ) }
                 loadOptions={ loadOptions }
                 onChange={ ( value: any ) =>
                     onChange( { [ field.id ]: value } )
