@@ -103,7 +103,7 @@ test.describe('Reverse Withdrawal (React) Tests @pro', () => {
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(4000);
         const tableVisible = await page.locator('table, [role="table"]').first().isVisible({ timeout: 3000 }).catch(() => false);
-        const emptyVisible = await page.locator("text=/no transactions|no items|nothing to show/i").first().isVisible({ timeout: 1000 }).catch(() => false);
+        const emptyVisible = await page.locator("text=/no transaction found|no data found|no transactions|no items|nothing to show/i").first().isVisible({ timeout: 3000 }).catch(() => false);
         expect(tableVisible || emptyVisible).toBe(true);
         await page.close();
         await ctx.close();

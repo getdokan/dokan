@@ -430,12 +430,27 @@ test.describe('Announcements Tests @pro', () => {
     });
 
     test('Test Case 20 - Admin Trashes and Permanently Deletes Announcements in New Admin Dashboard', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
+        // Self-contained seeding: announcements created via the UI in earlier cases do not
+        // reliably persist to this point, and freshly-published rows fall off page 1 (see the
+        // describe beforeAll note). Reset and seed exactly the three announcements this case
+        // trashes so they are the only rows — guaranteeing the trash-by-title flow finds them.
+        const apiUtils = new ApiUtils(await request.newContext());
+        await apiUtils.deleteAllAnnouncements(payloads.adminAuth);
+        for (const title of [
+            'Test Published Announcement 1',
+            'Test Draft Announcement 2',
+            'Test Scheduled Announcement 3',
+        ]) {
+            await apiUtils.createAnnouncement({ ...payloads.createAnnouncement(), title }, payloads.adminAuth);
+        }
+        await apiUtils.dispose();
+
         // Using admin session storage
         const context = await browser.newContext({ storageState: a1 });
         const adminPage = await context.newPage();
         const announcementsPage = new AnnouncementsPage(adminPage);
 
-        // Move draft and scheduled announcements to trash, then permanently delete all from trash
+        // Move announcements to trash, then permanently delete all from trash
         await announcementsPage.trashAndPermanentlyDeleteAnnouncementsInNewAdminDashboard();
 
         await announcementsPage.waitForPageReady();

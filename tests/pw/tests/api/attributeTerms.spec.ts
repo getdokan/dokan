@@ -61,14 +61,16 @@ test.describe('attribute term api test', () => {
     });
 
     test('update batch attribute terms', { tag: ['@lite'] }, async () => {
-        const allAttributeTermIds = (await apiUtils.getAllAttributeTerms(attributeId)).map((a: { id: unknown }) => a.id);
+        // Self-contained: seed a dedicated attribute with two terms so the batch always has
+        // valid entries. Previously this read getAllAttributeTerms(attributeId).slice(0, 2),
+        // which raced with the sibling create/delete tests and intermittently produced an empty
+        // `update` — WC then returns a bare array instead of the { update: [...] } envelope.
+        const [, batchAttributeId, batchTermId1] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm());
+        const [, , batchTermId2] = await apiUtils.createAttributeTerm(batchAttributeId, payloads.createAttributeTerm());
 
-        const batchAttributeTerms: object[] = [];
-        for (const attributeTermId of allAttributeTermIds.slice(0, 2)) {
-            batchAttributeTerms.push({ ...payloads.updateBatchAttributesTemplate(), id: attributeTermId });
-        }
+        const batchAttributeTerms = [batchTermId1, batchTermId2].map(id => ({ ...payloads.updateBatchAttributesTemplate(), id }));
 
-        const [response, responseBody] = await apiUtils.put(endPoints.updateBatchAttributeTerms(attributeId), { data: { update: batchAttributeTerms } });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateBatchAttributeTerms(batchAttributeId), { data: { update: batchAttributeTerms } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.attributeTermsSchema.batchUpdateAttributesSchema);

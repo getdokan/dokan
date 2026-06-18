@@ -344,9 +344,11 @@ export const api = {
             name: `PW PFM ${type} ${faker.string.nanoid(6)}`,
             type,
             status: 'publish',
-            // `description` is a required+mandatory default field; populate it so
-            // the editor's save button is gated only by the field under test.
+            // `description` and `purchase_note` are required+visible default
+            // fields; populate them so the editor's save button (gated by
+            // FORM-level validity) is held only by the field under test.
             description: 'PW autotest product description.',
+            purchase_note: 'PW autotest purchase note.',
             categories: [{ id: categoryId }],
         };
         if (type === 'simple' || type === 'external') {
@@ -373,9 +375,11 @@ export const api = {
                 type: 'simple',
                 regular_price: '20',
                 status: 'publish',
-                // `description` is a required+mandatory default field; populate it so
-                // the editor's save button is gated only by the field under test.
+                // `description` and `purchase_note` are required+visible default
+                // fields; populate them so the editor's save button (gated by
+                // FORM-level validity) is held only by the field under test.
                 description: 'PW autotest product description.',
+                purchase_note: 'PW autotest purchase note.',
                 categories: [{ id: categoryId }],
                 ...extraParams,
             },

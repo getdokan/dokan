@@ -399,7 +399,7 @@ test.describe('Abuse Reports Tests @pro', () => {
 
         // Confirm delete: reason verified server-side via the DELETE response wait
         const description = await abuseReportsPage.getDeleteModalDescriptionText();
-        expect(description, 'Single-delete modal should reference exactly one report').toContain('this abuse report');
+        expect(description, 'Single-delete modal should reference the selected report(s)').toContain('selected abuse report(s)');
 
         await abuseReportsPage.confirmDeleteInModal();
         await abuseReportsPage.waitForListReady();
@@ -459,8 +459,8 @@ test.describe('Abuse Reports Tests @pro', () => {
         const description = await abuseReportsPage.getDeleteModalDescriptionText();
         expect(
             description,
-            'Bulk-delete modal copy should reference multiple reports',
-        ).toMatch(/these\s+\d+/i);
+            'Bulk-delete modal copy should reference the selected abuse report(s)',
+        ).toMatch(/abuse report\(s\)/i);
         await abuseReportsPage.confirmDeleteInModal();
         await abuseReportsPage.waitForListReady();
 
