@@ -294,7 +294,7 @@ abstract class DokanRESTController extends WP_REST_Controller {
      */
     protected function prepare_objects_query( $request ) {
         // Vendors are always scoped to their own objects; only a store admin may target another vendor via the id param.
-        $is_store_admin          = current_user_can( dokana_admin_menu_capability() );
+        $is_store_admin          = current_user_can( dokan_admin_menu_capability() );
         $can_target_other_vendor = $is_store_admin && isset( $request['id'] );
 
         $args                        = array();
