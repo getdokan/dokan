@@ -821,6 +821,11 @@
       "file": "stripe-connect/stripeConnect3dsDeclined.spec.ts",
       "ms": 80000,
       "tests": 1
+    },
+    {
+      "file": "stripe-connect/stripeConnectShipping.spec.ts",
+      "ms": 60000,
+      "tests": 1
     }
   ]
 }
