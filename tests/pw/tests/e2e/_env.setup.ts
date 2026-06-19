@@ -93,6 +93,11 @@ setup.describe('setup woocommerce settings', () => {
     });
 
     setup('add attributes', { tag: ['@lite'] }, async () => {
+        // Creating attribute terms via the REST endpoint requires the
+        // "add new attribute" selling option to be enabled (since Dokan 5.0.5),
+        // otherwise the request is rejected with a 403. Enable it first.
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { add_new_attribute: 'on' });
+
         // delete previous attributes
         await apiUtils.updateBatchAttributes('delete', []);
 
