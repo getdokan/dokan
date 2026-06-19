@@ -1,6 +1,7 @@
 import fs from 'fs';
 import { execSync } from 'child_process';
 import { Browser, BrowserContextOptions, Page } from '@playwright/test';
+import { log } from '@utils/logger';
 
 const { CI, SITE_PATH } = process.env;
 
@@ -461,11 +462,14 @@ export const helpers = {
         process.chdir(directoryPath);
         try {
             const output = execSync(command, { encoding: 'utf-8' });
-            console.log(output);
+            log.output(output);
             return output;
         } catch (error: any) {
-            console.log(error);
-            return error;
+            // Surface only the meaningful CLI message (stderr/stdout) instead of
+            // dumping the full Node error object (status, pid, output[], …).
+            const message = String(error?.stderr || error?.stdout || error?.message || error).trim();
+            log.warn(`command failed: ${command}`, message);
+            return new Error(message);
         }
     },
 
@@ -475,7 +479,7 @@ export const helpers = {
         command = CI ? `npm run wp-env run tests-cli -- ${command}` : `cd ${SITE_PATH} && ${command}`;
         const result = await this.exeCommand(command);
         // Rethrow so callers can catch (e.g. storefront activate → try install → fallback link)
-        if (result instanceof Error || (result && typeof result === 'object' && 'status' in (result as object))) {
+        if (result instanceof Error) {
             throw result;
         }
     },

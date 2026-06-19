@@ -246,7 +246,7 @@ export const payloads = {
                 key: 'dokan_geo_address',
                 value: 'Dhaka, Bangladesh',
             },
-{
+            {
                 key: '_product_addons',
                 value: [
                     {
@@ -431,7 +431,7 @@ export const payloads = {
                 key: 'dokan_geo_address',
                 value: 'New York, NY, USA',
             },
-// {
+            // {
             //     key: '_product_addons',
             //     value: [
             //         {
@@ -545,7 +545,7 @@ export const payloads = {
                 key: 'dokan_geo_address',
                 value: 'New York, NY, USA',
             },
-// {
+            // {
             // key: '_dokan_min_max_meta',
             // value: {
             //     min_quantity: 4,
@@ -638,7 +638,7 @@ export const payloads = {
                 key: 'dokan_geo_address',
                 value: 'New York, NY, USA',
             },
-// {
+            // {
             // key: '_dokan_min_max_meta',
             // value: {
             //     min_quantity: 4,
@@ -717,7 +717,7 @@ export const payloads = {
                 key: 'dokan_geo_address',
                 value: 'New York, NY, USA',
             },
-{
+            {
                 key: '_sale_price_label',
                 value: 'old-price',
             },
@@ -3563,7 +3563,7 @@ export const payloads = {
         liveChat: 'live_chat',
         liveSearch: 'live_search',
         mangopay: 'mangopay',
-        paystack: "paystack",
+        paystack: 'paystack',
         vendorSupport: 'vendor_support',
         minMaxQuantities: 'order_min_max',
         paypalMarketplace: 'paypal_marketplace',
@@ -3706,7 +3706,7 @@ export const payloads = {
             threads: 'https://www.threads.net/',
         },
         phone: '0123456789',
-        show_email: 'yes',
+        show_email: true,
         address: {
             street_1: 'abc street',
             street_2: 'xyz street',
@@ -4128,7 +4128,7 @@ export const payloads = {
     },
 
     createStore1: {
-        user_login: VENDOR ,
+        user_login: VENDOR,
         user_pass: USER_PASSWORD,
         user_nicename: `${VENDOR}store`, // store url
         email: `${VENDOR}@email.com`,

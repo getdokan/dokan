@@ -4,6 +4,44 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.0.5',
+        'released' => '2026-06-19',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Migrated all admin dashboard tables to the unified Plugin UI DataViews component.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated price formatting in the product editor to use locale-specific display.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Lazy-loaded product editor taxonomies (attributes, categories, and tags) to prevent memory exhaustion on large catalogues.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Escaped vendor-controlled values in store product search results to prevent stored XSS via a product SKU.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Restricted the Products REST endpoint so vendors can no longer access other vendors\' products via the id parameter.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Decoded HTML entities in product category labels for correct rendering.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Corrected the product edit URL and improved dashboard navigation for the new product UI.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.0.4',
         'released' => '2026-06-08',
         'changes'  => [

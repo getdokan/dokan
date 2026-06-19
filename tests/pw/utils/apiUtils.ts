@@ -834,6 +834,15 @@ export class ApiUtils {
         return refundId;
     }
 
+    // get the refundId for a specific order id (the refund row's order_id),
+    // scoped to a status. Avoids picking allRefunds[0] (lowest-id pending) when
+    // several refunds of the same status coexist.
+    async getRefundIdByOrderId(orderId: string, status: string, auth?: auth): Promise<string> {
+        const allRefunds = await this.getAllRefunds(status, auth);
+        const match = allRefunds.find((r: any) => String(r?.order_id) === String(orderId));
+        return match?.id;
+    }
+
     /**
      * dokan settings api methods
      */

@@ -489,11 +489,31 @@ class ProductController extends DokanRESTController {
      * Get_single_product_permissions_check
      *
      * @since 2.8.0
+     * @since 5.0.5 Added check for dokan_is_product_author()
      *
      * @return bool
      */
-    public function get_single_product_permissions_check() {
-        return current_user_can( 'dokandar' ) || current_user_can( 'manage_options' );
+    public function get_single_product_permissions_check( $request ) {
+        // Store admins may read any product.
+        if ( current_user_can( 'manage_options' ) ) {
+            return true;
+        }
+
+        if ( ! current_user_can( 'dokandar' ) ) {
+            return false;
+        }
+
+        // A vendor may only read their own product.
+        $request_id = (int) ( $request['id'] ?? 0 );
+        if ( ! dokan_is_product_author( $request_id ) ) {
+            return new WP_Error(
+                'dokan_rest_cannot_view',
+                __( 'Sorry, you are not allowed to view this product.', 'dokan-lite' ),
+                [ 'status' => rest_authorization_required_code() ]
+            );
+        }
+
+        return true;
     }
 
     /**

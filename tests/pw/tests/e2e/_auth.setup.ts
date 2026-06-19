@@ -4,6 +4,7 @@ import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 import { dbUtils } from '@utils/dbUtils';
 import { helpers, parseBoolean } from '@utils/helpers';
+import { RankMathWizardPage } from './rank-math/rankMathWizardPage';
 
 const { DOKAN_PRO } = process.env;
 const isPro = parseBoolean(DOKAN_PRO);
@@ -109,6 +110,26 @@ setup.describe('add & authenticate users', () => {
 
     setup('authenticate admin', { tag: ['@lite'] }, async ({ page }) => {
         await adminLogin(page, data.admin, data.auth.adminAuthFile);
+    });
+
+    // Complete the Rank Math SEO setup wizard through its admin UI so the plugin
+    // is *configured* before the rank-math suite runs (otherwise wp-admin keeps
+    // redirecting to the wizard and the SEO module stays half-initialised).
+    // Runs right after `authenticate admin` so the admin storage state exists.
+    // Non-fatal: when Rank Math is absent / already configured the wizard never
+    // renders and `completeSetupWizard()` no-ops.
+    setup('complete Rank Math setup wizard', { tag: ['@lite'] }, async ({ browser }) => {
+        const context = await browser.newContext({ storageState: data.auth.adminAuthFile });
+        const page = await context.newPage();
+        try {
+            const wizard = new RankMathWizardPage(page);
+            const result = await wizard.completeSetupWizard();
+            console.log(result === 'completed' ? 'Rank Math setup wizard completed via UI' : 'Rank Math setup wizard skipped (plugin absent or already configured)');
+        } catch (error) {
+            console.log('Rank Math setup wizard step failed, continuing:', (error as Error)?.message ?? '');
+        } finally {
+            await context.close();
+        }
     });
 
     setup('enable admin selling status', { tag: ['@lite'] }, async () => {
