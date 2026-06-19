@@ -232,29 +232,15 @@ test.describe('Vendor new product form (React) functionality', () => {
                 await setCategoryStyle('single');
             });
 
-            // BUG (verified live 2026-06-18): the new React product form ignores
-            // dokan_selling.product_category_style. The `category_ids` field schema
-            // (dokan-lite includes/ProductEditor/FormSchema.php) never sets `multiple`
-            // from the setting, so the category field is always a multi-select tree —
-            // a vendor can pick several categories even when the admin chose "single".
-            // Fix = set the field's `multiple` to `! product_category_selection_is_single()`
-            // (ProductCategory\Helper) in FormSchema so the frontend renders it single.
-            // When fixed, selecting a second category replaces the first (a true
-            // single-select holds exactly one value).
-            test.fixme('single mode limits the vendor to one product category', { tag: ['@lite', '@vendor'] }, async () => {
+            // The category field honors dokan_selling.product_category_style: when
+            // set to 'single', FormSchema marks the `category_ids` field as
+            // non-multiple, so selecting a second category replaces the first (a
+            // true single-select holds exactly one value).
+            test('single mode limits the vendor to one product category', { tag: ['@lite', '@vendor'] }, async () => {
                 await form.selectCategory(cat.a);
                 await form.selectCategory(cat.b);
                 expect(await form.selectedCategoryCount(), 'single mode must keep exactly one category').toBe(1);
                 expect(await form.isCategorySelected(cat.b), 'the last pick is the one kept').toBe(true);
-            });
-
-            // Active companion: documents the current (buggy) behaviour as a guard so a
-            // future fix flips this to fail and the fixme above to pass. Kept @exploratory
-            // so it doesn't gate CI while the product bug stands.
-            test('single mode currently still allows multiple categories (documents the bug)', { tag: ['@lite', '@vendor', '@exploratory'] }, async () => {
-                await form.selectCategory(cat.a);
-                await form.selectCategory(cat.b);
-                expect(await form.selectedCategoryCount(), 'the form does not yet enforce single category selection').toBeGreaterThanOrEqual(2);
             });
         });
     });
