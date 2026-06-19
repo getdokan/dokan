@@ -9,8 +9,8 @@
     },
     {
       "file": "stripe-connect/stripeConnect.spec.ts",
-      "ms": 270000,
-      "tests": 21
+      "ms": 330000,
+      "tests": 22
     },
     {
       "file": "abuse-reports/abuseReports.spec.ts",
@@ -754,8 +754,8 @@
     },
     {
       "file": "stripe-connect/stripeConnectEdgeAdvertisement.spec.ts",
-      "ms": 210000,
-      "tests": 4
+      "ms": 235000,
+      "tests": 6
     },
     {
       "file": "stripe-connect/stripeConnectSettings.spec.ts",
@@ -764,8 +764,8 @@
     },
     {
       "file": "stripe-connect/stripeConnectSavedCards.spec.ts",
-      "ms": 165000,
-      "tests": 6
+      "ms": 200000,
+      "tests": 7
     },
     {
       "file": "stripe-connect/stripeConnectSecurity.spec.ts",
@@ -774,8 +774,53 @@
     },
     {
       "file": "stripe-connect/stripeConnectCurrency.spec.ts",
-      "ms": 90000,
+      "ms": 180000,
+      "tests": 4
+    },
+    {
+      "file": "stripe-connect/stripeConnectWebhooks.spec.ts",
+      "ms": 170000,
       "tests": 3
+    },
+    {
+      "file": "stripe-connect/stripeConnectVendorOnboarding.spec.ts",
+      "ms": 50000,
+      "tests": 1
+    },
+    {
+      "file": "stripe-connect/stripeConnectExpress.spec.ts",
+      "ms": 25000,
+      "tests": 1
+    },
+    {
+      "file": "stripe-connect/stripeConnectPreflight.spec.ts",
+      "ms": 5000,
+      "tests": 1
+    },
+    {
+      "file": "stripe-connect/stripeConnectSubscriptionWebhooks.spec.ts",
+      "ms": 200000,
+      "tests": 3
+    },
+    {
+      "file": "stripe-connect/stripeConnectXss.spec.ts",
+      "ms": 15000,
+      "tests": 1
+    },
+    {
+      "file": "stripe-connect/stripeConnectGuest.spec.ts",
+      "ms": 50000,
+      "tests": 1
+    },
+    {
+      "file": "stripe-connect/stripeConnectBackwardCompat.spec.ts",
+      "ms": 60000,
+      "tests": 1
+    },
+    {
+      "file": "stripe-connect/stripeConnect3dsDeclined.spec.ts",
+      "ms": 80000,
+      "tests": 1
     }
   ]
 }

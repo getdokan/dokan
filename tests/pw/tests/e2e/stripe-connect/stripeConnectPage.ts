@@ -14,6 +14,7 @@ export const STRIPE_CARDS = {
     success: '4242 4242 4242 4242',
     threeDS: '4000 0025 0000 3155', // SCA required (on-session)
     threeDSRenewal: '4000 0027 6000 3184', // SCA required (off-session/renewal)
+    threeDSDeclined: '4000 0084 0000 1629', // SCA required, then DECLINED (insufficient_funds) after authentication
     declined: '4000 0000 0000 0002', // card_declined
     insufficientFunds: '4000 0000 0000 9995',
     expired: '4000 0000 0000 0069',
@@ -152,6 +153,9 @@ export class StripeConnectPage {
         saveCardCheckbox: '#wc-dokan-stripe-connect-new-payment-method',
         expressWrap: '.dokan-stripe-pe-express-wrap',
         expressMount: '#dokan-stripe-connect-express-checkout',
+        // Block checkout uses a React wrapper (no classic .is-ready/.is-empty); the
+        // Express Checkout Element (Stripe Link / wallet buttons) mounts inside it.
+        expressBlockWrap: '.dokan-stripe-pe-express-block',
         error: 'ul.dokan-stripe-pe-error, .woocommerce-error, .wc-block-components-notice-banner.is-error',
         placeOrderClassic: '#place_order',
         // Block place-order button (text node lives in a child span).
@@ -444,6 +448,21 @@ export class StripeConnectPage {
         });
     }
 
+    /**
+     * Click the vendor dashboard "Disconnect" button. Its href is the deauthorize URL
+     * carrying the `dokan-stripe-vendor-deauthorize` nonce; navigating it runs
+     * RegisterWithdrawMethods::deauthorize_vendor() on template_redirect, which attempts
+     * the Stripe OAuth deauthorize and then UNCONDITIONALLY clears the local meta
+     * (`_stripe_connect_access_key` + `dokan_connected_vendor_id`) and redirects back.
+     */
+    async disconnectVendorViaDashboard(): Promise<void> {
+        await this.gotoVendorStripeManage();
+        const disconnect = this.page.locator(this.vendor.disconnectButton);
+        await expect(disconnect, 'connected vendor should see Disconnect before disconnecting').toBeVisible({ timeout: 20_000 });
+        await disconnect.click();
+        await this.page.waitForLoadState('domcontentloaded');
+    }
+
     // ============================================
     // CARD ENTRY (Stripe Payment Element iframe) — for upcoming checkout specs
     // ============================================
@@ -698,6 +717,26 @@ export class StripeConnectPage {
         await this.page.goto(this.checkout.blockUrl);
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.locator(this.blockSelectors.placeOrder).waitFor({ state: 'visible', timeout: 30_000 });
+    }
+
+    /**
+     * Fill the WC block checkout CONTACT + SHIPPING address as a GUEST (no saved address).
+     * Field ids are the stable WC-Blocks ids (#email, #shipping-*). State options populate after
+     * the country is set, so set country first. WC Blocks debounces an update_checkout after address
+     * edits, so settle before the gateway/PE step.
+     */
+    async fillBlockGuestDetails(d: { email: string; firstName: string; lastName: string; address: string; city: string; state: string; postcode: string; country: string }): Promise<void> {
+        const p = this.page;
+        await p.locator('#email').fill(d.email);
+        await p.locator('#shipping-country').selectOption(d.country);
+        await p.locator('#shipping-first_name').fill(d.firstName);
+        await p.locator('#shipping-last_name').fill(d.lastName);
+        await p.locator('#shipping-address_1').fill(d.address);
+        await p.locator('#shipping-city').fill(d.city);
+        await p.locator('#shipping-state').selectOption(d.state).catch(() => undefined); // not all countries have states
+        await p.locator('#shipping-postcode').fill(d.postcode);
+        await p.waitForLoadState('networkidle').catch(() => undefined);
+        await p.waitForTimeout(1_500); // let the debounced totals/shipping recompute settle
     }
 
     /** Select the Stripe Connect block payment method and wait for the PE to mount. */

@@ -818,13 +818,15 @@ test.describe.serial('Stripe Connect — refunds (transfer reversal)', () => {
     test('multi-vendor: refunding one sub-order reverses only that vendor transfer', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         test.skip(!hasCredentials, 'Stripe Connect test keys missing');
         test.skip(!HAS_REAL_CONNECTED_ACCOUNTS, 'needs REAL Stripe test connected accounts');
-        // SKIPPED — known product bug R10 (full write-up + repro steps in the private QA
-        // notes: dokan-pro/tests/stripe-connect/bugs-found.md). Refunding a multi-vendor
-        // sub-order via the Dokan refund flow intermittently throws a 500 PHP fatal in the
-        // Stripe Connect Refund processor, so the outcome can't be stably asserted. The body
-        // below asserts the CORRECT behaviour (only the refunded vendor's transfer reverses);
-        // delete this one line to re-enable once the product bug is fixed.
-        test.fixme(true, 'R10: multi-vendor sub-order refund intermittently 500s (PHP fatal) — see bugs-found.md');
+        // EXPECTED-FAIL guard — known product bug R10 (full write-up + repro steps in the private QA
+        // notes: dokan-pro/tests/stripe-connect/bugs-found.md). Refunding a multi-vendor sub-order via the
+        // Dokan refund flow throws a 500 PHP fatal in the Stripe Connect Refund processor. The body below
+        // asserts the CORRECT behaviour (only the refunded vendor's transfer reverses); test.fail() RUNS it
+        // as an expected failure so the money lane exercises the path and pins the fatal (reports PASS while
+        // present, FLIPS to failure once fixed → delete this line). NOTE: the fatal has been observed to be
+        // intermittent, so on a run where it does not reproduce this reports an "unexpected pass" — that is
+        // itself signal. Double-gated above (needs keys + real connected accounts), so only the money lane runs it.
+        test.fail(true, 'R10: multi-vendor sub-order refund 500s (PHP fatal at Refund.php:307) — see bugs-found.md');
 
         // 1) One order spanning both connected vendors → parent + 2 sub-orders, 1 transfer each.
         let parentOrderId: string | undefined;

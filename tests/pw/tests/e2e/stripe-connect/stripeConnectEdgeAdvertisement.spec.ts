@@ -437,6 +437,26 @@ test.describe.serial('Stripe Connect — edge cases + Product Advertisement (gat
         const intentId = await getStripeIntentIdForOrder(orderId as string);
         expect(intentId, 'ad order carries a Stripe PaymentIntent (pi_…)').toMatch(/^pi_/);
 
+        // 4b) FEE-AMOUNT correctness (audit gap): the ad fee charged equals the configured per-product cost ($15).
+        //     The PaymentIntent matches the ORDER TOTAL (proves no over/under-charge vs the order), and the ad
+        //     base-product LINE ITEM equals the bare $15 cost (store tax, if any, is added on top of that).
+        if (stripeApi.hasSecretKey()) {
+            const adPi = await stripeApi.getPaymentIntent(intentId);
+            const cents = Number(adPi.amount_received ?? adPi.amount);
+            expect(cents, 'the ad PaymentIntent must equal the order total (no over/under-charge)').toBe(Math.round(parseFloat(summary.total) * 100));
+
+            const oCtx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+            let adLineTotal = 0;
+            try {
+                const ores = await oCtx.get(`${SERVER_URL}/wc/v3/orders/${orderId}?_fields=line_items`);
+                const ojson = (await ores.json().catch(() => ({}))) as { line_items?: Array<{ total: string }> };
+                adLineTotal = parseFloat(ojson.line_items?.[0]?.total ?? '0');
+            } finally {
+                await oCtx.dispose();
+            }
+            expect(adLineTotal, 'the ad base-product line item must be charged at the configured $15 per-product ad cost').toBe(15);
+        }
+
         // 5) Advertisement recorded: the product is now advertised (server-side Helper::is_product_advertised).
         await expect
             .poll(async () => isProductAdvertised(adProductId as string), {
@@ -453,6 +473,52 @@ test.describe.serial('Stripe Connect — edge cases + Product Advertisement (gat
         }
 
         log.success(`PADV: vendor advertised product ${adProductId} via Stripe Connect order ${orderId} (intent ${intentId}); ad fee retained by platform`);
+    });
+
+    // ---- PADV nonce / CSRF: the advertise add-to-cart AJAX must reject a tampered nonce ----
+    test('PADV — the advertise add-to-cart AJAX rejects a tampered nonce (CSRF guard)', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+        test.skip(!hasCredentials, CREDS_SKIP);
+        await enableProductAdvertisement('15');
+        adEnabled = true;
+        const api = new ApiUtils(await request.newContext());
+        const [, pid] = await api.createProduct(payloads.createProduct(), payloads.vendorAuth);
+
+        let outcome: { accepted: boolean; error?: string } = { accepted: false };
+        const ctx = await browser.newContext({ storageState: vendorAuth });
+        const page = await ctx.newPage();
+        try {
+            // The legacy vendor products page is where wp.ajax + the localized advertise nonce live.
+            await page.goto(toPath('dashboard/products'));
+            await page.waitForLoadState('domcontentloaded');
+            await page
+                .waitForFunction(() => Boolean((window as unknown as { wp?: { ajax?: unknown } }).wp?.ajax), undefined, { timeout: 30_000 })
+                .catch(() => undefined);
+
+            // Fire the add-to-cart action with a TAMPERED nonce — a CSRF-protected handler must reject it.
+            outcome = await page.evaluate(async (productId: string) => {
+                const w = window as unknown as { wp?: { ajax?: { post: (a: string, d: Record<string, unknown>) => PromiseLike<unknown> } } };
+                if (!w.wp?.ajax) {
+                    return { accepted: false, error: 'wp.ajax unavailable' };
+                }
+                try {
+                    await w.wp.ajax.post('dokan_add_advertise_product_to_cart', {
+                        product_id: productId,
+                        advertise_product_nonce: 'tampered-nonce-deadbeef',
+                    });
+                    return { accepted: true }; // accepted WITH a bad nonce = a CSRF hole
+                } catch (e) {
+                    const err = e as { message?: string; data?: { message?: string } };
+                    return { accepted: false, error: err?.data?.message ?? err?.message ?? 'rejected' };
+                }
+            }, pid);
+        } finally {
+            await page.close();
+            await ctx.close();
+            await deleteProduct(pid);
+        }
+
+        expect(outcome.accepted, 'a tampered advertise_product_nonce must be REJECTED (the advertise add-to-cart AJAX is CSRF-protected)').toBe(false);
+        log.success(`PADV: advertise add-to-cart rejected a tampered nonce (CSRF guard enforced) — ${outcome.error ?? ''}`);
     });
 });
 

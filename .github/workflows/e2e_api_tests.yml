@@ -72,6 +72,11 @@ env:
     TEST_CLIENT_ID_STRIPE_CONNECT: ${{secrets.TEST_CLIENT_ID_STRIPE_CONNECT}}
     STRIPE_VENDOR1_ACCT: ${{secrets.STRIPE_VENDOR1_ACCT}}
     STRIPE_VENDOR2_ACCT: ${{secrets.STRIPE_VENDOR2_ACCT}}
+    # True only when the Stripe Connect secrets are expected (internal pushes/PRs); false on
+    # fork PRs where GitHub withholds secrets. The Stripe Connect pre-flight spec hard-fails
+    # the run when this is true but the secrets are missing (so a misconfiguration can't pass
+    # as a green-but-all-skipped run), and stays soft otherwise so fork PRs remain green.
+    STRIPE_CONNECT_REQUIRED: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
     BASE_URL: http://localhost:9999
     CI: true
     HEADLESS: true

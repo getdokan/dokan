@@ -5,6 +5,7 @@ import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 import { data } from '@utils/testData';
 import { helpers, parseBoolean } from '@utils/helpers';
+import { ensureStripeConnectConfigured } from './stripe-connect/helpers';
 
 const { DOKAN_PRO } = process.env;
 const isPro = parseBoolean(DOKAN_PRO);
@@ -69,12 +70,21 @@ setup.describe('setup woocommerce settings', () => {
         await apiUtils.updatePaymentGateway('cod', payloads.cod);
 
         // if (DOKAN_PRO) {
-        // await apiUtils.updatePaymentGateway('dokan-stripe-connect', payloads.stripeConnect);
         // await apiUtils.updatePaymentGateway('dokan_paypal_marketplace', payloads.payPal);
         // await apiUtils.updatePaymentGateway('dokan_mangopay', payloads.mangoPay);
         // await apiUtils.updatePaymentGateway('dokan_razorpay', payloads.razorpay);
         // await apiUtils.updatePaymentGateway('dokan_stripe_express', payloads.stripeExpress);
         // }
+    });
+
+    // Configure Stripe Connect ONCE PER SHARD so every shard's fresh wp-env has the gateway
+    // ready (module active + gateway settings from the env test keys + withdraw method). The
+    // gateway config previously lived only in stripeConnect.spec.ts's pre-setup describe, so any
+    // CI shard not running that file had an unconfigured gateway and every other Stripe spec
+    // failed. @pro → runs only in the Pro lane; a no-op without keys (the @pro Stripe specs
+    // self-skip there) and graceful when Dokan Pro is absent.
+    setup('configure Stripe Connect gateway', { tag: ['@pro'] }, async () => {
+        await ensureStripeConnectConfigured();
     });
 
     setup('add categories', { tag: ['@lite'] }, async () => {

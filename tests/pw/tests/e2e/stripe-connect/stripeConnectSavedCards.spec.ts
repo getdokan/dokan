@@ -87,7 +87,13 @@ test.describe.serial('Stripe Connect — saved cards (my-account payment methods
     // F-block-save (GATEWAY BUG, documented — not executed): block-checkout "save card" stores a token whose
     // Stripe PaymentMethod is NEVER attached (PI setup_future_usage=null → post-confirm attach rejected → swallowed,
     // token saved anyway). modules/stripe/includes/Processors/IntentProcessor.php:374-394. See bugs-found.md.
-    test.fixme('F-block-save (gateway bug): saving a card at block checkout should ATTACH the pm on Stripe', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
+    test('F-block-save (gateway bug): saving a card at block checkout should ATTACH the pm on Stripe — expected-fail guard', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
+        test.skip(!hasCredentials, 'Stripe Connect test keys missing — set TEST_*_STRIPE_CONNECT in tests/pw/.env');
+        // CONFIRMED bug (IntentProcessor.php:374-394): block-checkout "save card" writes the WC token but its Stripe
+        // pm is NEVER attached (block PI has setup_future_usage=null → post-confirm attach is rejected + swallowed),
+        // so the saved card is unusable off-session. The assertion below asserts the CORRECT behaviour (pm attached);
+        // test.fail() runs it as an EXPECTED FAILURE so CI executes the save path and pins the bug. Assertion NOT weakened.
+        test.fail(true, 'Block-save no-attach: token saved but Stripe pm never attached (setup_future_usage=null) — see bugs-found.md');
         const ctx: BrowserContext = await browser.newContext({ storageState: customerAuth });
         const page: Page = await ctx.newPage();
         try {

@@ -275,3 +275,165 @@ add_action(
 		);
 	}
 );
+
+add_action(
+	'rest_api_init',
+	function () {
+		// Idempotently configure Stripe Connect on THIS site: activate the stripe + product_subscription modules
+		// (deactivate stripe_express), write the gateway settings from the posted test keys, and enable the
+		// dokan-stripe-connect withdraw method. CI shards each run on their own fresh wp-env, and the gateway
+		// config previously lived only in stripeConnect.spec.ts's pre-setup describe — so any shard that did NOT
+		// run that file had an unconfigured gateway and every other Stripe spec failed. The e2e setup project calls
+		// this once per shard so every shard is self-sufficient. Returns the resulting readiness flags.
+		register_rest_route(
+			'dokan-test/v1',
+			'/configure-stripe-connect',
+			[
+				'methods'             => 'POST',
+				'permission_callback' => function () {
+					return current_user_can( 'manage_woocommerce' );
+				},
+				'callback'            => function ( WP_REST_Request $request ) {
+					$result = [ 'ok' => true ];
+
+					// 1) Modules — activate Stripe Connect + Vendor Subscription, deactivate Stripe Express.
+					if ( function_exists( 'dokan_pro' ) && ! empty( dokan_pro()->module ) ) {
+						dokan_pro()->module->activate_modules( [ 'stripe', 'product_subscription' ], true );
+						if ( method_exists( dokan_pro()->module, 'deactivate_modules' ) ) {
+							dokan_pro()->module->deactivate_modules( [ 'stripe_express' ] );
+						}
+						$result['stripe_active'] = dokan_pro()->module->is_active( 'stripe' );
+					} else {
+						// Dokan Pro absent (e.g. a lite run) — nothing to configure; report gracefully.
+						return rest_ensure_response( [ 'ok' => true, 'skipped' => 'dokan_pro_absent' ] );
+					}
+
+					// 2) Gateway settings — MERGE into the existing option so title/description survive.
+					$pub = (string) $request->get_param( 'publishable' );
+					$sec = (string) $request->get_param( 'secret' );
+					$cid = (string) $request->get_param( 'client_id' );
+					if ( '' !== $pub && '' !== $sec ) {
+						$settings = get_option( 'woocommerce_dokan-stripe-connect_settings', [] );
+						if ( ! is_array( $settings ) ) {
+							$settings = [];
+						}
+						$settings = array_merge(
+							$settings,
+							[
+								'enabled'              => 'yes',
+								'testmode'             => 'yes',
+								'test_publishable_key' => $pub,
+								'test_secret_key'      => $sec,
+								'test_client_id'       => $cid,
+								'saved_cards'          => 'yes',
+							]
+						);
+						update_option( 'woocommerce_dokan-stripe-connect_settings', $settings );
+						$result['gateway_configured'] = true;
+						$result['ready']              = ( '' !== $cid ); // ready (withdraw + vendor connect) needs a client id
+					}
+
+					// 3) Withdraw method — enable dokan-stripe-connect (surfaces the vendor connect UI when ready).
+					$wd = get_option( 'dokan_withdraw', [] );
+					if ( ! is_array( $wd ) ) {
+						$wd = [];
+					}
+					if ( empty( $wd['withdraw_methods'] ) || ! is_array( $wd['withdraw_methods'] ) ) {
+						$wd['withdraw_methods'] = [];
+					}
+					$wd['withdraw_methods']['dokan-stripe-connect'] = 'dokan-stripe-connect';
+					update_option( 'dokan_withdraw', $wd );
+					$result['withdraw_method_enabled'] = true;
+
+					// 4) Optional: set the gateway DESCRIPTION (used by the stored-XSS test to inject + restore a payload).
+					$desc = $request->get_param( 'description' );
+					if ( null !== $desc ) {
+						$s = get_option( 'woocommerce_dokan-stripe-connect_settings', [] );
+						if ( ! is_array( $s ) ) {
+							$s = [];
+						}
+						$s['description'] = (string) $desc;
+						update_option( 'woocommerce_dokan-stripe-connect_settings', $s );
+						$result['description_set'] = true;
+					}
+
+					return rest_ensure_response( $result );
+				},
+			]
+		);
+	}
+);
+
+add_action(
+	'rest_api_init',
+	function () {
+		// Inject a Stripe webhook event DIRECTLY into the gateway's event factory + handler, bypassing the live
+		// ?wc-api=dokan_stripe endpoint's Event::retrieve() re-fetch (which would require the event to already
+		// exist in Stripe). This lets the e2e suite drive dispute / subscription-lifecycle / payout / out-of-order
+		// events with a synthetic-but-well-formed object and FULL control. Returns whether handle() threw (and
+		// whether it was a PHP \Error = an uncatchable-in-prod fatal) so a spec can pin a handler that crashes on a
+		// valid event. The faithful path (a REAL event id, posted unsigned — exploiting the missing signature
+		// check R2) is helpers.ts postWebhookEvent(); the optional Stripe-CLI path is documented in the spec.
+		register_rest_route(
+			'dokan-test/v1',
+			'/stripe-webhook',
+			[
+				'methods'             => 'POST',
+				'permission_callback' => function () {
+					return current_user_can( 'manage_woocommerce' );
+				},
+				'callback'            => function ( WP_REST_Request $request ) {
+					if ( ! class_exists( '\WeDevs\DokanPro\Modules\Stripe\DokanStripe' ) || ! class_exists( '\Stripe\Event' ) ) {
+						return new WP_Error( 'dokan_test_no_stripe', 'Stripe Connect module / SDK not loaded', [ 'status' => 500 ] );
+					}
+
+					$type        = $request->get_param( 'type' );
+					$data_object = $request->get_param( 'data_object' );
+					$account     = $request->get_param( 'account' );
+
+					if ( empty( $type ) || ! is_array( $data_object ) ) {
+						return new WP_Error( 'dokan_test_bad_payload', 'type (string) and data_object (object) are required', [ 'status' => 400 ] );
+					}
+
+					// Set the platform secret key so Charge/Invoice/Subscription retrieves inside the handler resolve.
+					if ( class_exists( '\WeDevs\DokanPro\Modules\Stripe\Helper' ) ) {
+						\Stripe\Stripe::setApiKey( \WeDevs\DokanPro\Modules\Stripe\Helper::get_secret_key() );
+					}
+
+					$event = \Stripe\Event::constructFrom(
+						[
+							'id'      => 'evt_e2e_' . wp_generate_password( 16, false ),
+							'type'    => $type,
+							'data'    => [ 'object' => $data_object ],
+							'account' => $account ? $account : null,
+						]
+					);
+
+					$threw = false;
+					$fatal = false;
+					$error = null;
+					try {
+						$handler = \WeDevs\DokanPro\Modules\Stripe\DokanStripe::events()->get( $event );
+						if ( $handler ) {
+							$handler->handle();
+						}
+					} catch ( \Throwable $e ) {
+						$threw = true;
+						$fatal = $e instanceof \Error; // \Error = method-on-null etc. = an uncatchable-in-prod PHP fatal
+						$error = $e->getMessage();
+					}
+
+					return rest_ensure_response(
+						[
+							'ok'    => true,
+							'type'  => $type,
+							'threw' => $threw,
+							'fatal' => $fatal,
+							'error' => $error,
+						]
+					);
+				},
+			]
+		);
+	}
+);

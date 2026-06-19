@@ -137,6 +137,82 @@ export async function postWebhookEvent(event: { id: string; type: string; accoun
     }
 }
 
+/**
+ * Idempotently configure Stripe Connect on the current site via the test mu-plugin
+ * (`dokan-test/v1/configure-stripe-connect`): activate the stripe + product_subscription
+ * modules, write the gateway settings from the env test keys, and enable the withdraw method.
+ *
+ * WHY: each CI shard runs on its own fresh wp-env, but the gateway config used to live ONLY
+ * in stripeConnect.spec.ts's pre-setup describe — so any shard not running that file had an
+ * unconfigured gateway and every other Stripe spec failed. Calling this once per shard (from
+ * the e2e setup project) makes every shard self-sufficient. No-op without keys (the specs
+ * self-skip there) and the mu-plugin returns gracefully when Dokan Pro is absent (lite runs).
+ */
+export async function ensureStripeConnectConfigured(): Promise<void> {
+    if (!hasCredentials) {
+        return; // no keys → the @pro Stripe specs self-skip; nothing to configure
+    }
+    const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+    try {
+        const res = await ctx.post(`${SERVER_URL}/dokan-test/v1/configure-stripe-connect`, {
+            data: {
+                publishable: STRIPE_CONNECT_KEYS.publishable,
+                secret: STRIPE_CONNECT_KEYS.secret,
+                client_id: STRIPE_CONNECT_KEYS.clientId,
+            },
+        });
+        if (!res.ok()) {
+            throw new Error(`configure-stripe-connect failed (${res.status()}): ${(await res.text()).slice(0, 300)}`);
+        }
+    } finally {
+        await ctx.dispose();
+    }
+}
+
+/** Set the Stripe Connect gateway DESCRIPTION via the test mu-plugin (used by the stored-XSS test). */
+export async function setGatewayDescription(description: string): Promise<void> {
+    const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+    try {
+        const res = await ctx.post(`${SERVER_URL}/dokan-test/v1/configure-stripe-connect`, { data: { description } });
+        if (!res.ok()) {
+            throw new Error(`set gateway description failed (${res.status()}): ${(await res.text()).slice(0, 200)}`);
+        }
+    } finally {
+        await ctx.dispose();
+    }
+}
+
+export interface WebhookInjectResult {
+    ok: boolean;
+    type: string;
+    threw: boolean;
+    fatal: boolean;
+    error: string | null;
+}
+
+/**
+ * Inject a Stripe webhook event DIRECTLY into the gateway's EventFactory + handler via the test
+ * mu-plugin (`dokan-test/v1/stripe-webhook`), bypassing the live endpoint's `Event::retrieve()`
+ * re-fetch — so the event need not exist in Stripe. Returns whether the handler threw (and whether
+ * it was a PHP \Error = an uncatchable-in-prod fatal). Use to drive dispute / subscription-lifecycle
+ * / payout / out-of-order events the suite cannot get Stripe to deliver to localhost. The faithful
+ * alternative (a REAL event id posted unsigned, exploiting the missing signature check R2) is
+ * `postWebhookEvent` above.
+ */
+export async function injectStripeWebhook(payload: { type: string; data_object: Record<string, unknown>; account?: string }): Promise<WebhookInjectResult> {
+    const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+    try {
+        const res = await ctx.post(`${SERVER_URL}/dokan-test/v1/stripe-webhook`, { data: payload });
+        const body = (await res.json().catch(() => ({}))) as WebhookInjectResult;
+        if (!res.ok()) {
+            throw new Error(`stripe-webhook injection failed (${res.status()}): ${JSON.stringify(body)}`);
+        }
+        return body;
+    } finally {
+        await ctx.dispose();
+    }
+}
+
 /** Give the customer a saved billing+shipping address so the block checkout pre-fills. */
 export async function ensureCustomerAddress(): Promise<void> {
     const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
@@ -251,6 +327,43 @@ export async function buyPackExpectReceived(browser: Browser, packId: string, ca
     } finally {
         await page.close();
         await ctx.close();
+    }
+}
+
+/** Read a WC order's current status (admin auth). Returns 'none' when the order is absent. */
+export async function getOrderStatus(orderId: string | number): Promise<string> {
+    const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+    try {
+        const res = await ctx.get(`${SERVER_URL}/wc/v3/orders/${orderId}?_fields=status`);
+        const body = (await res.json().catch(() => ({}))) as { status?: string };
+        return body.status ?? 'none';
+    } finally {
+        await ctx.dispose();
+    }
+}
+
+/** Read a WC order's note strings (admin auth), newest first. */
+export async function getOrderNotes(orderId: string | number): Promise<string[]> {
+    const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+    try {
+        const res = await ctx.get(`${SERVER_URL}/wc/v3/orders/${orderId}/notes?_fields=note&per_page=50`);
+        const notes = (await res.json().catch(() => [])) as Array<{ note: string }>;
+        return Array.isArray(notes) ? notes.map(n => n.note) : [];
+    } finally {
+        await ctx.dispose();
+    }
+}
+
+/** Set/overwrite order meta (admin auth). Pass value '' to clear a key. */
+export async function setOrderMeta(orderId: string | number, meta: Array<{ key: string; value: string }>): Promise<void> {
+    const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+    try {
+        const res = await ctx.put(`${SERVER_URL}/wc/v3/orders/${orderId}`, { data: { meta_data: meta } });
+        if (!res.ok()) {
+            throw new Error(`setOrderMeta failed (${res.status()}): ${(await res.text()).slice(0, 200)}`);
+        }
+    } finally {
+        await ctx.dispose();
     }
 }
 
