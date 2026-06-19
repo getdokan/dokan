@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\DependencyManagement\Providers;
 
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
+use WeDevs\Dokan\Intelligence\Abilities\Registrar;
 use WeDevs\Dokan\Intelligence\Assets;
 use WeDevs\Dokan\Intelligence\Admin\Settings;
 use WeDevs\Dokan\Intelligence\Manager;
@@ -31,6 +32,7 @@ class IntelligenceServiceProvider extends BaseServiceProvider {
         Assets::class,
         Manager::class,
         Settings::class,
+        Registrar::class,
         OpenAI::class,
         Gemini::class,
         GeminiTwoDotFiveFlash::class,
