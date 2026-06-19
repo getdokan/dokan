@@ -17,6 +17,11 @@ const ThemeContext = createContext< {
 export const pluginUITokens = {
     primary: 'var(--dokan-button-background-color, #7047EB)',
     primaryForeground: 'var(--dokan-button-text-color, #ffffff)',
+    // Success (green) tokens for positive DataViews confirm actions
+    // (Approve/Activate/Restore/Publish). Plugin UI's default theme ships
+    // a destructive token but no success token, so define it here.
+    success: 'var(--dokan-success-color, #16A34A)',
+    successForeground: 'var(--dokan-success-text-color, #ffffff)',
 };
 
 // Create a ThemeProvider component
