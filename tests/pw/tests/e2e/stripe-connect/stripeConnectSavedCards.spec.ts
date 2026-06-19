@@ -136,8 +136,16 @@ test.describe.serial('Stripe Connect — saved cards (my-account payment methods
         expect(pmToken.brand.toLowerCase(), 'stored token brand is Visa').toBe('visa');
         savedPmId = pmToken.token;
         const custId = await getStripeCustomerId();
-        const pms = await stripeApi.listCustomerPaymentMethods(custId, 'card');
-        const pm = pms.find(p => p.id === savedPmId);
+        // The SetupIntent attaches the pm to the customer ASYNCHRONOUSLY; on a cold CI runner the attach
+        // can lag the redirect back to /payment-methods/, so poll the customer's pms until it appears.
+        const findPm = async () => (await stripeApi.listCustomerPaymentMethods(custId, 'card')).find(p => p.id === savedPmId);
+        await expect
+            .poll(async () => Boolean(await findPm()), {
+                message: 'the stored pm should attach to the Stripe customer (SetupIntent path)',
+                timeout: 25_000,
+            })
+            .toBe(true);
+        const pm = await findPm();
         expect(pm, 'the stored pm should be attached to the Stripe customer (SetupIntent path)').toBeTruthy();
         expect(pm.card?.last4, 'attached pm card.last4').toBe('4242');
         expect(pm.customer, 'attached pm is owned by the customer').toBe(custId);

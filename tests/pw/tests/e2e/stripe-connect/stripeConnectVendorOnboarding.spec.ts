@@ -2,7 +2,7 @@ import { test, expect } from '@utils/test';
 import { log } from '@utils/logger';
 import { dbUtils } from '@utils/dbUtils';
 import { StripeConnectPage, STRIPE_CONNECTED_ACCOUNTS } from './stripeConnectPage';
-import { vendorAuth, VENDOR_ID, isReadyCapable } from './helpers';
+import { vendorAuth, VENDOR_ID, isReadyCapable, hasCredentials, ensureStripeConnectConfigured } from './helpers';
 
 /**
  * Suite B — vendor onboarding / offboarding for Stripe Connect.
@@ -18,7 +18,16 @@ import { vendorAuth, VENDOR_ID, isReadyCapable } from './helpers';
  * Stripe-hosted and not automatable); the DISCONNECT path itself is fully exercised in-browser.
  */
 test.describe.serial('Stripe Connect — Suite B (vendor onboarding/offboarding)', () => {
-    test.describe.configure({ timeout: 90_000 });
+    test.describe.configure({ timeout: 120_000 });
+
+    test.beforeAll(async () => {
+        // Guarantee the gateway is READY + the withdraw method is enabled in THIS shard so the vendor
+        // connect/disconnect UI renders (the per-shard _env.setup config also does this; re-asserting here
+        // makes B2 independent of setup ordering on a fresh CI shard).
+        if (hasCredentials) {
+            await ensureStripeConnectConfigured();
+        }
+    });
 
     test.afterAll(async () => {
         // Restore the unconnected state for re-runs / other specs on the same worker.

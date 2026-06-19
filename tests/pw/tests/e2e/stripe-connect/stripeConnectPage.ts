@@ -370,9 +370,20 @@ export class StripeConnectPage {
 
     /** Open the Stripe Connect manage page directly (robust, state-independent). */
     async gotoVendorStripeManage(): Promise<void> {
-        await this.page.goto(this.vendor.stripeManageUrl);
-        await this.page.waitForLoadState('domcontentloaded');
-        await this.page.locator(this.vendor.container).waitFor({ state: 'visible', timeout: 20_000 });
+        const container = this.page.locator(this.vendor.container);
+        // Cold CI: the React vendor dashboard can render the manage route late (or need a reload) before
+        // the Stripe Connect container mounts — retry the navigation a few times before failing.
+        for (let attempt = 0; attempt < 3; attempt++) {
+            await this.page.goto(this.vendor.stripeManageUrl);
+            await this.page.waitForLoadState('domcontentloaded');
+            try {
+                await container.waitFor({ state: 'visible', timeout: 20_000 });
+                return;
+            } catch {
+                await this.page.waitForTimeout(2_000); // SPA still hydrating — reload and retry
+            }
+        }
+        await container.waitFor({ state: 'visible', timeout: 20_000 });
     }
 
     /**
