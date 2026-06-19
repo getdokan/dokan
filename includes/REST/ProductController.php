@@ -489,7 +489,7 @@ class ProductController extends DokanRESTController {
      * Get_single_product_permissions_check
      *
      * @since 2.8.0
-     * @since DOKAN_SINCE Added check for dokan_is_product_author()
+     * @since 5.0.5 Added check for dokan_is_product_author()
      *
      * @return bool
      */
