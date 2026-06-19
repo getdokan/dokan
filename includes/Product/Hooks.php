@@ -129,12 +129,13 @@ class Hooks {
             }
 
             $output .= '<li>';
-            $output .= '<a href="' . get_post_permalink( $result->ID ) . '">';
+            // Escape every vendor-controlled value below before it is injected into the AJAX search markup.
+            $output .= '<a href="' . esc_url( get_post_permalink( $result->ID ) ) . '">';
             $output .= '<div class="dokan-ls-product-image">';
             $output .= '<img src="' . $get_product_image . '">';
             $output .= '</div>';
             $output .= '<div class="dokan-ls-product-data">';
-            $output .= '<h3>' . $get_name . '</h3>';
+            $output .= '<h3>' . esc_html( $get_name ) . '</h3>';
 
             if ( ! empty( $price ) ) {
                 $output .= '<div class="product-price">';
@@ -150,15 +151,15 @@ class Hooks {
                 foreach ( $categories as $category ) {
                     if ( $category->parent ) {
                         $parent = get_term_by( 'id', $category->parent, 'product_cat' );
-                        $output .= '<span>' . $parent->name . '</span>';
+                        $output .= '<span>' . esc_html( $parent->name ) . '</span>';
                     }
-                    $output .= '<span>' . $category->name . '</span>';
+                    $output .= '<span>' . esc_html( $category->name ) . '</span>';
                 }
                 $output .= '</div>';
             }
 
             if ( ! empty( $sku ) ) {
-                $output .= '<div class="dokan-ls-product-sku">' . esc_html__( 'SKU:', 'dokan-lite' ) . ' ' . $sku . '</div>';
+                $output .= '<div class="dokan-ls-product-sku">' . esc_html__( 'SKU:', 'dokan-lite' ) . ' ' . esc_html( $sku ) . '</div>';
             }
 
             $output .= '</div>';

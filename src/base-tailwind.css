@@ -3,6 +3,7 @@
 
 /* import other libraries' CSS here, if needed */
 @import "@getdokan/dokan-ui/dist/dokan-ui.css";
+@import "../node_modules/@wedevs/plugin-ui/src/components/wordpress/style.css";
 
 @source "../src/";
 @source "../node_modules/@wedevs/plugin-ui/dist";
@@ -213,17 +214,7 @@
     -webkit-tap-highlight-color: transparent;
     border-color: var(--color-border) !important;
 }
-/*
- * TODO: Temporary scope for Plugin UI WordPress styles.
- * Remove this #dokan-vendor-dashboard-root wrapper after both legacy vendor
- * dashboard tables are migrated to Plugin UI DataViews and no vendor-dashboard
- * prefix compatibility is required.
- */
- #dokan-vendor-dashboard-root,
-.dokan-admin-dashboard-layout,
-.dokan-vendor-support-list-container {
-    @import "../node_modules/@wedevs/plugin-ui/src/components/wordpress/style.css";
-}
+
 
 body:has(.dokan-layout) {
     /* If .dokan-layout is present, hide the preflight styles on :root to prevent conflicts */

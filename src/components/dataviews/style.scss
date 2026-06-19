@@ -34,10 +34,6 @@
         }
     }
     .dokan-admin-dashboard-datatable {
-        // TODO: Temporary dokan-admin-dashboard-datatable-prefixed DataViews styles for admin compatibility.
-        // Remove this scoped import once both legacy dashboard tables are migrated
-        // to Plugin UI DataViews and prefix compatibility is no longer needed.
-        @import "@wordpress/dataviews/build-style/style.css";
         .dataviews-wrapper {
             height: auto;
             border-radius: 10px;
@@ -58,6 +54,12 @@
                 tr td:last-child,
                 tr th:last-child {
                     padding-right: 20px;
+                }
+
+                tbody tr td {
+                    min-height: 65px;
+                    padding-top: 14px;
+                    padding-bottom: 14px;
                 }
             }
             .components-button.is-compact.has-icon:not(.has-text) {
@@ -87,6 +89,58 @@
                         line-height: 1;
                     }
                 }
+            }
+        }
+
+        // Plugin UI wrapper rendered by the new DataViews component.
+        // Restores admin-table polish (single white card containing tabs +
+        // filters + table + pagination) that the legacy AdminDataViews
+        // wrapper used to provide.
+        .pui-root-dataviews {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 1px 3px 0px #0000001a;
+            overflow: hidden;
+
+            // Inner table wrapper: drop the duplicate card styling now that
+            // the outer wrapper carries the rounded corners + shadow.
+            .dataviews-wrapper {
+                box-shadow: none;
+                border-radius: 0;
+                background-color: transparent;
+            }
+
+            .dataviews-bulk-actions-footer__action-buttons {
+                gap: 10px;
+
+                .components-button.is-compact:not(:last-child) {
+                    border: 1px solid #e9e9e9;
+                    border-radius: 6px;
+                    line-height: 1;
+                    padding: 6px 10px;
+                }
+            }
+
+            .components-flex.components-h-stack.dataviews-pagination {
+                width: 100%;
+                justify-content: space-between;
+                padding: 15px 20px;
+            }
+
+            // Data rows: keep visual rhythm at 65px even for single-line rows.
+            table.dataviews-view-table tbody tr td {
+                min-height: 65px;
+                padding-top: 14px;
+                padding-bottom: 14px;
+            }
+
+            // Skeleton rows (rendered while isLoading): match the data row rhythm.
+            > div table tbody tr td.h-12 {
+                height: 65px;
+            }
+            > div table tbody tr td {
+                height: 65px;
+                min-height: 65px;
             }
         }
     }

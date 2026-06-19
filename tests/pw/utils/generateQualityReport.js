@@ -122,6 +122,11 @@ const suiteShape = report => {
         passRate,
         durationMs: num(report.suite_duration),
         durationFormatted: report.suite_duration_formatted || formatDuration(report.suite_duration),
+        // Shard accounting from mergeSummaryReport — a shard that died before
+        // uploading its results makes the suite incomplete, not green.
+        mergedReports: num(report.merged_reports),
+        expectedReports: num(report.expected_reports),
+        missingReports: num(report.missing_reports),
     };
 };
 
@@ -166,6 +171,15 @@ if (combinedTotal > 0) {
 }
 
 const overallFailed = totals.failed > 0;
+const missingReports = num(api?.missingReports) + num(e2e?.missingReports);
+const overallIncomplete = !overallFailed && missingReports > 0;
+const overallStatus = overallFailed ? 'failed' : overallIncomplete ? 'incomplete' : 'passed';
+const incompleteDescription = () => {
+    const parts = [];
+    if (num(api?.missingReports) > 0) parts.push(`API: ${api.mergedReports} of ${api.expectedReports} shard reports`);
+    if (num(e2e?.missingReports) > 0) parts.push(`E2E: ${e2e.mergedReports} of ${e2e.expectedReports} shard reports`);
+    return `Incomplete run — only ${parts.join(', ')} uploaded; totals under-count the suite`;
+};
 
 // ----------------------------------------------------------------------------
 // Artifacts (best-effort: list immediate subdirs under ARTIFACTS_DIR)
@@ -217,12 +231,14 @@ const placeholders = {
     DURATION: formatDuration(totals.durationMs),
     RUN_ID: runId,
 
-    STATUS_CLASS: overallFailed ? 'failed' : '',
-    STATUS_ICON: overallFailed ? '✕' : '✓',
-    STATUS_MESSAGE: overallFailed ? 'Tests failed' : 'All tests passed',
+    STATUS_CLASS: overallFailed || overallIncomplete ? 'failed' : '',
+    STATUS_ICON: overallFailed ? '✕' : overallIncomplete ? '!' : '✓',
+    STATUS_MESSAGE: overallFailed ? 'Tests failed' : overallIncomplete ? 'Incomplete run' : 'All tests passed',
     STATUS_DESCRIPTION: overallFailed
         ? `${totals.failed} failure${totals.failed === 1 ? '' : 's'} across the suite`
-        : 'Build is green and ready for review',
+        : overallIncomplete
+          ? incompleteDescription()
+          : 'Build is green and ready for review',
     PASS_RATE: fmtPct(totals.passRate),
 
     TOTAL_TESTS: fmtCount(totals.total),
@@ -233,8 +249,8 @@ const placeholders = {
     TOTAL_DURATION: formatDuration(totals.durationMs),
     TOTAL_COVERAGE: fmtPct(totalCoveragePct),
 
-    API_STATUS: api ? (api.failed > 0 ? 'Failed' : 'Passed') : 'No data',
-    API_STATUS_CLASS: api && api.failed > 0 ? 'failed' : '',
+    API_STATUS: api ? (api.failed > 0 ? 'Failed' : api.missingReports > 0 ? 'Incomplete' : 'Passed') : 'No data',
+    API_STATUS_CLASS: api && (api.failed > 0 || api.missingReports > 0) ? 'failed' : '',
     API_TOTAL: api ? fmtCount(api.total) : '—',
     API_PASSED: api ? fmtCount(api.passed) : '—',
     API_FAILED: api ? fmtCount(api.failed) : '—',
@@ -246,8 +262,8 @@ const placeholders = {
     API_PROGRESS_CLASS: api && api.failed > 0 ? 'failed' : '',
     API_TOTAL_RUN: api ? fmtCount(api.ran) : '—',
 
-    E2E_STATUS: e2e ? (e2e.failed > 0 ? 'Failed' : 'Passed') : 'No data',
-    E2E_STATUS_CLASS: e2e && e2e.failed > 0 ? 'failed' : '',
+    E2E_STATUS: e2e ? (e2e.failed > 0 ? 'Failed' : e2e.missingReports > 0 ? 'Incomplete' : 'Passed') : 'No data',
+    E2E_STATUS_CLASS: e2e && (e2e.failed > 0 || e2e.missingReports > 0) ? 'failed' : '',
     E2E_TOTAL: e2e ? fmtCount(e2e.total) : '—',
     E2E_PASSED: e2e ? fmtCount(e2e.passed) : '—',
     E2E_FAILED: e2e ? fmtCount(e2e.failed) : '—',
@@ -328,12 +344,15 @@ if (SUMMARY_FILE) {
 
     const statusBadge = overallFailed
         ? badge('✕  Tests failed', `${totals.failed} failure${totals.failed === 1 ? '' : 's'} · ${totals.passRate.toFixed(1)}% pass rate`, C.red, { labelColor: C.purplePrimary })
-        : badge('✓  All tests passed', `Build is green · ${totals.passRate.toFixed(1)}% pass rate`, C.teal, { labelColor: C.purplePrimary });
+        : overallIncomplete
+          ? badge('⚠  Incomplete run', `${missingReports} shard report${missingReports === 1 ? '' : 's'} missing · totals under-count the suite`, C.amber, { labelColor: C.purplePrimary })
+          : badge('✓  All tests passed', `Build is green · ${totals.passRate.toFixed(1)}% pass rate`, C.teal, { labelColor: C.purplePrimary });
 
     /** @param {any} s */
     const suiteStatusBadge = (s) => {
-        if (!s)            return badge('No data', '—', C.gray);
-        if (s.failed > 0)  return badge('Failed', `${s.failed} failure${s.failed === 1 ? '' : 's'}`, C.red);
+        if (!s)                    return badge('No data', '—', C.gray);
+        if (s.failed > 0)          return badge('Failed', `${s.failed} failure${s.failed === 1 ? '' : 's'}`, C.red);
+        if (s.missingReports > 0)  return badge('Incomplete', `${s.mergedReports} of ${s.expectedReports} shards reported`, C.amber);
         return badge('Passed', `${s.passRate.toFixed(1)}% pass rate`, C.green);
     };
 

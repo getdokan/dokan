@@ -10,6 +10,13 @@ import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
 import { RawHTML } from '@wordpress/element';
 
+// A select option; tree fields (e.g. categories) nest deeper options under `children`.
+type FieldOption = {
+    label: string;
+    value?: string | number;
+    children?: FieldOption[];
+};
+
 export const getFieldConfig = ( field: FormItem ) => {
     /**
      * Helper function to normalize options into an array of label/value objects.
@@ -21,18 +28,23 @@ export const getFieldConfig = ( field: FormItem ) => {
             return [];
         }
 
-        let normalizedOptions = [];
+        // Term names arrive HTML-encoded from the schema; decode the whole tree so options and chips read naturally.
+        const decodeOption = ( option: FieldOption ): FieldOption => ( {
+            ...option,
+            label: decodeEntities( option.label ),
+            ...( Array.isArray( option.children )
+                ? { children: option.children.map( decodeOption ) }
+                : {} ),
+        } );
+
         if ( Array.isArray( options ) ) {
-            normalizedOptions = [ ...options ]; // Clone to prevent mutation of the original array
-        } else {
-            normalizedOptions = Object.entries( options ).map(
-                ( [ value, label ] ) => ( {
-                    label,
-                    value,
-                } )
-            );
+            return options.map( decodeOption );
         }
-        return normalizedOptions;
+
+        return Object.entries( options ).map( ( [ value, label ] ) => ( {
+            label: decodeEntities( label ),
+            value,
+        } ) );
     };
     const mappedField = {
         ...field,

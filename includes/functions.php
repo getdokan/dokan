@@ -19,9 +19,13 @@ function dokan_admin_menu_position() {
  *
  * @since 3.0.0
  *
+ * @deprecated DOKAN_SINCE Misspelled name; use dokan_admin_menu_capability() instead.
+ *
  * @return string
  */
 function dokana_admin_menu_capability() {
+    wc_deprecated_function( 'dokana_admin_menu_capability', 'DOKAN_SINCE', 'dokan_admin_menu_capability()' );
+
     return dokan_admin_menu_capability();
 }
 

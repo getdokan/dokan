@@ -42,6 +42,7 @@ export const DokanSwitch = ( {
 export { default as DokanModal } from './modals/DokanModal';
 export { default as SortableList } from './sortable-list';
 export { default as ListEmpty } from './dataviews/ListEmpty';
+export { default as getActionLabel } from './dataviews/getActionLabel';
 
 export { default as Forbidden } from './../layout/403';
 export { default as NotFound } from './../layout/404';

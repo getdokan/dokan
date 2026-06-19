@@ -70,7 +70,7 @@
         "@typescript-eslint/parser": "^8.26.1",
         "eslint": "^9.22.0",
         "eslint-config-prettier": "^10.1.1",
-        "eslint-plugin-playwright": "^2.2.0",
+        "eslint-plugin-playwright": "^2.10.4",
         "js-yaml": "^4.1.0",
         "prettier": "^3.5.3",
         "ts-node": "^10.9.2",
@@ -79,12 +79,12 @@
     },
     "dependencies": {
         "@faker-js/faker": "^10.0.0",
-        "@playwright/test": "^1.57.0",
+        "@playwright/test": "^1.60.0",
         "@wordpress/env": "^10.20.0",
         "dotenv": "^16.4.7",
         "mysql2": "^3.13.0",
         "php-serialize": "^5.1.2",
-        "playwright": "^1.57.0",
+        "playwright": "^1.60.0",
         "zod": "^3.24.2"
     }
 }

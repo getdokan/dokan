@@ -1,586 +1,721 @@
 {
-  "generatedAt": "2026-06-02T09:36:01.072Z",
+  "generatedAt": "2026-06-09T07:29:37.635Z",
   "shards": 13,
   "specs": [
     {
       "file": "new-shipping/newShipping.spec.ts",
-      "ms": 356880,
+      "ms": 365840,
       "tests": 16
     },
     {
       "file": "abuse-reports/abuseReports.spec.ts",
-      "ms": 262897,
+      "ms": 294185,
       "tests": 42
     },
     {
       "file": "announcements/announcements.spec.ts",
-      "ms": 252774,
+      "ms": 233912,
       "tests": 25
     },
     {
       "file": "dashboard/dashboard.spec.ts",
-      "ms": 207244,
+      "ms": 196144,
       "tests": 25
     },
     {
-      "file": "orders/orders.spec.ts",
-      "ms": 182263,
-      "tests": 24
-    },
-    {
-      "file": "announcements/announcementsNewUI.spec.ts",
-      "ms": 175414,
-      "tests": 13
-    },
-    {
-      "file": "dokan-invoice/dokanInvoice.spec.ts",
-      "ms": 170981,
-      "tests": 26
-    },
-    {
-      "file": "vendor-products/addProduct.spec.ts",
-      "ms": 161980,
-      "tests": 24
-    },
-    {
-      "file": "new-product-form/newProductFormValidation.spec.ts",
-      "ms": 157434,
+      "file": "product-form-manager/newProductFormValidation.spec.ts",
+      "ms": 185278,
       "tests": 9
     },
     {
-      "file": "new-coupons/newCoupons.spec.ts",
-      "ms": 155239,
-      "tests": 14
+      "file": "orders/orders.spec.ts",
+      "ms": 181833,
+      "tests": 24
     },
     {
-      "file": "admin/admin.spec.ts",
-      "ms": 143780,
-      "tests": 17
+      "file": "vendor-products/addProduct.spec.ts",
+      "ms": 180244,
+      "tests": 24
     },
     {
-      "file": "new-withdraw/newWithdraw.spec.ts",
-      "ms": 139284,
-      "tests": 12
+      "file": "dokan-invoice/dokanInvoice.spec.ts",
+      "ms": 170732,
+      "tests": 26
     },
     {
-      "file": "new-manual-order/newManualOrder.spec.ts",
-      "ms": 134474,
+      "file": "product-form-manager/newProductForm.spec.ts",
+      "ms": 168818,
       "tests": 11
     },
     {
+      "file": "product-form-manager/productFormManagerAdmin.spec.ts",
+      "ms": 167135,
+      "tests": 46
+    },
+    {
+      "file": "announcements/announcementsNewUI.spec.ts",
+      "ms": 156472,
+      "tests": 13
+    },
+    {
+      "file": "new-manual-order/newManualOrder.spec.ts",
+      "ms": 154944,
+      "tests": 11
+    },
+    {
+      "file": "new-coupons/newCoupons.spec.ts",
+      "ms": 149992,
+      "tests": 14
+    },
+    {
+      "file": "new-withdraw/newWithdraw.spec.ts",
+      "ms": 143492,
+      "tests": 12
+    },
+    {
+      "file": "admin/adminSetupGuide.spec.ts",
+      "ms": 135920,
+      "tests": 17
+    },
+    {
+      "file": "admin/adminRefundRequests.spec.ts",
+      "ms": 135554,
+      "tests": 14
+    },
+    {
       "file": "new-products/newProducts.spec.ts",
-      "ms": 126333,
+      "ms": 124403,
+      "tests": 15
+    },
+    {
+      "file": "product-form-manager/newProductFormAdvanced.spec.ts",
+      "ms": 120839,
+      "tests": 12
+    },
+    {
+      "file": "admin/adminChangelog.spec.ts",
+      "ms": 115951,
+      "tests": 20
+    },
+    {
+      "file": "admin/adminStoreSupport.spec.ts",
+      "ms": 115213,
       "tests": 15
     },
     {
       "file": "new-orders/newOrders.spec.ts",
-      "ms": 114826,
+      "ms": 115006,
       "tests": 13
     },
     {
-      "file": "new-product-form/newProductFormAdvanced.spec.ts",
-      "ms": 112900,
-      "tests": 12
+      "file": "admin/adminExtensions.spec.ts",
+      "ms": 110479,
+      "tests": 18
     },
     {
-      "file": "new-product-form/newProductForm.spec.ts",
-      "ms": 87008,
-      "tests": 6
+      "file": "admin/adminModules.spec.ts",
+      "ms": 106214,
+      "tests": 17
+    },
+    {
+      "file": "admin/admin.spec.ts",
+      "ms": 104816,
+      "tests": 17
+    },
+    {
+      "file": "admin/adminVendorEdit.spec.ts",
+      "ms": 103529,
+      "tests": 13
+    },
+    {
+      "file": "admin/adminVendors.spec.ts",
+      "ms": 103475,
+      "tests": 14
+    },
+    {
+      "file": "admin/adminWholesaleCustomer.spec.ts",
+      "ms": 102295,
+      "tests": 14
+    },
+    {
+      "file": "admin/adminSellerBadges.spec.ts",
+      "ms": 101782,
+      "tests": 14
+    },
+    {
+      "file": "abuse-reports/abuseReportsSettings.spec.ts",
+      "ms": 101701,
+      "tests": 8
     },
     {
       "file": "abuse-reports/abuseReportsSecurity.spec.ts",
-      "ms": 85709,
+      "ms": 98766,
       "tests": 9
     },
     {
+      "file": "admin/adminDummyData.spec.ts",
+      "ms": 97424,
+      "tests": 17
+    },
+    {
+      "file": "admin/adminVendorCreate.spec.ts",
+      "ms": 97172,
+      "tests": 14
+    },
+    {
+      "file": "admin/adminVendorSingle.spec.ts",
+      "ms": 94708,
+      "tests": 14
+    },
+    {
+      "file": "admin/adminReverseWithdrawal.spec.ts",
+      "ms": 94005,
+      "tests": 15
+    },
+    {
+      "file": "admin/adminAnnouncements.spec.ts",
+      "ms": 93087,
+      "tests": 13
+    },
+    {
+      "file": "admin/adminProductQa.spec.ts",
+      "ms": 90910,
+      "tests": 15
+    },
+    {
+      "file": "admin/adminWithdraw.spec.ts",
+      "ms": 89302,
+      "tests": 15
+    },
+    {
+      "file": "admin/adminProductAdvertising.spec.ts",
+      "ms": 86385,
+      "tests": 14
+    },
+    {
+      "file": "admin/adminRequestForQuote.spec.ts",
+      "ms": 86204,
+      "tests": 14
+    },
+    {
+      "file": "admin/adminStoreReviews.spec.ts",
+      "ms": 85408,
+      "tests": 13
+    },
+    {
+      "file": "admin/adminTools.spec.ts",
+      "ms": 83430,
+      "tests": 16
+    },
+    {
+      "file": "admin/adminDashboardHome.spec.ts",
+      "ms": 83364,
+      "tests": 14
+    },
+    {
       "file": "new-reverse-withdraw/newReverseWithdraw.spec.ts",
-      "ms": 79699,
+      "ms": 82566,
       "tests": 13
     },
     {
       "file": "new-seller-badge/newSellerBadge.spec.ts",
-      "ms": 79428,
+      "ms": 78593,
       "tests": 8
-    },
-    {
-      "file": "abuse-reports/abuseReportsSettings.spec.ts",
-      "ms": 75108,
-      "tests": 8
-    },
-    {
-      "file": "customer/customer.spec.ts",
-      "ms": 74173,
-      "tests": 11
-    },
-    {
-      "file": "abuse-reports/abuseReportsCustomerForm.spec.ts",
-      "ms": 70224,
-      "tests": 11
-    },
-    {
-      "file": "new-store-reviews/newStoreReviews.spec.ts",
-      "ms": 63845,
-      "tests": 9
     },
     {
       "file": "abuse-reports/abuseReportsModalDelete.spec.ts",
-      "ms": 62040,
+      "ms": 72501,
       "tests": 6
     },
     {
-      "file": "new-store-seo/newStoreSeo.spec.ts",
-      "ms": 59319,
-      "tests": 6
+      "file": "admin/adminReports.spec.ts",
+      "ms": 71636,
+      "tests": 14
     },
     {
-      "file": "stores/stores.spec.ts",
-      "ms": 53503,
-      "tests": 18
+      "file": "abuse-reports/abuseReportsCustomerForm.spec.ts",
+      "ms": 71262,
+      "tests": 11
     },
     {
-      "file": "follow-store/followStore.spec.ts",
-      "ms": 48422,
+      "file": "admin/adminAbuseReports.spec.ts",
+      "ms": 68900,
+      "tests": 14
+    },
+    {
+      "file": "new-store-reviews/newStoreReviews.spec.ts",
+      "ms": 64185,
+      "tests": 9
+    },
+    {
+      "file": "admin/adminLicense.spec.ts",
+      "ms": 58668,
       "tests": 12
     },
     {
-      "file": "new-social/newSocial.spec.ts",
-      "ms": 47727,
-      "tests": 5
+      "file": "new-store-seo/newStoreSeo.spec.ts",
+      "ms": 55308,
+      "tests": 6
     },
     {
-      "file": "settings/settings.spec.ts",
-      "ms": 46185,
-      "tests": 34
+      "file": "abuse-reports/abuseReportsList.spec.ts",
+      "ms": 52756,
+      "tests": 8
+    },
+    {
+      "file": "admin/adminStatus.spec.ts",
+      "ms": 49148,
+      "tests": 11
+    },
+    {
+      "file": "customer/customer.spec.ts",
+      "ms": 45421,
+      "tests": 10
+    },
+    {
+      "file": "_auth.setup.ts",
+      "ms": 44759,
+      "tests": 10
     },
     {
       "file": "withdraws/withdraws.spec.ts",
-      "ms": 45566,
+      "ms": 44605,
       "tests": 24
     },
     {
       "file": "eu-compliance/euCompliance.spec.ts",
-      "ms": 44458,
+      "ms": 44294,
       "tests": 25
     },
     {
-      "file": "reverse-withdraws/reverseWithdraws.spec.ts",
-      "ms": 43969,
-      "tests": 17
-    },
-    {
-      "file": "_auth.setup.ts",
-      "ms": 43963,
-      "tests": 10
-    },
-    {
-      "file": "vendor-shipping/vendorShipping.spec.ts",
-      "ms": 35269,
-      "tests": 13
-    },
-    {
-      "file": "abuse-reports/abuseReportsList.spec.ts",
-      "ms": 34547,
-      "tests": 8
-    },
-    {
-      "file": "setup-guide/setupGuide.spec.ts",
-      "ms": 34382,
+      "file": "new-social/newSocial.spec.ts",
+      "ms": 43844,
       "tests": 5
     },
     {
-      "file": "vendor-verifications/vendorVerifications.spec.ts",
-      "ms": 33766,
-      "tests": 39
+      "file": "reverse-withdraws/reverseWithdraws.spec.ts",
+      "ms": 40213,
+      "tests": 17
     },
     {
-      "file": "vendor-reports/vendorReports.spec.ts",
-      "ms": 33642,
-      "tests": 45
-    },
-    {
-      "file": "_site.setup.ts",
-      "ms": 32911,
-      "tests": 21
-    },
-    {
-      "file": "product-reviews/productReviews.spec.ts",
-      "ms": 32757,
+      "file": "follow-store/followStore.spec.ts",
+      "ms": 37379,
       "tests": 12
     },
     {
+      "file": "_site.setup.ts",
+      "ms": 35137,
+      "tests": 22
+    },
+    {
       "file": "store-supports/storeSupports.spec.ts",
-      "ms": 32539,
+      "ms": 34999,
       "tests": 42
     },
     {
-      "file": "modules/modules.spec.ts",
-      "ms": 31294,
-      "tests": 10
+      "file": "stores/stores.spec.ts",
+      "ms": 34808,
+      "tests": 18
     },
     {
-      "file": "commission/commission.spec.ts",
-      "ms": 31198,
-      "tests": 3
+      "file": "settings/settings.spec.ts",
+      "ms": 33744,
+      "tests": 34
     },
     {
-      "file": "payments/payments.spec.ts",
-      "ms": 30065,
-      "tests": 33
-    },
-    {
-      "file": "seller-badges/sellerBadges.spec.ts",
-      "ms": 25848,
-      "tests": 21
-    },
-    {
-      "file": "vendor-delivery-time/vendorDeliveryTime.spec.ts",
-      "ms": 25425,
+      "file": "vendor-shipping/vendorShipping.spec.ts",
+      "ms": 33665,
       "tests": 13
     },
     {
+      "file": "product-reviews/productReviews.spec.ts",
+      "ms": 33633,
+      "tests": 12
+    },
+    {
+      "file": "vendor-reports/vendorReports.spec.ts",
+      "ms": 32564,
+      "tests": 45
+    },
+    {
+      "file": "vendor-verifications/vendorVerifications.spec.ts",
+      "ms": 32437,
+      "tests": 39
+    },
+    {
       "file": "abuse-reports/abuseReportsPermissions.spec.ts",
-      "ms": 24149,
+      "ms": 31371,
       "tests": 10
     },
     {
+      "file": "modules/modules.spec.ts",
+      "ms": 31345,
+      "tests": 10
+    },
+    {
+      "file": "payments/payments.spec.ts",
+      "ms": 29616,
+      "tests": 33
+    },
+    {
+      "file": "setup-guide/setupGuide.spec.ts",
+      "ms": 27959,
+      "tests": 5
+    },
+    {
+      "file": "vendor-delivery-time/vendorDeliveryTime.spec.ts",
+      "ms": 26362,
+      "tests": 13
+    },
+    {
+      "file": "seller-badges/sellerBadges.spec.ts",
+      "ms": 26214,
+      "tests": 21
+    },
+    {
+      "file": "admin/adminVerifications.spec.ts",
+      "ms": 24600,
+      "tests": 14
+    },
+    {
       "file": "geolocation/geolocation.spec.ts",
-      "ms": 23904,
+      "ms": 24141,
       "tests": 15
     },
     {
-      "file": "store-appearance/storeAppearance.spec.ts",
-      "ms": 21958,
-      "tests": 23
+      "file": "commission/commission.spec.ts",
+      "ms": 24043,
+      "tests": 3
     },
     {
       "file": "license/license.spec.ts",
-      "ms": 21658,
+      "ms": 21953,
       "tests": 4
     },
     {
       "file": "intelligence/intelligence.spec.ts",
-      "ms": 21499,
+      "ms": 21795,
       "tests": 2
     },
     {
-      "file": "request-for-quotes/requestForQuotes.spec.ts",
-      "ms": 20710,
+      "file": "store-appearance/storeAppearance.spec.ts",
+      "ms": 20785,
       "tests": 23
     },
     {
-      "file": "vendor-reports-admin/vendorReportsAdmin.spec.ts",
-      "ms": 20521,
-      "tests": 10
-    },
-    {
-      "file": "table-rate-shipping/tableRateShipping.spec.ts",
-      "ms": 19916,
-      "tests": 2
-    },
-    {
-      "file": "shipstation/shipstation.spec.ts",
-      "ms": 19899,
-      "tests": 6
+      "file": "request-for-quotes/requestForQuotes.spec.ts",
+      "ms": 20764,
+      "tests": 23
     },
     {
       "file": "export-import/exportImport.spec.ts",
-      "ms": 19864,
+      "ms": 19612,
       "tests": 2
-    },
-    {
-      "file": "diagnostic-notice/diagnosticNotice.spec.ts",
-      "ms": 19836,
-      "tests": 3
     },
     {
       "file": "product-variations/productVariations.spec.ts",
-      "ms": 19594,
-      "tests": 2
-    },
-    {
-      "file": "store-seo/storeSeo.spec.ts",
-      "ms": 19108,
-      "tests": 2
-    },
-    {
-      "file": "social-linking/socialLinking.spec.ts",
-      "ms": 19089,
+      "ms": 19568,
       "tests": 2
     },
     {
       "file": "product-bulk-edit/productBulkEdit.spec.ts",
-      "ms": 18975,
+      "ms": 19400,
+      "tests": 2
+    },
+    {
+      "file": "manual-order-pro/manualOrderPro.spec.ts",
+      "ms": 19253,
+      "tests": 2
+    },
+    {
+      "file": "vendor-auction/vendorAuction.spec.ts",
+      "ms": 19234,
+      "tests": 18
+    },
+    {
+      "file": "store-seo/storeSeo.spec.ts",
+      "ms": 19140,
+      "tests": 2
+    },
+    {
+      "file": "table-rate-shipping/tableRateShipping.spec.ts",
+      "ms": 19096,
       "tests": 2
     },
     {
       "file": "product-qa/productQA.spec.ts",
-      "ms": 18643,
+      "ms": 18768,
       "tests": 26
     },
     {
-      "file": "vendor-return-request/vendorReturnRequest.spec.ts",
-      "ms": 18317,
-      "tests": 14
-    },
-    {
-      "file": "vendor-booking/vendorBooking.spec.ts",
-      "ms": 18300,
-      "tests": 25
-    },
-    {
-      "file": "vendor-tools/vendorTools.spec.ts",
-      "ms": 18217,
-      "tests": 9
-    },
-    {
-      "file": "vendor-auction/vendorAuction.spec.ts",
-      "ms": 18153,
-      "tests": 18
-    },
-    {
-      "file": "vendor-subscriptions/vendorSubscriptions.spec.ts",
-      "ms": 18123,
-      "tests": 16
-    },
-    {
-      "file": "manual-order-pro/manualOrderPro.spec.ts",
-      "ms": 17600,
+      "file": "social-linking/socialLinking.spec.ts",
+      "ms": 18591,
       "tests": 2
     },
     {
       "file": "vendor-analytics/vendorAnalytics.spec.ts",
-      "ms": 17519,
+      "ms": 18284,
       "tests": 5
     },
     {
-      "file": "spmv/spmv.spec.ts",
-      "ms": 15610,
-      "tests": 18
+      "file": "vendor-booking/vendorBooking.spec.ts",
+      "ms": 17911,
+      "tests": 25
     },
     {
-      "file": "wholesale/wholesale.spec.ts",
-      "ms": 15329,
-      "tests": 20
-    },
-    {
-      "file": "_env.setup.ts",
-      "ms": 15004,
-      "tests": 42
-    },
-    {
-      "file": "refunds/refunds.spec.ts",
-      "ms": 14542,
+      "file": "vendor-tools/vendorTools.spec.ts",
+      "ms": 17713,
       "tests": 9
     },
     {
+      "file": "shipstation/shipstation.spec.ts",
+      "ms": 17677,
+      "tests": 6
+    },
+    {
+      "file": "vendor-return-request/vendorReturnRequest.spec.ts",
+      "ms": 17102,
+      "tests": 14
+    },
+    {
+      "file": "vendor-subscriptions/vendorSubscriptions.spec.ts",
+      "ms": 16822,
+      "tests": 16
+    },
+    {
+      "file": "refunds/refunds.spec.ts",
+      "ms": 15786,
+      "tests": 9
+    },
+    {
+      "file": "wholesale/wholesale.spec.ts",
+      "ms": 15738,
+      "tests": 20
+    },
+    {
+      "file": "vendor-reports-admin/vendorReportsAdmin.spec.ts",
+      "ms": 15577,
+      "tests": 10
+    },
+    {
+      "file": "spmv/spmv.spec.ts",
+      "ms": 15280,
+      "tests": 18
+    },
+    {
+      "file": "_env.setup.ts",
+      "ms": 14982,
+      "tests": 42
+    },
+    {
       "file": "vendor/vendor.spec.ts",
-      "ms": 14203,
+      "ms": 14242,
       "tests": 8
     },
     {
       "file": "colors/colors.spec.ts",
-      "ms": 9637,
+      "ms": 9610,
       "tests": 5
     },
     {
       "file": "min-max-quantities/minMaxQuantities.spec.ts",
-      "ms": 9451,
+      "ms": 8970,
       "tests": 3
-    },
-    {
-      "file": "help/help.spec.ts",
-      "ms": 9137,
-      "tests": 2
-    },
-    {
-      "file": "manual-order/manualOrder.spec.ts",
-      "ms": 8845,
-      "tests": 3
-    },
-    {
-      "file": "catalog-mode/catalogMode.spec.ts",
-      "ms": 8559,
-      "tests": 7
     },
     {
       "file": "store-reviews/storeReviews.spec.ts",
-      "ms": 8325,
+      "ms": 8484,
       "tests": 17
     },
     {
-      "file": "product-tabs/productTabs.spec.ts",
-      "ms": 8020,
-      "tests": 2
-    },
-    {
-      "file": "abuse-reports/abuseReportsRest.spec.ts",
-      "ms": 6258,
+      "file": "catalog-mode/catalogMode.spec.ts",
+      "ms": 8431,
       "tests": 7
     },
     {
-      "file": "single-store/singleStore.spec.ts",
-      "ms": 6194,
-      "tests": 9
+      "file": "manual-order/manualOrder.spec.ts",
+      "ms": 8004,
+      "tests": 3
     },
     {
-      "file": "vendor-staff/vendorStaff.spec.ts",
-      "ms": 5969,
-      "tests": 11
-    },
-    {
-      "file": "brand-filter/brandFilter.spec.ts",
-      "ms": 5844,
+      "file": "product-tabs/productTabs.spec.ts",
+      "ms": 7943,
       "tests": 2
     },
     {
-      "file": "store-categories/storeCategories.spec.ts",
-      "ms": 5545,
+      "file": "help/help.spec.ts",
+      "ms": 6870,
+      "tests": 2
+    },
+    {
+      "file": "diagnostic-notice/diagnosticNotice.spec.ts",
+      "ms": 6473,
+      "tests": 3
+    },
+    {
+      "file": "single-store/singleStore.spec.ts",
+      "ms": 6405,
+      "tests": 9
+    },
+    {
+      "file": "brand-filter/brandFilter.spec.ts",
+      "ms": 6060,
+      "tests": 2
+    },
+    {
+      "file": "vendor-staff/vendorStaff.spec.ts",
+      "ms": 5923,
       "tests": 11
     },
     {
+      "file": "store-categories/storeCategories.spec.ts",
+      "ms": 5521,
+      "tests": 11
+    },
+    {
+      "file": "abuse-reports/abuseReportsRest.spec.ts",
+      "ms": 5282,
+      "tests": 7
+    },
+    {
       "file": "store-listing/storeListing.spec.ts",
-      "ms": 5080,
+      "ms": 4938,
       "tests": 13
     },
     {
       "file": "product-advertising/productAdvertising.spec.ts",
-      "ms": 4840,
+      "ms": 4913,
       "tests": 14
     },
     {
       "file": "vendor-product-subscription/vendorProductSubscription.spec.ts",
-      "ms": 4779,
+      "ms": 4806,
       "tests": 16
     },
     {
-      "file": "frontend-badges/frontendBadges.spec.ts",
-      "ms": 4239,
-      "tests": 2
-    },
-    {
       "file": "email-verification/emailVerification.spec.ts",
-      "ms": 3922,
+      "ms": 4445,
       "tests": 4
     },
     {
-      "file": "onboarding/onboarding.spec.ts",
-      "ms": 3554,
+      "file": "frontend-badges/frontendBadges.spec.ts",
+      "ms": 4287,
       "tests": 2
     },
     {
       "file": "live-search/liveSearch.spec.ts",
-      "ms": 3511,
+      "ms": 3592,
       "tests": 7
     },
     {
-      "file": "live-chat/liveChat.spec.ts",
-      "ms": 3141,
-      "tests": 12
+      "file": "onboarding/onboarding.spec.ts",
+      "ms": 3457,
+      "tests": 2
     },
     {
       "file": "product-addons/productAddons.spec.ts",
-      "ms": 3133,
+      "ms": 3150,
       "tests": 15
     },
     {
+      "file": "live-chat/liveChat.spec.ts",
+      "ms": 3097,
+      "tests": 12
+    },
+    {
       "file": "printful/printful.spec.ts",
-      "ms": 3049,
+      "ms": 3062,
       "tests": 10
     },
     {
       "file": "vendor-booking-fast/vendorBookingFast.spec.ts",
-      "ms": 1360,
+      "ms": 1363,
       "tests": 17
     },
     {
       "file": "products-details/productsDetails.spec.ts",
-      "ms": 570,
+      "ms": 581,
       "tests": 95
     },
     {
       "file": "products-details-auction/productsDetailsAuction.spec.ts",
-      "ms": 272,
+      "ms": 336,
       "tests": 50
     },
     {
       "file": "products-details-bookings/productsDetailsBookings.spec.ts",
-      "ms": 216,
+      "ms": 258,
       "tests": 2
     },
     {
       "file": "product-enquiry/productEnquiry.spec.ts",
-      "ms": 118,
+      "ms": 138,
       "tests": 4
     },
     {
       "file": "shipping/shipping.spec.ts",
-      "ms": 73,
+      "ms": 74,
       "tests": 10
     },
     {
+      "file": "shortcodes/shortcodes.spec.ts",
+      "ms": 64,
+      "tests": 13
+    },
+    {
       "file": "tools/tools.spec.ts",
-      "ms": 73,
+      "ms": 59,
       "tests": 9
     },
     {
       "file": "menu-manager/menuManager.spec.ts",
-      "ms": 63,
+      "ms": 47,
       "tests": 8
     },
     {
       "file": "shop/shop.spec.ts",
-      "ms": 57,
+      "ms": 47,
       "tests": 7
     },
     {
-      "file": "my-orders/myOrders.spec.ts",
-      "ms": 53,
+      "file": "request-for-quote-rules/requestForQuoteRules.spec.ts",
+      "ms": 42,
       "tests": 6
     },
     {
-      "file": "shortcodes/shortcodes.spec.ts",
-      "ms": 50,
-      "tests": 13
-    },
-    {
-      "file": "request-for-quote-rules/requestForQuoteRules.spec.ts",
-      "ms": 44,
+      "file": "my-orders/myOrders.spec.ts",
+      "ms": 40,
       "tests": 6
     },
     {
       "file": "plugin/plugin.spec.ts",
-      "ms": 31,
+      "ms": 29,
       "tests": 8
     },
     {
       "file": "single-product/singleProduct.spec.ts",
-      "ms": 26,
+      "ms": 22,
       "tests": 8
     },
     {
-      "file": "notice-and-promotion/noticeAndPromotion.spec.ts",
-      "ms": 23,
-      "tests": 2
-    },
-    {
       "file": "seller-vacation/sellerVacation.spec.ts",
-      "ms": 22,
-      "tests": 2
-    },
-    {
-      "file": "tax/tax.spec.ts",
       "ms": 21,
       "tests": 2
     },
     {
       "file": "privacy-policy/privacyPolicy.spec.ts",
-      "ms": 18,
+      "ms": 20,
       "tests": 4
     },
     {
-      "file": "product-form-manager/productFormManager.spec.ts",
-      "ms": 0,
-      "tests": 9
+      "file": "tax/tax.spec.ts",
+      "ms": 19,
+      "tests": 2
+    },
+    {
+      "file": "notice-and-promotion/noticeAndPromotion.spec.ts",
+      "ms": 19,
+      "tests": 2
     },
     {
       "file": "products/products.spec.ts",
