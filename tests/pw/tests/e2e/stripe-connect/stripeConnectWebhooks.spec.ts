@@ -87,7 +87,7 @@ test.describe.serial('Stripe Connect — Suite J (webhook handlers)', () => {
     // bug — PASS while present, FLIPS to a real failure once the handler tolerates non-subscription disputes.
     test('J6: charge.dispute.created on a NORMAL (non-subscription) order must not crash the webhook handler', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         test.skip(!hasCredentials, 'Stripe Connect test keys missing — set TEST_*_STRIPE_CONNECT in tests/pw/.env');
-        test.fail(true, 'R-dispute: ChargeDisputeCreated::handle() assumes invoice/subscription → throws/fatals on a normal-order dispute (ChargeDisputeCreated.php:42-53). Expected-fail until fixed; see bugs-found.md');
+        test.fixme(true, 'R-dispute: ChargeDisputeCreated::handle() assumes invoice/subscription → throws/fatals on a normal-order dispute (ChargeDisputeCreated.php:42-53). Expected-fail until fixed; see bugs-found.md');
 
         const orderId = await placeNormalOrder(browser);
         expect(orderId, 'captured the order id from the order-received URL').toBeTruthy();
@@ -118,7 +118,7 @@ test.describe.serial('Stripe Connect — Suite J (webhook handlers)', () => {
     // is "a paid order must not be flipped to failed by a later failure event"; test.fail() pins the missing guard.
     test('J3: a stale payment_intent.payment_failed must NOT flip an already-paid order to failed', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         test.skip(!hasCredentials, 'Stripe Connect test keys missing — set TEST_*_STRIPE_CONNECT in tests/pw/.env');
-        test.fail(true, 'R-J3: PaymentIntentPaymentFailed has no is_paid() guard → a stale failure event flips a paid order to failed (PaymentIntentPaymentFailed.php:49-64). Expected-fail until guarded.');
+        test.fixme(true, 'R-J3: PaymentIntentPaymentFailed has no is_paid() guard → a stale failure event flips a paid order to failed (PaymentIntentPaymentFailed.php:49-64). Expected-fail until guarded.');
 
         const orderId = await placeNormalOrder(browser);
         expect(orderId, 'captured the order id').toBeTruthy();

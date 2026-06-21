@@ -1208,4 +1208,28 @@ export class StripeConnectPage {
         ]);
         await this.waitForCheckoutSettled();
     }
+
+    /**
+     * Select a WC-block shipping method by its label (e.g. /free shipping/i) and wait for the
+     * Store-API rate change + the re-rendered payment box to settle. Changing the shipping method
+     * fires update_checkout, which re-renders the totals and RE-MOUNTS the Stripe Payment Element.
+     */
+    async selectBlockShippingMethod(name: string | RegExp): Promise<void> {
+        const control = this.page.locator('.wc-block-components-shipping-rates-control').first();
+        await control.waitFor({ state: 'visible', timeout: 20_000 });
+        await Promise.all([
+            this.page
+                .waitForResponse(res => /wc\/store\/v\d+\/cart\/(select-shipping-rate|update-customer)/i.test(res.url()), { timeout: 20_000 })
+                .catch(() => undefined),
+            control
+                .getByRole('radio', { name })
+                .first()
+                .click({ timeout: 10_000 })
+                .catch(async () => {
+                    // Fallback: click the option label carrying the method name.
+                    await control.locator('.wc-block-components-radio-control__option, label').filter({ hasText: name }).first().click();
+                }),
+        ]);
+        await this.waitForCheckoutSettled();
+    }
 }

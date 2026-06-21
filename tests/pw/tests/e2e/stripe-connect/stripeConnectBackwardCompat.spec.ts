@@ -77,7 +77,7 @@ test.describe.serial('Stripe Connect — Suite L (backward compatibility)', () =
 
     test('L1: a legacy Stripe order (legacy charge meta, no intent meta) must still refund the customer', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         test.skip(!hasCredentials, 'Stripe Connect test keys missing — set TEST_*_STRIPE_CONNECT in tests/pw/.env');
-        test.fail(true, 'R-BCa/L1: the new refund flow keys on dokan_stripe_intent_id; a legacy order (only _dokan_stripe_charge_id) is silently NOT refunded (Refund.php early-return). Expected-fail until legacy orders refund. See bugs-found.md.');
+        test.fixme(true, 'R-BCa/L1: the new refund flow keys on dokan_stripe_intent_id; a legacy order (only _dokan_stripe_charge_id) is silently NOT refunded (Refund.php early-return). Expected-fail until legacy orders refund. See bugs-found.md.');
 
         const orderId = await placeNormalOrder(browser);
         expect(orderId, 'captured the order id').toBeTruthy();

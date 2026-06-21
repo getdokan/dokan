@@ -831,6 +831,11 @@
       "file": "stripe-connect/stripeConnectMarketplaceCoupon.spec.ts",
       "ms": 70000,
       "tests": 1
+    },
+    {
+      "file": "stripe-connect/stripeConnectReportedBugs.spec.ts",
+      "ms": 5000,
+      "tests": 6
     }
   ]
 }
