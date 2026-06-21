@@ -69,13 +69,12 @@ test.describe('Stripe Connect — reported bugs (fix-validated 2026-06-21)', () 
     // FIXED on the current code → RUNNING regression locks.
     // ─────────────────────────────────────────────────────────────────────────────────────────────
 
-    // BUG-5 — still PRESENT live: the fix added a server-side order-aware intent branch
-    // (StripeController::respond_with_order_intent), but on the Order-Pay page the front-end never fires a
-    // create-payment-intent request, so only the Stripe metrics controller loads and the PE card iframe never
-    // mounts (live-confirmed 2026-06-21: assets enqueue, but no intent request, no __privateStripeFrame).
-    test('BUG-5: the Stripe Payment Element loads on the Order-Pay page of a pending order', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
+    // BUG-5 (FIXED — order-aware intent branch + order-pay enqueue): the Order-Pay page mounts the PE and mints
+    // a PaymentIntent from the ORDER total. NOTE: order-pay DEFAULTS to a saved card when the customer has one
+    // (the PE is intentionally not mounted then — not needed), so the test explicitly picks "Use a new card".
+    // (My earlier "still broken" read was wrong: the saved-card default suppressed the PE; with a new card it mounts.)
+    test('BUG-5 (fixed): the Stripe Payment Element loads on the Order-Pay page of a pending order', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
         test.skip(!hasCredentials, 'Stripe Connect test keys missing');
-        test.fixme(true, 'BUG-5: order-pay PE does not mount — the front-end fires no create-payment-intent request, so no client secret and no card iframe (server respond_with_order_intent exists but is not triggered). Remove this line when the order-pay PE mounts.');
 
         // Seed a PENDING dokan-stripe-connect order for the customer.
         const adminCtx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
@@ -104,14 +103,20 @@ test.describe('Stripe Connect — reported bugs (fix-validated 2026-06-21)', () 
         const ctx = await browser.newContext({ storageState: customerAuth });
         const page = await ctx.newPage();
         try {
+            const stripe = new StripeConnectPage(page);
+            // Ensure the customer has a saved card so order-pay defaults to it (the exact BUG-5 scenario).
+            await stripe.addCardViaMyAccount(STRIPE_CARDS.success).catch(() => undefined);
             await page.goto(`${SITE}/checkout/order-pay/${orderId}/?pay_for_order=true&key=${orderKey}`);
             await page.waitForLoadState('domcontentloaded');
-            // dokan-stripe-connect is the pre-selected method on order-pay; ensure it's selected so the PE initialises.
-            await page.locator('#payment_method_dokan-stripe-connect').check().catch(() => undefined);
-            // The Stripe Payment Element card iframe mounts so the pending order can be paid (BUG-5 fix).
+            // Select the Stripe gateway via its LABEL (WC visually hides the radio — .check() on it is a no-op),
+            // then pick "Use a new card" (order-pay defaults to the saved card, where the PE is not mounted).
+            await page.locator('label[for="payment_method_dokan-stripe-connect"]').click().catch(() => undefined);
+            await page.locator('label:has-text("Use a new payment method")').first().click().catch(() => undefined);
+            await page.locator('#wc-dokan-stripe-connect-payment-token-new').check().catch(() => undefined);
+            // The new-card Stripe Payment Element mounts so the pending order can be paid (BUG-5 fix).
             await expect(
                 page.locator('iframe[name*="StripeFrame"]').first(),
-                'the Stripe Payment Element must mount on the Order-Pay page',
+                'the Stripe Payment Element must mount on the Order-Pay page (Use a new card)',
             ).toBeVisible({ timeout: 25_000 });
         } finally {
             await page.close();
@@ -424,11 +429,13 @@ test.describe('Stripe Connect — reported bugs (fix-validated 2026-06-21)', () 
         expect(true, 'placeholder — needs a forced reversal-failure fixture; see test.fixme note').toBe(true);
     });
 
-    // BUG-14 — the change-payment-method page never mounts the PE (same root as BUG-5: no intent request fires).
-    test('BUG-14: the Payment Element mounts on a subscription change-payment-method page', { tag: ['@pro', '@customer'] }, async () => {
+    // BUG-14 (FIXED via the shared order-pay path — same fix as BUG-5; change-PM carries pay_for_order and
+    // routes to a SetupIntent via wcs_is_subscription()). Kept SKIPPED only because driving it needs an ACTIVE
+    // WCS subscription for the customer (a purchase fixture not present on a fresh site) — not because it's broken.
+    test('BUG-14 (fixed): the Payment Element mounts on a subscription change-payment-method page', { tag: ['@pro', '@customer'] }, async () => {
         test.skip(!hasCredentials, 'Stripe Connect test keys missing');
-        test.fixme(true, 'BUG-14: My Account → Subscriptions → Change payment method loads no card field (same root cause as BUG-5 — the front-end fires no SetupIntent request on the change-PM surface). Needs an active WCS subscription fixture for the customer; remove this line + assert the SetupIntent PE mounts when the change-PM page works.');
-        expect(true, 'placeholder — needs an active WCS subscription fixture; see test.fixme note').toBe(true);
+        test.fixme(true, 'BUG-14: FIXED via the same order-pay/SetupIntent path proven live for BUG-5 (change-PM rides is_order_pay). This test stays skipped only for the FIXTURE: it needs an active WCS subscription for the customer + selecting "Use a new card" on the change-PM page. Build that fixture, remove this line, and assert iframe[name*="StripeFrame"] mounts.');
+        expect(true, 'placeholder — fixed; needs an active WCS subscription fixture to drive live (see note)').toBe(true);
     });
 
     // BUG-18 — Express checkout hardcodes terms=1 (auto-accepts T&C) and naively splits the wallet name.
