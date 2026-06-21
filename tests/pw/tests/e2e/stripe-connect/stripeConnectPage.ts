@@ -660,16 +660,19 @@ export class StripeConnectPage {
         };
         this.page.on('request', onReq);
         try {
-            await this.waitForCheckoutSettled(); // don't click mid update_order_review — an in-flight update drops the confirm
-            await this.page.locator(this.checkout.placeOrderClassic).click();
-            if (await this.page.waitForURL('**/order-received/**', { timeout: 45_000 }).then(() => true).catch(() => false)) {
-                return;
+            // Re-click up to 3×, each time ONLY if no confirm has reached Stripe yet (so a slow-but-real confirm is
+            // never double-submitted), polling just 15s before retrying so a genuine cold stall is cleared fast.
+            // Once the confirm fires (or we navigate) the loop exits and we wait the order out.
+            for (let attempt = 0; attempt < 3 && !confirmFired; attempt++) {
+                await this.waitForCheckoutSettled(); // don't click mid update_order_review — an in-flight update drops the confirm
+                await this.page.locator(this.checkout.placeOrderClassic).click();
+                const start = Date.now();
+                while (Date.now() - start < 15_000) {
+                    if (confirmFired || this.page.url().includes('order-received')) break;
+                    await this.page.waitForTimeout(1_000);
+                }
             }
-            if (!confirmFired) {
-                await this.waitForCheckoutSettled();
-                await this.page.locator(this.checkout.placeOrderClassic).click().catch(() => undefined);
-            }
-            await this.page.waitForURL('**/order-received/**', { timeout: 60_000 });
+            await this.page.waitForURL('**/order-received/**', { timeout: 75_000 });
         } finally {
             this.page.off('request', onReq);
         }
@@ -710,16 +713,19 @@ export class StripeConnectPage {
             return false;
         };
         try {
-            await this.waitForCheckoutSettled();
-            await this.page.locator(this.checkout.placeOrderClassic).click();
-            if (await pollAcs(45_000)) return;
-            // No ACS after 45s. If the confirm never reached Stripe (cold-CI risk-stall), re-click once in the warm
-            // session; otherwise the confirm is just slow. Either way give the ACS a second window before failing.
-            if (!confirmFired) {
+            // Re-click up to 3× if no confirm has reached Stripe within 15s (cold-CI stall), each time only while
+            // no confirm has fired (so a confirm already moving the PI to requires_action isn't double-submitted),
+            // then keep polling for the ACS challenge frame.
+            for (let attempt = 0; attempt < 3 && !confirmFired; attempt++) {
                 await this.waitForCheckoutSettled();
-                await this.page.locator(this.checkout.placeOrderClassic).click().catch(() => undefined);
+                await this.page.locator(this.checkout.placeOrderClassic).click();
+                const start = Date.now();
+                while (Date.now() - start < 15_000) {
+                    if (confirmFired || acsAttached()) break;
+                    await this.page.waitForTimeout(1_000);
+                }
             }
-            if (await pollAcs(45_000)) return;
+            if (await pollAcs(75_000)) return;
             throw new Error('Classic confirm stalled: the 3DS SCA challenge (testmode-acs.stripe.com) never loaded after place-order');
         } finally {
             this.page.off('request', onReq);
