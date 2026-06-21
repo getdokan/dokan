@@ -416,4 +416,32 @@ test.describe('Stripe Connect — reported bugs (fix-validated 2026-06-21)', () 
         // to the subscription's original card, not merely the customer's default/first saved pm_.
         expect(true, 'placeholder — see test.fixme note (legacy renewal fixture required)').toBe(true);
     });
+
+    // BUG-1 — refunding does not reliably reverse the vendor transfer; the real Stripe error is swallowed.
+    test('BUG-1: a failed vendor-transfer reversal surfaces the real Stripe error (not a generic "manual reversal" note)', { tag: ['@pro', '@admin'] }, async () => {
+        test.skip(!hasCredentials, 'Stripe Connect test keys missing');
+        test.fixme(true, 'BUG-1: when the transfer reversal fails, Refund.php logs a generic "Manual reversal required" note WITHOUT $e->getMessage(), and the reversal amount flows through the float get_stripe_amount (BUG-2). Intermittent + needs a forced reversal failure; remove this line + drive a failing reversal when the error is surfaced and the amount is int-cast. (Happy-path reversal is already covered by the running refund tests in stripeConnect.spec.ts.)');
+        expect(true, 'placeholder — needs a forced reversal-failure fixture; see test.fixme note').toBe(true);
+    });
+
+    // BUG-14 — the change-payment-method page never mounts the PE (same root as BUG-5: no intent request fires).
+    test('BUG-14: the Payment Element mounts on a subscription change-payment-method page', { tag: ['@pro', '@customer'] }, async () => {
+        test.skip(!hasCredentials, 'Stripe Connect test keys missing');
+        test.fixme(true, 'BUG-14: My Account → Subscriptions → Change payment method loads no card field (same root cause as BUG-5 — the front-end fires no SetupIntent request on the change-PM surface). Needs an active WCS subscription fixture for the customer; remove this line + assert the SetupIntent PE mounts when the change-PM page works.');
+        expect(true, 'placeholder — needs an active WCS subscription fixture; see test.fixme note').toBe(true);
+    });
+
+    // BUG-18 — Express checkout hardcodes terms=1 (auto-accepts T&C) and naively splits the wallet name.
+    test('BUG-18: Express checkout enforces the T&C checkbox and splits the wallet name correctly', { tag: ['@pro', '@customer'] }, async () => {
+        test.skip(!hasCredentials, 'Stripe Connect test keys missing');
+        test.fixme(true, 'BUG-18: completing an Express (wallet) purchase without ticking a required T&C still creates the order (terms=1 hardcoded), and a multi-word wallet name splits into the wrong first/last name. Wallet/device-gated (real Apple/Google Pay), not drivable headlessly; remove this line + drive a wallet purchase when T&C is enforced and the name split is fixed.');
+        expect(true, 'placeholder — wallet/device-gated; see test.fixme note').toBe(true);
+    });
+
+    // BUG-22 — Stripe error messages on classic/Express are always English (no i18n in the JS bundles).
+    test('BUG-22: a card error message on classic checkout is localised (not hardcoded English)', { tag: ['@pro', '@customer'] }, async () => {
+        test.skip(!hasCredentials, 'Stripe Connect test keys missing');
+        test.fixme(true, 'BUG-22: the classic/Express/shared JS bundles have no i18n, so a card-error message stays English on a non-English locale. Needs a non-English site locale + a loaded translation to assert against; remove this line + assert the localised string when the bundles are translated.');
+        expect(true, 'placeholder — needs a non-English locale + translation; see test.fixme note').toBe(true);
+    });
 });
