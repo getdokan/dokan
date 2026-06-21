@@ -87,13 +87,16 @@ test.describe.serial('Stripe Connect — saved cards (my-account payment methods
     // F-block-save (GATEWAY BUG, documented — not executed): block-checkout "save card" stores a token whose
     // Stripe PaymentMethod is NEVER attached (PI setup_future_usage=null → post-confirm attach rejected → swallowed,
     // token saved anyway). modules/stripe/includes/Processors/IntentProcessor.php:374-394. See bugs-found.md.
-    test('F-block-save (gateway bug): saving a card at block checkout should ATTACH the pm on Stripe — expected-fail guard', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
+    test('F-block-save (gateway bug): block save-card should set the card up for off-session reuse — expected-fail guard', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
         test.skip(!hasCredentials, 'Stripe Connect test keys missing — set TEST_*_STRIPE_CONNECT in tests/pw/.env');
-        // CONFIRMED bug (IntentProcessor.php:374-394): block-checkout "save card" writes the WC token but its Stripe
-        // pm is NEVER attached (block PI has setup_future_usage=null → post-confirm attach is rejected + swallowed),
-        // so the saved card is unusable off-session. The assertion below asserts the CORRECT behaviour (pm attached);
-        // test.fail() runs it as an EXPECTED FAILURE so CI executes the save path and pins the bug. Assertion NOT weakened.
-        test.fail(true, 'Block-save no-attach: token saved but Stripe pm never attached (setup_future_usage=null) — see bugs-found.md');
+        // CONFIRMED bug (IntentProcessor.php:374-394): block-checkout "save card" mints the PaymentIntent with
+        // setup_future_usage=null (should be 'off_session'), so the card is never set up for off-session reuse —
+        // the post-confirm attach is rejected + swallowed and the saved token is unusable. We assert the
+        // DETERMINISTIC root cause (the PI's setup_future_usage) rather than the racy downstream pm-attachment
+        // (which intermittently succeeds on CI and made the old guard flaky). test.fail() runs it as an EXPECTED
+        // FAILURE so CI executes the save path and pins the bug; assertion NOT weakened.
+        test.fail(true, 'Block-save: the save-card PaymentIntent has setup_future_usage=null (should be off_session) — see bugs-found.md');
+        let orderId: string | undefined;
         const ctx: BrowserContext = await browser.newContext({ storageState: customerAuth });
         const page: Page = await ctx.newPage();
         try {
@@ -105,14 +108,17 @@ test.describe.serial('Stripe Connect — saved cards (my-account payment methods
             await stripe.tickSaveCardBlock();
             await stripe.fillCardDetails(STRIPE_CARDS.success);
             await stripe.placeBlockOrderExpectReceived();
+            orderId = page.url().match(/order-received\/(\d+)/)?.[1];
         } finally {
             await page.close();
             await ctx.close();
         }
-        const pmToken = await getStoredPmToken();
-        const custId = await getStripeCustomerId();
-        const pms = await stripeApi.listCustomerPaymentMethods(custId, 'card');
-        expect(pms.some(p => p.id === pmToken.token), 'block-saved pm should be attached to the customer').toBe(true);
+        expect(orderId, 'captured the order id from order-received').toBeTruthy();
+        const intentId = await getStripeIntentIdForOrder(orderId as string);
+        const pi = await stripeApi.getPaymentIntent(intentId);
+        log.info(`block save-card PI ${intentId} setup_future_usage=${String(pi.setup_future_usage)}`);
+        // CORRECT behaviour: ticking "save card" sets the card up for off-session reuse.
+        expect(pi.setup_future_usage, 'block save-card PaymentIntent must set the card up for off-session reuse').toBe('off_session');
     });
 
     // F1 — save a card via My Account → Add payment method. This SetupIntent flow
