@@ -570,17 +570,16 @@ export class StripeConnectPage {
         // proceeds. Does NOT touch the 3DS challenge (served from
         // testmode-acs.stripe.com, no "hcaptcha" in the URL).
         await this.page.route(/hcaptcha/i, route => route.abort());
-        // ...but blocking hCaptcha alone isn't enough: hCaptcha is a Stripe LINK
-        // feature (a plain card charge never uses it). Link's consumer lookup on
-        // the entered email is what invokes it; on a cold CI session Stripe
-        // escalates to a visible challenge, and because we've blocked hCaptcha the
-        // inline confirm STALLS waiting for a token that never arrives (the
-        // observed first-attempt flake; the warm retry isn't risk-challenged so it
-        // passes). There is no gateway setting to disable Link, so disable it at
-        // the network layer: with Link's endpoints unreachable the Payment Element
-        // degrades to a plain card form and confirmPayment never touches hCaptcha.
-        // Core PE/confirm calls (api.stripe.com/v1/elements|payment_intents|
-        // payment_methods) are left intact.
+        // ...but blocking hCaptcha alone isn't enough: hCaptcha is a Stripe LINK feature (a plain card charge
+        // never uses it). Link's consumer lookup invokes it; on a cold CI session Stripe escalates to a visible
+        // challenge that stalls the inline confirm. There is no gateway setting to disable Link, so neutralise it
+        // at the network layer by ABORTING its JSON endpoints — Link then gives up and the PE degrades to a plain
+        // card form (this is the variant that PASSES locally). NB: fulfilling these with an empty 200 instead does
+        // NOT work — Link treats the 200 as "proceed", tries to continue, and the confirm breaks (verified: fulfil
+        // {} fails the classic confirm even locally). The aborted-fetch "Failed to fetch" page error is benign
+        // here. The residual cold-CI first-attempt risk-stall is handled by the in-test re-click in
+        // placeClassicOrderExpectReceived / placeClassicOrderExpect3DS. Core PE/confirm calls
+        // (api.stripe.com/v1/elements|payment_intents|payment_methods) are left intact.
         await this.page.route(
             /merchant-ui-api\.stripe\.com|link\.stripe\.com|api\.stripe\.com\/v1\/(consumers|consumer_sessions|link_account_sessions)/,
             route => route.abort(),
@@ -640,16 +639,47 @@ export class StripeConnectPage {
         await label.click();
         await this.waitForCheckoutSettled(); // settle the update_checkout from the gateway change
         if (expectPaymentElement) {
+            // If the customer has saved cards, classic checkout defaults to a saved-token radio and the new-card
+            // PE stays HIDDEN (the saved-card-default trap — what makes the PE "never mount" once a saved-card
+            // test has run in the same session/shard). The new-card flow wants the PE, so pick "Use a new card"
+            // first when that toggle is present (a no-op when there are no saved tokens).
+            const useNewCard = this.page
+                .locator('#wc-dokan-stripe-connect-payment-token-new, input[name="wc-dokan-stripe-connect-payment-token"][value="new"]')
+                .first();
+            if (await useNewCard.count().catch(() => 0)) {
+                await useNewCard.check().catch(() => undefined);
+                await this.waitForCheckoutSettled();
+            }
             await this.page.locator(this.checkout.classicMount).waitFor({ state: 'visible', timeout: 30_000 });
             await this.waitForCheckoutSettled(); // ensure the PE box finished (re)rendering
         }
     }
 
     async placeClassicOrderExpectReceived(): Promise<void> {
-        await this.page.locator(this.checkout.placeOrderClassic).click();
-        // Cold-start tolerant: the first classic confirm on a CI runner is slow
-        // (cold Stripe.js + connection), so allow the same headroom as block.
-        await this.page.waitForURL('**/order-received/**', { timeout: 90_000 });
+        // Track whether the in-page Stripe confirm actually reaches Stripe. A cold-CI first attempt can be Link-
+        // risk-stalled and never fire (no payment_intents/.../confirm request); a re-click in the now-warm session
+        // isn't risk-challenged. Re-click ONCE, guarded on "no confirm fired", so a slow-but-real confirm is never
+        // double-submitted. (Fresh-page test-level retries don't warm the session, so this in-test re-click is the
+        // thing that actually clears the cold-CI classic-confirm stall.)
+        let confirmFired = false;
+        const onReq = (req: { url(): string }) => {
+            if (/payment_intents\/[^/]+\/confirm|wc-ajax=checkout/i.test(req.url())) confirmFired = true;
+        };
+        this.page.on('request', onReq);
+        try {
+            await this.waitForCheckoutSettled(); // don't click mid update_order_review — an in-flight update drops the confirm
+            await this.page.locator(this.checkout.placeOrderClassic).click();
+            if (await this.page.waitForURL('**/order-received/**', { timeout: 45_000 }).then(() => true).catch(() => false)) {
+                return;
+            }
+            if (!confirmFired) {
+                await this.waitForCheckoutSettled();
+                await this.page.locator(this.checkout.placeOrderClassic).click().catch(() => undefined);
+            }
+            await this.page.waitForURL('**/order-received/**', { timeout: 60_000 });
+        } finally {
+            this.page.off('request', onReq);
+        }
     }
 
     async placeClassicOrderExpectError(): Promise<void> {
@@ -659,6 +689,48 @@ export class StripeConnectPage {
             'declined card should surface an inline error',
         ).toBeVisible({ timeout: 40_000 });
         await expect(this.page, 'declined card must not reach order-received').not.toHaveURL(/order-received/);
+    }
+
+    /**
+     * Place a classic order paid with a 3DS card and wait until the SCA challenge frame actually attaches
+     * (testmode-acs.stripe.com) before returning. Settles any in-flight update_order_review FIRST (a bare click
+     * during an update silently drops the in-page confirm — an observed CI stall), and re-clicks once if the
+     * first confirm stalls. Detects the ACS frame via page.frames() (Playwright flattens the nested cross-origin
+     * frame). A genuine confirm-stall fails loudly HERE instead of masquerading as "Complete button not found".
+     */
+    async placeClassicOrderExpect3DS(): Promise<void> {
+        // Track whether the in-page confirm actually reached Stripe — a cold-CI first attempt can be Link-risk-
+        // stalled and never fire. Re-click ONCE only if no confirm fired (so a real-but-slow confirm that already
+        // pushed the PI to requires_action is never double-submitted).
+        let confirmFired = false;
+        const onReq = (req: { url(): string }) => {
+            if (/payment_intents\/[^/]+\/confirm|\/3ds2\//i.test(req.url())) confirmFired = true;
+        };
+        this.page.on('request', onReq);
+        const acsAttached = () => this.page.frames().some(f => /testmode-acs\.stripe\.com|3d_secure_2/i.test(f.url()));
+        const pollAcs = async (ms: number): Promise<boolean> => {
+            const deadline = Date.now() + ms;
+            while (Date.now() < deadline) {
+                if (acsAttached()) return true;
+                await this.page.waitForTimeout(1_000);
+            }
+            return false;
+        };
+        try {
+            await this.waitForCheckoutSettled();
+            await this.page.locator(this.checkout.placeOrderClassic).click();
+            if (await pollAcs(45_000)) return;
+            // No ACS after 45s. If the confirm never reached Stripe (cold-CI risk-stall), re-click once in the warm
+            // session; otherwise the confirm is just slow. Either way give the ACS a second window before failing.
+            if (!confirmFired) {
+                await this.waitForCheckoutSettled();
+                await this.page.locator(this.checkout.placeOrderClassic).click().catch(() => undefined);
+            }
+            if (await pollAcs(45_000)) return;
+            throw new Error('Classic confirm stalled: the 3DS SCA challenge (testmode-acs.stripe.com) never loaded after place-order');
+        } finally {
+            this.page.off('request', onReq);
+        }
     }
 
     // ---- Block checkout (WC Checkout block; the site default /checkout/) ----
@@ -955,6 +1027,8 @@ export class StripeConnectPage {
             route.fulfill({ status: 200, contentType: 'application/javascript', body: '' }),
         );
         await this.page.route(/hcaptcha/i, route => route.abort());
+        // ABORT the Link endpoints so Link gives up and the PE degrades to a plain card form — see
+        // gotoClassicCheckout (fulfilling these with {} instead breaks the confirm even locally).
         await this.page.route(
             /merchant-ui-api\.stripe\.com|link\.stripe\.com|api\.stripe\.com\/v1\/(consumers|consumer_sessions|link_account_sessions)/,
             route => route.abort(),
@@ -1106,15 +1180,39 @@ export class StripeConnectPage {
     async assertCheckoutBlockedForNonConnectedVendor(variant: 'classic' | 'block' = 'classic'): Promise<void> {
         const errorSelector = variant === 'classic' ? this.checkout.error : this.blockSelectors.error;
         const placeOrder = variant === 'classic' ? this.checkout.placeOrderClassic : this.blockSelectors.placeOrder;
-        await this.page.locator(placeOrder).click();
         const error = this.page.locator(errorSelector).first();
-        await expect(error, 'non-connected vendor should block checkout with an error notice').toBeVisible({
-            timeout: 40_000,
-        });
-        await expect(error, 'error should name the Stripe-not-configured cause').toContainText(
-            /enabled Stripe as a payment gateway|Please remove/i,
-        );
-        await expect(this.page, 'a blocked checkout must not reach order-received').not.toHaveURL(/order-received/);
+        // CLASSIC: the non-connected block is a SERVER validation that only runs once the WC form POSTS
+        // (wc-ajax=checkout) — which the gateway does only after the in-page Stripe confirm. A cold-CI confirm can
+        // risk-stall and never post, so the error never renders (the observed CI flake). Track whether the
+        // confirm/post fired and re-click once in the warm session if it didn't (the warm attempt isn't
+        // risk-challenged). BLOCK runs validation server-side before any confirm, so it needs no retry.
+        let posted = false;
+        const onReq = (req: { url(): string }) => {
+            if (/payment_intents\/[^/]+\/confirm|wc-ajax=checkout/i.test(req.url())) posted = true;
+        };
+        this.page.on('request', onReq);
+        try {
+            if (variant === 'classic') {
+                await this.waitForCheckoutSettled();
+            }
+            await this.page.locator(placeOrder).click();
+            if (variant === 'classic') {
+                const shown = await error.waitFor({ state: 'visible', timeout: 25_000 }).then(() => true).catch(() => false);
+                if (!shown && !posted) {
+                    await this.waitForCheckoutSettled();
+                    await this.page.locator(placeOrder).click().catch(() => undefined);
+                }
+            }
+            await expect(error, 'non-connected vendor should block checkout with an error notice').toBeVisible({
+                timeout: 40_000,
+            });
+            await expect(error, 'error should name the Stripe-not-configured cause').toContainText(
+                /enabled Stripe as a payment gateway|Please remove/i,
+            );
+            await expect(this.page, 'a blocked checkout must not reach order-received').not.toHaveURL(/order-received/);
+        } finally {
+            this.page.off('request', onReq);
+        }
     }
 
     /**

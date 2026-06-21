@@ -913,7 +913,9 @@ test.describe.serial('Stripe Connect — 3DS / SCA', () => {
             await stripe.selectClassicGateway();
             const baseline = await getLatestStripeOrderId(); // pin: only a NEWER order (this test's) counts
             await stripe.fillCardDetails(STRIPE_CARDS.threeDS);
-            await page.locator(stripe.checkout.placeOrderClassic).click();
+            // Settle-then-click + wait for the ACS frame (re-clicks once if the confirm stalls) so the SCA
+            // challenge is guaranteed present before complete3DSChallenge() polls for the Complete button.
+            await stripe.placeClassicOrderExpect3DS();
             await stripe.complete3DSChallenge();
             await assertStripeOrderSettledSince(baseline);
             log.success('Classic 3DS order settled after completing the SCA challenge');
