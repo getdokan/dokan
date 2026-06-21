@@ -834,8 +834,8 @@
     },
     {
       "file": "stripe-connect/stripeConnectReportedBugs.spec.ts",
-      "ms": 5000,
-      "tests": 6
+      "ms": 35000,
+      "tests": 13
     }
   ]
 }

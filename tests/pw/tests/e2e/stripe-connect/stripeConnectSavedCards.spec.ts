@@ -84,18 +84,14 @@ test.describe.serial('Stripe Connect — saved cards (my-account payment methods
         await purgeCustomerTokens();
     });
 
-    // F-block-save (GATEWAY BUG, documented — not executed): block-checkout "save card" stores a token whose
-    // Stripe PaymentMethod is NEVER attached (PI setup_future_usage=null → post-confirm attach rejected → swallowed,
-    // token saved anyway). modules/stripe/includes/Processors/IntentProcessor.php:374-394. See bugs-found.md.
-    test('F-block-save (gateway bug): block save-card should set the card up for off-session reuse — expected-fail guard', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
+    // F-block-save (BUG-4A, FIXED 2026-06-21 by commit 69a3f69b1): block-checkout "save card" now mints the
+    // PaymentIntent with setup_future_usage='off_session', so the saved card is set up for off-session reuse.
+    // Previously this was a bug (setup_future_usage=null → pm never attached); this is now a RUNNING regression
+    // lock for the fix (verified passing — setup_future_usage=off_session). Assert on the deterministic
+    // setup_future_usage rather than the racy pm-attachment.
+    test('F-block-save (fixed): block save-card sets the card up for off-session reuse (setup_future_usage)', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
         test.skip(!hasCredentials, 'Stripe Connect test keys missing — set TEST_*_STRIPE_CONNECT in tests/pw/.env');
-        // CONFIRMED bug (IntentProcessor.php:374-394): block-checkout "save card" mints the PaymentIntent with
-        // setup_future_usage=null (should be 'off_session'), so the card is never set up for off-session reuse —
-        // the post-confirm attach is rejected + swallowed and the saved token is unusable. We assert the
-        // DETERMINISTIC root cause (the PI's setup_future_usage) rather than the racy downstream pm-attachment
-        // (which intermittently succeeds on CI and made the old guard flaky). test.fail() runs it as an EXPECTED
-        // FAILURE so CI executes the save path and pins the bug; assertion NOT weakened.
-        test.fixme(true, 'Block-save: the save-card PaymentIntent has setup_future_usage=null (should be off_session) — see bugs-found.md');
+
         let orderId: string | undefined;
         const ctx: BrowserContext = await browser.newContext({ storageState: customerAuth });
         const page: Page = await ctx.newPage();
