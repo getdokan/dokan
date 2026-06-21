@@ -570,20 +570,13 @@ export class StripeConnectPage {
         // proceeds. Does NOT touch the 3DS challenge (served from
         // testmode-acs.stripe.com, no "hcaptcha" in the URL).
         await this.page.route(/hcaptcha/i, route => route.abort());
-        // ...but blocking hCaptcha alone isn't enough: hCaptcha is a Stripe LINK feature (a plain card charge
-        // never uses it). Link's consumer lookup invokes it; on a cold CI session Stripe escalates to a visible
-        // challenge that stalls the inline confirm. There is no gateway setting to disable Link, so neutralise it
-        // at the network layer by ABORTING its JSON endpoints — Link then gives up and the PE degrades to a plain
-        // card form (this is the variant that PASSES locally). NB: fulfilling these with an empty 200 instead does
-        // NOT work — Link treats the 200 as "proceed", tries to continue, and the confirm breaks (verified: fulfil
-        // {} fails the classic confirm even locally). The aborted-fetch "Failed to fetch" page error is benign
-        // here. The residual cold-CI first-attempt risk-stall is handled by the in-test re-click in
-        // placeClassicOrderExpectReceived / placeClassicOrderExpect3DS. Core PE/confirm calls
-        // (api.stripe.com/v1/elements|payment_intents|payment_methods) are left intact.
-        await this.page.route(
-            /merchant-ui-api\.stripe\.com|link\.stripe\.com|api\.stripe\.com\/v1\/(consumers|consumer_sessions|link_account_sessions)/,
-            route => route.abort(),
-        );
+        // We deliberately do NOT abort/fulfill the Link JSON endpoints (merchant-ui-api/get-cookie, link.stripe.com,
+        // api.stripe.com/v1/consumers…). Aborting throws an uncaught "Failed to fetch" that RACES the gateway's
+        // classic JS init and on CI intermittently breaks it — place-order then fires NO payment-intent / confirm /
+        // wc-ajax at all (verified in a CI trace). Fulfilling these with {} makes Link "proceed" and breaks the
+        // confirm even locally. Leaving get-cookie alone lets the Payment Element init cleanly; Link's risk hCaptcha
+        // is already blocked above, so Link enrolment degrades and the plain card confirm proceeds. Any residual
+        // cold-CI first-attempt stall is handled by the in-test re-click in placeClassicOrderExpect*.
         await this.page.goto(this.checkout.classicUrl);
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.locator(this.checkout.placeOrderClassic).waitFor({ state: 'visible', timeout: 30_000 });
@@ -1027,12 +1020,9 @@ export class StripeConnectPage {
             route.fulfill({ status: 200, contentType: 'application/javascript', body: '' }),
         );
         await this.page.route(/hcaptcha/i, route => route.abort());
-        // ABORT the Link endpoints so Link gives up and the PE degrades to a plain card form — see
-        // gotoClassicCheckout (fulfilling these with {} instead breaks the confirm even locally).
-        await this.page.route(
-            /merchant-ui-api\.stripe\.com|link\.stripe\.com|api\.stripe\.com\/v1\/(consumers|consumer_sessions|link_account_sessions)/,
-            route => route.abort(),
-        );
+        // Do NOT block the Link JSON endpoints — see gotoClassicCheckout: aborting get-cookie throws an uncaught
+        // "Failed to fetch" that races the gateway JS init and can break the SetupIntent confirm; hCaptcha is
+        // already blocked above so Link degrades on its own.
         await this.page.goto(this.addPaymentMethod.url);
         await this.page.waitForLoadState('domcontentloaded');
         await this.page.locator(this.addPaymentMethod.form).waitFor({ state: 'visible', timeout: 30_000 });
