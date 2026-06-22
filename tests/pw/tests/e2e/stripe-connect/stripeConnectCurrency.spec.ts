@@ -155,11 +155,13 @@ test.describe.serial('Stripe Connect — Suite M (store currency)', () => {
     // See dokan-pro/tests/stripe-connect/bugs-found.md.
     test('M2: JPY (zero-decimal) PaymentIntent.amount equals the yen integer (not ×100) — R3 expected-fail guard', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
         test.skip(!hasCredentials, 'Stripe Connect test keys missing — set TEST_*_STRIPE_CONNECT in tests/pw/.env');
-        // R3 (CONFIRMED): Helper::get_stripe_amount() ×100s zero-decimal JPY → a ¥1500 order mints a 150000 PI
-        // (100× overcharge). This test asserts the CORRECT amount (1500); test.fail() runs it as an EXPECTED
-        // FAILURE so the suite executes the path and pins the bug — it reports PASS while R3 is present and FLIPS
-        // to a real failure the moment the gateway is fixed (signal to delete this line). Assertion NOT weakened.
-        test.fixme(true, 'R3: get_stripe_amount() multiplies zero-decimal JPY by 100 (overcharge) — see bugs-found.md');
+        // JPY is a TRUE zero-decimal currency: ¥1500 must mint amount=1500, NOT 150000. Ground truth 2026-06-22
+        // (c05e6061e): Helper::get_stripe_amount(1500,'JPY') = 150000 (now int-cast — the old float residual is
+        // fixed) → a 100× overcharge, and M2 reproduces it live (the JPY checkout mints ×100). This is DISTINCT
+        // from BUG-2/UGX (withdrawn — UGX ×100 is correct, a Stripe special-case): the gateway ×100s ALL
+        // no_decimal_currencies, which is right for UGX/HUF/TWD but WRONG for true-zero-decimal JPY/KRW. Parked
+        // because the marketplace runs USD; flag to the dev that zero-decimal vs ×100-special-case need to diverge.
+        test.fixme(true, 'JPY (true zero-decimal) is ×100-overcharged by get_stripe_amount() — real bug, distinct from the withdrawn BUG-2/UGX (UGX ×100 is correct). Parked; flag to dev.');
 
         // JPY is zero-decimal → the CORRECT minor-unit amount for ¥1500 is the integer 1500, NOT 150000.
         await setStoreCurrency('JPY');
@@ -179,11 +181,12 @@ test.describe.serial('Stripe Connect — Suite M (store currency)', () => {
 
     test('M3: UGX (zero-decimal) PaymentIntent.amount must equal the UGX integer — R3 expected-fail guard', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
         test.skip(!hasCredentials, 'Stripe Connect test keys missing — set TEST_*_STRIPE_CONNECT in tests/pw/.env');
-        // R3 (CONFIRMED): UGX is zero-decimal per no_decimal_currencies() but is OMITTED from get_stripe_amount()'s
-        // zero-decimal switch, so it falls through to ×100 → USh 5000 mints 500000 (100× overcharge). The assertion
-        // below asserts the CORRECT amount (5000); test.fail() runs it as an EXPECTED FAILURE so CI executes the path
-        // and pins the bug (PASS while present, FLIPS to failure once UGX is added to the switch). Assertion NOT weakened.
-        test.fixme(true, 'R3: get_stripe_amount() omits UGX from the zero-decimal switch → ×100 overcharge — see bugs-found.md');
+        // BUG-2/UGX WITHDRAWN (QA owner, 2026-06-22): UGX is a Stripe SPECIAL-CASE — although "zero-decimal", its
+        // API amount must be ×100, so get_stripe_amount() ×100-ing UGX is CORRECT (a live USh charge read 12000 as
+        // "120.00 USh"). This guard's premise (amount = the bare integer 5000) is therefore the WRONG expectation —
+        // the correct amount is 500000. Parked: the assertion below asserts a disproven expectation, so it must NOT
+        // run as written; re-enabling it would require inverting it to assert ×100 (the correct UGX behaviour).
+        test.fixme(true, 'BUG-2/UGX withdrawn — UGX ×100 is CORRECT (Stripe special-case, verified live). This guard asserts the wrong (integer) expectation; parked rather than inverted. NOT a bug.');
 
         // UGX is zero-decimal (it is listed in Helper::no_decimal_currencies()) so the
         // CORRECT minor-unit amount for USh 5000 is the integer 5000.

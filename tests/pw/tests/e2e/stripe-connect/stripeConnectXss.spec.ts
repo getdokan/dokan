@@ -55,7 +55,7 @@ test.describe.serial('Stripe Connect — Suite N7 (stored XSS in the block gatew
 
     test('N7: a script payload in the gateway description must NOT execute at block checkout (stored XSS)', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
         test.skip(!hasCredentials, 'Stripe Connect test keys missing — set TEST_*_STRIPE_CONNECT in tests/pw/.env');
-        test.fixme(true, 'R-xss: the block checkout renders the admin gateway description via dangerouslySetInnerHTML UNescaped → stored XSS. Expected-fail until the description is sanitised (wp_kses_post / escaped). See bugs-found.md.');
+        // FIXED 2026-06-22 (gateway description is now sanitised on block checkout) — now a running regression lock.
 
         const ctx = await browser.newContext({ storageState: customerAuth });
         const page = await ctx.newPage();

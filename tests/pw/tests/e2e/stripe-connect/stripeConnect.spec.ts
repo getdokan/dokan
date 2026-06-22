@@ -826,7 +826,7 @@ test.describe.serial('Stripe Connect — refunds (transfer reversal)', () => {
         // present, FLIPS to failure once fixed → delete this line). NOTE: the fatal has been observed to be
         // intermittent, so on a run where it does not reproduce this reports an "unexpected pass" — that is
         // itself signal. Double-gated above (needs keys + real connected accounts), so only the money lane runs it.
-        test.fixme(true, 'R10: multi-vendor sub-order refund 500s (PHP fatal at Refund.php:307) — see bugs-found.md');
+        // FIXED 2026-06-22 (multi-vendor sub-order refund no longer fatals) — now a running regression lock.
 
         // 1) One order spanning both connected vendors → parent + 2 sub-orders, 1 transfer each.
         let parentOrderId: string | undefined;

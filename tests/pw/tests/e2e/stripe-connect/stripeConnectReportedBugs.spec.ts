@@ -287,7 +287,7 @@ test.describe('Stripe Connect — reported bugs (fix-validated 2026-06-21)', () 
     // BUG-26 — the non-connected/zero-earning split path continue()s with no audit note (Helper.php:1113-1115).
     test('BUG-26: a skipped (non-connected / zero-earning) split sub-order records an audit note', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         test.skip(!hasCredentials, 'Stripe Connect test keys missing');
-        test.fixme(true, 'BUG-26: the split silently continue()s for non-connected / zero-earning vendors with no note on that sub-order (only a FAILED transfer notes). Remove this line when the skipped path records an audit note.');
+        // FIXED 2026-06-22 (skipped split sub-order now records an audit note) — running regression lock.
 
         let orderId: string | undefined;
         const ctx = await browser.newContext({ storageState: customerAuth });
@@ -312,7 +312,7 @@ test.describe('Stripe Connect — reported bugs (fix-validated 2026-06-21)', () 
     // BUG-15 — WebhookHandler does NO Stripe signature verification + returns 200 on handler error (no retry).
     test('BUG-15: the webhook endpoint rejects an unsigned/forged event (signature verification)', { tag: ['@pro', '@admin'] }, async () => {
         test.skip(!hasCredentials, 'Stripe Connect test keys missing');
-        test.fixme(true, 'BUG-15: WebhookHandler::handle_events() never verifies the Stripe-Signature and returns 200 even on failure (WebhookHandler.php:126-199). Remove this line when the endpoint verifies the signature and 4xx-rejects a forged event.');
+        // FIXED 2026-06-22 (webhook endpoint now 4xx-rejects a forged/unsigned event) — running regression lock.
 
         const ctx = await request.newContext();
         try {
@@ -331,7 +331,7 @@ test.describe('Stripe Connect — reported bugs (fix-validated 2026-06-21)', () 
     // BUG-31 — the deprecated, disabled enable_3d_secure checkbox is reset to 'no' on every settings save.
     test('BUG-31: saving gateway settings must preserve the legacy enable_3d_secure option', { tag: ['@pro', '@admin'] }, async () => {
         test.skip(!hasCredentials, 'Stripe Connect test keys missing');
-        test.fixme(true, 'BUG-31: enable_3d_secure has disabled=>disabled, so it is omitted from POST and process_admin_options resets it to no on every save (Settings/StripeConnect.php:154-164). Remove this line when a save preserves the option.');
+        // FIXED 2026-06-22 (saving settings preserves enable_3d_secure) — running regression lock.
 
         const optKey = 'woocommerce_dokan-stripe-connect_settings';
         const settings = ((await dbUtils.getOptionValue(optKey)) as Record<string, unknown>) ?? {};
@@ -346,7 +346,7 @@ test.describe('Stripe Connect — reported bugs (fix-validated 2026-06-21)', () 
     // BUG-30 — saving gateway settings deletes+recreates the Stripe webhook endpoint (signing-secret churn).
     test('BUG-30: saving gateway settings must not churn (delete+recreate) the Stripe webhook endpoint', { tag: ['@pro', '@admin'] }, async () => {
         test.skip(!hasCredentials, 'Stripe Connect test keys missing');
-        test.fixme(true, 'BUG-30: WebhookHandler::register_webhook() always deregister_webhook()s first → every settings save deletes+recreates the endpoint with a new signing secret (WebhookHandler.php:48). Remove this line when a save reuses the existing endpoint.');
+        // FIXED 2026-06-22 (saving settings no longer churns the webhook endpoint) — running regression lock.
 
         const secretKey = 'dokan_stripe_connect_webhook_secret';
         const before = await dbUtils.getOptionValue(secretKey).catch(() => undefined);
@@ -359,7 +359,7 @@ test.describe('Stripe Connect — reported bugs (fix-validated 2026-06-21)', () 
     // BUG-32 — the vendor "Connect with Stripe" image button has no alt / aria label.
     test('BUG-32: the vendor "Connect with Stripe" button has an accessible name (alt/aria)', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         test.skip(!hasCredentials, 'Stripe Connect test keys missing');
-        test.fixme(true, 'BUG-32: templates/vendor-settings-payment.php:12 renders the Connect-with-Stripe <img> with no alt/aria-label (unreadable to screen readers). Remove this line when the connect button has an accessible name.');
+        // FIXED 2026-06-22 (Connect-with-Stripe button has an accessible name) — running regression lock.
 
         // Ensure the vendor is DISCONNECTED so the connect button is shown, then check its accessible name.
         await dbUtils.removeStripeConnectedVendor(VENDOR_ID);
