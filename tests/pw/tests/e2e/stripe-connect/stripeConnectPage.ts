@@ -1189,15 +1189,19 @@ export class StripeConnectPage {
         this.page.on('request', onReq);
         try {
             if (variant === 'classic') {
-                await this.waitForCheckoutSettled();
-            }
-            await this.page.locator(placeOrder).click();
-            if (variant === 'classic') {
-                const shown = await error.waitFor({ state: 'visible', timeout: 25_000 }).then(() => true).catch(() => false);
-                if (!shown && !posted) {
+                // Cold-CI: the block error only renders once the WC form POSTS (the confirm fires first). Re-click
+                // up to 3× (every 15s) until the post reaches the server, guarded so a real post isn't double-fired.
+                for (let attempt = 0; attempt < 3 && !posted; attempt++) {
                     await this.waitForCheckoutSettled();
-                    await this.page.locator(placeOrder).click().catch(() => undefined);
+                    await this.page.locator(placeOrder).click();
+                    const start = Date.now();
+                    while (Date.now() - start < 15_000) {
+                        if (posted || (await error.isVisible().catch(() => false))) break;
+                        await this.page.waitForTimeout(1_000);
+                    }
                 }
+            } else {
+                await this.page.locator(placeOrder).click();
             }
             await expect(error, 'non-connected vendor should block checkout with an error notice').toBeVisible({
                 timeout: 40_000,
