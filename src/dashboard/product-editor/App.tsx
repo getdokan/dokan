@@ -32,7 +32,13 @@ interface ProductEditorData {
     };
 }
 
-const App = ( { params }: { params: { productId: string } } ) => {
+const App = ( {
+    params,
+    location,
+}: {
+    params: { productId: string };
+    location?: { search?: string };
+} ) => {
     const [ formEditor, setFormEditor ] = useState< ProductEditorData | null >(
         null
     );
@@ -75,9 +81,26 @@ const App = ( { params }: { params: { productId: string } } ) => {
     const fetchProductFields = useCallback( async () => {
         const id = Number( params.productId );
         setInitLoading( true );
+
+        // For a new product, honor a `?type=` hint in the URL (e.g. the auction
+        // list links here with ?type=auction) so the editor opens with that type
+        // preselected. Falls back to parsing the hash if the router prop is absent.
+        let typeParam = '';
+        if ( ! id ) {
+            let search = location?.search || '';
+            if ( ! search && window.location.hash.includes( '?' ) ) {
+                search = window.location.hash.slice(
+                    window.location.hash.indexOf( '?' )
+                );
+            }
+            typeParam = new URLSearchParams( search ).get( 'type' ) || '';
+        }
+
         try {
             const response = await apiFetch< ProductEditorData >( {
-                path: `/dokan/v3/products/init/fields?id=${ id || '' }`,
+                path: `/dokan/v3/products/init/fields?id=${ id || '' }${
+                    typeParam ? `&type=${ encodeURIComponent( typeParam ) }` : ''
+                }`,
             } );
             setFormEditor( response );
             ( window as any ).dokanProductEditor = response;
@@ -89,7 +112,7 @@ const App = ( { params }: { params: { productId: string } } ) => {
         } finally {
             setInitLoading( false );
         }
-    }, [ params.productId ] );
+    }, [ params.productId, location?.search ] );
 
     const ActionButton = useCallback( () => {
         if ( error || isInitLoading ) {
