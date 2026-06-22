@@ -564,7 +564,7 @@ class ProductController extends DokanRESTController {
         $exclude_types = array_values(
             array_unique(
                 array_merge(
-                    [ 'booking', 'auction' ],
+                    [ 'booking' ],
                     (array) apply_filters( 'dokan_product_listing_exclude_type', [] )
                 )
             )
