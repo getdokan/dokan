@@ -193,6 +193,9 @@ class Assets {
                 'can_add_product'            => dokan_is_seller_enabled( $user_id ) && current_user_can( 'dokan_add_product' ),
                 'new_product_url'            => dokan_edit_product_url( 0, true ),
                 'is_legacy_editor_preferred' => dokan_get_container()->get( LegacySwitcher::class )->is_product_editor_legacy_preferred( $user_id ),
+                // Type-filter options for the list; uses the same registered types as the
+                // editor so module types (e.g. auction) appear only when their module is active.
+                'product_types'              => dokan()->product_editor->get_product_types(),
             ]
         );
 
