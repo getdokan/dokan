@@ -10,6 +10,16 @@ branch must re-save the affected tabs to restore their values:
 - `dokan_appearance.google_map_api_key` (fieldgroup id) → `google_map_api_key_group`
 - `dokan_appearance.mapbox_api_key` (fieldgroup id) → `mapbox_api_key_group`
 
+### v5.0.5 ( Jun 19, 2026 ) ###
+
+- **update:** Migrated all admin dashboard tables to the unified Plugin UI DataViews component.
+- **update:** Updated price formatting in the product editor to use locale-specific display.
+- **fix:** Lazy-loaded product editor taxonomies (attributes, categories, and tags) to prevent memory exhaustion on large catalogues.
+- **fix:** Escaped vendor-controlled values in store product search results to prevent stored XSS via a product SKU.
+- **fix:** Restricted the Products REST endpoint so vendors can no longer access other vendors' products via the id parameter.
+- **fix:** Decoded HTML entities in product category labels for correct rendering.
+- **fix:** Corrected the product edit URL and improved dashboard navigation for the new product UI.
+
 ### v5.0.4 ( Jun 08, 2026 ) ###
 
 - **update:** Improved RTL support for the switch button transition in the new vendor dashboard layout.
