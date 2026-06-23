@@ -10,7 +10,6 @@ import {
     ExternalLink,
     LayoutGrid,
     Plus,
-    Gavel,
 } from 'lucide-react';
 import {
     DataViews,
@@ -99,9 +98,6 @@ const getStatusLabel = ( status: string ) => {
 };
 
 const getProductTypeLabel = ( item: ProductItem ) => {
-    if ( item.type === 'auction' ) {
-        return __( 'Auction', 'dokan-lite' );
-    }
     if ( item.type === 'grouped' ) {
         return __( 'Grouped', 'dokan-lite' );
     }
@@ -116,9 +112,6 @@ const getProductTypeLabel = ( item: ProductItem ) => {
 
 const ProductTypeIcon = ( { item }: { item: ProductItem } ) => {
     const cls = 'w-5 h-5 text-gray-500';
-    if ( item.type === 'auction' ) {
-        return <Gavel className={ cls } />;
-    }
     if ( item.type === 'variable' ) {
         return <Boxes className={ cls } />;
     }
@@ -294,13 +287,7 @@ function ProductList() {
             label: __( 'Stock', 'dokan-lite' ),
             enableSorting: false,
             render: ( { item }: { item: ProductItem } ) => {
-                // Auctions force-manage stock (qty 1) but don't track it meaningfully;
-                // show the in-stock state instead of the quantity, like the auction page.
-                if (
-                    item.type !== 'auction' &&
-                    item.manage_stock &&
-                    item.stock_quantity !== null
-                ) {
+                if ( item.manage_stock && item.stock_quantity !== null ) {
                     const qty = item.stock_quantity;
                     const isLow = qty <= 10;
                     return (
@@ -346,18 +333,6 @@ function ProductList() {
             render: ( { item }: { item: ProductItem } ) => {
                 if ( ! item.price ) {
                     return <span className="text-gray-400">{ '—' }</span>;
-                }
-                // Auctions render their own price markup (e.g. "Starting bid: …"),
-                // matching the dedicated auction list.
-                if ( item.type === 'auction' && item.price_html ) {
-                    return (
-                        <span
-                            // eslint-disable-next-line react/no-danger
-                            dangerouslySetInnerHTML={ {
-                                __html: item.price_html,
-                            } }
-                        />
-                    );
                 }
                 if ( item.on_sale && item.regular_price && item.sale_price ) {
                     return (
