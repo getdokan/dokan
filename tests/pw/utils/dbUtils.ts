@@ -516,6 +516,23 @@ export const dbUtils = {
         return tokens;
     },
 
+    // Delete a customer's saved payment tokens (+ their tokenmeta) for a gateway. Needed by the new-card flows
+    // (e.g. the declined-card test): once any saved-card test has run in the shard, classic checkout DEFAULTS to a
+    // saved-token radio and the valid saved card is used instead of the NEW card under test — so a declined NEW
+    // card silently succeeds via the saved card and no error appears. Purging the tokens removes that default so
+    // the new-card Payment Element is the only option. Returns the number of tokens deleted.
+    async deleteCustomerPaymentTokens(userId: string | number, gatewayId: string = 'dokan-stripe-connect'): Promise<number> {
+        const rows = (await dbUtils.dbQuery(
+            `SELECT token_id FROM ${dbPrefix}_woocommerce_payment_tokens WHERE user_id = ? AND gateway_id = ?;`,
+            [String(userId), gatewayId],
+        )) as Array<{ token_id: number }>;
+        for (const { token_id } of rows) {
+            await dbUtils.dbQuery(`DELETE FROM ${dbPrefix}_woocommerce_payment_tokenmeta WHERE payment_token_id = ?;`, [token_id]);
+            await dbUtils.dbQuery(`DELETE FROM ${dbPrefix}_woocommerce_payment_tokens WHERE token_id = ?;`, [token_id]);
+        }
+        return rows.length;
+    },
+
     // partial-update ONE key of the serialized Stripe Connect gateway option
     // (woocommerce_dokan-stripe-connect_settings) WITHOUT disturbing the other keys —
     // the settings-behaviour matrix toggles a single key (allow_non_connected_sellers /

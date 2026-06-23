@@ -679,12 +679,34 @@ export class StripeConnectPage {
     }
 
     async placeClassicOrderExpectError(): Promise<void> {
-        await this.page.locator(this.checkout.placeOrderClassic).click();
-        await expect(
-            this.page.locator(this.checkout.error).first(),
-            'declined card should surface an inline error',
-        ).toBeVisible({ timeout: 40_000 });
-        await expect(this.page, 'declined card must not reach order-received').not.toHaveURL(/order-received/);
+        // The classic in-page confirm can stall on a cold first attempt (Link-risk on CI; a slow first PE confirm
+        // locally), so the declined card never reaches Stripe → no decline → no error. Mirror the success/3DS
+        // helpers: re-click ONLY while no confirm has fired (so a real-but-slow confirm isn't double-submitted),
+        // then assert the decline error. A genuinely broken error-display still fails loudly at the assertion.
+        let confirmFired = false;
+        const onReq = (req: { url(): string }) => {
+            if (/payment_intents\/[^/]+\/confirm|wc-ajax=checkout/i.test(req.url())) confirmFired = true;
+        };
+        this.page.on('request', onReq);
+        const errorVisible = () => this.page.locator(this.checkout.error).first().isVisible().catch(() => false);
+        try {
+            for (let attempt = 0; attempt < 3 && !confirmFired; attempt++) {
+                await this.waitForCheckoutSettled();
+                await this.page.locator(this.checkout.placeOrderClassic).click();
+                const start = Date.now();
+                while (Date.now() - start < 15_000) {
+                    if (confirmFired || (await errorVisible()) || this.page.url().includes('order-received')) break;
+                    await this.page.waitForTimeout(1_000);
+                }
+            }
+            await expect(
+                this.page.locator(this.checkout.error).first(),
+                'declined card should surface an inline error',
+            ).toBeVisible({ timeout: 40_000 });
+            await expect(this.page, 'declined card must not reach order-received').not.toHaveURL(/order-received/);
+        } finally {
+            this.page.off('request', onReq);
+        }
     }
 
     /**

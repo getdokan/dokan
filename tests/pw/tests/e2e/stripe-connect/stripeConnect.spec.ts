@@ -397,6 +397,10 @@ test.describe.serial('Stripe Connect — classic checkout (Payment Elements)', (
         try {
             const stripe = new StripeConnectPage(page);
             await dbUtils.clearCustomerCart(CUSTOMER_ID);
+            // Purge any saved tokens (left by saved-card tests earlier in the shard) so classic checkout does NOT
+            // default to a saved card — otherwise the valid saved card is used instead of the NEW declined card and
+            // the order silently succeeds with no error. The new-card Payment Element must be the only option here.
+            await dbUtils.deleteCustomerPaymentTokens(CUSTOMER_ID);
             await stripe.addProductToCart(productId);
             await stripe.gotoClassicCheckout();
             await stripe.fillBillingClassic();
@@ -457,6 +461,8 @@ test.describe.serial('Stripe Connect — block checkout (Cart & Checkout Blocks)
         try {
             const stripe = new StripeConnectPage(page);
             await dbUtils.clearCustomerCart(CUSTOMER_ID);
+            // Purge saved tokens so the NEW declined card is used, not a valid saved card (see classic test above).
+            await dbUtils.deleteCustomerPaymentTokens(CUSTOMER_ID);
             await stripe.addProductToCart(productId);
             await stripe.gotoBlockCheckout();
             await stripe.selectBlockGateway();
