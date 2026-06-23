@@ -290,7 +290,8 @@ test.describe.serial('Stripe Connect — edge cases + Product Advertisement (gat
 
         // Stripe-side guard: exactly ONE succeeded PI carries this order id in metadata (no orphaned duplicate).
         if (stripeApi.hasSecretKey()) {
-            const succeededForOrder = await succeededPaymentIntentsForOrder(orderId as string);
+            // Scope to THIS env's Stripe customer — the WC order id collides across parallel CI shards' fresh envs.
+            const succeededForOrder = await succeededPaymentIntentsForOrder(orderId as string, (pi as { customer?: string | null }).customer);
             expect(succeededForOrder.length, 'exactly one succeeded PaymentIntent should exist for this order (no orphan)').toBe(1);
         }
 
@@ -527,16 +528,22 @@ test.describe.serial('Stripe Connect — edge cases + Product Advertisement (gat
  * into the PaymentIntent metadata (order_id), so a coupon re-mount that orphaned an old PI would surface as a
  * SECOND succeeded PI for the same order. Scans the most-recent intents (Stripe has no metadata query filter).
  */
-async function succeededPaymentIntentsForOrder(orderId: string): Promise<Array<{ id: string }>> {
+async function succeededPaymentIntentsForOrder(orderId: string, customerId?: string | null): Promise<Array<{ id: string }>> {
     const ctx = await request.newContext({ extraHTTPHeaders: { Authorization: '' } });
     try {
         const key = process.env.TEST_SECRET_KEY_STRIPE_CONNECT ?? '';
         const res = await ctx.get('https://api.stripe.com/v1/payment_intents?limit=100', {
             headers: { Authorization: `Bearer ${key}` },
         });
-        const body = (await res.json().catch(() => ({}))) as { data?: Array<{ id: string; status: string; metadata?: Record<string, string> }> };
+        const body = (await res.json().catch(() => ({}))) as { data?: Array<{ id: string; status: string; customer?: string | null; metadata?: Record<string, string> }> };
+        // The WC order id (auto-increment) is NOT unique on the SHARED Stripe test account: parallel CI shards each
+        // provision a FRESH env, so order id "77" recurs across shards with DIFFERENT Stripe customers. A bare
+        // order_id filter then counts those sibling orders' PIs too (CI showed 3≠1). Scope to THIS env's Stripe
+        // customer so the "no orphan duplicate" guard counts only the order under test — the assertion is unchanged,
+        // it just stops seeing other shards' identically-numbered orders.
         return (body.data ?? [])
             .filter(pi => pi.status === 'succeeded' && pi.metadata && String(pi.metadata.order_id) === String(orderId))
+            .filter(pi => !customerId || String(pi.customer ?? '') === String(customerId))
             .map(pi => ({ id: pi.id }));
     } finally {
         await ctx.dispose();
