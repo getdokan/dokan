@@ -2,6 +2,7 @@ import { test, expect, request } from '@utils/test';
 import { dbUtils } from '@utils/dbUtils';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
+import { helpers } from '@utils/helpers';
 import { StripeConnectPage, STRIPE_CARDS, STRIPE_CONNECTED_ACCOUNTS } from './stripeConnectPage';
 import {
     customerAuth,
@@ -412,14 +413,54 @@ test.describe('Stripe Connect — reported bugs (fix-validated 2026-06-21)', () 
             .not.toBe('on-hold');
     });
 
-    // BUG-29 — a legacy (src_) subscription renewal auto-upgrades to the customer's default/first pm_, not the original card.
-    test('BUG-29: a legacy subscription renewal charges the ORIGINAL card, not the default/first pm_', { tag: ['@pro', '@customer'] }, async () => {
+    // BUG-29 — a legacy (src_) subscription renewal resolves to the customer's DEFAULT pm_, not the card originally
+    // used. Real driver (the bug is reproduced live: resolve_legacy_renewal_pm returns pm_B): seed pm_A (same card
+    // as the src_, so same fingerprint), pm_B (different card, set default), and an order carrying the legacy
+    // _stripe_source_id=src_, then invoke resolve_legacy_renewal_pm and assert it maps to pm_A (the original card by
+    // fingerprint), not pm_B. SKIPPED until the gateway does the fingerprint mapping.
+    test('BUG-29: a legacy subscription renewal charges the ORIGINAL card, not the default/first pm_', { tag: ['@pro', '@admin'] }, async () => {
         test.skip(!hasCredentials, 'Stripe Connect test keys missing');
-        test.fixme(true, 'BUG-29: resolve_legacy_renewal_pm() picks the customer default/first pm_ (StripeConnect.php:302-327), not the card originally used for the subscription. No fingerprint/metadata mapping. Needs a legacy src_-token subscription fixture; remove this line + finish the fixture when the renewal resolves the original card.');
-        // Documented gap: driving a legacy src_-token subscription renewal needs a legacy fixture not present on a
-        // fresh site. The post-fix assertion is: the renewal PaymentIntent uses the pm_ that maps (by fingerprint)
-        // to the subscription's original card, not merely the customer's default/first saved pm_.
-        expect(true, 'placeholder — see test.fixme note (legacy renewal fixture required)').toBe(true);
+        test.fixme(true, 'BUG-29: resolve_legacy_renewal_pm() returns the customer DEFAULT pm_ (verified live: returns pm_B), ignoring the subscription src_ whose card fingerprint matches pm_A. Remove this line when it maps the legacy source to the pm_ with the same card fingerprint.');
+
+        const key = process.env.TEST_SECRET_KEY_STRIPE_CONNECT ?? '';
+        const stripePost = async (path: string, form: Record<string, string>): Promise<{ id: string }> => {
+            const ctx = await request.newContext({ extraHTTPHeaders: { Authorization: `Bearer ${key}` } });
+            try {
+                const res = await ctx.post(`https://api.stripe.com/v1/${path}`, { form });
+                return (await res.json()) as { id: string };
+            } finally {
+                await ctx.dispose();
+            }
+        };
+        // pm_A (visa 4242) shares its card fingerprint with the src_ (visa 4242); pm_B (mastercard) differs + is default.
+        const pmA = await stripePost('payment_methods', { type: 'card', 'card[token]': 'tok_visa' });
+        const pmB = await stripePost('payment_methods', { type: 'card', 'card[token]': 'tok_mastercard' });
+        const src = await stripePost('sources', { type: 'card', token: 'tok_visa' });
+
+        // Server-side fixture: purge tokens, add pm_A (not default) + pm_B (default), an order carrying the legacy
+        // _stripe_source_id=src_, invoke resolve_legacy_renewal_pm, and stash the resolved pm in an option to read.
+        const php = `
+            $cid=(int) get_user_by('login','customer1')->ID;
+            foreach (WC_Payment_Tokens::get_customer_tokens($cid,'dokan-stripe-connect') as $t){ $t->delete(); }
+            $a=new WC_Payment_Token_CC(); $a->set_token('${pmA.id}'); $a->set_gateway_id('dokan-stripe-connect'); $a->set_user_id($cid); $a->set_card_type('visa'); $a->set_last4('4242'); $a->set_expiry_month('12'); $a->set_expiry_year('2034'); $a->save();
+            $b=new WC_Payment_Token_CC(); $b->set_token('${pmB.id}'); $b->set_gateway_id('dokan-stripe-connect'); $b->set_user_id($cid); $b->set_card_type('mastercard'); $b->set_last4('4444'); $b->set_expiry_month('12'); $b->set_expiry_year('2034'); $b->set_default(true); $b->save();
+            $o=wc_create_order(['customer_id'=>$cid]); $o->update_meta_data('_stripe_source_id','${src.id}'); $o->save();
+            $gw=WC()->payment_gateways->payment_gateways()['dokan-stripe-connect'];
+            $m=new ReflectionMethod($gw,'resolve_legacy_renewal_pm'); $m->setAccessible(true);
+            update_option('bug29_resolved_pm', ['pm'=>(string) $m->invoke($gw,$o)], false);
+            $o->delete(true);
+        `;
+        const b64 = Buffer.from(php).toString('base64');
+        await helpers.exeCommandWpcli(`wp eval "eval(base64_decode('${b64}'));"`);
+
+        try {
+            const result = (await dbUtils.getOptionValue('bug29_resolved_pm')) as { pm?: string };
+            // Post-fix: the renewal maps the subscription's original card (src_, same fingerprint as pm_A) to pm_A,
+            // not the customer's default pm_B (which the bug returns).
+            expect(result?.pm, 'legacy renewal must resolve to the pm_ matching the original card (pm_A), not the default (pm_B)').toBe(pmA.id);
+        } finally {
+            await dbUtils.deleteCustomerPaymentTokens(CUSTOMER_ID);
+        }
     });
 
     // BUG-1 — refunding does not reliably reverse the vendor transfer; the real Stripe error is swallowed.
@@ -524,10 +565,36 @@ test.describe('Stripe Connect — reported bugs (fix-validated 2026-06-21)', () 
         expect(true, 'placeholder — wallet/device-gated; see test.fixme note').toBe(true);
     });
 
-    // BUG-22 — Stripe error messages on classic/Express are always English (no i18n in the JS bundles).
-    test('BUG-22: a card error message on classic checkout is localised (not hardcoded English)', { tag: ['@pro', '@customer'] }, async () => {
+    // BUG-22 (FIXED — the gateway now forwards the site locale to Stripe Elements): on a fr_FR site a declined-card
+    // error comes back localised (Stripe's own translation, e.g. "Votre carte a été refusée."), not the hardcoded
+    // English "Your card was declined." Running regression lock — re-validated live 2026-06-23 on c05e6061e.
+    test('BUG-22 (fixed): a card error message on classic checkout is localised (not hardcoded English)', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
         test.skip(!hasCredentials, 'Stripe Connect test keys missing');
-        test.fixme(true, 'BUG-22: the classic/Express/shared JS bundles have no i18n, so a card-error message stays English on a non-English locale. Needs a non-English site locale + a loaded translation to assert against; remove this line + assert the localised string when the bundles are translated.');
-        expect(true, 'placeholder — needs a non-English locale + translation; see test.fixme note').toBe(true);
+
+        // WPLANG is a PLAIN string (getOptionValue unserialize()s, which would throw), and the env default is en_US
+        // (empty). Set fr_FR with serializeData=false; restore to the en_US default in finally.
+        await dbUtils.setOptionValue('WPLANG', 'fr_FR', false);
+        const ctx = await browser.newContext({ storageState: customerAuth });
+        const page = await ctx.newPage();
+        try {
+            const stripe = new StripeConnectPage(page);
+            await dbUtils.clearCustomerCart(CUSTOMER_ID);
+            await dbUtils.deleteCustomerPaymentTokens(CUSTOMER_ID);
+            await stripe.addProductToCart(productId);
+            await stripe.gotoClassicCheckout();
+            await stripe.fillBillingClassic();
+            await stripe.selectClassicGateway();
+            await stripe.fillCardDetails(STRIPE_CARDS.declined);
+            await stripe.placeClassicOrderExpectError();
+            const errorText = ((await page.locator('ul.dokan-stripe-pe-error, .woocommerce-error').first().innerText().catch(() => '')) || '').trim();
+            // On a fr_FR site Stripe returns a localised decline (e.g. "Votre carte a été refusée"), NOT
+            // the English "Your card was declined." A still-English message means the locale was not forwarded.
+            expect(errorText.length, 'a decline error message is shown').toBeGreaterThan(0);
+            expect(errorText, 'the decline error must be localised, not the hardcoded English message').not.toMatch(/your card was declined|card was declined|card has been declined/i);
+        } finally {
+            await dbUtils.setOptionValue('WPLANG', '', false);
+            await page.close();
+            await ctx.close();
+        }
     });
 });
