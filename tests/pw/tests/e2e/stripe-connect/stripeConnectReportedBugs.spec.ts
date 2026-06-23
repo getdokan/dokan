@@ -429,13 +429,92 @@ test.describe('Stripe Connect — reported bugs (fix-validated 2026-06-21)', () 
         expect(true, 'placeholder — needs a forced reversal-failure fixture; see test.fixme note').toBe(true);
     });
 
-    // BUG-14 (FIXED via the shared order-pay path — same fix as BUG-5; change-PM carries pay_for_order and
-    // routes to a SetupIntent via wcs_is_subscription()). Kept SKIPPED only because driving it needs an ACTIVE
-    // WCS subscription for the customer (a purchase fixture not present on a fresh site) — not because it's broken.
-    test('BUG-14 (fixed): the Payment Element mounts on a subscription change-payment-method page', { tag: ['@pro', '@customer'] }, async () => {
+    // BUG-14 (FIXED via the shared order-pay path — same fix as BUG-5; change-PM carries pay_for_order and routes
+    // to a SetupIntent via wcs_is_subscription()). Real driver: buy a WCS subscription, open its change-payment
+    // page, and assert the SetupIntent Payment Element mounts. Gated on WooCommerce Subscriptions being active.
+    test('BUG-14 (fixed): the Payment Element mounts on a subscription change-payment-method page', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
         test.skip(!hasCredentials, 'Stripe Connect test keys missing');
-        test.fixme(true, 'BUG-14: FIXED via the same order-pay/SetupIntent path proven live for BUG-5 (change-PM rides is_order_pay). This test stays skipped only for the FIXTURE: it needs an active WCS subscription for the customer + selecting "Use a new card" on the change-PM page. Build that fixture, remove this line, and assert iframe[name*="StripeFrame"] mounts.');
-        expect(true, 'placeholder — fixed; needs an active WCS subscription fixture to drive live (see note)').toBe(true);
+
+        const api = new ApiUtils(await request.newContext());
+        const [resp, subProductId] = await api.createProduct(
+            {
+                ...payloads.createProduct(),
+                type: 'subscription',
+                regular_price: '5',
+                meta_data: [
+                    { key: '_subscription_price', value: '5' },
+                    { key: '_subscription_period', value: 'day' },
+                    { key: '_subscription_period_interval', value: '1' },
+                    { key: '_subscription_length', value: '0' },
+                ],
+            },
+            payloads.vendorAuth,
+        );
+        test.skip((resp as { type?: string })?.type !== 'subscription', 'WooCommerce Subscriptions not active — cannot create a WCS subscription');
+
+        const ctx = await browser.newContext({ storageState: customerAuth });
+        const page = await ctx.newPage();
+        try {
+            const stripe = new StripeConnectPage(page);
+            // 1) Buy the subscription so an ACTIVE subscription (with a saved card) exists for the customer. The
+            // block subscription purchase can occasionally stall on the confirm → retry the whole buy once.
+            let bought = false;
+            for (let attempt = 0; attempt < 2 && !bought; attempt++) {
+                try {
+                    await dbUtils.clearCustomerCart(CUSTOMER_ID);
+                    await dbUtils.deleteCustomerPaymentTokens(CUSTOMER_ID);
+                    await stripe.addProductToCart(subProductId);
+                    await stripe.gotoBlockCheckout();
+                    await stripe.selectBlockGateway();
+                    await stripe.fillCardDetails(STRIPE_CARDS.success);
+                    await stripe.placeBlockOrderExpectReceived();
+                    bought = true;
+                } catch (e) {
+                    if (attempt === 1) throw e;
+                }
+            }
+
+            // 2) Resolve the customer's newest WCS subscription id (WCS registers /wc/v3/subscriptions).
+            const adminCtx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+            let subId = 0;
+            try {
+                const r = await adminCtx.get(`${SERVER_URL}/wc/v3/subscriptions?customer=${CUSTOMER_ID}&per_page=1&orderby=date&order=desc&_fields=id,status`);
+                const arr = (await r.json().catch(() => [])) as Array<{ id: number; status: string }>;
+                subId = Array.isArray(arr) ? (arr[0]?.id ?? 0) : 0;
+            } finally {
+                await adminCtx.dispose();
+            }
+            expect(subId, 'an active WCS subscription was created for the customer by the purchase').toBeGreaterThan(0);
+
+            // 3) Open the subscription view page → "Change payment method" (carries the nonce the change-PM page needs).
+            await page.goto(`${SITE}/my-account/view-subscription/${subId}/`);
+            await page.waitForLoadState('domcontentloaded');
+            // Match the change-PM link by HREF (carries change_payment_method=<id>&_wpnonce=…) — robust to button text.
+            await page.locator('a[href*="change_payment_method"]').first().click();
+            await page.waitForLoadState('domcontentloaded');
+            await expect(page, 'reached the change-payment-method page').toHaveURL(/change_payment_method=/);
+
+            // 4) Select Stripe + "Use a new card" → the SetupIntent Payment Element must mount (the BUG-14 fix).
+            // WC visually hides the radio, so click its LABEL; change-PM defaults to the subscription's saved card,
+            // so explicitly pick "Use a new card" (the PE is intentionally not mounted for a saved token).
+            await page.locator('label[for="payment_method_dokan-stripe-connect"]').click().catch(() => undefined);
+            const useNewCard = page
+                .locator('#wc-dokan-stripe-connect-payment-token-new, input[name="wc-dokan-stripe-connect-payment-token"][value="new"]')
+                .first();
+            if (await useNewCard.count().catch(() => 0)) {
+                await useNewCard.check().catch(() => undefined);
+            }
+            await expect(
+                page.locator('iframe[name*="StripeFrame"]').first(),
+                'the Stripe Payment Element (SetupIntent) must mount on the change-payment-method page',
+            ).toBeVisible({ timeout: 25_000 });
+        } finally {
+            await page.close();
+            await ctx.close();
+            const c = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+            await c.delete(`${SERVER_URL}/wc/v3/products/${subProductId}?force=true`).catch(() => undefined);
+            await c.dispose();
+        }
     });
 
     // BUG-18 — Express checkout hardcodes terms=1 (auto-accepts T&C) and naively splits the wallet name.
