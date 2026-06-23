@@ -2,6 +2,7 @@ import { DokanToaster } from '@getdokan/dokan-ui';
 import { DokanButton, DokanTooltip, InternalError } from '@src/components';
 import { DataForm, useFormValidity } from '@dokan/product-editor';
 import { __ } from '@wordpress/i18n';
+import { addQueryArgs } from '@wordpress/url';
 import { ExternalLink } from 'lucide-react';
 import {
     useInitProductEditor,
@@ -98,9 +99,10 @@ const App = ( {
 
         try {
             const response = await apiFetch< ProductEditorData >( {
-                path: `/dokan/v3/products/init/fields?id=${ id || '' }${
-                    typeParam ? `&type=${ encodeURIComponent( typeParam ) }` : ''
-                }`,
+                path: addQueryArgs( '/dokan/v3/products/init/fields', {
+                    id: id || '',
+                    ...( typeParam ? { type: typeParam } : {} ),
+                } ),
             } );
             setFormEditor( response );
             ( window as any ).dokanProductEditor = response;
