@@ -559,8 +559,18 @@ class ProductController extends DokanRESTController {
     public function get_product_summary( $request ) {
         $seller_id = dokan_get_current_user_id();
 
-        // Match the list's exclusion scope so tab counts can't drift from it —
-        // Pro modules add `product_pack` etc. via this filter.
+        // Exclusion scope for the status-tab counts. Module-owned types
+        // (auction, product_pack, …) opt out through the
+        // `dokan_product_listing_exclude_type` filter — the same filter the
+        // list query (prepare_objects_query) uses, so for those types the list
+        // contents and the counts stay in sync.
+        //
+        // `booking` is kept as a deliberate defensive default (NOT a drift bug):
+        // booking products have always been a separate dashboard concept and
+        // must never inflate the regular product counts. The Booking module adds
+        // `booking` to the filter too, so this is redundant while that module is
+        // active; the hardcode only matters in the edge case where booking
+        // products exist but the module (and thus its filter handler) is off.
         $exclude_types = array_values(
             array_unique(
                 array_merge(
