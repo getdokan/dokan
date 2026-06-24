@@ -179,7 +179,7 @@ class Extensions extends AbstractPage {
             [
                 'slug'        => 'wedocs',
                 'title'       => esc_html__( 'weDocs', 'dokan-lite' ),
-                'description' => esc_html__( 'Add a self-serve help center with AI-powered docs - let vendors and customers find answers instantly and reduce your support workload.', 'dokan-lite' ),
+                'description' => esc_html__( 'Build a self-serve help center for your marketplace. Publish vendor-specific docs alongside store guides so vendors find answers instantly.', 'dokan-lite' ),
                 'image'       => $thumbnail_dir . '/addons/wedocs.svg',
                 'button_type' => 'install',
                 'wp_org_slug' => 'wedocs',
