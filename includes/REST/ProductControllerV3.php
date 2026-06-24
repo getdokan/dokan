@@ -224,7 +224,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
         $product = parent::create_item( $request );
 
         if ( is_wp_error( $product ) ) {
-            return $product;
+            return $this->clarify_download_error( $product );
         }
 
         $product_id = (int) $product->data['id'];
@@ -249,7 +249,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
         $product = parent::update_item( $request );
 
         if ( is_wp_error( $product ) ) {
-            return $product;
+            return $this->clarify_download_error( $product );
         }
 
         $product_id = (int) $product->data['id'];
@@ -259,6 +259,31 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
         do_action( 'dokan_product_updated', $product_id, $params );
 
         return $product;
+    }
+
+    /**
+     * Replace WooCommerce's admin-oriented "approved download directory" error with vendor-friendly guidance.
+     *
+     * WooCommerce rejects downloadable files that aren't on the server or inside an approved directory and
+     * tells the user to "contact a site administrator" — advice a vendor cannot act on. We keep the rejection
+     * (the file genuinely can't be used) but point them at the media picker, which is the path they control.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_Error $error Error returned from the parent WooCommerce REST save.
+     *
+     * @return WP_Error
+     */
+    protected function clarify_download_error( WP_Error $error ): WP_Error {
+        if ( 'product_invalid_download' !== $error->get_error_code() ) {
+            return $error;
+        }
+
+        return new WP_Error(
+            $error->get_error_code(),
+            __( 'The downloadable file could not be saved. Use the "Choose" button to upload your file or pick one from your media library, then try again.', 'dokan-lite' ),
+            $error->get_error_data()
+        );
     }
 
     /**
