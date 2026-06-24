@@ -19,6 +19,8 @@ const FileUploadEdit = ( { field, onChange, validity }: any ) => {
               ]
     );
 
+    // Editable by default; the schema can lock these fields via `disabled`.
+    const isReadOnly = field?.disabled ?? false;
     const onAddRow = () => {
         const newFiles = [
             ...files,
@@ -93,8 +95,8 @@ const FileUploadEdit = ( { field, onChange, validity }: any ) => {
                                             'Enter name',
                                             'dokan-lite'
                                         ),
-                                        readOnly: true,
-                                        disabled: true,
+                                        readOnly: isReadOnly,
+                                        disabled: isReadOnly,
                                     } }
                                 />
                             </div>
@@ -114,8 +116,8 @@ const FileUploadEdit = ( { field, onChange, validity }: any ) => {
                                             'Enter URL or select file',
                                             'dokan-lite'
                                         ),
-                                        readOnly: true,
-                                        disabled: true,
+                                        readOnly: isReadOnly,
+                                        disabled: isReadOnly,
                                     } }
                                 />
                             </div>
