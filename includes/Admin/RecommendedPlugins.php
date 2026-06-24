@@ -24,13 +24,13 @@ class RecommendedPlugins {
     public function __construct() {
         $this->plugins = [
             [
-                'type'        => 'store_growth',
-                'title'       => fn() => __( 'StoreGrowth', 'dokan-lite' ),
-                'description' => fn() => __( 'Boost sales with upsells, BOGO deals, FOMO popups and more', 'dokan-lite' ),
-                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/store-growth-logo.png',
-                'img_alt'     => fn() => __( 'StoreGrowth logo', 'dokan-lite' ),
-                'slug'        => 'storegrowth-sales-booster',
-                'basename'    => 'storegrowth-sales-booster/storegrowth-sales-booster.php',
+                'type'        => 'wepos',
+                'title'       => fn() => __( 'wePos', 'dokan-lite' ),
+                'description' => fn() => __( 'Run your counter and online store from one fast POS system', 'dokan-lite' ),
+                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/extensions/addons/wepos.svg',
+                'img_alt'     => fn() => __( 'wePos logo', 'dokan-lite' ),
+                'slug'        => 'wepos',
+                'basename'    => 'wepos/wepos.php',
             ],
             [
                 'type'        => 'wemail',
@@ -60,13 +60,13 @@ class RecommendedPlugins {
                 'basename'    => 'texty/texty.php',
             ],
             [
-                'type'        => 'wepos',
-                'title'       => fn() => __( 'wePos', 'dokan-lite' ),
-                'description' => fn() => __( 'Run your counter and online store from one fast POS system', 'dokan-lite' ),
-                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/extensions/addons/wepos.svg',
-                'img_alt'     => fn() => __( 'wePos logo', 'dokan-lite' ),
-                'slug'        => 'wepos',
-                'basename'    => 'wepos/wepos.php',
+                'type'        => 'store_growth',
+                'title'       => fn() => __( 'StoreGrowth', 'dokan-lite' ),
+                'description' => fn() => __( 'Boost sales with upsells, BOGO deals, FOMO popups and more', 'dokan-lite' ),
+                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/store-growth-logo.png',
+                'img_alt'     => fn() => __( 'StoreGrowth logo', 'dokan-lite' ),
+                'slug'        => 'storegrowth-sales-booster',
+                'basename'    => 'storegrowth-sales-booster/storegrowth-sales-booster.php',
             ],
             [
                 'type'        => 'wedocs',
