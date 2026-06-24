@@ -183,6 +183,13 @@ class SchemaValidator {
         'single_product_preview',
         'textarea',
         'withdraw_schedule',
+        'collapsible_switch',
+        'biweekly_week_pair',
+        'quarter_anchor_month',
+        'color_customizer',
+        'delivery_days',
+        'google_auth',
+        'verification_methods',
     ];
 
     /**
@@ -217,7 +224,10 @@ class SchemaValidator {
     public function validate( array $elements ): array {
         // Skip validation if disabled via constant.
         if ( defined( 'DOKAN_DISABLE_SCHEMA_VALIDATION' ) && DOKAN_DISABLE_SCHEMA_VALIDATION ) {
-            return [ 'errors' => [], 'warnings' => [] ];
+            return [
+				'errors' => [],
+				'warnings' => [],
+			];
         }
 
         /**
@@ -232,7 +242,10 @@ class SchemaValidator {
          * @param array $elements The schema elements about to be validated.
          */
         if ( apply_filters( 'dokan_admin_settings_schema_skip_validation', false, $elements ) ) {
-            return [ 'errors' => [], 'warnings' => [] ];
+            return [
+				'errors' => [],
+				'warnings' => [],
+			];
         }
 
         $this->errors   = [];

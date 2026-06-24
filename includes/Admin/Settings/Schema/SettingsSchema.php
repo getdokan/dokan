@@ -550,7 +550,8 @@ class SettingsSchema {
                 'type'        => 'subpage',
                 'page_id'     => 'transaction',
                 'title'       => esc_html__( 'Fees', 'dokan-lite' ),
-                'description' => esc_html__( 'Configure how different types of fees are distributed between vendors and admin', 'dokan-lite' ),                'priority'    => 100,
+                'description' => esc_html__( 'Configure how different types of fees are distributed between vendors and admin', 'dokan-lite' ),
+				'priority' => 100,
             ],
             [
                 'id'         => 'fees',
@@ -807,7 +808,8 @@ class SettingsSchema {
                 'type'        => 'subpage',
                 'page_id'     => 'transaction',
                 'title'       => esc_html__( 'Withdraw', 'dokan-lite' ),
-                'description' => esc_html__( 'Set up available withdrawal methods and transaction conditions for vendors.', 'dokan-lite' ),                'priority'    => 300,
+                'description' => esc_html__( 'Set up available withdrawal methods and transaction conditions for vendors.', 'dokan-lite' ),
+				'priority' => 300,
                 'doc_link'    => 'https://dokan.co/docs/wordpress/withdraw/',
             ],
             [
@@ -2571,11 +2573,52 @@ class SettingsSchema {
 					],
                 ],
             ],
+            // Group container for the card's credential fields. A dedicated
+            // `fieldgroup` (not the switch field itself) so `field_group_id`
+            // resolves to a real group element; the switch stays `type: field`
+            // to keep its legacy_key bridging and single-option storage. Carries
+            // the provider show/hide dependencies so credentials hide unless
+            // reCAPTCHA v3 is the selected provider.
+            [
+                'id'           => 'recaptcha_credentials_group',
+                'type'         => 'fieldgroup',
+                'section_id'   => 'captcha_section',
+                'dependencies' => [
+                    [
+						'key' => 'captcha_enable_status',
+						'value' => 'on',
+						'attribute' => 'display',
+						'effect' => 'show',
+						'comparison' => '===',
+					],
+                    [
+						'key' => 'captcha_enable_status',
+						'value' => 'on',
+						'attribute' => 'display',
+						'effect' => 'hide',
+						'comparison' => '!==',
+					],
+                    [
+						'key' => 'captcha_provider',
+						'value' => 'google_recaptcha_v3',
+						'attribute' => 'display',
+						'effect' => 'show',
+						'comparison' => '===',
+					],
+                    [
+						'key' => 'captcha_provider',
+						'value' => 'google_recaptcha_v3',
+						'attribute' => 'display',
+						'effect' => 'hide',
+						'comparison' => '!==',
+					],
+                ],
+            ],
             [
                 'id'             => 'recaptcha_admin_notice',
                 'type'           => 'field',
                 'variant'        => 'info',
-                'field_group_id' => 'recaptcha_validation_label',
+                'field_group_id' => 'recaptcha_credentials_group',
                 'show_icon'      => true,
                 'title'          => esc_html__( 'You can get your Site Key and Secret Key from your reCAPTCHA admin console.', 'dokan-lite' ),
                 'link_title'     => esc_html__( 'Admin Console', 'dokan-lite' ),
@@ -2585,7 +2628,7 @@ class SettingsSchema {
                 'id'             => 'recaptcha_site_key',
                 'type'           => 'field',
                 'variant'        => 'show_hide',
-                'field_group_id' => 'recaptcha_validation_label',
+                'field_group_id' => 'recaptcha_credentials_group',
                 'title'          => esc_html__( 'Site Key', 'dokan-lite' ),
                 'placeholder'    => esc_html__( 'Site Key', 'dokan-lite' ),
                 'tooltip'        => esc_html__( 'Insert Google reCAPTCHA v3 site key.', 'dokan-lite' ),
@@ -2599,7 +2642,7 @@ class SettingsSchema {
                 'id'             => 'recaptcha_secret_key',
                 'type'           => 'field',
                 'variant'        => 'show_hide',
-                'field_group_id' => 'recaptcha_validation_label',
+                'field_group_id' => 'recaptcha_credentials_group',
                 'title'          => esc_html__( 'Secret Key', 'dokan-lite' ),
                 'placeholder'    => esc_html__( 'Secret Key', 'dokan-lite' ),
                 'tooltip'        => esc_html__( 'Insert Google reCAPTCHA v3 secret key.', 'dokan-lite' ),
@@ -2670,11 +2713,52 @@ class SettingsSchema {
 					],
                 ],
             ],
+            // Group container for the card's credential fields. A dedicated
+            // `fieldgroup` (not the switch field itself) so `field_group_id`
+            // resolves to a real group element; the switch stays `type: field`
+            // to keep its legacy_key bridging and single-option storage. Carries
+            // the provider show/hide dependencies so credentials hide unless
+            // Turnstile is the selected provider.
+            [
+                'id'           => 'turnstile_credentials_group',
+                'type'         => 'fieldgroup',
+                'section_id'   => 'captcha_section',
+                'dependencies' => [
+                    [
+						'key' => 'captcha_enable_status',
+						'value' => 'on',
+						'attribute' => 'display',
+						'effect' => 'show',
+						'comparison' => '===',
+					],
+                    [
+						'key' => 'captcha_enable_status',
+						'value' => 'on',
+						'attribute' => 'display',
+						'effect' => 'hide',
+						'comparison' => '!==',
+					],
+                    [
+						'key' => 'captcha_provider',
+						'value' => 'cloudflare_turnstile',
+						'attribute' => 'display',
+						'effect' => 'show',
+						'comparison' => '===',
+					],
+                    [
+						'key' => 'captcha_provider',
+						'value' => 'cloudflare_turnstile',
+						'attribute' => 'display',
+						'effect' => 'hide',
+						'comparison' => '!==',
+					],
+                ],
+            ],
             [
                 'id'             => 'turnstile_admin_notice',
                 'type'           => 'field',
                 'variant'        => 'info',
-                'field_group_id' => 'turnstile_validation_label',
+                'field_group_id' => 'turnstile_credentials_group',
                 'show_icon'      => true,
                 'title'          => esc_html__( 'You can get your Site Key and Secret Key from your Cloudflare Turnstile dashboard.', 'dokan-lite' ),
                 'link_title'     => esc_html__( 'Turnstile Dashboard', 'dokan-lite' ),
@@ -2684,7 +2768,7 @@ class SettingsSchema {
                 'id'             => 'turnstile_site_key',
                 'type'           => 'field',
                 'variant'        => 'show_hide',
-                'field_group_id' => 'turnstile_validation_label',
+                'field_group_id' => 'turnstile_credentials_group',
                 'title'          => esc_html__( 'Site Key', 'dokan-lite' ),
                 'placeholder'    => esc_html__( 'Site Key', 'dokan-lite' ),
                 'tooltip'        => esc_html__( 'Insert Cloudflare Turnstile site key.', 'dokan-lite' ),
@@ -2698,7 +2782,7 @@ class SettingsSchema {
                 'id'             => 'turnstile_secret_key',
                 'type'           => 'field',
                 'variant'        => 'show_hide',
-                'field_group_id' => 'turnstile_validation_label',
+                'field_group_id' => 'turnstile_credentials_group',
                 'title'          => esc_html__( 'Secret Key', 'dokan-lite' ),
                 'placeholder'    => esc_html__( 'Secret Key', 'dokan-lite' ),
                 'tooltip'        => esc_html__( 'Insert Cloudflare Turnstile secret key.', 'dokan-lite' ),
