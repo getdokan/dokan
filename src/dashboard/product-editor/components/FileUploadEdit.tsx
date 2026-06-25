@@ -2,6 +2,7 @@ import { DokanButton } from '@dokan/components';
 import { SimpleInput } from '@getdokan/dokan-ui';
 import { MediaUploader } from '@src/components';
 import { useState } from '@wordpress/element';
+import { applyFilters } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
 import { Plus, Upload, X } from 'lucide-react';
 import CustomField, { getValidationError } from './CustomField';
@@ -19,8 +20,13 @@ const FileUploadEdit = ( { field, onChange, validity }: any ) => {
               ]
     );
 
-    // Editable by default; the schema can lock these fields via `disabled`.
-    const isReadOnly = field?.disabled ?? false;
+    // Read-only by default (vendors attach via "Choose"); only the core Downloadable Files field is free-typeable — filter-overridable per field.
+    const readOnly = applyFilters(
+        'dokan_product_editor_file_field_read_only',
+        field?.id !== 'downloads',
+        field
+    ) as boolean;
+
     const onAddRow = () => {
         const newFiles = [
             ...files,
@@ -95,8 +101,8 @@ const FileUploadEdit = ( { field, onChange, validity }: any ) => {
                                             'Enter name',
                                             'dokan-lite'
                                         ),
-                                        readOnly: isReadOnly,
-                                        disabled: isReadOnly,
+                                        readOnly,
+                                        disabled: readOnly,
                                     } }
                                 />
                             </div>
@@ -116,8 +122,8 @@ const FileUploadEdit = ( { field, onChange, validity }: any ) => {
                                             'Enter URL or select file',
                                             'dokan-lite'
                                         ),
-                                        readOnly: isReadOnly,
-                                        disabled: isReadOnly,
+                                        readOnly,
+                                        disabled: readOnly,
                                     } }
                                 />
                             </div>
