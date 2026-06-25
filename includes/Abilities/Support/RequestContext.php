@@ -30,6 +30,18 @@ class RequestContext {
     private static $ability_execution_depth = 0;
 
     /**
+     * Whether the current request has been positively identified as an MCP request.
+     *
+     * Set as soon as the MCP adapter starts handling an ability call — before the target
+     * ability's permission callback runs (see {@see flag_mcp_request()}). This is essential
+     * because the adapter pre-flights an ability's permission check *outside* of any tracked
+     * `wp_before_execute_ability` window, so the execution-depth signal is still zero then.
+     *
+     * @var bool
+     */
+    private static $request_is_mcp = false;
+
+    /**
      * Whether the current request targets an MCP / abilities endpoint.
      *
      * @since DOKAN_SINCE
@@ -39,7 +51,7 @@ class RequestContext {
     public static function is_mcp_request(): bool {
         $request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
 
-        $is_mcp_request = self::is_executing_ability() || self::matches_mcp_endpoint( $request_uri );
+        $is_mcp_request = self::$request_is_mcp || self::is_executing_ability() || self::matches_mcp_endpoint( $request_uri );
 
         /**
          * Filters whether the current request should be treated as an MCP / abilities request.
@@ -64,6 +76,29 @@ class RequestContext {
     }
 
     /**
+     * Flag the current request as an MCP request and return the given value unchanged.
+     *
+     * Designed to be hooked onto a filter the MCP adapter runs while handling a tool call —
+     * `mcp_adapter_execute_ability_capability`, which fires inside the adapter's permission
+     * pre-flight, *before* it checks the target ability's own permission callback. Marking the
+     * request here lets the per-object permission grant (e.g. allowing a vendor to read their own
+     * orders) recognize the MCP context even though no `wp_before_execute_ability` window is open
+     * yet. Works for any MCP server built on the shared adapter (WooCommerce, a future Dokan
+     * server, or a third-party such as MCP Site Manager).
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param mixed $value Value passed by the filter; returned unchanged.
+     *
+     * @return mixed
+     */
+    public static function flag_mcp_request( $value = null ) {
+        self::$request_is_mcp = true;
+
+        return $value;
+    }
+
+    /**
      * Mark the start of an ability execution. Hooked to `wp_before_execute_ability`.
      *
      * @since DOKAN_SINCE
@@ -83,6 +118,18 @@ class RequestContext {
      */
     public static function mark_ability_execution_finished(): void {
         self::$ability_execution_depth = max( 0, self::$ability_execution_depth - 1 );
+    }
+
+    /**
+     * Reset the per-request MCP state. Intended for test isolation.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public static function reset(): void {
+        self::$ability_execution_depth = 0;
+        self::$request_is_mcp          = false;
     }
 
     /**

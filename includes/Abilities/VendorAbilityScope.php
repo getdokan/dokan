@@ -110,6 +110,13 @@ class VendorAbilityScope implements Hookable {
         add_action( 'wp_before_execute_ability', [ RequestContext::class, 'mark_ability_execution_started' ] );
         add_action( 'wp_after_execute_ability', [ RequestContext::class, 'mark_ability_execution_finished' ] );
 
+        // Flag the request as MCP the moment the adapter begins handling a tool call. This fires
+        // during the adapter's permission pre-flight — before the target ability's permission
+        // callback runs and before any `wp_before_execute_ability` window opens — so the order /
+        // product read grant below can recognize the MCP context. Works for any MCP server built
+        // on the shared mcp-adapter package.
+        add_filter( 'mcp_adapter_execute_ability_capability', [ RequestContext::class, 'flag_mcp_request' ] );
+
         // Per-object permission: published products are public; orders and unpublished products
         // are restricted to their owner (and store admins).
         add_filter( 'woocommerce_rest_check_permissions', [ $this, 'scope_object_permissions' ], 99, 4 );

@@ -23,6 +23,8 @@ class VendorAbilityScopeTest extends DokanTestCase {
     public function set_up() {
         parent::set_up();
         $this->sut = new VendorAbilityScope();
+        // Clear the per-request MCP state so the static flag never leaks between tests.
+        RequestContext::reset();
     }
 
     /**
@@ -89,6 +91,50 @@ class VendorAbilityScopeTest extends DokanTestCase {
 
         $this->assertTrue( $this->sut->scope_object_permissions( true, 'read', $order1, 'shop_order' ) );
         $this->assertFalse( $this->sut->scope_object_permissions( true, 'read', $order2, 'shop_order' ) );
+    }
+
+    /**
+     * The MCP adapter pre-flights an ability's permission check (e.g. for woocommerce/orders-query)
+     * *before* it opens a `wp_before_execute_ability` window, so the execution-depth signal is still
+     * zero and the request URL is the adapter's own (not /woocommerce/mcp). The adapter firing
+     * `mcp_adapter_execute_ability_capability` is what marks the request — without it the vendor's
+     * order read was denied. Regression guard for "my orders" returning permission-denied over MCP.
+     */
+    public function test_flag_mcp_request_grants_order_read_during_adapter_preflight() {
+        $order1 = $this->create_single_vendor_order( $this->seller_id1 );
+        $order2 = $this->create_single_vendor_order( $this->seller_id2 );
+
+        wp_set_current_user( $this->seller_id1 );
+
+        // Pre-flight conditions: no execution window, no MCP URL. Previously denied.
+        $this->assertFalse( RequestContext::is_executing_ability() );
+        $this->assertFalse( $this->sut->scope_object_permissions( false, 'read', 0, 'shop_order' ) );
+
+        // The adapter fires this filter before checking the target ability's permission.
+        $capability = RequestContext::flag_mcp_request( 'read' );
+        $this->assertSame( 'read', $capability, 'The filter value must pass through unchanged.' );
+        $this->assertTrue( RequestContext::is_mcp_request() );
+        $this->assertFalse( RequestContext::is_executing_ability() );
+
+        // Collection-level read is now granted (so the vendor can list), the owned order is
+        // readable, and another vendor's order is still denied.
+        $this->assertTrue( $this->sut->scope_object_permissions( false, 'read', 0, 'shop_order' ) );
+        $this->assertTrue( $this->sut->scope_object_permissions( true, 'read', $order1, 'shop_order' ) );
+        $this->assertFalse( $this->sut->scope_object_permissions( true, 'read', $order2, 'shop_order' ) );
+    }
+
+    public function test_register_hooks_attaches_mcp_adapter_flag_filter() {
+        $this->sut->register_hooks();
+
+        $this->assertNotFalse(
+            has_filter( 'mcp_adapter_execute_ability_capability', [ RequestContext::class, 'flag_mcp_request' ] ),
+            'register_hooks() must attach the MCP-adapter pre-flight flag filter.'
+        );
+
+        // Simulate the adapter firing the filter; the request must then be detected as MCP.
+        $this->assertFalse( RequestContext::is_mcp_request() );
+        apply_filters( 'mcp_adapter_execute_ability_capability', 'read' );
+        $this->assertTrue( RequestContext::is_mcp_request() );
     }
 
     public function test_scope_object_permissions_is_noop_for_unrelated_post_type() {
