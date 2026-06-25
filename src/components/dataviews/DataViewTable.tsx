@@ -10,6 +10,7 @@ import type {
 import { kebabCase, snakeCase } from '@dokan/utilities';
 import { useEffect } from '@wordpress/element';
 import { useWindowDimensions } from '@dokan/hooks';
+import { __, setLocaleData } from '@wordpress/i18n';
 import { setLocaleData } from '@wordpress/i18n';
 import { getTranslatedStrings } from '@src/utilities/getTranslatedStrings';
 

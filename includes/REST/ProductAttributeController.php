@@ -64,9 +64,13 @@ class ProductAttributeController extends WC_REST_Product_Attributes_V1_Controlle
             )
         );
 
-        // REST API for lazily fetching / creating terms of a global attribute.
+        // REST API for lazily fetching / creating terms of a global attribute (product editor only).
+        // NOTE: uses a dedicated `editor-terms` sub-route so it does NOT shadow the public,
+        // WooCommerce-shaped collection endpoint `products/attributes/<id>/terms` served by
+        // ProductAttributeTermsController. The editor needs the {id,name,value,label} select2 shape;
+        // the public endpoint must keep the full WC shape ({id,name,slug,description,menu_order,count,_links}).
         register_rest_route(
-            $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)/terms',
+            $this->namespace, '/' . $this->rest_base . '/(?P<id>[\d]+)/editor-terms',
             array(
                 array(
                     'methods'             => WP_REST_Server::READABLE,

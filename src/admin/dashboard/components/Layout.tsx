@@ -25,9 +25,6 @@ const Layout = ( {
                 pluginId="dokan-admin-dashboard"
                 tokens={ pluginUITokens }
             >
-                { /* Dashboard layout container. Plugin UI WordPress styles are
-                    imported globally in base-tailwind.css; Tailwind utilities are
-                    scoped via the .dokan-layout class that individual pages add. */ }
                 <div className="dokan-admin-dashboard-layout">
                     { children }
                 </div>

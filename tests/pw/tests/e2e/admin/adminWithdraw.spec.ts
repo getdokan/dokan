@@ -5,6 +5,7 @@ import { ApiUtils } from '@utils/apiUtils';
 import { dbUtils } from '@utils/dbUtils';
 import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
+import { applyAndValidateDataViewsFilter } from './adminDataViews';
 import { serialize } from 'php-serialize';
 import path from 'path';
 
@@ -174,6 +175,14 @@ test.describe('Admin Withdraw list functionality', () => {
             expect(await withdraw.hasNoPhpFatal(), 'no PHP fatal').toBe(true);
         });
 
+        test('applying the Vendor filter refetches the withdraw list and re-renders the table', { tag: ['@lite', '@admin'] }, async () => {
+            await withdraw.goto();
+            const result = await applyAndValidateDataViewsFilter(page, { requestFragment: 'dokan/v2/withdraw', field: 'Vendor' });
+            expect(result.requestFired, 'applying the Vendor filter refetched the withdraw list').toBe(true);
+            expect(result.noPhpFatal, 'no PHP fatal after filtering').toBe(true);
+            expect(result.ok, 'the Vendor filter applied and the table re-rendered (rows or empty state)').toBe(true);
+        });
+
         test('the four status tabs render and Pending is active by default', { tag: ['@lite', '@admin'] }, async () => {
             await withdraw.goto();
             await expect(withdraw.tab(/Pending/)).toBeVisible();
@@ -304,8 +313,8 @@ test.describe('Admin Withdraw list functionality', () => {
             const withdraw = new AdminWithdrawPage(page);
             await withdraw.goto();
             await withdraw.startApprove(adminWithdrawData.poor.storeName);
-            expect(await withdraw.modalContains(/Insufficient Balance/i), 'insufficient-balance modal opens instead of the approve confirmation').toBe(true);
-            await withdraw.confirmModal('Close');
+            expect(await withdraw.modalContains(/Insufficient Balance/i), 'insufficient-balance modal opens after confirming the approve').toBe(true);
+            await withdraw.closeDialog('Close');
             // The row is still pending — no approval happened.
             await withdraw.goto();
             expect(await withdraw.statusOfRow(adminWithdrawData.poor.storeName)).toBe('Pending');
