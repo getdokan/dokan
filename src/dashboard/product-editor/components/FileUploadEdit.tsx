@@ -28,11 +28,13 @@ const FileUploadEdit = ( { field, onChange, validity }: any ) => {
     }, [ field.value ] );
 
     // Read-only by default (vendors attach via "Choose"); only the core Downloadable Files field is free-typeable — filter-overridable per field.
-    const readOnly = applyFilters(
-        'dokan_product_editor_file_field_read_only',
-        field?.id !== 'downloads',
-        field
-    ) as boolean;
+    const readOnly = Boolean(
+        applyFilters(
+            'dokan_product_editor_file_field_read_only',
+            field?.id !== 'downloads',
+            field
+        )
+    );
 
     const onAddRow = () => {
         const newFiles = [
