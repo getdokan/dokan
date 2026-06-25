@@ -979,12 +979,12 @@ test.describe('Product Form Manager', () => {
     });
 
     // ========================================================================
-    // MANDATORY FIELD — the builder must not let an admin hide a field flagged
-    // is_mandatory (PFM-N04). The flag is set via REST, then the UI is asserted.
+    // MANDATORY FIELD — the builder must not let an admin hide an is_mandatory
+    // field (PFM-N04). Asserted on a default-mandatory field (defined in PHP).
     // ========================================================================
     test.describe('mandatory field UI contract', () => {
         test(
-            'the visibility toggle is disabled for an is_mandatory field',
+            'the visibility toggle is locked for a default mandatory field',
             { tag: ['@pro', '@admin'] },
             async () => {
                 // Assert against a real is_mandatory DEFAULT field rather than seeding a
