@@ -1,7 +1,7 @@
 import { DokanButton } from '@dokan/components';
 import { SimpleInput } from '@getdokan/dokan-ui';
 import { MediaUploader } from '@src/components';
-import { useState } from '@wordpress/element';
+import { useState, useEffect } from '@wordpress/element';
 import { applyFilters } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
 import { Plus, Upload, X } from 'lucide-react';
@@ -19,6 +19,13 @@ const FileUploadEdit = ( { field, onChange, validity }: any ) => {
                   },
               ]
     );
+
+    // Re-sync rows when field.value loads/changes after mount (e.g. the create → edit SPA transition); the initial useState alone misses the late-arriving value.
+    useEffect( () => {
+        if ( field.value?.length > 0 ) {
+            setFiles( field.value );
+        }
+    }, [ field.value ] );
 
     // Read-only by default (vendors attach via "Choose"); only the core Downloadable Files field is free-typeable — filter-overridable per field.
     const readOnly = applyFilters(
