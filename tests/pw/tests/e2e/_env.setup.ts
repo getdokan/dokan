@@ -99,6 +99,12 @@ setup.describe('setup woocommerce settings', () => {
         // create attribute, attribute term
         const [, attributeId] = await apiUtils.createAttribute({ name: 'sizes' });
         helpers.createEnvVar('ATTRIBUTE_ID', attributeId);
+        // Dokan 5.0.5 gates attribute-term creation behind the dokan_selling `add_new_attribute`
+        // option (ProductAttributeController::create_attribute_term_permissions_check → 403 otherwise).
+        // The canonical selling settings (which enable it) are applied later in setup; apply the full
+        // set here via setOptionValue so the option row exists on a fresh DB. updateOptionValue would
+        // read-then-merge and crash (`undefined.option_value`) when the row is absent.
+        await dbUtils.setOptionValue(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
         await apiUtils.createAttributeTerm(attributeId, { name: 's' });
         await apiUtils.createAttributeTerm(attributeId, { name: 'l' });
         await apiUtils.createAttributeTerm(attributeId, { name: 'm' });
