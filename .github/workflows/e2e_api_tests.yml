@@ -537,13 +537,21 @@ jobs:
             # the same results.json, so the coverage teardown otherwise
             # overwrites the actual e2e shard summary with its own (1-test)
             # report and the merge step under-counts e2e by ~1000 tests.
-            - name: Preserve e2e summary before coverage
+            - name: Preserve e2e summary + spec durations before coverage
               if: always() && steps.e2e-test.outcome != 'cancelled'
               working-directory: tests/pw
               run: |
                   if [ -f playwright-report/e2e/summary-report/results.json ]; then
                       cp playwright-report/e2e/summary-report/results.json \
                          playwright-report/e2e/summary-report/results.e2e.bak.json
+                  fi
+                  # Coverage re-walks the suite and overwrites spec-durations.json with just the
+                  # coverage teardown, destroying the per-spec timings the shard balancer
+                  # (getShardSpecs.js) depends on. Preserve it so the artifact keeps the real
+                  # e2e timings and the duration baseline can be regenerated accurately.
+                  if [ -f playwright-report/e2e/spec-durations.json ]; then
+                      cp playwright-report/e2e/spec-durations.json \
+                         playwright-report/e2e/spec-durations.e2e.bak.json
                   fi
 
             # Coverage walks the suite a second time. Skip on PRs to halve the
@@ -557,13 +565,17 @@ jobs:
               run: |
                   npm run test:e2e:coverage
 
-            - name: Restore e2e summary after coverage
+            - name: Restore e2e summary + spec durations after coverage
               if: always() && steps.e2e-test.outcome != 'cancelled'
               working-directory: tests/pw
               run: |
                   if [ -f playwright-report/e2e/summary-report/results.e2e.bak.json ]; then
                       mv playwright-report/e2e/summary-report/results.e2e.bak.json \
                          playwright-report/e2e/summary-report/results.json
+                  fi
+                  if [ -f playwright-report/e2e/spec-durations.e2e.bak.json ]; then
+                      mv playwright-report/e2e/spec-durations.e2e.bak.json \
+                         playwright-report/e2e/spec-durations.json
                   fi
 
             - name: Backup Database

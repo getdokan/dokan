@@ -43,7 +43,7 @@ test.describe('attribute term api test', () => {
         const [response, responseBody] = await apiUtils.post(endPoints.createAttributeTerm(attributeId), { data: payloads.createAttributeTerm() });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        expect(responseBody).toMatchSchema(schemas.attributeTermsSchema.attributeTermDropdownSchema);
+        expect(responseBody).toMatchSchema(schemas.attributeTermsSchema.attributeTermSchema);
     });
 
     test('update an attribute term', { tag: ['@lite'] }, async () => {
