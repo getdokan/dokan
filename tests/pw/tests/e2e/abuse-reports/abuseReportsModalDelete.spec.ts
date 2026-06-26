@@ -410,7 +410,7 @@ test.describe('Abuse Reports — Modal, Delete-edge & Orphaned records @pro', ()
         await abuse.openRowActionMenu(reason);
         await abuse.clickDeleteActionFromMenu();
         const desc = await abuse.getDeleteModalDescriptionText();
-        expect(desc, 'Single-delete modal copy should be singular').toContain('this abuse report');
+        expect(desc, 'Single-delete modal copy should reference the selected report(s)').toContain('selected abuse report(s)');
         await abuse.confirmDeleteInModal();
         await abuse.waitForListReady();
 

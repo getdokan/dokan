@@ -224,7 +224,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
         $product = parent::create_item( $request );
 
         if ( is_wp_error( $product ) ) {
-            return $product;
+            return $this->clarify_download_error( $product );
         }
 
         $product_id = (int) $product->data['id'];
@@ -249,7 +249,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
         $product = parent::update_item( $request );
 
         if ( is_wp_error( $product ) ) {
-            return $product;
+            return $this->clarify_download_error( $product );
         }
 
         $product_id = (int) $product->data['id'];
@@ -259,6 +259,33 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
         do_action( 'dokan_product_updated', $product_id, $params );
 
         return $product;
+    }
+
+    /**
+     * Replace WooCommerce's admin-oriented "approved download directory" rejection with vendor-friendly guidance.
+     *
+     * WooCommerce raises product_invalid_download whenever a downloadable file can't be used — most often because
+     * its folder isn't an approved download directory — and tells the user to "contact a site administrator,"
+     * which a vendor can't act on. The specific cause isn't exposed (the error code and data are generic) and
+     * WooCommerce has already run the directory check, so rather than re-deriving it we simply restate the
+     * message; the field's tooltip explains the approved-directory requirement up front.
+     *
+     * @since 5.0.6
+     *
+     * @param WP_Error $error Error returned from the parent WooCommerce REST save.
+     *
+     * @return WP_Error
+     */
+    protected function clarify_download_error( WP_Error $error ): WP_Error {
+        if ( 'product_invalid_download' !== $error->get_error_code() ) {
+            return $error;
+        }
+
+        return new WP_Error(
+            $error->get_error_code(),
+            __( 'The downloadable file could not be saved. Please pick a file from upload directory approved by the store admin.', 'dokan-lite' ),
+            $error->get_error_data()
+        );
     }
 
     /**

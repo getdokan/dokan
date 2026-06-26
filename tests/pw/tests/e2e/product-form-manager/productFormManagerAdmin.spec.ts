@@ -979,25 +979,29 @@ test.describe('Product Form Manager', () => {
     });
 
     // ========================================================================
-    // MANDATORY FIELD — the builder must not let an admin hide a field flagged
-    // is_mandatory (PFM-N04). The flag is set via REST, then the UI is asserted.
+    // MANDATORY FIELD — the builder must not let an admin hide an is_mandatory
+    // field (PFM-N04). Asserted on a default-mandatory field (defined in PHP).
     // ========================================================================
     test.describe('mandatory field UI contract', () => {
         test(
-            'the visibility toggle is disabled for an is_mandatory field',
+            'the visibility toggle is locked for a default mandatory field',
             { tag: ['@pro', '@admin'] },
             async () => {
-                const baseline = await api.getSchema();
-                const { section, field } = api.pickOptionalDefaultField(baseline)!;
-                const next = baseline.map((i) =>
-                    i.id === field.id ? { ...i, is_mandatory: true } : i
-                );
-                await api.saveSchema(next);
-
+                // Assert against a real is_mandatory DEFAULT field rather than seeding a
+                // custom one: is_mandatory is stripped by the REST sanitizer for default
+                // fields, AND an API-seeded custom block does not render on the builder
+                // (only UI-created custom blocks do). The default 'Title' field in the
+                // 'General' section ships with is_mandatory=true, so its visibility toggle
+                // must render disabled — exactly the contract under test.
                 await admin.goto();
                 await expect(
-                    admin.fieldVisibilitySwitch(section.label, field.label)
+                    admin.fieldVisibilitySwitch( 'General', 'Title' )
                 ).toBeDisabled();
+                // Sanity: a non-mandatory default field in the same section stays enabled,
+                // proving the disabled state is driven by is_mandatory (not a blanket lock).
+                await expect(
+                    admin.fieldVisibilitySwitch( 'General', 'Price' )
+                ).toBeEnabled();
             }
         );
     });

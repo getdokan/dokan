@@ -1,14 +1,14 @@
 # Copyright (c) 2026 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 5.0.5\n"
+"Project-Id-Version: Dokan 5.0.6\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-19T05:57:02+00:00\n"
+"POT-Creation-Date: 2026-06-26T10:20:48+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -278,6 +278,7 @@ msgid "Generate professional PDF invoices automatically - streamline order manag
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Extensions.php:148
+#: includes/Admin/RecommendedPlugins.php:28
 msgid "wePos"
 msgstr ""
 
@@ -295,7 +296,7 @@ msgid "Stay connected with instant SMS alerts - notify vendors and customers abo
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Extensions.php:170
-#: includes/Admin/RecommendedPlugins.php:28
+#: includes/Admin/RecommendedPlugins.php:64
 msgid "StoreGrowth"
 msgstr ""
 
@@ -304,88 +305,97 @@ msgid "Accelerate your store growth with smart tools - boost engagement, increas
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Extensions.php:181
-msgid "TryAura"
+#: includes/Admin/RecommendedPlugins.php:73
+msgid "weDocs"
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Extensions.php:182
-msgid "Deliver immersive virtual try-ons - help customers visualize products better, build confidence, and increase conversions across your store."
+msgid "Build a self-serve help center for your marketplace. Publish vendor-specific docs alongside store guides so vendors find answers instantly."
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Extensions.php:192
-msgid "WPUF"
+msgid "TryAura"
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Extensions.php:193
-msgid "Enable frontend control for users - collect posts, registrations, and data easily without backend access, improving user experience."
+msgid "Deliver immersive virtual try-ons - help customers visualize products better, build confidence, and increase conversions across your store."
 msgstr ""
 
 #: includes/Admin/Dashboard/Pages/Extensions.php:203
+msgid "WPUF"
+msgstr ""
+
+#: includes/Admin/Dashboard/Pages/Extensions.php:204
+msgid "Enable frontend control for users - collect posts, registrations, and data easily without backend access, improving user experience."
+msgstr ""
+
+#: includes/Admin/Dashboard/Pages/Extensions.php:214
 #: includes/Admin/RecommendedPlugins.php:37
 msgid "weMail"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:204
+#: includes/Admin/Dashboard/Pages/Extensions.php:215
 msgid "Simplify email marketing with automation - engage customers, nurture leads, and drive repeat sales with powerful campaigns."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:214
+#: includes/Admin/Dashboard/Pages/Extensions.php:225
 msgid "CartPulse"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:215
+#: includes/Admin/Dashboard/Pages/Extensions.php:226
 msgid "Recover abandoned carts automatically - send timely follow-ups and bring customers back to complete their purchases and boost revenue."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:225
+#: includes/Admin/Dashboard/Pages/Extensions.php:236
 msgid "Conversion Tracking for WooCommerce"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:226
+#: includes/Admin/Dashboard/Pages/Extensions.php:237
 msgid "Track conversions, optimize campaigns, and use clear insights to boost ROI and drive smarter growth."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:236
+#: includes/Admin/Dashboard/Pages/Extensions.php:247
 #: assets/js/dokan-pro-features.js:2
 msgid "Dokan Migrator"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:237
+#: includes/Admin/Dashboard/Pages/Extensions.php:248
 msgid "Migrate your marketplace with ease - transfer data securely from other platforms and launch quickly without losing valuable information."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:316
+#: includes/Admin/Dashboard/Pages/Extensions.php:327
 msgid "Dokan Customer App"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:317
+#: includes/Admin/Dashboard/Pages/Extensions.php:328
 msgid "For Customers"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:318
+#: includes/Admin/Dashboard/Pages/Extensions.php:329
 msgid "A fully-featured shopping app for your Dokan marketplace customers. Browse vendor stores, discover products, place orders, and track deliveries all from one place."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:325
+#: includes/Admin/Dashboard/Pages/Extensions.php:336
 msgid "Dokan Vendor App"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:326
+#: includes/Admin/Dashboard/Pages/Extensions.php:337
 msgid "For Vendors"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:327
+#: includes/Admin/Dashboard/Pages/Extensions.php:338
 msgid "Gives vendors complete control over their store on the go. Manage products, process orders, view earnings, and respond to customer queries without needing a desktop."
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:334
+#: includes/Admin/Dashboard/Pages/Extensions.php:345
 msgid "Delivery Driver App"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:335
+#: includes/Admin/Dashboard/Pages/Extensions.php:346
 msgid "For Delivery Staff"
 msgstr ""
 
-#: includes/Admin/Dashboard/Pages/Extensions.php:336
+#: includes/Admin/Dashboard/Pages/Extensions.php:347
 msgid "Built for delivery agents to accept tasks, navigate routes, update delivery status in real time, and communicate with customers and vendors seamlessly."
 msgstr ""
 
@@ -795,7 +805,7 @@ msgstr ""
 #: includes/Admin/Dashboard/Pages/Status.php:24
 #: includes/Admin/WithdrawLogExporter.php:114
 #: includes/Product/functions.php:215
-#: includes/ProductEditor/FormSchema.php:865
+#: includes/ProductEditor/FormSchema.php:866
 #: includes/REST/WithdrawExportController.php:44
 #: templates/my-orders.php:27
 #: templates/orders/listing.php:33
@@ -1219,7 +1229,7 @@ msgstr ""
 #: includes/Admin/OnboardingSetup/Steps/CommissionStep.php:146
 #: includes/Admin/Settings.php:539
 #: includes/Admin/Settings.php:592
-#: includes/Product/Hooks.php:491
+#: includes/Product/Hooks.php:492
 #: assets/js/dokan-admin-dashboard.js:179
 #: assets/js/dokan-setup-wizard-commission.js:1
 #: assets/js/vue-admin.js:2
@@ -1448,15 +1458,15 @@ msgid "With the simplest configuration options available, only by enabling a sin
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:29
-msgid "Increase revenue with powerful sales tools for WooCommerce."
+msgid "Run your counter and online store from one fast POS system"
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:31
-msgid "StoreGrowth logo"
+msgid "wePos logo"
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:38
-msgid "Simplified Email Marketing Solution for WordPress!"
+msgid "Send campaigns and automate email marketing inside WordPress"
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:40
@@ -1468,7 +1478,7 @@ msgid "WooCommerce Conversion Tracking"
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:47
-msgid "Track conversions on your WooCommerce store like a pro!"
+msgid "Advanced WooCommerce conversion tracking for every ad platform"
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:49
@@ -1476,11 +1486,27 @@ msgid "WooCommerce Conversion Tracking logo"
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:56
-msgid "SMS Notification for WordPress, WooCommerce, Dokan and more!"
+msgid "Keep buyers updated with instant SMS for every order and alert"
 msgstr ""
 
 #: includes/Admin/RecommendedPlugins.php:58
 msgid "Texty logo"
+msgstr ""
+
+#: includes/Admin/RecommendedPlugins.php:65
+msgid "Boost sales with upsells, BOGO deals, FOMO popups and more"
+msgstr ""
+
+#: includes/Admin/RecommendedPlugins.php:67
+msgid "StoreGrowth logo"
+msgstr ""
+
+#: includes/Admin/RecommendedPlugins.php:74
+msgid "Add a self-serve help center with AI-powered docs for vendors"
+msgstr ""
+
+#: includes/Admin/RecommendedPlugins.php:76
+msgid "weDocs logo"
 msgstr ""
 
 #: includes/Admin/Settings.php:118
@@ -2840,7 +2866,7 @@ msgid "Delete"
 msgstr ""
 
 #: includes/Ajax.php:585
-#: includes/Product/Hooks.php:65
+#: includes/Product/Hooks.php:66
 msgid "Error: Nonce verification failed"
 msgstr ""
 
@@ -3522,19 +3548,23 @@ msgstr ""
 msgid "Select product tags"
 msgstr ""
 
-#: includes/Captcha/Manager.php:151
+#: includes/Captcha/Manager.php:218
+msgid "Captcha verification failed. Please try again."
+msgstr ""
+
+#: includes/Captcha/Manager.php:236
 msgid "Enable Captcha Service"
 msgstr ""
 
-#: includes/Captcha/Manager.php:152
+#: includes/Captcha/Manager.php:237
 msgid "Enable or disable captcha across forms that support it."
 msgstr ""
 
-#: includes/Captcha/Manager.php:164
+#: includes/Captcha/Manager.php:249
 msgid "Captcha Provider"
 msgstr ""
 
-#: includes/Captcha/Manager.php:166
+#: includes/Captcha/Manager.php:251
 msgid "Select the captcha provider to use for this store."
 msgstr ""
 
@@ -6139,7 +6169,7 @@ msgid "Catalog"
 msgstr ""
 
 #: includes/Product/functions.php:363
-#: includes/Product/Hooks.php:203
+#: includes/Product/Hooks.php:204
 #: templates/products/listing-filter.php:110
 #: assets/js/components.js:172
 #: assets/js/dashboard-charts.js:1
@@ -6195,30 +6225,30 @@ msgstr ""
 msgid "Relevance"
 msgstr ""
 
-#: includes/Product/Hooks.php:72
+#: includes/Product/Hooks.php:73
 msgid "Products not found with this search"
 msgstr ""
 
-#: includes/Product/Hooks.php:162
+#: includes/Product/Hooks.php:163
 #: templates/orders/commission-meta-box-html.php:85
 #: assets/js/frontend.js:179
 msgid "SKU:"
 msgstr ""
 
-#: includes/Product/Hooks.php:199
+#: includes/Product/Hooks.php:200
 msgid "Enter product name"
 msgstr ""
 
-#: includes/Product/Hooks.php:207
+#: includes/Product/Hooks.php:208
 msgid "Shop order"
 msgstr ""
 
-#: includes/Product/Hooks.php:425
+#: includes/Product/Hooks.php:426
 msgid "As this is your own product, the \"Add to Cart\" button has been removed. Please visit as a guest to view it."
 msgstr ""
 
-#: includes/Product/Hooks.php:495
 #: includes/Product/Hooks.php:496
+#: includes/Product/Hooks.php:497
 #: assets/js/vue-admin.js:2
 msgid "When the value is 0, no commissions will be deducted from this vendor."
 msgstr ""
@@ -6510,65 +6540,69 @@ msgid "Downloadable Files"
 msgstr ""
 
 #: includes/ProductEditor/FormSchema.php:825
+msgid "Pick downloadable files from upload directory which is approved by the store admin."
+msgstr ""
+
+#: includes/ProductEditor/FormSchema.php:826
 msgid "Upload files that customers can download after purchase."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:833
+#: includes/ProductEditor/FormSchema.php:834
 #: templates/products/downloadable.php:58
 msgid "Download Limit"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:835
+#: includes/ProductEditor/FormSchema.php:836
 #: templates/orders/order-download-permission-html.php:64
 #: templates/products/downloadable.php:59
 msgid "Unlimited"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:836
+#: includes/ProductEditor/FormSchema.php:837
 msgid "Leave blank for unlimited re-downloads."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:844
+#: includes/ProductEditor/FormSchema.php:845
 #: templates/products/downloadable.php:63
 msgid "Download Expiry"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:846
+#: includes/ProductEditor/FormSchema.php:847
 #: templates/orders/order-download-permission-html.php:72
 #: templates/products/downloadable.php:64
 msgid "Never"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:847
+#: includes/ProductEditor/FormSchema.php:848
 msgid "Enter the number of days before a download link expires, or leave blank."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:857
+#: includes/ProductEditor/FormSchema.php:858
 #: templates/products/others.php:7
 msgid "Other Options"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:858
+#: includes/ProductEditor/FormSchema.php:859
 #: templates/products/others.php:8
 msgid "Set your extra product options"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:876
+#: includes/ProductEditor/FormSchema.php:877
 #: templates/products/others.php:28
 msgid "Visibility"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:887
-#: includes/ProductEditor/FormSchema.php:889
+#: includes/ProductEditor/FormSchema.php:888
+#: includes/ProductEditor/FormSchema.php:890
 #: templates/products/others.php:41
 msgid "Purchase Note"
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:890
+#: includes/ProductEditor/FormSchema.php:891
 msgid "Customer will get this in order email."
 msgstr ""
 
-#: includes/ProductEditor/FormSchema.php:897
+#: includes/ProductEditor/FormSchema.php:898
 #: templates/products/others.php:52
 msgid "Enable product reviews"
 msgstr ""
@@ -8505,9 +8539,13 @@ msgstr ""
 msgid "You do not have permission to batch update products."
 msgstr ""
 
-#: includes/REST/ProductControllerV3.php:309
-#: includes/REST/ProductControllerV3.php:338
-#: includes/REST/ProductControllerV3.php:385
+#: includes/REST/ProductControllerV3.php:286
+msgid "The downloadable file could not be saved. Please pick a file from upload directory approved by the store admin."
+msgstr ""
+
+#: includes/REST/ProductControllerV3.php:336
+#: includes/REST/ProductControllerV3.php:365
+#: includes/REST/ProductControllerV3.php:412
 msgid "Invalid product ID."
 msgstr ""
 
