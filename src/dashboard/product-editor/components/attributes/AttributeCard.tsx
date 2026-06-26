@@ -68,7 +68,7 @@ const AttributeCard = ( {
             label: optionValue,
         } ) );
 
-    const termsEndpoint = `/dokan/v1/products/attributes/${ attr.id }/editor-terms`;
+    const termsEndpoint = `/dokan/v1/products/attributes/${ attr.id }/terms`;
 
     const mapTerm = ( term: any ) => ( {
         value: term.value,
@@ -169,7 +169,7 @@ const AttributeCard = ( {
         setIsAddingTerm( true );
         try {
             const response: any = await apiFetch( {
-                path: `/dokan/v1/products/attributes/${ attr.id }/editor-terms`,
+                path: `/dokan/v1/products/attributes/${ attr.id }/terms`,
                 method: 'POST',
                 data: { name: newTermName.trim() },
             } );
