@@ -177,6 +177,17 @@ class Extensions extends AbstractPage {
                 'position'    => 70,
             ],
             [
+                'slug'        => 'wedocs',
+                'title'       => esc_html__( 'weDocs', 'dokan-lite' ),
+                'description' => esc_html__( 'Build a self-serve help center for your marketplace. Publish vendor-specific docs alongside store guides so vendors find answers instantly.', 'dokan-lite' ),
+                'image'       => $thumbnail_dir . '/addons/wedocs.svg',
+                'button_type' => 'install',
+                'wp_org_slug' => 'wedocs',
+                'basename'    => 'wedocs/wedocs.php',
+                'installed'   => isset( $installed_plugins['wedocs/wedocs.php'] ),
+                'position'    => 75,
+            ],
+            [
                 'slug'        => 'tryaura',
                 'title'       => esc_html__( 'TryAura', 'dokan-lite' ),
                 'description' => esc_html__( 'Deliver immersive virtual try-ons - help customers visualize products better, build confidence, and increase conversions across your store.', 'dokan-lite' ),
