@@ -262,11 +262,13 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
     }
 
     /**
-     * Replace WooCommerce's admin-oriented "approved download directory" error with vendor-friendly guidance.
+     * Replace WooCommerce's admin-oriented "approved download directory" rejection with vendor-friendly guidance.
      *
-     * WooCommerce rejects downloadable files that aren't on the server or inside an approved directory and
-     * tells the user to "contact a site administrator" — advice a vendor cannot act on. We keep the rejection
-     * (the file genuinely can't be used) but point them at the media picker, which is the path they control.
+     * WooCommerce raises product_invalid_download whenever a downloadable file can't be used — most often because
+     * its folder isn't an approved download directory — and tells the user to "contact a site administrator,"
+     * which a vendor can't act on. The specific cause isn't exposed (the error code and data are generic) and
+     * WooCommerce has already run the directory check, so rather than re-deriving it we simply restate the
+     * message; the field's tooltip explains the approved-directory requirement up front.
      *
      * @since DOKAN_SINCE
      *
@@ -281,7 +283,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
 
         return new WP_Error(
             $error->get_error_code(),
-            __( 'The downloadable file could not be saved. Use the "Choose" button to upload your file or pick one from your media library, then try again.', 'dokan-lite' ),
+            __( 'The downloadable file could not be saved. Please pick a file from a download directory approved by the store admin.', 'dokan-lite' ),
             $error->get_error_data()
         );
     }
