@@ -1,3 +1,13 @@
+### v5.0.6 ( Jun 26, 2026 ) ###
+
+- **update:** Added wePos and weDocs to the setup wizard's recommended add-ons and refreshed the add-on descriptions.
+- **update:** Added weDocs to the admin Extensions page as an installable add-on.
+- **fix:** Added reCAPTCHA v3 support to the vendor registration forms to curb spam registrations.
+- **fix:** Loaded the admin dashboard on non-Latin locales (e.g. Persian) by matching the page slug instead of the translated menu title.
+- **fix:** Restored editing of downloadable file name and URL fields in the new product editor.
+- **fix:** Clarified the save error shown when a downloadable file falls outside WooCommerce's approved directories.
+- **fix:** Enabled the "View in site" button for all published products.
+
 ### v5.0.5 ( Jun 19, 2026 ) ###
 
 - **update:** Migrated all admin dashboard tables to the unified Plugin UI DataViews component.

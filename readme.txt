@@ -7,7 +7,7 @@ Tested up to: 7.0
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 5.0.5
+Stable tag: 5.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -376,6 +376,15 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v5.0.6 ( Jun 26, 2026 ) =
+- **update:** Added wePos and weDocs to the setup wizard's recommended add-ons and refreshed the add-on descriptions.
+- **update:** Added weDocs to the admin Extensions page as an installable add-on.
+- **fix:** Added reCAPTCHA v3 support to the vendor registration forms to curb spam registrations.
+- **fix:** Loaded the admin dashboard on non-Latin locales (e.g. Persian) by matching the page slug instead of the translated menu title.
+- **fix:** Restored editing of downloadable file name and URL fields in the new product editor.
+- **fix:** Clarified the save error shown when a downloadable file falls outside WooCommerce's approved directories.
+- **fix:** Enabled the "View in site" button for all published products.
+
 = v5.0.5 ( Jun 19, 2026 ) =
 - **update:** Migrated all admin dashboard tables to the unified Plugin UI DataViews component.
 - **update:** Updated price formatting in the product editor to use locale-specific display.
@@ -408,10 +417,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **fix:** Corrected the "View Details" link in the What's New admin notice to route to the appropriate changelog page.
 - **fix:** Prevented a PHP deprecation notice caused by a menu position type-cast.
 - **fix:** Ensured jQuery blockUI loads on the seller setup wizard and other custom enqueue pages.
-
-= v5.0.1 ( May 05, 2026 ) =
-- **update:** Added an admin-controllable vendor registration option on the My Account page.
-- **update:** Added RTL support for the new vendor dashboard UI.
-- **fix:** Properly decode HTML entities in admin settings labels.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

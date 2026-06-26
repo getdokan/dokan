@@ -149,7 +149,7 @@ class CommissionControllerV1 extends DokanRESTController {
      * objects ([ { value, label }, ... ]); the commission lookup only needs the
      * integer term IDs, so reduce any object shape to its `value` before use.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.6
      *
      * @param mixed $value Raw `category_ids` value from the request.
      *

@@ -634,7 +634,7 @@ class Hooks {
     /**
      * Sync category data for commission
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.6
      *
      * @param int   $product_id   The ID of the product being updated.
      *

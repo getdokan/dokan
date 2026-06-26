@@ -581,7 +581,7 @@ class Dashboard implements Hookable {
      * Matches the locale-stable `page` slug rather than the screen id, whose prefix
      * is derived from the translatable menu title and breaks on non-Latin locales.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.6
      *
      * @param array<string> $page_slugs Admin page slugs to match against.
      *

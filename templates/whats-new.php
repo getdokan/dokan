@@ -4,6 +4,44 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.0.6',
+        'released' => '2026-06-26',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Added wePos and weDocs to the setup wizard\'s recommended add-ons and refreshed the add-on descriptions.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added weDocs to the admin Extensions page as an installable add-on.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Added reCAPTCHA v3 support to the vendor registration forms to curb spam registrations.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Loaded the admin dashboard on non-Latin locales (e.g. Persian) by matching the page slug instead of the translated menu title.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Restored editing of downloadable file name and URL fields in the new product editor.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Clarified the save error shown when a downloadable file falls outside WooCommerce\'s approved directories.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Enabled the "View in site" button for all published products.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.0.5',
         'released' => '2026-06-19',
         'changes'  => [
