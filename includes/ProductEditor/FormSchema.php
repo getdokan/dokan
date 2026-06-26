@@ -822,7 +822,7 @@ class FormSchema {
                 'label'        => __( 'Downloadable Files', 'dokan-lite' ),
                 'variant'      => 'file',
                 'value'        => [],
-                'tooltip'      => __( 'Pick downloadable files from a upload directory which is approved by the store admin.', 'dokan-lite' ),
+                'tooltip'      => __( 'Pick downloadable files from upload directory which is approved by the store admin.', 'dokan-lite' ),
                 'description'  => __( 'Upload files that customers can download after purchase.', 'dokan-lite' ),
                 'dependencies' => $dep_downloadable,
                 'visibility'   => true,

@@ -283,7 +283,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
 
         return new WP_Error(
             $error->get_error_code(),
-            __( 'The downloadable file could not be saved. Please pick a file from a upload directory approved by the store admin.', 'dokan-lite' ),
+            __( 'The downloadable file could not be saved. Please pick a file from upload directory approved by the store admin.', 'dokan-lite' ),
             $error->get_error_data()
         );
     }
