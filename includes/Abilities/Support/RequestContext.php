@@ -42,6 +42,41 @@ class RequestContext {
     private static $request_is_mcp = false;
 
     /**
+     * Whether the shared MCP detection hooks have been registered this request.
+     *
+     * @var bool
+     */
+    private static $detection_hooks_registered = false;
+
+    /**
+     * Register the shared MCP-detection hooks exactly once.
+     *
+     * Both the product and order ability scopers depend on these signals, so either may call this;
+     * the guard keeps the execution counter from being incremented twice per ability.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public static function register_detection_hooks(): void {
+        if ( self::$detection_hooks_registered ) {
+            return;
+        }
+
+        self::$detection_hooks_registered = true;
+
+        // Track ability execution so scoping works on ANY MCP server (WooCommerce, Dokan, or
+        // third-party such as MCP Site Manager), not just known endpoint URLs.
+        add_action( 'wp_before_execute_ability', [ self::class, 'mark_ability_execution_started' ] );
+        add_action( 'wp_after_execute_ability', [ self::class, 'mark_ability_execution_finished' ] );
+
+        // Flag the request as MCP the moment the adapter begins handling a tool call — during its
+        // permission pre-flight, before the target ability's permission callback runs and before
+        // any wp_before_execute_ability window opens. Works for any server on the shared adapter.
+        add_filter( 'mcp_adapter_execute_ability_capability', [ self::class, 'flag_mcp_request' ] );
+    }
+
+    /**
      * Whether the current request targets an MCP / abilities endpoint.
      *
      * @since DOKAN_SINCE
@@ -73,6 +108,28 @@ class RequestContext {
      */
     public static function is_executing_ability(): bool {
         return self::$ability_execution_depth > 0;
+    }
+
+    /**
+     * Whether the current request is a vendor acting over an MCP / abilities endpoint.
+     *
+     * Store admins (manage_woocommerce) are intentionally left unscoped. Vendor staff resolve to
+     * their parent vendor via dokan_get_current_user_id().
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public static function is_vendor_mcp_context(): bool {
+        if ( ! self::is_mcp_request() ) {
+            return false;
+        }
+
+        if ( current_user_can( 'manage_woocommerce' ) ) {
+            return false;
+        }
+
+        return dokan_is_user_seller( dokan_get_current_user_id() );
     }
 
     /**
@@ -128,8 +185,9 @@ class RequestContext {
      * @return void
      */
     public static function reset(): void {
-        self::$ability_execution_depth = 0;
-        self::$request_is_mcp          = false;
+        self::$ability_execution_depth    = 0;
+        self::$request_is_mcp             = false;
+        self::$detection_hooks_registered = false;
     }
 
     /**

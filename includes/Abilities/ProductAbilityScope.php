@@ -8,49 +8,32 @@ use WeDevs\Dokan\Contracts\Hookable;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Vendor-scopes WooCommerce abilities for multivendor sites.
+ * Vendor-scopes WooCommerce product abilities for multivendor sites.
  *
- * WooCommerce 10.9.0 registers abilities in two layers, both of which run as the
+ * WooCommerce 10.9.0 registers product abilities in two layers, both of which run as the
  * authenticated user and act on the whole store:
  *
- *  - Layer 1 (deprecated REST proxy): `woocommerce/products-*`, `woocommerce/orders-*`
- *    re-dispatch standard WC REST requests via `rest_do_request()`.
- *  - Layer 2 (domain abilities): `woocommerce/products-query`, `product-create|update|delete`,
- *    `orders-query`, `order-add-note`, `order-update-status` call WC CRUD directly.
+ *  - Layer 1 (deprecated REST proxy): `woocommerce/products-*` re-dispatch standard WC REST
+ *    requests via `rest_do_request()`.
+ *  - Layer 2 (domain abilities): `woocommerce/products-query`, `product-create|update|delete`
+ *    call WC CRUD directly.
  *
  * Rather than re-implementing any ability, this class makes BOTH layers vendor-safe through
  * cross-cutting, public seams:
  *
- *  - Per-object permission: `woocommerce_rest_check_permissions` (the filter every
- *    `wc_rest_check_post_permissions()` call funnels through) enforces ownership for read,
- *    edit and delete on a specific product / order. WooCommerce's native meta-caps already
- *    deny cross-vendor *mutations*; this primarily closes the cross-vendor *read* leak.
- *  - List scoping: WC data-store and REST query filters constrain product / order listings
- *    to the current vendor.
+ *  - Per-object permission: `woocommerce_rest_check_permissions` enforces the public / private
+ *    boundary — published products are public, unpublished ones are owner / admin only.
+ *  - List scoping: the WC product data-store and REST query filters apply the optional `vendor_id`
+ *    filter and a published-only guard.
+ *  - In-place extension: the product-create abilities gain a `vendor_id` selector, and product
+ *    output is enriched with the owning vendor.
  *
- * Everything is gated to (MCP request && vendor) so normal storefront / admin / REST traffic
- * is untouched, and store admins (manage_woocommerce) stay unscoped.
+ * Everything is gated to (MCP request && vendor) so normal storefront / admin / REST traffic is
+ * untouched, and store admins (manage_woocommerce) stay unscoped.
  *
  * @since DOKAN_SINCE
  */
-class VendorAbilityScope implements Hookable {
-
-    /**
-     * Cached vendor order IDs for the current request.
-     *
-     * @var int[]|null
-     */
-    private $vendor_order_ids = null;
-
-    /**
-     * Re-entrancy guard while resolving the vendor order IDs.
-     *
-     * Resolving the IDs runs `wc_get_orders()`, which re-triggers the order query
-     * filters below; this prevents recursion / double scoping.
-     *
-     * @var bool
-     */
-    private $resolving_order_ids = false;
+class ProductAbilityScope implements Hookable {
 
     /**
      * Vendor a product currently being created should be authored to.
@@ -105,30 +88,16 @@ class VendorAbilityScope implements Hookable {
      * @return void
      */
     public function register_hooks(): void {
-        // Track ability execution so scoping works on ANY MCP server (WooCommerce, Dokan, or
-        // third-party such as MCP Site Manager), not just known endpoint URLs.
-        add_action( 'wp_before_execute_ability', [ RequestContext::class, 'mark_ability_execution_started' ] );
-        add_action( 'wp_after_execute_ability', [ RequestContext::class, 'mark_ability_execution_finished' ] );
+        // Shared MCP-detection signals (registered once across the product / order scopers).
+        RequestContext::register_detection_hooks();
 
-        // Flag the request as MCP the moment the adapter begins handling a tool call. This fires
-        // during the adapter's permission pre-flight — before the target ability's permission
-        // callback runs and before any `wp_before_execute_ability` window opens — so the order /
-        // product read grant below can recognize the MCP context. Works for any MCP server built
-        // on the shared mcp-adapter package.
-        add_filter( 'mcp_adapter_execute_ability_capability', [ RequestContext::class, 'flag_mcp_request' ] );
-
-        // Per-object permission: published products are public; orders and unpublished products
-        // are restricted to their owner (and store admins).
-        add_filter( 'woocommerce_rest_check_permissions', [ $this, 'scope_object_permissions' ], 99, 4 );
+        // Per-object permission: published products are public; unpublished products are
+        // restricted to their owner (and store admins).
+        add_filter( 'woocommerce_rest_check_permissions', [ $this, 'scope_product_permissions' ], 99, 4 );
 
         // Product list scoping: applies the optional vendor_id filter and the published-only guard.
         add_filter( 'woocommerce_product_data_store_cpt_get_products_query', [ $this, 'scope_products_query' ], 99 );
         add_filter( 'woocommerce_rest_product_object_query', [ $this, 'scope_rest_products_query' ], 99 );
-
-        // Orders list scoping (Layer 2: legacy CPT + HPOS data stores; Layer 1: REST controller).
-        add_filter( 'woocommerce_order_data_store_cpt_get_orders_query', [ $this, 'scope_orders_query' ], 99 );
-        add_filter( 'woocommerce_orders_table_datastore_get_orders_query', [ $this, 'scope_orders_query' ], 99 );
-        add_filter( 'woocommerce_rest_orders_prepare_object_query', [ $this, 'scope_rest_orders_query' ], 99 );
 
         // Extend WooCommerce's own product abilities in place: vendor selector on create,
         // and the owning vendor on product output.
@@ -139,12 +108,12 @@ class VendorAbilityScope implements Hookable {
     }
 
     /**
-     * Enforce the public / private boundary on per-object WooCommerce REST permission checks.
+     * Enforce the public / private boundary on per-object WooCommerce product permission checks.
      *
-     * Governs `wc_rest_check_post_permissions()` for products and shop orders. Published products
-     * are public (any caller may read one by ID); unpublished products are readable only by their
-     * owner or a store admin. Orders are always private to the owning vendor. Writes are left to
-     * WooCommerce's native capabilities, which already deny cross-vendor mutations.
+     * Governs `wc_rest_check_post_permissions()` for products. Published products are public (any
+     * caller may read one by ID); unpublished products are readable only by their owner or a store
+     * admin. Writes are left to WooCommerce's native capabilities, which already deny cross-vendor
+     * mutations.
      *
      * @since DOKAN_SINCE
      *
@@ -155,20 +124,12 @@ class VendorAbilityScope implements Hookable {
      *
      * @return bool
      */
-    public function scope_object_permissions( $permission, $context, $object_id, $post_type ) {
-        if ( ! RequestContext::is_mcp_request() ) {
+    public function scope_product_permissions( $permission, $context, $object_id, $post_type ) {
+        if ( 'product' !== $post_type || ! RequestContext::is_mcp_request() ) {
             return $permission;
         }
 
-        if ( 'product' === $post_type ) {
-            return $this->scope_product_permission( $permission, $context, absint( $object_id ) );
-        }
-
-        if ( 'shop_order' === $post_type ) {
-            return $this->scope_order_permission( $permission, $context, absint( $object_id ) );
-        }
-
-        return $permission;
+        return $this->scope_product_permission( $permission, $context, absint( $object_id ) );
     }
 
     /**
@@ -193,34 +154,6 @@ class VendorAbilityScope implements Hookable {
         }
 
         return 'publish' === get_post_status( $object_id );
-    }
-
-    /**
-     * Permission for a single order: private to the owning vendor (admins unscoped).
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param bool   $permission Incoming permission.
-     * @param string $context    Request context.
-     * @param int    $object_id  Order ID (0 for collection-level checks).
-     *
-     * @return bool
-     */
-    private function scope_order_permission( $permission, $context, $object_id ) {
-        if ( current_user_can( 'manage_woocommerce' ) || ! dokan_is_user_seller( dokan_get_current_user_id() ) ) {
-            return $permission;
-        }
-
-        if ( $object_id > 0 ) {
-            return absint( dokan_get_seller_id_by_order( $object_id ) ) === dokan_get_current_user_id();
-        }
-
-        // Collection level: broaden read so vendors can list; rows are scoped by the order query.
-        if ( 'read' === $context ) {
-            return true;
-        }
-
-        return $permission;
     }
 
     /**
@@ -278,50 +211,6 @@ class VendorAbilityScope implements Hookable {
     }
 
     /**
-     * Scope an order query (Layer 2, legacy CPT or HPOS) to the current vendor's orders.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array $query Query args passed to the order data store.
-     *
-     * @return array
-     */
-    public function scope_orders_query( $query ) {
-        if ( ! is_array( $query ) || $this->resolving_order_ids || ! $this->is_vendor_mcp_context() ) {
-            return $query;
-        }
-
-        $vendor_order_ids = $this->get_vendor_order_ids();
-
-        if ( ! empty( $query['post__in'] ) ) {
-            $existing          = array_map( 'absint', (array) $query['post__in'] );
-            $query['post__in'] = array_values( array_intersect( $existing, $vendor_order_ids ) );
-
-            // An empty intersection must yield no rows, not "all orders".
-            if ( empty( $query['post__in'] ) ) {
-                $query['post__in'] = [ 0 ];
-            }
-        } else {
-            $query['post__in'] = $vendor_order_ids;
-        }
-
-        return $query;
-    }
-
-    /**
-     * Scope a Layer 1 (REST proxy) order query to the current vendor's orders.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array $args Query args for the orders REST controller.
-     *
-     * @return array
-     */
-    public function scope_rest_orders_query( $args ) {
-        return $this->scope_orders_query( $args );
-    }
-
-    /**
      * Author an ability-created product to the resolved vendor.
      *
      * WooCommerce authors new products to `get_current_user_id()`, which is correct for a
@@ -339,7 +228,7 @@ class VendorAbilityScope implements Hookable {
     public function assign_vendor_as_product_author( $product_id ) {
         if ( $this->forced_product_author > 0 ) {
             $vendor_id = $this->forced_product_author;
-        } elseif ( $this->is_vendor_mcp_context() ) {
+        } elseif ( RequestContext::is_vendor_mcp_context() ) {
             $vendor_id = dokan_get_current_user_id();
         } else {
             return;
@@ -358,11 +247,12 @@ class VendorAbilityScope implements Hookable {
     }
 
     /**
-     * Extend WooCommerce's own product-create abilities with a vendor selector.
+     * Extend WooCommerce's own product abilities with a vendor selector, filter and output.
      *
      * Adds an optional `vendor_id` to the input schema and wraps the execute callback so the
-     * created product is authored to the chosen vendor. The ability id and registration are left
-     * intact, so other consumers keep working; only behavior is augmented.
+     * created product is authored to the chosen vendor, the list query honors the vendor filter,
+     * and the output carries the owning vendor. The ability id and registration are left intact,
+     * so other consumers keep working; only behavior is augmented.
      *
      * @since DOKAN_SINCE
      *
@@ -682,60 +572,5 @@ class VendorAbilityScope implements Hookable {
         $self = dokan_get_current_user_id();
 
         return dokan_is_user_seller( $self ) ? $self : 0;
-    }
-
-    /**
-     * Whether the current request is a vendor acting over an MCP / abilities endpoint.
-     *
-     * Store admins (manage_woocommerce) are intentionally left unscoped. Vendor staff resolve
-     * to their parent vendor via dokan_get_current_user_id().
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return bool
-     */
-    private function is_vendor_mcp_context(): bool {
-        if ( ! RequestContext::is_mcp_request() ) {
-            return false;
-        }
-
-        if ( current_user_can( 'manage_woocommerce' ) ) {
-            return false;
-        }
-
-        return dokan_is_user_seller( dokan_get_current_user_id() );
-    }
-
-    /**
-     * Resolve and cache the current vendor's order IDs.
-     *
-     * Returns `[ 0 ]` when the vendor has no orders so callers force an empty result set.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return int[]
-     */
-    private function get_vendor_order_ids(): array {
-        if ( null !== $this->vendor_order_ids ) {
-            return $this->vendor_order_ids;
-        }
-
-        $this->resolving_order_ids = true;
-
-        $ids = dokan()->order->all(
-            [
-                'seller_id' => dokan_get_current_user_id(),
-                'return'    => 'ids',
-                'limit'     => -1,
-            ]
-        );
-
-        $this->resolving_order_ids = false;
-
-        $ids = is_array( $ids ) ? array_values( array_filter( array_map( 'absint', $ids ) ) ) : [];
-
-        $this->vendor_order_ids = empty( $ids ) ? [ 0 ] : $ids;
-
-        return $this->vendor_order_ids;
     }
 }

@@ -2,27 +2,27 @@
 
 namespace WeDevs\Dokan\Test\Abilities;
 
+use WeDevs\Dokan\Abilities\ProductAbilityScope;
 use WeDevs\Dokan\Abilities\Support\RequestContext;
-use WeDevs\Dokan\Abilities\VendorAbilityScope;
 use WeDevs\Dokan\Test\DokanTestCase;
 
 /**
  * @group abilities
  *
- * Tests that WooCommerce abilities are vendor-scoped over MCP, and fully inert otherwise.
+ * Tests that WooCommerce product abilities are vendor-scoped over MCP, and fully inert otherwise.
  */
-class VendorAbilityScopeTest extends DokanTestCase {
+class ProductAbilityScopeTest extends DokanTestCase {
 
     /**
      * System under test.
      *
-     * @var VendorAbilityScope
+     * @var ProductAbilityScope
      */
     private $sut;
 
     public function set_up() {
         parent::set_up();
-        $this->sut = new VendorAbilityScope();
+        $this->sut = new ProductAbilityScope();
         // Clear the per-request MCP state so the static flag never leaks between tests.
         RequestContext::reset();
     }
@@ -53,7 +53,7 @@ class VendorAbilityScopeTest extends DokanTestCase {
         wp_set_current_user( $this->seller_id1 );
 
         // A published product is public, even another vendor's.
-        $this->assertTrue( $this->sut->scope_object_permissions( false, 'read', $other_published, 'product' ) );
+        $this->assertTrue( $this->sut->scope_product_permissions( false, 'read', $other_published, 'product' ) );
     }
 
     public function test_unpublished_product_readable_only_by_owner_or_admin() {
@@ -75,78 +75,23 @@ class VendorAbilityScopeTest extends DokanTestCase {
         $this->force_mcp_request();
 
         wp_set_current_user( $this->seller_id1 );
-        $this->assertFalse( $this->sut->scope_object_permissions( true, 'read', $other_draft, 'product' ) );
-        $this->assertTrue( $this->sut->scope_object_permissions( true, 'read', $own_draft, 'product' ) );
+        $this->assertFalse( $this->sut->scope_product_permissions( true, 'read', $other_draft, 'product' ) );
+        $this->assertTrue( $this->sut->scope_product_permissions( true, 'read', $own_draft, 'product' ) );
 
         wp_set_current_user( $this->admin_id );
-        $this->assertTrue( $this->sut->scope_object_permissions( false, 'read', $other_draft, 'product' ) );
+        $this->assertTrue( $this->sut->scope_product_permissions( false, 'read', $other_draft, 'product' ) );
     }
 
-    public function test_order_read_restricted_to_owning_vendor() {
-        $order1 = $this->create_single_vendor_order( $this->seller_id1 );
-        $order2 = $this->create_single_vendor_order( $this->seller_id2 );
-
-        $this->force_mcp_request();
-        wp_set_current_user( $this->seller_id1 );
-
-        $this->assertTrue( $this->sut->scope_object_permissions( true, 'read', $order1, 'shop_order' ) );
-        $this->assertFalse( $this->sut->scope_object_permissions( true, 'read', $order2, 'shop_order' ) );
-    }
-
-    /**
-     * The MCP adapter pre-flights an ability's permission check (e.g. for woocommerce/orders-query)
-     * *before* it opens a `wp_before_execute_ability` window, so the execution-depth signal is still
-     * zero and the request URL is the adapter's own (not /woocommerce/mcp). The adapter firing
-     * `mcp_adapter_execute_ability_capability` is what marks the request — without it the vendor's
-     * order read was denied. Regression guard for "my orders" returning permission-denied over MCP.
-     */
-    public function test_flag_mcp_request_grants_order_read_during_adapter_preflight() {
-        $order1 = $this->create_single_vendor_order( $this->seller_id1 );
-        $order2 = $this->create_single_vendor_order( $this->seller_id2 );
-
-        wp_set_current_user( $this->seller_id1 );
-
-        // Pre-flight conditions: no execution window, no MCP URL. Previously denied.
-        $this->assertFalse( RequestContext::is_executing_ability() );
-        $this->assertFalse( $this->sut->scope_object_permissions( false, 'read', 0, 'shop_order' ) );
-
-        // The adapter fires this filter before checking the target ability's permission.
-        $capability = RequestContext::flag_mcp_request( 'read' );
-        $this->assertSame( 'read', $capability, 'The filter value must pass through unchanged.' );
-        $this->assertTrue( RequestContext::is_mcp_request() );
-        $this->assertFalse( RequestContext::is_executing_ability() );
-
-        // Collection-level read is now granted (so the vendor can list), the owned order is
-        // readable, and another vendor's order is still denied.
-        $this->assertTrue( $this->sut->scope_object_permissions( false, 'read', 0, 'shop_order' ) );
-        $this->assertTrue( $this->sut->scope_object_permissions( true, 'read', $order1, 'shop_order' ) );
-        $this->assertFalse( $this->sut->scope_object_permissions( true, 'read', $order2, 'shop_order' ) );
-    }
-
-    public function test_register_hooks_attaches_mcp_adapter_flag_filter() {
-        $this->sut->register_hooks();
-
-        $this->assertNotFalse(
-            has_filter( 'mcp_adapter_execute_ability_capability', [ RequestContext::class, 'flag_mcp_request' ] ),
-            'register_hooks() must attach the MCP-adapter pre-flight flag filter.'
-        );
-
-        // Simulate the adapter firing the filter; the request must then be detected as MCP.
-        $this->assertFalse( RequestContext::is_mcp_request() );
-        apply_filters( 'mcp_adapter_execute_ability_capability', 'read' );
-        $this->assertTrue( RequestContext::is_mcp_request() );
-    }
-
-    public function test_scope_object_permissions_is_noop_for_unrelated_post_type() {
+    public function test_scope_product_permissions_is_noop_for_unrelated_post_type() {
         $this->force_mcp_request();
         wp_set_current_user( $this->seller_id1 );
 
         // Unrelated post types must pass the incoming permission through untouched.
-        $this->assertFalse( $this->sut->scope_object_permissions( false, 'read', 123, 'page' ) );
-        $this->assertTrue( $this->sut->scope_object_permissions( true, 'read', 123, 'page' ) );
+        $this->assertFalse( $this->sut->scope_product_permissions( false, 'read', 123, 'shop_order' ) );
+        $this->assertTrue( $this->sut->scope_product_permissions( true, 'read', 123, 'shop_order' ) );
     }
 
-    public function test_scope_object_permissions_is_noop_when_not_mcp_request() {
+    public function test_scope_product_permissions_is_noop_when_not_mcp_request() {
         $other_draft = $this->factory()->product->set_seller_id( $this->seller_id2 )->create();
         wp_update_post(
             [
@@ -158,30 +103,7 @@ class VendorAbilityScopeTest extends DokanTestCase {
         wp_set_current_user( $this->seller_id1 );
 
         // Without MCP context the incoming permission is returned unchanged (no enforcement).
-        $this->assertTrue( $this->sut->scope_object_permissions( true, 'read', $other_draft, 'product' ) );
-    }
-
-    public function test_scope_orders_query_limits_to_vendor_orders() {
-        $order1 = $this->create_single_vendor_order( $this->seller_id1 );
-        $order2 = $this->create_single_vendor_order( $this->seller_id2 );
-
-        $this->force_mcp_request();
-        wp_set_current_user( $this->seller_id1 );
-
-        $query = $this->sut->scope_orders_query( [] );
-
-        $this->assertArrayHasKey( 'post__in', $query );
-        $this->assertContains( $order1, $query['post__in'] );
-        $this->assertNotContains( $order2, $query['post__in'] );
-    }
-
-    public function test_scope_orders_query_is_noop_when_not_mcp_request() {
-        wp_set_current_user( $this->seller_id1 );
-
-        $query = $this->sut->scope_orders_query( [ 'foo' => 'bar' ] );
-
-        $this->assertArrayNotHasKey( 'post__in', $query );
-        $this->assertSame( 'bar', $query['foo'] );
+        $this->assertTrue( $this->sut->scope_product_permissions( true, 'read', $other_draft, 'product' ) );
     }
 
     public function test_staff_created_product_is_authored_to_parent_vendor() {
@@ -361,16 +283,6 @@ class VendorAbilityScopeTest extends DokanTestCase {
         );
 
         $this->assertSame( $this->seller_id1, (int) get_post_field( 'post_author', $result['id'] ) );
-    }
-
-    public function test_is_mcp_request_true_during_ability_execution() {
-        $this->assertFalse( RequestContext::is_mcp_request() );
-
-        RequestContext::mark_ability_execution_started();
-        $this->assertTrue( RequestContext::is_mcp_request() );
-
-        RequestContext::mark_ability_execution_finished();
-        $this->assertFalse( RequestContext::is_mcp_request() );
     }
 
     public function test_extend_injects_vendor_into_products_query_output_schema() {
