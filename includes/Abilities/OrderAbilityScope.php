@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Abilities;
 
 use WeDevs\Dokan\Abilities\Support\RequestContext;
+use WeDevs\Dokan\Abilities\Support\VendorPayload;
 use WeDevs\Dokan\Contracts\Hookable;
 
 defined( 'ABSPATH' ) || exit;
@@ -307,14 +308,10 @@ class OrderAbilityScope implements Hookable {
 
         // A parent multi-vendor order belongs to no single vendor; sub / single orders do.
         $seller_id = 'parent' === $relation ? 0 : absint( dokan_get_seller_id_by_order( $order ) );
-        $vendor    = $seller_id > 0 ? dokan()->vendor->get( $seller_id ) : null;
 
         $order_data['parent_id']      = $parent_id;
         $order_data['order_relation'] = $relation;
-        $order_data['vendor']         = [
-            'id'         => $seller_id,
-            'store_name' => $vendor ? (string) $vendor->get_shop_name() : '',
-        ];
+        $order_data['vendor']         = VendorPayload::for_user( $seller_id );
 
         return $order_data;
     }

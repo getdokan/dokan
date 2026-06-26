@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Abilities;
 
 use WeDevs\Dokan\Abilities\Support\RequestContext;
+use WeDevs\Dokan\Abilities\Support\VendorPayload;
 use WeDevs\Dokan\Contracts\Hookable;
 
 defined( 'ABSPATH' ) || exit;
@@ -514,12 +515,8 @@ class ProductAbilityScope implements Hookable {
      */
     private function vendor_payload( int $product_id ): array {
         $author = (int) get_post_field( 'post_author', $product_id );
-        $vendor = $author > 0 ? dokan()->vendor->get( $author ) : null;
 
-        return [
-            'id'         => $author,
-            'store_name' => $vendor ? (string) $vendor->get_shop_name() : '',
-        ];
+        return VendorPayload::for_user( $author );
     }
 
     /**
