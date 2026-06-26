@@ -270,7 +270,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      * WooCommerce has already run the directory check, so rather than re-deriving it we simply restate the
      * message; the field's tooltip explains the approved-directory requirement up front.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.6
      *
      * @param WP_Error $error Error returned from the parent WooCommerce REST save.
      *

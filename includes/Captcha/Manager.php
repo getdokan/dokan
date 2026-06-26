@@ -146,7 +146,7 @@ class Manager implements Hookable {
      * `woocommerce_register_form` (WooCommerce My Account registration). A static guard makes
      * sure the field is output only once per request, avoiding a duplicate token field/widget.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.6
      *
      * @return void
      */
@@ -181,7 +181,7 @@ class Manager implements Hookable {
      * after the registration nonce has already been verified upstream. Adds an error to the
      * registration error bag when verification fails, which aborts the registration.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.6
      *
      * @param string    $username          Submitted username.
      * @param string    $email             Submitted email.
