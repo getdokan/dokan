@@ -16,10 +16,48 @@ var Dokan_Vendor_Registration = {
         $( '#seller-url', form ).on( 'keyup', this.renderUrl );
         $( '#seller-url', form ).on( 'focusout', this.checkSlugAvailability );
 
+        // Generate the invisible reCAPTCHA v3 token right before the form is submitted.
+        form.on( 'submit', this.maybeInjectRecaptchaToken );
+
         this.validationLocalized();
         this.handlePasswordStrengthObserver();
         // this.validate(this);
         $( document ).trigger( 'dokan_event_seller_registration_form' );
+    },
+
+    // On submit, populate the empty reCAPTCHA v3 token field; no-op for Turnstile (self-fills) or when no provider is configured.
+    maybeInjectRecaptchaToken: function(e) {
+        const $form = $( this ),
+            $token  = $form.find( '.dokan_recaptcha_token' );
+
+        // No captcha field (provider not configured) or token already set (Turnstile).
+        if ( ! $token.length || $token.val() ) {
+            return;
+        }
+
+        // The helper and the localized site key only exist when reCAPTCHA v3 is active.
+        if ( 'undefined' === typeof dokan_google_recaptcha || 'undefined' === typeof dokan_execute_recaptcha ) {
+            return;
+        }
+
+        e.preventDefault();
+
+        // A programmatic submit drops the clicked button's value, so re-add the `register` field WooCommerce requires.
+        if ( ! $form.find( 'input[name=register][type=hidden]' ).length ) {
+            $( '<input>', { type: 'hidden', name: 'register', value: 'Register' } ).appendTo( $form );
+        }
+
+        // Disable the submit button so a double-click can't fire a second submit while the token is generated.
+        const $submitButton = $form.find( '[type=submit]' ).prop( 'disabled', true ),
+            submitForm = function() {
+                $submitButton.prop( 'disabled', false );
+                $form.off( 'submit', Dokan_Vendor_Registration.maybeInjectRecaptchaToken );
+                $form.get( 0 ).submit();
+            };
+
+        // Submit once the reCAPTCHA step settles, either way: with the token on success, or with an empty token on failure so the server returns a clear error instead of the form hanging.
+        dokan_execute_recaptcha( 'form.register .dokan_recaptcha_token', 'dokan_registration_recaptcha' )
+            .then( submitForm, submitForm );
     },
 
     validate: function(self) {
