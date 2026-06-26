@@ -283,11 +283,14 @@ test.describe('Abuse Reports — Admin DataViews List @pro', () => {
         await flow.waitForListReady();
 
         // Authenticated: the customer1 username links to its user-edit page.
+        // Web-first assertion (auto-retries): the DataViews table paints seeded rows from an
+        // async REST call, so a one-shot `count()` can read 0 before the authenticated row
+        // renders (flaky). toBeVisible() waits until the link actually renders.
         const authedLink = adminPage.locator(`//tr//a[contains(@href,'user-edit.php?user_id=${CUSTOMER_ID}')]`).first();
-        expect(
-            await authedLink.count(),
+        await expect(
+            authedLink,
             'Authenticated reporter should render as a link to the customer user-edit page',
-        ).toBeGreaterThan(0);
+        ).toBeVisible();
 
         // Guest: the seeded guest name renders. The column markup still emits an
         // <a> for it (GAP 2), but with admin_url null that <a> carries NO href —

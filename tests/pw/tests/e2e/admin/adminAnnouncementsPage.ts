@@ -1,5 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { toPath } from '@utils/helpers';
+import { confirmDataViewsAction, waitForDataViewsSettle } from './adminDataViews';
 
 // ============================================
 // TEST DATA
@@ -128,6 +129,7 @@ export class AdminAnnouncementsPage {
         await this.page.goto(this.url);
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     async gotoCreate(): Promise<void> {
@@ -146,12 +148,14 @@ export class AdminAnnouncementsPage {
             if ((await this.emptyState.count()) > 0) return;
             await this.page.waitForTimeout(250);
         }
+        await waitForDataViewsSettle(this.page);
     }
 
     async reload(): Promise<void> {
         await this.page.reload();
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     async hasNoPhpFatal(): Promise<boolean> {
@@ -194,7 +198,7 @@ export class AdminAnnouncementsPage {
         await tab.waitFor({ state: 'visible', timeout: 10000 });
         await tab.scrollIntoViewIfNeeded().catch(() => undefined);
         await tab.click();
-        await this.page.waitForTimeout(800); // DataViews refetch + repaint.
+        await waitForDataViewsSettle(this.page);
     }
 
     async search(query: string): Promise<void> {
@@ -214,7 +218,7 @@ export class AdminAnnouncementsPage {
             return;
         }
         await input.fill(query);
-        await this.page.waitForTimeout(900); // debounced search.
+        await waitForDataViewsSettle(this.page);
     }
 
     async clearSearch(): Promise<void> {
@@ -274,14 +278,10 @@ export class AdminAnnouncementsPage {
         await item.click();
     }
 
-    /** Confirm a DokanModal (Trash -> "Confirm", Delete -> "Delete"). */
+    /** Confirm the inline DataViews action (clicks the primary, non-Cancel button). */
     async confirmModal(confirmLabel: string): Promise<void> {
-        const dialog = this.page.getByRole('dialog');
-        await dialog.first().waitFor({ state: 'visible', timeout: 10000 });
-        const btn = dialog.getByRole('button', { name: new RegExp(escapeRegExp(confirmLabel), 'i') }).first();
-        await btn.waitFor({ state: 'visible', timeout: 10000 });
-        await btn.click();
-        await this.page.waitForTimeout(1200); // POST batch + list refetch.
+        void confirmLabel;
+        await confirmDataViewsAction(this.page);
     }
 
     /** Edit row action -> navigates to the detail/edit route #/announcement/:id. */
