@@ -669,8 +669,6 @@ function ProductList() {
             {
                 id: 'view-in-site',
                 label: () => __( 'View in site', 'dokan-lite' ),
-                isEligible: ( item: ProductItem ) =>
-                    item.status === 'publish' && !! item.permalink,
                 callback: ( [ item ]: ProductItem[] ) => {
                     if ( item.permalink ) {
                         window.open( item.permalink, '_blank' );
