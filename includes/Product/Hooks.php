@@ -36,6 +36,7 @@ class Hooks {
         // Add WooCommerce product brands support.
         add_action( 'dokan_new_product_added', [ $this, 'update_product_brands_by_id' ], 10, 2 );
         add_action( 'dokan_product_updated', [ $this, 'update_product_brands_by_id' ], 10, 2 );
+        add_action( 'dokan_product_updated', [ $this, 'sync_category_data_for_commission' ] );
         add_action( 'dokan_product_edit_after_pricing_fields', [ $this, 'add_product_brand_template_in_edit_product' ] );
         add_action( 'dokan_new_product_after_product_category', [ $this, 'add_product_brand_template_in_add_product' ] );
 
@@ -129,12 +130,13 @@ class Hooks {
             }
 
             $output .= '<li>';
-            $output .= '<a href="' . get_post_permalink( $result->ID ) . '">';
+            // Escape every vendor-controlled value below before it is injected into the AJAX search markup.
+            $output .= '<a href="' . esc_url( get_post_permalink( $result->ID ) ) . '">';
             $output .= '<div class="dokan-ls-product-image">';
             $output .= '<img src="' . $get_product_image . '">';
             $output .= '</div>';
             $output .= '<div class="dokan-ls-product-data">';
-            $output .= '<h3>' . $get_name . '</h3>';
+            $output .= '<h3>' . esc_html( $get_name ) . '</h3>';
 
             if ( ! empty( $price ) ) {
                 $output .= '<div class="product-price">';
@@ -150,15 +152,15 @@ class Hooks {
                 foreach ( $categories as $category ) {
                     if ( $category->parent ) {
                         $parent = get_term_by( 'id', $category->parent, 'product_cat' );
-                        $output .= '<span>' . $parent->name . '</span>';
+                        $output .= '<span>' . esc_html( $parent->name ) . '</span>';
                     }
-                    $output .= '<span>' . $category->name . '</span>';
+                    $output .= '<span>' . esc_html( $category->name ) . '</span>';
                 }
                 $output .= '</div>';
             }
 
             if ( ! empty( $sku ) ) {
-                $output .= '<div class="dokan-ls-product-sku">' . esc_html__( 'SKU:', 'dokan-lite' ) . ' ' . $sku . '</div>';
+                $output .= '<div class="dokan-ls-product-sku">' . esc_html__( 'SKU:', 'dokan-lite' ) . ' ' . esc_html( $sku ) . '</div>';
             }
 
             $output .= '</div>';
@@ -627,5 +629,22 @@ class Hooks {
             return;
 		}
         dokan()->product->save_brands( $product_id, $brand_ids );
+    }
+
+    /**
+     * Sync category data for commission
+     *
+     * @since 5.0.6
+     *
+     * @param int   $product_id   The ID of the product being updated.
+     *
+     * @return void
+     */
+    public function sync_category_data_for_commission( int $product_id ): void {
+        if ( ! current_user_can( 'dokan_edit_product' ) ) {
+            return;
+        }
+
+        $this->update_product_categories( $product_id );
     }
 }

@@ -1,3 +1,31 @@
+### v5.0.6 ( Jun 26, 2026 ) ###
+
+- **update:** Added wePos and weDocs to the setup wizard's recommended add-ons and refreshed the add-on descriptions.
+- **update:** Added weDocs to the admin Extensions page as an installable add-on.
+- **fix:** Added reCAPTCHA v3 support to the vendor registration forms to curb spam registrations.
+- **fix:** Loaded the admin dashboard on non-Latin locales (e.g. Persian) by matching the page slug instead of the translated menu title.
+- **fix:** Restored editing of downloadable file name and URL fields in the new product editor.
+- **fix:** Clarified the save error shown when a downloadable file falls outside WooCommerce's approved directories.
+- **fix:** Enabled the "View in site" button for all published products.
+
+### v5.0.5 ( Jun 19, 2026 ) ###
+
+- **update:** Migrated all admin dashboard tables to the unified Plugin UI DataViews component.
+- **update:** Updated price formatting in the product editor to use locale-specific display.
+- **fix:** Lazy-loaded product editor taxonomies (attributes, categories, and tags) to prevent memory exhaustion on large catalogues.
+- **fix:** Escaped vendor-controlled values in store product search results to prevent stored XSS via a product SKU.
+- **fix:** Restricted the Products REST endpoint so vendors can no longer access other vendors' products via the id parameter.
+- **fix:** Decoded HTML entities in product category labels for correct rendering.
+- **fix:** Corrected the product edit URL and improved dashboard navigation for the new product UI.
+
+### v5.0.4 ( Jun 08, 2026 ) ###
+
+- **update:** Improved RTL support for the switch button transition in the new vendor dashboard layout.
+- **update:** Made the vendor analytics panel compatible with the vendor-specific Coupons report.
+- **fix:** Allowed vendors to create new product tags inline from the new product editor.
+- **fix:** Resolved withdraw approval failing on an exact fractional balance.
+- **fix:** Added ownership checks to order AJAX handlers to prevent vendors from modifying orders they don't own.
+
 ### v5.0.3 ( May 21, 2026 ) ###
 
 - **update:** Exposed manual withdrawal availability and withdraw-visibility flags in the vendor dashboard REST API.

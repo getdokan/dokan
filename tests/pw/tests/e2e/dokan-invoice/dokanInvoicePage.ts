@@ -7,7 +7,7 @@ declare const Buffer: {
     from(input: string | Uint8Array, encoding?: string): { toString(encoding: string): string };
 };
 
-import { toPath, SERVER_URL } from '@utils/helpers';
+import { toPath, SERVER_URL, closeAnnouncementModal } from '@utils/helpers';
 
 /**
  * Page object for the Dokan Invoice add-on UI surfaces.
@@ -33,6 +33,14 @@ export class DokanInvoicePage {
 
     constructor(page: Page) {
         this.page = page;
+        // The Dokan Pro vendor dashboard (/dashboard/new/) shows an announcement
+        // modal whose .components-modal__screen-overlay intercepts pointer events
+        // and blocks the order row-action clicks the NewDash tests perform. Auto-
+        // dismiss it (no-op on the customer/admin surfaces, where it never shows).
+        // Without this, NewDash passed only by luck — when a co-located spec
+        // dismissed the modal first; balanced sharding moving this spec to a shard
+        // where it runs first exposed the latent order-dependence.
+        void closeAnnouncementModal(this.page);
     }
 
     // ============================================
@@ -61,8 +69,10 @@ export class DokanInvoicePage {
         // WC PDF buttons in the order edit sidebar metabox.
         invoiceButton: 'a.button.invoice',
         packingSlipButton: 'a.button.packing-slip',
-        // Plugin row used by the activation regression test.
-        dokanInvoiceRow: "tr[data-slug='dokan-invoice']",
+        // Plugin row used by the activation regression test. Match on data-plugin (the plugin file
+        // path) — WordPress derives data-slug from the display name ("Dokan - PDF Invoice" =>
+        // dokan-pdf-invoice) for premium plugins, not the folder name.
+        dokanInvoiceRow: "tr[data-plugin='dokan-invoice/dokan-invoice.php']",
     };
 
     vendor = {

@@ -24,18 +24,18 @@ class RecommendedPlugins {
     public function __construct() {
         $this->plugins = [
             [
-                'type'        => 'store_growth',
-                'title'       => fn() => __( 'StoreGrowth', 'dokan-lite' ),
-                'description' => fn() => __( 'Increase revenue with powerful sales tools for WooCommerce.', 'dokan-lite' ),
-                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/store-growth-logo.png',
-                'img_alt'     => fn() => __( 'StoreGrowth logo', 'dokan-lite' ),
-                'slug'        => 'storegrowth-sales-booster',
-                'basename'    => 'storegrowth-sales-booster/storegrowth-sales-booster.php',
+                'type'        => 'wepos',
+                'title'       => fn() => __( 'wePos', 'dokan-lite' ),
+                'description' => fn() => __( 'Run your counter and online store from one fast POS system', 'dokan-lite' ),
+                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/extensions/addons/wepos.svg',
+                'img_alt'     => fn() => __( 'wePos logo', 'dokan-lite' ),
+                'slug'        => 'wepos',
+                'basename'    => 'wepos/wepos.php',
             ],
             [
                 'type'        => 'wemail',
                 'title'       => fn() => __( 'weMail', 'dokan-lite' ),
-                'description' => fn() => __( 'Simplified Email Marketing Solution for WordPress!', 'dokan-lite' ),
+                'description' => fn() => __( 'Send campaigns and automate email marketing inside WordPress', 'dokan-lite' ),
                 'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/wemail-logo.png',
                 'img_alt'     => fn() => __( 'weMail logo', 'dokan-lite' ),
                 'slug'        => 'wemail',
@@ -44,7 +44,7 @@ class RecommendedPlugins {
             [
                 'type'        => 'wc_conversion_tracking',
                 'title'       => fn() => __( 'WooCommerce Conversion Tracking', 'dokan-lite' ),
-                'description' => fn() => __( 'Track conversions on your WooCommerce store like a pro!', 'dokan-lite' ),
+                'description' => fn() => __( 'Advanced WooCommerce conversion tracking for every ad platform', 'dokan-lite' ),
                 'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/wc-conversion-tracking-logo.png',
                 'img_alt'     => fn() => __( 'WooCommerce Conversion Tracking logo', 'dokan-lite' ),
                 'slug'        => 'woocommerce-conversion-tracking',
@@ -53,11 +53,29 @@ class RecommendedPlugins {
             [
                 'type'        => 'texty',
                 'title'       => fn() => __( 'Texty', 'dokan-lite' ),
-                'description' => fn() => __( 'SMS Notification for WordPress, WooCommerce, Dokan and more!', 'dokan-lite' ),
+                'description' => fn() => __( 'Keep buyers updated with instant SMS for every order and alert', 'dokan-lite' ),
                 'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/texty-logo.png',
                 'img_alt'     => fn() => __( 'Texty logo', 'dokan-lite' ),
                 'slug'        => 'texty',
                 'basename'    => 'texty/texty.php',
+            ],
+            [
+                'type'        => 'store_growth',
+                'title'       => fn() => __( 'StoreGrowth', 'dokan-lite' ),
+                'description' => fn() => __( 'Boost sales with upsells, BOGO deals, FOMO popups and more', 'dokan-lite' ),
+                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/store-growth-logo.png',
+                'img_alt'     => fn() => __( 'StoreGrowth logo', 'dokan-lite' ),
+                'slug'        => 'storegrowth-sales-booster',
+                'basename'    => 'storegrowth-sales-booster/storegrowth-sales-booster.php',
+            ],
+            [
+                'type'        => 'wedocs',
+                'title'       => fn() => __( 'weDocs', 'dokan-lite' ),
+                'description' => fn() => __( 'Add a self-serve help center with AI-powered docs for vendors', 'dokan-lite' ),
+                'img_url'     => DOKAN_PLUGIN_ASSEST . '/images/extensions/addons/wedocs.svg',
+                'img_alt'     => fn() => __( 'weDocs logo', 'dokan-lite' ),
+                'slug'        => 'wedocs',
+                'basename'    => 'wedocs/wedocs.php',
             ],
         ];
     }

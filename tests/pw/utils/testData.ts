@@ -1120,7 +1120,8 @@ export const data = {
                 tools: 'wp-admin/admin.php?page=dokan#/tools',
                 productQA: 'wp-admin/admin.php?page=dokan#/product-qa',
                 questionDetails: (questionId: string) => `wp-admin/admin.php?page=dokan#/product-qa/${questionId}`,
-                subscriptions: 'wp-admin/admin.php?page=dokan#/subscriptions',
+                // migrated DataViews page is on page=dokan-dashboard (page=dokan is the legacy list)
+                subscriptions: 'wp-admin/admin.php?page=dokan-dashboard#/subscriptions',
                 verifications: 'wp-admin/admin.php?page=dokan#/verifications?status=pending',
                 productAdvertising: 'wp-admin/admin.php?page=dokan#/product-advertising',
                 wholeSaleCustomer: 'wp-admin/admin.php?page=dokan#/wholesale-customer',
@@ -2897,7 +2898,12 @@ export const data = {
             WP_DEBUG: true,
             SCRIPT_DEBUG: true,
             WP_DEBUG_LOG: '/var/www/html/wp-data/debug.log',
-            WP_DEBUG_DISPLAY: true,
+            // Keep PHP notices/deprecations OUT of the response body. With DISPLAY on,
+            // a WP-core deprecation (e.g. WP 7.0 kses.php preg_replace(null)) prints before
+            // headers and corrupts wp_redirect()/wp_safe_redirect() Location headers, which
+            // breaks admin-login and order-status redirects in the browser tests. Errors are
+            // still captured via WP_DEBUG + WP_DEBUG_LOG above.
+            WP_DEBUG_DISPLAY: false,
         },
 
         // site info
@@ -2928,6 +2934,8 @@ export const data = {
             woocommerceProductAddons: 'woocommerce-product-addons',
             woocommerceSimpleAuctions: 'woocommerce-simple-auctions',
             woocommercePdfInvoices: 'woocommerce-pdf-invoices-packing-slips',
+            rankMath: 'seo-by-rank-math',
+            emailLog: 'email-log',
         },
     },
 
@@ -2950,6 +2958,7 @@ export const data = {
             installPlugin: (plugin: string) => `wp plugin install ${plugin} --activate --force`,
             activatePlugin: (plugin: string) => `wp plugin activate ${plugin}`,
             activateTheme: (theme: string) => `wp theme activate ${theme}`,
+            updateOption: (name: string, value: string) => `wp option update ${name} ${value}`,
             rewritePermalink: `wp rewrite structure /%postname%/`,
             flushRewrite: `wp rewrite flush --hard`,
         },

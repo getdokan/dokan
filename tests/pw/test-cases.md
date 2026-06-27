@@ -1,133 +1,60 @@
-# Dokan Test Cases — Author Sheet
+# Dokan Playwright — Test Cases (skill author/build sheet)
 
-> **For QA:** Fill this file out and the Claude skill will scaffold matching specs and page objects under `tests/e2e/<slug>/` (or `tests/api/<slug>.spec.ts` for API features).
->
-> **For the skill:** Read this file in full, then create one folder + spec + page object per `## Feature` block. Match the templates in `setup.md` §3 and §4 exactly. Skip blocks where `Status: skip`.
+This file is the QA-authored input the `dokan-automation` skill reads to scaffold
+spec folders. One `## Feature:` block per feature. The exhaustive per-route
+checklists live in `test-cases/` (`new-dashboards-test-cases.md`); seeding
+strategy in `test-cases/admin-dashboard-seeding-strategy.md`.
 
----
-
-## How to add test cases
-
-You have **two ways** to add test cases:
-
-1. **Edit this file directly** — fill in a `## Feature:` block using the template below and save.
-2. **Ask Claude** — say "add test cases for <feature>" and the skill will interview you (slug, gate, roles, scenarios) and write the block into this file. The skill **always** writes here first; it never scaffolds straight into `tests/e2e/`.
-
-The skill will not scaffold any spec until the feature block lives in this file with `Status: build`.
+> **Admin-dashboard folder convention:** all admin React-dashboard areas
+> (vendors, withdraw, settings, modules, dashboard-home, …) live together in the
+> single `tests/e2e/admin/` folder — one `<area>.spec.ts` + `<area>Page.ts` per
+> area — instead of separate top-level `admin-<area>/` folders. This keeps the
+> whole admin surface in one place and avoids folder sprawl. (Deviates from the
+> skill's default one-feature-one-folder scaffold, by choice.)
 
 ---
 
-## Section rules — every feature block has up to three sections
+## Feature: Admin Vendors List
 
-Every `## Feature:` block must include scenarios under these three sections:
-
-| Section            | Required? | What goes in it                                                              |
-|--------------------|-----------|------------------------------------------------------------------------------|
-| **Happy Paths**    | **Mandatory** | The golden, expected flows. The user does the right thing and the feature works. At least one case. |
-| **Edge Cases**     | Optional  | Boundary or unusual conditions: empty state, max length, large quantity, race conditions, slow network. |
-| **Negative Cases** | Optional  | The user does the wrong thing or violates a rule. Validation errors, permission denials, 4xx/5xx API responses. |
-
-Edge and Negative sections are **optional** — leave them out (or empty) if not relevant. Happy Paths is **never** optional. The skill will refuse to scaffold a feature with zero Happy Path cases.
-
-When the skill builds specs, it `test.describe`-groups cases by section so the report keeps the structure visible.
-
----
-
-## Feature template — copy this for every feature
-
-```
-## Feature: <human-readable feature name>
-- Slug: <kebab-case-folder-name>          # used as folder + file name
-- Type: e2e | api                          # which folder it lands in
-- Plugin gate: lite | liteOnly | pro      # picks the @lite / @liteOnly / @pro tag
-- Roles: admin, vendor, customer, guest   # one or more — picks @role tags
-- Storage state: admin, vendor, vendor2, customer, customer2, guest  # which auth files to load
-- REST seed: yes | no                      # whether the page object needs a REST helper
-- Status: build | skip                     # `skip` means don't generate yet
-
-### Happy Paths
-1. <role> can <action>
-   - Steps:
-     1. <step>
-     2. <step>
-   - Expected: <observable outcome>
-   - Tag extras: @exploratory, @visual    # optional — added on top of @<gate> + @<role>
-
-### Edge Cases    # optional — delete this section if you have no edge cases
-1. <role> <handles boundary condition>
-   - Steps: ...
-   - Expected: ...
-
-### Negative Cases    # optional — delete this section if you have no negative cases
-1. <role> cannot <forbidden action>
-   - Steps: ...
-   - Expected: <error / validation / 4xx>
-```
-
----
-
-## Example — already wired, do NOT regenerate
-
-## Feature: Abuse Reports
-- Slug: abuse-reports
-- Type: e2e
-- Plugin gate: pro
-- Roles: admin, customer
-- Storage state: admin, customer
-- REST seed: yes
-- Status: skip
-
-### Happy Paths
-1. admin can view abuse reports list
-   - Steps:
-     1. Log in as admin
-     2. Navigate to /wp-admin/admin.php?page=dokan#/abuse-reports
-   - Expected: Reports table renders with seeded report rows
-
-2. customer can submit an abuse report from a single product page
-   - Steps:
-     1. Open a vendor's single product
-     2. Click "Report abuse"
-     3. Pick a reason, submit
-   - Expected: Toast confirms submission; report appears in admin list
-
-### Edge Cases
-1. admin sees empty state when no reports exist
-   - Steps:
-     1. Delete all seeded reports via REST
-     2. Reload the abuse reports page
-   - Expected: Empty-state placeholder is shown, not a broken table
-
-### Negative Cases
-1. customer cannot submit an abuse report without selecting a reason
-   - Steps:
-     1. Open the report dialog
-     2. Leave reason empty, click submit
-   - Expected: Inline validation error; no network request fires
-
-2. guest cannot open the report dialog
-   - Steps:
-     1. Visit a single product as a guest
-   - Expected: "Report abuse" link is hidden or redirects to login
-
----
-
-<!-- ============================================================
-     ADD YOUR FEATURES BELOW. Delete this comment when you start.
-     Remember: Happy Paths is mandatory, the other two are optional.
-     ============================================================ -->
-
-## Feature: <REPLACE ME>
-- Slug: <replace-me>
+- Slug: admin-vendors
+- Files: `tests/e2e/admin/adminVendors.spec.ts` + `tests/e2e/admin/adminVendorsPage.ts` (lives in the shared `admin/` folder — see convention note above)
 - Type: e2e
 - Plugin gate: lite
-- Roles: vendor
-- Storage state: vendor
-- REST seed: no
-- Status: skip
+- Roles: admin, vendor, customer
+- REST seed: yes
+- Surface: wp-admin/admin.php?page=dokan-dashboard#/vendors (new React admin dashboard, AdminDataViews)
+- Status: done
+- Seeding: admin-only. Vendor state created via `apiUtils.createStore` + `updateStoreStatus` (admin auth); no vendor UI driven. See `test-cases/admin-dashboard-seeding-strategy.md` § Vendors list.
 
 ### Happy Paths
-1. vendor can <REPLACE ME>
-   - Steps:
-     1. <step>
-   - Expected: <outcome>
+
+- admin: view the Vendors list — DataViews table + Vendor/Phone/Registered/Status columns render, ≥1 seeded row, no PHP fatal.
+- admin: Add Vendor button navigates to `#/vendors/create`.
+- admin: search by store name filters the list to the matching vendor only.
+- admin: Approved tab shows an enabled vendor with the green "Enabled" pill.
+- admin: Pending tab shows a disabled vendor with the "Disabled" pill.
+- admin: approve a pending vendor via row action → confirm modal → status flips to Enabled (PUT `/dokan/v1/stores/:id/status` `{status:'active'}`).
+- admin: disable an enabled vendor via row action → confirm modal → status flips to Disabled (`{status:'inactive'}`).
+- admin: Edit row action navigates to `#/vendors/edit/:id`.
+- admin: bulk-approve pending vendors → POST `/dokan/v1/stores/batch` `{approved:[ids]}` → rows become Enabled. `@exploratory` (bulk-toolbar selectors pending first-run verification).
+
+### Edge Cases
+
+- admin: search with no match shows the empty state / zero rows.
+- admin: reloading on `#/vendors` preserves the hash route and re-mounts the list.
+- admin: sorting the Registered column requests `orderby=registered` from the API. `@exploratory`
+
+### Negative Cases
+
+- vendor: a logged-in vendor cannot access the admin Vendors page (no admin dashboard UI).
+- customer: a logged-in customer cannot access the admin Vendors page.
+
+### Backlog (not yet scaffolded — see new-dashboards-test-cases.md § Vendors list)
+
+- Pro: Store Categories button + Categories column + `?store_categories=` filter (`@pro`).
+- Pro: "Switch to" row action eligibility + navigation (`@pro`).
+- See Products / See Orders row actions (full-page nav to wp-admin).
+- Status tab live counts from `X-Status-*` headers; pagination/per-page.
+- Security: unauthenticated PUT/POST to stores endpoints; XSS in search; IDOR on `:id` status PUT.
+- a11y: keyboard operation of tabs/row actions; focus-trap in the confirm modal; ARIA table roles.
+- Phone column em-dash for a vendor with no phone; Registered back-dated sort order (DB-seeded via `dbUtils.setUserRegisteredDate`).

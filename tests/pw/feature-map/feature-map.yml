@@ -1193,10 +1193,24 @@
 - page: 'Rank Math SEO'
   features:
       admin:
-          admin can enable Rank Math SEO module: false
-          admin can disable Rank Math SEO module: false
+          admin can enable Rank Math SEO module: true
+          admin can disable Rank Math SEO module: true
+          admin can store the current editable post id: true
+          admin can read the rank math editor data: true
       vendor:
-          vendor can view rank math seo options on product edit page: false
+          vendor can view rank math seo options on product edit page: true
+          vendor sees the Rank Math SEO card on the product editor: true
+          vendor sees the Rank Math SEO fields rendered in the panel: true
+          vendor can store the current editable post id: true
+          vendor can read the rank math editor data for own product: true
+          Rank Math SEO section is absent when the module is disabled: true
+          vendor cannot store the editable post id for another vendor product: true
+          vendor cannot read editor data for another vendor product: true
+      customer:
+          customer cannot store the current editable post id: true
+      guest:
+          guest cannot store the current editable post id: true
+          guest cannot read the rank math editor data: true
 
 - page: 'Razorpay'
   features:

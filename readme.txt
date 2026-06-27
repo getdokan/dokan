@@ -2,12 +2,12 @@
 Contributors: tareq1988, dokaninc, wedevs, nizamuddinbabu
 Donate Link: https://dokan.co/wordpress/pricing/
 Tags: WooCommerce multivendor marketplace, multi seller, multi vendor, multivendor, multivendor marketplace
-Requires at least: 6.8
-Tested up to: 6.9
+Requires at least: 6.9
+Tested up to: 7.0
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 5.0.3
+Stable tag: 5.0.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -376,6 +376,31 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v5.0.6 ( Jun 26, 2026 ) =
+- **update:** Added wePos and weDocs to the setup wizard's recommended add-ons and refreshed the add-on descriptions.
+- **update:** Added weDocs to the admin Extensions page as an installable add-on.
+- **fix:** Added reCAPTCHA v3 support to the vendor registration forms to curb spam registrations.
+- **fix:** Loaded the admin dashboard on non-Latin locales (e.g. Persian) by matching the page slug instead of the translated menu title.
+- **fix:** Restored editing of downloadable file name and URL fields in the new product editor.
+- **fix:** Clarified the save error shown when a downloadable file falls outside WooCommerce's approved directories.
+- **fix:** Enabled the "View in site" button for all published products.
+
+= v5.0.5 ( Jun 19, 2026 ) =
+- **update:** Migrated all admin dashboard tables to the unified Plugin UI DataViews component.
+- **update:** Updated price formatting in the product editor to use locale-specific display.
+- **fix:** Lazy-loaded product editor taxonomies (attributes, categories, and tags) to prevent memory exhaustion on large catalogues.
+- **fix:** Escaped vendor-controlled values in store product search results to prevent stored XSS via a product SKU.
+- **fix:** Restricted the Products REST endpoint so vendors can no longer access other vendors' products via the id parameter.
+- **fix:** Decoded HTML entities in product category labels for correct rendering.
+- **fix:** Corrected the product edit URL and improved dashboard navigation for the new product UI.
+
+= v5.0.4 ( Jun 08, 2026 ) =
+- **update:** Improved RTL support for the switch button transition in the new vendor dashboard layout.
+- **update:** Made the vendor analytics panel compatible with the vendor-specific Coupons report.
+- **fix:** Allowed vendors to create new product tags inline from the new product editor.
+- **fix:** Resolved withdraw approval failing on an exact fractional balance.
+- **fix:** Added ownership checks to order AJAX handlers to prevent vendors from modifying orders they don't own.
+
 = v5.0.3 ( May 21, 2026 ) =
 - **update:** Exposed manual withdrawal availability and withdraw-visibility flags in the vendor dashboard REST API.
 - **fix:** Restricted the Customers REST endpoint to self-service to prevent vendors from modifying other user accounts.
@@ -392,43 +417,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **fix:** Corrected the "View Details" link in the What's New admin notice to route to the appropriate changelog page.
 - **fix:** Prevented a PHP deprecation notice caused by a menu position type-cast.
 - **fix:** Ensured jQuery blockUI loads on the seller setup wizard and other custom enqueue pages.
-
-= v5.0.1 ( May 05, 2026 ) =
-- **update:** Added an admin-controllable vendor registration option on the My Account page.
-- **update:** Added RTL support for the new vendor dashboard UI.
-- **fix:** Properly decode HTML entities in admin settings labels.
-
-= v5.0.0 ( Apr 28, 2026 ) =
-- **new:** Added a dedicated vendor onboarding page with a separate registration flow.
-- **new:** Introduced the new Product Form Manager for the vendor dashboard.
-- **new:** Added a "Get Support" button to the admin dashboard header.
-- **new:** Added a new Extensions page for Dokan in the admin panel.
-- **new:** Converted the admin Products list to React with Plugin UI.
-- **new:** Converted the vendor dashboard Orders list to React with Plugin UI.
-- **new:** Migrated the vendor dashboard Reverse Withdraw page to React with Plugin UI.
-- **new:** Migrated the admin Withdraw Requests page to Plugin UI with tabs.
-- **new:** Added `@wedevs/plugin-ui` dependency and integrate the DataViews component as the unified table system.
-- **update:** Migrated Dokan UI to Tailwind CSS v4 with a consolidated shared component bundle.
-- **update:** Rebuilt the admin Tools / Dummy Data section in React.
-- **update:** Added legacy compatibility support for the RFQ (Request for Quote) admin panel.
-- **update:** Updated the Vendor Announcement panel UX.
-- **update:** Added additional tax fields and new order types to the Dokan order stats table.
-- **update:** Added OpenAI model options to the latest ones for AI Assist settings.
-- **update:** Added a legacy switcher to the Product Form for backward compatibility.
-- **update:** Used ShortContent for product name display and widen the Products column.
-- **fix:** Resolved Product Form compatibility issues with WordPress v6.8.
-- **fix:** Resolved Plugin UI style conflicts between v10 and v14.
-- **fix:** Corrected filter border clipping and the WithdrawView layout type.
-- **fix:** Improved UI styles and navigation URL handling across new dashboard pages.
-- **fix:** Corrected the balance display on the Reverse Withdraw page.
-- **fix:** Corrected the back-link URL on the order details page.
-- **fix:** Fixed the active state of vendor sidebar submenu items.
-
-= v4.3.3 ( Mar 31, 2026 ) =
-- **update:** Manage changelog notification dot visibility for Dokan Lite and Pro based on new version availability.
-- **update:** Add confirmation modal for order status change actions in the vendor dashboard order listing.
-- **update:** Update the Pro Features admin menu color to highlight it with the brand color.
-- **fix:** Add the missing alt attribute to the store header banner image on the store listing page.
-- **fix:** Display a warning message when admin tries to approve a vendor withdrawal request exceeding the available balance.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

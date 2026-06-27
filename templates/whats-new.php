@@ -4,6 +4,112 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.0.6',
+        'released' => '2026-06-26',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Added wePos and weDocs to the setup wizard\'s recommended add-ons and refreshed the add-on descriptions.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added weDocs to the admin Extensions page as an installable add-on.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Added reCAPTCHA v3 support to the vendor registration forms to curb spam registrations.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Loaded the admin dashboard on non-Latin locales (e.g. Persian) by matching the page slug instead of the translated menu title.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Restored editing of downloadable file name and URL fields in the new product editor.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Clarified the save error shown when a downloadable file falls outside WooCommerce\'s approved directories.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Enabled the "View in site" button for all published products.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.0.5',
+        'released' => '2026-06-19',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Migrated all admin dashboard tables to the unified Plugin UI DataViews component.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated price formatting in the product editor to use locale-specific display.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Lazy-loaded product editor taxonomies (attributes, categories, and tags) to prevent memory exhaustion on large catalogues.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Escaped vendor-controlled values in store product search results to prevent stored XSS via a product SKU.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Restricted the Products REST endpoint so vendors can no longer access other vendors\' products via the id parameter.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Decoded HTML entities in product category labels for correct rendering.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Corrected the product edit URL and improved dashboard navigation for the new product UI.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.0.4',
+        'released' => '2026-06-08',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Improved RTL support for the switch button transition in the new vendor dashboard layout.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Made the vendor analytics panel compatible with the vendor-specific Coupons report.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Allowed vendors to create new product tags inline from the new product editor.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Resolved withdraw approval failing on an exact fractional balance.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added ownership checks to order AJAX handlers to prevent vendors from modifying orders they don\'t own.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.0.3',
         'released' => '2026-05-21',
         'changes'  => [

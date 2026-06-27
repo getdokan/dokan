@@ -166,6 +166,10 @@ export function useProductEditor(
             }
             try {
                 await saveProduct( productId );
+
+                // Lets features persist their own data once the product has been saved.
+                doAction( 'dokan_product_editor_after_save', productId );
+
                 toast( {
                     type: 'success',
                     title: __( 'Product saved successfully.', 'dokan-lite' ),
@@ -214,14 +218,11 @@ export function useInitProductEditor(
     vendorEarning: number
 ) {
     const { initForm } = useDispatch( productEditorStore );
-    const hasForm = useSelect(
-        ( select ) => select( productEditorStore ).hasForm( productId ),
-        [ productId ]
-    );
 
     useEffect( () => {
-        if ( ! hasForm && formItems.length > 0 ) {
+        // Re-init when freshly-fetched form items arrive (App re-fetches per product on navigation). Without this, returning to a product after save reused a stale cached form, so file fields showed empty until a full reload.
+        if ( formItems.length > 0 ) {
             initForm( productId, formItems, vendorEarning );
         }
-    }, [ productId, formItems, vendorEarning, hasForm, initForm ] );
+    }, [ productId, formItems, vendorEarning, initForm ] );
 }

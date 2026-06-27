@@ -231,6 +231,10 @@ class Ajax {
             wp_die( - 1 );
         }
 
+        if ( ! dokan_is_seller_has_order( dokan_get_current_user_id(), intval( wp_unslash( $_POST['order_id'] ) ) ) ) {
+            wp_die( - 1 );
+        }
+
         $order_id     = isset( $_POST['order_id'] ) ? intval( $_POST['order_id'] ) : 0;
         $product_ids  = isset( $_POST['product_ids'] ) ? intval( $_POST['product_ids'] ) : 0;
         $loop         = isset( $_POST['loop'] ) ? intval( $_POST['loop'] ) : 0;
@@ -302,7 +306,20 @@ class Ajax {
         $order_id     = isset( $_POST['order_id'] ) ? intval( $_POST['order_id'] ) : '';
         $order_status = isset( $_POST['order_status'] ) ? sanitize_text_field( wp_unslash( $_POST['order_status'] ) ) : '';
 
+        if ( ! dokan_is_seller_has_order( dokan_get_current_user_id(), $order_id ) ) {
+            wp_send_json_error( __( 'You have no permission to manage this order', 'dokan-lite' ) );
+
+            return;
+        }
+
         $order = dokan()->order->get( $order_id );
+
+        if ( ! $order ) {
+            wp_send_json_error( __( 'Invalid order.', 'dokan-lite' ) );
+
+            return;
+        }
+
         $order->update_status( $order_status );
 
         // Get the new order status. This is needed since plugin/theme authors might
@@ -387,6 +404,15 @@ class Ajax {
         $order_id      = intval( $_POST['order_id'] );
         $permission_id = absint( $_POST['permission_id'] );
 
+        // Resolve the order from the permission itself, then verify the current
+        // vendor owns that order. Trusting the posted order_id alone would allow a
+        // vendor to pair their own order_id with another vendor's permission_id.
+        $download_permission = new \WC_Customer_Download( $permission_id );
+
+        if ( ! $download_permission->get_id() || ! dokan_is_seller_has_order( dokan_get_current_user_id(), $download_permission->get_order_id() ) ) {
+            wp_die( - 1 );
+        }
+
         $data_store = WC_Data_Store::load( 'customer-download' );
         $data_store->delete_by_id( $permission_id );
 
@@ -411,6 +437,10 @@ class Ajax {
         $post_id   = isset( $_POST['post_id'] ) ? absint( $_POST['post_id'] ) : '';
         $note      = isset( $_POST['note'] ) ? sanitize_textarea_field( wp_unslash( $_POST['note'] ) ) : '';
         $note_type = isset( $_POST['note_type'] ) ? sanitize_text_field( wp_unslash( $_POST['note_type'] ) ) : '';
+
+        if ( ! dokan_is_seller_has_order( dokan_get_current_user_id(), $post_id ) ) {
+            die( - 1 );
+        }
 
         $is_customer_note = ( $note_type === 'customer' ) ? 1 : 0;
 
@@ -454,6 +484,10 @@ class Ajax {
         $shipping_number   = isset( $_POST['shipping_number'] ) ? sanitize_text_field( wp_unslash( $_POST['shipping_number'] ) ) : '';
         $shipping_number   = trim( stripslashes( $shipping_number ) );
         $shipped_date      = isset( $_POST['shipped_date'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['shipped_date'] ) ) ) : '';
+
+        if ( ! dokan_is_seller_has_order( dokan_get_current_user_id(), $post_id ) ) {
+            die( - 1 );
+        }
 
         $ship_info = __( 'Shipping provider: ', 'dokan-lite' ) . $shipping_provider . '<br />' . __( 'Shipping number: ', 'dokan-lite' ) . $shipping_number . '<br />' . __( 'Shipped date: ', 'dokan-lite' ) . $shipped_date;
 
@@ -522,6 +556,18 @@ class Ajax {
         $note_id = isset( $_POST['note_id'] ) ? intval( $_POST['note_id'] ) : '';
 
         if ( $note_id > 0 ) {
+            $comment = get_comment( $note_id );
+
+            // Only allow deleting genuine order notes whose parent order belongs to
+            // the current vendor. Without this, a raw note_id deletes any comment.
+            if ( ! $comment || 'order_note' !== $comment->comment_type ) {
+                die( - 1 );
+            }
+
+            if ( ! dokan_is_seller_has_order( dokan_get_current_user_id(), $comment->comment_post_ID ) ) {
+                die( - 1 );
+            }
+
             wp_delete_comment( $note_id );
         }
 

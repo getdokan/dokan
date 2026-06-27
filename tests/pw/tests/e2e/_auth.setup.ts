@@ -4,6 +4,7 @@ import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 import { dbUtils } from '@utils/dbUtils';
 import { helpers, parseBoolean } from '@utils/helpers';
+import { RankMathWizardPage } from './rank-math/rankMathWizardPage';
 
 const { DOKAN_PRO } = process.env;
 const isPro = parseBoolean(DOKAN_PRO);
@@ -52,20 +53,22 @@ async function frontendLogin(page: Page, user: { username: string; password: str
 }
 
 async function adminLogin(page: Page, user: { username: string; password: string }, storageState?: string): Promise<void> {
-    await page.goto('wp-admin', { waitUntil: 'networkidle' });
+    await page.goto('wp-admin', { waitUntil: 'domcontentloaded' });
     const hasLoginForm = await page.locator('#user_login').isVisible().catch(() => false);
     if (hasLoginForm) {
         await page.locator('#user_login').fill(user.username);
         await page.locator('#user_pass').fill(user.password);
-        await Promise.all([
-            page.waitForLoadState('load'),
-            page.waitForResponse(r => r.url().includes('wp-admin')),
-            page.locator('#wp-submit').click(),
-        ]);
-        if (storageState) await page.context().storageState({ path: storageState });
-        const loggedIn = await getCurrentUser(page);
-        expect(loggedIn).toBe(user.username);
+        // Submit WITHOUT auto-waiting on the post-login navigation. The wp-admin dashboard render is
+        // slow on CI (admin_init fires blocking wordpress.org update checks), so click()'s built-in
+        // "wait for navigation to finish" hits the 15s actionTimeout and the step fails. The auth
+        // cookie is set by the fast wp-login.php 302, so we fire the submit via dispatchEvent (no nav
+        // wait) and confirm authentication by polling the logged-in cookie below.
+        await page.locator('#wp-submit').dispatchEvent('click');
     }
+    await expect
+        .poll(async () => await getCurrentUser(page), { timeout: 30000 })
+        .toBe(user.username);
+    if (storageState) await page.context().storageState({ path: storageState });
 }
 
 async function getProductEditNonce(page: Page): Promise<string> {
@@ -107,6 +110,26 @@ setup.describe('add & authenticate users', () => {
 
     setup('authenticate admin', { tag: ['@lite'] }, async ({ page }) => {
         await adminLogin(page, data.admin, data.auth.adminAuthFile);
+    });
+
+    // Complete the Rank Math SEO setup wizard through its admin UI so the plugin
+    // is *configured* before the rank-math suite runs (otherwise wp-admin keeps
+    // redirecting to the wizard and the SEO module stays half-initialised).
+    // Runs right after `authenticate admin` so the admin storage state exists.
+    // Non-fatal: when Rank Math is absent / already configured the wizard never
+    // renders and `completeSetupWizard()` no-ops.
+    setup('complete Rank Math setup wizard', { tag: ['@lite'] }, async ({ browser }) => {
+        const context = await browser.newContext({ storageState: data.auth.adminAuthFile });
+        const page = await context.newPage();
+        try {
+            const wizard = new RankMathWizardPage(page);
+            const result = await wizard.completeSetupWizard();
+            console.log(result === 'completed' ? 'Rank Math setup wizard completed via UI' : 'Rank Math setup wizard skipped (plugin absent or already configured)');
+        } catch (error) {
+            console.log('Rank Math setup wizard step failed, continuing:', (error as Error)?.message ?? '');
+        } finally {
+            await context.close();
+        }
     });
 
     setup('enable admin selling status', { tag: ['@lite'] }, async () => {

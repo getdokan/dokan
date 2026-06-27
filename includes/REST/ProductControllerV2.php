@@ -274,7 +274,7 @@ class ProductControllerV2 extends ProductController {
         $product_types  = apply_filters( 'dokan_product_types', [ 'simple' => __( 'Simple', 'dokan-lite' ) ] );
 
         // If any vendor it trying to access other products then we need to replace author id by current user id.
-        if ( ! current_user_can( dokana_admin_menu_capability() ) ) {
+        if ( ! current_user_can( dokan_admin_menu_capability() ) ) {
             $args['author'] = dokan_get_current_user_id();
         } elseif ( $request->get_param( 'author' ) ) {
             $args['author'] = $request->get_param( 'author' );

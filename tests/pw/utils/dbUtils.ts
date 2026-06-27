@@ -70,14 +70,20 @@ export const dbUtils = {
             // Sanitize metaValue: replace undefined with null
             metaValue = metaValue === undefined ? null : metaValue;
             metaValue = serializeData && metaValue !== null && !isSerialized(metaValue as string) ? serialize(metaValue) : metaValue;
-            const metaExists = await dbUtils.dbQuery(`SELECT COUNT(*) AS count
+            const metaExists = await dbUtils.dbQuery(
+                `SELECT COUNT(*) AS count
                                                       FROM ${dbPrefix}_usermeta
                                                       WHERE user_id = ?
-                                                        AND meta_key = ?;`, [userId, metaKey]);
-            const query = metaExists[0].count > 0 ? `UPDATE ${dbPrefix}_usermeta
+                                                        AND meta_key = ?;`,
+                [userId, metaKey],
+            );
+            const query =
+                metaExists[0].count > 0
+                    ? `UPDATE ${dbPrefix}_usermeta
                                                      SET meta_value = ?
                                                      WHERE user_id = ?
-                                                       AND meta_key = ?;` : `INSERT INTO ${dbPrefix}_usermeta (user_id, meta_key, meta_value)
+                                                       AND meta_key = ?;`
+                    : `INSERT INTO ${dbPrefix}_usermeta (user_id, meta_key, meta_value)
                                                                              VALUES (?, ?, ?);`;
             const res = await dbUtils.dbQuery(query, metaExists[0].count > 0 ? [metaValue, userId, metaKey] : [userId, metaKey, metaValue]);
             return res;
@@ -253,5 +259,132 @@ export const dbUtils = {
         await dbUtils.setUserMeta(sellerId, 'dokan_geo_longitude', '-74.0059728', false);
         await dbUtils.setUserMeta(sellerId, 'dokan_geo_public', '1', false);
         await dbUtils.setUserMeta(sellerId, 'dokan_geo_address', 'New York, NY, USA', false);
+    },
+
+    // ============================================
+    // ADMIN-DASHBOARD SEEDING HELPERS
+    // ============================================
+    // Net-new writers for the admin-dashboard test suite (see
+    // tests/pw/test-cases/admin-dashboard-seeding-strategy.md). They force
+    // states the REST API cannot set, so admin-only specs can seed
+    // preconditions without ever driving the vendor/customer UI:
+    // post meta, post/order dates (back-dating for date-range filters and the
+    // monthly-comparison / sales-chart stats), vendor balance, and the
+    // vendor's user_registered date (the admin Vendors "Registered" column).
+
+    // set post meta (insert or update) — the postmeta twin of setUserMeta.
+    async setPostMeta(postId: string | number, metaKey: string, metaValue: object | string | null, serializeData?: boolean): Promise<any> {
+        if (postId === undefined || postId === null) {
+            throw new Error('setPostMeta: postId is required and cannot be null or undefined.');
+        }
+        if (!metaKey) {
+            throw new Error('setPostMeta: metaKey is required and cannot be null or undefined.');
+        }
+        metaValue = metaValue === undefined ? null : metaValue;
+        metaValue = serializeData && metaValue !== null && !isSerialized(metaValue as string) ? serialize(metaValue) : metaValue;
+        const metaExists = await dbUtils.dbQuery(`SELECT COUNT(*) AS count FROM ${dbPrefix}_postmeta WHERE post_id = ? AND meta_key = ?;`, [postId, metaKey]);
+        const query = metaExists[0].count > 0 ? `UPDATE ${dbPrefix}_postmeta SET meta_value = ? WHERE post_id = ? AND meta_key = ?;` : `INSERT INTO ${dbPrefix}_postmeta (post_id, meta_key, meta_value) VALUES (?, ?, ?);`;
+        return await dbUtils.dbQuery(query, metaExists[0].count > 0 ? [metaValue, postId, metaKey] : [postId, metaKey, metaValue]);
+    },
+
+    // back-date (or set) a post's published date — wp_posts.post_date[_gmt].
+    // `date` is a MySQL datetime string, e.g. '2025-01-15 10:00:00'.
+    async setPostDate(postId: string | number, date: string): Promise<any> {
+        const query = `UPDATE ${dbPrefix}_posts SET post_date = ?, post_date_gmt = ? WHERE ID = ?;`;
+        return await dbUtils.dbQuery(query, [date, date, postId]);
+    },
+
+    // back-date a WooCommerce order (HPOS wc_orders + the analytics
+    // wc_order_stats mirror when present) so admin date-range filters and the
+    // monthly-comparison / sales-chart prior-period figures are deterministic.
+    // The stats update is best-effort — the table may be empty on a fresh env.
+    async setOrderDate(orderId: string | number, date: string): Promise<void> {
+        await dbUtils.dbQuery(`UPDATE ${dbPrefix}_wc_orders SET date_created_gmt = ?, date_updated_gmt = ? WHERE id = ?;`, [date, date, orderId]);
+        try {
+            await dbUtils.dbQuery(`UPDATE ${dbPrefix}_wc_order_stats SET date_created = ?, date_created_gmt = ? WHERE order_id = ?;`, [date, date, orderId]);
+        } catch (e) {
+            console.warn('setOrderDate: wc_order_stats update skipped:', (e as Error).message);
+        }
+    },
+
+    // force a vendor balance row — admin Withdraw and Vendor-detail figures
+    // (available balance, total earning) derive from this table, so seeding it
+    // directly avoids relying on the order→commission settle cron.
+    //
+    // Balance math (Vendor::get_balance): balance = SUM(debit WHERE status IN the
+    // active order statuses, default 'wc-completed'/'wc-refunded') − SUM(credit).
+    // So a positive available balance is a DEBIT (an earning) with an active order
+    // status; a CREDIT models a withdrawal (subtracts). To give a vendor spendable
+    // balance call setVendorBalance(id, { debit: amount }) — `status` defaults to
+    // the active order status 'wc-completed' so the debit counts as earnings.
+    async setVendorBalance(vendorId: string | number, opts: { credit?: number; debit?: number; trnId?: number; trnType?: string; perticulars?: string; status?: string; trnDate?: string; balanceDate?: string } = {}): Promise<any> {
+        const { credit = 0, debit = 0, trnType = 'dokan_orders', perticulars = 'seeded balance', status = 'wc-completed', trnDate = helpers.currentDateTimeFullFormat, balanceDate = helpers.currentDateTimeFullFormat } = opts;
+        const trnId = opts.trnId ?? (await this.getMaxId('id', 'dokan_vendor_balance')) + 1;
+        const query = `INSERT INTO ${dbPrefix}_dokan_vendor_balance (vendor_id, trn_id, trn_type, perticulars, debit, credit, status, trn_date, balance_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`;
+        return await dbUtils.dbQuery(query, [vendorId, trnId, trnType, perticulars, debit, credit, status, trnDate, balanceDate]);
+    },
+
+    // set a user's registration date — wp_users.user_registered. REST won't
+    // set this; needed for the admin Vendors "Registered" sortable column and
+    // the missing/old-date edge cases.
+    async setUserRegisteredDate(userId: string | number, date: string): Promise<any> {
+        const query = `UPDATE ${dbPrefix}_users SET user_registered = ? WHERE ID = ?;`;
+        return await dbUtils.dbQuery(query, [date, userId]);
+    },
+
+    // ============================================
+    // EMAIL LOG (Email Log plugin → ${dbPrefix}_email_log)
+    // ============================================
+    // The Email Log plugin records every wp_mail() call into its own table
+    // BEFORE the SMTP transport runs, so a row exists even when the env's
+    // sendmail can't connect. These helpers let tests assert the admin email
+    // fired by a front-end abuse-report submit.
+
+    // highest existing email-log id — record this BEFORE an action so later
+    // reads only consider rows created by that action (avoids matching mail
+    // left over from earlier tests in the run).
+    async getMaxEmailLogId(): Promise<number> {
+        const query = `SELECT MAX(id) AS id FROM ${dbPrefix}_email_log;`;
+        const res = await dbUtils.dbQuery(query);
+        return Number(res[0]?.id ?? 0);
+    },
+
+    // parametrised read of recent email-log rows, newest first. All filters
+    // are optional; `sinceId` scopes to rows created after a recorded baseline.
+    async getEmailLogs(opts: { subjectLike?: string; toEmail?: string; sinceId?: number } = {}): Promise<any[]> {
+        const { subjectLike, toEmail, sinceId } = opts;
+        const where: string[] = [];
+        const params: any[] = [];
+        if (subjectLike !== undefined) {
+            where.push('subject LIKE ?');
+            params.push(subjectLike);
+        }
+        if (toEmail !== undefined) {
+            where.push('to_email = ?');
+            params.push(toEmail);
+        }
+        if (sinceId !== undefined) {
+            where.push('id > ?');
+            params.push(sinceId);
+        }
+        const whereClause = where.length ? `WHERE ${where.join(' AND ')}` : '';
+        const query = `SELECT id, to_email, subject, message, headers, sent_date FROM ${dbPrefix}_email_log ${whereClause} ORDER BY id DESC LIMIT 5;`;
+        const res = await dbUtils.dbQuery(query, params);
+        return res as any[];
+    },
+
+    // poll the email log until a matching row appears or the timeout elapses —
+    // the submit → wp_mail path is async, so the row may not be present the
+    // instant the front-end confirmation dialog closes.
+    async waitForEmailLog(opts: { subjectLike?: string; toEmail?: string; sinceId?: number } = {}, timeoutMs: number = 15000): Promise<any | null> {
+        const start = Date.now();
+        while (Date.now() - start < timeoutMs) {
+            const rows = await dbUtils.getEmailLogs(opts);
+            if (rows.length > 0) {
+                return rows[0];
+            }
+            await new Promise(resolve => setTimeout(resolve, 500));
+        }
+        return null;
     },
 };
