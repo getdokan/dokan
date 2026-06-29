@@ -1,8 +1,13 @@
 {
   "generatedAt": "2026-06-25T11:36:38.604Z",
-  "note": "rebalanced from CI run 28165448723 per-shard actuals (per-spec spec-durations.json was clobbered by the coverage step; workflow now preserves it for future accurate regen)",
+  "note": "rebalanced from CI run 28165448723 per-shard actuals (per-spec spec-durations.json was clobbered by the coverage step; workflow now preserves it for future accurate regen) | stripe-express specs added with key-enabled estimates (CI now wires TEST_*_STRIPE_EXPRESS + connected accts); auto-refined from CI spec-durations.json on subsequent runs.",
   "shards": 12,
   "specs": [
+    {
+      "file": "stripe-express/stripeExpressSavedCards.spec.ts",
+      "ms": 480000,
+      "tests": 8
+    },
     {
       "file": "new-shipping/newShipping.spec.ts",
       "ms": 433866,
@@ -17,6 +22,16 @@
       "file": "announcements/announcements.spec.ts",
       "ms": 244814,
       "tests": 25
+    },
+    {
+      "file": "stripe-express/stripeExpressPayouts.spec.ts",
+      "ms": 240000,
+      "tests": 11
+    },
+    {
+      "file": "stripe-express/stripeExpressRefunds.spec.ts",
+      "ms": 230000,
+      "tests": 7
     },
     {
       "file": "dashboard/dashboard.spec.ts",
@@ -84,6 +99,16 @@
       "tests": 17
     },
     {
+      "file": "stripe-express/stripeExpress3ds.spec.ts",
+      "ms": 140000,
+      "tests": 5
+    },
+    {
+      "file": "stripe-express/stripeExpressWebhooks.spec.ts",
+      "ms": 140000,
+      "tests": 17
+    },
+    {
       "file": "product-form-manager/newProductFormAdvanced.spec.ts",
       "ms": 130800,
       "tests": 12
@@ -102,6 +127,11 @@
       "file": "abuse-reports/abuseReportsSecurity.spec.ts",
       "ms": 120024,
       "tests": 9
+    },
+    {
+      "file": "stripe-express/stripeExpressGuest.spec.ts",
+      "ms": 120000,
+      "tests": 3
     },
     {
       "file": "admin/adminExtensions.spec.ts",
@@ -142,6 +172,11 @@
       "file": "admin/adminSellerBadges.spec.ts",
       "ms": 110172,
       "tests": 14
+    },
+    {
+      "file": "stripe-express/stripeExpressSettings.spec.ts",
+      "ms": 110000,
+      "tests": 12
     },
     {
       "file": "admin/adminWholesaleCustomer.spec.ts",
@@ -209,6 +244,21 @@
       "tests": 14
     },
     {
+      "file": "stripe-express/stripeExpressCurrency.spec.ts",
+      "ms": 90000,
+      "tests": 5
+    },
+    {
+      "file": "stripe-express/stripeExpressEdge.spec.ts",
+      "ms": 90000,
+      "tests": 7
+    },
+    {
+      "file": "stripe-express/stripeExpressSecurity.spec.ts",
+      "ms": 90000,
+      "tests": 14
+    },
+    {
       "file": "abuse-reports/abuseReportsCustomerForm.spec.ts",
       "ms": 86600,
       "tests": 11
@@ -242,6 +292,11 @@
       "file": "abuse-reports/abuseReportsModalDelete.spec.ts",
       "ms": 75880,
       "tests": 6
+    },
+    {
+      "file": "stripe-express/stripeExpressXss.spec.ts",
+      "ms": 75000,
+      "tests": 4
     },
     {
       "file": "new-store-reviews/newStoreReviews.spec.ts",
@@ -304,6 +359,11 @@
       "tests": 25
     },
     {
+      "file": "stripe-express/stripeExpress.spec.ts",
+      "ms": 45000,
+      "tests": 7
+    },
+    {
       "file": "reverse-withdraws/reverseWithdraws.spec.ts",
       "ms": 43528,
       "tests": 17
@@ -349,6 +409,11 @@
       "tests": 10
     },
     {
+      "file": "stripe-express/stripeExpressVendorOnboarding.spec.ts",
+      "ms": 35000,
+      "tests": 5
+    },
+    {
       "file": "vendor-reports/vendorReports.spec.ts",
       "ms": 34082,
       "tests": 45
@@ -367,6 +432,11 @@
       "file": "setup-guide/setupGuide.spec.ts",
       "ms": 30264,
       "tests": 5
+    },
+    {
+      "file": "stripe-express/stripeExpressAdvertisement.spec.ts",
+      "ms": 30000,
+      "tests": 2
     },
     {
       "file": "abuse-reports/abuseReportsPermissions.spec.ts",
@@ -397,6 +467,11 @@
       "file": "commission/commission.spec.ts",
       "ms": 26498,
       "tests": 3
+    },
+    {
+      "file": "stripe-express/stripeExpressWallet.spec.ts",
+      "ms": 25000,
+      "tests": 5
     },
     {
       "file": "store-appearance/storeAppearance.spec.ts",
@@ -514,6 +589,11 @@
       "tests": 14
     },
     {
+      "file": "stripe-express/stripeExpressSubscriptions.spec.ts",
+      "ms": 15000,
+      "tests": 11
+    },
+    {
       "file": "refunds/refunds.spec.ts",
       "ms": 14260,
       "tests": 9
@@ -567,6 +647,11 @@
       "file": "store-categories/storeCategories.spec.ts",
       "ms": 6548,
       "tests": 11
+    },
+    {
+      "file": "stripe-express/stripeExpressPreflight.spec.ts",
+      "ms": 6000,
+      "tests": 1
     },
     {
       "file": "diagnostic-notice/diagnosticNotice.spec.ts",
@@ -732,11 +817,6 @@
       "file": "setting/setting.spec.ts",
       "ms": 1,
       "tests": 10
-    },
-    {
-      "file": "stripe-express/stripeExpress.spec.ts",
-      "ms": 1,
-      "tests": 6
     },
     {
       "file": "vendor-settings/vendorSettings.spec.ts",

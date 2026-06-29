@@ -33,8 +33,11 @@ if ( ! function_exists( 'dokan_stripe_express_test_account_info' ) ) {
         return array_merge(
             [
                 'account_id'        => (string) $account_id,
-                'trashed_account_id'=> '',
-                'capabilities'      => [ 'card_payments' => 'active', 'transfers' => 'active' ],
+                'trashed_account_id' => '',
+                'capabilities'      => [
+					'card_payments' => 'active',
+					'transfers' => 'active',
+				],
                 'charges_enabled'   => true,
                 'payouts_enabled'   => true,
                 'transfers_enabled' => true,
@@ -43,7 +46,10 @@ if ( ! function_exists( 'dokan_stripe_express_test_account_info' ) ) {
                 'default_currency'  => 'usd',
                 'type'              => 'express',
                 'email'             => 'seeded-vendor@example.test',
-                'metadata'          => [ 'platform' => 'dokan', 'gateway' => 'Stripe Express' ],
+                'metadata'          => [
+					'platform' => 'dokan',
+					'gateway' => 'Stripe Express',
+				],
             ],
             $overrides
         );
@@ -85,7 +91,12 @@ add_action(
                     $result = [ 'ok' => true ];
 
                     if ( ! function_exists( 'dokan_pro' ) || empty( dokan_pro()->module ) ) {
-                        return rest_ensure_response( [ 'ok' => true, 'skipped' => 'dokan_pro_absent' ] );
+                        return rest_ensure_response(
+                            [
+								'ok' => true,
+								'skipped' => 'dokan_pro_absent',
+							]
+                        );
                     }
 
                     // 1) Modules — Express ON (+ vendor subscription), Connect OFF.
@@ -93,8 +104,22 @@ add_action(
                     if ( method_exists( dokan_pro()->module, 'deactivate_modules' ) ) {
                         dokan_pro()->module->deactivate_modules( [ 'stripe' ] );
                     }
-                    $result['stripe_express_active'] = dokan_pro()->module->is_active( 'stripe_express' );
-                    $result['stripe_active']         = dokan_pro()->module->is_active( 'stripe' );
+                    // Directly enforce the active-modules option as the source of truth. Module::activate_modules()
+                    // reads get_active_modules() WITHOUT force, and Module::deactivate_modules() does the same, so on
+                    // a fresh CI environment (license/cache state) the legacy `stripe` (Connect) module is not reliably
+                    // removed. Reconcile the option here so Express is ON and the conflicting Connect module is OFF,
+                    // preserving every other active module.
+                    $active_modules = array_values( array_unique( (array) get_option( 'dokan_pro_active_modules', [] ) ) );
+                    $active_modules = array_values( array_diff( $active_modules, [ 'stripe' ] ) );
+                    foreach ( [ 'stripe_express', 'product_subscription' ] as $needed_module ) {
+                        if ( ! in_array( $needed_module, $active_modules, true ) ) {
+                            $active_modules[] = $needed_module;
+                        }
+                    }
+                    update_option( 'dokan_pro_active_modules', $active_modules );
+
+                    $result['stripe_express_active'] = in_array( 'stripe_express', $active_modules, true );
+                    $result['stripe_active']         = in_array( 'stripe', $active_modules, true );
 
                     // 2) Gateway settings — MERGE so title/description survive.
                     $pub = (string) $request->get_param( 'publishable' );
@@ -188,7 +213,8 @@ add_action(
                     if ( ! $vendor_id || '' === $account_id ) {
                         return new WP_Error( 'dokan_test_bad_params', 'vendor_id and account_id are required', [ 'status' => 400 ] );
                     }
-                    $overrides = (array) ( $request->get_param( 'overrides' ) ?: [] );
+                    $overrides_param = $request->get_param( 'overrides' );
+                    $overrides       = is_array( $overrides_param ) ? $overrides_param : [];
                     $info      = dokan_stripe_express_test_account_info( $account_id, $overrides );
                     $key       = dokan_stripe_express_test_account_meta_key();
                     update_user_meta( $vendor_id, $key, $info );
@@ -221,7 +247,12 @@ add_action(
                     }
                     delete_user_meta( $vendor_id, '_dokan_stripe_express_test_account_info' );
                     delete_user_meta( $vendor_id, '_dokan_stripe_express_account_info' );
-                    return rest_ensure_response( [ 'ok' => true, 'vendor_id' => $vendor_id ] );
+                    return rest_ensure_response(
+                        [
+							'ok' => true,
+							'vendor_id' => $vendor_id,
+						]
+                    );
                 },
             ]
         );
@@ -313,7 +344,9 @@ add_action(
                         $order->update_status( 'completed', 'E2E: ready for refund' );
                     }
 
-                    $item_qtys = $item_totals = $item_tax_totals = [];
+                    $item_qtys       = [];
+                    $item_totals     = [];
+                    $item_tax_totals = [];
                     $collect = function ( $item_id, $item ) use ( &$item_totals, &$item_tax_totals ) {
                         $item_totals[ $item_id ] = wc_format_decimal( $item->get_total(), 2 );
                         $taxes = $item->get_taxes();
@@ -361,7 +394,13 @@ add_action(
                     if ( is_wp_error( $result ) ) {
                         return new WP_Error( 'dokan_test_refund_failed', $result->get_error_message(), [ 'status' => 400 ] );
                     }
-                    return rest_ensure_response( [ 'ok' => true, 'order_id' => $order_id, 'refund_amount' => (float) $order->get_total() ] );
+                    return rest_ensure_response(
+                        [
+							'ok' => true,
+							'order_id' => $order_id,
+							'refund_amount' => (float) $order->get_total(),
+						]
+                    );
                 },
             ]
         );
@@ -369,7 +408,10 @@ add_action(
         // ------------------------------------------------------------------
         // Vendor-subscription feature toggles + rewrite flush (gateway-agnostic).
         // ------------------------------------------------------------------
-        foreach ( [ 'enable-vendor-subscription' => 'on', 'disable-vendor-subscription' => 'off' ] as $route => $value ) {
+        foreach ( [
+			'enable-vendor-subscription' => 'on',
+			'disable-vendor-subscription' => 'off',
+		] as $route => $value ) {
             register_rest_route(
                 'dokan-test-express/v1',
                 '/' . $route,
@@ -383,7 +425,12 @@ add_action(
                         }
                         $opt['enable_pricing'] = $value;
                         update_option( 'dokan_product_subscription', $opt );
-                        return rest_ensure_response( [ 'ok' => true, 'enable_pricing' => $value ] );
+                        return rest_ensure_response(
+                            [
+								'ok' => true,
+								'enable_pricing' => $value,
+							]
+                        );
                     },
                 ]
             );
