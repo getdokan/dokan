@@ -68,13 +68,30 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
             return new WP_Error( 'dokan_rest_cannot_edit', __( 'You do not have permission to edit products.', 'dokan-lite' ), [ 'status' => 403 ] );
         }
 
-        $product_id = $request->get_param( 'id' );
-
-        if ( $product_id && ! dokan_is_product_author( $product_id ) ) {
+        if ( ! $this->check_ownership( $request ) ) {
             return new WP_Error( 'dokan_rest_cannot_view', __( 'You do not have permission to view/edit this product.', 'dokan-lite' ), [ 'status' => 403 ] );
         }
 
         return true;
+    }
+
+    /**
+     * Whether the current user owns the product targeted by the request.
+     *
+     * Centralizes the per-product authorship gate shared by the update and delete
+     * permission checks. A request without an `id` has no product to own, so it
+     * passes here and the capability check stays the gate.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     *
+     * @return bool
+     */
+    protected function check_ownership( $request ): bool {
+        $product_id = $request->get_param( 'id' );
+
+        return ! $product_id || dokan_is_product_author( $product_id );
     }
 
     /**
@@ -128,9 +145,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
             return new WP_Error( 'dokan_rest_cannot_delete', __( 'You do not have permission to delete products.', 'dokan-lite' ), [ 'status' => 403 ] );
         }
 
-        $product_id = $request->get_param( 'id' );
-
-        if ( $product_id && ! dokan_is_product_author( $product_id ) ) {
+        if ( ! $this->check_ownership( $request ) ) {
             return new WP_Error( 'dokan_rest_cannot_delete', __( 'You do not have permission to delete this product.', 'dokan-lite' ), [ 'status' => 403 ] );
         }
 
