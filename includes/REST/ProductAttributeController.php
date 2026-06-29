@@ -176,6 +176,15 @@ class ProductAttributeController extends WC_REST_Product_Attributes_V1_Controlle
      * @return WP_Error|bool
      */
     public function update_product_attribute_permissions_check( $request ) {
+        // A vendor may only edit attributes on their own products; admins/shop managers are exempt.
+        if ( ! current_user_can( 'manage_woocommerce' ) && ! dokan_is_product_author( absint( $request['id'] ) ) ) {
+            return new WP_Error(
+                'dokan_rest_cannot_edit',
+                __( 'Sorry, you are not allowed to edit this product.', 'dokan-lite' ),
+                array( 'status' => rest_authorization_required_code() )
+            );
+        }
+
         return current_user_can( 'dokan_edit_product' );
     }
 
