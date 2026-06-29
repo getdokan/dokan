@@ -55,7 +55,14 @@ export async function ensureStripeExpressConfigured(): Promise<void> {
     const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
     try {
         const res = await ctx.post(`${TEST_NS}/configure-stripe-express`, {
-            data: { publishable: STRIPE_EXPRESS_KEYS.publishable, secret: STRIPE_EXPRESS_KEYS.secret },
+            // Canonical baseline: ON_ORDER_COMPLETED so a vendor Transfer fires synchronously when an
+            // order completes (every transfer assertion depends on this). A fresh CI env has no sticky
+            // gateway state, so the disburse mode must be set here, not assumed from a prior run.
+            data: {
+                publishable: STRIPE_EXPRESS_KEYS.publishable,
+                secret: STRIPE_EXPRESS_KEYS.secret,
+                settings: { disburse_mode: 'ON_ORDER_COMPLETED' },
+            },
         });
         if (!res.ok()) {
             throw new Error(`configure-stripe-express failed (${res.status()}): ${(await res.text()).slice(0, 300)}`);
