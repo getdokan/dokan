@@ -36,11 +36,6 @@ class Dokan_API  {
 
         return jQuery.ajax({
             url: this.endpoint() + path,
-            // Force JSON parsing so a crafted path that resolves to application/javascript (e.g. the oEmbed JSONP proxy) is never script-evaluated; empty bodies stay valid.
-            dataType: 'json',
-            converters: {
-                'text json': ( text ) => ( text ? JSON.parse( text ) : null ),
-            },
             beforeSend: function ( xhr ) {
                 xhr.setRequestHeader( 'X-WP-Nonce', window.dokan.rest.nonce );
 
