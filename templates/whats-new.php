@@ -4,6 +4,22 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.0.7',
+        'released' => '2026-06-29',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Prevented a DOM-based XSS in the legacy Vue admin by validating the vendor details and reverse-withdrawal route parameters.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Enforced per-product ownership on the v3 products batch endpoint so vendors can no longer update or delete other vendors\' products.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.0.6',
         'released' => '2026-06-26',
         'changes'  => [
