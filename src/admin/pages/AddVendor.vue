@@ -149,7 +149,8 @@ export default {
 
     methods: {
         getId() {
-            return this.$route.params.id;
+            // Pin to a numeric ID so a crafted route param can't traverse the REST path into another endpoint (XSS).
+            return String( parseInt( this.$route.params.id, 10 ) || 0 );
         },
 
         showAlert( $title, $des, $status ) {
