@@ -95,6 +95,49 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
     }
 
     /**
+     * Check ownership before a batched product update.
+     *
+     * WooCommerce's WC_REST_Controller::batch_items() calls this once per "update"
+     * item, so this — not the route-level batch_items_permissions_check() — is where
+     * a vendor is stopped from editing another vendor's product.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     *
+     * @return true|WP_Error
+     */
+    public function update_item_permissions_check( $request ) {
+        return $this->check_permission( $request );
+    }
+
+    /**
+     * Check ownership before a batched product delete.
+     *
+     * Mirrors update_item_permissions_check(); the batch route is the only delete
+     * path the v3 controller exposes, so the ownership gate must live here.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     *
+     * @return true|WP_Error
+     */
+    public function delete_item_permissions_check( $request ) {
+        if ( ! current_user_can( 'dokan_delete_product' ) ) {
+            return new WP_Error( 'dokan_rest_cannot_delete', __( 'You do not have permission to delete products.', 'dokan-lite' ), [ 'status' => 403 ] );
+        }
+
+        $product_id = $request->get_param( 'id' );
+
+        if ( $product_id && ! dokan_is_product_author( $product_id ) ) {
+            return new WP_Error( 'dokan_rest_cannot_delete', __( 'You do not have permission to delete this product.', 'dokan-lite' ), [ 'status' => 403 ] );
+        }
+
+        return true;
+    }
+
+    /**
      * Bulk create, update and delete items.
      *
      * Resolves each item's payload through PayloadResolver before delegating
