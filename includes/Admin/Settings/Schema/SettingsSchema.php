@@ -2512,13 +2512,14 @@ class SettingsSchema {
 					],
                 ],
             ],
-            // Provider card — collapsible switch (icon header + toggle). The
-            // toggle bridges to the legacy `recaptcha_enable_status` flag;
-            // credential fields nest below.
+            // Provider header — display-only label (logo + title + description,
+            // no toggle button). `default => 'on'` + legacy_key keep the legacy
+            // `recaptcha_enable_status` flag enabled; credential fields render in
+            // the group below.
             [
                 'id'            => 'recaptcha_validation_label',
                 'type'          => 'field',
-                'variant'       => 'collapsible_switch',
+                'variant'       => 'base_field_label',
                 'section_id'    => 'captcha_section',
                 'title'         => esc_html__( 'Google reCAPTCHA v3 Validation', 'dokan-lite' ),
                 'description'   => sprintf(
@@ -2653,12 +2654,13 @@ class SettingsSchema {
                 ],
             ],
 
-            // Provider card — Cloudflare Turnstile. Shown when that provider is
-            // selected; credential fields bridge to the legacy `turnstile_*` keys.
+            // Provider header — display-only label (no toggle button), shown when
+            // Turnstile is the selected provider. `default => 'on'` + legacy_key keep
+            // `turnstile_enable_status` enabled; credential fields render below.
             [
                 'id'            => 'turnstile_validation_label',
                 'type'          => 'field',
-                'variant'       => 'collapsible_switch',
+                'variant'       => 'base_field_label',
                 'section_id'    => 'captcha_section',
                 'title'         => esc_html__( 'Cloudflare Turnstile Validation', 'dokan-lite' ),
                 'description'   => sprintf(
