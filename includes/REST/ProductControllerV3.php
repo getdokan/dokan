@@ -82,7 +82,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      * permission checks. A request without an `id` has no product to own, so it
      * passes here and the capability check stays the gate.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.7
      *
      * @param WP_REST_Request $request Full details about the request.
      *
@@ -118,7 +118,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      * item, so this — not the route-level batch_items_permissions_check() — is where
      * a vendor is stopped from editing another vendor's product.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.7
      *
      * @param WP_REST_Request $request Full details about the request.
      *
@@ -134,7 +134,7 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
      * Mirrors update_item_permissions_check(); the batch route is the only delete
      * path the v3 controller exposes, so the ownership gate must live here.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.7
      *
      * @param WP_REST_Request $request Full details about the request.
      *

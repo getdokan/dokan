@@ -7,7 +7,7 @@ Tested up to: 7.0
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 5.0.6
+Stable tag: 5.0.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -376,6 +376,10 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v5.0.7 ( Jun 29, 2026 ) =
+- **fix:** Prevented a DOM-based XSS in the legacy Vue admin by validating the vendor details and reverse-withdrawal route parameters.
+- **fix:** Enforced per-product ownership on the v3 products batch endpoint so vendors can no longer update or delete other vendors' products.
+
 = v5.0.6 ( Jun 26, 2026 ) =
 - **update:** Added wePos and weDocs to the setup wizard's recommended add-ons and refreshed the add-on descriptions.
 - **update:** Added weDocs to the admin Extensions page as an installable add-on.
@@ -405,17 +409,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **update:** Exposed manual withdrawal availability and withdraw-visibility flags in the vendor dashboard REST API.
 - **fix:** Restricted the Customers REST endpoint to self-service to prevent vendors from modifying other user accounts.
 - **fix:** Translated the "Actions" column header on vendor dashboard DataViews tables.
-
-= v5.0.2 ( May 18, 2026 ) =
-- **new:** Added a date range filter on the vendor dashboard Withdraw Requests table to filter results by start and end dates.
-- **update:** Centralized vendor selling activation and deactivation and introduced a new filter to control vendor selling eligibility.
-- **update:** Added customization filters to control the visibility of customer billing and shipping details in vendor order emails and vendor order detail pages.
-- **update:** Added options to independently show or hide the login and registration sections of the vendor onboarding shortcode form, with adaptive layout.
-- **update:** Renamed the Quick View modal label from "Page View" to "Views" and added a Views column to the product list.
-- **fix:** Resolved product attribute data inconsistency between taxonomy-enabled and standard attributes on the new product UI.
-- **fix:** Auto-select the vendor's default payment method in the withdraw request modal.
-- **fix:** Corrected the "View Details" link in the What's New admin notice to route to the appropriate changelog page.
-- **fix:** Prevented a PHP deprecation notice caused by a menu position type-cast.
-- **fix:** Ensured jQuery blockUI loads on the seller setup wizard and other custom enqueue pages.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).
