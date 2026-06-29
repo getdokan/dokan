@@ -473,9 +473,22 @@ export class StripeExpressPage {
     // ---- Block checkout (WC Checkout block; the site default /checkout/) ----
 
     async gotoBlockCheckout(): Promise<void> {
-        await this.page.goto(this.checkout.blockUrl);
-        await this.page.waitForLoadState('domcontentloaded');
-        await this.page.locator(this.blockSelectors.placeOrder).waitFor({ state: 'visible', timeout: 30_000 });
+        // The WC Checkout block hydrates client-side; under load (Docker + a busy suite) that occasionally
+        // overruns a 30s wait. Wait for network idle and, if the place-order button still hasn't rendered,
+        // reload once before failing. This is a render-timing guard — the page itself renders fine (verified
+        // live: button present, 0 console errors), it just occasionally hydrates slowly.
+        for (let attempt = 1; attempt <= 2; attempt++) {
+            await this.page.goto(this.checkout.blockUrl, { waitUntil: 'domcontentloaded' });
+            await this.page.waitForLoadState('networkidle').catch(() => undefined);
+            try {
+                await this.page.locator(this.blockSelectors.placeOrder).waitFor({ state: 'visible', timeout: 45_000 });
+                return;
+            } catch (err) {
+                if (attempt === 2) {
+                    throw err;
+                }
+            }
+        }
     }
 
     /** Fill the WC block checkout CONTACT + SHIPPING address as a GUEST (no saved address). */
@@ -694,7 +707,11 @@ export class StripeExpressPage {
         await this.page.locator(this.addPaymentMethod.mount).waitFor({ state: 'visible', timeout: 30_000 });
         await this.fillCardDetails(card);
         await this.page.locator(this.addPaymentMethod.submit).click();
-        await this.page.waitForURL('**/payment-methods/**', { timeout: 60_000 });
+        // The SetupIntent confirms in-page (a Stripe round-trip) and WC then redirects to the saved-methods
+        // list (…/payment-methods/?redirect_status=succeeded — verified live). That round-trip can exceed
+        // 60s when the suite is hammering the Stripe test API, so wait generously rather than fail a slow-
+        // but-successful add. A genuine failure surfaces as an error notice on the add-payment-method page.
+        await this.page.waitForURL('**/payment-methods/**', { timeout: 120_000 });
     }
 
     async getSavedCardRowCount(): Promise<number> {
