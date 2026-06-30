@@ -3,6 +3,7 @@ import { request } from '@playwright/test';
 import { NewProductsPage, newProductsData } from './newProductsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
+import { VendorTableFilter } from '@utils/vendorTableFilter';
 import path from 'path';
 
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
@@ -130,6 +131,36 @@ test.describe('Products (React) functionality', () => {
             await expect(products.rows).toHaveCount(0);
             await products.clearSearch();
             await expect.poll(() => products.getRowCount(), { message: 'clearing search restores rows' }).toBeGreaterThan(0);
+        });
+
+        test('vendor can filter products by Product Type via the funnel (React)', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            const filter = new VendorTableFilter(page, 'products');
+            // No variable products seeded -> filtering by Variable empties the list.
+            await filter.applySelect('Product Type', 'Variable');
+            await expect(products.rows, 'Variable filter empties the list').toHaveCount(0);
+            expect(await filter.activeFilterCount(), 'one active filter').toBe(1);
+            await filter.reset();
+            await expect.poll(() => products.getRowCount(), { message: 'reset restores rows' }).toBeGreaterThan(0);
+        });
+
+        test('vendor can filter products by Category via the funnel (React)', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            const filter = new VendorTableFilter(page, 'products');
+            const category = await filter.applyFirstOption('Category');
+            expect(category, 'a category option was applied').not.toBe('');
+            expect(await filter.activeFilterCount(), 'one active filter').toBe(1);
+            expect(await products.hasNoPhpFatal(), 'no PHP fatal while filtered').toBe(true);
+            await filter.reset();
+            await expect.poll(() => products.getRowCount(), { message: 'reset restores rows' }).toBeGreaterThan(0);
+        });
+
+        test('vendor can combine two filters and reset clears them (React)', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            const filter = new VendorTableFilter(page, 'products');
+            await filter.applyFirstOption('Category');
+            await filter.applySelect('Product Type', 'Simple');
+            expect(await filter.activeFilterCount(), 'two active filters').toBe(2);
+            await filter.reset();
+            expect(await filter.activeFilterCount(), 'reset clears all filters').toBe(0);
+            await expect.poll(() => products.getRowCount()).toBeGreaterThan(0);
         });
 
         test('vendor can open the Add new product editor (React)', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
