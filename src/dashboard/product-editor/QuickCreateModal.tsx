@@ -23,9 +23,47 @@ import './index.scss';
  * @since DOKAN_SINCE
  */
 const QUICK_CREATE_FIELDS = [
-    'name', // Elements::NAME
-    'image_id', // Elements::FEATURED_IMAGE_ID
-    'regular_price', // Elements::REGULAR_PRICE
+    {
+        id: 'root-layout',
+        layout: {
+            type: 'row',
+            alignment: 'start',
+            // `styles` is keyed by the row's DIRECT child id and only `flex` is
+            // honored (see @wordpress/dataviews RowLayout). `image_id` is a
+            // grandchild, so target the `image_gallery` column and pin it to a
+            // fixed 200px basis (no grow/shrink).
+            styles: {
+                image_gallery: {
+                    flex: '0 0 200px',
+                },
+            },
+        },
+        children: [
+            {
+                id: 'image_gallery',
+                layout: {
+                    type: 'column',
+                    alignment: 'start',
+                },
+                children: [ 'image_id', 'gallery_image_ids' ],
+            },
+            {
+                id: 'other-fields',
+                layout: {
+                    type: 'column',
+                    alignment: 'start',
+                },
+                children: [
+                    'name', // Elements::NAME
+                    'regular_price',
+                    'sale_price',
+                    'create_schedule_for_discount',
+                    'sale_price_dates_from',
+                    'sale_price_dates_to',
+                ],
+            },
+        ],
+    },
     'category_ids', // Elements::CATEGORIES
     'short_description', // Elements::SHORT_DESCRIPTION
 ];
@@ -170,7 +208,7 @@ const QuickCreateModal = ( {
         }
 
         return (
-            <div className="dokan-product-product-editor dokan-layout">
+            <div className="dokan-product-product-editor dokan-layout quick-create-product-editor">
                 <form onSubmit={ ( e ) => e.preventDefault() }>
                     <DataForm
                         data={ product }
@@ -189,7 +227,7 @@ const QuickCreateModal = ( {
             isOpen={ isOpen }
             onClose={ onClose }
             namespace="quick-create-product"
-            className="min-w-160"
+            className="min-w-160 min-h-60"
             dialogTitle={ __( 'Add New Product', 'dokan-lite' ) }
             dialogContent={ dialogContent }
             onConfirm={ handleConfirm }
