@@ -58,8 +58,8 @@ const QUICK_CREATE_FIELDS = [
                     'regular_price',
                     'sale_price',
                     'create_schedule_for_discount',
-                    'sale_price_dates_from',
-                    'sale_price_dates_to',
+                    'date_on_sale_from', // Elements::DATE_ON_SALE_FROM
+                    'date_on_sale_to', // Elements::DATE_ON_SALE_TO
                 ],
             },
         ],
