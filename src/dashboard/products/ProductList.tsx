@@ -966,15 +966,19 @@ function ProductList() {
                 onClose={ () => setQuickViewProduct( null ) }
             />
 
-            { /* Lightweight schema-driven create */ }
-            <QuickCreateModal
-                isOpen={ isQuickCreateOpen }
-                onClose={ () => setIsQuickCreateOpen( false ) }
-                onCreated={ () => {
-                    fetchProducts();
-                    fetchStatusCounts();
-                } }
-            />
+            { /* Lightweight schema-driven create — mount only while open so a
+                 transient init failure resets on the next open. */ }
+            { isQuickCreateOpen && (
+                <QuickCreateModal
+                    isOpen
+                    onClose={ () => setIsQuickCreateOpen( false ) }
+                    onCreated={ () => {
+                        setIsQuickCreateOpen( false );
+                        fetchProducts();
+                        fetchStatusCounts();
+                    } }
+                />
+            ) }
 
             {
                 applyFilters( 'dokan_product_list_after_content', null, {

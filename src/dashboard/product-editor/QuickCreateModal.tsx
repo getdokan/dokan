@@ -4,6 +4,7 @@ import { useToast } from '@getdokan/dokan-ui';
 import apiFetch from '@wordpress/api-fetch';
 import { useDispatch } from '@wordpress/data';
 import { useCallback, useEffect, useMemo, useState } from '@wordpress/element';
+import { doAction } from '@wordpress/hooks';
 import { __ } from '@wordpress/i18n';
 // @ts-ignore - store registered via window global, no local types.
 import productEditorStore from '@dokan/stores/product-editor';
@@ -160,6 +161,10 @@ const QuickCreateModal = ( {
     const onChange = useCallback(
         ( newData: Record< string, any > ) => {
             updateProduct( NEW_PRODUCT_ID, newData );
+            doAction( 'dokan_product_editor_field_changed', {
+                productId: NEW_PRODUCT_ID,
+                newData,
+            } );
         },
         [ updateProduct ]
     );
@@ -171,6 +176,9 @@ const QuickCreateModal = ( {
         // `saveProduct` throws on failure; success means the draft was created.
         try {
             await saveProduct( NEW_PRODUCT_ID );
+
+            // Lets features persist their own data once the draft is saved.
+            doAction( 'dokan_product_editor_after_save', NEW_PRODUCT_ID );
         } catch ( err: any ) {
             toast( {
                 type: 'error',

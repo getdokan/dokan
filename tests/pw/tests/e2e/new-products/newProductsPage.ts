@@ -34,6 +34,11 @@ export const newProductsSelectors = {
     tab: (name: RegExp) => name,
     // Toolbar buttons.
     addNewProductBtn: 'button:has-text("Add new product"), a:has-text("Add new product")',
+    // Quick-create modal (default flow when `one_step_product_create` is on).
+    // DokanModal renders a WP <Modal role="dialog"> with this title <h2> and a
+    // "Create & Continue" confirm button.
+    quickCreateModalTitle: 'h2:has-text("Add New Product")',
+    quickCreateConfirmBtn: 'button:has-text("Create & Continue")',
     importBtn: 'button:has-text("Import"), a:has-text("Import")',
     exportBtn: 'button:has-text("Export"), a:has-text("Export")',
     addFilterBtn: 'button:has-text("Add Filter")',
@@ -76,6 +81,8 @@ export class NewProductsPage {
     get selectAllCheckbox(): Locator { return this.page.locator(newProductsSelectors.selectAll).first(); }
     get rowCheckboxes(): Locator { return this.page.locator(newProductsSelectors.rowCheckbox); }
     get emptyState(): Locator { return this.page.locator(newProductsSelectors.emptyState).first(); }
+    get quickCreateModalTitle(): Locator { return this.page.locator(newProductsSelectors.quickCreateModalTitle).first(); }
+    get quickCreateConfirmButton(): Locator { return this.page.locator(newProductsSelectors.quickCreateConfirmBtn).first(); }
 
     /**
      * A status tab, e.g. tab(/^All/) or tab(/^Published/). The DataViews tabs
@@ -162,11 +169,15 @@ export class NewProductsPage {
     }
 
     // ---- Navigation actions ----
-    /** Click "Add new product"; resolves on the create editor route. */
+    /**
+     * Click "Add new product". With `one_step_product_create` on (the Lite
+     * default), this opens the quick-create modal instead of navigating to the
+     * create route, so wait for the modal title to surface.
+     */
     async clickAddNewProduct(): Promise<void> {
         await this.addNewProductButton.waitFor({ state: 'visible', timeout: 10000 });
         await this.addNewProductButton.click();
-        await this.page.waitForURL(/#\/products\/create/, { timeout: 15000 }).catch(() => undefined);
+        await this.quickCreateModalTitle.waitFor({ state: 'visible', timeout: 15000 }).catch(() => undefined);
     }
 
     /** Open the seeded product via its name link; resolves on the edit route. */
