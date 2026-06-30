@@ -66,7 +66,7 @@ class AdminSettingsController extends DokanBaseAdminController {
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_items' ],
-                    'permission_callback' => '__return_true',
+                    'permission_callback' => [ $this, 'check_permission' ],
                 ],
                 'schema' => [ $this, 'get_public_item_schema' ],
             ]
