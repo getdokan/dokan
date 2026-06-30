@@ -65,14 +65,14 @@ env:
     GMAP: ${{secrets.GMAP}}
     MAPBOX: ${{secrets.MAPBOX}}
     LICENSE_KEY: ${{secrets.LICENSE_KEY}}
-    # Stripe Express test keys (secrets) + the real EXPRESS connected accounts so the money/checkout
-    # specs RUN in CI. The account ids are NOT secrets (just identifiers, unusable without the secret
-    # key) and MUST belong to the Express test platform — the Connect-suite STRIPE_VENDOR*_ACCT secrets
-    # are a different platform and cannot receive Express transfers.
+    # Stripe Express test keys + the real EXPRESS connected accounts (all secrets) so the money/checkout
+    # specs RUN in CI. The connected accounts MUST belong to the Express test platform — the Connect-suite
+    # STRIPE_VENDOR*_ACCT secrets are a different platform and cannot receive Express transfers, so these
+    # use distinct STRIPE_EXPRESS_VENDOR*_ACCT secret names.
     TEST_PUBLISH_KEY_STRIPE_EXPRESS: ${{secrets.TEST_PUBLISH_KEY_STRIPE_EXPRESS}}
     TEST_SECRET_KEY_STRIPE_EXPRESS: ${{secrets.TEST_SECRET_KEY_STRIPE_EXPRESS}}
-    STRIPE_EXPRESS_VENDOR1_ACCT: acct_1TN54gLWuzy3cikh
-    STRIPE_EXPRESS_VENDOR2_ACCT: acct_1TN54yLHaCpzHVza
+    STRIPE_EXPRESS_VENDOR1_ACCT: ${{secrets.STRIPE_EXPRESS_VENDOR1_ACCT}}
+    STRIPE_EXPRESS_VENDOR2_ACCT: ${{secrets.STRIPE_EXPRESS_VENDOR2_ACCT}}
     STRIPE_EXPRESS_REQUIRED: true
     BASE_URL: http://localhost:9999
     CI: true
