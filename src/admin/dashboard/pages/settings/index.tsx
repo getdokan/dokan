@@ -11,6 +11,7 @@ import {
     toast,
     type SettingsElement,
 } from '@wedevs/plugin-ui';
+import { useSearchParams } from 'react-router-dom';
 import { registerSettingsFields } from './register-fields';
 
 // Side effect: register custom field renderers exactly once when this module
@@ -21,28 +22,6 @@ registerSettingsFields();
 const URL_PARAM_PAGE = 'page_id';
 const URL_PARAM_SUBPAGE = 'subpage_id';
 const URL_PARAM_TAB = 'tab_id';
-
-const getUrlParam = ( name: string ): string | null => {
-    if ( typeof window === 'undefined' ) {
-        return null;
-    }
-    return new URLSearchParams( window.location.search ).get( name );
-};
-
-const setUrlParams = ( updates: Record< string, string | null > ): void => {
-    if ( typeof window === 'undefined' ) {
-        return;
-    }
-    const url = new URL( window.location.href );
-    for ( const [ key, value ] of Object.entries( updates ) ) {
-        if ( value ) {
-            url.searchParams.set( key, value );
-        } else {
-            url.searchParams.delete( key );
-        }
-    }
-    window.history.replaceState( {}, '', url );
-};
 
 /**
  * Mounts inside the SettingsProvider tree (via renderSaveButton) and binds
@@ -58,6 +37,7 @@ const UrlSync = (): null => {
         setActiveSubpage,
         setActiveTab,
     } = useSettings();
+    const [ searchParams, setSearchParams ] = useSearchParams();
     const [ restored, setRestored ] = useState< boolean >( false );
 
     // Initial restore: after plugin-ui's auto-select has set defaults, replace
@@ -66,8 +46,8 @@ const UrlSync = (): null => {
         if ( restored || ! activePage ) {
             return;
         }
-        const urlSub = getUrlParam( URL_PARAM_SUBPAGE );
-        const urlTab = getUrlParam( URL_PARAM_TAB );
+        const urlSub = searchParams.get( URL_PARAM_SUBPAGE );
+        const urlTab = searchParams.get( URL_PARAM_TAB );
         if ( urlSub && urlSub !== activeSubpage ) {
             setActiveSubpage( urlSub );
         }
@@ -80,6 +60,7 @@ const UrlSync = (): null => {
         activeSubpage,
         activeTab,
         restored,
+        searchParams,
         setActiveSubpage,
         setActiveTab,
     ] );
@@ -91,16 +72,30 @@ const UrlSync = (): null => {
         if ( ! restored ) {
             return;
         }
-        setUrlParams( {
-            [ URL_PARAM_SUBPAGE ]: activeSubpage || null,
-            [ URL_PARAM_TAB ]: activeTab || null,
-        } );
-    }, [ activeSubpage, activeTab, restored ] );
+        setSearchParams(
+            ( prev ) => {
+                const next = new URLSearchParams( prev );
+                if ( activeSubpage ) {
+                    next.set( URL_PARAM_SUBPAGE, activeSubpage );
+                } else {
+                    next.delete( URL_PARAM_SUBPAGE );
+                }
+                if ( activeTab ) {
+                    next.set( URL_PARAM_TAB, activeTab );
+                } else {
+                    next.delete( URL_PARAM_TAB );
+                }
+                return next;
+            },
+            { replace: true }
+        );
+    }, [ activeSubpage, activeTab, restored, setSearchParams ] );
 
     return null;
 };
 
 export default function SettingsPage() {
+    const [ searchParams, setSearchParams ] = useSearchParams();
     const [ schema, setSchema ] = useState< SettingsElement[] >( [] );
     const [ loading, setLoading ] = useState< boolean >( true );
     const [ saving, setSaving ] = useState< boolean >( false );
@@ -146,14 +141,19 @@ export default function SettingsPage() {
     // Changing the top-level page resets subpage/tab — plugin-ui will auto-
     // select fresh defaults, and UrlSync will sync them back into the URL.
     const handleNavigate = ( pageId: string ): void => {
-        setUrlParams( {
-            [ URL_PARAM_PAGE ]: pageId,
-            [ URL_PARAM_SUBPAGE ]: null,
-            [ URL_PARAM_TAB ]: null,
-        } );
+        setSearchParams(
+            ( prev ) => {
+                const next = new URLSearchParams( prev );
+                next.set( URL_PARAM_PAGE, pageId );
+                next.delete( URL_PARAM_SUBPAGE );
+                next.delete( URL_PARAM_TAB );
+                return next;
+            },
+            { replace: true }
+        );
     };
 
-    const initialPage = getUrlParam( URL_PARAM_PAGE ) || undefined;
+    const initialPage = searchParams.get( URL_PARAM_PAGE ) || undefined;
 
     return (
         <>
