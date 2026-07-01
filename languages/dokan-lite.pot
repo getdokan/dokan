@@ -1,14 +1,14 @@
 # Copyright (c) 2026 Dokan Inc. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 5.0.6\n"
+"Project-Id-Version: Dokan 5.0.7\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-26T10:20:48+00:00\n"
+"POT-Creation-Date: 2026-06-29T11:42:40+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: dokan-lite\n"
@@ -7783,7 +7783,7 @@ msgstr ""
 #: includes/REST/ProductController.php:153
 #: includes/REST/ProductController.php:177
 #: includes/REST/ProductController.php:222
-#: includes/REST/ProductControllerV3.php:201
+#: includes/REST/ProductControllerV3.php:259
 #: includes/REST/StoreController.php:64
 #: includes/REST/StoreController.php:100
 #: includes/REST/StoreController.php:117
@@ -8531,21 +8531,29 @@ msgstr ""
 msgid "You do not have permission to edit products."
 msgstr ""
 
-#: includes/REST/ProductControllerV3.php:74
+#: includes/REST/ProductControllerV3.php:72
 msgid "You do not have permission to view/edit this product."
 msgstr ""
 
-#: includes/REST/ProductControllerV3.php:91
+#: includes/REST/ProductControllerV3.php:108
 msgid "You do not have permission to batch update products."
 msgstr ""
 
-#: includes/REST/ProductControllerV3.php:286
+#: includes/REST/ProductControllerV3.php:145
+msgid "You do not have permission to delete products."
+msgstr ""
+
+#: includes/REST/ProductControllerV3.php:149
+msgid "You do not have permission to delete this product."
+msgstr ""
+
+#: includes/REST/ProductControllerV3.php:344
 msgid "The downloadable file could not be saved. Please pick a file from upload directory approved by the store admin."
 msgstr ""
 
-#: includes/REST/ProductControllerV3.php:336
-#: includes/REST/ProductControllerV3.php:365
-#: includes/REST/ProductControllerV3.php:412
+#: includes/REST/ProductControllerV3.php:394
+#: includes/REST/ProductControllerV3.php:423
+#: includes/REST/ProductControllerV3.php:470
 msgid "Invalid product ID."
 msgstr ""
 

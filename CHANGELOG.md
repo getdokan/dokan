@@ -1,3 +1,8 @@
+### v5.0.7 ( Jun 29, 2026 ) ###
+
+- **fix:** Prevented a DOM-based XSS in the legacy Vue admin by validating the vendor details and reverse-withdrawal route parameters.
+- **fix:** Enforced per-product ownership on the v3 products batch endpoint so vendors can no longer update or delete other vendors' products.
+
 ### v5.0.6 ( Jun 26, 2026 ) ###
 
 - **update:** Added wePos and weDocs to the setup wizard's recommended add-ons and refreshed the add-on descriptions.

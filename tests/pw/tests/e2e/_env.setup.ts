@@ -5,6 +5,7 @@ import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 import { data } from '@utils/testData';
 import { helpers, parseBoolean } from '@utils/helpers';
+import { ensureStripeExpressConfigured } from './stripe-express/helpers';
 
 const { DOKAN_PRO } = process.env;
 const isPro = parseBoolean(DOKAN_PRO);
@@ -75,6 +76,15 @@ setup.describe('setup woocommerce settings', () => {
         // await apiUtils.updatePaymentGateway('dokan_razorpay', payloads.razorpay);
         // await apiUtils.updatePaymentGateway('dokan_stripe_express', payloads.stripeExpress);
         // }
+    });
+
+    // Per-shard Stripe Express config: activate the stripe_express module (deactivate the
+    // conflicting legacy stripe/Connect module), write the gateway test keys, enable the
+    // withdraw method. No-op without keys (the @pro Stripe Express specs self-skip), and the
+    // mu-plugin returns gracefully when Dokan Pro is absent (lite runs). Makes every shard
+    // self-sufficient so the @pro Express specs don't each have to re-configure the gateway.
+    setup('configure stripe express gateway', { tag: ['@pro'] }, async () => {
+        await ensureStripeExpressConfigured();
     });
 
     setup('add categories', { tag: ['@lite'] }, async () => {
