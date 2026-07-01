@@ -12,9 +12,12 @@ export const newOrdersSelectors = {
     heading: 'h3:has-text("Orders")',
     // Export control in the header actions.
     exportButton: 'button:has-text("Export All")',
+    // "Export Filtered" entry — only present once the export dropdown is open.
+    exportFilteredOption: 'button:has-text("Export Filtered")',
     // DataViews table + rows.
     dataViewsTable: 'table',
     dataRow: 'table tbody tr',
+    columnHeader: 'table thead th',
     // Search input — DataViews header. Placeholder is "Search Orders".
     searchInput: 'input[placeholder="Search Orders"], input[placeholder*="Search"]',
     // Status tabs are role=tab buttons whose accessible name carries a count,
@@ -73,6 +76,9 @@ export class NewOrdersPage {
     get reactRoot(): Locator { return this.page.locator(newOrdersSelectors.reactRoot).first(); }
     get heading(): Locator { return this.page.locator(newOrdersSelectors.heading).first(); }
     get exportButton(): Locator { return this.page.locator(newOrdersSelectors.exportButton).first(); }
+    get exportFilteredOption(): Locator { return this.page.locator(newOrdersSelectors.exportFilteredOption).first(); }
+    get columnHeaders(): Locator { return this.page.locator(newOrdersSelectors.columnHeader); }
+    get selectAllCheckbox(): Locator { return this.page.locator('input[aria-label="Select all"], input#inspector-checkbox-control-0').first(); }
     get searchInput(): Locator { return this.page.locator(newOrdersSelectors.searchInput).first(); }
     get emptyState(): Locator { return this.page.locator(newOrdersSelectors.emptyState).first(); }
     statusTab(label: string): Locator { return this.page.locator(newOrdersSelectors.statusTab(label)).first(); }
@@ -355,6 +361,53 @@ export class NewOrdersPage {
         const sawNonGet = await this.confirmStatusChange('Change status to completed');
         await this.page.waitForTimeout(500);
         return sawNonGet;
+    }
+
+    async getColumnHeaderTexts(): Promise<string[]> {
+        return (await this.columnHeaders.allInnerTexts()).map((t) => t.trim().toLowerCase());
+    }
+
+    /** Open the "Export All" header dropdown (reveals Export All / Export Filtered). */
+    async openExportMenu(): Promise<void> {
+        await this.exportButton.waitFor({ state: 'visible', timeout: 10000 });
+        await this.exportButton.click();
+        await this.exportFilteredOption.waitFor({ state: 'visible', timeout: 5000 }).catch(() => undefined);
+    }
+
+    /** A list row located precisely by its `#<id>` order link. */
+    orderRowById(orderId: string | number): Locator {
+        return this.page
+            .locator(newOrdersSelectors.dataRow)
+            .filter({ has: this.page.getByRole('link', { name: `#${orderId}`, exact: true }) })
+            .first();
+    }
+
+    /** Tick the selection checkbox of a specific order row. */
+    async selectOrderRow(orderId: string | number): Promise<void> {
+        const cb = this.orderRowById(orderId).locator('input[type="checkbox"]').first();
+        await cb.waitFor({ state: 'visible', timeout: 10000 });
+        await cb.check();
+        await this.page.waitForTimeout(300);
+    }
+
+    /**
+     * Click a bulk status-change toolbar button (e.g. "Change status to completed")
+     * for the currently-selected rows and confirm the destructive AlertDialog if
+     * it appears. Settles the list afterwards. Caller verifies the outcome.
+     */
+    async bulkChangeStatus(label: string): Promise<void> {
+        const btn = this.page.getByRole('button', { name: label, exact: true }).first();
+        await btn.waitFor({ state: 'visible', timeout: 10000 });
+        await btn.click();
+        if (await this.confirmDialog.isVisible({ timeout: 3000 }).catch(() => false)) {
+            const req = this.page
+                .waitForRequest(r => r.url().includes(newOrdersSelectors.ordersRestPath) && r.method() !== 'GET', { timeout: 15000 })
+                .catch(() => null);
+            await this.confirmButton.click();
+            await req;
+            await this.confirmDialog.waitFor({ state: 'hidden', timeout: 10000 }).catch(() => undefined);
+        }
+        await this.waitForListSettled();
     }
 
     /** Click the first row's "View" action and wait for navigation away from the list. */
