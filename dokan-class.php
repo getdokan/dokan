@@ -330,9 +330,8 @@ final class WeDevs_Dokan {
             $ajax_services = $this->get_container()->get( 'ajax-service' );
         }
 
-        // Register WP-CLI commands only while running under WP-CLI.
         if ( defined( 'WP_CLI' ) && WP_CLI ) {
-            new \WeDevs\Dokan\CLI\Manager();
+            $cli_services = $this->get_container()->get( 'cli-service' );
         }
     }
 
