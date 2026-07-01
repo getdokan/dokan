@@ -39,7 +39,20 @@ class Manager {
         // Extensions add their commands as [ 'dokan <command>' => HandlerClass::class ].
         $commands = apply_filters( 'dokan_cli_commands', [] );
 
+        if ( ! is_array( $commands ) ) {
+            return;
+        }
+
         foreach ( $commands as $name => $handler ) {
+            // Skip malformed entries so a misbehaving filter cannot break command registration.
+            if ( ! is_string( $name ) || '' === $name ) {
+                continue;
+            }
+
+            if ( ! is_callable( $handler ) && ! ( is_string( $handler ) && class_exists( $handler ) ) ) {
+                continue;
+            }
+
             \WP_CLI::add_command( $name, $handler );
         }
     }
