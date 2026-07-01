@@ -162,9 +162,12 @@ export const api = {
     customerAuth() {
         return { Authorization: basicAuth(CUSTOMER!, USER_PASSWORD!) };
     },
+    // Generous request timeout to absorb transient slowness under parallel workers.
+    _reqTimeout: 30000,
     async get(endpoint: string, headers?: Record<string, string>): Promise<any> {
         const r = await this._ctx!.get(`${SERVER_URL}${endpoint}`, {
             headers: headers ?? this.adminAuth(),
+            timeout: this._reqTimeout,
         });
         return r.json();
     },
@@ -172,12 +175,14 @@ export const api = {
         const r = await this._ctx!.post(`${SERVER_URL}${endpoint}`, {
             headers: headers ?? this.adminAuth(),
             data: payload,
+            timeout: this._reqTimeout,
         });
         return r.json();
     },
     async del(endpoint: string, headers?: Record<string, string>): Promise<void> {
         await this._ctx!.delete(`${SERVER_URL}${endpoint}`, {
             headers: headers ?? this.adminAuth(),
+            timeout: this._reqTimeout,
         });
     },
     // POST that returns the raw HTTP status — used by permission negatives where
@@ -190,6 +195,7 @@ export const api = {
         const r = await this._ctx!.post(`${SERVER_URL}${endpoint}`, {
             headers: headers ?? this.adminAuth(),
             data: payload,
+            timeout: this._reqTimeout,
         });
         return r.status();
     },
@@ -197,6 +203,7 @@ export const api = {
         const r = await this._ctx!.put(`${SERVER_URL}${endpoint}`, {
             headers: headers ?? this.adminAuth(),
             data: payload,
+            timeout: this._reqTimeout,
         });
         return r.json();
     },
@@ -320,6 +327,32 @@ export const api = {
         return undefined;
     },
 
+    // A default field flagged is_mandatory in the PHP schema (e.g. Title) and
+    // shown in the admin builder, whose visibility toggle the builder must lock.
+    pickMandatoryDefaultField(
+        schema: SchemaItem[]
+    ): { section: SchemaItem; field: SchemaItem } | undefined {
+        const isShownMandatory = (field: SchemaItem): boolean =>
+            field.type === 'field' &&
+            !field.is_custom &&
+            field.is_mandatory === true &&
+            field.show_in_admin !== false;
+        const adminSectionOf = (field: SchemaItem): SchemaItem | undefined =>
+            schema.find(
+                (s) =>
+                    s.type === 'section' &&
+                    s.id === field.section_id &&
+                    s.show_in_admin !== false
+            );
+
+        for (const field of this.fields(schema)) {
+            if (!isShownMandatory(field)) continue;
+            const section = adminSectionOf(field);
+            if (section) return { section, field };
+        }
+        return undefined;
+    },
+
     // --- Vendor product helpers ------------------------------------------------
     async getProductCategoryId(): Promise<number> {
         const cats = await this.get('/wc/v3/products/categories?per_page=1');
@@ -344,9 +377,11 @@ export const api = {
             name: `PW PFM ${type} ${faker.string.nanoid(6)}`,
             type,
             status: 'publish',
-            // `description` is a required+mandatory default field; populate it so
-            // the editor's save button is gated only by the field under test.
+            // `description` and `purchase_note` are required+visible default
+            // fields; populate them so the editor's save button (gated by
+            // FORM-level validity) is held only by the field under test.
             description: 'PW autotest product description.',
+            purchase_note: 'PW autotest purchase note.',
             categories: [{ id: categoryId }],
         };
         if (type === 'simple' || type === 'external') {
@@ -373,9 +408,11 @@ export const api = {
                 type: 'simple',
                 regular_price: '20',
                 status: 'publish',
-                // `description` is a required+mandatory default field; populate it so
-                // the editor's save button is gated only by the field under test.
+                // `description` and `purchase_note` are required+visible default
+                // fields; populate them so the editor's save button (gated by
+                // FORM-level validity) is held only by the field under test.
                 description: 'PW autotest product description.',
+                purchase_note: 'PW autotest purchase note.',
                 categories: [{ id: categoryId }],
                 ...extraParams,
             },

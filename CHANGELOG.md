@@ -1,14 +1,17 @@
-### Unreleased — refactor/simplify-settings-to-flat-array (dev branch only)
+### v5.0.7 ( Jun 29, 2026 ) ###
 
-**Breaking changes (dev/QA installs only)**
+- **fix:** Prevented a DOM-based XSS in the legacy Vue admin by validating the vendor details and reverse-withdrawal route parameters.
+- **fix:** Enforced per-product ownership on the v3 products batch endpoint so vendors can no longer update or delete other vendors' products.
 
-The following admin settings field ids were renamed to be globally unique
-across the flat `dokan_settings` storage. Dev/QA installs running this
-branch must re-save the affected tabs to restore their values:
+### v5.0.6 ( Jun 26, 2026 ) ###
 
-- `dokan_reverse_withdrawal.enabled` → `dokan_settings.reverse_withdrawal_enabled`
-- `dokan_appearance.google_map_api_key` (fieldgroup id) → `google_map_api_key_group`
-- `dokan_appearance.mapbox_api_key` (fieldgroup id) → `mapbox_api_key_group`
+- **update:** Added wePos and weDocs to the setup wizard's recommended add-ons and refreshed the add-on descriptions.
+- **update:** Added weDocs to the admin Extensions page as an installable add-on.
+- **fix:** Added reCAPTCHA v3 support to the vendor registration forms to curb spam registrations.
+- **fix:** Loaded the admin dashboard on non-Latin locales (e.g. Persian) by matching the page slug instead of the translated menu title.
+- **fix:** Restored editing of downloadable file name and URL fields in the new product editor.
+- **fix:** Clarified the save error shown when a downloadable file falls outside WooCommerce's approved directories.
+- **fix:** Enabled the "View in site" button for all published products.
 
 ### v5.0.5 ( Jun 19, 2026 ) ###
 

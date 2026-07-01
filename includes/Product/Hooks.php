@@ -36,6 +36,7 @@ class Hooks {
         // Add WooCommerce product brands support.
         add_action( 'dokan_new_product_added', [ $this, 'update_product_brands_by_id' ], 10, 2 );
         add_action( 'dokan_product_updated', [ $this, 'update_product_brands_by_id' ], 10, 2 );
+        add_action( 'dokan_product_updated', [ $this, 'sync_category_data_for_commission' ] );
         add_action( 'dokan_product_edit_after_pricing_fields', [ $this, 'add_product_brand_template_in_edit_product' ] );
         add_action( 'dokan_new_product_after_product_category', [ $this, 'add_product_brand_template_in_add_product' ] );
 
@@ -628,5 +629,22 @@ class Hooks {
             return;
 		}
         dokan()->product->save_brands( $product_id, $brand_ids );
+    }
+
+    /**
+     * Sync category data for commission
+     *
+     * @since 5.0.6
+     *
+     * @param int   $product_id   The ID of the product being updated.
+     *
+     * @return void
+     */
+    public function sync_category_data_for_commission( int $product_id ): void {
+        if ( ! current_user_can( 'dokan_edit_product' ) ) {
+            return;
+        }
+
+        $this->update_product_categories( $product_id );
     }
 }

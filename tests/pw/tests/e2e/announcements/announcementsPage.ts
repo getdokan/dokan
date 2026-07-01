@@ -137,10 +137,16 @@ export class AnnouncementsPage {
     adminNewDashboard = {
         announcementsUrl: toPath(`wp-admin/admin.php?page=dokan-dashboard#/announcement`),
 
-        // Trash / Empty Trash
-        trashTab: `//div[contains(text(),'Trash')]`,
-        selectAllCheckbox: `#inspector-checkbox-control-1`,
-        deletePermanently: `//span[normalize-space()='Delete Permanently']`,
+        // Trash / Empty Trash.
+        // The status filter is a base-ui DataViews role="tab" whose accessible
+        // name is "Trash (N)"; call sites use
+        // getByRole('tab', { name: /Trash/ }). Select-all exposes the stable
+        // "Select all" accessible label via
+        // getByRole('checkbox', { name: 'Select all' }) — the old
+        // #inspector-checkbox-control-1 was an unstable WP useInstanceId id.
+        // Target the bulk-action <button> (its label is split across nested spans, so a
+        // //span[...] selector matches 2 elements — strict-mode violation).
+        deletePermanently: `//button[normalize-space()='Delete Permanently']`,
         confirmDelete: `//button[normalize-space()='Delete']`,
 
         // Add Announcement Form
@@ -173,7 +179,10 @@ export class AnnouncementsPage {
         rowActionButton: (title: string) =>
             `//tr[.//div[contains(text(),'${title}')] and not(.//*[normalize-space()='Trash'])]//button[@aria-label='Actions']`,
         moveToTrash: `//div[@role='menuitem'][normalize-space()='Move to Trash']`,
-        confirmTrash: `//button[normalize-space()='Confirm']`,
+        // The destructive confirm is a base-ui AlertDialog (role="alertdialog")
+        // whose confirm button is labelled "Move to Trash" (the action's
+        // confirmButtonLabel), not "Confirm". Call sites scope to the dialog
+        // via getByRole('alertdialog').getByRole('button', { name: 'Move to Trash' }).
     };
 
     // Vendor New Dashboard Selectors
@@ -533,10 +542,27 @@ export class AnnouncementsPage {
         await this.page.goto(this.adminNewDashboard.announcementsUrl);
         await this.page.waitForLoadState('domcontentloaded');
 
-        await this.page.locator(this.adminNewDashboard.trashTab).click();
-        await this.page.locator(this.adminNewDashboard.selectAllCheckbox).click();
-        await this.page.locator(this.adminNewDashboard.deletePermanently).click();
-        await this.page.locator(this.adminNewDashboard.confirmDelete).click();
+        // The status filter is a role="tab" whose accessible name is
+        // "Trash (N)" — match on the "Trash" prefix.
+        await this.page.getByRole('tab', { name: /Trash/ }).click();
+        await this.page.waitForLoadState('domcontentloaded');
+
+        // Trash can be empty (e.g. TC21) — only run the select-all / empty
+        // flow when at least one data row is present. Check the row count
+        // explicitly rather than swallowing a failed click.
+        // Wait for the Trash-filtered table to finish loading before interacting: the
+        // `.loading` overlay intercepts the header-checkbox click during the re-render.
+        await expect(this.page.locator('.loading')).toBeHidden({ timeout: 15000 });
+        // Empty Trash still renders a "No data found" <tbody tr>, so gate on the header
+        // select-all checkbox instead of row count — it only exists when there are real,
+        // selectable rows. (Two "Select all" checkboxes exist: bulk-actions toolbar + the
+        // table header; the <thead> one selects every row.)
+        const selectAll = this.page.locator('thead input[aria-label="Select all"]');
+        if ((await selectAll.count()) > 0) {
+            await selectAll.click();
+            await this.page.locator(this.adminNewDashboard.deletePermanently).click();
+            await this.page.locator(this.adminNewDashboard.confirmDelete).click();
+        }
 
         await this.page.waitForLoadState('domcontentloaded');
     }
@@ -545,11 +571,26 @@ export class AnnouncementsPage {
         await this.page.goto(this.adminNewDashboard.announcementsUrl);
         await this.page.waitForLoadState('domcontentloaded');
 
-        await this.page.locator(this.adminNewDashboard.trashTab).click();
+        // The status filter is a role="tab" whose accessible name is
+        // "Trash (N)" — match on the "Trash" prefix.
+        await this.page.getByRole('tab', { name: /Trash/ }).click();
         await this.page.waitForLoadState('domcontentloaded');
-        await this.page.locator(this.adminNewDashboard.selectAllCheckbox).click();
-        await this.page.locator(this.adminNewDashboard.deletePermanently).click();
-        await this.page.locator(this.adminNewDashboard.confirmDelete).click();
+
+        // Trash can already be empty after a prior cleanup — only run the
+        // select-all / empty flow when at least one data row is present.
+        // Wait for the Trash-filtered table to finish loading before interacting: the
+        // `.loading` overlay intercepts the header-checkbox click during the re-render.
+        await expect(this.page.locator('.loading')).toBeHidden({ timeout: 15000 });
+        // Empty Trash still renders a "No data found" <tbody tr>, so gate on the header
+        // select-all checkbox instead of row count — it only exists when there are real,
+        // selectable rows. (Two "Select all" checkboxes exist: bulk-actions toolbar + the
+        // table header; the <thead> one selects every row.)
+        const selectAll = this.page.locator('thead input[aria-label="Select all"]');
+        if ((await selectAll.count()) > 0) {
+            await selectAll.click();
+            await this.page.locator(this.adminNewDashboard.deletePermanently).click();
+            await this.page.locator(this.adminNewDashboard.confirmDelete).click();
+        }
 
         await this.page.waitForLoadState('domcontentloaded');
     }
@@ -659,11 +700,16 @@ export class AnnouncementsPage {
         // The confirm fires a REST mutation; the table then refetches.
         // Sequential trash calls used to race the loader and the next row's
         // Actions button became unclickable.
+        //
+        // The destructive confirm is a base-ui AlertDialog (role="alertdialog")
+        // whose confirm button is labelled "Move to Trash" (the action's
+        // confirmButtonLabel), not "Confirm".
+        const dialog = this.page.getByRole('alertdialog');
         await Promise.all([
             // Wait for the trash MUTATION (non-GET), not the table's refetch GET to the same
             // endpoint — matching the GET would resolve before the row is actually trashed.
             this.page.waitForResponse(res => res.url().includes('dokan/v1/announcement') && res.request().method() !== 'GET' && res.status() < 400),
-            this.page.locator(this.adminNewDashboard.confirmTrash).click(),
+            dialog.getByRole('button', { name: 'Move to Trash' }).click(),
         ]);
         await this.page.waitForLoadState('domcontentloaded');
         // Wait for the post-mutation table re-render to settle before any
@@ -683,12 +729,26 @@ export class AnnouncementsPage {
         await this.page.goto(this.adminNewDashboard.announcementsUrl);
         await this.page.waitForLoadState('domcontentloaded');
 
-        // Go to Trash tab, select all, and permanently delete
-        await this.page.locator(this.adminNewDashboard.trashTab).click();
+        // Go to Trash tab, select all, and permanently delete. The status
+        // filter is a role="tab" named "Trash (N)"; select-all exposes the
+        // stable "Select all" accessible label.
+        await this.page.getByRole('tab', { name: /Trash/ }).click();
         await this.page.waitForLoadState('domcontentloaded');
-        await this.page.locator(this.adminNewDashboard.selectAllCheckbox).click();
-        await this.page.locator(this.adminNewDashboard.deletePermanently).click();
-        await this.page.locator(this.adminNewDashboard.confirmDelete).click();
+
+        // Guard the empty-trash flow on an actual data row being present.
+        // Wait for the Trash-filtered table to finish loading before interacting: the
+        // `.loading` overlay intercepts the header-checkbox click during the re-render.
+        await expect(this.page.locator('.loading')).toBeHidden({ timeout: 15000 });
+        // Empty Trash still renders a "No data found" <tbody tr>, so gate on the header
+        // select-all checkbox instead of row count — it only exists when there are real,
+        // selectable rows. (Two "Select all" checkboxes exist: bulk-actions toolbar + the
+        // table header; the <thead> one selects every row.)
+        const selectAll = this.page.locator('thead input[aria-label="Select all"]');
+        if ((await selectAll.count()) > 0) {
+            await selectAll.click();
+            await this.page.locator(this.adminNewDashboard.deletePermanently).click();
+            await this.page.locator(this.adminNewDashboard.confirmDelete).click();
+        }
         await this.page.waitForLoadState('domcontentloaded');
     }
 

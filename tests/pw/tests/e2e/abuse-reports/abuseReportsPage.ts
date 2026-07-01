@@ -36,7 +36,7 @@ export class AbuseReportsPage {
         // Abuse Reports List Selectors
         reportRowCheckbox: "input.components-checkbox-control__input:visible",
         deleteButton: "//button[normalize-space()='Delete']",
-        confirmDeleteButton: "button[class='inline-flex items-center gap-2 justify-center border rounded shadow-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-300 text-white bg-purple-600 hover:bg-purple-700 focus:ring-purple-600 px-5 py-2 text-sm dokan-btn']",
+        confirmDeleteButton: "//*[@role='alertdialog']//button[normalize-space()='Delete']",
         // Settings Page Selectors
         settingsSearchInput: "//input[@id='dokan-admin-search']",
         settingsHeading: "//h2[normalize-space()='Product Report Abuse Settings']",
@@ -57,8 +57,8 @@ export class AbuseReportsPage {
     adminReact = {
         // Page chrome
         pageHeading: "//*[self::h1 or self::h2 or self::h3][normalize-space()='Abuse Reports']",
-        allTab: "//button[.//span[contains(@class,'text-[#A5A5AA]')]]",
-        allTabBadge: "//button[.//div[contains(.,'All')]]//span[contains(@class,'text-[#A5A5AA]')]",
+        allTab: "//*[@role='tab'][contains(normalize-space(.),'All')]",
+        allTabBadge: "//*[@role='tab'][contains(normalize-space(.),'All')]",
         // List rows.
         dataRow: "table tbody tr",
         // IMPORTANT: the visible Reason cell text is truncated to 22 chars by the
@@ -97,18 +97,20 @@ export class AbuseReportsPage {
         // select-all + bulk-delete list case.
         bulkDeleteCompactButton:
             "button.components-button.is-compact:has-text('Delete')",
-        // Delete confirmation modal
-        deleteModal: "//*[@role='dialog'][.//*[normalize-space()='Delete Abuse Report'] or .//*[contains(., 'Are you sure you want to delete')]]",
+        // Delete confirmation modal. This is a base-ui AlertDialog rendered with
+        // role="alertdialog" (NOT role="dialog"), so every selector below matches
+        // either role to stay robust across the DataViews/base-ui rewrite.
+        deleteModal: "//*[(@role='dialog' or @role='alertdialog')][.//*[normalize-space()='Delete Abuse Report'] or .//*[contains(., 'Are you sure you want to delete')]]",
         deleteModalHeading:
-            "//*[@role='dialog']//*[self::h1 or self::h2 or self::h3 or self::h4][normalize-space()='Delete Abuse Report']",
+            "//*[(@role='dialog' or @role='alertdialog')]//*[self::h1 or self::h2 or self::h3 or self::h4][normalize-space()='Delete Abuse Report']",
         // The description renders inside a leaf <p>; scope to that to avoid
         // matching every wrapper div when used in strict-mode locators.
         deleteModalDescription:
-            "//*[@role='dialog']//p[contains(., 'Are you sure you want to delete')]",
+            "//*[(@role='dialog' or @role='alertdialog')]//p[contains(., 'Are you sure you want to delete')]",
         deleteModalConfirmBtn:
-            "//*[@role='dialog']//button[normalize-space()='Delete']",
+            "//*[(@role='dialog' or @role='alertdialog')]//button[normalize-space()='Delete']",
         deleteModalCancelBtn:
-            "//*[@role='dialog']//button[normalize-space()='Cancel']",
+            "//*[(@role='dialog' or @role='alertdialog')]//button[normalize-space()='Cancel']",
         // Detail modal
         detailModal:
             "//*[@role='dialog'][.//*[normalize-space()='Product Abuse Report']]",

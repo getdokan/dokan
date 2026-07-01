@@ -552,9 +552,7 @@ class Dashboard implements Hookable {
      * @return void
      */
     public function enqueue_scripts() {
-        $screen = get_current_screen();
-
-        if ( $screen->id !== 'toplevel_page_dokan' && $screen->id !== 'dokan_page_dokan-dashboard' ) {
+        if ( ! $this->is_dokan_admin_page( [ 'dokan', 'dokan-dashboard' ] ) ) {
             return;
         }
 
@@ -578,6 +576,24 @@ class Dashboard implements Hookable {
     }
 
     /**
+     * Check whether the current admin request targets one of the given Dokan pages.
+     *
+     * Matches the locale-stable `page` slug rather than the screen id, whose prefix
+     * is derived from the translatable menu title and breaks on non-Latin locales.
+     *
+     * @since 5.0.6
+     *
+     * @param array<string> $page_slugs Admin page slugs to match against.
+     *
+     * @return bool
+     */
+    protected function is_dokan_admin_page( array $page_slugs ): bool {
+        global $plugin_page;
+
+        return is_string( $plugin_page ) && in_array( $plugin_page, $page_slugs, true );
+    }
+
+    /**
      * Runs before admin notices action and hides them.
      *
      * @since 4.1.0
@@ -585,8 +601,7 @@ class Dashboard implements Hookable {
      * @return void
      */
     public function inject_before_notices(): void {
-        $screen = get_current_screen();
-        if ( ! $screen || ( $screen->id !== 'dokan_page_dokan-dashboard' ) ) {
+        if ( ! $this->is_dokan_admin_page( [ 'dokan-dashboard' ] ) ) {
             return;
         }
 
@@ -607,8 +622,7 @@ class Dashboard implements Hookable {
      * @return void
      */
     public function inject_after_notices(): void {
-        $screen = get_current_screen();
-        if ( ! $screen || ( $screen->id !== 'dokan_page_dokan-dashboard' ) ) {
+        if ( ! $this->is_dokan_admin_page( [ 'dokan-dashboard' ] ) ) {
             return;
         }
 

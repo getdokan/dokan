@@ -1,6 +1,10 @@
 import path from 'path';
 import { test, expect, BrowserContext, Page } from '@utils/test';
+import { request } from '@playwright/test';
 import { NewProductFormPage, newProductFormData } from './newProductFormPage';
+import { ApiUtils } from '@utils/apiUtils';
+import { dbUtils } from '@utils/dbUtils';
+import { payloads } from '@utils/payloads';
 
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 
@@ -35,8 +39,8 @@ test.describe('Vendor new product form (React) functionality', () => {
             await form.waitForSaveSuccess();
         });
 
-        //need fix
-        test.skip('vendor can create a product with every option filled', { tag: ['@lite', '@vendor'] }, async () => {
+        test('vendor can create a product with every option filled', { tag: ['@lite', '@vendor'] }, async () => {
+            test.slow();
             const data = newProductFormData.valid();
 
             await form.fillBasicInfo(data);
@@ -360,6 +364,89 @@ test.describe('Vendor new product form (React) functionality', () => {
                 await form.removeGalleryImage(0);
 
                 await expect(form.galleryImagePreviews).toHaveCount(newProductFormData.images.gallery.length - 1);
+            });
+        });
+    });
+
+    // ============================================
+    // CATEGORY SELECTION MODE
+    // Controlled by the admin setting dokan_selling.product_category_style
+    // ('single' | 'multiple'). Each sub-describe sets the mode in beforeAll
+    // (which runs before the parent beforeEach navigates, so the form loads in
+    // that mode); the prior value is restored in afterAll. Mutating this GLOBAL
+    // option is order-sensitive, so the block runs serially.
+    // ============================================
+    test.describe('category selection mode', () => {
+        test.describe.configure({ mode: 'serial' });
+
+        let apiUtils: ApiUtils;
+        let prevStyle: 'single' | 'multiple' = 'single';
+        const cat = { a: 'clothings', b: 'electronics' };
+
+        const setCategoryStyle = async (style: 'single' | 'multiple'): Promise<void> => {
+            await dbUtils.updateOptionValue('dokan_selling', { product_category_style: style });
+        };
+
+        const ensureCategory = async (name: string): Promise<void> => {
+            const all = await apiUtils.getAllCategories(payloads.adminAuth);
+            if (Array.isArray(all) && all.some((c: { name?: string }) => c.name?.toLowerCase() === name.toLowerCase())) {
+                return;
+            }
+            try {
+                await apiUtils.createCategory({ ...payloads.createCategory, name }, payloads.adminAuth);
+            } catch {
+                // created concurrently — fine.
+            }
+        };
+
+        test.beforeAll(async () => {
+            apiUtils = new ApiUtils(await request.newContext());
+            const current = await dbUtils.getOptionValue('dokan_selling');
+            prevStyle = current?.product_category_style === 'multiple' ? 'multiple' : 'single';
+            // Two categories are needed to test multi-selection.
+            await ensureCategory(cat.a);
+            await ensureCategory(cat.b);
+        });
+
+        test.afterAll(async () => {
+            await setCategoryStyle(prevStyle);
+            await apiUtils.dispose();
+        });
+
+        // ----------------------------------------
+        // MULTIPLE mode — the vendor can pick many categories.
+        // ----------------------------------------
+        test.describe('multiple mode', () => {
+            test.beforeAll(async () => {
+                await setCategoryStyle('multiple');
+            });
+
+            test('vendor can select multiple product categories', { tag: ['@lite', '@vendor'] }, async () => {
+                await form.selectCategory(cat.a);
+                await form.selectCategory(cat.b);
+                expect(await form.isCategorySelected(cat.a), `${cat.a} stays selected`).toBe(true);
+                expect(await form.isCategorySelected(cat.b), `${cat.b} stays selected`).toBe(true);
+                expect(await form.selectedCategoryCount(), 'both categories are kept in multiple mode').toBeGreaterThanOrEqual(2);
+            });
+        });
+
+        // ----------------------------------------
+        // SINGLE mode — the vendor must be limited to ONE category.
+        // ----------------------------------------
+        test.describe('single mode', () => {
+            test.beforeAll(async () => {
+                await setCategoryStyle('single');
+            });
+
+            // The category field honors dokan_selling.product_category_style: when
+            // set to 'single', FormSchema marks the `category_ids` field as
+            // non-multiple, so selecting a second category replaces the first (a
+            // true single-select holds exactly one value).
+            test('single mode limits the vendor to one product category', { tag: ['@lite', '@vendor'] }, async () => {
+                await form.selectCategory(cat.a);
+                await form.selectCategory(cat.b);
+                expect(await form.selectedCategoryCount(), 'single mode must keep exactly one category').toBe(1);
+                expect(await form.isCategorySelected(cat.b), 'the last pick is the one kept').toBe(true);
             });
         });
     });

@@ -1120,7 +1120,8 @@ export const data = {
                 tools: 'wp-admin/admin.php?page=dokan#/tools',
                 productQA: 'wp-admin/admin.php?page=dokan#/product-qa',
                 questionDetails: (questionId: string) => `wp-admin/admin.php?page=dokan#/product-qa/${questionId}`,
-                subscriptions: 'wp-admin/admin.php?page=dokan#/subscriptions',
+                // migrated DataViews page is on page=dokan-dashboard (page=dokan is the legacy list)
+                subscriptions: 'wp-admin/admin.php?page=dokan-dashboard#/subscriptions',
                 verifications: 'wp-admin/admin.php?page=dokan#/verifications?status=pending',
                 productAdvertising: 'wp-admin/admin.php?page=dokan#/product-advertising',
                 wholeSaleCustomer: 'wp-admin/admin.php?page=dokan#/wholesale-customer',

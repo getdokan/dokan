@@ -5,6 +5,7 @@ import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 import { data } from '@utils/testData';
 import { helpers, parseBoolean } from '@utils/helpers';
+import { ensureStripeExpressConfigured } from './stripe-express/helpers';
 
 const { DOKAN_PRO } = process.env;
 const isPro = parseBoolean(DOKAN_PRO);
@@ -77,6 +78,15 @@ setup.describe('setup woocommerce settings', () => {
         // }
     });
 
+    // Per-shard Stripe Express config: activate the stripe_express module (deactivate the
+    // conflicting legacy stripe/Connect module), write the gateway test keys, enable the
+    // withdraw method. No-op without keys (the @pro Stripe Express specs self-skip), and the
+    // mu-plugin returns gracefully when Dokan Pro is absent (lite runs). Makes every shard
+    // self-sufficient so the @pro Express specs don't each have to re-configure the gateway.
+    setup('configure stripe express gateway', { tag: ['@pro'] }, async () => {
+        await ensureStripeExpressConfigured();
+    });
+
     setup('add categories', { tag: ['@lite'] }, async () => {
         // delete previous categories
         await apiUtils.updateBatchCategories('delete', []);
@@ -99,6 +109,12 @@ setup.describe('setup woocommerce settings', () => {
         // create attribute, attribute term
         const [, attributeId] = await apiUtils.createAttribute({ name: 'sizes' });
         helpers.createEnvVar('ATTRIBUTE_ID', attributeId);
+        // Dokan 5.0.5 gates attribute-term creation behind the dokan_selling `add_new_attribute`
+        // option (ProductAttributeController::create_attribute_term_permissions_check → 403 otherwise).
+        // The canonical selling settings (which enable it) are applied later in setup; apply the full
+        // set here via setOptionValue so the option row exists on a fresh DB. updateOptionValue would
+        // read-then-merge and crash (`undefined.option_value`) when the row is absent.
+        await dbUtils.setOptionValue(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
         await apiUtils.createAttributeTerm(attributeId, { name: 's' });
         await apiUtils.createAttributeTerm(attributeId, { name: 'l' });
         await apiUtils.createAttributeTerm(attributeId, { name: 'm' });

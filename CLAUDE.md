@@ -152,6 +152,7 @@ Then `git reflog expire --expire=now --all && git gc --prune=now`. Re-run the `g
 - **JS/TS**: ESLint with `@wordpress/scripts` config
 - **CSS**: Stylelint
 - **TypeScript**: Strict mode, ESNext target, React-JSX
+- **`@since` for new code**: use the literal placeholder token `@since DOKAN_SINCE` (and `@deprecated DOKAN_SINCE` / `@version DOKAN_SINCE`) — the release tooling replaces it with the real version at tag time. Never hardcode or guess a version number (e.g. `@since 5.1.0`) for unreleased code.
 
 ## Key Patterns
 
