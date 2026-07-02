@@ -241,6 +241,10 @@
           vendor can set catalog visibility to hidden on the edit form (React) [lite]: true
           vendor can change the product category on the edit form (React) [lite]: true
           vendor can add a feature image on the edit form (React) [lite]: true
+          vendor can create a virtual product (React) [lite]: true
+          vendor sees the Pro row actions (Quick Edit / Duplicate) in the 3-dot menu (React): true
+          vendor can duplicate a product from the row menu (React): true
+          vendor can quick-edit a product price (React): true
           vendor can view product list page (React) [lite]: true
           vendor sees the core DataViews columns (React) [lite]: true
           vendor sees the seeded product row with SKU + status (React) [lite]: true

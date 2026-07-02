@@ -383,12 +383,26 @@ editor has no refund UI. So a refund test cannot legitimately carry `@new-ui`
 cases stay admin; the legacy "(React)" refund smokes should be relabeled
 `@admin`.)
 
-### B17 products creation gaps — not built (backlog)
+### B17 products creation gaps — ✔ PARTIAL DONE (green 3×) + limitations found
 
-Scout mapped it: React create-form product TYPES are server-driven — Lite =
-Simple only; Pro adds variable/external/grouped; the subscription module adds
-subscription types. True gaps: variable/external/grouped/subscription create,
-downloadable/virtual create+persist, Duplicate/Quick-Edit/Bulk-Edit Pro list
-actions, can't-buy-own-product oracle. CSV import/export stays legacy (no React
-route). Also D3: `products/products.spec.ts` blanket skip kills 8 healthy admin
-wp-admin cases — split + re-enable. Brief saved for a later batch.
+- **`new-products/newProductsProActions.spec.ts` — 3 Pro list-action tests, green
+  3×:** Pro row actions offered (Quick Edit / Duplicate), duplicate from the row
+  menu (gated on `POST /dokan/v2/products/:id/duplicate`; REST oracle: 2 rows
+  share the name), quick-edit a price (DokanModal "Quick Edit Product" → Update
+  Product → `POST /dokan/v3/products/batch` → REST `getSingleProduct` confirms the
+  new price). Extends the Lite list coverage in `new-products/`.
+- **`new-product-form/newProductFormTypes.spec.ts` — 1 create test, green 3×:**
+  create a virtual product (full create + `virtual===true` via REST) — the
+  legacy virtual motive, previously only a toggle assertion.
+- **LIMITATION found live (deferred):** the React editor lists External/Affiliate
+  and Group Product in the type dropdown but does NOT render their type-specific
+  fields (`external_url`/`button_text`/`grouped_products` wrappers are absent
+  after choosing the type) → external/grouped CREATE cannot be driven from the
+  form yet (a real editor gap). Variable (two-step) + subscription (module-gated)
+  creates + downloadable-with-file remain backlog. Also: the editor requires a
+  non-empty **description** before Save enables.
+- Deferred (legacy re-enablement, not a new-UI conversion): the D3 split of
+  `products/products.spec.ts` to revive its 8 healthy admin wp-admin cases —
+  needs those heavy wp-admin tests verified; recommended as a follow-up.
+- CSV import/export stays legacy (no React route). feature-map: 4 new-UI leaves
+  added to the Products `vendor (new UI)` group.

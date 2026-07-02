@@ -521,14 +521,44 @@ export class NewProductFormPage {
     }
 
     async setProductType(type: 'simple' | 'variable' | 'grouped' | 'external'): Promise<void> {
+        // Exact option labels as rendered by the live type dropdown.
         const labelMap = {
             simple: 'Simple',
             variable: 'Variable',
-            grouped: 'Grouped',
-            external: 'External/Affiliate',
+            grouped: 'Group Product',
+            external: 'External/Affiliate product',
         } as const;
         await this.chooseReactSelectOption(newProductFormSelectors.productTypeWrapper, labelMap[type]);
     }
+
+    /**
+     * Save a NEW product and return the created id read from the create POST
+     * response. More robust than searching getAllProducts (which paginates).
+     * The create is POST /dokan/vN/products (no id in path); batch / variations /
+     * duplicate / init / /:id calls are excluded.
+     */
+    async saveCreateAndGetId(): Promise<string> {
+        const respP = this.page
+            .waitForResponse(
+                r =>
+                    r.request().method() === 'POST' &&
+                    /\/products\b/i.test(r.url()) &&
+                    !/\/products\/\d+/.test(r.url()) &&
+                    !/batch|variations|duplicate|init/i.test(r.url()),
+                { timeout: 25000 },
+            )
+            .catch(() => undefined);
+        await this.save();
+        const resp = await respP;
+        const body = resp ? await resp.json().catch(() => ({})) : {};
+        return String((body as { id?: number | string })?.id ?? '');
+    }
+
+    // NOTE: the React editor lists External/Affiliate + Group Product in the type
+    // dropdown but does NOT render their type-specific fields (external_url /
+    // button_text / grouped_products wrappers are absent after choosing the type),
+    // so there is nothing to fill for those creates yet — see the limitation note
+    // in newProductFormTypes.spec.ts. setProductType() still switches the dropdown.
 
     // ---- Attributes ----
     get attributesSection(): Locator {
