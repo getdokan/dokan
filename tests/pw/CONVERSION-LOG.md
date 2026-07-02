@@ -318,3 +318,77 @@ C1 vendor-support (net-new), B4 vendor-staff, B7 return-request, B6
 verifications. Next: Wave 2 (product-edit parity + D2 consolidation, orders
 gaps + C2 order-edit, refunds, products gaps), then Waves 3–4, then the final
 CI shard-duration rebalance.
+
+## Wave 2 — in progress (branch `qa/new-ui-suite-wave-2`, stacked on wave-0)
+
+### B1 product-edit + D2 consolidation → `new-product-form/` — ✔ DONE (green 3×)
+
+- **D2 consolidation:** `git mv`'d `product-form-manager/newProductForm{Page.ts,
+.spec.ts,Validation.spec.ts,Advanced.spec.ts}` → `tests/e2e/new-product-form/`
+  (the 3 create specs import `./newProductFormPage`, same-dir, unchanged). The
+  wp-admin `productFormManagerAdmin*` files stay in `product-form-manager/`
+  (different SPA, `@admin`, not `@new-ui`). Extended `newProductFormPage.ts`
+  with `editUrl(id)`/`gotoEdit(id)`/`waitForEditReady()`/`saveEdit()`
+  (no-redirect: PUT-response + "Product saved successfully." toast, NOT a URL
+  race — edit does not redirect) + read-back getters.
+- **`newProductFormEdit.spec.ts`: 10 edit-persistence tests, green 3× (2
+  headless + 1 headed).** Each mutates a field on `/products/:id/edit`, clicks
+  Update Product, and asserts persistence via `getSingleProduct` (REST) +
+  reload: title, price, discount sale price, sale>regular VALIDATION (negative —
+  no PUT fires), short+long descriptions, virtual, SKU, catalog visibility,
+  category change, feature image (wp.media). This replaces the legacy
+  products-details 95 vacuous stub greens with real behavioral oracles.
+- Live-verification learnings:
+    - The seeded product MUST carry a `regular_price` — the editor's "Update
+      Product" button is `disabled` while the form is invalid (price required), so
+      a priceless seed blocks every non-price edit (10 tests failed on this until
+      fixed). `seedProduct` now defaults `regular_price: '50'`.
+    - The editor is HEAVY (~37s/test). Under sustained parallel/headed load the
+      wp-env memory-degrades badly (a 2-worker run hit 1.2h with 12–21 min
+      per-test stalls); single-worker runs are ~6 min and stable, and the site
+      recovers instantly. Run this spec single-worker.
+- **BACKLOG (deferred, documented):** manage-stock+quantity, stock-status
+  select, and add-tags do NOT persist through their dynamic/react-select
+  interactions on the EDIT surface (they behave differently than on create —
+  random stockQty id, stock-status select hidden once manage_stock is on,
+  creatable-tags input re-renders mid-type). Need live selector work; kept out
+  rather than shipped flaky. PLUS the remaining ~80 legacy field groups
+  (gallery, downloadable files, schedule dates, shipping dims/class, tax,
+  linked, attributes, bulk-discount, geolocation, addon, RMA, wholesale,
+  min-max, catalog-mode, multi-step category) — later batches.
+- Legacy retired: `products-details/productsDetails.spec.ts` whole describe
+  (all-vendor stubs) → `test.describe.skip` with a pointer (D3-safe blanket).
+  feature-map: 10 new-UI edit leaves added to the 'Products' `vendor (new UI)`
+  group.
+
+### B14 orders gaps + C2 order-edit — REFRAMED (scout finding)
+
+Not built. Scout found: `/orders/edit/:id` renders the SAME manual-order editor
+already covered by `new-manual-order/`; its only net-new value is deep-linking a
+seeded MANUAL order (needs a new `POST /dokan/v1/manual-orders` seeder —
+`createOrderWithStatus` makes admin WC orders that render `<Forbidden>` on the
+vendor edit route). The React list has NO row-action to the edit route.
+Tracking/downloads/shipment have NO React surface (stay legacy). B14 gaps to add
+to `new-orders/`: real export download, customer-filter/date-range row
+correctness, row status-update persistence, list money oracle.
+
+### B20 refunds — STAYS LEGACY (scout finding — no React surface)
+
+Not converted. There is NO React refund UI: the React Orders "View" action
+deep-links (`window.location.href`) to the LEGACY PHP order-details page, whose
+refund form is WooCommerce jQuery (`wc_input_price` + WC-AJAX
+`woocommerce_refund_line_items`). The React `/orders/edit/:id` manual-order
+editor has no refund UI. So a refund test cannot legitimately carry `@new-ui`
+(D4) — it belongs in the legacy suite, not a `new-*` folder. (Admin refund-queue
+cases stay admin; the legacy "(React)" refund smokes should be relabeled
+`@admin`.)
+
+### B17 products creation gaps — not built (backlog)
+
+Scout mapped it: React create-form product TYPES are server-driven — Lite =
+Simple only; Pro adds variable/external/grouped; the subscription module adds
+subscription types. True gaps: variable/external/grouped/subscription create,
+downloadable/virtual create+persist, Duplicate/Quick-Edit/Bulk-Edit Pro list
+actions, can't-buy-own-product oracle. CSV import/export stays legacy (no React
+route). Also D3: `products/products.spec.ts` blanket skip kills 8 healthy admin
+wp-admin cases — split + re-enable. Brief saved for a later batch.

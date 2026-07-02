@@ -231,6 +231,16 @@
           vendor can't add product min limit grater than max limit: true
           vendor can remove product min-max options: true
       vendor (new UI):
+          vendor can edit the product title on the edit form (React) [lite]: true
+          vendor can set a product price on the edit form (React) [lite]: true
+          vendor can add a discount sale price on the edit form (React) [lite]: true
+          vendor cannot set a sale price above the regular price (React) [lite]: true
+          vendor can edit the short and long descriptions on the edit form (React) [lite]: true
+          vendor can make a product virtual on the edit form (React) [lite]: true
+          vendor can set the SKU on the edit form (React) [lite]: true
+          vendor can set catalog visibility to hidden on the edit form (React) [lite]: true
+          vendor can change the product category on the edit form (React) [lite]: true
+          vendor can add a feature image on the edit form (React) [lite]: true
           vendor can view product list page (React) [lite]: true
           vendor sees the core DataViews columns (React) [lite]: true
           vendor sees the seeded product row with SKU + status (React) [lite]: true
