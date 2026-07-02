@@ -2051,3 +2051,26 @@
           vendor can clear a saved SEO field (React): true
       guest (new UI):
           vendor sets store SEO then a guest sees it in the storefront head (React): true
+
+# NOTE: the wp-admin Vendor Support coverage (tests/e2e/admin/adminVendorSupport.spec.ts,
+# 14 cases) is NOT yet mapped here — pre-existing gap flagged during the C1 conversion.
+- page: 'Vendor Support'
+  features:
+      vendor (new UI):
+          'vendor can open the Admin Support list mounted at #/vendor-support (React)': true
+          the ticket list renders Ticket Id / Subject / Status / Date columns without the admin Vendor column (React): true
+          the All / Active / Closed tabs render with counts (React): true
+          the Closed tab filters the list to closed tickets (React): true
+          vendor can create a ticket through the Add New Ticket modal (React): true
+          searching by subject narrows the list to the matching ticket (React): true
+          searching a non-existent subject shows the empty state (React): true
+          the row Actions menu offers View / Close but never Delete for a vendor (React): true
+          vendor can close a ticket from the row Actions menu after confirming (React): true
+          vendor can open a ticket detail thread from the list (React): true
+          vendor can reply from the ticket detail (React): true
+          replying to a closed ticket reopens it (React): true
+          HashRouter survives a reload on /vendor-support (React): true
+      cross-role (new UI):
+          an admin reply (REST) appears in the vendor ticket timeline (React): true
+          'business flow: vendor creates (UI) then admin closes (REST) and the vendor sees it closed (React)': true
+          a logged-in customer cannot mount the vendor Admin Support route (React): true

@@ -190,31 +190,46 @@ store support module` (D3) active in the outer describe; the 3 vendor
   `createProductQuestionAnswer` (vendorAuth = product author). Cleanup: bulk
   `PUT product-questions/bulk_action {action:'delete', ids}` (adminAuth).
 - Live-verification learnings (verified with a throwaway `_diag.spec.ts`, since
-  removed):
-    - The answer-delete confirm modal is `role="dialog"` (NOT `alertdialog`),
-      button label **"Yes, Delete"**.
-    - Deleting an answer fires a **POST with a REST method-override, not a literal
-      `DELETE`** to `/product-answers` → gate on any non-GET, not the DELETE verb.
-    - The API models "no answer" as an **empty stub** `{ id: 0, answer: '',
+  removed): - The answer-delete confirm modal is `role="dialog"` (NOT `alertdialog`),
+  button label **"Yes, Delete"**. - Deleting an answer fires a **POST with a REST method-override, not a literal
+  `DELETE`** to `/product-answers` → gate on any non-GET, not the DELETE verb. - The API models "no answer" as an **empty stub** `{ id: 0, answer: '',
 user_display_name: 'Deleted User' }`, NOT an absent field → the deletion
-      oracle checks answer _content_/`id === 0`, not object presence.
-    - `apiUtils.get(url, opts, false)` disables the built-in 2xx assert — required
-      for "deleted resource should 404" oracles (else `get` throws on the 4xx).
+  oracle checks answer _content_/`id === 0`, not object presence. - `apiUtils.get(url, opts, false)` disables the built-in 2xx assert — required
+  for "deleted resource should 404" oracles (else `get` throws on the 4xx).
 - Legacy retired: nested `describe.skip('vendor cases — ported to
 new-product-qa/')` wrapping the 7 contiguous vendor cases (customer/guest/admin
   stay active, D3); the transitional "(React) Tests" describe (2 legacy-URL
   vendor smokes) `describe.skip`'d.
 
-### B4 vendor-staff, B6 vendor-verifications, B7 vendor-return-request, C1 vendor-support
+### C1 vendor-support → `new-vendor-support/` — ✔ DONE (green 3×)
+
+- `newVendorSupportPage.ts` + `newVendorSupport.spec.ts`. **13 vendor + 3
+  cross-role tests, green 3× (2 headless + 1 headed), 16 tests.** NET-NEW —
+  no legacy vendor spec exists, so nothing is skipped (the wp-admin
+  `adminVendorSupport.spec.ts` stays; it's a different SPA). Seeding: raw REST
+  `POST/PUT/DELETE /dokan/v1/vendor-support/tickets` (vendorAuth to create as
+  the owning vendor; adminAuth for the admin-reply `.../conversations` POST and
+  cleanup DELETE), guarded by `activateModules('vendor_support')`.
+- Covers: list mount + tabs, vendor-context columns (asserts the admin-only
+  Vendor column + Delete row-action are ABSENT), Closed-tab filter, create via
+  the Add-New-Ticket DokanModal (Quill body), search + empty state, row-action
+  Close via the destructive alertdialog, detail thread, vendor reply,
+  reply-reopens-closed, HashRouter reload; cross-role: admin reply appears in
+  the vendor timeline, a full create→admin-close business flow, customer
+  non-mount.
+- Live-verification learning: the detail timeline paints only after the async
+  ticket GET resolves (slow on the polluted DB) — `detailHasText` now waits for
+  the `#<id> - <subject>` heading, then polls the SPA-root text (fixed a race
+  where the admin-reply assertion ran before the timeline rendered).
+- feature-map: new `page: 'Vendor Support'` entry (13 vendor + 3 cross-role
+  new-UI leaves). Flagged that the wp-admin `adminVendorSupport.spec.ts` (14
+  cases) was NEVER mapped — pre-existing gap, noted inline in the YAML.
+
+### B4 vendor-staff, B6 vendor-verifications, B7 vendor-return-request — remaining
 
 - Briefs ready on disk (see scratchpad). NOT yet built. Notable brief findings:
   verifications is a CARD list (not DataViews) with a once-only GET (reload
   before asserting); return-request must rebuild seeding via API orders +
   RMA REST (legacy used UI checkout); vendor-staff must re-target the React
   sidebar (`aside.dokan-frontend-sidebar`) for the staff-menu-visibility cases
-  and copy a staff storage-state locally; vendor-support (C1) is net-new,
-  seeded via `/dokan/v1/vendor-support`.
-
-Note: `new-store-support` and `new-product-qa` are NOT counted done until they
-pass 3× live against Docker :9999. Do not commit them to a wave-1 branch or
-skip any legacy block until that gate is met.
+  and copy a staff storage-state locally.
