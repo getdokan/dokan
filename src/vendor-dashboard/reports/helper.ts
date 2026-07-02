@@ -1,6 +1,7 @@
 import { dokanConfig } from './dokan-config';
 import { getHistory } from '@woocommerce/navigation';
 import { applyFilters } from '@wordpress/hooks';
+import { addQueryArgs } from '@wordpress/url';
 
 declare const vendorAnalyticsDokanConfig: {
     seller_id: number;
@@ -70,7 +71,15 @@ export const shouldBlockNavigation = () => {
         );
 
     if ( isAnalyticsExcluded && matchingRedirectRule ) {
-        document.location.href = matchingRedirectRule.redirect;
+        // Preserve the current query args (e.g. WPML's ?lang= in parameter-based mode),
+        // except `path` — the redirect target's own path must win.
+        const { path, ...currentParams } = Object.fromEntries(
+            new URLSearchParams( document.location.search )
+        );
+        document.location.href = addQueryArgs(
+            matchingRedirectRule.redirect,
+            currentParams
+        );
     }
 
     return applyFilters( BLOCK_NAVIGATION_FILTER, isAnalyticsExcluded );

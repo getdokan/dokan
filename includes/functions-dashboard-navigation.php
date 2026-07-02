@@ -38,7 +38,7 @@ function dokan_get_dashboard_nav(): array {
         'dashboard' => [
             'title'      => __( 'Dashboard', 'dokan-lite' ),
             'icon'       => '<i class="fas fa-tachometer-alt"></i>',
-            'url'        => dokan_get_navigation_url() . ( ReportUtil::is_analytics_enabled() ? '?path=%2Fanalytics%2FOverview' : '' ),
+            'url'        => ReportUtil::is_analytics_enabled() ? add_query_arg( 'path', '/analytics/Overview', dokan_get_navigation_url() ) : dokan_get_navigation_url(),
             'pos'        => 10,
             'icon_name'  => 'House',
             'permission' => 'dokan_view_overview_menu',
