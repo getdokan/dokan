@@ -284,8 +284,37 @@ new-product-qa/')` wrapping the 7 contiguous vendor cases (customer/guest/admin
   (`dashboard/settings/rma`) stays legacy (no React route). feature-map: 10
   new-UI leaves under 'Return and Warranty Request'; legacy vendor leaves → false.
 
-### B6 vendor-verifications — remaining (last Wave 1 item)
+### B6 vendor-verifications → `new-vendor-verifications/` — ✔ DONE (green 3×)
 
-- Brief ready on disk. NOT yet built. Notable: it is a CARD list (not
-  DataViews) with a once-only GET (reload before asserting), a wp.media upload
-  for one test, and a documented headless-hang risk to watch during the 3× gate.
+- `newVendorVerificationsPage.ts` + `newVendorVerifications.spec.ts`. \*\*9 vendor
+    - 1 cross-role = 10 tests, green 3× (2 headless + 1 headed).** This is a CARD
+      list (not DataViews): view page, submit-with-**wp.media-upload\*\*, no-document
+      validation, resubmit-rejected, cancel-pending (DokanModal "Yes, Cancel"),
+      view documents, view note, approved-has-no-actions, reload; cross-role: an
+      admin-approved request reflected on the vendor card.
+- Seeding: `activateModules('vendor_verification')`, one shared
+  `uploadMedia(avatar)` (also guarantees the wp.media Library tab is non-empty),
+  `createVerificationMethod`/`createVerificationRequest` (adminAuth can set any
+  status), `updateVerificationRequest` for admin approve. Cleanup: delete each
+  method (never the DANGEROUS `deleteAll*`).
+- Live-verification notes: NO headless-hang materialised (the flagged risk) —
+  the one-shot GET resolved fine; the wp.media Library recipe worked headless
+  (Browse tab → first attachment → "Use this media"); readiness keys on the
+  always-present "Social Profiles" card (there is no zero-methods empty state);
+  the page never refetches, so every mid-test REST write is asserted after a
+  fresh `goto`.
+- Legacy retired: the 6 vendor-DASHBOARD cases wrapped in a nested
+  `describe.skip` (admin + setup-wizard [different surface] + customer stay
+  active, D3); the transitional vendor "(React)" smokes (legacy URL) →
+  `describe.skip`; the admin "(React)" smokes (wp-admin SPA, different surface,
+  covered by admin/adminVerifications) left as-is. feature-map: 10 new-UI leaves
+  under 'Vendor Verification'; the 6 legacy vendor-dashboard leaves → false.
+
+## Wave 1 — COMPLETE ✅
+
+All six items done and green 3× (2 headless + 1 headed) against Docker :9999,
+each committed on `qa/new-ui-suite-wave-0`: B2 store-support, B5 product-qa,
+C1 vendor-support (net-new), B4 vendor-staff, B7 return-request, B6
+verifications. Next: Wave 2 (product-edit parity + D2 consolidation, orders
+gaps + C2 order-edit, refunds, products gaps), then Waves 3–4, then the final
+CI shard-duration rebalance.

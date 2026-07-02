@@ -1893,12 +1893,12 @@
           admin can reject verification request: true
           admin can perform bulk action on verification requests: true
       vendor:
-          vendor can view verifications settings menu page: true
-          vendor can submit verification request: true
-          vendor can re-submit verification request: true
-          vendor can cancel verification request: true
-          vendor can view verification request documents: true
-          vendor can view verification request notes: true
+          vendor can view verifications settings menu page: false
+          vendor can submit verification request: false
+          vendor can re-submit verification request: false
+          vendor can cancel verification request: false
+          vendor can view verification request documents: false
+          vendor can view verification request notes: false
           vendor can view only required verification method on setup wizard: true
           vendor can view verification methods on setup wizard: true
           vendor can submit verification request on setup wizard: true
@@ -1908,6 +1908,18 @@
           vendor need all required method to be verified to get verification badge: false
           vendor need to be verified only one method when no required method is exists: false
           vendor address verification gets reset when he update address: false
+      vendor (new UI):
+          vendor can view the verification settings page with a seeded method (React): true
+          vendor can submit a verification request with an uploaded document (React): true
+          vendor can't submit a verification request without a document (React): true
+          vendor can re-submit a rejected verification request (React): true
+          vendor can cancel a pending verification request (React): true
+          vendor can view the verification request documents (React): true
+          vendor can view the verification request note (React): true
+          an approved verification request offers no vendor actions (React): true
+          HashRouter survives a reload on /settings/verification (React): true
+      cross-role (new UI):
+          an admin-approved request is reflected on the vendor verification card (React): true
       customer:
           customer can view verified badge: true
 
