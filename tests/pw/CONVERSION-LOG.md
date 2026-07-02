@@ -225,11 +225,41 @@ new-product-qa/')` wrapping the 7 contiguous vendor cases (customer/guest/admin
   new-UI leaves). Flagged that the wp-admin `adminVendorSupport.spec.ts` (14
   cases) was NEVER mapped — pre-existing gap, noted inline in the YAML.
 
-### B4 vendor-staff, B6 vendor-verifications, B7 vendor-return-request — remaining
+### B4 vendor-staff → `new-vendor-staff/` — ✔ DONE (green 3×)
+
+- `newVendorStaffPage.ts` + `newVendorStaff.spec.ts`. **9 vendor + 3 staff +
+  1 admin-gate = 13 tests, green 3× (2 headless + 1 headed).** Covers: list
+  render, create (Add-New-Staff form), edit, grant/reset permissions (checkbox
+  ids == capability keys), delete (destructive alertdialog), Name-link →
+  edit navigation, row-action menu; staff-context: default-cap sidebar
+  visibility (Products/Orders shown, Withdraw/Staff hidden), a vendor-grants-cap
+  → staff-sidebar-gains-menu cross-role flow, and staff denied the
+  staff-management route; admin: module deactivate → Staff menu gone → reactivate
+  → menu back. Seeding: `createVendorStaff(vendorAuth)`, `updateStaffCapabilities`,
+  raw DELETE `{id, force:true}`; staff-login via a local my-account `frontendLogin`
+  helper (no staff storage state exists) with a REST-seeded known-password staff.
+- Live-verification learnings:
+    - The Name cell is a clickable `<div class="!dokan-link … cursor-pointer">`
+      (Tailwind important prefix), NOT an `<a>` — selector `[class*="dokan-link"]`.
+    - DokanToaster toasts render with EMPTY text and auto-dismiss → never assert on
+      toast text; the REST/DB and list-row oracles are the real proof (dropped all
+      5 toast assertions).
+    - A form-created staff's `user_login` is WP-sanitized (not the raw email), and
+      `getAllVendorStaffs` paginates → the create oracle is the React list-row
+      (newest-first), with REST used only for best-effort cleanup.
+    - The staff SPA (R5) DOES mount for a `vendor_staff` user; the server-filtered
+      sidebar drops unpermitted menu `<a>`s, so visibility is assertable by name.
+- Legacy retired: describe 2 (`Vendor staff test (vendorStaff)`, both cases
+  stub-backed via `new ApiUtils(null)`) and describe 3 (three "(React)" smokes
+  on a NON-EXISTENT `dashboard/vendor-staff/` URL) → `describe.skip` with
+  pointers; describe 1 was already skipped. feature-map: 13 new-UI leaves under
+  `'Vendor Staff Manager'` (vendor/staff/admin new-UI groups); legacy leaves
+  flipped to `false`.
+
+### B6 vendor-verifications, B7 vendor-return-request — remaining
 
 - Briefs ready on disk (see scratchpad). NOT yet built. Notable brief findings:
   verifications is a CARD list (not DataViews) with a once-only GET (reload
-  before asserting); return-request must rebuild seeding via API orders +
-  RMA REST (legacy used UI checkout); vendor-staff must re-target the React
-  sidebar (`aside.dokan-frontend-sidebar`) for the staff-menu-visibility cases
-  and copy a staff storage-state locally.
+  before asserting), a wp.media upload for one test, and a headless-hang risk;
+  return-request must rebuild seeding via API orders + RMA REST (legacy used UI
+  checkout).

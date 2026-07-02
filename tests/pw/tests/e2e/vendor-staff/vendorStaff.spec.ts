@@ -40,7 +40,13 @@ test.describe.skip('Vendor staff test (vendor)', () => {
     test('vendor can delete staff', { tag: ['@pro', '@vendor'] }, async () => { await vendor.deleteStaff(staff.firstName + ' ' + staff.lastName); });
 });
 
-test.describe('Vendor staff test (vendorStaff)', () => {
+// Ported to tests/e2e/new-vendor-staff/ (parity green 3×; NEW_UI_HOUSE_STYLE.md §8).
+// Both cases here ran through the folder's no-op STUB ApiUtils (new ApiUtils(null)),
+// so nothing was ever created/deactivated — the green was vacuous. Their motives now
+// live in the new spec: the staff menu-visibility case → the `staff (menu visibility)`
+// describe; `admin can disable vendor staff manager module` → the REST-driven
+// `admin (module gate)` describe (which also re-activates + asserts restoration).
+test.describe.skip('Vendor staff test (vendorStaff)', () => {
     let admin: VendorStaffPage;
     let staff: VendorStaffPage;
     let aPage: Page, sPage: Page;
@@ -81,7 +87,10 @@ function createPayload(capabilitiesArray: string[], access = true) {
 // surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
 // the legacy tests above for parity coverage during rollout.
 
-test.describe('Vendor Staff (React) Tests @pro', () => {
+// Retired (D1/D4): these three "(React)" smokes navigate a NON-EXISTENT legacy URL
+// (dashboard/vendor-staff/ — the real legacy page is dashboard/staffs/) and assert
+// only no-fatal / body-text length. Real React parity lives in new-vendor-staff/.
+test.describe.skip('Vendor Staff (React) Tests @pro', () => {
     test('Test Case 1 - Vendor staff page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();

@@ -1809,15 +1809,31 @@
   features:
       admin:
           admin can enable vendor staff manager module: true
-          admin can disable vendor staff manager module: true
+          admin can disable vendor staff manager module: false
       vendor:
-          vendor can view staff menu page: true
-          vendor can add new staff: true
-          vendor can edit staff: true
-          vendor can manage staff permission: true
-          vendor can delete staff: true
+          vendor can view staff menu page: false
+          vendor can add new staff: false
+          vendor can edit staff: false
+          vendor can manage staff permission: false
+          vendor can delete staff: false
       staff:
-          vendorStaff can view allowed menus: true
+          vendorStaff can view allowed menus: false
+      vendor (new UI):
+          vendor can view the staff list with the seeded staff (React): true
+          vendor can add a new staff member (React): true
+          vendor can edit a staff member (React): true
+          vendor can grant a staff permission (React): true
+          vendor can reset staff permissions to defaults (React): true
+          vendor can delete a staff member (React): true
+          the staff Name link opens the edit form (React): true
+          the row Actions menu offers Edit / Manage / Delete (React): true
+          HashRouter survives a reload on /staffs (React): true
+      staff (new UI):
+          staff with default permissions sees only permitted menus in the React sidebar (React): true
+          staff gains a sidebar menu when the vendor grants the capability (React): true
+          staff cannot access the staff-management route (React): true
+      admin (new UI):
+          deactivating the vendor-staff module removes the Staff route from the vendor dashboard (React): true
 
 - page: 'Vendor Subscription'
   features:
