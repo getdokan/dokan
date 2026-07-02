@@ -340,6 +340,8 @@
           vendor can add downloadable product permission to order [lite]: false
           vendor can perform bulk action on orders [lite]: true
       vendor (new UI):
+          vendor updating an order status from the row action persists it (React) [lite]: true
+          vendor order revenue equals vendor earning plus admin commission (React) [lite]: true
           vendor can view order list page (React) [lite]: true
           vendor order list shows the seeded order row (React) [lite]: true
           vendor sees the core order columns (React) [lite]: true

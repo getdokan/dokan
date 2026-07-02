@@ -361,7 +361,20 @@ CI shard-duration rebalance.
   feature-map: 10 new-UI edit leaves added to the 'Products' `vendor (new UI)`
   group.
 
-### B14 orders gaps + C2 order-edit — REFRAMED (scout finding)
+### B14 orders gaps — ✔ PARTIAL DONE (green 3×); C2 order-edit — REFRAMED (scout finding)
+
+- **`new-orders/newOrdersGaps.spec.ts` — 2 tests, green 3×:** (1) a row
+  status-change that PERSISTS — drive "Change status to completed" through the
+  confirm dialog, then REST `getSingleOrder(id).status === 'completed'` (the
+  existing new-orders test only asserted a request fired); (2) the house-style
+  MONEY ORACLE — vendor earning + admin commission (per line-item, admin+vendor
+  REST) reconciles to the order's product revenue — asserted nowhere before.
+- DEFERRED (documented): the CSV export-download test — the React export is a
+  hidden-form POST to a nonce'd URL and headless Chromium does not fire a
+  `download` event for it (R6); customer-filter + date-range row-correctness are
+  backlog. feature-map: 2 new-UI leaves under the Orders `vendor (new UI)` group.
+
+Original scout finding (unchanged):
 
 Not built. Scout found: `/orders/edit/:id` renders the SAME manual-order editor
 already covered by `new-manual-order/`; its only net-new value is deep-linking a
