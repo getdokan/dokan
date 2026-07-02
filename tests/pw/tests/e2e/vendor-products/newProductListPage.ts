@@ -1,7 +1,20 @@
 import { Page } from '@playwright/test';
 
 
-import { toPath } from '@utils/helpers';
+import { closeAnnouncementModal, toPath } from '@utils/helpers';
+import {
+    REACT_ROOT,
+    ROW_ACTIONS_BTN,
+    SEARCH_INPUT,
+    actionMenuItem as dvActionMenuItem,
+    waitForRootReady as dvWaitForRootReady,
+    waitForListReady as dvWaitForListReady,
+    rawRowCount,
+    openRowActionMenu,
+    clickActionMenuItem as dvClickActionMenuItem,
+    fillDataViewsSearch,
+    clearDataViewsSearch,
+} from '@utils/dataViews';
 
 /**
  * Page object for the new vendor React product list (Dokan 5.0.0+) at
@@ -10,27 +23,17 @@ import { toPath } from '@utils/helpers';
  * `DataViews`, mounted inside the new dashboard React shell rooted at
  * `#dokan-vendor-dashboard-root` (template `templates/dashboard/new-dashboard.php`).
  *
- * This page object is self-contained per CONVENTIONS.md §4 (no shared utils).
+ * Self-contained per NEW_UI_HOUSE_STYLE.md §1 — shared DataViews primitives
+ * come from @utils/dataViews. NOTE: the canonical products-list coverage lives
+ * in tests/e2e/new-products/ (house-style D1); this backs the in-folder legacy
+ * "(React)" blocks pending their migration.
  */
 export class NewProductListPage {
     readonly page: Page;
 
     constructor(page: Page) {
         this.page = page;
-        void this.installAnnouncementModalHandler();
-    }
-
-    private async installAnnouncementModalHandler(): Promise<void> {
-        const installed = '__dokanAnnouncementModalHandlerInstalled' as const;
-        const pwf = this.page as Page & { [installed]?: boolean };
-        if (pwf[installed]) return;
-        pwf[installed] = true;
-        const modal = this.page.locator('.vendor-announcement-modal');
-        await this.page.addLocatorHandler(modal, async () => {
-            const btn = modal.locator('button[aria-label="Close"]').first();
-            if (await btn.isVisible().catch(() => false)) await btn.click({ timeout: 2000 }).catch(() => undefined);
-            else await this.page.keyboard.press('Escape').catch(() => undefined);
-        }, { noWaitAfter: true }).catch(() => undefined);
+        void closeAnnouncementModal(page);
     }
 
     // The new vendor dashboard mounts at /dashboard/new/. The React app
@@ -40,23 +43,22 @@ export class NewProductListPage {
 
     selectors = {
         // The React shell mounts on this root id (see new-dashboard.php).
-        reactRoot: '#dokan-vendor-dashboard-root',
+        reactRoot: REACT_ROOT,
         // Product list page-specific markers (rendered by ProductList.tsx).
         productListWrapper: '.dokan-react-products, .dokan-products-wrapper',
         // DataViews surface (the inner table)
         dataViewsTable: 'table',
         dataRow: 'table tbody tr',
         // Search input — DataViews header
-        searchInput: 'input[type="search"], input[placeholder*="Search"]',
+        searchInput: SEARCH_INPUT,
         // "Add new product" affordance — heading right side
         addProductCta: "a[href*='products/create'], button[aria-label*='Add'], //a[contains(., 'Add new product')] | //button[contains(., 'Add Product')]",
         // 3-dot row actions menu — scope strictly to in-tbody rows so the
         // toolbar's "Actions" button (when bulk-selection exists) doesn't
         // clash with per-row buttons.
-        rowActionsBtn: "//tbody//tr//button[@aria-label='Actions']",
+        rowActionsBtn: ROW_ACTIONS_BTN,
         // Action menu items
-        actionMenuItem: (label: string) =>
-            `//*[@role='menuitem'][normalize-space()='${label}']`,
+        actionMenuItem: dvActionMenuItem,
         // QuickViewModal (rendered by QuickViewModal.tsx). The modal renders
         // the product title as its heading rather than the literal "Quick
         // View" text, so we accept any dialog containing common product-info
@@ -82,49 +84,35 @@ export class NewProductListPage {
 
     async waitForReactReady(timeoutMs = 30000): Promise<void> {
         // Wait for the React root to mount (the loading spinner inside it
-        // is replaced by real content once the app boots).
-        await this.page.locator(this.selectors.reactRoot).first().waitFor({ state: 'visible', timeout: timeoutMs });
-        // Then wait for either rows or an empty state inside it.
-        const start = Date.now();
-        while (Date.now() - start < 15000) {
-            const rows = await this.page.locator(this.selectors.dataRow).count();
-            if (rows > 0) return;
-            const empty = await this.page.locator("text=/no products|no items|nothing to show|create your first/i").count();
-            if (empty > 0) return;
-            await this.page.waitForTimeout(250);
-        }
+        // is replaced by real content once the app boots), then for either
+        // rows or an empty state inside it.
+        await dvWaitForRootReady(this.page, timeoutMs);
+        await dvWaitForListReady(this.page, {
+            rowSelector: this.selectors.dataRow,
+            emptyState: 'text=/no products|no items|nothing to show|create your first/i',
+        });
     }
 
     async getRowCount(): Promise<number> {
-        return await this.page.locator(this.selectors.dataRow).count();
+        return await rawRowCount(this.page, this.selectors.dataRow);
     }
 
     async fillSearch(query: string): Promise<void> {
-        const input = this.page.locator(this.selectors.searchInput).first();
-        await input.waitFor({ state: 'visible', timeout: 10000 });
-        await input.fill(query);
         // DataViews search debounces ~300ms
-        await this.page.waitForTimeout(800);
+        await fillDataViewsSearch(this.page, query, { selector: this.selectors.searchInput, debounceMs: 800 });
     }
 
     async clearSearch(): Promise<void> {
-        const input = this.page.locator(this.selectors.searchInput).first();
-        if (await input.isVisible().catch(() => false)) {
-            await input.fill('');
-            await this.page.waitForTimeout(500);
-        }
+        await clearDataViewsSearch(this.page, { selector: this.selectors.searchInput, debounceMs: 500 });
     }
 
     async openRowActionMenuByIndex(index: number): Promise<void> {
-        const buttons = this.page.locator(this.selectors.rowActionsBtn);
-        await buttons.nth(index).waitFor({ state: 'visible', timeout: 10000 });
-        await buttons.nth(index).click();
-        // Wait for at least one menu item to render
-        await this.page.locator(this.selectors.actionMenuItem('Quick view')).first().waitFor({ state: 'visible', timeout: 5000 }).catch(() => undefined);
+        // Wait for at least one menu item to render (Quick view is always present).
+        await openRowActionMenu(this.page, index, 'Quick view');
     }
 
     async clickActionMenuItem(label: string): Promise<void> {
-        await this.page.locator(this.selectors.actionMenuItem(label)).first().click();
+        await dvClickActionMenuItem(this.page, label);
     }
 
     async isQuickViewOpen(): Promise<boolean> {

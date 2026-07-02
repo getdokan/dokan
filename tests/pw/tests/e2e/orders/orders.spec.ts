@@ -225,7 +225,7 @@ test.describe('Order functionality test @lite', () => {
 // the legacy tests above for parity coverage during rollout.
 
 test.describe('New Vendor Order List (React) Tests @lite', () => {
-    test('Test Case 1 - React order list mounts at /dashboard/new/#/orders', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 1 - React order list mounts at /dashboard/new/#/orders', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const list = new NewOrderListPage(page);
@@ -242,7 +242,7 @@ test.describe('New Vendor Order List (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 2 - Order list renders rows or an empty-state banner', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 2 - Order list renders rows or an empty-state banner', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const list = new NewOrderListPage(page);
@@ -258,7 +258,7 @@ test.describe('New Vendor Order List (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 3 - Search filter narrows the list to zero rows for nonsense query', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 3 - Search filter narrows the list to zero rows for nonsense query', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const list = new NewOrderListPage(page);
@@ -286,7 +286,7 @@ test.describe('New Vendor Order List (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 4 - Row actions menu exposes View and at least one status-change action', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 4 - Row actions menu exposes View and at least one status-change action', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const list = new NewOrderListPage(page);
@@ -322,7 +322,7 @@ test.describe('New Vendor Order List (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 5 - Page renders without a PHP fatal', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 5 - Page renders without a PHP fatal', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const list = new NewOrderListPage(page);
@@ -336,7 +336,7 @@ test.describe('New Vendor Order List (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 6 - Vendor announcement modal does not block list mount', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 6 - Vendor announcement modal does not block list mount', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const list = new NewOrderListPage(page);
@@ -351,7 +351,7 @@ test.describe('New Vendor Order List (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 7 - Direct deep link to /orders works (HashRouter survives reload)', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 7 - Direct deep link to /orders works (HashRouter survives reload)', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const list = new NewOrderListPage(page);
@@ -369,7 +369,7 @@ test.describe('New Vendor Order List (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test.skip('Test Case 8 - Status-change action issues a non-GET request', { tag: ['@lite', '@exploratory', '@vendor'] }, async ({ browser }) => {
+    test.skip('Test Case 8 - Status-change action issues a non-GET request', { tag: ['@lite', '@exploratory', '@vendor', '@new-ui'] }, async ({ browser }) => {
         // Skipped: timing on the click → REST request handshake is brittle
         // because the order list refetches the rows immediately after status
         // update, masking the original PATCH/POST. Re-enable once the test

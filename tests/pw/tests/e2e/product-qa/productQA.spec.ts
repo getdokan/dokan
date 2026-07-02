@@ -103,37 +103,44 @@ test.describe('Product QA functionality test', () => {
         await admin.productQuestionsBulkAction('read');
     });
 
-    test('vendor can view product QA menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
-        await vendor.vendorProductQARenderProperly();
-    });
+    // Ported to the React vendor dashboard at tests/e2e/new-product-qa/ (parity
+    // green 3×; see NEW_UI_HOUSE_STYLE.md §8). The legacy vendor cases below drove
+    // the old screen through a no-op stub page object + stub ApiUtils, so their
+    // green was vacuous. Nested skip keeps the sibling customer/guest/admin cases
+    // (D3) active.
+    test.describe.skip('vendor cases — ported to new-product-qa/', () => {
+        test('vendor can view product QA menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+            await vendor.vendorProductQARenderProperly();
+        });
 
-    test('vendor can view product question details', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
-        const [, qId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
-        await vendor.vendorViewQuestionDetails(qId);
-    });
+        test('vendor can view product question details', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+            const [, qId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
+            await vendor.vendorViewQuestionDetails(qId);
+        });
 
-    test('vendor can filter questions', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.vendorFilterQuestions(data.predefined.simpleProduct.product1.name);
-    });
+        test('vendor can filter questions', { tag: ['@pro', '@vendor'] }, async () => {
+            await vendor.vendorFilterQuestions(data.predefined.simpleProduct.product1.name);
+        });
 
-    test('vendor can answer to question', { tag: ['@pro', '@vendor'] }, async () => {
-        const [, qId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
-        await vendor.vendorAnswerQuestion(qId, data.questionAnswers());
-    });
+        test('vendor can answer to question', { tag: ['@pro', '@vendor'] }, async () => {
+            const [, qId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
+            await vendor.vendorAnswerQuestion(qId, data.questionAnswers());
+        });
 
-    test('vendor can edit answer', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.vendorEditAnswer(questionId, data.questionAnswers());
-    });
+        test('vendor can edit answer', { tag: ['@pro', '@vendor'] }, async () => {
+            await vendor.vendorEditAnswer(questionId, data.questionAnswers());
+        });
 
-    test('vendor can delete a answer', { tag: ['@pro', '@vendor'] }, async () => {
-        const [, qId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
-        await apiUtils.createProductQuestionAnswer({ ...payloads.createProductQuestionAnswer(), question_id: qId }, payloads.adminAuth);
-        await vendor.vendorDeleteAnswer(qId);
-    });
+        test('vendor can delete a answer', { tag: ['@pro', '@vendor'] }, async () => {
+            const [, qId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
+            await apiUtils.createProductQuestionAnswer({ ...payloads.createProductQuestionAnswer(), question_id: qId }, payloads.adminAuth);
+            await vendor.vendorDeleteAnswer(qId);
+        });
 
-    test('vendor can delete a question', { tag: ['@pro', '@vendor'] }, async () => {
-        const [, qId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
-        await vendor.vendorDeleteQuestion(qId);
+        test('vendor can delete a question', { tag: ['@pro', '@vendor'] }, async () => {
+            const [, qId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
+            await vendor.vendorDeleteQuestion(qId);
+        });
     });
 
     test('customer can search question', { tag: ['@pro', '@customer'] }, async () => {
@@ -167,7 +174,10 @@ test.describe('Product QA functionality test', () => {
 // surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
 // the legacy tests above for parity coverage during rollout.
 
-test.describe('Product Q&A (React) Tests @pro', () => {
+// Retired (D1/D4): these two "(React)" smokes navigate the LEGACY
+// /dashboard/product-questions-answers/ URL and assert only no-fatal /
+// body-text length. Real React parity lives in tests/e2e/new-product-qa/.
+test.describe.skip('Product Q&A (React) Tests @pro', () => {
     test('Test Case 1 - Vendor Q&A page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();

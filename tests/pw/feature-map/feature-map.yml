@@ -37,6 +37,25 @@
           vendor can add local pickup shipping: true
           vendor can edit shipping method: true
           vendor can delete shipping method: true
+      admin (new UI):
+          admin loading the vendor shipping route does not produce a PHP fatal (React): true
+      vendor (new UI):
+          vendor can view shipping settings page with the zone table (React): true
+          vendor sees the seeded US zone row (React): true
+          vendor can open a zone and reach the zone edit view (React): true
+          vendor can open a zone via the row action menu (React): true
+          vendor can add flat rate shipping to a zone (React): true
+          vendor can add free shipping to a zone (React): true
+          vendor can edit a shipping method (React): true
+          vendor can delete a shipping method (React): true
+          vendor can open the shipping policy section (React): true
+          vendor shipping page survives a reload (React): true
+          added method persists in the zone after reload (React): true
+          opening the add-method modal then closing leaves the zone unchanged (React): true
+          vendor configures a flat-rate method on the zone and it is reflected back in the React UI (React): true
+      customer (new UI):
+          customer at checkout sees the vendor shipping option (React): false
+          customer loading the vendor shipping route does not produce a PHP fatal (React): true
 
 - page: 'Admin'
   features:
@@ -211,6 +230,72 @@
           vendor can update product min-max options: true
           vendor can't add product min limit grater than max limit: true
           vendor can remove product min-max options: true
+      vendor (new UI):
+          vendor can view product list page (React) [lite]: true
+          vendor sees the core DataViews columns (React) [lite]: true
+          vendor sees the seeded product row with SKU + status (React) [lite]: true
+          vendor can filter by Published status tab (React) [lite]: true
+          vendor sees an empty Draft status tab (React) [lite]: true
+          vendor sees an empty Pending Review status tab (React) [lite]: true
+          vendor can filter by In stock status tab (React) [lite]: true
+          vendor can switch to the Out of stock status tab (React) [lite]: true
+          vendor can search products (React) [lite]: true
+          vendor sees no results for a nonsense search (React) [lite]: true
+          vendor can clear search to restore the list (React) [lite]: true
+          vendor can filter products by Product Type via the funnel (React) [lite]: true
+          vendor can filter products by Category via the funnel (React) [lite]: true
+          vendor can combine two filters and reset clears them (React) [lite]: true
+          vendor can open the Add new product editor (React) [lite]: true
+          vendor can open the seeded product editor from the list (React) [lite]: true
+          vendor sees the core row actions in the 3-dot menu (React) [lite]: true
+          vendor can open and close the Quick view modal (React) [lite]: true
+          vendor can open a product on the storefront via "View in site" (React) [lite]: true
+          vendor can toggle the select-all checkbox (React) [lite]: true
+          vendor product list survives a reload (HashRouter) (React) [lite]: true
+          vendor can delete a single product from the row menu (React) [lite]: true
+          vendor can cancel a delete without removing the product (React) [lite]: true
+          vendor can bulk-delete selected products (React) [lite]: true
+          vendor can bulk-publish a draft product (React) [lite]: true
+          seeded React product appears in the vendor list AND on the customer store (React) [lite]: true
+          vendor can create a simple product with required fields [lite]: true
+          vendor can create a product with every option filled [lite]: true
+          vendor can save a product as draft [lite]: true
+          handles a very long title (300+ chars) gracefully [lite]: true
+          preserves special characters in the title field [lite]: true
+          preserves the title field after a validation error [lite]: true
+          vendor can add a feature image [lite]: true
+          vendor can add multiple gallery images [lite]: true
+          vendor can create and save a product with feature and gallery images [lite]: true
+          vendor can remove a feature image after adding it [lite]: true
+          vendor can remove a single gallery image while keeping the rest [lite]: true
+          vendor can select multiple product categories [lite]: true
+          single mode limits the vendor to one product category [lite]: true
+          shows error when title is empty [lite]: true
+          shows error when price is empty [lite]: true
+          shows error when description is empty [lite]: true
+          shows error when no category is selected [lite]: true
+          coerces negative price to a non-negative value [lite]: true
+          rejects non-numeric price input [lite]: true
+          shows error when sale price is greater than regular price [lite]: true
+          accepts a valid min/max quantity range [lite]: true
+          accepts valid shipping dimensions [lite]: true
+          toggling downloadable checks the Downloadable option [lite]: true
+          toggling virtual checks the Virtual option [lite]: true
+          switching to variable type reveals the Attributes section [lite]: true
+          accepts a valid GTIN/UPC/EAN [lite]: true
+          vendor can fill SKU [lite]: true
+          vendor can toggle Manage Stock [lite]: true
+          vendor can add a global attribute whose terms lazy-load [lite]: true
+          vendor can change product visibility [lite]: true
+          vendor can toggle product reviews off [lite]: true
+          vendor can fill the purchase note [lite]: true
+          vendor can enable wholesale: true
+          vendor can override the default RMA settings: true
+          vendor can enable bulk discount: true
+      customer (new UI):
+          customer can view the seeded product on the vendor storefront (React) [lite]: true
+      guest (new UI):
+          guest can view the seeded product on the vendor storefront (React) [lite]: true
 
 - page: 'MyOrders'
   features:
@@ -240,6 +325,29 @@
           vendor can add shipment to order: true
           vendor can add downloadable product permission to order [lite]: false
           vendor can perform bulk action on orders [lite]: true
+      vendor (new UI):
+          vendor can view order list page (React) [lite]: true
+          vendor order list shows the seeded order row (React) [lite]: true
+          vendor sees the core order columns (React) [lite]: true
+          vendor seeded order row shows status badge + total (React) [lite]: true
+          vendor can open the Export dropdown (React) [lite]: true
+          vendor can view the All status tab (React) [lite]: true
+          vendor sees the empty state for a non-existent order id search (React) [lite]: true
+          vendor can filter orders by Customer via the funnel (React) [lite]: true
+          vendor can filter orders by Date Range via the funnel (React) [lite]: true
+          vendor can search orders — narrows to zero rows for a non-existent order id (React) [lite]: true
+          vendor can search orders — exact order id keeps the row (React) [lite]: true
+          vendor can filter orders by status tab — Processing shows the seeded order (React) [lite]: true
+          vendor row actions menu exposes View + at least one status-change action (React) [lite]: true
+          vendor can view order details from the row action (React) [lite]: true
+          vendor status-change action issues a non-GET request (React) [lite]: true
+          vendor order list deep-link survives reload (HashRouter) (React) [lite]: true
+          vendor order list renders without a PHP fatal (React) [lite]: true
+          vendor can bulk-change status of selected orders (React) [lite]: true
+          customer order appears in vendor React /orders, vendor completes it, change persists (React) [lite]: true
+      customer (new UI):
+          customer can view my orders page and sees the seeded order (React parity) [lite]: true
+          customer can view order details (React parity) [lite]: true
 
 - page: 'Manual Orders'
   features:
@@ -255,6 +363,19 @@
           vendor can select customer for manual order: true
           vendor can set manual order status: true
           vendor can add fee to manual order: true
+      admin (new UI):
+          admin can enable vendor order creation, making the React route reachable (React): true
+          admin can disable vendor order creation, hiding the React route (React): true
+          admin enables order creation, vendor creates and saves a manual order, then admin disables it (React): true
+      vendor (new UI):
+          vendor can view the Add New Order form (React): true
+          vendor sees the default order status as Pending payment (React): true
+          vendor sees all WooCommerce order statuses in the status dropdown (React): true
+          vendor can create a manual order by adding a product line (React): true
+          vendor can set the order status while creating a manual order (React): true
+          vendor can add an order note while creating a manual order (React): true
+          vendor product search returns no option for a non-existent product (React): true
+          vendor customer field handles an empty search result without error (React): true
 
 - page: 'Payments'
   features:
@@ -423,6 +544,20 @@
           vendor can cancel withdrawal request [lite]: true
           vendor can add auto withdraw disbursement schedule: true
           vendor can add default withdraw payment methods [lite]: true
+      admin (new UI):
+          admin-approved withdraw shows on the vendor Approved tab (React) [lite]: true
+      vendor (new UI):
+          vendor can view withdraw balance page (React) [lite]: true
+          vendor can view withdrawal requests page with status tabs (React) [lite]: true
+          vendor can switch between withdraw status tabs (React) [lite]: true
+          vendor withdraw-requests list exposes filter controls (React) [lite]: true
+          vendor can send withdrawal request when balance >= minimum (React) [lite]: true
+          vendor can't send withdrawal request when a pending request exists (React) [lite]: true
+          vendor can cancel a pending withdrawal request (React) [lite]: true
+          vendor balance summary exposes View Payments + Request Withdraw (React) [lite]: true
+          HashRouter survives reload on /withdraw (React) [lite]: true
+          HashRouter survives reload on /withdraw-requests (React) [lite]: true
+          vendor requests a withdraw -> admin approves (REST) -> vendor Approved tab reflects it (React) [lite]: true
 
 - page: 'Reverse Withdrawal'
   features:
@@ -442,6 +577,22 @@
           vendor status is inactive when reverse withdrawal rule applied: true
           vendor withdraw menu is hidden when reverse withdrawal rule applied: true
           vendor products in catalog mode when reverse withdrawal rule applied: true
+      admin (new UI):
+          admin can read reverse-withdrawal stores via REST (React parity): true
+          admin can add reverse withdrawal (React) — no React surface: false
+          admin can filter reverse withdrawal by store (React) — no React surface: false
+          admin can clear reverse withdrawal filters (React) — no React surface: false
+          vendor reverse-withdrawal widget is consistent with REST state (React): true
+      vendor (new UI):
+          vendor can view reverse withdrawal menu page (React): true
+          vendor reverse-withdrawal renders the balance/threshold widget (React): true
+          vendor reverse-withdrawal transactions table renders all columns (React): true
+          vendor reverse-withdrawal shows transactions or an empty state (React): true
+          vendor reverse-withdrawal filter controls are present (React): true
+          vendor reverse-withdrawal reset leaves the table populated (React): true
+          vendor reverse-withdrawal HashRouter survives a reload (React): true
+      customer (new UI):
+          customer does not get a vendor reverse-withdrawal surface (React): true
 
 - page: 'Catalog Mode'
   features:
@@ -615,6 +766,23 @@
           customer can buy product with coupon: true
           customer can buy product with marketplace coupon: true
           customer can buy product with vendor coupon: true
+      admin (new UI):
+          admin marketplace coupon appears under the vendor Marketplace Coupons tab (React): true
+      vendor (new UI):
+          vendor sees coupons list with My/Marketplace tabs and the seeded c1_v1 row (React): true
+          vendor "Add New Coupon" navigates to the create form (React): true
+          vendor can create a percentage-discount coupon (React): true
+          vendor can create a fixed-product-discount coupon (React): true
+          vendor can create a fixed-cart-discount coupon (React): false
+          vendor can edit a coupon via /coupons/update/:id (React): true
+          vendor can delete a coupon via the row action (React): true
+          vendor search narrows the coupons list (React): true
+          vendor empty search restores the full list (React): true
+          vendor cannot create a coupon with an empty title (React): true
+          vendor toggling the Marketplace Coupons tab switches the list (React): true
+          vendor creates a coupon (React) -> customer order applies it -> vendor sees usage increment (React): true
+      customer (new UI):
+          customer order applying the vendor coupon records the discount (React-created coupon): true
 
 - page: 'Refunds'
   features:
@@ -672,6 +840,22 @@
           vendor can view announcements menu page: true
           vendor can view announcement details: true
           vendor can delete announcement: true
+      admin (new UI):
+          'Admin: empty title shows validation toast and does NOT submit': true
+          'Admin: HTML in title is escaped (no XSS)': true
+          'Admin: long title (200 chars) accepted without fatal': true
+      vendor (new UI):
+          'Vendor: tabs and search input render': true
+          'Vendor: search narrows the list to a uniquely seeded title': true
+          'Vendor: bogus search empties the list (no matching rows)': true
+          'Vendor: clearing the search input issues a fetch without the search filter': true
+          'Vendor: clicking an announcement card opens detail with title in <h2>': true
+          'Vendor: clicking "Unread" tab issues request with read_status=unread': true
+          'Vendor: HashRouter survives reload on /announcement': true
+          'Vendor: list and announcement modal coexist (modal auto-dismissed)': true
+      customer (new UI):
+          'Customer: legacy /dashboard/announcement does NOT mount vendor list': true
+          'Customer: vendor /dashboard/new/#/announcement does NOT mount vendor dashboard': true
 
 - page: 'Email Verification'
   features:
@@ -1157,18 +1341,30 @@
           admin can delete a question: true
           admin can perform bulk action on product QAs: true
       vendor:
-          vendor can view product QA menu page: true
-          vendor can view product question details: true
-          vendor can filter questions: true
-          vendor can answer to question: true
-          vendor can edit answer: true
-          vendor can delete a answer: true
-          vendor can delete a question: true
+          vendor can view product QA menu page: false
+          vendor can view product question details: false
+          vendor can filter questions: false
+          vendor can answer to question: false
+          vendor can edit answer: false
+          vendor can delete a answer: false
+          vendor can delete a question: false
       customer:
           customer can search question: true
           customer can post question: true
       guest:
           guest customer need to signIn/signUp to post question: true
+      vendor (new UI):
+          vendor can view the Product Q&A list with status tabs (React): true
+          vendor can switch between Answered and Unanswered tabs (React): true
+          vendor can open a question details view (React): true
+          vendor can answer a question (React): true
+          vendor can edit an answer (React): true
+          vendor can delete an answer (React): true
+          vendor can delete a question from the details view (React): true
+          vendor can delete a question from the list row action (React): true
+          HashRouter survives a reload on the Q&A list (React): true
+      business flow (new UI):
+          customer asks (REST) then vendor answers (React) and it persists (REST): true
 
 - page: 'Product Subscription'
   features:
@@ -1352,6 +1548,16 @@
           vendor can view badge acquired congratulation popup message action: true
           vendor can search seller badge: true
           vendor can filter seller badges: true
+      admin (new UI):
+          admin-seeded badge appears in the vendor Available Badges tab (React): true
+          admin creates a badge then vendor sees it under Available Badges (React): true
+      vendor (new UI):
+          vendor can view badges page with All / My Badges / Available Badges tabs (React): true
+          vendor sees the seller-badge intro text (React): true
+          vendor can switch between badge tabs (React): true
+          vendor sees a search input on the badges page (React): true
+          vendor badges page survives a reload (React): true
+          vendor sees no fatal when searching for a non-existent badge (React): true
 
 - page: 'Seller Vacation'
   features:
@@ -1414,6 +1620,18 @@
           customer can review store: true
           customer can edit store review: true
           customer can view own review: true
+      admin (new UI):
+          admin can trash a store review (REST — no React vendor surface): true
+      vendor (new UI):
+          vendor reviews page renders with the four status tabs (React): true
+          vendor sees the seeded store review in the list (React): true
+          vendor can switch status tabs to filter reviews (React): true
+          vendor empty status tab shows the empty state (React): true
+          vendor reviews list survives a reload (React): true
+      customer (new UI):
+          customer can review store (React parity): true
+          customer can submit a review with the configured rating (React parity): true
+          customer reviews store then vendor sees it in React reviews list (React): true
 
 - page: 'Store Support'
   features:
@@ -1437,17 +1655,17 @@
           admin can reopen closed support ticket: true
           admin can perform bulk action on store support tickets: true
       vendor:
-          vendor can view store support menu page: true
-          vendor can view support ticket details: true
-          vendor can filter support tickets by customer: true
-          vendor can filter support tickets by date range: true
-          vendor can search support ticket by ticket id: true
-          vendor can search support ticket by ticket title: true
-          vendor can reply to support ticket: true
-          vendor can close support ticket: true
-          vendor can reopen closed support ticket: true
-          vendor can close support ticket with a chat reply: true
-          vendor can reopen closed support ticket with a chat reply: true
+          vendor can view store support menu page: false
+          vendor can view support ticket details: false
+          vendor can filter support tickets by customer: false
+          vendor can filter support tickets by date range: false
+          vendor can search support ticket by ticket id: false
+          vendor can search support ticket by ticket title: false
+          vendor can reply to support ticket: false
+          vendor can close support ticket: false
+          vendor can reopen closed support ticket: false
+          vendor can close support ticket with a chat reply: false
+          vendor can reopen closed support ticket with a chat reply: false
       customer:
           customer can view store support menu page: true
           customer can view support ticket details: true
@@ -1461,6 +1679,24 @@
           customer can't send message to closed support ticket: true
       guest:
           guest customer need to login before asking for store support: true
+      vendor (new UI):
+          vendor can view support tickets list with status tabs (React): true
+          vendor can open a support ticket details view (React): true
+          vendor can filter tickets to the Open tab (React): true
+          vendor can filter tickets to the Closed tab (React): true
+          vendor can search a support ticket by title (React): true
+          vendor can search a support ticket by id (React): true
+          vendor can reply to a support ticket (React): true
+          vendor can close a support ticket from the row action (React): true
+          vendor can reopen a closed support ticket from the row action (React): true
+          vendor can close a ticket with a chat reply (React): true
+          vendor replying to a closed ticket reopens it (React): true
+          vendor sees a not-found state for a nonexistent ticket (React): true
+          HashRouter survives a reload on /support (React): true
+      customer (new UI):
+          a customer-created ticket (REST) appears in the vendor list (React): true
+      admin (new UI):
+          an admin-closed ticket (REST) is reflected on the vendor Closed tab (React): true
 
 - page: 'Stripe Connect'
   features:
@@ -1785,3 +2021,33 @@
           vendor can remove booking product addon: true
       customer:
           customer can buy bookable product: true
+
+- page: 'Dokan Invoice'
+  features:
+      vendor (new UI):
+          NewDash-1 - dashboard renders an orders DataView with rows: true
+          NewDash-2 - row action menu contains "View Invoice" AND "View Packing Slip": true
+          NewDash-3 - clicking "View Invoice" calls window.open with the WC PDF URL: true
+          NewDash-4 - clicking "View Packing Slip" calls window.open with the packing-slip URL: true
+          NewDash-5 - the URL window.open is given actually serves a real PDF: true
+
+- page: 'Social Profiles'
+  features:
+      vendor (new UI):
+          vendor can view social profiles settings page (React): true
+          vendor can save social profile links (React): true
+          vendor social links persist after reload (React): true
+          vendor can clear a social link (React): true
+      guest (new UI):
+          vendor sets social links then guest sees them on the storefront (React): true
+
+- page: 'Store SEO'
+  features:
+      vendor (new UI):
+          vendor can view store SEO settings page (React): true
+          vendor can save SEO meta + Facebook + X fields (React): true
+          vendor store SEO values persist after reload (React): true
+          vendor can update a single SEO field (React): true
+          vendor can clear a saved SEO field (React): true
+      guest (new UI):
+          vendor sets store SEO then a guest sees it in the storefront head (React): true

@@ -3,9 +3,7 @@ import { request } from '@playwright/test';
 import { NewSellerBadgePage } from './newSellerBadgePage';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
-import path from 'path';
-
-const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
+import { VENDOR_STORAGE_STATE as v1 } from '@utils/authStates';
 
 // ============================================
 // NEW REACT UI TEST CASES (Dokan 5.0.0+)

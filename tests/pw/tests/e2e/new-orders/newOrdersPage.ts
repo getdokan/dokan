@@ -1,12 +1,20 @@
 import { Locator, Page, expect } from '@playwright/test';
 import { closeAnnouncementModal, toPath } from '@utils/helpers';
+import {
+    REACT_ROOT,
+    ROW_ACTIONS_BTN,
+    PHP_FATAL,
+    actionMenuItem as dvActionMenuItem,
+    hasNoPhpFatal as dvHasNoPhpFatal,
+    openRowActionMenu,
+} from '@utils/dataViews';
 
 // ============================================
 // SELECTORS — verified against the live /dashboard/new/#/orders render
 // (tmp-explore/orders.json + orders.html). DataViews list (Lite).
 // ============================================
 export const newOrdersSelectors = {
-    reactRoot: '#dokan-vendor-dashboard-root',
+    reactRoot: REACT_ROOT,
     // The React orders surface wrapper (src/dashboard/orders/OrderList.tsx).
     ordersWrapper: '.dokan-orders-wrapper, .dokan-react-orders',
     heading: 'h3:has-text("Orders")',
@@ -28,9 +36,9 @@ export const newOrdersSelectors = {
     reset: 'button:has-text("Reset")',
     // 3-dot row actions menu (scoped to tbody — the toolbar Actions shares the
     // same aria-label).
-    rowActionsBtn: "//tbody//tr//button[@aria-label='Actions']",
+    rowActionsBtn: ROW_ACTIONS_BTN,
     // Action-menu items rendered by DataViews.
-    actionMenuItem: (label: string) => `//*[@role='menuitem'][normalize-space()='${label}']`,
+    actionMenuItem: dvActionMenuItem,
     // Destructive status-change actions are confirmed in an AlertDialog
     // (@wedevs/plugin-ui DataViews wraps `isDestructive` actions in a
     // confirmation popup). The popup carries data-slot="alert-dialog-content";
@@ -40,7 +48,7 @@ export const newOrdersSelectors = {
     // Empty-state banner ("No Order Yet" / "All your orders will be listed here").
     emptyState: 'text=/No Order Yet|no orders|no items|nothing to show|create your first/i',
     // PHP fatal markers.
-    phpFatal: 'text=/Fatal error|Parse error|There has been a critical error/i',
+    phpFatal: PHP_FATAL,
     // The orders list REST endpoint the React hook fetches from
     // (useOrders → apiFetch '/dokan/v1/orders'). Used to wait on refetches.
     ordersRestPath: '/dokan/v1/orders',
@@ -57,8 +65,9 @@ export const statusChangeActions = [
 // ============================================
 // PAGE OBJECT — new React vendor Order list (Dokan 5.0.0+)
 // Surface: /dashboard/new/#/orders (DataViews list, Lite).
-// Self-contained per NEW_UI_HOUSE_STYLE §1 — DataViews patterns copied from
-// tests/e2e/orders/newOrderListPage.ts.
+// Self-contained per NEW_UI_HOUSE_STYLE.md §1 — shared DataViews primitives
+// come from @utils/dataViews; the REST-gated search/tab/settle orchestration
+// below is orders-specific and stays local.
 // ============================================
 export class NewOrdersPage {
     readonly page: Page;
@@ -117,8 +126,7 @@ export class NewOrdersPage {
     }
 
     async hasNoPhpFatal(): Promise<boolean> {
-        const fatal = await this.page.locator(newOrdersSelectors.phpFatal).first().isVisible({ timeout: 1000 }).catch(() => false);
-        return !fatal;
+        return await dvHasNoPhpFatal(this.page);
     }
 
     // ---- DataViews list helpers ----
@@ -258,10 +266,7 @@ export class NewOrdersPage {
 
     /** Open the per-row 3-dot Actions menu and wait for "View" to render. */
     async openRowActionMenuByIndex(index = 0): Promise<void> {
-        const buttons = this.page.locator(newOrdersSelectors.rowActionsBtn);
-        await buttons.nth(index).waitFor({ state: 'visible', timeout: 10000 });
-        await buttons.nth(index).click();
-        await this.actionMenuItem('View').waitFor({ state: 'visible', timeout: 5000 }).catch(() => undefined);
+        await openRowActionMenu(this.page, index, 'View');
     }
 
     async clickActionMenuItem(label: string): Promise<void> {

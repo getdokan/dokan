@@ -232,7 +232,7 @@ test.describe('New Vendor Dashboard (React) Tests @pro', () => {
     // NEW FULL-WIDTH DASHBOARD (Lite + Pro)
     // ============================================
 
-    test('Test Case 10 - New full-width dashboard root mounts', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 10 - New full-width dashboard root mounts', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const dash = new NewVendorDashboardPage(page);
@@ -248,7 +248,7 @@ test.describe('New Vendor Dashboard (React) Tests @pro', () => {
         await ctx.close();
     });
 
-    test('Test Case 11 - New dashboard /products route mounts', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 11 - New dashboard /products route mounts', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const dash = new NewVendorDashboardPage(page);
@@ -262,7 +262,7 @@ test.describe('New Vendor Dashboard (React) Tests @pro', () => {
         await ctx.close();
     });
 
-    test('Test Case 12 - New dashboard /products/create route mounts (product editor)', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 12 - New dashboard /products/create route mounts (product editor)', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const dash = new NewVendorDashboardPage(page);
@@ -276,7 +276,7 @@ test.describe('New Vendor Dashboard (React) Tests @pro', () => {
         await ctx.close();
     });
 
-    test('Test Case 13 - New dashboard /orders route mounts', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 13 - New dashboard /orders route mounts', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const dash = new NewVendorDashboardPage(page);
@@ -290,7 +290,7 @@ test.describe('New Vendor Dashboard (React) Tests @pro', () => {
         await ctx.close();
     });
 
-    test('Test Case 14 - New dashboard /withdraw route mounts', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 14 - New dashboard /withdraw route mounts', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const dash = new NewVendorDashboardPage(page);
@@ -304,7 +304,7 @@ test.describe('New Vendor Dashboard (React) Tests @pro', () => {
         await ctx.close();
     });
 
-    test('Test Case 15 - New dashboard /withdraw-requests route mounts', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 15 - New dashboard /withdraw-requests route mounts', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const dash = new NewVendorDashboardPage(page);
@@ -318,7 +318,7 @@ test.describe('New Vendor Dashboard (React) Tests @pro', () => {
         await ctx.close();
     });
 
-    test('Test Case 16 - New dashboard /reverse-withdrawal route mounts', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 16 - New dashboard /reverse-withdrawal route mounts', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const dash = new NewVendorDashboardPage(page);
@@ -332,7 +332,7 @@ test.describe('New Vendor Dashboard (React) Tests @pro', () => {
         await ctx.close();
     });
 
-    test('Test Case 17 - HashRouter survives full reload', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 17 - HashRouter survives full reload', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const dash = new NewVendorDashboardPage(page);
@@ -348,7 +348,7 @@ test.describe('New Vendor Dashboard (React) Tests @pro', () => {
         await ctx.close();
     });
 
-    test('Test Case 18 - Vendor announcement modal does not block dashboard mount', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 18 - Vendor announcement modal does not block dashboard mount', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const dash = new NewVendorDashboardPage(page);
@@ -365,7 +365,7 @@ test.describe('New Vendor Dashboard (React) Tests @pro', () => {
         await ctx.close();
     });
 
-    test('Test Case 19 - Customer cannot reach the new vendor dashboard', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
+    test('Test Case 19 - Customer cannot reach the new vendor dashboard', { tag: ['@pro', '@customer', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: c1 });
         const page = await ctx.newPage();
         const dash = new NewVendorDashboardPage(page);
@@ -381,7 +381,7 @@ test.describe('New Vendor Dashboard (React) Tests @pro', () => {
         await ctx.close();
     });
 
-    test('Test Case 20 - Unknown HashRouter route does not crash the shell', { tag: ['@lite', '@exploratory', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 20 - Unknown HashRouter route does not crash the shell', { tag: ['@lite', '@exploratory', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const dash = new NewVendorDashboardPage(page);

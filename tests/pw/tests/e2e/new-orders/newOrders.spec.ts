@@ -4,13 +4,7 @@ import { NewOrdersPage } from './newOrdersPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { VendorTableFilter } from '@utils/vendorTableFilter';
-import path from 'path';
-
-// ============================================
-// SESSION STORAGE VARIABLES
-// ============================================
-const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json'); // Vendor 1 session storage
-const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.json'); // Customer session storage
+import { VENDOR_STORAGE_STATE as v1, CUSTOMER_STORAGE_STATE as c1 } from '@utils/authStates';
 
 // ============================================
 // NEW REACT UI TEST CASES (Dokan 5.0.0+)

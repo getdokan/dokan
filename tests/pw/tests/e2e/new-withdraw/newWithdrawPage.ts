@@ -1,5 +1,19 @@
 import { Locator, Page } from '@playwright/test';
 import { closeAnnouncementModal, toPath } from '@utils/helpers';
+import {
+    REACT_ROOT,
+    ROW_ACTIONS_BTN,
+    PHP_FATAL,
+    actionMenuItem as dvActionMenuItem,
+    waitForRootReady as dvWaitForRootReady,
+    waitForListReady as dvWaitForListReady,
+    hasNoPhpFatal as dvHasNoPhpFatal,
+    rawRowCount,
+    openRowActionMenu,
+    clickActionMenuItem as dvClickActionMenuItem,
+    openFilterPanel as dvOpenFilterPanel,
+    hasFilterControls as dvHasFilterControls,
+} from '@utils/dataViews';
 
 // ============================================
 // SELECTORS — verified against the live Dokan 5.0.0 React render.
@@ -16,10 +30,11 @@ import { closeAnnouncementModal, toPath } from '@utils/helpers';
 // renders when the vendor has at least one payment method configured (the spec
 // seeds PayPal via REST in beforeAll); otherwise a "No payment methods found"
 // warning replaces the form. Submit button reads "Submit request".
-// Self-contained per NEW_UI_HOUSE_STYLE.md §1 (folders never import each other).
+// Self-contained per NEW_UI_HOUSE_STYLE.md §1 (folders never import each other;
+// shared DataViews primitives come from @utils/dataViews).
 // ============================================
 export const newWithdrawSelectors = {
-    reactRoot: '#dokan-vendor-dashboard-root',
+    reactRoot: REACT_ROOT,
 
     // ---- Balance summary (/withdraw) ----
     balanceHeading: 'text=/^Balance$/',
@@ -46,8 +61,8 @@ export const newWithdrawSelectors = {
     // as the reverse-withdrawal DataViews surface.
     filterIconButton: 'button[title="Filter"]',
     // Per-row 3-dot actions button (scoped to tbody — the toolbar also has one).
-    rowActionsBtn: "//tbody//tr//button[@aria-label='Actions']",
-    actionMenuItem: (label: string) => `//*[@role='menuitem'][normalize-space()='${label}']`,
+    rowActionsBtn: ROW_ACTIONS_BTN,
+    actionMenuItem: dvActionMenuItem,
     emptyState: 'text=/no data found|no items|no requests|nothing to show/i',
 
     // ---- Request Withdraw modal (DokanModal) ----
@@ -67,7 +82,7 @@ export const newWithdrawSelectors = {
     successToast: 'div[role="status"]',
     createdToast: 'text=/Withdraw request created|Request cancelled successfully/i',
 
-    phpFatal: 'text=/Fatal error|Parse error|There has been a critical error/i',
+    phpFatal: PHP_FATAL,
 } as const;
 
 export type WithdrawTab = 'pending' | 'approved' | 'cancelled';
@@ -126,27 +141,21 @@ export class NewWithdrawPage {
     }
 
     async waitForRootReady(timeoutMs = 30000): Promise<void> {
-        await this.page.locator(newWithdrawSelectors.reactRoot).first().waitFor({ state: 'visible', timeout: timeoutMs });
+        await dvWaitForRootReady(this.page, timeoutMs);
     }
 
     /** List is ready when the react root is visible AND (>=1 row OR an empty
-     *  state OR the status tabs) is present — poll up to ~15s. */
+     *  state OR the status tabs) is present — poll up to ~15s (house-style §5). */
     async waitForListReady(): Promise<void> {
-        const start = Date.now();
-        while (Date.now() - start < 15000) {
-            const rows = await this.page.locator(newWithdrawSelectors.dataRow).count();
-            if (rows > 0) return;
-            const empty = await this.page.locator(newWithdrawSelectors.emptyState).count();
-            if (empty > 0) return;
-            const tabs = await this.tabPending.isVisible().catch(() => false);
-            if (tabs) return;
-            await this.page.waitForTimeout(250);
-        }
+        await dvWaitForListReady(this.page, {
+            rowSelector: newWithdrawSelectors.dataRow,
+            emptyState: newWithdrawSelectors.emptyState,
+            extraReady: () => this.tabPending.isVisible(),
+        });
     }
 
     async hasNoPhpFatal(): Promise<boolean> {
-        const fatal = await this.page.locator(newWithdrawSelectors.phpFatal).first().isVisible({ timeout: 1000 }).catch(() => false);
-        return !fatal;
+        return await dvHasNoPhpFatal(this.page);
     }
 
     // ---- Balance summary reads ----
@@ -163,7 +172,7 @@ export class NewWithdrawPage {
 
     // ---- DataViews list reads ----
     async getRowCount(): Promise<number> {
-        return await this.page.locator(newWithdrawSelectors.dataRow).count();
+        return await rawRowCount(this.page, newWithdrawSelectors.dataRow);
     }
 
     /** Click a status tab (Pending/Approved/Cancelled) and wait for the refetch. */
@@ -191,22 +200,11 @@ export class NewWithdrawPage {
      * (which would toggle it back closed). Mirrors new-reverse-withdraw.
      */
     async openFilterPanel(): Promise<void> {
-        if (await this.resetButton.isVisible().catch(() => false)) return;
-        const funnel = this.filterIconButton;
-        if (await funnel.isVisible().catch(() => false)) {
-            await funnel.click();
-            await this.resetButton.waitFor({ state: 'visible', timeout: 5000 }).catch(() => undefined);
-        }
+        await dvOpenFilterPanel(this.page);
     }
 
     async hasFilterControls(): Promise<boolean> {
-        await this.openFilterPanel();
-        const addFilter = await this.addFilterButton.isVisible().catch(() => false);
-        const reset = await this.resetButton.isVisible().catch(() => false);
-        const funnel = await this.filterIconButton.isVisible().catch(() => false);
-        // Either the expanded controls are present, or at minimum the funnel
-        // affordance that opens them exists on the surface.
-        return (addFilter && reset) || funnel;
+        return await dvHasFilterControls(this.page);
     }
 
     // ---- Request Withdraw modal ----
@@ -289,12 +287,8 @@ export class NewWithdrawPage {
     // ---- Cancel a pending request (row action on the Pending tab) ----
     async cancelFirstPendingRequest(): Promise<void> {
         await this.selectTab('pending');
-        const actions = this.page.locator(newWithdrawSelectors.rowActionsBtn);
-        await actions.first().waitFor({ state: 'visible', timeout: 15000 });
-        await actions.first().click();
-        const cancelItem = this.page.locator(newWithdrawSelectors.actionMenuItem('Cancel')).first();
-        await cancelItem.waitFor({ state: 'visible', timeout: 8000 });
-        await cancelItem.click();
+        await openRowActionMenu(this.page, 0, 'Cancel');
+        await dvClickActionMenuItem(this.page, 'Cancel');
         // Destructive action opens a confirm dialog with "Cancel Withdraw".
         const confirm = this.page.locator(newWithdrawSelectors.confirmCancelButton).first();
         await confirm.waitFor({ state: 'visible', timeout: 8000 });

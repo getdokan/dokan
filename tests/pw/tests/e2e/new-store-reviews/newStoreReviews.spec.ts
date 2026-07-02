@@ -4,12 +4,7 @@ import { NewStoreReviewsPage, newStoreReviewData } from './newStoreReviewsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
-import path from 'path';
-
-// ============================================
-// SESSION STORAGE
-// ============================================
-const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json'); // Vendor 1 session
+import { VENDOR_STORAGE_STATE as v1 } from '@utils/authStates';
 
 const { VENDOR_ID, PRODUCT_ID } = process.env;
 

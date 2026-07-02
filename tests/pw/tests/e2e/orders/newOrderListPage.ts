@@ -1,7 +1,22 @@
 import { Page } from '@playwright/test';
 
 
-import { toPath } from '@utils/helpers';
+import { closeAnnouncementModal, toPath } from '@utils/helpers';
+import {
+    REACT_ROOT,
+    ROW_ACTIONS_BTN,
+    SEARCH_INPUT,
+    PHP_FATAL,
+    actionMenuItem as dvActionMenuItem,
+    waitForRootReady as dvWaitForRootReady,
+    waitForListReady as dvWaitForListReady,
+    hasNoPhpFatal as dvHasNoPhpFatal,
+    rawRowCount,
+    openRowActionMenu,
+    clickActionMenuItem as dvClickActionMenuItem,
+    fillDataViewsSearch,
+    clearDataViewsSearch,
+} from '@utils/dataViews';
 
 /**
  * Page object for the new vendor React order list (Dokan 5.0.0+) at
@@ -12,47 +27,36 @@ import { toPath } from '@utils/helpers';
  * Settings → Appearance → Vendor Dashboard Style: New UI
  * (`dokan_appearance.vendor_layout_style = 'latest'`).
  *
- * Self-contained per CONVENTIONS.md §4.
+ * Self-contained per NEW_UI_HOUSE_STYLE.md §1 — shared DataViews primitives
+ * come from @utils/dataViews. NOTE: richer, REST-gated orders coverage lives
+ * in tests/e2e/new-orders/ (the canonical home per house-style D1); this page
+ * object backs the in-folder legacy "(React)" smoke block only.
  */
 export class NewOrderListPage {
     readonly page: Page;
 
     constructor(page: Page) {
         this.page = page;
-        void this.installAnnouncementModalHandler();
-    }
-
-    private async installAnnouncementModalHandler(): Promise<void> {
-        const installed = '__dokanAnnouncementModalHandlerInstalled' as const;
-        const pwf = this.page as Page & { [installed]?: boolean };
-        if (pwf[installed]) return;
-        pwf[installed] = true;
-        const modal = this.page.locator('.vendor-announcement-modal');
-        await this.page.addLocatorHandler(modal, async () => {
-            const btn = modal.locator('button[aria-label="Close"]').first();
-            if (await btn.isVisible().catch(() => false)) await btn.click({ timeout: 2000 }).catch(() => undefined);
-            else await this.page.keyboard.press('Escape').catch(() => undefined);
-        }, { noWaitAfter: true }).catch(() => undefined);
+        void closeAnnouncementModal(page);
     }
 
     readonly url = toPath(`dashboard/new/#/orders`);
 
     selectors = {
-        reactRoot: '#dokan-vendor-dashboard-root',
+        reactRoot: REACT_ROOT,
         orderListWrapper: '.dokan-orders-wrapper, .dokan-react-orders',
         dataViewsTable: 'table',
         dataRow: 'table tbody tr',
         // Search input — DataViews header
-        searchInput: 'input[type="search"], input[placeholder*="Search"]',
+        searchInput: SEARCH_INPUT,
         // 3-dot row actions menu (in tbody only — toolbar Actions has same aria-label)
-        rowActionsBtn: "//tbody//tr//button[@aria-label='Actions']",
+        rowActionsBtn: ROW_ACTIONS_BTN,
         // Action menu items rendered by DataViews
-        actionMenuItem: (label: string) =>
-            `//*[@role='menuitem'][normalize-space()='${label}']`,
+        actionMenuItem: dvActionMenuItem,
         // The View action redirects to a single-order page, so detection is
         // by URL navigation rather than dialog.
         // PHP fatal markers
-        phpFatal: "text=/Fatal error|Parse error|There has been a critical error/i",
+        phpFatal: PHP_FATAL,
     };
 
     async goto(): Promise<void> {
@@ -61,51 +65,36 @@ export class NewOrderListPage {
     }
 
     async waitForReactReady(timeoutMs = 30000): Promise<void> {
-        await this.page.locator(this.selectors.reactRoot).first().waitFor({ state: 'visible', timeout: timeoutMs });
+        await dvWaitForRootReady(this.page, timeoutMs);
         // Wait for either rows OR an empty banner.
-        const start = Date.now();
-        while (Date.now() - start < 15000) {
-            const rows = await this.page.locator(this.selectors.dataRow).count();
-            if (rows > 0) return;
-            const empty = await this.page.locator("text=/no orders|no items|nothing to show|create your first/i").count();
-            if (empty > 0) return;
-            await this.page.waitForTimeout(250);
-        }
+        await dvWaitForListReady(this.page, {
+            rowSelector: this.selectors.dataRow,
+            emptyState: 'text=/no orders|no items|nothing to show|create your first/i',
+        });
     }
 
     async getRowCount(): Promise<number> {
-        return await this.page.locator(this.selectors.dataRow).count();
+        return await rawRowCount(this.page, this.selectors.dataRow);
     }
 
     async fillSearch(query: string): Promise<void> {
-        const input = this.page.locator(this.selectors.searchInput).first();
-        await input.waitFor({ state: 'visible', timeout: 10000 });
-        await input.fill(query);
-        await this.page.waitForTimeout(800);
+        await fillDataViewsSearch(this.page, query, { selector: this.selectors.searchInput, debounceMs: 800 });
     }
 
     async clearSearch(): Promise<void> {
-        const input = this.page.locator(this.selectors.searchInput).first();
-        if (await input.isVisible().catch(() => false)) {
-            await input.fill('');
-            await this.page.waitForTimeout(500);
-        }
+        await clearDataViewsSearch(this.page, { selector: this.selectors.searchInput, debounceMs: 500 });
     }
 
     async openRowActionMenuByIndex(index: number): Promise<void> {
-        const buttons = this.page.locator(this.selectors.rowActionsBtn);
-        await buttons.nth(index).waitFor({ state: 'visible', timeout: 10000 });
-        await buttons.nth(index).click();
         // Wait for any of the order menu items to render (View is always present).
-        await this.page.locator(this.selectors.actionMenuItem('View')).first().waitFor({ state: 'visible', timeout: 5000 }).catch(() => undefined);
+        await openRowActionMenu(this.page, index, 'View');
     }
 
     async clickActionMenuItem(label: string): Promise<void> {
-        await this.page.locator(this.selectors.actionMenuItem(label)).first().click();
+        await dvClickActionMenuItem(this.page, label);
     }
 
     async hasNoServerError(): Promise<boolean> {
-        const fatal = await this.page.locator(this.selectors.phpFatal).first().isVisible({ timeout: 1000 }).catch(() => false);
-        return !fatal;
+        return await dvHasNoPhpFatal(this.page);
     }
 }

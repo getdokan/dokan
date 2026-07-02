@@ -4,9 +4,15 @@ import path from 'path';
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 import { toPath } from '@utils/helpers';
 
-// Store SEO (React) — vendor-side React surface in Dokan 5.0.0+. Mount URL: /dashboard/settings/seo/
+// RETIRED (Wave 0, D6): fully superseded by tests/e2e/new-store-seo/ which
+// drives the real React surface /dashboard/new/#/settings/seo with behavioral
+// assertions (save, persistence after reload, single-field update, clear,
+// storefront <head> oracle). Despite the "(React)" title, these two smokes
+// navigated the LEGACY /dashboard/settings/seo/ URL and asserted only
+// no-fatal / body-text length — no coverage exists here that new-store-seo
+// does not exceed.
 
-test.describe('Store SEO (React) Tests @pro', () => {
+test.describe.skip('Store SEO (React) Tests @pro', () => {
     test('Test Case 1 - Page renders without fatal', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();

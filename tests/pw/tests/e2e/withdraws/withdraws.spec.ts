@@ -102,7 +102,7 @@ test.describe.skip('Withdraw test', () => {
 // the legacy tests above for parity coverage during rollout.
 
 test.describe('New Vendor Withdraw (React) Tests @lite', () => {
-    test('Test Case 1 - /withdraw route mounts', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 1 - /withdraw route mounts', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
 
@@ -119,7 +119,7 @@ test.describe('New Vendor Withdraw (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 2 - /withdraw-requests route mounts', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 2 - /withdraw-requests route mounts', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
 
@@ -135,7 +135,7 @@ test.describe('New Vendor Withdraw (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 3 - Withdraw page shows balance widget', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 3 - Withdraw page shows balance widget', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
 
@@ -153,7 +153,7 @@ test.describe('New Vendor Withdraw (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 4 - HashRouter survives reload on /withdraw', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 4 - HashRouter survives reload on /withdraw', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
 
@@ -170,7 +170,7 @@ test.describe('New Vendor Withdraw (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 5 - Reverse-withdrawal route mounts', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 5 - Reverse-withdrawal route mounts', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
 

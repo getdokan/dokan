@@ -481,7 +481,7 @@ test.describe('Announcements Tests @pro', () => {
 // the legacy tests above for parity coverage during rollout.
 
 test.describe('New Vendor Announcement (React) Tests @pro', () => {
-    test('Test Case 1 - /announcement route mounts in new vendor dashboard', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 1 - /announcement route mounts in new vendor dashboard', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         // Seed an announcement so the list isn't empty
         const adminCtx = await browser.newContext({ storageState: a1 });
         const adminPage = await adminCtx.newPage();
@@ -504,7 +504,7 @@ test.describe('New Vendor Announcement (React) Tests @pro', () => {
         await ctx.close();
     });
 
-    test('Test Case 2 - Announcement list renders rows or empty state', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 2 - Announcement list renders rows or empty state', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         await page.goto(toPath(`dashboard/new/#/announcement`));
@@ -521,7 +521,7 @@ test.describe('New Vendor Announcement (React) Tests @pro', () => {
         await ctx.close();
     });
 
-    test('Test Case 3 - HashRouter survives reload on /announcement', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 3 - HashRouter survives reload on /announcement', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         await page.goto(toPath(`dashboard/new/#/announcement`));
@@ -536,7 +536,7 @@ test.describe('New Vendor Announcement (React) Tests @pro', () => {
         await ctx.close();
     });
 
-    test('Test Case 4 - Announcement modal does NOT block list mount', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 4 - Announcement modal does NOT block list mount', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
 

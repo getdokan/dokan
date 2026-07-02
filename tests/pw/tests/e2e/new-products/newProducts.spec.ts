@@ -4,10 +4,7 @@ import { NewProductsPage, newProductsData } from './newProductsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { VendorTableFilter } from '@utils/vendorTableFilter';
-import path from 'path';
-
-const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
-const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.json');
+import { VENDOR_STORAGE_STATE as v1, CUSTOMER_STORAGE_STATE as c1 } from '@utils/authStates';
 
 // Coverage for the 5.0.0 React vendor Products LIST at /dashboard/new/#/products
 // (DataViews). The create/edit editor is owned by `product-form-manager`.

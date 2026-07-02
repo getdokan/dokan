@@ -1,8 +1,6 @@
 import { test, expect, Page, BrowserContext } from '@utils/test';
 import { NewManualOrderPage, newManualOrderData } from './newManualOrderPage';
-import path from 'path';
-
-const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
+import { VENDOR_STORAGE_STATE as v1 } from '@utils/authStates';
 
 // ============================================
 // NEW REACT UI TEST CASES (Dokan 5.0.0+)

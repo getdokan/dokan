@@ -1,5 +1,17 @@
 import { Locator, Page } from '@playwright/test';
 import { closeAnnouncementModal, toPath } from '@utils/helpers';
+import {
+    REACT_ROOT,
+    PHP_FATAL,
+    waitForRootReady as dvWaitForRootReady,
+    waitForListReady as dvWaitForListReady,
+    hasNoPhpFatal as dvHasNoPhpFatal,
+    rawRowCount,
+    parseTabCount,
+    fillDataViewsSearch,
+    clearDataViewsSearch,
+    isEmptyStateVisible,
+} from '@utils/dataViews';
 
 // ============================================
 // SELECTORS — verified against the live /dashboard/new/#/seller-badge render
@@ -9,7 +21,7 @@ import { closeAnnouncementModal, toPath } from '@utils/helpers';
 // See tmp-explore/seller-badge.json + seller-badge.html.
 // ============================================
 export const newSellerBadgeSelectors = {
-    reactRoot: '#dokan-vendor-dashboard-root',
+    reactRoot: REACT_ROOT,
     heading: 'h3:has-text("Badge"), h2:has-text("Badge")',
     intro: 'text=/Vendors with a good selling history/i',
     // Status tabs (role=tab; count rendered in a nested span).
@@ -25,14 +37,14 @@ export const newSellerBadgeSelectors = {
     badgeCard: '[class*="badge"], [data-slot="card"], .dokan-badge-card',
     // Empty state.
     emptyState: 'text=/no data found|no badges|no items|nothing to show|no result/i',
-    phpFatal: 'text=/Fatal error|Parse error|There has been a critical error/i',
+    phpFatal: PHP_FATAL,
 } as const;
 
 // ============================================
 // PAGE OBJECT — new React Seller Badge list (Dokan 5.0.0+)
 // Surface: /dashboard/new/#/seller-badge (DataViews list). Pro feature.
-// Self-contained per house-style §1 (DataViews patterns copied inline from
-// tests/e2e/orders/newOrderListPage.ts — folders never import each other).
+// Self-contained per house-style §1 (folders never import each other;
+// shared DataViews primitives come from @utils/dataViews).
 // ============================================
 export class NewSellerBadgePage {
     readonly page: Page;
@@ -60,17 +72,15 @@ export class NewSellerBadgePage {
         await this.waitForReady();
     }
 
-    /** React root visible AND (the heading OR the tab strip) present. */
+    /** React root visible AND (the heading OR the tab strip) present (§5). */
     async waitForReady(timeoutMs = 30000): Promise<void> {
-        await this.page.locator(newSellerBadgeSelectors.reactRoot).first().waitFor({ state: 'visible', timeout: timeoutMs });
-        const start = Date.now();
-        while (Date.now() - start < 15000) {
-            const tabs = await this.page.locator(newSellerBadgeSelectors.anyTab).count();
-            if (tabs > 0) return;
-            const heading = await this.heading.isVisible().catch(() => false);
-            if (heading) return;
-            await this.page.waitForTimeout(250);
-        }
+        await dvWaitForRootReady(this.page, timeoutMs);
+        // Readiness signal here is the tab strip (or heading), NOT rows — the
+        // badge list legitimately renders zero rows on a fresh seed.
+        await dvWaitForListReady(this.page, {
+            rowSelector: newSellerBadgeSelectors.anyTab,
+            extraReady: () => this.heading.isVisible(),
+        });
     }
 
     async reloadPage(): Promise<void> {
@@ -79,17 +89,26 @@ export class NewSellerBadgePage {
     }
 
     async hasNoPhpFatal(): Promise<boolean> {
-        const fatal = await this.page.locator(newSellerBadgeSelectors.phpFatal).first().isVisible({ timeout: 1000 }).catch(() => false);
-        return !fatal;
+        return await dvHasNoPhpFatal(this.page);
     }
 
     // ---- Tabs ----
-    /** All three status tabs visible (the core "no PHP fatal / renders" check). */
+    /**
+     * All three status tabs visible (the core "no PHP fatal / renders" check).
+     * A DataViews search triggers a client-side re-render that briefly detaches
+     * the tab strip; an instant isVisible() read taken in that gap flakes under
+     * parallel load. Wait (bounded) for each tab to settle back visible before
+     * reading — still genuinely requires all three, no weakening.
+     */
     async tabsVisible(): Promise<boolean> {
-        const all = await this.allTab.isVisible().catch(() => false);
-        const mine = await this.myBadgesTab.isVisible().catch(() => false);
-        const available = await this.availableBadgesTab.isVisible().catch(() => false);
-        return all && mine && available;
+        for (const tab of [this.allTab, this.myBadgesTab, this.availableBadgesTab]) {
+            const ok = await tab
+                .waitFor({ state: 'visible', timeout: 5000 })
+                .then(() => true)
+                .catch(() => false);
+            if (!ok) return false;
+        }
+        return true;
     }
 
     async tabCount(): Promise<number> {
@@ -113,8 +132,7 @@ export class NewSellerBadgePage {
     async getTabCountValue(tab: 'all' | 'my' | 'available'): Promise<number> {
         const locator = tab === 'all' ? this.allTab : tab === 'my' ? this.myBadgesTab : this.availableBadgesTab;
         const text = (await locator.textContent({ timeout: 10000 }).catch(() => '')) ?? '';
-        const match = text.match(/\((\d+)\)/);
-        return match ? Number(match[1]) : 0;
+        return parseTabCount(text);
     }
 
     // ---- Search ----
@@ -123,24 +141,17 @@ export class NewSellerBadgePage {
     }
 
     async fillSearch(query: string): Promise<void> {
-        const input = this.searchInput;
-        await input.waitFor({ state: 'visible', timeout: 10000 });
-        await input.fill(query);
         // DataViews search is debounced.
-        await this.page.waitForTimeout(800);
+        await fillDataViewsSearch(this.page, query, { selector: newSellerBadgeSelectors.searchInput, debounceMs: 800 });
     }
 
     async clearSearch(): Promise<void> {
-        const input = this.searchInput;
-        if (await input.isVisible().catch(() => false)) {
-            await input.fill('');
-            await this.page.waitForTimeout(600);
-        }
+        await clearDataViewsSearch(this.page, { selector: newSellerBadgeSelectors.searchInput, debounceMs: 600 });
     }
 
     // ---- List ----
     async getRowCount(): Promise<number> {
-        return await this.page.locator(newSellerBadgeSelectors.dataRow).count();
+        return await rawRowCount(this.page, newSellerBadgeSelectors.dataRow);
     }
 
     async getBadgeCardCount(): Promise<number> {
@@ -159,6 +170,6 @@ export class NewSellerBadgePage {
     }
 
     async hasEmptyState(): Promise<boolean> {
-        return await this.page.locator(newSellerBadgeSelectors.emptyState).first().isVisible({ timeout: 2000 }).catch(() => false);
+        return await isEmptyStateVisible(this.page, newSellerBadgeSelectors.emptyState);
     }
 }

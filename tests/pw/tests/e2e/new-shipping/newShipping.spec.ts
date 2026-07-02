@@ -1,10 +1,6 @@
 import { test, expect, Page, BrowserContext } from '@utils/test';
 import { NewShippingPage, newShippingData } from './newShippingPage';
-import path from 'path';
-
-const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
-const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
-const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.json');
+import { ADMIN_STORAGE_STATE as a1, VENDOR_STORAGE_STATE as v1, CUSTOMER_STORAGE_STATE as c1 } from '@utils/authStates';
 
 // Build a one-of-a-kind Method Title so a row can be asserted/removed in
 // isolation even if a same-type ("Flat rate") method is left over from another

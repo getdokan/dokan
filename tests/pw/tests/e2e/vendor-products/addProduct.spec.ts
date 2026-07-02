@@ -218,7 +218,7 @@ test.describe('Vendor Add Product Tests @lite', () => {
 // the legacy tests above for parity coverage during rollout.
 
 test.describe('New Vendor Product List (React) Tests @lite', () => {
-    test('Test Case 1 - React product list mounts at /dashboard/new/#/products', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 1 - React product list mounts at /dashboard/new/#/products', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const list = new NewProductListPage(page);
@@ -236,7 +236,7 @@ test.describe('New Vendor Product List (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 2 - Add new product CTA is reachable', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 2 - Add new product CTA is reachable', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const list = new NewProductListPage(page);
@@ -270,7 +270,7 @@ test.describe('New Vendor Product List (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 3 - Product list renders rows or empty state', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 3 - Product list renders rows or empty state', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const list = new NewProductListPage(page);
@@ -290,7 +290,7 @@ test.describe('New Vendor Product List (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 4 - Search filter narrows the list to zero rows for a non-existent product', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 4 - Search filter narrows the list to zero rows for a non-existent product', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const list = new NewProductListPage(page);
@@ -314,7 +314,7 @@ test.describe('New Vendor Product List (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 5 - Row actions menu exposes Edit, Quick view, and Delete', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 5 - Row actions menu exposes Edit, Quick view, and Delete', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const list = new NewProductListPage(page);
@@ -345,7 +345,7 @@ test.describe('New Vendor Product List (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 6 - Quick view action opens the QuickViewModal', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 6 - Quick view action opens the QuickViewModal', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const list = new NewProductListPage(page);
@@ -367,7 +367,7 @@ test.describe('New Vendor Product List (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 7 - Cancel delete keeps the row visible', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 7 - Cancel delete keeps the row visible', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const list = new NewProductListPage(page);
@@ -405,7 +405,7 @@ test.describe('New Vendor Product List (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 8 - Page renders without PHP fatal', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 8 - Page renders without PHP fatal', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const list = new NewProductListPage(page);
@@ -420,7 +420,7 @@ test.describe('New Vendor Product List (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 9 - Vendor announcement modal does not block list mount', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 9 - Vendor announcement modal does not block list mount', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const list = new NewProductListPage(page);
@@ -436,7 +436,7 @@ test.describe('New Vendor Product List (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 10 - Direct deep link to /products works (HashRouter survives reload)', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 10 - Direct deep link to /products works (HashRouter survives reload)', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const list = new NewProductListPage(page);
@@ -470,7 +470,7 @@ test.describe('New Vendor Product List (React) Tests @lite', () => {
 // the legacy tests above for parity coverage during rollout.
 
 test.describe('New Vendor Product Editor (React) Tests @lite', () => {
-    test('Test Case 1 - Editor mounts at /products/create', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 1 - Editor mounts at /products/create', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
 
@@ -493,7 +493,7 @@ test.describe('New Vendor Product Editor (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 2 - Editor renders without PHP fatal', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 2 - Editor renders without PHP fatal', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
 
@@ -508,7 +508,7 @@ test.describe('New Vendor Product Editor (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 3 - Editor exposes a Save / Update affordance', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 3 - Editor exposes a Save / Update affordance', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
 
@@ -532,7 +532,7 @@ test.describe('New Vendor Product Editor (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 4 - Editor shows a name / title field', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 4 - Editor shows a name / title field', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
 
@@ -557,7 +557,7 @@ test.describe('New Vendor Product Editor (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 5 - Edit non-existent product shows an error / empty state', { tag: ['@lite', '@exploratory', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 5 - Edit non-existent product shows an error / empty state', { tag: ['@lite', '@exploratory', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
 
@@ -575,7 +575,7 @@ test.describe('New Vendor Product Editor (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 6 - Vendor announcement modal does not block editor mount', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 6 - Vendor announcement modal does not block editor mount', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
 
@@ -601,7 +601,7 @@ test.describe('New Vendor Product Editor (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 7 - Reload preserves /products/create route', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 7 - Reload preserves /products/create route', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
 

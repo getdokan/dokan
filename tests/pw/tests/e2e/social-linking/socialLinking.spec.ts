@@ -4,9 +4,14 @@ import path from 'path';
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 import { toPath } from '@utils/helpers';
 
-// Vendor Social Linking (React) — vendor-side React surface in Dokan 5.0.0+. Mount URL: /dashboard/settings/social/
+// RETIRED (Wave 0, D6): fully superseded by tests/e2e/new-social/ which drives
+// the real React surface /dashboard/new/#/settings/social with behavioral
+// assertions (save, persistence after reload, clear, storefront oracle).
+// Despite the "(React)" title, these two smokes navigated the LEGACY
+// /dashboard/settings/social/ URL and asserted only no-fatal / body-text
+// length — no coverage exists here that new-social does not exceed.
 
-test.describe('Vendor Social Linking (React) Tests @pro', () => {
+test.describe.skip('Vendor Social Linking (React) Tests @pro', () => {
     test('Test Case 1 - Page renders without fatal', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();

@@ -112,7 +112,10 @@ test.describe('Vendor Subscriptions (React) Tests @pro', () => {
     test('Test Case 1 - Page renders without fatal', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(toPath(`dashboard/user-subscription/`));
+        // D5 fix: this spec covers VENDOR subscription packs, whose vendor list
+        // is /dashboard/subscription/ (dashboard/user-subscription/ is the
+        // product-subscription surface owned by vendor-product-subscription).
+        await page.goto(toPath(`dashboard/subscription/`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
@@ -124,7 +127,7 @@ test.describe('Vendor Subscriptions (React) Tests @pro', () => {
     test('Test Case 2 - Page renders content', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(toPath(`dashboard/user-subscription/`));
+        await page.goto(toPath(`dashboard/subscription/`));
         await page.waitForLoadState('domcontentloaded');
         await expect
             .poll(async () => (await page.locator('body').innerText()).trim().length, {

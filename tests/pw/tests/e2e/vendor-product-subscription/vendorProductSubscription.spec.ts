@@ -69,7 +69,10 @@ test.describe('Vendor Product Subscription (React) Tests @pro', () => {
     test('Test Case 1 - Vendor subscription page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
-        await page.goto(toPath(`dashboard/subscription/`));
+        // D5 fix: this spec covers PRODUCT subscriptions, whose vendor list is
+        // /dashboard/user-subscription/ (dashboard/subscription/ is the vendor
+        // PACKS surface owned by vendor-subscriptions). URLs were swapped.
+        await page.goto(toPath(`dashboard/user-subscription/`));
         await page.waitForLoadState('domcontentloaded');
         await page.waitForTimeout(2000);
         const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);

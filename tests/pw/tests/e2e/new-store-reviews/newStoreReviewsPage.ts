@@ -1,5 +1,15 @@
 import { Locator, Page } from '@playwright/test';
 import { closeAnnouncementModal, toPath } from '@utils/helpers';
+import {
+    REACT_ROOT,
+    SKELETON_ANY,
+    DATA_ROW_SETTLED,
+    PHP_FATAL,
+    statusTab,
+    waitForRootReady as dvWaitForRootReady,
+    hasNoPhpFatal as dvHasNoPhpFatal,
+    parseTabCount,
+} from '@utils/dataViews';
 
 // ============================================
 // TEST DATA
@@ -57,11 +67,11 @@ export type StoreReviewPayload = ReturnType<typeof newStoreReviewData.review>;
 // Empty-state copy on a fresh list is exactly "No data found".
 // ============================================
 export const newStoreReviewsSelectors = {
-    reactRoot: '#dokan-vendor-dashboard-root',
+    reactRoot: REACT_ROOT,
     heading: 'text=/^Reviews$/',
     // Status tabs are role=tab buttons; the count is part of the text but NOT
     // matched here so the selector is stable as the count changes.
-    tab: (name: string) => `[role="tab"]:has-text("${name}")`,
+    tab: statusTab,
     approvedTab: '[role="tab"]:has-text("Approved")',
     pendingTab: '[role="tab"]:has-text("Pending")',
     spamTab: '[role="tab"]:has-text("Spam")',
@@ -72,20 +82,21 @@ export const newStoreReviewsSelectors = {
     dataRow: 'table tbody tr, [role="rowgroup"] [role="row"]',
     // Skeleton placeholder bars rendered inside loading rows
     // (@wedevs/plugin-ui DataViews: <div data-slot="skeleton" class="animate-pulse">).
-    skeleton: '[data-slot="skeleton"], .animate-pulse',
+    skeleton: SKELETON_ANY,
     // A settled data row = a body row that contains NO skeleton placeholder and
     // is NOT the column-header row (header cells use role=columnheader).
-    settledRow: 'table tbody tr:not(:has([data-slot="skeleton"])):not(:has(.animate-pulse)), [role="rowgroup"] [role="row"]:not(:has([role="columnheader"])):not(:has([data-slot="skeleton"])):not(:has(.animate-pulse))',
+    settledRow: DATA_ROW_SETTLED,
     // Empty state copy verified on a fresh seed: "No data found".
     emptyState: 'text=/no data found/i',
-    phpFatal: 'text=/Fatal error|Parse error|There has been a critical error/i',
+    phpFatal: PHP_FATAL,
 } as const;
 
 // ============================================
 // PAGE OBJECT — new React Store/Product Reviews list (Dokan 5.0.0+)
 // Surface: /dashboard/new/#/reviews (DataViews). Pro feature.
-// Self-contained per the house-style golden rule (folders never import each
-// other) — DataViews helpers are inlined from orders/newOrderListPage.ts.
+// Self-contained per the house-style golden rule §1 (folders never import
+// each other; shared DataViews primitives come from @utils/dataViews). The
+// skeleton-aware settle loop is reviews-specific and stays local.
 // ============================================
 export class NewStoreReviewsPage {
     readonly page: Page;
@@ -121,9 +132,9 @@ export class NewStoreReviewsPage {
         await this.waitForReady();
     }
 
-    /** React root visible AND (>=1 row OR empty-state text) present — poll up to 15s. */
+    /** React root visible AND (>=1 row OR empty-state text) present — poll up to 15s (§5). */
     async waitForReady(timeoutMs = 30000): Promise<void> {
-        await this.page.locator(newStoreReviewsSelectors.reactRoot).first().waitFor({ state: 'visible', timeout: timeoutMs });
+        await dvWaitForRootReady(this.page, timeoutMs);
         await this.approvedTab.waitFor({ state: 'visible', timeout: timeoutMs }).catch(() => undefined);
         await this.waitForSettle();
     }
@@ -150,8 +161,7 @@ export class NewStoreReviewsPage {
     }
 
     async hasNoPhpFatal(): Promise<boolean> {
-        const fatal = await this.page.locator(newStoreReviewsSelectors.phpFatal).first().isVisible({ timeout: 1000 }).catch(() => false);
-        return !fatal;
+        return await dvHasNoPhpFatal(this.page);
     }
 
     // ---- DataViews helpers ----
@@ -194,9 +204,7 @@ export class NewStoreReviewsPage {
 
     /** Read the count from a tab's text, e.g. "Approved (3)" -> 3. */
     async getTabCount(name: string): Promise<number> {
-        const text = (await this.tab(name).textContent()) ?? '';
-        const m = text.match(/\((\d+)\)/);
-        return m ? Number(m[1]) : 0;
+        return parseTabCount(await this.tab(name).textContent());
     }
 
     /** Is the given review text visible anywhere in the rendered list? */

@@ -3,10 +3,7 @@ import { request } from '@playwright/test';
 import { NewReverseWithdrawPage } from './newReverseWithdrawPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
-import path from 'path';
-
-const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
-const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.json');
+import { VENDOR_STORAGE_STATE as v1, CUSTOMER_STORAGE_STATE as c1 } from '@utils/authStates';
 
 // ============================================
 // NEW REACT UI TEST CASES (Dokan 5.0.0+)

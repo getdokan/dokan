@@ -4,14 +4,13 @@ import { NewCouponsPage, newCouponData, NEW_COUPON_PREFIX } from './newCouponsPa
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { endPoints } from '@utils/apiEndPoints';
-import path from 'path';
+import { VENDOR_STORAGE_STATE as v1 } from '@utils/authStates';
 
 // ============================================
 // SESSION STORAGE
 // ============================================
 // Admin-side seeding is done over REST via ApiUtils (payloads.adminAuth), so no
 // admin browser storage state is needed here.
-const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 
 // ============================================
 // NEW REACT UI TEST CASES (Dokan 5.0.0+)
