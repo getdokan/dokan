@@ -8,6 +8,12 @@ const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.jso
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.json');
 
+// Ported to tests/e2e/new-return-request/ (parity green 3×; NEW_UI_HOUSE_STYLE.md §8).
+// This describe was already fully skipped and every method was a no-op stub (incl.
+// a fake UI-checkout "seed" that never ran) — its green was vacuous. The new spec
+// covers list/tabs/details/message/status/refund/delete + a customer-created flow
+// via REST seeding. The RMA *settings* page (dashboard/settings/rma) stays legacy —
+// there is no React settings route yet.
 test.describe.skip('Vendor RMA test', () => {
     let admin: VendorReturnRequestPage;
     let vendor: VendorReturnRequestPage;
@@ -78,7 +84,10 @@ test.describe.skip('Vendor RMA test', () => {
 // surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
 // the legacy tests above for parity coverage during rollout.
 
-test.describe('Vendor Return Request (React) Tests @pro', () => {
+// Retired (D1/D4): these two "(React)" smokes navigate the LEGACY
+// dashboard/return-request/ URL and assert only no-fatal / body-text length.
+// Real React parity lives in tests/e2e/new-return-request/.
+test.describe.skip('Vendor Return Request (React) Tests @pro', () => {
     test('Test Case 1 - Return request page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();

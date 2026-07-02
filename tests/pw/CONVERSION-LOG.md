@@ -256,10 +256,36 @@ new-product-qa/')` wrapping the 7 contiguous vendor cases (customer/guest/admin
   `'Vendor Staff Manager'` (vendor/staff/admin new-UI groups); legacy leaves
   flipped to `false`.
 
-### B6 vendor-verifications, B7 vendor-return-request — remaining
+### B7 vendor-return-request → `new-return-request/` — ✔ DONE (green 3×)
 
-- Briefs ready on disk (see scratchpad). NOT yet built. Notable brief findings:
-  verifications is a CARD list (not DataViews) with a once-only GET (reload
-  before asserting), a wp.media upload for one test, and a headless-hang risk;
-  return-request must rebuild seeding via API orders + RMA REST (legacy used UI
-  checkout).
+- `newReturnRequestPage.ts` + `newReturnRequest.spec.ts`. **9 vendor + 1
+  cross-role = 10 tests, green 3× (2 headless + 1 headed).** Covers: list
+  render, status-tab filter, details (Order/Reason cards), send RMA message,
+  update status (new→processing), delete, **send refund** (masked
+  DokanPriceInput modal + admin `getRefundIdByOrderId` pending-refund oracle),
+  not-found, reload; cross-role: a customer-created request appears on the
+  vendor list.
+- Seeding is REST-only (RMA data lives in custom tables `wp_dokan_rma_*` with a
+  cache group invalidated only via module actions — raw SQL would serve stale
+  reads): fresh WC order (`createOrderWithStatus`) → `POST
+/dokan/v1/rma/warranty-requests` as **customerAuth** (create is customer-only;
+  admin/vendor get 403) with a real order line-item id → recover the request id
+  via `GET ?order_id=` as vendor (the POST body carries no id). Seed the target
+  status at create time (a PUT of an unchanged status errors). Cleanup: DELETE
+  each as vendorAuth (vendor-only rule).
+- Live-verification learning: the row **Delete is a TWO-LAYER confirm** — the
+  plugin-ui destructive alertdialog ("Are you sure? This action cannot be
+  undone." → "Delete") THEN the module's own DokanModal ("Delete <Type>
+  Request … Are you sure you want to continue?" → "Yes, Delete") which fires the
+  actual DELETE. Confirming only the first layer does nothing.
+- Legacy retired: the `Vendor RMA test` describe was already fully skipped (all
+  stub methods incl. a fake UI-checkout seed) — added a pointer; the transitional
+  "(React) Tests" describe (2 legacy-URL smokes) → `describe.skip`. RMA _settings_
+  (`dashboard/settings/rma`) stays legacy (no React route). feature-map: 10
+  new-UI leaves under 'Return and Warranty Request'; legacy vendor leaves → false.
+
+### B6 vendor-verifications — remaining (last Wave 1 item)
+
+- Brief ready on disk. NOT yet built. Notable: it is a CARD list (not
+  DataViews) with a once-only GET (reload before asserting), a wp.media upload
+  for one test, and a documented headless-hang risk to watch during the 3× gate.

@@ -1513,18 +1513,30 @@
           admin can RMA module: true
           admin can disable RMA module: true
       vendor:
-          vendor can view return request menu page: true
-          vendor can view return request settings menu page: true
-          vendor can view return request details: true
-          vendor can send rma message: true
-          vendor can update rma status: true
-          vendor can rma refund: true
-          vendor can delete rma request: true
+          vendor can view return request menu page: false
+          vendor can view return request settings menu page: false
+          vendor can view return request details: false
+          vendor can send rma message: false
+          vendor can update rma status: false
+          vendor can rma refund: false
+          vendor can delete rma request: false
       customer:
           customer can view return request menu page: true
           customer can request warranty: true
           customer can request warranty (replace): false
           customer can send rma message: true
+      vendor (new UI):
+          vendor can view the return request list (React): true
+          vendor can filter return requests by status tab (React): true
+          vendor can view return request details (React): true
+          vendor can send an RMA message (React): true
+          vendor can update return request status (React): true
+          vendor can delete a return request (React): true
+          vendor can send a refund for a return request (React): true
+          vendor sees a not-found state for a missing return request (React): true
+          HashRouter survives a reload on /return-request (React): true
+      cross-role (new UI):
+          a customer-created return request appears on the vendor React list (React): true
 
 - page: 'Seller Badge'
   features:
