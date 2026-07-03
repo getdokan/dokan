@@ -841,6 +841,142 @@
       "file": "visual/visual.spec.ts",
       "ms": 0,
       "tests": 57
+    },
+    {
+      "file": "new-announcements/newAnnouncements.spec.ts",
+      "ms": 30000,
+      "tests": 5
+    },
+    {
+      "file": "new-auction/newAuction.spec.ts",
+      "ms": 96000,
+      "tests": 16
+    },
+    {
+      "file": "new-booking/newBooking.spec.ts",
+      "ms": 90000,
+      "tests": 15
+    },
+    {
+      "file": "new-delivery-time/newDeliveryTime.spec.ts",
+      "ms": 36000,
+      "tests": 6
+    },
+    {
+      "file": "new-followers/newFollowers.spec.ts",
+      "ms": 66000,
+      "tests": 11
+    },
+    {
+      "file": "new-menu-manager/newMenuManager.spec.ts",
+      "ms": 42000,
+      "tests": 7
+    },
+    {
+      "file": "new-orders/newOrdersGaps.spec.ts",
+      "ms": 30000,
+      "tests": 5
+    },
+    {
+      "file": "new-product-addons/newProductAddons.spec.ts",
+      "ms": 60000,
+      "tests": 10
+    },
+    {
+      "file": "new-product-advertising/newProductAdvertising.spec.ts",
+      "ms": 54000,
+      "tests": 9
+    },
+    {
+      "file": "new-product-form/newProductForm.spec.ts",
+      "ms": 484000,
+      "tests": 22
+    },
+    {
+      "file": "new-product-form/newProductFormAdvanced.spec.ts",
+      "ms": 418000,
+      "tests": 19
+    },
+    {
+      "file": "new-product-form/newProductFormEdit.spec.ts",
+      "ms": 242000,
+      "tests": 11
+    },
+    {
+      "file": "new-product-form/newProductFormTypes.spec.ts",
+      "ms": 44000,
+      "tests": 2
+    },
+    {
+      "file": "new-product-form/newProductFormValidation.spec.ts",
+      "ms": 242000,
+      "tests": 11
+    },
+    {
+      "file": "new-product-form/newProductFormWholesale.spec.ts",
+      "ms": 66000,
+      "tests": 3
+    },
+    {
+      "file": "new-product-qa/newProductQa.spec.ts",
+      "ms": 78000,
+      "tests": 13
+    },
+    {
+      "file": "new-products/newProductsProActions.spec.ts",
+      "ms": 24000,
+      "tests": 4
+    },
+    {
+      "file": "new-requested-quotes/newRequestedQuotes.spec.ts",
+      "ms": 72000,
+      "tests": 12
+    },
+    {
+      "file": "new-return-request/newReturnRequest.spec.ts",
+      "ms": 78000,
+      "tests": 13
+    },
+    {
+      "file": "new-shipstation/newShipstation.spec.ts",
+      "ms": 36000,
+      "tests": 6
+    },
+    {
+      "file": "new-store-support/newStoreSupport.spec.ts",
+      "ms": 108000,
+      "tests": 18
+    },
+    {
+      "file": "new-subscription/newSubscription.spec.ts",
+      "ms": 54000,
+      "tests": 9
+    },
+    {
+      "file": "new-user-subscription/newUserSubscription.spec.ts",
+      "ms": 54000,
+      "tests": 9
+    },
+    {
+      "file": "new-vendor-staff/newVendorStaff.spec.ts",
+      "ms": 102000,
+      "tests": 17
+    },
+    {
+      "file": "new-vendor-support/newVendorSupport.spec.ts",
+      "ms": 114000,
+      "tests": 19
+    },
+    {
+      "file": "new-vendor-verifications/newVendorVerifications.spec.ts",
+      "ms": 78000,
+      "tests": 13
+    },
+    {
+      "file": "new-withdraw/newWithdrawB15.spec.ts",
+      "ms": 18000,
+      "tests": 3
     }
-  ]
+  ],
+  "note": "Includes count-scaled estimates for new-UI specs added after 2026-07-01T04:50:42.496Z; exact durations refresh on the next full CI run via specDurationReporter."
 }
