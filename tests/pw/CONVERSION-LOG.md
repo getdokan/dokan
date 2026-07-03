@@ -575,3 +575,16 @@ stays-legacy DECISIONS.
   payments "(React)" smoke (after 3× green per §8). feature-map `vendor (new UI)` leaves
   for menu-manager + wholesale + the orders gate. Cut branch `qa/new-ui-suite-wave-4`,
   commit (awaiting approval). Then the FINAL 12-shard duration rebalance.
+
+### Wave 4 deferred — progress
+- **B15 SHIPPED** (`new-withdraw/newWithdrawB15.spec.ts`, green): B15-b set-default
+  withdraw method (React "Make Default" -> POST /v2/withdraw/make-default-method ->
+  REST withdraw_method flip) + B15-a disbursement-schedule widget renders when
+  disbursement is enabled (dbUtils dokan_withdraw seed + REST enabled:true). Seeds
+  paypal+bank active_methods. NOTE: dbUtils.updateOptionValue deep-merges (cannot
+  remove keys) — disbursement stays enabled after this suite; harmless (widget-only).
+- **STILL DEFERRED** (briefs ready; iteration impractical under the current ~16min/run
+  degraded wp-env): B16-4 RW date-filter (DataViews Date-Range field), B16-6 RW
+  pay-now (add-to-cart+redirect), B30/B31 shipping table-rate/distance-rate drill-in
+  forms (add-method -> Edit -> per-instance route). Each needs live selector/seeder
+  iteration that the slow env makes unreliable to complete now.
