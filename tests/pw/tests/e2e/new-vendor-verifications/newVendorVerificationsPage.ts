@@ -37,6 +37,8 @@ export const newVendorVerificationsSelectors = {
     // wp.media classic frame.
     mediaModal: '.media-modal:visible',
     mediaBrowseTab: 'button#menu-item-browse',
+    mediaUploadTab: 'button#menu-item-upload',
+    mediaFileInput: '.media-modal input[type="file"]',
     mediaAttachment: '.media-modal .attachment',
     mediaSelectButton: '.media-modal .media-toolbar-primary button.media-button-select, .media-modal button:has-text("Use this media")',
 
@@ -134,20 +136,53 @@ export class NewVendorVerificationsPage {
         await btn.click();
     }
 
-    /** Upload a document through the classic wp.media Library (an admin-uploaded attachment exists). */
-    async uploadFromMediaLibrary(title: string): Promise<void> {
+    /**
+     * Upload a document through the classic wp.media modal. A vendor's media modal
+     * shows only the vendor's OWN media, so an admin-seeded attachment is invisible
+     * here and a clean env (CI) has an empty Library. We therefore UPLOAD a fixture
+     * through the "Upload Files" tab (uploaded as the current vendor session → always
+     * appears + auto-selects), then confirm — instead of relying on an existing
+     * Library attachment.
+     */
+    async uploadFromMediaLibrary(title: string, filePath = 'utils/sampleData/avatar.png'): Promise<void> {
         const uploadBtn = this.card(title).locator(newVendorVerificationsSelectors.uploadFilesButton).first();
         await uploadBtn.waitFor({ state: 'visible', timeout: 15000 });
         await uploadBtn.click();
         const modal = this.page.locator(newVendorVerificationsSelectors.mediaModal).first();
         await modal.waitFor({ state: 'visible', timeout: 15000 });
-        // Ensure the Media Library tab is active (vs Upload Files).
+
+        // Try to use an existing Library attachment first (fast path when media exists).
         const browseTab = this.page.locator(newVendorVerificationsSelectors.mediaBrowseTab).first();
         if (await browseTab.isVisible().catch(() => false)) await browseTab.click().catch(() => undefined);
-        const firstAttachment = this.page.locator(newVendorVerificationsSelectors.mediaAttachment).first();
-        await firstAttachment.waitFor({ state: 'visible', timeout: 15000 });
-        await firstAttachment.click();
+        const attachment = this.page.locator(newVendorVerificationsSelectors.mediaAttachment).first();
+        let ready = await attachment
+            .waitFor({ state: 'visible', timeout: 5000 })
+            .then(() => true)
+            .catch(() => false);
+
+        // Otherwise upload the fixture via the "Upload Files" tab (robust in a clean env).
+        if (!ready) {
+            const uploadTab = this.page.locator(newVendorVerificationsSelectors.mediaUploadTab).first();
+            if (await uploadTab.isVisible().catch(() => false)) await uploadTab.click().catch(() => undefined);
+            await this.page
+                .locator(newVendorVerificationsSelectors.mediaFileInput)
+                .first()
+                .setInputFiles(filePath)
+                .catch(() => undefined);
+            ready = await attachment
+                .waitFor({ state: 'visible', timeout: 30000 })
+                .then(() => true)
+                .catch(() => false);
+        }
+
+        // Ensure the attachment is selected — but do NOT re-click an already-selected
+        // one (a freshly uploaded item auto-selects; clicking again would deselect it).
+        if (await attachment.isVisible().catch(() => false)) {
+            const alreadySelected = await attachment.evaluate(el => el.classList.contains('selected') || el.getAttribute('aria-checked') === 'true').catch(() => false);
+            if (!alreadySelected) await attachment.click().catch(() => undefined);
+        }
         const useBtn = this.page.locator(newVendorVerificationsSelectors.mediaSelectButton).first();
+        await useBtn.waitFor({ state: 'visible', timeout: 10000 });
         await useBtn.click();
         await modal.waitFor({ state: 'hidden', timeout: 10000 }).catch(() => undefined);
     }
