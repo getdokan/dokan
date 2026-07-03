@@ -512,3 +512,66 @@ real test carries `{ tag: [...] }`.
   storefront STAY, D3) + retire the D4 "(React)" smokes at legacy URLs + remove/
   retire `vendor-booking-fast`. feature-map `vendor (new UI)` leaves. Then commit.
 
+---
+
+## Wave 4 — long tail (branch `qa/new-ui-suite-wave-4` — NOT yet cut; built on wave-3 working tree)
+
+Scouted (4 parallel read-only briefs in session scratchpad `wave4/`) then built the
+CLEAN, high-confidence items; the seeder-risky ones are deferred with documentation
+(below). Wave 4 is mostly EXTENSIONS of existing folders + one net-new + several
+stays-legacy DECISIONS.
+
+### Shipped green
+- **B26 setting order-status gate** — extends `new-orders/newOrdersGaps.spec.ts`: the
+  NEGATIVE capability path (the positive is already covered). With
+  `dokan_selling.order_status_change='off'`, the vendor's React row-action status change
+  is rejected server-side → REST oracle `getSingleOrder` shows the status UNCHANGED.
+  Serial block; seeds the order BEFORE toggling off (the create-with-status endpoint is
+  itself gated); restores the option in afterAll. 1 test green.
+- **F7 menu-manager** — NET-NEW `new-menu-manager/`: the React sidebar honors
+  dokan_menu_manager (rename → label text, hide → `<a>` absent, reorder → position).
+  DB-seed `dokan_menu_manager.dashboard_menu_manager.left_menus`; assert on the vendor
+  sidebar; restore in afterAll. 4 tests green (rename/hide/reorder/cross-role).
+  **GOTCHA found live:** `is_switched_on` is run through `wc_string_to_bool` which does
+  NOT accept `'on'` (→ false, hides the item) — must use `'yes'`/`'no'`. The legacy
+  menu-manager page object is a NO-OP STUB (its admin tests assert nothing) so this is
+  net-new vendor coverage; the admin settings-page validations STAY legacy (D3).
+- **B23 wholesale verify** — extends `new-product-form/` (`newProductFormWholesale.spec.ts`):
+  the existing "enable wholesale" test only checked the checkbox. Added a CREATE-surface
+  persistence test (REST `_dokan_wholesale_meta` == {enable_wholesale:'yes', price:'60',
+  quantity:'10'}) + an EDIT-surface hydration test (seeded product shows enabled). 2 tests
+  green. **R-B23-1 DISPROVED:** wholesale price/qty DO persist on React create — the
+  earlier "empty price" was purely a **stale selector** in the shared `enableWholesale()`
+  (`input[name="wholesale_price"]` / `#dokan-form-field-wholesale_price` no longer exist;
+  the base-ui fields render with auto-generated ids → target by field LABEL). Worked
+  around locally; the shared page-object selector drift is worth a follow-up fix.
+
+### Recorded STAYS-LEGACY (no build — verdicts from the briefs)
+- **B22 EU/Germanized product fields** — hook the LEGACY product form
+  (`dokan_product_edit_after_main`); ZERO `dokan_product_editor_schema` injection → no
+  React surface. The 3 product-EU vendor cases stay `test.skip` in euCompliance.spec.ts.
+- **B27/B28 vendor Stripe legs** — SE-SUB cancel/reactivate drive the legacy
+  `/dashboard/subscription/` inline form; SE-ONB-04 + SE-SET-18 render on the legacy
+  Payment-settings / dashboard-home (no `/dashboard/new` route). Payment settings is
+  confirmed legacy 3 ways. Stripe branch scope respected (no edits there). The lying
+  "(React)" smoke to relabel lives in `payments/` (D4, payments-folder owner).
+- **B16 reverse-withdraw grace/after-grace NOTICES + announcement** — PHP template
+  (`dokan_reverse_withdrawal_content`); React never renders `display_notice`. Stay legacy.
+
+### DEFERRED (buildable but seeder-risky — documented for follow-up)
+- **B15-a auto-withdraw disbursement schedule** (React DokanModal) — needs a live-verified
+  `dokan_withdraw` disbursement-enable seed (exact keys that flip
+  `is_withdraw_disbursement_enabled`).
+- **B15-b make-default withdraw method** — needs bank+paypal active_methods seeded so the
+  React "Make Default" (not "Setup") renders.
+- **B16-4 reverse-withdraw date filter** (bespoke DateRangePicker) + **B16-6 Pay-Now**
+  (add-to-cart + redirect) — need a seeded dated txn / payable balance.
+- **B30/B31 shipping table-rate + distance-rate drill-in forms** — extend `new-shipping/`;
+  reached by add-method → row-action Edit → per-instance route; distance-rate is GMAP-gated.
+  Add-method-then-Edit navigation + per-instance PUT oracle to be built live.
+
+### Bookkeeping pending for Wave 4
+- Retire the legacy `Wholesale test (vendor)` case + comment the EU skips + relabel the
+  payments "(React)" smoke (after 3× green per §8). feature-map `vendor (new UI)` leaves
+  for menu-manager + wholesale + the orders gate. Cut branch `qa/new-ui-suite-wave-4`,
+  commit (awaiting approval). Then the FINAL 12-shard duration rebalance.

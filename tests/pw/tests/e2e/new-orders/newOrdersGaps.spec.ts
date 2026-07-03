@@ -3,6 +3,7 @@ import { request } from '@playwright/test';
 import { NewOrdersPage } from './newOrdersPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
+import { dbUtils } from '@utils/dbUtils';
 import { VENDOR_STORAGE_STATE as v1 } from '@utils/authStates';
 
 // ============================================
@@ -79,5 +80,75 @@ test.describe('Vendor orders list — behavioral gaps (React)', () => {
         const earning = Number(await apiUtils.getEarningLineItems(lineItems, payloads.vendorAuth));
         const commission = Number(await apiUtils.getCommissionLineItems(lineItems, payloads.adminAuth));
         expect(round2(earning + commission), 'earning + commission == product revenue (money oracle)').toBe(revenue);
+    });
+});
+
+// ============================================
+// B26 (setting.spec.ts port): the order-status-change CAPABILITY GATE (negative
+// path). The positive path (vendor CAN change status with the default 'on') is
+// covered above. This ports the ONE unported vendor case worth porting from the
+// otherwise-legacy setting.spec.ts: with dokan_selling.order_status_change='off',
+// the server rejects the vendor's status-change PUT (OrderController::
+// update_order_permissions_check returns false), so the status must NOT persist.
+// The React row action still fires the request (the client doesn't know the
+// capability) — the authoritative oracle is the REST GET (status unchanged), never
+// the request firing or the menu contents. The toggle mutates a GLOBAL option that
+// sibling order specs depend on ('on'), so this block is serial and restores in
+// afterAll (§ mirrors newProductForm category-option pattern).
+// ============================================
+test.describe('Vendor orders — order-status-change capability gate (React)', () => {
+    test.describe.configure({ mode: 'serial' });
+
+    let gateApi: ApiUtils;
+    const gateOrderIds: string[] = [];
+    let prevSelling: unknown;
+    let gateOrderId: string;
+
+    test.beforeAll(async () => {
+        gateApi = new ApiUtils(await request.newContext());
+        // Seed the order in 'processing' FIRST (while the capability is still on —
+        // createOrderWithStatus itself hits the gated status endpoint), THEN disable.
+        const [, , orderId] = await gateApi.createOrderWithStatus(PRODUCT_ID as string, { ...payloads.createOrder }, 'wc-processing', payloads.vendorAuth);
+        gateOrderId = orderId;
+        gateOrderIds.push(orderId);
+        // Disable the capability globally (capture prior value for restore).
+        const [prev] = await dbUtils.updateOptionValue('dokan_selling', { order_status_change: 'off' });
+        prevSelling = prev;
+    });
+
+    test.afterAll(async () => {
+        // Restore the capability so sibling order specs keep working.
+        if (prevSelling && typeof prevSelling === 'object' && 'order_status_change' in (prevSelling as object)) {
+            await dbUtils.updateOptionValue('dokan_selling', { order_status_change: (prevSelling as { order_status_change: string }).order_status_change });
+        } else {
+            await dbUtils.updateOptionValue('dokan_selling', { order_status_change: 'on' });
+        }
+        for (const id of gateOrderIds) await gateApi.updateOrderStatus(id, 'cancelled', payloads.adminAuth).catch(() => undefined);
+        await gateApi?.dispose();
+    });
+
+    let ctx: BrowserContext;
+    let page: Page;
+    let orders: NewOrdersPage;
+
+    test.beforeEach(async ({ browser }) => {
+        ctx = await browser.newContext({ storageState: v1 });
+        page = await ctx.newPage();
+        orders = new NewOrdersPage(page);
+    });
+
+    test.afterEach(async () => {
+        await page?.close();
+        await ctx?.close();
+    });
+
+    test('vendor cannot change an order status when the capability is disabled (React)', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+        await orders.goto();
+        // Attempt the status change from the row action; a rejected mutation is tolerated.
+        await orders.completeOrderById(gateOrderId).catch(() => undefined);
+        await page.waitForTimeout(1500);
+        // Behavioral oracle (REST, no fake green): the status did NOT change — the gate held.
+        const [, order] = await gateApi.getSingleOrder(gateOrderId, payloads.vendorAuth);
+        expect(String(order.status), 'order status is unchanged (still processing) — the disabled capability blocked it').toBe('processing');
     });
 });
