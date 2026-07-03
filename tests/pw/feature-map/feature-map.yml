@@ -869,6 +869,9 @@
           'Vendor: clicking "Unread" tab issues request with read_status=unread': true
           'Vendor: HashRouter survives reload on /announcement': true
           'Vendor: list and announcement modal coexist (modal auto-dismissed)': true
+          selecting a card + bulk Delete opens the "Delete Announcement" DokanModal (React): true
+          confirming delete removes the announcement from the vendor list (React): true
+          Cancel on the delete modal keeps the announcement (React): true
       customer (new UI):
           'Customer: legacy /dashboard/announcement does NOT mount vendor list': true
           'Customer: vendor /dashboard/new/#/announcement does NOT mount vendor dashboard': true
@@ -905,6 +908,11 @@
           admin can reorder menu: true
           admin can't reorder or toggle status of dashboard & store menu: true
           admin can reset menu manager settings: true
+      vendor (new UI):
+          menu-manager rename shows the renamed label on the React sidebar (React): true
+          menu-manager hide removes the item from the React sidebar (React): true
+          menu-manager reorder changes the sidebar order (React): true
+          a logged-in customer cannot mount the vendor dashboard sidebar (React): true
 
 - page: 'License'
   features:
@@ -1023,6 +1031,19 @@
           customer can bid auction product: true
           customer can buy auction product after win: false
           customer can buy auction product with buy it now price: true
+      vendor (new UI):
+          'vendor can open the Auctions list mounted at #/auction (React)': true
+          the auction list renders Products / Type / Stock / Status / Price columns (React): true
+          the All / Published / Draft tabs render with counts (React): true
+          searching by product name narrows the list (React): true
+          searching a non-existent product shows the empty state (React): true
+          vendor can permanently delete an auction product after confirming (React): true
+          the row Edit action leaves the SPA toward the legacy auction editor (React→legacy): true
+          HashRouter survives a reload on /auction (React): true
+          'vendor can open the Auctions Activity list at #/auction-activity (React)': true
+          the activity list renders its columns when bids exist, else the empty state (React): true
+          'the Auctions back button returns to #/auction (React)': true
+          a logged-in customer cannot mount the vendor Auctions route (React): true
 
 - page: 'Color Scheme Customizer'
   features:
@@ -1064,6 +1085,10 @@
       customer:
           customer can buy product with delivery time: true
           customer can buy product with store pickup: true
+      vendor (new UI):
+          'vendor can mount the Delivery Time dashboard calendar at #/delivery-time-dashboard (mount smoke, React)': true
+          the Delivery Time dashboard survives a reload (mount smoke, React): true
+          a logged-in customer cannot mount the vendor Delivery Time route (React): true
 
 - page: 'Elementor'
   features:
@@ -1130,6 +1155,15 @@
           customer can follow store on single store: true
           customer can unfollow store on store list page: true
           customer can unfollow store on single store: true
+      vendor (new UI):
+          'vendor can open the Followers list mounted at #/followers (React)': true
+          the followers list renders Name and Followed At columns (React): true
+          a customer who follows the vendor (REST) appears in the vendor followers list (React): true
+          searching followers by name narrows the list (React): true
+          searching a non-follower name shows the empty state (React): true
+          unfollowing (REST) removes the follower from the vendor list (React): false
+          HashRouter survives a reload on /followers (React): true
+          a logged-in customer cannot mount the vendor Followers route (React): true
 
 - page: 'Geolocation'
   features:
@@ -1272,6 +1306,9 @@
           admin can edit custom field of custom block: true
           admin can delete custom field from custom block: true
           admin can reset product form manager settings: false
+      vendor (new UI):
+          creating a product with wholesale enabled persists _dokan_wholesale_meta (React): true
+          a REST-seeded wholesale product hydrates its enabled state in the React editor (React): true
 
 - page: 'Product Addon'
   features:
@@ -1294,6 +1331,14 @@
       customer:
           customer can view product addons on single product page: false
           customer can buy product with addon: false
+      vendor (new UI):
+          vendor can view the global product-addons list with a seeded addon (React): true
+          the seeded addon row shows its restricted category (React): true
+          vendor can search global product addons by name (React): true
+          vendor can delete a global product addon from the list (React): true
+          the Create New Addon link points at the addon form (React): true
+          HashRouter survives a reload on /settings/product-addon (React): true
+          a logged-in customer cannot mount the vendor Product Addons route (React): true
 
 - page: 'Product Advertising'
   features:
@@ -1328,6 +1373,13 @@
           vendor can buy auction product advertising: true
       customer:
           customer can view advertised product on shop page: false
+      vendor (new UI):
+          the vendor product list renders an Advertise column with a Promote control (React): true
+          an admin-marked advertised product round-trips through REST (React surface + REST oracle): true
+          a draft product cannot be advertised — Promote shows the "must be published" modal (React): true
+          the Promote localized nonce global is present on the new dashboard (React — documents the module boundary): true
+          HashRouter survives a reload on /products with the Advertise column (React): true
+          a logged-in customer cannot mount the vendor products route (React): true
 
 - page: 'Product Enquiry'
   features:
@@ -1401,6 +1453,13 @@
           customer can change payment of subscription: true
           customer can renew subscription: true
           customer can buy product subscription: true
+      vendor (new UI):
+          'vendor can open the User Subscription list mounted at #/user-subscription (React)': true
+          vendor sees a seeded subscription row with its columns (React): true
+          the seeded subscription Status column reflects its active state (React): true
+          View opens the subscription detail route (React): true
+          HashRouter survives a reload on /user-subscription (React): true
+          a logged-in customer cannot mount the vendor User Subscription route (React): true
 
 - page: 'Rank Math SEO'
   features:
@@ -1521,6 +1580,16 @@
           customer can filter quotes by status: false
       guest:
           guest customer can quote product: true
+      vendor (new UI):
+          'vendor can open the Requested Quotes list mounted at #/requested-quotes (React)': true
+          'the list renders Quote # / Status / Customer / Date columns (React)': true
+          the status tabs render with counts (React): true
+          the Pending tab keeps the seeded pending quote (React): true
+          searching by quote number narrows the list (React): true
+          vendor can move a quote to Trash from row Actions after confirming (React): true
+          vendor can restore a trashed quote via the Pending row action (React): true
+          HashRouter survives a reload on /requested-quotes (React): true
+          a logged-in customer cannot mount the vendor Requested Quotes route (React): true
 
 - page: 'Return and Warranty Request'
   features:
@@ -1586,6 +1655,8 @@
           vendor sees a search input on the badges page (React): true
           vendor badges page survives a reload (React): true
           vendor sees no fatal when searching for a non-existent badge (React): true
+          a fresh vendor sees an admin-seeded badge under Available Badges but not My Badges (React): true
+          vendor sees the "Congratulations!" unseen-badges modal on entering the badges page (React): true
 
 - page: 'Seller Vacation'
   features:
@@ -1606,6 +1677,11 @@
           vendor can generate ShipStation credentials: true
           vendor can revoke ShipStation credentials: true
           vendor can set ShipStation settings: true
+      vendor (new UI):
+          vendor sees Generate Credentials when no credential exists (React): true
+          vendor can generate ShipStation credentials (React): true
+          vendor can revoke ShipStation credentials (React): true
+          HashRouter survives a reload on /settings/shipstation (React): true
 
 - page: 'Single Product Multiple Vendor (SPMV)'
   features:
@@ -1884,6 +1960,13 @@
           vendor can buy recurring subscription pack (on subscription page): false
           vendor can switch subscription: true
           vendor can cancel subscription: true
+      vendor (new UI):
+          'vendor can open the Subscription page mounted at #/subscription (React)': true
+          a vendor with no pack sees the empty Current Subscription state (React): true
+          the Subscription Packages card lists an admin-seeded pack (React): false
+          'vendor can open the Subscription Orders list at #/subscription/orders (React)': true
+          HashRouter survives a reload on /subscription (React): true
+          a logged-in customer cannot mount the vendor Subscription route (React): true
 
 - page: 'Vendor Verification'
   features:
@@ -2077,6 +2160,17 @@
           vendor can remove booking product addon: true
       customer:
           customer can buy bookable product: true
+      vendor (new UI):
+          'vendor can open the Booking products list mounted at #/booking (React)': true
+          the booking products list renders Products / Type / Status / Price columns (React): true
+          searching by product name narrows the list (React): true
+          vendor can permanently delete a booking product after confirming (React): true
+          HashRouter survives a reload on /booking (React): true
+          vendor can add a booking resource via the React modal (React): true
+          vendor can remove a booking resource (React): true
+          HashRouter survives a reload on /booking/resources (React): true
+          vendor can view the booking calendar and it fetches events (React): true
+          a logged-in customer cannot mount the vendor Booking route (React): true
 
 - page: 'Dokan Invoice'
   features:
