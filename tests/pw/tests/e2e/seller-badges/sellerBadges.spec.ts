@@ -63,10 +63,10 @@ test.describe('Seller badge test', () => {
         await admin.sellerBadgeBulkAction('delete', data.sellerBadge.eventName.featuredProducts);
     });
 
-    test('vendor can view badges menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorSellerBadgeRenderProperly(); });
-    test('vendor can view badge acquired congratulation popup message action', { tag: ['@pro', '@vendor'] }, async () => { await vendor.sellerBadgeCongratsPopup(); });
-    test('vendor can search seller badge', { tag: ['@pro', '@vendor'] }, async () => { await vendor.vendorSearchSellerBadge(data.sellerBadge.eventName.productsPublished); });
-    test('vendor can filter seller badges', { tag: ['@pro', '@vendor'] }, async () => { await vendor.filterSellerBadges('available_badges'); });
+    test.skip('vendor can view badges menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorSellerBadgeRenderProperly(); });
+    test.skip('vendor can view badge acquired congratulation popup message action', { tag: ['@pro', '@vendor'] }, async () => { await vendor.sellerBadgeCongratsPopup(); });
+    test.skip('vendor can search seller badge', { tag: ['@pro', '@vendor'] }, async () => { await vendor.vendorSearchSellerBadge(data.sellerBadge.eventName.productsPublished); });
+    test.skip('vendor can filter seller badges', { tag: ['@pro', '@vendor'] }, async () => { await vendor.filterSellerBadges('available_badges'); });
 
     test('admin can disable seller badge module', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.deactivateModules(payloads.moduleIds.sellerBadge, payloads.adminAuth);
@@ -81,7 +81,7 @@ test.describe('Seller badge test', () => {
 // surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
 // the legacy tests above for parity coverage during rollout.
 
-test.describe('Seller Badges (React) Tests @pro', () => {
+test.describe.skip('Seller Badges (React) Tests @pro', () => {
     test('Test Case 1 - Vendor badges page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();

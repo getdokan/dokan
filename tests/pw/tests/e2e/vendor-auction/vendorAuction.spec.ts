@@ -41,24 +41,24 @@ test.describe('Auction Product test', () => {
 
     test('admin can enable auction integration module', { tag: ['@pro', '@admin'] }, async () => { await admin.enableAuctionIntegrationModule(); });
     test('admin can add auction product', { tag: ['@pro', '@admin'] }, async () => { await admin.adminAddAuctionProduct(data.product.auction); });
-    test('vendor can view auction menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorAuctionRenderProperly(); });
+    test.skip('vendor can view auction menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorAuctionRenderProperly(); });
     test('vendor can add auction product', { tag: ['@pro', '@vendor'] }, async () => { await vendor.addAuctionProduct({ ...data.product.auction, name: data.product.auction.productName() }); });
     test('vendor can edit auction product', { tag: ['@pro', '@vendor'] }, async () => { await vendor.editAuctionProduct({ ...data.product.auction, name: auctionProductName }); });
     test('vendor can view auction product', { tag: ['@pro', '@vendor'] }, async () => { await vendor.viewAuctionProduct(auctionProductName); });
     test("vendor can't bid own product", { tag: ['@pro', '@vendor'] }, async () => { await vendor.cantBidOwnProduct(auctionProductName); });
-    test('vendor can search auction product', { tag: ['@pro', '@vendor'] }, async () => { await vendor.searchAuctionProduct(auctionProductName); });
+    test.skip('vendor can search auction product', { tag: ['@pro', '@vendor'] }, async () => { await vendor.searchAuctionProduct(auctionProductName); });
 
     test('vendor can duplicate auction product', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , name] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
         await vendor.duplicateAuctionProduct(name);
     });
 
-    test('vendor can permanently delete auction product', { tag: ['@pro', '@vendor'] }, async () => {
+    test.skip('vendor can permanently delete auction product', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , name] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
         await vendor.deleteAuctionProduct(name);
     });
 
-    test('vendor can view auction activity page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorAuctionActivityRenderProperly(); });
+    test.skip('vendor can view auction activity page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorAuctionActivityRenderProperly(); });
     test('vendor can filter auction activity', { tag: ['@pro', '@vendor'] }, async () => { await vendor.filterAuctionActivity(data.date.dateRange); });
     test('vendor can search auction activity', { tag: ['@pro', '@vendor'] }, async () => { await vendor.searchAuctionActivity(data.customer.username); });
     test('customer can bid auction product', { tag: ['@pro', '@customer'] }, async () => { await customer.bidAuctionProduct(auctionProductName); });
@@ -82,7 +82,7 @@ test.describe('Auction Product test', () => {
 // surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
 // the legacy tests above for parity coverage during rollout.
 
-test.describe('Vendor Auction (React) Tests @pro', () => {
+test.describe.skip('Vendor Auction (React) Tests @pro', () => {
     test('Test Case 1 - Auction page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();

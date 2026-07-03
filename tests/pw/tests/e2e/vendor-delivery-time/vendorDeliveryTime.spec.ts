@@ -66,7 +66,7 @@ test.describe('Vendor delivery time test', () => {
 // surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
 // the legacy tests above for parity coverage during rollout.
 
-test.describe('Vendor Delivery Time (React) Tests @pro', () => {
+test.describe.skip('Vendor Delivery Time (React) Tests @pro', () => {
     test('Test Case 1 - Vendor delivery time page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
@@ -102,7 +102,7 @@ test.describe('Vendor Delivery Time (React) Tests @pro', () => {
 // surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
 // the legacy tests above for parity coverage during rollout.
 
-test.describe('Delivery Time Front-end (React) Tests @pro', () => {
+test.describe.skip('Delivery Time Front-end (React) Tests @pro', () => {
     test('Test Case 1 - Page renders without fatal', { tag: ['@pro', '@guest'] }, async ({ browser }) => {
         const ctx = await browser.newContext();
         const page = await ctx.newPage();

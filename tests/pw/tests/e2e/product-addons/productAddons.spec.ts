@@ -48,7 +48,7 @@ test.describe('Product addon functionality test', () => {
         await vendor.enableProductAddonModule();
     });
 
-    test('vendor can view product addons menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test.skip('vendor can view product addons menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorProductAddonsSettingsRenderProperly();
     });
 
@@ -75,7 +75,7 @@ test.describe('Product addon functionality test', () => {
         await vendor.removeAddonField(addonId, addonFieldTitle);
     });
 
-    test('vendor can remove global product addon', { tag: ['@pro', '@vendor'] }, async () => {
+    test.skip('vendor can remove global product addon', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , addonName] = await createVendorProductAddon();
         await vendor.removeAddon({ ...data.vendor.addon(), name: addonName });
     });
@@ -113,7 +113,7 @@ test.describe('Product addon functionality test', () => {
 // surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
 // the legacy tests above for parity coverage during rollout.
 
-test.describe('Product Add-ons (React) Tests @pro', () => {
+test.describe.skip('Product Add-ons (React) Tests @pro', () => {
     test('Test Case 1 - Vendor add-ons page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();

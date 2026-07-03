@@ -1,17 +1,6 @@
 import { Locator, Page } from '@playwright/test';
 import { closeAnnouncementModal, toPath } from '@utils/helpers';
-import {
-    REACT_ROOT,
-    PHP_FATAL,
-    waitForRootReady as dvWaitForRootReady,
-    waitForListReady as dvWaitForListReady,
-    hasNoPhpFatal as dvHasNoPhpFatal,
-    rawRowCount,
-    parseTabCount,
-    fillDataViewsSearch,
-    clearDataViewsSearch,
-    isEmptyStateVisible,
-} from '@utils/dataViews';
+import { REACT_ROOT, PHP_FATAL, waitForRootReady as dvWaitForRootReady, waitForListReady as dvWaitForListReady, hasNoPhpFatal as dvHasNoPhpFatal, rawRowCount, parseTabCount, fillDataViewsSearch, clearDataViewsSearch, isEmptyStateVisible } from '@utils/dataViews';
 
 // ============================================
 // SELECTORS — verified against the live /dashboard/new/#/seller-badge render
@@ -37,7 +26,15 @@ export const newSellerBadgeSelectors = {
     badgeCard: '[class*="badge"], [data-slot="card"], .dokan-badge-card',
     // Empty state.
     emptyState: 'text=/no data found|no badges|no items|nothing to show|no result/i',
+    // Congrats (unseen badges) modal — UnseenBadgesModal.tsx.
+    congratsModal: 'div.dokan-unseen-badges-modal',
+    congratsHeading: 'h2:has-text("Congratulations")',
+    congratsCloseButton: 'button[aria-label="Close"]',
     phpFatal: PHP_FATAL,
+
+    // REST endpoints (version-agnostic).
+    unseenRest: /dokan\/v[0-9]+\/seller-badge\/vendor-unseen-badges/i,
+    setSeenRest: /dokan\/v[0-9]+\/seller-badge\/set-badge-as-seen/i,
 } as const;
 
 // ============================================
@@ -58,12 +55,24 @@ export class NewSellerBadgePage {
     }
 
     // ---- Locators ----
-    get heading(): Locator { return this.page.locator(newSellerBadgeSelectors.heading).first(); }
-    get intro(): Locator { return this.page.locator(newSellerBadgeSelectors.intro).first(); }
-    get allTab(): Locator { return this.page.locator(newSellerBadgeSelectors.tabAll).first(); }
-    get myBadgesTab(): Locator { return this.page.locator(newSellerBadgeSelectors.tabMyBadges).first(); }
-    get availableBadgesTab(): Locator { return this.page.locator(newSellerBadgeSelectors.tabAvailableBadges).first(); }
-    get searchInput(): Locator { return this.page.locator(newSellerBadgeSelectors.searchInput).first(); }
+    get heading(): Locator {
+        return this.page.locator(newSellerBadgeSelectors.heading).first();
+    }
+    get intro(): Locator {
+        return this.page.locator(newSellerBadgeSelectors.intro).first();
+    }
+    get allTab(): Locator {
+        return this.page.locator(newSellerBadgeSelectors.tabAll).first();
+    }
+    get myBadgesTab(): Locator {
+        return this.page.locator(newSellerBadgeSelectors.tabMyBadges).first();
+    }
+    get availableBadgesTab(): Locator {
+        return this.page.locator(newSellerBadgeSelectors.tabAvailableBadges).first();
+    }
+    get searchInput(): Locator {
+        return this.page.locator(newSellerBadgeSelectors.searchInput).first();
+    }
 
     // ---- Navigation ----
     async goto(): Promise<void> {
@@ -171,5 +180,65 @@ export class NewSellerBadgePage {
 
     async hasEmptyState(): Promise<boolean> {
         return await isEmptyStateVisible(this.page, newSellerBadgeSelectors.emptyState);
+    }
+
+    // ---- Named-badge presence (for the Available-Badges filter oracle) ----
+    /** A list row/card that contains the given badge name. */
+    badgeWithName(name: string): Locator {
+        return this.page.locator(newSellerBadgeSelectors.dataRow).filter({ hasText: name });
+    }
+
+    /** Whether a badge with the given name is currently visible in the list. */
+    async isBadgeVisible(name: string): Promise<boolean> {
+        return await this.badgeWithName(name)
+            .first()
+            .isVisible({ timeout: 8000 })
+            .catch(() => false);
+    }
+
+    /** Count of list rows/cards matching the given badge name (0 when absent). */
+    async badgeMatchCount(name: string): Promise<number> {
+        return await this.badgeWithName(name).count();
+    }
+
+    // ---- Congrats (unseen badges) modal ----
+    /**
+     * Navigate and wait for the vendor-unseen-badges GET to resolve — the congrats
+     * modal only renders after that (separate, slower call than the list), so a
+     * plain goto() races it. Register the response wait BEFORE navigating.
+     */
+    async gotoAndAwaitUnseen(): Promise<void> {
+        const unseen = this.page.waitForResponse(r => newSellerBadgeSelectors.unseenRest.test(r.url()), { timeout: 25000 }).catch(() => undefined);
+        await this.page.goto(this.url);
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.waitForReady();
+        await unseen;
+        await this.page.waitForTimeout(600);
+    }
+
+    /** The congrats modal renders as a role=dialog with an <h2> "Congratulations!". */
+    get congratsHeadingLocator(): Locator {
+        return this.page.getByRole('heading', { name: /Congratulations/i }).first();
+    }
+
+    async congratsModalVisible(timeoutMs = 12000): Promise<boolean> {
+        return await this.congratsHeadingLocator.isVisible({ timeout: timeoutMs }).catch(() => false);
+    }
+
+    /** Dismiss the congrats modal (Close icon, else Escape) and gate the set-badge-as-seen PUT. */
+    async dismissCongratsModal(): Promise<void> {
+        const dialog = this.page
+            .getByRole('dialog')
+            .filter({ hasText: /Congratulations/i })
+            .first();
+        const close = dialog.locator('button[aria-label="Close"]').first();
+        const setSeen = this.page.waitForResponse(r => newSellerBadgeSelectors.setSeenRest.test(r.url()) && r.request().method() !== 'GET', { timeout: 15000 }).catch(() => undefined);
+        if (await close.isVisible().catch(() => false)) {
+            await close.click().catch(() => undefined);
+        } else {
+            await this.page.keyboard.press('Escape').catch(() => undefined);
+        }
+        await setSeen;
+        await this.page.waitForTimeout(600);
     }
 }

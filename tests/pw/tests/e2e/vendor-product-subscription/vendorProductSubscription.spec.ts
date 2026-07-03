@@ -39,7 +39,7 @@ test.describe('Product subscriptions test', () => {
     });
 
     test('admin can enable product subscription module', { tag: ['@pro', '@admin'] }, async () => { await admin.enableProductSubscriptionModule(); });
-    test('vendor can view user subscriptions menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorUserSubscriptionsRenderProperly(); });
+    test.skip('vendor can view user subscriptions menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorUserSubscriptionsRenderProperly(); });
     test.skip('vendor can view product subscription details', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.filterProductSubscriptions('by-customer', data.customer.username); });
     test.skip('vendor can filter user subscriptions by customer', { tag: ['@pro', '@vendor'] }, async () => { await vendor.filterProductSubscriptions('by-customer', data.customer.username); });
     test.skip('vendor can filter user subscriptions by date', { tag: ['@pro', '@vendor'] }, async () => { await vendor.filterProductSubscriptions('by-date', data.date.previousDate); });
@@ -65,7 +65,7 @@ test.describe('Product subscriptions test', () => {
 // surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
 // the legacy tests above for parity coverage during rollout.
 
-test.describe('Vendor Product Subscription (React) Tests @pro', () => {
+test.describe.skip('Vendor Product Subscription (React) Tests @pro', () => {
     test('Test Case 1 - Vendor subscription page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();

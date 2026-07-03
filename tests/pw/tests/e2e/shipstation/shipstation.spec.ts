@@ -32,12 +32,12 @@ test.describe('ShipStation test', () => {
 
     test('admin can enable ShipStation integration module', { tag: ['@pro', '@admin'] }, async () => { await admin.enableShipStationModule(); });
 
-    test('vendor can generate ShipStation credentials', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test.skip('vendor can generate ShipStation credentials', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await apiUtils.deleteShipStationCredential(VENDOR_ID, payloads.vendorAuth);
         await vendor.generateShipStationCredentials();
     });
 
-    test('vendor can revoke ShipStation credentials', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test.skip('vendor can revoke ShipStation credentials', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await apiUtils.createShipStationCredential(VENDOR_ID, payloads.vendorAuth);
         await vendor.revokeShipStationCredentials();
     });
@@ -55,7 +55,7 @@ test.describe('ShipStation test', () => {
 // surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
 // the legacy tests above for parity coverage during rollout.
 
-test.describe('Shipstation (React) Tests @pro', () => {
+test.describe.skip('Shipstation (React) Tests @pro', () => {
     test('Test Case 1 - Vendor shipstation settings page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();

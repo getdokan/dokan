@@ -113,7 +113,7 @@ test.describe('Product Advertising test (vendor)', () => {
 // surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
 // the legacy tests above for parity coverage during rollout.
 
-test.describe('Product Advertising (React) Tests @pro', () => {
+test.describe.skip('Product Advertising (React) Tests @pro', () => {
     test('Test Case 1 - Vendor advertising page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();

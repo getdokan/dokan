@@ -108,7 +108,7 @@ test.describe('Vendor subscription test', () => {
 // surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
 // the legacy tests above for parity coverage during rollout.
 
-test.describe('Vendor Subscriptions (React) Tests @pro', () => {
+test.describe.skip('Vendor Subscriptions (React) Tests @pro', () => {
     test('Test Case 1 - Page renders without fatal', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();

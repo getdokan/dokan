@@ -120,13 +120,13 @@ test.describe('Follow stores modules functionality test', () => {
     });
 
     // vendor
-    test('vendor can view followers menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test.skip('vendor can view followers menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await test.step('Vendor navigates to Followers page and verifies page elements render properly', async () => {
             await vendor.vendorFollowersRenderProperly();
         });
     });
 
-    test('vendor can view followers', { tag: ['@pro', '@vendor'] }, async () => {
+    test.skip('vendor can view followers', { tag: ['@pro', '@vendor'] }, async () => {
         await api.followStore(VENDOR_ID || '', payloads.customerAuth);
         await test.step('Vendor verifies that followers list is not empty', async () => {
             await vendor.vendorViewFollowers();
@@ -149,7 +149,7 @@ test.describe('Follow stores modules functionality test', () => {
 // surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
 // the legacy tests above for parity coverage during rollout.
 
-test.describe('Follow Store Vendor (React) Tests @pro', () => {
+test.describe.skip('Follow Store Vendor (React) Tests @pro', () => {
     test('Test Case 1 - Vendor followers page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();

@@ -419,3 +419,96 @@ cases stay admin; the legacy "(React)" refund smokes should be relabeled
   needs those heavy wp-admin tests verified; recommended as a follow-up.
 - CSV import/export stays legacy (no React route). feature-map: 4 new-UI leaves
   added to the Products `vendor (new UI)` group.
+
+---
+
+## Wave 3 — modules (branch `qa/new-ui-suite-wave-3`, stacked on wave-2)
+
+Twelve module surfaces built as self-contained `new-*` folders, each green on a
+single run (collective batch re-validation pending). Build order was by
+reliability: clean DataViews-list / DokanModal surfaces first, seeder-risky ones
+later, retire-only last. The `e2e_tests` project only selects TAGGED tests — a
+gotcha that cost a debugging loop (untagged diag specs silently vanish); every
+real test carries `{ tag: [...] }`.
+
+### Shipped green
+- **B11 `new-followers/`** — followers DataViews list (read-only): open/columns,
+  cross-role follow→row-appears (REST `followStore`), search, empty-state, reload,
+  cross-role mount-negative. **PRODUCT BUG FOUND + filed** (`bugs/follow-store-followers-cache-stale.md`):
+  the vendor followers list is cached under `get_followers_<md5(args)>` but the
+  unfollow toggle invalidates only the literal key `get_followers` (should be
+  `Cache::invalidate_group`), so an unfollowed customer keeps showing for ~2 weeks.
+  The "unfollow removes follower" test is `test.fixme` referencing the bug (no
+  fake-green); the follow direction (cold-cache) asserts normally.
+- **A2 `new-shipstation/`** — Generate/Revoke credential DokanModals; oracle is the
+  REST credential-existence flip (200 key_id ↔ 404 dokan_pro_rest_no_resource) +
+  the card Generate↔Revoke state flip. 4/4.
+- **B9 `new-requested-quotes/`** — RFQ DataViews list: tabs (label≠key), search,
+  Move-to-Trash (alertdialog confirm) + Restore, View→legacy smoke, reload,
+  cross-role. Admin-seeded quotes (store_id=VENDOR_ID) DO surface on the vendor
+  list. 8/8. (Quote detail stays legacy — no React :id route.)
+- **B18 `new-product-addons/`** — global add-ons DataViews list: seeded-row render,
+  category cell, client-search, DELETE (with a plugin-ui **alertdialog confirm** —
+  the scout's "no confirm modal" was wrong; verified live), Create-New link smoke,
+  reload, cross-role. Seed = createProductAddon(admin) + dbUtils.updateCell
+  (post_author→VENDOR_ID). 7/7. Create/edit/import/export forms stay legacy.
+- **B21 `new-announcements/`** — vendor bulk-DELETE (the sole gap over
+  announcementsNewUI): card checkbox → Delete → DokanModal "Yes, Delete" → DELETE
+  /announcement/notice/{id} + card leaves list; plus Cancel-keeps + modal-opens.
+  The per-vendor NOTICE is created by a **WP background process** (async) → hardened
+  with a reload-retry `findCard()`. 3/3.
+- **B8 `new-auction/`** — products DataViews list (open/columns/tabs/search/empty/
+  delete-with-confirm/edit→legacy/reload) + activity list (columns-when-data-else-
+  empty; **no REST bid seeder** — documented) + cross-role. 10/10.
+- **B24 `new-seller-badge/` (extended)** — +2 gap tests: Available-Badges tab
+  partitions rows (admin-seeded unacquired badge under Available, absent under My
+  Badges) and the **"Congratulations!" congrats popup** (DB-seeded badge_seen=0
+  acquired row via dbUtils.dbQuery; gated on the unseen-badges GET; dismissal fires
+  set-badge-as-seen and doesn't reappear). 10/10.
+- **A3+B3+A1 `new-booking/`** — products list (search/delete-REST-oracle/reload),
+  resources (Add-Resource DokanModal — POST-response id oracle; Remove), calendar
+  (FullCalendar render + calendar-events REST), cross-role. Trap: `has-text("OK")`
+  matched the "All Bo(ok)ing Product" tab → dialog-scoped exact match. 10/10.
+  **DEFERRED:** my-bookings list + Confirm-pending-booking — a booking ROW has no
+  dokan create-REST (needs wc-bookings POST + _booking_seller_id/pending-confirmation
+  meta or a storefront checkout). vendor-booking-fast is a duplicate to retire.
+- **B12 `new-user-subscription/`** — user-subscription DataViews list (search=false):
+  seeded-row + columns, active Status badge, View→detail route, reload, cross-role.
+  **Seeder WORKS**: POST /wc/v3/subscriptions + `_dokan_vendor_id` meta surfaces on
+  /dokan/v1/product-subscriptions (self-probed in beforeAll; data tests gate on it).
+  6/6 (seedOk true).
+- **B13 `new-subscription/`** — vendor subscription packs CARD surface: mount/cards,
+  empty Current-Subscription, orders DataViews route, reload, cross-role (5 green).
+  Pack-listing test is a **documented skip** — the pack seeder (product_pack term +
+  save-commission) is still blocked exactly as the legacy `vendor-subscriptions`
+  suite recorded (`test.skip(true, 'need to update create dokan subscription product')`).
+  Cancel/active-pack DEFERRED (assignSubscriptionToVendor mints a NEW store — vendor
+  identity mismatch).
+- **B19 `new-product-advertising/`** — Advertise column render + Promote control,
+  REST advertised round-trip (createProductAdvertisement → getAllProductAdvertisements),
+  draft-cannot-advertise error modal (client-side guard), reload, cross-role. 6/6.
+  **Scout's flagged "likely live bug" did NOT reproduce**: window.dokan_purchase_advertisement
+  IS localized on the new dashboard with a valid advertise_product_nonce (logged) —
+  so the interactive Promote is NOT broken. Paid checkout stays in stripe-express.
+- **B10 `new-delivery-time/`** — labeled MOUNT SMOKE only (FullCalendar dashboard,
+  not DataViews; settings surface is legacy PHP): mount + calendar paints, reload,
+  cross-role. 3/3. No behavioral React CRUD to port (§7); set-slots stays legacy.
+
+### Reusable gotchas found live (Wave 3)
+- The `e2e_tests` project filters to TAGGED tests only — untagged diag/probe specs
+  are silently "No tests found". Single-file path args also mis-resolve; run by
+  FOLDER path (+ `-g "<title>"` to target one tagged test).
+- Dokan list caches (`Cache` = wp_cache w/ group-prefix versioning) — the correct
+  invalidation is `Cache::invalidate_group`; a bare `Cache::delete('key', group)`
+  misses per-arg-hash keys (the follow-store bug).
+- plugin-ui DataViews destructive row actions DO render a `role="alertdialog"`
+  confirm even when the action def has only a callback (add-ons delete) — always
+  confirm, don't assume "no modal".
+- Announcement notices + (some) list read-backs are async/paginated — gate on the
+  create POST response id, or reload-retry the UI, rather than a one-shot list read.
+
+### Bookkeeping pending for Wave 3 (in progress)
+- Legacy nested `describe.skip` of the ported VENDOR blocks (admin/customer/
+  storefront STAY, D3) + retire the D4 "(React)" smokes at legacy URLs + remove/
+  retire `vendor-booking-fast`. feature-map `vendor (new UI)` leaves. Then commit.
+

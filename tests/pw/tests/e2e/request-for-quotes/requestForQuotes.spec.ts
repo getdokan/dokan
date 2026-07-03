@@ -85,7 +85,7 @@ test.describe('Request for quotation test vendor', () => {
         await apiUtils.dispose();
     });
 
-    test('vendor can view request quotes menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorRequestQuotesRenderProperly(); });
+    test.skip('vendor can view request quotes menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorRequestQuotesRenderProperly(); });
     test('vendor can view request quote details', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorViewQuoteDetails(quoteId); });
     test('vendor can update quote request', { tag: ['@pro', '@vendor'] }, async () => { await vendor.vendorUpdateQuoteRequest(quoteId, { ...data.requestForQuotation.vendorUpdateQuote, productName: productName }); });
 
@@ -158,7 +158,7 @@ test.describe('Request for quotation test customer', () => {
 // surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
 // the legacy tests above for parity coverage during rollout.
 
-test.describe('Request For Quotes (React) Tests @pro', () => {
+test.describe.skip('Request For Quotes (React) Tests @pro', () => {
     test('Test Case 1 - Vendor RFQ list page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();

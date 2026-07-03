@@ -274,7 +274,7 @@ test.describe('Announcements Tests @pro', () => {
         await vendorContext.close();
     });
 
-    test('Old Test Case 11 - Vendor Deletes Announcement', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test.skip('Old Test Case 11 - Vendor Deletes Announcement', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         // Using admin session storage to create a published announcement first
         const adminContext = await browser.newContext({ storageState: a1 });
         const adminPage = await adminContext.newPage();
@@ -480,7 +480,7 @@ test.describe('Announcements Tests @pro', () => {
 // surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
 // the legacy tests above for parity coverage during rollout.
 
-test.describe('New Vendor Announcement (React) Tests @pro', () => {
+test.describe.skip('New Vendor Announcement (React) Tests @pro', () => {
     test('Test Case 1 - /announcement route mounts in new vendor dashboard', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         // Seed an announcement so the list isn't empty
         const adminCtx = await browser.newContext({ storageState: a1 });
