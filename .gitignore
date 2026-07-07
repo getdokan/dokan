@@ -15,6 +15,10 @@ config.json
 /lib/classes/
 .env
 
+# wp-env: live config is per-machine / per-worktree. Commit .wp-env.json.example only.
+.wp-env.json
+.wp-env.override.json
+
 # Composer
 /vendor/
 phpcs-report.txt
