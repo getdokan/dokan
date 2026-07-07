@@ -84,17 +84,21 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
             return [];
         }
 
-        // Route the incoming slice through the bridge: mapped keys go to the
-        // new flat option only; the legacy row holds unmapped keys only.
-        $stripped_slice = $this->bridge->persist_legacy_section( $section, $slice );
+        // Route the incoming slice through the bridge: mapped keys are
+        // mirrored into the new flat option; with the legacy mirror enabled
+        // (default) they also stay in the legacy row so a downgraded plugin
+        // still reads current data, otherwise they are stripped out.
+        $persistable_slice = $this->bridge->persist_legacy_section( $section, $slice );
 
-        $raw    = get_option( $section, [] );
-        $raw    = is_array( $raw ) ? $raw : [];
-        // Defensive: a previously-stored legacy row may still hold mapped keys
-        // (lazy migration policy — we never backfill on read). Strip them on
-        // every write so the saved row converges on the invariant.
-        $raw    = $this->bridge->strip_mapped_keys( $section, $raw );
-        $merged = array_merge( $raw, $stripped_slice );
+        $raw = get_option( $section, [] );
+        $raw = is_array( $raw ) ? $raw : [];
+        if ( ! LegacySettingsBridge::is_legacy_mirror_enabled() ) {
+            // Strict mode: a previously-stored legacy row may still hold mapped
+            // keys. Strip them on every write so the row converges on the
+            // mapped-keys-live-only-in-the-flat-option invariant.
+            $raw = $this->bridge->strip_mapped_keys( $section, $raw );
+        }
+        $merged = array_merge( $raw, $persistable_slice );
 
         update_option( $section, $merged, true );
         // Refresh our snapshot now — the WP hook already flushed it, but we want
@@ -129,13 +133,13 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
             }
         }
 
-        // `replace` is a full-row write, so mapped keys must be peeled off
-        // before we land the legacy option. The bridge mirrors them into the
-        // new flat option as a side effect.
-        $stripped_payload = $this->bridge->persist_legacy_section( $section, $payload );
+        // `replace` is a full-row write. The bridge mirrors mapped keys into
+        // the new flat option as a side effect; with the legacy mirror enabled
+        // (default) they also stay in the row, otherwise they are peeled off.
+        $persistable_payload = $this->bridge->persist_legacy_section( $section, $payload );
 
-        update_option( $section, $stripped_payload, true );
-        $this->snapshots[ $section ] = $this->bridge->hydrate_legacy_from_new( $section, $stripped_payload );
+        update_option( $section, $persistable_payload, true );
+        $this->snapshots[ $section ] = $this->bridge->hydrate_legacy_from_new( $section, $persistable_payload );
 
         if ( ! empty( $diff ) ) {
             /** This action is documented in includes/Admin/Settings/Repository/LegacySettingsRepository.php */
@@ -186,14 +190,7 @@ final class LegacySettingsRepository implements LegacySettingsRepositoryInterfac
      * @return array<int,string>
      */
     private function known_sections(): array {
-        $map      = $this->bridge->get_mapping();
-        $sections = [];
-        foreach ( $map as $entry ) {
-            if ( is_array( $entry ) && isset( $entry['option'] ) && is_string( $entry['option'] ) ) {
-                $sections[ $entry['option'] ] = true;
-            }
-        }
-        return array_keys( $sections );
+        return $this->bridge->known_sections();
     }
 
     /**
