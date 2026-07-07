@@ -93,6 +93,17 @@ const WeeklyTimeSlots = ( {
                     },
                 ];
             }
+        } else {
+            // Disabling clears the day's error state; if it was in error, reset the
+            // fields too so the read-only overlay never shows invalid times.
+            setTouched( ( prev ) => {
+                const next = { ...prev };
+                delete next[ dayKey ];
+                return next;
+            } );
+            if ( errors[ dayKey ] ) {
+                slots = [ seed() ];
+            }
         }
         commit( dayKey, { status: isActive, slots }, isActive );
     };
@@ -187,26 +198,26 @@ const WeeklyTimeSlots = ( {
                     includeFullDay={ allowFullDay && ! multiple }
                     step={ step }
                 />
-                { ! isFullDaySlot && (
-                    <>
-                        <Minus size={ 20 } color={ '#828282' } />
-                        <TimeDropdown
-                            value={ slot.closing_time }
-                            placeholder={ closesAt }
-                            onChange={ ( v ) =>
-                                handleTimeChange(
-                                    dayKey,
-                                    index,
-                                    'closing_time',
-                                    v
-                                )
-                            }
-                            is12Hour={ is12Hour }
-                            hasError={ Boolean( slotError?.closing ) }
-                            includeFullDay={ false }
-                            step={ step }
-                        />
-                    </>
+                <Minus size={ 20 } color={ '#828282' } />
+                { isFullDaySlot ? (
+                    // Full Day spans the whole day: keep the closing field visible but static/read-only.
+                    <TimeDropdown
+                        value={ FULL_DAY }
+                        is12Hour={ is12Hour }
+                        readOnly
+                    />
+                ) : (
+                    <TimeDropdown
+                        value={ slot.closing_time }
+                        placeholder={ closesAt }
+                        onChange={ ( v ) =>
+                            handleTimeChange( dayKey, index, 'closing_time', v )
+                        }
+                        is12Hour={ is12Hour }
+                        hasError={ Boolean( slotError?.closing ) }
+                        includeFullDay={ false }
+                        step={ step }
+                    />
                 ) }
                 { multiple && (
                     <div className="flex gap-2 ml-2">
@@ -241,7 +252,7 @@ const WeeklyTimeSlots = ( {
 
     const renderDayRow = ( dayKey: string ) => {
         const day = value[ dayKey ] ?? { status: false, slots: [] };
-        // De-duplicated day messages, rendered under the row.
+        // De-duplicated day messages, rendered under the row (disabled days carry none).
         const dayMessages = touched[ dayKey ]
             ? Array.from(
                   new Set(
@@ -252,6 +263,11 @@ const WeeklyTimeSlots = ( {
               )
             : [];
 
+        // A disabled day keeps its pickers visible but dimmed and non-interactive (read-only overlay).
+        const slotsOverlay =
+            ! day.status && 'opacity-50 pointer-events-none select-none';
+        const hasSlots = day.slots.length > 0;
+
         return (
             <div
                 key={ dayKey }
@@ -259,34 +275,25 @@ const WeeklyTimeSlots = ( {
             >
                 { /* Desktop Layout */ }
                 <div className="hidden sm:block!">
-                    <div className="flex items-center py-4 px-6 min-h-20">
-                        { /* Day name */ }
-                        <div className="w-2/4 shrink-0 self-start mt-2">
-                            <span className="text-sm font-medium text-[#25252D]">
+                    <div className="flex items-center justify-between gap-4 py-4 px-6 min-h-20">
+                        { /* Day name with its validation message underneath, like a sub-description. */ }
+                        <div>
+                            <span
+                                className={ twMerge(
+                                    'text-sm font-medium text-[#25252D]',
+                                    ! day.status && 'opacity-50'
+                                ) }
+                            >
                                 { days[ dayKey ] }
                             </span>
-                            { renderDayMessages( dayMessages ) }
+                            { dayMessages.length > 0 &&
+                                renderDayMessages( dayMessages ) }
                         </div>
 
-                        <div className="flex-1 flex items-center justify-end">
-                            { /* Time slots or status */ }
-                            <div className="flex-1 flex items-center justify-end">
-                                { day.status && day.slots.length > 0 && (
-                                    <div className="dokan-weekly-slots space-y-2">
-                                        { day.slots.map( ( slot, index ) =>
-                                            renderSlotRow(
-                                                dayKey,
-                                                day,
-                                                slot,
-                                                index
-                                            )
-                                        ) }
-                                    </div>
-                                ) }
-                            </div>
-
-                            { /* Switch - with proper spacing */ }
-                            <div className="ml-10 shrink-0">
+                        { /* Switch sits beside the time settings; the group is right-aligned
+                             so the switch lines up on every row. */ }
+                        <div className="flex items-center gap-8 shrink-0">
+                            <div className="shrink-0">
                                 <DokanSwitch
                                     checked={ day.status }
                                     onChange={ ( val: boolean ) =>
@@ -294,23 +301,41 @@ const WeeklyTimeSlots = ( {
                                     }
                                 />
                             </div>
+                            { hasSlots && (
+                                <div
+                                    className={ twMerge(
+                                        'dokan-weekly-slots space-y-2',
+                                        slotsOverlay
+                                    ) }
+                                >
+                                    { day.slots.map( ( slot, index ) =>
+                                        renderSlotRow(
+                                            dayKey,
+                                            day,
+                                            slot,
+                                            index
+                                        )
+                                    ) }
+                                </div>
+                            ) }
                         </div>
                     </div>
                 </div>
                 { /* Mobile Layout */ }
-                <div
-                    className={ twMerge(
-                        'sm:hidden! px-6 py-4 min-h-20 w-full',
-                        ! day.status && 'flex items-center'
-                    ) }
-                >
-                    { /* Day name + Switch row */ }
+                <div className="sm:hidden! px-6 py-4 w-full">
+                    { /* Day name (+ validation message) + Switch row */ }
                     <div className="flex items-center justify-between w-full">
                         <div>
-                            <span className="text-sm font-semibold text-[#25252D]">
+                            <span
+                                className={ twMerge(
+                                    'text-sm font-semibold text-[#25252D]',
+                                    ! day.status && 'opacity-50'
+                                ) }
+                            >
                                 { days[ dayKey ] }
                             </span>
-                            { renderDayMessages( dayMessages ) }
+                            { dayMessages.length > 0 &&
+                                renderDayMessages( dayMessages ) }
                         </div>
                         <DokanSwitch
                             checked={ day.status }
@@ -320,9 +345,14 @@ const WeeklyTimeSlots = ( {
                         />
                     </div>
 
-                    { /* Time picker rows - only when active */ }
-                    { day.status && day.slots.length > 0 && (
-                        <div className="mt-4 space-y-2">
+                    { /* Time picker rows — read-only overlay when the day is off */ }
+                    { hasSlots && (
+                        <div
+                            className={ twMerge(
+                                'mt-4 space-y-2',
+                                slotsOverlay
+                            ) }
+                        >
                             { day.slots.map( ( slot, index ) =>
                                 renderSlotRow( dayKey, day, slot, index )
                             ) }

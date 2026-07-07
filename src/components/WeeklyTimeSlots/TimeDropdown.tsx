@@ -21,6 +21,8 @@ export type TimeDropdownProps = {
     // Offer the "Full Day" preset (opening dropdowns only — a closing can never be "Full Day").
     includeFullDay?: boolean;
     step?: number;
+    // Render as a static, non-openable field (e.g. the "Full Day" closing placeholder).
+    readOnly?: boolean;
 };
 
 type TimeOption = { key: string; label: string; minutes: number | null };
@@ -35,6 +37,7 @@ const TimeDropdown = ( {
     hasError = false,
     includeFullDay = false,
     step = DEFAULT_STEP_MINUTES,
+    readOnly = false,
 }: TimeDropdownProps ) => {
     const [ open, setOpen ] = useState( false );
     const wrapRef = useRef< HTMLDivElement | null >( null );
@@ -99,12 +102,15 @@ const TimeDropdown = ( {
         <div ref={ wrapRef } className="relative inline-block">
             <button
                 type="button"
+                disabled={ readOnly }
                 onClick={ () => setOpen( ( isOpen ) => ! isOpen ) }
                 className={ twMerge(
                     'flex items-center gap-2 rounded-md border bg-white px-3 py-2 text-sm shadow-sm min-w-[155px] focus:outline-none focus:ring-2 focus:ring-[#7047EB]',
                     hasError
                         ? 'border-red-500 ring-1 ring-red-500'
-                        : 'border-gray-300'
+                        : 'border-gray-300',
+                    // Static "Full Day" placeholder: overlayed (dimmed) and not openable.
+                    readOnly && 'cursor-not-allowed opacity-50'
                 ) }
             >
                 <Clock size={ 16 } className="text-gray-400" />
@@ -118,7 +124,7 @@ const TimeDropdown = ( {
                 </span>
                 <ChevronDown size={ 14 } className="text-gray-400" />
             </button>
-            { open && (
+            { open && ! readOnly && (
                 <ul
                     ref={ listRef }
                     className="absolute z-50 mt-1 max-h-72 w-full overflow-y-auto rounded-md border border-gray-300 bg-white py-1 shadow-lg"

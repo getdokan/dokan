@@ -1,4 +1,4 @@
-import { dateI18n } from '@wordpress/date';
+import { dateI18n, getSettings } from '@wordpress/date';
 import type { TimeSlot } from './types';
 
 // "Full Day" sentinel; mirrors DeliveryDaysScheduleTransformer::FULL_DAY_SENTINEL.
@@ -45,8 +45,12 @@ export const minutesToCanonical = ( totalMinutes: number ): string => {
     return `${ hours12 }:${ pad( normalized % 60 ) } ${ meridiem }`;
 };
 
-// Localized time-of-day label. Build the instant in UTC and format in UTC (gmt=true) so the
-// wall-clock time survives any browser/site timezone gap; dateI18n still localizes the meridiem.
+// Localized time-of-day label rendered with the EXACT site time format
+// (WP Settings → General → Time Format), so presets ('g:i a', 'g:i A', 'H:i')
+// and custom formats (e.g. 'G\h i') all display faithfully. is12Hour is only a
+// fallback for contexts without WP date settings (e.g. unit tests). Built and
+// formatted in UTC (gmt=true) so the wall-clock time survives any browser/site
+// timezone gap; dateI18n still localizes the meridiem.
 export const minutesToDisplay = (
     totalMinutes: number,
     is12Hour: boolean
@@ -60,7 +64,8 @@ export const minutesToDisplay = (
             totalMinutes % 60
         )
     );
-    return dateI18n( is12Hour ? 'g:i A' : 'H:i', date, true );
+    const format = getSettings().formats.time || ( is12Hour ? 'g:i a' : 'H:i' );
+    return dateI18n( format, date, true );
 };
 
 // Localize any parseable stored value (even off the preset grid); raw fallback otherwise.
