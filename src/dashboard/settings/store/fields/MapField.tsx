@@ -113,6 +113,30 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
         updateValue( fieldKey, { ...valueRef.current, ...next } );
     };
 
+    // On auth failure Google disables the attached Autocomplete input and
+    // stuffs an error string into it AFTER gm_authFailure fires — hand the
+    // input back to the vendor once Google is done with it.
+    useEffect( () => {
+        if ( ! mapFailed ) {
+            return;
+        }
+
+        const timer = setTimeout( () => {
+            const input = searchInputRef.current;
+            if ( input ) {
+                input.disabled = false;
+                input.value = valueRef.current.find_address || '';
+                input.placeholder = __(
+                    'Search your store address…',
+                    'dokan-lite'
+                );
+                input.style.backgroundColor = '';
+            }
+        }, 100 );
+
+        return () => clearTimeout( timer );
+    }, [ mapFailed ] );
+
     // Google provider.
     useEffect( () => {
         if ( 'google_maps' !== provider || ! apiKey ) {
@@ -265,11 +289,7 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
     const showsCanvas = ! mapFailed && !! apiKey;
 
     return (
-        <div className="dokan-vendor-map-field flex flex-col gap-2">
-            <span className="text-sm font-medium text-gray-900">
-                { element.title }
-            </span>
-
+        <div className="dokan-vendor-map-field flex w-full flex-col gap-2 p-4">
             <input
                 ref={ searchInputRef }
                 type="text"
@@ -307,7 +327,9 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
                         type="text"
                         className={ inputClass }
                         placeholder="23.709921,90.407143"
-                        value={ value.location }
+                        value={
+                            ',' === value.location.trim() ? '' : value.location
+                        }
                         onChange={ ( event ) =>
                             commit( { location: event.target.value } )
                         }

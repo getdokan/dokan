@@ -128,19 +128,19 @@ const StoreScheduleField = ( { element }: { element: SettingsElement } ) => {
     };
 
     return (
-        <div className="dokan-vendor-store-schedule-field flex flex-col gap-2">
-            <span className="text-sm font-medium text-gray-900">
-                { element.title }
-            </span>
-            <WeeklyTimeSlots
-                value={ weeklyValue }
-                days={ days }
-                multiple={ !! element.multiple }
-                spread={ false }
-                is12Hour={ is12Hour }
-                validateOnMount
-                onChange={ handleChange }
-            />
+        <div className="dokan-vendor-store-schedule-field w-full p-4">
+            { /* Delivery-time treatment: a bordered box with one row per weekday. */ }
+            <div className="overflow-hidden rounded-md border border-gray-200">
+                <WeeklyTimeSlots
+                    value={ weeklyValue }
+                    days={ days }
+                    multiple={ !! element.multiple }
+                    spread={ false }
+                    is12Hour={ is12Hour }
+                    validateOnMount
+                    onChange={ handleChange }
+                />
+            </div>
         </div>
     );
 };

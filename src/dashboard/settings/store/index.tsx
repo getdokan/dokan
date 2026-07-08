@@ -31,6 +31,7 @@ export default function StoreSettings() {
     const [ schema, setSchema ] = useState< SettingsElement[] >( [] );
     const [ loading, setLoading ] = useState< boolean >( true );
     const [ saving, setSaving ] = useState< boolean >( false );
+    const [ resetKey, setResetKey ] = useState< number >( 0 );
 
     useEffect( () => {
         apiFetch< SettingsElement[] >( { path: ENDPOINT } )
@@ -97,25 +98,52 @@ export default function StoreSettings() {
         }
     };
 
+    // Cancel = refetch + remount the engine so every field resets to the saved state.
+    const handleCancel = async (): Promise< void > => {
+        setLoading( true );
+        try {
+            const response = await apiFetch< SettingsElement[] >( {
+                path: ENDPOINT,
+            } );
+            setSchema( response );
+            setResetKey( ( key ) => key + 1 );
+        } catch ( error ) {
+            // eslint-disable-next-line no-console
+            console.error( 'Failed to reload store settings:', error );
+        } finally {
+            setLoading( false );
+        }
+    };
+
     return (
         <div className="dokan-vendor-store-settings">
             <Settings
+                key={ resetKey }
                 schema={ schema }
                 loading={ loading }
-                title={ __( 'Store Settings', 'dokan-lite' ) }
+                title={ __( 'Store', 'dokan-lite' ) }
                 hookPrefix="dokan_vendor"
                 applyFilters={ applyFilters }
                 onSave={ handleSave }
                 renderSaveButton={ ( { dirty, hasErrors, onSave } ) => (
-                    <Button
-                        onClick={ onSave }
-                        disabled={ ! dirty || hasErrors || saving }
-                    >
-                        { saving && <Spinner className="size-4 mr-2" /> }
-                        { saving
-                            ? __( 'Saving…', 'dokan-lite' )
-                            : __( 'Save Changes', 'dokan-lite' ) }
-                    </Button>
+                    <div className="flex items-center justify-end gap-3">
+                        <Button
+                            variant="outline"
+                            onClick={ handleCancel }
+                            disabled={ ! dirty || saving }
+                        >
+                            { __( 'Cancel', 'dokan-lite' ) }
+                        </Button>
+                        <Button
+                            onClick={ onSave }
+                            disabled={ ! dirty || hasErrors || saving }
+                        >
+                            { saving && <Spinner className="size-4 mr-2" /> }
+                            { saving
+                                ? __( 'Saving…', 'dokan-lite' )
+                                : __( 'Save Changes', 'dokan-lite' ) }
+                        </Button>
+                    </div>
                 ) }
             />
             <Toaster richColors />

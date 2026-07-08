@@ -7,11 +7,17 @@ use WeDevs\Dokan\CatalogMode\Helper as CatalogModeHelper;
 /**
  * Vendor Store Settings flat-array schema.
  *
- * Builds the flat `SettingsElement[]` list (page → subpage → sections → fields)
- * consumed by the plugin-ui `<Settings>` engine on the vendor dashboard Store
- * settings page. Field values are populated inline from the vendor's
- * `dokan_profile_settings` user meta — the storage keys and value shapes stay
- * byte-identical to the legacy store form (see plugin-internal-tasks#2115).
+ * Builds the flat `SettingsElement[]` list (page → subpage → section cards →
+ * fields) consumed by the plugin-ui `<Settings>` engine on the vendor
+ * dashboard Store settings page. Field values are populated inline from the
+ * vendor's `dokan_profile_settings` user meta — the storage keys and value
+ * shapes stay byte-identical to the legacy store form (see
+ * plugin-internal-tasks#2115).
+ *
+ * Presentation follows the Figma Store page: every section renders as its own
+ * collapsible card (title + helper description) with full-width stacked
+ * fields; cross-plugin card order is controlled via `priority` so Pro can
+ * slot its cards (e.g. Store Biography before Terms & Conditions).
  *
  * Conditional blocks are gated server-side with the same checks the legacy
  * `templates/settings/store-form.php` used, so the schema never contains a
@@ -39,12 +45,13 @@ class StoreSettingsSchema {
 
         $elements = array_merge(
             self::structure(),
-            self::store_details( $info ),
+            self::branding( $info ),
+            self::store_information( $info ),
             self::address( $info ),
             self::map( $info ),
             self::schedule( $info ),
-            self::terms_and_conditions( $info ),
-            self::catalog_mode( $vendor_id )
+            self::catalog_mode( $vendor_id ),
+            self::terms_and_conditions( $info )
         );
 
         /**
@@ -54,7 +61,8 @@ class StoreSettingsSchema {
          * through the legacy `dokan_store_profile_settings_args` /
          * `dokan_store_profile_saved` seams. A field element may declare a
          * string `legacy_key` to control which `dokan_profile_settings` key
-         * its value lands in (defaults to the field id).
+         * its value lands in (defaults to the field id). Use `priority` to
+         * slot cards into the page order (Lite cards use 10–90).
          *
          * @since DOKAN_SINCE
          *
@@ -65,7 +73,7 @@ class StoreSettingsSchema {
     }
 
     /**
-     * Page and subpage skeleton the sections hang from.
+     * Page and subpage skeleton the section cards hang from.
      *
      * @since DOKAN_SINCE
      *
@@ -79,16 +87,18 @@ class StoreSettingsSchema {
                 'title' => __( 'Store', 'dokan-lite' ),
             ],
             [
-                'id'      => 'store_settings',
-                'type'    => 'subpage',
-                'page_id' => 'store',
-                'title'   => __( 'Store', 'dokan-lite' ),
+                'id'           => 'store_settings',
+                'type'         => 'subpage',
+                'page_id'      => 'store',
+                'title'        => __( 'Store', 'dokan-lite' ),
+                // The page component renders the "Store" heading — hide the duplicate.
+                'hide_heading' => true,
             ],
         ];
     }
 
     /**
-     * Store identity card: banner, profile picture, name, phone, email visibility.
+     * Branding card: store title, banner, and logo.
      *
      * @since DOKAN_SINCE
      *
@@ -96,17 +106,37 @@ class StoreSettingsSchema {
      *
      * @return array
      */
-    protected static function store_details( array $info ): array {
+    protected static function branding( array $info ): array {
         $banner_id   = absint( $info['banner'] ?? 0 );
         $gravatar_id = absint( $info['gravatar'] ?? 0 );
 
-        $elements = [
+        return [
             [
                 'id'          => 'company_banner',
                 'type'        => 'section',
                 'subpage_id'  => 'store_settings',
-                'title'       => __( 'Store Details', 'dokan-lite' ),
+                'title'       => __( 'Branding', 'dokan-lite' ),
+                'description' => __( "Oversee your store's branding elements: title, banner, logo, and contact number.", 'dokan-lite' ),
                 'collapsible' => true,
+                'priority'    => 10,
+            ],
+            [
+                'id'          => 'store_name',
+                'type'        => 'field',
+                'variant'     => 'text',
+                'section_id'  => 'company_banner',
+                'title'       => __( 'Store Title', 'dokan-lite' ),
+                'placeholder' => __( 'ex - Fashion Store', 'dokan-lite' ),
+                'layout'      => 'full-width',
+                'value'       => (string) ( $info['store_name'] ?? '' ),
+                'default'     => '',
+                'legacy_key'  => 'store_name',
+                'validations' => [
+                    [
+                        'rules'   => 'not_empty',
+                        'message' => __( 'Store title is required.', 'dokan-lite' ),
+                    ],
+                ],
             ],
             [
                 'id'          => 'banner',
@@ -116,7 +146,7 @@ class StoreSettingsSchema {
                 'title'       => __( 'Store Banner', 'dokan-lite' ),
                 'description' => sprintf(
                     /* translators: 1) store banner width 2) store banner height */
-                    __( 'Upload a banner for your store. Banner size is (%1$sx%2$s) pixels.', 'dokan-lite' ),
+                    __( 'Specification - %1$s X %2$s pixels, Format JPG or Png and file size 5mb max', 'dokan-lite' ),
                     dokan_get_vendor_store_banner_width(),
                     dokan_get_vendor_store_banner_height()
                 ),
@@ -126,40 +156,49 @@ class StoreSettingsSchema {
                 'legacy_key'  => 'banner',
             ],
             [
-                'id'         => 'gravatar',
-                'type'       => 'field',
-                'variant'    => 'vendor_image',
-                'section_id' => 'company_banner',
-                'title'      => __( 'Profile Picture', 'dokan-lite' ),
-                'value'      => $gravatar_id,
-                'default'    => 0,
-                'image_url'  => $gravatar_id ? (string) wp_get_attachment_url( $gravatar_id ) : '',
-                'legacy_key' => 'gravatar',
-            ],
-            [
-                'id'          => 'store_name',
+                'id'          => 'gravatar',
                 'type'        => 'field',
-                'variant'     => 'text',
+                'variant'     => 'vendor_image',
                 'section_id'  => 'company_banner',
-                'title'       => __( 'Store Name', 'dokan-lite' ),
-                'placeholder' => __( 'store name', 'dokan-lite' ),
-                'value'       => (string) ( $info['store_name'] ?? '' ),
-                'default'     => '',
-                'legacy_key'  => 'store_name',
-                'validations' => [
-                    [
-                        'rules'   => 'not_empty',
-                        'message' => __( 'Store name is required.', 'dokan-lite' ),
-                    ],
-                ],
+                'title'       => __( 'Logo', 'dokan-lite' ),
+                'description' => __( 'Specification - 150 X 150 pixels, file size 5mb max', 'dokan-lite' ),
+                'shape'       => 'round',
+                'value'       => $gravatar_id,
+                'default'     => 0,
+                'image_url'   => $gravatar_id ? (string) wp_get_attachment_url( $gravatar_id ) : '',
+                'legacy_key'  => 'gravatar',
+            ],
+        ];
+    }
+
+    /**
+     * Store Information card: phone and email visibility.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $info Vendor store info.
+     *
+     * @return array
+     */
+    protected static function store_information( array $info ): array {
+        $elements = [
+            [
+                'id'          => 'store_information',
+                'type'        => 'section',
+                'subpage_id'  => 'store_settings',
+                'title'       => __( 'Store Information', 'dokan-lite' ),
+                'description' => __( 'These information can increase trust layers to your customers.', 'dokan-lite' ),
+                'collapsible' => true,
+                'priority'    => 20,
             ],
             [
                 'id'          => 'phone',
                 'type'        => 'field',
                 'variant'     => 'text',
-                'section_id'  => 'company_banner',
-                'title'       => __( 'Phone No', 'dokan-lite' ),
-                'placeholder' => __( '+123456..', 'dokan-lite' ),
+                'section_id'  => 'store_information',
+                'title'       => __( 'Phone', 'dokan-lite' ),
+                'placeholder' => __( 'e.g 206-555-0122', 'dokan-lite' ),
+                'layout'      => 'full-width',
                 'value'       => (string) ( $info['phone'] ?? '' ),
                 'default'     => '',
                 'legacy_key'  => 'phone',
@@ -172,7 +211,7 @@ class StoreSettingsSchema {
                 'id'            => 'show_email',
                 'type'          => 'field',
                 'variant'       => 'switch',
-                'section_id'    => 'company_banner',
+                'section_id'    => 'store_information',
                 'title'         => __( 'Show email address in store', 'dokan-lite' ),
                 'value'         => ( $info['show_email'] ?? 'no' ) === 'yes' ? 'yes' : 'no',
                 'default'       => 'no',
@@ -192,8 +231,8 @@ class StoreSettingsSchema {
     }
 
     /**
-     * Address card — omitted entirely when the Pro delivery-time module owns
-     * the address UI (store-pickup renders its own location form there).
+     * Store Locations card — omitted entirely when the Pro delivery-time
+     * module owns the address UI (store-pickup renders its own form there).
      *
      * @since DOKAN_SINCE
      *
@@ -213,15 +252,16 @@ class StoreSettingsSchema {
                 'id'          => 'location_details',
                 'type'        => 'section',
                 'subpage_id'  => 'store_settings',
-                'title'       => __( 'Address', 'dokan-lite' ),
+                'title'       => __( 'Store Locations', 'dokan-lite' ),
+                'description' => __( 'Please enter the address of your store where you conduct your business.', 'dokan-lite' ),
                 'collapsible' => true,
+                'priority'    => 30,
             ],
             [
                 'id'         => 'address',
                 'type'       => 'field',
                 'variant'    => 'vendor_address',
                 'section_id' => 'location_details',
-                'title'      => __( 'Address', 'dokan-lite' ),
                 'value'      => [
                     'street_1' => (string) ( $address['street_1'] ?? '' ),
                     'street_2' => (string) ( $address['street_2'] ?? '' ),
@@ -237,8 +277,8 @@ class StoreSettingsSchema {
     }
 
     /**
-     * Map card — only when a map provider API key is configured, same gate as
-     * the legacy form (`dokan_has_map_api_key()`).
+     * Store Map card — only when a map provider API key is configured, same
+     * gate as the legacy form (`dokan_has_map_api_key()`).
      *
      * @since DOKAN_SINCE
      *
@@ -261,15 +301,16 @@ class StoreSettingsSchema {
                 'id'          => 'store_map_section',
                 'type'        => 'section',
                 'subpage_id'  => 'store_settings',
-                'title'       => __( 'Store Location', 'dokan-lite' ),
+                'title'       => __( 'Store Map', 'dokan-lite' ),
+                'description' => __( 'Kindly provide the location of the store address from which you ship your products.', 'dokan-lite' ),
                 'collapsible' => true,
+                'priority'    => 40,
             ],
             [
                 'id'         => 'store_map',
                 'type'       => 'field',
                 'variant'    => 'vendor_map',
                 'section_id' => 'store_map_section',
-                'title'      => __( 'Map', 'dokan-lite' ),
                 'provider'   => $provider,
                 'api_key'    => $api_key,
                 'value'      => [
@@ -285,7 +326,7 @@ class StoreSettingsSchema {
     }
 
     /**
-     * Store schedule card — gated by the admin appearance option, same as legacy.
+     * Store Schedule card — gated by the admin appearance option, same as legacy.
      *
      * @since DOKAN_SINCE
      *
@@ -324,7 +365,9 @@ class StoreSettingsSchema {
                 'type'        => 'section',
                 'subpage_id'  => 'store_settings',
                 'title'       => __( 'Store Schedule', 'dokan-lite' ),
+                'description' => __( 'Set the daily open and close time your store follows.', 'dokan-lite' ),
                 'collapsible' => true,
+                'priority'    => 50,
             ],
             [
                 'id'            => 'dokan_store_time_enabled',
@@ -349,7 +392,6 @@ class StoreSettingsSchema {
                 'type'         => 'field',
                 'variant'      => 'vendor_store_schedule',
                 'section_id'   => 'store_schedule',
-                'title'        => __( 'Store Schedule', 'dokan-lite' ),
                 // Lite renders one range per day; Pro flips this via the schema filter.
                 'multiple'     => false,
                 'days'         => dokan_get_translated_days(),
@@ -365,6 +407,7 @@ class StoreSettingsSchema {
                 'section_id'   => 'store_schedule',
                 'title'        => __( 'Store Open Notice', 'dokan-lite' ),
                 'placeholder'  => __( 'Store is open', 'dokan-lite' ),
+                'layout'       => 'full-width',
                 'value'        => (string) ( $info['dokan_store_open_notice'] ?? '' ),
                 'default'      => '',
                 'legacy_key'   => 'dokan_store_open_notice',
@@ -377,6 +420,7 @@ class StoreSettingsSchema {
                 'section_id'   => 'store_schedule',
                 'title'        => __( 'Store Close Notice', 'dokan-lite' ),
                 'placeholder'  => __( 'Store is closed', 'dokan-lite' ),
+                'layout'       => 'full-width',
                 'value'        => (string) ( $info['dokan_store_close_notice'] ?? '' ),
                 'default'      => '',
                 'legacy_key'   => 'dokan_store_close_notice',
@@ -387,6 +431,7 @@ class StoreSettingsSchema {
 
     /**
      * Terms & Conditions card — only when the admin allows vendor ToC.
+     * Renders last on the page (priority 90), collapsed by default.
      *
      * @since DOKAN_SINCE
      *
@@ -404,8 +449,11 @@ class StoreSettingsSchema {
                 'id'          => 'terms_conditions',
                 'type'        => 'section',
                 'subpage_id'  => 'store_settings',
-                'title'       => __( 'Terms and Conditions', 'dokan-lite' ),
+                'title'       => __( 'Terms & Conditions', 'dokan-lite' ),
+                'description' => __( 'Clearly define store policies to ensure a smooth shopping experience.', 'dokan-lite' ),
                 'collapsible' => true,
+                'collapsed'   => true,
+                'priority'    => 90,
             ],
             [
                 'id'            => 'enable_tnc',
@@ -431,6 +479,7 @@ class StoreSettingsSchema {
                 'variant'      => 'rich_text',
                 'section_id'   => 'terms_conditions',
                 'title'        => __( 'TOC Details', 'dokan-lite' ),
+                'layout'       => 'full-width',
                 'value'        => (string) ( $info['store_tnc'] ?? '' ),
                 'default'      => '',
                 'legacy_key'   => 'store_tnc',
@@ -479,7 +528,9 @@ class StoreSettingsSchema {
                 'type'        => 'section',
                 'subpage_id'  => 'store_settings',
                 'title'       => __( 'Catalog Mode', 'dokan-lite' ),
+                'description' => __( 'Control how customers can purchase products from your store.', 'dokan-lite' ),
                 'collapsible' => true,
+                'priority'    => 60,
             ],
             [
                 'id'            => 'catalog_mode_hide_add_to_cart_button',

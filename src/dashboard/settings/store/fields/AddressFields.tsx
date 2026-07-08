@@ -97,11 +97,7 @@ const AddressFields = ( { element }: { element: SettingsElement } ) => {
     const states = selectedCountry?.states || [];
 
     return (
-        <div className="dokan-vendor-address-field flex flex-col gap-3">
-            <span className="text-sm font-medium text-gray-900">
-                { element.title }
-            </span>
-
+        <div className="dokan-vendor-address-field flex w-full flex-col gap-3 p-4">
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 { TEXT_PARTS.map( ( { part, label, placeholder } ) => (
                     <label
