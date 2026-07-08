@@ -1,6 +1,6 @@
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Pencil, Trash } from 'lucide-react';
 import { useSettings, type SettingsElement } from '@wedevs/plugin-ui';
 import { MediaUploader } from '@dokan/components';
 
@@ -68,9 +68,10 @@ const ImageField = ( { element }: { element: SettingsElement } ) => {
                             type="button"
                             aria-label={ __( 'Remove image', 'dokan-lite' ) }
                             onClick={ handleRemove }
-                            className="flex h-8 w-8 items-center justify-center rounded-md border border-gray-300 bg-white text-gray-500 hover:text-red-600"
+                            className="box-border! flex h-8! w-8! min-w-0! shrink-0 items-center justify-center rounded-md! border! border-gray-300! bg-white! p-0! text-gray-500 hover:text-red-600"
                         >
-                            <Trash2 className="h-4 w-4" />
+                            { /* Inline size survives the theme's button/svg rules (same fight WeeklyTimeSlots' icon buttons solve). */ }
+                            <Trash size={ 16 } />
                         </button>
                     </div>
                 </div>

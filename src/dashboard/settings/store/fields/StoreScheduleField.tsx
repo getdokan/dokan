@@ -1,8 +1,35 @@
 import { useMemo } from '@wordpress/element';
+import { __, sprintf } from '@wordpress/i18n';
 import { getSettings } from '@wordpress/date';
 import { useSettings, type SettingsElement } from '@wedevs/plugin-ui';
 import { WeeklyTimeSlots, FULL_DAY } from '@dokan/components';
 import type { WeeklyValue } from '@dokan/components';
+
+// Store-domain validation copy — the shared component's defaults speak
+// about "delivery time".
+const SCHEDULE_MESSAGES = {
+    required: ( dayLabel: string ): string =>
+        sprintf(
+            /* translators: %s: day name */
+            __( '%s opening and closing time can not be empty.', 'dokan-lite' ),
+            dayLabel
+        ),
+    order: ( dayLabel: string ): string =>
+        sprintf(
+            /* translators: %s: day name */
+            __(
+                '%s closing time must be later than the opening time.',
+                'dokan-lite'
+            ),
+            dayLabel
+        ),
+    overlap: ( dayLabel: string ): string =>
+        sprintf(
+            /* translators: %s: day name */
+            __( '%s time ranges can not overlap.', 'dokan-lite' ),
+            dayLabel
+        ),
+};
 
 type LegacyDay = {
     status?: 'open' | 'close' | string;
@@ -138,6 +165,7 @@ const StoreScheduleField = ( { element }: { element: SettingsElement } ) => {
                     spread={ false }
                     is12Hour={ is12Hour }
                     validateOnMount
+                    messages={ SCHEDULE_MESSAGES }
                     onChange={ handleChange }
                 />
             </div>

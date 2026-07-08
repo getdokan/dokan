@@ -128,7 +128,7 @@ export default function StoreSettings() {
                 renderSaveButton={ ( { dirty, hasErrors, onSave } ) => (
                     <div className="flex items-center justify-end gap-3">
                         <Button
-                            variant="outline"
+                            variant="ghost"
                             onClick={ handleCancel }
                             disabled={ ! dirty || saving }
                         >
