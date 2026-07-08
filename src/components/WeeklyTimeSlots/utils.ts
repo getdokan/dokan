@@ -1,4 +1,4 @@
-import { dateI18n } from '@wordpress/date';
+import { dateI18n, getSettings } from '@wordpress/date';
 import type { TimeSlot } from './types';
 
 // "Full Day" sentinel; mirrors DeliveryDaysScheduleTransformer::FULL_DAY_SENTINEL.
@@ -45,8 +45,49 @@ export const minutesToCanonical = ( totalMinutes: number ): string => {
     return `${ hours12 }:${ pad( normalized % 60 ) } ${ meridiem }`;
 };
 
-// Localized time-of-day label. Build the instant in UTC and format in UTC (gmt=true) so the
-// wall-clock time survives any browser/site timezone gap; dateI18n still localizes the meridiem.
+// Site locale as a BCP-47 tag for Intl (l10n.locale is `bn_BD`; Intl needs `bn-BD`).
+const localeTag = (): string => {
+    const fromSettings = getSettings()?.l10n?.locale;
+    if ( fromSettings ) {
+        return fromSettings.replace( /_/g, '-' );
+    }
+    if ( typeof document !== 'undefined' && document.documentElement.lang ) {
+        return document.documentElement.lang;
+    }
+    return 'en';
+};
+
+// Per-locale ASCII→native digit maps; null means the locale already uses ASCII (no-op).
+const digitMaps: Record< string, Record< string, string > | null > = {};
+
+// dateI18n localizes the meridiem but never the digits; map ASCII 0-9 to the site
+// locale's numerals (e.g. Bangla ০-৯) so the whole label reads localized.
+const localizeDigits = ( text: string ): string => {
+    const tag = localeTag();
+    if ( ! ( tag in digitMaps ) ) {
+        try {
+            const formatter = new Intl.NumberFormat( tag, {
+                useGrouping: false,
+            } );
+            const map: Record< string, string > = {};
+            for ( let digit = 0; digit <= 9; digit++ ) {
+                map[ digit ] = formatter.format( digit );
+            }
+            digitMaps[ tag ] = map[ '0' ] === '0' ? null : map;
+        } catch ( error ) {
+            digitMaps[ tag ] = null;
+        }
+    }
+    const map = digitMaps[ tag ];
+    return map ? text.replace( /[0-9]/g, ( digit ) => map[ digit ] ) : text;
+};
+
+// Localized time-of-day label rendered with the EXACT site time format
+// (WP Settings → General → Time Format), so presets ('g:i a', 'g:i A', 'H:i')
+// and custom formats (e.g. 'G\h i') all display faithfully. is12Hour is only a
+// fallback for contexts without WP date settings (e.g. unit tests). Built and
+// formatted in UTC (gmt=true) so the wall-clock time survives any browser/site
+// timezone gap; dateI18n localizes the meridiem, localizeDigits the numerals.
 export const minutesToDisplay = (
     totalMinutes: number,
     is12Hour: boolean
@@ -60,7 +101,8 @@ export const minutesToDisplay = (
             totalMinutes % 60
         )
     );
-    return dateI18n( is12Hour ? 'g:i A' : 'H:i', date, true );
+    const format = getSettings().formats.time || ( is12Hour ? 'g:i a' : 'H:i' );
+    return localizeDigits( dateI18n( format, date, true ) );
 };
 
 // Localize any parseable stored value (even off the preset grid); raw fallback otherwise.
