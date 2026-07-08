@@ -77,5 +77,8 @@ class NewDashboard {
 
         wp_enqueue_script( 'dokan-react-frontend' );
         wp_enqueue_style( 'dokan-react-frontend' );
+
+        // Store settings media fields (banner/profile picture) drive wp.media.
+        wp_enqueue_media();
     }
 }

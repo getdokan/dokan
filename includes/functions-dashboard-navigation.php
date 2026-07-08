@@ -80,11 +80,12 @@ function dokan_get_dashboard_nav(): array {
 
     $settings_sub = [
         'store'   => [
-            'title'      => __( 'Store', 'dokan-lite' ),
-            'icon'       => '<i class="fas fa-university"></i>',
-            'url'        => dokan_get_navigation_url( 'settings/store' ),
-            'pos'        => 30,
-            'permission' => 'dokan_view_store_settings_menu',
+            'title'       => __( 'Store', 'dokan-lite' ),
+            'icon'        => '<i class="fas fa-university"></i>',
+            'url'         => dokan_get_navigation_url( 'settings/store' ),
+            'pos'         => 30,
+            'permission'  => 'dokan_view_store_settings_menu',
+            'react_route' => 'settings/store',
         ],
         'payment' => [
             'title'      => __( 'Payment', 'dokan-lite' ),
