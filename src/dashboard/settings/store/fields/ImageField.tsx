@@ -42,20 +42,29 @@ const ImageField = ( { element }: { element: SettingsElement } ) => {
             ) }
 
             { previewUrl ? (
-                <div className="relative inline-flex w-fit">
-                    <img
-                        src={ previewUrl }
-                        alt={ ( element.title as string ) || '' }
-                        className="max-h-40 max-w-full rounded-md border border-gray-200 object-cover"
-                    />
-                    <button
-                        type="button"
-                        aria-label={ __( 'Remove image', 'dokan-lite' ) }
-                        onClick={ handleRemove }
-                        className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-600 shadow-sm hover:text-red-600"
+                <div className="flex flex-col gap-2">
+                    <div className="relative inline-flex w-fit">
+                        <img
+                            src={ previewUrl }
+                            alt={ ( element.title as string ) || '' }
+                            className="max-h-40 max-w-full rounded-md border border-gray-200 object-cover"
+                        />
+                        <button
+                            type="button"
+                            aria-label={ __( 'Remove image', 'dokan-lite' ) }
+                            onClick={ handleRemove }
+                            className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-600 shadow-sm hover:text-red-600"
+                        >
+                            &times;
+                        </button>
+                    </div>
+                    <MediaUploader
+                        onSelect={ handleSelect }
+                        title={ ( element.title as string ) || undefined }
+                        className="w-fit cursor-pointer rounded-md border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50"
                     >
-                        &times;
-                    </button>
+                        { __( 'Change', 'dokan-lite' ) }
+                    </MediaUploader>
                 </div>
             ) : (
                 <MediaUploader

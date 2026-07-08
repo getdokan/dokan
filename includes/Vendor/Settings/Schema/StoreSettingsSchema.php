@@ -82,7 +82,7 @@ class StoreSettingsSchema {
                 'id'      => 'store_settings',
                 'type'    => 'subpage',
                 'page_id' => 'store',
-                'title'   => __( 'Store Settings', 'dokan-lite' ),
+                'title'   => __( 'Store', 'dokan-lite' ),
             ],
         ];
     }

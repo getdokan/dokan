@@ -1,4 +1,4 @@
-import { useEffect, useRef } from '@wordpress/element';
+import { useEffect, useRef, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { useSettings, type SettingsElement } from '@wedevs/plugin-ui';
 
@@ -12,10 +12,17 @@ type MapValue = {
 const DEFAULT_LAT = 23.709921;
 const DEFAULT_LNG = 90.407143;
 
+const MAPBOX_GL_JS = 'https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js';
+const MAPBOX_GL_CSS =
+    'https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css';
+
 declare global {
     interface Window {
         google?: any;
+        mapboxgl?: any;
+        gm_authFailure?: () => void;
         __dokanGoogleMapsLoader?: Promise< void >;
+        __dokanMapboxLoader?: Promise< void >;
     }
 }
 
@@ -52,13 +59,38 @@ const loadGoogleMaps = ( apiKey: string ): Promise< void > => {
     return window.__dokanGoogleMapsLoader;
 };
 
+const loadMapbox = (): Promise< void > => {
+    if ( window.mapboxgl ) {
+        return Promise.resolve();
+    }
+
+    if ( ! window.__dokanMapboxLoader ) {
+        window.__dokanMapboxLoader = new Promise( ( resolve, reject ) => {
+            const link = document.createElement( 'link' );
+            link.rel = 'stylesheet';
+            link.href = MAPBOX_GL_CSS;
+            document.head.appendChild( link );
+
+            const script = document.createElement( 'script' );
+            script.src = MAPBOX_GL_JS;
+            script.async = true;
+            script.onload = () => resolve();
+            script.onerror = () =>
+                reject( new Error( 'Mapbox GL failed to load' ) );
+            document.head.appendChild( script );
+        } );
+    }
+
+    return window.__dokanMapboxLoader;
+};
+
 const inputClass =
     'w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-dokan-btn focus:outline-none';
 
 // `vendor_map` variant — search box + draggable pin writing the two legacy
 // keys as one composite value: `location` ("lat,lng") and `find_address`.
-// Google Maps renders inline; the Mapbox provider currently falls back to
-// plain address/coordinate inputs (both providers persist identically).
+// Renders Google or Mapbox per the admin `map_api_source`; provider/auth
+// failures degrade to plain coordinate inputs so the value stays editable.
 const MapField = ( { element }: { element: SettingsElement } ) => {
     const { updateValue } = useSettings();
     const fieldKey = ( element.dependency_key as string ) || element.id;
@@ -69,10 +101,10 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
     };
     const provider = ( element.provider as string ) || 'google_maps';
     const apiKey = ( element.api_key as string ) || '';
+    const [ mapFailed, setMapFailed ] = useState< boolean >( false );
 
     const mapContainerRef = useRef< HTMLDivElement | null >( null );
     const searchInputRef = useRef< HTMLInputElement | null >( null );
-    const markerRef = useRef< any >( null );
     // Keeps the latest composite value visible to map-event closures.
     const valueRef = useRef< MapValue >( value );
     valueRef.current = value;
@@ -81,12 +113,16 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
         updateValue( fieldKey, { ...valueRef.current, ...next } );
     };
 
+    // Google provider.
     useEffect( () => {
         if ( 'google_maps' !== provider || ! apiKey ) {
             return;
         }
 
         let cancelled = false;
+
+        // Google reports invalid keys through this global instead of onerror.
+        window.gm_authFailure = () => setMapFailed( true );
 
         loadGoogleMaps( apiKey )
             .then( () => {
@@ -113,7 +149,6 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
                     map,
                     draggable: true,
                 } );
-                markerRef.current = marker;
 
                 marker.addListener( 'dragend', () => {
                     const position = marker.getPosition();
@@ -144,9 +179,7 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
                     } );
                 }
             } )
-            .catch( () => {
-                // Loader failure leaves the plain inputs below fully functional.
-            } );
+            .catch( () => setMapFailed( true ) );
 
         return () => {
             cancelled = true;
@@ -154,7 +187,82 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ provider, apiKey ] );
 
-    const showsCanvas = 'google_maps' === provider && !! apiKey;
+    // Mapbox provider.
+    useEffect( () => {
+        if ( 'mapbox' !== provider || ! apiKey ) {
+            return;
+        }
+
+        let cancelled = false;
+
+        loadMapbox()
+            .then( () => {
+                if (
+                    cancelled ||
+                    ! mapContainerRef.current ||
+                    ! window.mapboxgl
+                ) {
+                    return;
+                }
+
+                window.mapboxgl.accessToken = apiKey;
+
+                const center = parseLocation( valueRef.current.location );
+                const map = new window.mapboxgl.Map( {
+                    container: mapContainerRef.current,
+                    style: 'mapbox://styles/mapbox/streets-v11',
+                    center: [ center.lng, center.lat ],
+                    zoom: 12,
+                } );
+                const marker = new window.mapboxgl.Marker( {
+                    draggable: true,
+                } )
+                    .setLngLat( [ center.lng, center.lat ] )
+                    .addTo( map );
+
+                map.on( 'error', () => setMapFailed( true ) );
+                marker.on( 'dragend', () => {
+                    const position = marker.getLngLat();
+                    commit( {
+                        location: `${ position.lat },${ position.lng }`,
+                    } );
+                } );
+            } )
+            .catch( () => setMapFailed( true ) );
+
+        return () => {
+            cancelled = true;
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [ provider, apiKey ] );
+
+    // Mapbox has no Places widget — search through the geocoding REST API.
+    const searchMapboxAddress = async ( query: string ) => {
+        if ( ! query || 'mapbox' !== provider || ! apiKey ) {
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                `https://api.mapbox.com/geocoding/v5/mapbox.places/${ encodeURIComponent(
+                    query
+                ) }.json?access_token=${ encodeURIComponent( apiKey ) }&limit=1`
+            );
+            const data = await response.json();
+            const feature = data?.features?.[ 0 ];
+
+            if ( feature?.center ) {
+                commit( {
+                    location: `${ feature.center[ 1 ] },${ feature.center[ 0 ] }`,
+                    find_address: feature.place_name || query,
+                } );
+            }
+        } catch ( error ) {
+            // Geocoding failure keeps the typed address; coordinates stay editable below.
+        }
+    };
+
+    const showsCanvas = ! mapFailed && !! apiKey;
 
     return (
         <div className="dokan-vendor-map-field flex flex-col gap-2">
@@ -171,14 +279,24 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
                 onBlur={ ( event ) =>
                     commit( { find_address: event.target.value } )
                 }
+                onKeyDown={ ( event ) => {
+                    if ( 'Enter' === event.key ) {
+                        event.preventDefault();
+                        searchMapboxAddress(
+                            ( event.target as HTMLInputElement ).value
+                        );
+                    }
+                } }
             />
 
-            { showsCanvas ? (
+            { showsCanvas && (
                 <div
                     ref={ mapContainerRef }
                     className="h-72 w-full overflow-hidden rounded-md border border-gray-200"
                 />
-            ) : (
+            ) }
+
+            { ( mapFailed || ! apiKey ) && (
                 <label
                     htmlFor={ `${ fieldKey }-location` }
                     className="flex flex-col gap-1 text-xs text-gray-600"
