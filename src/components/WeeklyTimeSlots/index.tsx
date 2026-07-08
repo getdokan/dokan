@@ -1,6 +1,5 @@
 import { useMemo, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import DokanButton from '../Button';
 import { DokanSwitch } from '../Switch';
 import { twMerge } from 'tailwind-merge';
 import { Minus, Plus, Trash } from 'lucide-react';
@@ -21,12 +20,38 @@ import type {
     WeeklyValue,
 } from './types';
 
+// Per-mode layout classes: vendor (multiple) rows are wide, so they switch side-by-side/stacked on the CONTAINER width (@container root) at @3xl; admin (single) is narrow and uses the viewport `sm` breakpoint. Literal strings so Tailwind emits every variant.
+const LAYOUT = {
+    multiple: {
+        desktopRow: 'hidden @3xl:block!',
+        mobileRow: '@3xl:hidden!',
+        slotRow:
+            'flex flex-col gap-2 @3xl:flex-row @3xl:items-center @3xl:gap-4',
+        fieldWidth: 'w-full @3xl:w-auto',
+        minus: 'hidden shrink-0 @3xl:block',
+        icons: 'flex shrink-0 gap-2 self-end @3xl:ml-2 @3xl:self-auto',
+    },
+    single: {
+        desktopRow: 'hidden sm:block!',
+        mobileRow: 'sm:hidden!',
+        slotRow: 'flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4',
+        fieldWidth: 'w-full sm:w-auto',
+        minus: 'hidden shrink-0 sm:block',
+        icons: 'flex shrink-0 gap-2 self-end sm:ml-2 sm:self-auto',
+    },
+} as const;
+
+// Icon buttons: 32px (a touch shorter than the field), gray border, rounded, no shadow; `!` stops the theme's own button rules from overriding them.
+const iconBtnBase =
+    'flex items-center justify-center shrink-0 box-border! h-8! w-8! min-w-0! rounded-md! border! border-gray-200! bg-white! p-0! transition-colors';
+
 // Generic weekly schedule editor: `multiple` switches between one range/day (admin) and
 // N ranges with add/remove (vendor). Validation and messages are overridable via props.
 const WeeklyTimeSlots = ( {
     value,
     days,
     multiple = false,
+    spread = true,
     is12Hour = true,
     allowFullDay = true,
     step = DEFAULT_STEP_MINUTES,
@@ -67,6 +92,15 @@ const WeeklyTimeSlots = ( {
     const opensAt = openingPlaceholder ?? __( 'Opens at', 'dokan-lite' );
     const closesAt = closingPlaceholder ?? __( 'Closed at', 'dokan-lite' );
 
+    const {
+        desktopRow: desktopRowCls,
+        mobileRow: mobileRowCls,
+        slotRow: slotRowCls,
+        fieldWidth: fieldWidthCls,
+        minus: minusCls,
+        icons: iconsCls,
+    } = multiple ? LAYOUT.multiple : LAYOUT.single;
+
     const commit = ( dayKey: string, nextDay: WeeklyDay, isTouched = true ) => {
         const nextValue: WeeklyValue = { ...value, [ dayKey ]: nextDay };
         if ( isTouched ) {
@@ -92,6 +126,17 @@ const WeeklyTimeSlots = ( {
                             slots[ 0 ].closing_time || seeded.closing_time,
                     },
                 ];
+            }
+        } else {
+            // Disabling clears the day's error state; if it was in error, reset the
+            // fields too so the read-only overlay never shows invalid times.
+            setTouched( ( prev ) => {
+                const next = { ...prev };
+                delete next[ dayKey ];
+                return next;
+            } );
+            if ( errors[ dayKey ] ) {
+                slots = [ seed() ];
             }
         }
         commit( dayKey, { status: isActive, slots }, isActive );
@@ -170,7 +215,7 @@ const WeeklyTimeSlots = ( {
             <div
                 key={ index }
                 className={ twMerge(
-                    'flex items-center gap-4',
+                    slotRowCls,
                     slotError && 'dokan-weekly-slot-error'
                 ) }
             >
@@ -182,50 +227,73 @@ const WeeklyTimeSlots = ( {
                     }
                     is12Hour={ is12Hour }
                     hasError={ Boolean( slotError?.opening ) }
-                    // "Full Day" is a single-range concept; offering it per row in multiple
-                    // mode would wipe the day's other ranges on selection.
-                    includeFullDay={ allowFullDay && ! multiple }
+                    // Full Day only ever lives on the opening dropdown; picking it collapses the day.
+                    includeFullDay={ allowFullDay }
                     step={ step }
+                    wrapperClassName={ fieldWidthCls }
                 />
-                { ! isFullDaySlot && (
-                    <>
-                        <Minus size={ 20 } color={ '#828282' } />
-                        <TimeDropdown
-                            value={ slot.closing_time }
-                            placeholder={ closesAt }
-                            onChange={ ( v ) =>
-                                handleTimeChange(
-                                    dayKey,
-                                    index,
-                                    'closing_time',
-                                    v
-                                )
-                            }
-                            is12Hour={ is12Hour }
-                            hasError={ Boolean( slotError?.closing ) }
-                            includeFullDay={ false }
-                            step={ step }
-                        />
-                    </>
+                <Minus size={ 20 } color={ '#828282' } className={ minusCls } />
+                { /* Full Day spans the day, so its closing is a static read-only "Full Day" (matches admin). */ }
+                { isFullDaySlot ? (
+                    <TimeDropdown
+                        value={ FULL_DAY }
+                        is12Hour={ is12Hour }
+                        readOnly
+                        wrapperClassName={ fieldWidthCls }
+                    />
+                ) : (
+                    <TimeDropdown
+                        value={ slot.closing_time }
+                        placeholder={ closesAt }
+                        onChange={ ( v ) =>
+                            handleTimeChange( dayKey, index, 'closing_time', v )
+                        }
+                        is12Hour={ is12Hour }
+                        hasError={ Boolean( slotError?.closing ) }
+                        includeFullDay={ false }
+                        step={ step }
+                        wrapperClassName={ fieldWidthCls }
+                    />
                 ) }
                 { multiple && (
-                    <div className="flex gap-2 ml-2">
-                        <DokanButton
-                            variant="tertiary"
-                            className="p-2! text-gray-500! hover:text-red-500! hover:bg-red-50! h-8 w-8"
+                    <div className={ iconsCls }>
+                        <button
+                            type="button"
+                            aria-label={ __(
+                                'Remove time slot',
+                                'dokan-lite'
+                            ) }
+                            // A Full Day range is removed by toggling the day off, so its delete is disabled.
+                            disabled={ isFullDaySlot }
                             onClick={ () => handleRemoveSlot( dayKey, index ) }
+                            className={ twMerge(
+                                iconBtnBase,
+                                'text-gray-500!',
+                                isFullDaySlot
+                                    ? 'cursor-not-allowed opacity-50'
+                                    : 'hover:border-red-300! hover:bg-red-50! hover:text-red-600!'
+                            ) }
                         >
-                            <Trash />
-                        </DokanButton>
-                        { ! isFullDaySlot && index === day.slots.length - 1 && (
-                            <DokanButton
-                                variant="tertiary"
-                                className="p-2! text-gray-500! h-8 w-8"
-                                onClick={ () => handleAddSlot( dayKey ) }
-                            >
-                                <Plus />
-                            </DokanButton>
-                        ) }
+                            <Trash size={ 16 } className="shrink-0" />
+                        </button>
+                        { /* Add: real on the last non-Full-Day slot. On other rows it collapses when stacked (delete hugs the right edge) but keeps its space side-by-side so trashes stay in a column. */ }
+                        <button
+                            type="button"
+                            aria-label={ __( 'Add time slot', 'dokan-lite' ) }
+                            onClick={ () => handleAddSlot( dayKey ) }
+                            style={ {
+                                color: 'var(--dokan-button-background-color, #7047EB)',
+                            } }
+                            className={ twMerge(
+                                iconBtnBase,
+                                'hover:bg-gray-50!',
+                                ( isFullDaySlot ||
+                                    index !== day.slots.length - 1 ) &&
+                                    'hidden @3xl:flex @3xl:invisible'
+                            ) }
+                        >
+                            <Plus size={ 16 } className="shrink-0" />
+                        </button>
                     </div>
                 ) }
             </div>
@@ -241,7 +309,7 @@ const WeeklyTimeSlots = ( {
 
     const renderDayRow = ( dayKey: string ) => {
         const day = value[ dayKey ] ?? { status: false, slots: [] };
-        // De-duplicated day messages, rendered under the row.
+        // De-duplicated day messages, rendered under the row (disabled days carry none).
         const dayMessages = touched[ dayKey ]
             ? Array.from(
                   new Set(
@@ -252,90 +320,96 @@ const WeeklyTimeSlots = ( {
               )
             : [];
 
+        // A disabled day keeps its pickers visible but dimmed and non-interactive (read-only overlay).
+        const slotsOverlay =
+            ! day.status && 'opacity-50 pointer-events-none select-none';
+        const hasSlots = day.slots.length > 0;
+        // Admin centers rows; vendor top-aligns multi-slot rows so the switch/first field line up.
+        const desktopItems =
+            spread || day.slots.length <= 1 ? 'items-center' : 'items-start';
+
+        // Subtrees shared by the desktop and mobile layouts.
+        const nameBlock = ( fontCls: string ) => (
+            <div>
+                <span
+                    className={ twMerge(
+                        fontCls,
+                        ! day.status && 'opacity-50'
+                    ) }
+                >
+                    { days[ dayKey ] }
+                </span>
+                { dayMessages.length > 0 && renderDayMessages( dayMessages ) }
+            </div>
+        );
+        const slotsBlock = ( wrapCls: string ) =>
+            hasSlots && (
+                <div className={ twMerge( wrapCls, slotsOverlay ) }>
+                    { day.slots.map( ( slot, index ) =>
+                        renderSlotRow( dayKey, day, slot, index )
+                    ) }
+                </div>
+            );
+        const switchEl = (
+            <DokanSwitch
+                checked={ day.status }
+                onChange={ ( val: boolean ) => handleToggle( dayKey, val ) }
+            />
+        );
+
         return (
             <div
                 key={ dayKey }
-                className="border-b border-gray-200 last:border-b-0 bg-white"
+                className={ twMerge(
+                    'border-b border-gray-200 last:border-b-0 bg-white',
+                    // Vendor rows round their outer corners to match the bordered box (admin has no box).
+                    ! spread && 'first:rounded-t-md last:rounded-b-md'
+                ) }
             >
-                { /* Desktop Layout */ }
-                <div className="hidden sm:block!">
-                    <div className="flex items-center py-4 px-6 min-h-20">
-                        { /* Day name */ }
-                        <div className="w-2/4 shrink-0 self-start mt-2">
-                            <span className="text-sm font-medium text-[#25252D]">
-                                { days[ dayKey ] }
-                            </span>
-                            { renderDayMessages( dayMessages ) }
-                        </div>
-
-                        <div className="flex-1 flex items-center justify-end">
-                            { /* Time slots or status */ }
-                            <div className="flex-1 flex items-center justify-end">
-                                { day.status && day.slots.length > 0 && (
-                                    <div className="dokan-weekly-slots space-y-2">
-                                        { day.slots.map( ( slot, index ) =>
-                                            renderSlotRow(
-                                                dayKey,
-                                                day,
-                                                slot,
-                                                index
-                                            )
-                                        ) }
-                                    </div>
+                { /* Desktop: day name left, switch + pickers right. */ }
+                <div className={ desktopRowCls }>
+                    <div
+                        className={ twMerge(
+                            'flex justify-between gap-4 py-4 px-6',
+                            spread && 'min-h-20',
+                            desktopItems
+                        ) }
+                    >
+                        { nameBlock( 'text-sm font-medium text-[#25252D]' ) }
+                        <div
+                            className={ twMerge(
+                                'flex gap-8 shrink-0',
+                                desktopItems
+                            ) }
+                        >
+                            <div
+                                className={ twMerge(
+                                    'shrink-0',
+                                    ! spread && 'flex items-center min-h-10'
                                 ) }
+                            >
+                                { switchEl }
                             </div>
-
-                            { /* Switch - with proper spacing */ }
-                            <div className="ml-10 shrink-0">
-                                <DokanSwitch
-                                    checked={ day.status }
-                                    onChange={ ( val: boolean ) =>
-                                        handleToggle( dayKey, val )
-                                    }
-                                />
-                            </div>
+                            { slotsBlock( 'dokan-weekly-slots space-y-2' ) }
                         </div>
                     </div>
                 </div>
-                { /* Mobile Layout */ }
-                <div
-                    className={ twMerge(
-                        'sm:hidden! px-6 py-4 min-h-20 w-full',
-                        ! day.status && 'flex items-center'
-                    ) }
-                >
-                    { /* Day name + Switch row */ }
-                    <div className="flex items-center justify-between w-full">
-                        <div>
-                            <span className="text-sm font-semibold text-[#25252D]">
-                                { days[ dayKey ] }
-                            </span>
-                            { renderDayMessages( dayMessages ) }
-                        </div>
-                        <DokanSwitch
-                            checked={ day.status }
-                            onChange={ ( val: boolean ) =>
-                                handleToggle( dayKey, val )
-                            }
-                        />
+                { /* Mobile: name + switch stacked over the pickers. */ }
+                <div className={ twMerge( mobileRowCls, 'px-6 py-4 w-full' ) }>
+                    <div className="flex items-start justify-between w-full gap-4">
+                        { nameBlock( 'text-sm font-semibold text-[#25252D]' ) }
+                        { switchEl }
                     </div>
-
-                    { /* Time picker rows - only when active */ }
-                    { day.status && day.slots.length > 0 && (
-                        <div className="mt-4 space-y-2">
-                            { day.slots.map( ( slot, index ) =>
-                                renderSlotRow( dayKey, day, slot, index )
-                            ) }
-                        </div>
-                    ) }
+                    { slotsBlock( 'mt-4 space-y-2' ) }
                 </div>
             </div>
         );
     };
 
     // Render in `days` key order (honours WP "Week Starts On"), not the value's key order.
+    // Admin keeps overflow-hidden; vendor drops it so a bottom-row dropdown isn't clipped.
     return (
-        <div className="overflow-hidden">
+        <div className={ twMerge( '@container', spread && 'overflow-hidden' ) }>
             { Object.keys( days ).map( renderDayRow ) }
         </div>
     );

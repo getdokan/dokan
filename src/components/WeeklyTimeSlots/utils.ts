@@ -1,4 +1,4 @@
-import { dateI18n } from '@wordpress/date';
+import { dateI18n, getSettings } from '@wordpress/date';
 import type { TimeSlot } from './types';
 
 // "Full Day" sentinel; mirrors DeliveryDaysScheduleTransformer::FULL_DAY_SENTINEL.
@@ -45,8 +45,48 @@ export const minutesToCanonical = ( totalMinutes: number ): string => {
     return `${ hours12 }:${ pad( normalized % 60 ) } ${ meridiem }`;
 };
 
-// Localized time-of-day label. Build the instant in UTC and format in UTC (gmt=true) so the
-// wall-clock time survives any browser/site timezone gap; dateI18n still localizes the meridiem.
+// Site locale as a BCP-47 tag for Intl (l10n.locale `bn_BD` → `bn-BD`); constant per page, so resolve once.
+let cachedTag: string | undefined;
+const localeTag = (): string => {
+    if ( cachedTag === undefined ) {
+        const fromSettings = getSettings()?.l10n?.locale;
+        const fromDom =
+            typeof document !== 'undefined'
+                ? document.documentElement.lang
+                : '';
+        cachedTag = fromSettings
+            ? fromSettings.replace( /_/g, '-' )
+            : fromDom || 'en';
+    }
+    return cachedTag;
+};
+
+// Per-locale ASCII→native digit maps; null means the locale already uses ASCII (no-op).
+const digitMaps: Record< string, Record< string, string > | null > = {};
+
+// dateI18n localizes the meridiem but never the digits; map ASCII 0-9 to the site
+// locale's numerals (e.g. Bangla ০-৯) so the whole label reads localized.
+const localizeDigits = ( text: string ): string => {
+    const tag = localeTag();
+    if ( ! ( tag in digitMaps ) ) {
+        try {
+            const formatter = new Intl.NumberFormat( tag, {
+                useGrouping: false,
+            } );
+            const map: Record< string, string > = {};
+            for ( let digit = 0; digit <= 9; digit++ ) {
+                map[ digit ] = formatter.format( digit );
+            }
+            digitMaps[ tag ] = map[ '0' ] === '0' ? null : map;
+        } catch ( error ) {
+            digitMaps[ tag ] = null;
+        }
+    }
+    const map = digitMaps[ tag ];
+    return map ? text.replace( /[0-9]/g, ( digit ) => map[ digit ] ) : text;
+};
+
+// Localized time label in the site's WP time format (is12Hour is a no-settings fallback); built/formatted in UTC so the wall-clock survives TZ gaps, with meridiem + digits localized.
 export const minutesToDisplay = (
     totalMinutes: number,
     is12Hour: boolean
@@ -60,7 +100,8 @@ export const minutesToDisplay = (
             totalMinutes % 60
         )
     );
-    return dateI18n( is12Hour ? 'g:i A' : 'H:i', date, true );
+    const format = getSettings().formats.time || ( is12Hour ? 'g:i a' : 'H:i' );
+    return localizeDigits( dateI18n( format, date, true ) );
 };
 
 // Localize any parseable stored value (even off the preset grid); raw fallback otherwise.

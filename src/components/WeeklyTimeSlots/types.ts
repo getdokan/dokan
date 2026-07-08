@@ -42,6 +42,8 @@ export type WeeklyTimeSlotsProps = {
     days: Record< string, string >;
     // false (default): one range per day. true: N ranges with add/remove.
     multiple?: boolean;
+    // true (default): switch + pickers right-aligned (admin). false: grouped left by the day name (vendor).
+    spread?: boolean;
     // Display-only; storage is always canonical `g:i a`.
     is12Hour?: boolean;
     // Offer the "Full Day" preset in opening dropdowns. Default true.
