@@ -45,16 +45,20 @@ export const minutesToCanonical = ( totalMinutes: number ): string => {
     return `${ hours12 }:${ pad( normalized % 60 ) } ${ meridiem }`;
 };
 
-// Site locale as a BCP-47 tag for Intl (l10n.locale is `bn_BD`; Intl needs `bn-BD`).
+// Site locale as a BCP-47 tag for Intl (l10n.locale `bn_BD` → `bn-BD`); constant per page, so resolve once.
+let cachedTag: string | undefined;
 const localeTag = (): string => {
-    const fromSettings = getSettings()?.l10n?.locale;
-    if ( fromSettings ) {
-        return fromSettings.replace( /_/g, '-' );
+    if ( cachedTag === undefined ) {
+        const fromSettings = getSettings()?.l10n?.locale;
+        const fromDom =
+            typeof document !== 'undefined'
+                ? document.documentElement.lang
+                : '';
+        cachedTag = fromSettings
+            ? fromSettings.replace( /_/g, '-' )
+            : fromDom || 'en';
     }
-    if ( typeof document !== 'undefined' && document.documentElement.lang ) {
-        return document.documentElement.lang;
-    }
-    return 'en';
+    return cachedTag;
 };
 
 // Per-locale ASCII→native digit maps; null means the locale already uses ASCII (no-op).
@@ -82,12 +86,7 @@ const localizeDigits = ( text: string ): string => {
     return map ? text.replace( /[0-9]/g, ( digit ) => map[ digit ] ) : text;
 };
 
-// Localized time-of-day label rendered with the EXACT site time format
-// (WP Settings → General → Time Format), so presets ('g:i a', 'g:i A', 'H:i')
-// and custom formats (e.g. 'G\h i') all display faithfully. is12Hour is only a
-// fallback for contexts without WP date settings (e.g. unit tests). Built and
-// formatted in UTC (gmt=true) so the wall-clock time survives any browser/site
-// timezone gap; dateI18n localizes the meridiem, localizeDigits the numerals.
+// Localized time label in the site's WP time format (is12Hour is a no-settings fallback); built/formatted in UTC so the wall-clock survives TZ gaps, with meridiem + digits localized.
 export const minutesToDisplay = (
     totalMinutes: number,
     is12Hour: boolean

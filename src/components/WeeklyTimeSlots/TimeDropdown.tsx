@@ -23,14 +23,15 @@ export type TimeDropdownProps = {
     step?: number;
     // Render as a static, non-editable field (e.g. the "Full Day" closing placeholder).
     readOnly?: boolean;
+    // Extra classes for the outer wrapper (e.g. responsive width inside a slot row).
+    wrapperClassName?: string;
 };
 
 type TimeOption = { key: string; label: string; minutes: number | null };
 
 const LIST_MAX_HEIGHT = 288;
 
-// Visible clip window: the viewport intersected with every scroll/overflow ancestor (e.g. the
-// admin settings card), so the in-flow list can flip up / shrink to fit instead of being cut off.
+// Visible clip window (viewport ∩ every scroll/overflow ancestor, e.g. the admin settings card) so the in-flow list flips up / shrinks to fit instead of being cut off.
 const getClipWindow = ( el: HTMLElement ): { top: number; bottom: number } => {
     let top = 0;
     let bottom = window.innerHeight;
@@ -56,6 +57,7 @@ const TimeDropdown = ( {
     includeFullDay = false,
     step = DEFAULT_STEP_MINUTES,
     readOnly = false,
+    wrapperClassName = '',
 }: TimeDropdownProps ) => {
     const [ open, setOpen ] = useState( false );
     // The list opens downward by default; it flips up / shrinks to stay inside the clip window.
@@ -176,7 +178,10 @@ const TimeDropdown = ( {
     }, [ open ] );
 
     return (
-        <div ref={ wrapRef } className="relative inline-block">
+        <div
+            ref={ wrapRef }
+            className={ twMerge( 'relative inline-block', wrapperClassName ) }
+        >
             <div
                 className={ twMerge(
                     'flex items-center gap-2 rounded-md border bg-white px-3 py-2 text-sm shadow-sm min-w-[155px] focus-within:ring-2 focus-within:ring-[#7047EB]',
