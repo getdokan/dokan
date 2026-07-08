@@ -96,6 +96,11 @@ class ValueMapper {
         // Hiding the price is meaningless with the cart button visible — same forced-off rule as legacy.
         if ( 'off' === ( $catalog['hide_add_to_cart_button'] ?? 'off' ) ) {
             $catalog['hide_product_price'] = 'off';
+
+            // RFQ's quote button follows the same rule; its own Seam-A handler is nonce-guarded and silent on REST saves.
+            if ( isset( $catalog['request_a_quote_enabled'] ) ) {
+                $catalog['request_a_quote_enabled'] = 'off';
+            }
         }
 
         return $catalog;
