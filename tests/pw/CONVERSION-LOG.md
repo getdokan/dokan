@@ -724,8 +724,53 @@ follow-store's was deleted as the exemplar; the remaining 20 are **retired-in-pl
 documented** — deletion is safe cleanup but is deferred this pass to spend budget on the higher-value
 class-B REAL-coverage rebuilds. None are un-skipped (that would fake-green).
 
+### GAP-1 shipping drill-in — DONE (2026-07-09), green 3× headless
+New self-contained folder **`tests/e2e/new-shipping-rate/`** (`newShippingRatePage.ts` + `newShippingRate.spec.ts`)
+closes the one confirmed conversion gap: the React vendor-dashboard **per-instance shipping settings forms**
+(`/dashboard/new/#/settings/shipping/:zoneID/{table-rate|distance-rate}/:instanceID`), which the zones-list
+spec (`new-shipping/`) never reaches. Rendering components: Pro module `table-rate-shipping/src/js/vendor-dashboard/`
+`table-settings/index.tsx` + `distance-settings/index.tsx`.
+
+4 tests (all `['@pro','@vendor','@new-ui']`):
+- **TR-1** table-rate form renders on a REST-seeded deep-linked instance (`.dokan-table-rate-shipping-settings-container`
+  + Method Title input + `#table-rates-shipping-table` + "Save Changes"; not NotFound).
+- **TR-2 (PRIMARY oracle)** Method Title persists: fill → "Save Changes" paired with the version-agnostic PUT
+  `/dokan\/v[0-9]+\/shipping\/table-rate\/settings\/zone\/\d+\/instance\/\d+/` (assert `.ok()`), then full reload +
+  input read-back equals the value (the mount GET re-reads persisted `settings.title`). No render-only/no-fatal
+  stand-in; if persistence silently broke either the PUT status or the read-back would fail.
+- **DR-1** distance-rate GMAP gate: asserts `.dokan-alert-danger[role="alert"]` "requires Google map API key".
+- **DR-2** distance-rate persist (PUT + reload read-back), mirroring TR-2 for the distance form.
+
+**Seeding (brief §3):** vendor method instances live in `{prefix}dokan_shipping_zone_methods` (seller-scoped) — the
+WC-v3 helper cannot create them and there is no ApiUtils wrapper. So each test `apiUtils.post`s
+`/dokan/v1/shipping/{zoneId}/methods/` with **VENDOR** auth (`method_id: dokan_table_rate_shipping` /
+`dokan_distance_rate_shipping`), extracts the newest `instance_id` from the keyed `"{method_id}:{instance_id}"`
+map, deep-links it, and `apiUtils.delete`s it in `afterEach`. Depends on `_env.setup.ts:57-60` enabling those
+methods on the admin US zone — otherwise `ShippingZone::get_shipping_methods` (available_shipping_methods gate,
+`Hooks.php::add_table_rate_method`) filters the new instance out of the create response.
+
+**Selector drift fixed:** the brief's `input[placeholder="Enter method title"]` matches **nothing** — MethodSettings /
+DistanceMethodSettings render the field with `@getdokan/dokan-ui` `<SimpleInput placeholder=… />`, but SimpleInput's
+props (`SimpleInput.d.ts`) have **no top-level `placeholder`** (only forwarded via its `input` prop), so the emitted
+`<input>` carries no placeholder attribute (verified live: 0 matches). Anchored instead on the labelled grid row:
+`//div[contains(@class,"sm:grid")][.//h3[normalize-space()="Method Title"]]//input` (1 match; reads the bound value).
+
+**GMAP note:** the distance-rate form renders only when `dokanTableRateShippingHelper.map_api_key`
+(`module.php:188` = `dokan_appearance.gmap_api_key`, seeded from the `GMAP` env) is truthy; otherwise it renders the
+gate alert. **GMAP is populated in this env** (`dbData.ts:238`), so live the distance form renders and the alert does
+NOT (probe-confirmed). DR-1/DR-2 are therefore a mutually-exclusive pair guarded by `test.skip` on
+`process.env.GMAP` — **exactly one runs per environment, neither fakes green**: here DR-1 skips (documented reason)
+and **DR-2 runs the real persist**. In a GMAP-absent env DR-1 runs the alert assertion and DR-2 skips.
+
+**Green 3× (headless, single worker, `--project=e2e_tests`, coordinator directive = headless only):**
+- Run 1 (full `e2e_setup`): `79 passed, 2 skipped (2.4m)` → this folder 3 passed + 1 skipped (DR-1, GMAP present).
+- Run 2 (full `e2e_setup`): `79 passed, 2 skipped (2.4m)` → same.
+- Run 3 (`NO_SETUP`, isolated): `3 passed, 1 skipped (28s)`.
+(An earlier `--headed` run also went `3 passed, 1 skipped`; remaining runs kept headless per directive.)
+
+Legacy `tableRateShipping.spec.ts` **left untouched** (it drives the classic Vue/PHP shipping surface — a different
+surface, not the React drill-in). Feature-map: 4 leaves added under `Shipping › vendor (new UI)`.
+
 ### In flight (this pass)
-- **Phase 2 GAP-1 shipping drill-in** — a build agent is authoring `new-shipping-rate/` (table-rate render +
-  PUT-persist oracle; distance-rate GMAP-gate assertion) per the scout brief; green-3× in progress.
 - **Class-B authoring (code-only)** — 5 rebuilds being authored via recovery+seeding: store-supports,
   product-qa, vendor-staff, vendor-return-request, product-addons. Serial live verification (green 3×) follows.

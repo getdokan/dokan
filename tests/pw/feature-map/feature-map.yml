@@ -53,6 +53,14 @@
           added method persists in the zone after reload (React): true
           opening the add-method modal then closing leaves the zone unchanged (React): true
           vendor configures a flat-rate method on the zone and it is reflected back in the React UI (React): true
+          # Per-instance shipping drill-in forms (new-shipping-rate/) — GAP-1 closure.
+          vendor sees the table-rate settings form on the per-instance drill-in route (React): true
+          vendor persists the table-rate Method Title via the settings PUT and it survives reload (React): true
+          # DR-1/DR-2 are a GMAP-gated pair: exactly one runs per environment
+          # (DR-1 asserts the gate alert when no map key is configured; DR-2 the
+          # persist path when a key is present). Both are genuine coverage.
+          distance-rate drill-in renders the Google-map-API-key gate alert when no map key is configured (React): true
+          vendor persists the distance-rate Method Title via the settings PUT and it survives reload (React): true
       customer (new UI):
           customer at checkout sees the vendor shipping option (React): false
           customer loading the vendor shipping route does not produce a PHP fatal (React): true
