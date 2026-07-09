@@ -276,19 +276,29 @@ const WeeklyTimeSlots = ( {
                         >
                             <Trash size={ 16 } className="shrink-0" />
                         </button>
-                        { /* Add: real on the last non-Full-Day slot. On other rows it collapses when stacked (delete hugs the right edge) but keeps its space side-by-side so trashes stay in a column. */ }
+                        { /* Add: functional on the last dated slot. A Full Day
+                             slot shows it disabled (a full day already spans 24h)
+                             so the row still lines up with dated rows instead of
+                             leaving a gap next to the trash. Non-last rows keep
+                             their space but hide the glyph so the last row owns the +. */ }
                         <button
                             type="button"
                             aria-label={ __( 'Add time slot', 'dokan-lite' ) }
+                            disabled={ isFullDaySlot }
                             onClick={ () => handleAddSlot( dayKey ) }
-                            style={ {
-                                color: 'var(--dokan-button-background-color, #7047EB)',
-                            } }
+                            style={
+                                isFullDaySlot
+                                    ? undefined
+                                    : {
+                                          color: 'var(--dokan-button-background-color, #7047EB)',
+                                      }
+                            }
                             className={ twMerge(
                                 iconBtnBase,
-                                'hover:bg-gray-50!',
-                                ( isFullDaySlot ||
-                                    index !== day.slots.length - 1 ) &&
+                                isFullDaySlot
+                                    ? 'text-gray-500! cursor-not-allowed opacity-50'
+                                    : 'hover:bg-gray-50!',
+                                index !== day.slots.length - 1 &&
                                     'hidden @3xl:flex @3xl:invisible'
                             ) }
                         >
