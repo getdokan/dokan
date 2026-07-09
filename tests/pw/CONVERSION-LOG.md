@@ -867,3 +867,20 @@ legacy specs + the additive `new-*` React specs pass green together (final conso
 (follow-store, announcements, product-qa) and left the rest as documented follow-ups (4 class-B reverted with a
 recovery recipe; 20 class-C retired-in-place). No block was left in a fake-green or red state — the committed
 suite is entirely green. The two product-bug tests stay `test.fixme` (QA reports, does not fix product code).
+
+## Class-B continuation (vendor-only scope) — store-supports REVIVED ✔ (2026-07-09)
+
+Re-did store-supports with the scoped recipe (vendor methods only; admin+customer stay `{}` stubs). Un-skipped
+the nested `vendor cases — ported to new-store-support/` block → **11 real legacy vendor cases** on classic
+`/dashboard/support` (view menu/details, filter by customer + date-range, search by id + title, reply, close,
+reopen, close-with-chat-reply, reopen-with-chat-reply). Green 3× headless (39 store-supports passed/run;
+115 passed incl. setup) + an independent confirmation run. **No documented skips** — all 11 vendor cases real.
+
+Live drift check (throwaway probe, deleted): the classic `/dashboard/support` still renders the legacy support
+template (now nested in the React dashboard shell `#dokan-vendor-dashboard-layout-root`, but the content markup
+is unchanged). **Reply endpoint is still `POST wp-comments-post.php` → 302** (the suspected REST migration did
+NOT happen); close/reopen `//td[@data-title="Action"]//a` → `.swal2-confirm` → `GET ?action=dokan-support-topic-status`
+unchanged; search input + select2 customer filter unchanged; only additive change is a new "Order Ref." column.
+Strengthened over the recovery (no fake green): added real status/reply read-back oracles the old methods lacked,
+and fixed the by-customer filter that never actually selected the option. Admin (React SPA) + customer methods
+kept as vacuous `{}` stubs (their cases pass as on develop). feature-map: 11 vendor leaves flipped `false→true`.

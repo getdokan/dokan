@@ -1766,18 +1766,18 @@
           admin can close support ticket: true
           admin can reopen closed support ticket: true
           admin can perform bulk action on store support tickets: true
-      vendor:
-          vendor can view store support menu page: false
-          vendor can view support ticket details: false
-          vendor can filter support tickets by customer: false
-          vendor can filter support tickets by date range: false
-          vendor can search support ticket by ticket id: false
-          vendor can search support ticket by ticket title: false
-          vendor can reply to support ticket: false
-          vendor can close support ticket: false
-          vendor can reopen closed support ticket: false
-          vendor can close support ticket with a chat reply: false
-          vendor can reopen closed support ticket with a chat reply: false
+      vendor: # legacy /dashboard/support cases REVIVED 2026-07-09 (green 3×, vendor-only scope)
+          vendor can view store support menu page: true
+          vendor can view support ticket details: true
+          vendor can filter support tickets by customer: true
+          vendor can filter support tickets by date range: true
+          vendor can search support ticket by ticket id: true
+          vendor can search support ticket by ticket title: true
+          vendor can reply to support ticket: true
+          vendor can close support ticket: true
+          vendor can reopen closed support ticket: true
+          vendor can close support ticket with a chat reply: true
+          vendor can reopen closed support ticket with a chat reply: true
       customer:
           customer can view store support menu page: true
           customer can view support ticket details: true

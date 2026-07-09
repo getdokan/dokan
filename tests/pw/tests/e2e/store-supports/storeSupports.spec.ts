@@ -122,6 +122,8 @@ test.describe('Store Support test (vendor)', () => {
         vPage = await vendorContext.newPage();
         vendor = new StoreSupportsPage(vPage);
         apiUtils = new ApiUtils(null);
+        // The legacy /dashboard/support vendor screen only renders when the module is active.
+        await apiUtils.activateModules(payloads.moduleIds.storeSupport, payloads.adminAuth);
         [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
         await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, status: 'closed', author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
     });
@@ -133,12 +135,8 @@ test.describe('Store Support test (vendor)', () => {
         await apiUtils.dispose();
     });
 
-    // Ported to the React vendor dashboard at tests/e2e/new-store-support/
-    // (parity green 3×; see NEW_UI_HOUSE_STYLE.md §8). The legacy vendor cases
-    // below drove the old PHP/Vue support screen through a no-op stub page
-    // object, so their green was vacuous. Skipped as a nested block so the
-    // sibling `admin can disable store support module` case (D3) stays active.
-    test.describe.skip('vendor cases — ported to new-store-support/', () => {
+    // Revived: these drive the classic PHP/Vue `/dashboard/support` screen for real (legacy regression); vendor page methods + selectors are implemented, admin/customer stay vacuous stubs.
+    test.describe('vendor cases — legacy /dashboard/support regression', () => {
         test('vendor can view store support menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorStoreSupportRenderProperly(); });
         test('vendor can view support ticket details', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorViewSupportTicketDetails(supportTicketId); });
         test('vendor can filter support tickets by customer', { tag: ['@pro', '@vendor'] }, async () => { await vendor.vendorFilterSupportTickets('by-customer', data.storeSupport.filter.byCustomer); });
