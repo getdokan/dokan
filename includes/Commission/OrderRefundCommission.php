@@ -407,34 +407,35 @@ class OrderRefundCommission {
             return 0;
         }
 
-        $gateway_fee = $this->get_dokan_gateway_fee();
+        $prorated_fee = 0.0;
+        $gateway_fee  = $this->get_dokan_gateway_fee();
+        $order_total  = floatval( $this->get_order()->get_total() );
 
-        if ( empty( $gateway_fee['fee'] ) || $recipient !== $gateway_fee['paid_by'] ) {
-            return 0;
+        if ( ! empty( $gateway_fee['fee'] ) && $recipient === $gateway_fee['paid_by'] && $order_total > 0 ) {
+            $prorated_fee = $gateway_fee['fee'] * ( abs( floatval( $this->refund->get_total() ) ) / $order_total );
         }
-
-        $order_total = floatval( $this->get_order()->get_total() );
-
-        if ( $order_total <= 0 ) {
-            return 0;
-        }
-
-        $prorated_fee = $gateway_fee['fee'] * ( abs( floatval( $this->refund->get_total() ) ) / $order_total );
 
         /**
-         * Filter the gateway fee amount returned to the fee payer for this refund.
+         * Filter the gateway fee amount returned to the given recipient for this refund.
          *
          * All gateways keep the processing fee on refund except a few (e.g.
          * Paystack), so the default is 0 and the refund gateway-fee logic is
          * handled by the associated payment gateway integration.
          *
+         * The filter fires for both recipients ('seller' and 'admin') and also
+         * when no `dokan_gateway_fee` order meta is stored — some gateways
+         * (e.g. Paystack split payments) never persist it — so the gateway
+         * integration decides both the amount and who receives it. The
+         * prorated share of the stored fee is 0 unless the recipient matches
+         * `dokan_gateway_fee_paid_by`.
+         *
          * @since DOKAN_SINCE
          *
          * @param float            $gateway_fee_refund The gateway fee amount returned for this refund. Default 0.
-         * @param float            $prorated_fee       The payer's prorated share of the gateway fee for the refunded portion.
+         * @param float            $prorated_fee       The recipient's prorated share of the stored gateway fee for the refunded portion.
          * @param \WC_Order_Refund $refund             The refund being calculated.
          * @param \WC_Order        $order              The refunded order.
-         * @param string           $recipient          The party that paid the gateway fee ('seller' or 'admin').
+         * @param string           $recipient          The party being calculated for ('seller' or 'admin').
          */
         return floatval( apply_filters( 'dokan_refund_gateway_fee', 0.0, $prorated_fee, $this->refund, $this->get_order(), $recipient ) );
     }

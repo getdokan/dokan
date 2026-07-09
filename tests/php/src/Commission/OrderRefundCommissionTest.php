@@ -286,6 +286,32 @@ class OrderRefundCommissionTest extends \WeDevs\Dokan\Test\DokanTestCase {
 	}
 
 	/**
+	 * The dokan_refund_gateway_fee filter fires even when no dokan_gateway_fee
+	 * meta is stored on the order — gateways like Paystack handle fees via
+	 * split-payment bearer config and never persist the meta, but must still
+	 * be able to supply the returned fee per recipient.
+	 */
+	public function test_gateway_fee_filter_fires_without_stored_fee_meta() {
+		$order  = $this->create_order(); // No dokan_gateway_fee meta at all.
+		$refund = $this->create_refund( $order, 15 );
+
+		$refund_commission = $this->get_refund_commission( $refund, $order )->calculate();
+
+		$this->assertEquals( 0.0, $refund_commission->get_vendor_gateway_fee_refund() );
+
+		$supply_fee_for_seller = function ( $gateway_fee_refund, $prorated_fee, $refund_obj, $order_obj, $recipient ) {
+			return 'seller' === $recipient ? 0.75 : $gateway_fee_refund;
+		};
+		add_filter( 'dokan_refund_gateway_fee', $supply_fee_for_seller, 10, 5 );
+
+		$this->assertEquals( 0.75, round( $refund_commission->get_vendor_gateway_fee_refund(), 2 ) );
+		$this->assertEquals( 0.0, round( $refund_commission->get_admin_gateway_fee_refund(), 2 ) );
+		$this->assertEquals( 12.75, round( $refund_commission->get_vendor_total_refund(), 2 ) ); // 27/30 × 15 − 0.75
+
+		remove_filter( 'dokan_refund_gateway_fee', $supply_fee_for_seller, 10 );
+	}
+
+	/**
 	 * When dokan_gateway_fee_paid_by meta is empty, the payer falls back to the
 	 * seller for non Stripe-Connect payment methods (regression for the
 	 * previously dead fallback in OrderCommission::get_dokan_gateway_fee()).
