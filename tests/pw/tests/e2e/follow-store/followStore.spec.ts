@@ -1,4 +1,4 @@
-import { Page, expect, test } from '@utils/test';
+import { Page, test } from '@utils/test';
 import {
     FollowStorePage,
     api,

@@ -1,4 +1,4 @@
-import { Locator, Page, APIResponse } from '@playwright/test';
+import { Locator, Page, Response } from '@playwright/test';
 import { closeAnnouncementModal, toPath } from '@utils/helpers';
 import { REACT_ROOT, PHP_FATAL, hasNoPhpFatal } from '@utils/dataViews';
 
@@ -180,7 +180,7 @@ export class NewShippingRatePage {
     /** Click "Save Changes" on the table-rate form, paired with the version-
      *  agnostic settings PUT (§3). Returns the PUT APIResponse (or undefined if
      *  none fired) so the spec can assert ok() — the primary persistence oracle. */
-    async saveTableRateSettings(): Promise<APIResponse | undefined> {
+    async saveTableRateSettings(): Promise<Response | undefined> {
         const [resp] = await Promise.all([
             this.page
                 .waitForResponse(r => TABLE_RATE_SETTINGS_PUT_RE.test(r.url()) && ['PUT', 'POST'].includes(r.request().method()), { timeout: 15000 })
@@ -192,7 +192,7 @@ export class NewShippingRatePage {
 
     /** Click "Save Changes" on the distance-rate form, paired with its version-
      *  agnostic settings PUT (§3). Returns the PUT APIResponse (or undefined). */
-    async saveDistanceRateSettings(): Promise<APIResponse | undefined> {
+    async saveDistanceRateSettings(): Promise<Response | undefined> {
         const [resp] = await Promise.all([
             this.page
                 .waitForResponse(r => DISTANCE_RATE_SETTINGS_PUT_RE.test(r.url()) && ['PUT', 'POST'].includes(r.request().method()), { timeout: 15000 })
