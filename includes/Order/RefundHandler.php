@@ -3,7 +3,7 @@
 namespace WeDevs\Dokan\Order;
 
 use WeDevs\Dokan\Analytics\Reports\OrderType;
-use WeDevs\Dokan\Commission\OrderCommission;
+use WeDevs\Dokan\Commission\OrderRefundCommission;
 use WeDevs\Dokan\Contracts\Hookable;
 use WeDevs\Dokan\Cache;
 
@@ -19,7 +19,8 @@ class RefundHandler implements Hookable {
         add_filter( 'dokan_refund_should_insert_into_vendor_balance', [ $this, 'exclude_cod_payment' ], 10, 3 );
         add_filter( 'dokan_vendor_earning_in_refund', [ $this, 'get_vendor_earning_in_refund' ], 10, 2 );
         add_action( 'dokan_refund_adjust_vendor_balance', [ $this, 'insert_into_balance_table' ], 10, 3 );
-//        add_action( 'dokan_refund_adjust_dokan_orders', [ $this, 'update_order_amounts' ], 10, 3 );
+        // phpcs:ignore Squiz.PHP.CommentedOutCode.Found
+        // add_action( 'dokan_refund_adjust_dokan_orders', [ $this, 'update_order_amounts' ], 10, 3 );
         add_action( 'dokan_refund_after_dokan_orders_updated', [ $this, 'clear_order_caches' ], 10, 3 );
     }
 
@@ -63,22 +64,12 @@ class RefundHandler implements Hookable {
      * @return float
      */
     public function get_vendor_earning_in_refund( $refund_order, $order ): float {
-        if ( $order->get_meta( 'has_sub_order' ) ) {
-            return 0;
-        }
+        $refund_commission = dokan_get_container()->get( OrderRefundCommission::class );
 
-		$commission = dokan_get_container()->get( OrderCommission::class );
+        $refund_commission->set_refund( $refund_order );
+        $refund_commission->set_order( $order );
 
-        $commission->set_order( $order );
-        $commission->calculate();
-
-        $refund_commission = $commission->calculate_for_refund( $refund_order );
-        $vendor_refund     = $refund_commission->get_vendor_net_earning();
-
-        $vendor_refund += $this->get_tax_refund( $refund_order, $order );
-        $vendor_refund += $this->get_shipping_refund( $refund_order, $order );
-
-        return floatval( $vendor_refund );
+        return $refund_commission->get_vendor_total_refund();
     }
 
     /**
@@ -138,6 +129,7 @@ class RefundHandler implements Hookable {
      * Get the refunded tax amount for the vendor.
      *
      * @since 4.0.0
+     * @deprecated DOKAN_SINCE Use OrderRefundCommission::get_vendor_tax_refund() instead.
      *
      * @param \WC_Order_Refund $refund_order The refund object.
      * @param \WC_Order        $order  The original order object.
@@ -145,32 +137,18 @@ class RefundHandler implements Hookable {
      * @return float
      */
     protected function get_tax_refund( \WC_Order_Refund $refund_order, \WC_Order $order ): float {
-        $tax_refund          = 0;
-        $shipping_tax_refund = 0;
+        wc_deprecated_function( __METHOD__, 'DOKAN_SINCE', OrderRefundCommission::class . '::get_vendor_tax_refund' );
 
-        foreach ( $refund_order->get_items( 'tax' ) as $tax_item ) {
-            $tax_data = $tax_item->get_data();
-            $tax_refund += floatval( $tax_data['tax_total'] );
-            $shipping_tax_refund += floatval( $tax_data['shipping_tax_total'] );
-        }
+        $refund_commission = dokan_get_container()->get( OrderRefundCommission::class );
 
-        $vendor_tax_refund = 0;
-
-        if ( 'seller' === dokan()->fees->get_tax_fee_recipient( $order ) ) {
-            $vendor_tax_refund += $tax_refund;
-        }
-
-        if ( 'seller' === dokan()->fees->get_shipping_tax_fee_recipient( $order ) ) {
-            $vendor_tax_refund += $shipping_tax_refund;
-        }
-
-        return abs( $vendor_tax_refund );
+        return $refund_commission->set_refund( $refund_order )->set_order( $order )->get_vendor_tax_refund();
     }
 
     /**
      * Get the refunded shipping amount for the vendor.
      *
      * @since 4.0.0
+     * @deprecated DOKAN_SINCE Use OrderRefundCommission::get_vendor_shipping_refund() instead.
      *
      * @param \WC_Order_Refund $refund_order The refund object.
      * @param \WC_Order        $order  The original order object.
@@ -178,17 +156,11 @@ class RefundHandler implements Hookable {
      * @return float
      */
     protected function get_shipping_refund( \WC_Order_Refund $refund_order, \WC_Order $order ): float {
-        $shipping_refund = 0;
+        wc_deprecated_function( __METHOD__, 'DOKAN_SINCE', OrderRefundCommission::class . '::get_vendor_shipping_refund' );
 
-        if ( 'seller' !== dokan()->fees->get_shipping_fee_recipient( $order->get_id() ) ) {
-            return 0;
-        }
+        $refund_commission = dokan_get_container()->get( OrderRefundCommission::class );
 
-        foreach ( $refund_order->get_items( 'shipping' ) as $item ) {
-            $shipping_refund += $item->get_total();
-        }
-
-        return abs( $shipping_refund );
+        return $refund_commission->set_refund( $refund_order )->set_order( $order )->get_vendor_shipping_refund();
     }
 
     /**
