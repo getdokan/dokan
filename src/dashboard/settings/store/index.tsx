@@ -1,6 +1,7 @@
 import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { applyFilters } from '@wordpress/hooks';
+import { Fill } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import {
     Settings,
@@ -11,6 +12,8 @@ import {
     type SettingsElement,
 } from '@wedevs/plugin-ui';
 import { registerVendorSettingsFields } from './register-fields';
+import StoreSettingsSkeleton from './StoreSettingsSkeleton';
+import './style.scss';
 
 // Side effect: register the custom variants exactly once at module load —
 // registering inside the component would duplicate handlers on every render.
@@ -115,35 +118,82 @@ export default function StoreSettings() {
         }
     };
 
+    // The engine's built-in skeleton draws the admin sidebar+panel frame; this
+    // page renders as bare full-width cards, so it gets a matching skeleton.
+    if ( loading ) {
+        return (
+            <div className="dokan-vendor-store-settings">
+                <StoreSettingsSkeleton />
+                <Toaster richColors />
+            </div>
+        );
+    }
+
     return (
         <div className="dokan-vendor-store-settings">
             <Settings
                 key={ resetKey }
                 schema={ schema }
-                loading={ loading }
-                title={ __( 'Store', 'dokan-lite' ) }
+                loading={ false }
+                title={ __( 'Store Settings', 'dokan-lite' ) }
                 hookPrefix="dokan_vendor"
                 applyFilters={ applyFilters }
                 onSave={ handleSave }
+                // Strip the engine's outer panel chrome so the cards float on the
+                // dashboard background, matching the Figma page.
+                className="border-0 rounded-none min-h-0 bg-transparent"
+                // Save/Cancel render twice: portaled into the dashboard header
+                // (legacy "Update Settings" placement) AND inline in the
+                // engine's save area at the end of the page (Figma footer) —
+                // style.scss strips that bar down to plain right-aligned buttons.
                 renderSaveButton={ ( { dirty, hasErrors, onSave } ) => (
-                    <div className="flex items-center justify-end gap-3">
-                        <Button
-                            variant="ghost"
-                            onClick={ handleCancel }
-                            disabled={ ! dirty || saving }
-                        >
-                            { __( 'Cancel', 'dokan-lite' ) }
-                        </Button>
-                        <Button
-                            onClick={ onSave }
-                            disabled={ ! dirty || hasErrors || saving }
-                        >
-                            { saving && <Spinner className="size-4 mr-2" /> }
-                            { saving
-                                ? __( 'Saving…', 'dokan-lite' )
-                                : __( 'Save Changes', 'dokan-lite' ) }
-                        </Button>
-                    </div>
+                    <>
+                        <Fill name="dokan-header-actions">
+                            <div className="flex items-center gap-2.5">
+                                <Button
+                                    variant="ghost"
+                                    onClick={ handleCancel }
+                                    disabled={ ! dirty || saving }
+                                >
+                                    { __( 'Cancel', 'dokan-lite' ) }
+                                </Button>
+                                <Button
+                                    onClick={ onSave }
+                                    disabled={ ! dirty || hasErrors || saving }
+                                >
+                                    { saving && (
+                                        <Spinner className="size-4 mr-2" />
+                                    ) }
+                                    { saving
+                                        ? __( 'Saving…', 'dokan-lite' )
+                                        : __(
+                                              'Save Changes',
+                                              'dokan-lite'
+                                          ) }
+                                </Button>
+                            </div>
+                        </Fill>
+                        <div className="flex items-center justify-end gap-2.5">
+                            <Button
+                                variant="ghost"
+                                onClick={ handleCancel }
+                                disabled={ ! dirty || saving }
+                            >
+                                { __( 'Cancel', 'dokan-lite' ) }
+                            </Button>
+                            <Button
+                                onClick={ onSave }
+                                disabled={ ! dirty || hasErrors || saving }
+                            >
+                                { saving && (
+                                    <Spinner className="size-4 mr-2" />
+                                ) }
+                                { saving
+                                    ? __( 'Saving…', 'dokan-lite' )
+                                    : __( 'Save Changes', 'dokan-lite' ) }
+                            </Button>
+                        </div>
+                    </>
                 ) }
             />
             <Toaster richColors />

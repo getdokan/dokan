@@ -1,0 +1,33 @@
+/**
+ * Vendor Store settings — integration polish layered over the shared plugin-ui
+ * <Settings> engine. Scoped to this page's wrapper so nothing here leaks into
+ * the admin settings screen, which renders the same engine.
+ */
+.dokan-vendor-store-settings {
+    // The engine's save area doubles the header actions at the end of the page
+    // (Figma footer). Strip its sticky white-bar chrome so it reads as plain
+    // right-aligned buttons on the page background, flush with the cards.
+    // !important because dokan-tailwind.css ships its utilities important-flagged.
+    [data-testid^='settings-save-'] {
+        position: static !important;
+        border-top: 0 !important;
+        background: transparent !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    // Figma card anatomy: a faint grey header strip over the white field body.
+    [data-testid^='settings-section-'] > [role='button'] {
+        background-color: #f9fafb;
+    }
+
+    // The engine wraps the cards in a 24px gutter, indenting them from the
+    // "Store Settings" heading. Drop the side gutters so the cards line up with
+    // the page title, and trim the top gap so the first card sits just under it.
+    // !important because dokan-tailwind.css ships its utilities important-flagged.
+    [data-testid='settings-content'] .p-6.space-y-6 {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        padding-top: 0.25rem !important;
+    }
+}

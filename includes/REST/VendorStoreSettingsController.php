@@ -208,7 +208,26 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
             $prev  = get_user_meta( $vendor_id, 'dokan_profile_settings', true );
             $slice = $this->mapper->to_legacy( $sanitized, is_array( $prev ) ? $prev : [], $fields_by_id );
 
-            $this->writer->save( $vendor_id, $slice );
+            // A save with only `non_meta` fields (e.g. store categories) yields an
+            // empty meta slice — skip the redundant profile write, still fire the seam.
+            if ( ! empty( $slice ) ) {
+                $this->writer->save( $vendor_id, $slice );
+            }
+
+            /**
+             * Fires after vendor Store settings are saved, with the sanitized
+             * flat values. Pro persists fields it owns outside
+             * `dokan_profile_settings` here — e.g. the taxonomy-backed store
+             * category (flagged `non_meta` so the mapper leaves it out of the
+             * profile slice). Mirrors admin's `dokan_after_saving_settings`.
+             *
+             * @since DOKAN_SINCE
+             *
+             * @param int   $vendor_id    Vendor user ID.
+             * @param array $sanitized    Sanitized values keyed by field id.
+             * @param array $fields_by_id Schema field elements keyed by id.
+             */
+            do_action( 'dokan_after_saving_vendor_settings', $vendor_id, $sanitized, $fields_by_id );
         }
 
         return rest_ensure_response( $this->get_response_schema( $vendor_id ) );

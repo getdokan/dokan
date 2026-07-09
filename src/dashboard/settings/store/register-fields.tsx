@@ -1,5 +1,7 @@
 import { addFilter } from '@wordpress/hooks';
 import type { SettingsElement } from '@wedevs/plugin-ui';
+import VendorTextField from './fields/VendorTextField';
+import VendorMultiSelectField from './fields/VendorMultiSelectField';
 import ImageField from './fields/ImageField';
 import AddressFields from './fields/AddressFields';
 import MapField from './fields/MapField';
@@ -16,6 +18,22 @@ import StoreScheduleField from './fields/StoreScheduleField';
  * `@wordpress/hooks` does not dedupe repeated registrations.
  */
 export function registerVendorSettingsFields(): void {
+    addFilter(
+        'dokan_vendor_settings_vendor_text_field',
+        'dokan-lite/vendor-text',
+        ( _defaultComponent: unknown, element: SettingsElement ) => (
+            <VendorTextField element={ element } />
+        )
+    );
+
+    addFilter(
+        'dokan_vendor_settings_vendor_multiselect_field',
+        'dokan-lite/vendor-multiselect',
+        ( _defaultComponent: unknown, element: SettingsElement ) => (
+            <VendorMultiSelectField element={ element } />
+        )
+    );
+
     addFilter(
         'dokan_vendor_settings_vendor_image_field',
         'dokan-lite/vendor-image',

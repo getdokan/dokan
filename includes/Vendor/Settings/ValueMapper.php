@@ -49,7 +49,15 @@ class ValueMapper {
                     break;
 
                 default:
-                    $field      = $fields_by_id[ $id ] ?? [];
+                    $field = $fields_by_id[ $id ] ?? [];
+
+                    // Fields the owning plugin persists itself (e.g. the
+                    // taxonomy-backed store category) opt out of the profile
+                    // meta slice and save on the `dokan_after_saving_vendor_settings` seam.
+                    if ( ! empty( $field['non_meta'] ) ) {
+                        break;
+                    }
+
                     $legacy_key = isset( $field['legacy_key'] ) && is_string( $field['legacy_key'] ) ? $field['legacy_key'] : $id;
 
                     $slice[ $legacy_key ] = $value;

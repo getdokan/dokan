@@ -75,7 +75,7 @@ export default [
     },
     {
         id: 'dokan-settings-store',
-        title: __( 'Store', 'dokan-lite' ),
+        title: __( 'Store Settings', 'dokan-lite' ),
         element: <StoreSettings />,
         path: '/settings/store',
         exact: true,

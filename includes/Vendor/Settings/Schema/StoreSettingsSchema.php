@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Vendor\Settings\Schema;
 
 use WeDevs\Dokan\CatalogMode\Helper as CatalogModeHelper;
+use WeDevs\Dokan\Utilities\VendorUtil;
 
 /**
  * Vendor Store Settings flat-array schema.
@@ -123,11 +124,13 @@ class StoreSettingsSchema {
             [
                 'id'          => 'store_name',
                 'type'        => 'field',
-                'variant'     => 'text',
+                // Custom text variant so the label can carry the red "(Required)" marker.
+                'variant'     => 'vendor_text',
                 'section_id'  => 'company_banner',
                 'title'       => __( 'Store Title', 'dokan-lite' ),
                 'placeholder' => __( 'ex - Fashion Store', 'dokan-lite' ),
                 'layout'      => 'full-width',
+                'required'    => true,
                 'value'       => (string) ( $info['store_name'] ?? '' ),
                 'default'     => '',
                 'legacy_key'  => 'store_name',
@@ -139,21 +142,23 @@ class StoreSettingsSchema {
                 ],
             ],
             [
-                'id'          => 'banner',
-                'type'        => 'field',
-                'variant'     => 'vendor_image',
-                'section_id'  => 'company_banner',
-                'title'       => __( 'Store Banner', 'dokan-lite' ),
-                'description' => sprintf(
+                'id'              => 'banner',
+                'type'            => 'field',
+                'variant'         => 'vendor_image',
+                'section_id'      => 'company_banner',
+                'title'           => __( 'Store Banner', 'dokan-lite' ),
+                'description'     => sprintf(
                     /* translators: 1) store banner width 2) store banner height */
                     __( 'Specification - %1$s X %2$s pixels, Format JPG or Png and file size 5mb max', 'dokan-lite' ),
                     dokan_get_vendor_store_banner_width(),
                     dokan_get_vendor_store_banner_height()
                 ),
-                'value'       => $banner_id,
-                'default'     => 0,
-                'image_url'   => $banner_id ? (string) wp_get_attachment_url( $banner_id ) : '',
-                'legacy_key'  => 'banner',
+                'value'           => $banner_id,
+                'default'         => 0,
+                'image_url'       => $banner_id ? (string) wp_get_attachment_url( $banner_id ) : '',
+                // Shown full-width when the vendor hasn't set a banner yet, same as the store page.
+                'placeholder_url' => VendorUtil::get_vendor_default_banner_url(),
+                'legacy_key'      => 'banner',
             ],
             [
                 'id'          => 'gravatar',
@@ -191,21 +196,10 @@ class StoreSettingsSchema {
                 'collapsible' => true,
                 'priority'    => 20,
             ],
-            [
-                'id'          => 'phone',
-                'type'        => 'field',
-                'variant'     => 'text',
-                'section_id'  => 'store_information',
-                'title'       => __( 'Phone', 'dokan-lite' ),
-                'placeholder' => __( 'e.g 206-555-0122', 'dokan-lite' ),
-                'layout'      => 'full-width',
-                'value'       => (string) ( $info['phone'] ?? '' ),
-                'default'     => '',
-                'legacy_key'  => 'phone',
-            ],
         ];
 
-        // Same visibility rule the legacy form used for the email checkbox.
+        // Email visibility toggle sits above the phone (same visibility rule the
+        // legacy form used for the email checkbox); a description balances the row height.
         if ( ! dokan_is_vendor_info_hidden( 'email' ) ) {
             $elements[] = [
                 'id'            => 'show_email',
@@ -213,6 +207,7 @@ class StoreSettingsSchema {
                 'variant'       => 'switch',
                 'section_id'    => 'store_information',
                 'title'         => __( 'Show email address in store', 'dokan-lite' ),
+                'description'   => __( 'Display your account email on the store page so customers can reach you directly.', 'dokan-lite' ),
                 'value'         => ( $info['show_email'] ?? 'no' ) === 'yes' ? 'yes' : 'no',
                 'default'       => 'no',
                 'legacy_key'    => 'show_email',
@@ -226,6 +221,19 @@ class StoreSettingsSchema {
                 ],
             ];
         }
+
+        $elements[] = [
+            'id'          => 'phone',
+            'type'        => 'field',
+            'variant'     => 'text',
+            'section_id'  => 'store_information',
+            'title'       => __( 'Phone', 'dokan-lite' ),
+            'placeholder' => __( 'e.g 206-555-0122', 'dokan-lite' ),
+            'layout'      => 'full-width',
+            'value'       => (string) ( $info['phone'] ?? '' ),
+            'default'     => '',
+            'legacy_key'  => 'phone',
+        ];
 
         return $elements;
     }
@@ -452,7 +460,6 @@ class StoreSettingsSchema {
                 'title'       => __( 'Terms & Conditions', 'dokan-lite' ),
                 'description' => __( 'Clearly define store policies to ensure a smooth shopping experience.', 'dokan-lite' ),
                 'collapsible' => true,
-                'collapsed'   => true,
                 'priority'    => 90,
             ],
             [
