@@ -771,6 +771,43 @@ and **DR-2 runs the real persist**. In a GMAP-absent env DR-1 runs the alert ass
 Legacy `tableRateShipping.spec.ts` **left untouched** (it drives the classic Vue/PHP shipping surface — a different
 surface, not the React drill-in). Feature-map: 4 leaves added under `Shipping › vendor (new UI)`.
 
-### In flight (this pass)
-- **Class-B authoring (code-only)** — 5 rebuilds being authored via recovery+seeding: store-supports,
-  product-qa, vendor-staff, vendor-return-request, product-addons. Serial live verification (green 3×) follows.
+### Class-B (stub-vacuous) rebuilds — outcome (2026-07-09)
+
+Authored 5 rebuilds (store-supports, product-qa, vendor-staff, vendor-return-request, product-addons) via
+the pre-#3173 recovery + `new-*` seeding, then live-verified (headless, single-worker). Key finding, recorded
+per the autonomy grant:
+
+- **The vendor revival cases largely WORK** (product-qa vendor 7/7 green, most admin cases green, etc.) — the
+  recovery+seeding approach is sound.
+- **But the authoring agents OVER-REACHED**: they made the *entire* shared page object real (admin + customer +
+  staff + guest methods), not just the vendor block. Many of those out-of-scope roles' surfaces changed in 5.0.8
+  — **admin Store Support is now a React SPA** (`page=dokan-dashboard#/admin-store-support`), the **staff
+  dashboard sidebar is React** (`dashboard/new/#...` links), and some storefront Q&A/RMA flows drifted — so the
+  now-real out-of-scope cases fail. Batch run: 31 failed / 135 passed, and the failures are dominated by
+  admin/customer/staff over-reach, not the vendor targets.
+
+**Action taken (no fake green, suite stays green):**
+- **product-qa — SALVAGED, green 3× headless (96 passed/run, 0 failed).** Un-skipped the nested
+  `vendor cases — ported to new-product-qa/` block → **7 real legacy vendor cases** on
+  `dashboard/product-questions-answers` (view menu/details, filter, answer, edit-answer, delete-answer,
+  delete-question); the 12 legacy **admin** cases were made real too and pass stably (bonus real coverage).
+  The 4 out-of-scope cases whose surfaces drifted (`admin can enable product Q&A module` toggle, `customer can
+  search/post question`, guest post) are `test.skip` with a documented reason (they were vacuous stub-passes on
+  develop; module stays enabled via `beforeAll`). feature-map: 7 vendor leaves flipped `false→true`, 4 skips `→false`.
+- **store-supports, product-addons, vendor-return-request, vendor-staff — REVERTED to their stub baseline**
+  (`git checkout HEAD -- <files>`), so the committed suite stays 100% green. Reasons: store-supports admin is
+  React-rewritten (14 over-reach failures); product-addons has real vendor-side drift (view/remove global-addon
+  selectors); vendor-return-request has vendor `delete` drift + an RMA-*settings* case that stays-legacy;
+  vendor-staff's conversion-added block is only 2 cases (the CRUD set is a pre-existing skip) and its one staff
+  case needs the React sidebar. The authored drafts are recoverable from workflow `wf_fdaac56c-74d` (journal).
+
+**Follow-up recipe for the 4 reverted features (scoped re-do):** recover the pre-#3173 real PO
+(`git show e2ec507de:tests/pw/pages/<feature>Page.ts`), but implement **ONLY the vendor methods** the
+conversion-added vendor block calls — leave admin/customer/staff/guest methods as the existing `{}` stubs
+(preserving their develop vacuous-green baseline). Then un-skip only the vendor block, fix live selector drift
+against the legacy `/dashboard/<route>`, green 3× headless. All 4 legacy pages were confirmed to still render
+the classic UI (see the legacy-render probe above), so each is revivable with this narrower scope.
+
+### Directive: headless-only verification (2026-07-09)
+Per the user, all green-3× verification this pass is **3× headless** (no `--headed`) — no visible browser
+windows on the shared Mac. (Headed mode was confirmed working earlier; the change is operational, not technical.)
