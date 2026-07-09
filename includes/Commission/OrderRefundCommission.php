@@ -408,11 +408,11 @@ class OrderRefundCommission {
         }
 
         $prorated_fee = 0.0;
-        $gateway_fee  = $this->get_dokan_gateway_fee();
+        $borne_fee    = $this->get_gateway_fee_borne_by( $recipient );
         $order_total  = floatval( $this->get_order()->get_total() );
 
-        if ( ! empty( $gateway_fee['fee'] ) && $recipient === $gateway_fee['paid_by'] && $order_total > 0 ) {
-            $prorated_fee = $gateway_fee['fee'] * ( abs( floatval( $this->refund->get_total() ) ) / $order_total );
+        if ( $borne_fee > 0 && $order_total > 0 ) {
+            $prorated_fee = $borne_fee * ( abs( floatval( $this->refund->get_total() ) ) / $order_total );
         }
 
         /**
@@ -423,11 +423,13 @@ class OrderRefundCommission {
          * handled by the associated payment gateway integration.
          *
          * The filter fires for both recipients ('seller' and 'admin') and also
-         * when no `dokan_gateway_fee` order meta is stored — some gateways
-         * (e.g. Paystack split payments) never persist it — so the gateway
+         * when no gateway fee meta is stored on the order, so the gateway
          * integration decides both the amount and who receives it. The
-         * prorated share of the stored fee is 0 unless the recipient matches
-         * `dokan_gateway_fee_paid_by`.
+         * prorated share is based on the fee borne by the recipient: the
+         * `dokan_gateway_fee` meta when the recipient matches
+         * `dokan_gateway_fee_paid_by`, plus the admin's separately stored
+         * portion (`dokan_admin_gateway_fee` meta) for the admin recipient —
+         * and 0 when the recipient bore no fee.
          *
          * @since DOKAN_SINCE
          *
@@ -462,6 +464,36 @@ class OrderRefundCommission {
             'tax'          => abs( $tax_refund ),
             'shipping_tax' => abs( $shipping_tax_refund ),
         ];
+    }
+
+    /**
+     * Get the gateway fee borne by the given recipient.
+     *
+     * Mirrors OrderCommission::get_vendor_gateway_fee() and
+     * get_admin_gateway_fee(): the `dokan_gateway_fee` meta belongs to the
+     * `dokan_gateway_fee_paid_by` party, while the admin may bear its own
+     * separately stored portion (`dokan_admin_gateway_fee` meta) even when the
+     * seller pays the vendor share — e.g. Paystack split payments distribute
+     * the fee between the vendor and the admin.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $recipient Either self::SELLER or self::ADMIN.
+     *
+     * @return float
+     */
+    protected function get_gateway_fee_borne_by( string $recipient ): float {
+        $gateway_fee = $this->get_dokan_gateway_fee();
+
+        if ( ! empty( $gateway_fee['fee'] ) && $recipient === $gateway_fee['paid_by'] ) {
+            return floatval( $gateway_fee['fee'] );
+        }
+
+        if ( self::ADMIN === $recipient ) {
+            return floatval( $this->get_order()->get_meta( 'dokan_admin_gateway_fee', true ) );
+        }
+
+        return 0;
     }
 
     /**

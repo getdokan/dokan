@@ -286,6 +286,41 @@ class OrderRefundCommissionTest extends \WeDevs\Dokan\Test\DokanTestCase {
 	}
 
 	/**
+	 * When the gateway fee is split between the vendor and the admin — the
+	 * vendor share stored in dokan_gateway_fee (paid_by seller) and the admin
+	 * share stored separately in dokan_admin_gateway_fee (e.g. Paystack split
+	 * payments) — each recipient's prorated share is based on the fee that
+	 * recipient actually bore, mirroring OrderCommission's forward routing.
+	 *
+	 * Order total 45, vendor fee 4.5 + admin fee 1.5, refund 15 (1/3):
+	 * vendor prorated 1.5, admin prorated 0.5.
+	 */
+	public function test_gateway_fee_split_between_vendor_and_admin_is_prorated_per_recipient() {
+		$order = $this->create_order();
+		$order->update_meta_data( 'dokan_gateway_fee', 4.5 );
+		$order->update_meta_data( 'dokan_gateway_fee_paid_by', 'seller' );
+		$order->update_meta_data( 'dokan_admin_gateway_fee', 1.5 );
+		$order->save();
+
+		$order  = new WC_Order( $order->get_id() );
+		$refund = $this->create_refund( $order, 15 );
+
+		$refund_commission = $this->get_refund_commission( $refund, $order )->calculate();
+
+		$supply_prorated_fee = function ( $gateway_fee_refund, $prorated_fee ) {
+			return $prorated_fee;
+		};
+		add_filter( 'dokan_refund_gateway_fee', $supply_prorated_fee, 10, 2 );
+
+		$this->assertEquals( 1.5, round( $refund_commission->get_vendor_gateway_fee_refund(), 2 ) ); // 4.5 × 15/45
+		$this->assertEquals( 0.5, round( $refund_commission->get_admin_gateway_fee_refund(), 2 ) );  // 1.5 × 15/45
+		$this->assertEquals( 12.0, round( $refund_commission->get_vendor_total_refund(), 2 ) );      // 13.5 − 1.5
+		$this->assertEquals( 1.0, round( $refund_commission->get_admin_total_refund(), 2 ) );        // 1.5 − 0.5
+
+		remove_filter( 'dokan_refund_gateway_fee', $supply_prorated_fee, 10 );
+	}
+
+	/**
 	 * The dokan_refund_gateway_fee filter fires even when no dokan_gateway_fee
 	 * meta is stored on the order — gateways like Paystack handle fees via
 	 * split-payment bearer config and never persist the meta, but must still
