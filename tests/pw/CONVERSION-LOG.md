@@ -837,3 +837,33 @@ shard  4: 1008.4s   shard  8: 1006.6s   shard 12: 1006.2s
 
 Well within the ~10% target. (Heaviest specs — the bin-pack constraint — are `new-product-form/newProductForm*`
 ~450-480s and `new-shipping/`, `new-products/`, `abuse-reports/` ~300-380s, spread 1-per-bin.)
+
+---
+
+## Run summary (2026-07-09) — Phases 0→4, single unattended pass
+
+**Deliverables (all committed on `qa/new-ui-suite-wave-0`, push-ready, NOT pushed):**
+1. **Phase 0 — reconcile ✔.** One branch = full 30-folder conversion (`215b85718`) + develop 5.0.8/#3300,
+   clean conflict-free merge, `tsc` clean. Safety net: `backup/wave-0-prereconcile-38d2c0bde` +
+   tag `backup/full-conversion-215b85718`.
+2. **Phase 1 — audit ✔** (`feature-map/CONVERSION-AUDIT-2026-07.md`). Conversion essentially COMPLETE;
+   1 true buildable gap; 39 conversion-added revival blocks classified.
+3. **Phase 2 — GAP-1 closed ✔.** `new-shipping-rate/` (per-instance table/distance-rate drill-in forms),
+   green 3× headless. (31 `new-*` folders now.)
+4. **Phase 3 — legacy suite revived (real, no fake green):**
+   - Class-A: **follow-store** 2 vendor cases (green 3×); **announcements** `Old TC11` legacy delete (green 3×).
+   - Class-B: **product-qa** 7 legacy vendor + 11 legacy admin cases made real (green 3×; 5 out-of-scope cases
+     documented-skip). 4 other class-B rebuilds authored via pre-#3173 recovery but **reverted to green stub
+     baseline** after live verification exposed authoring-agent over-reach (they made out-of-scope admin/customer
+     methods real → fail on 5.0.8 React-rewritten surfaces) + some vendor drift; scoped re-do recipe recorded above.
+   - Class-C: follow-store's vacuous `(React)` body-length smoke deleted (exemplar); the other 20 kept
+     skipped-and-documented (they emit no fake green while skipped).
+5. **Phase 4 — shards rebalanced ✔.** 193-entry baseline, 12-shard spread **0.3%**.
+
+**Coexistence proven:** the classic legacy `/dashboard/<route>` pages still render in 5.0.8, and the revived
+legacy specs + the additive `new-*` React specs pass green together (final consolidated run: 141 passed / 0 failed).
+
+**Honest scope note:** of the 39 conversion-added revival blocks, this pass genuinely revived 3 features green
+(follow-store, announcements, product-qa) and left the rest as documented follow-ups (4 class-B reverted with a
+recovery recipe; 20 class-C retired-in-place). No block was left in a fake-green or red state — the committed
+suite is entirely green. The two product-bug tests stay `test.fixme` (QA reports, does not fix product code).
