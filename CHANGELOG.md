@@ -1,3 +1,7 @@
+### v5.0.8 ( Jul 06, 2026 ) ###
+
+- **fix:** Cleared the vendor dashboard sale price when the field is blanked so the product reverts to its regular price instead of saving a 0 price.
+
 ### v5.0.7 ( Jun 29, 2026 ) ###
 
 - **fix:** Prevented a DOM-based XSS in the legacy Vue admin by validating the vendor details and reverse-withdrawal route parameters.

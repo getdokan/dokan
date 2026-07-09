@@ -4,6 +4,18 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.0.8',
+        'released' => '2026-07-06',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Cleared the vendor dashboard sale price when the field is blanked so the product reverts to its regular price instead of saving a 0 price.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.0.7',
         'released' => '2026-06-29',
         'changes'  => [
