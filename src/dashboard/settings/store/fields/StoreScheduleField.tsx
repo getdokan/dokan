@@ -68,18 +68,24 @@ const legacyToWeekly = (
         const opening = asArray( day.opening_time );
         const closing = asArray( day.closing_time );
 
+        const slots = opening.map( ( openingTime, index ) => {
+            const closingTime = closing[ index ] || '';
+
+            return isFullDayPair( openingTime, closingTime )
+                ? { opening_time: FULL_DAY, closing_time: '' }
+                : {
+                      opening_time: openingTime,
+                      closing_time: closingTime,
+                  };
+        } );
+
         weekly[ dayKey ] = {
             status: 'open' === day.status,
-            slots: opening.map( ( openingTime, index ) => {
-                const closingTime = closing[ index ] || '';
-
-                return isFullDayPair( openingTime, closingTime )
-                    ? { opening_time: FULL_DAY, closing_time: '' }
-                    : {
-                          opening_time: openingTime,
-                          closing_time: closingTime,
-                      };
-            } ),
+            // A day with no stored times still shows one dimmed empty pair, so
+            // disabled rows read like the delivery-time page instead of bare.
+            slots: slots.length
+                ? slots
+                : [ { opening_time: '', closing_time: '' } ],
         };
     } );
 
@@ -87,19 +93,13 @@ const legacyToWeekly = (
 };
 
 // WeeklyTimeSlots value shape → the exact legacy struct the writer persists.
+// Off days KEEP their slot times (delivery-time behaviour: toggling a day off
+// dims its pickers, re-enabling restores them); the server zeroes closed days
+// at save so the stored shape stays byte-identical to legacy.
 const weeklyToLegacy = ( weekly: WeeklyValue ): LegacySchedule => {
     const schedule: LegacySchedule = {};
 
     Object.entries( weekly ).forEach( ( [ dayKey, day ] ) => {
-        if ( ! day.status ) {
-            schedule[ dayKey ] = {
-                status: 'close',
-                opening_time: [],
-                closing_time: [],
-            };
-            return;
-        }
-
         const opening: string[] = [];
         const closing: string[] = [];
 
@@ -114,7 +114,7 @@ const weeklyToLegacy = ( weekly: WeeklyValue ): LegacySchedule => {
         } );
 
         schedule[ dayKey ] = {
-            status: 'open',
+            status: day.status ? 'open' : 'close',
             opening_time: opening,
             closing_time: closing,
         };
@@ -155,20 +155,19 @@ const StoreScheduleField = ( { element }: { element: SettingsElement } ) => {
     };
 
     return (
-        <div className="dokan-vendor-store-schedule-field w-full p-4">
-            { /* Delivery-time treatment: a bordered box with one row per weekday. */ }
-            <div className="overflow-hidden rounded-md border border-gray-200">
-                <WeeklyTimeSlots
-                    value={ weeklyValue }
-                    days={ days }
-                    multiple={ !! element.multiple }
-                    spread={ false }
-                    is12Hour={ is12Hour }
-                    validateOnMount
-                    messages={ SCHEDULE_MESSAGES }
-                    onChange={ handleChange }
-                />
-            </div>
+        // Full-bleed weekday rows — the section card supplies the outer frame,
+        // the rows their own horizontal rules (delivery-time anatomy, minus its
+        // standalone box). Errors surface on touch, like the delivery page.
+        <div className="dokan-vendor-store-schedule-field w-full">
+            <WeeklyTimeSlots
+                value={ weeklyValue }
+                days={ days }
+                multiple={ !! element.multiple }
+                spread={ false }
+                is12Hour={ is12Hour }
+                messages={ SCHEDULE_MESSAGES }
+                onChange={ handleChange }
+            />
         </div>
     );
 };
