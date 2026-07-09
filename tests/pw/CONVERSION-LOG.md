@@ -689,3 +689,43 @@ either pass vacuously (forbidden) or duplicate the class-A/B real legacy case fo
   followers menu page` + `vendor can view followers`; real PO drives classic `dashboard/followers`
   (`//h1[="Store Followers"]` + legacy `.dokan-table`). Coexistence CONFIRMED — legacy
   `/dashboard/<route>` pages still render in 5.0.8. (Env healthy ~2.1m/run; headed mode works.)
+  Retired its vacuous `(React) Tests` smoke block (body-length at legacy URL) as the class-C exemplar.
+- **announcements (class A) — `Old Test Case 11 - Vendor Deletes Announcement` revived, green 1×**
+  (batch-3× pending): real PO drives legacy `dashboard/announcement` admin-ajax delete. Its
+  `Test Case 14 …New Vendor Dashboard` + the `New Vendor Announcement (React) Tests` describe.skip
+  navigate the NEW dashboard (`dashboard/new/#announcement`, `#dokan-vendor-dashboard-root`) — those
+  are redundant NEW-UI smokes (superseded by new-announcements/), NOT legacy cases → left skipped
+  (out of legacy-revival scope; D1 migration candidates).
+
+### Live legacy-render probe (2026-07-09) — ALL class-B pages are REVIVABLE
+Ran a throwaway vendor probe over the 8 class-B legacy URLs (deleted after). **Every one renders the
+classic PHP/Vue UI in 5.0.8 with `#dokan-vendor-dashboard-root` ABSENT** (real headings): `dashboard/support`
+("Support Tickets"), `dashboard/return-request` ("Return Requests"/"Send Refund Request"),
+`dashboard/settings/verification` ("Verification"), `dashboard/staffs` ("Staff/Add new staff"),
+`dashboard/product-questions-answers` ("Product Questions & Answers"), `dashboard/settings/product-addon`
+("Product Addons"), `dashboard/seller-badge` ("Badges"), `dashboard/withdraw` ("Withdraw"). So no class-B
+feature is React-only — all can be revived against the legacy UI.
+
+### Class-B rebuild strategy — pre-#3173 RECOVERY shortcut
+The stub POs were BORN as stubs in `#3173` "Full suite refactoring" (no real impl in *their* history),
+BUT the pre-#3173 tree (`e2ec507de`) holds the ORIGINAL real page objects at `tests/pw/pages/<feature>Page.ts`
+with real legacy selectors + method bodies (e.g. `storeSupportsPage.ts` = 501 lines, real
+`storeSupportsVendor` selectors, `wp-comments-post.php` 302 reply). Rebuild recipe per feature: recover the
+real PO from `e2ec507de` → adapt to the current BasePage helpers (same names) + wire REAL @utils/apiUtils
+seeding mirroring the co-located `new-*` folder (seeding+oracles identical to the React spec; only the driving
+surface differs) → un-skip the conversion-added vendor block → green 3× vs the legacy URL. Recovery files
+confirmed present for: storeSupports, productQA, vendorStaff, vendorReturnRequest, productAddons,
+sellerBadges, vendorVerifications, withdraws, reverseWithdraws.
+
+### Class-C decision (finalized)
+The 21 `react-smoke-legacy-url` blocks are **already `describe.skip`'d, so they emit NO fake green** (a
+skipped test is not a passing test — §7 forbids *passing* vacuously). They add zero coverage either way.
+follow-store's was deleted as the exemplar; the remaining 20 are **retired-in-place (kept skipped) +
+documented** — deletion is safe cleanup but is deferred this pass to spend budget on the higher-value
+class-B REAL-coverage rebuilds. None are un-skipped (that would fake-green).
+
+### In flight (this pass)
+- **Phase 2 GAP-1 shipping drill-in** — a build agent is authoring `new-shipping-rate/` (table-rate render +
+  PUT-persist oracle; distance-rate GMAP-gate assertion) per the scout brief; green-3× in progress.
+- **Class-B authoring (code-only)** — 5 rebuilds being authored via recovery+seeding: store-supports,
+  product-qa, vendor-staff, vendor-return-request, product-addons. Serial live verification (green 3×) follows.
