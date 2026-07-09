@@ -33,13 +33,8 @@
       "tests": 8
     },
     {
-      "file": "product-form-manager/newProductForm.spec.ts",
-      "ms": 250131,
-      "tests": 13
-    },
-    {
       "file": "announcements/announcements.spec.ts",
-      "ms": 240117,
+      "ms": 141871,
       "tests": 25
     },
     {
@@ -71,11 +66,6 @@
       "file": "orders/orders.spec.ts",
       "ms": 182990,
       "tests": 24
-    },
-    {
-      "file": "product-form-manager/newProductFormValidation.spec.ts",
-      "ms": 175692,
-      "tests": 9
     },
     {
       "file": "dokan-invoice/dokanInvoice.spec.ts",
@@ -111,11 +101,6 @@
       "file": "new-withdraw/newWithdraw.spec.ts",
       "ms": 151310,
       "tests": 12
-    },
-    {
-      "file": "product-form-manager/newProductFormAdvanced.spec.ts",
-      "ms": 148688,
-      "tests": 13
     },
     {
       "file": "admin/adminRefundRequests.spec.ts",
@@ -379,7 +364,7 @@
     },
     {
       "file": "follow-store/followStore.spec.ts",
-      "ms": 38935,
+      "ms": 26434,
       "tests": 12
     },
     {
@@ -539,7 +524,7 @@
     },
     {
       "file": "product-qa/productQA.spec.ts",
-      "ms": 18630,
+      "ms": 60000,
       "tests": 26
     },
     {
@@ -976,6 +961,11 @@
       "file": "new-withdraw/newWithdrawB15.spec.ts",
       "ms": 18000,
       "tests": 3
+    },
+    {
+      "file": "new-shipping-rate/newShippingRate.spec.ts",
+      "ms": 22820,
+      "tests": 4
     }
   ],
   "note": "Includes count-scaled estimates for new-UI specs added after 2026-07-01T04:50:42.496Z; exact durations refresh on the next full CI run via specDurationReporter."

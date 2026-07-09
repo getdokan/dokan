@@ -811,3 +811,29 @@ the classic UI (see the legacy-render probe above), so each is revivable with th
 ### Directive: headless-only verification (2026-07-09)
 Per the user, all green-3× verification this pass is **3× headless** (no `--headed`) — no visible browser
 windows on the shared Mac. (Headed mode was confirmed working earlier; the change is operational, not technical.)
+
+## Phase 4 — CI shard-duration rebalance ✔ (2026-07-09)
+
+Refreshed `utils/shard-durations.json` for the specs whose runtime changed this pass, then verified the
+12-shard bin-pack balance (`node utils/getShardSpecs.js <i> 12`, greedy longest-first).
+
+- **Updated** (fresh ms captured via `CI=1` + `specDurationReporter`): `announcements/announcements.spec.ts`
+  240117→141871ms; `follow-store/followStore.spec.ts` 38935→26434ms; `product-qa/productQA.spec.ts`
+  18630→60000ms (revived 7 vendor + 11 admin real cases — was near-instant stubbed before).
+- **Added**: `new-shipping-rate/newShippingRate.spec.ts` 22820ms/4t (GAP-1, net-new).
+- **Dropped 3 stale entries**: `product-form-manager/newProductForm{,Validation,Advanced}.spec.ts` (git-mv'd to
+  `new-product-form/` in Wave 2 — no longer on disk). The 4 reverted class-B features keep their unchanged
+  stub-baseline durations (no update needed).
+- Baseline now **193 entries** (190 discovered specs + 3 setup files).
+
+**12-shard balance (all bins ≈ equal): spread 0.3%** — max 1009.5s, min 1006.2s:
+
+```
+shard  1: 1009.5s   shard  5: 1008.3s   shard  9: 1006.2s
+shard  2: 1008.7s   shard  6: 1008.3s   shard 10: 1006.2s
+shard  3: 1008.6s   shard  7: 1006.8s   shard 11: 1006.2s
+shard  4: 1008.4s   shard  8: 1006.6s   shard 12: 1006.2s
+```
+
+Well within the ~10% target. (Heaviest specs — the bin-pack constraint — are `new-product-form/newProductForm*`
+~450-480s and `new-shipping/`, `new-products/`, `abuse-reports/` ~300-380s, spread 1-per-bin.)
