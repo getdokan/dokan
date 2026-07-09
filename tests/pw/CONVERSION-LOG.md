@@ -634,3 +634,58 @@ NOT a git repo — the git repo is the plugin dir):
 `.ts` (only the pre-existing plain-JS util-script implicit-any noise remains, confirmed
 on the develop baseline). Working tree otherwise clean (the untracked
 `stripe-express/bugs/` is another branch's scope — left untouched, never `git add`ed).
+
+## Phase 1 — Conversion-completeness AUDIT ✔ → `feature-map/CONVERSION-AUDIT-2026-07.md`
+
+Ran an 8-area read-only audit workflow (per-feature-area readers → adversarial gap-verify →
+matrix), cross-referencing the 165-spec plan-of-record, `feature-map.yml` `(new UI)` leaves,
+actual `new-*/*.spec.ts` titles, and each legacy spec's page object (stub vs real).
+
+**Verdict: the React conversion is essentially COMPLETE.** 61 vendor-relevant feature rows:
+19 converted, 17 partial (every partial's residue is documented-deferred — seeder-blocked /
+React-editor-limited / no-React-surface), 12 stays-legacy (no React route), 12 not-affected.
+**Exactly ONE claimed gap survived adversarial verification** → Phase 2:
+- **GAP-1** shipping **table-rate / distance-rate per-instance drill-in forms** (B30/B31),
+  route `/settings/shipping/:zoneID/{table-rate|distance-rate}/:instanceID`, seeder confirmed.
+  (This is the known-deferred Wave-4 item; the earlier deferral was env-speed, not infeasibility.)
+
+Big structural finding: **63 legacy page-object files carry ~800 empty-body stub methods** (the
+`#3173` "Full suite refactoring" born them as stubs — NOT recoverable from git history). So the
+legacy suite was already largely fake-green BEFORE the conversion. Phase 3 is therefore correctly
+**bounded to the 39 conversion-ADDED skip blocks** (not the 94 pre-existing skips).
+
+### Phase-3 revival inventory + ACTION POLICY (decision, no fake green — house-style §7)
+
+39 conversion-added blocks, three classes:
+- **A. real-redundant (5)** — real PO already drives the legacy DOM → **un-skip + green 3×** vs
+  classic `/dashboard/<route>`. (announcements ×3, follow-store ×2.)
+- **B. stub-vacuous (13)** — legacy PO is a no-op stub → **rebuild the PO** with live legacy-DOM
+  selectors + real behavioral assertions, un-skip, green 3×. (products-details[95], store-supports[11],
+  vendor-return-request[6], vendor-verifications[6], vendor-staff, product-qa, product-addons ×2,
+  seller-badges ×4, withdraws.)
+- **C. react-smoke-legacy-url (21)** — `(React) Tests` blocks that navigate a **legacy** URL and
+  assert only `body.innerText.length > N` / no-fatal. Un-skipping them = **fake green** (§7 forbids
+  body-length). They are superseded by the `new-*` React specs (React side) AND, for A/B features,
+  by the revived real legacy vendor cases (legacy side). **DECISION: retire (delete) these vacuous
+  smoke blocks**, following the D4/D6 "retire lying smokes" precedent the conversion itself used for
+  social-linking/store-seo. They are NOT legacy test cases — they were React-rollout scaffolding
+  added *during* the 5.0 rewrite ("Added during the 5.0.0 React rewrite" banner), so deleting them
+  does not remove any legacy-support coverage. The genuine legacy regression coverage is restored by
+  classes A + B.
+
+Rationale recorded per the prompt's autonomy grant: reviving a `body.innerText.length` smoke would
+either pass vacuously (forbidden) or duplicate the class-A/B real legacy case for the same page.
+
+### Phase-3 execution order (by cost, most-user-facing first within a tier)
+1. Class A un-skips (cheap): follow-store ✔ (green 3×), announcements ×3.
+2. Class C retires (edit-only, verify-vacuous-then-delete): 21 blocks.
+3. Class B rebuilds (expensive live selector work): seller-badges → product-addons → product-qa →
+   vendor-staff → store-supports → vendor-return-request → vendor-verifications → withdraws →
+   products-details[95] (largest, likely partial/deferred). Each genuinely green 3× or left skipped
+   with a "rebuild-required" note — never fake-green.
+
+### Phase-3 progress
+- **follow-store (class A) ✔ green 3×** (2 headless + 1 headed): un-skipped `vendor can view
+  followers menu page` + `vendor can view followers`; real PO drives classic `dashboard/followers`
+  (`//h1[="Store Followers"]` + legacy `.dokan-table`). Coexistence CONFIRMED — legacy
+  `/dashboard/<route>` pages still render in 5.0.8. (Env healthy ~2.1m/run; headed mode works.)

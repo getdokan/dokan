@@ -119,14 +119,16 @@ test.describe('Follow stores modules functionality test', () => {
         });
     });
 
-    // vendor
-    test.skip('vendor can view followers menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    // vendor — LEGACY UI regression cases (revived 2026-07-09 for legacy support;
+    // real page object drives the classic `dashboard/followers` PHP screen).
+    // New-UI parity lives in tests/e2e/new-followers/.
+    test('vendor can view followers menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await test.step('Vendor navigates to Followers page and verifies page elements render properly', async () => {
             await vendor.vendorFollowersRenderProperly();
         });
     });
 
-    test.skip('vendor can view followers', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can view followers', { tag: ['@pro', '@vendor'] }, async () => {
         await api.followStore(VENDOR_ID || '', payloads.customerAuth);
         await test.step('Vendor verifies that followers list is not empty', async () => {
             await vendor.vendorViewFollowers();
