@@ -244,12 +244,14 @@ class OrderRefundCommissionTest extends \WeDevs\Dokan\Test\DokanTestCase {
 	}
 
 	/**
-	 * Gateway fee is prorated by |refund_total| / order_total, routed by payer,
-	 * and only deducted from totals when the filter opts in.
+	 * The gateway fee refund defaults to 0 (most gateways keep the processing
+	 * fee on refund); the associated gateway supplies the returned amount via
+	 * the dokan_refund_gateway_fee filter, which receives the prorated share
+	 * ( fee × |refund_total| / order_total ) and is routed to the fee payer.
 	 *
 	 * Order total 45, gateway fee 4.5 paid by seller, refund 15 → prorated fee 1.5.
 	 */
-	public function test_gateway_fee_refund_proration_and_filter_gating() {
+	public function test_gateway_fee_refund_defaults_to_zero_and_is_gateway_supplied() {
 		$order = $this->create_order();
 		$order->update_meta_data( 'dokan_gateway_fee', 4.5 );
 		$order->update_meta_data( 'dokan_gateway_fee_paid_by', 'seller' );
@@ -260,16 +262,19 @@ class OrderRefundCommissionTest extends \WeDevs\Dokan\Test\DokanTestCase {
 
 		$refund_commission = $this->get_refund_commission( $refund, $order )->calculate();
 
-		$this->assertEquals( 1.5, round( $refund_commission->get_vendor_gateway_fee_refund(), 2 ) );
+		// Default: no gateway returns its fee, nothing is deducted.
+		$this->assertEquals( 0.0, round( $refund_commission->get_vendor_gateway_fee_refund(), 2 ) );
 		$this->assertEquals( 0.0, round( $refund_commission->get_admin_gateway_fee_refund(), 2 ) );
+		$this->assertEquals( 13.5, round( $refund_commission->get_vendor_total_refund(), 2 ) ); // 27/30 × 15
 
-		// Default behavior: gateway fee is NOT deducted from the totals.
-		$vendor_total_without_fee = $refund_commission->get_vendor_total_refund();
-		$this->assertEquals( 13.5, round( $vendor_total_without_fee, 2 ) ); // 27/30 × 15
+		// A gateway that returns its fee (e.g. Paystack) supplies the amount.
+		$supply_prorated_fee = function ( $gateway_fee_refund, $prorated_fee ) {
+			return $prorated_fee;
+		};
+		add_filter( 'dokan_refund_gateway_fee', $supply_prorated_fee, 10, 2 );
 
-		// Opting in via the filter deducts the prorated fee from the payer's total.
-		add_filter( 'dokan_refund_include_gateway_fee', '__return_true' );
-
+		$this->assertEquals( 1.5, round( $refund_commission->get_vendor_gateway_fee_refund(), 2 ) );
+		$this->assertEquals( 0.0, round( $refund_commission->get_admin_gateway_fee_refund(), 2 ), 'Non-payer gets no gateway fee refund' );
 		$this->assertEquals( 12.0, round( $refund_commission->get_vendor_total_refund(), 2 ) );
 		$this->assertEquals(
 			round( $refund_commission->get_admin_net_commission(), 2 ),
@@ -277,7 +282,7 @@ class OrderRefundCommissionTest extends \WeDevs\Dokan\Test\DokanTestCase {
 			'Admin total should be unaffected when the seller paid the gateway fee'
 		);
 
-		remove_filter( 'dokan_refund_include_gateway_fee', '__return_true' );
+		remove_filter( 'dokan_refund_gateway_fee', $supply_prorated_fee, 10 );
 	}
 
 	/**
@@ -295,8 +300,15 @@ class OrderRefundCommissionTest extends \WeDevs\Dokan\Test\DokanTestCase {
 
 		$refund_commission = $this->get_refund_commission( $refund, $order )->calculate();
 
+		$supply_prorated_fee = function ( $gateway_fee_refund, $prorated_fee ) {
+			return $prorated_fee;
+		};
+		add_filter( 'dokan_refund_gateway_fee', $supply_prorated_fee, 10, 2 );
+
 		$this->assertEquals( 1.0, round( $refund_commission->get_vendor_gateway_fee_refund(), 2 ) ); // 3 × 15/45
 		$this->assertEquals( 0.0, round( $refund_commission->get_admin_gateway_fee_refund(), 2 ) );
+
+		remove_filter( 'dokan_refund_gateway_fee', $supply_prorated_fee, 10 );
 
 		// The same fallback in the forward calculation (OrderCommission).
 		$order_commission = dokan_get_container()->get( OrderCommission::class );

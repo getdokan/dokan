@@ -234,7 +234,10 @@ class OrderRefundCommission {
     }
 
     /**
-     * Get the vendor's prorated share of the gateway fee for the refunded portion.
+     * Get the gateway fee returned to the vendor for the refunded portion.
+     *
+     * Defaults to 0 via the `dokan_refund_gateway_fee` filter; supplied by the
+     * associated payment gateway when it returns its fee on refund.
      *
      * @since DOKAN_SINCE
      *
@@ -245,7 +248,10 @@ class OrderRefundCommission {
     }
 
     /**
-     * Get the admin's prorated share of the gateway fee for the refunded portion.
+     * Get the gateway fee returned to the admin for the refunded portion.
+     *
+     * Defaults to 0 via the `dokan_refund_gateway_fee` filter; supplied by the
+     * associated payment gateway when it returns its fee on refund.
      *
      * @since DOKAN_SINCE
      *
@@ -259,8 +265,8 @@ class OrderRefundCommission {
      * Get the total amount the vendor gives back for this refund.
      *
      * Prorated line-item earning plus refunded tax/shipping allocated to the
-     * vendor, minus the vendor's prorated gateway fee when its inclusion is
-     * enabled via the `dokan_refund_include_gateway_fee` filter.
+     * vendor, minus any gateway fee the payment gateway returns to the vendor
+     * (0 unless the gateway supplies it via `dokan_refund_gateway_fee`).
      *
      * @since DOKAN_SINCE
      *
@@ -271,11 +277,7 @@ class OrderRefundCommission {
             return 0;
         }
 
-        $total = $this->get_vendor_net_earning() + $this->get_vendor_tax_refund() + $this->get_vendor_shipping_refund();
-
-        if ( $this->should_include_gateway_fee() ) {
-            $total -= $this->get_vendor_gateway_fee_refund();
-        }
+        $total = $this->get_vendor_net_earning() + $this->get_vendor_tax_refund() + $this->get_vendor_shipping_refund() - $this->get_vendor_gateway_fee_refund();
 
         return floatval( $total );
     }
@@ -284,9 +286,9 @@ class OrderRefundCommission {
      * Get the total amount the admin gives back for this refund.
      *
      * Prorated line-item commission (plus admin net earning for admin-earning
-     * order types) plus refunded tax/shipping allocated to the admin, minus the
-     * admin's prorated gateway fee when its inclusion is enabled via the
-     * `dokan_refund_include_gateway_fee` filter.
+     * order types) plus refunded tax/shipping allocated to the admin, minus any
+     * gateway fee the payment gateway returns to the admin (0 unless the
+     * gateway supplies it via `dokan_refund_gateway_fee`).
      *
      * @since DOKAN_SINCE
      *
@@ -297,11 +299,7 @@ class OrderRefundCommission {
             return 0;
         }
 
-        $total = $this->get_admin_net_commission() + $this->get_admin_net_earning() + $this->get_admin_tax_refund() + $this->get_admin_shipping_refund();
-
-        if ( $this->should_include_gateway_fee() ) {
-            $total -= $this->get_admin_gateway_fee_refund();
-        }
+        $total = $this->get_admin_net_commission() + $this->get_admin_net_earning() + $this->get_admin_tax_refund() + $this->get_admin_shipping_refund() - $this->get_admin_gateway_fee_refund();
 
         return floatval( $total );
     }
@@ -389,9 +387,14 @@ class OrderRefundCommission {
     }
 
     /**
-     * Get the prorated gateway fee for the refunded portion, when paid by the given recipient.
+     * Get the gateway fee returned for the refunded portion, when paid by the given recipient.
      *
-     * Formula: fee_refund = order_gateway_fee × ( |refund_total| / order_total )
+     * Most payment gateways keep their processing fee when a payment is
+     * refunded, so this defaults to 0. Gateways that do return the fee on
+     * refund (e.g. Paystack) should hook `dokan_refund_gateway_fee` and supply
+     * the returned amount; the prorated share
+     * ( order_gateway_fee × |refund_total| / order_total ) is provided as a
+     * convenience.
      *
      * @since DOKAN_SINCE
      *
@@ -416,7 +419,24 @@ class OrderRefundCommission {
             return 0;
         }
 
-        return $gateway_fee['fee'] * ( abs( floatval( $this->refund->get_total() ) ) / $order_total );
+        $prorated_fee = $gateway_fee['fee'] * ( abs( floatval( $this->refund->get_total() ) ) / $order_total );
+
+        /**
+         * Filter the gateway fee amount returned to the fee payer for this refund.
+         *
+         * All gateways keep the processing fee on refund except a few (e.g.
+         * Paystack), so the default is 0 and the refund gateway-fee logic is
+         * handled by the associated payment gateway integration.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param float            $gateway_fee_refund The gateway fee amount returned for this refund. Default 0.
+         * @param float            $prorated_fee       The payer's prorated share of the gateway fee for the refunded portion.
+         * @param \WC_Order_Refund $refund             The refund being calculated.
+         * @param \WC_Order        $order              The refunded order.
+         * @param string           $recipient          The party that paid the gateway fee ('seller' or 'admin').
+         */
+        return floatval( apply_filters( 'dokan_refund_gateway_fee', 0.0, $prorated_fee, $this->refund, $this->get_order(), $recipient ) );
     }
 
     /**
@@ -468,30 +488,4 @@ class OrderRefundCommission {
         ];
     }
 
-    /**
-     * Whether the prorated gateway fee should be deducted from the refund totals.
-     *
-     * Defaults to false: most processors keep the gateway fee on refund and
-     * Dokan historically leaves the fee untouched, so the paying party bears it.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return bool
-     */
-    protected function should_include_gateway_fee(): bool {
-        /**
-         * Filter whether the prorated gateway fee is deducted from the refund totals.
-         *
-         * Enable this (e.g. per payment gateway) when the processor returns the
-         * gateway fee on refund, so the party who paid the fee gives back less.
-         *
-         * @since DOKAN_SINCE
-         *
-         * @param bool                  $include           Whether to deduct the prorated gateway fee. Default false.
-         * @param WC_Order_Refund       $refund            The refund being calculated.
-         * @param WC_Order              $order             The refunded order.
-         * @param OrderRefundCommission $refund_commission The refund commission calculator.
-         */
-        return apply_filters( 'dokan_refund_include_gateway_fee', false, $this->refund, $this->get_order(), $this );
-    }
 }
