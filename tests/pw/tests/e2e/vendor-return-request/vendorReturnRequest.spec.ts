@@ -1,5 +1,6 @@
 import { Page, expect, test } from '@utils/test';
 import { VendorReturnRequestPage, CustomerPage, OrdersPage, ApiUtils, data, payloads } from './vendorReturnRequestPage';
+import { endPoints } from '@utils/apiEndPoints';
 import path from 'path';
 
 import { toPath } from '@utils/helpers';
@@ -7,14 +8,48 @@ import { toPath } from '@utils/helpers';
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.json');
+const { PRODUCT_ID, VENDOR_ID, CUSTOMER_ID } = process.env;
+const RMA = `${endPoints.serverUrl}/dokan/v1/rma/warranty-requests`;
 
-// Ported to tests/e2e/new-return-request/ (parity green 3×; NEW_UI_HOUSE_STYLE.md §8).
-// This describe was already fully skipped and every method was a no-op stub (incl.
-// a fake UI-checkout "seed" that never ran) — its green was vacuous. The new spec
-// covers list/tabs/details/message/status/refund/delete + a customer-created flow
-// via REST seeding. The RMA *settings* page (dashboard/settings/rma) stays legacy —
-// there is no React settings route yet.
-test.describe.skip('Vendor RMA test', () => {
+interface Seed {
+    orderId: string;
+    requestId: string;
+}
+
+// Seed one return request over REST (mirrors tests/e2e/new-return-request):
+// fresh WC order → POST warranty-request as the CUSTOMER (RMA create is
+// customer-only) → recover the request id as the VENDOR. RMA rows live in the
+// custom wp_dokan_rma_* tables, so this is REST-only (no raw SQL).
+async function seedReturnRequest(apiUtils: ApiUtils, type: 'replace' | 'refund' | 'coupon' = 'refund', status: 'new' | 'processing' = 'new'): Promise<Seed> {
+    const [, order, orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID as string, payloads.createOrder, 'wc-processing', payloads.vendorAuth);
+    const [res] = await apiUtils.post(
+        RMA,
+        {
+            data: {
+                order_id: Number(orderId),
+                customer_id: Number(CUSTOMER_ID),
+                vendor_id: Number(VENDOR_ID),
+                type,
+                status,
+                reasons: 'defective',
+                details: `PW RMA ${type}/${status} ${Date.now()}`,
+                items: [{ product_id: order.line_items[0].product_id, item_id: order.line_items[0].id, quantity: 1 }],
+            },
+            headers: payloads.customerAuth,
+        },
+        false,
+    );
+    expect(res.status(), 'RMA request seeded (201)').toBe(201);
+    const [, rows] = await apiUtils.get(`${RMA}?order_id=${orderId}`, { headers: payloads.vendorAuth }, false);
+    return { orderId, requestId: String(rows[0].id) };
+}
+
+async function getRmaStatus(apiUtils: ApiUtils, requestId: string): Promise<string> {
+    const [, body] = await apiUtils.get(`${RMA}/${requestId}`, { headers: payloads.vendorAuth }, false);
+    return String(body?.status ?? '');
+}
+
+test.describe('Vendor RMA test', () => {
     let admin: VendorReturnRequestPage;
     let vendor: VendorReturnRequestPage;
     let vendor1: OrdersPage;
@@ -23,6 +58,7 @@ test.describe.skip('Vendor RMA test', () => {
     let aPage: Page, vPage: Page, cPage: Page;
     let apiUtils: ApiUtils;
     let orderId: string;
+    let requestId: string;
 
     test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext({ storageState: a1 });
@@ -36,16 +72,26 @@ test.describe.skip('Vendor RMA test', () => {
         cPage = await customerContext.newPage();
         customer = new VendorReturnRequestPage(cPage);
         customer1 = new CustomerPage(cPage);
-        await customer1.addProductToCartFromSingleProductPage(data.predefined.simpleProduct.product1.name);
-        await customer1.goToCheckout();
-        orderId = await customer1.paymentOrder();
-        await vendor1.updateOrderStatusOnTable(orderId, 'processing');
-        await customer.customerRequestWarranty(orderId, data.predefined.simpleProduct.product1.name, data.rma.requestWarranty);
+
         apiUtils = new ApiUtils(null);
+        // the legacy /dashboard/return-request vendor screen only renders when the module is active
+        await apiUtils.activateModules(payloads.moduleIds.rma, payloads.adminAuth);
+        // clean the vendor's existing requests so list/row oracles stay deterministic
+        const [, existing] = await apiUtils.get(`${RMA}?per_page=100`, { headers: payloads.vendorAuth }, false);
+        for (const r of Array.isArray(existing) ? existing : []) {
+            await apiUtils.delete(`${RMA}/${r.id}`, { headers: payloads.vendorAuth }).catch(() => undefined);
+        }
+        // seed one refund request (drives view/message/status/refund/delete)
+        ({ orderId, requestId } = await seedReturnRequest(apiUtils, 'refund', 'new'));
     });
 
     test.afterAll(async () => {
+        // the last case deactivates the module — reactivate before RMA REST cleanup
         await apiUtils.activateModules(payloads.moduleIds.rma, payloads.adminAuth);
+        const [, existing] = await apiUtils.get(`${RMA}?per_page=100`, { headers: payloads.vendorAuth }, false).catch(() => [undefined, []] as any);
+        for (const r of Array.isArray(existing) ? existing : []) {
+            await apiUtils.delete(`${RMA}/${r.id}`, { headers: payloads.vendorAuth }).catch(() => undefined);
+        }
         await aPage?.close();
         await vPage?.close();
         await cPage?.close();
@@ -58,20 +104,38 @@ test.describe.skip('Vendor RMA test', () => {
     test('vendor can view return request details', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorViewRmaDetails(orderId); });
     test('customer can send rma message', { tag: ['@pro', '@customer'] }, async () => { await customer.customerSendRmaMessage(orderId, 'test customer rma message'); });
     test('vendor can send rma message', { tag: ['@pro', '@vendor'] }, async () => { await vendor.vendorSendRmaMessage(orderId, 'test vendor rma message'); });
-    test('vendor can update rma status', { tag: ['@pro', '@vendor'] }, async () => { await vendor.vendorUpdateRmaStatus(orderId, 'processing'); });
-    test('vendor can rma refund', { tag: ['@pro', '@vendor'] }, async () => { await vendor.vendorRmaRefund(orderId, data.predefined.simpleProduct.product1.name, 'processing'); });
-    test('vendor can delete rma request', { tag: ['@pro', '@vendor'] }, async () => { await vendor.vendorDeleteRmaRequest(orderId); });
+
+    test('vendor can update rma status', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.vendorUpdateRmaStatus(orderId, 'processing');
+        // REST oracle: the request transitioned to processing
+        expect(await getRmaStatus(apiUtils, requestId), 'status transitioned to processing (REST)').toBe('processing');
+    });
+
+    test('vendor can rma refund', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.vendorRmaRefund(orderId, data.predefined.simpleProduct.product1.name, 'processing');
+        // admin REST oracle: a pending refund now exists for this order
+        const refundId = await apiUtils.getRefundIdByOrderId(orderId, 'pending', payloads.adminAuth).catch(() => undefined);
+        expect(refundId, 'a pending refund was created for the order (admin REST)').toBeTruthy();
+    });
+
+    test('vendor can delete rma request', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.vendorDeleteRmaRequest(orderId);
+        // REST oracle: the request no longer resolves
+        const [, rows] = await apiUtils.get(`${RMA}?order_id=${orderId}`, { headers: payloads.vendorAuth }, false);
+        expect(Array.isArray(rows) ? rows.length : 0, 'deleted request no longer resolves (REST)').toBe(0);
+    });
+
     test('customer can view return request menu page', { tag: ['@pro', '@exploratory', '@customer'] }, async () => { await customer.customerReturnRequestRenderProperly(); });
 
     test('customer can request warranty', { tag: ['@pro', '@customer'] }, async () => {
         await customer1.addProductToCartFromSingleProductPage(data.predefined.simpleProduct.product1.name);
         await customer1.goToCheckout();
-        const orderId = await customer1.paymentOrder();
-        await vendor1.updateOrderStatusOnTable(orderId, 'processing');
-        await customer.customerRequestWarranty(orderId, data.predefined.simpleProduct.product1.name, data.rma.requestWarranty);
+        const newOrderId = await customer1.paymentOrder();
+        await vendor1.updateOrderStatusOnTable(newOrderId, 'processing');
+        await customer.customerRequestWarranty(newOrderId, data.predefined.simpleProduct.product1.name, data.rma.requestWarranty);
     });
 
-    test.skip('admin can disable RMA module', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can disable RMA module', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.deactivateModules(payloads.moduleIds.rma, payloads.adminAuth);
         await admin.disableRmaModule();
     });
@@ -115,4 +179,3 @@ test.describe.skip('Vendor Return Request (React) Tests @pro', () => {
         await ctx.close();
     });
 });
-

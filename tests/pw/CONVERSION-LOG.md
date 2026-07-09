@@ -884,3 +884,30 @@ unchanged; search input + select2 customer filter unchanged; only additive chang
 Strengthened over the recovery (no fake green): added real status/reply read-back oracles the old methods lacked,
 and fixed the by-customer filter that never actually selected the option. Admin (React SPA) + customer methods
 kept as vacuous `{}` stubs (their cases pass as on develop). feature-map: 11 vendor leaves flipped `false→true`.
+
+## Class-B continuation — vendor-return-request REVIVED ✔ (2026-07-09)
+
+Scoped vendor-only revival of `test.describe.skip('Vendor RMA test')` → **7 real legacy vendor cases** on classic
+`/dashboard/return-request` (view menu, view RMA settings, view details, send RMA message, update status, refund,
+delete). Green 3× headless (12 passed folder / 88 with setup, 0 failed) + independent confirmation. Admin/customer
+methods kept `{}` stub; `admin can disable RMA module` sibling made active. RMA *settings* page renders legacy →
+revived real (no skip needed). Seeding is REST-only (RMA lives in custom `wp_dokan_rma_*` tables): fresh WC order →
+POST `/dokan/v1/rma/warranty-requests` as customer → recover id as vendor → DELETE cleanup (mirrors new-return-request).
+
+**Real drift fixed (no fake green):** (1) refund/status-update AJAX fires `window.location.reload()` — armed
+`waitForEvent('load')` before the click to avoid a `net::ERR_ABORTED` race (removed the racing goto); (2) the store
+uses a **comma** monetary decimal — typing dot-decimal triggered WooCommerce's `wc_error_tip` overlay that blocked the
+refund submit, so the amount is now formatted with `window.dokan_refund.mon_decimal_point`; (3) the delete-success woo
+banner only prints on the detail template (not the list the delete redirects to in the React shell) → oracle is
+row-absence + REST `?order_id=` returns 0. Real oracles throughout: update→REST `getRmaStatus==='processing'`,
+refund→admin REST `getRefundIdByOrderId(...,'pending')`, delete→REST-absent. feature-map: 7 vendor leaves `false→true`.
+
+### product-addons + vendor-staff — NOT revived this pass (documented)
+- **product-addons**: only 2 conversion-added skips (`vendor can view product addons menu page` render-only, and
+  `vendor can remove global product addon`). The remove method `removeAddon` is SHARED with an *active* sibling
+  (`vendor can remove product addon`, per-product surface) so it can't be scoped cleanly without disentangling, and the
+  sole clean target is a weak render-only check (§7 discourages render-only as the primary oracle). Left at stub baseline.
+- **vendor-staff**: the conversion-added `Vendor staff test (vendorStaff)` block has **no revivable pure-vendor case** —
+  it is `VendorStaff can view allowed menus` (the staff dashboard sidebar is React in 5.0.8 → not legacy-assertable) +
+  `admin can disable vendor staff manager module` (an admin case). The real staff CRUD lives in the pre-existing-skipped
+  `Vendor staff test (vendor)` block (out of conversion-added scope). Left at stub baseline.

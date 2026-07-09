@@ -1606,13 +1606,13 @@
           admin can RMA module: true
           admin can disable RMA module: true
       vendor:
-          vendor can view return request menu page: false
-          vendor can view return request settings menu page: false
-          vendor can view return request details: false
-          vendor can send rma message: false
-          vendor can update rma status: false
-          vendor can rma refund: false
-          vendor can delete rma request: false
+          vendor can view return request menu page: true # legacy /dashboard/return-request REVIVED 2026-07-09 (green 3×)
+          vendor can view return request settings menu page: true
+          vendor can view return request details: true
+          vendor can send rma message: true
+          vendor can update rma status: true
+          vendor can rma refund: true
+          vendor can delete rma request: true
       customer:
           customer can view return request menu page: true
           customer can request warranty: true
