@@ -911,3 +911,22 @@ refund→admin REST `getRefundIdByOrderId(...,'pending')`, delete→REST-absent.
   it is `VendorStaff can view allowed menus` (the staff dashboard sidebar is React in 5.0.8 → not legacy-assertable) +
   `admin can disable vendor staff manager module` (an admin case). The real staff CRUD lives in the pre-existing-skipped
   `Vendor staff test (vendor)` block (out of conversion-added scope). Left at stub baseline.
+
+## FINAL tally — legacy revival (2026-07-09, after class-B continuation)
+
+The scoped **vendor-only** recipe (make ONLY the vendor block's methods real; keep admin/customer/staff as `{}`
+stubs; recover pre-#3173 selectors; live drift-fix; green 3× headless) succeeded where the first over-reaching
+attempt failed. **5 legacy features genuinely revived green** (all 3× headless + an independent confirmation run):
+
+| Feature | Legacy surface | Real vendor cases | Notes |
+|---|---|--:|---|
+| follow-store | `/dashboard/followers` | 2 | real PO, un-skip |
+| announcements | `/dashboard/announcement` | 1 | Old TC11 legacy delete |
+| product-qa | `/dashboard/product-questions-answers` | 7 (+11 admin real) | 5 out-of-scope skips documented |
+| store-supports | `/dashboard/support` | 11 | +real oracles the recovery lacked |
+| vendor-return-request | `/dashboard/return-request` | 7 | +3 real drift fixes (reload/decimal/delete) |
+
+= **28 real legacy vendor cases + 11 legacy admin cases** revived, coexisting green with the additive `new-*`
+React suite. NOT revived (documented not-viable this pass): product-addons (shared `removeAddon` method +
+render-only target), vendor-staff (React staff sidebar; no pure-vendor conversion-added case). Class-C: 1 vacuous
+smoke deleted (exemplar), 20 retired-in-place (skipped, emit no fake green). Two product-bug tests stay `test.fixme`.
