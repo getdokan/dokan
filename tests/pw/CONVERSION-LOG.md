@@ -588,3 +588,49 @@ stays-legacy DECISIONS.
   pay-now (add-to-cart+redirect), B30/B31 shipping table-rate/distance-rate drill-in
   forms (add-method -> Edit -> per-instance route). Each needs live selector/seeder
   iteration that the slow env makes unreliable to complete now.
+
+---
+
+# Phase 0–4 resume run (2026-07-09) — reconcile + **KEEP LEGACY SUITE** mandate
+
+New team-lead decision: **KEEP the legacy (old-UI) test cases for legacy support.**
+End state = **two parallel, both-green e2e suites**: the additive `new-*` React suite
+(`/dashboard/new/#/<route>`) AND the classic legacy suite (`/dashboard/<route>`)
+restored to fully functional. The old-UI cases keep testing the OLD UI in their
+original folders; the new-UI cases are an ADDITION, never a replacement.
+
+## Phase 0 — Reconcile onto ONE branch `qa/new-ui-suite-wave-0` ✔
+
+Ground truth re-derived from the repo (repo root:
+`wp-content/plugins/dokan-lite`; the working dir `dokanautomation/` is the WP install,
+NOT a git repo — the git repo is the plugin dir):
+
+- `origin/qa/new-ui-suite-wave-0` = PR #3303 head = **`215b85718`** = local branch
+  `qa/new-ui-suite-wave-4` = the COMPLETE Waves 0–4 conversion = **30 `new-*` folders**
+  (verified `ls-tree`). Based on develop @ `ece223fc9` (pre-5.0.8).
+- Local checked-out `qa/new-ui-suite-wave-0` was diverged @ **`38d2c0bde`** = only
+  **17 `new-*` folders** (Waves 0–1) + a merge of develop-5.0.8 + fix #3300.
+- `merge-base(38d2c0bde, 215b85718)` = `23a81697b` (Wave 1 COMPLETE) — the divergence
+  point. Diff of the 17 shared folders (`23a81697b`→`215b85718`) is **all additions**
+  (waves 2–4 added specs, removed none) ⇒ `215b85718` is a strict **superset** of the
+  wave-0/1 test work. The diverged local checkout had **zero unique test work**; its
+  only unique content was develop-5.0.8 + fix #3300 (`e3391ac55`, which touches ONLY
+  `src/dashboard/product-editor/components/PriceEdit.tsx`, and is already in
+  `origin/develop`).
+
+**Reconcile performed (lossless, no rebuild):**
+1. Safety net: branch `backup/wave-0-prereconcile-38d2c0bde` @ `38d2c0bde` + tag
+   `backup/full-conversion-215b85718` @ `215b85718` (both reversible).
+2. `git reset --hard 215b85718` (make wave-0 the full 30-folder conversion base).
+3. `git merge origin/develop` → **clean, conflict-free** (the prompt predicted
+   conflicts in feature-map.yml / shard-durations.json / CONVERSION-LOG.md /
+   package-lock.json, but the overlap of files-changed-by-both-sides since the shared
+   merge-base `ece223fc9` was **empty**: develop only bumped version files +
+   `PriceEdit.tsx`; the conversion is test-only). Merge commit `d9bca4de5`.
+
+**Post-reconcile asserts (all pass):** `git branch --show-current` ==
+`qa/new-ui-suite-wave-0`; `ls -d tests/e2e/new-*` == **30**; develop content present
+(`dokan.php` Version 5.0.8, `PriceEdit.tsx` #3300 fix); `tsc --noEmit` clean on every
+`.ts` (only the pre-existing plain-JS util-script implicit-any noise remains, confirmed
+on the develop baseline). Working tree otherwise clean (the untracked
+`stripe-express/bugs/` is another branch's scope — left untouched, never `git add`ed).
