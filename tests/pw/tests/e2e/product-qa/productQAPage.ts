@@ -14,14 +14,14 @@ import { data } from '@utils/testData';
 // It is now REAL: selectors + method bodies ported from the pre-#3173 page object
 // (git e2ec507de:tests/pw/pages/productQAPage.ts + pages/selectors.ts), and the
 // ApiUtils / payloads / data the spec seeds with are the REAL @utils
-// implementations (identical seeding + REST oracles to tests/e2e/new-product-qa/;
+// implementations (identical seeding + REST oracles to tests/e2e/product-qa/;
 // the ONLY difference is the driving surface — legacy vs React).
 //
 // Self-contained per the revived-legacy convention: the BasePage helper bodies
 // (goIfNotThere, toBeVisible, multipleElementVisible, clearAndType,
 // clickAndWaitForResponse, click, clickAndWaitForResponseAndLoadState, …) are
 // inlined verbatim from the pre-#3173 BasePage; only cross-folder @pages imports
-// are removed. New-UI parity lives in tests/e2e/new-product-qa/.
+// are removed. New-UI parity lives in tests/e2e/product-qa/.
 // ============================================
 
 // Re-export the REAL utilities under the names the spec imports.

@@ -106,12 +106,12 @@ test.describe('Product QA functionality test', () => {
         await admin.productQuestionsBulkAction('read');
     });
 
-    // LEGACY UI regression — revived 2026-07-09; new-UI parity in tests/e2e/new-product-qa/.
+    // LEGACY UI regression — revived 2026-07-09; new-UI parity in tests/e2e/product-qa/.
     // These vendor cases now drive the CLASSIC Vue vendor dashboard
     // (dashboard/product-questions-answers) through the real page object + real
-    // @utils ApiUtils/payloads seeding (identical to new-product-qa/, only the
+    // @utils ApiUtils/payloads seeding (identical to product-qa/, only the
     // driving surface differs), replacing the former no-op stub / vacuous green.
-    test.describe('vendor cases — ported to new-product-qa/', () => {
+    test.describe('vendor cases — ported to product-qa/', () => {
         test('vendor can view product QA menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
             await vendor.vendorProductQARenderProperly();
         });
@@ -186,7 +186,7 @@ test.describe('Product QA functionality test', () => {
 
 // Retired (D1/D4): these two "(React)" smokes navigate the LEGACY
 // /dashboard/product-questions-answers/ URL and assert only no-fatal /
-// body-text length. Real React parity lives in tests/e2e/new-product-qa/.
+// body-text length. Real React parity lives in tests/e2e/product-qa/.
 test.describe.skip('Product Q&A (React) Tests @pro', () => {
     test('Test Case 1 - Vendor Q&A page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });

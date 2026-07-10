@@ -5,16 +5,23 @@ Dokan 5.0 React vendor dashboard (`/dashboard/new/#/<route>`, HashRouter, SPA
 root `#dokan-vendor-dashboard-root`). Several page objects cite this document
 by section number (`§1`, `§5`) — **do not renumber sections**.
 
-Gold-standard exemplar: `tests/e2e/new-withdraw/`. DataViews-heavy exemplars:
-`new-orders/`, `new-shipping/`.
+Gold-standard exemplar: `tests/e2e/withdraws/`. DataViews-heavy exemplars:
+`orders/`, `vendor-shipping/`.
 
 ---
 
-## §1. Golden rule — self-contained folders
+## §1. Golden rule — one folder per feature (legacy + new-UI co-located)
 
-One feature = one folder: `tests/e2e/new-<feature>/`. **Spec folders never
-import from each other.** The only allowed non-local imports are `@utils/*`
-(and `@playwright/test`).
+**One feature = one folder.** The React new-UI specs live **inside the feature's
+existing (legacy) folder**, named `new<Feature>.spec.ts` / `new<Feature>Page.ts`,
+alongside the legacy `<feature>.spec.ts` / `<feature>Page.ts`. There are **no
+separate `new-*` folders** — they were consolidated 2026-07-10 so a feature never
+has two folders. (A net-new surface with no legacy folder simply gets its own
+feature folder, e.g. `vendor-support/`, `coupons/`.)
+
+**Spec files never import from each other** (legacy↔new or across features). The
+only allowed non-local imports are `@utils/*` (and `@playwright/test`); the
+same-folder new/legacy files stay independent.
 
 - Shared DataViews primitives live in `@utils/dataViews` (selector constants,
   `waitForRootReady`, `waitForListReady`, `hasNoPhpFatal`, row-action menu,
@@ -30,12 +37,14 @@ import from each other.** The only allowed non-local imports are `@utils/*`
 ## §2. Folder & file layout, header banners
 
 ```
-tests/e2e/new-<feature>/
-├── new<Feature>.spec.ts    # test cases only — thin test() blocks
-└── new<Feature>Page.ts     # selectors const + page object (+ TEST DATA const)
+tests/e2e/<feature>/                 # the feature's single folder
+├── <feature>.spec.ts       # legacy (classic /dashboard/) cases
+├── <feature>Page.ts        # legacy page object
+├── new<Feature>.spec.ts    # NEW React-UI cases — thin test() blocks
+└── new<Feature>Page.ts     # NEW selectors const + page object (+ TEST DATA const)
 ```
 
-Spec header banner (see `new-withdraw/newWithdraw.spec.ts`): a `// ====`
+Spec header banner (see `withdraws/newWithdraw.spec.ts`): a `// ====`
 banner stating (a) `NEW REACT UI TEST CASES (Dokan 5.0.0+)`, (b) which legacy
 spec it ports, (c) `Surface(s):` with hash route(s) + widget type
 (`DataViews list`, `DokanModal form`, …), (d) Lite/Pro tier, (e) any
@@ -46,7 +55,7 @@ against the live render** and citing the rendering component source path
 (e.g. `src/dashboard/withdraw/WithdrawRequests.tsx`), then the exported
 selectors const, then a `PAGE OBJECT` banner. When fixture data is needed
 beyond `payloads`/env, export a `newXData` const under a `TEST DATA` banner
-(see `new-shipping/newShippingPage.ts`).
+(see `vendor-shipping/newShippingPage.ts`).
 
 ## §3. Page objects
 
@@ -125,7 +134,7 @@ beyond `payloads`/env, export a `newXData` const under a `TEST DATA` banner
   `[data-slot="skeleton"]` while loading. Any row-count read on a
   skeleton-rendering surface must settle first and count settled rows only
   (`DATA_ROW_SETTLED` / subtract `:has([data-slot="skeleton"])` rows) — see
-  `new-orders/newOrdersPage.ts` for the canonical explanation of the readiness
+  `orders/newOrdersPage.ts` for the canonical explanation of the readiness
   race. Surfaces without skeletons may use `rawRowCount`.
 - Prefer **REST-response-gated** waits over fixed sleeps whenever the refetch
   is observable (`waitForResponse` on the list endpoint carrying the expected
@@ -209,9 +218,9 @@ welcome additions but never replace the vendor behavioral cases.
   `product-form-manager/`, "(React) Tests" describes appended inside legacy
   specs) are transitional — migrate them into `new-*` folders opportunistically
   when touching those files.
-- **D2 — product-editor consolidation (planned, Wave 2):** `new-products/`
+- **D2 — product-editor consolidation (planned, Wave 2):** `products/`
   owns the `/products` list; `product-form-manager/newProductForm*` moves to a
-  `new-product-form/` folder owning `/products/create` + `/products/:id/edit`;
+  `product-form-manager/` folder owning `/products/create` + `/products/:id/edit`;
   smoke-only `product-variations/` and `product-bulk-edit/` retire into it.
 - **D3 — never blanket-skip:** a legacy skip must cover only the ported vendor
   cases; admin/storefront cases in the same file stay live.
@@ -222,8 +231,8 @@ welcome additions but never replace the vendor behavioral cases.
   `/dashboard/user-subscription/`; `vendor-subscriptions` covers vendor packs
   at `/dashboard/subscription/`. The two smokes had them swapped.
 - **D6 — retired (Wave 0):** `social-linking/socialLinking.spec.ts` and
-  `store-seo/storeSeo.spec.ts` — superseded by `new-social/` and
-  `new-store-seo/`.
+  `store-seo/storeSeo.spec.ts` — superseded by `social-linking/` and
+  `store-seo/`.
 - **Naming arbitrations:** readiness methods are `waitForRootReady` /
   `waitForListReady` (list surfaces may add a local `waitForSettle` for
   skeleton math); `hasNoPhpFatal` (not `hasNoServerError`); tab-count parsing

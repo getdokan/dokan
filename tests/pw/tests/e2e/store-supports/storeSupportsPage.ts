@@ -12,10 +12,10 @@ import { ApiUtils as RealApiUtils } from '@utils/apiUtils';
 // methods below are real; every admin/customer method stays an empty stub
 // because those surfaces are now React SPAs in 5.0.8 and their spec cases
 // pass vacuously (verified on develop). Real behavioral parity for the React
-// vendor surface lives in tests/e2e/new-store-support/.
+// vendor surface lives in tests/e2e/store-supports/.
 //
 // data / payloads / ApiUtils are re-exported REAL from @utils so the block's
-// beforeAll seeds real tickets (mirrors new-store-support/newStoreSupport.spec).
+// beforeAll seeds real tickets (mirrors store-supports/newStoreSupport.spec).
 // ============================================================================
 
 // Re-export the REAL test data + payloads + response type used across the spec.

@@ -276,7 +276,7 @@ test.describe('Announcements Tests @pro', () => {
 
     // LEGACY UI regression case (revived 2026-07-09 for legacy support): drives the
     // classic `dashboard/announcement` PHP screen via admin-ajax delete. New-UI parity
-    // (bulk delete) lives in tests/e2e/new-announcements/.
+    // (bulk delete) lives in tests/e2e/announcements/.
     test('Old Test Case 11 - Vendor Deletes Announcement', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         // Using admin session storage to create a published announcement first
         const adminContext = await browser.newContext({ storageState: a1 });

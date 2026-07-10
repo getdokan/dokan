@@ -13,12 +13,12 @@
       "tests": 276
     },
     {
-      "file": "new-shipping/newShipping.spec.ts",
+      "file": "vendor-shipping/newShipping.spec.ts",
       "ms": 379160,
       "tests": 16
     },
     {
-      "file": "new-products/newProducts.spec.ts",
+      "file": "products/newProducts.spec.ts",
       "ms": 370569,
       "tests": 32
     },
@@ -38,7 +38,7 @@
       "tests": 25
     },
     {
-      "file": "new-orders/newOrders.spec.ts",
+      "file": "orders/newOrders.spec.ts",
       "ms": 238422,
       "tests": 21
     },
@@ -78,7 +78,7 @@
       "tests": 25
     },
     {
-      "file": "new-coupons/newCoupons.spec.ts",
+      "file": "coupons/newCoupons.spec.ts",
       "ms": 160316,
       "tests": 14
     },
@@ -93,12 +93,12 @@
       "tests": 23
     },
     {
-      "file": "new-manual-order/newManualOrder.spec.ts",
+      "file": "manual-order/newManualOrder.spec.ts",
       "ms": 156250,
       "tests": 11
     },
     {
-      "file": "new-withdraw/newWithdraw.spec.ts",
+      "file": "withdraws/newWithdraw.spec.ts",
       "ms": 151310,
       "tests": 12
     },
@@ -248,7 +248,7 @@
       "tests": 16
     },
     {
-      "file": "new-seller-badge/newSellerBadge.spec.ts",
+      "file": "seller-badges/newSellerBadge.spec.ts",
       "ms": 82587,
       "tests": 8
     },
@@ -273,7 +273,7 @@
       "tests": 6
     },
     {
-      "file": "new-reverse-withdraw/newReverseWithdraw.spec.ts",
+      "file": "reverse-withdraws/newReverseWithdraw.spec.ts",
       "ms": 71870,
       "tests": 13
     },
@@ -288,7 +288,7 @@
       "tests": 16
     },
     {
-      "file": "new-store-reviews/newStoreReviews.spec.ts",
+      "file": "store-reviews/newStoreReviews.spec.ts",
       "ms": 64593,
       "tests": 9
     },
@@ -298,7 +298,7 @@
       "tests": 3
     },
     {
-      "file": "new-store-seo/newStoreSeo.spec.ts",
+      "file": "store-seo/newStoreSeo.spec.ts",
       "ms": 62680,
       "tests": 6
     },
@@ -353,7 +353,7 @@
       "tests": 4
     },
     {
-      "file": "new-social/newSocial.spec.ts",
+      "file": "social-linking/newSocial.spec.ts",
       "ms": 42126,
       "tests": 5
     },
@@ -828,142 +828,142 @@
       "tests": 57
     },
     {
-      "file": "new-announcements/newAnnouncements.spec.ts",
+      "file": "announcements/newAnnouncements.spec.ts",
       "ms": 30000,
       "tests": 5
     },
     {
-      "file": "new-auction/newAuction.spec.ts",
+      "file": "vendor-auction/newAuction.spec.ts",
       "ms": 96000,
       "tests": 16
     },
     {
-      "file": "new-booking/newBooking.spec.ts",
+      "file": "vendor-booking/newBooking.spec.ts",
       "ms": 90000,
       "tests": 15
     },
     {
-      "file": "new-delivery-time/newDeliveryTime.spec.ts",
+      "file": "vendor-delivery-time/newDeliveryTime.spec.ts",
       "ms": 36000,
       "tests": 6
     },
     {
-      "file": "new-followers/newFollowers.spec.ts",
+      "file": "follow-store/newFollowers.spec.ts",
       "ms": 66000,
       "tests": 11
     },
     {
-      "file": "new-menu-manager/newMenuManager.spec.ts",
+      "file": "menu-manager/newMenuManager.spec.ts",
       "ms": 42000,
       "tests": 7
     },
     {
-      "file": "new-orders/newOrdersGaps.spec.ts",
+      "file": "orders/newOrdersGaps.spec.ts",
       "ms": 30000,
       "tests": 5
     },
     {
-      "file": "new-product-addons/newProductAddons.spec.ts",
+      "file": "product-addons/newProductAddons.spec.ts",
       "ms": 60000,
       "tests": 10
     },
     {
-      "file": "new-product-advertising/newProductAdvertising.spec.ts",
+      "file": "product-advertising/newProductAdvertising.spec.ts",
       "ms": 54000,
       "tests": 9
     },
     {
-      "file": "new-product-form/newProductForm.spec.ts",
+      "file": "product-form-manager/newProductForm.spec.ts",
       "ms": 484000,
       "tests": 22
     },
     {
-      "file": "new-product-form/newProductFormAdvanced.spec.ts",
+      "file": "product-form-manager/newProductFormAdvanced.spec.ts",
       "ms": 418000,
       "tests": 19
     },
     {
-      "file": "new-product-form/newProductFormEdit.spec.ts",
+      "file": "product-form-manager/newProductFormEdit.spec.ts",
       "ms": 242000,
       "tests": 11
     },
     {
-      "file": "new-product-form/newProductFormTypes.spec.ts",
+      "file": "product-form-manager/newProductFormTypes.spec.ts",
       "ms": 44000,
       "tests": 2
     },
     {
-      "file": "new-product-form/newProductFormValidation.spec.ts",
+      "file": "product-form-manager/newProductFormValidation.spec.ts",
       "ms": 242000,
       "tests": 11
     },
     {
-      "file": "new-product-form/newProductFormWholesale.spec.ts",
+      "file": "product-form-manager/newProductFormWholesale.spec.ts",
       "ms": 66000,
       "tests": 3
     },
     {
-      "file": "new-product-qa/newProductQa.spec.ts",
+      "file": "product-qa/newProductQa.spec.ts",
       "ms": 78000,
       "tests": 13
     },
     {
-      "file": "new-products/newProductsProActions.spec.ts",
+      "file": "products/newProductsProActions.spec.ts",
       "ms": 24000,
       "tests": 4
     },
     {
-      "file": "new-requested-quotes/newRequestedQuotes.spec.ts",
+      "file": "request-for-quotes/newRequestedQuotes.spec.ts",
       "ms": 72000,
       "tests": 12
     },
     {
-      "file": "new-return-request/newReturnRequest.spec.ts",
+      "file": "vendor-return-request/newReturnRequest.spec.ts",
       "ms": 78000,
       "tests": 13
     },
     {
-      "file": "new-shipstation/newShipstation.spec.ts",
+      "file": "shipstation/newShipstation.spec.ts",
       "ms": 36000,
       "tests": 6
     },
     {
-      "file": "new-store-support/newStoreSupport.spec.ts",
+      "file": "store-supports/newStoreSupport.spec.ts",
       "ms": 108000,
       "tests": 18
     },
     {
-      "file": "new-subscription/newSubscription.spec.ts",
+      "file": "vendor-subscriptions/newSubscription.spec.ts",
       "ms": 54000,
       "tests": 9
     },
     {
-      "file": "new-user-subscription/newUserSubscription.spec.ts",
+      "file": "vendor-product-subscription/newUserSubscription.spec.ts",
       "ms": 54000,
       "tests": 9
     },
     {
-      "file": "new-vendor-staff/newVendorStaff.spec.ts",
+      "file": "vendor-staff/newVendorStaff.spec.ts",
       "ms": 102000,
       "tests": 17
     },
     {
-      "file": "new-vendor-support/newVendorSupport.spec.ts",
+      "file": "vendor-support/newVendorSupport.spec.ts",
       "ms": 114000,
       "tests": 19
     },
     {
-      "file": "new-vendor-verifications/newVendorVerifications.spec.ts",
+      "file": "vendor-verifications/newVendorVerifications.spec.ts",
       "ms": 78000,
       "tests": 13
     },
     {
-      "file": "new-withdraw/newWithdrawB15.spec.ts",
+      "file": "withdraws/newWithdrawB15.spec.ts",
       "ms": 18000,
       "tests": 3
     },
     {
-      "file": "new-shipping-rate/newShippingRate.spec.ts",
+      "file": "table-rate-shipping/newShippingRate.spec.ts",
       "ms": 22820,
       "tests": 4
     }

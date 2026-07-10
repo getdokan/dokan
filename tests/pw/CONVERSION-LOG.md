@@ -930,3 +930,22 @@ attempt failed. **5 legacy features genuinely revived green** (all 3× headless 
 React suite. NOT revived (documented not-viable this pass): product-addons (shared `removeAddon` method +
 render-only target), vendor-staff (React staff sidebar; no pure-vendor conversion-added case). Class-C: 1 vacuous
 smoke deleted (exemplar), 20 retired-in-place (skipped, emit no fake green). Two product-bug tests stay `test.fixme`.
+
+## Folder consolidation — new-* merged into feature folders (2026-07-10)
+
+Per team-lead decision: reverse the house-style §1 "separate new-<feature>/ folder" convention —
+two folders per feature reads as messy. Moved every `new<Feature>.spec.ts` / `new<Feature>Page.ts`
+into its **existing feature (legacy) folder** so each feature has ONE folder holding both the legacy
+and the React new-UI specs. **Zero `new-*` folders remain.**
+
+- 29 merges (`git mv`), e.g. new-announcements→announcements, new-followers→follow-store,
+  new-social→social-linking, new-shipping→vendor-shipping, new-shipping-rate→table-rate-shipping,
+  new-subscription→vendor-subscriptions, new-user-subscription→vendor-product-subscription,
+  new-store-support→store-supports, new-product-form→product-form-manager, etc.
+- 2 net-new surfaces with no legacy folder simply lost the `new-` prefix: new-coupons→coupons,
+  new-vendor-support→vendor-support.
+- Safe: verified no spec imports from another folder (only `@utils/*` + same-dir), no filename
+  collisions; `tsc --noEmit` clean after the move (same-dir `./new*Page` imports intact); shard
+  paths in `utils/shard-durations.json` remapped (39 entries); 21 files' comment path-refs updated;
+  NEW_UI_HOUSE_STYLE.md §1/§2 rewritten for the co-located layout. Spot-run `follow-store` (legacy
+  revived + newFollowers together) green 93/0. e2e folder count 127→99.

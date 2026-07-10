@@ -150,7 +150,7 @@ test.describe('Vendor RMA test', () => {
 
 // Retired (D1/D4): these two "(React)" smokes navigate the LEGACY
 // dashboard/return-request/ URL and assert only no-fatal / body-text length.
-// Real React parity lives in tests/e2e/new-return-request/.
+// Real React parity lives in tests/e2e/vendor-return-request/.
 test.describe.skip('Vendor Return Request (React) Tests @pro', () => {
     test('Test Case 1 - Return request page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });

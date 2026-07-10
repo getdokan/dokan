@@ -177,7 +177,7 @@ test.describe('Store Support test (vendor)', () => {
 
 test.describe('Store Supports (React) Tests @pro', () => {
     // Retired (D4): render-only vendor smoke on the LEGACY /dashboard/support/
-    // URL. Real behavioral parity lives in tests/e2e/new-store-support/.
+    // URL. Real behavioral parity lives in tests/e2e/store-supports/.
     test.skip('Test Case 1 - Vendor support page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
@@ -190,7 +190,7 @@ test.describe('Store Supports (React) Tests @pro', () => {
         await ctx.close();
     });
 
-    // Retired (D4): superseded by new-store-support/ list coverage.
+    // Retired (D4): superseded by store-supports/ list coverage.
     test.skip('Test Case 2 - Vendor support shows tickets table or empty state', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
@@ -216,7 +216,7 @@ test.describe('Store Supports (React) Tests @pro', () => {
         await ctx.close();
     });
 
-    // Retired (D4): superseded by the HashRouter-reload test in new-store-support/.
+    // Retired (D4): superseded by the HashRouter-reload test in store-supports/.
     test.skip('Test Case 4 - Vendor support page survives reload', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();

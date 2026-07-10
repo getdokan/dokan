@@ -7,7 +7,7 @@ const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.js
 
 const { CATEGORY_ID } = process.env;
 
-// Ported to the React product editor at tests/e2e/new-product-form/newProductFormEdit.spec.ts
+// Ported to the React product editor at tests/e2e/product-form-manager/newProductFormEdit.spec.ts
 // (edit-persistence parity; NEW_UI_HOUSE_STYLE.md §8). This whole describe is
 // ALL-VENDOR and ran through a no-op STUB page object + fabricated ApiUtils, so
 // its 95 greens were vacuous — nothing was seeded or asserted. Blanket-skipped

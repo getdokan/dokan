@@ -65,7 +65,7 @@ and a full page reload, the follower row remained for the entire 15s assertion w
 
 ## Test impact
 
-`tests/e2e/new-followers/newFollowers.spec.ts` — the "unfollowing (REST) removes the follower
+`tests/e2e/follow-store/newFollowers.spec.ts` — the "unfollowing (REST) removes the follower
 from the vendor list (React)" case is marked `test.fixme` referencing this note (the product
 does not reflect the unfollow, so a truthful behavioral assertion cannot pass). The follow
 direction ("a customer who follows the vendor appears in the list") is a cold-cache population

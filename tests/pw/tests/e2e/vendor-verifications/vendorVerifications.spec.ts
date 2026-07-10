@@ -98,12 +98,12 @@ test.describe('Verifications test', () => {
     });
     test('admin can perform bulk action on verification requests', { tag: ['@pro', '@admin'] }, async () => { await admin.verificationRequestBulkAction('approved'); });
 
-    // Ported to tests/e2e/new-vendor-verifications/ (parity green 3×;
+    // Ported to tests/e2e/vendor-verifications/ (parity green 3×;
     // NEW_UI_HOUSE_STYLE.md §8). These 6 vendor-DASHBOARD cases ran through the
     // folder's no-op STUB page object + stub ApiUtils, so their green was
     // vacuous. Nested skip keeps the admin, setup-wizard (a different surface),
     // and customer cases (D3) active.
-    test.describe.skip('vendor dashboard cases — ported to new-vendor-verifications/', () => {
+    test.describe.skip('vendor dashboard cases — ported to vendor-verifications/', () => {
     test('vendor can view verifications settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         const [, , methodName] = await apiUtils.createVerificationMethod(payloads.createVerificationMethod(), payloads.adminAuth);
         await vendor.vendorVerificationsSettingsRenderProperly(methodName);
@@ -176,7 +176,7 @@ test.describe('Verifications test', () => {
 
 // Retired (D1/D4): these two smokes navigate the LEGACY
 // dashboard/settings/verification/ URL and assert only no-fatal / body-text
-// length. Real React parity lives in tests/e2e/new-vendor-verifications/.
+// length. Real React parity lives in tests/e2e/vendor-verifications/.
 test.describe.skip('Vendor Verifications (React) Tests @pro', () => {
     test('Test Case 1 - Verification page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });

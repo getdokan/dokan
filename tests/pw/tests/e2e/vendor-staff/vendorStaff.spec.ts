@@ -40,7 +40,7 @@ test.describe.skip('Vendor staff test (vendor)', () => {
     test('vendor can delete staff', { tag: ['@pro', '@vendor'] }, async () => { await vendor.deleteStaff(staff.firstName + ' ' + staff.lastName); });
 });
 
-// Ported to tests/e2e/new-vendor-staff/ (parity green 3×; NEW_UI_HOUSE_STYLE.md §8).
+// Ported to tests/e2e/vendor-staff/ (parity green 3×; NEW_UI_HOUSE_STYLE.md §8).
 // Both cases here ran through the folder's no-op STUB ApiUtils (new ApiUtils(null)),
 // so nothing was ever created/deactivated — the green was vacuous. Their motives now
 // live in the new spec: the staff menu-visibility case → the `staff (menu visibility)`
@@ -89,7 +89,7 @@ function createPayload(capabilitiesArray: string[], access = true) {
 
 // Retired (D1/D4): these three "(React)" smokes navigate a NON-EXISTENT legacy URL
 // (dashboard/vendor-staff/ — the real legacy page is dashboard/staffs/) and assert
-// only no-fatal / body-text length. Real React parity lives in new-vendor-staff/.
+// only no-fatal / body-text length. Real React parity lives in vendor-staff/.
 test.describe.skip('Vendor Staff (React) Tests @pro', () => {
     test('Test Case 1 - Vendor staff page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });

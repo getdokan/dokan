@@ -2,7 +2,7 @@
 
 **Status:** pre-existing (NOT introduced by the Wave 0 new-UI conversion)
 **Discovered:** 2026-07-02, during the Wave 0 `@new-ui` validation runs
-**Spec:** `tests/e2e/new-products/newProducts.spec.ts` (already-converted; not a
+**Spec:** `tests/e2e/products/newProducts.spec.ts` (already-converted; not a
 Wave 0 conversion target)
 **Scope note:** the only Wave 0 change to this folder was migrating a
 storage-state `path.join` const to an `@utils/authStates` import in the spec —

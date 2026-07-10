@@ -8,7 +8,7 @@ import { VENDOR_STORAGE_STATE as v1, CUSTOMER_STORAGE_STATE as c1 } from '@utils
 // ============================================
 // NEW REACT UI TEST CASES (Dokan 5.0.0+)
 // Net-new coverage for the React vendor product-list "Advertise" column (Pro module
-// product_advertising / dir product-adv) on /dashboard/new/#/products. new-products/
+// product_advertising / dir product-adv) on /dashboard/new/#/products. products/
 // intentionally excludes the Pro Advertise column, so this is its home. Ports the
 // row-state + draft-guard motives from tests/e2e/product-advertising (a no-op stub).
 // The admin wp-admin advertising list + the paid checkout + tampered-nonce cases

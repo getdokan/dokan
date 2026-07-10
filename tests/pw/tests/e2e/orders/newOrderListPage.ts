@@ -29,7 +29,7 @@ import {
  *
  * Self-contained per NEW_UI_HOUSE_STYLE.md §1 — shared DataViews primitives
  * come from @utils/dataViews. NOTE: richer, REST-gated orders coverage lives
- * in tests/e2e/new-orders/ (the canonical home per house-style D1); this page
+ * in tests/e2e/orders/ (the canonical home per house-style D1); this page
  * object backs the in-folder legacy "(React)" smoke block only.
  */
 export class NewOrderListPage {

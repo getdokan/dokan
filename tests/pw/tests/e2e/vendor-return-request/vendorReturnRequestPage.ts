@@ -12,7 +12,7 @@ import { ApiUtils as RealApiUtils } from '@utils/apiUtils';
 // dashboard shell; verified live). Only the 7 vendor methods below are real;
 // every admin/customer method stays an empty stub because those surfaces are
 // now React SPAs in 5.0.8 and their spec cases pass vacuously. Real behavioral
-// parity for the React vendor surface lives in tests/e2e/new-return-request/.
+// parity for the React vendor surface lives in tests/e2e/vendor-return-request/.
 //
 // data / payloads / ApiUtils are re-exported REAL from @utils so the block's
 // beforeAll seeds real RMA requests over REST (mirrors new-return-request):

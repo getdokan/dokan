@@ -10,7 +10,7 @@ import { VENDOR_STORAGE_STATE as v1 } from '@utils/authStates';
 // NEW REACT UI TEST CASES (Dokan 5.0.0+)
 // Closes conversion GAP-1 (CONVERSION-AUDIT-2026-07 / shipping-gap-brief): the
 // per-instance shipping drill-in FORMS on the React vendor dashboard, which the
-// zones-list spec (new-shipping/) never reaches.
+// zones-list spec (vendor-shipping/) never reaches.
 //
 // Surfaces (Pro, table-rate-shipping module):
 //   - /dashboard/new/#/settings/shipping/:zoneID/table-rate/:instanceID

@@ -119,7 +119,7 @@ test.describe('Follow stores modules functionality test', () => {
 
     // vendor — LEGACY UI regression cases (revived 2026-07-09 for legacy support;
     // real page object drives the classic `dashboard/followers` PHP screen).
-    // New-UI parity lives in tests/e2e/new-followers/.
+    // New-UI parity lives in tests/e2e/follow-store/.
     test('vendor can view followers menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await test.step('Vendor navigates to Followers page and verifies page elements render properly', async () => {
             await vendor.vendorFollowersRenderProperly();
@@ -145,6 +145,6 @@ test.describe('Follow stores modules functionality test', () => {
 // The transitional "(React) Tests" smoke block that lived here (2 body-length
 // smokes at the LEGACY dashboard/followers URL) was RETIRED 2026-07-09: it
 // asserted only `body.innerText.length > 50` (fake green, house-style §7) and is
-// superseded on the React side by tests/e2e/new-followers/ and on the legacy side
+// superseded on the React side by tests/e2e/follow-store/ and on the legacy side
 // by the two revived real vendor cases above. Retired per the D4/D6 precedent.
 

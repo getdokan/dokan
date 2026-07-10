@@ -4,7 +4,7 @@ import path from 'path';
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 import { toPath } from '@utils/helpers';
 
-// RETIRED (Wave 0, D6): fully superseded by tests/e2e/new-social/ which drives
+// RETIRED (Wave 0, D6): fully superseded by tests/e2e/social-linking/ which drives
 // the real React surface /dashboard/new/#/settings/social with behavioral
 // assertions (save, persistence after reload, clear, storefront oracle).
 // Despite the "(React)" title, these two smokes navigated the LEGACY

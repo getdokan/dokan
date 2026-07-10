@@ -25,7 +25,7 @@ import {
  *
  * Self-contained per NEW_UI_HOUSE_STYLE.md §1 — shared DataViews primitives
  * come from @utils/dataViews. NOTE: the canonical products-list coverage lives
- * in tests/e2e/new-products/ (house-style D1); this backs the in-folder legacy
+ * in tests/e2e/products/ (house-style D1); this backs the in-folder legacy
  * "(React)" blocks pending their migration.
  */
 export class NewProductListPage {
