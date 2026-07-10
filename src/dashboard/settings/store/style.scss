@@ -4,10 +4,7 @@
  * the admin settings screen, which renders the same engine.
  */
 .dokan-vendor-store-settings {
-    // The engine's save area doubles the header actions at the end of the page
-    // (Figma footer). Strip its sticky white-bar chrome so it reads as plain
-    // right-aligned buttons on the page background, flush with the cards.
-    // !important because dokan-tailwind.css ships its utilities important-flagged.
+    // Strip the save area's sticky white-bar chrome so the buttons sit flush on the page background (!important: dokan-tailwind utilities are important-flagged).
     [data-testid^='settings-save-'] {
         position: static !important;
         border-top: 0 !important;
@@ -16,18 +13,82 @@
         padding-right: 0 !important;
     }
 
-    // Figma card anatomy: a faint grey header strip over the white field body.
+    // plugin-ui pads the header px-5 (20px) but the body p-4 (16px), leaving section titles 4px right of their content; match the header inset to the body (!important: dokan-tailwind flags px-5).
     [data-testid^='settings-section-'] > [role='button'] {
         background-color: #f9fafb;
+        padding-left: 16px !important;
+        padding-right: 16px !important;
     }
 
-    // The engine wraps the cards in a 24px gutter, indenting them from the
-    // "Store Settings" heading. Drop the side gutters so the cards line up with
-    // the page title, and trim the top gap so the first card sits just under it.
-    // !important because dokan-tailwind.css ships its utilities important-flagged.
+    // plugin-ui rings the whole card when the header button is focused (a stray inset blue box); drop it — the chevron and hover tint already signal interactivity.
+    [data-testid^='settings-section-'] > [role='button']:focus,
+    [data-testid^='settings-section-'] > [role='button']:focus-visible {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+
+    // Drop the engine's 24px card gutter so cards line up with the page title, and trim the top gap (!important: dokan-tailwind utilities are important-flagged).
     [data-testid='settings-content'] .p-6.space-y-6 {
         padding-left: 0 !important;
         padding-right: 0 !important;
         padding-top: 0.25rem !important;
+    }
+
+    // plugin-ui DataViews ships a standalone-grid frame (rounded shadow + 48px gutters); strip it so rows sit flat and flush inside the settings card (!important: both stylesheets flag these).
+    .dokan-vendor-store-locations {
+        .pui-root-dataviews {
+            border: 0 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+        }
+
+        // 16px matches the plugin-ui field inset so header, cells and the Add button share the sibling fields' left edge.
+        .dataviews-view-table tr td:first-child,
+        .dataviews-view-table tr th:first-child {
+            padding-left: 16px !important;
+        }
+
+        .dataviews-view-table tr td:last-child,
+        .dataviews-view-table tr th:last-child {
+            padding-right: 16px !important;
+        }
+
+        // DataViews pulls the header label 8px left of its cell; cancel it so the heading lines up with the rows.
+        .dataviews-view-table
+            tr
+            th:first-child
+            .dataviews-view-table-header-button {
+            margin-left: 0 !important;
+        }
+    }
+}
+
+// SmartSelect dropdowns are base-ui popovers that portal to <body> at z-50, below the WP Modal overlay (100000); lift only our marked popups above it.
+[data-slot='popover-portal'] > .pui-root > *:has(> .dokan-location-popover) {
+    z-index: 100001 !important;
+}
+
+// Quiet the auto-focused search box's heavy focus ring to a plain light border.
+.dokan-location-popover input:focus,
+.dokan-location-popover input:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: #e5e7eb !important;
+}
+
+// The modal renders outside plugin-ui's theme provider, so Input/SmartSelect border-input/ring-ring fall back to currentColor (black); pin the light admin look here in real CSS.
+.dokan-location-form {
+    input[data-slot='input'],
+    [data-slot='smart-select-trigger'] {
+        border-color: #d1d5db !important;
+    }
+
+    input[data-slot='input']:focus,
+    input[data-slot='input']:focus-visible,
+    [data-slot='smart-select-trigger']:focus,
+    [data-slot='smart-select-trigger']:focus-visible {
+        border-color: var(--color-dokan-btn, #34abdb) !important;
+        box-shadow: none !important;
+        outline: none !important;
     }
 }

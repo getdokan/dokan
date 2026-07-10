@@ -193,6 +193,9 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
             $validation_errors['store_tnc'][] = __( 'Please add Terms & Conditions content before saving the settings.', 'dokan-lite' );
         }
 
+        // Whole-payload seam so Pro can add cross-field rules (e.g. min ≤ max) the per-field validator can't express.
+        $validation_errors = (array) apply_filters( 'dokan_rest_vendor_settings_validate', $validation_errors, $sanitized, $fields_by_id, $vendor_id );
+
         if ( ! empty( $validation_errors ) ) {
             return new WP_Error(
                 'dokan_rest_validation_failed',

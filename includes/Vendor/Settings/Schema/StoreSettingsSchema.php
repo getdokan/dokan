@@ -471,6 +471,7 @@ class StoreSettingsSchema {
                 'variant'       => 'switch',
                 'section_id'    => 'terms_conditions',
                 'title'         => __( 'Show terms and conditions in store page', 'dokan-lite' ),
+                'description'   => __( 'Publish your store terms and conditions on the store page so customers know your policies before they buy.', 'dokan-lite' ),
                 'value'         => ( $info['enable_tnc'] ?? 'off' ) === 'on' ? 'on' : 'off',
                 'default'       => 'off',
                 'legacy_key'    => 'enable_tnc',
@@ -486,9 +487,13 @@ class StoreSettingsSchema {
             [
                 'id'           => 'store_tnc',
                 'type'         => 'field',
-                'variant'      => 'rich_text',
+                // Custom variant so the label can carry the red "(Required)" marker.
+                'variant'      => 'vendor_rich_text',
                 'section_id'   => 'terms_conditions',
                 'title'        => __( 'TOC Details', 'dokan-lite' ),
+                'description'  => __( 'Spell out your store policies — returns, shipping, and warranties — that customers agree to when they order.', 'dokan-lite' ),
+                // Required when the toggle is on; the controller enforces the same content check as the legacy form.
+                'required'     => true,
                 'layout'       => 'full-width',
                 'value'        => (string) ( $info['store_tnc'] ?? '' ),
                 'default'      => '',
