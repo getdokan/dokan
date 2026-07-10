@@ -71,8 +71,11 @@ export const TAB_COUNT_RE = /\((\d+)\)/;
 
 // ---- Readiness --------------------------------------------------------------
 
-/** Wait for the vendor React dashboard SPA root to mount. */
-export async function waitForRootReady(page: Page, timeoutMs = 30000): Promise<void> {
+/** Wait for the vendor React dashboard SPA root to mount.
+ *  Default 60s (was 30s): a MAX budget that returns as soon as the root paints,
+ *  so it costs nothing on a fast (local) env — it only gives the heavy React
+ *  surfaces (product editor ~37s) headroom on slower CI runners. */
+export async function waitForRootReady(page: Page, timeoutMs = 60000): Promise<void> {
     await page.locator(REACT_ROOT).first().waitFor({ state: 'visible', timeout: timeoutMs });
 }
 
@@ -94,7 +97,7 @@ export interface ListReadyOpts {
  * method that does).
  */
 export async function waitForListReady(page: Page, opts: ListReadyOpts = {}): Promise<void> {
-    const timeoutMs = opts.timeoutMs ?? 15000;
+    const timeoutMs = opts.timeoutMs ?? 30000; // was 15s — MAX budget, returns early; extra headroom for slow CI.
     const rows = page.locator(opts.rowSelector ?? DATA_ROW_ANY);
     const empty = typeof opts.emptyState === 'string' ? page.locator(opts.emptyState) : page.getByText(opts.emptyState ?? DATAVIEWS_EMPTY);
     const start = Date.now();
@@ -115,7 +118,7 @@ export async function waitForListReady(page: Page, opts: ListReadyOpts = {}): Pr
  * back to their timeout (never throw) so background polling can't wedge the suite.
  */
 export async function waitForDataViewsSettle(page: Page, opts: { timeout?: number; debounceMs?: number } = {}): Promise<void> {
-    const timeout = opts.timeout ?? 10000;
+    const timeout = opts.timeout ?? 20000; // was 10s — networkidle/skeleton waits fall back gracefully; headroom for slow CI.
     const debounceMs = opts.debounceMs ?? 350;
 
     await page.waitForTimeout(debounceMs); // let a debounced search/tab request dispatch.

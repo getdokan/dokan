@@ -1,5 +1,5 @@
 {
-  "core": "https://wordpress.org/wordpress-6.9.3.zip",
+  "core": null,
   "phpVersion": "7.4",
   "plugins": [
 	".",
