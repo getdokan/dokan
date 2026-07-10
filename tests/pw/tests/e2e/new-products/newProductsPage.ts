@@ -1,65 +1,47 @@
 import { Locator, Page } from '@playwright/test';
 import { closeAnnouncementModal, toPath } from '@utils/helpers';
 
-// ============================================
-// TEST DATA
-// ============================================
-// The site is pre-seeded with the simple product `p1_v1 (simple)` (id 19),
-// published, in-stock, owned by `vendor1store`. These tests drive the React
-// products LIST around that fixture (the editor itself lives in
-// `product-form-manager`, so this folder never creates/edits products).
+// Pre-seeded simple product owned by `vendor1store`. The numeric post id is NOT
+// pinned — WooCommerce assigns ids by insertion order, so route assertions match
+// `/products/<digits>/edit`, never a literal id.
 export const newProductsData = {
     seededProductName: 'p1_v1 (simple)',
-    seededProductId: '19',
     searchHit: 'p1_v1',
     searchMiss: 'zzznomatch',
     store: 'vendor1store',
 } as const;
 
-// ============================================
-// SELECTORS — verified against the live /dashboard/new/#/products render
-// (tmp-explore/products.json + products.html). This is the unified
-// @wedevs/plugin-ui DataViews list. Selectors copied from
-// tests/e2e/orders/newOrderListPage.ts and adapted to the products surface;
-// this page object is fully self-contained (folders never import each other).
-// ============================================
+// Lite/Pro: this surface is shared. Pro injects extra tabs (Rejected), columns
+// (Advertise) and row actions (Quick Edit, Bulk Edit, Duplicate); selectors below
+// target only the Lite-guaranteed surface so the @lite spec passes in both builds.
 export const newProductsSelectors = {
     reactRoot: '#dokan-vendor-dashboard-root',
-    // DataViews table + rows.
     table: 'table',
     dataRow: 'table tbody tr',
-    // Search input — DataViews header. Verified placeholder="Search".
+    columnHeader: 'table thead th',
     searchInput: 'input[placeholder="Search"]',
-    // Status tabs are buttons whose accessible name carries a count.
-    tab: (name: RegExp) => name,
-    // Toolbar buttons.
-    addNewProductBtn: 'button:has-text("Add new product"), a:has-text("Add new product")',
     // Quick-create modal (default flow when `one_step_product_create` is on).
     // DokanModal renders a WP <Modal role="dialog"> with this title <h2> and a
     // "Create & Continue" confirm button.
     quickCreateModalTitle: 'h2:has-text("Add New Product")',
     quickCreateConfirmBtn: 'button:has-text("Create & Continue")',
-    importBtn: 'button:has-text("Import"), a:has-text("Import")',
-    exportBtn: 'button:has-text("Export"), a:has-text("Export")',
     addFilterBtn: 'button:has-text("Add Filter")',
     resetBtn: 'button:has-text("Reset")',
-    // Bulk select — verified id/aria.
     selectAll: 'input#inspector-checkbox-control-0, input[aria-label="Select all"]',
     rowCheckbox: 'tbody input[type="checkbox"]',
-    // 3-dot per-row actions (scoped to tbody — the toolbar shares the aria-label).
-    rowActionsBtn: "//tbody//tr//button[@aria-label='Actions']",
-    actionMenuItem: (label: string) => `//*[@role='menuitem'][normalize-space()='${label}']`,
-    // Empty state — DataViews renders this when no rows match.
+    rowActionsBtn: "button[aria-label='Actions']",
+    // DokanModal renders role="dialog" with the product title as its heading, so
+    // anchor on the stable "Product info" body label.
+    quickViewModal: "//*[@role='dialog'][.//*[contains(normalize-space(),'Product info')]]",
+    quickViewClose: "//*[@role='dialog']//button[normalize-space()='Close']",
+    deleteAlert: "[role='alertdialog']",
+    deleteConfirmBtn: "//*[@role='alertdialog']//button[normalize-space()='Delete Permanently']",
+    deleteCancelBtn: "//*[@role='alertdialog']//button[normalize-space()='Cancel']",
+    toast: "[role='status'], [class*='toast'], [class*='Toast']",
     emptyState: 'text=/no data found|no items|no results|nothing to show|no products/i',
-    // PHP fatal markers.
     phpFatal: 'text=/Fatal error|Parse error|There has been a critical error/i',
-    // Storefront product title (theme-agnostic: match by visible text).
 } as const;
 
-// ============================================
-// PAGE OBJECT — new React Products list (Dokan 5.0.0+)
-// Surface: /dashboard/new/#/products (DataViews, Lite).
-// ============================================
 export class NewProductsPage {
     readonly page: Page;
     readonly url = toPath('dashboard/new/#/products');
@@ -74,33 +56,39 @@ export class NewProductsPage {
     // ---- Locators ----
     get reactRoot(): Locator { return this.page.locator(newProductsSelectors.reactRoot).first(); }
     get rows(): Locator { return this.page.locator(newProductsSelectors.dataRow); }
+    get columnHeaders(): Locator { return this.page.locator(newProductsSelectors.columnHeader); }
     get searchBox(): Locator { return this.page.locator(newProductsSelectors.searchInput).first(); }
-    get addNewProductButton(): Locator { return this.page.locator(newProductsSelectors.addNewProductBtn).first(); }
-    get importButton(): Locator { return this.page.locator(newProductsSelectors.importBtn).first(); }
-    get exportButton(): Locator { return this.page.locator(newProductsSelectors.exportBtn).first(); }
+    get addFilterButton(): Locator { return this.page.locator(newProductsSelectors.addFilterBtn).first(); }
+    get resetButton(): Locator { return this.page.locator(newProductsSelectors.resetBtn).first(); }
+    get addNewProductButton(): Locator { return this.page.getByRole('button', { name: /Add new product/i }).first(); }
     get selectAllCheckbox(): Locator { return this.page.locator(newProductsSelectors.selectAll).first(); }
     get rowCheckboxes(): Locator { return this.page.locator(newProductsSelectors.rowCheckbox); }
     get emptyState(): Locator { return this.page.locator(newProductsSelectors.emptyState).first(); }
     get quickCreateModalTitle(): Locator { return this.page.locator(newProductsSelectors.quickCreateModalTitle).first(); }
     get quickCreateConfirmButton(): Locator { return this.page.locator(newProductsSelectors.quickCreateConfirmBtn).first(); }
+    get quickViewModal(): Locator { return this.page.locator(newProductsSelectors.quickViewModal).first(); }
+    get deleteAlert(): Locator { return this.page.locator(newProductsSelectors.deleteAlert).first(); }
 
-    /**
-     * A status tab, e.g. tab(/^All/) or tab(/^Published/). The DataViews tabs
-     * render as `<button role="tab">` and the count badge is NOT part of the
-     * accessible name, so match the leading label only (no `(\d+)`).
-     */
+    // The count badge is not part of the tab's accessible name — match the label only.
     tab(name: RegExp): Locator {
         return this.page.getByRole('tab', { name }).first();
     }
 
-    /** The seeded product's name link (opens #products/19/edit). */
     get seededProductLink(): Locator {
-        return this.page.getByRole('link', { name: new RegExp(escapeRegExp(newProductsData.seededProductName), 'i') }).first();
+        return this.productLink(newProductsData.seededProductName);
     }
 
-    /** A list row matching a product name. */
+    productLink(name: string): Locator {
+        return this.page.getByRole('link', { name: new RegExp(escapeRegExp(name), 'i') }).first();
+    }
+
     rowByName(name: string): Locator {
         return this.rows.filter({ hasText: new RegExp(escapeRegExp(name), 'i') }).first();
+    }
+
+    // The per-row checkbox aria-label is the exact product name.
+    rowCheckboxByName(name: string): Locator {
+        return this.page.locator(`input[aria-label="${name}"]`).first();
     }
 
     // ---- Navigation ----
@@ -110,11 +98,8 @@ export class NewProductsPage {
         await this.waitForReady();
     }
 
-    /**
-     * List is ready when the react root is visible AND either ≥1 row OR the
-     * empty-state banner has rendered (DataViews paints rows client-side, so
-     * we must poll rather than rely on initial HTML).
-     */
+    // Ready = react root visible AND either ≥1 row OR the empty-state banner
+    // (DataViews paints rows client-side, so poll rather than trust initial HTML).
     async waitForReady(timeoutMs = 30000): Promise<void> {
         await this.reactRoot.waitFor({ state: 'visible', timeout: timeoutMs });
         const start = Date.now();
@@ -135,36 +120,52 @@ export class NewProductsPage {
         return await this.rows.count();
     }
 
+    async getColumnHeaderTexts(): Promise<string[]> {
+        return (await this.columnHeaders.allInnerTexts()).map((t) => t.trim().toLowerCase());
+    }
+
     async isEmptyStateVisible(): Promise<boolean> {
         return await this.emptyState.isVisible({ timeout: 5000 }).catch(() => false);
     }
 
+    async rowStatusText(name: string): Promise<string> {
+        return (await this.rowByName(name).innerText().catch(() => '')).trim();
+    }
+
     // ---- Status tabs ----
-    /**
-     * Click a status tab and wait for the list to settle. The tab labels carry
-     * a live count, e.g. "All (1)", "Published (1)", "Draft (0)".
-     */
     async clickTab(name: RegExp): Promise<void> {
         const tab = this.tab(name);
         await tab.waitFor({ state: 'visible', timeout: 10000 });
         await tab.scrollIntoViewIfNeeded().catch(() => undefined);
-        await tab.click();
-        await this.page.waitForTimeout(800); // DataViews refetch + repaint.
+        await this.waitForListRefetch(() => tab.click());
     }
 
     // ---- Search ----
+    // Resolve on the next products-LIST refetch (GET /dokan/vN/products, not a
+    // single /products/<id>). A fixed debounce wait flakes — stale rows linger
+    // until the REST round-trip lands and React repaints.
+    private async waitForListRefetch(action: () => Promise<void>, timeout = 15000): Promise<void> {
+        const respP = this.page
+            .waitForResponse(
+                (r) => /\/dokan\/v\d+\/products(\?|$)/.test(r.url()) && !/\/products\/\d+/.test(r.url()) && r.request().method() === 'GET',
+                { timeout },
+            )
+            .catch(() => null);
+        await action();
+        await respP;
+        await this.page.waitForTimeout(400);
+    }
+
     async search(query: string): Promise<void> {
         const input = this.searchBox;
         await input.waitFor({ state: 'visible', timeout: 10000 });
-        await input.fill(query);
-        await this.page.waitForTimeout(900); // debounced search.
+        await this.waitForListRefetch(() => input.fill(query));
     }
 
     async clearSearch(): Promise<void> {
         const input = this.searchBox;
         if (await input.isVisible().catch(() => false)) {
-            await input.fill('');
-            await this.page.waitForTimeout(600);
+            await this.waitForListRefetch(() => input.fill(''));
         }
     }
 
@@ -180,11 +181,10 @@ export class NewProductsPage {
         await this.quickCreateModalTitle.waitFor({ state: 'visible', timeout: 15000 }).catch(() => undefined);
     }
 
-    /** Open the seeded product via its name link; resolves on the edit route. */
     async openSeededProduct(): Promise<void> {
         await this.seededProductLink.waitFor({ state: 'visible', timeout: 10000 });
         await this.seededProductLink.click();
-        await this.page.waitForURL(/#\/?products\/19\/edit/, { timeout: 15000 }).catch(() => undefined);
+        await this.page.waitForURL(/#\/?products\/\d+\/edit/, { timeout: 15000 }).catch(() => undefined);
     }
 
     // ---- Bulk select ----
@@ -192,6 +192,13 @@ export class NewProductsPage {
         const cb = this.selectAllCheckbox;
         await cb.waitFor({ state: 'visible', timeout: 10000 });
         await cb.click();
+    }
+
+    async selectRow(name: string): Promise<void> {
+        const cb = this.rowCheckboxByName(name);
+        await cb.waitFor({ state: 'visible', timeout: 10000 });
+        await cb.check();
+        await this.page.waitForTimeout(300);
     }
 
     async checkedRowCount(): Promise<number> {
@@ -204,15 +211,100 @@ export class NewProductsPage {
         return checked;
     }
 
-    // ---- Row actions ----
-    async openRowActionMenu(index = 0): Promise<void> {
-        const buttons = this.page.locator(newProductsSelectors.rowActionsBtn);
-        await buttons.nth(index).waitFor({ state: 'visible', timeout: 10000 });
-        await buttons.nth(index).click();
+    // ---- Row actions (3-dot menu) ----
+    async openRowActionMenu(name: string): Promise<void> {
+        const btn = this.rowByName(name).locator(newProductsSelectors.rowActionsBtn).first();
+        await btn.waitFor({ state: 'visible', timeout: 10000 });
+        await btn.click();
+        await this.page.getByRole('menuitem').first().waitFor({ state: 'visible', timeout: 5000 }).catch(() => undefined);
     }
 
-    actionMenuItem(label: string): Locator {
-        return this.page.locator(newProductsSelectors.actionMenuItem(label)).first();
+    menuItem(label: string): Locator {
+        return this.page.getByRole('menuitem', { name: label }).first();
+    }
+
+    async clickMenuItem(label: string): Promise<void> {
+        await this.menuItem(label).click();
+    }
+
+    async rowMenuItemLabels(name: string): Promise<string[]> {
+        await this.openRowActionMenu(name);
+        const labels = await this.page.getByRole('menuitem').allInnerTexts().catch(() => []);
+        await this.page.keyboard.press('Escape').catch(() => undefined);
+        return labels.map((l) => l.trim());
+    }
+
+    // ---- Quick view ----
+    async openQuickView(name: string): Promise<void> {
+        await this.openRowActionMenu(name);
+        await this.clickMenuItem('Quick view');
+        await this.quickViewModal.waitFor({ state: 'visible', timeout: 10000 });
+    }
+
+    async isQuickViewOpen(): Promise<boolean> {
+        return await this.quickViewModal.isVisible({ timeout: 3000 }).catch(() => false);
+    }
+
+    async quickViewText(): Promise<string> {
+        return (await this.quickViewModal.innerText().catch(() => '')).replace(/\s+/g, ' ').trim();
+    }
+
+    async closeQuickView(): Promise<void> {
+        await this.page.locator(newProductsSelectors.quickViewClose).first().click().catch(() => undefined);
+        await this.quickViewModal.waitFor({ state: 'hidden', timeout: 8000 }).catch(() => undefined);
+    }
+
+    // ---- View in site (opens product permalink in a new tab) ----
+    async viewInSite(name: string): Promise<Page | null> {
+        await this.openRowActionMenu(name);
+        const [popup] = await Promise.all([
+            this.page.waitForEvent('popup', { timeout: 15000 }).catch(() => null),
+            this.clickMenuItem('View in site'),
+        ]);
+        if (popup) await popup.waitForLoadState('domcontentloaded').catch(() => undefined);
+        return popup;
+    }
+
+    // ---- Delete (single, via row menu) ----
+    async openDeleteConfirm(name: string): Promise<void> {
+        await this.openRowActionMenu(name);
+        await this.clickMenuItem('Delete Permanently');
+        await this.deleteAlert.waitFor({ state: 'visible', timeout: 10000 });
+    }
+
+    async confirmDelete(): Promise<void> {
+        const btn = this.page.locator(newProductsSelectors.deleteConfirmBtn).first();
+        await btn.waitFor({ state: 'visible', timeout: 10000 });
+        await btn.click();
+        await this.deleteAlert.waitFor({ state: 'hidden', timeout: 15000 }).catch(() => undefined);
+        await this.page.waitForTimeout(800);
+    }
+
+    async cancelDelete(): Promise<void> {
+        await this.page.locator(newProductsSelectors.deleteCancelBtn).first().click();
+        await this.deleteAlert.waitFor({ state: 'hidden', timeout: 8000 }).catch(() => undefined);
+    }
+
+    async deleteProduct(name: string): Promise<void> {
+        await this.openDeleteConfirm(name);
+        await this.confirmDelete();
+    }
+
+    // ---- Bulk actions (selection toolbar) ----
+    async bulkDelete(): Promise<void> {
+        // Before the alertdialog opens, the only "Delete Permanently" button is the
+        // selection-toolbar trigger; `.first()` (earliest in DOM) is that toolbar.
+        const trigger = this.page.getByRole('button', { name: 'Delete Permanently', exact: true }).first();
+        await trigger.waitFor({ state: 'visible', timeout: 10000 });
+        await trigger.click();
+        await this.confirmDelete();
+    }
+
+    async bulkPublish(): Promise<void> {
+        const trigger = this.page.getByRole('button', { name: /Publish Products?/ }).first();
+        await trigger.waitFor({ state: 'visible', timeout: 10000 });
+        await trigger.click();
+        await this.page.waitForTimeout(1200);
     }
 
     // ---- HashRouter reload survival ----
@@ -223,10 +315,6 @@ export class NewProductsPage {
     }
 
     // ---- Storefront (guest/customer) ----
-    /**
-     * Visit the vendor store and assert a product name is visible. Theme-agnostic:
-     * matches by visible text rather than a theme-specific class.
-     */
     async gotoStore(): Promise<void> {
         await this.page.goto(this.storeUrl);
         await this.page.waitForLoadState('domcontentloaded');
