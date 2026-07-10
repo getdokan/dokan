@@ -13,9 +13,6 @@ import {
     useProductEditor,
 } from './hooks/useProductEditor';
 import { FormItem } from './types';
-// Field styles are scoped under `.dokan-product-product-editor`; load them so
-// the modal's fields match the full editor even when that route never mounts.
-import './index.scss';
 
 /**
  * Schema field IDs (Elements constants) rendered in the lightweight quick-create form.
@@ -77,6 +74,59 @@ interface InitFieldsResponse {
     vendor_earning: number;
     products_url: string;
 }
+
+/**
+ * Pulse skeleton mirroring the quick-create layout (200px image column beside
+ * the stacked name/price fields, then category and short-description rows) so
+ * the modal keeps its shape while the schema fetch is in flight.
+ *
+ * @since DOKAN_SINCE
+ */
+const QuickCreateSkeleton = () => (
+    <div role="status" className="animate-pulse">
+        <span className="sr-only">{ __( 'Loading…', 'dokan-lite' ) }</span>
+        <div className="flex gap-6 mb-6" aria-hidden="true">
+            { /* Image + gallery column (fixed 200px, like the real form). */ }
+            <div className="w-50 shrink-0">
+                <div className="h-4 bg-gray-200 rounded w-1/2 mb-3"></div>
+                <div className="bg-gray-100 rounded w-full aspect-square mb-3"></div>
+                <div className="flex gap-2">
+                    <div className="bg-gray-100 rounded w-12 h-12"></div>
+                    <div className="bg-gray-100 rounded w-12 h-12"></div>
+                    <div className="bg-gray-100 rounded w-12 h-12"></div>
+                </div>
+            </div>
+            { /* Name, regular price, sale price + discount-schedule row. */ }
+            <div className="flex-1">
+                <div className="mb-6">
+                    <div className="h-4 bg-gray-200 rounded w-1/4 mb-3"></div>
+                    <div className="bg-gray-100 rounded w-full h-10"></div>
+                </div>
+                <div className="mb-6">
+                    <div className="h-4 bg-gray-200 rounded w-1/5 mb-3"></div>
+                    <div className="bg-gray-100 rounded w-full h-10"></div>
+                </div>
+                <div className="mb-6">
+                    <div className="h-4 bg-gray-200 rounded w-1/5 mb-3"></div>
+                    <div className="bg-gray-100 rounded w-full h-10"></div>
+                </div>
+                <div className="flex items-center gap-2">
+                    <div className="w-5 h-5 bg-gray-100 rounded"></div>
+                    <div className="h-4 bg-gray-200 rounded w-40"></div>
+                </div>
+            </div>
+        </div>
+        { /* Category + short description (full width). */ }
+        <div className="mb-6" aria-hidden="true">
+            <div className="h-4 bg-gray-200 rounded w-1/6 mb-3"></div>
+            <div className="bg-gray-100 rounded w-full h-10"></div>
+        </div>
+        <div aria-hidden="true">
+            <div className="h-4 bg-gray-200 rounded w-1/4 mb-3"></div>
+            <div className="bg-gray-100 rounded w-full h-24"></div>
+        </div>
+    </div>
+);
 
 interface QuickCreateModalProps {
     isOpen: boolean;
@@ -200,11 +250,7 @@ const QuickCreateModal = ( {
 
     const dialogContent = useMemo( () => {
         if ( initLoading ) {
-            return (
-                <p className="text-sm text-gray-500">
-                    { __( 'Loading product form…', 'dokan-lite' ) }
-                </p>
-            );
+            return <QuickCreateSkeleton />;
         }
 
         if ( initError ) {
