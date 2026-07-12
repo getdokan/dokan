@@ -3,7 +3,6 @@ import { request } from '@playwright/test';
 import { AnnouncementsPage } from './announcementsPage';
 import path from 'path';
 
-import { toPath } from '@utils/helpers';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 
@@ -336,25 +335,6 @@ test.describe('Announcements Tests @pro', () => {
         await context.close();
     });
 
-    test.skip('Test Case 14 - Vendor Views Announcement Detail in New Vendor Dashboard', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
-        // Using vendor session storage
-        const context = await browser.newContext({ storageState: v1 });
-        const vendorPage = await context.newPage();
-        const announcementsPage = new AnnouncementsPage(vendorPage);
-
-        const title = 'Test Published Announcement 1';
-
-        // Navigate to the new vendor dashboard announcements and click the announcement card
-        await announcementsPage.vendorViewAnnouncementInNewDashboard(title);
-
-        // Verify the announcement detail title is visible
-        await expect(vendorPage.locator(announcementsPage.vendorNewDashboard.announcementDetailTitle(title)),
-            `Announcement detail title "${title}" should be visible`).toBeVisible();
-
-        await announcementsPage.waitForPageReady();
-        await vendorPage.close();
-        await context.close();
-    });
 
     test('Test Case 15 - Admin Creates Draft Announcement in New Admin Dashboard', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         // Using admin session storage

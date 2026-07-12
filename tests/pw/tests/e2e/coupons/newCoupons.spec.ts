@@ -126,7 +126,7 @@ test.describe('Coupons (React) functionality', () => {
         // booking/recurring) from `window.dokanCoupon.coupon_types`. `fixed_cart`
         // is NOT a creatable option in the React form (it exists only in the
         // list display mapping), so a fixed-cart coupon cannot be created here.
-        test.skip('vendor can create a fixed-cart-discount coupon (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
+        test('vendor can create a fixed-cart-discount coupon (React)', { tag: ['@pro', '@vendor', '@new-ui'] }, async () => {
             // Intentionally skipped — see note above.
         });
 

@@ -3,7 +3,6 @@ import { VendorReturnRequestPage, CustomerPage, OrdersPage, ApiUtils, data, payl
 import { endPoints } from '@utils/apiEndPoints';
 import path from 'path';
 
-import { toPath } from '@utils/helpers';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');

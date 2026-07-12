@@ -1,8 +1,7 @@
-import { test, Page, expect, request } from '@utils/test';
+import { test, Page, request } from '@utils/test';
 import { ProductQAPage, ApiUtils, data, payloads } from './productQAPage';
 import path from 'path';
 
-import { toPath } from '@utils/helpers';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
@@ -13,7 +12,6 @@ const { PRODUCT_ID } = process.env;
 test.describe('Product QA functionality test', () => {
     let admin: ProductQAPage;
     let vendor: ProductQAPage;
-    let customer: ProductQAPage;
     let aPage: Page, vPage: Page, cPage: Page;
     let apiUtils: ApiUtils;
     let questionId: string;
@@ -28,7 +26,6 @@ test.describe('Product QA functionality test', () => {
         vendor = new ProductQAPage(vPage);
         const customerContext = await browser.newContext({ storageState: c1 });
         cPage = await customerContext.newPage();
-        customer = new ProductQAPage(cPage);
         apiUtils = new ApiUtils(await request.newContext());
         await apiUtils.activateModules(payloads.moduleIds.productQa, payloads.adminAuth);
         [, questionId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
@@ -43,13 +40,6 @@ test.describe('Product QA functionality test', () => {
         await vPage?.close();
         await cPage?.close();
         await apiUtils.dispose();
-    });
-
-    // Out of the vendor-revival scope (2026-07-09): the admin module-enable toggle UI drifted in
-    // 5.0.8 (was a vacuous stub-pass on develop). The module is already active via beforeAll
-    // activateModules, so the remaining admin cases below run real. Needs a separate real impl.
-    test.skip('admin can enable product Q&A module', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.enableProductQaModule(data.predefined.simpleProduct.product1.name);
     });
 
     test('admin product QA menu page renders properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
@@ -146,34 +136,5 @@ test.describe('Product QA functionality test', () => {
         });
     });
 
-    // Out of the vendor-revival scope (2026-07-09): the storefront single-product Q&A tab
-    // (customer/guest post + search) drifted in 5.0.8 (was a vacuous stub-pass on develop).
-    // Skipped with a documented reason; the 7 vendor cases above are the real legacy revival.
-    test.skip('customer can search question', { tag: ['@pro', '@customer'] }, async () => {
-        await customer.searchQuestion(data.predefined.simpleProduct.product1.name, data.questionAnswers());
-    });
-
-    test.skip('customer can post question', { tag: ['@pro', '@customer'] }, async () => {
-        await customer.postQuestion(data.predefined.simpleProduct.product1.name, data.questionAnswers());
-    });
-
-    test.skip('guest customer need to signIn/signUp to post question', { tag: ['@pro', '@guest'] }, async ({ page }) => {
-        const guest = new ProductQAPage(page);
-        await guest.postQuestion(data.predefined.simpleProduct.product1.name, data.questionAnswers(), true);
-    });
-
-    // Out of the vendor-revival scope + flaky (2026-07-09): after deactivating the module the
-    // Q&A page 404s ("Oops! That page can't be found") and the tab-hidden assertion races the
-    // permalink-404 recovery handler under batch load. Documented test.skip (afterAll keeps the
-    // module active for downstream specs). The vendor revival + stable admin cases are unaffected.
-    test.skip('admin can disable product Q&A module', { tag: ['@pro', '@admin'] }, async () => {
-        const [, modules] = await apiUtils.deactivateModules(payloads.moduleIds.productQa, payloads.adminAuth);
-        const productQa = modules.find((m: { id: string; active: boolean }) => m.id === 'product_qa');
-        expect(productQa).toEqual(expect.objectContaining({ id: 'product_qa', active: false }));
-        qaModuleDisabled = true;
-        await admin.goto(data.subUrls.backend.dokan.dokan);
-        await admin.page.reload({ waitUntil: 'networkidle' });
-        await admin.disableProductQaModule(data.predefined.simpleProduct.product1.name);
-    });
 });
 

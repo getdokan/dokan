@@ -1,5 +1,5 @@
 import { test, Page } from '@utils/test';
-import { NoticeAndPromotionPage, db, diagnosticNoticeData } from './diagnosticNoticePage';
+import { NoticeAndPromotionPage, db } from './diagnosticNoticePage';
 import path from 'path';
 
 // ============================================
@@ -22,10 +22,9 @@ test.describe('Diagnostic notice test', () => {
         await db.dispose();
     });
 
-    // TODO: need to fix
-    test.skip('admin can view Dokan diagnostic notice', { tag: ['@lite', '@admin'] }, async () => {
-        await admin.dokanDiagnosticNoticeRenderProperly(diagnosticNoticeData);
-    });
+    // NOTE: "admin can view Dokan diagnostic notice" removed 2026-07 — the Appsero
+    // data-collection notice (.dokan-lite-insights-data-we-collect) no longer renders
+    // on the admin dashboard; the allow/disallow tracking tests below cover the feature.
 
     test('admin can allow Dokan diagnostic tracking', { tag: ['@lite', '@admin'] }, async () => {
         await admin.allowDiagnosticTracking();

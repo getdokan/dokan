@@ -34,7 +34,7 @@ test.describe('Dashboard test', () => {
 
     // admin
     // TODO: need to fix
-    test.skip('admin can view Dokan dashboard', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
+    test('admin can view Dokan dashboard', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
         await admin.adminDashboardRenderProperly();
     });
 
@@ -44,11 +44,9 @@ test.describe('Dashboard test', () => {
         await vendor.vendorDashboardRenderProperly();
     });
 
-    // The legacy `.dokan-dashboard-menu` is replaced by the React shell when
-    // `dokan_appearance.vendor_layout_style = 'latest'`. Skip when new UI is on.
-    test.skip('vendor can view vendor dashboard menus', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
-        await vendor.vendorDashboardMenusRenderProperly();
-    });
+    // NOTE: "vendor can view vendor dashboard menus" was removed 2026-07 — the
+    // legacy `.dokan-dashboard-menu` view is superseded by the React shell
+    // (vendor_layout_style='latest' defaults the dashboard to the analytics view).
 
     // ============================================
     // NEW VENDOR DASHBOARD (React, /dashboard/?path=…) — 5.0.0+
