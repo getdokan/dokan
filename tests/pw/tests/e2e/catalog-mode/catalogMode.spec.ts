@@ -75,8 +75,14 @@ test.describe('Catalog mode test', () => {
         // todo: implement vendor store settings catalog mode via self-contained page
     });
     test('vendor can disable hide product price in catalog mode', { tag: ['@lite', '@admin'] }, async () => {
-        test.skip(true, "dokan issue: vendor disable hide product price doesn't work");
-        const [previousMeta] = await db.updateUserMeta(vendorName, 'dokan_profile_settings', { catalog_mode: { ...catalogModeSetting, hide_product_price: 'off' } });
+        // Fixed a test bug here (was passing `vendorName` to updateUserMeta instead of
+        // `sellerId`, which errored before the assertion). With that fixed the test now
+        // reaches the assertion and fails: with hide_product_price='off' the price is
+        // still not shown on the storefront. Matches the original "vendor disable hide
+        // product price doesn't work" report — a candidate product bug, kept skipped
+        // pending product-side confirmation. See SKIPPED-TESTS-BUG-REPORT.md.
+        test.skip(true, "candidate product bug: vendor-level 'disable hide product price' has no effect — price stays hidden with hide_product_price='off'");
+        const [previousMeta] = await db.updateUserMeta(sellerId, 'dokan_profile_settings', { catalog_mode: { ...catalogModeSetting, hide_product_price: 'off' } });
         await customer.viewPriceInCatalogModeProduct(productName, vendorName);
 
         // reset
@@ -84,7 +90,7 @@ test.describe('Catalog mode test', () => {
     });
 
     // Skipped: Dokan Pro RMA module has a fatal error (RMACommon.php:209) that crashes product pages
-    test.skip('vendor can enable RFQ in catalog mode', { tag: ['@pro', '@admin'] }, async () => {
+    test('vendor can enable RFQ in catalog mode', { tag: ['@pro', '@admin'] }, async () => {
         const [previousMeta] = await db.updateUserMeta(sellerId, 'dokan_profile_settings', { catalog_mode: { ...catalogModeSetting, request_a_quote_enabled: 'on' } });
         const [, productId, productName] = await api.createProduct(undefined, api.userAuth(vendorName));
         const [, quoteRuleId] = await api.createQuoteRule({ ...createQuoteRulePayload(), product_ids: [productId] }, api.adminAuth());
