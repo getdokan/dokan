@@ -117,24 +117,6 @@ test.describe('Reverse Withdrawal (React) functionality', () => {
             expect(Array.isArray(stores), 'getAllReverseWithdrawalStores returns a collection').toBe(true);
         });
 
-        // The legacy admin flows below ("add reverse withdrawal", "filter by
-        // store", "clear filters") are wp-admin-only management actions with NO
-        // React surface in the vendor dashboard. Per house style we do not drive
-        // legacy wp-admin from a new-ui parity spec.
-        test.skip('admin can add reverse withdrawal (React) — no React surface', { tag: ['@pro', '@admin', '@new-ui'] }, async () => {
-            // Skipped: adding a reverse-withdrawal debit is a legacy wp-admin
-            // (Dokan > Reverse Withdrawal) action; there is no React mount for it
-            // in the vendor dashboard. Covered by the legacy reverseWithdraws spec.
-        });
-
-        test.skip('admin can filter reverse withdrawal by store (React) — no React surface', { tag: ['@pro', '@admin', '@new-ui'] }, async () => {
-            // Skipped: store filtering exists only on the legacy wp-admin list,
-            // not on the vendor React surface.
-        });
-
-        test.skip('admin can clear reverse withdrawal filters (React) — no React surface', { tag: ['@pro', '@admin', '@new-ui'] }, async () => {
-            // Skipped: legacy wp-admin-only; no React equivalent to assert.
-        });
     });
 
     // ----------------------------------------

@@ -176,34 +176,6 @@ test.describe('Store Support test (vendor)', () => {
 // the legacy tests above for parity coverage during rollout.
 
 test.describe('Store Supports (React) Tests @pro', () => {
-    // Retired (D4): render-only vendor smoke on the LEGACY /dashboard/support/
-    // URL. Real behavioral parity lives in tests/e2e/store-supports/.
-    test.skip('Test Case 1 - Vendor support page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
-        const ctx = await browser.newContext({ storageState: v1 });
-        const page = await ctx.newPage();
-        await page.goto(toPath(`dashboard/support/`));
-        await page.waitForLoadState('domcontentloaded');
-        await expect(page.locator('#dokan-vendor-dashboard-layout-root')).toBeVisible({ timeout: 30_000 });
-        const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
-        expect(fatal).toBe(false);
-        await page.close();
-        await ctx.close();
-    });
-
-    // Retired (D4): superseded by store-supports/ list coverage.
-    test.skip('Test Case 2 - Vendor support shows tickets table or empty state', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
-        const ctx = await browser.newContext({ storageState: v1 });
-        const page = await ctx.newPage();
-        await page.goto(toPath(`dashboard/support/`));
-        await page.waitForLoadState('domcontentloaded');
-        await expect(page.locator('#dokan-vendor-dashboard-layout-root')).toBeVisible({ timeout: 30_000 });
-        const tableVisible = await page.locator('table, [role="table"]').first().isVisible({ timeout: 3000 }).catch(() => false);
-        const emptyVisible = await page.locator("text=/no tickets|no support|nothing/i").first().isVisible({ timeout: 1000 }).catch(() => false);
-        expect(tableVisible || emptyVisible).toBe(true);
-        await page.close();
-        await ctx.close();
-    });
-
     test('Test Case 3 - Admin support page renders', { tag: ['@pro', '@admin'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: a1 });
         const page = await ctx.newPage();
@@ -216,19 +188,5 @@ test.describe('Store Supports (React) Tests @pro', () => {
         await ctx.close();
     });
 
-    // Retired (D4): superseded by the HashRouter-reload test in store-supports/.
-    test.skip('Test Case 4 - Vendor support page survives reload', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
-        const ctx = await browser.newContext({ storageState: v1 });
-        const page = await ctx.newPage();
-        await page.goto(toPath(`dashboard/support/`));
-        await page.waitForLoadState('domcontentloaded');
-        await expect(page.locator('#dokan-vendor-dashboard-layout-root')).toBeVisible({ timeout: 30_000 });
-        await page.reload({ waitUntil: 'domcontentloaded' });
-        await expect(page.locator('#dokan-vendor-dashboard-layout-root')).toBeVisible({ timeout: 30_000 });
-        const fatal = await page.locator("text=/Fatal error|Parse error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
-        expect(fatal).toBe(false);
-        await page.close();
-        await ctx.close();
-    });
 });
 
