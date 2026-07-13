@@ -48,6 +48,9 @@ export const bookingSelectors = {
     vDashboard: {
         dashboardDiv: 'div.dokan-dashboard-wrap',
         bookingMenu: 'ul.dokan-dashboard-menu li.booking a',
+        // The legacy sidebar (`li.booking a`) is rendered but kept display-hidden now that the
+        // vendor dashboard nav is React; the actually-visible Booking menu entry is this nav link.
+        bookingMenuVisible: 'a[href*="#booking"]:visible',
     },
 
     // customer my-account navigation
@@ -244,6 +247,12 @@ export class BookingPage {
         await this.page.goto(toPath(subPath), { waitUntil });
     }
 
+    // Public single-product permalink for a product name. The shared data.subUrls helper points at
+    // `shop/uncategorized/<slug>`, which 404s on this site's `/product/<slug>/` permalink structure.
+    private productPath(productName: string): string {
+        return `${data.subUrls.frontend.productCustomerPage}/${helpers.slugify(productName)}/`;
+    }
+
     private async gotoUntilNetworkidle(subPath: string): Promise<void> {
         await this.page.goto(toPath(subPath), { waitUntil: 'networkidle' });
     }
@@ -310,9 +319,9 @@ export class BookingPage {
     // ---- module enable / disable ----
 
     async enableBookingModule(): Promise<void> {
-        // vendor dashboard menu
+        // vendor dashboard menu (Booking nav entry is present once the module is enabled)
         await this.goto(data.subUrls.frontend.vDashboard.dashboard);
-        await expect(this.page.locator(bookingSelectors.vDashboard.bookingMenu)).toBeVisible();
+        await expect(this.page.locator(bookingSelectors.vDashboard.bookingMenuVisible).filter({ hasText: 'Booking' }).first()).toBeVisible();
 
         // customer dashboard menu
         await this.goto(data.subUrls.frontend.myAccount);
@@ -446,8 +455,9 @@ export class BookingPage {
     }
 
     async addBookingProduct(product: BookingProductData): Promise<void> {
-        await this.goto(data.subUrls.frontend.vDashboard.booking);
-        await this.clickAndWaitForLoadState(bookingSelectors.vBooking.addNewBookingProduct);
+        // The classic "Add New Booking Product" button now links into the React dashboard SPA
+        // (#booking/new-product, which 404s), so drive the still-live classic form by its direct URL.
+        await this.goto(data.subUrls.frontend.vDashboard.addBookingProduct);
         await this.updateBookingProductFields(product);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.addBookingProduct, bookingSelectors.vBooking.booking.saveProduct, 302);
         await expect(this.page.locator(bookingSelectors.vProduct.updatedSuccessMessage)).toContainText(product.saveSuccessMessage);
@@ -471,7 +481,7 @@ export class BookingPage {
     }
 
     async cantBuyOwnBookingProduct(productName: string): Promise<void> {
-        await this.goto(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+        await this.goto(this.productPath(productName));
         await expect(this.page.locator(bookingSelectors.vBooking.viewBooking.bookingCalendar)).toBeHidden();
         await expect(this.page.locator(bookingSelectors.vBooking.viewBooking.bookNow)).toBeHidden();
     }
@@ -572,11 +582,12 @@ export class BookingPage {
     // ---- customer: buy bookable product ----
 
     async buyBookableProduct(productName: string, bookings: Bookings): Promise<void> {
-        await this.gotoUntilNetworkidle(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+        const productPath = this.productPath(productName);
+        await this.gotoUntilNetworkidle(productPath);
         await expect(this.page.locator(bookingSelectors.cBookings.calendarLoader)).toBeHidden();
         await this.clickAndWaitForResponse(data.subUrls.ajax, bookingSelectors.cBookings.selectCalendarDay(bookings.startDate.getMonth(), bookings.startDate.getDate()));
         await this.clickAndWaitForResponse(data.subUrls.ajax, bookingSelectors.cBookings.selectCalendarDay(bookings.endDate.getMonth(), bookings.endDate.getDate()));
-        await this.clickAndWaitForResponse(data.subUrls.frontend.productDetails(helpers.slugify(productName)), bookingSelectors.cBookings.bookNow);
+        await this.clickAndWaitForResponse(productPath, bookingSelectors.cBookings.bookNow);
         await this.placeOrder();
     }
 
