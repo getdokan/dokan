@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dokan hook graph — all hooks: firers &amp; consumers</title>
+<script src="https://unpkg.com/vis-network@9.1.6/standalone/umd/vis-network.min.js"
+        integrity="sha384-Ux6phic9PEHJ38YtrijhkzyJ8yQlH8i/+buBR8s3mAZOJrP1gwyvAcIYl3GWtpX1"
+        crossorigin="anonymous"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f0f1a; color: #e0e0e0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; display: flex; height: 100vh; overflow: hidden; }
+  #graph { flex: 1; }
+  #sidebar { width: 300px; background: #1a1a2e; border-left: 1px solid #2a2a4e; display: flex; flex-direction: column; overflow: hidden; }
+  #search-wrap { padding: 12px; border-bottom: 1px solid #2a2a4e; }
+  #search { width: 100%; background: #0f0f1a; border: 1px solid #3a3a5e; color: #e0e0e0; padding: 7px 10px; border-radius: 6px; font-size: 13px; outline: none; }
+  #search:focus { border-color: #4E79A7; }
+  #search-results { max-height: 180px; overflow-y: auto; padding: 4px 12px; border-bottom: 1px solid #2a2a4e; display: none; }
+  .search-item { padding: 4px 6px; cursor: pointer; border-radius: 4px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .search-item:hover { background: #2a2a4e; }
+  #info-panel { padding: 14px; border-bottom: 1px solid #2a2a4e; min-height: 120px; max-height: 45%; overflow-y: auto; }
+  #info-panel h3 { font-size: 12px; color: #aaa; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+  #info-content { font-size: 13px; color: #ccc; line-height: 1.5; }
+  #info-content .field { margin-bottom: 4px; word-break: break-all; }
+  #info-content .field b { color: #e0e0e0; }
+  #info-content .empty { color: #555; font-style: italic; }
+  #info-content h4 { font-size: 11px; color: #888; margin: 10px 0 4px; text-transform: uppercase; }
+  .neighbor-link { display: block; padding: 2px 6px; margin: 2px 0; border-radius: 3px; cursor: pointer; font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-left: 3px solid #333; }
+  .neighbor-link:hover { background: #2a2a4e; }
+  .neighbor-link small { color: #777; }
+  #legend-wrap { flex: 1; overflow-y: auto; padding: 12px; }
+  #legend-wrap h3 { font-size: 12px; color: #aaa; margin: 10px 0 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .legend-item { display: flex; align-items: center; gap: 8px; padding: 4px 2px; cursor: pointer; border-radius: 4px; font-size: 12.5px; user-select: none; }
+  .legend-item:hover { background: #2a2a4e; }
+  .legend-item.dimmed { opacity: 0.35; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .legend-line { width: 16px; height: 3px; border-radius: 2px; flex-shrink: 0; }
+  .legend-label { flex: 1; }
+  .legend-count { color: #666; font-size: 11px; }
+  #hooks-only-wrap { display:flex; align-items:center; gap:6px; font-size:12.5px; padding: 4px 2px; cursor:pointer; user-select:none; }
+  #stats { padding: 10px 14px; border-top: 1px solid #2a2a4e; font-size: 11px; color: #555; }
+</style>
+</head>
+<body>
+<div id="graph"></div>
+<div id="sidebar">
+  <div id="search-wrap"><input id="search" placeholder="Search hooks &amp; functions…" autocomplete="off"></div>
+  <div id="search-results"></div>
+  <div id="info-panel"><h3>Node info</h3><div id="info-content"><span class="empty">Click a node to inspect it</span></div></div>
+  <div id="legend-wrap">
+    <h3>Node types</h3><div id="legend-repos"></div>
+    <h3>Edge types</h3><div id="legend-rels"></div>
+    <h3>View</h3>
+    <label id="hooks-only-wrap"><input type="checkbox" id="hooks-only"> Hooks with both firers &amp; consumers</label>
+  </div>
+  <div id="stats">__STATS__</div>
+</div>
+<script>
+const RAW_NODES = __NODES__;
+const RAW_EDGES = __EDGES__;
+const REPO_COLORS = __REPO_COLORS__;
+const REL_COLORS = __REL_COLORS__;
+
+const REPO_LABELS = { hook: 'WordPress hook', 'dokan-lite': 'dokan-lite function', 'dokan-pro': 'dokan-pro function', woocommerce: 'woocommerce function' };
+const REL_LABELS = { fires: 'fires (do_action / apply_filters)', handled_by: 'handled_by (add_action / add_filter)', registered_in: 'registered_in', fires_and_handles: 'fires_and_handles' };
+
+const nodeById = {};
+RAW_NODES.forEach(n => nodeById[n.id] = n);
+
+// adjacency for the info panel
+const adj = {};
+RAW_EDGES.forEach(e => {
+  (adj[e.from] = adj[e.from] || []).push({ other: e.to, rel: e.rel, loc: e.loc, dir: 'out' });
+  (adj[e.to] = adj[e.to] || []).push({ other: e.from, rel: e.rel, loc: e.loc, dir: 'in' });
+});
+
+// hooks that have both a firer and a consumer
+const hookHasFire = {}, hookHasHandle = {};
+RAW_EDGES.forEach(e => {
+  const h = e.from.startsWith('hook::') ? e.from : (e.to.startsWith('hook::') ? e.to : null);
+  if (!h) return;
+  if (e.rel === 'fires' || e.rel === 'fires_and_handles') hookHasFire[h] = true;
+  if (e.rel === 'handled_by' || e.rel === 'registered_in' || e.rel === 'fires_and_handles') hookHasHandle[h] = true;
+});
+
+function visNode(n) {
+  const color = REPO_COLORS[n.group] || REPO_COLORS.other;
+  const isHook = n.group === 'hook';
+  return {
+    id: n.id, x: n.x, y: n.y, fixed: true,
+    label: isHook ? n.label : undefined,
+    size: n.size,
+    shape: 'dot',
+    color: { background: color, border: color, highlight: { background: '#fff', border: color } },
+    font: { color: '#e8e8f0', size: 15, strokeWidth: 3, strokeColor: '#0f0f1a' },
+    scaling: { label: { drawThreshold: 6 } },
+  };
+}
+function visEdge(e, i) {
+  const c = REL_COLORS[e.rel] || '#666';
+  return {
+    id: i, from: e.from, to: e.to,
+    color: { color: c, opacity: 0.55, highlight: '#fff' },
+    width: 1,
+    arrows: { to: { enabled: true, scaleFactor: 0.4 } },
+    dashes: e.rel === 'registered_in',
+    smooth: false,
+  };
+}
+
+const nodesDS = new vis.DataSet(RAW_NODES.map(visNode));
+const edgesDS = new vis.DataSet(RAW_EDGES.map(visEdge));
+
+const network = new vis.Network(document.getElementById('graph'), { nodes: nodesDS, edges: edgesDS }, {
+  physics: false,
+  interaction: { hover: false, multiselect: false, dragNodes: false, navigationButtons: false, keyboard: false },
+  layout: { improvedLayout: false },
+});
+
+// ---------- filtering ----------
+const repoOff = {}, relOff = {};
+let hooksOnlyBoth = false;
+
+function applyFilters() {
+  const nodeVisible = {};
+  const nodeUpdates = [];
+  RAW_NODES.forEach(n => {
+    let vis_ = !repoOff[n.group];
+    if (vis_ && hooksOnlyBoth) {
+      if (n.group === 'hook') { vis_ = hookHasFire[n.id] && hookHasHandle[n.id]; }
+      else {
+        // keep function only if attached to a surviving hook via a visible relation
+        vis_ = (adj[n.id] || []).some(a => {
+          const h = a.other;
+          return h.startsWith('hook::') && hookHasFire[h] && hookHasHandle[h] && !relOff[a.rel] && !repoOff['hook'];
+        });
+      }
+    }
+    nodeVisible[n.id] = vis_;
+    nodeUpdates.push({ id: n.id, hidden: !vis_ });
+  });
+  const edgeUpdates = RAW_EDGES.map((e, i) => ({ id: i, hidden: !!relOff[e.rel] || !nodeVisible[e.from] || !nodeVisible[e.to] }));
+  nodesDS.update(nodeUpdates);
+  edgesDS.update(edgeUpdates);
+}
+
+function legendRow(container, key, label, color, isLine, offMap) {
+  const el = document.createElement('div');
+  el.className = 'legend-item';
+  el.innerHTML = `<span class="${isLine ? 'legend-line' : 'legend-dot'}" style="background:${color}"></span><span class="legend-label">${label}</span><span class="legend-count">${countFor(key, isLine)}</span>`;
+  el.onclick = () => { offMap[key] = !offMap[key]; el.classList.toggle('dimmed', !!offMap[key]); applyFilters(); };
+  container.appendChild(el);
+}
+function countFor(key, isLine) {
+  if (isLine) return RAW_EDGES.filter(e => e.rel === key).length.toLocaleString();
+  return RAW_NODES.filter(n => n.group === key).length.toLocaleString();
+}
+const repoC = document.getElementById('legend-repos');
+Object.keys(REPO_COLORS).forEach(k => { if (RAW_NODES.some(n => n.group === k)) legendRow(repoC, k, REPO_LABELS[k] || k, REPO_COLORS[k], false, repoOff); });
+const relC = document.getElementById('legend-rels');
+Object.keys(REL_COLORS).forEach(k => { if (RAW_EDGES.some(e => e.rel === k)) legendRow(relC, k, REL_LABELS[k] || k, REL_COLORS[k], true, relOff); });
+document.getElementById('hooks-only').onchange = e => { hooksOnlyBoth = e.target.checked; applyFilters(); };
+
+// ---------- node info ----------
+function showInfo(id) {
+  const n = nodeById[id];
+  if (!n) return;
+  const isHook = n.group === 'hook';
+  const nbrs = adj[id] || [];
+  const firers = nbrs.filter(a => (a.rel === 'fires' || a.rel === 'fires_and_handles') && (isHook ? a.dir === 'in' : a.dir === 'out'));
+  // NB: handled_by / registered_in edges are stored function -> hook (same
+  // direction as fires), so at a hook every relation arrives as dir 'in'.
+  const handlers = nbrs.filter(a => (a.rel === 'handled_by' || a.rel === 'registered_in' || a.rel === 'fires_and_handles') && (isHook ? a.dir === 'in' : a.dir === 'out'));
+  let h = `<div class="field"><b>${esc(n.label)}</b></div>` +
+          `<div class="field">${esc(REPO_LABELS[n.group] || n.group)}</div>`;
+  if (n.file) h += `<div class="field" style="color:#889">${esc(n.file)}</div>`;
+  if (isHook) {
+    h += `<h4>Fired from (${firers.length})</h4>` + neighborList(firers);
+    h += `<h4>Consumed by (${handlers.length})</h4>` + neighborList(handlers);
+  } else {
+    const hooks = nbrs.filter(a => a.other.startsWith('hook::'));
+    h += `<h4>Hooks touched (${hooks.length})</h4>` + neighborList(hooks);
+  }
+  document.getElementById('info-content').innerHTML = h;
+  document.querySelectorAll('.neighbor-link').forEach(el => el.onclick = () => focusNode(el.dataset.id));
+}
+function neighborList(list) {
+  if (!list.length) return '<span class="empty">none in corpus</span>';
+  return list.map(a => {
+    const o = nodeById[a.other] || { label: a.other, group: 'other' };
+    const c = REPO_COLORS[o.group] || REPO_COLORS.other;
+    return `<span class="neighbor-link" data-id="${escAttr(a.other)}" style="border-left-color:${c}">${esc(o.label)} <small>${esc(a.loc || '')}</small></span>`;
+  }).join('');
+}
+function esc(s) { return String(s).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
+function escAttr(s) { return esc(s).replace(/'/g, '&#39;'); }
+
+function focusNode(id) {
+  network.selectNodes([id]);
+  network.focus(id, { scale: 1.1, animation: { duration: 350 } });
+  showInfo(id);
+}
+network.on('click', p => { if (p.nodes.length) showInfo(p.nodes[0]); });
+
+// ---------- search ----------
+const searchEl = document.getElementById('search');
+const resultsEl = document.getElementById('search-results');
+searchEl.addEventListener('input', () => {
+  const q = searchEl.value.trim().toLowerCase();
+  if (q.length < 2) { resultsEl.style.display = 'none'; return; }
+  const hits = RAW_NODES.filter(n => n.label.toLowerCase().includes(q)).slice(0, 40);
+  resultsEl.innerHTML = hits.map(n => `<div class="search-item" data-id="${escAttr(n.id)}"><span style="color:${REPO_COLORS[n.group] || '#999'}">●</span> ${esc(n.label)}</div>`).join('') || '<div class="search-item">no match</div>';
+  resultsEl.style.display = 'block';
+  resultsEl.querySelectorAll('[data-id]').forEach(el => el.onclick = () => { focusNode(el.dataset.id); resultsEl.style.display = 'none'; });
+});
+
+network.once('afterDrawing', () => network.fit());
+</script>
+</body>
+</html>
