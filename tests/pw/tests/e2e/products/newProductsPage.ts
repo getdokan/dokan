@@ -203,8 +203,20 @@ export class NewProductsPage {
     async openRowActionMenu(name: string): Promise<void> {
         const btn = this.rowByName(name).locator(newProductsSelectors.rowActionsBtn).first();
         await btn.waitFor({ state: 'visible', timeout: 10000 });
-        await btn.click();
-        await this.page.getByRole('menuitem').first().waitFor({ state: 'visible', timeout: 5000 }).catch(() => undefined);
+        // The DataViews dropdown can no-op if the trigger is clicked mid-render (or a
+        // list refetch closes a just-opened menu), which makes a follow-up menuitem
+        // click time out intermittently. Open it and CONFIRM a menuitem appeared;
+        // re-trigger only if it's still closed — checking open-state first so we never
+        // re-click an already-open menu (which would toggle it shut).
+        const firstItem = this.page.getByRole('menuitem').first();
+        for (let attempt = 0; attempt < 3; attempt++) {
+            if (await firstItem.isVisible().catch(() => false)) return;
+            await btn.click();
+            const opened = await firstItem.waitFor({ state: 'visible', timeout: 5000 }).then(() => true).catch(() => false);
+            if (opened) return;
+        }
+        // Still not open — surface a real error instead of clicking into the void.
+        await firstItem.waitFor({ state: 'visible', timeout: 5000 });
     }
 
     menuItem(label: string): Locator {
@@ -212,7 +224,11 @@ export class NewProductsPage {
     }
 
     async clickMenuItem(label: string): Promise<void> {
-        await this.menuItem(label).click();
+        const item = this.menuItem(label);
+        // Wait for THIS item (not just any menuitem) to be rendered and stable before
+        // clicking — the menu can paint its items progressively.
+        await item.waitFor({ state: 'visible', timeout: 10000 });
+        await item.click();
     }
 
     async rowMenuItemLabels(name: string): Promise<string[]> {

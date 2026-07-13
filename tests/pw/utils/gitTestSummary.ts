@@ -118,23 +118,27 @@ const buildOverallBanner = (core, results) => {
             acc.total += num(r.total_tests);
             acc.passed += num(r.passed);
             acc.failed += num(r.failed);
+            acc.flaky += num(r.flaky);
             acc.skipped += num(r.skipped);
             acc.missing += num(r.missing_reports);
             return acc;
         },
-        { total: 0, passed: 0, failed: 0, skipped: 0, missing: 0 },
+        { total: 0, passed: 0, failed: 0, flaky: 0, skipped: 0, missing: 0 },
     );
 
     const status = totals.failed > 0 ? '🔴 <strong>Failed</strong>' : totals.missing > 0 ? '🟠 <strong>Incomplete</strong>' : '🟢 <strong>Passed</strong>';
     const ran = totals.passed + totals.failed;
     const rate = ran === 0 ? '—' : `${((totals.passed / ran) * 100).toFixed(1)}%`;
+    // Flaky (passed-on-retry) is a subset of passed — surface it so a green build
+    // with hidden instability is still called out.
+    const flakyNote = totals.flaky > 0 ? `, ${totals.flaky.toLocaleString()} flaky ⚠️` : '';
 
     // HTML, not markdown (see buildHeader): rendered as a raw-HTML block, so use
     // <strong> — `**` would show literally. Spell the arithmetic out (total =
     // passed + failed + skipped; pass rate is over the tests that ran).
     core.summary
         .addRaw(
-            `<blockquote>${status} &nbsp;·&nbsp; <strong>${totals.passed.toLocaleString()} / ${totals.total.toLocaleString()}</strong> tests passed (${totals.failed.toLocaleString()} failed, ${totals.skipped.toLocaleString()} skipped) &nbsp;·&nbsp; pass rate <strong>${rate}</strong> of the ${ran.toLocaleString()} tests run</blockquote>`,
+            `<blockquote>${status} &nbsp;·&nbsp; <strong>${totals.passed.toLocaleString()} / ${totals.total.toLocaleString()}</strong> tests passed (${totals.failed.toLocaleString()} failed, ${totals.skipped.toLocaleString()} skipped${flakyNote}) &nbsp;·&nbsp; pass rate <strong>${rate}</strong> of the ${ran.toLocaleString()} tests run</blockquote>`,
         )
         .addEOL()
         .addEOL();
