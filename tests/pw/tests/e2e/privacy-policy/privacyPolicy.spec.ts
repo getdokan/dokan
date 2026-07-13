@@ -14,6 +14,10 @@ test.describe('Privacy Policy & Store Contact form test', () => {
         cPage = await customerContext.newPage();
         customer = new PrivacyPolicyPage(cPage);
         apiUtils = new ApiUtils(null);
+        // Deterministic start state: privacy policy + store contact form ON, so the
+        // navigate/disable cases don't depend on a prior run's leftover option state.
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.privacyPolicy, { enable_privacy: 'on' });
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { contact_seller: 'on' });
     });
 
     test.afterAll(async () => {
