@@ -23,11 +23,17 @@ type StaffData = {
 export const vendorStaffSelectors = {
     // vendor dashboard (menu presence / dashboard wrap)
     dashboardDiv: 'div.dokan-dashboard-wrap',
+    // The vendor's `/dashboard/` menu moved to the React sidebar (`.dokan-frontend-sidebar`).
+    // The legacy `ul.dokan-dashboard-menu` is still emitted but hidden, and now uses the same
+    // `#products` hash hrefs — so menu-visibility checks must be scoped to the visible sidebar.
+    // The sidebar honours staff `dokan_view_*_menu` capabilities (denied menus are omitted),
+    // so these selectors still validate permission-based menu visibility for a logged-in staff.
     primaryMenus: {
-        dashboard: 'ul.dokan-dashboard-menu li.dashboard a',
-        products: 'ul.dokan-dashboard-menu li.products a',
-        orders: 'ul.dokan-dashboard-menu li.orders a',
-        coupons: 'ul.dokan-dashboard-menu li.coupons a',
+        dashboard: '.dokan-frontend-sidebar a[href*="Overview"]',
+        products: '.dokan-frontend-sidebar a[href*="#products"]',
+        orders: '.dokan-frontend-sidebar a[href*="#orders"]',
+        coupons: '.dokan-frontend-sidebar a[href*="#coupons"]',
+        // Legacy selectors retained for the admin-side disable check (element must be absent/hidden).
         reports: 'ul.dokan-dashboard-menu li.reports a',
         reviews: 'ul.dokan-dashboard-menu li.reviews a',
         withdraw: 'ul.dokan-dashboard-menu li.withdraw a',
@@ -327,6 +333,33 @@ export class VendorStaffPage {
     }
 
     // ---- staff (logged in as the created staff account) ----
+
+    // Log in the freshly-created staff via the my-account form. The staff has no
+    // storage state, so the fresh sPage context must authenticate through the UI
+    // before the permitted vendor-dashboard menus can be asserted.
+    async frontendLogin(username: string, password: string): Promise<void> {
+        await this.page.goto(toPath('my-account'), { waitUntil: 'domcontentloaded' });
+        const userField = this.page.locator('#username');
+        if (await userField.isVisible().catch(() => false)) {
+            await userField.fill(username);
+            await this.page.locator('#password').fill(password);
+            await this.page
+                .locator('#rememberme')
+                .check()
+                .catch(() => undefined);
+            await this.page.locator('//button[@value="Log in"]').click();
+            await this.page.waitForLoadState('load');
+            await expect
+                .poll(
+                    async () => {
+                        const cookies = await this.page.context().cookies();
+                        return cookies.some(c => c.name.startsWith('wordpress_logged_in_'));
+                    },
+                    { timeout: 15000 },
+                )
+                .toBe(true);
+        }
+    }
 
     // view permitted menus on the vendor dashboard
     async viewPermittedMenus(menus: string[]): Promise<void> {
