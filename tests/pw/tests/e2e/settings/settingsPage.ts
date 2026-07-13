@@ -1495,16 +1495,16 @@ export class SettingsPage {
         await this.page.locator(settingsSelectors.menus.vendorSubscription).click();
 
         // Vendor Subscription Settings
+        // The `dokan_product_subscription` option now registers only these fields
+        // (subscription module admin.php): subscription_pack, enable_pricing,
+        // enable_subscription_pack_in_reg, no_of_days_before_mail,
+        // product_status_after_end. The former notify_by_email / cancelling & alert
+        // email inputs no longer exist on this page, so they are not set here.
         await this.page.locator(settingsSelectors.vendorSubscriptions.subscription).selectOption({ label: subscription.displayPage });
         await this.enableSwitcher(settingsSelectors.vendorSubscriptions.enableProductSubscription);
         await this.enableSwitcher(settingsSelectors.vendorSubscriptions.enableSubscriptionInRegistrationForm);
-        await this.enableSwitcher(settingsSelectors.vendorSubscriptions.enableEmailNotification);
         await this.page.locator(settingsSelectors.vendorSubscriptions.noOfDays).fill(subscription.noOfDays);
         await this.page.locator(settingsSelectors.vendorSubscriptions.productStatus).selectOption({ value: subscription.productStatus });
-        await this.page.locator(settingsSelectors.vendorSubscriptions.cancellingEmailSubject).fill(subscription.cancellingEmailSubject);
-        await this.page.locator(settingsSelectors.vendorSubscriptions.cancellingEmailBody).fill(subscription.cancellingEmailBody);
-        await this.page.locator(settingsSelectors.vendorSubscriptions.alertEmailSubject).fill(subscription.alertEmailSubject);
-        await this.page.locator(settingsSelectors.vendorSubscriptions.alertEmailBody).fill(subscription.alertEmailBody);
 
         // save settings
         await this.saveSettings();
