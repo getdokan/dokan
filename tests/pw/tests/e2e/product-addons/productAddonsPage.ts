@@ -94,20 +94,14 @@ const messages = {
 };
 
 // ============================================================================
-// VENDOR DASHBOARD MENUS (selector.vendor.vDashboard.menus)
-// ============================================================================
-const menusVendor = {
-    settings: '(//ul[@class="dokan-dashboard-menu"]//li[contains(@class,"settings has-submenu")]//a)[1]',
-    addons: '.submenu-item.product-addon',
-};
-
-// ============================================================================
 // GLOBAL ADD-ON SETTINGS SELECTORS (selector.vendor.vAddonSettings)
 // ============================================================================
 const addonsVendor = {
     productAddonsDiv: 'div.dokan-pa-all-addons',
     productAddonsText: '.dokan-settings-content h1',
-    visitStore: '//a[normalize-space()="Visit Store"]',
+    // Scoped to the classic settings content: the new React dashboard chrome adds its
+    // own header "Visit Store" link, so an unscoped match is ambiguous (2 elements).
+    visitStore: '//div[contains(@class,"dokan-settings-content")]//a[normalize-space()="Visit Store"]',
 
     createNewAddon: '.dokan-pa-all-addons .dokan-btn',
 
@@ -276,12 +270,14 @@ export class ProductAddonsPage {
 
     // enable product addon module
     async enableProductAddonModule(): Promise<void> {
-        // vendor dashboard settings menu
-        await this.page.goto(toPath(subUrls.dashboard), { waitUntil: 'domcontentloaded' });
-        await this.page.locator(menusVendor.settings).hover();
-        await expect(this.page.locator(menusVendor.addons)).toBeVisible();
+        // module enabled -> the global add-on settings page renders the add-ons list.
+        // (The legacy dashboard hover-submenu is now a hidden leftover under the React
+        //  dashboard shell, so module state is verified via the surfaces that still gate
+        //  on it: the classic settings page + the classic product-add metabox.)
+        await this.page.goto(toPath(subUrls.settingsAddon), { waitUntil: 'domcontentloaded' });
+        await expect(this.page.locator(addonsVendor.productAddonsDiv)).toBeVisible();
 
-        // vendor dashboard
+        // module enabled -> the add-on metabox appears on the product-add screen
         await this.page.goto(toPath(subUrls.products), { waitUntil: 'domcontentloaded' });
         await Promise.all([this.page.waitForLoadState('domcontentloaded'), this.page.locator(productsVendor.addNewProduct).click()]);
         await expect(this.page.locator(productsVendor.addon.addonSection)).toBeVisible();
@@ -289,16 +285,11 @@ export class ProductAddonsPage {
 
     // disable product addon module
     async disableProductAddonModule(): Promise<void> {
-        // vendor dashboard settings menu
-        await this.page.goto(toPath(subUrls.dashboard), { waitUntil: 'domcontentloaded' });
-        await this.page.locator(menusVendor.settings).hover();
-        await expect(this.page.locator(menusVendor.addons)).toBeHidden();
-
-        // vendor dashboard settings menu page
+        // module disabled -> the global add-on settings page no longer renders the add-ons list
         await this.page.goto(toPath(subUrls.settingsAddon), { waitUntil: 'domcontentloaded' });
         await expect(this.page.locator(addonsVendor.productAddonsDiv)).toBeHidden();
 
-        // vendor dashboard
+        // module disabled -> the add-on metabox is gone from the product-add screen
         await this.page.goto(toPath(subUrls.products), { waitUntil: 'domcontentloaded' });
         await Promise.all([this.page.waitForLoadState('domcontentloaded'), this.page.locator(productsVendor.addNewProduct).click()]);
         await expect(this.page.locator(productsVendor.addon.addonSection)).toBeHidden();
@@ -472,12 +463,17 @@ export class ProductsPage {
     // vendor search product
     private async searchProduct(productName: string): Promise<void> {
         await goIfNotThere(this.page, subUrls.products);
-        await this.page.locator(productsVendor.search.searchInput).fill(productName);
-        await Promise.all([
-            this.page.waitForResponse(resp => resp.url().includes(subUrls.products) && resp.status() === 200),
-            this.page.locator(productsVendor.search.searchBtn).click(),
-        ]);
-        await expect(this.page.locator(productsVendor.productLink(productName))).toBeVisible();
+        // Retry the whole search: the vendor product list can briefly lag right after a
+        // REST-seeded product is created or a prior save, so a single search occasionally
+        // renders no matching row. Re-issuing the search is the deterministic recovery.
+        await expect(async () => {
+            await this.page.locator(productsVendor.search.searchInput).fill(productName);
+            await Promise.all([
+                this.page.waitForResponse(resp => resp.url().includes(subUrls.products) && resp.status() === 200),
+                this.page.locator(productsVendor.search.searchBtn).click(),
+            ]);
+            await expect(this.page.locator(productsVendor.productLink(productName))).toBeVisible({ timeout: 10_000 });
+        }).toPass({ timeout: 60_000, intervals: [1_000, 2_000, 3_000] });
     }
 
     // go to product edit (search-based, name is not numeric)
@@ -486,9 +482,10 @@ export class ProductsPage {
         // force the row actions visible to avoid hover flakiness
         await this.page.locator(productsVendor.rowActions(productName)).evaluate((el: HTMLElement) => el.removeAttribute('class'));
         await this.page.locator(productsVendor.productCell(productName)).hover();
-        const [, response] = await Promise.all([
-            // eslint-disable-next-line playwright/no-networkidle
-            this.page.waitForLoadState('networkidle'),
+        // No networkidle wait: the React dashboard shell polls in the background and can
+        // keep the network from ever settling. The title toHaveValue check below is a
+        // stronger, deterministic confirmation that the correct edit screen has loaded.
+        const [response] = await Promise.all([
             this.page.waitForResponse(resp => resp.url().includes(subUrls.products) && resp.status() === 200),
             this.page.locator(productsVendor.editProduct(productName)).click(),
         ]);
@@ -508,13 +505,16 @@ export class ProductsPage {
 
     // save product
     private async saveProduct(): Promise<void> {
-        const [, response] = await Promise.all([
-            this.page.waitForLoadState('load'),
-            this.page.waitForResponse(resp => resp.url().includes(subUrls.products) && resp.status() === 200),
-            this.page.locator(productsVendor.saveProduct).click(),
-        ]);
-        expect(response.status()).toBe(200);
-        await expect(this.page.locator(productsVendor.updatedSuccessMessage)).toContainText(messages.productSaved);
+        // The frontend product form is submitted through dokan.js `inputValidate`, which
+        // preventDefaults every submit and only performs the real POST once its client-side
+        // preconditions have settled; until then the Publish click silently no-ops (no
+        // request, no navigation). Racing a specific network response is therefore flaky.
+        // Retry the click and gate on the definitive success notice instead. Re-saving is
+        // idempotent, so an extra click on a stubborn first attempt is harmless.
+        await expect(async () => {
+            await this.page.locator(productsVendor.saveProduct).click();
+            await expect(this.page.locator(productsVendor.updatedSuccessMessage)).toContainText(messages.productSaved, { timeout: 20_000 });
+        }).toPass({ timeout: 90_000, intervals: [3_000, 5_000, 5_000] });
     }
 
     // add product addon
@@ -565,7 +565,19 @@ export class ProductsPage {
     async importAddon(productName: string, addon: string, addonTitle: string): Promise<void> {
         await this.goToProductEditById(productName);
         await this.page.locator(productsVendor.addon.import).click();
-        await this.page.locator(productsVendor.addon.importInput).fill(addon);
+        // The Import button reveals the textarea via a jQuery slideToggle('300') whose
+        // completion callback clears it once (`$(this).val('')`). A fill that lands inside
+        // that ~300ms window is silently wiped. Wait past the one-shot clear before filling,
+        // then confirm the value survived (retrying as a safety net), so the serialized addon
+        // is actually present in the field at save time.
+        const importField = this.page.locator(productsVendor.addon.importInput);
+        await expect(importField).toBeVisible();
+        await this.page.waitForTimeout(600);
+        await expect(async () => {
+            await importField.fill(addon);
+            await this.page.waitForTimeout(300);
+            await expect(importField).toHaveValue(addon);
+        }).toPass({ timeout: 20_000, intervals: [500, 1_000, 1_000] });
         await this.saveProduct();
         await expect(this.page.locator(productsVendor.addon.addonRow(addonTitle))).toBeVisible();
     }
