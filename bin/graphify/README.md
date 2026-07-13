@@ -29,6 +29,25 @@ Everything lands in `graphify-out/` (gitignored, ~100 MB):
 | `graph.html`      | interactive visualization (community-aggregated)      |
 | `GRAPH_REPORT.md` | audit report: god nodes, communities, ambiguous edges |
 | `hooks.json`      | raw hook scan (every fire/registration with location) |
+| `hook-view.html`  | all-hooks viewer (see below)                          |
+
+## All-hooks viewer
+
+```bash
+# one-time: the layout step needs scipy in graphify's env
+uv pip install --python "$(cat graphify-out/.graphify_python)" scipy
+
+python3 bin/graphify/wp_hook_view.py    # writes graphify-out/hook-view.html
+```
+
+Renders every `hook::` node (~6k hooks, ~14k nodes) with its firing call
+sites and consumers. Layout is precomputed in Python (spring layout for the
+giant connected component, shelf-packed radial stars for the rest) so the
+browser runs with physics off. Sidebar: search, per-hook **Fired from /
+Consumed by** lists with `file:line`, repo & edge-type filters, and a
+"hooks with both firers & consumers" toggle. Template lives in
+`wp_hook_view.tpl.html`. Note the edge convention: `handled_by` /
+`registered_in` are stored function→hook, the same direction as `fires`.
 
 ## Query
 
