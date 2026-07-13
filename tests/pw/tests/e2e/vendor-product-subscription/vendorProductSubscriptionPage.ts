@@ -97,7 +97,13 @@ const subUrls = {
 const selectors = {
     // vendor dashboard menu + user-subscription screen
     vendor: {
-        dashboardMenu: 'ul.dokan-dashboard-menu li.user-subscription a',
+        // Selector drift (Dokan 4.x React vendor dashboard): the legacy
+        // `ul.dokan-dashboard-menu` sidebar is now kept only as a data source and
+        // rendered with `visibility:hidden`; the real, visible navigation is the
+        // React `aside.dokan-frontend-sidebar`. Verified live: the User
+        // Subscriptions nav link is present when the vsp module is active and
+        // removed when it is deactivated — so this remains a genuine module oracle.
+        dashboardMenu: 'aside.dokan-frontend-sidebar a[href*="#user-subscription"]',
         dashboardDiv: 'div.dokan-dashboard-wrap',
         filters: {
             filterByCustomer: '//select[@id="dokan-filter-customer"]/..//span[@class="select2-selection__arrow"]',

@@ -19,6 +19,9 @@ import { data } from '@utils/testData';
 // Re-export the REAL test data + payloads the spec imports from this module.
 export { data };
 export { payloads } from '@utils/payloads';
+// Re-export the REAL dbUtils so the spec can flip the deterministic
+// vendor-product-editor option (see spec beforeAll for why).
+export { dbUtils } from '@utils/dbUtils';
 
 // ---------------------------------------------------------------------------
 // Null-tolerant ApiUtils wrapper (mirrors the vendor-return-request precedent).
