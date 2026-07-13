@@ -29,7 +29,7 @@ const { DOKAN_PRO } = process.env;
 export const vendorSettingsSelectors = {
     vStoreSettings: {
         settingsText: '.dokan-settings-content h1',
-        visitStore: '//a[normalize-space()="Visit Store"]',
+        visitStore: '//div[contains(concat(" ", normalize-space(@class), " "), " dokan-settings-content ")]//h1//a[normalize-space()="Visit Store"]',
 
         // wp image upload
         wpUploadFiles: '#menu-item-upload',
@@ -187,7 +187,7 @@ export const vendorSettingsSelectors = {
     vShipStationSettings: {
         shipStationSettingsDiv: 'div#dokan-shipstation-vendor-settings',
         shipStationText: '.dokan-settings-content h1',
-        visitStore: '//a[normalize-space()="Visit Store"]',
+        visitStore: '//div[contains(concat(" ", normalize-space(@class), " "), " dokan-settings-content ")]//h1//a[normalize-space()="Visit Store"]',
 
         generateCredentials: 'button#dokan-shipstation-generate-credentials-btn',
         generateSuccessMessage: '//div[@id="swal2-html-container" and normalize-space()="API credentials generated successfully."]',
@@ -215,7 +215,7 @@ export const vendorSettingsSelectors = {
 
     vSocialProfileSettings: {
         socialProfileText: '.dokan-settings-content h1',
-        visitStore: '//a[normalize-space()="Visit Store"]',
+        visitStore: '//div[contains(concat(" ", normalize-space(@class), " "), " dokan-settings-content ")]//h1//a[normalize-space()="Visit Store"]',
 
         platforms: {
             facebook: '#settings\\[social\\]\\[fb\\]',
@@ -234,7 +234,7 @@ export const vendorSettingsSelectors = {
 
     vStoreSeoSettings: {
         storeSeoText: '.dokan-settings-content h1',
-        visitStore: '//a[normalize-space()="Visit Store"]',
+        visitStore: '//div[contains(concat(" ", normalize-space(@class), " "), " dokan-settings-content ")]//h1//a[normalize-space()="Visit Store"]',
 
         seoTitle: '#dokan-seo-meta-title',
         metaDescription: '#dokan-seo-meta-desc',
@@ -261,7 +261,7 @@ export const vendorSettingsSelectors = {
     vRmaSettings: {
         rmaSettingsDiv: 'div.dokan-rma-wrapper',
         returnAndWarrantyText: '.dokan-settings-content h1',
-        visitStore: '//a[normalize-space()="Visit Store"]',
+        visitStore: '//div[contains(concat(" ", normalize-space(@class), " "), " dokan-settings-content ")]//h1//a[normalize-space()="Visit Store"]',
 
         label: '#dokan-rma-label',
         type: '#dokan-warranty-type',
@@ -518,9 +518,13 @@ export class VendorSettingsPage {
         // settings text is visible
         await this.toBeVisible(settingsVendor.settingsText);
 
-        // visit store link is visible
-        await this.toBeVisible(settingsVendor.banner);
-        await this.toBeVisible(settingsVendor.profilePicture);
+        // banner and profile picture render.
+        // Since Dokan 4.0.6 every vendor always has a default banner/avatar image
+        // (VendorUtil::get_vendor_default_{banner,avatar}_url), so the "Upload banner"/
+        // "Upload Photo" drag buttons are hidden behind the (default) image; the image
+        // itself is what renders. The beforeAll reset guarantees the default image state.
+        await this.toBeVisible(settingsVendor.bannerImage);
+        await this.toBeVisible(settingsVendor.profilePictureImage);
         await this.toBeVisible(settingsVendor.storeName);
         await this.toBeVisible(settingsVendor.phoneNo);
         if (DOKAN_PRO) {

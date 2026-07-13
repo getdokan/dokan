@@ -5,7 +5,7 @@ import path from 'path';
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 const { DOKAN_PRO, VENDOR_ID } = process.env;
 
-test.describe.skip('Vendor settings test', () => {
+test.describe('Vendor settings test', () => {
     let vendor: VendorSettingsPage;
     let vPage: Page;
     let apiUtils: ApiUtils;
@@ -15,6 +15,12 @@ test.describe.skip('Vendor settings test', () => {
         vPage = await vendorContext.newPage();
         vendor = new VendorSettingsPage(vPage);
         apiUtils = new ApiUtils(null);
+        // Deterministic state: reset store to defaults (banner:0, gravatar:0) so the
+        // "Upload banner"/"Upload Photo" controls render for the store-settings render test.
+        await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth);
+        // Enable admin-level catalog mode so the vendor-facing catalog toggles render
+        // (Helper::is_enabled_by_admin gates them). The catalog test resets these to 'off'.
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { catalog_mode_hide_add_to_cart_button: 'on', catalog_mode_hide_product_price: 'on' });
     });
 
     test.afterAll(async () => {
@@ -34,7 +40,7 @@ test.describe.skip('Vendor settings test', () => {
     test('vendor can set store basic settings', { tag: ['@lite', '@vendor'] }, async () => { await vendor.setStoreSettings(data.vendor.vendorInfo, 'basic'); });
     test('vendor can set store address settings', { tag: ['@lite', '@vendor'] }, async () => { await vendor.setStoreSettings(data.vendor.vendorInfo, 'address'); });
     test('vendor can set euCompliance info settings', { tag: ['@pro', '@vendor'] }, async () => { await vendor.setStoreSettings(data.vendor.vendorInfo, 'euCompliance'); });
-    test('vendor can set map settings', { tag: ['@lite', '@vendor'] }, async () => { await vendor.setStoreSettings(data.vendor.vendorInfo, 'map'); });
+    test('vendor can set map settings', { tag: ['@lite', '@vendor'] }, async () => { test.skip(true, 'GMAP key in .env is a deleted Google Cloud project (DeletedApiProjectMapError); Maps SDK blocks geocode requests client-side, so no /maps/api response fires. Needs a valid billing-enabled key.'); await vendor.setStoreSettings(data.vendor.vendorInfo, 'map'); });
     test('vendor can set terms and conditions settings', { tag: ['@lite', '@vendor'] }, async () => { await vendor.setStoreSettings(data.vendor.vendorInfo, 'toc'); });
     test('vendor can set open-close settings', { tag: ['@lite', '@vendor'] }, async () => { await vendor.setStoreSettings(data.vendor.vendorInfo, 'open-close'); });
     test('vendor can set vacation settings', { tag: ['@pro', '@vendor'] }, async () => { await vendor.setStoreSettings(data.vendor.vendorInfo, 'vacation'); });
