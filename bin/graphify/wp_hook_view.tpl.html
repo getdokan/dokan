@@ -97,11 +97,19 @@ function visNode(n) {
 }
 function visEdge(e, i) {
   const c = REL_COLORS[e.rel] || '#666';
+  // Data is stored function->hook for every relation; orientation carries no
+  // meaning (the graph is undirected upstream). Arrows here are display-only
+  // semantics: fires points into the hook, handled_by/registered_in points
+  // out to the handler, fires_and_handles points both ways.
+  const flip = e.rel === 'handled_by' || e.rel === 'registered_in';
   return {
-    id: i, from: e.from, to: e.to,
+    id: i, from: flip ? e.to : e.from, to: flip ? e.from : e.to,
     color: { color: c, opacity: 0.55, highlight: '#fff' },
     width: 1,
-    arrows: { to: { enabled: true, scaleFactor: 0.4 } },
+    arrows: {
+      to: { enabled: true, scaleFactor: 0.4 },
+      from: { enabled: e.rel === 'fires_and_handles', scaleFactor: 0.4 },
+    },
     dashes: e.rel === 'registered_in',
     smooth: false,
   };
@@ -166,10 +174,11 @@ function showInfo(id) {
   if (!n) return;
   const isHook = n.group === 'hook';
   const nbrs = adj[id] || [];
-  const firers = nbrs.filter(a => (a.rel === 'fires' || a.rel === 'fires_and_handles') && (isHook ? a.dir === 'in' : a.dir === 'out'));
-  // NB: handled_by / registered_in edges are stored function -> hook (same
-  // direction as fires), so at a hook every relation arrives as dir 'in'.
-  const handlers = nbrs.filter(a => (a.rel === 'handled_by' || a.rel === 'registered_in' || a.rel === 'fires_and_handles') && (isHook ? a.dir === 'in' : a.dir === 'out'));
+  // Hook edges only ever connect a hook to a function, so the relation name
+  // alone classifies each neighbor — stored orientation is ignored entirely
+  // (the graph is undirected upstream and may re-canonicalize endpoints).
+  const firers = nbrs.filter(a => a.rel === 'fires' || a.rel === 'fires_and_handles');
+  const handlers = nbrs.filter(a => a.rel === 'handled_by' || a.rel === 'registered_in' || a.rel === 'fires_and_handles');
   let h = `<div class="field"><b>${esc(n.label)}</b></div>` +
           `<div class="field">${esc(REPO_LABELS[n.group] || n.group)}</div>`;
   if (n.file) h += `<div class="field" style="color:#889">${esc(n.file)}</div>`;

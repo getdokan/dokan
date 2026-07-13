@@ -1,8 +1,18 @@
 """Inject WordPress hook nodes/edges into the merged graphify graph.json.
 
 Hook nodes are shared (unprefixed `hook::<name>` ids) so they bridge repos.
-Edges: <fn> -fires-> <hook>, <hook> -handled_by-> <callback fn>,
-<hook> -registered_in-> <registration site> when the callback is unresolvable.
+
+Edge orientation is CANONICAL: every hook edge is stored function -> hook,
+regardless of relation. The graph is undirected downstream (merge-graphs and
+postprocess both coerce to a simple nx.Graph, which canonicalizes endpoint
+order), so stored orientation cannot carry meaning — the relation name does:
+  fires             the function calls do_action/apply_filters for the hook
+  handled_by        the function is registered as the hook's callback
+  registered_in     registration site when the callback is unresolvable
+  fires_and_handles the same function both fires and handles the hook
+The canonical orientation also makes (fn, hook) a stable aggregation key, so
+a function that both fires and handles a hook is merged here instead of being
+destructively collapsed by networkx's simple-graph edge dedup.
 Dynamic (interpolated) hook names are tagged AMBIGUOUS.
 """
 import json
@@ -123,6 +133,8 @@ def main():
             h["hook_kind"] = "mixed"
         return h["id"]
 
+    CONF_RANK = {"AMBIGUOUS": 0, "INFERRED": 1, "EXTRACTED": 2}
+
     def add_edge(src, tgt, relation, context, confidence, r):
         key = (src, tgt)
         e = agg.get(key)
@@ -135,11 +147,16 @@ def main():
             }
         else:
             e["weight"] += 1.0
-            if e["relation"] != relation:
+            if e["relation"] != relation and e["relation"] != "fires_and_handles":
                 e["relation"] = "fires_and_handles"
                 stats["relation_merged"] += 1
-            if confidence == "AMBIGUOUS":
-                e["confidence"] = e["confidence"]  # keep strongest
+            # keep the strongest confidence, and move provenance with it so
+            # the surviving file:line points at the best-evidenced record
+            if CONF_RANK[confidence] > CONF_RANK[e["confidence"]]:
+                e["confidence"] = confidence
+                e["context"] = context
+                e["source_file"] = f"{r['repo']}/{r['file']}"
+                e["source_location"] = f"L{r['line']}"
         stats[relation] += 1
 
     for r in hooks:
@@ -159,21 +176,22 @@ def main():
             cb_node, cb_conf = resolve_callback(r)
             if cb_node:
                 ctx = r["api"] + (":closure" if (r.get("callback") or {}).get("type") == "closure" else "")
-                add_edge(hid, cb_node, "handled_by", ctx,
+                add_edge(cb_node, hid, "handled_by", ctx,
                          "AMBIGUOUS" if (r["dynamic"] or cb_conf == "AMBIGUOUS") else "EXTRACTED", r)
             else:
                 site = resolve_scope(r)
                 stats["callback_unresolved"] += 1
                 if site:
-                    add_edge(hid, site, "registered_in", r["api"], "AMBIGUOUS", r)
+                    add_edge(site, hid, "registered_in", r["api"], "AMBIGUOUS", r)
 
-    # cross-repo bridge stats
+    # cross-repo bridge stats (all edges are function -> hook)
     fire_repos, listen_repos = defaultdict(set), defaultdict(set)
     for (src, tgt), e in agg.items():
-        if e["relation"] == "fires":
-            fire_repos[tgt].add(src.split("::", 1)[0])
-        elif tgt.startswith("hook::") is False and src.startswith("hook::"):
-            listen_repos[src].add(tgt.split("::", 1)[0])
+        repo = src.split("::", 1)[0]
+        if e["relation"] in ("fires", "fires_and_handles"):
+            fire_repos[tgt].add(repo)
+        if e["relation"] in ("handled_by", "registered_in", "fires_and_handles"):
+            listen_repos[tgt].add(repo)
     bridges = [h for h in hook_nodes.values()
                if fire_repos.get(h["id"]) and listen_repos.get(h["id"])
                and (fire_repos[h["id"]] | listen_repos[h["id"]]) - fire_repos[h["id"]]]
