@@ -22,8 +22,8 @@ export const vendorAnalyticsSelectors = {
     // vendor dashboard: wrapper div (present only when the analytics page renders)
     dashboardDiv: 'div.dokan-dashboard-wrap',
 
-    // analytics page
-    analyticsText: '//h1[normalize-space()="Analytics"]',
+    // analytics page (Dokan 5.0.0 renamed the dashboard heading "Analytics" -> "Store Stats")
+    analyticsText: '//h1[normalize-space()="Store Stats"]',
 
     // analytics tab menus
     menus: {
@@ -41,7 +41,10 @@ export const vendorAnalyticsSelectors = {
         show: 'input[value="Show"]',
     },
 
-    noAnalyticsFound: '//div[@class="tab-pane active" and normalize-space()="There is no analytics found for your store."]',
+    // empty-state text rendered per tab when no Google Analytics data is connected.
+    // Dokan 5.0.0 changed the copy to "No Data Found!" and the text now lives alongside
+    // the date-range form inside the active tab-pane, so scope by the pane + hasText.
+    noAnalyticsFound: '#dokan_tabs_container .tab-pane.active:has-text("No Data Found!")',
 } as const;
 
 export class VendorAnalyticsPage {
