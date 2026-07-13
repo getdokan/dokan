@@ -43,3 +43,5 @@ webpack-entries.js
 base-tailwind.config.js
 CLAUDE.md
 /.claude
+/graphify-out
+.graphifyignore
