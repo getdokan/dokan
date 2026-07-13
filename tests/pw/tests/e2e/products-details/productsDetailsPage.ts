@@ -29,7 +29,7 @@ export { dbUtils } from '@utils/dbUtils';
 export { payloads } from '@utils/payloads';
 export type { responseBody } from '@utils/interfaces';
 
-const { DOKAN_PRO, PRODUCT_EDIT_NONCE } = process.env;
+const { DOKAN_PRO } = process.env;
 
 /**
  * Null-tolerant ApiUtils wrapper (mirrors the sibling legacy page objects).
@@ -373,10 +373,24 @@ const productsVendor = {
 // ============================================================================
 export class ProductsPage {
     readonly page: Page;
+    private cachedProductEditNonce: string | null = null;
 
     constructor(page: Page) {
         this.page = page;
         void closeAnnouncementModal(page);
+    }
+
+    // Fetch a session-valid product-edit nonce live from the vendor dashboard
+    // (window.dokan.product_edit_nonce). The static PRODUCT_EDIT_NONCE env var goes stale between
+    // auth runs (esp. under NO_SETUP=true); a stale nonce makes the edit URL silently fall back to
+    // the product listing, so reading it live keeps the by-id edit navigation deterministic.
+    async getProductEditNonce(): Promise<string> {
+        if (this.cachedProductEditNonce) return this.cachedProductEditNonce;
+        await this.goIfNotThere(subUrls.products);
+        const nonce = await this.page.evaluate(() => (window as unknown as { dokan?: { product_edit_nonce?: string } }).dokan?.product_edit_nonce);
+        if (!nonce) throw new Error('Unable to read window.dokan.product_edit_nonce from the vendor products page');
+        this.cachedProductEditNonce = nonce;
+        return nonce;
     }
 
     // ------------------------------------------------------------------
@@ -652,9 +666,10 @@ export class ProductsPage {
     }
 
     // go to product edit by id (numeric -> direct nonce URL, else search)
-    async goToProductEditById(productId: string, nonce: string = PRODUCT_EDIT_NONCE as string): Promise<void> {
+    async goToProductEditById(productId: string, nonce?: string): Promise<void> {
         if (productId && !Number.isNaN(Number(productId))) {
-            await this.gotoUntilNetworkidle(subUrls.productEdit(productId, nonce));
+            const editNonce = nonce ?? (await this.getProductEditNonce());
+            await this.gotoUntilNetworkidle(subUrls.productEdit(productId, editNonce));
         } else {
             await this.goToProductEdit(productId);
         }
