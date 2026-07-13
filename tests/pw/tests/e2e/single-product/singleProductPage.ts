@@ -32,7 +32,10 @@ export { payloads } from '@utils/payloads';
 const DOKAN_PRO = parseBoolean(process.env.DOKAN_PRO);
 
 // Sub-URLs (from @utils/testData) used by the single-product flow.
-const productDetailsUrl = (productName: string): string => data.subUrls.frontend.productDetails(helpers.slugify(productName)); // 'shop/uncategorized/<slug>'
+// WooCommerce product permalink base is `/product/<slug>/` on this install; the
+// legacy shared `shop/uncategorized/<slug>` structure 404s (products are seeded
+// into a non-default category), so build the canonical permalink directly.
+const productDetailsUrl = (productName: string): string => `${data.subUrls.frontend.productCustomerPage}/${helpers.slugify(productName)}`; // 'product/<slug>'
 const productReviewUrl = data.subUrls.frontend.productReview; // 'wp-comments-post.php'
 
 /**
