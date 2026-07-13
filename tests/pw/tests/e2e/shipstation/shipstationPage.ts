@@ -84,10 +84,19 @@ export class ApiUtils extends RealApiUtils {
 // ============================================================================
 const shipStationSelectors = {
     menus: {
-        // The primary "Settings" menu item in the vendor dashboard sidebar.
-        settings: '(//ul[@class="dokan-dashboard-menu"]//li[contains(@class,"settings has-submenu")]//a)[1]',
-        // The ShipStation sub-menu — only rendered when the module is active.
-        shipStation: '.submenu-item.shipstation',
+        // Dokan 5.0 vendor dashboard is the React app (`dashboard/new/#…`). Its
+        // Settings section auto-expands on any `settings/*` route and renders a
+        // real, visible "ShipStation" sub-item link — but ONLY when the module is
+        // active. The legacy `.dokan-dashboard-menu` markup still exists in the
+        // DOM but is display:none, so we assert against the live React nav link.
+        shipStation: 'a[href$="#settings/shipstation"]',
+        // Same link, filtered to the visible React nav element (the legacy one is
+        // hidden); used for the "enabled ⇒ visible" assertion.
+        shipStationVisible: 'a[href$="#settings/shipstation"]:visible',
+        // A stable, shipstation-independent Settings sub-item (Social Profile) used
+        // only to confirm the React Settings nav has hydrated before asserting the
+        // ShipStation link is absent — so the absence check is meaningful.
+        settingsNavHydrated: 'a[href$="#settings/social"]:visible',
     },
     settings: {
         shipStationSettingsDiv: 'div#dokan-shipstation-vendor-settings',
@@ -109,7 +118,7 @@ const shipStationSelectors = {
 
 // Sub-paths (raw, un-prefixed) reused for navigation and response matching.
 const subUrls = {
-    dashboard: data.subUrls.frontend.vDashboard.dashboard, // 'dashboard'
+    settingsStore: data.subUrls.frontend.vDashboard.settingsStore, // 'dashboard/settings/store'
     settingsShipStation: data.subUrls.frontend.vDashboard.settingsShipStation, // 'dashboard/settings/shipstation'
     apiShipStation: data.subUrls.api.dokan.shipStation, // 'dokan/v1/shipstation'
 } as const;
@@ -152,24 +161,24 @@ export class ShipStationPage {
 
     // ---- module toggle (admin enables/disables the ShipStation integration) --
 
-    // enable ShipStation module: the vendor Settings menu now exposes a
-    // ShipStation sub-menu.
+    // enable ShipStation module: the vendor dashboard Settings nav now exposes a
+    // ShipStation sub-item. We land on a settings route so the React Settings
+    // section is expanded, then assert the live ShipStation nav link is visible.
     async enableShipStationModule(): Promise<void> {
-        // vendor dashboard settings menu
-        await this.goto(subUrls.dashboard);
-        await this.page.locator(shipStationSelectors.menus.settings).hover();
-        await expect(this.page.locator(shipStationSelectors.menus.shipStation)).toBeVisible();
+        await this.goto(subUrls.settingsStore);
+        await expect(this.page.locator(shipStationSelectors.menus.shipStationVisible)).toBeVisible();
     }
 
-    // disable ShipStation module: the ShipStation sub-menu and the settings page
-    // content are both gone.
+    // disable ShipStation module: the ShipStation nav sub-item and the settings
+    // page content are both gone.
     async disableShipStationModule(): Promise<void> {
-        // vendor dashboard settings menu
-        await this.goto(subUrls.dashboard);
-        await this.page.locator(shipStationSelectors.menus.settings).hover();
-        await expect(this.page.locator(shipStationSelectors.menus.shipStation)).toBeHidden();
+        await this.goto(subUrls.settingsStore);
+        // Wait for the React Settings nav to hydrate (a shipstation-independent
+        // sub-item) so the absence assertion below is meaningful, not premature.
+        await expect(this.page.locator(shipStationSelectors.menus.settingsNavHydrated)).toBeVisible();
+        await expect(this.page.locator(shipStationSelectors.menus.shipStation)).toHaveCount(0);
 
-        // vendor dashboard settings menu page
+        // vendor dashboard settings menu page — no ShipStation panel is rendered.
         await this.goto(subUrls.settingsShipStation);
         await expect(this.page.locator(shipStationSelectors.settings.shipStationSettingsDiv)).toBeHidden();
     }
