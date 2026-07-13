@@ -211,6 +211,13 @@ const WeeklyTimeSlots = ( {
             ? errors[ dayKey ]?.[ index ]
             : undefined;
         const isFullDaySlot = slot.opening_time === FULL_DAY;
+        // Once a slot closes at the last selectable preset (11:30 pm on the
+        // 30-min grid) the day is full, so its add control retires the way the
+        // legacy "Add hours" link disappears at the end of the day.
+        const closingMinutes = timeToMinutes( slot.closing_time );
+        const atDayEnd =
+            closingMinutes !== null && closingMinutes >= MINUTES_PER_DAY - step;
+        const addDisabled = isFullDaySlot || atDayEnd;
         return (
             <div
                 key={ index }
@@ -284,10 +291,10 @@ const WeeklyTimeSlots = ( {
                         <button
                             type="button"
                             aria-label={ __( 'Add time slot', 'dokan-lite' ) }
-                            disabled={ isFullDaySlot }
+                            disabled={ addDisabled }
                             onClick={ () => handleAddSlot( dayKey ) }
                             style={
-                                isFullDaySlot
+                                addDisabled
                                     ? undefined
                                     : {
                                           color: 'var(--dokan-button-background-color, #7047EB)',
@@ -298,7 +305,10 @@ const WeeklyTimeSlots = ( {
                                 isFullDaySlot
                                     ? 'text-gray-500! cursor-not-allowed opacity-50'
                                     : 'hover:bg-gray-50!',
-                                index !== day.slots.length - 1 &&
+                                // Retire the glyph on the day-end row too, so a full
+                                // day reads like the legacy rows (× only, no add).
+                                ( index !== day.slots.length - 1 ||
+                                    atDayEnd ) &&
                                     'hidden @3xl:flex @3xl:invisible'
                             ) }
                         >

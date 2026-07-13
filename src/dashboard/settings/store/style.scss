@@ -13,8 +13,9 @@
         padding-right: 0 !important;
     }
 
-    // plugin-ui pads the header px-5 (20px) but the body p-4 (16px), leaving section titles 4px right of their content; match the header inset to the body (!important: dokan-tailwind flags px-5).
-    [data-testid^='settings-section-'] > [role='button'] {
+    // plugin-ui pads the header px-5 (20px) but the body p-4 (16px), leaving section titles 4px right of their content; match the header inset to the body (!important: dokan-tailwind flags px-5). The company header is a plain div while non-collapsible (no details yet), so match it structurally too.
+    [data-testid^='settings-section-'] > [role='button'],
+    [data-testid='settings-section-company_bank_details'] > div:first-child {
         background-color: #f9fafb;
         padding-left: 16px !important;
         padding-right: 16px !important;
@@ -35,7 +36,8 @@
     }
 
     // plugin-ui DataViews ships a standalone-grid frame (rounded shadow + 48px gutters); strip it so rows sit flat and flush inside the settings card (!important: both stylesheets flag these).
-    .dokan-vendor-store-locations {
+    .dokan-vendor-store-locations,
+    .dokan-vendor-vacation-history {
         .pui-root-dataviews {
             border: 0 !important;
             border-radius: 0 !important;
@@ -61,11 +63,86 @@
             margin-left: 0 !important;
         }
     }
+
+    // Locations gets its above-the-table divider from the section's divide-y (its switch is a separate field block); the history header + table share one block, so draw the same line here.
+    .dokan-vendor-vacation-history .pui-root-dataviews {
+        border-top: 1px solid #e5e7eb !important;
+    }
+
+    // Store Vacation Mode: the enable switch is schema-wise the section's first field; lift it into the header strip (right side) to match the design (!important throughout: the row carries dokan-tailwind's important-flagged w-full/inset/grid utilities).
+    [data-testid='settings-section-store_vacation'] {
+        position: relative;
+
+        // top centres the 24px switch against the header block (pt-5/pb-3 asymmetric padding shifts its visual centre down); flex replaces the row's 12-col grid, whose empty tracks otherwise push the switch off the right edge.
+        [data-testid='settings-field-setting_go_vacation'] {
+            position: absolute !important;
+            top: 30px !important;
+            right: 16px !important;
+            left: auto !important;
+            width: auto !important;
+            display: flex !important;
+            justify-content: flex-end;
+            padding: 0 !important;
+            border: 0 !important;
+            background: transparent !important;
+        }
+    }
+
+    // Company & Bank Details: when empty the schema pins the section non-collapsible and the field collapses to its "Set Details" chip, lifted into the header strip (the empty section is exactly one header tall, so 50% centres against the header). Custom variants render bare (no settings-field wrapper), so the component class is the hook.
+    [data-testid='settings-section-company_bank_details'] {
+        position: relative;
+
+        .dokan-vendor-company-bank.is-empty {
+            position: absolute !important;
+            top: 50% !important;
+            transform: translateY(-50%);
+            right: 16px !important;
+            left: auto !important;
+            width: auto !important;
+            padding: 0 !important;
+            border: 0 !important;
+            background: transparent !important;
+        }
+
+        // Between deleting the details and saving, the section is still collapsible; keep the chip clear of the chevron.
+        &:has(> [role='button']) .dokan-vendor-company-bank.is-empty {
+            right: 48px !important;
+        }
+
+        // Empty state reads as one plain white card like the Live Chat block (symmetric padding, no grey header tint — that returns with the details/body), and the header divider goes too: the lifted chip leaves a zero-height body, so the divider would stack on the card's own bottom border (the "double border").
+        &:has(.dokan-vendor-company-bank.is-empty) > div:first-child {
+            border-bottom: 0 !important;
+            background-color: transparent;
+            padding-top: 16px !important;
+            padding-bottom: 16px !important;
+        }
+    }
 }
 
 // SmartSelect dropdowns are base-ui popovers that portal to <body> at z-50, below the WP Modal overlay (100000); lift only our marked popups above it.
 [data-slot='popover-portal'] > .pui-root > *:has(> .dokan-location-popover) {
     z-index: 100001 !important;
+}
+
+// plugin-ui's DateRangePicker trigger is a bare <button data-slot="popover-trigger">, so the dashboard theme's generic button chrome (grey fill, border, padding) paints over our custom trigger; hand the box back to the trigger's own content.
+.dokan-range-input [data-slot='popover-trigger'] {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    text-align: inherit;
+    line-height: inherit;
+}
+
+// Same theme bleed inside the calendar: react-day-picker v9 paints selection on the <td>, so the theme's grey button fill covers both the resting cells and the selected/range markers; make the day/nav buttons transparent so the calendar's own tokens show through. Footer Apply/Cancel sit outside .rdp-root and keep their variants.
+.dokan-location-popover .rdp-root button {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    color: inherit;
 }
 
 // Quiet the auto-focused search box's heavy focus ring to a plain light border.

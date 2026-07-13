@@ -60,11 +60,20 @@ export default function StoreSettings() {
     ): Promise< void > => {
         setSaving( true );
         try {
-            await apiFetch( {
+            const response = await apiFetch< SettingsElement[] >( {
                 path: ENDPOINT,
                 method: 'PUT',
                 data: { values: flatValues },
             } );
+
+            // Apply the refreshed schema so server-derived values (vacation
+            // history rows, cleared composer, dependent force-offs) come back
+            // without a manual reload; the remount also resets dirty state.
+            if ( Array.isArray( response ) ) {
+                setSchema( response );
+                setResetKey( ( key ) => key + 1 );
+            }
+
             toast.success( __( 'Store settings saved.', 'dokan-lite' ) );
         } catch ( error ) {
             const typedError = error as {
@@ -166,10 +175,7 @@ export default function StoreSettings() {
                                     ) }
                                     { saving
                                         ? __( 'Saving…', 'dokan-lite' )
-                                        : __(
-                                              'Save Changes',
-                                              'dokan-lite'
-                                          ) }
+                                        : __( 'Save Changes', 'dokan-lite' ) }
                                 </Button>
                             </div>
                         </Fill>

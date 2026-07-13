@@ -1,6 +1,7 @@
 import { addFilter } from '@wordpress/hooks';
 import type { SettingsElement } from '@wedevs/plugin-ui';
 import VendorTextField from './fields/VendorTextField';
+import VendorNumberField from './fields/VendorNumberField';
 import VendorRichTextField from './fields/VendorRichTextField';
 import VendorMultiSelectField from './fields/VendorMultiSelectField';
 import ImageField from './fields/ImageField';
@@ -8,6 +9,11 @@ import AddressFields from './fields/AddressFields';
 import MapField from './fields/MapField';
 import StoreScheduleField from './fields/StoreScheduleField';
 import StoreLocationsField from './fields/StoreLocationsField';
+import VendorRadioField from './fields/VendorRadioField';
+import VendorTextareaField from './fields/VendorTextareaField';
+import VendorDateRangeField from './fields/VendorDateRangeField';
+import VacationHistoryField from './fields/VacationHistoryField';
+import CompanyBankField from './fields/CompanyBankField';
 
 /**
  * Registers the vendor-settings custom field variants with the plugin-ui
@@ -25,6 +31,14 @@ export function registerVendorSettingsFields(): void {
         'dokan-lite/vendor-text',
         ( _defaultComponent: unknown, element: SettingsElement ) => (
             <VendorTextField element={ element } />
+        )
+    );
+
+    addFilter(
+        'dokan_vendor_settings_vendor_number_field',
+        'dokan-lite/vendor-number',
+        ( _defaultComponent: unknown, element: SettingsElement ) => (
+            <VendorNumberField element={ element } />
         )
     );
 
@@ -81,6 +95,46 @@ export function registerVendorSettingsFields(): void {
         'dokan-lite/vendor-store-locations',
         ( _defaultComponent: unknown, element: SettingsElement ) => (
             <StoreLocationsField element={ element } />
+        )
+    );
+
+    addFilter(
+        'dokan_vendor_settings_vendor_radio_field',
+        'dokan-lite/vendor-radio',
+        ( _defaultComponent: unknown, element: SettingsElement ) => (
+            <VendorRadioField element={ element } />
+        )
+    );
+
+    addFilter(
+        'dokan_vendor_settings_vendor_textarea_field',
+        'dokan-lite/vendor-textarea',
+        ( _defaultComponent: unknown, element: SettingsElement ) => (
+            <VendorTextareaField element={ element } />
+        )
+    );
+
+    addFilter(
+        'dokan_vendor_settings_vendor_date_range_field',
+        'dokan-lite/vendor-date-range',
+        ( _defaultComponent: unknown, element: SettingsElement ) => (
+            <VendorDateRangeField element={ element } />
+        )
+    );
+
+    addFilter(
+        'dokan_vendor_settings_vendor_vacation_history_field',
+        'dokan-lite/vendor-vacation-history',
+        ( _defaultComponent: unknown, element: SettingsElement ) => (
+            <VacationHistoryField element={ element } />
+        )
+    );
+
+    addFilter(
+        'dokan_vendor_settings_vendor_company_bank_field',
+        'dokan-lite/vendor-company-bank',
+        ( _defaultComponent: unknown, element: SettingsElement ) => (
+            <CompanyBankField element={ element } />
         )
     );
 }

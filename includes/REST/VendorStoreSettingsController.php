@@ -375,9 +375,11 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
                 return sanitize_text_field( wp_unslash( (string) $value ) );
 
             case 'textarea':
+            case 'vendor_textarea':
                 return sanitize_textarea_field( wp_unslash( (string) $value ) );
 
             case 'rich_text':
+            case 'vendor_rich_text':
                 $html = wp_kses_post( wp_unslash( (string) $value ) );
 
                 // store_tnc keeps the legacy semantics: effectively-empty markup collapses to ''.
