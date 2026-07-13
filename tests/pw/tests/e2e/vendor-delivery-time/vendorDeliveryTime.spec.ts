@@ -26,6 +26,12 @@ test.describe('Vendor delivery time test', () => {
         cPage = await customerContext.newPage();
         customer = new VendorDeliveryTimePage(cPage);
         apiUtils = new ApiUtils(null);
+
+        // Deterministic seed: the customer places a real order via the (block)
+        // checkout, which needs an enabled offline payment gateway. NO_SETUP runs
+        // skip the global env setup that normally enables it, so ensure Direct Bank
+        // Transfer is on before the buy flow.
+        await apiUtils.updatePaymentGateway('bacs', payloads.bcs, payloads.adminAuth);
     });
 
     test.afterAll(async () => {

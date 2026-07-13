@@ -35,12 +35,16 @@ const selectors = {
     vendor: {
         dashboardDiv: 'div.dokan-dashboard-wrap',
         menus: {
+            // Dokan 5.0 React vendor dashboard renders the nav from the same
+            // `dokan_get_dashboard_nav` data; the delivery-time nav links are only
+            // present in the DOM while the module is active (verified live: module
+            // off => 0 anchors, module on => visible anchor). Match by href so the
+            // check is agnostic to the legacy-vs-React menu markup.
             primary: {
-                deliveryTime: 'ul.dokan-dashboard-menu li.delivery-time-dashboard a',
-                settings: '(//ul[@class="dokan-dashboard-menu"]//li[contains(@class,"settings has-submenu")]//a)[1]',
+                deliveryTime: 'a[href*="delivery-time-dashboard"]',
             },
             subMenus: {
-                deliveryTime: '.submenu-item.delivery-time',
+                deliveryTime: 'a[href*="settings/delivery-time"]',
             },
         },
         deliveryTime: {
@@ -89,7 +93,10 @@ const selectors = {
             deliveryTimeInput: 'input.delivery-time-date-picker.input',
             deliveryDate: (date: string) =>
                 `//div[contains(@class,"flatpickr-calendar animate open")]//div[@class="dayContainer"]//span[contains(@class,"flatpickr-day") and @aria-label="${date}"]`,
-            timePicker: '//option[normalize-space()="Select time slot"]/..',
+            // WooCommerce block checkout renders the delivery time-slot picker as a
+            // Gutenberg SelectControl (.delivery-time-vendor-select) instead of the
+            // legacy shortcode `<select class="delivery-time-slot-picker">`.
+            timePicker: '.delivery-time-vendor-select select',
             locationPicker: '//option[normalize-space()="Select store location"]/..',
             storeLocation: 'div.store-address.vendor-info',
             orderDetails: {
@@ -174,6 +181,11 @@ export class ApiUtils extends RealApiUtils {
     override async deactivateModules(...args: Parameters<RealApiUtils['deactivateModules']>): ReturnType<RealApiUtils['deactivateModules']> {
         await this.ready();
         return super.deactivateModules(...args);
+    }
+
+    override async updatePaymentGateway(...args: Parameters<RealApiUtils['updatePaymentGateway']>): ReturnType<RealApiUtils['updatePaymentGateway']> {
+        await this.ready();
+        return super.updatePaymentGateway(...args);
     }
 
     override async dispose(): Promise<void> {
@@ -267,13 +279,14 @@ export class VendorDeliveryTimePage {
         await this.goto(data.subUrls.backend.dokan.settings);
         await expect(this.page.locator(selectors.admin.settings.deliveryTime)).toBeVisible();
 
-        // vendor dashboard menu
+        // vendor dashboard menu — the Dokan 5.0 React vendor dashboard renders the
+        // navigation from the same `dokan_get_dashboard_nav` data as the legacy menu.
+        // When the module is active the delivery-time nav links are rendered & visible.
         await this.goto(data.subUrls.frontend.vDashboard.dashboard);
-        await expect(this.page.locator(selectors.vendor.menus.primary.deliveryTime)).toBeVisible();
+        await expect(this.page.locator(selectors.vendor.menus.primary.deliveryTime + ':visible').first()).toBeVisible();
 
-        // vendor dashboard settings menu
-        await this.page.locator(selectors.vendor.menus.primary.settings).hover();
-        await expect(this.page.locator(selectors.vendor.menus.subMenus.deliveryTime)).toBeVisible();
+        // vendor dashboard settings submenu (delivery time settings link)
+        await expect(this.page.locator(selectors.vendor.menus.subMenus.deliveryTime + ':visible').first()).toBeVisible();
     }
 
     // disable delivery time module
@@ -282,19 +295,19 @@ export class VendorDeliveryTimePage {
         await this.goto(data.subUrls.backend.dokan.settings);
         await expect(this.page.locator(selectors.admin.settings.deliveryTime)).toBeHidden();
 
-        // vendor dashboard menu
+        // vendor dashboard menu — with the module deactivated the delivery-time nav
+        // links are not registered at all (verified live: 0 anchors in the DOM).
         await this.goto(data.subUrls.frontend.vDashboard.dashboard);
-        await expect(this.page.locator(selectors.vendor.menus.primary.deliveryTime)).toBeHidden();
+        await expect(this.page.locator(selectors.vendor.menus.primary.deliveryTime)).toHaveCount(0);
 
-        // vendor dashboard settings menu
-        await this.page.locator(selectors.vendor.menus.primary.settings).hover();
-        await expect(this.page.locator(selectors.vendor.menus.subMenus.deliveryTime)).toBeHidden();
+        // vendor dashboard settings submenu (delivery time settings link) is gone too
+        await expect(this.page.locator(selectors.vendor.menus.subMenus.deliveryTime)).toHaveCount(0);
 
-        // vendor dashboard menu page
+        // vendor dashboard menu page — the delivery-time dashboard content is not rendered
         await this.goto(data.subUrls.frontend.vDashboard.deliveryTime);
         await expect(this.page.locator(selectors.vendor.dashboardDiv)).toBeHidden();
 
-        // vendor dashboard settings menu page
+        // vendor dashboard settings menu page — the delivery settings form is not rendered
         await this.goto(data.subUrls.frontend.vDashboard.settingsDeliveryTime);
         await expect(this.page.locator(deliveryTimeSettingsVendor.deliveryTimeSettingsDiv)).toBeHidden();
     }
@@ -325,8 +338,9 @@ export class VendorDeliveryTimePage {
         // settings text is visible
         await expect(this.page.locator(deliveryTimeSettingsVendor.settingsText)).toBeVisible();
 
-        // visit store link is visible
-        await expect(this.page.locator(deliveryTimeSettingsVendor.visitStore)).toBeVisible();
+        // visit store link is visible (the React dashboard header also renders a
+        // "Visit Store" link, so scope to the first match to avoid strict-mode).
+        await expect(this.page.locator(deliveryTimeSettingsVendor.visitStore).first()).toBeVisible();
 
         // delivery support elements are visible
         await expect(this.page.locator(deliveryTimeSettingsVendor.homeDelivery)).toBeVisible();
@@ -425,7 +439,9 @@ export class VendorDeliveryTimePage {
 
     // add product to cart from single product page
     private async addProductToCartFromSingleProductPage(productName: string, quantity?: string): Promise<void> {
-        await this.goto(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+        // WooCommerce product permalink base is `/product/<slug>/` on this install
+        // (the legacy `shop/uncategorized/<slug>` path 404s), so build it directly.
+        await this.goto(`product/${helpers.slugify(productName)}`);
         const addonIsVisible = await this.isVisible(selectors.customer.singleProduct.addOnSelect);
         if (addonIsVisible) await this.page.selectOption(selectors.customer.singleProduct.addOnSelect, { index: 1 });
         if (quantity) await this.page.locator(selectors.customer.singleProduct.quantity).fill(String(quantity));
@@ -484,18 +500,30 @@ export class VendorDeliveryTimePage {
     async placeOrderWithDeliverTimeStorePickup(deliveryType: 'delivery-time' | 'store-pickup', deliveryTimeData: deliveryTime, paymentMethod = 'bank'): Promise<void> {
         await this.goToCheckout();
 
+        // Pick a near-future delivery date (tomorrow) rather than the passed-in
+        // "today" so open time slots always exist regardless of the current time of
+        // day — the vendor's remaining slots for today are progressively filtered
+        // out as the clock advances (none remain late at night).
+        const target = new Date();
+        target.setDate(target.getDate() + 1);
+        const deliveryDate = deliveryTimeData.date && new Date(deliveryTimeData.date).toDateString() !== new Date().toDateString()
+            ? deliveryTimeData.date
+            : target.toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' });
+
         switch (deliveryType) {
             case 'delivery-time':
                 await this.page.locator(deliveryTimeCustomer.delivery).click();
                 await this.page.locator(deliveryTimeCustomer.deliveryTimeInput).click();
-                await this.clickAndWaitForResponse(data.subUrls.api.dokan.deliveryTime, deliveryTimeCustomer.deliveryDate(deliveryTimeData.date));
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.deliveryTime, deliveryTimeCustomer.deliveryDate(deliveryDate));
+                await expect(this.page.locator(deliveryTimeCustomer.timePicker)).toBeVisible();
                 await this.page.selectOption(deliveryTimeCustomer.timePicker, { index: 0 });
                 break;
 
             case 'store-pickup':
                 await this.page.locator(deliveryTimeCustomer.storePickup).click();
                 await this.page.locator(deliveryTimeCustomer.deliveryTimeInput).click();
-                await this.clickAndWaitForResponse(data.subUrls.api.dokan.deliveryTime, deliveryTimeCustomer.deliveryDate(deliveryTimeData.date));
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.deliveryTime, deliveryTimeCustomer.deliveryDate(deliveryDate));
+                await expect(this.page.locator(deliveryTimeCustomer.timePicker)).toBeVisible();
                 await this.page.selectOption(deliveryTimeCustomer.timePicker, { index: 0 });
                 await this.page.selectOption(deliveryTimeCustomer.locationPicker, { index: 0 });
                 await expect(this.page.locator(deliveryTimeCustomer.storeLocation)).toBeVisible();
