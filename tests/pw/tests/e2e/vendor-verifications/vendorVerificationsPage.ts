@@ -100,7 +100,9 @@ const selectors = {
     verificationsVendor: {
         verificationSettingsDiv: 'div.dokan-verification-content',
         verificationText: '.dokan-settings-content h1',
-        visitStore: '//a[normalize-space()="Visit Store"]',
+        // Scope to the classic settings header — the React dashboard shell also
+        // renders a "Visit Store" link, so the bare text match is ambiguous.
+        visitStore: '//header[contains(@class,"dokan-dashboard-header")]//a[normalize-space()="Visit Store"]',
         verificationMethodDiv: (methodName: string) => `//strong[text()='${methodName}']/../..`,
         verificationMethodHelpText: (methodName: string) => `//strong[text()='${methodName}']/../..//p`,
         startVerification: (methodName: string) => `//strong[text()='${methodName}']/../..//button[contains(@class,'dokan-vendor-verification-start')]`,
@@ -117,9 +119,19 @@ const selectors = {
     },
 
     // vendor dashboard primary menu + submenu
+    //
+    // The vendor dashboard navigation moved to a React sidebar
+    // (<aside class="dokan-frontend-sidebar">). The legacy Vue/PHP
+    // `ul.dokan-dashboard-menu` markup is still emitted but rendered
+    // visibility:hidden inside the new wrapper (and the bare `/dashboard/`
+    // root now redirects to the React analytics Overview), so the classic
+    // `.submenu-item.verification` can never be hovered/seen. The Verification
+    // entry now surfaces as a visible link in the React sidebar; its Settings
+    // group is expanded on any /dashboard/settings/* route.
     vendorDashboardMenus: {
         settings: '(//ul[@class="dokan-dashboard-menu"]//li[contains(@class,"settings has-submenu")]//a)[1]',
         verification: '.submenu-item.verification',
+        sidebarVerification: 'aside.dokan-frontend-sidebar a[href*="settings/verification"]',
     },
 
     // vendor setup wizard (only the steps the verification flow touches)
@@ -330,10 +342,10 @@ export class VendorVerificationsPage {
         await this.goto(data.subUrls.backend.dokan.settings);
         await expect(this.page.locator(settingsAdmin.menus.vendorVerification)).toBeVisible();
 
-        // vendor dashboard menu
-        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
-        await this.page.locator(selectors.vendorDashboardMenus.settings).hover();
-        await expect(this.page.locator(selectors.vendorDashboardMenus.verification)).toBeVisible();
+        // vendor dashboard menu (React sidebar — driven from a settings sub-page
+        // where the Settings group is expanded and the classic menu is hidden)
+        await this.goto(data.subUrls.frontend.vDashboard.settingsStore);
+        await expect(this.page.locator(selectors.vendorDashboardMenus.sidebarVerification).first()).toBeVisible();
     }
 
     // disable vendor verification module
@@ -350,10 +362,10 @@ export class VendorVerificationsPage {
         await this.goto(data.subUrls.backend.dokan.settings);
         await expect(this.page.locator(settingsAdmin.menus.vendorVerification)).toBeHidden();
 
-        // vendor dashboard menu
-        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
-        await this.page.locator(selectors.vendorDashboardMenus.settings).hover();
-        await expect(this.page.locator(selectors.vendorDashboardMenus.verification)).toBeHidden();
+        // vendor dashboard menu (React sidebar — the Verification entry is gone
+        // once the module is deactivated)
+        await this.goto(data.subUrls.frontend.vDashboard.settingsStore);
+        await expect(this.page.locator(selectors.vendorDashboardMenus.sidebarVerification)).toBeHidden();
 
         // vendor dashboard menu page
         await this.goto(data.subUrls.frontend.vDashboard.settingsVerification);
@@ -411,8 +423,11 @@ export class VendorVerificationsPage {
         await this.page.reload();
         await this.page.locator(settingsAdmin.menus.vendorVerification).click();
 
+        // The edit button is CSS hover-revealed (visibility:hidden until the row
+        // is hovered via `group-hover/item:visible`), which Playwright cannot
+        // reliably surface in headless; dispatch the click to fire the Vue handler.
         await this.page.locator(settingsAdmin.vendorVerification.verificationMethodRow(methodName)).hover();
-        await this.page.locator(settingsAdmin.vendorVerification.editVerificationMethod(methodName)).click();
+        await this.page.locator(settingsAdmin.vendorVerification.editVerificationMethod(methodName)).dispatchEvent('click');
         await this.updateVerificationMethod(verificationMethod);
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.addNewVerification.update);
         await expect(this.page.locator(settingsAdmin.vendorVerification.methodUpdateSuccessMessage)).toBeVisible();
@@ -428,8 +443,10 @@ export class VendorVerificationsPage {
         await this.page.reload();
         await this.page.locator(settingsAdmin.menus.vendorVerification).click();
 
+        // The delete button is CSS hover-revealed (visibility:hidden until the row
+        // is hovered); dispatch the click to fire the Vue handler in headless.
         await this.page.locator(settingsAdmin.vendorVerification.verificationMethodRow(methodName)).hover();
-        await this.page.locator(settingsAdmin.vendorVerification.deleteVerificationMethod(methodName)).click();
+        await this.page.locator(settingsAdmin.vendorVerification.deleteVerificationMethod(methodName)).dispatchEvent('click');
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.confirmDelete, 204);
         await expect(this.page.locator(settingsAdmin.vendorVerification.methodDeleteSuccessMessage)).toBeVisible();
 
@@ -613,7 +630,10 @@ export class VendorVerificationsPage {
 
     // advance the setup wizard up to the verification step
     private async gotoSetupWizardVerification(): Promise<void> {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.setupWizard);
+        // Always navigate fresh — the shared vendor page is reused across tests,
+        // so `goIfNotThere` would leave us on a later wizard step (no "Let's Go"
+        // intro) whenever the previous test ended on the wizard.
+        await this.goto(data.subUrls.frontend.vDashboard.setupWizard);
         await this.page.locator(setupWizardVendor.letsGo).click();
         await this.completeAddressStep(data.vendorSetupWizard);
         await this.page.locator(setupWizardVendor.skipTheStepPaymentSetup).click();
@@ -675,12 +695,15 @@ export class VendorVerificationsPage {
         await expect(this.page.locator(verificationsVendor.verificationRequestNote(methodName))).toContainText(note);
     }
 
-    // vendor view verification methods on setup wizard (required visible, non-required hidden)
+    // vendor view verification methods on setup wizard
+    // The wizard was redesigned to surface BOTH required and non-required enabled
+    // methods (grouped into "Required Verification Methods" and a plain group),
+    // so both render on the wizard — verified against the live setup-wizard.php.
     async viewVerificationMethods(requiredMethod: string, nonRequiredMethod: string): Promise<void> {
         await this.gotoSetupWizardVerification();
 
         await expect(this.page.locator(verificationsVendor.verificationMethodDiv(requiredMethod))).toBeVisible();
-        await expect(this.page.locator(verificationsVendor.verificationMethodDiv(nonRequiredMethod))).toBeHidden();
+        await expect(this.page.locator(verificationsVendor.verificationMethodDiv(nonRequiredMethod))).toBeVisible();
     }
 
     // complete the setup wizard address step
