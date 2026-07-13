@@ -11,6 +11,7 @@ Usage: python3 bin/graphify/wp_hook_view.py  (from dokan-lite root)
 import json
 import math
 import html
+from datetime import datetime
 from pathlib import Path
 
 import networkx as nx
@@ -148,7 +149,8 @@ def build_payload(nodes, edges, pos):
 
 def render_html(out_nodes, out_edges):
     n_hooks = sum(1 for n in out_nodes if n["group"] == "hook")
-    stats = f"{len(out_nodes):,} nodes ({n_hooks:,} hooks) · {len(out_edges):,} edges"
+    built = datetime.now().strftime("%Y-%m-%d %H:%M")
+    stats = f"{len(out_nodes):,} nodes ({n_hooks:,} hooks) · {len(out_edges):,} edges · built {built}"
     tpl = Path(__file__).with_name("wp_hook_view.tpl.html").read_text(encoding="utf-8")
     return (
         tpl.replace("__NODES__", json.dumps(out_nodes, ensure_ascii=False))
