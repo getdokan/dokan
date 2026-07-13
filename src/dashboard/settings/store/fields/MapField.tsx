@@ -43,7 +43,23 @@ const parseLocation = ( location: string ): { lat: number; lng: number } => {
 
 // One shared loader per page — repeated mounts reuse the same script promise.
 const loadGoogleMaps = ( apiKey: string ): Promise< void > => {
-    if ( window.google?.maps ) {
+    const maps = window.google?.maps;
+
+    // Maps is already on the page (another Dokan script — store pickup, legacy
+    // form — often loads it first). Make sure the Places library the search box
+    // needs is present too: pull it in through the modern loader when it's
+    // missing rather than re-injecting the API <script>, which would trip
+    // Google's "included multiple times" break. If Places can't be added, the
+    // map still renders and the Geocoder powers search (Autocomplete is guarded).
+    if ( maps ) {
+        if ( maps.places ) {
+            return Promise.resolve();
+        }
+        if ( maps.importLibrary ) {
+            return Promise.resolve( maps.importLibrary( 'places' ) ).then(
+                () => undefined
+            );
+        }
         return Promise.resolve();
     }
 
@@ -285,7 +301,10 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
                     } );
                 } );
 
-                if ( searchInputRef.current ) {
+                // Places may be absent if another script loaded Maps without it
+                // and the modern loader couldn't add it — the map + Geocoder
+                // search still work, so skip Autocomplete instead of throwing.
+                if ( searchInputRef.current && window.google.maps.places ) {
                     const autocomplete =
                         new window.google.maps.places.Autocomplete(
                             searchInputRef.current
