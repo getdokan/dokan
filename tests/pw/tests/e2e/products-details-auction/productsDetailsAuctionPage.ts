@@ -1,5 +1,9 @@
-import { Page, expect } from '@playwright/test';
+import { Page, expect, Route } from '@playwright/test';
 import { request as pwRequest, APIRequestContext } from '@playwright/test';
+
+// Google Maps JS/tile/service endpoints — blocked while driving the geolocation field (see
+// addProductGeolocation) so the Places Autocomplete widget cannot attach and rewrite the input.
+const GOOGLE_MAPS_RESOURCE = /maps\.googleapis\.com|maps-api-v3|\/maps\/api\//;
 import { closeAnnouncementModal, toPath, parseBoolean } from '@utils/helpers';
 import { ApiUtils as RealApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
@@ -257,7 +261,11 @@ export class AuctionsPage {
 
     // navigate to the auction product edit page by id
     private async goToAuctionProductEditById(productId: string): Promise<void> {
-        await this.page.goto(toPath(data.subUrls.frontend.vDashboard.auctionProductEdit(productId)), { waitUntil: 'networkidle' });
+        // Use 'load' (not 'networkidle'): the auction edit screen embeds a live Google Map whose
+        // periodic beacons/tiles keep the network busy, so 'networkidle' can never settle and times
+        // out. 'load' fires reliably once scripts/DOM are ready (matches the maintained products
+        // page object), and every method below then waits on its own specific elements/responses.
+        await this.page.goto(toPath(data.subUrls.frontend.vDashboard.auctionProductEdit(productId)), { waitUntil: 'load' });
     }
 
     // save the auction product & assert the success message
@@ -274,11 +282,6 @@ export class AuctionsPage {
     // click a locator & wait for a matching XHR/response
     private async clickAndWaitForResponse(subUrl: string, selector: string, code = 200): Promise<void> {
         await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.locator(selector).click()]);
-    }
-
-    // fill a locator & wait for a matching XHR/response
-    private async typeAndWaitForResponse(subUrl: string, selector: string, text: string, code = 200): Promise<void> {
-        await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.locator(selector).fill(text)]);
     }
 
     // poll-based visibility check (mirrors base isVisible: up to `timeoutSec`s)
@@ -716,14 +719,26 @@ export class AuctionsPage {
 
     // add product geolocation
     async addProductGeolocation(productId: string, location: string): Promise<void> {
-        await this.goToAuctionProductEditById(productId);
-        await this.page.locator(selectors.product.geolocation.sameAsStore).uncheck();
-        await this.typeAndWaitForResponse(data.subUrls.gmap, selectors.product.geolocation.productLocation, location);
-        await this.page.keyboard.press(data.key.arrowDown);
-        await this.page.keyboard.press(data.key.enter);
-        await this.saveProduct();
-        await expect(this.page.locator(selectors.product.geolocation.sameAsStore)).not.toBeChecked();
-        await expect(this.page.locator(selectors.product.geolocation.productLocation)).toHaveValue(location);
+        // The vendor geolocation field is a Google Places Autocomplete input. On CI the live Maps
+        // API key intermittently fails auth (gm-err-autocomplete) and, when it does load, the
+        // Autocomplete widget rewrites the typed address to Google's canonical form
+        // ("NYC, NY, USA" -> "New York, NY, USA") at unpredictable times, so an exact assertion is
+        // non-deterministic. Blocking the Maps JS stops the widget from attaching, leaving a plain
+        // text input whose entered address persists verbatim. Dokan's own geolocation JS registers
+        // the "use store settings" toggle before it touches google.maps, so unchecking + saving
+        // still work; only the address + per-product mode are asserted (lat/lng aren't).
+        const blockMaps = (route: Route) => route.abort();
+        await this.page.route(GOOGLE_MAPS_RESOURCE, blockMaps);
+        try {
+            await this.goToAuctionProductEditById(productId);
+            await this.page.locator(selectors.product.geolocation.sameAsStore).uncheck();
+            await this.page.locator(selectors.product.geolocation.productLocation).fill(location);
+            await this.saveProduct();
+            await expect(this.page.locator(selectors.product.geolocation.sameAsStore)).not.toBeChecked();
+            await expect(this.page.locator(selectors.product.geolocation.productLocation)).toHaveValue(location);
+        } finally {
+            await this.page.unroute(GOOGLE_MAPS_RESOURCE, blockMaps);
+        }
     }
 
     // remove product geolocation
