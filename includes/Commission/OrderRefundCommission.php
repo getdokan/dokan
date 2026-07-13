@@ -520,5 +520,4 @@ class OrderRefundCommission {
             'paid_by' => $gateway_fee_paid_by,
         ];
     }
-
 }
