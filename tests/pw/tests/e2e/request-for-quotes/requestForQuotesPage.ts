@@ -222,7 +222,12 @@ const rfqVendor = {
         approveThisQuote: 'button[name="approved_by_vendor_button"]',
         convertToOrder: 'button[name="dokan_convert_to_order_customer"]',
 
+        // The classic vendor dashboard quote-details template does not print WC
+        // transient notices (no wc_print_notices() call); the real success
+        // feedback is the server-rendered status notice in #dokan-quote-notice.
         message: '.woocommerce-message',
+        updateNotice: '#dokan-quote-notice .quote-notice.update-notice',
+        convertedNotice: '#dokan-quote-notice .quote-notice.converted-notice',
     },
 } as const;
 
@@ -626,14 +631,18 @@ export class RequestForQuotationsPage {
         await this.page.locator(rfqVendor.quoteDetails.shippingCost).fill(quote.shippingCost);
         await this.page.locator(rfqVendor.quoteDetails.reply).fill(quote.reply);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.quoteDetails(quoteId), rfqVendor.quoteDetails.updateQuote);
-        await expect(this.page.locator(rfqVendor.quoteDetails.message)).toContainText('Your quote has been successfully updated.');
+        // Changing the offered price flips the quote status to "updated"; the real
+        // UI confirms this via the server-rendered status notice.
+        await expect(this.page.locator(rfqVendor.quoteDetails.updateNotice)).toContainText('Updated Quote has been sent successfully to the customer.');
     }
 
     // vendor approve quote request
     async vendorApproveQuoteRequest(quoteId: string): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.quoteDetails(quoteId));
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.quoteDetails(quoteId), rfqVendor.quoteDetails.approveThisQuote);
-        await expect(this.page.locator(rfqVendor.quoteDetails.message)).toContainText('Your quote has been successfully updated.');
+        // Approving (without altering the offer) moves the quote to "approve"; the
+        // approve button is replaced by the "Convert to Order" button.
+        await expect(this.page.locator(rfqVendor.quoteDetails.convertToOrder)).toBeVisible();
     }
 
     // vendor convert quote to order
@@ -644,7 +653,7 @@ export class RequestForQuotationsPage {
             await this.vendorApproveQuoteRequest(quoteId);
         }
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.quoteDetails(quoteId), rfqVendor.quoteDetails.convertToOrder);
-        await expect(this.page.locator(rfqVendor.quoteDetails.message)).toContainText(`Your Quote #${quoteId} has been converted to Order #`);
+        await expect(this.page.locator(rfqVendor.quoteDetails.convertedNotice)).toContainText('The Quote Has been Converted to an Order.');
     }
 
     // ==================================================================
@@ -748,8 +757,12 @@ export class RequestForQuotationsPage {
 
     // customer quote product (logged-in customer or guest)
     async customerQuoteProduct(quote: CustomerQuoteData, guest?: GuestData): Promise<string | void> {
-        // go to product details page
-        await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(quote.productName)));
+        // Go to the single product page via its canonical WooCommerce permalink.
+        // The shared `productDetails` sub-url (shop/uncategorized/<slug>) 404s for
+        // products seeded into a non-default category (CATEGORY_ID), so use the
+        // deterministic /product/<slug>/ permalink where the add-to-quote button
+        // renders inside form.cart.
+        await this.goIfNotThere(`product/${helpers.slugify(quote.productName)}`);
         await this.clickAndWaitForResponse(data.subUrls.ajax, rfqCustomer.singleProductDetails.addToQuote);
 
         const viewQuoteIsVisible = await this.isVisible(rfqCustomer.singleProductDetails.viewQuote);
