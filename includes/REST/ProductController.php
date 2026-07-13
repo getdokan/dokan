@@ -56,6 +56,15 @@ class ProductController extends DokanRESTController {
     protected $post_status = [ 'publish', 'pending', 'draft', 'future' ];
 
     /**
+     * Free-text search term used to extend product search to SKUs.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var string
+     */
+    protected $product_search_term = '';
+
+    /**
      * Class constructor.
      *
      * @since 4.0.0
@@ -792,6 +801,12 @@ class ProductController extends DokanRESTController {
         // Set post_status.
         $args['post_status'] = ! empty( $request['status'] ) ? $request['status'] : $this->post_status;
 
+        // Extend the free-text `search` param to also match product SKUs.
+        if ( ! empty( $request['search'] ) ) {
+            $this->product_search_term = wc_clean( wp_unslash( $request['search'] ) );
+            add_filter( 'posts_search', [ $this, 'add_sku_to_product_search' ], 10, 2 );
+        }
+
         // Taxonomy query to filter products by type, category,
         // tag, shipping class, and attribute.
         $tax_query = [];
@@ -943,6 +958,45 @@ class ProductController extends DokanRESTController {
          * @param WP_REST_Request $request The current REST request.
          */
         return apply_filters( 'dokan_rest_pre_product_listing_args', $args, $request );
+    }
+
+    /**
+     * Add matching product SKUs to the product listing search WHERE clause.
+     *
+     * WP_Query's `s` only searches title/content/excerpt, so this ORs in
+     * products whose `_sku` matches. The outer author/post_type conditions
+     * still apply. Mirrors dokan_product_search_by_sku().
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string    $where    The search WHERE clause.
+     * @param \WP_Query $wp_query The current query.
+     *
+     * @return string
+     */
+    public function add_sku_to_product_search( $where, $wp_query ) {
+        global $wpdb;
+
+        // Only apply to the query this filter was registered for.
+        remove_filter( 'posts_search', [ $this, 'add_sku_to_product_search' ], 10 );
+
+        if ( '' === $this->product_search_term ) {
+            return $where;
+        }
+
+        $like = '%' . $wpdb->esc_like( $this->product_search_term ) . '%';
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $search_ids = $wpdb->get_col( $wpdb->prepare( "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_sku' AND meta_value LIKE %s", $like ) );
+        $search_ids = array_filter( array_map( 'absint', $search_ids ) );
+
+        if ( empty( $search_ids ) ) {
+            return $where;
+        }
+
+        $where = str_replace( ')))', ") OR ({$wpdb->posts}.ID IN (" . implode( ',', $search_ids ) . '))))', $where );
+
+        return $where;
     }
 
     /**
