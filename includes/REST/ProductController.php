@@ -994,9 +994,11 @@ class ProductController extends DokanRESTController {
             return $where;
         }
 
-        $where = str_replace( ')))', ") OR ({$wpdb->posts}.ID IN (" . implode( ',', $search_ids ) . '))))', $where );
+        // Anchor to the trailing ')))' only, so a term containing ')))' can't corrupt the SQL.
+        $sku_clause = ") OR ({$wpdb->posts}.ID IN (" . implode( ',', $search_ids ) . '))))';
+        $patched    = preg_replace( '/\)\)\)\s*$/', $sku_clause, $where, 1 );
 
-        return $where;
+        return null === $patched ? $where : $patched;
     }
 
     /**
