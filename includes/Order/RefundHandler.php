@@ -50,7 +50,8 @@ class RefundHandler implements Hookable {
 
         $vendor_refund = apply_filters( 'dokan_vendor_earning_in_refund', $refund_order, $order );
 
-        do_action( 'dokan_refund_adjust_vendor_balance', $vendor_refund, $refund_order, $order );
+        // Without Pro, no gateway integration adjusts the payout amount, so both amounts are the same.
+        do_action( 'dokan_refund_adjust_vendor_balance', $vendor_refund, $refund_order, $order, $vendor_refund );
 
         do_action( 'dokan_refund_adjust_dokan_orders', $vendor_refund, $refund_order, $order );
     }
@@ -171,12 +172,16 @@ class RefundHandler implements Hookable {
      * @param float            $vendor_payout_refund  The vendor refund amount after the gateway fee is deducted.
      * @param \WC_Order_Refund $refund_order          The refund order object.
      * @param \WC_Order        $order                 The original order object.
-     * @param float            $vendor_earning_refund The vendor refund amount before the gateway fee deduction.
+     * @param float|null       $vendor_earning_refund The vendor refund amount before the gateway fee deduction.
+     *                                                Falls back to $vendor_payout_refund when the action is fired
+     *                                                with three arguments (e.g. older Dokan Pro versions).
      *
      * @return void
      */
-    public function insert_into_balance_table( $vendor_payout_refund, $refund_order, $order, $vendor_earning_refund ) {
+    public function insert_into_balance_table( $vendor_payout_refund, $refund_order, $order, $vendor_earning_refund = null ) {
         global $wpdb;
+
+        $vendor_earning_refund = $vendor_earning_refund ?? $vendor_payout_refund;
 
         $seller_id = dokan_get_seller_id_by_order( $order );
 
@@ -186,7 +191,8 @@ class RefundHandler implements Hookable {
                     // translators: 1: Order ID, 2: Refund ID, 3: Refund Amount
                     __( 'Dokan refund adjustment error: Seller not found, Order ID: %1$d, Refund ID: %2$d, Refund Amount: %3$f ', 'dokan-lite' ),
                     $order->get_id(),
-                    $refund_order->get_id, $vendor_earning_refund
+                    $refund_order->get_id(),
+                    $vendor_earning_refund
                 )
             );
 
