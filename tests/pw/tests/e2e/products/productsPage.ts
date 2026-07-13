@@ -1,6 +1,6 @@
 import { Page, expect, request, APIRequestContext } from '@playwright/test';
 import { faker } from '@faker-js/faker';
-import { toPath, SERVER_URL } from '@utils/helpers';
+import { toPath, SERVER_URL, closeAnnouncementModal } from '@utils/helpers';
 
 // ============================================
 // ENVIRONMENT VARIABLES
@@ -784,6 +784,7 @@ export class ProductsPage {
 
     constructor(page: Page) {
         this.page = page;
+        void closeAnnouncementModal(page);
     }
 
     // ---- BasePage inlined helpers ----
