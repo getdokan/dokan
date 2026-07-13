@@ -1,4 +1,4 @@
-import { test, Page } from '@utils/test';
+import { test, Page, Browser, request } from '@utils/test';
 import { SettingPage, ApiUtils, dbData, dbUtils, data, helpers, payloads } from './settingPage';
 import path from 'path';
 
@@ -8,15 +8,35 @@ const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.
 
 const { CUSTOMER_ID, PRODUCT_ID } = process.env;
 
-test.describe.skip('Settings test', () => {
+test.describe('Settings test', () => {
     let admin: SettingPage;
     let vendor: SettingPage;
     let customer: SettingPage;
     let guest: SettingPage;
     let aPage: Page, vPage: Page, cPage: Page, gPage: Page;
     let apiUtils: ApiUtils;
+    let browserRef: Browser;
 
     test.beforeAll(async ({ browser }) => {
+        browserRef = browser;
+        // Real API request context (the inline `new ApiUtils(null)` in the tests
+        // below had a null request and threw on the first REST call).
+        apiUtils = new ApiUtils(await request.newContext());
+
+        // Deterministic setup for the "@pro enable T&C on registration" test:
+        // the #tc_agree checkbox only renders when a Terms & Conditions page is
+        // configured (seller-registration-form.php gates on
+        // dokan_get_terms_condition_url()). Point reg_tc_page at the published
+        // "Terms And Conditions" page (id 22).
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.page, { reg_tc_page: '22' });
+
+        // These tests drive the CLASSIC vendor dashboard (they assert legacy
+        // markers like `ul.dokan-dashboard-menu` and the classic seller-warning
+        // notice). The default `vendor_layout_style` is the React "New UI"
+        // ('latest'), which hides those legacy nodes, so pin the vendor
+        // dashboard to the legacy layout for this suite (restored in afterAll).
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { vendor_layout_style: 'legacy' });
+
         const adminContext = await browser.newContext({ storageState: a1 });
         aPage = await adminContext.newPage();
         admin = new SettingPage(aPage);
@@ -37,11 +57,14 @@ test.describe.skip('Settings test', () => {
     test.afterAll(async () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.general, dbData.dokan.generalSettings);
         await dbUtils.setOptionValue(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
+        // restore the default React "New UI" vendor dashboard
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { vendor_layout_style: 'latest' });
 
         await aPage?.close();
         await vPage?.close();
         await cPage?.close();
         await gPage?.close();
+        await apiUtils?.dispose();
     });
 
     test('admin can set vendor store url (general settings)', { tag: ['@lite', '@admin', '@serial'] }, async () => {
@@ -53,7 +76,6 @@ test.describe.skip('Settings test', () => {
     });
 
     test('admin can set vendor setup wizard logo & message (general settings)', { tag: ['@lite', '@admin'] }, async () => {
-        apiUtils = new ApiUtils(null);
         const [responseBody] = await apiUtils.uploadFile(data.image.dokan, payloads.adminAuth);
         const logoUrl = responseBody.source_url;
         await dbUtils.updateOptionValue(dbData.dokan.optionName.general, { setup_wizard_logo_url: logoUrl, setup_wizard_message: dbData.testData.dokan.generalSettings.setup_wizard_message });
@@ -85,10 +107,14 @@ test.describe.skip('Settings test', () => {
     });
 
     test('admin can enable store terms and conditions on registration (general settings)', { tag: ['@pro', '@vendor'] }, async () => {
+        // Checking the T&C checkbox on the vendor *registration* form is a guest
+        // action: openVendorRegistrationForm() logs the actor out to reveal the
+        // form. Driving this on the shared `vendor` context would log that
+        // context out and break the later vendor-dashboard tests, so use `guest`.
         await dbUtils.updateOptionValue(dbData.dokan.optionName.general, { enable_tc_on_reg: 'on' });
-        await vendor.enableStoreTermsAndConditionsOnRegistration('on');
+        await guest.enableStoreTermsAndConditionsOnRegistration('on');
         await dbUtils.updateOptionValue(dbData.dokan.optionName.general, { enable_tc_on_reg: 'off' });
-        await vendor.enableStoreTermsAndConditionsOnRegistration('off');
+        await guest.enableStoreTermsAndConditionsOnRegistration('off');
     });
 
     test('admin can set show vendor info (general settings)', { tag: ['@lite', '@customer'] }, async () => {
@@ -106,14 +132,29 @@ test.describe.skip('Settings test', () => {
     });
 
     test('admin can enable vendor selling (selling settings)', { tag: ['@lite', '@guest'] }, async () => {
+        // The "disable vendor setup wizard" test above turns `disable_welcome_wizard`
+        // on and never resets it. This flow registers with the setup wizard enabled
+        // (choice = not-right-now), so the wizard must actually appear — re-enable it
+        // deterministically instead of inheriting the earlier test's state.
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.general, { disable_welcome_wizard: 'off' });
+
+        // Each 'status' registers a fresh vendor, which logs that browser
+        // context in and lands it on the dashboard. Re-using one context for
+        // the second registration races the setup-wizard→dashboard redirect and
+        // aborts the next my-account navigation (net::ERR_ABORTED), so give each
+        // registration a pristine guest context.
         await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { new_seller_enable_selling: 'on' });
-        await guest.enableVendorSelling('on');
+        const guestOn = new SettingPage(await (await browserRef.newContext()).newPage());
+        await guestOn.enableVendorSelling('on');
+        await guestOn.page.context().close();
+
         await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { new_seller_enable_selling: 'off' });
-        await guest.enableVendorSelling('off');
+        const guestOff = new SettingPage(await (await browserRef.newContext()).newPage());
+        await guestOff.enableVendorSelling('off');
+        await guestOff.page.context().close();
     });
 
     test('admin can set order status change capability (selling settings)', { tag: ['@lite', '@vendor'] }, async () => {
-        apiUtils = new ApiUtils(null);
         const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.onhold, payloads.vendorAuth);
         await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { order_status_change: 'on' });
         await vendor.setOrderStatusChangeCapability(orderId, 'on');
