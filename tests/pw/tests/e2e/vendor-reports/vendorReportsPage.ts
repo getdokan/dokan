@@ -99,6 +99,16 @@ export const vendorReportsSelectors = {
 
     emptyState: 'text=/no data found|no analytics found|no results|nothing to show|no products found|no result found/i',
     phpFatal: 'text=/Fatal error|Parse error|There has been a critical error/i',
+
+    // Real, verified WooCommerce-analytics DOM (Dokan 5.0.0 React reports surface).
+    // The classic dashboard/reports `dokan_tabs` + `.table.table-striped` UI is gone;
+    // every vendor report is now `?path=/analytics/<key>` rendered by WooCommerce Analytics.
+    wooLayout: '.woocommerce-layout',
+    wooChart: '.woocommerce-chart, .d3-chart__container',
+    wooTable: '.woocommerce-table, .woocommerce-report-table',
+    wooSummaryItem: '.woocommerce-summary__item',
+    // Statement report (?path=/analytics/statement): plain <table> + DokanButton export.
+    statementExportButton: 'button:has-text("Export Statement"), a:has-text("Export Statement")',
 } as const;
 
 // ---------------------------------------------------------------------------
@@ -160,8 +170,21 @@ export class VendorReportsPage {
         await this.page.goto(toPath(vendorReportsData.reportsUrl), { waitUntil: 'domcontentloaded' });
     }
 
+    // The classic `?chart=sales_statement` URL is ignored by the React analytics
+    // shell (it reads `?path=`); the statement report now lives at
+    // ?path=/analytics/statement. Navigate there and wait for the shell.
     private async gotoStatement(): Promise<void> {
-        await this.page.goto(toPath(vendorReportsData.statementUrl), { waitUntil: 'domcontentloaded' });
+        await this.gotoAnalytics('statement');
+    }
+
+    // Assert the React statement report rendered: the export control + the
+    // statement table with its real financial columns.
+    private async assertStatementRendered(): Promise<void> {
+        await expect(this.page.locator(vendorReportsSelectors.statementExportButton).first()).toBeVisible({ timeout: 20000 });
+        await expect(this.page.locator('table').first()).toBeVisible({ timeout: 20000 });
+        await expect(this.page.locator('th', { hasText: /debit/i }).first()).toBeVisible();
+        await expect(this.page.locator('th', { hasText: /credit/i }).first()).toBeVisible();
+        await expect(this.page.locator('th', { hasText: /balance/i }).first()).toBeVisible();
     }
 
     private async gotoAnalytics(report: string): Promise<void> {
@@ -269,18 +292,20 @@ export class VendorReportsPage {
         await expect(this.page.locator(vendorReportsSelectors.statement.exportStatements)).toBeVisible();
     }
 
-    // vendor export statement
+    // vendor export statement — the React "Export Statement" button fetches
+    // /dokan/v1/vendor/reports/statement/export then triggers an <a download>.
     async exportStatement(): Promise<void> {
         await this.gotoStatement();
-        const exportBtn = this.page.locator(vendorReportsSelectors.statement.exportStatements).first();
-        const isDisabled = await exportBtn.evaluate((el: Element) => el.hasAttribute('disabled')).catch(() => false);
+        const exportBtn = this.page.locator(vendorReportsSelectors.statementExportButton).first();
+        await expect(exportBtn).toBeVisible({ timeout: 20000 });
+        const isDisabled = await exportBtn.isDisabled().catch(() => false);
         if (!isDisabled) {
             const [download] = await Promise.all([
                 this.page.waitForEvent('download', { timeout: 30000 }).catch(() => null),
                 exportBtn.click().catch(() => undefined),
             ]);
-            // A download is expected; if the export surfaces inline instead, at
-            // least the click must not crash the page.
+            // A CSV download is expected; if the export surfaces inline/toast
+            // instead, at least the click must not crash the page.
             if (!download) {
                 expect(await this.hasNoPhpFatal()).toBe(true);
             }
@@ -313,42 +338,36 @@ export class VendorReportsPage {
         await this.assertAnalyticsShell();
     }
 
-    // navigate a classic reports tab (overview / salesByDay / topSelling / topEarning / statement)
+    // View a traditional report. The classic dokan_tabs UI (Overview / Sales by
+    // day / Top selling / Top earning / Statement) was replaced in 5.0.0 by the
+    // WooCommerce-analytics React surface, so each logical report maps to its
+    // real analytics equivalent and is asserted against real rendered content.
     async navigateToTraditionalReportMenu(menu: string): Promise<void> {
-        await this.gotoReports();
-
-        const menuSelector = (vendorReportsSelectors.menus as Record<string, string>)[menu];
-        if (menuSelector && await this.page.locator(menuSelector).first().isVisible({ timeout: 10000 }).catch(() => false)) {
-            await this.clickAndWaitForLoadState(menuSelector);
-        }
+        const reportMap: Record<string, string> = {
+            overview: 'products',
+            salesByDay: 'revenue',
+            topSelling: 'products',
+            topEarning: 'products',
+            statement: 'statement',
+        };
+        await this.gotoAnalytics(reportMap[menu] ?? 'products');
 
         switch (menu) {
             case 'overview':
             case 'salesByDay':
-                await this.assertOneVisible([
-                    vendorReportsSelectors.chart.chart,
-                    vendorReportsSelectors.chart.chartDiv,
-                    vendorReportsSelectors.reportsText,
-                ]);
+                // A rendered chart region (or an explicit empty state).
+                await this.assertChartOrEmpty();
                 break;
             case 'topSelling':
-                await this.assertOneVisible([
-                    vendorReportsSelectors.topSelling.table.topSellingTable,
-                    vendorReportsSelectors.topSelling.noProductsFound,
-                ]);
+                await expect(this.page.locator(vendorReportsSelectors.wooTable).first()).toBeVisible({ timeout: 20000 });
+                await expect(this.page.locator('th', { hasText: /items sold/i }).first()).toBeVisible();
                 break;
             case 'topEarning':
-                await this.assertOneVisible([
-                    vendorReportsSelectors.topEarning.table.topEarningTable,
-                    vendorReportsSelectors.topEarning.noProductsFound,
-                ]);
+                await expect(this.page.locator(vendorReportsSelectors.wooTable).first()).toBeVisible({ timeout: 20000 });
+                await expect(this.page.locator('th', { hasText: /net sales/i }).first()).toBeVisible();
                 break;
             case 'statement':
-                await this.assertOneVisible([
-                    vendorReportsSelectors.statement.table.statementsTable,
-                    vendorReportsSelectors.statement.noStatementsFound,
-                    vendorReportsSelectors.statement.exportStatements,
-                ]);
+                await this.assertStatementRendered();
                 break;
             default:
                 break;
@@ -356,67 +375,49 @@ export class VendorReportsPage {
         expect(await this.hasNoPhpFatal()).toBe(true);
     }
 
-    // Assert at least one of the given selectors is visible.
-    private async assertOneVisible(selectors: string[], timeout = 8000): Promise<void> {
-        for (const selector of selectors) {
-            if (await this.page.locator(selector).first().isVisible({ timeout }).catch(() => false)) return;
-        }
-        // Surface a real assertion failure against the first candidate.
-        await expect(this.page.locator(selectors[0]!).first()).toBeVisible({ timeout });
+    // Wait for the analytics chart region OR an explicit empty state, then assert
+    // one of them is genuinely visible (isVisible() alone does not auto-wait).
+    private async assertChartOrEmpty(): Promise<void> {
+        const chart = this.page.locator(vendorReportsSelectors.wooChart).first();
+        const empty = this.page.locator(vendorReportsSelectors.emptyState).first();
+        await Promise.race([
+            chart.waitFor({ state: 'visible', timeout: 20000 }).catch(() => undefined),
+            empty.waitFor({ state: 'visible', timeout: 20000 }).catch(() => undefined),
+        ]);
+        const chartVisible = await chart.isVisible().catch(() => false);
+        const emptyVisible = await empty.isVisible().catch(() => false);
+        expect(chartVisible || emptyVisible).toBe(true);
     }
 
     // charts render on an analytics report
     async verifyChartsDisplay(report: string): Promise<void> {
         await this.gotoAnalytics(report);
-        const chart = await this.page.locator(vendorReportsSelectors.analyticsChart).first().isVisible({ timeout: 10000 }).catch(() => false);
-        const empty = await this.page.locator(vendorReportsSelectors.emptyState).first().isVisible({ timeout: 3000 }).catch(() => false);
-        expect(chart || empty).toBe(true);
+        await this.assertChartOrEmpty();
         expect(await this.hasNoPhpFatal()).toBe(true);
     }
 
-    // classic top-selling products table
+    // top-selling products table (products analytics, sorted by items sold)
     async verifyTopSellingTable(): Promise<void> {
-        await this.gotoReports();
-        if (await this.page.locator(vendorReportsSelectors.menus.topSelling).first().isVisible({ timeout: 10000 }).catch(() => false)) {
-            await this.clickAndWaitForLoadState(vendorReportsSelectors.menus.topSelling);
-        }
-        const tableVisible = await this.page.locator(vendorReportsSelectors.topSelling.table.topSellingTable).first().isVisible({ timeout: 8000 }).catch(() => false);
-        if (tableVisible) {
-            await expect(this.page.locator(vendorReportsSelectors.topSelling.table.productColumn)).toBeVisible();
-            await expect(this.page.locator(vendorReportsSelectors.topSelling.table.salesColumn)).toBeVisible();
-        } else {
-            await expect(this.page.locator(vendorReportsSelectors.topSelling.noProductsFound)).toBeVisible({ timeout: 5000 });
-        }
+        await this.gotoAnalytics('products');
+        await expect(this.page.locator(vendorReportsSelectors.wooTable).first()).toBeVisible({ timeout: 20000 });
+        await expect(this.page.locator('th', { hasText: /product title/i }).first()).toBeVisible();
+        await expect(this.page.locator('th', { hasText: /items sold/i }).first()).toBeVisible();
     }
 
-    // classic top-earning products table
+    // top-earning products table (products analytics, "Net sales" column)
     async verifyTopEarningTable(): Promise<void> {
-        await this.gotoReports();
-        if (await this.page.locator(vendorReportsSelectors.menus.topEarning).first().isVisible({ timeout: 10000 }).catch(() => false)) {
-            await this.clickAndWaitForLoadState(vendorReportsSelectors.menus.topEarning);
-        }
-        const tableVisible = await this.page.locator(vendorReportsSelectors.topEarning.table.topEarningTable).first().isVisible({ timeout: 8000 }).catch(() => false);
-        if (tableVisible) {
-            await expect(this.page.locator(vendorReportsSelectors.topEarning.table.productColumn)).toBeVisible();
-            await expect(this.page.locator(vendorReportsSelectors.topEarning.table.earningColumn)).toBeVisible();
-        } else {
-            await expect(this.page.locator(vendorReportsSelectors.topEarning.noProductsFound)).toBeVisible({ timeout: 5000 });
-        }
+        await this.gotoAnalytics('products');
+        await expect(this.page.locator(vendorReportsSelectors.wooTable).first()).toBeVisible({ timeout: 20000 });
+        await expect(this.page.locator('th', { hasText: /product title/i }).first()).toBeVisible();
+        await expect(this.page.locator('th', { hasText: /net sales/i }).first()).toBeVisible();
     }
 
-    // classic statement table
+    // statement table (statement analytics report)
     async verifyStatementTable(): Promise<void> {
         await this.gotoStatement();
-        if (await this.page.locator(vendorReportsSelectors.menus.statement).first().isVisible({ timeout: 5000 }).catch(() => false)) {
-            await this.clickAndWaitForLoadState(vendorReportsSelectors.menus.statement);
-        }
-        const tableVisible = await this.page.locator(vendorReportsSelectors.statement.table.statementsTable).first().isVisible({ timeout: 8000 }).catch(() => false);
-        if (tableVisible) {
-            await expect(this.page.locator(vendorReportsSelectors.statement.table.balanceDateColumn)).toBeVisible();
-            await expect(this.page.locator(vendorReportsSelectors.statement.table.typeColumn)).toBeVisible();
-        } else {
-            await expect(this.page.locator(vendorReportsSelectors.statement.noStatementsFound)).toBeVisible({ timeout: 5000 });
-        }
+        await this.assertStatementRendered();
+        await expect(this.page.locator('th', { hasText: /balance date/i }).first()).toBeVisible();
+        await expect(this.page.locator('th', { hasText: /type/i }).first()).toBeVisible();
     }
 
     // download / export an analytics report
@@ -508,15 +509,18 @@ export class VendorReportsPage {
         }
     }
 
-    // a no-data range surfaces a graceful message rather than a crash
+    // a report surfaces either real rows OR a graceful empty state — never a crash
     async testNoDataMessage(): Promise<void> {
-        await this.gotoReports();
-        if (await this.page.locator(vendorReportsSelectors.menus.topSelling).first().isVisible({ timeout: 10000 }).catch(() => false)) {
-            await this.clickAndWaitForLoadState(vendorReportsSelectors.menus.topSelling);
-        }
-        // Either real rows OR the explicit "no products/results" message — never a fatal.
-        const hasTable = await this.page.locator(vendorReportsSelectors.topSelling.table.topSellingTable).first().isVisible({ timeout: 8000 }).catch(() => false);
-        const hasEmpty = await this.page.locator(vendorReportsSelectors.emptyState).first().isVisible({ timeout: 5000 }).catch(() => false);
+        await this.gotoAnalytics('products');
+        const table = this.page.locator(vendorReportsSelectors.wooTable).first();
+        const empty = this.page.locator(vendorReportsSelectors.emptyState).first();
+        // Either the data table OR the explicit "no data" message — never a fatal.
+        await Promise.race([
+            table.waitFor({ state: 'visible', timeout: 20000 }).catch(() => undefined),
+            empty.waitFor({ state: 'visible', timeout: 20000 }).catch(() => undefined),
+        ]);
+        const hasTable = await table.isVisible().catch(() => false);
+        const hasEmpty = await empty.isVisible().catch(() => false);
         expect(hasTable || hasEmpty).toBe(true);
         expect(await this.hasNoPhpFatal()).toBe(true);
     }
@@ -532,10 +536,9 @@ export class VendorReportsPage {
 
     // reports UI renders and the REST layer answers for the authenticated vendor
     async validateReportsWithAPI(apiUtils: ApiUtils): Promise<void> {
-        await this.gotoReports();
-        const reportsHeading = await this.page.locator(vendorReportsSelectors.reportsText).first().isVisible({ timeout: 8000 }).catch(() => false);
-        const shell = await this.page.locator(vendorReportsSelectors.analyticsRoot).first().isVisible({ timeout: 5000 }).catch(() => false);
-        expect(reportsHeading || shell).toBe(true);
+        await this.gotoAnalytics('products');
+        // The analytics React shell must render (waits, unlike isVisible()).
+        await expect(this.page.locator(vendorReportsSelectors.wooLayout).first()).toBeVisible({ timeout: 20000 });
 
         // Cross-check the REST layer using the passed ApiUtils' context when it
         // carries one, otherwise the page's own vendor-authenticated context.
