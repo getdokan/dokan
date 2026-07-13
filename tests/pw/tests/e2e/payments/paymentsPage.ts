@@ -183,8 +183,8 @@ const selectors = {
                 testPublishableKey: '#woocommerce_dokan_stripe_express_test_publishable_key',
                 testSecretKey: '#woocommerce_dokan_stripe_express_test_secret_key',
                 testWebhookSecret: '#woocommerce_dokan_stripe_express_test_webhook_key',
-                choosePaymentMethods: '//select[@id="woocommerce_dokan_stripe_express_enabled_payment_methods"]/..//span[@class="select2-selection select2-selection--multiple"]',
-                choosePaymentMethodsValues: '.select2-results ul li',
+                // NOTE: enabled_payment_methods select2 multiselect removed from the gateway
+                // (payment methods now come from Stripe's payment_method_configuration).
                 takeProcessingFeesFromSellers: '#woocommerce_dokan_stripe_express_sellers_pay_processing_fee',
                 savedCards: '#woocommerce_dokan_stripe_express_saved_cards',
                 capturePaymentsManually: '#woocommerce_dokan_stripe_express_capture',
@@ -574,10 +574,11 @@ export class PaymentsPage {
         await this.fill(e.testSecretKey, payment.stripeExpress.testSecretKey);
         await this.fill(e.testWebhookSecret, payment.stripeExpress.testWebhookSecret);
         // payment and disbursement
-        await this.click(e.choosePaymentMethods);
-        await this.setDropdownOptionSpan(e.choosePaymentMethodsValues, payment.stripeExpress.paymentMethods.card);
-        await this.click(e.choosePaymentMethods);
-        await this.setDropdownOptionSpan(e.choosePaymentMethodsValues, payment.stripeExpress.paymentMethods.ideal);
+        // NOTE: The old "Choose Payment Methods" select2 multiselect
+        // (woocommerce_dokan_stripe_express_enabled_payment_methods) was removed from
+        // the gateway settings. Enabled payment methods are now driven by a Stripe
+        // "Payment method configuration" text field (defaults to Stripe's default set),
+        // so there is no in-page control to toggle card/iDEAL here anymore.
         await this.check(e.takeProcessingFeesFromSellers);
         await this.check(e.savedCards);
         await this.check(e.capturePaymentsManually);

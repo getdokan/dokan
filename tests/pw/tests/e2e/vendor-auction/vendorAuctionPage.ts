@@ -18,7 +18,7 @@ const urls = {
     auction: 'dashboard/auction',
     auctionActivity: 'dashboard/auction-activity',
     checkout: 'checkout',
-    productDetails: (productName: string) => `shop/uncategorized/${helpers.slugify(productName)}`,
+    productDetails: (productName: string) => `product/${helpers.slugify(productName)}`,
 } as const;
 
 // Response-URL match substrings (used with page.waitForResponse).
@@ -65,7 +65,7 @@ export const auctionSelectors = {
 
     // vendor dashboard menu + customer my-account menu
     menus: {
-        vendorAuctionMenu: 'ul.dokan-dashboard-menu li.auction a',
+        vendorAuctionMenu: 'aside.dokan-frontend-sidebar a[href*="#auction"]',
         dashboardDiv: 'div.dokan-dashboard-wrap',
         myAccountAuctions: '.woocommerce-MyAccount-navigation-link--auctions-endpoint a',
     },
