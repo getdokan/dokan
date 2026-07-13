@@ -13,6 +13,37 @@
         padding-right: 0 !important;
     }
 
+    // Line tabs between the page title and the cards: strip the engine's px-6 so the strip sits flush with the title, and quiet the theme's generic button chrome (grey fill, border shorthand, radius) off the bare tab <button>s — same bleed the DateRangePicker trigger gets below. No active-color rule needed: base-tailwind maps --primary to the customizer var, so the engine's text-primary/border-primary already follow it.
+    [data-testid='settings-tabs'] {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+
+        // Wider run between tab labels than the engine's 16px (!important: dokan-tailwind flags gap-4).
+        [role='tablist'] {
+            gap: 32px !important;
+        }
+
+        [role='tab'] {
+            background: transparent !important;
+            border-top: 0 !important;
+            border-left: 0 !important;
+            border-right: 0 !important;
+            // 1px active underline sits flush on the strip's hairline instead of reading heavier than it.
+            border-bottom-width: 1px !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            outline: none !important;
+            font-size: 15px !important;
+            // A step up from the engine's font-medium so the labels hold their own against the card titles.
+            font-weight: 600 !important;
+        }
+
+        // Resting tabs read like the page's other labels, not the engine's washed muted-gray.
+        [role='tab']:not([aria-selected='true']) {
+            color: #111827 !important;
+        }
+    }
+
     // plugin-ui pads the header px-5 (20px) but the body p-4 (16px), leaving section titles 4px right of their content; match the header inset to the body (!important: dokan-tailwind flags px-5). The company header is a plain div while non-collapsible (no details yet), so match it structurally too.
     [data-testid^='settings-section-'] > [role='button'],
     [data-testid='settings-section-company_bank_details'] > div:first-child {
@@ -28,11 +59,11 @@
         box-shadow: none !important;
     }
 
-    // Drop the engine's 24px card gutter so cards line up with the page title, and trim the top gap (!important: dokan-tailwind utilities are important-flagged).
+    // Drop the engine's 24px card gutter so cards line up with the page title, keeping breathing room under the tab strip (!important: dokan-tailwind utilities are important-flagged).
     [data-testid='settings-content'] .p-6.space-y-6 {
         padding-left: 0 !important;
         padding-right: 0 !important;
-        padding-top: 0.25rem !important;
+        padding-top: 1.5rem !important;
     }
 
     // plugin-ui DataViews ships a standalone-grid frame (rounded shadow + 48px gutters); strip it so rows sit flat and flush inside the settings card (!important: both stylesheets flag these).

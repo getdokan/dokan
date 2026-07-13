@@ -1,7 +1,6 @@
-import { useEffect, useState } from '@wordpress/element';
+import { useEffect, useRef, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { applyFilters } from '@wordpress/hooks';
-import { Fill } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import {
     Settings,
@@ -9,6 +8,7 @@ import {
     Spinner,
     Toaster,
     toast,
+    useSettings,
     type SettingsElement,
 } from '@wedevs/plugin-ui';
 import { registerVendorSettingsFields } from './register-fields';
@@ -22,6 +22,49 @@ registerVendorSettingsFields();
 const ENDPOINT = '/dokan/v1/vendor-settings/store';
 
 type ServerFieldErrors = Record< string, string[] | string >;
+
+// Module-level so it survives the Save/Cancel refresh-remounts (key bump) and the vendor's tab can be picked back up.
+const lastActiveTab = { current: '' };
+
+// Imperative bridge: handleSave lives outside the provider, so a failed save reaches the engine's tab state through this slot (filled by TabKeeper).
+const tabControls: { setActiveTab: ( ( tab: string ) => void ) | null } = {
+    setActiveTab: null,
+};
+
+// Mounted inside the engine provider via renderSaveButton: remembers the active line tab and restores it after a refresh-remount instead of snapping back to the first tab.
+const TabKeeper = () => {
+    const { activeTab, setActiveTab, getActiveTabs } = useSettings();
+    const restored = useRef( false );
+
+    useEffect( () => {
+        tabControls.setActiveTab = setActiveTab;
+        return () => {
+            tabControls.setActiveTab = null;
+        };
+    }, [ setActiveTab ] );
+
+    useEffect( () => {
+        // The provider assigns the first tab async after mount — the first non-empty value is the restore moment; everything after is the vendor navigating.
+        if ( ! activeTab ) {
+            return;
+        }
+        if ( ! restored.current ) {
+            restored.current = true;
+            const remembered = lastActiveTab.current;
+            if (
+                remembered &&
+                remembered !== activeTab &&
+                getActiveTabs().some( ( tab ) => tab.id === remembered )
+            ) {
+                setActiveTab( remembered );
+                return;
+            }
+        }
+        lastActiveTab.current = activeTab;
+    }, [ activeTab, setActiveTab, getActiveTabs ] );
+
+    return null;
+};
 
 /**
  * Vendor dashboard › Settings › Store — the flat-array React page.
@@ -52,6 +95,42 @@ export default function StoreSettings() {
                 setLoading( false );
             } );
     }, [] );
+
+    // A failed save may reject fields on a hidden tab — activate the first tab (in strip order) that carries an error so the vendor sees it.
+    const focusErrorTab = ( fieldErrors: ServerFieldErrors ) => {
+        const byId = new Map( schema.map( ( el ) => [ el.id, el ] ) );
+        const tabOf = ( fieldId: string ): string => {
+            let el = byId.get( fieldId );
+            // Field → owning section → tab; section-less cards carry tab_id directly.
+            while ( el ) {
+                if ( el.tab_id ) {
+                    return String( el.tab_id );
+                }
+                el = el.section_id
+                    ? byId.get( String( el.section_id ) )
+                    : undefined;
+            }
+            return '';
+        };
+
+        const errorTabs = new Set(
+            Object.keys( fieldErrors ).map( tabOf ).filter( Boolean )
+        );
+        const target = schema
+            .filter( ( el ) => 'tab' === el.type )
+            .sort(
+                ( a, b ) =>
+                    ( ( a.priority as number ) ?? 0 ) -
+                    ( ( b.priority as number ) ?? 0 )
+            )
+            .find( ( tab ) => errorTabs.has( tab.id ) );
+
+        if ( target ) {
+            // Keep TabKeeper aligned so a follow-up successful save stays here.
+            lastActiveTab.current = target.id;
+            tabControls.setActiveTab?.( target.id );
+        }
+    };
 
     const handleSave = async (
         _scopeId: string,
@@ -90,6 +169,7 @@ export default function StoreSettings() {
             // (`error.errors` keyed by field id) — also keeps the form dirty.
             const fieldErrors = typedError?.data?.errors;
             if ( fieldErrors && 'object' === typeof fieldErrors ) {
+                focusErrorTab( fieldErrors );
                 throw {
                     errors: Object.fromEntries(
                         Object.entries( fieldErrors ).map(
@@ -157,28 +237,7 @@ export default function StoreSettings() {
                 // style.scss strips that bar down to plain right-aligned buttons.
                 renderSaveButton={ ( { dirty, hasErrors, onSave } ) => (
                     <>
-                        <Fill name="dokan-header-actions">
-                            <div className="flex items-center gap-2.5">
-                                <Button
-                                    variant="ghost"
-                                    onClick={ handleCancel }
-                                    disabled={ ! dirty || saving }
-                                >
-                                    { __( 'Cancel', 'dokan-lite' ) }
-                                </Button>
-                                <Button
-                                    onClick={ onSave }
-                                    disabled={ ! dirty || hasErrors || saving }
-                                >
-                                    { saving && (
-                                        <Spinner className="size-4 mr-2" />
-                                    ) }
-                                    { saving
-                                        ? __( 'Saving…', 'dokan-lite' )
-                                        : __( 'Save Changes', 'dokan-lite' ) }
-                                </Button>
-                            </div>
-                        </Fill>
+                        <TabKeeper />
                         <div className="flex items-center justify-end gap-2.5">
                             <Button
                                 variant="ghost"

@@ -70,7 +70,9 @@ class StoreSettingsSchema {
          * @param array $elements  Flat schema elements with values.
          * @param int   $vendor_id Vendor user ID.
          */
-        return apply_filters( 'dokan_get_vendor_settings_schema', $elements, $vendor_id );
+        $elements = apply_filters( 'dokan_get_vendor_settings_schema', $elements, $vendor_id );
+
+        return self::group_into_tabs( $elements );
     }
 
     /**
@@ -98,6 +100,105 @@ class StoreSettingsSchema {
         ];
     }
 
+
+    /**
+     * Group the page's cards under the line tabs.
+     *
+     * Runs after the schema filter, so the one extension surface covers tabs
+     * too: a section (or section-less card field) placed via
+     * `dokan_get_vendor_settings_schema` picks its tab by declaring `tab_id`,
+     * and a custom tab is just an injected `type => tab` element. Cards that
+     * declare nothing fall back to General — the engine renders only the
+     * active tab's children, so nothing may be left tabless. Tabs that end up
+     * with no cards are dropped.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $elements Flat schema elements, schema filter applied.
+     *
+     * @return array
+     */
+    protected static function group_into_tabs( array $elements ): array {
+        $tabs = [
+            [
+                'id'         => 'tab_general',
+                'type'       => 'tab',
+                'subpage_id' => 'store_settings',
+                'title'      => __( 'General', 'dokan-lite' ),
+                'priority'   => 10,
+            ],
+            [
+                'id'         => 'tab_location',
+                'type'       => 'tab',
+                'subpage_id' => 'store_settings',
+                'title'      => __( 'Location', 'dokan-lite' ),
+                'priority'   => 20,
+            ],
+            [
+                'id'         => 'tab_schedule',
+                'type'       => 'tab',
+                'subpage_id' => 'store_settings',
+                'title'      => __( 'Schedule', 'dokan-lite' ),
+                'priority'   => 30,
+            ],
+            [
+                'id'         => 'tab_business',
+                'type'       => 'tab',
+                'subpage_id' => 'store_settings',
+                'title'      => __( 'Business', 'dokan-lite' ),
+                'priority'   => 40,
+            ],
+            [
+                'id'         => 'tab_policies',
+                'type'       => 'tab',
+                'subpage_id' => 'store_settings',
+                'title'      => __( 'Policies', 'dokan-lite' ),
+                'priority'   => 50,
+            ],
+        ];
+
+        // Tabs injected through the schema filter are valid targets too.
+        $known_tabs = wp_list_pluck( $tabs, 'id' );
+        foreach ( $elements as $element ) {
+            if ( 'tab' === ( $element['type'] ?? '' ) && ! empty( $element['id'] ) ) {
+                $known_tabs[] = $element['id'];
+            }
+        }
+
+        $members = [];
+        foreach ( $elements as &$element ) {
+            $type      = $element['type'] ?? '';
+            $is_card   = ( 'field' === $type || 'fieldgroup' === $type ) && empty( $element['section_id'] );
+            // Only direct children of the store subpage join a tab: sections, plus section-less card fields (e.g. Live Chat).
+            if ( ( 'section' !== $type && ! $is_card ) || 'store_settings' !== ( $element['subpage_id'] ?? '' ) ) {
+                continue;
+            }
+
+            $tab_id = ! empty( $element['tab_id'] ) ? (string) $element['tab_id'] : 'tab_general';
+
+            // A dangling tab id would hide the card on every tab.
+            if ( ! in_array( $tab_id, $known_tabs, true ) ) {
+                $tab_id = 'tab_general';
+            }
+
+            $element['tab_id']  = $tab_id;
+            $members[ $tab_id ] = true;
+        }
+        unset( $element );
+
+        // Admin gates can empty whole tabs (map key, schedule, catalog, T&C) — drop those.
+        $tabs = array_values(
+            array_filter(
+                $tabs,
+                static function ( array $tab ) use ( $members ) {
+                    return ! empty( $members[ $tab['id'] ] );
+                }
+            )
+        );
+
+        return array_merge( $elements, $tabs );
+    }
+
     /**
      * Branding card: store title, banner, and logo.
      *
@@ -116,6 +217,7 @@ class StoreSettingsSchema {
                 'id'          => 'company_banner',
                 'type'        => 'section',
                 'subpage_id'  => 'store_settings',
+                'tab_id'      => 'tab_general',
                 'title'       => __( 'Branding', 'dokan-lite' ),
                 'description' => __( "Oversee your store's branding elements: title, banner, logo, and contact number.", 'dokan-lite' ),
                 'collapsible' => true,
@@ -191,6 +293,7 @@ class StoreSettingsSchema {
                 'id'          => 'store_information',
                 'type'        => 'section',
                 'subpage_id'  => 'store_settings',
+                'tab_id'      => 'tab_general',
                 'title'       => __( 'Store Information', 'dokan-lite' ),
                 'description' => __( 'These information can increase trust layers to your customers.', 'dokan-lite' ),
                 'collapsible' => true,
@@ -260,6 +363,7 @@ class StoreSettingsSchema {
                 'id'          => 'location_details',
                 'type'        => 'section',
                 'subpage_id'  => 'store_settings',
+                'tab_id'      => 'tab_location',
                 'title'       => __( 'Store Locations', 'dokan-lite' ),
                 'description' => __( 'Please enter the address of your store where you conduct your business.', 'dokan-lite' ),
                 'collapsible' => true,
@@ -309,6 +413,7 @@ class StoreSettingsSchema {
                 'id'          => 'store_map_section',
                 'type'        => 'section',
                 'subpage_id'  => 'store_settings',
+                'tab_id'      => 'tab_location',
                 'title'       => __( 'Store Map', 'dokan-lite' ),
                 'description' => __( 'Kindly provide the location of the store address from which you ship your products.', 'dokan-lite' ),
                 'collapsible' => true,
@@ -319,6 +424,7 @@ class StoreSettingsSchema {
                 'type'       => 'field',
                 'variant'    => 'vendor_map',
                 'section_id' => 'store_map_section',
+                'title'      => __( 'Find Address', 'dokan-lite' ),
                 'provider'   => $provider,
                 'api_key'    => $api_key,
                 'value'      => [
@@ -372,6 +478,7 @@ class StoreSettingsSchema {
                 'id'          => 'store_schedule',
                 'type'        => 'section',
                 'subpage_id'  => 'store_settings',
+                'tab_id'      => 'tab_schedule',
                 'title'       => __( 'Store Schedule', 'dokan-lite' ),
                 'description' => __( 'Set the daily open and close time your store follows.', 'dokan-lite' ),
                 'collapsible' => true,
@@ -460,6 +567,7 @@ class StoreSettingsSchema {
                 'id'          => 'terms_conditions',
                 'type'        => 'section',
                 'subpage_id'  => 'store_settings',
+                'tab_id'      => 'tab_policies',
                 'title'       => __( 'Terms & Conditions', 'dokan-lite' ),
                 'description' => __( 'Clearly define store policies to ensure a smooth shopping experience.', 'dokan-lite' ),
                 'collapsible' => true,
@@ -542,6 +650,7 @@ class StoreSettingsSchema {
                 'id'          => 'catalog_mode_section',
                 'type'        => 'section',
                 'subpage_id'  => 'store_settings',
+                'tab_id'      => 'tab_business',
                 'title'       => __( 'Catalog Mode', 'dokan-lite' ),
                 'description' => __( 'Control how customers can purchase products from your store.', 'dokan-lite' ),
                 'collapsible' => true,

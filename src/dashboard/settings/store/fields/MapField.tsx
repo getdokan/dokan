@@ -45,12 +45,7 @@ const parseLocation = ( location: string ): { lat: number; lng: number } => {
 const loadGoogleMaps = ( apiKey: string ): Promise< void > => {
     const maps = window.google?.maps;
 
-    // Maps is already on the page (another Dokan script — store pickup, legacy
-    // form — often loads it first). Make sure the Places library the search box
-    // needs is present too: pull it in through the modern loader when it's
-    // missing rather than re-injecting the API <script>, which would trip
-    // Google's "included multiple times" break. If Places can't be added, the
-    // map still renders and the Geocoder powers search (Autocomplete is guarded).
+    // Another Dokan script often loads Maps first WITHOUT Places; add Places via the modern loader (re-injecting the API <script> trips Google's "included multiple times" break) — if it can't load, the map still renders and the Geocoder covers search.
     if ( maps ) {
         if ( maps.places ) {
             return Promise.resolve();
@@ -301,9 +296,7 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
                     } );
                 } );
 
-                // Places may be absent if another script loaded Maps without it
-                // and the modern loader couldn't add it — the map + Geocoder
-                // search still work, so skip Autocomplete instead of throwing.
+                // Places can still be absent (older loader without importLibrary) — map + Geocoder search work without Autocomplete, so skip instead of throwing.
                 if ( searchInputRef.current && window.google.maps.places ) {
                     const autocomplete =
                         new window.google.maps.places.Autocomplete(
@@ -393,6 +386,11 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
 
     return (
         <div className="dokan-vendor-map-field flex w-full flex-col gap-2 p-4">
+            { element.title && (
+                <span className="text-sm font-semibold text-gray-900">
+                    { String( element.title ) }
+                </span>
+            ) }
             <Input
                 ref={ searchInputRef }
                 type="text"
@@ -416,7 +414,8 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
             { showsCanvas && (
                 <div
                     ref={ mapContainerRef }
-                    className="h-72 w-full overflow-hidden rounded-md border border-gray-200"
+                    // mt-2 doubles the column gap so the canvas doesn't crowd the search box.
+                    className="mt-2 h-72 w-full overflow-hidden rounded-md border border-gray-200"
                 />
             ) }
 
