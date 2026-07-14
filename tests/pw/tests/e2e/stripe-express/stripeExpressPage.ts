@@ -473,6 +473,11 @@ export class StripeExpressPage {
     // ---- Block checkout (WC Checkout block; the site default /checkout/) ----
 
     async gotoBlockCheckout(): Promise<void> {
+        // Stripe Link inside the block Payment Element loads an invisible hCaptcha that on CI runner IPs
+        // escalates into a VISIBLE challenge, blocking the in-page card confirm so the order never reaches
+        // order-received (90s waitForURL timeout). A plain card charge doesn't need hCaptcha (it gates Link
+        // enrolment only), so abort hCaptcha resources — same guard already applied to gotoClassicCheckout.
+        await this.page.route(/hcaptcha/i, route => route.abort());
         // The WC Checkout block hydrates client-side; under load (Docker + a busy suite) that occasionally
         // overruns a 30s wait. Wait for network idle and, if the place-order button still hasn't rendered,
         // reload once before failing. This is a render-timing guard — the page itself renders fine (verified
