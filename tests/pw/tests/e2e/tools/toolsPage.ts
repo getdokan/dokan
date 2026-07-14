@@ -347,8 +347,29 @@ export class ToolsPage {
 
     // regenerate variable product variations author IDs
     async regenerateVariableProductVariationsAuthorIds(): Promise<void> {
-        await this.goIfNotThere(data.subUrls.backend.dokan.tools);
-        await this.clickAndWaitForResponse(data.subUrls.ajax, toolsAdmin.regenerateVariableProductVariationsAuthorIds.regenerate);
+        // Load the Tools page FRESH (goto + reload) instead of reusing the current page.
+        // "Regenerate Order Commission" and "Regenerate Variable Product Variations Author
+        // IDs" share ONE reactive Vue flag `disableRegenerateButton`. A prior sibling test
+        // (regenerate order commission) sets it to true, which re-renders BOTH regenerate
+        // buttons as `<a class="button button-disabled">` WITHOUT the @click handler. Because
+        // the whole suite reuses a single page and goIfNotThere() never reloads once on the
+        // Tools URL, without a fresh load the variations "Regenerate" the test clicks is the
+        // dead disabled button — the click fires no AJAX and waitForResponse times out. This
+        // reproduces only when a prior regenerate ran first (masked locally under accumulated
+        // NO_SETUP state, surfaced by CI's ordered full-file run). Reloading reinitializes the
+        // Tools component with the flag reset to false, restoring the clickable primary button.
+        await this.page.goto(toPath(data.subUrls.backend.dokan.tools), { waitUntil: 'domcontentloaded' });
+        await this.page.reload({ waitUntil: 'networkidle' });
+
+        // The classic Vue app binds the @click handler asynchronously after mount; re-click
+        // until the AJAX request actually fires (mirrors products/productsPage.ts saveProduct).
+        await expect(async () => {
+            const [response] = await Promise.all([
+                this.page.waitForResponse(resp => resp.url().includes(data.subUrls.ajax) && resp.status() === 200, { timeout: 15000 }),
+                this.page.locator(toolsAdmin.regenerateVariableProductVariationsAuthorIds.regenerate).click(),
+            ]);
+            expect(response.status()).toBe(200);
+        }).toPass({ intervals: [1000, 2000, 3000], timeout: 90000 });
     }
 
     // import dummy data
