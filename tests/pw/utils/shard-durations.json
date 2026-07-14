@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T00:00:00Z",
+  "generatedAt": "2026-07-14T00:00:00Z",
   "shards": 12,
   "specs": [
     {
@@ -9,7 +9,7 @@
     },
     {
       "file": "vendor-auction/vendorAuction.spec.ts",
-      "ms": 18239,
+      "ms": 45900,
       "tests": 19
     },
     {
@@ -29,7 +29,7 @@
     },
     {
       "file": "settings/settings.spec.ts",
-      "ms": 35194,
+      "ms": 56600,
       "tests": 34
     },
     {
@@ -49,12 +49,12 @@
     },
     {
       "file": "request-for-quotes/requestForQuotes.spec.ts",
-      "ms": 20592,
+      "ms": 41200,
       "tests": 24
     },
     {
       "file": "menu-manager/menuManager.spec.ts",
-      "ms": 84,
+      "ms": 39600,
       "tests": 9
     },
     {
@@ -74,7 +74,7 @@
     },
     {
       "file": "vendor-product-subscription/vendorProductSubscription.spec.ts",
-      "ms": 4900,
+      "ms": 37700,
       "tests": 16
     },
     {
@@ -94,7 +94,7 @@
     },
     {
       "file": "tools/tools.spec.ts",
-      "ms": 69,
+      "ms": 39600,
       "tests": 10
     },
     {
@@ -139,12 +139,12 @@
     },
     {
       "file": "products/products.spec.ts",
-      "ms": 163376,
+      "ms": 216000,
       "tests": 33
     },
     {
       "file": "products-details/productsDetails.spec.ts",
-      "ms": 911,
+      "ms": 600000,
       "tests": 95
     },
     {
@@ -284,7 +284,7 @@
     },
     {
       "file": "vendor-delivery-time/vendorDeliveryTime.spec.ts",
-      "ms": 26085,
+      "ms": 57100,
       "tests": 13
     },
     {
@@ -339,7 +339,7 @@
     },
     {
       "file": "shop/shop.spec.ts",
-      "ms": 78,
+      "ms": 34650,
       "tests": 7
     },
     {
@@ -549,7 +549,7 @@
     },
     {
       "file": "shipping/shipping.spec.ts",
-      "ms": 106,
+      "ms": 49500,
       "tests": 10
     },
     {
@@ -559,7 +559,7 @@
     },
     {
       "file": "my-orders/myOrders.spec.ts",
-      "ms": 52,
+      "ms": 29700,
       "tests": 6
     },
     {
@@ -569,7 +569,7 @@
     },
     {
       "file": "shortcodes/shortcodes.spec.ts",
-      "ms": 78,
+      "ms": 34650,
       "tests": 13
     },
     {
@@ -624,7 +624,7 @@
     },
     {
       "file": "vendor-staff/vendorStaff.spec.ts",
-      "ms": 5942,
+      "ms": 51200,
       "tests": 13
     },
     {
@@ -644,7 +644,7 @@
     },
     {
       "file": "product-advertising/productAdvertising.spec.ts",
-      "ms": 4999,
+      "ms": 47600,
       "tests": 17
     },
     {
@@ -664,7 +664,7 @@
     },
     {
       "file": "notice-and-promotion/noticeAndPromotion.spec.ts",
-      "ms": 21,
+      "ms": 9100,
       "tests": 3
     },
     {
@@ -674,17 +674,17 @@
     },
     {
       "file": "products-details-auction/productsDetailsAuction.spec.ts",
-      "ms": 416,
+      "ms": 58100,
       "tests": 56
     },
     {
       "file": "wholesale/wholesale.spec.ts",
-      "ms": 16070,
+      "ms": 34700,
       "tests": 26
     },
     {
       "file": "single-product/singleProduct.spec.ts",
-      "ms": 27,
+      "ms": 3900,
       "tests": 8
     },
     {
@@ -719,12 +719,12 @@
     },
     {
       "file": "vendor-analytics/vendorAnalytics.spec.ts",
-      "ms": 18100,
+      "ms": 22200,
       "tests": 5
     },
     {
       "file": "single-store/singleStore.spec.ts",
-      "ms": 6533,
+      "ms": 23700,
       "tests": 9
     },
     {
@@ -864,7 +864,7 @@
     },
     {
       "file": "reverse-withdraws/reverseWithdraws.spec.ts",
-      "ms": 39726,
+      "ms": 56200,
       "tests": 17
     },
     {
@@ -879,7 +879,7 @@
     },
     {
       "file": "product-addons/productAddons.spec.ts",
-      "ms": 3087,
+      "ms": 17100,
       "tests": 15
     },
     {
@@ -889,7 +889,7 @@
     },
     {
       "file": "request-for-quote-rules/requestForQuoteRules.spec.ts",
-      "ms": 46,
+      "ms": 34650,
       "tests": 7
     },
     {
@@ -899,7 +899,7 @@
     },
     {
       "file": "shipstation/shipstation.spec.ts",
-      "ms": 16749,
+      "ms": 32000,
       "tests": 6
     },
     {
@@ -953,5 +953,5 @@
       "tests": 7
     }
   ],
-  "note": "rebuilt test-count-weighted (avg 4950 ms/test) for balance after legacy restore"
+  "note": "de-stub grind durations: real measured (workers=1) or per-test estimates, merged as max(measured, prior baseline) to avoid underweighting; stripe-express left key-gated (skipped in CI)"
 }
