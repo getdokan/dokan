@@ -272,6 +272,11 @@ class Assets {
                 'name'      => 'ChangeLog',
                 'component' => 'ChangeLog',
             ],
+            [
+                'path'      => '/tools',
+                'name'      => 'Tools',
+                'component' => 'Tools',
+            ],
         ];
 
         // @codingStandardsIgnoreLine
