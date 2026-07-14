@@ -762,6 +762,21 @@ export const api = {
         return [json, String(json.id), json.name];
     },
 
+    async ensureCategory(name: string): Promise<string> {
+        // Idempotent seed that returns the category's term id. The e2e setup deletes the default WC
+        // "Uncategorized" term and reseeds a custom category set, so this spec must create the category it
+        // needs instead of relying on ambient state. WooCommerce returns 200 with the new term on create,
+        // or a 400 { code: 'term_exists', data: { resource_id } } (a JSON body, not a thrown error) when it
+        // already exists — both give us the id, and a plain lookup is the final fallback.
+        const json = await this.post('/wc/v3/products/categories', { name }, this.adminAuth());
+        if (json?.id) return String(json.id);
+        if (json?.data?.resource_id) return String(json.data.resource_id);
+        const listResp = await this._context!.get(`${SERVER_URL}/wc/v3/products/categories?search=${encodeURIComponent(name)}&per_page=100`, { headers: this.adminAuth() });
+        const cats = await listResp.json();
+        const found = Array.isArray(cats) ? cats.find((c: any) => String(c.name).toLowerCase() === name.toLowerCase()) : null;
+        return found ? String(found.id) : '';
+    },
+
     async deleteAllProducts(prefix: string, headers?: Record<string, string>): Promise<void> {
         // This is a simplified version - deletes products by prefix
         const response = await this._context!.get(`${SERVER_URL}/dokan/v1/products?search=${prefix}&per_page=100`, {
