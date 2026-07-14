@@ -1,15 +1,7 @@
 import { Locator, Page } from '@playwright/test';
 import { toPath } from '@utils/helpers';
+import { waitForDataViewsSettle } from './adminDataViews';
 
-// ============================================
-// TEST DATA — Admin Product Q&A moderation (#/product-qa, pro).
-// Everything is seeded via the REST API (apiUtils.createProductQuestion +
-// createProductQuestionAnswer, admin auth) so the admin DataView is
-// deterministic. This is an ADMIN-only spec: it moderates pre-existing
-// customer questions and never drives the storefront question form.
-// See tests/pw/test-cases/admin-dashboard-seeding-strategy.md (§ Product Q&A).
-// All seeded names are namespaced with the "AQA" prefix.
-// ============================================
 export const adminProductQaData = {
     // The vendor store that owns the product the questions target.
     vendor: { storeName: 'AQA QA Vendor Store', userLogin: 'aqa_qa_vendor', email: 'aqa_qa_vendor@example.test' },
@@ -30,38 +22,21 @@ export const adminProductQaData = {
     searchMiss: 'zzz_no_such_question_zzz',
 } as const;
 
-// ============================================
-// SELECTORS — verified against
-// dokan-pro/modules/product-qa/src/admin/ProductQAList.tsx and
-// ProductQASingle.tsx. The admin Product Q&A page is the unified
-// @dokan/components AdminDataViews list mounted on #dokan-admin-dashboard at
-// admin.php?page=dokan-dashboard#/product-qa (HashRouter, pro module-gated).
-// Same DataViews surface as the admin Vendors list, so the row / search /
-// tab / bulk selectors mirror adminVendorsPage.ts.
-// ============================================
 export const adminProductQaSelectors = {
     reactRoot: '#dokan-admin-dashboard',
     table: 'table',
     dataRow: 'table tbody tr',
-    // DataViews header search — placeholder="Search" (SearchInput component).
     searchInput: 'input[placeholder="Search"]',
     // Per-row 3-dot actions trigger (scoped to a row — the toolbar shares the label).
     rowActionsBtn: "button[aria-label='Actions']",
-    // Empty state DataViews renders when no row matches.
     emptyState: 'text=/no data found|no items|no results|nothing to show/i',
-    // PHP fatal markers.
     phpFatal: 'text=/Fatal error|Parse error|There has been a critical error/i',
     loginForm: '#loginform, #user_login',
 } as const;
 
-// ============================================
-// PAGE OBJECT — admin Product Q&A list + single (Dokan Pro 5.0.0+ React admin).
-// Surface: wp-admin/admin.php?page=dokan-dashboard#/product-qa
-// NOTE: admin-facing — the vendor announcement modal does NOT appear in
-// wp-admin, so this page object deliberately does NOT register the
-// closeAnnouncementModal handler (a generic role=dialog handler would race the
-// Delete / visibility confirmation modals).
-// ============================================
+// PAGE OBJECT — admin Product Q&A list + single. Surface: admin.php?page=dokan-dashboard#/product-qa.
+// Admin-facing, so it deliberately does NOT register closeAnnouncementModal — a
+// generic role=dialog handler would race the Delete / visibility confirm modals.
 export class AdminProductQaPage {
     readonly page: Page;
     readonly url = toPath('wp-admin/admin.php?page=dokan-dashboard#/product-qa');
@@ -70,7 +45,6 @@ export class AdminProductQaPage {
         this.page = page;
     }
 
-    // ---- Locators ----
     get reactRoot(): Locator {
         return this.page.locator(adminProductQaSelectors.reactRoot).first();
     }
@@ -118,11 +92,11 @@ export class AdminProductQaPage {
         return this.rows.filter({ hasText: questionText }).first();
     }
 
-    // ---- Navigation / readiness ----
     async goto(): Promise<void> {
         await this.page.goto(this.url);
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     /** Ready when the React root is visible AND either ≥1 row OR the empty-state has painted. */
@@ -140,6 +114,7 @@ export class AdminProductQaPage {
         await this.page.reload();
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForReady();
+        await waitForDataViewsSettle(this.page);
     }
 
     async hasNoPhpFatal(): Promise<boolean> {
@@ -151,7 +126,6 @@ export class AdminProductQaPage {
         return !fatal;
     }
 
-    // ---- Reads ----
     async getRowCount(): Promise<number> {
         return await this.rows.count();
     }
@@ -170,7 +144,6 @@ export class AdminProductQaPage {
         return '';
     }
 
-    // ---- Tabs / search ----
     async clickTab(name: RegExp): Promise<void> {
         const tab = this.tab(name);
         await tab.waitFor({ state: 'visible', timeout: 10000 });
@@ -189,13 +162,9 @@ export class AdminProductQaPage {
     }
 
     async search(query: string): Promise<void> {
-        // The admin Product Q&A DataViews list does NOT render a search input.
-        // Unlike the admin Vendors page (which injects <SearchInput> via
-        // tabs.additionalComponents), ProductQAList.tsx renders no search widget
-        // and fetchQuestions() never sends a `search` query param — so no
-        // input[placeholder="Search"] exists on this surface. When the box is
-        // present (future product change) we still use it; otherwise we no-op and
-        // let row-by-text matching filter the already-loaded (tab-filtered) page.
+        // The admin Product Q&A list renders NO search input (unlike the Vendors
+        // page), so when absent we no-op and let row-by-text matching filter the
+        // already-loaded, tab-filtered page.
         const input = this.searchBox;
         const hasSearch = await input.isVisible({ timeout: 2000 }).catch(() => false);
         if (!hasSearch) {
@@ -215,7 +184,6 @@ export class AdminProductQaPage {
         }
     }
 
-    // ---- Detail navigation ----
     /** Open the detail route by clicking the (single visible) question cell. */
     async openFirstQuestionDetail(): Promise<void> {
         const cell = this.rows.first().locator('td').first();
@@ -243,7 +211,6 @@ export class AdminProductQaPage {
         await this.page.waitForTimeout(600);
     }
 
-    // ---- Detail: answer flow ----
     get answerEditor(): Locator {
         // RichText renders a contenteditable region; fall back to any editor box.
         return this.page.locator('[contenteditable="true"], .dokan-rich-text [role="textbox"]').first();
@@ -286,7 +253,6 @@ export class AdminProductQaPage {
         await this.page.waitForTimeout(1200);
     }
 
-    // ---- Detail: visibility toggle ----
     /** Click "Hide from product page" / "Show in product page" then confirm. */
     async toggleVisibility(): Promise<void> {
         const toggle = this.page.getByRole('button', { name: /Hide from product page|Show in product page/i }).first();
@@ -322,7 +288,6 @@ export class AdminProductQaPage {
         return isHidden ? 'Hidden' : '';
     }
 
-    // ---- Detail: delete the whole Q&A ----
     /** Click "Delete Entire Q&A" and confirm the DokanModal ("Yes, Delete"). */
     async deleteQuestion(): Promise<void> {
         const del = this.page.getByRole('button', { name: /Delete Entire Q&A/i }).first();
@@ -335,7 +300,6 @@ export class AdminProductQaPage {
         await this.page.waitForTimeout(800);
     }
 
-    // ---- Row actions (kebab) ----
     /** Open the 3-dot actions menu for the (single visible) first row. */
     async openFirstRowActionMenu(): Promise<void> {
         const row = this.rows.first();
@@ -362,7 +326,6 @@ export class AdminProductQaPage {
         await this.page.waitForTimeout(1000); // PUT bulk_action + list refetch.
     }
 
-    // ---- Bulk ----
     /** Tick every currently-visible row checkbox. Use after narrowing via tab/search. */
     async selectAllVisibleRows(): Promise<void> {
         const count = await this.rows.count();
@@ -393,7 +356,6 @@ export class AdminProductQaPage {
             .catch(() => false);
     }
 
-    // ---- Authorization (non-admin) ----
     /** True when the admin Product Q&A UI is NOT reachable for the current user. */
     async isAccessDenied(): Promise<boolean> {
         const rootVisible = await this.reactRoot.isVisible({ timeout: 5000 }).catch(() => false);

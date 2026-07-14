@@ -7,7 +7,7 @@ Tested up to: 7.0
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 5.0.4
+Stable tag: 5.0.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -376,6 +376,31 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
+= v5.0.8 ( Jul 06, 2026 ) =
+- **fix:** Cleared the vendor dashboard sale price when the field is blanked so the product reverts to its regular price instead of saving a 0 price.
+
+= v5.0.7 ( Jun 29, 2026 ) =
+- **fix:** Prevented a DOM-based XSS in the legacy Vue admin by validating the vendor details and reverse-withdrawal route parameters.
+- **fix:** Enforced per-product ownership on the v3 products batch endpoint so vendors can no longer update or delete other vendors' products.
+
+= v5.0.6 ( Jun 26, 2026 ) =
+- **update:** Added wePos and weDocs to the setup wizard's recommended add-ons and refreshed the add-on descriptions.
+- **update:** Added weDocs to the admin Extensions page as an installable add-on.
+- **fix:** Added reCAPTCHA v3 support to the vendor registration forms to curb spam registrations.
+- **fix:** Loaded the admin dashboard on non-Latin locales (e.g. Persian) by matching the page slug instead of the translated menu title.
+- **fix:** Restored editing of downloadable file name and URL fields in the new product editor.
+- **fix:** Clarified the save error shown when a downloadable file falls outside WooCommerce's approved directories.
+- **fix:** Enabled the "View in site" button for all published products.
+
+= v5.0.5 ( Jun 19, 2026 ) =
+- **update:** Migrated all admin dashboard tables to the unified Plugin UI DataViews component.
+- **update:** Updated price formatting in the product editor to use locale-specific display.
+- **fix:** Lazy-loaded product editor taxonomies (attributes, categories, and tags) to prevent memory exhaustion on large catalogues.
+- **fix:** Escaped vendor-controlled values in store product search results to prevent stored XSS via a product SKU.
+- **fix:** Restricted the Products REST endpoint so vendors can no longer access other vendors' products via the id parameter.
+- **fix:** Decoded HTML entities in product category labels for correct rendering.
+- **fix:** Corrected the product edit URL and improved dashboard navigation for the new product UI.
+
 = v5.0.4 ( Jun 08, 2026 ) =
 - **update:** Improved RTL support for the switch button transition in the new vendor dashboard layout.
 - **update:** Made the vendor analytics panel compatible with the vendor-specific Coupons report.
@@ -387,48 +412,5 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 - **update:** Exposed manual withdrawal availability and withdraw-visibility flags in the vendor dashboard REST API.
 - **fix:** Restricted the Customers REST endpoint to self-service to prevent vendors from modifying other user accounts.
 - **fix:** Translated the "Actions" column header on vendor dashboard DataViews tables.
-
-= v5.0.2 ( May 18, 2026 ) =
-- **new:** Added a date range filter on the vendor dashboard Withdraw Requests table to filter results by start and end dates.
-- **update:** Centralized vendor selling activation and deactivation and introduced a new filter to control vendor selling eligibility.
-- **update:** Added customization filters to control the visibility of customer billing and shipping details in vendor order emails and vendor order detail pages.
-- **update:** Added options to independently show or hide the login and registration sections of the vendor onboarding shortcode form, with adaptive layout.
-- **update:** Renamed the Quick View modal label from "Page View" to "Views" and added a Views column to the product list.
-- **fix:** Resolved product attribute data inconsistency between taxonomy-enabled and standard attributes on the new product UI.
-- **fix:** Auto-select the vendor's default payment method in the withdraw request modal.
-- **fix:** Corrected the "View Details" link in the What's New admin notice to route to the appropriate changelog page.
-- **fix:** Prevented a PHP deprecation notice caused by a menu position type-cast.
-- **fix:** Ensured jQuery blockUI loads on the seller setup wizard and other custom enqueue pages.
-
-= v5.0.1 ( May 05, 2026 ) =
-- **update:** Added an admin-controllable vendor registration option on the My Account page.
-- **update:** Added RTL support for the new vendor dashboard UI.
-- **fix:** Properly decode HTML entities in admin settings labels.
-
-= v5.0.0 ( Apr 28, 2026 ) =
-- **new:** Added a dedicated vendor onboarding page with a separate registration flow.
-- **new:** Introduced the new Product Form Manager for the vendor dashboard.
-- **new:** Added a "Get Support" button to the admin dashboard header.
-- **new:** Added a new Extensions page for Dokan in the admin panel.
-- **new:** Converted the admin Products list to React with Plugin UI.
-- **new:** Converted the vendor dashboard Orders list to React with Plugin UI.
-- **new:** Migrated the vendor dashboard Reverse Withdraw page to React with Plugin UI.
-- **new:** Migrated the admin Withdraw Requests page to Plugin UI with tabs.
-- **new:** Added `@wedevs/plugin-ui` dependency and integrate the DataViews component as the unified table system.
-- **update:** Migrated Dokan UI to Tailwind CSS v4 with a consolidated shared component bundle.
-- **update:** Rebuilt the admin Tools / Dummy Data section in React.
-- **update:** Added legacy compatibility support for the RFQ (Request for Quote) admin panel.
-- **update:** Updated the Vendor Announcement panel UX.
-- **update:** Added additional tax fields and new order types to the Dokan order stats table.
-- **update:** Added OpenAI model options to the latest ones for AI Assist settings.
-- **update:** Added a legacy switcher to the Product Form for backward compatibility.
-- **update:** Used ShortContent for product name display and widen the Products column.
-- **fix:** Resolved Product Form compatibility issues with WordPress v6.8.
-- **fix:** Resolved Plugin UI style conflicts between v10 and v14.
-- **fix:** Corrected filter border clipping and the WithdrawView layout type.
-- **fix:** Improved UI styles and navigation URL handling across new dashboard pages.
-- **fix:** Corrected the balance display on the Reverse Withdraw page.
-- **fix:** Corrected the back-link URL on the order details page.
-- **fix:** Fixed the active state of vendor sidebar submenu items.
 
 [See changelog for all versions](https://github.com/getdokan/dokan/blob/develop/CHANGELOG.md).

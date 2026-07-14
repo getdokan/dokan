@@ -4,6 +4,110 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.0.8',
+        'released' => '2026-07-06',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Cleared the vendor dashboard sale price when the field is blanked so the product reverts to its regular price instead of saving a 0 price.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.0.7',
+        'released' => '2026-06-29',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Prevented a DOM-based XSS in the legacy Vue admin by validating the vendor details and reverse-withdrawal route parameters.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Enforced per-product ownership on the v3 products batch endpoint so vendors can no longer update or delete other vendors\' products.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.0.6',
+        'released' => '2026-06-26',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Added wePos and weDocs to the setup wizard\'s recommended add-ons and refreshed the add-on descriptions.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added weDocs to the admin Extensions page as an installable add-on.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Added reCAPTCHA v3 support to the vendor registration forms to curb spam registrations.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Loaded the admin dashboard on non-Latin locales (e.g. Persian) by matching the page slug instead of the translated menu title.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Restored editing of downloadable file name and URL fields in the new product editor.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Clarified the save error shown when a downloadable file falls outside WooCommerce\'s approved directories.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Enabled the "View in site" button for all published products.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.0.5',
+        'released' => '2026-06-19',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Migrated all admin dashboard tables to the unified Plugin UI DataViews component.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Updated price formatting in the product editor to use locale-specific display.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Lazy-loaded product editor taxonomies (attributes, categories, and tags) to prevent memory exhaustion on large catalogues.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Escaped vendor-controlled values in store product search results to prevent stored XSS via a product SKU.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Restricted the Products REST endpoint so vendors can no longer access other vendors\' products via the id parameter.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Decoded HTML entities in product category labels for correct rendering.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Corrected the product edit URL and improved dashboard navigation for the new product UI.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.0.4',
         'released' => '2026-06-08',
         'changes'  => [

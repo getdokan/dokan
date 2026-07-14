@@ -3,6 +3,7 @@ import { request } from '@playwright/test';
 import { NewOrdersPage } from './newOrdersPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
+import { VendorTableFilter } from '@utils/vendorTableFilter';
 import path from 'path';
 
 // ============================================
@@ -76,6 +77,58 @@ test.describe('Orders (React) functionality', () => {
             expect(rows, 'seeded processing order should appear as a row').toBeGreaterThan(0);
         });
 
+        test('vendor sees the core order columns (React)', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            const headers = await orders.getColumnHeaderTexts();
+            // Lite-guaranteed columns (Shipment is conditional on the shipping feature; not asserted).
+            for (const col of ['order', 'order total', 'earning', 'status', 'customer']) {
+                expect(headers.join(' | '), `column "${col}" present`).toContain(col);
+            }
+        });
+
+        test('vendor seeded order row shows status badge + total (React)', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            await orders.fillSearch(String(seededOrderId));
+            const row = orders.orderRowById(seededOrderId);
+            await expect(row, 'seeded order row is isolated by id').toBeVisible();
+            const rowText = (await row.innerText()).replace(/\s+/g, ' ');
+            expect(rowText, 'row shows the Processing status badge').toMatch(/Processing/i);
+            expect(rowText, 'row shows a money amount').toMatch(/\d/);
+            await orders.clearSearch();
+        });
+
+        test('vendor can open the Export dropdown (React)', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            await orders.openExportMenu();
+            await expect(orders.exportFilteredOption, 'dropdown exposes "Export Filtered"').toBeVisible();
+            await page.keyboard.press('Escape').catch(() => undefined);
+        });
+
+        test('vendor can view the All status tab (React)', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            await orders.clickStatusTab('All');
+            expect(await orders.getRowCount(), 'All tab lists the accumulated orders').toBeGreaterThan(0);
+        });
+
+        test('vendor sees the empty state for a non-existent order id search (React)', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            await orders.fillSearch('999999999');
+            expect(await orders.getRowCount(), 'non-existent id yields zero rows').toBe(0);
+            expect(await orders.isEmptyStateVisible(), '"No Order Yet" empty-state banner shows').toBe(true);
+            await orders.clearSearch();
+        });
+
+        test('vendor can filter orders by Customer via the funnel (React)', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            const filter = new VendorTableFilter(page, 'orders');
+            await filter.searchSelect('Customer', 'customer');
+            expect(await filter.activeFilterCount(), 'customer filter is active').toBe(1);
+            expect(await orders.hasNoPhpFatal(), 'no PHP fatal after filtering').toBe(true);
+            await filter.reset();
+        });
+
+        test('vendor can filter orders by Date Range via the funnel (React)', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            const filter = new VendorTableFilter(page, 'orders');
+            await filter.applyDateRange('Date Range', 1, 28);
+            expect(await filter.activeFilterCount(), 'date range filter is active').toBeGreaterThan(0);
+            expect(await orders.hasNoPhpFatal(), 'no PHP fatal after date filtering').toBe(true);
+            await filter.reset();
+        });
+
         test('vendor can search orders — narrows to zero rows for a non-existent order id (React)', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             // The vendor orders list searches strictly by order id: the REST
             // controller casts `search` with absint() and filters on the post id
@@ -136,6 +189,58 @@ test.describe('Orders (React) functionality', () => {
 
         test('vendor order list renders without a PHP fatal (React)', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             expect(await orders.hasNoPhpFatal(), 'order list shows no PHP fatal').toBe(true);
+        });
+    });
+
+    // Bulk status change mutates real orders, so each case seeds its own orders
+    // and operates only on those (selected by id), never select-all.
+    test.describe('vendor bulk actions', () => {
+        test.describe.configure({ mode: 'serial' });
+
+        let bulkApi: ApiUtils;
+
+        test.beforeAll(async () => {
+            bulkApi = new ApiUtils(await request.newContext());
+        });
+
+        test.afterAll(async () => {
+            await bulkApi.dispose();
+        });
+
+        test('vendor can bulk-change status of selected orders (React)', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
+            const mk = async () => {
+                const [, , id] = await bulkApi.createOrderWithStatus(
+                    process.env.PRODUCT_ID as string,
+                    { ...payloads.createOrder, line_items: [{ product_id: process.env.PRODUCT_ID, quantity: 1 }] },
+                    'wc-processing',
+                    payloads.vendorAuth,
+                );
+                return id;
+            };
+            const idA = await mk();
+            const idB = await mk();
+
+            const ctx = await browser.newContext({ storageState: v1 });
+            const page = await ctx.newPage();
+            const orders = new NewOrdersPage(page);
+            await orders.goto();
+            // Newest orders sort to the top of the All tab, so both are on page 1.
+            await orders.clickStatusTab('All');
+            await expect(orders.orderRowById(idA)).toBeVisible();
+            await expect(orders.orderRowById(idB)).toBeVisible();
+
+            await orders.selectOrderRow(idA);
+            await orders.selectOrderRow(idB);
+            await orders.bulkChangeStatus('Change status to completed');
+
+            await page.close();
+            await ctx.close();
+
+            // Authoritative: both orders persisted as completed.
+            const [, bodyA] = await bulkApi.getSingleOrder(idA, payloads.vendorAuth);
+            const [, bodyB] = await bulkApi.getSingleOrder(idB, payloads.vendorAuth);
+            expect(bodyA.status, 'order A bulk-completed').toBe('completed');
+            expect(bodyB.status, 'order B bulk-completed').toBe('completed');
         });
     });
 

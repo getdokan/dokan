@@ -963,6 +963,16 @@ const attributeTermSchema = z.object({
     _links: linksSchema,
 });
 
+// Dokan 5.0.5: the list (get-all) and create term endpoints return a slim "dropdown"
+// shape ({ id, name, value, label }) for the React product editor, while get-single,
+// update, delete and batch still return the full WC term shape (attributeTermSchema).
+const attributeTermDropdownSchema = z.object({
+    id: z.string().or(z.number()),
+    name: z.string(),
+    value: z.string().or(z.number()),
+    label: z.string(),
+});
+
 const abuseReportSchema = z.object({
     id: z.string().or(z.number()),
     reason: z.string(),
@@ -1695,10 +1705,11 @@ export const schemas = {
 
     // attribute terms schema
     attributeTermsSchema: {
-        attributeTermSchema: attributeTermSchema,
-        attributeTermsSchema: z.array(attributeTermSchema),
+        attributeTermSchema: attributeTermSchema, // get-single, update, delete (full WC shape)
+        attributeTermDropdownSchema: attributeTermDropdownSchema, // create (slim dropdown shape)
+        attributeTermsSchema: z.array(attributeTermDropdownSchema), // get-all returns slim dropdown items
         batchUpdateAttributesSchema: z.object({
-            update: z.array(attributeTermSchema),
+            update: z.array(attributeTermSchema), // batch update returns full WC shape
         }),
     },
 

@@ -1226,12 +1226,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCompatibility/PHPCompatibilityWP.git",
-                "reference": "2a9f41d8218ac08932e105c8681f3c5646ee0f86"
+                "reference": "0c3d688ebd61feaaf1e31759b815304a1f4ed57a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/2a9f41d8218ac08932e105c8681f3c5646ee0f86",
-                "reference": "2a9f41d8218ac08932e105c8681f3c5646ee0f86",
+                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/0c3d688ebd61feaaf1e31759b815304a1f4ed57a",
+                "reference": "0c3d688ebd61feaaf1e31759b815304a1f4ed57a",
                 "shasum": ""
             },
             "require": {
@@ -1286,7 +1286,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2026-06-06T13:25:08+00:00"
+            "time": "2026-06-21T11:02:28+00:00"
         },
         {
             "name": "phpcsstandards/phpcsextra",
@@ -3517,16 +3517,16 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.38.1",
+            "version": "v1.38.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "14c5439eec4ccff081ac14eca2dc57feb2a66d92"
+                "reference": "d3d318bad5e7a1bfbd026009c8bfb8d8f99ae6b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/14c5439eec4ccff081ac14eca2dc57feb2a66d92",
-                "reference": "14c5439eec4ccff081ac14eca2dc57feb2a66d92",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/d3d318bad5e7a1bfbd026009c8bfb8d8f99ae6b6",
+                "reference": "d3d318bad5e7a1bfbd026009c8bfb8d8f99ae6b6",
                 "shasum": ""
             },
             "require": {
@@ -3578,7 +3578,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.38.1"
+                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.38.2"
             },
             "funding": [
                 {
@@ -3598,7 +3598,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-26T12:51:13+00:00"
+            "time": "2026-05-27T06:59:30+00:00"
         },
         {
             "name": "symfony/polyfill-php73",
@@ -4005,12 +4005,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress-Coding-Standards.git",
-                "reference": "4d11dbc7f68caa89c9367b91c3fd07b7f7f4370f"
+                "reference": "53b69296577ad22a304a0ad016f816b72e04e736"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/4d11dbc7f68caa89c9367b91c3fd07b7f7f4370f",
-                "reference": "4d11dbc7f68caa89c9367b91c3fd07b7f7f4370f",
+                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/53b69296577ad22a304a0ad016f816b72e04e736",
+                "reference": "53b69296577ad22a304a0ad016f816b72e04e736",
                 "shasum": ""
             },
             "require": {
@@ -4064,7 +4064,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2026-06-06T13:19:49+00:00"
+            "time": "2026-06-22T00:44:15+00:00"
         },
         {
             "name": "wp-phpunit/wp-phpunit",
