@@ -66,7 +66,7 @@
     // turn it into a full-height column — the cards container already carries
     // flex-1 and grows, pushing the save row to the bottom of the region.
     [data-testid='settings-content'] {
-        min-height: 800px !important;
+        min-height: 500px !important;
 
         > div > div {
             min-height: 100%;
