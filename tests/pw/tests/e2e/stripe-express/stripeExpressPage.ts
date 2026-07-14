@@ -472,11 +472,18 @@ export class StripeExpressPage {
 
     // ---- Block checkout (WC Checkout block; the site default /checkout/) ----
 
-    async gotoBlockCheckout(): Promise<void> {
-        // Stripe Link inside the block Payment Element loads an invisible hCaptcha that on CI runner IPs
-        // escalates into a VISIBLE challenge, blocking the in-page card confirm so the order never reaches
-        // order-received (90s waitForURL timeout). A plain card charge doesn't need hCaptcha (it gates Link
-        // enrolment only), so abort hCaptcha resources — same guard already applied to gotoClassicCheckout.
+    async gotoBlockCheckout(blockWallet = true): Promise<void> {
+        // The Stripe Express Checkout / Link WALLET element initialises an invisible hCaptcha (its Link-
+        // enrolment gate). On CI runner IPs that invisible hCaptcha ESCALATES into a VISIBLE challenge which
+        // blocks the in-page card confirm, so the order never reaches order-received (90s waitForURL timeout).
+        // A plain card charge does not need Link, so for card flows block the Link backend (merchant-ui-api)
+        // so the wallet element never mounts and hCaptcha is never requested. The Card element
+        // (api.stripe.com + js.stripe.com core) is untouched. Wallet-render tests pass blockWallet=false.
+        // Verified live (browser network trace): merchant-ui-api.stripe.com/link → express-checkout element
+        // → hcaptcha resources; cutting the first link stops the chain.
+        if (blockWallet) {
+            await this.page.route(/merchant-ui-api\.stripe\.com/i, route => route.abort());
+        }
         await this.page.route(/hcaptcha/i, route => route.abort());
         // The WC Checkout block hydrates client-side; under load (Docker + a busy suite) that occasionally
         // overruns a 30s wait. Wait for network idle and, if the place-order button still hasn't rendered,
