@@ -23,6 +23,25 @@ test.describe('Settings test', () => {
         // below had a null request and threw on the first REST call).
         apiUtils = new ApiUtils(await request.newContext());
 
+        // Seeding for the "@lite show vendor info" test (:120): its single-product
+        // "Vendor Info" tab asserts the vendor's `.store-address` node, which the
+        // template (templates/global/product-tab.php) only renders when the product
+        // author's `dokan_profile_settings['address']` is a NON-EMPTY array. Global
+        // setup seeds vendor1 with an address, but a sibling spec sharing a CI shard
+        // can clear it (leaving an empty `address` array) before this suite runs —
+        // that drops `.store-address` and fails :120 while the store name / seller
+        // name (which key off `store_name`) still render. Re-seed vendor1's store
+        // name + address here so the test owns its prerequisite instead of trusting
+        // ambient state. (Passes locally because the shared Docker still had the
+        // address; a fresh CI shard does not.)
+        //
+        // Seed via a direct usermeta deep-merge (only the store_name + address keys)
+        // rather than the REST updateStore: dokan's Manager::update() resets omitted
+        // fields (e.g. it forces `enable_tnc`/`show_email` off when not supplied),
+        // which would clobber the vendor's T&C setting and break the store T&C test.
+        const vendor1Id = process.env.VENDOR_ID ?? (await apiUtils.getSellerId(payloads.createStore1.store_name, payloads.adminAuth));
+        await dbUtils.updateUserMeta(vendor1Id, 'dokan_profile_settings', { store_name: payloads.createStore1.store_name, address: payloads.createStore1.address });
+
         // Deterministic setup for the "@pro enable T&C on registration" test:
         // the #tc_agree checkbox only renders when a Terms & Conditions page is
         // configured (seller-registration-form.php gates on
