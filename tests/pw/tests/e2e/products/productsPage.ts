@@ -1278,12 +1278,45 @@ export class ProductsPage {
         }
     }
 
+    // A fresh WooCommerce install shows a "Start by adding attributes" onboarding pointer the
+    // first time the Attributes tab is opened. It overlays the attribute controls and swallows
+    // the next click, so the add-existing-attribute AJAX never fires and clickAndWaitForResponse
+    // times out. It only appears on a fresh env (dismissed state accumulates locally), which is
+    // why this passed locally but failed on CI. Dismiss it if present (idempotent, no-op otherwise).
+    async dismissAttributesTour(): Promise<void> {
+        // On a fresh install WooCommerce shows a @wordpress/tour-kit onboarding tour
+        // (.woocommerce-tour-kit) the first time the Attributes tab is opened; its overlay +
+        // spotlight swallow clicks on the attribute controls. Wait for it to mount, then click its
+        // "Got it" done button (.woocommerce-tour-kit-step-navigation__done-btn). Idempotent —
+        // no-op when the tour was already dismissed. (Confirmed live via DOM inspection.)
+        // Guard on the "Got it" button, not the tour container (the container is a zero-size popper
+        // wrapper Playwright reports as not-visible; verified via live DOM inspection). Use waitFor
+        // (which waits) — isVisible() is an immediate snapshot. The tour's overlay/spotlight can keep
+        // intercepting clicks, so force-click the done button and retry until the overlay is actually
+        // gone (confirmed: once the overlay clears, the attribute select2 + its AJAX work).
+        const done = this.page
+            .locator('.woocommerce-tour-kit-step-navigation__done-btn, .tour-kit-frame button.is-primary')
+            .first();
+        try {
+            await done.waitFor({ state: 'visible', timeout: 8000 });
+        } catch {
+            return; // tour never appeared (already dismissed) — nothing to do
+        }
+        // The tour's overlay intercepts real pointer events, so a normal/force click lands on the
+        // overlay and misses the button. dispatchEvent fires the button's click handler directly,
+        // which closes the tour + overlay (verified live: normal/force click → overlay stays;
+        // dispatchEvent → overlay cleared).
+        await done.dispatchEvent('click').catch(() => undefined);
+        await this.page.locator('.tour-kit-overlay').first().waitFor({ state: 'hidden', timeout: 8000 }).catch(() => undefined);
+    }
+
     // admin add variable product
     async addVariableProduct(product: typeof productData.variable): Promise<void> {
         await this.goIfNotThere(subUrls.backend.wc.addNewProducts);
         await this.addProductNameAndType(product.productName(), product.productType);
 
         await this.clickAndWaitForResponse(subUrls.ajax, productsAdmin.product.subMenus.attributes);
+        await this.dismissAttributesTour();
 
         if (await this.isVisibleLocator(productsAdmin.product.customProductAttribute)) {
             await this.selectByValue(productsAdmin.product.customProductAttribute, `pa_${product.attribute}`);
