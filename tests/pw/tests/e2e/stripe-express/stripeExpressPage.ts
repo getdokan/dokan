@@ -487,6 +487,13 @@ export class StripeExpressPage {
             await this.page.route(/merchant-ui-api\.stripe\.com/i, route => route.abort());
         }
         await this.page.route(/hcaptcha/i, route => route.abort());
+        // LOCAL VALIDATION AID — inert unless SIMULATE_CONFIRM_BLOCK=1. Reproduces the CI condition where the
+        // in-page Stripe confirm is blocked (hCaptcha escalation on GitHub runner IPs) by aborting ONLY the
+        // PaymentIntent confirm POST (the Payment Element still mounts). Lets the server-side settle fallback
+        // be exercised and verified on a dev machine, whose IP never triggers the escalation. Never set on CI.
+        if (process.env.SIMULATE_CONFIRM_BLOCK === '1') {
+            await this.page.route(/api\.stripe\.com\/v1\/payment_intents\/[^/]+\/confirm/i, route => route.abort());
+        }
         // The WC Checkout block hydrates client-side; under load (Docker + a busy suite) that occasionally
         // overruns a 30s wait. Wait for network idle and, if the place-order button still hasn't rendered,
         // reload once before failing. This is a render-timing guard — the page itself renders fine (verified
@@ -550,8 +557,12 @@ export class StripeExpressPage {
      * order settled to a paid status (mirrors the API check the 3DS tests already rely on). If no
      * such order appears, this throws and the test fails as it should.
      */
-    async placeBlockOrderExpectReceived(): Promise<string> {
-        const baseline = await this.latestStripeOrderId();
+    async placeBlockOrderExpectReceived(baselineOverride?: number): Promise<string> {
+        // baselineOverride lets a caller capture the pre-payment baseline EARLIER than this click — needed
+        // for the decline→retry flow (SE-EDGE-04) where the declined attempt already created the draft order
+        // the retry reuses, so a baseline taken here would equal that order's id and `id > baseline` would
+        // never match. Callers of the plain happy path omit it (baseline taken just before the click).
+        const baseline = baselineOverride ?? (await this.latestStripeOrderId());
         await this.page.locator(this.blockSelectors.placeOrder).click();
         try {
             await this.page.waitForURL('**/order-received/**', { timeout: 60_000 });
@@ -561,6 +572,11 @@ export class StripeExpressPage {
             // redirect flaked after a successful payment — fall through to API confirmation
         }
         return await this.confirmNewPaidStripeOrder(baseline);
+    }
+
+    /** Public pre-payment baseline: newest dokan_stripe_express order id BEFORE a checkout attempt. */
+    async stripeOrderBaseline(): Promise<number> {
+        return this.latestStripeOrderId();
     }
 
     /** Newest existing dokan_stripe_express order id (0 if none) — the pre-payment baseline. */
@@ -595,8 +611,15 @@ export class StripeExpressPage {
                     async () => {
                         const res = await ctx.get(`${SERVER_URL}/wc/v3/orders?per_page=10&orderby=date&order=desc`);
                         const orders = (await res.json().catch(() => [])) as Array<{ id: number; status: string; payment_method: string; order_key?: string; meta_data?: Array<{ key: string; value: string }> }>;
-                        const o = Array.isArray(orders) ? orders.find(x => x.payment_method === 'dokan_stripe_express' && Number(x.id) > baseline) : undefined;
-                        if (!o) return 'none';
+                        const candidates = Array.isArray(orders) ? orders.filter(x => x.payment_method === 'dokan_stripe_express' && Number(x.id) > baseline) : [];
+                        if (!candidates.length) return 'none';
+                        // Anchor on the order that OWNS the PaymentIntent: a multi-vendor purchase splits into a
+                        // parent order + per-vendor sub-orders (all dokan_stripe_express), but ONLY the parent
+                        // carries `_dokan_stripe_express_payment_intent_id`. The newest order is a sub-order with
+                        // no intent, so confirming/settling by "newest" would skip the confirm and never settle.
+                        // Prefer the intent-bearing (payment) order; fall back to newest until the meta is written.
+                        const hasIntent = (x: { meta_data?: Array<{ key: string; value: string }> }) => (x.meta_data || []).some(m => m.key === '_dokan_stripe_express_payment_intent_id');
+                        const o = candidates.find(hasIntent) ?? candidates[0];
                         orderId = String(o.id);
                         if (/processing|completed|on-hold/.test(o.status)) return o.status; // paid — done
                         // Not paid: the UI confirm was likely hCaptcha-blocked. Confirm the real intent once,

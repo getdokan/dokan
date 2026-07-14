@@ -2444,8 +2444,8 @@ export const data = {
             settingTitle: 'Social Settings',
             platform: 'facebook',
             facebook: {
-                appId: FB_APP_ID,
-                appSecret: FB_APP_SECRET,
+                appId: FB_APP_ID || 'test-fb-app-id',
+                appSecret: FB_APP_SECRET || 'test-fb-app-secret',
             },
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
@@ -2562,8 +2562,8 @@ export const data = {
         liveChat: {
             settingTitle: 'Live Chat Settings',
             chatProvider: 'talkjs', // messenger, talkjs, tawkto, whatsapp
-            talkJsAppId: TALKJS_APP_ID,
-            talkJsAppSecret: TALKJS_APP_SECRET,
+            talkJsAppId: TALKJS_APP_ID || 'test-talkjs-app-id',
+            talkJsAppSecret: TALKJS_APP_SECRET || 'test-talkjs-app-secret',
             chatButtonPosition: 'above_tab', // above_tab, inside_tab, dont_show
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
@@ -2647,8 +2647,8 @@ export const data = {
         // Printful Settings
         printful: {
             settingTitle: 'Printful Settings',
-            clientId: PRINTFUL_APP_ID,
-            secretKey: PRINTFUL_APP_SECRET,
+            clientId: PRINTFUL_APP_ID || 'test-printful-client-id',
+            secretKey: PRINTFUL_APP_SECRET || 'test-printful-secret-key',
             popupTitle: 'Size Guide',
             popupTextColor: '#000000',
             popupBackgroundColor: '#FFFFFF',

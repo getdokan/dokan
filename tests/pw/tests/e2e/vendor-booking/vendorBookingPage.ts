@@ -2,6 +2,13 @@ import { Page, expect } from '@playwright/test';
 import { helpers, toPath, closeAnnouncementModal } from '@utils/helpers';
 import { data } from '@utils/testData';
 
+// The suite's strict tsconfig doesn't include @types/node — declare process locally.
+declare const process: { env: Record<string, string | undefined> };
+// The booking add-to-cart / place-order round-trips post back to WordPress; on loaded CI runners those
+// responses can take well over the Playwright waitForResponse default (30s). Give them CI headroom so a
+// slow-but-successful round-trip isn't misread as a failure (matches the suite's slow-render policy).
+const RESPONSE_TIMEOUT = helpers.parseBoolean(process.env.CI) ? 90_000 : 30_000;
+
 // Re-export the real utils the spec imports from this module (contract preserved).
 export { ApiUtils } from '@utils/apiUtils';
 export { payloads } from '@utils/payloads';
@@ -287,7 +294,7 @@ export class BookingPage {
         await element.scrollIntoViewIfNeeded();
         await element.waitFor({ state: 'visible' });
         await Promise.all([
-            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code),
+            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code, { timeout: RESPONSE_TIMEOUT }),
             element.click(),
         ]);
     }
@@ -295,7 +302,7 @@ export class BookingPage {
     private async clickAndWaitForResponseAndLoadState(subUrl: string, selector: string, code = 200): Promise<void> {
         const [, response] = await Promise.all([
             this.page.waitForLoadState('load'),
-            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code),
+            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code, { timeout: RESPONSE_TIMEOUT }),
             this.page.locator(selector).click(),
         ]);
         expect(response.status()).toBe(code);
