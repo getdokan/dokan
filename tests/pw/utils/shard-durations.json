@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-14T00:00:00Z",
+  "generatedAt": "2026-07-14T12:00:00Z",
   "shards": 12,
   "specs": [
     {
@@ -94,7 +94,7 @@
     },
     {
       "file": "tools/tools.spec.ts",
-      "ms": 39600,
+      "ms": 500,
       "tests": 10
     },
     {
@@ -424,7 +424,7 @@
     },
     {
       "file": "admin/adminTools.spec.ts",
-      "ms": 84436,
+      "ms": 500,
       "tests": 17
     },
     {
@@ -953,5 +953,5 @@
       "tests": 7
     }
   ],
-  "note": "de-stub grind durations: real measured (workers=1) or per-test estimates, merged as max(measured, prior baseline) to avoid underweighting; stripe-express left key-gated (skipped in CI)"
+  "note": "de-stub grind durations: real measured (workers=1) or per-test estimates, merged as max(measured, prior baseline) to avoid underweighting; stripe-express left key-gated (skipped in CI) | tools + adminTools now describe.skip (weight floored)"
 }
