@@ -1,5 +1,5 @@
 import { Page, expect, test } from '@utils/test';
-import { SettingsPage, dbData, dbUtils, data } from './settingsPage';
+import { SettingsPage, dbData, dbUtils, data, ApiUtils, payloads } from './settingsPage';
 import path from 'path';
 
 import { toPath } from '@utils/helpers';
@@ -9,11 +9,26 @@ const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.jso
 test.describe('Settings test', () => {
     let admin: SettingsPage;
     let aPage: Page;
+    let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext({ storageState: a1 });
         aPage = await adminContext.newPage();
         admin = new SettingsPage(aPage);
+
+        // Seed the "National ID" verification method the vendor-verification test
+        // reads. On a fresh install Dokan Pro ships it as a default method, but the
+        // sibling `vendorVerifications.spec.ts` beforeAll deletes ALL methods, so on
+        // a shared DB it may be gone — its settings-tab row would then be absent and
+        // the switcher would time out. Idempotently ensure it exists (create only
+        // when missing) so this test never relies on ambient state. The tab lists the
+        // first 100 methods by id asc, so a freshly-created one stays visible.
+        apiUtils = new ApiUtils(null);
+        const nationalId = data.dokanSettings.vendorVerification.verificationMethods.nationalId;
+        const existingMethodId = await apiUtils.getVerificationMethodId(nationalId, payloads.adminAuth);
+        if (!existingMethodId) {
+            await apiUtils.createVerificationMethod({ ...payloads.createVerificationMethod(), title: nationalId, status: true }, payloads.adminAuth);
+        }
     });
 
     test.afterAll(async () => {

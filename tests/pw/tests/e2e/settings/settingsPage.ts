@@ -4,12 +4,14 @@ import { closeAnnouncementModal, toPath, helpers, parseBoolean } from '@utils/he
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 import { dbUtils } from '@utils/dbUtils';
+import { ApiUtils } from '@utils/apiUtils';
+import { payloads } from '@utils/payloads';
 import { dokanSettings } from '@utils/interfaces';
 
 // Re-export the real utils so the spec's
 // `import { SettingsPage, dbData, dbUtils, data } from './settingsPage'`
 // resolves to the live dbUtils / dbData / testData (NOT local no-op stubs).
-export { data, dbData, dbUtils };
+export { data, dbData, dbUtils, ApiUtils, payloads };
 
 // DOKAN_PRO gates the Pro-only settings sections. Never branch on the raw env
 // string — a non-empty "false" is truthy — so normalise through parseBoolean().
@@ -763,14 +765,44 @@ export class SettingsPage {
         return '';
     }
 
-    // click "Save Changes" and wait for the admin-ajax save + a settled load state.
-    private async saveSettings(): Promise<void> {
-        const [, response] = await Promise.all([
-            this.page.waitForLoadState('load'),
-            this.page.waitForResponse(resp => resp.url().includes(data.subUrls.ajax) && resp.status() === 200),
-            this.page.locator(settingsSelectors.saveChanges).click(),
-        ]);
-        expect(response.status()).toBe(200);
+    // Click "Save Changes" and wait for the real `dokan_save_settings` admin-ajax POST.
+    //
+    // The legacy Dokan settings form binds its ajax submit handler asynchronously. If
+    // "Save Changes" is clicked before that handler is ready, the browser performs a
+    // NATIVE form submit that reloads the whole page back onto the default (#/settings)
+    // tab — dropping the current tab's fields — after which an unrelated admin-ajax
+    // call (heartbeat / settings fetch) can falsely satisfy a loose "any admin-ajax
+    // 200" wait, masking the reload. That is exactly the CI failure mode: the assert
+    // that follows a save then can't find its tab-scoped field ("navigated to
+    // #/settings"). So settle the page first (handler binds by networkidle), then
+    // retry the click until the SPECIFIC dokan_save_settings request fires and 200s.
+    private async saveSettings(reopen?: { menu: string; title: string }): Promise<void> {
+        await this.page.waitForLoadState('networkidle');
+        await expect(async () => {
+            const [response] = await Promise.all([
+                this.page.waitForResponse(
+                    resp =>
+                        resp.url().includes(data.subUrls.ajax) &&
+                        resp.request().method() === 'POST' &&
+                        (resp.request().postData() ?? '').includes('action=dokan_save_settings') &&
+                        resp.status() === 200,
+                    { timeout: 15000 },
+                ),
+                this.page.locator(settingsSelectors.saveChanges).click(),
+            ]);
+            expect(response.status()).toBe(200);
+        }).toPass({ intervals: [1000, 2000, 3000], timeout: 90000 });
+
+        // Sections that contain a `refresh_after_save` field (Withdraw's withdraw_charges,
+        // Live Chat, Appearance's map_api_source, Reverse Withdrawal, Menu Manager,
+        // Shipping) make Settings.vue call window.location.reload() on a successful save.
+        // That reload drops the form back to the settings-menu landing and races any
+        // value assertion the caller runs next (the CI failure: "navigated to #/settings",
+        // tab-scoped field "element(s) not found"). When the caller flags such a section,
+        // re-open it on the reloaded page so persisted values render on a fresh form.
+        if (reopen) {
+            await this.goToSingleDokanSettings(reopen.menu, reopen.title);
+        }
     }
 
     private async typeAndWaitForResponse(subUrl: string, selector: string, text: string, code = 200): Promise<void> {
@@ -1005,8 +1037,8 @@ export class SettingsPage {
             await this.page.locator(settingsSelectors.withdraw.weeklyScheduleDay).selectOption({ value: withdraw.weeklyScheduleDay });
         }
 
-        // save settings
-        await this.saveSettings();
+        // save settings (Withdraw's withdraw_charges field forces a post-save reload)
+        await this.saveSettings({ menu: settingsSelectors.menus.withdrawOptions, title: data.dokanSettings.withdraw.settingTitle });
         await expect(this.page.locator(settingsSelectors.withdraw.minimumWithdrawAmount)).toHaveValue(withdraw.minimumWithdrawAmount);
     }
 
@@ -1283,8 +1315,9 @@ export class SettingsPage {
         await this.enableSwitcher(settingsSelectors.liveChat.chatButtonOnVendorPage);
         await this.page.locator(settingsSelectors.liveChat.chatButtonOnProductPage).selectOption({ value: liveChat.chatButtonPosition });
 
-        // save settings
-        await this.saveSettings();
+        // save settings (the live-chat module registers a refresh_after_save field, so
+        // the save forces a page reload; re-open the section before verifying values)
+        await this.saveSettings({ menu: settingsSelectors.menus.liveChat, title: data.dokanSettings.liveChat.settingTitle });
 
         await this.toHaveBackgroundColor(settingsSelectors.liveChat.enableLiveChat + '//span', 'rgb(0, 144, 255)');
         await expect(this.page.locator(settingsSelectors.liveChat.chatProvider(liveChat.chatProvider))).toHaveClass('checked');
