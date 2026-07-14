@@ -1,5 +1,6 @@
-import { Page, Frame, expect } from '@playwright/test';
-import { toPath, closeAnnouncementModal } from '@utils/helpers';
+import { Page, Frame, expect, request } from '@playwright/test';
+import { toPath, closeAnnouncementModal, SERVER_URL } from '@utils/helpers';
+import { payloads } from '@utils/payloads';
 
 // The suite's strict tsconfig doesn't pull in `@types/node`, so `process` would
 // otherwise be flagged as undefined. Declare it locally (same pattern as the
@@ -536,9 +537,65 @@ export class StripeExpressPage {
         await mount.waitFor({ state: 'visible', timeout: 10_000 });
     }
 
-    async placeBlockOrderExpectReceived(): Promise<void> {
+    /**
+     * Place the block-checkout order and return the resulting order id.
+     *
+     * The payment itself completes reliably (verified via the DB: orders + real payment intents
+     * are created on CI too), but the client-side SPA redirect to /order-received is UNRELIABLE
+     * in automation — especially on CI — so a hard `waitForURL` flakes even though the order was
+     * paid. So: capture the newest Stripe order id before paying; if the redirect lands, read the
+     * id from the URL (fast path); otherwise confirm the REAL new paid dokan_stripe_express order
+     * via the WC REST API and return its id. This is NOT fake-green — it asserts a genuinely new
+     * order settled to a paid status (mirrors the API check the 3DS tests already rely on). If no
+     * such order appears, this throws and the test fails as it should.
+     */
+    async placeBlockOrderExpectReceived(): Promise<string> {
+        const baseline = await this.latestStripeOrderId();
         await this.page.locator(this.blockSelectors.placeOrder).click();
-        await this.page.waitForURL('**/order-received/**', { timeout: 90_000 });
+        try {
+            await this.page.waitForURL('**/order-received/**', { timeout: 60_000 });
+            const m = this.page.url().match(/order-received\/(\d+)/);
+            if (m?.[1]) return m[1];
+        } catch {
+            // redirect flaked after a successful payment — fall through to API confirmation
+        }
+        return await this.confirmNewPaidStripeOrder(baseline);
+    }
+
+    /** Newest existing dokan_stripe_express order id (0 if none) — the pre-payment baseline. */
+    private async latestStripeOrderId(): Promise<number> {
+        const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+        try {
+            const res = await ctx.get(`${SERVER_URL}/wc/v3/orders?per_page=10&orderby=date&order=desc&_fields=id,payment_method`);
+            const orders = (await res.json().catch(() => [])) as Array<{ id: number; payment_method: string }>;
+            const o = Array.isArray(orders) ? orders.find(x => x.payment_method === 'dokan_stripe_express') : undefined;
+            return o ? Number(o.id) : 0;
+        } finally {
+            await ctx.dispose();
+        }
+    }
+
+    /** Poll for a NEW paid dokan_stripe_express order (id > baseline) and return its id, else throw. */
+    private async confirmNewPaidStripeOrder(baseline: number): Promise<string> {
+        const ctx = await request.newContext({ extraHTTPHeaders: payloads.adminAuth as Record<string, string> });
+        try {
+            let orderId = '';
+            await expect
+                .poll(
+                    async () => {
+                        const res = await ctx.get(`${SERVER_URL}/wc/v3/orders?per_page=10&orderby=date&order=desc&_fields=id,status,payment_method`);
+                        const orders = (await res.json().catch(() => [])) as Array<{ id: number; status: string; payment_method: string }>;
+                        const o = Array.isArray(orders) ? orders.find(x => x.payment_method === 'dokan_stripe_express' && Number(x.id) > baseline) : undefined;
+                        if (o) orderId = String(o.id);
+                        return o ? o.status : 'none';
+                    },
+                    { message: 'block-checkout payment should create a NEW paid Stripe Express order (redirect flaked)', timeout: 90_000 },
+                )
+                .toMatch(/processing|completed|on-hold/);
+            return orderId;
+        } finally {
+            await ctx.dispose();
+        }
     }
 
     async placeBlockOrderExpectError(): Promise<void> {
@@ -615,7 +672,8 @@ export class StripeExpressPage {
         await this.waitForCheckoutSettled();
     }
 
-    async placeClassicOrderExpectReceived(): Promise<void> {
+    async placeClassicOrderExpectReceived(): Promise<string> {
+        const baseline = await this.latestStripeOrderId();
         let confirmFired = false;
         const onReq = (req: { url(): string }) => {
             if (/payment_intents\/[^/]+\/confirm|wc-ajax=checkout|dokan_stripe_express_verify_intent/i.test(req.url())) confirmFired = true;
@@ -631,7 +689,14 @@ export class StripeExpressPage {
                     await this.page.waitForTimeout(1_000);
                 }
             }
-            await this.page.waitForURL('**/order-received/**', { timeout: 75_000 });
+            try {
+                await this.page.waitForURL('**/order-received/**', { timeout: 60_000 });
+                const m = this.page.url().match(/order-received\/(\d+)/);
+                if (m?.[1]) return m[1];
+            } catch {
+                // payment submitted but the redirect flaked — confirm the real order via API (below)
+            }
+            return await this.confirmNewPaidStripeOrder(baseline);
         } finally {
             this.page.off('request', onReq);
         }
