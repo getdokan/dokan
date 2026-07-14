@@ -613,13 +613,17 @@ export class CustomerPage {
     }
 
     private async goToCheckoutFromCart(): Promise<void> {
-        await this.goto(subUrls.cart);
-        // Cart block hydrates async (totals/shipping calls). Wait for it to settle
-        // before interacting, otherwise the button may detach mid-click or be
-        // covered by the placeholder overlay.
-        await this.page.waitForLoadState('networkidle');
         const button = this.page.locator(selectors.cart.proceedToCheckout).first();
-        await button.waitFor({ state: 'visible', timeout: 30000 });
+        // The cart is a Gutenberg block that reads from the WooCommerce Store API.
+        // Under load (CI) that API can briefly lag the add-to-cart AJAX, so the cart
+        // first renders the EMPTY-cart block and the checkout button never appears
+        // within a single wait. Reload the cart until the item syncs and the button
+        // hydrates — a fresh navigation forces a fresh Store API fetch.
+        await expect(async () => {
+            await this.goto(subUrls.cart);
+            await this.page.waitForLoadState('networkidle');
+            await button.waitFor({ state: 'visible', timeout: 15000 });
+        }).toPass({ intervals: [2000, 3000, 5000], timeout: 90000 });
         await button.scrollIntoViewIfNeeded();
         await button.click();
         await this.page.waitForURL(/\/checkout\/?/, { timeout: 30000 });
