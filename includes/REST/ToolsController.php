@@ -12,7 +12,7 @@ use WP_REST_Server;
  *
  * Pro keeps its own paths under the same `tools` base for its Pro-only actions.
  *
- * @since DOKAN_SINCE
+ * @since 5.0.9
  */
 class ToolsController extends DokanBaseAdminController {
 
@@ -33,7 +33,7 @@ class ToolsController extends DokanBaseAdminController {
     /**
      * Constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.9
      */
     public function __construct() {
         $this->tools = new ToolsActions();
@@ -42,7 +42,7 @@ class ToolsController extends DokanBaseAdminController {
     /**
      * Register routes.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.9
      *
      * @return void
      */
@@ -81,7 +81,7 @@ class ToolsController extends DokanBaseAdminController {
     /**
      * Create the Dokan default pages.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.9
      *
      * @param WP_REST_Request $request Request object.
      *
@@ -94,7 +94,7 @@ class ToolsController extends DokanBaseAdminController {
     /**
      * Check whether all Dokan pages exist.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.9
      *
      * @param WP_REST_Request $request Request object.
      *
@@ -107,7 +107,7 @@ class ToolsController extends DokanBaseAdminController {
     /**
      * Clear all Dokan caches.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.9
      *
      * @param WP_REST_Request $request Request object.
      *

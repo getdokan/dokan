@@ -18,7 +18,7 @@ import { FormItem } from './types';
  * Schema field IDs (Elements constants) rendered in the lightweight quick-create form.
  * Everything else from the full product-editor schema is fetched but never shown.
  *
- * @since DOKAN_SINCE
+ * @since 5.0.9
  */
 const QUICK_CREATE_FIELDS = [
     {
@@ -80,7 +80,7 @@ interface InitFieldsResponse {
  * the stacked name/price fields, then category and short-description rows) so
  * the modal keeps its shape while the schema fetch is in flight.
  *
- * @since DOKAN_SINCE
+ * @since 5.0.9
  */
 const QuickCreateSkeleton = () => (
     <div role="status" className="animate-pulse">
@@ -152,7 +152,7 @@ interface QuickCreateModalProps {
  * @param root0.isOpen
  * @param root0.onClose
  * @param root0.onCreated
- * @since DOKAN_SINCE
+ * @since 5.0.9
  */
 const QuickCreateModal = ( {
     isOpen,

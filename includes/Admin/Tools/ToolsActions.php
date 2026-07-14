@@ -8,14 +8,14 @@ namespace WeDevs\Dokan\Admin\Tools;
  * The same logic backs both the REST controller (React dashboard) and the AJAX
  * handlers (legacy Vue admin), so a tool behaves identically across both UIs.
  *
- * @since DOKAN_SINCE
+ * @since 5.0.9
  */
 class ToolsActions {
 
     /**
      * Default Dokan pages the "Installation Guide" tool ensures exist.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.9
      *
      * @return array<int, array<string, string>>
      */
@@ -55,7 +55,7 @@ class ToolsActions {
      * recreates only the pages that are actually missing, so an admin can recover
      * an accidentally-deleted page from the Tools screen at any time.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.9
      *
      * @return array
      */
@@ -106,7 +106,7 @@ class ToolsActions {
     /**
      * Whether the Dokan default pages have already been created.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.9
      *
      * @return array
      */
@@ -124,7 +124,7 @@ class ToolsActions {
      * flushes the object cache so data held in a persistent backend (Redis/Memcached)
      * is rebuilt on demand.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.9
      *
      * @return array
      */
@@ -144,7 +144,7 @@ class ToolsActions {
         /**
          * Fires after all Dokan caches have been cleared from the admin Tools page.
          *
-         * @since DOKAN_SINCE
+         * @since 5.0.9
          */
         do_action( 'dokan_caches_cleared' );
 

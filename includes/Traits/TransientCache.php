@@ -48,7 +48,7 @@ trait TransientCache {
              * core garbage-collect it. The value must outlive the longest-lived data
              * transient in any group, otherwise the group is invalidated prematurely.
              *
-             * @since DOKAN_SINCE
+             * @since 5.0.9
              *
              * @param int    $expiration Marker lifetime in seconds. Default 1 month.
              * @param string $group      Cache group the marker belongs to.

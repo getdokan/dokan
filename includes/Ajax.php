@@ -66,7 +66,7 @@ class Ajax {
     /**
      * Create the Dokan default pages (legacy Vue admin Tools page).
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.9
      *
      * @return void
      */
@@ -83,7 +83,7 @@ class Ajax {
     /**
      * Check whether all Dokan pages exist (legacy Vue admin Tools page).
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.9
      *
      * @return void
      */
@@ -100,7 +100,7 @@ class Ajax {
     /**
      * Clear all Dokan caches (legacy Vue admin Tools page).
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.9
      *
      * @return void
      */

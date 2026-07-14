@@ -8,7 +8,7 @@ namespace WeDevs\Dokan\Admin\Dashboard\Pages;
  * Renders the free Tools sections; Dokan Pro injects its own sections into the
  * same page via the `dokan_admin_dashboard_tools_sections` JS filter.
  *
- * @since DOKAN_SINCE
+ * @since 5.0.9
  */
 class Tools extends AbstractPage {
 
