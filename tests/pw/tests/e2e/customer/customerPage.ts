@@ -613,17 +613,19 @@ export class CustomerPage {
     }
 
     private async goToCheckoutFromCart(): Promise<void> {
+        await this.goto(subUrls.cart);
+        await this.page.waitForLoadState('networkidle');
         const button = this.page.locator(selectors.cart.proceedToCheckout).first();
-        // The cart is a Gutenberg block that reads from the WooCommerce Store API.
-        // Under load (CI) that API can briefly lag the add-to-cart AJAX, so the cart
-        // first renders the EMPTY-cart block and the checkout button never appears
-        // within a single wait. Reload the cart until the item syncs and the button
-        // hydrates — a fresh navigation forces a fresh Store API fetch.
+        // In the narrow (single-column) block-cart layout the only "Proceed to Checkout"
+        // button lives in the MOBILE sticky footer (.wc-block-cart__submit-container--sticky),
+        // which is display:none until the page is scrolled — it is revealed on scroll via an
+        // IntersectionObserver. Wait for it in the DOM, scroll to the bottom to trigger the
+        // reveal, then click. (Verified live: pre-scroll display:none → post-scroll display:block.)
+        await button.waitFor({ state: 'attached', timeout: 30000 });
         await expect(async () => {
-            await this.goto(subUrls.cart);
-            await this.page.waitForLoadState('networkidle');
-            await button.waitFor({ state: 'visible', timeout: 15000 });
-        }).toPass({ intervals: [2000, 3000, 5000], timeout: 90000 });
+            await this.page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+            await button.waitFor({ state: 'visible', timeout: 5000 });
+        }).toPass({ intervals: [500, 1000, 2000], timeout: 30000 });
         await button.scrollIntoViewIfNeeded();
         await button.click();
         await this.page.waitForURL(/\/checkout\/?/, { timeout: 30000 });
