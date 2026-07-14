@@ -188,6 +188,16 @@ export class ApiUtils extends RealApiUtils {
         return super.updatePaymentGateway(...args);
     }
 
+    override async checkProductExistence(...args: Parameters<RealApiUtils['checkProductExistence']>): ReturnType<RealApiUtils['checkProductExistence']> {
+        await this.ready();
+        return super.checkProductExistence(...args);
+    }
+
+    override async createProduct(...args: Parameters<RealApiUtils['createProduct']>): ReturnType<RealApiUtils['createProduct']> {
+        await this.ready();
+        return super.createProduct(...args);
+    }
+
     override async dispose(): Promise<void> {
         await this.ready();
         await super.dispose();

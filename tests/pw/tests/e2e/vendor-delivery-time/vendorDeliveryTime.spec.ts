@@ -32,6 +32,20 @@ test.describe('Vendor delivery time test', () => {
         // skip the global env setup that normally enables it, so ensure Direct Bank
         // Transfer is on before the buy flow.
         await apiUtils.updatePaymentGateway('bacs', payloads.bcs, payloads.adminAuth);
+
+        // Deterministic seed: the buy flow adds the predefined simple product to the
+        // cart by navigating to its permalink (product/<slug-of-name>). The global
+        // _env.setup creates this product, but within a CI shard other specs that run
+        // before this one can delete/recreate it (drifting its slug or removing it
+        // entirely). NO_SETUP local runs masked the gap by reusing accumulated Docker
+        // state where the product still existed. Seed our own prerequisite here so the
+        // single-product page always resolves — create-if-missing (never delete) keeps
+        // the shared PRODUCT_ID stable for other specs in the shard.
+        const productName = data.predefined.simpleProduct.product1.name;
+        const productExists = await apiUtils.checkProductExistence(productName, payloads.vendorAuth);
+        if (!productExists) {
+            await apiUtils.createProduct({ ...payloads.createProduct(), name: productName }, payloads.vendorAuth);
+        }
     });
 
     test.afterAll(async () => {
