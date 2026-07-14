@@ -677,7 +677,21 @@ export class ProductsPage {
 
     // save product
     async saveProduct(): Promise<void> {
-        await this.clickAndWaitForResponseAndLoadState(subUrls.products, productsVendor.saveProduct);
+        // The classic product editor binds its form-submit handler asynchronously (RankMath SEO /
+        // WooCommerce product init). Clicking "Save Product" before that handler is ready silently
+        // no-ops the first submit (the save request never fires), so wait for the page to settle,
+        // then re-click until the save request actually fires. Mirrors tests/e2e/products/productsPage.ts.
+        await this.page.waitForLoadState('networkidle');
+        await this.toPass(
+            async () => {
+                const [response] = await Promise.all([
+                    this.page.waitForResponse(resp => resp.url().includes(subUrls.products) && resp.status() === 200, { timeout: 15000 }),
+                    this.page.locator(productsVendor.saveProduct).click(),
+                ]);
+                expect(response.status()).toBe(200);
+            },
+            { intervals: [1000, 2000, 3000], timeout: 90000 },
+        );
         await this.toContainText(productsVendor.updatedSuccessMessage, messages.productSaved);
     }
 
@@ -772,7 +786,11 @@ export class ProductsPage {
             await this.click(productsVendor.category.openCategoryModal);
         } else {
             await this.click(productsVendor.category.addNewCategory);
-            await this.click(productsVendor.category.selectACategory);
+            // In multiple-category (Pro) mode the product already renders a trailing empty
+            // "- Select a category -" selector by default, so clicking "+ Add new category"
+            // leaves TWO empty selectors on the page. Open the one we just appended (last)
+            // instead of letting the plain locator trip strict mode on both.
+            await this.page.locator(productsVendor.category.selectACategory).last().click();
         }
         await this.toBeVisible(productsVendor.category.categoryModal);
         await this.type(productsVendor.category.searchInput, category);
@@ -1125,6 +1143,14 @@ export class ProductsPage {
     // add product shipping
     async addProductShipping(productName: string, shipping: product['productInfo']['shipping']): Promise<void> {
         await this.goToProductEditById(productName);
+        // An earlier test ("vendor can add product virtual option") turns productIdBasic virtual, and
+        // the shipping panel is hidden for virtual products (div.dokan-shipping-container.hide_if_virtual).
+        // Ensure the product is physical so the shipping fields exist before editing them, instead of
+        // relying on the ambient (test-order-dependent) virtual state.
+        if (await this.page.locator(productsVendor.virtual).isChecked()) {
+            await this.uncheck(productsVendor.virtual);
+        }
+        await this.toBeVisible(productsVendor.shipping.shippingContainer);
         await this.check(productsVendor.shipping.requiresShipping);
         await this.clearAndType(productsVendor.shipping.weight, shipping.weight);
         await this.clearAndType(productsVendor.shipping.length, shipping.length);
@@ -1407,7 +1433,22 @@ export class ProductsPage {
     async importAddon(productName: string, addon: string, addonTitle: string): Promise<void> {
         await this.goToProductEditById(productName);
         await this.click(productsVendor.addon.import);
-        await this.clearAndType(productsVendor.addon.importInput, addon);
+        // The Import button reveals the textarea via a jQuery slideToggle('300') whose completion
+        // callback clears it once (`$(this).val('')`). A fill that lands inside that ~300ms window is
+        // silently wiped, so nothing is imported and the save produces no addon. Wait past the one-shot
+        // clear before filling, then confirm the value survived (retrying as a safety net) so the
+        // serialized addon is actually present in the field at save time.
+        const importField = this.page.locator(productsVendor.addon.importInput);
+        await expect(importField).toBeVisible();
+        await this.page.waitForTimeout(600);
+        await this.toPass(
+            async () => {
+                await importField.fill(addon);
+                await this.page.waitForTimeout(300);
+                await expect(importField).toHaveValue(addon);
+            },
+            { timeout: 20_000, intervals: [500, 1_000, 1_000] },
+        );
         await this.saveProduct();
         await this.toBeVisible(productsVendor.addon.addonRow(addonTitle));
     }
@@ -1517,8 +1558,13 @@ export class ProductsPage {
     // can't add product min greater than max
     async cantAddGreaterMin(productName: string, minMaxOption: product['productInfo']['minMax']): Promise<void> {
         await this.goToProductEditById(productName);
-        await this.clearAndType(productsVendor.minMax.minimumQuantity, minMaxOption.minimumProductQuantity);
+        // Type the maximum BEFORE the minimum. When the product already carries a maximum quantity
+        // (a prior test set one), filling the larger minimum first makes the min-max validation bump
+        // the max field up to the minimum, and the new max digits then concatenate onto that value
+        // (e.g. "100" + "50" => "10050"). Filling max first — while the minimum is still small so no
+        // premature correction fires — then the minimum, leaves the validation to correct exactly once.
         await this.clearAndType(productsVendor.minMax.maximumQuantity, minMaxOption.maximumProductQuantity);
+        await this.clearAndType(productsVendor.minMax.minimumQuantity, minMaxOption.minimumProductQuantity);
         await this.press('Tab'); // to trigger validation
         await this.toHaveValue(productsVendor.minMax.maximumQuantity, minMaxOption.minimumProductQuantity);
         await this.saveProduct();
