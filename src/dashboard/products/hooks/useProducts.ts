@@ -124,8 +124,26 @@ export const useProducts = (
                 queryArgs.filter_by_other = filterArgs.filter_by_other;
             }
 
+            /**
+             * Filter the query args sent with the vendor product list REST
+             * requests.
+             *
+             * Applied to both the list request and the status-count (summary)
+             * request, so anything added here — e.g. `include_types`, which
+             * opts excluded product types back into this listing — keeps the
+             * list and its counts in sync.
+             *
+             * @since DOKAN_SINCE
+             *
+             * @param {Object} queryArgs Query args about to be sent.
+             */
+            const finalQueryArgs = applyFilters(
+                'dokan_product_list_query_args',
+                queryArgs
+            ) as Record< string, any >;
+
             const response = ( await apiFetch( {
-                path: addQueryArgs( '/dokan/v1/products', queryArgs ),
+                path: addQueryArgs( '/dokan/v1/products', finalQueryArgs ),
                 parse: false,
             } ) ) as Response;
 
@@ -159,8 +177,17 @@ export const useProducts = (
 
     const fetchStatusCounts = useCallback( async () => {
         try {
+            /** This filter is documented above in fetchProducts. */
+            const summaryQueryArgs = applyFilters(
+                'dokan_product_list_query_args',
+                {}
+            ) as Record< string, any >;
+
             const response = ( await apiFetch( {
-                path: '/dokan/v1/products/summary',
+                path: addQueryArgs(
+                    '/dokan/v1/products/summary',
+                    summaryQueryArgs
+                ),
             } ) ) as ProductSummary;
 
             const counts = response.post_counts ?? {};

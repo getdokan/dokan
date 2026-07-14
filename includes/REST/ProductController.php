@@ -580,6 +580,11 @@ class ProductController extends DokanRESTController {
             )
         );
 
+        // Honor the request's `include_types` opt-in exactly like the list
+        // query (prepare_objects_query) does, so the counts keep matching
+        // the list contents.
+        $exclude_types = array_values( array_diff( $exclude_types, $this->get_requested_include_types( $request ) ) );
+
         $data = [
             'post_counts'      => dokan_count_posts( 'product', $seller_id, $exclude_types ),
             'products_url'     => dokan_get_navigation_url( 'products' ),
@@ -932,7 +937,12 @@ class ProductController extends DokanRESTController {
 
         // Exclude product types that belong to separate dashboards
         // (e.g. auction, booking, subscription — registered by their Pro modules).
+        // A request may opt an excluded type back in via `include_types` — the
+        // vendor dashboard product list does this (through its
+        // `dokan_product_list_query_args` JS filter) for types that are
+        // first-class there, e.g. auctions under the new product editor.
         $exclude_types = (array) apply_filters( 'dokan_product_listing_exclude_type', [] );
+        $exclude_types = array_values( array_diff( $exclude_types, $this->get_requested_include_types( $request ) ) );
         if ( ! empty( $exclude_types ) ) {
             $args['tax_query'][] = [ //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
                 'taxonomy' => 'product_type',
@@ -953,6 +963,30 @@ class ProductController extends DokanRESTController {
          * @param WP_REST_Request $request The current REST request.
          */
         return apply_filters( 'dokan_rest_pre_product_listing_args', $args, $request );
+    }
+
+    /**
+     * Product types the request explicitly asked to include.
+     *
+     * Types excluded through `dokan_product_listing_exclude_type` are opt-out
+     * by default; a listing that treats one of them as first-class (e.g. the
+     * vendor dashboard product list showing auctions) opts back in by sending
+     * `include_types` with the request. The result is only ever used to shrink
+     * the exclusion list — never fed to the query directly — so unknown or
+     * unexcluded values are harmless no-ops.
+     *
+     * Note: the v2 product search (behind pickers such as the manual order
+     * "Add products to order" modal) rebuilds its own exclusion list and does
+     * not honor this opt-in.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Request $request The current REST request.
+     *
+     * @return array Sanitized product type slugs.
+     */
+    protected function get_requested_include_types( $request ): array {
+        return array_filter( array_map( 'sanitize_key', (array) $request->get_param( 'include_types' ) ) );
     }
 
     /**
