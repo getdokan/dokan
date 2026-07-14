@@ -2540,8 +2540,11 @@ export const data = {
             smsSentError: 'Unable to send sms. Contact admin',
             activeGateway: 'nexmo', // nexmo, twilio
             vonage: {
-                apiKey: VONAGE_API_KEY,
-                apiSecret: VONAGE_API_SECRET,
+                // Default to placeholders when the env vars are unset (e.g. CI has no Vonage secrets):
+                // this test only verifies the SMS-gateway settings form saves, not real Vonage delivery,
+                // so a non-empty string is enough. Without the fallback, fill(undefined) throws.
+                apiKey: VONAGE_API_KEY || 'test-vonage-api-key',
+                apiSecret: VONAGE_API_SECRET || 'test-vonage-api-secret',
             },
 
             saveSuccessMessage: 'Setting has been saved successfully.',
