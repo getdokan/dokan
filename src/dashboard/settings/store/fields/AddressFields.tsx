@@ -1,7 +1,7 @@
 import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
-import { useSettings, type SettingsElement } from '@wedevs/plugin-ui';
+import { useSettings, Input, type SettingsElement } from '@wedevs/plugin-ui';
 
 type AddressValue = {
     street_1: string;
@@ -57,8 +57,11 @@ const TEXT_PARTS: Array< {
     },
 ];
 
-const inputClass =
-    'w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-dokan-btn focus:outline-none';
+// Text subfields render through plugin-ui's <Input> so they match the default
+// text fields (e.g. Store Name); only the native country/state selects keep a
+// hand-styled class.
+const selectClass =
+    'w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-dokan-btn focus:outline-none';
 
 // `vendor_address` variant — the six legacy address subkeys with a WC-backed
 // country → state cascade (falls back to free text when the country list is
@@ -106,10 +109,8 @@ const AddressFields = ( { element }: { element: SettingsElement } ) => {
                         className="flex flex-col gap-1 text-xs text-gray-600"
                     >
                         { label }
-                        <input
+                        <Input
                             id={ `${ fieldKey }-${ part }` }
-                            type="text"
-                            className={ inputClass }
                             placeholder={ placeholder }
                             value={ value[ part ] }
                             onChange={ ( event ) =>
@@ -127,7 +128,7 @@ const AddressFields = ( { element }: { element: SettingsElement } ) => {
                     { countries.length ? (
                         <select
                             id={ `${ fieldKey }-country` }
-                            className={ inputClass }
+                            className={ selectClass }
                             value={ value.country }
                             onChange={ ( event ) =>
                                 update( 'country', event.target.value )
@@ -146,10 +147,8 @@ const AddressFields = ( { element }: { element: SettingsElement } ) => {
                             ) ) }
                         </select>
                     ) : (
-                        <input
+                        <Input
                             id={ `${ fieldKey }-country` }
-                            type="text"
-                            className={ inputClass }
                             placeholder={ __( 'Country code', 'dokan-lite' ) }
                             value={ value.country }
                             onChange={ ( event ) =>
@@ -167,7 +166,7 @@ const AddressFields = ( { element }: { element: SettingsElement } ) => {
                     { states.length ? (
                         <select
                             id={ `${ fieldKey }-state` }
-                            className={ inputClass }
+                            className={ selectClass }
                             value={ value.state }
                             onChange={ ( event ) =>
                                 update( 'state', event.target.value )
@@ -183,10 +182,8 @@ const AddressFields = ( { element }: { element: SettingsElement } ) => {
                             ) ) }
                         </select>
                     ) : (
-                        <input
+                        <Input
                             id={ `${ fieldKey }-state` }
-                            type="text"
-                            className={ inputClass }
                             placeholder={ __( 'State', 'dokan-lite' ) }
                             value={ value.state }
                             onChange={ ( event ) =>
