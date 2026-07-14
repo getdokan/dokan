@@ -59,6 +59,22 @@
         box-shadow: none !important;
     }
 
+    // Short tabs (e.g. Policies' single card) let the save row hug the content
+    // with a sea of empty page below; keep the content region at least this
+    // tall so the footer holds a steady, breathable position across tabs.
+    // The engine's inner wrapper doesn't stretch to the scroll viewport, so
+    // turn it into a full-height column — the cards container already carries
+    // flex-1 and grows, pushing the save row to the bottom of the region.
+    [data-testid='settings-content'] {
+        min-height: 400px !important;
+
+        > div > div {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+    }
+
     // Drop the engine's 24px card gutter so cards line up with the page title, keeping breathing room under the tab strip (!important: dokan-tailwind utilities are important-flagged).
     [data-testid='settings-content'] .p-6.space-y-6 {
         padding-left: 0 !important;
