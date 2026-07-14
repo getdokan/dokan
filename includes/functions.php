@@ -308,6 +308,11 @@ function dokan_count_posts( $post_type, $user_id, $exclude_product_types = [ 'bo
  * Count stock product type from a user
  *
  * @since 3.2.5
+ * @since DOKAN_SINCE Cache key encodes `$exclude_product_types` (callers pass
+ *                    per-request exclusion lists — e.g. the products summary
+ *                    honoring `include_types` — and a key without them serves
+ *                    one caller's counts to another); the key filter receives
+ *                    the exclusion list as a new fifth argument.
  *
  * @param string $post_type
  * @param int    $user_id
@@ -320,7 +325,7 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type, $exclude_pr
     global $wpdb;
 
     $cache_group = 'seller_product_stock_data_' . $user_id;
-    $cache_key   = apply_filters( 'dokan_count_stock_posts_cache_key', "count_stock_posts_{$user_id}_{$post_type}_{$stock_type}", $post_type, $user_id, $stock_type );
+    $cache_key   = apply_filters( 'dokan_count_stock_posts_cache_key', 'count_stock_posts_' . md5( wp_json_encode( [ $user_id, $post_type, $stock_type, $exclude_product_types ] ) ), $post_type, $user_id, $stock_type, $exclude_product_types );
     $counts      = Cache::get( $cache_key, $cache_group );
 
     if ( false === $counts ) {
