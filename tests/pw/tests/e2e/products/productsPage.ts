@@ -140,7 +140,7 @@ const productsAdmin = {
 const productsVendor = {
     menus: {
         all: '//ul[contains(@class,"subsubsub")]//a[contains(text(),"All")]',
-        online: '//ul[contains(@class,"subsubsub")]//a[contains(text(),"Online")]',
+        publish: '//ul[contains(@class,"subsubsub")]//a[contains(text(),"Publish")]',
         draft: '//ul[contains(@class,"subsubsub")]//a[contains(text(),"Draft")]',
         pendingReview: '//ul[contains(@class,"subsubsub")]//a[contains(text(),"Pending Review")]',
         inStock: '//ul[contains(@class,"subsubsub")]//a[contains(text(),"In stock")]',
@@ -1633,7 +1633,20 @@ export class ProductsPage {
 
     // save product
     async saveProduct(): Promise<void> {
-        await this.clickAndWaitForResponseAndLoadState(subUrls.frontend.vDashboard.products, productsVendor.saveProduct);
+        // The classic product editor binds its form-submit handler asynchronously (RankMath SEO / WooCommerce
+        // product init). Clicking "Save Product" before that handler is ready silently no-ops the first submit,
+        // so wait for the page to settle, then re-click until the save request actually fires.
+        await this.page.waitForLoadState('networkidle');
+        await this.toPass(
+            async () => {
+                const [response] = await Promise.all([
+                    this.page.waitForResponse(resp => resp.url().includes(subUrls.frontend.vDashboard.products) && resp.status() === 200, { timeout: 15000 }),
+                    this.page.locator(productsVendor.saveProduct).click(),
+                ]);
+                expect(response.status()).toBe(200);
+            },
+            { intervals: [1000, 2000, 3000], timeout: 90000 },
+        );
         await this.toContainText(productsVendor.updatedSuccessMessage, productData.createUpdateSaveSuccessMessage);
     }
 

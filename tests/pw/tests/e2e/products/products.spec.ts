@@ -1,5 +1,6 @@
 import { test, Page } from '@utils/test';
 import { ProductsPage, api, productData, predefined } from './productsPage';
+import { dbUtils } from '@utils/dbUtils';
 import path from 'path';
 
 // ============================================
@@ -8,13 +9,21 @@ import path from 'path';
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 
-test.describe.skip('Product functionality test', () => {
+test.describe('Product functionality test', () => {
     let admin: ProductsPage;
     let vendor: ProductsPage;
     let aPage: Page, vPage: Page;
     let productName: string;
 
     test.beforeAll(async ({ browser }) => {
+        // Catalog Mode vendor controls only render on the add-product page when the admin has enabled them.
+        await dbUtils.updateOptionValue('dokan_selling', { catalog_mode_hide_add_to_cart_button: 'on', catalog_mode_hide_product_price: 'on' });
+        // Ensure the vendor's own catalog-mode toggles are off so enabling the admin feature above does not
+        // hide price/add-to-cart on the vendor's storefront products (asserted by the view-product test).
+        const dbPrefix = process.env.DB_PREFIX;
+        const [vendorRow] = await dbUtils.dbQuery(`SELECT ID FROM ${dbPrefix}_users WHERE user_login = ?`, [process.env.VENDOR]);
+        await dbUtils.updateUserMeta(String(vendorRow.ID), 'dokan_profile_settings', { catalog_mode: { hide_add_to_cart_button: 'off', hide_product_price: 'off' } });
+
         await api.init();
 
         const adminContext = await browser.newContext({ storageState: a1 });
