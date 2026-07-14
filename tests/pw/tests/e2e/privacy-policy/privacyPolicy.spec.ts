@@ -1,5 +1,5 @@
-import { test, Page } from '@utils/test';
-import { PrivacyPolicyPage, ApiUtils, data, dbData, dbUtils } from './privacyPolicyPage';
+import { test, Page, request } from '@utils/test';
+import { PrivacyPolicyPage, ApiUtils, data, dbData, dbUtils, seedPrivacyPage } from './privacyPolicyPage';
 import path from 'path';
 
 const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.json');
@@ -13,10 +13,13 @@ test.describe('Privacy Policy & Store Contact form test', () => {
         const customerContext = await browser.newContext({ storageState: c1 });
         cPage = await customerContext.newPage();
         customer = new PrivacyPolicyPage(cPage);
-        apiUtils = new ApiUtils(null);
+        apiUtils = new ApiUtils(await request.newContext());
         // Deterministic start state: privacy policy + store contact form ON, so the
         // navigate/disable cases don't depend on a prior run's leftover option state.
-        await dbUtils.updateOptionValue(dbData.dokan.optionName.privacyPolicy, { enable_privacy: 'on' });
+        // seedPrivacyPage also creates/points `dokan_privacy.privacy_page` at a real
+        // published page — without it the `a.dokan-privacy-policy-link` never renders
+        // (CI's fresh setup leaves privacy_page empty; the shared Docker masked this).
+        await seedPrivacyPage(apiUtils);
         await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { contact_seller: 'on' });
     });
 

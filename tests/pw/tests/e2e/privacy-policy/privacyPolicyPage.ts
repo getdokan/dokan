@@ -1,6 +1,7 @@
 import { Page, expect, APIRequestContext } from '@playwright/test';
 import { toPath, helpers, closeAnnouncementModal } from '@utils/helpers';
 import { ApiUtils as RealApiUtils } from '@utils/apiUtils';
+import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 import { dbUtils } from '@utils/dbUtils';
@@ -21,6 +22,28 @@ import { dbUtils } from '@utils/dbUtils';
 
 // Re-export the REAL test data + db helpers under the names the spec imports.
 export { data, dbData, dbUtils };
+
+/**
+ * Seed the privacy-policy prerequisite the store contact form depends on.
+ *
+ * The `a.dokan-privacy-policy-link` (asserted by `goToPrivacyPolicy`) is only
+ * rendered by `dokan_privacy_policy_text()` when BOTH `enable_privacy` is 'on'
+ * AND `dokan_privacy.privacy_page` points at a real page (see
+ * includes/functions.php:3316-3323 + :3296-3297). A fresh CI setup can leave
+ * `privacy_page` empty (the option is reset to `privacyPolicySettings`, whose
+ * `privacy_page` is ''), so the link never renders and the test fails with
+ * "element(s) not found". The local shared Docker masked this because a prior
+ * run had left `privacy_page` populated.
+ *
+ * This mirrors `_env.setup.ts` ('admin set dokan privacy policy settings',
+ * lines 265-266): create/reuse a PUBLISHED "Privacy Policy" page (its permalink
+ * contains "privacy-policy", satisfying the spec's `/privacy-policy/` waitForURL)
+ * and point Dokan's `privacy_page` at it. Idempotent via `createPage` dedup.
+ */
+export async function seedPrivacyPage(apiUtils: RealApiUtils): Promise<void> {
+    const [, pageId] = await apiUtils.createPage(payloads.privacyPolicyPage, payloads.adminAuth);
+    await dbUtils.updateOptionValue(dbData.dokan.optionName.privacyPolicy, { enable_privacy: 'on', privacy_page: pageId });
+}
 
 /**
  * Null-tolerant ApiUtils wrapper.
