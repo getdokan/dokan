@@ -718,6 +718,16 @@ export class VendorVerificationsPage {
         await this.page.keyboard.press(data.key.enter);
         await this.page.locator(setupWizardVendor.state).click();
         await this.page.locator(setupWizardVendor.stateInput).pressSequentially(setupWizardData.state, { delay: 100 });
+        // Commit the state select2 selection (mirrors the country step above). For a
+        // country that has states (e.g. US), the store-step "Continue" handler blocks
+        // and returns when `address[state]` is empty. The old code only filtered the
+        // search box without choosing an option, so it relied on the vendor already
+        // having a state saved in dokan_profile_settings — true for the accumulated
+        // local Docker (state=NY) but absent on a fresh CI vendor, which is why these
+        // setup-wizard tests failed only in CI. Select the highlighted state so the
+        // hidden <select> gets a real value before continuing.
+        await expect(this.page.locator(setupWizardVendor.highlightedResult)).toContainText(setupWizardData.state);
+        await this.page.keyboard.press(data.key.enter);
         await this.page.locator(setupWizardVendor.continueStoreSetup).click();
     }
 
