@@ -438,10 +438,15 @@ export class VendorReportsPage {
     async validateAnalyticsData(report: string): Promise<void> {
         await this.gotoAnalytics(report);
         await this.assertAnalyticsShell();
-        const table = await this.page.locator(vendorReportsSelectors.analyticsTable).first().isVisible({ timeout: 10000 }).catch(() => false);
-        const summary = await this.page.locator(vendorReportsSelectors.analyticsSummary).first().isVisible({ timeout: 3000 }).catch(() => false);
-        const empty = await this.page.locator(vendorReportsSelectors.emptyState).first().isVisible({ timeout: 3000 }).catch(() => false);
-        expect(table || summary || empty).toBe(true);
+        // isVisible() is an IMMEDIATE snapshot (it does not wait), so under slow CI render
+        // all three probes can momentarily read false. Retry until the report renders a
+        // table, a summary, or an explicit empty state.
+        await expect(async () => {
+            const table = await this.page.locator(vendorReportsSelectors.analyticsTable).first().isVisible().catch(() => false);
+            const summary = await this.page.locator(vendorReportsSelectors.analyticsSummary).first().isVisible().catch(() => false);
+            const empty = await this.page.locator(vendorReportsSelectors.emptyState).first().isVisible().catch(() => false);
+            expect(table || summary || empty).toBe(true);
+        }).toPass({ intervals: [1000, 2000, 3000], timeout: 30000 });
     }
 
     // open the product filter on an analytics report
