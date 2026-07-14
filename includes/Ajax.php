@@ -315,7 +315,13 @@ class Ajax {
 
         foreach ( $product_ids as $product_id ) {
             $product = dokan()->product->get( $product_id );
-            $files   = $product->get_downloads();
+
+            // Only grant downloads for the vendor's own products, never another vendor's files.
+            if ( ! $product || ! dokan_is_product_author( $product_id ) ) {
+                continue;
+            }
+
+            $files = $product->get_downloads();
 
             if ( ! $order->get_billing_email() ) {
                 wp_die();
