@@ -304,6 +304,13 @@ async function clickAndAcceptAndWaitForResponse(page: Page, subUrl: string, sele
     await Promise.all([page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), page.locator(selector).click()]);
 }
 
+// retry an async assertion until it passes (mirrors basePage.toPass / expect.toPass).
+async function toPass(asyncFn: () => Promise<void>, options?: { timeout?: number; intervals?: number[] }): Promise<void> {
+    await expect(async () => {
+        await asyncFn();
+    }).toPass(options);
+}
+
 // resolve the currently logged-in username from the WordPress cookie (mirrors basePage.getCurrentUser).
 async function getCurrentUser(page: Page): Promise<string | undefined> {
     const cookies = await page.context().cookies();
@@ -784,7 +791,22 @@ export class ProductsPage {
 
     // save the currently open vendor product.
     async saveProduct(): Promise<void> {
-        await clickAndWaitForResponseAndLoadState(this.page, data.subUrls.frontend.vDashboard.products, selectors.vendor.product.saveProduct);
+        // The classic product editor binds its form-submit handler asynchronously (WooCommerce product init).
+        // Clicking "Save Product" before that handler is ready silently no-ops the first submit, so the save
+        // request never fires and clickAndWaitForResponse* times out (passes locally where binding is fast,
+        // fails in CI under load). Wait for the page to settle, then re-click until the save request fires.
+        // eslint-disable-next-line playwright/no-networkidle
+        await this.page.waitForLoadState('networkidle');
+        await toPass(
+            async () => {
+                const [response] = await Promise.all([
+                    this.page.waitForResponse(resp => resp.url().includes(data.subUrls.frontend.vDashboard.products) && resp.status() === 200, { timeout: 15000 }),
+                    this.page.locator(selectors.vendor.product.saveProduct).click(),
+                ]);
+                expect(response.status()).toBe(200);
+            },
+            { intervals: [1000, 2000, 3000], timeout: 90000 },
+        );
         await expect(this.page.locator(selectors.vendor.product.updatedSuccessMessage)).toContainText(data.product.createUpdateSaveSuccessMessage);
     }
 
