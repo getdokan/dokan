@@ -565,16 +565,20 @@ class ProductController extends DokanRESTController {
         // list query (prepare_objects_query) uses, so for those types the list
         // contents and the counts stay in sync.
         //
-        // `booking` is kept as a deliberate defensive default (NOT a drift bug):
-        // booking products have always been a separate dashboard concept and
-        // must never inflate the regular product counts. The Booking module adds
-        // `booking` to the filter too, so this is redundant while that module is
-        // active; the hardcode only matters in the edge case where booking
-        // products exist but the module (and thus its filter handler) is off.
+        // `booking` and `auction` are deliberate defensive defaults (NOT drift
+        // bugs): both are separate dashboard concepts and must never inflate the
+        // regular product counts. Their modules add them to the filter too, so
+        // this is redundant while those modules are active; the hardcodes only
+        // matter when such products exist but the module (and thus its filter
+        // handler) is off — for auctions, WooCommerce Simple Auctions would then
+        // still hide them from the WP_Query product list while these raw-SQL
+        // counts kept including them, leaving the tabs out of sync with the list.
+        // The request's `include_types` opt-in (below) is what re-includes a type
+        // for the one listing that wants it.
         $exclude_types = array_values(
             array_unique(
                 array_merge(
-                    [ 'booking' ],
+                    [ 'booking', 'auction' ],
                     (array) apply_filters( 'dokan_product_listing_exclude_type', [] )
                 )
             )
@@ -941,7 +945,14 @@ class ProductController extends DokanRESTController {
         // vendor dashboard product list does this (through its
         // `dokan_product_list_query_args` JS filter) for types that are
         // first-class there, e.g. auctions under the new product editor.
-        $exclude_types = (array) apply_filters( 'dokan_product_listing_exclude_type', [] );
+        //
+        // `auction` is a defensive default, like `booking` in get_product_summary():
+        // when auction products exist but the Auction module (and thus its filter
+        // handler and its `include_types` opt-in) is off, WooCommerce Simple
+        // Auctions still hides them from WP_Query listings while the raw-SQL
+        // counts would keep including them — excluding the type on both surfaces
+        // keeps the list and its counts in sync.
+        $exclude_types = array_unique( array_merge( [ 'auction' ], (array) apply_filters( 'dokan_product_listing_exclude_type', [] ) ) );
         $exclude_types = array_values( array_diff( $exclude_types, $this->get_requested_include_types( $request ) ) );
         if ( ! empty( $exclude_types ) ) {
             $args['tax_query'][] = [ //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
