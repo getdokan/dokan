@@ -4,13 +4,7 @@ import { useToast } from '@getdokan/dokan-ui';
 import { addAction, applyFilters, removeAction } from '@wordpress/hooks';
 import { Fill } from '@wordpress/components';
 import { useNavigate } from 'react-router-dom';
-import {
-    Boxes,
-    Package,
-    ExternalLink,
-    LayoutGrid,
-    Plus,
-} from 'lucide-react';
+import { Boxes, Package, ExternalLink, LayoutGrid, Plus } from 'lucide-react';
 import {
     DataViews,
     DokanBadge,
