@@ -9,6 +9,7 @@ use WeDevs\Dokan\Admin\Dashboard\Pages\Modules;
 use WeDevs\Dokan\Admin\Dashboard\Pages\ProFeatures;
 use WeDevs\Dokan\Admin\Dashboard\Pages\SetupGuide;
 use WeDevs\Dokan\Admin\Dashboard\Pages\Status;
+use WeDevs\Dokan\Admin\Dashboard\Pages\Tools;
 use WeDevs\Dokan\Admin\Dashboard\Pages\Withdraw;
 use WeDevs\Dokan\Admin\Dashboard\Pages\Vendors;
 use WeDevs\Dokan\Admin\OnboardingSetup\AdminSetupGuide;
@@ -37,6 +38,7 @@ class AdminDashboardServiceProvider extends BaseServiceProvider {
         Dashboard::class,
         LegacySwitcher::class,
         Modules::class,
+        Tools::class,
         Status::class,
         ProFeatures::class,
         Withdraw::class,
