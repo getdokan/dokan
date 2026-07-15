@@ -49,11 +49,17 @@ const VendorRadioField = ( { element }: { element: SettingsElement } ) => {
                                 updateValue( fieldKey, option.value )
                             }
                             className="mt-0.5 size-4 cursor-pointer"
-                            // Same token the engine's switches use, so the active radio matches the customizer colour exactly.
-                            style={ {
-                                accentColor:
-                                    'var(--primary, var(--color-dokan-btn, #34abdb))',
-                            } }
+                            // The forms layer renders radios appearance:none with a stock blue checked fill (accent-color is ignored there); paint the checked one with the customizer colour directly.
+                            style={
+                                current === option.value
+                                    ? {
+                                          backgroundColor:
+                                              'var(--dokan-button-background-color, var(--color-dokan-btn, #7047eb))',
+                                          borderColor:
+                                              'var(--dokan-button-background-color, var(--color-dokan-btn, #7047eb))',
+                                      }
+                                    : undefined
+                            }
                         />
                         <span className="flex flex-col gap-0.5">
                             <span className="text-sm text-gray-700">
