@@ -253,22 +253,6 @@ test.describe('Admin Abuse Reports list functionality @pro', () => {
             await ctx?.close();
         });
 
-        // QUARANTINED @exploratory: the admin Abuse Reports DataViews page renders NO
-        // free-text search input — verified live: even with >=1 row seeded, no
-        // input[placeholder="Search"] mounts (only the Vendors page adds a SearchInput).
-        // So a search-driven empty state is unreachable via the UI. Documented product
-        // gap — re-enable when admin search lands.
-        test.fixme('searching for an unmatched reason shows the empty state', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
-            await dbUtils.dbQuery(`DELETE FROM ${ABUSE_TABLE};`);
-            await seedReports(adminAbuseReportsData.reasons.spam, 'AABR empty-state seed', 1);
-
-            await reports.goto();
-            await page.locator('table tbody tr').first().waitFor({ state: 'visible', timeout: 20000 });
-            await reports.search(adminAbuseReportsData.filterMiss);
-            const empty = (await reports.isEmptyStateVisible()) || (await reports.getRowCount()) === 0;
-            expect(empty, 'no rows / empty-state for an unmatched search').toBe(true);
-        });
-
         test('reloading on #/abuse-reports preserves the route and re-mounts the list', { tag: ['@pro', '@admin'] }, async () => {
             await reports.goto();
             await reports.reload();

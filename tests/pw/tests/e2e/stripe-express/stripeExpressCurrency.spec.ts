@@ -218,8 +218,7 @@ async function placeCustomerBlockOrder(browser: Browser, productId: string, onCh
         }
         await stripe.selectBlockGateway();
         await stripe.fillCardDetails(STRIPE_CARDS.success);
-        await stripe.placeBlockOrderExpectReceived();
-        return page.url().match(/order-received\/(\d+)/)?.[1];
+        return await stripe.placeBlockOrderExpectReceived();
     } finally {
         await page.close();
         await ctx.close();
