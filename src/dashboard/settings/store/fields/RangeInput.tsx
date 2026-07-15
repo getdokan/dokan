@@ -1,11 +1,6 @@
-import { RawHTML } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { dateI18n, getSettings as getDateSettings } from '@wordpress/date';
-import {
-    useSettings,
-    DateRangePicker,
-    type SettingsElement,
-} from '@wedevs/plugin-ui';
+import { DateRangePicker } from '@wedevs/plugin-ui';
 import { Calendar } from 'lucide-react';
 
 export type RangeValue = {
@@ -13,7 +8,7 @@ export type RangeValue = {
     to: string;
 };
 
-// Y-m-d string → local Date (new Date('Y-m-d') would parse UTC and can shift a day).
+// Y-m-d string → local Date (new Date('Y-m-d') parses as UTC and can shift a day).
 const parseYmd = ( value: string ): Date | undefined => {
     const parts = value.match( /^(\d{4})-(\d{2})-(\d{2})$/ );
     return parts
@@ -29,6 +24,7 @@ const toYmd = ( date?: Date ): string =>
           ) }-${ String( date.getDate() ).padStart( 2, '0' ) }`
         : '';
 
+// Format a stored Y-m-d value with the site's date format for display.
 export const formatRangeDate = ( value?: string ): string => {
     if ( ! value ) {
         return '';
@@ -37,7 +33,7 @@ export const formatRangeDate = ( value?: string ): string => {
     return dateI18n( settings.formats.date, value, settings.timezone.string );
 };
 
-// Shared calendar-prefixed range trigger + plugin-ui range calendar, reused by the composer field and the history edit modal.
+// Calendar-prefixed range trigger + plugin-ui range calendar, shared by the vacation composer field and the history edit modal.
 export const RangeInput = ( {
     value,
     onChange,
@@ -45,7 +41,7 @@ export const RangeInput = ( {
     value: RangeValue;
     onChange: ( next: RangeValue ) => void;
 } ) => {
-    const text =
+    const label =
         value.from || value.to
             ? `${ formatRangeDate( value.from ) } - ${ formatRangeDate(
                   value.to
@@ -85,10 +81,10 @@ export const RangeInput = ( {
                         </span>
                         <span
                             className={ `flex-1 px-3.5 py-2.5 text-left text-sm ${
-                                text ? 'text-gray-900' : 'text-gray-400'
+                                label ? 'text-gray-900' : 'text-gray-400'
                             }` }
                         >
-                            { text || __( 'Select date range', 'dokan-lite' ) }
+                            { label || __( 'Select date range', 'dokan-lite' ) }
                         </span>
                     </div>
                 ) }
@@ -96,44 +92,3 @@ export const RangeInput = ( {
         </div>
     );
 };
-
-// `vendor_date_range` variant — the vacation composer's date range, stored as { from, to } Y-m-d strings.
-const VendorDateRangeField = ( { element }: { element: SettingsElement } ) => {
-    const { updateValue } = useSettings();
-    const fieldKey = ( element.dependency_key as string ) || element.id;
-    const raw = ( element.value ?? {} ) as Partial< RangeValue >;
-    const value: RangeValue = {
-        from: String( raw.from ?? '' ),
-        to: String( raw.to ?? '' ),
-    };
-    const error = element.validationError as string | undefined;
-
-    return (
-        <div className="dokan-vendor-date-range-field flex w-full flex-col gap-2 p-4">
-            <span className="flex items-center gap-1.5 text-sm font-semibold text-gray-900">
-                { element.title }
-                { element.required && (
-                    <span className="text-xs font-normal text-red-500">
-                        { __( '(Required)', 'dokan-lite' ) }
-                    </span>
-                ) }
-            </span>
-            { element.description && (
-                <span className="text-xs text-gray-500">
-                    { element.description }
-                </span>
-            ) }
-            <RangeInput
-                value={ value }
-                onChange={ ( next ) => updateValue( fieldKey, next ) }
-            />
-            { error && (
-                <div className="text-sm text-red-600">
-                    <RawHTML>{ error }</RawHTML>
-                </div>
-            ) }
-        </div>
-    );
-};
-
-export default VendorDateRangeField;

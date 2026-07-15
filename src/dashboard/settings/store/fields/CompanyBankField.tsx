@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { useSettings, Input, type SettingsElement } from '@wedevs/plugin-ui';
 import { DokanModal } from '@dokan/components';
 import { Pencil, Settings, Trash2 } from 'lucide-react';
+import { fieldKeyOf, editButtonClass, deleteButtonClass } from './shared';
 
 type SubField = {
     key: string;
@@ -14,7 +15,7 @@ type DetailsValue = Record< string, string >;
 // `vendor_company_bank` variant — a modal-edited detail group: empty state shows a "Set Details" chip (CSS-lifted into the section header), filled state a label-over-value grid with Edit/Delete top-right, level with its first row. Sub-fields, labels and copy come from the injecting module's schema.
 const CompanyBankField = ( { element }: { element: SettingsElement } ) => {
     const { updateValue } = useSettings();
-    const fieldKey = ( element.dependency_key as string ) || element.id;
+    const fieldKey = fieldKeyOf( element );
 
     const subFields = useMemo< SubField[] >(
         () =>
@@ -60,11 +61,6 @@ const CompanyBankField = ( { element }: { element: SettingsElement } ) => {
         );
         setConfirmingDelete( false );
     };
-
-    const actionButtonBase =
-        'inline-flex items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 transition-colors';
-    const editButtonClass = `${ actionButtonBase } hover:border-dokan-btn hover:bg-dokan-btn-secondary-hover hover:text-dokan-btn`;
-    const deleteButtonClass = `${ actionButtonBase } hover:border-dokan-btn-danger hover:bg-dokan-danger hover:text-dokan-btn-danger`;
 
     return (
         <div

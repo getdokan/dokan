@@ -4,6 +4,7 @@ import {
     SmartMultiSelect,
     type SettingsElement,
 } from '@wedevs/plugin-ui';
+import { fieldKeyOf } from './shared';
 
 type Option = { label: string; value: string };
 
@@ -18,7 +19,7 @@ const VendorMultiSelectField = ( {
     element: SettingsElement;
 } ) => {
     const { updateValue } = useSettings();
-    const fieldKey = ( element.dependency_key as string ) || element.id;
+    const fieldKey = fieldKeyOf( element );
     const isMultiple = false !== element.multiple;
 
     // Memoized so a new array reference each render doesn't thrash the

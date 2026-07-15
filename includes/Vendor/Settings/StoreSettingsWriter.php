@@ -29,16 +29,14 @@ class StoreSettingsWriter {
         $prev = get_user_meta( $vendor_id, 'dokan_profile_settings', true );
         $prev = is_array( $prev ) ? $prev : [];
 
-        // Shallow on purpose — untouched top-level keys (vendor_biography,
-        // payment, store_seo, order_min_max, …) must survive a Store save.
+        // Shallow on purpose — untouched top-level keys (biography, payment, store_seo, order_min_max, …) must survive a Store save.
         $merged = array_merge( $prev, $slice );
 
         if ( array_key_exists( 'store_name', $slice ) ) {
             update_user_meta( $vendor_id, 'dokan_store_name', $merged['store_name'] );
         }
 
-        // The slice already carries the final dokan_store_time array — the legacy
-        // 'dokan_store_time' POST-parsing filter must never run on this path.
+        // The slice already carries the final dokan_store_time array, so the legacy POST-parsing filter must never run here.
         $merged = apply_filters( 'dokan_store_profile_settings_args', $merged, $vendor_id );
 
         update_user_meta( $vendor_id, 'dokan_profile_settings', $merged );

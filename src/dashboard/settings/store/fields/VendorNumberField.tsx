@@ -1,6 +1,6 @@
 import { useMemo, RawHTML } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
 import { useSettings, Input, type SettingsElement } from '@wedevs/plugin-ui';
+import { RequiredMark, fieldKeyOf } from './shared';
 
 // Optional live cross-field guard declared on the schema (e.g. "max ≥ min").
 type CompareRule = {
@@ -25,7 +25,7 @@ const toNumber = ( raw: unknown ): number | null => {
 // value changes, not only after Save.
 const VendorNumberField = ( { element }: { element: SettingsElement } ) => {
     const { updateValue, values } = useSettings();
-    const fieldKey = ( element.dependency_key as string ) || element.id;
+    const fieldKey = fieldKeyOf( element );
     const value = String( element.value ?? element.default ?? '' );
     const compare = element.compare as CompareRule | undefined;
 
@@ -69,11 +69,7 @@ const VendorNumberField = ( { element }: { element: SettingsElement } ) => {
         <div className="dokan-vendor-number-field flex w-full flex-col gap-2 p-4">
             <span className="flex items-center gap-1.5 text-sm font-semibold text-gray-900">
                 { element.title }
-                { element.required && (
-                    <span className="text-xs font-normal text-red-500">
-                        { __( '(Required)', 'dokan-lite' ) }
-                    </span>
-                ) }
+                { element.required && <RequiredMark /> }
             </span>
             { element.description && (
                 <span className="text-xs text-gray-500">

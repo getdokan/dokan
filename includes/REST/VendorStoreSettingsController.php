@@ -107,14 +107,10 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
      * @return WP_REST_Response|WP_Error
      */
     public function get_items( $request ) {
-        $vendor_id = $this->get_vendor_id_for_user( get_current_user_id() );
+        $vendor_id = $this->resolve_vendor_id();
 
-        if ( ! $vendor_id ) {
-            return new WP_Error(
-                'dokan_rest_no_vendor_found',
-                __( 'No vendor found for the current user.', 'dokan-lite' ),
-                [ 'status' => 404 ]
-            );
+        if ( is_wp_error( $vendor_id ) ) {
+            return $vendor_id;
         }
 
         return rest_ensure_response( $this->get_response_schema( $vendor_id ) );
@@ -134,14 +130,10 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
      * @return WP_REST_Response|WP_Error
      */
     public function update_item( $request ) {
-        $vendor_id = $this->get_vendor_id_for_user( get_current_user_id() );
+        $vendor_id = $this->resolve_vendor_id();
 
-        if ( ! $vendor_id ) {
-            return new WP_Error(
-                'dokan_rest_no_vendor_found',
-                __( 'No vendor found for the current user.', 'dokan-lite' ),
-                [ 'status' => 404 ]
-            );
+        if ( is_wp_error( $vendor_id ) ) {
+            return $vendor_id;
         }
 
         $flat_values = $request->get_param( 'values' );
@@ -156,38 +148,29 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
 
         $fields_by_id = $this->get_fields_by_id( StoreSettingsSchema::get_schema( $vendor_id ) );
 
-        // Phase 1 — sanitize every recognized field up front, so cross-field
-        // validators (e.g. min ≤ max) see the full submitted value set.
+        // Sanitize every recognized field up front so cross-field validators (e.g. min ≤ max) see the full submitted set.
         $sanitized = [];
 
         foreach ( $flat_values as $key => $value ) {
-            // plugin-ui emits dot-path keys (`page.subpage.field_id`) reflecting
-            // its internal tree — normalize to the schema's leaf field id.
-            $leaf_id = false !== strpos( (string) $key, '.' )
-                ? substr( (string) $key, strrpos( (string) $key, '.' ) + 1 )
-                : (string) $key;
-
-            $field = $fields_by_id[ $leaf_id ] ?? null;
+            $field = $fields_by_id[ $this->normalize_field_key( $key ) ] ?? null;
 
             if ( $field ) {
-                $sanitized[ $leaf_id ] = $this->sanitize_field_value( $field, $value );
+                $sanitized[ $field['id'] ] = $this->sanitize_field_value( $field, $value );
             }
         }
 
-        // Phase 2 — validate each field against its own rules, passing the full
-        // sanitized map so a field's `validation_func` can compare siblings.
+        // Validate each field against its own rules, handing every validator the full sanitized map for sibling comparisons.
         $validation_errors = [];
 
-        foreach ( $sanitized as $leaf_id => $value ) {
-            $errors = $this->validate_field_value( $fields_by_id[ $leaf_id ], $value, $sanitized, $vendor_id );
+        foreach ( $sanitized as $field_id => $value ) {
+            $errors = $this->validate_field_value( $fields_by_id[ $field_id ], $value, $sanitized, $vendor_id );
 
             if ( ! empty( $errors ) ) {
-                $validation_errors[ $leaf_id ] = $errors;
+                $validation_errors[ $field_id ] = $errors;
             }
         }
 
-        // Whole-payload seam for section-level rules that belong to no single
-        // field (e.g. the vacation closing-style/message/date-range trio).
+        // Whole-payload seam for section-level rules owned by no single field (e.g. the vacation style/message/date-range trio).
         $validation_errors = (array) apply_filters( 'dokan_rest_vendor_settings_validate', $validation_errors, $sanitized, $fields_by_id, $vendor_id );
 
         if ( ! empty( $validation_errors ) ) {
@@ -205,8 +188,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
             $prev  = get_user_meta( $vendor_id, 'dokan_profile_settings', true );
             $slice = $this->mapper->to_legacy( $sanitized, is_array( $prev ) ? $prev : [], $fields_by_id );
 
-            // A save with only `non_meta` fields (e.g. store categories) yields an
-            // empty meta slice — skip the redundant profile write, still fire the seam.
+            // A save touching only non_meta fields (e.g. store categories) yields an empty slice — skip the write, still fire the seam.
             if ( ! empty( $slice ) ) {
                 $this->writer->save( $vendor_id, $slice );
             }
@@ -254,6 +236,46 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
     }
 
     /**
+     * Resolve the acting vendor, or a 404 error when the user owns no store.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return int|WP_Error Vendor user ID, or an error response.
+     */
+    protected function resolve_vendor_id() {
+        $vendor_id = $this->get_vendor_id_for_user( get_current_user_id() );
+
+        if ( ! $vendor_id ) {
+            return new WP_Error(
+                'dokan_rest_no_vendor_found',
+                __( 'No vendor found for the current user.', 'dokan-lite' ),
+                [ 'status' => 404 ]
+            );
+        }
+
+        return $vendor_id;
+    }
+
+    /**
+     * Reduce a submitted key to its schema field id.
+     *
+     * plugin-ui emits dot-path keys (`page.subpage.field_id`) that mirror its
+     * internal tree; the schema is keyed by the leaf id alone.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $key Submitted key.
+     *
+     * @return string Leaf field id.
+     */
+    protected function normalize_field_key( $key ): string {
+        $key = (string) $key;
+        $dot = strrpos( $key, '.' );
+
+        return false === $dot ? $key : substr( $key, $dot + 1 );
+    }
+
+    /**
      * Index the schema's field elements by id.
      *
      * @since DOKAN_SINCE
@@ -277,13 +299,11 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
     /**
      * Validate a sanitized value against the field's declared rules.
      *
-     * Runs, in order: the declarative `validations` rules (the plugin-ui client
-     * contract `[ { rules: 'not_empty|…', message: '…' } ]`, so one declaration
-     * drives both client and server), then the field's optional
+     * Runs in order: the declarative `validations`, the field's optional
      * `validation_func` closure, then the `dokan_rest_vendor_settings_validate_field`
-     * filter. A `validation_func` receives `( $value, $all_values, $vendor_id )`
-     * and returns `true` when valid, or `false` / a message / a list of messages
-     * — so schedule-style multi-error and cross-field checks live on the field.
+     * filter. A `validation_func` gets `( $value, $all_values, $vendor_id )` and
+     * returns `true`, `false`, a message, or a list of messages — so multi-error
+     * and cross-field checks live on the field that owns them.
      *
      * @since DOKAN_SINCE
      *
@@ -298,37 +318,20 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
         $errors  = [];
         $variant = $field['variant'] ?? '';
 
+        // Declarative rules — the same `[ { rules, message, params } ]` contract the client runs, so one declaration drives both sides.
         foreach ( (array) ( $field['validations'] ?? [] ) as $validation ) {
             if ( ! is_array( $validation ) || empty( $validation['rules'] ) ) {
                 continue;
             }
 
-            $message = isset( $validation['message'] ) ? (string) $validation['message'] : '';
+            $message = (string) ( $validation['message'] ?? '' );
+            $params  = (array) ( $validation['params'] ?? [] );
 
             foreach ( explode( '|', (string) $validation['rules'] ) as $rule ) {
-                switch ( trim( $rule ) ) {
-                    case 'required':
-                    case 'not_empty':
-                        if ( '' === $value || null === $value || [] === $value ) {
-                            $errors[] = '' !== $message ? $message : __( 'This field is required.', 'dokan-lite' );
-                        }
-                        break;
+                $error = $this->validate_rule( trim( $rule ), $value, $params, $message );
 
-                    case 'min_value':
-                        $min = $validation['params']['min'] ?? ( $validation['params'][0] ?? null );
-                        if ( null !== $min && is_numeric( $value ) && (float) $value < (float) $min ) {
-                            /* translators: %s: minimum value */
-                            $errors[] = '' !== $message ? $message : sprintf( __( 'Value must be at least %s.', 'dokan-lite' ), $min );
-                        }
-                        break;
-
-                    case 'max_value':
-                        $max = $validation['params']['max'] ?? ( $validation['params'][0] ?? null );
-                        if ( null !== $max && is_numeric( $value ) && (float) $value > (float) $max ) {
-                            /* translators: %s: maximum value */
-                            $errors[] = '' !== $message ? $message : sprintf( __( 'Value must be at most %s.', 'dokan-lite' ), $max );
-                        }
-                        break;
+                if ( null !== $error ) {
+                    $errors[] = $error;
                 }
             }
         }
@@ -363,6 +366,47 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
     }
 
     /**
+     * Evaluate one declarative rule against a value.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $rule    Rule name (`required`, `not_empty`, `min_value`, `max_value`).
+     * @param mixed  $value   The sanitized value.
+     * @param array  $params  Rule parameters (`min`/`max`, positional or keyed).
+     * @param string $message Custom message; falls back to a built-in default.
+     *
+     * @return string|null Error message when the rule fails, null otherwise.
+     */
+    protected function validate_rule( string $rule, $value, array $params, string $message ): ?string {
+        switch ( $rule ) {
+            case 'required':
+            case 'not_empty':
+                if ( '' === $value || null === $value || [] === $value ) {
+                    return '' !== $message ? $message : __( 'This field is required.', 'dokan-lite' );
+                }
+                break;
+
+            case 'min_value':
+                $min = $params['min'] ?? ( $params[0] ?? null );
+                if ( null !== $min && is_numeric( $value ) && (float) $value < (float) $min ) {
+                    /* translators: %s: minimum value */
+                    return '' !== $message ? $message : sprintf( __( 'Value must be at least %s.', 'dokan-lite' ), $min );
+                }
+                break;
+
+            case 'max_value':
+                $max = $params['max'] ?? ( $params[0] ?? null );
+                if ( null !== $max && is_numeric( $value ) && (float) $value > (float) $max ) {
+                    /* translators: %s: maximum value */
+                    return '' !== $message ? $message : sprintf( __( 'Value must be at most %s.', 'dokan-lite' ), $max );
+                }
+                break;
+        }
+
+        return null;
+    }
+
+    /**
      * Sanitize a submitted value based on the field variant.
      *
      * @since DOKAN_SINCE
@@ -373,9 +417,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
      * @return mixed Sanitized value.
      */
     protected function sanitize_field_value( array $field, $value ) {
-        // Per-field closure declared on the schema wins (mirrors admin) — this
-        // is where field-specific rules (phone, store schedule, ToC collapse)
-        // live instead of special-casing them here.
+        // A per-field sanitize_callback wins (mirrors admin): phone, schedule and ToC rules live on the field, not in a switch here.
         if ( ! empty( $field['sanitize_callback'] ) && is_callable( $field['sanitize_callback'] ) ) {
             return call_user_func( $field['sanitize_callback'], $value );
         }
@@ -383,15 +425,10 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
         $variant = $field['variant'] ?? 'text';
 
         switch ( $variant ) {
-            case 'text':
-                return sanitize_text_field( wp_unslash( (string) $value ) );
-
             case 'textarea':
-            case 'vendor_textarea':
                 return sanitize_textarea_field( wp_unslash( (string) $value ) );
 
             case 'rich_text':
-            case 'vendor_rich_text':
                 return wp_kses_post( wp_unslash( (string) $value ) );
 
             case 'switch':
@@ -411,6 +448,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
             case 'number':
                 return is_numeric( $value ) ? $value + 0 : 0;
 
+            case 'text':
             case 'select':
             case 'radio':
                 return sanitize_text_field( wp_unslash( (string) $value ) );

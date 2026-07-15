@@ -1,7 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from '@wordpress/element';
+import { useMemo, useRef, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { decodeEntities } from '@wordpress/html-entities';
-import apiFetch from '@wordpress/api-fetch';
 import {
     useSettings,
     SmartSelect,
@@ -10,6 +8,15 @@ import {
 } from '@wedevs/plugin-ui';
 import { DataViews, DokanModal } from '@dokan/components';
 import { Pencil, Plus, Trash2 } from 'lucide-react';
+import {
+    RequiredMark,
+    fieldKeyOf,
+    useCountries,
+    actionButtonBase,
+    editButtonClass,
+    deleteButtonClass,
+    type CountryData,
+} from './shared';
 
 type LocationRow = {
     id: string;
@@ -21,12 +28,6 @@ type LocationRow = {
     zip: string;
     state: string;
     country: string;
-};
-
-type CountryData = {
-    code: string;
-    name: string;
-    states?: Array< { code: string; name: string } >;
 };
 
 const blankRow = (): LocationRow => ( {
@@ -74,12 +75,6 @@ const labelClass = 'flex flex-col gap-1 text-sm text-gray-700';
 // Match the SmartSelect trigger height; the light border + soft focus are pinned in style.scss (.dokan-location-form) since the modal renders outside plugin-ui's theme provider.
 const inputClass = 'min-h-[42px]';
 
-const requiredMark = (
-    <span className="text-xs font-normal text-red-500">
-        { __( '(Required)', 'dokan-lite' ) }
-    </span>
-);
-
 // Row → one readable line, resolving country/state codes to names like the legacy WC-formatted address.
 const formatAddress = (
     row: LocationRow,
@@ -105,7 +100,7 @@ const formatAddress = (
 // `vendor_store_locations` variant — the store-pickup locations DataViews table with add/edit + delete modals; row 0 is the non-deletable Default, and extra rows plus "Add New Address" show only when the sibling multiple-locations switch is on.
 const StoreLocationsField = ( { element }: { element: SettingsElement } ) => {
     const { values, updateValue } = useSettings();
-    const fieldKey = ( element.dependency_key as string ) || element.id;
+    const fieldKey = fieldKeyOf( element );
     const fid = ( part: string ) => `${ fieldKey }-modal-${ part }`;
 
     // Read the sibling multiple-locations switch live so the table syncs the moment the vendor flips it.
@@ -127,7 +122,7 @@ const StoreLocationsField = ( { element }: { element: SettingsElement } ) => {
         return value;
     }, [ element.value ] );
 
-    const [ countries, setCountries ] = useState< CountryData[] >( [] );
+    const countries = useCountries();
     // Figma column rhythm via the DataViews layout API — percentages hold proportions at any width.
     const [ view, setView ] = useState( {
         type: 'table',
@@ -147,25 +142,6 @@ const StoreLocationsField = ( { element }: { element: SettingsElement } ) => {
         null
     );
     const newIdCounter = useRef( 0 );
-
-    useEffect( () => {
-        apiFetch< CountryData[] >( { path: '/dokan/v1/data/countries' } )
-            .then( ( response ) => {
-                const list = Array.isArray( response ) ? response : [];
-                // WooCommerce ships country/state names HTML-encoded; decode once so the table, address line and options read as real text.
-                setCountries(
-                    list.map( ( country ) => ( {
-                        ...country,
-                        name: decodeEntities( country.name ),
-                        states: country.states?.map( ( state ) => ( {
-                            ...state,
-                            name: decodeEntities( state.name ),
-                        } ) ),
-                    } ) )
-                );
-            } )
-            .catch( () => setCountries( [] ) );
-    }, [] );
 
     const commit = ( next: LocationRow[] ) => updateValue( fieldKey, next );
 
@@ -214,12 +190,6 @@ const StoreLocationsField = ( { element }: { element: SettingsElement } ) => {
     const displayRows = multipleOn
         ? rows
         : rows.filter( ( row ) => row.is_default );
-
-    // Neutral resting chip; on hover Edit warms to the theme's active colour and Delete to its danger colour. The default row's disabled Delete keeps the plain base.
-    const actionButtonBase =
-        'inline-flex items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 transition-colors disabled:cursor-not-allowed disabled:opacity-50';
-    const editButtonClass = `${ actionButtonBase } hover:border-dokan-btn hover:bg-dokan-btn-secondary-hover hover:text-dokan-btn`;
-    const deleteButtonClass = `${ actionButtonBase } hover:border-dokan-btn-danger hover:bg-dokan-danger hover:text-dokan-btn-danger`;
 
     const fields = [
         {
@@ -359,7 +329,7 @@ const StoreLocationsField = ( { element }: { element: SettingsElement } ) => {
                             >
                                 <span>
                                     { __( 'Location Name', 'dokan-lite' ) }{ ' ' }
-                                    { requiredMark }
+                                    <RequiredMark />
                                 </span>
                                 <Input
                                     id={ fid( 'location_name' ) }
@@ -408,7 +378,7 @@ const StoreLocationsField = ( { element }: { element: SettingsElement } ) => {
                             <label className={ labelClass }>
                                 <span>
                                     { __( 'Country', 'dokan-lite' ) }{ ' ' }
-                                    { requiredMark }
+                                    <RequiredMark />
                                 </span>
                                 <SmartSelect
                                     options={ countryOptions }

@@ -2,6 +2,7 @@ import { useMemo } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { getSettings } from '@wordpress/date';
 import { useSettings, type SettingsElement } from '@wedevs/plugin-ui';
+import { fieldKeyOf } from './shared';
 import { WeeklyTimeSlots, FULL_DAY } from '@dokan/components';
 import type { WeeklyValue } from '@dokan/components';
 
@@ -128,7 +129,7 @@ const weeklyToLegacy = ( weekly: WeeklyValue ): LegacySchedule => {
 // Lite renders one range per day; Pro flips `multiple` via the schema filter.
 const StoreScheduleField = ( { element }: { element: SettingsElement } ) => {
     const { updateValue } = useSettings();
-    const fieldKey = ( element.dependency_key as string ) || element.id;
+    const fieldKey = fieldKeyOf( element );
 
     // Memoized so unrelated form edits don't hand WeeklyTimeSlots fresh refs.
     const days = useMemo(

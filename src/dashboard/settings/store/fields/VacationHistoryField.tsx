@@ -1,13 +1,15 @@
 import { useMemo, useRef, useState, RawHTML } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { useSettings, type SettingsElement } from '@wedevs/plugin-ui';
+import { useSettings, Textarea, type SettingsElement } from '@wedevs/plugin-ui';
 import { DataViews, DokanModal } from '@dokan/components';
 import { Eye, Pencil, Plus, Trash2 } from 'lucide-react';
+import { RangeInput, formatRangeDate, type RangeValue } from './RangeInput';
 import {
-    RangeInput,
-    formatRangeDate,
-    type RangeValue,
-} from './VendorDateRangeField';
+    RequiredMark,
+    fieldKeyOf,
+    editButtonClass,
+    deleteButtonClass,
+} from './shared';
 
 type ScheduleRow = {
     id: string;
@@ -20,7 +22,7 @@ type ScheduleRow = {
 // `vendor_vacation_history` variant — the date-wise vacation schedules as a DataViews table (locations-table pattern): upcoming rows edit in a modal, past rows open read-only, any row can be deleted; rows persist through the page Save.
 const VacationHistoryField = ( { element }: { element: SettingsElement } ) => {
     const { updateValue } = useSettings();
-    const fieldKey = ( element.dependency_key as string ) || element.id;
+    const fieldKey = fieldKeyOf( element );
 
     const rows = useMemo< ScheduleRow[] >(
         () =>
@@ -87,11 +89,6 @@ const VacationHistoryField = ( { element }: { element: SettingsElement } ) => {
         commit( rows.filter( ( item ) => item.id !== pendingDelete.id ) );
         setPendingDelete( null );
     };
-
-    const actionButtonBase =
-        'inline-flex items-center gap-1.5 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 transition-colors';
-    const editButtonClass = `${ actionButtonBase } hover:border-dokan-btn hover:bg-dokan-btn-secondary-hover hover:text-dokan-btn`;
-    const deleteButtonClass = `${ actionButtonBase } hover:border-dokan-btn-danger hover:bg-dokan-danger hover:text-dokan-btn-danger`;
 
     const fields = [
         {
@@ -245,9 +242,7 @@ const VacationHistoryField = ( { element }: { element: SettingsElement } ) => {
                             <div className="flex flex-col gap-1 text-sm text-gray-700">
                                 <span>
                                     { __( 'Date Range', 'dokan-lite' ) }{ ' ' }
-                                    <span className="text-xs font-normal text-red-500">
-                                        { __( '(Required)', 'dokan-lite' ) }
-                                    </span>
+                                    <RequiredMark />
                                 </span>
                                 <RangeInput
                                     value={ {
@@ -271,13 +266,10 @@ const VacationHistoryField = ( { element }: { element: SettingsElement } ) => {
                             <label className="flex flex-col gap-1 text-sm text-gray-700">
                                 <span>
                                     { __( 'Vacation Message', 'dokan-lite' ) }{ ' ' }
-                                    <span className="text-xs font-normal text-red-500">
-                                        { __( '(Required)', 'dokan-lite' ) }
-                                    </span>
+                                    <RequiredMark />
                                 </span>
-                                <textarea
+                                <Textarea
                                     rows={ 4 }
-                                    className="w-full rounded-md border border-gray-300 bg-white p-3 text-sm text-gray-900 placeholder:text-gray-400"
                                     placeholder={ __(
                                         'Write here',
                                         'dokan-lite'

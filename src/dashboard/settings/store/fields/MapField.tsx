@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { useSettings, Input, type SettingsElement } from '@wedevs/plugin-ui';
+import { fieldKeyOf } from './shared';
 
 type MapValue = {
     location: string;
@@ -108,7 +109,7 @@ const loadMapbox = (): Promise< void > => {
 // editable.
 const MapField = ( { element }: { element: SettingsElement } ) => {
     const { updateValue } = useSettings();
-    const fieldKey = ( element.dependency_key as string ) || element.id;
+    const fieldKey = fieldKeyOf( element );
     const value: MapValue = {
         location: '',
         find_address: '',
@@ -419,7 +420,7 @@ const MapField = ( { element }: { element: SettingsElement } ) => {
                 />
             ) }
 
-            { ( mapFailed || ! apiKey ) && (
+            { ! showsCanvas && (
                 <label
                     htmlFor={ `${ fieldKey }-location` }
                     className="flex flex-col gap-1 text-xs text-gray-600"

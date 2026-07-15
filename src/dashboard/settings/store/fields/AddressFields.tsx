@@ -1,7 +1,6 @@
-import { useEffect, useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import apiFetch from '@wordpress/api-fetch';
 import { useSettings, Input, type SettingsElement } from '@wedevs/plugin-ui';
+import { fieldKeyOf, useCountries } from './shared';
 
 type AddressValue = {
     street_1: string;
@@ -10,12 +9,6 @@ type AddressValue = {
     zip: string;
     country: string;
     state: string;
-};
-
-type CountryData = {
-    code: string;
-    name: string;
-    states?: Array< { code: string; name: string } >;
 };
 
 const EMPTY_ADDRESS: AddressValue = {
@@ -68,20 +61,12 @@ const selectClass =
 // unavailable or the selected country has no registered states).
 const AddressFields = ( { element }: { element: SettingsElement } ) => {
     const { updateValue } = useSettings();
-    const fieldKey = ( element.dependency_key as string ) || element.id;
+    const fieldKey = fieldKeyOf( element );
     const value: AddressValue = {
         ...EMPTY_ADDRESS,
         ...( ( element.value as Partial< AddressValue > ) || {} ),
     };
-    const [ countries, setCountries ] = useState< CountryData[] >( [] );
-
-    useEffect( () => {
-        apiFetch< CountryData[] >( { path: '/dokan/v1/data/countries' } )
-            .then( ( response ) =>
-                setCountries( Array.isArray( response ) ? response : [] )
-            )
-            .catch( () => setCountries( [] ) );
-    }, [] );
+    const countries = useCountries();
 
     const update = ( part: keyof AddressValue, partValue: string ) => {
         const next: AddressValue = { ...value, [ part ]: partValue };

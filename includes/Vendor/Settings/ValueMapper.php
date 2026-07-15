@@ -29,39 +29,18 @@ class ValueMapper {
     public function to_legacy( array $sanitized, array $prev, array $fields_by_id ): array {
         $slice = [];
 
+        // The catalog toggles fold into the nested catalog_mode array, so they get no flat key of their own.
+        $folded_into_catalog = [ 'catalog_mode_hide_add_to_cart_button', 'catalog_mode_hide_product_price' ];
+
         foreach ( $sanitized as $id => $value ) {
-            switch ( $id ) {
-                case 'store_map':
-                    // Composite field → the two legacy top-level keys.
-                    $slice['location']     = (string) ( $value['location'] ?? '' );
-                    $slice['find_address'] = (string) ( $value['find_address'] ?? '' );
-                    break;
+            $field = $fields_by_id[ $id ] ?? [];
 
-                case 'address':
-                    // Merge over the previous subkeys so extras like the
-                    // store-pickup `location_name` survive a React save.
-                    $slice['address'] = array_merge( (array) ( $prev['address'] ?? [] ), (array) $value );
-                    break;
-
-                case 'catalog_mode_hide_add_to_cart_button':
-                case 'catalog_mode_hide_product_price':
-                    // Collected into the nested catalog_mode array below.
-                    break;
-
-                default:
-                    $field = $fields_by_id[ $id ] ?? [];
-
-                    // Fields the owning plugin persists itself (e.g. the
-                    // taxonomy-backed store category) opt out of the profile
-                    // meta slice and save on the `dokan_after_saving_vendor_settings` seam.
-                    if ( ! empty( $field['non_meta'] ) ) {
-                        break;
-                    }
-
-                    $legacy_key = isset( $field['legacy_key'] ) && is_string( $field['legacy_key'] ) ? $field['legacy_key'] : $id;
-
-                    $slice[ $legacy_key ] = $value;
+            // Skip catalog toggles and any field the owning plugin persists itself (e.g. the taxonomy store category).
+            if ( in_array( $id, $folded_into_catalog, true ) || ! empty( $field['non_meta'] ) ) {
+                continue;
             }
+
+            $slice = array_merge( $slice, $this->legacy_entry( $id, $value, $prev, $field ) );
         }
 
         $catalog = $this->catalog_mode_slice( $sanitized, $prev );
@@ -70,6 +49,40 @@ class ValueMapper {
         }
 
         return $slice;
+    }
+
+    /**
+     * Map one sanitized field onto its legacy key/value pair(s).
+     *
+     * Most fields land under a single `legacy_key`; the composite map field
+     * expands to two top-level keys and the address merges over its previous
+     * subkeys.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $id    Field id.
+     * @param mixed  $value Sanitized value.
+     * @param array  $prev  The vendor's current profile settings.
+     * @param array  $field The field schema element.
+     *
+     * @return array Partial legacy slice to merge in.
+     */
+    protected function legacy_entry( string $id, $value, array $prev, array $field ): array {
+        if ( 'store_map' === $id ) {
+            return [
+                'location'     => (string) ( $value['location'] ?? '' ),
+                'find_address' => (string) ( $value['find_address'] ?? '' ),
+            ];
+        }
+
+        // Merge over the previous subkeys so extras like the store-pickup `location_name` survive a React save.
+        if ( 'address' === $id ) {
+            return [ 'address' => array_merge( (array) ( $prev['address'] ?? [] ), (array) $value ) ];
+        }
+
+        $legacy_key = isset( $field['legacy_key'] ) && is_string( $field['legacy_key'] ) ? $field['legacy_key'] : $id;
+
+        return [ $legacy_key => $value ];
     }
 
     /**

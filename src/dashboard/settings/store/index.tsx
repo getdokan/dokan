@@ -231,10 +231,7 @@ export default function StoreSettings() {
                 // Strip the engine's outer panel chrome so the cards float on the
                 // dashboard background, matching the Figma page.
                 className="border-0 rounded-none min-h-0 bg-transparent"
-                // Save/Cancel render twice: portaled into the dashboard header
-                // (legacy "Update Settings" placement) AND inline in the
-                // engine's save area at the end of the page (Figma footer) —
-                // style.scss strips that bar down to plain right-aligned buttons.
+                // Save/Cancel sit in the engine's save area at the page footer; style.scss strips that bar down to plain right-aligned buttons.
                 renderSaveButton={ ( { dirty, hasErrors, onSave } ) => (
                     <>
                         <TabKeeper />

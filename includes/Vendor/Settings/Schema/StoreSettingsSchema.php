@@ -78,6 +78,39 @@ class StoreSettingsSchema {
     }
 
     /**
+     * Show/hide dependency pair: reveal a field only while another equals a value.
+     *
+     * Mirrors the admin schema convention (a `===`/`!==` show/hide couple).
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $key   Controlling field id.
+     * @param mixed  $value Value that reveals the dependent field.
+     *
+     * @return array Two-rule set for a field's `dependencies`.
+     */
+    protected static function visible_when( string $key, $value ): array {
+        return [
+            [
+                'key'        => $key,
+                'value'      => $value,
+                'to_self'    => true,
+                'attribute'  => 'display',
+                'effect'     => 'show',
+                'comparison' => '===',
+            ],
+            [
+                'key'        => $key,
+                'value'      => $value,
+                'to_self'    => true,
+                'attribute'  => 'display',
+                'effect'     => 'hide',
+                'comparison' => '!==',
+            ],
+        ];
+    }
+
+    /**
      * Page and subpage skeleton the section cards hang from.
      *
      * @since DOKAN_SINCE
@@ -228,8 +261,7 @@ class StoreSettingsSchema {
             [
                 'id'          => 'store_name',
                 'type'        => 'field',
-                // Custom text variant so the label can carry the red "(Required)" marker.
-                'variant'     => 'vendor_text',
+                'variant'     => 'text',
                 'section_id'  => 'company_banner',
                 'title'       => __( 'Store Title', 'dokan-lite' ),
                 'placeholder' => __( 'ex - Fashion Store', 'dokan-lite' ),
@@ -303,8 +335,7 @@ class StoreSettingsSchema {
             ],
         ];
 
-        // Email visibility toggle sits above the phone (same visibility rule the
-        // legacy form used for the email checkbox); a description balances the row height.
+        // Email visibility toggle sits above the phone, matching the legacy form's email-checkbox visibility rule.
         if ( ! dokan_is_vendor_info_hidden( 'email' ) ) {
             $elements[] = [
                 'id'            => 'show_email',
@@ -459,25 +490,8 @@ class StoreSettingsSchema {
             return [];
         }
 
-        // Dependency pair (show/hide) mirrors the admin schema convention.
-        $requires_schedule_enabled = [
-            [
-                'key'        => 'dokan_store_time_enabled',
-                'value'      => 'yes',
-                'to_self'    => true,
-                'attribute'  => 'display',
-                'effect'     => 'show',
-                'comparison' => '===',
-            ],
-            [
-                'key'        => 'dokan_store_time_enabled',
-                'value'      => 'yes',
-                'to_self'    => true,
-                'attribute'  => 'display',
-                'effect'     => 'hide',
-                'comparison' => '!==',
-            ],
-        ];
+        // Reveal the schedule fields only while the enable switch is on.
+        $requires_schedule_enabled = self::visible_when( 'dokan_store_time_enabled', 'yes' );
 
         return [
             [
@@ -603,8 +617,7 @@ class StoreSettingsSchema {
             [
                 'id'                => 'store_tnc',
                 'type'              => 'field',
-                // Custom variant so the label can carry the red "(Required)" marker.
-                'variant'           => 'vendor_rich_text',
+                'variant'           => 'rich_text',
                 'section_id'        => 'terms_conditions',
                 'title'             => __( 'TOC Details', 'dokan-lite' ),
                 'description'       => __( 'Spell out your store policies — returns, shipping, and warranties — that customers agree to when they order.', 'dokan-lite' ),
@@ -628,24 +641,7 @@ class StoreSettingsSchema {
 
                     return true;
                 },
-                'dependencies'      => [
-                    [
-                        'key'        => 'enable_tnc',
-                        'value'      => 'on',
-                        'to_self'    => true,
-                        'attribute'  => 'display',
-                        'effect'     => 'show',
-                        'comparison' => '===',
-                    ],
-                    [
-                        'key'        => 'enable_tnc',
-                        'value'      => 'on',
-                        'to_self'    => true,
-                        'attribute'  => 'display',
-                        'effect'     => 'hide',
-                        'comparison' => '!==',
-                    ],
-                ],
+                'dependencies'      => self::visible_when( 'enable_tnc', 'on' ),
             ],
         ];
     }
@@ -716,24 +712,7 @@ class StoreSettingsSchema {
                     'label' => __( 'Disabled', 'dokan-lite' ),
                     'value' => 'off',
                 ],
-                'dependencies'  => [
-                    [
-                        'key'        => 'catalog_mode_hide_add_to_cart_button',
-                        'value'      => 'on',
-                        'to_self'    => true,
-                        'attribute'  => 'display',
-                        'effect'     => 'show',
-                        'comparison' => '===',
-                    ],
-                    [
-                        'key'        => 'catalog_mode_hide_add_to_cart_button',
-                        'value'      => 'on',
-                        'to_self'    => true,
-                        'attribute'  => 'display',
-                        'effect'     => 'hide',
-                        'comparison' => '!==',
-                    ],
-                ],
+                'dependencies'  => self::visible_when( 'catalog_mode_hide_add_to_cart_button', 'on' ),
             ];
         }
 

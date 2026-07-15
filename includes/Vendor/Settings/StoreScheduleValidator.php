@@ -68,30 +68,47 @@ class StoreScheduleValidator {
                 continue;
             }
 
-            $day_label = dokan_get_translated_days( $day );
-            $opening   = (array) ( $day_data['opening_time'] ?? [] );
-            $closing   = (array) ( $day_data['closing_time'] ?? [] );
+            $errors = array_merge( $errors, self::validate_open_day( dokan_get_translated_days( $day ), (array) $day_data ) );
+        }
 
-            if ( empty( $opening ) || count( $opening ) !== count( $closing ) ) {
+        return $errors;
+    }
+
+    /**
+     * Validate the opening/closing time pairs of a single open day.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $day_label Translated day name for messages.
+     * @param array  $day_data  Normalized day entry.
+     *
+     * @return string[] Error messages for the day (empty when valid).
+     */
+    protected static function validate_open_day( string $day_label, array $day_data ): array {
+        $opening = (array) ( $day_data['opening_time'] ?? [] );
+        $closing = (array) ( $day_data['closing_time'] ?? [] );
+
+        // Every opening time needs its closing counterpart.
+        if ( empty( $opening ) || count( $opening ) !== count( $closing ) ) {
+            /* translators: %s: day name */
+            return [ sprintf( __( '%s: opening and closing times are required for open days.', 'dokan-lite' ), $day_label ) ];
+        }
+
+        $errors = [];
+
+        foreach ( $opening as $index => $opening_time ) {
+            $open  = DateTime::createFromFormat( 'g:i a', strtolower( trim( (string) $opening_time ) ) );
+            $close = DateTime::createFromFormat( 'g:i a', strtolower( trim( (string) $closing[ $index ] ) ) );
+
+            if ( false === $open || false === $close ) {
                 /* translators: %s: day name */
-                $errors[] = sprintf( __( '%s: opening and closing times are required for open days.', 'dokan-lite' ), $day_label );
+                $errors[] = sprintf( __( '%s: times must use the h:mm am/pm format.', 'dokan-lite' ), $day_label );
                 continue;
             }
 
-            foreach ( $opening as $index => $opening_time ) {
-                $open  = DateTime::createFromFormat( 'g:i a', strtolower( trim( (string) $opening_time ) ) );
-                $close = DateTime::createFromFormat( 'g:i a', strtolower( trim( (string) $closing[ $index ] ) ) );
-
-                if ( false === $open || false === $close ) {
-                    /* translators: %s: day name */
-                    $errors[] = sprintf( __( '%s: times must use the h:mm am/pm format.', 'dokan-lite' ), $day_label );
-                    continue;
-                }
-
-                if ( $open->getTimestamp() >= $close->getTimestamp() ) {
-                    /* translators: %s: day name */
-                    $errors[] = sprintf( __( '%s: the opening time must be earlier than the closing time.', 'dokan-lite' ), $day_label );
-                }
+            if ( $open->getTimestamp() >= $close->getTimestamp() ) {
+                /* translators: %s: day name */
+                $errors[] = sprintf( __( '%s: the opening time must be earlier than the closing time.', 'dokan-lite' ), $day_label );
             }
         }
 

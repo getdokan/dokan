@@ -1,8 +1,9 @@
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { Pencil, Trash, Upload } from 'lucide-react';
-import { useSettings, type SettingsElement } from '@wedevs/plugin-ui';
+import { useSettings, Button, type SettingsElement } from '@wedevs/plugin-ui';
 import { MediaUploader } from '@dokan/components';
+import { fieldKeyOf } from './shared';
 
 type Attachment = {
     id: number;
@@ -38,7 +39,7 @@ const LogoPlaceholder = () => (
 // empty. Delete only shows once the vendor has set their own image.
 const ImageField = ( { element }: { element: SettingsElement } ) => {
     const { updateValue } = useSettings();
-    const fieldKey = ( element.dependency_key as string ) || element.id;
+    const fieldKey = fieldKeyOf( element );
     const isRound = 'round' === ( element.shape as string );
     const placeholderUrl = ( element.placeholder_url as string ) || '';
 
@@ -89,15 +90,15 @@ const ImageField = ( { element }: { element: SettingsElement } ) => {
                             : __( 'Upload', 'dokan-lite' ) }
                     </MediaUploader>
                     { hasCustomImage && (
-                        <button
-                            type="button"
+                        <Button
+                            variant="outline"
+                            size="icon-sm"
                             aria-label={ __( 'Remove image', 'dokan-lite' ) }
                             onClick={ handleRemove }
-                            className="box-border! flex h-8! w-8! min-w-0! shrink-0 items-center justify-center rounded-md! border! border-gray-300! bg-white! p-0! text-gray-500 hover:text-red-600"
+                            className="shrink-0 text-gray-500 hover:text-red-600"
                         >
-                            { /* Inline size survives the theme's button/svg rules (same fight WeeklyTimeSlots' icon buttons solve). */ }
                             <Trash size={ 16 } />
-                        </button>
+                        </Button>
                     ) }
                 </div>
             </div>
