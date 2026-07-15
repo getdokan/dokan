@@ -20,6 +20,11 @@ export const newProductsSelectors = {
     dataRow: 'table tbody tr',
     columnHeader: 'table thead th',
     searchInput: 'input[placeholder="Search"]',
+    // Quick-create modal (default flow when `one_step_product_create` is on).
+    // DokanModal renders a WP <Modal role="dialog"> with this title <h2> and a
+    // "Create & Continue" confirm button.
+    quickCreateModalTitle: 'h2:has-text("Add New Product")',
+    quickCreateConfirmBtn: 'button:has-text("Create & Continue")',
     addFilterBtn: 'button:has-text("Add Filter")',
     resetBtn: 'button:has-text("Reset")',
     selectAll: 'input#inspector-checkbox-control-0, input[aria-label="Select all"]',
@@ -59,6 +64,8 @@ export class NewProductsPage {
     get selectAllCheckbox(): Locator { return this.page.locator(newProductsSelectors.selectAll).first(); }
     get rowCheckboxes(): Locator { return this.page.locator(newProductsSelectors.rowCheckbox); }
     get emptyState(): Locator { return this.page.locator(newProductsSelectors.emptyState).first(); }
+    get quickCreateModalTitle(): Locator { return this.page.locator(newProductsSelectors.quickCreateModalTitle).first(); }
+    get quickCreateConfirmButton(): Locator { return this.page.locator(newProductsSelectors.quickCreateConfirmBtn).first(); }
     get quickViewModal(): Locator { return this.page.locator(newProductsSelectors.quickViewModal).first(); }
     get deleteAlert(): Locator { return this.page.locator(newProductsSelectors.deleteAlert).first(); }
 
@@ -163,10 +170,15 @@ export class NewProductsPage {
     }
 
     // ---- Navigation actions ----
+    /**
+     * Click "Add new product". With `one_step_product_create` on (the Lite
+     * default), this opens the quick-create modal instead of navigating to the
+     * create route, so wait for the modal title to surface.
+     */
     async clickAddNewProduct(): Promise<void> {
         await this.addNewProductButton.waitFor({ state: 'visible', timeout: 10000 });
         await this.addNewProductButton.click();
-        await this.page.waitForURL(/#\/?products\/create/, { timeout: 15000 }).catch(() => undefined);
+        await this.quickCreateModalTitle.waitFor({ state: 'visible', timeout: 15000 }).catch(() => undefined);
     }
 
     async openSeededProduct(): Promise<void> {
