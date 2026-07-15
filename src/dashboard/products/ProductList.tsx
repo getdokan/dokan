@@ -4,13 +4,7 @@ import { useToast } from '@getdokan/dokan-ui';
 import { addAction, applyFilters, removeAction } from '@wordpress/hooks';
 import { Fill } from '@wordpress/components';
 import { useNavigate } from 'react-router-dom';
-import {
-    Boxes,
-    Package,
-    ExternalLink,
-    LayoutGrid,
-    Plus,
-} from 'lucide-react';
+import { Boxes, Package, ExternalLink, LayoutGrid, Plus } from 'lucide-react';
 import {
     DataViews,
     DokanBadge,
@@ -25,6 +19,7 @@ import PriceHtml from '../../components/PriceHtml';
 import { useProducts } from './hooks/useProducts';
 import { useProductCategories } from './hooks/useProductCategories';
 import { QuickViewModal } from './QuickViewModal';
+import QuickCreateModal from '../product-editor/QuickCreateModal';
 import type { ProductItem, ProductStatus, ProductFilterState } from './types';
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
@@ -157,6 +152,13 @@ interface ProductListingConfig {
     can_add_product?: boolean;
     new_product_url?: string;
     is_legacy_editor_preferred?: boolean;
+    /**
+     * When true, the "Add new product" button opens the lightweight
+     * schema-driven quick-create modal instead of navigating to the full
+     * create page. Localized from PHP (admin setting). Ignored when the legacy
+     * editor is preferred.
+     */
+    is_quick_create_enabled?: boolean;
     can_import?: boolean;
     can_export?: boolean;
     import_url?: string;
@@ -173,6 +175,7 @@ function ProductList() {
     const [ selection, setSelection ] = useState< string[] >( [] );
     const [ quickViewProduct, setQuickViewProduct ] =
         useState< ProductItem | null >( null );
+    const [ isQuickCreateOpen, setIsQuickCreateOpen ] = useState( false );
 
     const [ filterArgs, setFilterArgs ] = useState< ProductFilterState >( {
         page: 1,
@@ -377,7 +380,15 @@ function ProductList() {
         type: 'table',
         status: 'all',
         titleField: 'name',
-        fields: [ 'type', 'stock', 'status', 'price', 'earning', 'advertise', 'views' ],
+        fields: [
+            'type',
+            'stock',
+            'status',
+            'price',
+            'earning',
+            'advertise',
+            'views',
+        ],
     } );
 
     /**
@@ -478,6 +489,7 @@ function ProductList() {
         if ( config.can_add_product ) {
             const useLegacy =
                 config.is_legacy_editor_preferred && !! config.new_product_url;
+            const useQuickModal = ! useLegacy && config.is_quick_create_enabled;
             buttons.push(
                 <DokanButton
                     key="add-product"
@@ -485,6 +497,10 @@ function ProductList() {
                         if ( useLegacy ) {
                             window.location.href =
                                 config.new_product_url as string;
+                            return;
+                        }
+                        if ( useQuickModal ) {
+                            setIsQuickCreateOpen( true );
                             return;
                         }
                         navigate( '/products/create' );
@@ -849,7 +865,6 @@ function ProductList() {
             subscriptionInfo,
             effectiveRemaining,
             subscriptionLimitReached,
-            navigate,
         ]
     );
 
@@ -962,6 +977,20 @@ function ProductList() {
                 product={ quickViewProduct }
                 onClose={ () => setQuickViewProduct( null ) }
             />
+
+            { /* Lightweight schema-driven create — mount only while open so a
+                 transient init failure resets on the next open. */ }
+            { isQuickCreateOpen && (
+                <QuickCreateModal
+                    isOpen
+                    onClose={ () => setIsQuickCreateOpen( false ) }
+                    onCreated={ () => {
+                        setIsQuickCreateOpen( false );
+                        fetchProducts();
+                        fetchStatusCounts();
+                    } }
+                />
+            ) }
 
             {
                 applyFilters( 'dokan_product_list_after_content', null, {

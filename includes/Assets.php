@@ -186,6 +186,8 @@ class Assets {
         }
 
         $user_id = dokan_get_current_user_id();
+        $one_step_product_create = 'on' === dokan_get_option( 'one_step_product_create', 'dokan_selling', 'on' );
+        $disable_product_popup   = $one_step_product_create || 'on' === dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' );
 
         $args['product_listing'] = array_merge(
             $args['product_listing'] ?? [],
@@ -196,6 +198,9 @@ class Assets {
                 // Type-filter options for the list; uses the same registered types as the
                 // editor so module types (e.g. auction) appear only when their module is active.
                 'product_types'              => dokan()->product_editor->get_product_types(),
+                // When "One Page Product Creation" is enabled, the Add-new-product
+                // button opens the lightweight schema-driven quick-create modal.
+                'is_quick_create_enabled'    => ! $disable_product_popup,
             ]
         );
 
@@ -274,6 +279,11 @@ class Assets {
                 'path'      => '/changelog',
                 'name'      => 'ChangeLog',
                 'component' => 'ChangeLog',
+            ],
+            [
+                'path'      => '/tools',
+                'name'      => 'Tools',
+                'component' => 'Tools',
             ],
         ];
 
