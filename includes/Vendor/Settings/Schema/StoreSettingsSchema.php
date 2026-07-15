@@ -3,7 +3,9 @@
 namespace WeDevs\Dokan\Vendor\Settings\Schema;
 
 use WeDevs\Dokan\CatalogMode\Helper as CatalogModeHelper;
+use WeDevs\Dokan\Utilities\RichTextSanitizerUtil;
 use WeDevs\Dokan\Utilities\VendorUtil;
+use WeDevs\Dokan\Vendor\Settings\StoreScheduleValidator;
 
 /**
  * Vendor Store Settings flat-array schema.
@@ -326,16 +328,20 @@ class StoreSettingsSchema {
         }
 
         $elements[] = [
-            'id'          => 'phone',
-            'type'        => 'field',
-            'variant'     => 'text',
-            'section_id'  => 'store_information',
-            'title'       => __( 'Phone', 'dokan-lite' ),
-            'placeholder' => __( 'e.g 206-555-0122', 'dokan-lite' ),
-            'layout'      => 'full-width',
-            'value'       => (string) ( $info['phone'] ?? '' ),
-            'default'     => '',
-            'legacy_key'  => 'phone',
+            'id'                => 'phone',
+            'type'              => 'field',
+            'variant'           => 'text',
+            'section_id'        => 'store_information',
+            'title'             => __( 'Phone', 'dokan-lite' ),
+            'placeholder'       => __( 'e.g 206-555-0122', 'dokan-lite' ),
+            'layout'            => 'full-width',
+            'value'             => (string) ( $info['phone'] ?? '' ),
+            'default'           => '',
+            'legacy_key'        => 'phone',
+            // Phone keeps the legacy dedicated sanitizer.
+            'sanitize_callback' => static function ( $value ) {
+                return dokan_sanitize_phone_number( wp_unslash( (string) $value ) );
+            },
         ];
 
         return $elements;
@@ -504,17 +510,19 @@ class StoreSettingsSchema {
                 ],
             ],
             [
-                'id'           => 'dokan_store_time',
-                'type'         => 'field',
-                'variant'      => 'vendor_store_schedule',
-                'section_id'   => 'store_schedule',
+                'id'                => 'dokan_store_time',
+                'type'              => 'field',
+                'variant'           => 'vendor_store_schedule',
+                'section_id'        => 'store_schedule',
                 // Lite renders one range per day; Pro flips this via the schema filter.
-                'multiple'     => false,
-                'days'         => dokan_get_translated_days(),
-                'value'        => is_array( $info['dokan_store_time'] ?? null ) ? $info['dokan_store_time'] : [],
-                'default'      => [],
-                'legacy_key'   => 'dokan_store_time',
-                'dependencies' => $requires_schedule_enabled,
+                'multiple'          => false,
+                'days'              => dokan_get_translated_days(),
+                'value'             => is_array( $info['dokan_store_time'] ?? null ) ? $info['dokan_store_time'] : [],
+                'default'           => [],
+                'legacy_key'        => 'dokan_store_time',
+                'dependencies'      => $requires_schedule_enabled,
+                'sanitize_callback' => [ StoreScheduleValidator::class, 'sanitize' ],
+                'validation_func'   => [ StoreScheduleValidator::class, 'validate' ],
             ],
             [
                 'id'           => 'dokan_store_open_notice',
@@ -593,20 +601,34 @@ class StoreSettingsSchema {
                 ],
             ],
             [
-                'id'           => 'store_tnc',
-                'type'         => 'field',
+                'id'                => 'store_tnc',
+                'type'              => 'field',
                 // Custom variant so the label can carry the red "(Required)" marker.
-                'variant'      => 'vendor_rich_text',
-                'section_id'   => 'terms_conditions',
-                'title'        => __( 'TOC Details', 'dokan-lite' ),
-                'description'  => __( 'Spell out your store policies — returns, shipping, and warranties — that customers agree to when they order.', 'dokan-lite' ),
-                // Required when the toggle is on; the controller enforces the same content check as the legacy form.
-                'required'     => true,
-                'layout'       => 'full-width',
-                'value'        => (string) ( $info['store_tnc'] ?? '' ),
-                'default'      => '',
-                'legacy_key'   => 'store_tnc',
-                'dependencies' => [
+                'variant'           => 'vendor_rich_text',
+                'section_id'        => 'terms_conditions',
+                'title'             => __( 'TOC Details', 'dokan-lite' ),
+                'description'       => __( 'Spell out your store policies — returns, shipping, and warranties — that customers agree to when they order.', 'dokan-lite' ),
+                // Required when the toggle is on — enforced by the validation_func below, same content check as the legacy form.
+                'required'          => true,
+                'layout'            => 'full-width',
+                'value'             => (string) ( $info['store_tnc'] ?? '' ),
+                'default'           => '',
+                'legacy_key'        => 'store_tnc',
+                // Effectively-empty markup collapses to '' (legacy semantics), which the validation_func then treats as blank.
+                'sanitize_callback' => static function ( $value ) {
+                    $html = wp_kses_post( wp_unslash( (string) $value ) );
+
+                    return '' === RichTextSanitizerUtil::sanitize_richtext_content( $html ) ? '' : $html;
+                },
+                // Cross-field: enabling the ToC toggle requires actual content.
+                'validation_func'   => static function ( $value, array $all_values ) {
+                    if ( 'on' === ( $all_values['enable_tnc'] ?? '' ) && '' === (string) $value ) {
+                        return __( 'Please add Terms & Conditions content before saving the settings.', 'dokan-lite' );
+                    }
+
+                    return true;
+                },
+                'dependencies'      => [
                     [
                         'key'        => 'enable_tnc',
                         'value'      => 'on',

@@ -2,7 +2,6 @@
 
 namespace WeDevs\Dokan\REST;
 
-use WeDevs\Dokan\Utilities\RichTextSanitizerUtil;
 use WeDevs\Dokan\Vendor\Settings\Schema\StoreSettingsSchema;
 use WeDevs\Dokan\Vendor\Settings\StoreSettingsWriter;
 use WeDevs\Dokan\Vendor\Settings\ValueMapper;
@@ -157,8 +156,9 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
 
         $fields_by_id = $this->get_fields_by_id( StoreSettingsSchema::get_schema( $vendor_id ) );
 
-        $validation_errors = [];
-        $sanitized         = [];
+        // Phase 1 — sanitize every recognized field up front, so cross-field
+        // validators (e.g. min ≤ max) see the full submitted value set.
+        $sanitized = [];
 
         foreach ( $flat_values as $key => $value ) {
             // plugin-ui emits dot-path keys (`page.subpage.field_id`) reflecting
@@ -169,31 +169,25 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
 
             $field = $fields_by_id[ $leaf_id ] ?? null;
 
-            if ( ! $field ) {
-                continue;
+            if ( $field ) {
+                $sanitized[ $leaf_id ] = $this->sanitize_field_value( $field, $value );
             }
+        }
 
-            $clean  = $this->sanitize_field_value( $field, $value );
-            $errors = $this->validate_field_value( $field, $clean );
+        // Phase 2 — validate each field against its own rules, passing the full
+        // sanitized map so a field's `validation_func` can compare siblings.
+        $validation_errors = [];
+
+        foreach ( $sanitized as $leaf_id => $value ) {
+            $errors = $this->validate_field_value( $fields_by_id[ $leaf_id ], $value, $sanitized, $vendor_id );
 
             if ( ! empty( $errors ) ) {
                 $validation_errors[ $leaf_id ] = $errors;
-                continue;
             }
-
-            $sanitized[ $leaf_id ] = $clean;
         }
 
-        // Cross-field rule from the legacy validator: enabling ToC requires content.
-        if (
-            'on' === ( $sanitized['enable_tnc'] ?? '' )
-            && array_key_exists( 'store_tnc', $sanitized )
-            && '' === RichTextSanitizerUtil::sanitize_richtext_content( (string) $sanitized['store_tnc'] )
-        ) {
-            $validation_errors['store_tnc'][] = __( 'Please add Terms & Conditions content before saving the settings.', 'dokan-lite' );
-        }
-
-        // Whole-payload seam so Pro can add cross-field rules (e.g. min ≤ max) the per-field validator can't express.
+        // Whole-payload seam for section-level rules that belong to no single
+        // field (e.g. the vacation closing-style/message/date-range trio).
         $validation_errors = (array) apply_filters( 'dokan_rest_vendor_settings_validate', $validation_errors, $sanitized, $fields_by_id, $vendor_id );
 
         if ( ! empty( $validation_errors ) ) {
@@ -283,18 +277,24 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
     /**
      * Validate a sanitized value against the field's declared rules.
      *
-     * Rules use the plugin-ui client contract — `[ { rules: 'not_empty|…',
-     * message: '…' } ]` — so a single declaration drives both client and
-     * server validation.
+     * Runs, in order: the declarative `validations` rules (the plugin-ui client
+     * contract `[ { rules: 'not_empty|…', message: '…' } ]`, so one declaration
+     * drives both client and server), then the field's optional
+     * `validation_func` closure, then the `dokan_rest_vendor_settings_validate_field`
+     * filter. A `validation_func` receives `( $value, $all_values, $vendor_id )`
+     * and returns `true` when valid, or `false` / a message / a list of messages
+     * — so schedule-style multi-error and cross-field checks live on the field.
      *
      * @since DOKAN_SINCE
      *
-     * @param array $field The field schema element.
-     * @param mixed $value The sanitized value.
+     * @param array $field      The field schema element.
+     * @param mixed $value      The sanitized value.
+     * @param array $all_values Every sanitized value keyed by field id.
+     * @param int   $vendor_id  Vendor user ID.
      *
      * @return string[] Error messages (empty when valid).
      */
-    protected function validate_field_value( array $field, $value ): array {
+    protected function validate_field_value( array $field, $value, array $all_values = [], int $vendor_id = 0 ): array {
         $errors  = [];
         $variant = $field['variant'] ?? '';
 
@@ -333,8 +333,17 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
             }
         }
 
-        if ( 'vendor_store_schedule' === $variant ) {
-            $errors = array_merge( $errors, $this->validate_store_time( (array) $value ) );
+        // Per-field closure declared on the schema (returns true|false|string|string[]).
+        if ( ! empty( $field['validation_func'] ) && is_callable( $field['validation_func'] ) ) {
+            $result = call_user_func( $field['validation_func'], $value, $all_values, $vendor_id );
+
+            if ( is_array( $result ) ) {
+                $errors = array_merge( $errors, array_map( 'strval', $result ) );
+            } elseif ( is_string( $result ) && '' !== $result ) {
+                $errors[] = $result;
+            } elseif ( false === $result ) {
+                $errors[] = __( 'This field is invalid.', 'dokan-lite' );
+            }
         }
 
         /**
@@ -364,14 +373,17 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
      * @return mixed Sanitized value.
      */
     protected function sanitize_field_value( array $field, $value ) {
+        // Per-field closure declared on the schema wins (mirrors admin) — this
+        // is where field-specific rules (phone, store schedule, ToC collapse)
+        // live instead of special-casing them here.
+        if ( ! empty( $field['sanitize_callback'] ) && is_callable( $field['sanitize_callback'] ) ) {
+            return call_user_func( $field['sanitize_callback'], $value );
+        }
+
         $variant = $field['variant'] ?? 'text';
 
         switch ( $variant ) {
             case 'text':
-                // The phone field keeps the legacy dedicated sanitizer.
-                if ( 'phone' === ( $field['id'] ?? '' ) ) {
-                    return dokan_sanitize_phone_number( wp_unslash( (string) $value ) );
-                }
                 return sanitize_text_field( wp_unslash( (string) $value ) );
 
             case 'textarea':
@@ -380,14 +392,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
 
             case 'rich_text':
             case 'vendor_rich_text':
-                $html = wp_kses_post( wp_unslash( (string) $value ) );
-
-                // store_tnc keeps the legacy semantics: effectively-empty markup collapses to ''.
-                if ( 'store_tnc' === ( $field['id'] ?? '' ) && '' === RichTextSanitizerUtil::sanitize_richtext_content( $html ) ) {
-                    return '';
-                }
-
-                return $html;
+                return wp_kses_post( wp_unslash( (string) $value ) );
 
             case 'switch':
                 $allowed  = [ 'on', 'off' ];
@@ -433,9 +438,6 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
                     'find_address' => sanitize_text_field( wp_unslash( (string) ( $value['find_address'] ?? '' ) ) ),
                 ];
 
-            case 'vendor_store_schedule':
-                return $this->sanitize_store_time( (array) $value );
-
             default:
                 if ( is_array( $value ) ) {
                     return map_deep( wp_unslash( $value ), 'sanitize_text_field' );
@@ -455,90 +457,5 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
                  */
                 return apply_filters( 'dokan_rest_vendor_settings_sanitize_field', sanitize_text_field( wp_unslash( (string) $value ) ), $field, $variant );
         }
-    }
-
-    /**
-     * Normalize a submitted store schedule into the exact legacy shape:
-     * per-day `{ status: 'open'|'close', opening_time: string[], closing_time: string[] }`
-     * with canonical `g:i a` time strings. Closed days carry empty arrays.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array $value Submitted schedule keyed by day.
-     *
-     * @return array
-     */
-    protected function sanitize_store_time( array $value ): array {
-        $schedule = [];
-
-        foreach ( array_keys( dokan_get_translated_days() ) as $day ) {
-            $day_data = isset( $value[ $day ] ) && is_array( $value[ $day ] ) ? $value[ $day ] : [];
-            $status   = 'open' === ( $day_data['status'] ?? '' ) ? 'open' : 'close';
-
-            $opening = 'open' === $status
-                ? array_values( array_map( 'sanitize_text_field', (array) ( $day_data['opening_time'] ?? [] ) ) )
-                : [];
-            $closing = 'open' === $status
-                ? array_values( array_map( 'sanitize_text_field', (array) ( $day_data['closing_time'] ?? [] ) ) )
-                : [];
-
-            $schedule[ $day ] = [
-                'status'       => $status,
-                'opening_time' => $opening,
-                'closing_time' => $closing,
-            ];
-        }
-
-        return $schedule;
-    }
-
-    /**
-     * Validate a normalized store schedule: open days need matching time
-     * pairs, each in `g:i a` format with the opening time before the closing
-     * time (the full-day `12:00 am` – `11:59 pm` pair satisfies this).
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array $schedule Normalized schedule keyed by day.
-     *
-     * @return string[] Error messages.
-     */
-    protected function validate_store_time( array $schedule ): array {
-        $errors = [];
-
-        foreach ( $schedule as $day => $day_data ) {
-            if ( 'open' !== ( $day_data['status'] ?? '' ) ) {
-                continue;
-            }
-
-            $day_label = dokan_get_translated_days( $day );
-            $opening   = (array) ( $day_data['opening_time'] ?? [] );
-            $closing   = (array) ( $day_data['closing_time'] ?? [] );
-
-            if ( empty( $opening ) || count( $opening ) !== count( $closing ) ) {
-                /* translators: %s: day name */
-                $errors[] = sprintf( __( '%s: opening and closing times are required for open days.', 'dokan-lite' ), $day_label );
-                continue;
-            }
-
-            foreach ( $opening as $index => $opening_time ) {
-                $closing_time = $closing[ $index ];
-                $open         = \DateTime::createFromFormat( 'g:i a', strtolower( trim( (string) $opening_time ) ) );
-                $close        = \DateTime::createFromFormat( 'g:i a', strtolower( trim( (string) $closing_time ) ) );
-
-                if ( false === $open || false === $close ) {
-                    /* translators: %s: day name */
-                    $errors[] = sprintf( __( '%s: times must use the h:mm am/pm format.', 'dokan-lite' ), $day_label );
-                    continue;
-                }
-
-                if ( $open->getTimestamp() >= $close->getTimestamp() ) {
-                    /* translators: %s: day name */
-                    $errors[] = sprintf( __( '%s: the opening time must be earlier than the closing time.', 'dokan-lite' ), $day_label );
-                }
-            }
-        }
-
-        return $errors;
     }
 }
