@@ -939,20 +939,17 @@ class ProductController extends DokanRESTController {
             $args['post_type'] = $this->post_type;
         }
 
-        // Exclude product types that belong to separate dashboards
-        // (e.g. auction, booking, subscription — registered by their Pro modules).
+        // Exclude product types that belong to separate dashboards — auction,
+        // booking, subscription — each registered by its own Pro module through
+        // `dokan_product_listing_exclude_type`. The filter is the single source
+        // of truth here: no type is hardcoded, so any consumer can add or drop
+        // one without lite knowing about it.
+        //
         // A request may opt an excluded type back in via `include_types` — the
         // vendor dashboard product list does this (through its
         // `dokan_product_list_query_args` JS filter) for types that are
         // first-class there, e.g. auctions under the new product editor.
-        //
-        // `auction` is a defensive default, like `booking` in get_product_summary():
-        // when auction products exist but the Auction module (and thus its filter
-        // handler and its `include_types` opt-in) is off, WooCommerce Simple
-        // Auctions still hides them from WP_Query listings while the raw-SQL
-        // counts would keep including them — excluding the type on both surfaces
-        // keeps the list and its counts in sync.
-        $exclude_types = array_unique( array_merge( [ 'auction' ], (array) apply_filters( 'dokan_product_listing_exclude_type', [] ) ) );
+        $exclude_types = array_unique( (array) apply_filters( 'dokan_product_listing_exclude_type', [] ) );
         $exclude_types = array_values( array_diff( $exclude_types, $this->get_requested_include_types( $request ) ) );
         if ( ! empty( $exclude_types ) ) {
             $args['tax_query'][] = [ //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
