@@ -119,7 +119,13 @@ export class VendorStoreSettingsPage extends BasePage {
         if (((await toggle.getAttribute('aria-checked')) === 'true') === enabled) {
             return;
         }
-        await toggle.click();
+        // A switch click can silently miss under load; retry until aria-checked flips.
+        await expect(async () => {
+            if (((await toggle.getAttribute('aria-checked')) === 'true') !== enabled) {
+                await toggle.click();
+            }
+            expect((await toggle.getAttribute('aria-checked')) === 'true').toBe(enabled);
+        }).toPass({ timeout: 10000 });
         await this.saveNew();
     }
 
@@ -132,7 +138,13 @@ export class VendorStoreSettingsPage extends BasePage {
         if ((await toggle.getAttribute('aria-checked')) === 'true') {
             return;
         }
-        await toggle.click();
+        // Retry the click until it registers (a single click can miss under load).
+        await expect(async () => {
+            if ((await toggle.getAttribute('aria-checked')) !== 'true') {
+                await toggle.click();
+            }
+            expect(await toggle.getAttribute('aria-checked')).toBe('true');
+        }).toPass({ timeout: 10000 });
         await this.saveNew();
     }
 

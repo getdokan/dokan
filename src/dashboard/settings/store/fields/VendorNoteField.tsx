@@ -12,7 +12,7 @@ const VendorNoteField = ( { element }: { element: SettingsElement } ) => {
     }
 
     return (
-        <div className="dokan-vendor-note flex items-start gap-2 px-4 pt-6 pb-4 -mt-2 text-[13px] leading-normal text-gray-500">
+        <div className="dokan-vendor-note flex items-start gap-2 px-4 pb-3 text-[13px] leading-normal text-gray-500">
             <Info size={ 16 } className="text-dokan-link mt-px shrink-0" />
             <span>{ text }</span>
         </div>
