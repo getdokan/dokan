@@ -216,8 +216,7 @@ test.describe.serial('Stripe Express — saved cards (my-account payment methods
             await savedRadio.waitFor({ state: 'attached', timeout: 20_000 });
             await savedRadio.check();
             await stripe.waitForCheckoutSettled();
-            await stripe.placeClassicOrderExpectReceived();
-            orderId = page.url().match(/order-received\/(\d+)/)?.[1];
+            orderId = await stripe.placeClassicOrderExpectReceived();
             log.success('Customer paid a new order with the saved token — order received (no card entry)');
         } finally {
             await page.close();

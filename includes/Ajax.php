@@ -56,6 +56,66 @@ class Ajax {
         add_action( 'wp_ajax_nopriv_dokan_login_user', [ $this, 'login_user' ] );
 
         add_action( 'wp_ajax_dokan-upgrade-dissmiss', [ $this, 'dismiss_pro_notice' ] );
+
+        // Admin Tools page (free): page installation + cache clearing.
+        add_action( 'wp_ajax_create_pages', [ $this, 'create_pages' ] );
+        add_action( 'wp_ajax_check_all_dokan_pages_exists', [ $this, 'check_all_dokan_pages_exists' ] );
+        add_action( 'wp_ajax_dokan_clear_caches', [ $this, 'clear_caches' ] );
+    }
+
+    /**
+     * Create the Dokan default pages (legacy Vue admin Tools page).
+     *
+     * @since 5.0.9
+     *
+     * @return void
+     */
+    public function create_pages() {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            wp_send_json_error( __( 'You don\'t have enough permission', 'dokan-lite' ), 403 );
+        }
+
+        $tools = new \WeDevs\Dokan\Admin\Tools\ToolsActions();
+
+        wp_send_json_success( $tools->create_default_pages() );
+    }
+
+    /**
+     * Check whether all Dokan pages exist (legacy Vue admin Tools page).
+     *
+     * @since 5.0.9
+     *
+     * @return void
+     */
+    public function check_all_dokan_pages_exists() {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            wp_send_json_error( __( 'You don\'t have enough permission', 'dokan-lite' ), 403 );
+        }
+
+        $tools = new \WeDevs\Dokan\Admin\Tools\ToolsActions();
+
+        wp_send_json_success( $tools->check_all_dokan_pages_exists() );
+    }
+
+    /**
+     * Clear all Dokan caches (legacy Vue admin Tools page).
+     *
+     * @since 5.0.9
+     *
+     * @return void
+     */
+    public function clear_caches() {
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'dokan_admin' ) ) {
+            wp_send_json_error( __( 'Nonce verification failed', 'dokan-lite' ), 403 );
+        }
+
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            wp_send_json_error( __( 'You don\'t have enough permission', 'dokan-lite' ), 403 );
+        }
+
+        $tools = new \WeDevs\Dokan\Admin\Tools\ToolsActions();
+
+        wp_send_json_success( $tools->clear_dokan_caches() );
     }
 
     /**
@@ -255,7 +315,13 @@ class Ajax {
 
         foreach ( $product_ids as $product_id ) {
             $product = dokan()->product->get( $product_id );
-            $files   = $product->get_downloads();
+
+            // Only grant downloads for the vendor's own products, never another vendor's files.
+            if ( ! $product || ! dokan_is_product_author( $product_id ) ) {
+                continue;
+            }
+
+            $files = $product->get_downloads();
 
             if ( ! $order->get_billing_email() ) {
                 wp_die();

@@ -1,4 +1,4 @@
-import { expect, Request, APIRequestContext, APIResponse } from '@playwright/test';
+import { expect, Request, APIRequestContext, APIResponse, request as pwRequest } from '@playwright/test';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
@@ -41,8 +41,23 @@ function extractTrailingJson(text: string): any {
 export class ApiUtils {
     readonly request: APIRequestContext;
 
-    constructor(request: APIRequestContext) {
-        this.request = request;
+    constructor(request: APIRequestContext | null) {
+        if (request) {
+            this.request = request;
+        } else {
+            // De-stubbed legacy specs construct `new ApiUtils(null)` (the old local
+            // stub accepted anything). Provide a lazy proxy that creates a real API
+            // request context on first use, so those specs run without each having to
+            // wire one. Callers that pass a real context are unaffected.
+            let ctx: APIRequestContext | null = null;
+            this.request = new Proxy({} as APIRequestContext, {
+                get: (_t, prop) => async (...args: unknown[]) => {
+                    if (!ctx) ctx = await pwRequest.newContext();
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    return (ctx as any)[prop](...args);
+                },
+            });
+        }
     }
 
     /**

@@ -81,8 +81,7 @@ test.describe.serial('Stripe Express — SE-GUEST (guest checkout) @pro', () => 
             });
             await stripe.selectBlockGateway();
             await stripe.fillCardDetails(STRIPE_CARDS.success);
-            await stripe.placeBlockOrderExpectReceived();
-            orderId = page.url().match(/order-received\/(\d+)/)?.[1];
+            orderId = await stripe.placeBlockOrderExpectReceived();
         } finally {
             await page.close();
             await ctx.close();
@@ -129,8 +128,7 @@ test.describe.serial('Stripe Express — SE-GUEST (guest checkout) @pro', () => 
             });
             await stripe.selectClassicGateway();
             await stripe.fillCardDetails(STRIPE_CARDS.success);
-            await stripe.placeClassicOrderExpectReceived();
-            orderId = page.url().match(/order-received\/(\d+)/)?.[1];
+            orderId = await stripe.placeClassicOrderExpectReceived();
         } finally {
             await page.close();
             await ctx.close();

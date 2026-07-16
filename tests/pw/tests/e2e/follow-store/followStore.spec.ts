@@ -1,4 +1,4 @@
-import { Page, expect, test } from '@utils/test';
+import { Page, test } from '@utils/test';
 import {
     FollowStorePage,
     api,
@@ -7,8 +7,6 @@ import {
     predefinedStores,
 } from './followStorePage';
 import path from 'path';
-
-import { toPath } from '@utils/helpers';
 
 // ============================================
 // SESSION STORAGE VARIABLES
@@ -119,7 +117,9 @@ test.describe('Follow stores modules functionality test', () => {
         });
     });
 
-    // vendor
+    // vendor — LEGACY UI regression cases (revived 2026-07-09 for legacy support;
+    // real page object drives the classic `dashboard/followers` PHP screen).
+    // New-UI parity lives in tests/e2e/follow-store/.
     test('vendor can view followers menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await test.step('Vendor navigates to Followers page and verifies page elements render properly', async () => {
             await vendor.vendorFollowersRenderProperly();
@@ -142,39 +142,9 @@ test.describe('Follow stores modules functionality test', () => {
     });
 });
 
-// ============================================
-// NEW REACT UI TEST CASES (Dokan 5.0.0+)
-// ============================================
-// Added during the 5.0.0 React rewrite. These tests target the new React
-// surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
-// the legacy tests above for parity coverage during rollout.
-
-test.describe('Follow Store Vendor (React) Tests @pro', () => {
-    test('Test Case 1 - Vendor followers page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
-        const ctx = await browser.newContext({ storageState: v1 });
-        const page = await ctx.newPage();
-        await page.goto(toPath(`dashboard/followers/`));
-        await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(2000);
-        const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
-        expect(fatal).toBe(false);
-        await page.close();
-        await ctx.close();
-    });
-
-    test('Test Case 2 - Followers page renders content', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
-        const ctx = await browser.newContext({ storageState: v1 });
-        const page = await ctx.newPage();
-        await page.goto(toPath(`dashboard/followers/`));
-        await page.waitForLoadState('domcontentloaded');
-        await expect
-            .poll(async () => (await page.locator('body').innerText()).trim().length, {
-                timeout: 30_000,
-                intervals: [500, 1000, 2000, 3000],
-            })
-            .toBeGreaterThan(50);
-        await page.close();
-        await ctx.close();
-    });
-});
+// The transitional "(React) Tests" smoke block that lived here (2 body-length
+// smokes at the LEGACY dashboard/followers URL) was RETIRED 2026-07-09: it
+// asserted only `body.innerText.length > 50` (fake green, house-style §7) and is
+// superseded on the React side by tests/e2e/follow-store/ and on the legacy side
+// by the two revived real vendor cases above. Retired per the D4/D6 precedent.
 

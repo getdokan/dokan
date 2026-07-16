@@ -57,8 +57,7 @@ async function placeBlockOrder(browser: Browser, productIds: string[]): Promise<
         await stripe.gotoBlockCheckout();
         await stripe.selectBlockGateway();
         await stripe.fillCardDetails(STRIPE_CARDS.success);
-        await stripe.placeBlockOrderExpectReceived();
-        const orderId = page.url().match(/order-received\/(\d+)/)?.[1];
+        const orderId = await stripe.placeBlockOrderExpectReceived();
         if (!orderId) {
             throw new Error('could not parse the order id from the order-received URL');
         }

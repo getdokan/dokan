@@ -164,8 +164,10 @@ test.describe('Stripe Express — edge & resilience @pro', () => {
             await stripe.assertBlockPaymentElementReady();
             // Prove the re-mounted element is fully functional by completing the purchase on it.
             await stripe.fillCardDetails(STRIPE_CARDS.success);
-            await stripe.placeBlockOrderExpectReceived();
-            await expect(page, 'the re-mounted Express PE should complete the order').toHaveURL(/order-received/);
+            // The helper asserts a NEW paid order settled and returns its id (on CI the in-page confirm is
+            // hCaptcha-blocked so the SPA never redirects — assert the settled order, not the URL).
+            const orderId = await stripe.placeBlockOrderExpectReceived();
+            expect(Number(orderId), 'the re-mounted Express PE should settle a paid order').toBeGreaterThan(0);
         } finally {
             await page.close();
             await ctx.close();
@@ -184,13 +186,19 @@ test.describe('Stripe Express — edge & resilience @pro', () => {
             await stripe.addProductToCart(connectedProductId);
             await stripe.gotoBlockCheckout();
             await stripe.selectBlockGateway();
+            // Capture the baseline BEFORE the declined attempt: the block reuses its draft order across the
+            // retry, so the paid order the retry produces has the same id as the draft created here. A
+            // baseline taken after the decline would equal that id and the settle check would never match.
+            const baseline = await stripe.stripeOrderBaseline();
             // First attempt: a declined card surfaces an inline error and creates no paid order.
             await stripe.fillCardDetails(STRIPE_CARDS.declined);
             await stripe.placeBlockOrderExpectError();
             // Retry on the SAME checkout (the block reuses its draft order): a valid card now succeeds.
             await stripe.fillCardDetails(STRIPE_CARDS.success);
-            await stripe.placeBlockOrderExpectReceived();
-            await expect(page, 'the retry with a valid card should reach order-received').toHaveURL(/order-received/);
+            // Assert the settled paid order (helper return), not the URL — hCaptcha blocks the in-page confirm
+            // on CI so the SPA never redirects even though the retry payment settled server-side.
+            const orderId = await stripe.placeBlockOrderExpectReceived(baseline);
+            expect(Number(orderId), 'the retry with a valid card should settle a paid order').toBeGreaterThan(0);
         } finally {
             await page.close();
             await ctx.close();
@@ -242,8 +250,10 @@ test.describe('Stripe Express — edge & resilience @pro', () => {
             // The PE must mount cleanly despite the long/unicode billing pre-fill.
             await stripe.assertBlockPaymentElementReady();
             await stripe.fillCardDetails(STRIPE_CARDS.success);
-            await stripe.placeBlockOrderExpectReceived();
-            await expect(page, 'long/unicode billing should still complete the Express order').toHaveURL(/order-received/);
+            // Assert the settled paid order (helper return), not the browser URL — the in-page confirm is
+            // hCaptcha-blocked on CI so the SPA never redirects even though the payment settled.
+            const orderId = await stripe.placeBlockOrderExpectReceived();
+            expect(Number(orderId), 'long/unicode billing should still settle a paid Express order').toBeGreaterThan(0);
         } finally {
             // Restore the customer's standard address so later specs pre-fill predictably.
             await ensureCustomerAddress();
