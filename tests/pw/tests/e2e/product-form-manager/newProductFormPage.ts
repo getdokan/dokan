@@ -35,6 +35,28 @@ export const newProductFormData = {
             scheduleTo: '2026-06-30',
         };
     },
+    // Auction (Pro simple-auction) fixture. Dates default to a window that
+    // starts tomorrow and ends 10 days out, expressed as picker parts so the
+    // POM can drive the WP DateTimePicker deterministically (no locale parsing).
+    auction: () => {
+        const id = uniqueId();
+        return {
+            title: `Auction ${faker.commerce.productName()} ${id}`,
+            description: 'Auction product created by automated tests.',
+            shortDescription: 'Automated auction short description.',
+            itemCondition: 'New' as const,
+            auctionType: 'Normal' as const,
+            startPrice: '50',
+            bidIncrement: '5',
+            reservedPrice: '150',
+            buyItNow: '200',
+            // Fixed future dates keep the end-after-start invariant stable.
+            startDate: { year: 2027, month: 6, day: 10, hour: 10, minute: 0 },
+            endDate: { year: 2027, month: 6, day: 20, hour: 10, minute: 0 },
+            // For the negative "end before start" case.
+            endBeforeStart: { year: 2027, month: 6, day: 5, hour: 10, minute: 0 },
+        };
+    },
     invalid: {
         emptyTitle: '',
         longTitle: 'A'.repeat(300),
@@ -53,6 +75,8 @@ export const newProductFormData = {
 } as const;
 
 export type ProductData = ReturnType<typeof newProductFormData.valid>;
+export type AuctionData = ReturnType<typeof newProductFormData.auction>;
+export type DatePart = { year: number; month: number; day: number; hour?: number; minute?: number };
 
 // ============================================
 // SELECTORS
@@ -105,6 +129,23 @@ export const newProductFormSelectors = {
 
     attributesWrapper: '#dokan-form-field-attributes',
 
+    // Auction (Pro simple-auction) — the ProductEditor integration renders these
+    // fields into the "Auction Options" card, shown only when type == auction.
+    // Field id == meta key, so most get a `#dokan-form-field-<key>` wrapper.
+    // Bid increment is the exception: it renders with no wrapper id, so we reach
+    // it by label (see bidIncrement getter).
+    auctionSectionHeading: 'Auction Options',
+    auctionItemConditionWrapper: '#dokan-form-field-_auction_item_condition',
+    auctionTypeWrapper: '#dokan-form-field-_auction_type',
+    auctionStartPrice: '#dokan-form-field-_auction_start_price input',
+    auctionReservedPrice: '#dokan-form-field-_auction_reserved_price input',
+    // Buy-it-now maps to the product's regular price prop, not a custom meta key.
+    buyItNowPrice: '#dokan-form-field-_regular_price input',
+    auctionDatesFromWrapper: '#dokan-form-field-_auction_dates_from',
+    auctionDatesToWrapper: '#dokan-form-field-_auction_dates_to',
+    // WP DateTimePicker popover opened when a date field is focused.
+    dateTimePicker: '.components-datetime',
+
     // Save button — rendered into the page header via WP Fill slot.
     saveButton:
         'button:has-text("Save Changes"), button:has-text("Update Product"), button:has-text("Create Product"), button:has-text("Publish")',
@@ -145,6 +186,11 @@ const LABELS = {
     overrideRma: 'Override your default RMA settings for this product',
     enableWholesale: 'Enable wholesale for this product',
     enableBulkDiscount: 'Enable bulk discount',
+    // Auction (Pro simple-auction) checkbox labels — verbatim from the schema.
+    auctionProxy: 'Enable proxy bidding for this auction product',
+    auctionSealed: 'Enable sealed bidding for this auction product',
+    auctionExtend: 'Extend auction on bid?',
+    auctionRelist: 'Enable automatic relisting for this auction',
 } as const;
 
 // ============================================
@@ -452,14 +498,27 @@ export class NewProductFormPage {
         await this.setCheckbox(LABELS.downloadable, true);
     }
 
-    async setProductType(type: 'simple' | 'variable' | 'grouped' | 'external'): Promise<void> {
+    async setProductType(type: 'simple' | 'variable' | 'grouped' | 'external' | 'auction'): Promise<void> {
         const labelMap = {
             simple: 'Simple',
             variable: 'Variable',
             grouped: 'Grouped',
             external: 'External/Affiliate',
+            // Pro (simple-auction module). Registered into the type dropdown only
+            // for the NEW editor, at priority 15 so Pro's set_default_product_types
+            // doesn't strip it.
+            auction: 'Auction',
         } as const;
         await this.chooseReactSelectOption(newProductFormSelectors.productTypeWrapper, labelMap[type]);
+    }
+
+    /** True when the given label appears as an option in the Product Type dropdown. */
+    async isProductTypeOptionAvailable(label: string): Promise<boolean> {
+        await this.reactSelectInput(newProductFormSelectors.productTypeWrapper).click();
+        const opt = this.reactSelectOption(label).first();
+        const visible = await opt.isVisible().catch(() => false);
+        await this.page.keyboard.press('Escape').catch(() => undefined);
+        return visible;
     }
 
     // ---- Attributes ----
@@ -676,6 +735,155 @@ export class NewProductFormPage {
             .locator('#dokan-form-field-dokan_geolocation_map input, input[placeholder*="location" i]')
             .first();
         if (await search.count()) await search.fill(query);
+    }
+
+    // ============================================
+    // AUCTION (Pro simple-auction module)
+    // The ProductEditor integration adds an "Auction Options" card and restricts
+    // the form to the legacy auction field set when type == auction.
+    // ============================================
+
+    get auctionOptionsCard(): Locator {
+        return this.page
+            .locator('.dokan-form-section, section, div')
+            .filter({ hasText: new RegExp(escapeRegExp(newProductFormSelectors.auctionSectionHeading), 'i') })
+            .first();
+    }
+
+    get auctionStartPrice(): Locator { return this.page.locator(newProductFormSelectors.auctionStartPrice).first(); }
+    get auctionReservedPrice(): Locator { return this.page.locator(newProductFormSelectors.auctionReservedPrice).first(); }
+    get buyItNowPrice(): Locator { return this.page.locator(newProductFormSelectors.buyItNowPrice).first(); }
+
+    /**
+     * Bid increment renders without a `#dokan-form-field-` wrapper (its auto id
+     * is unstable), so we reach the input through its label's base-control block.
+     */
+    get bidIncrement(): Locator {
+        return this.page
+            .locator('.components-base-control')
+            .filter({ has: this.page.locator('.dokan-form-field-label', { hasText: /bid increment/i }) })
+            .locator('input')
+            .first();
+    }
+
+    /** True when the Auction Options card is rendered (i.e. type == auction). */
+    async isAuctionOptionsVisible(): Promise<boolean> {
+        return (await this.page.locator(newProductFormSelectors.auctionStartPrice).count()) > 0;
+    }
+
+    /** True when a `#dokan-form-field-<id>` wrapper is present in the DOM. */
+    async isFieldPresent(fieldId: string): Promise<boolean> {
+        return (await this.page.locator(newProductFormSelectors.fieldWrapper(fieldId)).count()) > 0;
+    }
+
+    async selectAuctionItemCondition(label: 'New' | 'Used'): Promise<void> {
+        await this.chooseReactSelectOption(newProductFormSelectors.auctionItemConditionWrapper, label);
+    }
+
+    async selectAuctionType(label: 'Normal' | 'Reverse'): Promise<void> {
+        await this.chooseReactSelectOption(newProductFormSelectors.auctionTypeWrapper, label);
+    }
+
+    /**
+     * Set an auction date through the WP DateTimePicker popover.
+     *
+     * The popover exposes four number inputs in order — hours, minutes, day,
+     * year — plus a month `<select>`. Driving those parts is locale-independent
+     * (the calendar day buttons render a localized aria-label). The field's
+     * display value updates live via React's onChange, so we just close the
+     * popover afterward.
+     *
+     * @param wrapper The date field wrapper selector.
+     * @param parts   Target year / month (1-12) / day / optional hour & minute.
+     */
+    async setAuctionDate(wrapper: string, parts: DatePart): Promise<void> {
+        await this.page.locator(`${wrapper} input`).first().click();
+        const picker = this.page.locator(newProductFormSelectors.dateTimePicker).first();
+        await picker.waitFor({ state: 'visible', timeout: 8000 });
+
+        const numberInputs = picker.locator('input[type="number"]');
+        const monthSelect = picker.locator('select').first();
+
+        // Month select values are zero-padded ("01".."12").
+        await monthSelect.selectOption(String(parts.month).padStart(2, '0'));
+
+        const fillNumber = async (index: number, value: number): Promise<void> => {
+            const input = numberInputs.nth(index);
+            await input.click();
+            await input.evaluate((el) => (el as HTMLInputElement).select());
+            await this.page.keyboard.press('Delete');
+            await input.pressSequentially(String(value), { delay: 20 });
+            await input.press('Tab').catch(() => undefined);
+        };
+
+        // Order: [0] hours, [1] minutes, [2] day, [3] year.
+        if (parts.hour !== undefined) await fillNumber(0, parts.hour);
+        if (parts.minute !== undefined) await fillNumber(1, parts.minute);
+        await fillNumber(2, parts.day);
+        await fillNumber(3, parts.year);
+
+        // Close the popover so it doesn't overlap the next field.
+        await this.title.click().catch(() => undefined);
+        await picker.waitFor({ state: 'hidden', timeout: 5000 }).catch(async () => {
+            await this.page.keyboard.press('Escape').catch(() => undefined);
+        });
+    }
+
+    /**
+     * Fill the whole Auction Options card. Type must already be `auction`.
+     * Prices route through the Cleave-masked PriceEdit inputs (fillPrice);
+     * bid increment is a plain input.
+     */
+    async fillAuctionOptions(data: Partial<AuctionData>): Promise<void> {
+        if (data.itemCondition) await this.selectAuctionItemCondition(data.itemCondition);
+        if (data.auctionType) await this.selectAuctionType(data.auctionType);
+        if (data.startPrice !== undefined) await this.fillPrice(this.auctionStartPrice, data.startPrice);
+        if (data.bidIncrement !== undefined) await this.bidIncrement.fill(data.bidIncrement);
+        if (data.reservedPrice !== undefined) await this.fillPrice(this.auctionReservedPrice, data.reservedPrice);
+        if (data.buyItNow !== undefined) await this.fillPrice(this.buyItNowPrice, data.buyItNow);
+        if (data.startDate) await this.setAuctionDate(newProductFormSelectors.auctionDatesFromWrapper, data.startDate);
+        if (data.endDate) await this.setAuctionDate(newProductFormSelectors.auctionDatesToWrapper, data.endDate);
+    }
+
+    /** Toggle proxy / sealed / extend-on-bid / auto-relist auction checkboxes. */
+    async setAuctionProxy(value: boolean): Promise<void> { await this.setCheckbox(LABELS.auctionProxy, value); }
+    async setAuctionExtendOnBid(value: boolean): Promise<void> { await this.setCheckbox(LABELS.auctionExtend, value); }
+    async setAuctionAutoRelist(value: boolean): Promise<void> { await this.setCheckbox(LABELS.auctionRelist, value); }
+
+    /** End-to-end: select the auction type, fill the required options, save. */
+    async createAuctionProduct(data: AuctionData): Promise<void> {
+        await this.title.fill(data.title);
+        await this.fillRichText(this.description, data.description);
+        await this.setProductType('auction');
+        await this.auctionStartPrice.waitFor({ state: 'visible', timeout: 8000 });
+        await this.fillAuctionOptions(data);
+        await this.save();
+    }
+
+    /**
+     * Click Save and return the product id the editor persisted to. New products
+     * are pre-created as an auto-draft, so the save is a POST to
+     * `/dokan/v3/products/<id>` — we read the id off that request URL.
+     */
+    async saveAndGetProductId(): Promise<number | null> {
+        const [resp] = await Promise.all([
+            this.page
+                .waitForResponse(
+                    (r) => /\/dokan\/v3\/products\/\d+/.test(r.url()) && r.request().method() === 'POST',
+                    { timeout: 20000 }
+                )
+                .catch(() => null),
+            this.save(),
+        ]);
+        const match = resp?.url().match(/\/products\/(\d+)/);
+        return match ? Number(match[1]) : null;
+    }
+
+    /** Open a product in the new editor's edit route and wait for it to hydrate. */
+    async gotoEdit(productId: number): Promise<void> {
+        await this.page.goto(`${BASE_URL}/dashboard/new/#/products/${productId}/edit`);
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.title.waitFor({ state: 'visible', timeout: 30000 });
     }
 }
 
