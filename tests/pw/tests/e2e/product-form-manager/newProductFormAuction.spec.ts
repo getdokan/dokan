@@ -39,7 +39,7 @@ test.describe('Vendor new product form (React) — auction & product types', () 
     // ============================================
     test.describe('product type dropdown', () => {
         test('offers Simple, Variable, External/Affiliate and Group types', { tag: ['@lite', '@vendor'] }, async () => {
-            for (const label of ['Simple', 'Variable', 'External/Affiliate', 'Group']) {
+            for (const label of ['Simple', 'Variable', 'External/Affiliate product', 'Group Product']) {
                 expect(await form.isProductTypeOptionAvailable(label), `${label} is offered`).toBe(true);
             }
         });

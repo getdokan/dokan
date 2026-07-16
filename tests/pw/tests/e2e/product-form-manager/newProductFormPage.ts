@@ -502,8 +502,8 @@ export class NewProductFormPage {
         const labelMap = {
             simple: 'Simple',
             variable: 'Variable',
-            grouped: 'Grouped',
-            external: 'External/Affiliate',
+            grouped: 'Group Product',
+            external: 'External/Affiliate product',
             // Pro (simple-auction module). Registered into the type dropdown only
             // for the NEW editor, at priority 15 so Pro's set_default_product_types
             // doesn't strip it.
@@ -787,43 +787,49 @@ export class NewProductFormPage {
     /**
      * Set an auction date through the WP DateTimePicker popover.
      *
-     * The popover exposes four number inputs in order — hours, minutes, day,
-     * year — plus a month `<select>`. Driving those parts is locale-independent
-     * (the calendar day buttons render a localized aria-label). The field's
-     * display value updates live via React's onChange, so we just close the
-     * popover afterward.
+     * The Dokan wrapper (src/components/DateTimePicker.tsx) closes the popover
+     * on the *first* committed change — its onChange calls setIsVisible(false),
+     * and WpDateTimePicker fires onChange on every sub-field edit. So the whole
+     * date has to be set with a single interaction: walk the calendar to the
+     * target month, then click the target day. The time-of-day is left at the
+     * picker default; auction ordering (end after start) is decided by the day,
+     * which is all the auction cases assert.
      *
      * @param wrapper The date field wrapper selector.
-     * @param parts   Target year / month (1-12) / day / optional hour & minute.
+     * @param parts   Target year / month (1-12) / day. Hour/minute are ignored.
      */
     async setAuctionDate(wrapper: string, parts: DatePart): Promise<void> {
         await this.page.locator(`${wrapper} input`).first().click();
         const picker = this.page.locator(newProductFormSelectors.dateTimePicker).first();
         await picker.waitFor({ state: 'visible', timeout: 8000 });
 
-        const numberInputs = picker.locator('input[type="number"]');
-        const monthSelect = picker.locator('select').first();
+        const monthNames = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December',
+        ];
+        const targetTotal = parts.year * 12 + (parts.month - 1);
+        const heading = picker.locator('.components-datetime__date h3');
 
-        // Month select values are zero-padded ("01".."12").
-        await monthSelect.selectOption(String(parts.month).padStart(2, '0'));
+        // Walk one month at a time until the calendar shows the target month.
+        for (let i = 0; i < 60; i++) {
+            const current = (await heading.textContent())?.replace(/\s+/g, ' ').trim() ?? '';
+            const [curMonthName, curYearStr] = current.split(' ');
+            const curTotal = Number(curYearStr) * 12 + monthNames.indexOf(curMonthName);
+            if (curTotal === targetTotal) break;
+            const nav = targetTotal > curTotal ? 'View next month' : 'View previous month';
+            await picker.getByRole('button', { name: nav }).click();
+            await this.page.waitForTimeout(120);
+        }
 
-        const fillNumber = async (index: number, value: number): Promise<void> => {
-            const input = numberInputs.nth(index);
-            await input.click();
-            await input.evaluate((el) => (el as HTMLInputElement).select());
-            await this.page.keyboard.press('Delete');
-            await input.pressSequentially(String(value), { delay: 20 });
-            await input.press('Tab').catch(() => undefined);
-        };
+        // Day buttons render only the current month's days, so an exact-text
+        // match is unambiguous. Clicking one commits the date and (via the
+        // wrapper's onChange) closes the popover.
+        await picker
+            .locator('.components-datetime__date__day')
+            .filter({ hasText: new RegExp(`^${parts.day}$`) })
+            .first()
+            .click();
 
-        // Order: [0] hours, [1] minutes, [2] day, [3] year.
-        if (parts.hour !== undefined) await fillNumber(0, parts.hour);
-        if (parts.minute !== undefined) await fillNumber(1, parts.minute);
-        await fillNumber(2, parts.day);
-        await fillNumber(3, parts.year);
-
-        // Close the popover so it doesn't overlap the next field.
-        await this.title.click().catch(() => undefined);
         await picker.waitFor({ state: 'hidden', timeout: 5000 }).catch(async () => {
             await this.page.keyboard.press('Escape').catch(() => undefined);
         });
@@ -833,8 +839,15 @@ export class NewProductFormPage {
      * Fill the whole Auction Options card. Type must already be `auction`.
      * Prices route through the Cleave-masked PriceEdit inputs (fillPrice);
      * bid increment is a plain input.
+     *
+     * `description` is a required + visible default field, so the editor's
+     * save button (gated by FORM-level validity, `!isValid`) stays disabled
+     * until it is filled — populate it (and the short description) here so the
+     * auction save flows actually persist rather than silently no-op.
      */
     async fillAuctionOptions(data: Partial<AuctionData>): Promise<void> {
+        if (data.description) await this.fillRichText(this.description, data.description);
+        if (data.shortDescription) await this.fillRichText(this.shortDescription, data.shortDescription);
         if (data.itemCondition) await this.selectAuctionItemCondition(data.itemCondition);
         if (data.auctionType) await this.selectAuctionType(data.auctionType);
         if (data.startPrice !== undefined) await this.fillPrice(this.auctionStartPrice, data.startPrice);
