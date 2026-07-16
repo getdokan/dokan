@@ -154,84 +154,110 @@ class StoreSettingsSchema {
      * @return array
      */
     protected static function group_into_tabs( array $elements ): array {
-        $tabs = [
-            [
-                'id'         => 'tab_general',
-                'type'       => 'tab',
-                'subpage_id' => 'store_settings',
-                'title'      => __( 'General', 'dokan-lite' ),
-                'priority'   => 10,
-            ],
-            [
-                'id'         => 'tab_location',
-                'type'       => 'tab',
-                'subpage_id' => 'store_settings',
-                'title'      => __( 'Location', 'dokan-lite' ),
-                'priority'   => 20,
-            ],
-            [
-                'id'         => 'tab_schedule',
-                'type'       => 'tab',
-                'subpage_id' => 'store_settings',
-                'title'      => __( 'Schedule', 'dokan-lite' ),
-                'priority'   => 30,
-            ],
-            [
-                'id'         => 'tab_business',
-                'type'       => 'tab',
-                'subpage_id' => 'store_settings',
-                'title'      => __( 'Business', 'dokan-lite' ),
-                'priority'   => 40,
-            ],
-            [
-                'id'         => 'tab_policies',
-                'type'       => 'tab',
-                'subpage_id' => 'store_settings',
-                'title'      => __( 'Policies', 'dokan-lite' ),
-                'priority'   => 50,
-            ],
-        ];
+        $tabs       = self::base_tabs();
+        $known_tabs = self::known_tab_ids( $elements, $tabs );
 
-        // Tabs injected through the schema filter are valid targets too.
-        $known_tabs = wp_list_pluck( $tabs, 'id' );
-        foreach ( $elements as $element ) {
-            if ( 'tab' === ( $element['type'] ?? '' ) && ! empty( $element['id'] ) ) {
-                $known_tabs[] = $element['id'];
-            }
-        }
-
-        $members = [];
+        // Pin every card (section or section-less field) to a known tab, defaulting to General so nothing is left tabless.
+        $used_tabs = [];
         foreach ( $elements as &$element ) {
-            $type      = $element['type'] ?? '';
-            $is_card   = ( 'field' === $type || 'fieldgroup' === $type ) && empty( $element['section_id'] );
-            // Only direct children of the store subpage join a tab: sections, plus section-less card fields (e.g. Live Chat).
-            if ( ( 'section' !== $type && ! $is_card ) || 'store_settings' !== ( $element['subpage_id'] ?? '' ) ) {
+            if ( ! self::is_tab_member( $element ) ) {
                 continue;
             }
 
-            $tab_id = ! empty( $element['tab_id'] ) ? (string) $element['tab_id'] : 'tab_general';
+            $tab_id = ! empty( $element['tab_id'] ) && in_array( (string) $element['tab_id'], $known_tabs, true )
+                ? (string) $element['tab_id']
+                : 'tab_general';
 
-            // A dangling tab id would hide the card on every tab.
-            if ( ! in_array( $tab_id, $known_tabs, true ) ) {
-                $tab_id = 'tab_general';
-            }
-
-            $element['tab_id']  = $tab_id;
-            $members[ $tab_id ] = true;
+            $element['tab_id']    = $tab_id;
+            $used_tabs[ $tab_id ] = true;
         }
         unset( $element );
 
         // Admin gates can empty whole tabs (map key, schedule, catalog, T&C) — drop those.
-        $tabs = array_values(
-            array_filter(
-                $tabs,
-                static function ( array $tab ) use ( $members ) {
-                    return ! empty( $members[ $tab['id'] ] );
-                }
-            )
+        $tabs = array_filter(
+            $tabs,
+            static function ( array $tab ) use ( $used_tabs ) {
+                return ! empty( $used_tabs[ $tab['id'] ] );
+            }
         );
 
-        return array_merge( $elements, $tabs );
+        return array_merge( $elements, array_values( $tabs ) );
+    }
+
+    /**
+     * The Store page's line tabs, in strip order.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    protected static function base_tabs(): array {
+        $titles = [
+            'tab_general'  => __( 'General', 'dokan-lite' ),
+            'tab_location' => __( 'Location', 'dokan-lite' ),
+            'tab_schedule' => __( 'Schedule', 'dokan-lite' ),
+            'tab_business' => __( 'Business', 'dokan-lite' ),
+            'tab_policies' => __( 'Policies', 'dokan-lite' ),
+        ];
+
+        $tabs     = [];
+        $priority = 10;
+
+        foreach ( $titles as $id => $title ) {
+            $tabs[]    = [
+                'id'         => $id,
+                'type'       => 'tab',
+                'subpage_id' => 'store_settings',
+                'title'      => $title,
+                'priority'   => $priority,
+            ];
+            $priority += 10;
+        }
+
+        return $tabs;
+    }
+
+    /**
+     * Valid tab ids: the base tabs plus any injected through the schema filter.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $elements Flat schema elements.
+     * @param array $tabs     Base tabs.
+     *
+     * @return string[]
+     */
+    protected static function known_tab_ids( array $elements, array $tabs ): array {
+        $ids = wp_list_pluck( $tabs, 'id' );
+
+        foreach ( $elements as $element ) {
+            if ( 'tab' === ( $element['type'] ?? '' ) && ! empty( $element['id'] ) ) {
+                $ids[] = $element['id'];
+            }
+        }
+
+        return $ids;
+    }
+
+    /**
+     * Whether an element is a store-subpage card that belongs under a tab: a
+     * section, or a section-less card field (e.g. Live Chat).
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $element Schema element.
+     *
+     * @return bool
+     */
+    protected static function is_tab_member( array $element ): bool {
+        if ( 'store_settings' !== ( $element['subpage_id'] ?? '' ) ) {
+            return false;
+        }
+
+        $type    = $element['type'] ?? '';
+        $is_card = ( 'field' === $type || 'fieldgroup' === $type ) && empty( $element['section_id'] );
+
+        return 'section' === $type || $is_card;
     }
 
     /**

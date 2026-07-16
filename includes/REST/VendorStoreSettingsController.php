@@ -381,8 +381,9 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
         switch ( $rule ) {
             case 'required':
             case 'not_empty':
+                // Strict blank check (like AdminSettingsController): empty() would also reject '0'/0, diverging from the client's not_empty.
                 if ( '' === $value || null === $value || [] === $value ) {
-                    return '' !== $message ? $message : __( 'This field is required.', 'dokan-lite' );
+                    return $message ? $message : __( 'This field is required.', 'dokan-lite' );
                 }
                 break;
 
@@ -390,7 +391,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
                 $min = $params['min'] ?? ( $params[0] ?? null );
                 if ( null !== $min && is_numeric( $value ) && (float) $value < (float) $min ) {
                     /* translators: %s: minimum value */
-                    return '' !== $message ? $message : sprintf( __( 'Value must be at least %s.', 'dokan-lite' ), $min );
+                    return $message ? $message : sprintf( __( 'Value must be at least %s.', 'dokan-lite' ), $min );
                 }
                 break;
 
@@ -398,7 +399,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
                 $max = $params['max'] ?? ( $params[0] ?? null );
                 if ( null !== $max && is_numeric( $value ) && (float) $value > (float) $max ) {
                     /* translators: %s: maximum value */
-                    return '' !== $message ? $message : sprintf( __( 'Value must be at most %s.', 'dokan-lite' ), $max );
+                    return $message ? $message : sprintf( __( 'Value must be at most %s.', 'dokan-lite' ), $max );
                 }
                 break;
         }

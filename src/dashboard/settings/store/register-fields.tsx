@@ -8,6 +8,7 @@ import MapField from './fields/MapField';
 import StoreScheduleField from './fields/StoreScheduleField';
 import StoreLocationsField from './fields/StoreLocationsField';
 import VendorRadioField from './fields/VendorRadioField';
+import VendorNoteField from './fields/VendorNoteField';
 import VacationHistoryField from './fields/VacationHistoryField';
 import CompanyBankField from './fields/CompanyBankField';
 
@@ -25,6 +26,7 @@ const CUSTOM_VARIANTS: Record< string, FieldComponent > = {
     vendor_store_schedule: StoreScheduleField,
     vendor_store_locations: StoreLocationsField,
     vendor_radio: VendorRadioField,
+    vendor_note: VendorNoteField,
     vendor_vacation_history: VacationHistoryField,
     vendor_company_bank: CompanyBankField,
 };
