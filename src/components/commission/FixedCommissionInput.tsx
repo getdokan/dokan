@@ -130,7 +130,7 @@ const FixedCommissionInput = ( {
     return (
         <div
             id={ hookKey }
-            className="@container/combine grid grid-cols-12 p-4 gap-2"
+            className="@container/combine grid grid-cols-12 p-4 gap-2 w-full"
         >
             { hasContent && (
                 <div className="flex flex-col justify-center @xl/combine:col-span-7 col-span-12 gap-1">
