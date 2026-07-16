@@ -47,6 +47,7 @@
         "docker:full": "npm run start:env && npm run create:admin && npm run docker:setup",
         "test": "npx playwright test",
         "test:e2e": "NO_SETUP=true npx playwright test --project=e2e_tests",
+        "test:e2e:newui": "NO_SETUP=true npx playwright test --project=e2e_tests --grep @new-ui",
         "test:e2e:coverage": "npx playwright test --project=coverage_report",
         "test:api": "npx playwright test --project=api_tests --config=api.config.ts",
         "test:headed": "npx playwright test --project=e2e_tests --headed",

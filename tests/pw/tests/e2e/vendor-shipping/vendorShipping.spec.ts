@@ -1,46 +1,21 @@
-import { Page, expect, test } from '@utils/test';
-import { VendorShippingPage, data } from './vendorShippingPage';
+import { expect, test } from '@utils/test';
 import path from 'path';
 
 import { toPath } from '@utils/helpers';
 
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
 
-test.describe.skip('Vendor shipping test', () => {
-    let vendor: VendorShippingPage;
-    let vPage: Page;
-
-    test.beforeAll(async ({ browser }) => {
-        const vendorContext = await browser.newContext({ storageState: v1 });
-        vPage = await vendorContext.newPage();
-        vendor = new VendorShippingPage(vPage);
-    });
-
-    test.afterAll(async () => { await vPage?.close(); });
-
-    test('vendor can view shipping settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => { await vendor.vendorShippingSettingsRenderProperly(); });
-    test('vendor can add shipping policy', { tag: ['@pro', '@vendor'] }, async () => { await vendor.setShippingPolicies(data.vendor.shipping.shippingPolicy); });
-    test('vendor can add flat rate shipping', { tag: ['@pro', '@vendor'] }, async () => { await vendor.addShippingMethod(data.vendor.shipping.shippingMethods.flatRate); });
-    test('vendor can add free shipping', { tag: ['@pro', '@vendor'] }, async () => { await vendor.addShippingMethod(data.vendor.shipping.shippingMethods.freeShipping); });
-    test('vendor can add local pickup shipping', { tag: ['@pro', '@vendor'] }, async () => { await vendor.addShippingMethod(data.vendor.shipping.shippingMethods.localPickup); });
-    test('vendor can add table rate shipping', { tag: ['@pro', '@vendor'] }, async () => { await vendor.addShippingMethod(data.vendor.shipping.shippingMethods.tableRateShipping); });
-    test('vendor can add distance rate shipping', { tag: ['@pro', '@vendor'] }, async () => { await vendor.addShippingMethod(data.vendor.shipping.shippingMethods.distanceRateShipping); });
-    test('vendor can edit shipping method', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.addShippingMethod(data.vendor.shipping.shippingMethods.localPickup, false, true);
-        await vendor.addShippingMethod(data.vendor.shipping.shippingMethods.localPickup);
-    });
-    test('vendor can delete shipping method', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.addShippingMethod(data.vendor.shipping.shippingMethods.flatRate, true, true);
-        await vendor.deleteShippingMethod(data.vendor.shipping.shippingMethods.flatRate);
-    });
-});
-
 // ============================================
-// NEW REACT UI TEST CASES (Dokan 5.0.0+)
+// VENDOR SHIPPING (React, Dokan 5.0.0+)
 // ============================================
-// Added during the 5.0.0 React rewrite. These tests target the new React
-// surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
-// the legacy tests above for parity coverage during rollout.
+// RETIRED (2026-07-10): the legacy "Vendor shipping test" block (9 tests that
+// drove the classic /dashboard/settings/shipping zone table through a stubbed
+// page object) was removed. That surface migrated to the React shipping UI at
+// /dashboard/settings/shipping/#/, and its full method CRUD is already covered
+// in depth by tests/e2e/vendor-shipping/newShipping.spec.ts (add flat/free/local,
+// edit, delete, shipping policy, reload persistence) and
+// tests/e2e/table-rate-shipping/newShippingRate.spec.ts (table-rate + distance-rate).
+// Rebuilding them would only duplicate that coverage. The smoke tests below remain.
 
 test.describe('Vendor Shipping (React) Tests @pro', () => {
     test('Test Case 1 - Vendor shipping settings page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {

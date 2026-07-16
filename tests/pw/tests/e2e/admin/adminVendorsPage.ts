@@ -31,7 +31,7 @@ export const adminVendorsData = {
 // The admin Vendors page is the unified @dokan/components AdminDataViews list
 // mounted on #dokan-admin-dashboard at admin.php?page=dokan-dashboard#/vendors.
 // Same DataViews surface as the vendor dashboard lists, so the row / search /
-// row-action selectors mirror tests/e2e/new-products/newProductsPage.ts.
+// row-action selectors mirror tests/e2e/products/newProductsPage.ts.
 // ============================================
 export const adminVendorsSelectors = {
     reactRoot: '#dokan-admin-dashboard',

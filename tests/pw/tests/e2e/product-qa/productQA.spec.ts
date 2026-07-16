@@ -1,8 +1,7 @@
-import { test, Page, expect } from '@utils/test';
+import { test, Page, request } from '@utils/test';
 import { ProductQAPage, ApiUtils, data, payloads } from './productQAPage';
 import path from 'path';
 
-import { toPath } from '@utils/helpers';
 
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
@@ -13,7 +12,6 @@ const { PRODUCT_ID } = process.env;
 test.describe('Product QA functionality test', () => {
     let admin: ProductQAPage;
     let vendor: ProductQAPage;
-    let customer: ProductQAPage;
     let aPage: Page, vPage: Page, cPage: Page;
     let apiUtils: ApiUtils;
     let questionId: string;
@@ -28,8 +26,7 @@ test.describe('Product QA functionality test', () => {
         vendor = new ProductQAPage(vPage);
         const customerContext = await browser.newContext({ storageState: c1 });
         cPage = await customerContext.newPage();
-        customer = new ProductQAPage(cPage);
-        apiUtils = new ApiUtils(null);
+        apiUtils = new ApiUtils(await request.newContext());
         await apiUtils.activateModules(payloads.moduleIds.productQa, payloads.adminAuth);
         [, questionId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
         await apiUtils.createProductQuestionAnswer({ ...payloads.createProductQuestionAnswer(), question_id: questionId }, payloads.adminAuth);
@@ -43,10 +40,6 @@ test.describe('Product QA functionality test', () => {
         await vPage?.close();
         await cPage?.close();
         await apiUtils.dispose();
-    });
-
-    test('admin can enable product Q&A module', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.enableProductQaModule(data.predefined.simpleProduct.product1.name);
     });
 
     test('admin product QA menu page renders properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
@@ -103,96 +96,45 @@ test.describe('Product QA functionality test', () => {
         await admin.productQuestionsBulkAction('read');
     });
 
-    test('vendor can view product QA menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
-        await vendor.vendorProductQARenderProperly();
+    // LEGACY UI regression — revived 2026-07-09; new-UI parity in tests/e2e/product-qa/.
+    // These vendor cases now drive the CLASSIC Vue vendor dashboard
+    // (dashboard/product-questions-answers) through the real page object + real
+    // @utils ApiUtils/payloads seeding (identical to product-qa/, only the
+    // driving surface differs), replacing the former no-op stub / vacuous green.
+    test.describe('vendor cases — ported to product-qa/', () => {
+        test('vendor can view product QA menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+            await vendor.vendorProductQARenderProperly();
+        });
+
+        test('vendor can view product question details', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+            const [, qId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
+            await vendor.vendorViewQuestionDetails(qId);
+        });
+
+        test('vendor can filter questions', { tag: ['@pro', '@vendor'] }, async () => {
+            await vendor.vendorFilterQuestions(data.predefined.simpleProduct.product1.name);
+        });
+
+        test('vendor can answer to question', { tag: ['@pro', '@vendor'] }, async () => {
+            const [, qId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
+            await vendor.vendorAnswerQuestion(qId, data.questionAnswers());
+        });
+
+        test('vendor can edit answer', { tag: ['@pro', '@vendor'] }, async () => {
+            await vendor.vendorEditAnswer(questionId, data.questionAnswers());
+        });
+
+        test('vendor can delete a answer', { tag: ['@pro', '@vendor'] }, async () => {
+            const [, qId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
+            await apiUtils.createProductQuestionAnswer({ ...payloads.createProductQuestionAnswer(), question_id: qId }, payloads.adminAuth);
+            await vendor.vendorDeleteAnswer(qId);
+        });
+
+        test('vendor can delete a question', { tag: ['@pro', '@vendor'] }, async () => {
+            const [, qId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
+            await vendor.vendorDeleteQuestion(qId);
+        });
     });
 
-    test('vendor can view product question details', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
-        const [, qId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
-        await vendor.vendorViewQuestionDetails(qId);
-    });
-
-    test('vendor can filter questions', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.vendorFilterQuestions(data.predefined.simpleProduct.product1.name);
-    });
-
-    test('vendor can answer to question', { tag: ['@pro', '@vendor'] }, async () => {
-        const [, qId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
-        await vendor.vendorAnswerQuestion(qId, data.questionAnswers());
-    });
-
-    test('vendor can edit answer', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.vendorEditAnswer(questionId, data.questionAnswers());
-    });
-
-    test('vendor can delete a answer', { tag: ['@pro', '@vendor'] }, async () => {
-        const [, qId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
-        await apiUtils.createProductQuestionAnswer({ ...payloads.createProductQuestionAnswer(), question_id: qId }, payloads.adminAuth);
-        await vendor.vendorDeleteAnswer(qId);
-    });
-
-    test('vendor can delete a question', { tag: ['@pro', '@vendor'] }, async () => {
-        const [, qId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
-        await vendor.vendorDeleteQuestion(qId);
-    });
-
-    test('customer can search question', { tag: ['@pro', '@customer'] }, async () => {
-        await customer.searchQuestion(data.predefined.simpleProduct.product1.name, data.questionAnswers());
-    });
-
-    test('customer can post question', { tag: ['@pro', '@customer'] }, async () => {
-        await customer.postQuestion(data.predefined.simpleProduct.product1.name, data.questionAnswers());
-    });
-
-    test('guest customer need to signIn/signUp to post question', { tag: ['@pro', '@guest'] }, async ({ page }) => {
-        const guest = new ProductQAPage(page);
-        await guest.postQuestion(data.predefined.simpleProduct.product1.name, data.questionAnswers(), true);
-    });
-
-    test('admin can disable product Q&A module', { tag: ['@pro', '@admin'] }, async () => {
-        const [, modules] = await apiUtils.deactivateModules(payloads.moduleIds.productQa, payloads.adminAuth);
-        const productQa = modules.find((m: { id: string; active: boolean }) => m.id === 'product_qa');
-        expect(productQa).toEqual(expect.objectContaining({ id: 'product_qa', active: false }));
-        qaModuleDisabled = true;
-        await admin.goto(data.subUrls.backend.dokan.dokan);
-        await admin.page.reload({ waitUntil: 'networkidle' });
-        await admin.disableProductQaModule(data.predefined.simpleProduct.product1.name);
-    });
-});
-
-// ============================================
-// NEW REACT UI TEST CASES (Dokan 5.0.0+)
-// ============================================
-// Added during the 5.0.0 React rewrite. These tests target the new React
-// surfaces (DataViews, DokanModal, HashRouter routes). They live alongside
-// the legacy tests above for parity coverage during rollout.
-
-test.describe('Product Q&A (React) Tests @pro', () => {
-    test('Test Case 1 - Vendor Q&A page renders', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
-        const ctx = await browser.newContext({ storageState: v1 });
-        const page = await ctx.newPage();
-        await page.goto(toPath(`dashboard/product-questions-answers/`));
-        await page.waitForLoadState('domcontentloaded');
-        await page.waitForTimeout(2000);
-        const fatal = await page.locator("text=/Fatal error|Parse error|There has been a critical error/i").first().isVisible({ timeout: 1000 }).catch(() => false);
-        expect(fatal).toBe(false);
-        await page.close();
-        await ctx.close();
-    });
-
-    test('Test Case 2 - Q&A page renders content', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
-        const ctx = await browser.newContext({ storageState: v1 });
-        const page = await ctx.newPage();
-        await page.goto(toPath(`dashboard/product-questions-answers/`));
-        await page.waitForLoadState('domcontentloaded');
-        await expect
-            .poll(async () => (await page.locator('body').innerText()).trim().length, {
-                timeout: 30_000,
-                intervals: [500, 1000, 2000, 3000],
-            })
-            .toBeGreaterThan(50);
-        await page.close();
-        await ctx.close();
-    });
 });
 

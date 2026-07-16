@@ -304,7 +304,10 @@ export class GeolocationPage {
     }
 
     private async gotoUntilNetworkidle(subPath: string): Promise<void> {
-        await this.page.goto(this.createUrl(subPath), { waitUntil: 'load' });
+        // These pages embed a Google Map whose script keeps loading tiles/API calls, so the
+        // 'load' event can lag and the goto hits its 90s cap under CI load. domcontentloaded is
+        // enough — the callers wait for the specific map element/attribute right after.
+        await this.page.goto(this.createUrl(subPath), { waitUntil: 'domcontentloaded' });
     }
 
     // Assertion helpers
