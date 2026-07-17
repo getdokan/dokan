@@ -2,6 +2,8 @@ import { test, expect, Page } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { VendorStoreSettingsPage, SyncField } from '@pages/vendorStoreSettingsPage';
 import { data } from '@utils/testData';
+import { dbUtils } from '@utils/dbUtils';
+import { dbData } from '@utils/dbData';
 
 const migration = data.vendorStoreSettingsMigration;
 const { BASE_URL } = process.env;
@@ -17,6 +19,11 @@ test.describe('Vendor Store Settings Migration', () => {
     let store: VendorStoreSettingsPage;
 
     test.beforeAll(async ({ browser }) => {
+        // Catalog Mode is gated by Helper::is_enabled_by_admin — with it off the whole
+        // Business tab drops out of the schema. Seed it rather than inherit whatever
+        // the previously-run spec left behind.
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { catalog_mode_hide_add_to_cart_button: 'on', catalog_mode_hide_product_price: 'on' });
+
         const context = await browser.newContext({ baseURL: BASE_URL ?? 'http://localhost:9999' });
         vendorPage = await context.newPage();
         await new LoginPage(vendorPage).login(data.vendor);
