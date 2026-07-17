@@ -166,8 +166,11 @@
     }
 }
 
-// SmartSelect dropdowns are base-ui popovers that portal to <body> at z-50, below the WP Modal overlay (100000); lift only our marked popups above it.
-[data-slot='popover-portal'] > .pui-root > *:has(> .dokan-location-popover) {
+// SmartSelect dropdowns portal to a bare body-level .pui-root at z-50, below the
+// WP Modal overlay (100000); lift only our marked popups above it. (plugin-ui v2
+// dropped the old [data-slot='popover-portal'] wrapper — keep the selector anchored
+// to .pui-root so it survives either markup.)
+.pui-root > *:has(> .dokan-location-popover) {
     z-index: 100001 !important;
 }
 
