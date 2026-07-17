@@ -5,18 +5,20 @@ import path from 'path';
 const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
 import { toPath } from '@utils/helpers';
 
-test.skip('should redirect all the header items from the help menu', { tag: ['@lite', '@admin'] }, async ({ page }) => {
+test('should show all the header items in the help menu', { tag: ['@lite', '@admin'] }, async ({ page }) => {
     const loginPage = new LoginPage(page);
     const adminDashboardPage = new AdminDashboardPage(page);
     await loginPage.adminLogin(data.admin);
     await adminDashboardPage.adminDashboardRenderProperly();
 
-    const setupGuideBtn = page.locator('[data-test-id="admin-setup-guide-button"] button');
-    if (await setupGuideBtn.isVisible()) await setupGuideBtn.click();
+    // The header help menu (redesigned in 5.0.x) is an icon fly-out: a
+    // `.cursor-pointer` trigger reveals aria-labelled destination links.
+    // (The legacy 'What's New'/'Get Support' items are now 'Changelog'/removed.)
+    const helpMenu = page.locator('[data-test-id="dokan-dashboard-header-help-menu-container"]');
+    await helpMenu.locator('.cursor-pointer').first().hover();
 
     const menuItems = [
-        { name: "What's New" },
-        { name: 'Get Support' },
+        { name: 'Changelog' },
         { name: 'Community' },
         { name: 'Documentation' },
         { name: 'FAQ' },
@@ -24,11 +26,8 @@ test.skip('should redirect all the header items from the help menu', { tag: ['@l
         { name: 'Request a Feature' },
         { name: 'Import dummy data' },
     ];
-
-    await page.locator('[data-test-id="dokan-dashboard-header-help-menu-container"] button').hover();
     for (const item of menuItems) {
-        const helpMenuItem = page.locator('[data-test-id="dokan-dashboard-header-help-menu-container"]').getByRole('link', { name: item.name });
-        await expect(helpMenuItem).toBeVisible();
+        await expect(helpMenu.getByRole('link', { name: item.name })).toBeVisible();
     }
 });
 
@@ -42,13 +41,10 @@ test.describe('Setup guide functionality test', () => {
         if (await setupGuideBtn.isVisible()) await setupGuideBtn.click();
     });
 
-    test.skip('should redirect all the header items from the help menu', { tag: ['@lite', '@admin'] }, async ({ page }) => {
-        const menuItems = [{ name: "What's New" }];
-        await page.locator('[data-test-id="dokan-dashboard-header-help-menu-container"] button').hover();
-        for (const item of menuItems) {
-            const helpMenuItem = page.locator('[data-test-id="dokan-dashboard-header-help-menu-container"]').getByRole('link', { name: item.name });
-            await expect(helpMenuItem).toBeVisible();
-        }
+    test('help menu exposes the changelog item', { tag: ['@lite', '@admin'] }, async ({ page }) => {
+        const helpMenu = page.locator('[data-test-id="dokan-dashboard-header-help-menu-container"]');
+        await helpMenu.locator('.cursor-pointer').first().hover();
+        await expect(helpMenu.getByRole('link', { name: 'Changelog' })).toBeVisible();
     });
 });
 

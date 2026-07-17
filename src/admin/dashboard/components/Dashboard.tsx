@@ -17,6 +17,7 @@ import ReverseWithdrawalTransactionPage from 'admin/dashboard/pages/reverse-with
 import ChangelogPage from '../pages/changelog';
 import ExtensionsPage from '../pages/extensions';
 import DummyData from '../pages/dummy-data';
+import Tools from './Tools/Tools';
 
 export type DokanAdminRoute = {
     id: string;
@@ -86,6 +87,11 @@ const getAdminRoutes = () => {
             id: 'extensions',
             element: <ExtensionsPage />,
             path: '/extensions',
+        },
+        {
+            id: 'tools',
+            element: <Tools />,
+            path: '/tools',
         },
         {
             id: 'changelog',

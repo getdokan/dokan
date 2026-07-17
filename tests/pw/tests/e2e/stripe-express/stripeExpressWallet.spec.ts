@@ -114,7 +114,7 @@ test.describe.serial('Stripe Express — wallet / Express Checkout element @pro'
             const stripe = new StripeExpressPage(page);
             await dbUtils.clearCustomerCart(CUSTOMER_ID);
             await stripe.addProductToCart(productId);
-            await stripe.gotoBlockCheckout();
+            await stripe.gotoBlockCheckout(false); // wallet-render test: keep Link/Express Checkout element
             // The wallet element (block express method dokan_stripe_express_checkout) is DISTINCT from
             // the card gateway/PE (dokan_stripe_express) — assert the wallet "Express Checkout" surface.
             await stripe.assertExpressCheckoutElementRenders();
@@ -192,7 +192,7 @@ test.describe.serial('Stripe Express — wallet / Express Checkout element @pro'
             const stripe = new StripeExpressPage(page);
             await dbUtils.clearCustomerCart(CUSTOMER_ID);
             await stripe.addProductToCart(productId);
-            await stripe.gotoBlockCheckout();
+            await stripe.gotoBlockCheckout(false); // wallet-render test: keep Link/Express Checkout element
             await stripe.assertExpressCheckoutElementRenders();
             // Let the Express Checkout element finish mounting (its onConfirm/cart wiring runs async).
             await page.waitForTimeout(4_000);

@@ -1,3 +1,17 @@
+### v5.0.9 ( Jul 14, 2026 ) ###
+
+- **new:** Vendors can now add a product without leaving the product list — a quick-create window collects just the essentials (name, image, price, category, and short description) and saves it as a draft.
+- **new:** Added a Tools page to the admin dashboard where admins can clear Dokan's caches and restore any missing Dokan pages in one click.
+- **fix:** Product names and categories now display safely on the admin vendor details page, so a vendor can no longer run malicious code in the admin area through a crafted product title.
+- **fix:** Vendors can no longer give their customers download access to another vendor's downloadable files.
+- **fix:** Vendors can no longer change another vendor's product attributes.
+- **fix:** Vendors can no longer change the status of another vendor's orders through bulk actions.
+- **fix:** Dokan's cache markers now expire on their own, so they no longer pile up in the database and slow down stores that run without an object cache.
+
+### v5.0.8 ( Jul 06, 2026 ) ###
+
+- **fix:** Cleared the vendor dashboard sale price when the field is blanked so the product reverts to its regular price instead of saving a 0 price.
+
 ### v5.0.7 ( Jun 29, 2026 ) ###
 
 - **fix:** Prevented a DOM-based XSS in the legacy Vue admin by validating the vendor details and reverse-withdrawal route parameters.

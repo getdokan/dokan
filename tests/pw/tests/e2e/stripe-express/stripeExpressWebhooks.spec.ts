@@ -90,8 +90,7 @@ test.describe.serial('Stripe Express — Webhooks (SE-WH) @pro', () => {
             await stripe.gotoBlockCheckout();
             await stripe.selectBlockGateway();
             await stripe.fillCardDetails(STRIPE_CARDS.success);
-            await stripe.placeBlockOrderExpectReceived();
-            const id = page.url().match(/order-received\/(\d+)/)?.[1];
+            const id = await stripe.placeBlockOrderExpectReceived();
             expect(id, 'captured the order id from the order-received URL').toBeTruthy();
             return id as string;
         } finally {
