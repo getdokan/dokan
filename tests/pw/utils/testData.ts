@@ -1439,7 +1439,8 @@ export const data = {
             newUI: {
                 panel: '#settings-tabpanel-store_settings',
                 tabButton: (tab: string) => `#settings-tab-store_settings-tab_${tab}`,
-                sectionContent: (section: string) => `#settings-section-content-${section}`,
+                // plugin-ui v2 dropped the `#settings-section-content-*` id; the card carries a testid.
+                sectionContent: (section: string) => `[data-testid="settings-section-${section}"]`,
                 // Built-in variants put the schema field id on the field wrapper div.
                 fieldInput: (id: string) => `#${id} input`,
                 fieldSwitch: (id: string) => `#${id} [role="switch"]`,
@@ -1465,6 +1466,10 @@ export const data = {
             business: { tab: 'Business', sections: ['catalog_mode_section', 'support_button_visibility', 'set_cart_amount_min_max', 'company_bank_details'] },
             policies: { tab: 'Policies', sections: ['terms_conditions'] },
         },
+
+        // Sections contributed by Pro modules — absent on a Lite-only site, so the
+        // render test asserts them only when the run is Pro-gated.
+        proSections: ['store_vacation', 'support_button_visibility', 'set_cart_amount_min_max', 'company_bank_details'],
 
         // Standalone vice-versa fields (built-in variants). `kind` drives the new-page
         // read/write; `legacyKind` the legacy one. `requires` names a parent switch that

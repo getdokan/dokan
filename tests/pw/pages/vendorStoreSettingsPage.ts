@@ -1,7 +1,7 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { BasePage } from '@pages/basePage';
 import { data } from '@utils/testData';
-import { closeAnnouncementModal } from '@utils/helpers';
+import { closeAnnouncementModal, parseBoolean } from '@utils/helpers';
 
 const migration = data.vendorStoreSettingsMigration;
 const { urls, selectors } = migration;
@@ -334,9 +334,11 @@ export class VendorStoreSettingsPage extends BasePage {
     // ---- Tabs + sections render ----------------------------------------------
 
     async assertTabsAndSections(): Promise<void> {
+        const proActive = parseBoolean(process.env.DOKAN_PRO);
         for (const [tab, config] of Object.entries(migration.layout)) {
             await this.openNewTab(tab);
             for (const section of config.sections) {
+                if (!proActive && migration.proSections.includes(section)) continue;
                 // Collapsible sections render collapsed (attached but hidden), so assert
                 // the section card is present on its tab rather than expanded.
                 await expect(this.page.locator(newUI.sectionContent(section))).toBeAttached({ timeout: 15000 });
