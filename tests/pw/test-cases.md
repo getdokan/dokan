@@ -58,3 +58,25 @@ strategy in `test-cases/admin-dashboard-seeding-strategy.md`.
 - Security: unauthenticated PUT/POST to stores endpoints; XSS in search; IDOR on `:id` status PUT.
 - a11y: keyboard operation of tabs/row actions; focus-trap in the confirm modal; ARIA table roles.
 - Phone column em-dash for a vendor with no phone; Registered back-dated sort order (DB-seeded via `dbUtils.setUserRegisteredDate`).
+
+## Feature: Vendor Setup Wizard (React)
+Slug: vendor-setup-wizard
+Type: e2e
+Plugin gate: lite
+Roles: vendor, guest
+Storage state: none (fresh vendor per worker via REST seed + UI login)
+REST seed: yes
+Status: build
+
+### Happy Paths
+- vendor sees the welcome screen: site branding, welcome message, Skip and Start Journey actions
+- vendor completes the wizard end to end: store step (searchable country/state combobox, city, zip, street) saves and advances to Payment; PayPal email saves and advances to Ready; `dokan_profile_settings` holds every submitted field
+- vendor can skip the wizard from the welcome screen and land on the dashboard
+- vendor finishing the wizard reaches the dashboard through Explore Dashboard
+
+### Edge Cases
+- re-entering the store step after a save shows the previously saved values prefilled
+
+### Negative Cases
+- a partially filled bank account is rejected on Next with an inline error and the vendor stays on the payment step
+- a guest hitting the wizard URL never sees the wizard (request falls through to the normal site)
