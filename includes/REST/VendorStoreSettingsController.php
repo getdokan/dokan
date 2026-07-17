@@ -146,7 +146,7 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
             );
         }
 
-        $fields_by_id = $this->get_fields_by_id( StoreSettingsSchema::get_schema( $vendor_id ) );
+        $fields_by_id = $this->get_fields_by_id( $this->get_input_schema( $vendor_id ) );
 
         // Sanitize every recognized field up front so cross-field validators (e.g. min ≤ max) see the full submitted set.
         $sanitized = [];
@@ -185,31 +185,76 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
         }
 
         if ( ! empty( $sanitized ) ) {
-            $prev  = get_user_meta( $vendor_id, 'dokan_profile_settings', true );
-            $slice = $this->mapper->to_legacy( $sanitized, is_array( $prev ) ? $prev : [], $fields_by_id );
-
-            // A save touching only non_meta fields (e.g. store categories) yields an empty slice — skip the write, still fire the seam.
-            if ( ! empty( $slice ) ) {
-                $this->writer->save( $vendor_id, $slice );
-            }
-
-            /**
-             * Fires after vendor Store settings are saved, with the sanitized
-             * flat values. Pro persists fields it owns outside
-             * `dokan_profile_settings` here — e.g. the taxonomy-backed store
-             * category (flagged `non_meta` so the mapper leaves it out of the
-             * profile slice). Mirrors admin's `dokan_after_saving_settings`.
-             *
-             * @since DOKAN_SINCE
-             *
-             * @param int   $vendor_id    Vendor user ID.
-             * @param array $sanitized    Sanitized values keyed by field id.
-             * @param array $fields_by_id Schema field elements keyed by id.
-             */
-            do_action( 'dokan_after_saving_vendor_settings', $vendor_id, $sanitized, $fields_by_id );
+            $this->persist( $vendor_id, $sanitized, $fields_by_id );
         }
 
         return rest_ensure_response( $this->get_response_schema( $vendor_id ) );
+    }
+
+    /**
+     * The schema the update pipeline validates/sanitizes against — subclasses
+     * serving a different surface (the setup wizard) swap in their own.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $vendor_id Vendor user ID.
+     *
+     * @return array Flat schema elements.
+     */
+    protected function get_input_schema( int $vendor_id ): array {
+        return StoreSettingsSchema::get_schema( $vendor_id );
+    }
+
+    /**
+     * Persist sanitized values and fire the post-save seam.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int   $vendor_id    Vendor user ID.
+     * @param array $sanitized    Sanitized values keyed by field id.
+     * @param array $fields_by_id Schema field elements keyed by id.
+     *
+     * @return void
+     */
+    protected function persist( int $vendor_id, array $sanitized, array $fields_by_id ): void {
+        $prev  = get_user_meta( $vendor_id, 'dokan_profile_settings', true );
+        $slice = $this->mapper->to_legacy( $sanitized, is_array( $prev ) ? $prev : [], $fields_by_id );
+
+        // A save touching only non_meta fields (e.g. store categories) yields an empty slice — skip the write, still fire the seam.
+        if ( ! empty( $slice ) ) {
+            $this->save_slice( $vendor_id, $slice );
+        }
+
+        /**
+         * Fires after vendor Store settings are saved, with the sanitized
+         * flat values. Pro persists fields it owns outside
+         * `dokan_profile_settings` here — e.g. the taxonomy-backed store
+         * category (flagged `non_meta` so the mapper leaves it out of the
+         * profile slice). Mirrors admin's `dokan_after_saving_settings`.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param int   $vendor_id    Vendor user ID.
+         * @param array $sanitized    Sanitized values keyed by field id.
+         * @param array $fields_by_id Schema field elements keyed by id.
+         */
+        do_action( 'dokan_after_saving_vendor_settings', $vendor_id, $sanitized, $fields_by_id );
+    }
+
+    /**
+     * Write a legacy-shaped profile slice — the seam subclasses swap for a
+     * different saver (the onboarding wizard suppresses Seam A through
+     * WizardStoreSaver) without copying the rest of persist().
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int   $vendor_id Vendor user ID.
+     * @param array $slice     Legacy-shaped profile slice.
+     *
+     * @return void
+     */
+    protected function save_slice( int $vendor_id, array $slice ): void {
+        $this->writer->save( $vendor_id, $slice );
     }
 
     /**
@@ -259,8 +304,8 @@ class VendorStoreSettingsController extends DokanBaseVendorController {
     /**
      * Reduce a submitted key to its schema field id.
      *
-     * plugin-ui emits dot-path keys (`page.subpage.field_id`) that mirror its
-     * internal tree; the schema is keyed by the leaf id alone.
+     * The plugin-ui engine emits dot-path keys (`page.subpage.field_id`) that
+     * mirror its internal tree; the schema is keyed by the leaf id alone.
      *
      * @since DOKAN_SINCE
      *

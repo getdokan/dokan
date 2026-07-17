@@ -449,7 +449,7 @@ class Settings {
                     'name'    => 'setup_wizard_message',
                     'label'   => __( 'Vendor Setup Wizard Message', 'dokan-lite' ),
                     'type'    => 'wpeditor',
-                    'default' => __( 'Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It’s completely optional and shouldn’t take longer than two minutes.</strong>', 'dokan-lite' ),
+                    'default' => \WeDevs\Dokan\Vendor\SetupWizard::default_wizard_message(),
                 ],
                 'disable_welcome_wizard' => [
                     'name'    => 'disable_welcome_wizard',

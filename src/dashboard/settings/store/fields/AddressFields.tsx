@@ -1,5 +1,11 @@
+import { useMemo } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
-import { useSettings, Input, type SettingsElement } from '@wedevs/plugin-ui';
+import {
+    useSettings,
+    Input,
+    SmartSelect,
+    type SettingsElement,
+} from '@wedevs/plugin-ui';
 import { fieldKeyOf, useCountries } from './shared';
 
 type AddressValue = {
@@ -50,11 +56,19 @@ const TEXT_PARTS: Array< {
     },
 ];
 
-// Text subfields render through plugin-ui's <Input> so they match the default
-// text fields (e.g. Store Name); only the native country/state selects keep a
-// hand-styled class.
-const selectClass =
-    'w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-dokan-btn focus:outline-none';
+// Country/State render through plugin-ui's SmartSelect (searchable combobox,
+// same component as the store-locations editor) so the cascade matches the
+// rest of the design system; text subfields use the shared <Input>.
+const smartSelectClass = 'w-full bg-white font-normal text-gray-900';
+
+const DEFAULT_PART_ORDER: Array< keyof AddressValue > = [
+    'street_1',
+    'street_2',
+    'city',
+    'zip',
+    'country',
+    'state',
+];
 
 // `vendor_address` variant — the six legacy address subkeys with a WC-backed
 // country → state cascade (falls back to free text when the country list is
@@ -79,105 +93,147 @@ const AddressFields = ( { element }: { element: SettingsElement } ) => {
         updateValue( fieldKey, next );
     };
 
-    const selectedCountry = countries.find(
-        ( country ) => country.code === value.country
+    // The component re-renders on every engine keystroke — don't rebuild the
+    // ~250-entry option arrays (and defeat SmartSelect's memoization) each time.
+    const countryOptions = useMemo(
+        () =>
+            countries.map( ( country ) => ( {
+                value: country.code,
+                label: country.name,
+            } ) ),
+        [ countries ]
     );
-    const states = selectedCountry?.states || [];
+    const selectedCountry = useMemo(
+        () => countries.find( ( country ) => country.code === value.country ),
+        [ countries, value.country ]
+    );
+    const stateOptions = useMemo(
+        () =>
+            ( selectedCountry?.states || [] ).map( ( state ) => ( {
+                value: state.code,
+                label: state.name,
+            } ) ),
+        [ selectedCountry ]
+    );
+
+    // Schema-driven subfield sequence (the wizard leads with the country cascade).
+    const declaredOrder = Array.isArray( element.part_order )
+        ? ( element.part_order as Array< keyof AddressValue > ).filter(
+              ( part ) => DEFAULT_PART_ORDER.includes( part )
+          )
+        : [];
+    const partOrder = declaredOrder.length ? declaredOrder : DEFAULT_PART_ORDER;
+
+    const renderTextPart = ( part: keyof AddressValue ) => {
+        const config = TEXT_PARTS.find( ( entry ) => entry.part === part );
+
+        if ( ! config ) {
+            return null;
+        }
+
+        return (
+            <label
+                key={ part }
+                htmlFor={ `${ fieldKey }-${ part }` }
+                className="flex flex-col gap-1.5 text-sm font-medium text-gray-700"
+            >
+                { config.label }
+                <Input
+                    id={ `${ fieldKey }-${ part }` }
+                    placeholder={ config.placeholder }
+                    value={ value[ part ] }
+                    onChange={ ( event ) => update( part, event.target.value ) }
+                />
+            </label>
+        );
+    };
+
+    // Country and state share one anatomy: searchable combobox with a free-text
+    // fallback when the option list is unavailable.
+    const renderSelectPart = (
+        part: 'country' | 'state',
+        options: Array< { value: string; label: string } >,
+        labels: {
+            title: string;
+            placeholder: string;
+            searchPlaceholder: string;
+            emptyMessage: string;
+            fallbackPlaceholder: string;
+        }
+    ) => (
+        <div
+            key={ part }
+            data-testid={ `dokan-address-${ part }` }
+            className="flex flex-col gap-1.5 text-sm font-medium text-gray-700"
+        >
+            { labels.title }
+            { options.length ? (
+                <SmartSelect
+                    options={ options }
+                    value={ value[ part ] }
+                    onValueChange={ ( selected: string ) =>
+                        update( part, selected )
+                    }
+                    placeholder={ labels.placeholder }
+                    searchPlaceholder={ labels.searchPlaceholder }
+                    emptyMessage={ labels.emptyMessage }
+                    showClear
+                    className={ smartSelectClass }
+                />
+            ) : (
+                <Input
+                    id={ `${ fieldKey }-${ part }` }
+                    placeholder={ labels.fallbackPlaceholder }
+                    value={ value[ part ] }
+                    onChange={ ( event ) => update( part, event.target.value ) }
+                />
+            ) }
+        </div>
+    );
+
+    const renderCountry = () =>
+        renderSelectPart( 'country', countryOptions, {
+            title: __( 'Country', 'dokan-lite' ),
+            placeholder: __( 'Select a country', 'dokan-lite' ),
+            searchPlaceholder: __( 'Search country', 'dokan-lite' ),
+            emptyMessage: __( 'No countries found.', 'dokan-lite' ),
+            fallbackPlaceholder: __( 'Country code', 'dokan-lite' ),
+        } );
+
+    const renderState = () =>
+        renderSelectPart( 'state', stateOptions, {
+            title: __( 'State', 'dokan-lite' ),
+            placeholder: __( 'Select a state', 'dokan-lite' ),
+            searchPlaceholder: __( 'Search state', 'dokan-lite' ),
+            emptyMessage: __( 'No states found.', 'dokan-lite' ),
+            fallbackPlaceholder: __( 'State', 'dokan-lite' ),
+        } );
+
+    // The wizard stacks one field per row per its mock; the settings page keeps two columns.
+    const gridClass =
+        1 === element.part_columns
+            ? 'grid grid-cols-1 gap-4'
+            : 'grid grid-cols-1 gap-3 sm:grid-cols-2';
 
     return (
         <div className="dokan-vendor-address-field flex w-full flex-col gap-3 p-4">
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                { TEXT_PARTS.map( ( { part, label, placeholder } ) => (
-                    <label
-                        key={ part }
-                        htmlFor={ `${ fieldKey }-${ part }` }
-                        className="flex flex-col gap-1 text-xs text-gray-600"
-                    >
-                        { label }
-                        <Input
-                            id={ `${ fieldKey }-${ part }` }
-                            placeholder={ placeholder }
-                            value={ value[ part ] }
-                            onChange={ ( event ) =>
-                                update( part, event.target.value )
-                            }
-                        />
-                    </label>
-                ) ) }
-
-                <label
-                    htmlFor={ `${ fieldKey }-country` }
-                    className="flex flex-col gap-1 text-xs text-gray-600"
-                >
-                    { __( 'Country', 'dokan-lite' ) }
-                    { countries.length ? (
-                        <select
-                            id={ `${ fieldKey }-country` }
-                            className={ selectClass }
-                            value={ value.country }
-                            onChange={ ( event ) =>
-                                update( 'country', event.target.value )
-                            }
-                        >
-                            <option value="">
-                                { __( 'Select a country…', 'dokan-lite' ) }
-                            </option>
-                            { countries.map( ( country ) => (
-                                <option
-                                    key={ country.code }
-                                    value={ country.code }
-                                >
-                                    { country.name }
-                                </option>
-                            ) ) }
-                        </select>
-                    ) : (
-                        <Input
-                            id={ `${ fieldKey }-country` }
-                            placeholder={ __( 'Country code', 'dokan-lite' ) }
-                            value={ value.country }
-                            onChange={ ( event ) =>
-                                update( 'country', event.target.value )
-                            }
-                        />
-                    ) }
-                </label>
-
-                <label
-                    htmlFor={ `${ fieldKey }-state` }
-                    className="flex flex-col gap-1 text-xs text-gray-600"
-                >
-                    { __( 'State', 'dokan-lite' ) }
-                    { states.length ? (
-                        <select
-                            id={ `${ fieldKey }-state` }
-                            className={ selectClass }
-                            value={ value.state }
-                            onChange={ ( event ) =>
-                                update( 'state', event.target.value )
-                            }
-                        >
-                            <option value="">
-                                { __( 'Select a state…', 'dokan-lite' ) }
-                            </option>
-                            { states.map( ( state ) => (
-                                <option key={ state.code } value={ state.code }>
-                                    { state.name }
-                                </option>
-                            ) ) }
-                        </select>
-                    ) : (
-                        <Input
-                            id={ `${ fieldKey }-state` }
-                            placeholder={ __( 'State', 'dokan-lite' ) }
-                            value={ value.state }
-                            onChange={ ( event ) =>
-                                update( 'state', event.target.value )
-                            }
-                        />
-                    ) }
-                </label>
+            <div className={ gridClass }>
+                { partOrder.map( ( part ) => {
+                    if ( 'country' === part ) {
+                        return renderCountry();
+                    }
+                    if ( 'state' === part ) {
+                        return renderState();
+                    }
+                    return renderTextPart( part );
+                } ) }
             </div>
+
+            { element.validationError && (
+                <p className="m-0 text-sm text-red-500" role="alert">
+                    { element.validationError }
+                </p>
+            ) }
         </div>
     );
 };

@@ -329,34 +329,184 @@
         }
     }
 
-    .wc-setup-content {
-        .dokan-seller-setup-form {
-            .dokan-map-wrap {
-                .dokan-map-search-bar {
-                    input {
-                        &#dokan-map-add {
-                            width: 100%;
-                        }
-                    }
-
-                    a {
-                        &#dokan-location-find-btn {
-                            display: none;
-                        }
-                    }
-                }
-
-                .dokan-google-map {
-                    width: 100%;
-                    height: 300px;
-                }
-            }
-        }
-    }
 }
 
 span {
   &.required {
     color: #e2401c;
   }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Vendor setup wizard — Figma chrome (plugin-internal-tasks#2130).
+// Scoped under the body class so the admin wizard stays untouched.
+// Palette: brand purple #7047eb, page #f1f1f4, text #1f2937 / #6b7280,
+// hairline #e5e7eb; "warm" soft shadows per the design review.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// wc-setup.css puts 20px side margins on <html> — the topbar must bleed edge to edge.
+html:has(body.dokan-vendor-setup-wizard) {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+body.dokan-vendor-setup-wizard {
+    background: #f1f1f4;
+    margin: 0;
+    padding: 0;
+    max-width: none; // wc-setup.css caps body.wc-setup at 700px and centers it with margins
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+
+    .dokan-vsw-topbar {
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-shrink: 0;
+        min-height: 80px;
+        background: #fff;
+        border-bottom: 1px solid #eceef2;
+        box-shadow: 0 1px 3px rgba(16, 24, 40, 0.06);
+        padding: 0 32px;
+
+        #wc-logo.dokan-vsw-brand {
+            margin: 0;
+            padding: 0;
+            font-size: 24px;
+            font-weight: 700;
+            color: #1f2937;
+            text-align: left;
+            border: 0;
+
+            a {
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                color: inherit;
+                text-decoration: none;
+            }
+
+            img {
+                max-height: 36px;
+                width: auto;
+                display: block;
+            }
+
+            img.dokan-vsw-brand-icon {
+                width: 28px;
+                height: 28px;
+                border-radius: 6px;
+                object-fit: cover;
+            }
+        }
+    }
+
+    .dokan-vsw-rail {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 12px;
+        color: #6b7280;
+        white-space: nowrap;
+
+        .dokan-vsw-rail-label {
+            font-weight: 500;
+            color: #4b5563;
+        }
+
+        .dokan-vsw-rail-track {
+            display: inline-block;
+            width: 180px;
+            height: 6px;
+            border-radius: 999px;
+            background: #eceef2;
+            box-shadow: inset 0 1px 2px rgba(16, 24, 40, 0.06);
+            overflow: hidden;
+
+            .dokan-vsw-rail-fill {
+                display: block;
+                height: 100%;
+                border-radius: 999px;
+                background: linear-gradient(90deg, #7047eb, #9061f9);
+                box-shadow: 0 0 6px rgba(112, 71, 235, 0.35);
+                transition: width 0.4s ease;
+            }
+        }
+    }
+
+    // The step body renders as a centered white card. React owns the interior.
+    .wc-setup-content {
+        width: 100%;
+        max-width: 650px;
+        margin: 40px auto 56px;
+        border-radius: 6px;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(16, 24, 40, 0.08), 0 1px 2px rgba(16, 24, 40, 0.04);
+        padding: 32px;
+        box-sizing: border-box;
+    }
+
+    // Intro + Ready: narrower card, vertically centered in the content area.
+    &.dokan-vsw-center .wc-setup-content {
+        max-width: 564px;
+        margin: auto;
+    }
+
+    // Form steps: the card is viewport-bounded so heading + footer stay in
+    // view and only the middle form region scrolls (React owns the gutters).
+    &.dokan-vsw-form {
+        .wc-setup-content {
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            // Viewport minus the 80px topbar and the card's 40/56 margins.
+            max-height: calc(100vh - 176px);
+            overflow: hidden;
+        }
+
+        #dokan-setup-wizard-step {
+            display: flex;
+            flex-direction: column;
+            flex: 1 1 auto;
+            min-height: 0;
+        }
+    }
+
+    // Intro hides the whole topbar — the card carries the logo (mock).
+    &.dokan-vsw-step-introduction .dokan-vsw-topbar {
+        display: none;
+    }
+
+    // wp-admin's install.css (a wc-setup dependency) underlines every bare h2 —
+    // it draws a stray divider through the media modal's "Drop files to upload".
+    .media-modal h2 {
+        border-bottom: 0;
+    }
+
+    @media (max-width: 640px) {
+        .dokan-vsw-topbar {
+            padding: 0 16px;
+        }
+
+        .dokan-vsw-rail .dokan-vsw-rail-track {
+            width: 90px;
+        }
+
+        .wc-setup-content {
+            margin: 20px 16px 40px;
+            max-width: none;
+            padding: 20px;
+        }
+
+        &.dokan-vsw-form .wc-setup-content {
+            padding: 0;
+            max-height: calc(100vh - 140px);
+        }
+    }
 }

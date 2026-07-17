@@ -1,0 +1,207 @@
+// Setup wizard React steps — interior styling for the per-step mounts.
+// The wizard chrome (topbar, card shell, page background) lives in
+// assets/src/less/setup.less; this sheet owns everything React renders.
+//
+// Form steps (store/payment/verification) use a viewport-bounded card:
+// the heading pins at the top, the footer at the bottom, and only the
+// middle form region scrolls (the Figma "scroll version" behaviour).
+
+// plugin-ui's design tokens ship in its dist stylesheet, which no Dokan page
+// enqueues — without them `bg-input`, `border-input`, `ring-ring` resolve to
+// nothing (invisible switch tracks, unstyled focus rings). Define the canonical
+// set here, scoped like the utilities themselves. `--primary` is deliberately
+// omitted: dokan-tailwind maps it to the brand purple at :root.
+:is(.pui-root, .dokan-layout) {
+    --background: oklch(100% 0 0);
+    --foreground: oklch(14.5% 0 0);
+    --card: oklch(100% 0 0);
+    --card-foreground: oklch(14.5% 0 0);
+    --popover: oklch(100% 0 0);
+    --popover-foreground: oklch(14.5% 0 0);
+    --primary-foreground: oklch(98.5% 0 0);
+    --secondary: oklch(97% 0 0);
+    --secondary-foreground: oklch(20.5% 0 0);
+    --muted: oklch(97% 0 0);
+    --muted-foreground: oklch(55.6% 0 0);
+    --accent: oklch(97% 0 0);
+    --accent-foreground: oklch(20.5% 0 0);
+    --destructive: oklch(57.7% 0.245 27.325);
+    --border: oklch(92.2% 0 0);
+    --input: oklch(92.2% 0 0);
+    --ring: oklch(70.8% 0 0);
+}
+
+.dokan-setup-wizard-step {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+    text-align: left;
+
+    // Lets the pinned heading/footer read the form scroller's named timeline
+    // (they sit outside it) for the scroll-edge shadows below.
+    timeline-scope: --dokan-vsw-scroll;
+
+    // The wizard follows the Figma brand purple even when the marketplace
+    // customizer re-tints dashboard buttons — the onboarding flow is pre-brand.
+    // (--primary itself: the :root token resolves its inner var() at :root,
+    // so re-pointing the customizer var this deep would never reach it.)
+    --primary: #7047eb;
+
+    // wc-setup.css hard-aligns headings/copy left inside the card; let the
+    // step wrappers (centered intro/ready cards) decide instead.
+    h1,
+    h2,
+    p {
+        text-align: inherit;
+    }
+
+    // The engine renders its own card chrome — the wizard's PHP shell already
+    // provides the card, so flatten only the OUTER box; the inner section
+    // cards keep their borders so steps read like the settings pages. The
+    // token utilities are emitted with !important, so these must be too.
+    [data-testid='settings-root'] {
+        flex: 1 1 auto;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        min-height: 0 !important;
+        overflow: hidden !important;
+    }
+
+    // The engine's content region is the step's scroller — bounded by the
+    // card, it owns the side gutters and shows a slim scrollbar. Reaching the
+    // end must not rubber-band the page behind it.
+    [data-testid='settings-content'] {
+        flex: 1 1 auto !important;
+        overflow-y: auto !important;
+        padding: 0 32px !important;
+        scrollbar-width: thin;
+        scrollbar-color: #d1d5db transparent;
+        overscroll-behavior: contain;
+        scroll-timeline: --dokan-vsw-scroll block;
+    }
+
+    // Let the viewport wrapper grow with its content so the region scrolls
+    // naturally instead of clipping at 100% height.
+    [data-testid='settings-content'] > div {
+        height: auto !important;
+        min-height: 100%;
+        overflow: visible !important;
+    }
+
+    // The heading pins while the form scrolls beneath it ("eye lined"); a warm
+    // shadow fades in as content slides under (scroll-driven, no-op where
+    // unsupported — the timeline stays inactive and the base style holds).
+    [data-testid^='settings-heading-'] {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: #fff;
+        padding: 32px 0 20px !important;
+        animation: dokan-vsw-heading-shadow linear both;
+        animation-timeline: --dokan-vsw-scroll;
+        animation-range: 0 56px;
+    }
+
+    [data-testid^='settings-heading-'] + div {
+        padding: 0 0 24px !important;
+    }
+
+    // The save bar renders empty (the wizard footer owns the action), but its
+    // container still paints a sticky hairline — drop it.
+    [data-testid^='settings-save-'] {
+        display: none !important;
+    }
+
+    // The social note rides in a chrome-less section so it scrolls with the
+    // methods list, tucked close under the card.
+    [data-testid='settings-section-verification_social'] {
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        margin-top: 12px !important;
+    }
+
+    // wp-admin/wc-setup/theme paint their own focus chrome (blue glow on bare
+    // inputs, outlined links); plugin-ui's focus-visible ring utilities are
+    // !important and load later, so keyboard focus still shows.
+    a:focus,
+    button:focus,
+    input:focus,
+    select:focus,
+    textarea:focus {
+        box-shadow: none;
+        outline: none;
+    }
+
+    // The theme/wc-setup can force `fill` onto SVGs — lucide icons are
+    // stroke-drawn and turn into blobs when filled.
+    svg.lucide {
+        fill: none;
+    }
+}
+
+// The SmartSelect popup portals to a body-level .pui-root — outside the step
+// scope — where wp-admin's forms.css paints a blue glow on its search input.
+// This sheet only loads on the wizard page, so the slot selector is safe.
+.pui-root [data-slot='smart-select-content'] input:focus,
+.pui-root [data-slot='smart-select-content'] input:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: #d1d5db !important;
+}
+
+// Shared step footer — the card is viewport-bounded, so the footer is simply
+// the last flex row: always visible, buttons centered in their band. Its warm
+// shadow fades out as the vendor reaches the end of the form.
+.dokan-vsw-step-footer {
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0;
+    padding: 16px 32px;
+    background: #fff;
+    border-top: 1px solid #f3f4f6;
+    border-radius: 0 0 6px 6px;
+    animation: dokan-vsw-footer-shadow linear both;
+    animation-timeline: --dokan-vsw-scroll;
+    animation-range: calc(100% - 56px) 100%;
+}
+
+@keyframes dokan-vsw-heading-shadow {
+    from {
+        box-shadow: 0 0 rgba(16, 24, 40, 0);
+    }
+
+    to {
+        box-shadow: 0 12px 14px -12px rgba(16, 24, 40, 0.14);
+    }
+}
+
+@keyframes dokan-vsw-footer-shadow {
+    from {
+        box-shadow: 0 -12px 14px -12px rgba(16, 24, 40, 0.14);
+    }
+
+    to {
+        box-shadow: 0 0 rgba(16, 24, 40, 0);
+    }
+}
+
+// Full-screen transitional state between the last input step and Ready.
+.dokan-vsw-creating-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #f1f1f4;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1f2937;
+}

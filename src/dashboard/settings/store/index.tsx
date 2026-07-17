@@ -12,6 +12,10 @@ import {
     type SettingsElement,
 } from '@wedevs/plugin-ui';
 import { registerVendorSettingsFields } from './register-fields';
+import {
+    qualifyDependencyKeys,
+    rekeyServerErrors,
+} from '../shared/server-errors';
 import StoreSettingsSkeleton from './StoreSettingsSkeleton';
 import './style.scss';
 
@@ -82,7 +86,8 @@ export default function StoreSettings() {
     useEffect( () => {
         apiFetch< SettingsElement[] >( { path: ENDPOINT } )
             .then( ( response ) => {
-                setSchema( response );
+                // plugin-ui v2 matches dependency keys literally against dot-path values.
+                setSchema( qualifyDependencyKeys( response ) );
                 setLoading( false );
             } )
             .catch( ( error ) => {
@@ -149,7 +154,7 @@ export default function StoreSettings() {
             // history rows, cleared composer, dependent force-offs) come back
             // without a manual reload; the remount also resets dirty state.
             if ( Array.isArray( response ) ) {
-                setSchema( response );
+                setSchema( qualifyDependencyKeys( response ) );
                 setResetKey( ( key ) => key + 1 );
             }
 
@@ -165,22 +170,13 @@ export default function StoreSettings() {
                     __( 'Failed to save store settings.', 'dokan-lite' )
             );
 
-            // Re-throw in the shape plugin-ui merges into per-field errors
-            // (`error.errors` keyed by field id) — also keeps the form dirty.
+            // Re-throw in the shape plugin-ui merges into per-field errors — the
+            // engine keys them by dependency_key (dot path), not bare field id.
             const fieldErrors = typedError?.data?.errors;
             if ( fieldErrors && 'object' === typeof fieldErrors ) {
                 focusErrorTab( fieldErrors );
                 throw {
-                    errors: Object.fromEntries(
-                        Object.entries( fieldErrors ).map(
-                            ( [ fieldId, messages ] ) => [
-                                fieldId,
-                                Array.isArray( messages )
-                                    ? messages.join( ' ' )
-                                    : String( messages ),
-                            ]
-                        )
-                    ),
+                    errors: rekeyServerErrors( schema, fieldErrors ),
                 };
             }
 
@@ -197,7 +193,7 @@ export default function StoreSettings() {
             const response = await apiFetch< SettingsElement[] >( {
                 path: ENDPOINT,
             } );
-            setSchema( response );
+            setSchema( qualifyDependencyKeys( response ) );
             setResetKey( ( key ) => key + 1 );
         } catch ( error ) {
             // eslint-disable-next-line no-console
