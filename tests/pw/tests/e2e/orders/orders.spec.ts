@@ -87,7 +87,7 @@ test.describe('Order functionality test @lite', () => {
         await context.close();
     });
 
-    test.skip('vendor can view order details', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('vendor can view order details', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
         const context = await browser.newContext({ storageState: v1 });
         const page = await context.newPage();
         const ordersPage = new OrdersPage(page);
@@ -107,7 +107,7 @@ test.describe('Order functionality test @lite', () => {
         await context.close();
     });
 
-    test.skip('vendor can update order status on order details', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('vendor can update order status on order details', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
         const freshOrderId = await OrdersPage.createTestOrder(await request.newContext());
         const context = await browser.newContext({ storageState: v1 });
         const page = await context.newPage();
@@ -118,7 +118,7 @@ test.describe('Order functionality test @lite', () => {
         await context.close();
     });
 
-    test.skip('vendor can add order note', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('vendor can add order note', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
         const context = await browser.newContext({ storageState: v1 });
         const page = await context.newPage();
         const ordersPage = new OrdersPage(page);
@@ -128,7 +128,7 @@ test.describe('Order functionality test @lite', () => {
         await context.close();
     });
 
-    test.skip('vendor can add private order note', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('vendor can add private order note', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
         const context = await browser.newContext({ storageState: v1 });
         const page = await context.newPage();
         const ordersPage = new OrdersPage(page);
@@ -138,7 +138,7 @@ test.describe('Order functionality test @lite', () => {
         await context.close();
     });
 
-    test.skip('vendor can add tracking details to order', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('vendor can add tracking details to order', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
         const context = await browser.newContext({ storageState: v1 });
         const page = await context.newPage();
         const ordersPage = new OrdersPage(page);
@@ -164,7 +164,7 @@ test.describe('Order functionality test @lite', () => {
         await context.close();
     });
 
-    test.skip('vendor can add downloadable product permission to order', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('vendor can add downloadable product permission to order', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
         const downloadableProductName = await OrdersPage.createDownloadableProduct(await request.newContext());
         const context = await browser.newContext({ storageState: v1 });
         const page = await context.newPage();
@@ -225,7 +225,7 @@ test.describe('Order functionality test @lite', () => {
 // the legacy tests above for parity coverage during rollout.
 
 test.describe('New Vendor Order List (React) Tests @lite', () => {
-    test('Test Case 1 - React order list mounts at /dashboard/new/#/orders', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 1 - React order list mounts at /dashboard/new/#/orders', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const list = new NewOrderListPage(page);
@@ -242,7 +242,7 @@ test.describe('New Vendor Order List (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 2 - Order list renders rows or an empty-state banner', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 2 - Order list renders rows or an empty-state banner', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const list = new NewOrderListPage(page);
@@ -258,7 +258,7 @@ test.describe('New Vendor Order List (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 3 - Search filter narrows the list to zero rows for nonsense query', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 3 - Search filter narrows the list to zero rows for nonsense query', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const list = new NewOrderListPage(page);
@@ -286,7 +286,7 @@ test.describe('New Vendor Order List (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 4 - Row actions menu exposes View and at least one status-change action', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 4 - Row actions menu exposes View and at least one status-change action', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const list = new NewOrderListPage(page);
@@ -322,7 +322,7 @@ test.describe('New Vendor Order List (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 5 - Page renders without a PHP fatal', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 5 - Page renders without a PHP fatal', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const list = new NewOrderListPage(page);
@@ -336,7 +336,7 @@ test.describe('New Vendor Order List (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 6 - Vendor announcement modal does not block list mount', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 6 - Vendor announcement modal does not block list mount', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const list = new NewOrderListPage(page);
@@ -351,7 +351,7 @@ test.describe('New Vendor Order List (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test('Test Case 7 - Direct deep link to /orders works (HashRouter survives reload)', { tag: ['@lite', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 7 - Direct deep link to /orders works (HashRouter survives reload)', { tag: ['@lite', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         const list = new NewOrderListPage(page);
@@ -369,54 +369,5 @@ test.describe('New Vendor Order List (React) Tests @lite', () => {
         await ctx.close();
     });
 
-    test.skip('Test Case 8 - Status-change action issues a non-GET request', { tag: ['@lite', '@exploratory', '@vendor'] }, async ({ browser }) => {
-        // Skipped: timing on the click → REST request handshake is brittle
-        // because the order list refetches the rows immediately after status
-        // update, masking the original PATCH/POST. Re-enable once the test
-        // can intercept the network traffic on the page level.
-        const ctx = await browser.newContext({ storageState: v1 });
-        const page = await ctx.newPage();
-        const list = new NewOrderListPage(page);
-
-        await list.goto();
-        await list.waitForReactReady();
-
-        const rows = await list.getRowCount();
-        test.skip(rows < 1, 'No orders to update status on');
-
-        await list.openRowActionMenuByIndex(0);
-
-        const candidates = [
-            'Change status to on-hold',
-            'Change status to processing',
-            'Change status to completed',
-        ];
-
-        // Listen for ANY non-GET request on /wp-json/ — the order REST URL
-        // varies by Dokan version (could be /dokan/v1/orders, /dokan/v2/orders,
-        // or /wc/v3/orders depending on routing).
-        const respPromise = page.waitForRequest(
-            (req) => req.url().includes('/wp-json/') && req.method() !== 'GET',
-            { timeout: 15000 },
-        ).catch(() => null);
-
-        let clicked = false;
-        for (const label of candidates) {
-            const item = page.locator(list.selectors.actionMenuItem(label)).first();
-            if (await item.isVisible({ timeout: 500 }).catch(() => false)) {
-                await item.click();
-                clicked = true;
-                break;
-            }
-        }
-
-        test.skip(!clicked, 'No status-change action visible (e.g. order in completed already)');
-
-        const req = await respPromise;
-        expect(req, 'A status-change action should issue a non-GET REST request').not.toBeNull();
-
-        await page.close();
-        await ctx.close();
-    });
 });
 

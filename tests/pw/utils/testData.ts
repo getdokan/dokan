@@ -2521,13 +2521,12 @@ export const data = {
                 'Reverse Withdrawal',
                 'Badge',
                 'Product Q&A',
-                'Return Request',
-                'Staff',
+                'Return Requests',
                 'Followers',
                 // 'Subscription',
                 'Booking',
                 'Announcements',
-                'Analytics',
+                'Store Stats',
                 'Tools',
                 'Auction',
                 'Support',
@@ -2617,8 +2616,8 @@ export const data = {
             settingTitle: 'Social Settings',
             platform: 'facebook',
             facebook: {
-                appId: FB_APP_ID,
-                appSecret: FB_APP_SECRET,
+                appId: FB_APP_ID || 'test-fb-app-id',
+                appSecret: FB_APP_SECRET || 'test-fb-app-secret',
             },
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
@@ -2713,8 +2712,11 @@ export const data = {
             smsSentError: 'Unable to send sms. Contact admin',
             activeGateway: 'nexmo', // nexmo, twilio
             vonage: {
-                apiKey: VONAGE_API_KEY,
-                apiSecret: VONAGE_API_SECRET,
+                // Default to placeholders when the env vars are unset (e.g. CI has no Vonage secrets):
+                // this test only verifies the SMS-gateway settings form saves, not real Vonage delivery,
+                // so a non-empty string is enough. Without the fallback, fill(undefined) throws.
+                apiKey: VONAGE_API_KEY || 'test-vonage-api-key',
+                apiSecret: VONAGE_API_SECRET || 'test-vonage-api-secret',
             },
 
             saveSuccessMessage: 'Setting has been saved successfully.',
@@ -2732,8 +2734,8 @@ export const data = {
         liveChat: {
             settingTitle: 'Live Chat Settings',
             chatProvider: 'talkjs', // messenger, talkjs, tawkto, whatsapp
-            talkJsAppId: TALKJS_APP_ID,
-            talkJsAppSecret: TALKJS_APP_SECRET,
+            talkJsAppId: TALKJS_APP_ID || 'test-talkjs-app-id',
+            talkJsAppSecret: TALKJS_APP_SECRET || 'test-talkjs-app-secret',
             chatButtonPosition: 'above_tab', // above_tab, inside_tab, dont_show
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
@@ -2817,8 +2819,8 @@ export const data = {
         // Printful Settings
         printful: {
             settingTitle: 'Printful Settings',
-            clientId: PRINTFUL_APP_ID,
-            secretKey: PRINTFUL_APP_SECRET,
+            clientId: PRINTFUL_APP_ID || 'test-printful-client-id',
+            secretKey: PRINTFUL_APP_SECRET || 'test-printful-secret-key',
             popupTitle: 'Size Guide',
             popupTextColor: '#000000',
             popupBackgroundColor: '#FFFFFF',

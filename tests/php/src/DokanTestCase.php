@@ -137,7 +137,15 @@ abstract class DokanTestCase extends WP_UnitTestCase {
     public function tear_down() {
         Monkey\tearDown();
 
-        parent::tear_down();
+        parent::tear_down(); // Rolls back the per-test DB transaction (incl. the wp_user_roles option).
+
+        // The DB option is restored by the rollback, but the cached WP_Roles singleton still holds any
+        // add_cap()/remove_cap() a test performed — those in-memory mutations would otherwise leak into
+        // every subsequent test in the run. Rebuild the singleton from the (now-canonical) option so
+        // role-capability changes cannot cross a test boundary. Mirrors the install-time reset in
+        // tests/php/bootstrap.php.
+        $GLOBALS['wp_roles'] = null; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+        wp_roles();
     }
 
 

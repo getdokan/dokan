@@ -466,8 +466,7 @@ export async function buyPackExpectReceived(browser: Browser, packId: string, ca
         await stripe.gotoBlockCheckout();
         await stripe.selectBlockGateway();
         await stripe.fillCardDetails(card);
-        await stripe.placeBlockOrderExpectReceived();
-        return page.url().match(/order-received\/(\d+)/)?.[1];
+        return await stripe.placeBlockOrderExpectReceived();
     } finally {
         await page.close();
         await ctx.close();

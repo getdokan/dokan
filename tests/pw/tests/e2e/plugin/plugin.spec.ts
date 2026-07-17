@@ -58,28 +58,32 @@ test.describe('Plugin functionality test', () => {
     });
 
     test('admin can activate Dokan pro plugin', { tag: ['@pro', '@admin'] }, async () => {
-        const [, , currentStatus] = await apiUtils.getSinglePlugin(data.plugin.pluginList.dokanPro, payloads.adminAuth);
-        if (currentStatus === 'inactive') {
-            await apiUtils.updatePlugin(data.plugin.pluginList.dokanLite, { status: 'active' }, payloads.adminAuth);
-            await admin.activatePlugin(data.plugin.pluginName.dokanPro);
-        }
+        // Deterministic precondition: Dokan Lite (dependency) active, Dokan Pro inactive,
+        // so the activate action link is present and the UI activation genuinely runs.
+        await apiUtils.updatePlugin(data.plugin.pluginList.dokanLite, { status: 'active' }, payloads.adminAuth);
+        await apiUtils.updatePlugin(data.plugin.pluginList.dokanPro, { status: 'inactive' }, payloads.adminAuth);
+        await admin.activatePlugin(data.plugin.pluginName.dokanPro);
     });
 
     test('admin can deactivate Dokan pro plugin', { tag: ['@pro', '@admin'] }, async () => {
-        const [, , currentStatus] = await apiUtils.getSinglePlugin(data.plugin.pluginList.dokanPro, payloads.adminAuth);
-        if (currentStatus === 'active') {
-            await admin.deactivateDokanPlugin(data.plugin.pluginName.dokanPro, false);
-        }
+        // Deterministic precondition: Dokan Pro active so the deactivate feedback modal
+        // (skip-and-deactivate path) genuinely runs.
+        await apiUtils.updatePlugin(data.plugin.pluginList.dokanPro, { status: 'active' }, payloads.adminAuth);
+        await admin.deactivateDokanPlugin(data.plugin.pluginName.dokanPro, false);
     });
 
     test('admin can deactivate Dokan pro plugin with deactivate reason', { tag: ['@pro', '@admin'] }, async () => {
-        const [, , currentStatus] = await apiUtils.getSinglePlugin(data.plugin.pluginList.dokanPro, payloads.adminAuth);
-        if (currentStatus === 'active') {
-            await admin.deactivateDokanPlugin(data.plugin.pluginName.dokanPro, true);
-        }
+        // Deterministic precondition: Dokan Pro active so the deactivate feedback modal
+        // (submit-reason-and-deactivate path) genuinely runs.
+        await apiUtils.updatePlugin(data.plugin.pluginList.dokanPro, { status: 'active' }, payloads.adminAuth);
+        await admin.deactivateDokanPlugin(data.plugin.pluginName.dokanPro, true);
     });
 
     test('admin can activate Dokan plugin', { tag: ['@lite', '@admin'] }, async () => {
+        // Dokan Lite is a hard dependency of Dokan Pro: in a pro environment WordPress
+        // dependency-locks it active (no activate/deactivate action link is rendered), so
+        // this can only genuinely drive the UI in a lite-only environment where Lite is
+        // inactive. Guard on the real state instead of forcing an unreachable precondition.
         const [, , currentStatus] = await apiUtils.getSinglePlugin(data.plugin.pluginList.dokanLite, payloads.adminAuth);
         if (currentStatus === 'inactive') {
             await admin.activatePlugin(data.plugin.pluginName.dokanLite);

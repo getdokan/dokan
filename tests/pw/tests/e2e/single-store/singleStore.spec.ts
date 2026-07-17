@@ -1,10 +1,15 @@
 import { Page, expect, test } from '@utils/test';
 import { SingleStorePage, data } from './singleStorePage';
+import { ApiUtils } from '@utils/apiUtils';
+import { dbUtils } from '@utils/dbUtils';
+import { dbData } from '@utils/dbData';
+import { payloads } from '@utils/payloads';
 import path from 'path';
 
 import { toPath } from '@utils/helpers';
 
 const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.json');
+const { VENDOR_ID } = process.env;
 
 test.describe('Single store functionality test', () => {
     let customer: SingleStorePage;
@@ -14,6 +19,16 @@ test.describe('Single store functionality test', () => {
         const customerContext = await browser.newContext({ storageState: c1 });
         cPage = await customerContext.newPage();
         customer = new SingleStorePage(cPage);
+
+        // Seed the store Terms-and-Conditions prerequisites so the TOC tab renders
+        // regardless of shard ordering. dokan_get_toc_url() (functions.php) needs BOTH
+        // the global `seller_enable_terms_and_conditions` option AND the vendor's own
+        // `enable_tnc` to be 'on'. The setting spec (setting.spec.ts) leaves the global
+        // option OFF and does not restore it, so a CI shard that runs it first would hide
+        // the tab. Re-seed both here instead of relying on ambient setup state.
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.general, { seller_enable_terms_and_conditions: 'on' });
+        const apiUtils = new ApiUtils(null);
+        await apiUtils.updateStore(VENDOR_ID as string, { enable_tnc: true, store_tnc: data.vendor.toc }, payloads.adminAuth);
     });
 
     test.afterAll(async () => { await cPage?.close(); });

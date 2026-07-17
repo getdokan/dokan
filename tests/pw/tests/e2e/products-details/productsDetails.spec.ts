@@ -28,6 +28,11 @@ test.describe('Product details functionality test', () => {
         vendor = new ProductsPage(vPage);
         apiUtils = new ApiUtils(null);
 
+        // The product-details tests drive the CLASSIC (legacy) PHP product-edit screen, which
+        // only renders when the vendor product editor is set to 'legacy'. With NO_SETUP=true the
+        // auth stage that normally flips this option does not run, so set it deterministically here.
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { vendor_product_editor: 'legacy' });
+
         const [basicResult, fullResult, discountResult, discountScheduleResult, multiCategoryResult, virtualResult, addonExportResult] = await Promise.all([
             apiUtils.createProduct(payloads.createProductRequiredFields(), payloads.vendorAuth),
             (async () => {

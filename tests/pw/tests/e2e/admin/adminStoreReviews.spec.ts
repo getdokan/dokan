@@ -141,19 +141,6 @@ test.describe('Admin Store Reviews functionality', () => {
             await expect(reviews.tab(/Trash/)).toBeVisible();
         });
 
-        // QUARANTINED @exploratory: the admin Store Reviews DataViews page renders
-        // NO free-text search input (ReviewList.tsx adds no <SearchInput> to
-        // additionalComponents and fetchReviews sends no `search` param). Only the
-        // Vendors page has search. This asserts search-driven filtering (the
-        // matching row present AND a non-matching row absent) the UI cannot perform.
-        // Documented product gap — re-enable when admin search lands.
-        test.fixme('searching by review title filters the list to the matching review', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
-            await reviews.goto();
-            await reviews.search(adminStoreReviewsData.visible.title);
-            await expect(reviews.rowByTitle(adminStoreReviewsData.visible.title)).toBeVisible();
-            await expect(page.getByText(adminStoreReviewsData.deleteTarget.title, { exact: false })).toHaveCount(0);
-        });
-
         test('admin can move a published review to Trash (it leaves the All tab)', { tag: ['@pro', '@admin'] }, async () => {
             await resetReviewStatus(reviewIds.trashTarget, 'restore');
             await reviews.goto();
@@ -249,16 +236,6 @@ test.describe('Admin Store Reviews functionality', () => {
         test.afterEach(async () => {
             await page?.close();
             await ctx?.close();
-        });
-
-        // QUARANTINED @exploratory: no free-text search input on the admin Store
-        // Reviews page (see the "searching by review title" test above) — a
-        // search-driven empty state is unreachable via the UI. Documented product gap.
-        test.fixme('search with no match shows the empty state', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
-            await reviews.goto();
-            await reviews.search(adminStoreReviewsData.searchMiss);
-            const empty = (await reviews.isEmptyStateVisible()) || (await reviews.getRowCount()) === 0;
-            expect(empty, 'no rows / empty-state for an unmatched search').toBe(true);
         });
 
         test('reloading on #/store-reviews preserves the route and re-mounts the list (route-registration regression)', { tag: ['@pro', '@admin'] }, async () => {

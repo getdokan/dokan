@@ -18,6 +18,7 @@ test.describe('Product addon functionality test', () => {
     let categoryName: string;
     let productName: string;
     let apiUtils: ApiUtils;
+    let originalProductEditor: string;
 
     async function createVendorProductAddon(): Promise<[responseBody, string, string, string, string]> {
         const [, categoryId, categoryName] = await apiUtils.createCategory(payloads.createCategoryRandom(), payloads.adminAuth);
@@ -27,6 +28,16 @@ test.describe('Product addon functionality test', () => {
     }
 
     test.beforeAll(async ({ browser }) => {
+        // On a fresh env the auth stage leaves dokan_appearance.vendor_product_editor='latest', which routes the
+        // vendor "Add/Edit product" page to the new React editor (dashboard/new/#products/...). This whole spec
+        // drives the CLASSIC product editor: the enable-module check reads the legacy add-product add-ons metabox
+        // (div#dokan-product-addons-options) and every per-product add-on test navigates the legacy edit screen
+        // (dashboard/products/?product_id=...&action=edit + wc-pao-* metabox). Flip to the legacy editor so those
+        // surfaces exist, and restore the captured value in afterAll. Under NO_SETUP the shared Docker was left on
+        // 'legacy' by prior runs, which masked this dependency; a fresh CI shard defaults to 'latest'.
+        const [originalAppearance] = await dbUtils.updateOptionValue('dokan_appearance', { vendor_product_editor: 'legacy' });
+        originalProductEditor = originalAppearance?.vendor_product_editor ?? 'latest';
+
         const vendorContext = await browser.newContext({ storageState: v1 });
         vPage = await vendorContext.newPage();
         vendor = new ProductAddonsPage(vPage);
@@ -38,6 +49,8 @@ test.describe('Product addon functionality test', () => {
     });
 
     test.afterAll(async () => {
+        // Restore the vendor product editor mode captured before the spec flipped it to legacy.
+        await dbUtils.updateOptionValue('dokan_appearance', { vendor_product_editor: originalProductEditor });
         await apiUtils.deleteAllProductAddons(payloads.adminAuth);
         await apiUtils.activateModules(payloads.moduleIds.productAddon, payloads.adminAuth);
         await vPage?.close();
