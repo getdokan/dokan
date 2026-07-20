@@ -583,6 +583,26 @@ function ProductList() {
 
     // ── Filter fields ─────────────────────────────────────────────────────────
 
+    /**
+     * Product type options for the listing's "Product Type" filter.
+     *
+     * Pro modules whose product type is revealed in this list (see
+     * `dokan_product_list_exclude_types`) add their type here so vendors can
+     * filter by it — e.g. the auction module appends 'auction'.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param {Array} options Default product type options ({ value, label }).
+     */
+    const productTypeOptions = useMemo(
+        () =>
+            applyFilters(
+                'dokan_product_list_type_options',
+                PRODUCT_TYPE_OPTIONS
+            ) as typeof PRODUCT_TYPE_OPTIONS,
+        []
+    );
+
     const filterFields = useMemo(
         () => [
             {

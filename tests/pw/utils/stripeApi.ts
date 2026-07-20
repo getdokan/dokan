@@ -51,11 +51,43 @@ async function stripeDelete(path: string): Promise<any> {
     }
 }
 
+/** Form-encoded POST against the Stripe test API. Mutating counterpart to stripeGet. */
+async function stripePost(path: string, form: Record<string, string> = {}): Promise<any> {
+    const ctx = await request.newContext({
+        baseURL: STRIPE_API,
+        extraHTTPHeaders: { Authorization: `Bearer ${secretKey()}` },
+    });
+    try {
+        const res = await ctx.post(path, { form });
+        const body = await res.json();
+        if (!res.ok()) {
+            throw new Error(`Stripe API POST ${path} → ${res.status()}: ${JSON.stringify(body?.error ?? body)}`);
+        }
+        return body;
+    } finally {
+        await ctx.dispose();
+    }
+}
+
 export const stripeApi = {
     hasSecretKey: (): boolean => Boolean(secretKey()),
 
     async getPaymentIntent(intentId: string): Promise<any> {
         return stripeGet(`/v1/payment_intents/${intentId}`);
+    },
+
+    /**
+     * Confirm a PaymentIntent server-side. Used ONLY as a CI fallback when GitHub runner IPs
+     * trigger a blocking hCaptcha on the in-page card confirm — the payment still goes through
+     * Stripe for real (this is the actual intent the checkout created), we just complete the
+     * confirmation via the API instead of the hCaptcha-gated UI click. No-op if already paid.
+     */
+    async confirmPaymentIntent(intentId: string, paymentMethod = 'pm_card_visa'): Promise<any> {
+        const pi = await this.getPaymentIntent(intentId);
+        if (['succeeded', 'processing'].includes(pi.status)) return pi;
+        const form: Record<string, string> = { return_url: 'https://example.com/return' };
+        if (!pi.payment_method) form.payment_method = paymentMethod;
+        return stripePost(`/v1/payment_intents/${intentId}/confirm`, form);
     },
 
     /** Resolve the charge id for a PaymentIntent (its latest_charge). */

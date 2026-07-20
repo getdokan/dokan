@@ -232,8 +232,7 @@ test.describe.serial('Stripe Express — SE-XSS (stored XSS / output escaping) @
             await stripe.gotoBlockCheckout();
             await stripe.selectBlockGateway();
             await stripe.fillCardDetails(STRIPE_CARDS.success);
-            await stripe.placeBlockOrderExpectReceived();
-            const orderId = page.url().match(/order-received\/(\d+)/)?.[1];
+            const orderId = await stripe.placeBlockOrderExpectReceived();
             expect(orderId, 'order reached order-received → the markup descriptor was cleaned (Stripe would reject a raw <script> value)').toBeTruthy();
 
             const charge = await stripeApi.getCharge(await getStripeChargeIdForOrder(orderId as string));
