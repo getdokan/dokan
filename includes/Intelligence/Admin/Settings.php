@@ -25,11 +25,11 @@ class Settings implements Hookable {
      * @param array  $values     Section setting values.
      * @param string $section_id Section id.
      *
-     * @return array
+     * @return mixed Untouched when the section is not the AI section.
      */
-    public function remap_retired_model_values( $values, $section_id ): array {
+    public function remap_retired_model_values( $values, $section_id ) {
         if ( 'dokan_ai' !== $section_id || ! is_array( $values ) ) {
-            return (array) $values;
+            return $values;
         }
 
         $manager = dokan_get_container()->get( Manager::class );

@@ -84,22 +84,19 @@ abstract class Provider implements AIProviderInterface, Hookable {
      * @return AIModelInterface|null
      */
     public function resolve_model( string $type, string $model_id = '' ): ?AIModelInterface {
-        if ( '' !== $model_id ) {
-            $model = $this->get_model( $model_id );
+        // Keyed by model id, so every lookup below is an array read rather than another filter dispatch.
+        $models = $this->get_models_by_type( $type );
 
-            if ( $model instanceof AIModelInterface && $model->supports( $type ) ) {
-                return $model;
-            }
+        if ( '' !== $model_id && isset( $models[ $model_id ] ) ) {
+            return $models[ $model_id ];
         }
 
         // A model id saved before the provider retired that model must not break generation.
-        $default = $this->get_model( $this->get_default_model_id() );
+        $default_id = $this->get_default_model_id();
 
-        if ( $default instanceof AIModelInterface && $default->supports( $type ) ) {
-            return $default;
+        if ( isset( $models[ $default_id ] ) ) {
+            return $models[ $default_id ];
         }
-
-        $models = $this->get_models_by_type( $type );
 
         return ! empty( $models ) ? reset( $models ) : null;
     }

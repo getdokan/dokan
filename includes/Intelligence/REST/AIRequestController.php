@@ -78,10 +78,11 @@ class AIRequestController extends DokanBaseVendorController {
         );
 
         // The payload schema declares no properties, so coerce before any string API touches these.
-        $args['type']  = is_scalar( $args['type'] ) ? sanitize_key( (string) $args['type'] ) : Model::SUPPORTS_TEXT;
-        $args['field'] = is_scalar( $args['field'] ) ? (string) $args['field'] : '';
-        $type          = '' !== $args['type'] ? $args['type'] : Model::SUPPORTS_TEXT;
+        $type = is_scalar( $args['type'] ) ? sanitize_key( (string) $args['type'] ) : '';
+        $type = '' !== $type ? $type : Model::SUPPORTS_TEXT;
+
         $args['type']  = $type;
+        $args['field'] = is_scalar( $args['field'] ) ? (string) $args['field'] : '';
 
         // Resolve the appropriate service based on the AI engine.
 		try {
