@@ -575,8 +575,8 @@ function ProductList() {
     /**
      * Product type options for the listing's "Product Type" filter.
      *
-     * Pro modules whose product type is opted into this list (see
-     * `dokan_product_list_include_types`) add their type here so vendors can
+     * Pro modules whose product type is revealed in this list (see
+     * `dokan_product_list_exclude_types`) add their type here so vendors can
      * filter by it — e.g. the auction module appends 'auction'.
      *
      * @since DOKAN_SINCE

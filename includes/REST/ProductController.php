@@ -587,12 +587,11 @@ class ProductController extends DokanRESTController {
     /**
      * Get the product types excluded from the vendor product listing.
      *
-     * Types that live on their own dashboards (auction, booking, …) are kept
-     * out of this listing by default via the `dokan_product_listing_exclude_type`
-     * filter (Pro modules register them). A request may opt a type back in by
-     * sending `include_types` — the vendor product list does this for auctions,
-     * while other product searches (e.g. the manual order picker) do not, so
-     * those keep excluding them.
+     * The vendor product list sends its own `exclude_types` set — omitting the
+     * types it wants shown (e.g. it drops `auction` to reveal auctions). Every
+     * other request (the manual order product picker, the legacy page) sends
+     * nothing and falls back to the default `[ 'auction', 'booking' ]`, so those
+     * keep excluding them.
      *
      * @since DOKAN_SINCE
      *
@@ -601,16 +600,14 @@ class ProductController extends DokanRESTController {
      * @return array
      */
     protected function get_exclude_types( $request ) {
-        // Pro modules register the types to keep out (auction, booking,
-        // subscription's product_pack, …) on this filter, so it is the single
-        // source — no need to hardcode or merge anything here.
-        $exclude_types = (array) apply_filters( 'dokan_product_listing_exclude_type', [] );
+        $exclude_types = $request->get_param( 'exclude_types' );
 
-        // Opt back in whatever the request asked for (e.g. `auction` from the
-        // vendor product list); other requests send nothing and keep them out.
-        $include_types = (array) $request->get_param( 'include_types' );
-
-        return array_values( array_diff( $exclude_types, $include_types ) );
+        // Null-check before casting: `(array) null` is `[]`, which would make
+        // `??` skip the default and drop the exclusion for requests that send
+        // nothing (e.g. the manual order picker).
+        return null !== $exclude_types
+            ? array_values( (array) $exclude_types )
+            : [ 'auction', 'booking' ];
     }
 
     /**

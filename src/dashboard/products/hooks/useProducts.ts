@@ -91,16 +91,21 @@ export const useProducts = (
                 page: filterArgs.page,
                 include_hidden_products: true,
                 /**
-                 * Product types to opt back into this listing (excluded by
-                 * default server-side; e.g. the auction module adds 'auction').
+                 * Product types to exclude from this listing.
+                 *
+                 * Only `booking` (it has its own dashboard); `auction` is
+                 * deliberately kept out of the exclude set so auctions show
+                 * here. Other requests send nothing and fall back to the
+                 * server-side default `[ auction, booking ]`. Pro modules can
+                 * add types to hide via this filter.
                  *
                  * @since DOKAN_SINCE
                  *
-                 * @param {string[]} includeTypes Product type slugs to include.
+                 * @param {string[]} excludeTypes Product type slugs to exclude.
                  */
-                include_types: applyFilters(
-                    'dokan_product_list_include_types',
-                    []
+                exclude_types: applyFilters(
+                    'dokan_product_list_exclude_types',
+                    [ 'booking' ]
                 ) as string[],
             };
 
@@ -171,12 +176,12 @@ export const useProducts = (
 
     const fetchStatusCounts = useCallback( async () => {
         try {
-            // Opt the counts into the same types as the list (see fetchProducts),
-            // so the status-tab badges can't drift from the rows.
+            // Exclude the same types as the list (see fetchProducts), so the
+            // status-tab badges can't drift from the rows.
             const summaryArgs = {
-                include_types: applyFilters(
-                    'dokan_product_list_include_types',
-                    []
+                exclude_types: applyFilters(
+                    'dokan_product_list_exclude_types',
+                    [ 'booking' ]
                 ) as string[],
             };
 
