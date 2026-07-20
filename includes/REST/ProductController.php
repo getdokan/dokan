@@ -157,7 +157,7 @@ class ProductController extends DokanRESTController {
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_items' ],
-                    'args'                => $this->get_collection_params(),
+                    'args'                => array_merge( $this->get_collection_params(), $this->get_exclude_types_param() ),
                     'permission_callback' => [ $this, 'get_product_permissions_check' ],
                 ],
                 [
@@ -210,6 +210,7 @@ class ProductController extends DokanRESTController {
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_product_summary' ],
+                    'args'                => $this->get_exclude_types_param(),
                     'permission_callback' => [ $this, 'get_product_summary_permissions_check' ],
                 ],
             ]
@@ -608,6 +609,28 @@ class ProductController extends DokanRESTController {
         return null !== $exclude_types
             ? array_values( (array) $exclude_types )
             : [ 'auction', 'booking' ];
+    }
+
+    /**
+     * Collection param schema for `exclude_types`.
+     *
+     * Product type slugs to hide from the vendor listing. Consumed by
+     * get_exclude_types(); the vendor product list sends it (omitting the types
+     * it wants shown, e.g. `auction`).
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    protected function get_exclude_types_param() {
+        return [
+            'exclude_types' => [
+                'description'       => __( 'Product type slugs to exclude from the vendor listing (e.g. booking).', 'dokan-lite' ),
+                'type'              => 'array',
+                'items'             => [ 'type' => 'string' ],
+                'sanitize_callback' => 'wp_parse_slug_list',
+            ],
+        ];
     }
 
     /**
