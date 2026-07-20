@@ -559,16 +559,8 @@ class ProductController extends DokanRESTController {
     public function get_product_summary( $request ) {
         $seller_id = dokan_get_current_user_id();
 
-        // Match the list's exclusion scope so tab counts can't drift from it —
-        // Pro modules add `product_pack` etc. via this filter.
-        $exclude_types = array_values(
-            array_unique(
-                array_merge(
-                    [ 'booking', 'auction' ],
-                    (array) apply_filters( 'dokan_product_listing_exclude_type', [] )
-                )
-            )
-        );
+        // Match the list's exclusion scope so tab counts can't drift from it.
+        $exclude_types = $this->get_exclude_types( $request );
 
         $data = [
             'post_counts'      => dokan_count_posts( 'product', $seller_id, $exclude_types ),
@@ -590,6 +582,35 @@ class ProductController extends DokanRESTController {
         $data = (array) apply_filters( 'dokan_product_listing_summary_data', $data, $seller_id );
 
         return rest_ensure_response( $data );
+    }
+
+    /**
+     * Get the product types excluded from the vendor product listing.
+     *
+     * Types that live on their own dashboards (auction, booking, …) are kept
+     * out of this listing by default via the `dokan_product_listing_exclude_type`
+     * filter (Pro modules register them). A request may opt a type back in by
+     * sending `include_types` — the vendor product list does this for auctions,
+     * while other product searches (e.g. the manual order picker) do not, so
+     * those keep excluding them.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Request $request Request object.
+     *
+     * @return array
+     */
+    protected function get_exclude_types( $request ) {
+        // Pro modules register the types to keep out (auction, booking,
+        // subscription's product_pack, …) on this filter, so it is the single
+        // source — no need to hardcode or merge anything here.
+        $exclude_types = (array) apply_filters( 'dokan_product_listing_exclude_type', [] );
+
+        // Opt back in whatever the request asked for (e.g. `auction` from the
+        // vendor product list); other requests send nothing and keep them out.
+        $include_types = (array) $request->get_param( 'include_types' );
+
+        return array_values( array_diff( $exclude_types, $include_types ) );
     }
 
     /**
@@ -922,7 +943,7 @@ class ProductController extends DokanRESTController {
 
         // Exclude product types that belong to separate dashboards
         // (e.g. auction, booking, subscription — registered by their Pro modules).
-        $exclude_types = (array) apply_filters( 'dokan_product_listing_exclude_type', [] );
+        $exclude_types = $this->get_exclude_types( $request );
         if ( ! empty( $exclude_types ) ) {
             $args['tax_query'][] = [ //phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
                 'taxonomy' => 'product_type',

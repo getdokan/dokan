@@ -90,6 +90,18 @@ export const useProducts = (
                 per_page: filterArgs.per_page,
                 page: filterArgs.page,
                 include_hidden_products: true,
+                /**
+                 * Product types to opt back into this listing (excluded by
+                 * default server-side; e.g. the auction module adds 'auction').
+                 *
+                 * @since DOKAN_SINCE
+                 *
+                 * @param {string[]} includeTypes Product type slugs to include.
+                 */
+                include_types: applyFilters(
+                    'dokan_product_list_include_types',
+                    []
+                ) as string[],
             };
 
             if ( filterArgs.status !== 'all' ) {
@@ -159,8 +171,17 @@ export const useProducts = (
 
     const fetchStatusCounts = useCallback( async () => {
         try {
+            // Opt the counts into the same types as the list (see fetchProducts),
+            // so the status-tab badges can't drift from the rows.
+            const summaryArgs = {
+                include_types: applyFilters(
+                    'dokan_product_list_include_types',
+                    []
+                ) as string[],
+            };
+
             const response = ( await apiFetch( {
-                path: '/dokan/v1/products/summary',
+                path: addQueryArgs( '/dokan/v1/products/summary', summaryArgs ),
             } ) ) as ProductSummary;
 
             const counts = response.post_counts ?? {};
