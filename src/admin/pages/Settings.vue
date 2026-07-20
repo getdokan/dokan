@@ -308,20 +308,19 @@
                     if ( resp.success ) {
 
                         Object.keys( self.settingFields ).forEach( function( section, index ) {
-                            Object.keys( self.settingFields[section] ).forEach( function( field, i ) {
+                            // Copy the saved section once up front; assigning it inside the loop wiped the
+                            // defaults already applied to fields that came before the first saved one.
+                            self.settingValues[section] = jQuery.extend( {}, resp.data[section] );
 
-                                if (!self.settingValues[section]) {
-                                    self.settingValues[section] = {};
+                            Object.keys( self.settingFields[section] ).forEach( function( field, i ) {
+                                if ( typeof( self.settingValues[section][field] ) !== 'undefined' ) {
+                                    return;
                                 }
 
-                                if ( typeof( resp.data[section][field] ) === 'undefined' ) {
-                                    if ( typeof( self.settingFields[section][field].default ) === 'undefined' ) {
-                                        self.settingValues[section][field] = '';
-                                    } else {
-                                        self.settingValues[section][field] = self.settingFields[section][field].default;
-                                    }
+                                if ( typeof( self.settingFields[section][field].default ) === 'undefined' ) {
+                                    self.settingValues[section][field] = '';
                                 } else {
-                                    self.settingValues[section] = resp.data[section];
+                                    self.settingValues[section][field] = self.settingFields[section][field].default;
                                 }
                             });
                         });

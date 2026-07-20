@@ -73,6 +73,52 @@ abstract class Provider implements AIProviderInterface, Hookable {
 
     abstract public function get_default_model_id(): string;
 
+    /**
+     * Resolve the model to use for a generation type, tolerating stale saved ids.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $type     The type of generation (e.g., 'text', 'image').
+     * @param string $model_id Optional. Saved model id to prefer.
+     *
+     * @return AIModelInterface|null
+     */
+    public function resolve_model( string $type, string $model_id = '' ): ?AIModelInterface {
+        if ( '' !== $model_id ) {
+            $model = $this->get_model( $model_id );
+
+            if ( $model instanceof AIModelInterface && $model->supports( $type ) ) {
+                return $model;
+            }
+        }
+
+        // A model id saved before the provider retired that model must not break generation.
+        $default = $this->get_model( $this->get_default_model_id() );
+
+        if ( $default instanceof AIModelInterface && $default->supports( $type ) ) {
+            return $default;
+        }
+
+        $models = $this->get_models_by_type( $type );
+
+        return ! empty( $models ) ? reset( $models ) : null;
+    }
+
+    /**
+     * Get the default model id for a generation type.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $type The type of generation (e.g., 'text', 'image').
+     *
+     * @return string Empty string when the provider has no model of that type.
+     */
+    public function get_default_model_id_by_type( string $type ): string {
+        $model = $this->resolve_model( $type );
+
+        return $model instanceof AIModelInterface ? $model->get_id() : '';
+    }
+
 	/**
 	 * @inheritDoc
 	 */
