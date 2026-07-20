@@ -1,5 +1,6 @@
 import { Page, expect, APIRequestContext } from '@playwright/test';
 import mysql from 'mysql2/promise';
+import { createHash } from 'crypto';
 import { isSerialized, serialize, unserialize } from 'php-serialize';
 
 // closeAnnouncementModal is inlined per CONVENTIONS.md §4 (self-contained).
@@ -96,6 +97,17 @@ async function updateOptionValue(optionName: string, updatedSettings: Record<str
     await setOptionValue(optionName, merged);
 }
 
+// Seed a product's _downloadable_files meta directly (WC's Approved Download
+// Directories blocks setting a file URL via REST). The key is md5(file) — WC's
+// download-id convention — and get_downloads() reads it back without re-validating.
+async function setDownloadableFileMeta(productId: number, name: string, file: string): Promise<void> {
+    const prefix = DB_PREFIX ?? 'wp';
+    const downloadId = createHash('md5').update(file).digest('hex');
+    const serialized = serialize({ [downloadId]: { id: downloadId, name, file } });
+    await dbQuery(`DELETE FROM ${prefix}_postmeta WHERE post_id = ? AND meta_key = '_downloadable_files'`, [productId]);
+    await dbQuery(`INSERT INTO ${prefix}_postmeta (post_id, meta_key, meta_value) VALUES (?, '_downloadable_files', ?)`, [productId, serialized]);
+}
+
 // ============================================
 // INLINE API HELPERS
 // ============================================
@@ -152,13 +164,26 @@ const createOrderPayload = {
     ],
 };
 
-const createDownloadableProductPayload = () => ({
-    name: `Downloadable_Product_${Date.now()}`,
-    type: 'simple',
-    downloadable: true,
-    regular_price: '10',
-    downloads: [],
-});
+const createDownloadableProductPayload = () => {
+    // POST /dokan/v1/products under vendor auth enforces the category
+    // requirement ("Category must be required" 404). CATEGORY_ID is seeded by
+    // _env.setup.ts; read it lazily and attach it, falling back to [{}] when the
+    // seed hasn't run yet (mirrors payloads.ts categoriesPayload()).
+    const categoryId = Number(process.env.CATEGORY_ID);
+    return {
+        name: `Downloadable_Product_${Date.now()}`,
+        type: 'simple',
+        downloadable: true,
+        regular_price: '10',
+        // No file here on purpose: WC's Approved Download Directories rejects any
+        // download-file URL set via REST (product_invalid_download). The file is
+        // seeded straight into _downloadable_files meta after creation instead
+        // (see createDownloadableProduct) — a product needs ≥1 file for a
+        // grant-access permission row (and its .revoke_access) to render.
+        downloads: [],
+        categories: Number.isFinite(categoryId) && categoryId > 0 ? [{ id: categoryId }] : [{}],
+    };
+};
 
 const shippingStatusOptionName = 'dokan_shipping_status_setting';
 
@@ -327,6 +352,10 @@ const ordersVendor = {
     },
     downloadableProductPermission: {
         downloadableProductPermissionDiv: '//strong[normalize-space()="Downloadable Product Permission"]/../..',
+        // The visible select2 box for the multi-select #grant_access_id product picker.
+        // (The internal `.select2-search__field` has 0 width / visible=false until the
+        // box is focused, so it must not be used for a visibility assertion.)
+        downloadableProductSelect2: '.order_download_permissions .select2-selection',
         downloadableProductInput: '.select2-search__field',
         grantAccess: '.grant_access',
         revokeAccess: '.revoke_access',
@@ -373,8 +402,17 @@ export class OrdersPage {
     }
 
     static async createDownloadableProduct(requestContext: APIRequestContext): Promise<string> {
-        const body = await apiPost(requestContext, `${SERVER_URL}/dokan/v1/products`, createDownloadableProductPayload(), vendorAuth) as { name: string };
+        const body = await apiPost(requestContext, `${SERVER_URL}/dokan/v1/products`, createDownloadableProductPayload(), vendorAuth) as { id?: number; name?: string; code?: string; message?: string };
         await requestContext.dispose();
+        // Fail loud instead of returning undefined (which surfaces later as an
+        // opaque "locator.fill: got undefined"): the product POST must succeed.
+        if (!body?.name || !body?.id) {
+            throw new Error(`createDownloadableProduct: product POST returned no id/name — ${body?.code ?? ''} ${body?.message ?? JSON.stringify(body)}`);
+        }
+        // Seed the downloadable file directly into _downloadable_files meta. Setting
+        // it via REST is blocked by WC's Approved Download Directories validation,
+        // but the grant-access UI only reads this meta to offer a file to grant.
+        await setDownloadableFileMeta(body.id, 'Test Download File', 'https://example.com/downloads/test-file.zip');
         return body.name;
     }
 
@@ -680,7 +718,10 @@ export class OrdersPage {
             const { addTrackingNumber, ...trackingDetails } = ordersVendor.trackingDetails;
             await this.multipleElementVisible(trackingDetails as Record<string, unknown>);
         }
-        const { revokeAccess, confirmAction, cancelAction, ...downloadableProductPermission } = ordersVendor.downloadableProductPermission;
+        // Assert the section renders: the panel + the (visible) product-search select2 box.
+        // grantAccess/downloadableProductInput are excluded — the button is conditional and
+        // the internal search input is legitimately hidden until the box is focused.
+        const { revokeAccess, confirmAction, cancelAction, downloadableProductInput, grantAccess, ...downloadableProductPermission } = ordersVendor.downloadableProductPermission;
         await this.multipleElementVisible(downloadableProductPermission as Record<string, unknown>);
     }
 
@@ -776,14 +817,24 @@ export class OrdersPage {
 
     async addDownloadableProduct(orderNumber: string, downloadableProductName: string): Promise<void> {
         await this.goToOrderDetails(orderNumber);
-        await this.clearAndType(ordersVendor.downloadableProductPermission.downloadableProductInput, downloadableProductName);
-        await this.press(key.enter);
+        // The #grant_access_id product picker is an AJAX select2. Its inline
+        // search input isn't `fill`-able (0 width until focused), so click the
+        // box to focus it, type via the keyboard to trigger the AJAX search,
+        // then pick the loaded result option explicitly.
+        await this.page.locator(ordersVendor.downloadableProductPermission.downloadableProductSelect2).click();
+        await this.page.keyboard.type(downloadableProductName);
+        const option = this.page.locator('.select2-results__option', { hasText: downloadableProductName }).first();
+        await option.waitFor({ state: 'visible', timeout: 15000 });
+        await option.click();
         await this.clickAndAcceptAndWaitForResponseAndLoadState(subUrls.ajax, ordersVendor.downloadableProductPermission.grantAccess);
     }
 
-    async removeDownloadableProduct(orderNumber: string, downloadableProductName: string): Promise<void> {
-        await this.addDownloadableProduct(orderNumber, downloadableProductName);
-        await this.click(ordersVendor.downloadableProductPermission.revokeAccess);
+    async removeDownloadableProduct(orderNumber: string, _downloadableProductName: string): Promise<void> {
+        // The caller already granted access (persisted), so just re-open the order
+        // and revoke that grant. Re-granting here would render a second permission
+        // row, and `.revoke_access` would then match two elements (strict-mode fail).
+        await this.goToOrderDetails(orderNumber);
+        await this.page.locator(ordersVendor.downloadableProductPermission.revokeAccess).first().click();
         await this.clickAndAcceptAndWaitForResponse(subUrls.ajax, ordersVendor.downloadableProductPermission.confirmAction);
     }
 

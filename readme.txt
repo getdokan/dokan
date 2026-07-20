@@ -7,7 +7,7 @@ Tested up to: 7.0
 WC requires at least: 8.5.0
 WC tested up to: 10.4.3
 Requires PHP: 7.4
-Stable tag: 5.0.8
+Stable tag: 5.0.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,23 +34,23 @@ Hear what reputed WordPress influencer and online business strategist, Darrel Wi
 
 👉 **Easy Delivery Management with [Dokan Delivery Driver App](https://dokan.co/wordpress/delivery-driver-app/)** (Pro) with real-time order tracking, live timeline updates, and an asynchronous system between admin, vendors, customers, and delivery drivers.
 
-👉 **Confused about how to get started?** Read our blogs from [weDevs](https://wedevs.com/blog/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) and [Dokan](https://dokan.co/blog/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) 
-👉 **Docs & Support:** [Access Now](https://dokan.co/docs/wordpress/) 
+👉 **Confused about how to get started?** Read our blogs from [weDevs](https://wedevs.com/blog/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) and [Dokan](https://dokan.co/blog/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
+👉 **Docs & Support:** [Access Now](https://dokan.co/docs/wordpress/)
 
 **Here is how you can build your multivendor marketplace with Dokan.**
 
 [youtube https://www.youtube.com/watch?v=_Vv5T7qqhoE&t=1s]
 
-# 🌍 Marketplaces You Can Build with Dokan: [Complete list](https://dokan.co/wordpress/popular-marketplace/) 
-* Retail Marketplace like Amazon, Flipkart, Walmart, using Dokan 
-* Niche marketplaces like Etsy, Redbubble, Zazzle, using Dokan 
-* Digital Products Marketplace like Gumroad, Envato, using Dokan 
-* Booking Marketplace like Airbnb, Booking.com, using Dokan 
-* Auction Marketplace like eBay, Catawiki, using Dokan 
-* Subscription Marketplace like Cratejoy, using Dokan 
-* Local Marketplace like Craigslist, Nextdoor, using Dokan 
-* Print-on-Demand Marketplace (via Printful integration), using Dokan 
-* B2B, B2C, P2B, D2C, or any kind of Marketplace, using Dokan 
+# 🌍 Marketplaces You Can Build with Dokan: [Complete list](https://dokan.co/wordpress/popular-marketplace/)
+* Retail Marketplace like Amazon, Flipkart, Walmart, using Dokan
+* Niche marketplaces like Etsy, Redbubble, Zazzle, using Dokan
+* Digital Products Marketplace like Gumroad, Envato, using Dokan
+* Booking Marketplace like Airbnb, Booking.com, using Dokan
+* Auction Marketplace like eBay, Catawiki, using Dokan
+* Subscription Marketplace like Cratejoy, using Dokan
+* Local Marketplace like Craigslist, Nextdoor, using Dokan
+* Print-on-Demand Marketplace (via Printful integration), using Dokan
+* B2B, B2C, P2B, D2C, or any kind of Marketplace, using Dokan
 
 = PLACES WHERE DOKAN HAS BEEN FEATURED =
 
@@ -116,12 +116,12 @@ See Our Official GitHub page: [Official Dokan GitHub](https://github.com/getdoka
 
 = A SCALABLE MARKET =
 
-Dokan Multivendor Marketplace plugin allows you to have an unlimited number of vendors on any marketplace, each with the ability to create an unlimited number of products. Create marketplaces that offer – 
+Dokan Multivendor Marketplace plugin allows you to have an unlimited number of vendors on any marketplace, each with the ability to create an unlimited number of products. Create marketplaces that offer –
 
-* Physical products 
+* Physical products
 * Downloadable products
 * Variable products
-* Bookable products through the [Dokan WC Bookings Integration](https://dokan.co/wordpress/modules/woocommerce-booking-integration/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) 
+* Bookable products through the [Dokan WC Bookings Integration](https://dokan.co/wordpress/modules/woocommerce-booking-integration/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
 * Auction products through the [Dokan Simple Auction Integration](https://dokan.co/wordpress/modules/dokan-simple-auctions/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
 
 = EARN IN MULTIPLE WAYS =
@@ -246,7 +246,7 @@ Never get bored with the old-fashioned appearance of your store. Have full contr
 Dokan comes with a number of advanced features & modules that boost your WooCommerce marketplace position, always keeping you one step ahead of the competition. Continuous innovations and features are brought with regular and timely releases. Check out the changelog [here](https://dokan.co/wordpress/changelog/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
 
 * [Product Form Manager](https://dokan.co/wordpress/modules/product-form-manager/)(Pro)
-* [Paystack](https://dokan.co/docs/wordpress/modules/paystack/)(Pro) 
+* [Paystack](https://dokan.co/docs/wordpress/modules/paystack/)(Pro)
 * [Stripe Express](https://dokan.co/wordpress/modules/stripe-express/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module)(Pro)
 * [Vendor Support](https://dokan.co/docs/wordpress/modules/vendor-support/)(Pro)
 * [Print on Demand Marketplace](https://dokan.co/wordpress/modules/printful-integration/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module)(Pro)
@@ -289,7 +289,7 @@ Dokan comes with a number of advanced features & modules that boost your WooComm
 * [Vendor Dashboard](https://dokan.co/wordpress/modules/vendor-dashboard/)
 * [Dokan Delivery Driver App](https://dokan.co/wordpress/delivery-driver-app/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro)
 
-[AND MANY MORE](https://dokan.co/wordpress/modules/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) ⏩ 
+[AND MANY MORE](https://dokan.co/wordpress/modules/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) ⏩
 
 #### 🔄 Migrate to Dokan — Worry Free
 
@@ -300,7 +300,7 @@ Our migration tools support importing from:
 * ✅ **WCFM Marketplace** → Dokan
 * ✅ **MultiVendorX** → Dokan
 
-It helps to migrate all your vendor data, products, and orders safely. 
+It helps to migrate all your vendor data, products, and orders safely.
 
 = WE KNOW WE ARE NOT PERFECT THAT’S WHY WE ARE IMPROVING EVERYDAY =
 
@@ -375,6 +375,15 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 19. Frontend &rarr; Product Delivery Schedules
 
 == Changelog ==
+
+= v5.0.9 ( Jul 14, 2026 ) =
+- **new:** Vendors can now add a product without leaving the product list — a quick-create window collects just the essentials (name, image, price, category, and short description) and saves it as a draft.
+- **new:** Added a Tools page to the admin dashboard where admins can clear Dokan's caches and restore any missing Dokan pages in one click.
+- **fix:** Product names and categories now display safely on the admin vendor details page, so a vendor can no longer run malicious code in the admin area through a crafted product title.
+- **fix:** Vendors can no longer give their customers download access to another vendor's downloadable files.
+- **fix:** Vendors can no longer change another vendor's product attributes.
+- **fix:** Vendors can no longer change the status of another vendor's orders through bulk actions.
+- **fix:** Dokan's cache markers now expire on their own, so they no longer pile up in the database and slow down stores that run without an object cache.
 
 = v5.0.8 ( Jul 06, 2026 ) =
 - **fix:** Cleared the vendor dashboard sale price when the field is blanked so the product reverts to its regular price instead of saving a 0 price.

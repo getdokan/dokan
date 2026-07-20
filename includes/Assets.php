@@ -186,6 +186,8 @@ class Assets {
         }
 
         $user_id = dokan_get_current_user_id();
+        $one_step_product_create = 'on' === dokan_get_option( 'one_step_product_create', 'dokan_selling', 'on' );
+        $disable_product_popup   = $one_step_product_create || 'on' === dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' );
 
         $args['product_listing'] = array_merge(
             $args['product_listing'] ?? [],
@@ -193,6 +195,9 @@ class Assets {
                 'can_add_product'            => dokan_is_seller_enabled( $user_id ) && current_user_can( 'dokan_add_product' ),
                 'new_product_url'            => dokan_edit_product_url( 0, true ),
                 'is_legacy_editor_preferred' => dokan_get_container()->get( LegacySwitcher::class )->is_product_editor_legacy_preferred( $user_id ),
+                // When "One Page Product Creation" is enabled, the Add-new-product
+                // button opens the lightweight schema-driven quick-create modal.
+                'is_quick_create_enabled'    => ! $disable_product_popup,
             ]
         );
 
@@ -271,6 +276,11 @@ class Assets {
                 'path'      => '/changelog',
                 'name'      => 'ChangeLog',
                 'component' => 'ChangeLog',
+            ],
+            [
+                'path'      => '/tools',
+                'name'      => 'Tools',
+                'component' => 'Tools',
             ],
         ];
 

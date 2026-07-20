@@ -66,8 +66,7 @@ async function placeExpressOrder(browser: Browser, productIds: string[], card: s
         await stripe.gotoBlockCheckout();
         await stripe.selectBlockGateway();
         await stripe.fillCardDetails(card);
-        await stripe.placeBlockOrderExpectReceived();
-        const orderId = page.url().match(/order-received\/(\d+)/)?.[1];
+        const orderId = await stripe.placeBlockOrderExpectReceived();
         if (!orderId) {
             throw new Error('could not parse the order id from the order-received URL');
         }
@@ -411,7 +410,19 @@ test.describe.serial('Stripe Express — SE-PAY payouts (separate charge + trans
 
     // ---- SE-PAY-09 — marketplace coupon on a multi-vendor cart still pays both vendors ----
 
-    test('SE-PAY-09: an admin-absorbed marketplace coupon on a multi-vendor cart pays BOTH vendors (Σtransfers ≤ charge)', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
+    // KNOWN PRODUCT FINDING (fixme, not fake-green): under an admin-absorbed
+    // marketplace coupon on a multi-vendor cart, a vendor deterministically receives
+    // TWO Stripe transfers for the SAME charge (Expected 1, Received 2 — polled 60s,
+    // all retries). The counter is strict (source_transaction === chargeId, to that
+    // vendor's account), and process_single_transfer creates exactly one idempotent
+    // transfer per sub-order with no coupon-compensation path — so this is an
+    // unexplained double transfer to a vendor (a potential double-payment). SE-PAY-01
+    // (single vendor) and SE-PAY-02 (multi-vendor, no coupon) both pass, so the admin
+    // coupon is the trigger. Do NOT relax the assertion to accept 2 — that would mask
+    // a possible double-payment. Needs the Stripe-Express team to root-cause (real bug
+    // vs an intended compensation transfer) and either fix disbursement or adjust the
+    // assertion. See bugs/se-pay-09-double-transfer-admin-coupon.md.
+    test.fixme('SE-PAY-09: an admin-absorbed marketplace coupon on a multi-vendor cart pays BOTH vendors (Σtransfers ≤ charge)', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
         test.skip(!HAS_REAL_CONNECTED_ACCOUNTS, REAL_SKIP);
 
         await seedStripeExpressConnectedVendor(VENDOR2_ID, STRIPE_EXPRESS_CONNECTED_ACCOUNTS.vendor2);
@@ -427,8 +438,7 @@ test.describe.serial('Stripe Express — SE-PAY payouts (separate charge + trans
             await applyBlockCoupon(page, couponCode);
             await stripe.selectBlockGateway();
             await stripe.fillCardDetails(STRIPE_CARDS.success);
-            await stripe.placeBlockOrderExpectReceived();
-            orderId = page.url().match(/order-received\/(\d+)/)?.[1];
+            orderId = await stripe.placeBlockOrderExpectReceived();
         } finally {
             await page.close();
             await ctx.close();

@@ -152,8 +152,7 @@ test.describe.serial('Stripe Express — Product Advertisement (SE-PADV) @pro', 
             await page.waitForLoadState('domcontentloaded');
             await stripe.selectBlockGateway();
             await stripe.fillCardDetails(STRIPE_CARDS.success);
-            await stripe.placeBlockOrderExpectReceived();
-            orderId = page.url().match(/order-received\/(\d+)/)?.[1];
+            orderId = await stripe.placeBlockOrderExpectReceived();
         } finally {
             await page.close();
             await ctx.close();
