@@ -948,6 +948,18 @@ class ProductController extends DokanRESTController {
                             '',
                             true,
                             true,
+                            /**
+                             * Filters the maximum number of products the SKU search may match.
+                             *
+                             * Defaults to null (unlimited) so the result set is never truncated
+                             * before the vendor `author` constraint is applied -- a cap here would
+                             * silently hide a vendor's own matching product on a large catalogue.
+                             * Large marketplaces can trade that for a bounded query.
+                             *
+                             * @since DOKAN_SINCE
+                             *
+                             * @param int|null $limit Maximum matches, or null for unlimited.
+                             */
                             apply_filters( 'dokan_rest_product_search_limit', null )
                         )
                     )
@@ -960,9 +972,7 @@ class ProductController extends DokanRESTController {
                 }
 
                 // WP_Query ignores post__not_in once post__in is set, so honour `exclude` by hand.
-                if ( ! empty( $args['post__not_in'] ) ) {
-                    $search_ids = array_diff( $search_ids, array_map( 'absint', (array) $args['post__not_in'] ) );
-                }
+                $search_ids = array_diff( $search_ids, array_map( 'absint', (array) ( $args['post__not_in'] ?? [] ) ) );
 
                 // Never leave post__in empty — WP_Query would drop the constraint and return the whole catalogue.
                 $args['post__in'] = ! empty( $search_ids ) ? array_values( array_unique( $search_ids ) ) : [ 0 ];
