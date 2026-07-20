@@ -44,6 +44,11 @@ class RefundHandler implements Hookable {
         $refund_order = wc_get_order( $refund_id );
         $order  = wc_get_order( $order_id );
 
+        // Bail if either order could not be resolved; downstream calls are strictly typed and would throw.
+        if ( ! $refund_order instanceof \WC_Order_Refund || ! $order instanceof \WC_Order ) {
+            return;
+        }
+
         if ( $order_type_detector->get_type( $refund_order ) === OrderType::DOKAN_PARENT_ORDER_REFUND ) {
             return;
         }
@@ -65,6 +70,11 @@ class RefundHandler implements Hookable {
      * @return float
      */
     public function get_vendor_earning_in_refund( $refund_order, $order ): float {
+        // Guard against invalid orders; set_refund()/set_order() are strictly typed and would throw.
+        if ( ! $refund_order instanceof \WC_Order_Refund || ! $order instanceof \WC_Order ) {
+            return 0.0;
+        }
+
         $refund_commission = dokan_get_container()->get( OrderRefundCommission::class );
 
         $refund_commission->set_refund( $refund_order );

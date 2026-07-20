@@ -197,6 +197,8 @@ class OrderRefundCommission {
      * @return float
      */
     public function get_vendor_tax_refund(): float {
+        $this->ensure_calculated();
+
         return $this->get_tax_refund_for( self::SELLER );
     }
 
@@ -208,6 +210,8 @@ class OrderRefundCommission {
      * @return float
      */
     public function get_admin_tax_refund(): float {
+        $this->ensure_calculated();
+
         return $this->get_tax_refund_for( self::ADMIN );
     }
 
@@ -219,6 +223,8 @@ class OrderRefundCommission {
      * @return float
      */
     public function get_vendor_shipping_refund(): float {
+        $this->ensure_calculated();
+
         return $this->get_shipping_refund_for( self::SELLER );
     }
 
@@ -230,6 +236,8 @@ class OrderRefundCommission {
      * @return float
      */
     public function get_admin_shipping_refund(): float {
+        $this->ensure_calculated();
+
         return $this->get_shipping_refund_for( self::ADMIN );
     }
 
@@ -244,6 +252,8 @@ class OrderRefundCommission {
      * @return float
      */
     public function get_vendor_gateway_fee_refund(): float {
+        $this->ensure_calculated();
+
         return $this->get_gateway_fee_refund_for( self::SELLER );
     }
 
@@ -258,6 +268,8 @@ class OrderRefundCommission {
      * @return float
      */
     public function get_admin_gateway_fee_refund(): float {
+        $this->ensure_calculated();
+
         return $this->get_gateway_fee_refund_for( self::ADMIN );
     }
 
