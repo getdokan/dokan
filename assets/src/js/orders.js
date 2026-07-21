@@ -44,7 +44,43 @@ window.dokan.orderDetails = window.dokan.orderDetails || {
             }
         } );
     },
+
+    /**
+     * Emit an order-details event on both channels.
+     *
+     * Every event is published through the modern JavaScript hooks system and as a
+     * jQuery event on `document.body`, so extension code from either era can consume
+     * it. See docs/frontend/order-details-fragment.md.
+     *
+     * @param {string} name Event name.
+     * @param {Array}  args Positional payload.
+     */
+    emit( name, args ) {
+        if ( window.wp && window.wp.hooks && window.wp.hooks.doAction ) {
+            window.wp.hooks.doAction.apply( null, [ name ].concat( args ) );
+        }
+
+        if ( window.jQuery ) {
+            window.jQuery( document.body ).trigger( name, args );
+        }
+    },
 };
+
+// Re-initialise whenever the Vendor panel injects the fragment. Third parties bind to
+// the very same event.
+if ( ! window.dokan.orderDetails.isBound ) {
+    window.dokan.orderDetails.isBound = true;
+
+    if ( window.wp && window.wp.hooks && window.wp.hooks.addAction ) {
+        window.wp.hooks.addAction(
+            'dokan-order-details-fragment-rendered',
+            'dokan-lite/order-details',
+            function ( container ) {
+                window.dokan.orderDetails.init( container );
+            }
+        );
+    }
+}
 
 jQuery(function($) {
 
@@ -82,6 +118,15 @@ jQuery(function($) {
                 li.addClass('dokan-hide');
                 prev_li.find('label').replaceWith(response.data);
                 prev_li.find('a.dokan-edit-status').removeClass('dokan-hide');
+
+                // Anything showing this order's status elsewhere on the page — the
+                // Vendor panel header, for one — would otherwise contradict what the
+                // Vendor is looking at.
+                window.dokan.orderDetails.emit( 'dokan-order-details-status-changed', [
+                    parseInt( self.find( 'input[name="order_id"]' ).val(), 10 ),
+                    String( self.find( '#order_status' ).val() || '' ).replace( /^wc-/, '' ),
+                    response.data,
+                ] );
             } else {
                 dokan_sweetalert( response.data, {
                     icon: 'success',
