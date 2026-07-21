@@ -58,11 +58,17 @@ add_action( 'dokan_order_details_fragment_before', function ( $order ) { /* … 
 add_action( 'dokan_order_details_fragment_after',  function ( $order ) { /* … */ } );
 ```
 
-And a filter on the response payload itself:
+And filters on the response itself:
 
 ```php
-add_filter( 'dokan_rest_prepare_order_details_html', function ( $data, $order, $request ) {
+// The payload array.
+add_filter( 'dokan_rest_prepare_order_details_html_data', function ( $data, $order, $request ) {
     return $data; // [ 'html' => …, 'inline_scripts' => [ … ], 'order' => [ … ] ]
+}, 10, 3 );
+
+// The WP_REST_Response, if you need headers or links.
+add_filter( 'dokan_rest_prepare_order_details_html_object', function ( $response, $order, $request ) {
+    return $response;
 }, 10, 3 );
 ```
 
@@ -129,6 +135,10 @@ Two more events are available:
 | `dokan-order-details-fragment-rendered` | `( container, orderId )` | markup is on the page and inline data is executing |
 | `dokan-order-details-status-changed` | `( orderId, status, labelHtml )` | a Vendor changed the status inline and it persisted |
 
+These use the `dokan-` prefix rather than `dokan_`, matching the panel's existing
+JavaScript hooks (`dokan-dashboard-routes`, `dokan-header-actions`,
+`dokan-vendor-{route}-dashboard-header-backUrl`) that extensions already bind to.
+
 ## Passing render-time data to the browser
 
 `wp_add_inline_script()` from inside your template still works — the endpoint snapshots
@@ -165,9 +175,11 @@ Two things to know:
 - The payload is executed at **global scope**, as a real script element — not `eval`,
   which would function-scope it and leave your consuming script finding nothing.
 - **Do not declare render-time data with a top-level `let` or `const`.** Those bindings
-  cannot be redeclared, so when the Vendor opens a second order the new payload throws a
-  `SyntaxError` and your script keeps reading the *previous* order's data. Assign to
-  `window`, or use `var`.
+  live in the global lexical environment and outlive the script element that created
+  them, so when the Vendor opens a second order the new payload is refused with a
+  redeclaration `SyntaxError` and your script keeps reading the *previous* order's data.
+  Assign to `window`, or use `var`. The panel logs a console warning naming your handle
+  when it detects this, but it cannot fix it for you.
 
 Script tags embedded in your rendered HTML are also re-created so they execute — HTML
 assigned as a string never runs its scripts.

@@ -137,7 +137,7 @@ class OrderDetailsFragmentTest extends DokanTestCase {
     }
 
     /**
-     * A marketplace admin can open any Vendor order.
+     * A marketplace admin reaches any Vendor order's endpoint.
      *
      * @return void
      */
@@ -147,6 +147,50 @@ class OrderDetailsFragmentTest extends DokanTestCase {
         $response = $this->get_request( $this->fragment_route( $this->order_id ) );
 
         $this->assertEquals( 200, $response->get_status() );
+    }
+
+    /**
+     * What an admin actually SEES matches the legacy page, byte for byte in intent.
+     *
+     * The details template guards on vendor ownership itself
+     * (`templates/orders/details.php`), and that guard has no admin bypass — so an
+     * admin opening the legacy order details URL is shown a not-yours notice rather
+     * than the order. The endpoint reproduces that exactly.
+     *
+     * This is asserted rather than left implicit because a status-code-only test reads
+     * as "admins can view order details" when they cannot. Granting admins more than
+     * the legacy page grants them would be a behaviour change to the permission model,
+     * not a UI migration.
+     *
+     * @return void
+     */
+    public function test_admin_sees_exactly_what_the_legacy_page_shows_them(): void {
+        wp_set_current_user( $this->admin_id );
+
+        $fragment_html = $this->get_request( $this->fragment_route( $this->order_id ) )->get_data()['html'];
+
+        ob_start();
+        dokan_get_template_part( 'orders/details', '', [ 'order_id' => $this->order_id ] );
+        $legacy_html = ob_get_clean();
+
+        $this->assertStringContainsString( $legacy_html, $fragment_html, 'The fragment shows an admin the same thing the legacy template does' );
+    }
+
+    /**
+     * A Vendor sees the real order, not the ownership notice.
+     *
+     * Guards the inverse of the admin case: it would be easy to "fix" the admin path
+     * in a way that silently swaps every Vendor's details view for an error too.
+     *
+     * @return void
+     */
+    public function test_vendor_sees_the_order_not_an_ownership_notice(): void {
+        wp_set_current_user( $this->seller_id1 );
+
+        $html = $this->get_request( $this->fragment_route( $this->order_id ) )->get_data()['html'];
+
+        $this->assertStringContainsString( 'dokan-order-details-wrap', $html );
+        $this->assertStringNotContainsString( 'dokan-alert-danger', $html );
     }
 
     /**
@@ -291,8 +335,10 @@ class OrderDetailsFragmentTest extends DokanTestCase {
         $this->assertNotFalse( $observed['nonce_valid'], 'A valid order-view nonce should be present' );
 
         $this->assertFalse( dokan_is_seller_dashboard(), 'Dashboard detection should be restored after the render' );
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Asserting the superglobal was cleaned up is the point.
         $this->assertArrayNotHasKey( 'order_id', $_GET );
         $this->assertArrayNotHasKey( '_wpnonce', $_GET );
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
     }
 
     /**

@@ -22,6 +22,57 @@ const inlineScriptKey = ( script: OrderDetailsInlineScript ) =>
     `${ script.handle }|${ script.position }|${ script.code }`;
 
 /**
+ * Top-level lexical declarations found in a payload, e.g. `let vendorInfo = {…}`.
+ */
+const TOP_LEVEL_DECLARATION = /(?:^|\n)\s*(?:let|const)\s+([A-Za-z_$][\w$]*)/g;
+
+const topLevelBindings = ( code: string ): string[] => {
+    const names: string[] = [];
+    let match: RegExpExecArray | null;
+
+    TOP_LEVEL_DECLARATION.lastIndex = 0;
+
+    // eslint-disable-next-line no-cond-assign
+    while ( ( match = TOP_LEVEL_DECLARATION.exec( code ) ) !== null ) {
+        names.push( match[ 1 ] );
+    }
+
+    return names;
+};
+
+/**
+ * Warn when a payload cannot take effect because of a binding it already created.
+ *
+ * A top-level `let`/`const` executed at global scope lives in the global lexical
+ * environment and outlives the element that declared it. If a later order ships a
+ * different value under the same name, the browser refuses the whole script with a
+ * redeclaration `SyntaxError` and the consumer silently keeps reading the previous
+ * order's data. Nothing here can undo that binding — but a named warning turns a
+ * silent stale-data bug into one an extension author can act on.
+ *
+ * The fix is theirs: assign to `window`, or use `var`.
+ */
+const warnOnRedeclaration = (
+    handle: string,
+    previousCode: string,
+    nextCode: string
+) => {
+    const clashing = topLevelBindings( previousCode ).filter( ( name ) =>
+        topLevelBindings( nextCode ).includes( name )
+    );
+
+    if ( ! clashing.length || ! window.console?.warn ) {
+        return;
+    }
+
+    window.console.warn(
+        `[dokan] Inline data for "${ handle }" redeclares ${ clashing
+            .map( ( name ) => `\`${ name }\`` )
+            .join( ', ' ) } at global scope, so this order's value cannot replace the previous one. Assign to \`window\` or use \`var\` instead. See docs/frontend/order-details-fragment.md.`
+    );
+};
+
+/**
  * Put render-time inline data on the page as real script elements.
  *
  * Deliberately not `eval`: the known payloads declare top-level `let` bindings, which
@@ -46,6 +97,19 @@ const syncInlineScripts = ( scripts: OrderDetailsInlineScript[] ) => {
             // Already executing with exactly this code — leave it alone.
             wanted.delete( key );
             return;
+        }
+
+        const [ handle ] = key.split( '|' );
+        const replacement = Array.from( wanted.values() ).find(
+            ( script ) => script.handle === handle
+        );
+
+        if ( replacement ) {
+            warnOnRedeclaration(
+                handle,
+                element.textContent ?? '',
+                replacement.code
+            );
         }
 
         element.remove();
@@ -125,6 +189,14 @@ const OrderDetails = ( { params }: { params?: { orderId?: string } } ) => {
                 // be in place before anyone is told to re-initialise against it.
                 syncInlineScripts( fragment?.inline_scripts ?? [] );
 
+                // Announced before the markup lands so the panel header can show the
+                // order number and status while the fragment is still being inserted.
+                if ( fragment?.order ) {
+                    emitOrderDetailsEvent( ORDER_DETAILS_LOADED, [
+                        fragment.order,
+                    ] );
+                }
+
                 // Assigning server-rendered markup is the whole point of this
                 // component, not an oversight. The HTML comes from Dokan's own REST
                 // endpoint, which requires `dokan_view_order` plus ownership before it
@@ -134,12 +206,6 @@ const OrderDetails = ( { params }: { params?: { orderId?: string } } ) => {
                 container.innerHTML = fragment?.html ?? '';
 
                 executeEmbeddedScripts( container );
-
-                if ( fragment?.order ) {
-                    emitOrderDetailsEvent( ORDER_DETAILS_LOADED, [
-                        fragment.order,
-                    ] );
-                }
 
                 emitOrderDetailsEvent( ORDER_DETAILS_RENDERED, [
                     container,

@@ -856,18 +856,17 @@ class OrderController extends DokanRESTController {
             );
         }
 
-        $order = wc_get_order( absint( $request['id'] ) );
+        $order = $this->get_viewable_order( $request );
 
-        if ( ! $order || 'trash' === $order->get_status() ) {
-            return new WP_Error(
-                'dokan_rest_invalid_order_id',
-                __( 'Invalid Order ID.', 'dokan-lite' ),
-                array( 'status' => 404 )
-            );
+        if ( is_wp_error( $order ) ) {
+            return $order;
         }
 
         // Marketplace admins support Vendors and investigate disputes, so they reach
-        // any Vendor order — the same as the legacy page.
+        // any Vendor order — the same as the legacy page. Note that the details
+        // template applies its own vendor-ownership guard, so what an admin is shown
+        // is whatever the legacy page shows them; this endpoint neither grants nor
+        // removes access relative to that page.
         if ( current_user_can( 'manage_woocommerce' ) ) {
             return true;
         }
@@ -896,9 +895,31 @@ class OrderController extends DokanRESTController {
      * @return WP_REST_Response|WP_Error
      */
     public function get_order_details_html( $request ) {
+        $order = $this->get_viewable_order( $request );
+
+        if ( is_wp_error( $order ) ) {
+            return $order;
+        }
+
+        return $this->prepare_order_details_html_for_response( $order, $request );
+    }
+
+    /**
+     * Resolve the order a fragment request is asking for.
+     *
+     * A trashed order is treated as missing so the panel gets a clean error rather
+     * than a blank view.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Request $request Request object.
+     *
+     * @return WC_Order|WP_Error
+     */
+    protected function get_viewable_order( $request ) {
         $order = wc_get_order( absint( $request['id'] ) );
 
-        if ( ! $order ) {
+        if ( ! $order || 'trash' === $order->get_status() ) {
             return new WP_Error(
                 'dokan_rest_invalid_order_id',
                 __( 'Invalid Order ID.', 'dokan-lite' ),
@@ -906,8 +927,26 @@ class OrderController extends DokanRESTController {
             );
         }
 
-        $fragment    = dokan()->order_details_fragment->render( $order );
-        $date_create = $order->get_date_created();
+        return $order;
+    }
+
+    /**
+     * Shape the order details fragment into a response.
+     *
+     * Named for the fragment rather than overriding `prepare_item_for_response()`,
+     * because this controller's item is an order — a future caller reaching for the
+     * generic name must not be handed a rendered document instead.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Order        $order   Order being rendered.
+     * @param WP_REST_Request $request Request object.
+     *
+     * @return WP_REST_Response
+     */
+    public function prepare_order_details_html_for_response( $order, $request ) {
+        $fragment     = dokan()->order_details_fragment->render( $order );
+        $date_created = $order->get_date_created();
 
         $data = array(
             'html'           => $fragment['html'],
@@ -917,12 +956,12 @@ class OrderController extends DokanRESTController {
                 'number'       => (string) $order->get_order_number(),
                 'status'       => $order->get_status(),
                 'status_label' => dokan_get_order_status_translated( $order->get_status() ),
-                'date_created' => $date_create ? wc_rest_prepare_date_response( $date_create, false ) : null,
+                'date_created' => $date_created ? wc_rest_prepare_date_response( $date_created, false ) : null,
             ),
         );
 
         /**
-         * Filters the Vendor order details fragment response payload.
+         * Filters the Vendor order details fragment payload.
          *
          * @since DOKAN_SINCE
          *
@@ -930,9 +969,41 @@ class OrderController extends DokanRESTController {
          * @param WC_Order        $order   Order being rendered.
          * @param WP_REST_Request $request Request object.
          */
-        $data = apply_filters( 'dokan_rest_prepare_order_details_html', $data, $order, $request );
+        $data = apply_filters( 'dokan_rest_prepare_order_details_html_data', $data, $order, $request );
 
-        return rest_ensure_response( $data );
+        $response = rest_ensure_response( $data );
+        $response->add_links( $this->prepare_order_details_html_links( $order ) );
+
+        /**
+         * Filters the Vendor order details fragment response.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param WP_REST_Response $response Response object.
+         * @param WC_Order         $order    Order being rendered.
+         * @param WP_REST_Request  $request  Request object.
+         */
+        return apply_filters( 'dokan_rest_prepare_order_details_html_object', $response, $order, $request );
+    }
+
+    /**
+     * Links for the order details fragment.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WC_Order $order Order being rendered.
+     *
+     * @return array
+     */
+    protected function prepare_order_details_html_links( $order ) {
+        return array(
+            'self'  => array(
+                'href' => rest_url( sprintf( '/%s/%s/%d/details-html', $this->namespace, $this->base, $order->get_id() ) ),
+            ),
+            'order' => array(
+                'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->base, $order->get_id() ) ),
+            ),
+        );
     }
 
     /**

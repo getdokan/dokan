@@ -63,6 +63,9 @@ export const newOrdersSelectors = {
     detailsFragment: '.dokan-order-details-fragment',
     detailsWrapper: '.dokan-react-order-details',
     detailsRestPath: '/details-html',
+    // The details markup itself — identical on the legacy page and in the panel,
+    // which is the point.
+    legacyDetailsWrap: '.dokan-order-details-wrap',
     // Panel-owned chrome (src/dashboard/orders/OrderDetailsHeader.tsx).
     headerTitle: '.dokan-header-title-section h3',
     headerBadge: '.dokan-header-title-section [class*="dokan-badge"]',
@@ -96,6 +99,15 @@ export const statusChangeActions = [
 // come from @utils/dataViews; the REST-gated search/tab/settle orchestration
 // below is orders-specific and stays local.
 // ============================================
+/** Extra server-side fixtures a panel-details navigation can switch on. */
+export interface PanelDetailsOpts {
+    /**
+     * Register a stand-in extension that attaches render-time inline data and embeds a
+     * raw script tag — see tests/pw/mu-plugins/dokan-panel-order-details-toggle.php.
+     */
+    withInlineDataFixture?: boolean;
+}
+
 export class NewOrdersPage {
     readonly page: Page;
     readonly url = toPath('dashboard/new/#/orders');
@@ -455,8 +467,9 @@ export class NewOrdersPage {
         return toPath(`dashboard/new/?dokan_panel_order_details=${fragmentEnabled ? 1 : 0}#/orders`);
     }
 
-    panelDetailsUrl(orderId: string | number, fragmentEnabled = true): string {
-        return toPath(`dashboard/new/?dokan_panel_order_details=${fragmentEnabled ? 1 : 0}#/orders/${orderId}`);
+    panelDetailsUrl(orderId: string | number, fragmentEnabled = true, opts: PanelDetailsOpts = {}): string {
+        const fixture = opts.withInlineDataFixture ? '&dokan_fragment_fixture=1' : '';
+        return toPath(`dashboard/new/?dokan_panel_order_details=${fragmentEnabled ? 1 : 0}${fixture}#/orders/${orderId}`);
     }
 
     get detailsFragment(): Locator { return this.page.locator(newOrdersSelectors.detailsFragment).first(); }
@@ -465,6 +478,7 @@ export class NewOrdersPage {
     get headerBackButton(): Locator { return this.page.locator(newOrdersSelectors.headerBackButton).first(); }
     get orderNotes(): Locator { return this.page.locator(newOrdersSelectors.orderNote); }
     get statusLabel(): Locator { return this.page.locator(newOrdersSelectors.statusLabel).first(); }
+    get legacyDetailsWrap(): Locator { return this.page.locator(newOrdersSelectors.legacyDetailsWrap).first(); }
 
     /** Open the panel order list with the fragment route on (or off). */
     async gotoPanelList(fragmentEnabled = true): Promise<void> {
@@ -474,8 +488,8 @@ export class NewOrdersPage {
     }
 
     /** Deep-link straight to the panel details route. */
-    async gotoPanelDetails(orderId: string | number, fragmentEnabled = true): Promise<void> {
-        await this.page.goto(this.panelDetailsUrl(orderId, fragmentEnabled));
+    async gotoPanelDetails(orderId: string | number, fragmentEnabled = true, opts: PanelDetailsOpts = {}): Promise<void> {
+        await this.page.goto(this.panelDetailsUrl(orderId, fragmentEnabled, opts));
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForFragment();
     }
@@ -516,40 +530,53 @@ export class NewOrdersPage {
      */
     async changeStatusInFragment(status: string): Promise<void> {
         await this.page.locator(newOrdersSelectors.editStatusLink).first().click();
-        await this.page.locator(newOrdersSelectors.statusForm).first().waitFor({ state: 'visible', timeout: 10000 });
+        await expect(this.page.locator(newOrdersSelectors.statusForm).first()).toBeVisible({ timeout: 10000 });
         await this.page.locator(newOrdersSelectors.statusSelect).first().selectOption(status);
 
-        const request = this.page
-            .waitForRequest(r => r.url().includes('admin-ajax.php') && r.method() === 'POST', { timeout: 15000 })
+        // The legacy handler POSTs to admin-ajax and swaps the status label in place,
+        // so the response landing IS the observable outcome — no fixed wait needed.
+        const response = this.page
+            .waitForResponse(r => r.url().includes('admin-ajax.php') && r.request().method() === 'POST', { timeout: 15000 })
             .catch(() => null);
 
         await this.page.locator(newOrdersSelectors.statusSubmit).first().click();
-        await request;
-        await this.page.waitForTimeout(1000);
+        await response;
     }
 
     /** Add an order note from inside the fragment. */
     async addOrderNoteInFragment(note: string): Promise<void> {
+        const before = await this.orderNotes.count();
+
         await this.page.locator(newOrdersSelectors.addNoteContent).first().fill(note);
 
-        const request = this.page
-            .waitForRequest(r => r.url().includes('admin-ajax.php') && r.method() === 'POST', { timeout: 15000 })
+        const response = this.page
+            .waitForResponse(r => r.url().includes('admin-ajax.php') && r.request().method() === 'POST', { timeout: 15000 })
             .catch(() => null);
 
         await this.page.locator(newOrdersSelectors.addNoteSubmit).first().click();
-        await request;
-        await this.page.waitForTimeout(1000);
+        await response;
+
+        // The handler prepends the new <li>; wait on that rather than the clock.
+        await expect(this.orderNotes).toHaveCount(before + 1, { timeout: 10000 });
     }
 
     /** Delete the first order note from inside the fragment. */
     async deleteFirstOrderNoteInFragment(): Promise<void> {
-        const request = this.page
-            .waitForRequest(r => r.url().includes('admin-ajax.php') && r.method() === 'POST', { timeout: 15000 })
+        const before = await this.orderNotes.count();
+
+        const response = this.page
+            .waitForResponse(r => r.url().includes('admin-ajax.php') && r.request().method() === 'POST', { timeout: 15000 })
             .catch(() => null);
 
         await this.page.locator(newOrdersSelectors.deleteNote).first().click();
-        await request;
-        await this.page.waitForTimeout(1000);
+        await response;
+
+        await expect(this.orderNotes).toHaveCount(before - 1, { timeout: 10000 });
+    }
+
+    /** The search term currently applied to the list — used to prove Back preserved it. */
+    async getAppliedSearchTerm(): Promise<string> {
+        return (await this.searchInput.inputValue().catch(() => '')) ?? '';
     }
 
     /** Whether the documented re-init event reached both channels. */

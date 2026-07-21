@@ -208,34 +208,34 @@ function OrderList() {
 
     const [ view, setView ] = useState< OrderListView >(
         restoredState.restoreView ?? {
-        perPage: 10,
-        page: 1,
-        search: '',
-        type: 'table' as const,
-        status: 'all',
-        fields: fieldsColumns,
-        layout: {
-            styles: {
-                order: {
-                    width: '20%',
-                },
-                order_total: {
-                    width: '15%',
-                },
-                earning: {
-                    width: '15%',
-                },
-                status: {
-                    width: '15%',
-                },
-                customer: {
-                    width: '15%',
-                },
-                shipment: {
-                    width: '20%',
+            perPage: 10,
+            page: 1,
+            search: '',
+            type: 'table' as const,
+            status: 'all',
+            fields: fieldsColumns,
+            layout: {
+                styles: {
+                    order: {
+                        width: '20%',
+                    },
+                    order_total: {
+                        width: '15%',
+                    },
+                    earning: {
+                        width: '15%',
+                    },
+                    status: {
+                        width: '15%',
+                    },
+                    customer: {
+                        width: '15%',
+                    },
+                    shipment: {
+                        width: '20%',
+                    },
                 },
             },
-        },
         }
     );
 

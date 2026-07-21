@@ -267,28 +267,44 @@ test.describe('Orders (React) functionality', () => {
         test('vendor adds and deletes an order note in-panel', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             await orders.gotoPanelDetails(seededOrderId, true);
 
-            const before = await orders.orderNotes.count();
-            await orders.addOrderNoteInFragment(`Panel fragment note ${Date.now()}`);
-            expect(await orders.orderNotes.count(), 'note was added').toBeGreaterThan(before);
-
-            const afterAdd = await orders.orderNotes.count();
+            // The page object asserts the count moved, so reaching here is the result.
+            await orders.addOrderNoteInFragment(`Panel fragment note ${seededOrderId}`);
             await orders.deleteFirstOrderNoteInFragment();
-            expect(await orders.orderNotes.count(), 'note was deleted').toBeLessThan(afterAdd);
         });
 
-        test('back returns to the list and another order still opens', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+        test('back returns to the list with its filters still applied', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
             await orders.gotoPanelList(true);
-            await orders.openFirstOrderInPanel();
 
+            // Put the list into a non-default state, so "Back" restoring it is
+            // observable rather than indistinguishable from a fresh load.
+            await orders.fillSearch(String(seededOrderId));
+            const searchBefore = await orders.getAppliedSearchTerm();
+            expect(searchBefore, 'the list is in a filtered state to begin with').not.toBe('');
+
+            await orders.openFirstOrderInPanel();
             await orders.headerBackButton.click();
             await page.waitForURL(/#\/orders$/, { timeout: 15000 });
             await orders.waitForReady();
+
+            expect(await orders.getAppliedSearchTerm(), 'the search term survived the round trip').toBe(searchBefore);
             expect(await orders.getRowCount(), 'the list is back').toBeGreaterThan(0);
 
             // Re-opening must not double-bind or leave a stale fragment behind.
             const { reloaded } = await orders.openFirstOrderInPanel();
             expect(reloaded).toBe(false);
             await expect(orders.detailsFragment).toBeVisible();
+        });
+
+        test('render-time inline data reaches the browser as a real global', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            await orders.gotoPanelDetails(seededOrderId, true, { withInlineDataFixture: true });
+
+            // The fixture handle is registered on `init` and attaches its data during
+            // the render — the exact path the register-on-init rule exists to protect.
+            const injected = await page.evaluate(() => ( window as any ).dokanFragmentFixture);
+            expect(injected?.orderId, 'inline data is visible as a global').toBeTruthy();
+
+            const fromRawTag = await page.evaluate(() => ( window as any ).dokanFragmentRawScriptRan);
+            expect(fromRawTag, 'a script tag embedded in the rendered HTML executed').toBe(true);
         });
 
         test('with the kill-switch off the list navigates to the legacy page', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
@@ -304,7 +320,7 @@ test.describe('Orders (React) functionality', () => {
             await orders.gotoPanelList(false);
             await orders.viewFirstOrder();
 
-            await expect(page.locator('.dokan-order-details-wrap').first(), 'legacy details markup renders').toBeVisible();
+            await expect(orders.legacyDetailsWrap, 'legacy details markup renders').toBeVisible();
             expect(await orders.hasNoPhpFatal(), 'no PHP fatal').toBe(true);
         });
     });

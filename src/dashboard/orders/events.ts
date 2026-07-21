@@ -1,4 +1,4 @@
-import { doAction } from '@wordpress/hooks';
+import { addAction, doAction, removeAction } from '@wordpress/hooks';
 
 /**
  * The public re-init contract for the Vendor order details fragment.
@@ -39,12 +39,12 @@ export const ORDER_DETAILS_STATUS_CHANGED =
 
 type JQueryLike = ( target: unknown ) => {
     trigger: ( name: string, args: unknown[] ) => void;
-    on: ( name: string, handler: ( ...args: unknown[] ) => void ) => void;
-    off: ( name: string, handler: ( ...args: unknown[] ) => void ) => void;
 };
 
 const getJQuery = (): JQueryLike | undefined =>
     ( window as unknown as { jQuery?: JQueryLike } ).jQuery;
+
+let subscriptionCount = 0;
 
 /**
  * Emit one of the order-details events on both channels.
@@ -59,13 +59,14 @@ export const emitOrderDetailsEvent = ( name: string, args: unknown[] ) => {
 };
 
 /**
- * Subscribe to an order-details event fired on either channel.
+ * Subscribe to an order-details event.
  *
- * Listens on the jQuery channel only, because every emitter fires both — subscribing to
- * both would run the handler twice.
+ * Listens on the hooks channel only. Every emitter publishes on both, so subscribing to
+ * both would run the handler twice — and the hooks channel is the one panel code can
+ * count on, since it is imported rather than assumed present on `window`.
  *
  * @param name    Event name.
- * @param handler Receives the payload without jQuery's leading event object.
+ * @param handler Receives the event payload.
  *
  * @return Unsubscribe function.
  */
@@ -73,15 +74,11 @@ export const onOrderDetailsEvent = (
     name: string,
     handler: ( ...args: unknown[] ) => void
 ) => {
-    const jQuery = getJQuery();
+    // Hook namespaces are unique per subscription so two mounted listeners on the same
+    // event cannot unregister each other.
+    const namespace = `dokan-lite/order-details-${ ++subscriptionCount }`;
 
-    if ( ! jQuery ) {
-        return () => undefined;
-    }
+    addAction( name, namespace, handler );
 
-    const wrapped = ( ...args: unknown[] ) => handler( ...args.slice( 1 ) );
-
-    jQuery( document.body ).on( name, wrapped );
-
-    return () => jQuery( document.body ).off( name, wrapped );
+    return () => removeAction( name, namespace );
 };
