@@ -1,0 +1,704 @@
+# Source chains — curated manifest for the settings graph overlay.
+#
+# A Source chain is the ordered set of Sources a config value resolves through, most
+# specific first. Exactly one Source wins; values never merge. See CONTEXT.md and
+# docs/adr/0005-source-chains-resolve-by-precedence.md.
+#
+# WHY THIS FILE IS HAND-WRITTEN
+# Nine chains exist. Only `commission` has formal structure (AbstractStrategy + set_next())
+# that a scanner could detect. The other eight are inline if-ladders with no shared base
+# class, no naming convention, and six different Defer encodings between them. A scanner
+# would find 1 of 9 while looking authoritative — the same silent-undercount failure that
+# makes an impact-analysis answer worse than no answer. So: written by hand, reviewed by
+# humans, anchors verified in CI by bin/graph/check_anchors.py.
+#
+# It also captures edges no scanner could reach at all. The subscription module writes into
+# commission's vendor Source via $vendor->save_commission_settings() — a domain method, not
+# a meta call. See [[chain.written_by]] under commission.
+#
+# MAINTAINING
+# `anchor` is "<repo>/<path>:<line>". CI verifies the file exists and the line still
+# contains `anchor_contains`. When an anchor drifts, fix it here — a stale anchor means the
+# chain description is no longer trustworthy, and this file's only value is trustworthiness.
+# When you add a chain #10, add it here; nothing will find it for you.
+
+schema_version = 1
+
+
+# ----------------------------------------------------------------------------- discrepancies
+# Places where two mechanisms that should agree do not. The scanner detects one class on its
+# own — grant_without_revoke, where saving a setting grants a capability nothing ever revokes,
+# so "off" stops meaning off. These are the ones it cannot prove and a human has to assert.
+#
+# Each needs an anchor + anchor_contains like everything else here, so check_anchors.py fails
+# when the code moves out from under the claim. A discrepancy that silently stops being true
+# is worse than one never recorded: someone will "fix" a bug that no longer exists.
+#
+# Recorded, not fixed. Fixing them is a separate decision with separate blast radius.
+#
+# REMOVED 2026-07-15: `defer_predicates_disagree` (was severity=high). It claimed manual_order
+# skips its subscription_pack Source for a vendor whose `_dokan_enable_manual_order` row EXISTS
+# but holds ''. Both predicates were quoted correctly — Manager.php:83 tests '' === $capability,
+# module.php:2535 tests metadata_exists() — but the state is UNREACHABLE: the only writer,
+# Settings::save_enable_manual_order_for_vendor (Settings.php:131), runs every input through
+# wc_bool_to_string() and can only ever emit 'yes' or 'no'. A discrepancy nobody can trigger is
+# not a bug, and this file's whole argument is that a stale "this is broken" note is worse than
+# none. It was found by adversarial review, not by the anchor check — anchors verify WHERE a
+# claim points, never WHETHER it is true. Do not re-add without a reachable repro.
+
+[[discrepancy]]
+type = "two_paths_one_question"
+severity = "medium"
+chain = "manual_order"
+setting = "dokan_selling.allow_vendor_create_manual_order"
+anchor = "dokan-pro/includes/Dashboard/ManualOrders/Settings.php:169"
+anchor_contains = "$is_enable = dokan_pro()->manual_orders->is_enabled_globally();"
+summary = """
+Two code paths answer "can this vendor create manual orders" and only one walks the whole
+chain. Manager::is_enabled_for_vendor() (Manager.php:72) resolves vendor -> pack -> global via
+the dokan_manual_orders_is_enabled filter. Settings::add_manual_order_capability_to_vendor_shop_data()
+(Settings.php:168) re-implements vendor + global INLINE and fires a different filter
+(dokan_vendor_enable_manual_order) that has no subscribers — so the pack Source never applies
+there. A vendor on a pack granting manual orders reads enabled via Manager and disabled via
+the store REST payload.
+"""
+
+[[discrepancy]]
+type = "filter_return_discarded"
+severity = "medium"
+chain = "commission"
+setting = "postmeta._per_product_admin_commission"
+anchor = "dokan-lite/includes/Commission/Settings/Product.php:69"
+anchor_contains = "dokan_product_commission_settings_before_save"
+summary = """
+Product.php:69 assigns apply_filters(...) to $settings (plural) then persists from $setting
+(singular) — so the dokan_product_commission_settings_before_save filter's return value is
+never saved. The filtered value IS passed to the after-save action, so a third party
+modifying a product's commission sees their change reported back as applied while the
+unfiltered value is written. The three sibling savers (Vendor.php:91, OrderItem.php:80,
+GlobalSetting.php:80) all assign back to $setting correctly — this is a one-character typo in
+1 of 4, not a convention.
+"""
+
+
+# ---------------------------------------------------------------------------------- labels
+# Node `id` is the physical address — a fact, extracted, never editorialised. Node `label` is
+# the canonical domain term. That split is what lets the graph be honest AND readable at once:
+# CONTEXT.md tells us to avoid "commission type" and "rate", but the db keys really ARE
+# commission_type and _dokan_commission_rate. The glossary governs prose and labels; it does
+# not get to rename a legacy column.
+#
+# Only settings whose canonical term differs from their key need an entry. Everything else
+# falls back to the field id.
+
+[labels]
+"dokan_selling.commission_type" = "Commission formula (global)"
+"dokan_selling.admin_percentage" = "Commission percentage (global)"
+"dokan_selling.additional_fee" = "Commission flat fee (global)"
+"dokan_selling.commission_category_based_values" = "Category-based Commission formula (global)"
+"dokan_selling.shipping_fee_recipient" = "Fee recipient: shipping"
+"dokan_selling.tax_fee_recipient" = "Fee recipient: tax"
+"dokan_selling.shipping_tax_fee_recipient" = "Fee recipient: shipping tax"
+"dokan_withdraw.withdraw_date_limit" = "Withdraw threshold (global)"
+
+"usermeta.dokan_admin_percentage" = "Commission percentage (vendor)"
+"usermeta.dokan_admin_percentage_type" = "Commission formula (vendor)"
+"usermeta.dokan_admin_additional_fee" = "Commission flat fee (vendor)"
+"usermeta.admin_category_commission" = "Category-based Commission (vendor)"
+"usermeta.withdraw_date_limit" = "Withdraw threshold (vendor)"
+
+"postmeta._per_product_admin_commission" = "Commission percentage (product)"
+"postmeta._per_product_admin_commission_type" = "Commission formula (product)"
+"postmeta._per_product_admin_additional_fee" = "Commission flat fee (product)"
+
+"itemmeta._dokan_commission_rate" = "Commission percentage (order item)"
+"itemmeta._dokan_commission_type" = "Commission formula (order item)"
+"itemmeta._dokan_additional_fee" = "Commission flat fee (order item)"
+"itemmeta._dokan_commission_source" = "Winning Source (order item)"
+
+
+# ---------------------------------------------------------------------------- commission
+# The only formally-structured chain, and the deepest. Also the only one with a persisted
+# record of which Source won: _dokan_commission_source. That field is where the domain term
+# "Source" comes from.
+
+[[chain]]
+id = "commission"
+label = "Commission"
+repo = "dokan-lite"
+resolver = "dokan-lite/includes/Commission/Strategies/AbstractStrategy.php:55"
+anchor_contains = "get_eligible_strategy():"
+defer_predicate = "trim( $percentage ) === '' && trim( $flat ) === ''"
+defer_anchor = "dokan-lite/includes/Commission/Model/Setting.php:289"
+source_meta = "_dokan_commission_source"
+notes = """
+Resolution freezes on first calculate(), not at order creation: AbstractStrategy
+::save_settings_to_order_item() (:100) stamps the winning Source onto item meta, after
+which rank 1 is always applicable and the chain never re-walks. Called from exactly one
+place — OrderLineItemCommission.php:127 — which means any read path that calculates also
+writes.
+
+Category-based is resolved WITHIN ranks 3 and 4, not as its own Source: both branch on
+type === 'category_based' and pick ['items'][cat] falling back to ['all'].
+
+Variations resolve to their parent product (Settings/Product.php:22) — there is no
+per-variation commission.
+"""
+
+  [[chain.level]]
+  rank = 1
+  source = "order_item"
+  store = "itemmeta._dokan_commission_rate"
+  also = [
+    "itemmeta._dokan_commission_type",
+    "itemmeta._dokan_additional_fee",
+    "itemmeta._dokan_commission_source",
+    "itemmeta._dokan_commission_meta",
+  ]
+  defer = "trim() === ''"
+  anchor = "dokan-lite/includes/Commission/Settings/OrderItem.php:43"
+  anchor_contains = "_dokan_commission_rate', t"
+
+  [[chain.level]]
+  rank = 2
+  source = "product"
+  store = "postmeta._per_product_admin_commission"
+  also = [
+    "postmeta._per_product_admin_commission_type",
+    "postmeta._per_product_admin_additional_fee",
+  ]
+  defer = "trim() === ''"
+  anchor = "dokan-lite/includes/Commission/Settings/Product.php:41"
+  anchor_contains = "_per_product_admin_commission', t"
+
+  [[chain.level]]
+  rank = 3
+  source = "vendor"
+  store = "usermeta.dokan_admin_percentage"
+  also = [
+    "usermeta.dokan_admin_percentage_type",
+    "usermeta.dokan_admin_additional_fee",
+    "usermeta.admin_category_commission",
+  ]
+  defer = "trim() === ''"
+  anchor = "dokan-lite/includes/Commission/Settings/Vendor.php:39"
+  anchor_contains = "dokan_admin_percentage', t"
+
+  [[chain.level]]
+  rank = 4
+  source = "global"
+  setting = "dokan_selling.admin_percentage"
+  also_settings = [
+    "dokan_selling.commission_type",
+    "dokan_selling.additional_fee",
+    "dokan_selling.commission_category_based_values",
+  ]
+  defer = "dokan_get_option default of '' is falsy-empty"
+  anchor = "dokan-lite/includes/Commission/Settings/GlobalSetting.php:37"
+  anchor_contains = "admin_percentage',"
+  notes = """
+  commission_type is never genuinely empty at read time on the admin UI path:
+  Admin/Settings.php:76 filters dokan_get_settings_values to default it to 'fixed'.
+  """
+
+  [[chain.level]]
+  rank = 5
+  source = "default"
+  store = ""
+  defer = "terminal — never defers"
+  anchor = "dokan-lite/includes/Commission/Strategies/DefaultStrategy.php:48"
+  anchor_contains = "set_flat"
+  notes = "Forces flat=0/percentage=0 and returns null from get_next(), terminating."
+
+  # Not a Source. The subscription module resolves its own snapshot then MATERIALIZES the
+  # result into rank 3's store, so a subscription silently rewrites a vendor's commission
+  # without joining this chain. Invisible to any scanner: it calls a domain method, not a
+  # meta API. This is the single most important hand-declared edge in this file.
+  [[chain.written_by]]
+  store = "usermeta.dokan_admin_percentage"
+  via = "$vendor->save_commission_settings()"
+  anchor = "dokan-pro/modules/subscription/module.php:1121"
+  anchor_contains = "save_commission_settings"
+  chain_ref = "subscription_snapshot"
+
+
+# ------------------------------------------------------------------------- manual_order
+# Precedence is built by seed-then-overwrite rather than first-applicable, and rank 2 is
+# spliced in by a filter from a different module. Structurally inverted from commission.
+
+[[chain]]
+id = "manual_order"
+label = "Manual order capability"
+repo = "dokan-pro"
+resolver = "dokan-pro/includes/Dashboard/ManualOrders/Manager.php:98"
+anchor_contains = "dokan_manual_orders_is_enabled"
+defer_predicate = "'' === $capability   (Manager)   BUT   metadata_exists( 'user', ... )   (subscription) — see notes, these disagree"
+notes = """
+Seed-then-override, not first-applicable: Manager::is_enabled() resolves vendor-or-global
+first, then the dokan_manual_orders_is_enabled filter lets the subscription pack override —
+but only when the vendor Defers. Net precedence is still vendor > pack > global.
+
+TWO FILTERS EXIST AND ONLY ONE IS A CHAIN. Do not confuse them:
+  - dokan_manual_orders_is_enabled     Manager.php:98   — the real capability check. THIS one.
+  - dokan_vendor_enable_manual_order   Settings.php:184 — builds the store REST payload,
+    duplicating rank 1 + rank 3 inline (Settings.php:169-172). ZERO subscribers, so the pack
+    Source does NOT apply on that path. A vendor on a pack that grants manual orders reads
+    as enabled via Manager and as disabled via shop_data.
+
+DEFER SIGNALS DISAGREE WITHIN THIS CHAIN — a latent bug, recorded not fixed:
+  - Manager.php:83        Defers on '' === $capability          (empty value)
+  - module.php:2534       Defers on metadata_exists( 'user' )   (row exists)
+A vendor whose meta row exists but holds '' expressed no preference. Manager correctly falls
+back to global; the subscription callback then sees metadata_exists() === true, concludes the
+vendor already decided, and SKIPS the pack Source. So an empty-but-present vendor row
+silently disables pack-granted manual orders.
+
+NOT A SOURCE: modules/vendor-staff/module.php:490 also subscribes, but it is an AND-gate
+($is_enabled && $vendor_id matches && $staff_user->has_cap('dokan_manage_manual_order')).
+It can only narrow the answer to off, never supply a value. Gates are not precedence.
+"""
+
+  [[chain.level]]
+  rank = 1
+  source = "vendor"
+  store = "usermeta._dokan_enable_manual_order"
+  defer = "'' === capability"
+  anchor = "dokan-pro/includes/Dashboard/ManualOrders/Manager.php:83"
+  anchor_contains = "'' !== $capability"
+  notes = "Meta key comes from Settings::get_meta_key(), not a literal — invisible to a key scan."
+
+  [[chain.level]]
+  rank = 2
+  source = "subscription_pack"
+  store = "postmeta._dokan_enable_manual_order"
+  defer = "metadata_exists(user) || enable_pricing off || no package || ! product->meta_exists()"
+  anchor = "dokan-pro/modules/subscription/module.php:2531"
+  anchor_contains = "is_manual_order_enabled("
+  gate_setting = "dokan_product_subscription.enable_pricing"
+  notes = """
+  Spliced in via dokan_manual_orders_is_enabled (registered module.php:178). Gated on
+  dokan_product_subscription.enable_pricing — a setting from an unrelated section that can
+  disable this entire Source. The pack value lives on the product_pack product, written at
+  Settings.php:154; the field is the 'Enable Order Creation' checkbox (Settings.php:106).
+  """
+
+  [[chain.level]]
+  rank = 3
+  source = "global"
+  setting = "dokan_selling.allow_vendor_create_manual_order"
+  defer = "terminal — defaults to 'off'"
+  anchor = "dokan-pro/includes/Dashboard/ManualOrders/Manager.php:109"
+  anchor_contains = "allow_vendor_create_manual_order"
+
+
+# -------------------------------------------------------------------- withdraw_threshold
+# The closest cousin to commission: same empty-string Defer, hand-rolled.
+
+[[chain]]
+id = "withdraw_threshold"
+label = "Withdraw threshold"
+repo = "dokan-lite"
+resolver = "dokan-lite/includes/functions.php:3933"
+anchor_contains = "dokan_get_withdraw_threshold"
+defer_predicate = "get_user_meta( $id, 'withdraw_date_limit', true ) === ''"
+notes = """
+The vendor meta is written only by Pro (Admin/Admin.php:784), which stores '' to mean
+defer — so Lite owns the read and Pro owns the write. Trailing `absint()` means a resolved
+0 and a deferred-to-0 are indistinguishable downstream.
+"""
+
+  [[chain.level]]
+  rank = 1
+  source = "vendor"
+  store = "usermeta.withdraw_date_limit"
+  defer = "!== '' "
+  anchor = "dokan-lite/includes/functions.php:3934"
+  anchor_contains = "withdraw_date_limit', true ) "
+
+  [[chain.level]]
+  rank = 2
+  source = "global"
+  setting = "dokan_withdraw.withdraw_date_limit"
+  defer = "terminal — default 0"
+  anchor = "dokan-lite/includes/functions.php:3937"
+  anchor_contains = "dokan_get_option( 'w"
+
+
+# ----------------------------------------------------------------------- fee recipients
+# Three near-identical chains, each duplicated inline rather than shared. All three WRITE
+# BACK on a read miss: the getter resolves from global, then persists the result to order
+# meta and calls $order->save(). A read that mutates. That write-back is what makes them a
+# freeze, exactly like commission's rank 1 — reached by a different mechanism.
+
+[[chain]]
+id = "shipping_fee_recipient"
+label = "Shipping fee recipient"
+repo = "dokan-lite"
+resolver = "dokan-lite/includes/Fees.php:155"
+anchor_contains = "get_shipping_fee_recipient"
+defer_predicate = "! $order->get_meta( 'shipping_fee_recipient', true )"
+writes_back_on_miss = true
+notes = "Fees.php:170-171 persists the resolved value to order meta and saves the order."
+
+  [[chain.level]]
+  rank = 1
+  source = "order"
+  store = "ordermeta.shipping_fee_recipient"
+  defer = "falsy"
+  anchor = "dokan-lite/includes/Fees.php:164"
+  anchor_contains = "shipping_fee_recipient', t"
+
+  [[chain.level]]
+  rank = 2
+  source = "global"
+  setting = "dokan_selling.shipping_fee_recipient"
+  defer = "terminal — default 'seller'"
+  anchor = "dokan-lite/includes/Fees.php:169"
+  anchor_contains = "dokan_get_option( 'shipping_f"
+
+[[chain]]
+id = "tax_fee_recipient"
+label = "Tax fee recipient"
+repo = "dokan-lite"
+resolver = "dokan-lite/includes/Fees.php:188"
+anchor_contains = "get_tax_fee_recipient( $order "
+defer_predicate = "! $order->get_meta( 'tax_fee_recipient', true )"
+writes_back_on_miss = true
+
+  [[chain.level]]
+  rank = 1
+  source = "order"
+  store = "ordermeta.tax_fee_recipient"
+  defer = "falsy"
+  anchor = "dokan-lite/includes/Fees.php:197"
+  anchor_contains = "$saved_tax_recipient = $order->get_meta( 'tax_fee_recipient', true );"
+
+  [[chain.level]]
+  rank = 2
+  source = "global"
+  setting = "dokan_selling.tax_fee_recipient"
+  defer = "terminal — default 'seller'"
+  anchor = "dokan-lite/includes/Fees.php:202"
+  anchor_contains = "dokan_get_option( 't"
+
+[[chain]]
+id = "shipping_tax_fee_recipient"
+label = "Shipping tax fee recipient"
+repo = "dokan-lite"
+resolver = "dokan-lite/includes/Fees.php:220"
+anchor_contains = "get_shipping_tax_fee_recipient"
+defer_predicate = "! $order->get_meta( 'shipping_tax_fee_recipient', true )"
+writes_back_on_miss = true
+notes = """
+Three levels, not two: its global read passes get_tax_fee_recipient() as the DEFAULT
+(Fees.php:227), so it chains into the tax_fee_recipient chain rather than terminating.
+The only chain in this file that composes with another.
+"""
+
+  [[chain.level]]
+  rank = 1
+  source = "order"
+  store = "ordermeta.shipping_tax_fee_recipient"
+  defer = "falsy"
+  anchor = "dokan-lite/includes/Fees.php:229"
+  anchor_contains = "shipping_tax_fee_recipient', $shipping_tax_recipient, $"
+
+  [[chain.level]]
+  rank = 2
+  source = "global"
+  setting = "dokan_selling.shipping_tax_fee_recipient"
+  defer = "falls through to the tax_fee_recipient chain"
+  anchor = "dokan-lite/includes/Fees.php:228"
+  anchor_contains = "dokan_get_option( 'shipping_t"
+
+  [[chain.level]]
+  rank = 3
+  source = "chain:tax_fee_recipient"
+  store = ""
+  defer = "terminal — delegates"
+  anchor = "dokan-lite/includes/Fees.php:227"
+  anchor_contains = "get_tax_fee_recipient( $order-"
+
+
+# ------------------------------------------------------------------------- delivery_time
+# The only chain whose Defer is gated: a vendor override is ignored entirely unless an
+# admin setting switches overrides on. Two conditions, not one.
+
+[[chain]]
+id = "delivery_time"
+label = "Delivery time settings"
+repo = "dokan-pro"
+resolver = "dokan-pro/modules/delivery-time/includes/Helper.php:238"
+anchor_contains = "get_delivery_time_settings( $vendor_id ) "
+defer_predicate = "allow_vendor_override_settings !== 'on' || ! isset( $vendor['delivery_day'] )"
+
+  [[chain.level]]
+  rank = 1
+  source = "vendor"
+  store = "usermeta._dokan_vendor_delivery_time_settings"
+  defer = "gate off OR key unset"
+  anchor = "dokan-pro/modules/delivery-time/includes/Helper.php:248"
+  anchor_contains = "_dokan_vendor_delivery_time_settings"
+
+  [[chain.level]]
+  rank = 2
+  source = "global"
+  setting = "dokan_delivery_time.delivery_support"
+  also_settings = [
+    "dokan_delivery_time.order_per_slot",
+    "dokan_delivery_time.time_slot_minutes",
+    "dokan_delivery_time.allow_vendor_override_settings",
+  ]
+  defer = "terminal"
+  anchor = "dokan-pro/modules/delivery-time/includes/Helper.php:773"
+  anchor_contains = "allow_vendor_override_settings"
+
+
+# ------------------------------------------------------------- subscription_snapshot
+# Feeds commission rather than resolving against it — see commission's [[chain.written_by]].
+
+[[chain]]
+id = "subscription_snapshot"
+label = "Subscription commission snapshot"
+repo = "dokan-pro"
+resolver = "dokan-pro/modules/subscription/module.php:1105"
+anchor_contains = "meta_exists( '_n"
+defer_predicate = "! $order->meta_exists( $key )"
+notes = """
+Freezes the pack's commission onto the order at purchase, then writes the resolved values
+into commission's rank 3 via $vendor->save_commission_settings() (module.php:1121). The
+snapshot is the chain; the materialization is the edge that matters.
+"""
+
+  [[chain.level]]
+  rank = 1
+  source = "order"
+  store = "ordermeta._subscription_product_admin_commission"
+  also = [
+    "ordermeta._subscription_product_admin_commission_type",
+    "ordermeta._subscription_product_admin_additional_fee",
+    "ordermeta._subscription_product_admin_category_based_commission",
+    "ordermeta._no_of_product",
+  ]
+  defer = "! meta_exists()"
+  anchor = "dokan-pro/modules/subscription/module.php:1106"
+  anchor_contains = "_subscription_product_admin_commission' "
+
+  [[chain.level]]
+  rank = 2
+  source = "subscription_pack"
+  store = "postmeta._subscription_product_admin_commission"
+  defer = "terminal"
+  anchor = "dokan-pro/modules/subscription/module.php:1106"
+  anchor_contains = "$product->get_meta( '_subscription_product_admin_commission', true );"
+
+
+# -------------------------------------------------------------------------- behaviors
+# The use-case layer. A chain answers "which value wins"; a behavior answers "what does a
+# real person experience because of it" — the missing hop between a setting and its point.
+# Worked example: dokan_delivery_time.selection_required has a read-radius of 2, near the
+# bottom of the audit, yet it is the switch for "customers must pick a delivery slot before
+# they can pay". Radius measures code; behaviors measure consequence. Both are needed.
+#
+# Hand-written for the same reason chains are: "this validation callback blocks checkout"
+# is not derivable from an AST. Same trust contract too — every anchor (including each
+# gate/shape and the outcome) is verified by check_anchors.py.
+#
+# Vocabulary:
+#   gate   — a setting that turns the behavior on/off or mandatory/optional. `via_chain`
+#            means the value resolves through that Source chain (so a vendor can override);
+#            ABSENT via_chain on a behavior that HAS a chain is itself a fact worth reading:
+#            the setting is admin-only and the vendor override does NOT apply to it.
+#   shape  — a setting that parameterizes the behavior without gating it.
+#   outcome— what a successful pass of the behavior persists.
+#
+# Rendered by impact.py: per-setting under USE CASES, or the full story via
+# `impact.py <behavior-id>` / `impact.py --behaviors`.
+
+[[behavior]]
+id = "checkout.delivery_slot_selection"
+label = "Customer picks a delivery date & time slot at checkout"
+actor = "customer"
+surface = "checkout — classic and block"
+chain = "delivery_time"
+anchor = "dokan-pro/modules/delivery-time/includes/Frontend.php:268"
+anchor_contains = "validate_delivery_time_slot_args"
+outcome = """
+One row per vendor in {prefix}dokan_delivery_time (order_id, vendor_id, date, slot,
+delivery_type) plus delivery meta on each suborder — the same table order_per_slot counts
+against, so every selection consumes slot capacity.
+"""
+outcome_anchor = "dokan-pro/modules/delivery-time/includes/Helper.php:206"
+outcome_anchor_contains = "prefix . 'dokan_delivery_time',"
+notes = """
+The three-actor story this behavior encodes: admin enables Delivery Time and sets the
+schedule (chain rank 2). If admin also switches on allow_vendor_override_settings, a vendor
+who saves their own schedule takes over (rank 1 — see behavior
+vendor_dashboard.delivery_schedule_override). Whichever Source wins is what the customer
+sees; selection_required then decides whether they can skip it. Note selection_required is
+NOT in the chain: a vendor can override the schedule but can never make selection optional —
+that is admin's call alone.
+"""
+
+  [[behavior.gate]]
+  question = "Does the delivery box appear for this vendor's items?"
+  setting = "dokan_delivery_time.delivery_support"
+  via_chain = "delivery_time"
+  when = """
+  The winning Source has delivery_support on — or the vendor has store pickup active.
+  Vendors failing both are dropped from the box; if every vendor drops (or the cart is all
+  virtual/downloadable), the box never renders and nothing downstream happens.
+  """
+  anchor = "dokan-pro/modules/delivery-time/includes/Helper.php:814"
+  anchor_contains = "'on' === $vendor_delivery_options['delivery_support']"
+  also_anchors = [
+    { anchor = "dokan-pro/modules/delivery-time/includes/Helper.php:888", anchor_contains = "|| $is_delivery_time_active ) {" },
+  ]
+
+  [[behavior.gate]]
+  question = "Is selecting a date & slot mandatory?"
+  setting = "dokan_delivery_time.selection_required"
+  when = """
+  'on' (default): checkout refuses to place the order until every participating vendor
+  group has a date + slot (+ pickup location when the type is store-pickup). 'off': the box
+  still renders but the customer may skip it.
+  """
+  note = """
+  Enforced only on the two checkout paths (classic + block). Orders created via REST or
+  admin never hit this gate. Admin-only: not part of the delivery_time chain, so a vendor
+  cannot loosen it.
+  """
+  anchor = "dokan-pro/modules/delivery-time/includes/Frontend.php:269"
+  anchor_contains = "'selection_required', 'dokan_delivery_time', 'on' )"
+  also_anchors = [
+    { anchor = "dokan-pro/modules/delivery-time/includes/Blocks/CartCheckoutBlockSupport/BlockSupportIntegration.php:104", anchor_contains = "'on' === dokan_get_option( 'selection_required'" },
+  ]
+
+  [[behavior.shape]]
+  setting = "dokan_delivery_time.time_slot_minutes"
+  via_chain = "delivery_time"
+  effect = "slot granularity — each delivery day's open window is chopped into N-minute slots"
+  anchor = "dokan-pro/modules/delivery-time/includes/Helper.php:282"
+  anchor_contains = "$delivery_settings['time_slot_minutes']"
+
+  [[behavior.shape]]
+  setting = "dokan_delivery_time.order_per_slot"
+  via_chain = "delivery_time"
+  effect = "per-slot capacity — a slot stops being offered once it already holds N orders; 0 = unlimited"
+  anchor = "dokan-pro/modules/delivery-time/includes/Helper.php:141"
+  anchor_contains = "0 === (int) $vendor_order_per_slot"
+
+  [[behavior.shape]]
+  setting = "dokan_delivery_time.delivery_buffer_unit"
+  via_chain = "delivery_time"
+  effect = """
+  earliest selectable date/slot — 'days' blocks the next preorder_date days outright;
+  'hours' additionally filters same-day slots against now + delivery_buffer_value hours
+  """
+  anchor = "dokan-pro/modules/delivery-time/includes/Helper.php:325"
+  anchor_contains = "function get_earliest_delivery_datetime"
+
+[[behavior]]
+id = "vendor_dashboard.delivery_schedule_override"
+label = "Vendor configures their own delivery schedule"
+actor = "vendor"
+surface = "vendor dashboard -> Settings -> Delivery Time"
+chain = "delivery_time"
+anchor = "dokan-pro/modules/delivery-time/includes/Vendor.php:104"
+anchor_contains = "! Helper::vendor_can_override_settings()"
+outcome = """
+usermeta._dokan_vendor_delivery_time_settings (+ regenerated _dokan_vendor_delivery_time_slots)
+— rank 1 of the delivery_time chain. From the first save with a delivery_day onward, the
+vendor's schedule, not the admin's, is what checkout.delivery_slot_selection shows customers.
+"""
+outcome_anchor = "dokan-pro/modules/delivery-time/includes/Vendor.php:482"
+outcome_anchor_contains = "_dokan_vendor_delivery_time_settings', $data"
+
+  [[behavior.gate]]
+  question = "May this vendor override the admin schedule at all?"
+  setting = "dokan_delivery_time.allow_vendor_override_settings"
+  when = """
+  'on': Delivery Time appears in the vendor settings menu and full payloads save. 'off':
+  menu entry hidden, settings page renders nothing, React route unregistered, and BOTH save
+  paths (form + REST) silently discard everything except delivery_support.
+  """
+  anchor = "dokan-pro/modules/delivery-time/includes/Vendor.php:104"
+  anchor_contains = "! Helper::vendor_can_override_settings()"
+  also_anchors = [
+    { anchor = "dokan-pro/modules/delivery-time/includes/Vendor.php:271", anchor_contains = "! Helper::vendor_can_override_settings()" },
+  ]
+
+[[behavior]]
+id = "vendor_order.delivery_time_update"
+label = "Vendor updates the delivery time on an existing order"
+actor = "vendor"
+surface = "vendor dashboard -> order details -> Delivery Time box"
+chain = "delivery_time"
+anchor = "dokan-pro/modules/delivery-time/includes/Vendor.php:633"
+anchor_contains = "function save_vendor_delivery_time_box"
+outcome = """
+The order's row in {prefix}dokan_delivery_time is deleted and re-inserted with the new
+date/slot/type (so capacity moves with it), order meta is rewritten, and
+dokan_after_vendor_update_order_delivery_info (Vendor.php:665) triggers the
+'Dokan Vendor Update Order Delivery Time' WC email to the order's CUSTOMER
+(UpdateVendorOrderDeliveryTime.php:38, enabled by default).
+"""
+outcome_anchor = "dokan-pro/modules/delivery-time/includes/Helper.php:605"
+outcome_anchor_contains = "delete( $wpdb->prefix . 'dokan_delivery_time'"
+
+  [[behavior.gate]]
+  question = "Does the Delivery Time box render on the vendor's order details page?"
+  setting = "dokan_delivery_time.delivery_support"
+  via_chain = "delivery_time"
+  when = """
+  The winning Source has delivery_support on, or store pickup is active for the vendor.
+  Neither -> the box never renders and the order's delivery time is vendor-immutable.
+  """
+  anchor = "dokan-pro/modules/delivery-time/includes/Vendor.php:583"
+  anchor_contains = "! $is_delivery_time_active && ! $is_store_pickup_active"
+
+  [[behavior.shape]]
+  setting = "dokan_delivery_time.order_per_slot"
+  via_chain = "delivery_time"
+  effect = "same per-slot capacity as checkout applies to the replacement slot the vendor picks"
+  anchor = "dokan-pro/modules/delivery-time/includes/Vendor.php:591"
+  anchor_contains = "isset( $vendor_delivery_options['order_per_slot'] )"
+
+  [[behavior.shape]]
+  setting = "dokan_delivery_time.preorder_date"
+  via_chain = "delivery_time"
+  effect = """
+  blocks the next N days in the vendor-side picker. Days mode only: unlike checkout, this
+  box has no hours-mode branch, so with delivery_buffer_unit = 'hours' the vendor picker
+  blocks nothing while checkout does.
+  """
+  anchor = "dokan-pro/modules/delivery-time/includes/Vendor.php:592"
+  anchor_contains = "$vendor_delivery_options['preorder_date'] > 0"
+
+
+# ------------------------------------------------- subscription_allowed_categories
+
+[[chain]]
+id = "subscription_allowed_categories"
+label = "Subscription allowed categories"
+repo = "dokan-pro"
+resolver = "dokan-pro/modules/subscription/module.php:783"
+anchor_contains = "vendor_allowed_categories"
+defer_predicate = "empty( $override_cat )"
+
+  [[chain.level]]
+  rank = 1
+  source = "vendor"
+  store = "usermeta.vendor_allowed_categories"
+  defer = "empty()"
+  anchor = "dokan-pro/modules/subscription/module.php:783"
+  anchor_contains = "vendor_allowed_categories"
+
+  [[chain.level]]
+  rank = 2
+  source = "subscription_pack"
+  store = ""
+  defer = "terminal"
+  anchor = "dokan-pro/modules/subscription/module.php:784"
+  anchor_contains = "get_allowed_product_categories"
+  notes = "Resolved by a domain method, not a meta read — no store node."
