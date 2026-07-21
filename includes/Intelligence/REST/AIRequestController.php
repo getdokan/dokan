@@ -101,13 +101,12 @@ class AIRequestController extends DokanBaseVendorController {
             $prefix      = $manager->get_type_prefix( $type );
             $provider_id = $manager->active_engine( $type );
             $model_id    = dokan_get_option( 'dokan_ai_' . $prefix . $provider_id . '_model', 'dokan_ai', '' );
+            $model_id    = is_scalar( $model_id ) ? (string) $model_id : '';
             $provider    = $manager->get_provider( $provider_id );
 
             if ( ! $provider instanceof AIProviderInterface ) {
                 return $this->configuration_error( __( 'The configured AI provider is no longer available. Kindly reach out to Marketplace Owner.', 'dokan-lite' ) );
             }
-
-            $model_id = is_scalar( $model_id ) ? (string) $model_id : '';
 
             // A model id saved before the provider retired that model must not break generation.
             $model = $provider instanceof Provider
