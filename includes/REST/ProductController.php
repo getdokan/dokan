@@ -932,50 +932,39 @@ class ProductController extends DokanRESTController {
             ];
         }
 
-        // WP_Query's `s` only covers title/excerpt/content, so a vendor cannot find a product by its SKU.
-        // Delegate to WooCommerce's own product search — the same call WP Admin makes — so SKU, numeric ID
-        // and variation-SKU-to-parent lookups all behave identically to the WordPress product list.
-        // Runs last so it intersects with, rather than being merged into, the include/exclude/on_sale sets above.
-        if ( ! empty( $request['search'] ) && 'product' === $this->post_type ) {
+        // WP_Query's `s` can't match SKUs — reuse WP Admin's WooCommerce product search so SKU, numeric-ID and variation-SKU lookups behave identically here.
+        if ( isset( $request['search'] ) && '' !== $request['search'] && 'product' === $this->post_type ) {
             $data_store = \WC_Data_Store::load( 'product' );
 
             if ( $data_store->has_callable( 'search_products' ) ) {
-                $search_ids = array_filter(
-                    array_map(
-                        'absint',
-                        $data_store->search_products(
-                            wc_clean( wp_unslash( $request['search'] ) ),
-                            '',
-                            true,
-                            true,
-                            /**
-                             * Filters the maximum number of products the SKU search may match.
-                             *
-                             * Defaults to null (unlimited) so the result set is never truncated
-                             * before the vendor `author` constraint is applied -- a cap here would
-                             * silently hide a vendor's own matching product on a large catalogue.
-                             * Large marketplaces can trade that for a bounded query.
-                             *
-                             * @since DOKAN_SINCE
-                             *
-                             * @param int|null $limit Maximum matches, or null for unlimited.
-                             */
-                            apply_filters( 'dokan_rest_product_search_limit', null )
-                        )
-                    )
-                );
+                /**
+                 * Filters the maximum number of products the product search may match.
+                 *
+                 * Null (default) keeps the match set unbounded so a vendor's own product is never
+                 * truncated away before the `author` constraint applies; large marketplaces can
+                 * bound the query at the cost of that guarantee.
+                 *
+                 * @since DOKAN_SINCE
+                 *
+                 * @param int|null $limit Maximum matches, or null for unlimited.
+                 */
+                $search_limit = apply_filters( 'dokan_rest_product_search_limit', null );
 
-                // Any post__in already set (the `include` param, or the on_sale filter) must narrow the
-                // search result, never widen it.
+                // All statuses searched — vendors must find their drafts; the query's `author` arg keeps results vendor-scoped.
+                $search_ids = array_filter( wp_parse_id_list( $data_store->search_products( wc_clean( $request['search'] ), '', true, true, $search_limit ) ) );
+
+                // Search runs last so any post__in set above (`include` param, on_sale) narrows the matches instead of being widened by them.
                 if ( ! empty( $args['post__in'] ) ) {
-                    $search_ids = array_intersect( $search_ids, array_map( 'absint', (array) $args['post__in'] ) );
+                    $search_ids = array_intersect( $search_ids, wp_parse_id_list( $args['post__in'] ) );
                 }
 
                 // WP_Query ignores post__not_in once post__in is set, so honour `exclude` by hand.
-                $search_ids = array_diff( $search_ids, array_map( 'absint', (array) ( $args['post__not_in'] ?? [] ) ) );
+                if ( ! empty( $args['post__not_in'] ) ) {
+                    $search_ids = array_diff( $search_ids, wp_parse_id_list( $args['post__not_in'] ) );
+                }
 
-                // Never leave post__in empty — WP_Query would drop the constraint and return the whole catalogue.
-                $args['post__in'] = ! empty( $search_ids ) ? array_values( array_unique( $search_ids ) ) : [ 0 ];
+                // A zero-match search must return nothing — an empty post__in would drop the constraint and return the whole catalogue.
+                $args['post__in'] = ! empty( $search_ids ) ? $search_ids : [ 0 ];
 
                 unset( $args['s'] );
             }
@@ -984,7 +973,8 @@ class ProductController extends DokanRESTController {
         /**
          * Filter the WP_Query args before executing the product listing query.
          * Allows Pro modules (e.g. product-adv, brands, subscription) to extend
-         * filtering for both v1 and v2 REST endpoints.
+         * filtering for both v1 and v2 REST endpoints. Note: `post__in` may already
+         * carry the search/on_sale constraints — callbacks should narrow it, never widen it.
          *
          * @since 5.0.0
          *
