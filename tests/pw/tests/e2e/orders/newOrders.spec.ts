@@ -186,6 +186,129 @@ test.describe('Orders (React) functionality', () => {
         });
     });
 
+    // ============================================
+    // VENDOR — panel order details (server-rendered HTML fragment)
+    //
+    // This is the only seam that can observe re-binding after injection. The HTML is
+    // perfect either way; a server-side test cannot tell whether the handlers are
+    // actually attached. The kill-switch ships OFF, so every case states which side of
+    // it it wants (see tests/pw/mu-plugins/dokan-panel-order-details-toggle.php).
+    // ============================================
+    test.describe('vendor order details in the panel', () => {
+        let ctx: BrowserContext;
+        let page: Page;
+        let orders: NewOrdersPage;
+
+        test.beforeEach(async ({ browser }) => {
+            ctx = await browser.newContext({ storageState: v1 });
+            page = await ctx.newPage();
+            orders = new NewOrdersPage(page);
+        });
+
+        test.afterEach(async () => {
+            await page?.close();
+            await ctx?.close();
+        });
+
+        test('vendor opens order details in-panel without a document reload', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            await orders.gotoPanelList(true);
+
+            const { reloaded } = await orders.openFirstOrderInPanel();
+
+            expect(reloaded, 'opening an order does not reload the document').toBe(false);
+            await expect(orders.detailsFragment, 'server-rendered details markup is on the page').toBeVisible();
+            expect(page.url(), 'URL is the panel details route').toMatch(/#\/orders\/\d+/);
+            expect(await orders.hasNoPhpFatal(), 'no PHP fatal').toBe(true);
+        });
+
+        test('vendor deep-links straight to the panel details route', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            await orders.gotoPanelDetails(seededOrderId, true);
+
+            await expect(orders.detailsFragment).toBeVisible();
+            expect(await orders.hasNoPhpFatal(), 'no PHP fatal').toBe(true);
+        });
+
+        test('panel header shows the order number and status', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            await orders.gotoPanelDetails(seededOrderId, true);
+
+            await expect(orders.headerTitle).toContainText(`#${seededOrderId}`);
+            await expect(orders.headerBadge, 'header carries a status badge').toBeVisible();
+        });
+
+        test('the re-init event fires on both channels after injection', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            const fired = await orders.captureReInitEvent(seededOrderId);
+
+            expect(fired.viaHooks, 'fired through the JS hooks system').toBe(true);
+            expect(fired.viaJQuery, 'fired as a jQuery event on the body').toBe(true);
+        });
+
+        test('vendor changes status inline and the header badge follows', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            const [, , orderId] = await new ApiUtils(await request.newContext()).createOrderWithStatus(
+                process.env.PRODUCT_ID as string,
+                { ...payloads.createOrder, line_items: [{ product_id: process.env.PRODUCT_ID, quantity: 1 }] },
+                'wc-processing',
+                payloads.vendorAuth,
+            );
+
+            await orders.gotoPanelDetails(orderId, true);
+            const before = (await orders.headerBadge.textContent())?.trim();
+
+            await orders.changeStatusInFragment('wc-completed');
+
+            await expect(orders.statusLabel, 'the fragment reflects the new status').toContainText(/completed/i);
+            await expect
+                .poll(async () => (await orders.headerBadge.textContent())?.trim(), {
+                    message: 'the panel header badge follows the inline change',
+                    timeout: 10000,
+                })
+                .not.toBe(before);
+        });
+
+        test('vendor adds and deletes an order note in-panel', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            await orders.gotoPanelDetails(seededOrderId, true);
+
+            const before = await orders.orderNotes.count();
+            await orders.addOrderNoteInFragment(`Panel fragment note ${Date.now()}`);
+            expect(await orders.orderNotes.count(), 'note was added').toBeGreaterThan(before);
+
+            const afterAdd = await orders.orderNotes.count();
+            await orders.deleteFirstOrderNoteInFragment();
+            expect(await orders.orderNotes.count(), 'note was deleted').toBeLessThan(afterAdd);
+        });
+
+        test('back returns to the list and another order still opens', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            await orders.gotoPanelList(true);
+            await orders.openFirstOrderInPanel();
+
+            await orders.headerBackButton.click();
+            await page.waitForURL(/#\/orders$/, { timeout: 15000 });
+            await orders.waitForReady();
+            expect(await orders.getRowCount(), 'the list is back').toBeGreaterThan(0);
+
+            // Re-opening must not double-bind or leave a stale fragment behind.
+            const { reloaded } = await orders.openFirstOrderInPanel();
+            expect(reloaded).toBe(false);
+            await expect(orders.detailsFragment).toBeVisible();
+        });
+
+        test('with the kill-switch off the list navigates to the legacy page', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            await orders.gotoPanelList(false);
+            await orders.viewFirstOrder();
+
+            expect(page.url(), 'landed on the legacy order details URL').toContain('order_id=');
+            expect(page.url(), 'did not enter the panel details route').not.toMatch(/#\/orders\/\d+/);
+            expect(await orders.hasNoPhpFatal(), 'legacy page has no PHP fatal').toBe(true);
+        });
+
+        test('the legacy order details URL still renders unchanged', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
+            await orders.gotoPanelList(false);
+            await orders.viewFirstOrder();
+
+            await expect(page.locator('.dokan-order-details-wrap').first(), 'legacy details markup renders').toBeVisible();
+            expect(await orders.hasNoPhpFatal(), 'no PHP fatal').toBe(true);
+        });
+    });
+
     // Bulk status change mutates real orders, so each case seeds its own orders
     // and operates only on those (selected by id), never select-all.
     test.describe('vendor bulk actions', () => {

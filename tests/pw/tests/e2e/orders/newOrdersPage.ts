@@ -52,6 +52,33 @@ export const newOrdersSelectors = {
     // The orders list REST endpoint the React hook fetches from
     // (useOrders → apiFetch '/dokan/v1/orders'). Used to wait on refetches.
     ordersRestPath: '/dokan/v1/orders',
+
+    // ============================================
+    // PANEL ORDER DETAILS
+    // The details view is server-rendered PHP injected into the SPA as an HTML
+    // fragment, so these selectors are the LEGACY markup's — deliberately the
+    // same ones the legacy page uses. If they drift, the compatibility promise
+    // has been broken.
+    // ============================================
+    detailsFragment: '.dokan-order-details-fragment',
+    detailsWrapper: '.dokan-react-order-details',
+    detailsRestPath: '/details-html',
+    // Panel-owned chrome (src/dashboard/orders/OrderDetailsHeader.tsx).
+    headerTitle: '.dokan-header-title-section h3',
+    headerBadge: '.dokan-header-title-section [class*="dokan-badge"]',
+    headerBackButton: '.dokan-header-actions button:has-text("Back")',
+    // Inline status change.
+    editStatusLink: 'a.dokan-edit-status',
+    statusForm: 'form#dokan-order-status-form',
+    statusSelect: 'form#dokan-order-status-form #order_status',
+    statusSubmit: 'form#dokan-order-status-form input[type="submit"]',
+    statusLabel: 'ul.order-status label.dokan-label',
+    // Order notes.
+    addNoteForm: 'form#add-order-note',
+    addNoteContent: '#add-note-content',
+    addNoteSubmit: 'form#add-order-note input[name="add_order_note"]',
+    orderNote: '#dokan-order-notes ul.order_notes li.note',
+    deleteNote: '#dokan-order-notes a.delete_note',
 } as const;
 
 // Status-change menu items DataViews exposes (depend on the current status).
@@ -413,6 +440,147 @@ export class NewOrdersPage {
             await this.confirmDialog.waitFor({ state: 'hidden', timeout: 10000 }).catch(() => undefined);
         }
         await this.waitForListSettled();
+    }
+
+    // ============================================
+    // PANEL ORDER DETAILS
+    //
+    // The `dokan_vendor_panel_order_details_enabled` kill-switch ships OFF, so every
+    // helper here states which side of it it wants. The E2E mu-plugin
+    // (tests/pw/mu-plugins/dokan-panel-order-details-toggle.php) reads
+    // `?dokan_panel_order_details=` and drives the filter from it, so the two states
+    // are exercised per-navigation with no global state to reset between tests.
+    // ============================================
+    panelListUrl(fragmentEnabled = true): string {
+        return toPath(`dashboard/new/?dokan_panel_order_details=${fragmentEnabled ? 1 : 0}#/orders`);
+    }
+
+    panelDetailsUrl(orderId: string | number, fragmentEnabled = true): string {
+        return toPath(`dashboard/new/?dokan_panel_order_details=${fragmentEnabled ? 1 : 0}#/orders/${orderId}`);
+    }
+
+    get detailsFragment(): Locator { return this.page.locator(newOrdersSelectors.detailsFragment).first(); }
+    get headerTitle(): Locator { return this.page.locator(newOrdersSelectors.headerTitle).first(); }
+    get headerBadge(): Locator { return this.page.locator(newOrdersSelectors.headerBadge).first(); }
+    get headerBackButton(): Locator { return this.page.locator(newOrdersSelectors.headerBackButton).first(); }
+    get orderNotes(): Locator { return this.page.locator(newOrdersSelectors.orderNote); }
+    get statusLabel(): Locator { return this.page.locator(newOrdersSelectors.statusLabel).first(); }
+
+    /** Open the panel order list with the fragment route on (or off). */
+    async gotoPanelList(fragmentEnabled = true): Promise<void> {
+        await this.page.goto(this.panelListUrl(fragmentEnabled));
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.waitForReady();
+    }
+
+    /** Deep-link straight to the panel details route. */
+    async gotoPanelDetails(orderId: string | number, fragmentEnabled = true): Promise<void> {
+        await this.page.goto(this.panelDetailsUrl(orderId, fragmentEnabled));
+        await this.page.waitForLoadState('domcontentloaded');
+        await this.waitForFragment();
+    }
+
+    /** Wait until the server-rendered details markup is actually on the page. */
+    async waitForFragment(timeoutMs = 30000): Promise<void> {
+        await this.reactRoot.waitFor({ state: 'visible', timeout: timeoutMs });
+        await this.detailsFragment.waitFor({ state: 'visible', timeout: timeoutMs });
+    }
+
+    /**
+     * Open the first order from the list without a document reload.
+     *
+     * Asserting "no reload" needs a marker that a navigation would destroy, so we
+     * stamp one on `window` and check it survived.
+     */
+    async openFirstOrderInPanel(): Promise<{ reloaded: boolean }> {
+        await this.page.evaluate(() => {
+            ( window as any ).__dokanNoReloadMarker = true;
+        });
+
+        await this.openRowActionMenuByIndex(0);
+        await Promise.all([
+            this.page.waitForURL(/#\/orders\/\d+/, { timeout: 15000 }).catch(() => undefined),
+            this.clickActionMenuItem('View'),
+        ]);
+        await this.waitForFragment();
+
+        const survived = await this.page.evaluate(() => Boolean(( window as any ).__dokanNoReloadMarker));
+        return { reloaded: !survived };
+    }
+
+    /**
+     * Change the order status from inside the fragment.
+     *
+     * This is the flow no server-side test can see: the handler has to be bound to
+     * markup that did not exist when the script ran.
+     */
+    async changeStatusInFragment(status: string): Promise<void> {
+        await this.page.locator(newOrdersSelectors.editStatusLink).first().click();
+        await this.page.locator(newOrdersSelectors.statusForm).first().waitFor({ state: 'visible', timeout: 10000 });
+        await this.page.locator(newOrdersSelectors.statusSelect).first().selectOption(status);
+
+        const request = this.page
+            .waitForRequest(r => r.url().includes('admin-ajax.php') && r.method() === 'POST', { timeout: 15000 })
+            .catch(() => null);
+
+        await this.page.locator(newOrdersSelectors.statusSubmit).first().click();
+        await request;
+        await this.page.waitForTimeout(1000);
+    }
+
+    /** Add an order note from inside the fragment. */
+    async addOrderNoteInFragment(note: string): Promise<void> {
+        await this.page.locator(newOrdersSelectors.addNoteContent).first().fill(note);
+
+        const request = this.page
+            .waitForRequest(r => r.url().includes('admin-ajax.php') && r.method() === 'POST', { timeout: 15000 })
+            .catch(() => null);
+
+        await this.page.locator(newOrdersSelectors.addNoteSubmit).first().click();
+        await request;
+        await this.page.waitForTimeout(1000);
+    }
+
+    /** Delete the first order note from inside the fragment. */
+    async deleteFirstOrderNoteInFragment(): Promise<void> {
+        const request = this.page
+            .waitForRequest(r => r.url().includes('admin-ajax.php') && r.method() === 'POST', { timeout: 15000 })
+            .catch(() => null);
+
+        await this.page.locator(newOrdersSelectors.deleteNote).first().click();
+        await request;
+        await this.page.waitForTimeout(1000);
+    }
+
+    /** Whether the documented re-init event reached both channels. */
+    async captureReInitEvent(orderId: string | number): Promise<{ viaHooks: boolean; viaJQuery: boolean }> {
+        await this.page.goto(this.panelListUrl(true));
+        await this.page.waitForLoadState('domcontentloaded');
+
+        await this.page.evaluate(() => {
+            const w = window as any;
+            w.__dokanReInit = { viaHooks: false, viaJQuery: false };
+
+            w.wp?.hooks?.addAction?.(
+                'dokan-order-details-fragment-rendered',
+                'dokan-e2e/probe',
+                () => {
+                    w.__dokanReInit.viaHooks = true;
+                }
+            );
+
+            w.jQuery?.(document.body).on('dokan-order-details-fragment-rendered', () => {
+                w.__dokanReInit.viaJQuery = true;
+            });
+        });
+
+        await this.page.evaluate(( id ) => {
+            window.location.hash = `#/orders/${ id }`;
+        }, String(orderId));
+
+        await this.waitForFragment();
+
+        return this.page.evaluate(() => ( window as any ).__dokanReInit);
     }
 
     /** Click the first row's "View" action and wait for navigation away from the list. */
