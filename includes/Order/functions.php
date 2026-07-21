@@ -983,10 +983,10 @@ function dokan_apply_bulk_order_status_change( $postdata ) {
 /**
  * Whether the Vendor panel opens order details in-panel.
  *
- * When this is off — the default until dokan-pro's companion change ships — the panel's
- * order list navigates to the legacy order details URL exactly as before. The legacy URL
- * keeps working either way, so flipping this back is free: no data migration, no routing
- * consequences, and links already sitting in Vendors' inboxes keep resolving.
+ * On by default: a Vendor clicking an order in the panel stays in the panel. Turning it
+ * off sends the order list back to full-page navigation to the legacy order details URL.
+ * That URL never stops working, so reverting is free — no data migration, no routing
+ * consequences, and links already sitting in Vendors' inboxes keep resolving either way.
  *
  * @since DOKAN_SINCE
  *
@@ -1002,5 +1002,5 @@ function dokan_is_vendor_panel_order_details_enabled(): bool {
      *
      * @param bool $enabled Whether the in-panel order details route is enabled.
      */
-    return (bool) apply_filters( 'dokan_vendor_panel_order_details_enabled', false );
+    return (bool) apply_filters( 'dokan_vendor_panel_order_details_enabled', true );
 }

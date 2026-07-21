@@ -41,9 +41,11 @@ Consequences worth knowing before "fixing" any of this:
   Hence the rule published to extension authors: register script handles on `init`,
   enqueue them on `wp_enqueue_scripts`.
 - **The feature is behind `dokan_vendor_panel_order_details_enabled`**, which defaults
-  off until dokan-pro's companion change ships. Without it the delivery-time panel
-  renders dead and unstyled, refund requests submit an empty order id, and the shipment
-  date picker never initialises.
+  on. It stays as the escape hatch for any store whose theme or third-party plugin
+  misbehaves; returning it to false restores full-page navigation with no data or
+  routing consequences. Pro's contributions — the delivery-time panel, refund requests
+  and the shipment date picker — depend on dokan-pro's companion change to be fully
+  functional inside a fragment.
 
 Three alternatives were rejected. A **React rewrite** would silently delete every hooked
 contribution — affected Vendors would get no error, just missing features. A **Gutenberg

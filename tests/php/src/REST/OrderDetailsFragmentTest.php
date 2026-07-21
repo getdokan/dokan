@@ -425,6 +425,22 @@ class OrderDetailsFragmentTest extends DokanTestCase {
     }
 
     /**
+     * The panel opens order details in-panel unless a store turns it off.
+     *
+     * Pinned as a test because this default is the whole feature switching on for
+     * Vendors, and the escape hatch has to keep working.
+     *
+     * @return void
+     */
+    public function test_panel_order_details_is_enabled_by_default_and_can_be_turned_off(): void {
+        $this->assertTrue( dokan_is_vendor_panel_order_details_enabled() );
+
+        add_filter( 'dokan_vendor_panel_order_details_enabled', '__return_false' );
+
+        $this->assertFalse( dokan_is_vendor_panel_order_details_enabled(), 'The kill-switch must still restore full-page navigation' );
+    }
+
+    /**
      * The response shape is the API contract.
      *
      * @return void

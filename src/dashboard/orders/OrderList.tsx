@@ -64,9 +64,9 @@ declare const window: Window & {
 /**
  * Whether order details opens inside the panel.
  *
- * Mirrors the `dokan_vendor_panel_order_details_enabled` PHP filter. While it is off —
- * the default until dokan-pro's companion change ships — the list navigates to the
- * legacy order details URL exactly as it always has.
+ * Mirrors the `dokan_vendor_panel_order_details_enabled` PHP filter, which is on by
+ * default. Turned off, the list navigates to the legacy order details URL exactly as it
+ * always has.
  */
 const isPanelRouteEnabled = () =>
     Boolean( window?.dokanFrontend?.order_details?.panel_route_enabled );

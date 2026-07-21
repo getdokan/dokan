@@ -210,8 +210,8 @@ The legacy URL never stops working, so this is free to flip:
 add_filter( 'dokan_vendor_panel_order_details_enabled', '__return_false' );
 ```
 
-It currently defaults **off** and will default on once dokan-pro's companion change has
-shipped.
+It defaults **on**. The legacy order details URL keeps working indefinitely, so turning
+it off has no data or routing consequences.
 
 ## Reference
 

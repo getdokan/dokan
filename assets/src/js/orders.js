@@ -75,7 +75,16 @@ if ( ! window.dokan.orderDetails.isBound ) {
         window.wp.hooks.addAction(
             'dokan-order-details-fragment-rendered',
             'dokan-lite/order-details',
-            function ( container ) {
+            function ( container, orderId ) {
+                // The refund cluster below reads its order id from `dokan_refund`,
+                // which is built once at page load from the request. On the legacy
+                // page that request carries `order_id`; in the Vendor panel it does
+                // not, so the id would be empty and a refund would be submitted
+                // against nothing. The fragment knows which order it just rendered.
+                if ( window.dokan_refund && orderId ) {
+                    window.dokan_refund.post_id = orderId;
+                }
+
                 window.dokan.orderDetails.init( container );
             }
         );
