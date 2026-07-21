@@ -30,17 +30,24 @@ add_filter(
 );
 
 /**
- * Stand-in for a third-party extension, enabled with `?dokan_fragment_fixture=1`.
+ * Stand-in for a third-party extension, enabled by the `dokan_fragment_fixture` cookie.
  *
  * Exercises the two things only a browser can confirm: that render-time inline data
  * attached to an `init`-registered handle reaches the page as a real global, and that a
  * script tag embedded in the rendered markup actually executes once injected (HTML
  * assigned as a string never runs its scripts).
+ *
+ * A cookie rather than a query argument, because the fragment is rendered by a *separate*
+ * REST request. Query arguments on the panel page URL never reach it; cookies do.
  */
+function dokan_test_fragment_fixture_enabled(): bool {
+    return isset( $_COOKIE['dokan_fragment_fixture'] );
+}
+
 add_action(
     'init',
     static function () {
-        if ( ! isset( $_GET['dokan_fragment_fixture'] ) ) {
+        if ( ! dokan_test_fragment_fixture_enabled() ) {
             return;
         }
 
@@ -53,7 +60,7 @@ add_action(
 add_action(
     'dokan_order_detail_after_order_items',
     static function ( $order ) {
-        if ( ! isset( $_GET['dokan_fragment_fixture'] ) ) {
+        if ( ! dokan_test_fragment_fixture_enabled() ) {
             return;
         }
 

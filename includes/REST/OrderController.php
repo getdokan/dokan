@@ -226,7 +226,7 @@ class OrderController extends DokanRESTController {
         $order = dokan()->order->get( $request->get_param( 'id' ) );
 
         if ( empty( $order ) ) {
-            return new WP_Error( "dokan_rest_invalid_order_id", __( 'Invalid Order ID.', 'dokan-lite' ), array( 'status' => 404 ) );
+            return new WP_Error( 'dokan_rest_invalid_order_id', __( 'Invalid Order ID.', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
         $data     = $this->prepare_data_for_response( $order, $request );
@@ -815,6 +815,11 @@ class OrderController extends DokanRESTController {
      * @return boolean
      */
     public function get_single_order_permissions_check( $request ) {
+        // Pre-existing role check on a shipped public route. Swapping it for a
+        // capability would change who can read single orders on v1/v2/v3 — a behaviour
+        // change needing its own release note and coverage, not a drive-by edit inside
+        // a UI migration.
+        // phpcs:ignore WordPress.WP.Capabilities.RoleFound
         if ( current_user_can( 'shop_manager' ) || current_user_can( 'administrator' ) ) {
             return true;
         }

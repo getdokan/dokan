@@ -1,5 +1,5 @@
 import { Locator, Page, expect } from '@playwright/test';
-import { closeAnnouncementModal, toPath } from '@utils/helpers';
+import { BASE_URL, closeAnnouncementModal, toPath } from '@utils/helpers';
 import {
     REACT_ROOT,
     ROW_ACTIONS_BTN,
@@ -99,15 +99,6 @@ export const statusChangeActions = [
 // come from @utils/dataViews; the REST-gated search/tab/settle orchestration
 // below is orders-specific and stays local.
 // ============================================
-/** Extra server-side fixtures a panel-details navigation can switch on. */
-export interface PanelDetailsOpts {
-    /**
-     * Register a stand-in extension that attaches render-time inline data and embeds a
-     * raw script tag — see tests/pw/mu-plugins/dokan-panel-order-details-toggle.php.
-     */
-    withInlineDataFixture?: boolean;
-}
-
 export class NewOrdersPage {
     readonly page: Page;
     readonly url = toPath('dashboard/new/#/orders');
@@ -467,9 +458,18 @@ export class NewOrdersPage {
         return toPath(`dashboard/new/?dokan_panel_order_details=${fragmentEnabled ? 1 : 0}#/orders`);
     }
 
-    panelDetailsUrl(orderId: string | number, fragmentEnabled = true, opts: PanelDetailsOpts = {}): string {
-        const fixture = opts.withInlineDataFixture ? '&dokan_fragment_fixture=1' : '';
-        return toPath(`dashboard/new/?dokan_panel_order_details=${fragmentEnabled ? 1 : 0}${fixture}#/orders/${orderId}`);
+    panelDetailsUrl(orderId: string | number, fragmentEnabled = true): string {
+        return toPath(`dashboard/new/?dokan_panel_order_details=${fragmentEnabled ? 1 : 0}#/orders/${orderId}`);
+    }
+
+    /**
+     * Switch on the stand-in extension that emits render-time inline data.
+     *
+     * A cookie, not a query argument: the fragment is rendered by a *separate* REST
+     * request, and query arguments on the panel page URL never reach it.
+     */
+    async enableInlineDataFixture(): Promise<void> {
+        await this.page.context().addCookies([{ name: 'dokan_fragment_fixture', value: '1', url: BASE_URL }]);
     }
 
     get detailsFragment(): Locator { return this.page.locator(newOrdersSelectors.detailsFragment).first(); }
@@ -488,8 +488,8 @@ export class NewOrdersPage {
     }
 
     /** Deep-link straight to the panel details route. */
-    async gotoPanelDetails(orderId: string | number, fragmentEnabled = true, opts: PanelDetailsOpts = {}): Promise<void> {
-        await this.page.goto(this.panelDetailsUrl(orderId, fragmentEnabled, opts));
+    async gotoPanelDetails(orderId: string | number, fragmentEnabled = true): Promise<void> {
+        await this.page.goto(this.panelDetailsUrl(orderId, fragmentEnabled));
         await this.page.waitForLoadState('domcontentloaded');
         await this.waitForFragment();
     }

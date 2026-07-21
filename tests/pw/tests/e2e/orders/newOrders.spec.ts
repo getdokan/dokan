@@ -296,7 +296,8 @@ test.describe('Orders (React) functionality', () => {
         });
 
         test('render-time inline data reaches the browser as a real global', { tag: ['@lite', '@vendor', '@new-ui'] }, async () => {
-            await orders.gotoPanelDetails(seededOrderId, true, { withInlineDataFixture: true });
+            await orders.enableInlineDataFixture();
+            await orders.gotoPanelDetails(seededOrderId, true);
 
             // The fixture handle is registered on `init` and attaches its data during
             // the render — the exact path the register-on-init rule exists to protect.
