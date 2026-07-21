@@ -100,6 +100,12 @@ class DetailsFragment {
      * Third-party CSS is written against the legacy page's class names, so the fragment
      * reproduces them rather than inventing new ones.
      *
+     * `dokan-legacy-fragment` is the hook the panel stylesheet needs to tell a bridged
+     * PHP surface apart from a React one: it excludes the subtree from the panel's
+     * element resets, and neutralises the page-layout half of the reproduced classes,
+     * which was written for a page that has a sidebar beside it. Every future Legacy
+     * fragment carries the same class.
+     *
      * @since DOKAN_SINCE
      *
      * @param string $html Rendered template output.
@@ -107,7 +113,7 @@ class DetailsFragment {
      * @return string
      */
     private function wrap( string $html ): string {
-        return '<div class="dokan-dashboard-wrap dokan-order-details-fragment">'
+        return '<div class="dokan-legacy-fragment dokan-dashboard-wrap dokan-order-details-fragment">'
             . '<div class="dokan-dashboard-content dokan-orders-content">'
             . '<article class="dokan-orders-area">'
             . $html

@@ -463,6 +463,11 @@ class OrderDetailsFragmentTest extends DokanTestCase {
         foreach ( [ 'dokan-dashboard-wrap', 'dokan-dashboard-content', 'dokan-orders-content', 'dokan-orders-area' ] as $class ) {
             $this->assertStringContainsString( $class, $html );
         }
+
+        // The stylesheet hook that keeps the panel's React-oriented element resets and
+        // its page-layout rules off a bridged PHP surface. Without it the fragment
+        // renders at zero height.
+        $this->assertStringContainsString( 'dokan-legacy-fragment', $html );
     }
 
     /**
