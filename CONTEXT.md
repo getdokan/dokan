@@ -89,6 +89,11 @@ names.
 
 ### Admin settings
 
+_The settings migration series is in flight. These terms describe the target model. On
+`develop` today the Legacy keys are still the physical store — the flat `dokan_admin_settings`
+row does not exist yet — so code you read will use `dokan_get_option( $field, $section )`
+against the per-section rows. See ADR-0002 and ADR-0003._
+
 **Canonical setting**:
 A setting stored under its canonical id in the flat `dokan_admin_settings`
 store — the single source of truth for admin configuration.
@@ -112,3 +117,23 @@ the mirror is about rows in the database.
 **Transformer**:
 The pair of value conversions between the canonical and legacy representations
 of one setting (e.g. `'on'`/`'off'` ↔ boolean).
+
+### Configuration
+
+**Source**:
+The level a resolved configuration value came from — order item, product, Vendor,
+global, or default. Not every value has one: a Source only exists where a Source
+chain does.
+_Avoid_: Level, scope, tier, origin
+
+**Source chain**:
+The ordered Sources a configuration value resolves through, most specific first.
+Exactly one Source wins and supplies the whole value; Sources never merge and
+never partially inherit. Commission, Fee recipient and the Withdraw threshold
+each have one.
+_Avoid_: Hierarchy, cascade, inheritance, fallback chain
+
+**Defer**:
+A Source having no opinion, passing resolution to the next one down. Being empty
+is what makes a Source Defer — so `0` is a real value that wins, not an absence.
+_Avoid_: Inherit, fall back, skip
