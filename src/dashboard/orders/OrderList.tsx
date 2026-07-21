@@ -20,6 +20,7 @@ import {
 import { ShoppingCart, ChevronDown, Download, Calendar } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useOrders } from './hooks/useOrders';
+import { getStatusBadgeVariant, getStatusLabel } from './status';
 import type { OrderItem, OrderFilterState } from './types';
 
 interface CustomerOption {
@@ -91,45 +92,6 @@ interface OrderListLocationState {
     restoreView?: OrderListView;
     restoreFilters?: OrderFilterState;
 }
-
-// Status helpers use unprefixed values (e.g. 'completed', 'processing') because
-// the REST API returns unprefixed statuses on order items. Tabs and filters use
-// wc-prefixed values (e.g. 'wc-completed') because the API expects that format
-// for filtering queries.
-const getStatusBadgeVariant = ( status: string ) => {
-    switch ( status ) {
-        case 'completed':
-            return 'success';
-        case 'processing':
-            return 'info';
-        case 'on-hold':
-            return 'warning';
-        case 'pending':
-        case 'failed':
-            return 'danger';
-        case 'cancelled':
-        case 'refunded':
-            return 'secondary';
-        default:
-            return 'secondary';
-    }
-};
-
-const getStatusLabel = ( status: string ) => {
-    const statuses = window?.dokan?.orderStatuses;
-
-    if ( Array.isArray( statuses ) ) {
-        const prefixed = `wc-${ status }`;
-        const found = statuses.find(
-            ( s ) => s.value === prefixed || s.value === status
-        );
-        if ( found ) {
-            return found.label;
-        }
-    }
-
-    return status;
-};
 
 const getShipmentBadgeVariant = ( shipment: string ) => {
     if ( ! shipment || shipment === '--' ) {

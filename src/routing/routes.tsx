@@ -6,6 +6,7 @@ import App from '@src/dashboard/product-editor/App';
 import Products from '@src/dashboard/products';
 import Orders from '@src/dashboard/orders';
 import OrderDetails from '@src/dashboard/orders/OrderDetails';
+import OrderDetailsHeader from '@src/dashboard/orders/OrderDetailsHeader';
 import ReverseWithdrawal from '@src/dashboard/reverse-withdraw';
 
 export default [
@@ -36,8 +37,11 @@ export default [
         id: 'dokan-order-details',
         title: __( 'Order Details', 'dokan-lite' ),
         element: OrderDetails,
+        // The panel owns the chrome here: the order number as the title, a live status
+        // badge, Back, and the Edit Order action Pro would otherwise lose with the
+        // status-filter bar the fragment does not render.
+        header: <OrderDetailsHeader />,
         path: '/orders/:orderId',
-        backUrl: '/orders',
         exact: true,
         order: 5,
         parent: 'orders',

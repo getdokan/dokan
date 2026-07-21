@@ -85,6 +85,8 @@ declare module '@dokan/components' {
   export const PriceInput: any;
   export const PriceHtml: any;
   export const CustomerFilter: any;
+  export const DateRangePicker: any;
+  export const DateTimeHtml: any;
   export const ShortContent: any;
   export const DokanTooltip: any;
 }
@@ -101,6 +103,7 @@ declare module '@dokan/hooks' {
   export const useWindowDimensions: any;
   export const useCurrentUser: any;
   export const useCustomerSearch: any;
+  export const usePermission: any;
   export const ViewportDimensions: any;
 }
 
