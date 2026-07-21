@@ -90,6 +90,23 @@ export const useProducts = (
                 per_page: filterArgs.per_page,
                 page: filterArgs.page,
                 include_hidden_products: true,
+                /**
+                 * Product types to exclude from this listing.
+                 *
+                 * Only `booking` (it has its own dashboard); `auction` is
+                 * deliberately kept out of the exclude set so auctions show
+                 * here. Other requests send nothing and fall back to the
+                 * server-side default `[ auction, booking ]`. Pro modules can
+                 * add types to hide via this filter.
+                 *
+                 * @since DOKAN_SINCE
+                 *
+                 * @param {string[]} excludeTypes Product type slugs to exclude.
+                 */
+                exclude_types: applyFilters(
+                    'dokan_product_list_exclude_types',
+                    [ 'booking' ]
+                ) as string[],
             };
 
             if ( filterArgs.status !== 'all' ) {
@@ -159,8 +176,17 @@ export const useProducts = (
 
     const fetchStatusCounts = useCallback( async () => {
         try {
+            // Exclude the same types as the list (see fetchProducts), so the
+            // status-tab badges can't drift from the rows.
+            const summaryArgs = {
+                exclude_types: applyFilters(
+                    'dokan_product_list_exclude_types',
+                    [ 'booking' ]
+                ) as string[],
+            };
+
             const response = ( await apiFetch( {
-                path: '/dokan/v1/products/summary',
+                path: addQueryArgs( '/dokan/v1/products/summary', summaryArgs ),
             } ) ) as ProductSummary;
 
             const counts = response.post_counts ?? {};

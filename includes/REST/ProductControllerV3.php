@@ -7,6 +7,7 @@ use WC_Product_Simple;
 use WC_REST_Products_Controller;
 use WeDevs\Dokan\Intelligence\Manager;
 use WeDevs\Dokan\Intelligence\Services\Model;
+use WeDevs\Dokan\ProductEditor\Elements;
 use WeDevs\Dokan\ProductEditor\FormSchema;
 use WeDevs\Dokan\ProductEditor\PayloadResolver;
 use WeDevs\Dokan\Traits\VendorAuthorizable;
@@ -427,6 +428,19 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
 
         $vendor_earning = dokan()->commission->get_earning_by_product( $product_id );
         $fields = dokan()->product_editor->get_schema( $product_id );
+
+        // Preselect the requested product type on a brand-new product, e.g. the
+        // "Add New Auction Product" button opens ...#/products/create?type=auction.
+        $requested_type = (string) $request->get_param( 'type' );
+        if ( $is_new_product && array_key_exists( $requested_type, wc_get_product_types() ) ) {
+            foreach ( $fields as &$field ) {
+                if ( Elements::TYPE === ( $field['id'] ?? '' ) ) {
+                    $field['value'] = $requested_type;
+                    break;
+                }
+            }
+            unset( $field );
+        }
         $layouts = FormSchema::get_layouts();
         $is_enabled = dokan_get_option( 'dokan_ai_image_gen_availability', 'dokan_ai', 'off' ) === 'on';
         $manager = dokan()->get_container()->get( Manager::class );
