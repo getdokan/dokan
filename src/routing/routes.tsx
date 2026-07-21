@@ -5,6 +5,7 @@ import WithdrawRequests from '@src/dashboard/withdraw/WithdrawRequests';
 import App from '@src/dashboard/product-editor/App';
 import Products from '@src/dashboard/products';
 import Orders from '@src/dashboard/orders';
+import OrderDetails from '@src/dashboard/orders/OrderDetails';
 import ReverseWithdrawal from '@src/dashboard/reverse-withdraw';
 
 export default [
@@ -25,6 +26,22 @@ export default [
         exact: true,
         order: 5,
         capabilities: [ 'dokan_view_order_menu' ],
+    },
+    {
+        // Vendor order details. The view itself is server-rendered PHP delivered as an
+        // HTML fragment — see src/dashboard/orders/OrderDetails.tsx.
+        //
+        // This dynamic path cannot shadow Pro's `orders/edit/:id`: the router ranks
+        // static segments above dynamic ones regardless of registration order.
+        id: 'dokan-order-details',
+        title: __( 'Order Details', 'dokan-lite' ),
+        element: OrderDetails,
+        path: '/orders/:orderId',
+        backUrl: '/orders',
+        exact: true,
+        order: 5,
+        parent: 'orders',
+        capabilities: [ 'dokan_view_order' ],
     },
     {
         id: 'dokan-withdraw',

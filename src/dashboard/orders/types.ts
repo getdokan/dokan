@@ -50,3 +50,29 @@ export interface OrderStatusCount {
     label: string;
     count: number;
 }
+
+export interface OrderDetailsInlineScript {
+    handle: string;
+    position: 'before' | 'after';
+    code: string;
+}
+
+export interface OrderDetailsMeta {
+    id: number;
+    number: string;
+    status: string;
+    status_label: string;
+    date_created: string | null;
+}
+
+/**
+ * Response of `GET /dokan/v1/orders/<id>/details-html`.
+ *
+ * The details view stays server-rendered PHP so every Pro and third-party hook keeps
+ * firing; the panel receives its markup as an HTML fragment.
+ */
+export interface OrderDetailsFragment {
+    html: string;
+    inline_scripts: OrderDetailsInlineScript[];
+    order: OrderDetailsMeta;
+}

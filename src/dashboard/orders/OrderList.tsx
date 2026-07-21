@@ -18,6 +18,7 @@ import {
     CustomerFilter,
 } from '@dokan/components';
 import { ShoppingCart, ChevronDown, Download, Calendar } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useOrders } from './hooks/useOrders';
 import type { OrderItem, OrderFilterState } from './types';
 
@@ -52,7 +53,44 @@ declare const window: Window & {
         allow_shipment?: string;
         has_shipment_func?: boolean;
     };
+    dokanFrontend?: {
+        order_details?: {
+            panel_route_enabled?: boolean;
+        };
+    };
 };
+
+/**
+ * Whether order details opens inside the panel.
+ *
+ * Mirrors the `dokan_vendor_panel_order_details_enabled` PHP filter. While it is off —
+ * the default until dokan-pro's companion change ships — the list navigates to the
+ * legacy order details URL exactly as it always has.
+ */
+const isPanelRouteEnabled = () =>
+    Boolean( window?.dokanFrontend?.order_details?.panel_route_enabled );
+
+const getPanelOrderDetailsUrl = ( orderId: number ) => `#/orders/${ orderId }`;
+
+interface OrderListView {
+    perPage: number;
+    page: number;
+    search: string;
+    type: 'table';
+    status: string;
+    fields: string[];
+    layout: {
+        styles: Record< string, { width: string } >;
+    };
+}
+
+/**
+ * State the details route hands back so returning to the list is not a reset.
+ */
+interface OrderListLocationState {
+    restoreView?: OrderListView;
+    restoreFilters?: OrderFilterState;
+}
 
 // Status helpers use unprefixed values (e.g. 'completed', 'processing') because
 // the REST API returns unprefixed statuses on order items. Tabs and filters use
@@ -159,6 +197,13 @@ const getCustomerName = ( item: OrderItem ) => {
 
 function OrderList() {
     const toast = useToast();
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    // The details route hands the list back its own state on the way out, so returning
+    // from an order lands on the page, filters and sort the Vendor left behind.
+    const restoredState = ( location?.state ?? {} ) as OrderListLocationState;
+
     const [ selection, setSelection ] = useState< string[] >( [] );
     const [ exportOpen, setExportOpen ] = useState( false );
     const exportFormRef = useRef< HTMLFormElement >( null );
@@ -174,12 +219,14 @@ function OrderList() {
     const [ selectedCustomer, setSelectedCustomer ] =
         useState< CustomerOption | null >( null );
 
-    const [ filterArgs, setFilterArgs ] = useState< OrderFilterState >( {
-        page: 1,
-        per_page: 10,
-        status: 'all',
-        search: '',
-    } );
+    const [ filterArgs, setFilterArgs ] = useState< OrderFilterState >(
+        restoredState.restoreFilters ?? {
+            page: 1,
+            per_page: 10,
+            status: 'all',
+            search: '',
+        }
+    );
 
     const allowShipment =
         window?.dokan?.allow_shipment === 'on' &&
@@ -197,7 +244,8 @@ function OrderList() {
         fieldsColumns.push( 'shipment' );
     }
 
-    const [ view, setView ] = useState( {
+    const [ view, setView ] = useState< OrderListView >(
+        restoredState.restoreView ?? {
         perPage: 10,
         page: 1,
         search: '',
@@ -226,7 +274,35 @@ function OrderList() {
                 },
             },
         },
-    } );
+        }
+    );
+
+    const panelRouteEnabled = isPanelRouteEnabled();
+
+    /**
+     * Open an order.
+     *
+     * With the panel route enabled this stays inside the SPA and carries the list's
+     * current view along so Back can restore it. With it disabled — the default — it
+     * navigates to the legacy details page exactly as before.
+     */
+    const openOrderDetails = useCallback(
+        ( orderId: number ) => {
+            if ( panelRouteEnabled ) {
+                navigate( `/orders/${ orderId }`, {
+                    state: { fromView: view, fromFilters: filterArgs },
+                } );
+                return;
+            }
+
+            const url = getOrderDetailsUrl( orderId );
+
+            if ( url && url !== '#' ) {
+                window.location.href = url;
+            }
+        },
+        [ panelRouteEnabled, navigate, view, filterArgs ]
+    );
 
     const {
         data,
@@ -258,13 +334,15 @@ function OrderList() {
             render: ( { item }: { item: OrderItem } ) => (
                 <div>
                     <a
-                        href={ getOrderDetailsUrl( item.id ) }
+                        href={
+                            panelRouteEnabled
+                                ? getPanelOrderDetailsUrl( item.id )
+                                : getOrderDetailsUrl( item.id )
+                        }
                         className="font-medium text-primary"
                         onClick={ ( e ) => {
                             e.preventDefault();
-                            window.location.href = getOrderDetailsUrl(
-                                item.id
-                            );
+                            openOrderDetails( item.id );
                         } }
                     >
                         { `#${ item.number || item.id }` }
@@ -603,12 +681,7 @@ function OrderList() {
                 id: 'view',
                 label: __( 'View', 'dokan-lite' ),
                 callback: ( items: OrderItem[] ) => {
-                    const item = items[ 0 ];
-                    const url = getOrderDetailsUrl( item.id );
-
-                    if ( url && url !== '#' ) {
-                        window.location.href = url;
-                    }
+                    openOrderDetails( items[ 0 ].id );
                 },
             },
             {
@@ -694,10 +767,7 @@ function OrderList() {
                 selection={ selection }
                 onChangeSelection={ ( ids: string[] ) => setSelection( ids ) }
                 onClickItem={ ( item: OrderItem ) => {
-                    const url = getOrderDetailsUrl( item.id );
-                    if ( url && url !== '#' ) {
-                        window.location.href = url;
-                    }
+                    openOrderDetails( item.id );
                 } }
                 isItemClickable={ () => true }
                 emptyIcon={
