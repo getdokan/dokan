@@ -429,20 +429,18 @@ class ProductControllerV3 extends WC_REST_Products_Controller {
         $vendor_earning = dokan()->commission->get_earning_by_product( $product_id );
         $fields = dokan()->product_editor->get_schema( $product_id );
 
-        // Preselect a product type for a brand-new product when requested (e.g. the
-        // "Add New Auction Product" button links here with ?type=auction). Validated
-        // against the editor's registered product types ([ 'label' => .., 'value' => slug ]).
-        $requested_type  = sanitize_key( (string) $request->get_param( 'type' ) );
-        $registered_types = wp_list_pluck( dokan()->product_editor->get_product_types(), 'value' );
-        if ( $is_new_product && '' !== $requested_type && in_array( $requested_type, $registered_types, true ) ) {
-            foreach ( $fields as $index => $field ) {
-                if ( isset( $field['id'] ) && Elements::TYPE === $field['id'] ) {
-                    $fields[ $index ]['value'] = $requested_type;
+        // Preselect the requested product type on a brand-new product, e.g. the
+        // "Add New Auction Product" button opens ...#/products/create?type=auction.
+        $requested_type = (string) $request->get_param( 'type' );
+        if ( $is_new_product && array_key_exists( $requested_type, wc_get_product_types() ) ) {
+            foreach ( $fields as &$field ) {
+                if ( Elements::TYPE === ( $field['id'] ?? '' ) ) {
+                    $field['value'] = $requested_type;
                     break;
                 }
             }
+            unset( $field );
         }
-
         $layouts = FormSchema::get_layouts();
         $is_enabled = dokan_get_option( 'dokan_ai_image_gen_availability', 'dokan_ai', 'off' ) === 'on';
         $manager = dokan()->get_container()->get( Manager::class );

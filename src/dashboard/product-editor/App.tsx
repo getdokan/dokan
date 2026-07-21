@@ -81,6 +81,12 @@ const App = ( {
 
     const fetchProductFields = useCallback( async () => {
         const id = Number( params.productId );
+        // Preselect a product type when the create URL carries a `?type=` hint
+        // (e.g. "Add New Auction Product" links to #/products/create?type=auction).
+        const type =
+            new URLSearchParams(
+                window.location.hash.split( '?' )[ 1 ] ?? ''
+            ).get( 'type' ) ?? '';
         setInitLoading( true );
 
         // For a new product, honor a `?type=` hint in the URL (e.g. the auction
@@ -99,10 +105,9 @@ const App = ( {
 
         try {
             const response = await apiFetch< ProductEditorData >( {
-                path: addQueryArgs( '/dokan/v3/products/init/fields', {
-                    id: id || '',
-                    ...( typeParam ? { type: typeParam } : {} ),
-                } ),
+                path: `/dokan/v3/products/init/fields?id=${ id || '' }${
+                    type ? `&type=${ encodeURIComponent( type ) }` : ''
+                }`,
             } );
             setFormEditor( response );
             ( window as any ).dokanProductEditor = response;

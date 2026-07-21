@@ -661,9 +661,9 @@ function ProductList() {
                         key="type-select"
                         isClearable
                         placeholder={ __( 'All types', 'dokan-lite' ) }
-                        options={ typeOptions }
+                        options={ productTypeOptions }
                         value={
-                            typeOptions.find(
+                            productTypeOptions.find(
                                 ( o ) => o.value === filterArgs.type
                             ) ?? null
                         }
@@ -681,7 +681,7 @@ function ProductList() {
         [
             monthOptions,
             categoryOptions,
-            typeOptions,
+            productTypeOptions,
             filterArgs.year_month,
             filterArgs.category,
             filterArgs.type,
