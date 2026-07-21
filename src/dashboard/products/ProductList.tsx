@@ -579,7 +579,7 @@ function ProductList() {
      * `dokan_product_list_exclude_types`) add their type here so vendors can
      * filter by it — e.g. the auction module appends 'auction'.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @param {Array} options Default product type options ({ value, label }).
      */

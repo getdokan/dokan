@@ -4,6 +4,28 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.0.10',
+        'released' => '2026-07-21',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Auction and other add-on product types can now appear in the vendor product list and its status counts.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Refund earnings and commissions are now calculated through a single dedicated calculator, keeping the vendor and admin refund give-back consistent and easier to extend.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'The admin commission and the vendor earning now always add up to the exact order total, fixing a rounding gap that could drop a cent on some amounts.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.0.9',
         'released' => '2026-07-14',
         'changes'  => [

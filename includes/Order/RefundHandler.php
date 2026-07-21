@@ -140,7 +140,7 @@ class RefundHandler implements Hookable {
      * Get the refunded tax amount for the vendor.
      *
      * @since 4.0.0
-     * @deprecated DOKAN_SINCE Use OrderRefundCommission::get_vendor_tax_refund() instead.
+     * @deprecated 5.0.10 Use OrderRefundCommission::get_vendor_tax_refund() instead.
      *
      * @param \WC_Order_Refund $refund_order The refund object.
      * @param \WC_Order        $order  The original order object.
@@ -148,7 +148,7 @@ class RefundHandler implements Hookable {
      * @return float
      */
     protected function get_tax_refund( \WC_Order_Refund $refund_order, \WC_Order $order ): float {
-        wc_deprecated_function( __METHOD__, 'DOKAN_SINCE', OrderRefundCommission::class . '::get_vendor_tax_refund' );
+        wc_deprecated_function( __METHOD__, '5.0.10', OrderRefundCommission::class . '::get_vendor_tax_refund' );
 
         $refund_commission = dokan_get_container()->get( OrderRefundCommission::class );
 
@@ -159,7 +159,7 @@ class RefundHandler implements Hookable {
      * Get the refunded shipping amount for the vendor.
      *
      * @since 4.0.0
-     * @deprecated DOKAN_SINCE Use OrderRefundCommission::get_vendor_shipping_refund() instead.
+     * @deprecated 5.0.10 Use OrderRefundCommission::get_vendor_shipping_refund() instead.
      *
      * @param \WC_Order_Refund $refund_order The refund object.
      * @param \WC_Order        $order  The original order object.
@@ -167,7 +167,7 @@ class RefundHandler implements Hookable {
      * @return float
      */
     protected function get_shipping_refund( \WC_Order_Refund $refund_order, \WC_Order $order ): float {
-        wc_deprecated_function( __METHOD__, 'DOKAN_SINCE', OrderRefundCommission::class . '::get_vendor_shipping_refund' );
+        wc_deprecated_function( __METHOD__, '5.0.10', OrderRefundCommission::class . '::get_vendor_shipping_refund' );
 
         $refund_commission = dokan_get_container()->get( OrderRefundCommission::class );
 

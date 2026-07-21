@@ -1,3 +1,9 @@
+### v5.0.10 ( Jul 21, 2026 ) ###
+
+- **update:** Auction and other add-on product types can now appear in the vendor product list and its status counts.
+- **update:** Refund earnings and commissions are now calculated through a single dedicated calculator, keeping the vendor and admin refund give-back consistent and easier to extend.
+- **fix:** The admin commission and the vendor earning now always add up to the exact order total, fixing a rounding gap that could drop a cent on some amounts.
+
 ### v5.0.9 ( Jul 14, 2026 ) ###
 
 - **new:** Vendors can now add a product without leaving the product list — a quick-create window collects just the essentials (name, image, price, category, and short description) and saves it as a draft.
