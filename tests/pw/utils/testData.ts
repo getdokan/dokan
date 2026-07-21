@@ -1391,22 +1391,41 @@ export const data = {
                 vendorSetupWizardMessageField: '.setup_wizard_message textarea',
             },
 
+            // React settings UI (Dokan 5.0.0+). Sidebar entries are role=button
+            // matched by accessible name; fields carry data-testid="settings-field-<id>".
             newUI: {
-                generalButton: '#dokan_settings_general button',
-                marketplaceLink: '#dokan_settings_general_marketplace',
-                vendorStoreUrlField: '#dokan_settings_general_marketplace_marketplace_settings_vendor_store_url_slug input',
-                singleSellerModeField: '#dokan_settings_general_marketplace_marketplace_settings_enable_single_seller_mode',
-                saveButton: '#dokan-admin-settings-save-btn button',
+                // Sidebar navigation (accessible names for getByRole)
+                generalNav: 'General',
+                marketplaceNav: 'Marketplace',
+                vendorsNav: 'Vendors',
+                vendorOnboardingNav: 'Vendor Onboarding',
+                socialOnboardingNav: 'Social Onboarding',
+                vendorCapabilitiesNav: 'Vendor Capabilities',
+                vendorSubscriptionNav: 'Vendor Subscription',
+                storeStatsNav: 'Store Stats',
+                saveButtonName: 'Save Changes',
+                // "Content loaded" marker: every field subpage renders at least one
+                // settings-field-* node (the settings-section-content-* wrapper is not
+                // present on all subpages, e.g. Vendor Onboarding).
+                sectionContent: '[data-testid^="settings-field-"]',
                 successMessage: '.notice-success, .updated',
-                clickHereLink: 'a[contains(text(),"Click Here")]',
-                storeCategoryField: '#dokan_settings_general_marketplace_marketplace_settings_store_category_mode',
-                vendorButton: '#dokan_settings_vendor button',
-                vendorOnboardingLink: '#dokan_settings_vendor_vendor_onboarding',
-                socialOnboardingLink: '#dokan_settings_vendor_social_onboarding',
-                vendorCapabilitiesLink: '#dokan_settings_vendor_vendor_capabilities',
-                vendorSubscriptionLink: '#dokan_settings_vendor_vendor_subscription',
-                soteStatsLink: '#dokan_settings_vendor_store_state',
-                singleProductMultiVendorLink: '#dokan_settings_vendor_single_product_multi_vendor',
+
+                // Marketplace fields
+                vendorStoreUrlField: '[data-testid="settings-field-vendor_store_url_slug"]',
+                singleSellerModeField: '[data-testid="settings-field-enable_single_seller_mode"]',
+                storeCategoryField: '[data-testid="settings-field-store_category_mode"]',
+                showCustomerDetailsField: '[data-testid="settings-field-show_customer_details_to_vendors"]',
+                guestProductEnquiryField: '[data-testid="settings-field-guest_product_enquiry"]',
+                addToCartVisibilityField: '[data-testid="settings-field-catalog_mode_add_to_cart_button_visibility"]',
+                liveSearchOptionField: '[data-testid="settings-field-live_search_option"]',
+
+                // Vendor onboarding fields
+                enableSellingField: '[data-testid="settings-field-vendor_auto_enable_selling"]',
+                addressFieldsField: '[data-testid="settings-field-vendor_registration_address_fields"]',
+                termsConditionsField: '[data-testid="settings-field-terms_conditions"]',
+                welcomeWizardField: '[data-testid="settings-field-vendor_welcome_wizard_enabled"]',
+                setupWizardMessageField: '[data-testid="settings-field-vendor_setup_wizard_message"]',
+                setupWizardLogoField: '[data-testid="settings-field-vendor_setup_wizard_logo"]',
             },
         },
 
