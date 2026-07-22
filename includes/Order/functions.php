@@ -958,16 +958,8 @@ function dokan_apply_bulk_order_status_change( $postdata ) {
     $status = sanitize_text_field( wp_unslash( $postdata['status'] ) );
     $orders = array_map( 'absint', $postdata['bulk_orders'] );
 
-    // Guard ownership at the shared sink so every caller (REST bulk-actions + the legacy dashboard bulk form) is covered: a vendor may only touch their own orders, admins/shop managers excepted.
-    if ( ! current_user_can( 'manage_woocommerce' ) ) {
-        $vendor_id = dokan_get_current_user_id();
-        $orders    = array_filter(
-            $orders,
-            function ( $order_id ) use ( $vendor_id ) {
-                return dokan_is_seller_has_order( $vendor_id, $order_id );
-            }
-        );
-    }
+    // Guard ownership at the shared sink so every caller (REST bulk-actions + the legacy dashboard bulk form) is covered.
+    $orders = array_filter( $orders, [ \WeDevs\Dokan\Utilities\OrderUtil::class, 'current_user_can_manage_order' ] );
 
     // -1 means bluk action option value
     $excluded_status = [ '-1', 'cancelled', 'refunded' ];
