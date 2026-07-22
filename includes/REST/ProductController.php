@@ -594,7 +594,7 @@ class ProductController extends DokanRESTController {
      * nothing and falls back to the default `[ 'auction', 'booking' ]`, so those
      * keep excluding them.
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @param WP_REST_Request $request Request object.
      *
@@ -618,7 +618,7 @@ class ProductController extends DokanRESTController {
      * get_exclude_types(); the vendor product list sends it (omitting the types
      * it wants shown, e.g. `auction`).
      *
-     * @since DOKAN_SINCE
+     * @since 5.0.10
      *
      * @return array
      */
