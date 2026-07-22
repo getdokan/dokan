@@ -231,7 +231,7 @@ export class NewAuctionPage {
         await this.waitForSettle();
     }
 
-    /** Click the Edit row action and report the href/nav it targets (should be legacy). */
+    /** Click the Edit row action and report the URL it navigates to (the React product editor). */
     async editActionTarget(text: string): Promise<string> {
         await this.openRowMenu(text);
         const edit = this.page.getByRole('menuitem', { name: /^Edit$/i }).first();

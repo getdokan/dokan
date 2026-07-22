@@ -702,14 +702,24 @@ export class AbuseReportsPage {
         return await this.page.locator(this.abuseReports.customerNameInput).isVisible().catch(() => false);
     }
 
+    /**
+     * The submission confirmation is a `dokan_sweetalert` (SweetAlert2) popup whose button reads "OK".
+     * Under load a second "OK" button can transiently coexist in the DOM (a prior popup mid-close, or a
+     * theme/consent control), so the bare `//button[text()='OK']` locator intermittently hits a strict-mode
+     * violation ("resolved to 2 elements"). Scope to the currently-visible one (the active dialog).
+     */
+    private confirmOk() {
+        return this.page.locator(this.abuseReports.confirmOkButton).filter({ visible: true }).last();
+    }
+
     async submitAbuseReport() {
         await this.page.locator(this.abuseReports.submitButton).click();
-        await this.page.locator(this.abuseReports.confirmOkButton).waitFor({ state: 'visible' });
+        await this.confirmOk().waitFor({ state: 'visible' });
     }
 
     async confirmAbuseReportSubmission() {
-        await this.page.locator(this.abuseReports.confirmOkButton).click();
-        await this.page.locator(this.abuseReports.confirmOkButton).waitFor({ state: 'hidden' });
+        await this.confirmOk().click();
+        await this.page.locator(this.abuseReports.confirmOkButton).filter({ visible: true }).waitFor({ state: 'hidden' });
     }
 
     async clickCustomReasonLabel(reason: string) {
