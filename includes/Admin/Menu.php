@@ -71,6 +71,11 @@ class Menu {
         do_action( 'dokan_admin_menu', $capability, $menu_position );
 
         if ( current_user_can( $capability ) ) {
+            // Legacy (Vue) Tools entry. The new (React) Tools entry comes from the
+            // Dashboard Pages system; LegacySwitcher keeps whichever the admin prefers,
+            // and Pro's submenu reorder positions it between Modules and Status.
+            $submenu[ $slug ][] = [ esc_html__( 'Tools', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/tools' ];
+
             $submenu[ $slug ][] = [ esc_html__( 'Help', 'dokan-lite' ), $capability, 'admin.php?page=' . $slug . '#/help' ];
 
             /**

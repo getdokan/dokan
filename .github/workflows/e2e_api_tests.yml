@@ -65,6 +65,15 @@ env:
     GMAP: ${{secrets.GMAP}}
     MAPBOX: ${{secrets.MAPBOX}}
     LICENSE_KEY: ${{secrets.LICENSE_KEY}}
+    # Stripe Express test keys + the real EXPRESS connected accounts (all secrets) so the money/checkout
+    # specs RUN in CI. The connected accounts MUST belong to the Express test platform — the Connect-suite
+    # STRIPE_VENDOR*_ACCT secrets are a different platform and cannot receive Express transfers, so these
+    # use distinct STRIPE_EXPRESS_VENDOR*_ACCT secret names.
+    TEST_PUBLISH_KEY_STRIPE_EXPRESS: ${{secrets.TEST_PUBLISH_KEY_STRIPE_EXPRESS}}
+    TEST_SECRET_KEY_STRIPE_EXPRESS: ${{secrets.TEST_SECRET_KEY_STRIPE_EXPRESS}}
+    STRIPE_EXPRESS_VENDOR1_ACCT: ${{secrets.STRIPE_EXPRESS_VENDOR1_ACCT}}
+    STRIPE_EXPRESS_VENDOR2_ACCT: ${{secrets.STRIPE_EXPRESS_VENDOR2_ACCT}}
+    STRIPE_EXPRESS_REQUIRED: true
     BASE_URL: http://localhost:9999
     CI: true
     HEADLESS: true
@@ -271,7 +280,7 @@ jobs:
     e2e_tests:
         name: e2e tests
         runs-on: ubuntu-latest
-        timeout-minutes: 45
+        timeout-minutes: 75
         # Wait for both build jobs. build_pro is conditional (fork PRs) and may not run;
         # `always() && build_lite succeeded` covers the fork-PR path too.
         needs: [build_lite, build_pro]
@@ -521,7 +530,7 @@ jobs:
             - name: 🧪 Run e2e tests-${{ matrix.shardIndex }}
               id: e2e-test
               if: success() && (github.event_name != 'workflow_dispatch' || ( github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All')))
-              timeout-minutes: 30
+              timeout-minutes: 60
               working-directory: tests/pw
               run: |
                   # Pass the resolved spec list as positional args (xargs -d to preserve newlines)

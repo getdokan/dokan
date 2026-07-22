@@ -1,6 +1,5 @@
 import { test, expect, Browser, Page } from '@utils/test';
 import { AnnouncementsPage } from './announcementsPage';
-import path from 'path';
 
 // =====================================================================
 // New UI announcement coverage (Dokan 5.0.0+ React rewrite).
@@ -16,11 +15,8 @@ import path from 'path';
 // state, customer access.
 // =====================================================================
 
-import { toPath } from '@utils/helpers';
-
-const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
-const v1 = path.join(__dirname, '../../../playwright/.auth/vendorStorageState.json');
-const c1 = path.join(__dirname, '../../../playwright/.auth/customerStorageState.json');
+import { closeAnnouncementModal, toPath } from '@utils/helpers';
+import { ADMIN_STORAGE_STATE as a1, VENDOR_STORAGE_STATE as v1, CUSTOMER_STORAGE_STATE as c1 } from '@utils/authStates';
 
 const ADMIN_NEW_URL = toPath(`wp-admin/admin.php?page=dokan-dashboard#/announcement`);
 const VENDOR_NEW_URL = toPath(`dashboard/new/#/announcement`);
@@ -62,34 +58,13 @@ async function typeSearch(page: Page, text: string): Promise<void> {
 }
 
 // ---------------------------------------------------------------------
-// Helpers (kept local so this folder stays self-contained — see the
-// closeAnnouncementModal pattern in announcementsPage.ts for the rule).
+// Helpers (kept local so this folder stays self-contained; the announcement
+// modal dismissal comes from the shared @utils/helpers closeAnnouncementModal
+// per NEW_UI_HOUSE_STYLE.md §3 — F3 consolidation).
 // ---------------------------------------------------------------------
 
 function uniqueTitle(label: string): string {
     return `nu_${label}_${Date.now()}_${Math.floor(Math.random() * 1e4)}`;
-}
-
-async function installModalDismissHandler(page: Page): Promise<void> {
-    const flag = '__newuiAnnouncementModalHandlerInstalled' as const;
-    const p = page as Page & { [flag]?: boolean };
-    if (p[flag]) return;
-    p[flag] = true;
-    const modal = page.locator('.vendor-announcement-modal');
-    await page
-        .addLocatorHandler(
-            modal,
-            async () => {
-                const btn = modal.locator('button[aria-label="Close"]').first();
-                if (await btn.isVisible().catch(() => false)) {
-                    await btn.click({ timeout: 2000 }).catch(() => undefined);
-                } else {
-                    await page.keyboard.press('Escape').catch(() => undefined);
-                }
-            },
-            { noWaitAfter: true },
-        )
-        .catch(() => undefined);
 }
 
 async function seedAnnouncement(browser: Browser, title: string): Promise<void> {
@@ -104,7 +79,7 @@ async function seedAnnouncement(browser: Browser, title: string): Promise<void> 
 async function openVendorAnnouncementList(browser: Browser): Promise<{ page: Page; close: () => Promise<void> }> {
     const ctx = await browser.newContext({ storageState: v1 });
     const page = await ctx.newPage();
-    await installModalDismissHandler(page);
+    await closeAnnouncementModal(page);
     await page.goto(VENDOR_NEW_URL);
     await page.waitForLoadState('domcontentloaded');
     await page.locator(VENDOR_DASHBOARD_ROOT).waitFor({ state: 'visible', timeout: 30_000 });
@@ -200,7 +175,7 @@ test.describe('New Admin Announcement Dashboard (React) @pro', () => {
 // ============================================================
 
 test.describe('New Vendor Announcement Dashboard (React) @pro', () => {
-    test('Vendor: tabs and search input render', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('Vendor: tabs and search input render', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         // Ensure at least one announcement exists so the page mounts in the
         // "with rows" branch (the empty branch also renders search/tabs but
         // explicit seeding makes the rendered state deterministic).
@@ -217,7 +192,7 @@ test.describe('New Vendor Announcement Dashboard (React) @pro', () => {
         await close();
     });
 
-    test('Vendor: search narrows the list to a uniquely seeded title', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('Vendor: search narrows the list to a uniquely seeded title', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const title = uniqueTitle('search');
         await seedAnnouncement(browser, title);
 
@@ -244,7 +219,7 @@ test.describe('New Vendor Announcement Dashboard (React) @pro', () => {
         await close();
     });
 
-    test('Vendor: bogus search empties the list (no matching rows)', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('Vendor: bogus search empties the list (no matching rows)', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         // Seed something so we know rows exist before the filter runs.
         await seedAnnouncement(browser, uniqueTitle('bogus'));
 
@@ -264,7 +239,7 @@ test.describe('New Vendor Announcement Dashboard (React) @pro', () => {
         await close();
     });
 
-    test('Vendor: clearing the search input issues a fetch without the search filter', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('Vendor: clearing the search input issues a fetch without the search filter', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         // We assert on the *clear behavior* (a fetch without search= fires,
         // input value is empty) rather than on a row-count restoration. Other
         // workers run bulk-trash and empty-trash tests against the same DB,
@@ -316,7 +291,7 @@ test.describe('New Vendor Announcement Dashboard (React) @pro', () => {
         await close();
     });
 
-    test('Vendor: clicking an announcement card opens detail with title in <h2>', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('Vendor: clicking an announcement card opens detail with title in <h2>', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const title = uniqueTitle('detail');
         await seedAnnouncement(browser, title);
 
@@ -341,7 +316,7 @@ test.describe('New Vendor Announcement Dashboard (React) @pro', () => {
         await close();
     });
 
-    test('Vendor: clicking "Unread" tab issues request with read_status=unread', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('Vendor: clicking "Unread" tab issues request with read_status=unread', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         // Seed at least one announcement so tab counts are non-zero (cleaner signal).
         await seedAnnouncement(browser, uniqueTitle('unreadtab'));
 
@@ -364,7 +339,7 @@ test.describe('New Vendor Announcement Dashboard (React) @pro', () => {
         await close();
     });
 
-    test('Vendor: HashRouter survives reload on /announcement', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('Vendor: HashRouter survives reload on /announcement', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const { page, close } = await openVendorAnnouncementList(browser);
 
         await page.reload({ waitUntil: 'domcontentloaded' });
@@ -375,7 +350,7 @@ test.describe('New Vendor Announcement Dashboard (React) @pro', () => {
         await close();
     });
 
-    test('Vendor: list and announcement modal coexist (modal auto-dismissed)', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('Vendor: list and announcement modal coexist (modal auto-dismissed)', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const { page, close } = await openVendorAnnouncementList(browser);
 
         const modalVisible = await page.locator('.vendor-announcement-modal').first().isVisible({ timeout: 1000 }).catch(() => false);
@@ -406,7 +381,7 @@ test.describe('Customer Cannot Access Vendor Announcements (React) @pro', () => 
         await ctx.close();
     });
 
-    test('Customer: vendor /dashboard/new/#/announcement does NOT mount vendor dashboard', { tag: ['@pro', '@customer'] }, async ({ browser }) => {
+    test('Customer: vendor /dashboard/new/#/announcement does NOT mount vendor dashboard', { tag: ['@pro', '@customer', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: c1 });
         const page = await ctx.newPage();
         await page.goto(VENDOR_NEW_URL);

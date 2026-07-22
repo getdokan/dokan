@@ -4,6 +4,78 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 5.0.10',
+        'released' => '2026-07-21',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Auction and other add-on product types can now appear in the vendor product list and its status counts.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Refund earnings and commissions are now calculated through a single dedicated calculator, keeping the vendor and admin refund give-back consistent and easier to extend.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'The admin commission and the vendor earning now always add up to the exact order total, fixing a rounding gap that could drop a cent on some amounts.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.0.9',
+        'released' => '2026-07-14',
+        'changes'  => [
+            'New Feature' => [
+                [
+                    'title'       => 'Vendors can now add a product without leaving the product list — a quick-create window collects just the essentials (name, image, price, category, and short description) and saves it as a draft.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added a Tools page to the admin dashboard where admins can clear Dokan\'s caches and restore any missing Dokan pages in one click.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Product names and categories now display safely on the admin vendor details page, so a vendor can no longer run malicious code in the admin area through a crafted product title.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendors can no longer give their customers download access to another vendor\'s downloadable files.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendors can no longer change another vendor\'s product attributes.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendors can no longer change the status of another vendor\'s orders through bulk actions.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Dokan\'s cache markers now expire on their own, so they no longer pile up in the database and slow down stores that run without an object cache.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 5.0.8',
+        'released' => '2026-07-06',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Cleared the vendor dashboard sale price when the field is blanked so the product reverts to its regular price instead of saving a 0 price.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 5.0.7',
         'released' => '2026-06-29',
         'changes'  => [

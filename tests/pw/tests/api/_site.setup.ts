@@ -115,6 +115,26 @@ setup.describe('site setup', () => {
         expect(response.ok()).toBeTruthy();
     });
 
+    // Rank Math SEO is a wordpress.org dependency of the Dokan "Rank Math SEO"
+    // product-editor integration. The e2e site setup activates + marks it configured
+    // (tests/e2e/_site.setup.ts) but the api setup did NOT — so `api/rankMath.spec.ts`
+    // (whose editor-data endpoint instantiates Rank Math's `Screen`, which
+    // `implements RankMath\Admin\Metabox\IScreen`) fatal-500'd in CI where the plugin
+    // was never activated (it only passed locally because the shared wp-env already
+    // had it active from e2e runs). Activate + short-circuit registration here too,
+    // mirroring the e2e setup. Non-fatal: the module/tests tolerate the plugin being
+    // absent (DependencyNotice).
+    setup('activate Rank Math SEO', { tag: ['@pro'] }, async () => {
+        try {
+            await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.rankMath));
+            await helpers.exeCommandWpcli(data.commands.wpcli.setDebugConfig('RANK_MATH_REGISTRATION_SKIP', true));
+            await helpers.exeCommandWpcli(data.commands.wpcli.updateOption('rank_math_registration_skip', '1'));
+            await helpers.exeCommandWpcli(data.commands.wpcli.updateOption('rank_math_is_configured', '1'));
+        } catch {
+            // Plugin absent — the rank-math suite tolerates this (DependencyNotice).
+        }
+    });
+
     setup('set site general settings', { tag: ['@lite'] }, async () => {
         const siteSettings = await apiUtils.setSiteSettings(payloads.siteSettings, payloads.adminAuth);
         expect(siteSettings).toEqual(expect.objectContaining(payloads.siteSettings));

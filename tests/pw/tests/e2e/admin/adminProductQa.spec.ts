@@ -166,15 +166,6 @@ test.describe('Admin Product Q&A moderation', () => {
             expect(await qa.hasNoPhpFatal(), 'no PHP fatal').toBe(true);
         });
 
-        // QUARANTINED: the admin Product Q&A page renders no free-text search input,
-        // so this asserts filtering the UI cannot perform. Re-enable when search lands.
-        test.fixme('searching by question text filters the list to the matching question', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
-            await qa.goto();
-            await qa.search(adminProductQaData.answerTarget);
-            await expect(qa.rowByQuestion(adminProductQaData.answerTarget)).toBeVisible();
-            await expect(page.getByText(adminProductQaData.answered, { exact: false })).toHaveCount(0);
-        });
-
         test('Unanswered tab requests answered=false and shows an Unanswered question', { tag: ['@pro', '@admin'] }, async () => {
             await qa.goto();
             const url = await qa.clickTabAndCaptureQuery(/^Unanswered/);
@@ -276,15 +267,6 @@ test.describe('Admin Product Q&A moderation', () => {
         test.afterEach(async () => {
             await page?.close();
             await ctx?.close();
-        });
-
-        // QUARANTINED: no search input on the admin Product Q&A page, so a
-        // search-driven empty state is unreachable via the UI.
-        test.fixme('search with no match shows the empty state', { tag: ['@pro', '@admin', '@exploratory'] }, async () => {
-            await qa.goto();
-            await qa.search(adminProductQaData.searchMiss);
-            const empty = (await qa.isEmptyStateVisible()) || (await qa.getRowCount()) === 0;
-            expect(empty, 'no rows / empty-state for an unmatched search').toBe(true);
         });
 
         test('reloading on #/product-qa preserves the route and re-mounts the list', { tag: ['@pro', '@admin'] }, async () => {

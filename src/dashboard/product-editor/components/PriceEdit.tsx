@@ -84,9 +84,10 @@ const PriceEdit = ( { data, field, onChange, validity }: any ) => {
                 } }
                 onChange={ ( formattedValue, rawValue ) => {
                     setDisplayValue( formattedValue );
-                    const value = Number( rawValue );
+                    // Keep a cleared field empty, not 0, so blanking it clears the value instead of saving 0.
+                    const value = rawValue > 0 ? Number( rawValue ) : '';
                     onChange( { [ field.id ]: value } );
-                    void vendorEarningHandler( value );
+                    void vendorEarningHandler( Number( value ) );
                 } }
             />
         </CustomField>

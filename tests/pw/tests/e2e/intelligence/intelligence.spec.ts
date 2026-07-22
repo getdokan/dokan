@@ -10,7 +10,7 @@ import { toPath } from '@utils/helpers';
 // product editor + vendor dashboard. Visible when AI settings are on.
 
 test.describe('DokanAI / Intelligence (React) Tests @pro', () => {
-    test('Test Case 1 - Vendor product editor loads (AI mounts via Fill slot)', { tag: ['@pro', '@vendor'] }, async ({ browser }) => {
+    test('Test Case 1 - Vendor product editor loads (AI mounts via Fill slot)', { tag: ['@pro', '@vendor', '@new-ui'] }, async ({ browser }) => {
         const ctx = await browser.newContext({ storageState: v1 });
         const page = await ctx.newPage();
         await page.goto(toPath(`dashboard/new/#/products/create`));

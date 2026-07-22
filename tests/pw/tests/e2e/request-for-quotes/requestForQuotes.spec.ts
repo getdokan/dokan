@@ -132,11 +132,26 @@ test.describe('Request for quotation test customer', () => {
 
     test('customer can pay for order converted from quote request', { tag: ['@pro', '@customer'] }, async () => {
         test.slow();
-        await apiUtils.updatePaymentGateway('dokan-stripe-connect', { ...payloads.stripeConnect, enabled: false }, payloads.adminAuth);
-        await apiUtils.updatePaymentGateway('dokan_paypal_marketplace', { ...payloads.payPal, enabled: false }, payloads.adminAuth);
-        await apiUtils.updatePaymentGateway('dokan_mangopay', { ...payloads.mangoPay, enabled: false }, payloads.adminAuth);
-        await apiUtils.updatePaymentGateway('dokan_razorpay', { ...payloads.razorpay, enabled: false }, payloads.adminAuth);
-        await apiUtils.updatePaymentGateway('dokan_stripe_express', { ...payloads.stripeExpress, enabled: false }, payloads.adminAuth);
+        // The converted order is paid via Direct Bank Transfer (bacs), which is enabled
+        // by default. The marketplace gateways below are disabled so a Dokan gateway can't
+        // interfere with placing the bacs order. Each Dokan gateway is only registered when
+        // its module is active — e.g. Stripe Connect is absent on a fresh CI setup, and a PUT
+        // to a non-existent gateway 404s. Disable only the gateways that actually exist here
+        // instead of relying on the shared local Docker's accumulated module state.
+        const gateways = (await apiUtils.getAllPaymentGateways(payloads.adminAuth)) as Array<{ id: string }>;
+        const existingIds = new Set(gateways.map(g => g.id));
+        const marketplaceGateways: Array<[string, object]> = [
+            ['dokan-stripe-connect', payloads.stripeConnect],
+            ['dokan_paypal_marketplace', payloads.payPal],
+            ['dokan_mangopay', payloads.mangoPay],
+            ['dokan_razorpay', payloads.razorpay],
+            ['dokan_stripe_express', payloads.stripeExpress],
+        ];
+        for (const [id, payload] of marketplaceGateways) {
+            if (existingIds.has(id)) {
+                await apiUtils.updatePaymentGateway(id, { ...payload, enabled: false }, payloads.adminAuth);
+            }
+        }
         await apiUtils.convertQuoteToOrder(quoteId, payloads.adminAuth);
         await customer.payConvertedQuote(quoteId);
     });
