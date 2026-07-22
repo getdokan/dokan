@@ -8,6 +8,7 @@ type UploadTypes = {
     as?: React.ElementType;
     title?: string;
     buttonText?: string;
+    uploaderParams?: Record< string, string >;
 };
 
 const Upload = ( {
@@ -17,6 +18,7 @@ const Upload = ( {
     className,
     title,
     buttonText,
+    uploaderParams,
     ...props
 }: UploadTypes ) => {
     const uploadHandler = () => {
@@ -28,6 +30,12 @@ const Upload = ( {
             },
             multiple, // Set to true to allow multiple selection
         } );
+        if ( uploaderParams ) {
+            // Extra plupload multipart params, e.g. `type: 'downloadable_product'` routes uploads into woocommerce_uploads.
+            mediaFrame.on( 'ready', () => {
+                mediaFrame.uploader.options.uploader.params = uploaderParams;
+            } );
+        }
         mediaFrame.on( 'select', () => {
             const attachment = mediaFrame.state().get( 'selection' );
             if ( multiple ) {
