@@ -8,7 +8,6 @@ use WeDevs\Dokan\Test\DokanTestCase;
 use WC_Customer_Download;
 use WC_Data_Store;
 use WC_Product_Download;
-use WP_REST_Request;
 
 /**
  * Authorization test for the REST download-revoke endpoint.
@@ -16,6 +15,8 @@ use WP_REST_Request;
  * Covers the cross-vendor IDOR (audit L8 / plugin-internal-tasks#2150): revoke_order_downloads()
  * deleted a permission by attacker-supplied permission_id without checking it belonged to the
  * route order. The endpoint now rejects a permission that belongs to a different order.
+ *
+ * @since DOKAN_SINCE
  *
  * @group dokan-order-downloads
  * @group dokan-authorization
@@ -53,10 +54,20 @@ class OrderDownloadsRevokeOwnershipTest extends DokanTestCase {
      */
     protected int $product_id;
 
+    /**
+     * Approved-directories mode captured in set_up() and restored in tear_down().
+     *
+     * @var string
+     */
+    protected string $previous_download_mode;
+
     public function set_up() {
         parent::set_up();
 
-        wc_get_container()->get( DownloadApprovedDirectories::class )->set_mode( DownloadApprovedDirectories::MODE_DISABLED );
+        // Disable the approved-directories gate so the test's example.com files validate; restored in tear_down().
+        $approved_directories         = wc_get_container()->get( DownloadApprovedDirectories::class );
+        $this->previous_download_mode = $approved_directories->get_mode();
+        $approved_directories->set_mode( DownloadApprovedDirectories::MODE_DISABLED );
 
         ( new OrderControllerV2() )->register_routes();
 
@@ -100,6 +111,16 @@ class OrderDownloadsRevokeOwnershipTest extends DokanTestCase {
     }
 
     /**
+     * An unknown permission id is rejected with 400 rather than a 500 fatal (WC_Customer_Download throws on unknown ids).
+     */
+    public function test_revoke_rejects_unknown_permission() {
+        wp_set_current_user( $this->seller_id1 );
+        $response = $this->revoke_request( $this->own_order, 999999 );
+
+        $this->assertSame( 400, $response->get_status(), 'An unknown permission id must be rejected, not cause a fatal.' );
+    }
+
+    /**
      * Grant one download permission on the given order and return its permission id.
      */
     protected function grant_permission( int $order_id ): int {
@@ -113,14 +134,15 @@ class OrderDownloadsRevokeOwnershipTest extends DokanTestCase {
      * Dispatch a DELETE against the downloads endpoint.
      */
     protected function revoke_request( int $order_id, int $permission_id ) {
-        $request = new WP_REST_Request( 'DELETE', "/dokan/v2/orders/{$order_id}/downloads" );
-        $request->set_body_params( [ 'permission_id' => $permission_id ] );
-
-        return $this->server->dispatch( $request );
+        return $this->delete_request( "/orders/{$order_id}/downloads", [ 'permission_id' => $permission_id ] );
     }
 
     public function tear_down() {
         wp_set_current_user( 0 );
+
+        // Restore the shared approved-directories mode so disabling it here doesn't leak into later tests.
+        wc_get_container()->get( DownloadApprovedDirectories::class )->set_mode( $this->previous_download_mode );
+
         parent::tear_down();
     }
 }
