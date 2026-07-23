@@ -37,9 +37,10 @@ const oldDataset = [
                 "value": false
             },
             {
+                // Inverted bridge: new "Product Popup" on == legacy "disable product popup" off.
                 "selector": '//label[@for="dokan_selling[disable_product_popup]"]//label[@class="switch tips"]',
                 "type": "checkbox",
-                "value": true
+                "value": false
             },
             {
                 "selector": '//label[@for="dokan_selling[order_status_change]"]//label[@class="switch tips"]',

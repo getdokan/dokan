@@ -86,12 +86,12 @@ const newDataset = {
             value: '+1234567890',
         },
         {
-            selector: 'input[placeholder="Enter your Account SID..."]',
+            selector: '[data-testid="settings-field-account_sid"] input[type="password"]',
             type: 'text',
             value: 'ACxxxxxxxxxxxxxxxxxxxxx',
         },
         {
-            selector: 'input[placeholder="Enter your Auth Token..."]',
+            selector: '[data-testid="settings-field-auth_token"] input[type="password"]',
             type: 'text',
             value: 'auth_token_123',
         },
@@ -101,22 +101,22 @@ const newDataset = {
             value: 'Numeric',
         },
         {
-            selector: 'input[placeholder="Enter sender name..."]',
+            selector: '[data-testid="settings-field-sender_name"] input',
             type: 'text',
             value: 'Market Team',
         },
         {
-            selector: 'textarea[placeholder="Enter SMS message template..."]',
+            selector: '[data-testid="settings-field-sms_text"] textarea',
             type: 'text',
             value: 'Your verification code is: %CODE%',
         },
         {
-            selector: 'textarea[placeholder="Enter success message..."]',
+            selector: '[data-testid="settings-field-sms_sent_success"] textarea',
             type: 'text',
             value: 'SMS sent. Please enter your verification code',
         },
         {
-            selector: 'textarea[placeholder="Enter error message..."]',
+            selector: '[data-testid="settings-field-sms_sent_error"] textarea',
             type: 'text',
             value: 'Unable to send sms. Contact admin',
         },

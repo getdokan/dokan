@@ -260,7 +260,7 @@ export class AdminSettingsPageNew extends AdminPage {
                 }
                 case 'readOnly': {
                     const value = await this.page.inputValue(field.selector);
-                    expect(value).toBe(field.value);
+                    expect(value, field.selector).toBe(field.value);
                     break;
                 }
             }
@@ -273,23 +273,23 @@ export class AdminSettingsPageNew extends AdminPage {
             switch (field.type) {
                 case 'text': {
                     const value = await this.page.inputValue(field.selector);
-                    expect(value).toBe(field.value);
+                    expect(value, field.selector).toBe(field.value);
                     break;
                 }
                 case 'number': {
                     const value = await this.page.inputValue(field.selector);
-                    expect(value).toBe(field.value);
+                    expect(value, field.selector).toBe(field.value);
                     break;
                 }
                 case 'email': {
                     const value = await this.page.inputValue(field.selector);
-                    expect(value).toBe(field.value);
+                    expect(value, field.selector).toBe(field.value);
                     break;
                 }
                 case 'switch': {
                     const ariaChecked = await this.page.locator(field.selector).getAttribute('aria-checked');
                     const isChecked = ariaChecked === 'true';
-                    expect(isChecked).toBe(field.value);
+                    expect(isChecked, field.selector).toBe(field.value);
                     break;
                 }
                 case 'checkbox': {
@@ -297,12 +297,12 @@ export class AdminSettingsPageNew extends AdminPage {
                     const hasEnabledClass = await inputElement.evaluate(el => el.classList.contains('enabled'));
                     console.log('hasEnabledClass', hasEnabledClass);
                     console.log('field.value', field.value);
-                    expect(hasEnabledClass).toBe(field.value);
+                    expect(hasEnabledClass, field.selector).toBe(field.value);
                     break;
                 }
                 case 'radio': {
                     const ariaChecked = await this.page.locator(field.selector).getAttribute('aria-checked');
-                    expect(ariaChecked).toBe(field.value);
+                    expect(ariaChecked, field.selector).toBe(field.value);
                     break;
                 }
                 case 'radioOld': {
@@ -317,12 +317,12 @@ export class AdminSettingsPageNew extends AdminPage {
                             isSelected = await inputLocator.isChecked().catch(() => false);
                         }
                     }
-                    expect(isSelected).toBe(desiredSelected);
+                    expect(isSelected, field.selector).toBe(desiredSelected);
                     break;
                 }
                 case 'select': {
                     const { value, label } = await this.nativeSelection(field.selector);
-                    expect([value, label]).toContain(field.value);
+                    expect([value, label], field.selector).toContain(field.value);
                     break;
                 }
                 case 'radix-dropdown': {
@@ -336,20 +336,20 @@ export class AdminSettingsPageNew extends AdminPage {
                     const editor = this.page.locator(field.selector).first();
                     await editor.waitFor({ state: 'visible' });
                     const value = await editor.innerText(); // use innerText for Quill editor
-                    expect(value).toBe(field.value);
+                    expect(value, field.selector).toBe(field.value);
                     break;
                 }
                 case 'color-picker': {
                     const color = await this.page.locator(field.selector).evaluate(el => {
                         return getComputedStyle(el).backgroundColor;
                     });
-                    expect(color).toBe(field.value);
+                    expect(color, field.selector).toBe(field.value);
                     break;
                 }
                 case 'textareaOld': {
                     const frameHandle = this.page.frameLocator(field.selector);
                     const textValue = await frameHandle.locator('body').innerText();
-                    expect(textValue.trim()).toBe(field.value);
+                    expect(textValue.trim(), field.selector).toBe(field.value);
                     return;
                 }
                 case 'radioLabel': {
@@ -360,13 +360,13 @@ export class AdminSettingsPageNew extends AdminPage {
                     await selectedLocator.waitFor({ state: 'visible', timeout: 15000 });
 
                     const labelText = (await selectedLocator.innerText()).trim();
-                    expect(labelText).toBe(field.value);
+                    expect(labelText, field.selector).toBe(field.value);
                     break;
                 }
                 case 'checkbox-switch': {
                     const locator = this.page.locator(field.selector);
                     const isChecked = await locator.isChecked();
-                    expect(isChecked).toBe(field.value);
+                    expect(isChecked, field.selector).toBe(field.value);
                     break;
                 }
                 case 'radio-capsule': {
@@ -395,7 +395,7 @@ export class AdminSettingsPageNew extends AdminPage {
                 case 'richtext': {
                     const editor = this.page.locator(field.selector).first();
                     await editor.waitFor({ state: 'visible' });
-                    expect((await editor.innerText()).trim()).toBe(field.value);
+                    expect((await editor.innerText()).trim(), field.selector).toBe(field.value);
                     break;
                 }
                 case 'radio-input': {

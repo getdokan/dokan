@@ -42,9 +42,12 @@ const oldDataset = [
                 value: true,
             },
             {
+                // Bridged through InvertOnOffTransformer: the new UI stores
+                // "Add to Cart Button Visibility", so visibility off means the
+                // legacy "hide add to cart button" flag is on.
                 selector: '//label[@for="dokan_selling[catalog_mode_hide_add_to_cart_button]"]//label[@class="switch tips"]',
                 type: 'checkbox',
-                value: false,
+                value: true,
             },
         ],
     },

@@ -19,14 +19,15 @@ const oldWholesaleDataset = {
         //     value: 'wholesale_customer',
         // },
         {
-            selector: 'label[for=\"dokan_wholesale[display_price_in_shop_archieve]\"]',
+            // Direct bridge (no inversion): the legacy flag must match the new value.
+            selector: 'label[for="dokan_wholesale[display_price_in_shop_archieve]"]',
             type: 'checkbox',
-            value: false,
+            value: true,
         },
         {
-            selector: 'label[for=\"dokan_wholesale[need_approval_for_wholesale_customer]\"]',
+            selector: 'label[for="dokan_wholesale[need_approval_for_wholesale_customer]"]',
             type: 'checkbox',
-            value: false,
+            value: true,
         },
     ],
 };
