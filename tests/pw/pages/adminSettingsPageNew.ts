@@ -106,6 +106,15 @@ export class AdminSettingsPageNew extends AdminPage {
                     // reflects the chosen label.
                     const trigger = this.page.locator(field.selector);
                     await trigger.waitFor({ state: 'visible' });
+
+                    // Nothing to change when the trigger already shows the wanted
+                    // option. Opening the popup anyway is not harmless: Base UI
+                    // scroll-aligns the list to the selected item, so the option
+                    // never settles and `click()` times out on "not stable".
+                    if ((await trigger.textContent())?.includes(field.value)) {
+                        break;
+                    }
+
                     await trigger.click();
 
                     const option = this.page.getByRole('option', { name: field.value, exact: true });

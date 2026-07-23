@@ -25,9 +25,11 @@ const oldDataset = {
     selector: '//div[@class="nav-title" and contains(text(),"Vendor Verification")]',
     fields: [
         {
-            // The verified icon is a radio group keyed by icon slug.
-            selector: '//input[@id="dokan_verification[verified_icon][check_circle_solid]"]',
-            type: 'radio-input',
+            // The verified icon is a radio group keyed by icon slug. The input
+            // itself is visually hidden behind a styled label, so drive the label.
+            selector: '//label[@for="dokan_verification[verified_icon][check_circle_solid]"]',
+            type: 'radioOld',
+            value: 'true',
         },
         ...methods.map(method => ({
             selector: `label.switch:has(input[value="${method.id}"])`,
