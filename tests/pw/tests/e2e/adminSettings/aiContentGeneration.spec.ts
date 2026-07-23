@@ -1,10 +1,7 @@
 import { test } from '@playwright/test';
+import { LoginPage } from '@pages/loginPage';
 import { AdminSettingsPageNew as AdminSettingsPage } from '@pages/adminSettingsPageNew';
-import path from 'path';
-
-// Reuse the admin session captured by the auth_setup project instead of
-// logging in through the UI before every test.
-const a1 = path.join(__dirname, '../../../playwright/.auth/adminStorageState.json');
+import { data } from '@utils/testData';
 
 const oldDataset = {
     title: 'Admin Old Setting: AI Assist',
@@ -32,16 +29,13 @@ const oldDataset = {
 // page=dokan-dashboard. NOTE: the text engine is set to OpenAI so the OpenAI
 // API key/model fields it fills stay visible (engine selection gates which
 // provider group renders) and to mirror the legacy `oldDataset` (OpenAI).
+// The AI Product Info Generator section is header-only — it has no enable
+// toggle, matching the legacy `dokan_ai_product_info` sub_section.
 const newDataset = {
     title: 'Admin Setting: AI Assist',
     url: 'wp-admin/admin.php?page=dokan-dashboard#/settings',
     selector: '[data-testid="settings-menu-ai_assist"] >> [data-testid="settings-menu-product_generation"]',
     fields: [
-        {
-            selector: '[data-testid="settings-field-ai_product_info_generate"] [role="switch"]',
-            type: 'switch',
-            value: true,
-        },
         {
             selector: '[data-testid="settings-field-ai_product_info_engine"] button[role="combobox"]',
             type: 'radix-dropdown',
@@ -81,12 +75,17 @@ const newDataset = {
 };
 
 test.describe('Admin Setting: AI Assist', () => {
-    test.use({ storageState: a1 });
-
+    let loginPage: LoginPage;
     let adminSettingsPage: AdminSettingsPage;
 
     test.beforeEach(async ({ page }) => {
+        loginPage = new LoginPage(page);
         adminSettingsPage = new AdminSettingsPage(page);
+
+        // Log in through the UI like every other adminSettings spec: the
+        // auth_setup storage state expires with the WordPress auth cookie, and a
+        // stale one silently lands every test on the login screen.
+        await loginPage.adminLogin(data.admin);
     });
     test('New to Old AI Assist Settings synchronization', { tag: ['@lite', '@admin', '@migration'] }, async () => {
         await test.step('Update new settings', async () => {

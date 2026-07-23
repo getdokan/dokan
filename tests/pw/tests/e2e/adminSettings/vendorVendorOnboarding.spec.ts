@@ -49,37 +49,37 @@ const oldDataset = [
 const newDataset = {
     title: 'Admin Setting: Vendor -> vendor_onboarding',
     url:'wp-admin/admin.php?page=dokan-dashboard#/settings',
-    selector: '#dokan_settings_vendor >> #dokan_settings_vendor_vendor_onboarding',
-    //selector: '#dokan_settings_general >> #dokan_settings_general_marketplace',
+    selector: '[data-testid="settings-menu-vendor"] >> [data-testid="settings-menu-vendor_onboarding"]',
+    //selector: '[data-testid="settings-menu-general"] >> [data-testid="settings-menu-marketplace"]',
     fields: [
         {
-            selector: '#dokan_settings_vendor_vendor_onboarding_vendor_auto_enable_selling button[name="automatically"]',
-            type: 'radio',
-            value: 'true',
+            selector: '[data-testid="settings-field-vendor_auto_enable_selling"]',
+            type: 'radio-capsule',
+            value: 'Automatically',
         },
         {
-            selector: '#dokan_settings_vendor_vendor_onboarding_vendor_registration_address_fields button[role="switch"]',
+            selector: '[data-testid="settings-field-vendor_registration_address_fields"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_vendor_vendor_onboarding_terms_conditions button[role="switch"]',
+            selector: '[data-testid="settings-field-terms_conditions"] [role="switch"]',
             type: 'switch',
             value: true,
         },
         {
-            selector: '#dokan_settings_vendor_vendor_onboarding_vendor_welcome_wizard_enabled button[role="switch"]',
+            selector: '[data-testid="settings-field-vendor_welcome_wizard_enabled"] [role="switch"]',
             type: 'switch',
             value: false, // Note: Inverted value compared to old setting
         },
         // { // This field should be test manually
-        //     selector: '#dokan_settings_vendor_vendor_onboarding_vendor_setup_wizard_logo input[name="dokan-file-upload-url"]',
+        //     selector: '[data-testid="settings-field-vendor_setup_wizard_logo"] input[name="dokan-file-upload-url"]',
         //     type: 'text',
         //     value: '',
         // },
         {
-            selector: '#dokan_settings_vendor_vendor_onboarding_vendor_setup_wizard_message .ql-editor',
-            type: 'textarea',
+            selector: '[data-testid="settings-field-vendor_setup_wizard_message"] [contenteditable="true"]',
+            type: 'richtext',
             value: 'Welcome to our marketplace!',
         },
     ],

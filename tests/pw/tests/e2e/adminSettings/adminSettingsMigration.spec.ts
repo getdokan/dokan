@@ -477,9 +477,13 @@ test.describe('Admin Settings Migration', () => {
     });
 
     // Test for `Vendor Capabilities -> Product Popup` settings synchronization.
-    // Skipped: the "Product Popup" (disable_product_popup) capability has no field
-    // in the React settings UI, so there is nothing to synchronise against.
-    test.skip('should maintain bi-directional data synchronization for Product Popup', { tag: ['@lite', '@admin', '@migration'] }, async () => {
+    // The new UI stores "Product Popup" enabled while the legacy option stores
+    // `disable_product_popup`, bridged through InvertOnOffTransformer, so the two
+    // sides always hold opposite values. `getOldSetting` reports the raw legacy
+    // checkbox, hence the flipped expectations below.
+    // The field is also gated on "One Page Product Creation" being off, which
+    // step 0 ensures - with it on, the field is absent from the DOM entirely.
+    test('should maintain bi-directional data synchronization for Product Popup', { tag: ['@lite', '@admin', '@migration'] }, async () => {
 
         const oldNavigationFunction = 'navigateToOldSellingOptions';
         const newNavigationFunction = 'navigateToNewVendorCapabilitiesSettings';
@@ -500,14 +504,15 @@ test.describe('Admin Settings Migration', () => {
         let status = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSelectorId);
         await adminSettingsPage.updateNewSettings(newNavigationFunction, fieldSelectorId, !status);
 
-        // Step 2: Verify in old settings (mapping: dokan_selling.show_vendor_info)
+        // Step 2: Verify in old settings (mapping: dokan_selling.disable_product_popup, inverted)
         const oldValueAfterNewUpdate1 = await adminSettingsPage.getOldSetting(oldNavigationFunction, checkboxClass);
-        expect(oldValueAfterNewUpdate1).toBe(!status); // New toggle should reflect correctly in old settings
+        expect(oldValueAfterNewUpdate1).toBe(status); // popup enabled == "disable popup" off
 
-        // Step 3: Update old settings back to original status
-        await adminSettingsPage.updateOldSetting(status, oldNavigationFunction, fieldKey, checkboxClass);
+        // Step 3: Drive the legacy flag to the opposite of its current value, which
+        // restores the new setting to its original `status`.
+        await adminSettingsPage.updateOldSetting(!status, oldNavigationFunction, fieldKey, checkboxClass);
         const oldValueAfterNewUpdate2 = await adminSettingsPage.getOldSetting(oldNavigationFunction, checkboxClass);
-        expect(oldValueAfterNewUpdate2).toBe(status); // Old settings should match updated value
+        expect(oldValueAfterNewUpdate2).toBe(!status); // Old settings should match updated value
 
         // Step 4: Verify new settings reflect updated value from old settings
         const newValueAfterOldUpdate2 = await adminSettingsPage.getNewSettings(newNavigationFunction, fieldSelectorId);
